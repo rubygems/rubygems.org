@@ -43,6 +43,7 @@ gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
 gem "unpwn"
+gem "webauthn"
 
 # Logging
 gem "lograge"

@@ -1,0 +1,11 @@
+<%= form_for webauthn_credential, html: { class: "js-new-webauthn-credential--form" } do |f| %>
+  <h3><%= t('.new_device') %></h3>
+  <div class="text_field">
+    <%= f.label :nickname, t('.nickname'), class: 'form__label' %>
+    <%= f.text_field :nickname, class: 'form__input js-new-webauthn-credential--nickname', required: true, pattern: '.*\S+.*' %>
+  </div>
+
+  <p hidden class="l-text-red-600 js-new-webauthn-credential--error"></p>
+
+  <%= f.submit t('.submit'), class: 'form__submit js-new-webauthn-credential--submit' %>
+<% end %>

@@ -13,6 +13,12 @@ FactoryBot.define do
     password { PasswordHelpers::SECURE_TEST_PASSWORD }
     api_key { "secret123" }
     email_confirmed { true }
+
+    trait :mfa_enabled do
+      mfa_seed { "123abc" }
+      mfa_level { User.mfa_levels["ui_and_api"] }
+      mfa_recovery_codes { %w[aaa bbb ccc] }
+    end
   end
 
   factory :dependency do
@@ -194,6 +200,19 @@ FactoryBot.define do
 
   factory :gem_typo_exception do
     name
+  end
+
+  factory :webauthn_credential do
+    user
+    sequence(:external_id) { |n| "webauthn-credential-#{n}" }
+    public_key { "abc" }
+    nickname { "Key #{SecureRandom.hex(24)}" }
+
+    trait :primary
+
+    trait :backup do
+      nickname { "Backup key" }
+    end
   end
 
   factory :api_key_rubygem_scope do

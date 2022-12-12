@@ -346,6 +346,7 @@ es:
         registrar un nuevo dispositivo.
       success: Has activado exitosamente la autenticación de múltiples factores.
     recovery:
+      copied:
       continue: Continuar
       title: Códigos de recuperación
       copy:
@@ -398,6 +399,11 @@ es:
   settings:
     edit:
       title: Editar configuración
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: "¿Seguro? Este cambio no puede deshacerse."
         credentials_html: 'Si quieres usar %{gem_commands_link} desde la línea de
@@ -412,6 +418,7 @@ es:
         title: Reestablecer contraseña
       mfa:
         multifactor_auth: Autenticación de múltiples factores
+        otp:
         disabled_html:
         go_settings: Registrar un nuevo dispositivo
         enabled_html:
@@ -571,6 +578,13 @@ es:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -648,3 +662,20 @@ es:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

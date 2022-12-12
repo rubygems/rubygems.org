@@ -17,11 +17,13 @@ require "mocha/minitest"
 require "capybara/rails"
 require "capybara/minitest"
 require "clearance/test_unit"
+require "webauthn/fake_client"
 require "shoulda"
 require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
+require "helpers/webauthn_helpers"
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
@@ -66,6 +68,14 @@ class ActiveSupport::TestCase
     Capybara.current_driver = :selenium_chrome_headless
     Capybara.default_max_wait_time = 2
     Selenium::WebDriver.logger.level = :error
+  end
+
+  def fullscreen_headless_chrome_driver
+    headless_chrome_driver
+    driver = page.driver
+    fullscreen_width = 1200
+    fullscreen_height = 1000
+    driver.resize_window_to(driver.current_window_handle, fullscreen_width, fullscreen_height)
   end
 end
 

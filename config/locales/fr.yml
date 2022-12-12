@@ -350,6 +350,7 @@ fr:
         un nouvel appareil.
       success: Vous avez activé l'authentification multifacteur.
     recovery:
+      copied:
       continue: Continuer
       title: Codes de récupération
       copy:
@@ -401,6 +402,11 @@ fr:
   settings:
     edit:
       title:
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: Êtes-vous sûr ? Cette action ne peut être annulée.
         credentials_html: 'Si vous voulez utiliser %{gem_commands_link} de la ligne
@@ -415,6 +421,7 @@ fr:
         title: Renvoi de mot de passe
       mfa:
         multifactor_auth: Authentification Multifacteur
+        otp:
         disabled_html:
         go_settings: Enregistrer un nouvel appareil
         enabled_html:
@@ -578,6 +585,13 @@ fr:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -655,3 +669,20 @@ fr:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

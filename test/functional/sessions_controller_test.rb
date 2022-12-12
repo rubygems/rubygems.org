@@ -201,6 +201,90 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :unauthorized
     end
+
+    context "when user has mfa enabled" do
+      setup do
+        @user = create(:user, :mfa_enabled)
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+      end
+
+      should respond_with :ok
+
+      should "not set webauthn_authentication" do
+        assert_nil session[:webauthn_authentication]
+      end
+
+      should "set mfa_user" do
+        assert_equal @user.id, session[:mfa_user]
+      end
+
+      should "have mfa forms and not webauthn credentials form" do
+        assert page.has_content?("multi-factor authentication")
+        assert page.has_field?("OTP or recovery code")
+        assert page.has_button?("Verify code")
+      end
+    end
+
+    context "when user has webauthn credentials" do
+      setup do
+        @user = create(:user)
+        create(:webauthn_credential, user: @user)
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+      end
+
+      should respond_with :ok
+
+      should "set webauthn authentication" do
+        assert_equal @user.id, session[:webauthn_authentication]["user"]
+        assert_not_nil session[:webauthn_authentication]["challenge"]
+      end
+
+      should "not set mfa_user" do
+        assert_nil session[:mfa_user]
+      end
+
+      should "not have mfa forms and have webauthn credentials form" do
+        assert page.has_content?("Multi-factor authentication")
+        assert_not page.has_field?("OTP code")
+        assert_not page.has_field?("Recovery code")
+        assert page.has_button?("Authenticate with security device")
+      end
+    end
+
+    context "when user has mfa enabled and webauthn credentials" do
+      setup do
+        @user = create(:user, :mfa_enabled)
+        create(:webauthn_credential, user: @user)
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+      end
+
+      should respond_with :ok
+
+      should "set webauthn authentication" do
+        assert_equal @user.id, session[:webauthn_authentication]["user"]
+        assert_not_nil session[:webauthn_authentication]["challenge"]
+      end
+
+      should "set mfa_user" do
+        assert_equal @user.id, session[:mfa_user]
+      end
+
+      should "have mfa forms and webauthn credentials form" do
+        assert page.has_content?("multi-factor authentication")
+        assert page.has_field?("OTP or recovery code")
+        assert page.has_button?("Verify code")
+        assert page.has_button?("Authenticate with security device")
+      end
+    end
   end
 
   context "on DELETE to destroy" do
@@ -281,6 +365,93 @@ class SessionsControllerTest < ActionController::TestCase
         post :authenticate, params: { user_id: user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
       end
       should redirect_to("sign in") { sign_in_path }
+    end
+  end
+
+  context "#webauthn_create" do
+    context "when verifying the challenge" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+        @challenge = session[:webauthn_authentication]["challenge"]
+        @origin = "http://localhost:3000"
+        @rp_id = URI.parse(@origin).host
+        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        post(
+          :webauthn_create,
+          params: {
+            credentials:
+              WebauthnHelpers.get_result(
+                client: @client,
+                challenge: @challenge
+              )
+          },
+          format: :json
+        )
+      end
+
+      should redirect_to :dashboard
+
+      should "log in the user" do
+        assert_predicate @controller.request.env[:clearance], :signed_in?
+      end
+    end
+
+    context "when not providing credentials" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+        post(
+          :webauthn_create,
+          format: :json
+        )
+      end
+
+      should respond_with :unauthorized
+    end
+
+    context "when providing wrong credentials" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+        @wrong_challenge = SecureRandom.hex
+        @origin = "http://localhost:3000"
+        @rp_id = URI.parse(@origin).host
+        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        post(
+          :webauthn_create,
+          params: {
+            credentials:
+              WebauthnHelpers.get_result(
+                client: @client,
+                challenge: @wrong_challenge
+              )
+          },
+          format: :json
+        )
+      end
+
+      should respond_with :unauthorized
     end
   end
 
