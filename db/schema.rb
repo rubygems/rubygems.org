@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_09_221942) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -295,4 +295,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_09_221942) do
 
   add_foreign_key "api_keys", "users"
   add_foreign_key "webauthn_credentials", "users"
+  add_foreign_key "ownerships", "users", on_delete: :cascade
 end
