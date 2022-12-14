@@ -7,6 +7,8 @@ class Net::HTTP::Purge < Net::HTTPRequest
 end
 
 class Fastly
+  # These are not kwargs because delayed_job doesn't correctly support kwargs in Fastly.delay.purge
+  # See: https://github.com/collectiveidea/delayed_job/issues/1134
   def self.purge(options = {})
     return unless ENV["FASTLY_DOMAINS"]
     ENV["FASTLY_DOMAINS"].split(",").each do |domain|
