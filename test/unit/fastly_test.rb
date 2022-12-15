@@ -28,7 +28,7 @@ class FastlyTest < ActiveSupport::TestCase
         timeout: 10,
         headers: { "Fastly-Key" => "api-key" }
       }
-      RestClient::Request.expects(:execute).with(params).returns("{}")
+      RestClient::Request.expects(:execute).with(**params).returns("{}")
       Fastly.purge_key("some-key")
     end
   end

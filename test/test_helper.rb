@@ -27,6 +27,9 @@ require "helpers/webauthn_helpers"
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
+Mocha.configure do |c|
+  c.strict_keyword_argument_matching = true
+end
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
