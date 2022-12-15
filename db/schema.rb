@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_14_191823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -293,7 +293,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
   end
 
+  create_table "webauthn_verifications", force: :cascade do |t|
+    t.string "path_token", limit: 128
+    t.datetime "path_token_expires_at"
+    t.string "otp"
+    t.datetime "otp_expires_at"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
+  end
+
   add_foreign_key "api_keys", "users"
   add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "webauthn_verifications", "users"
 end
