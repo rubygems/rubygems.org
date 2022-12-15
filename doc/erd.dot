@@ -279,6 +279,18 @@ m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5
   <tr><td align="left" width="130" port="sign_count">sign_count <font face="Arial Italic" color="grey60">integer (8) ∗</font></td></tr>
 </table>
 >];
+m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">WebauthnVerification</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="otp">otp <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="otp_expires_at">otp_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="path_token">path_token <font face="Arial Italic" color="grey60">string (128) ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="path_token_expires_at">path_token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0) ∗</font></td></tr>
+</table>
+>];
+  m_User -> m_WebauthnVerification [arrowhead = "none", arrowtail = "none", weight = "3"];
   m_User -> m_WebauthnCredential [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
