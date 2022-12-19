@@ -40,4 +40,25 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
       assert_equal [@webauthn_credential.external_id], get_options.allow
     end
   end
+
+  context "#refresh_webauthn_verification" do
+    setup do
+      @webauthn_verification = @user.refresh_webauthn_verification
+    end
+
+    should "create a token that is 16 characters long" do
+      assert_equal 16, @webauthn_verification.path_token.length
+    end
+
+    should "store a path token in the database" do
+      assert_equal @user.webauthn_verification.path_token, @webauthn_verification.path_token
+    end
+
+    should "reset the token each time the method is called" do
+      token_before = @webauthn_verification.path_token
+      @user.refresh_webauthn_verification
+
+      refute_equal token_before, @user.webauthn_verification.path_token
+    end
+  end
 end
