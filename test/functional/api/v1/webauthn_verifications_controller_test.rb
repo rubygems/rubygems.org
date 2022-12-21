@@ -11,7 +11,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
   end
 
   def self.should_respond_to_format(format)
-    context "when the request asks for format '#{format.to_s}'" do
+    context "when the request asks for format '#{format}'" do
       setup do
         @user = create(:user)
         create(:webauthn_credential, user: @user)
