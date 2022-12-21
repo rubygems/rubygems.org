@@ -10,6 +10,32 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
     @request.env["HTTP_AUTHORIZATION"] = "Basic #{Base64.encode64(str)}"
   end
 
+  def self.should_respond_to_format(format)
+    context "when the request asks for format '#{format.to_s}'" do
+      setup do
+        @user = create(:user)
+        create(:webauthn_credential, user: @user)
+        authorize_with("#{@user.email}:#{@user.password}")
+        post :create, format: format
+      end
+
+      should respond_with :success
+
+      should "return Webauthn verification URL with path token" do
+        assert_not_nil @response.body
+
+        token = @user.webauthn_verification.path_token
+
+        if [:json, :yaml].include?(format) # API request from 3rd party client
+          response = YAML.load(@response.body)
+          assert_equal response["path"], "example.com/webauthn/#{token}"
+        else # plain text request, as from gem CLI
+          assert_equal @response.body, "example.com/webauthn/#{token}"
+        end
+      end
+    end
+  end
+
   context "on POST to create" do
     context "with no credentials" do
       setup { post :create }
@@ -34,23 +60,9 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
     end
 
     context "user has enabled webauthn" do
-      setup do
-        @user = create(:user)
-        create(:webauthn_credential, user: @user)
-        authorize_with("#{@user.email}:#{@user.password}")
-        post :create, format: :yaml
-      end
-
-      should respond_with :success
-
-      should "return Webauthn verification URL with path token" do
-        response = YAML.load(@response.body)
-        assert_not_nil response
-
-        token = @user.webauthn_verification.path_token
-
-        assert_equal response["path"], "example.com/webauthn/#{token}"
-      end
+      should_respond_to_format :yaml
+      should_respond_to_format :json
+      should_respond_to_format :plain
 
       should "not sign in user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
