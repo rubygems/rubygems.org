@@ -26,11 +26,11 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
 
         token = @user.webauthn_verification.path_token
 
-        if [:json, :yaml].include?(format) # API request from 3rd party client
+        if format == :plain # API request from 3rd party client
+          assert_equal @response.body, "example.com/webauthn/#{token}"
+        else # plain text request, as from gem CLI
           response = YAML.load(@response.body)
           assert_equal response["path"], "example.com/webauthn/#{token}"
-        else # plain text request, as from gem CLI
-          assert_equal @response.body, "example.com/webauthn/#{token}"
         end
       end
     end
