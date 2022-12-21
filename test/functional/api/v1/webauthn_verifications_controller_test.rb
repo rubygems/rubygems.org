@@ -13,7 +13,10 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "with no credentials" do
       setup { post :create }
-      should_deny_access
+      should "deny access" do
+        assert_response 401
+        assert_match "HTTP Basic: Access denied.", @response.body
+      end
     end
 
     context "with invalid credentials" do
