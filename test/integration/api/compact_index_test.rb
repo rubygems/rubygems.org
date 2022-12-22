@@ -60,7 +60,6 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     expected_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
     assert_equal expected_body, @response.body
     assert_equal etag(expected_body), @response.headers["ETag"]
-    assert_equal %w[gemA gemA1 gemA2 gemB], Rails.cache.read("names")
   end
 
   test "/names partial response" do
@@ -135,7 +134,6 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal expected, @response.body
     assert_equal etag(expected), @response.headers["ETag"]
-    assert_equal expected, CompactIndex.info(Rails.cache.read("info/gemA"))
   end
 
   test "/info has surrogate key header" do
