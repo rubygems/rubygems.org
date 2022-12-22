@@ -56,6 +56,12 @@ class ActiveSupport::TestCase
     Capybara::Node::Simple.new(@response.body)
   end
 
+  def requires_cache
+    Rails.cache.write("test", "test")
+    return if Rails.cache.read("test") == "test"
+    raise "Rails.cache is not working, but was required for this test. Is Memcached running?"
+  end
+
   def requires_toxiproxy
     return if Toxiproxy.running?
     raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]

@@ -54,6 +54,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "/names output" do
+    requires_cache
     get names_path
 
     assert_response :success
@@ -122,6 +123,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "/info with existing gem" do
+    requires_cache
     expected = <<~VERSIONS_FILE
       ---
       1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
