@@ -31,6 +31,13 @@ Mocha.configure do |c|
   c.strict_keyword_argument_matching = true
 end
 
+begin
+  Elasticsearch::Model.client.cluster.health
+rescue Faraday::ConnectionFailed => e
+  puts "ElasticSearch is not reachable: #{e}"
+  exit 1
+end
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include GemHelpers
