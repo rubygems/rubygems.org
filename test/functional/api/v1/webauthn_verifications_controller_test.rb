@@ -17,20 +17,24 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
         create(:webauthn_credential, user: @user)
         authorize_with("#{@user.email}:#{@user.password}")
         post :create, format: format
+
+        @token = @user.webauthn_verification.path_token
       end
 
       should respond_with :success
 
-      should "return Webauthn verification URL with path token" do
+      should "have a body" do
         assert_not_nil @response.body
+      end
 
-        token = @user.webauthn_verification.path_token
-
-        if format == :plain
-          assert_equal @response.body, "example.com/webauthn/#{token}"
-        else
+      if format == :plain
+        should "return only the Webauthn verification URL with path token" do
+          assert_equal @response.body, "example.com/webauthn/#{@token}"
+        end
+      else
+        should "return a YAML or JSON document with path token" do
           response = YAML.safe_load(@response.body)
-          assert_equal response["path"], "example.com/webauthn/#{token}"
+          assert_equal response["path"], "example.com/webauthn/#{@token}"
         end
       end
     end
