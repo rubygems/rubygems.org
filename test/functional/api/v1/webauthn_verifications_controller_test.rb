@@ -29,7 +29,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
         if format == :plain
           assert_equal @response.body, "example.com/webauthn/#{token}"
         else
-          response = YAML.load(@response.body)
+          response = YAML.safe_load(@response.body)
           assert_equal response["path"], "example.com/webauthn/#{token}"
         end
       end
