@@ -16,7 +16,10 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
         @user = create(:user)
         create(:webauthn_credential, user: @user)
         authorize_with("#{@user.email}:#{@user.password}")
-        post :create, format: format
+
+        travel_to Time.utc(2023, 1, 1, 0, 0, 0) do
+          post :create, format: format
+        end
 
         @token = @user.webauthn_verification.path_token
       end
@@ -35,6 +38,11 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
         should "return a YAML or JSON document with path token" do
           response = YAML.safe_load(@response.body)
           assert_equal response["path"], "example.com/webauthn/#{@token}"
+        end
+
+        should "return a YAML or JSON document with path expiry" do
+          response = YAML.safe_load(@response.body)
+          assert_equal "2023-01-01T00:02:00.000Z", response["expiry"]
         end
       end
     end
