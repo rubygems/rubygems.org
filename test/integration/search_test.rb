@@ -3,6 +3,10 @@ require "test_helper"
 class SearchTest < SystemTest
   include ESHelper
 
+  setup do
+    Rubygem.__elasticsearch__.create_index! force: true
+  end
+
   test "searching for a gem" do
     create(:rubygem, name: "LDAP", number: "1.0.0")
     create(:rubygem, name: "LDAP-PLUS", number: "1.0.0")
