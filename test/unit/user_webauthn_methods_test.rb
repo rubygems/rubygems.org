@@ -53,7 +53,7 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
     end
 
     should "set a 5 minute expiry" do
-      assert_equal Time.utc(2023, 1, 1, 0, 5, 0), @webauthn_verification.path_token_expires_at
+      assert_equal Time.utc(2023, 1, 1, 0, 2, 0), @webauthn_verification.path_token_expires_at
     end
 
     should "store a path token in the database" do
