@@ -337,6 +337,10 @@ en:
       owner_heading: Ownership Notifications
       owner_request_heading: Ownership Request Notifications
       push_heading: Push Notifications
+  webauthn_verification:
+    title: Authenticate with Security Device
+    authenticating_as: Authenticating as
+    authenticate: Authenticate
   owners:
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem

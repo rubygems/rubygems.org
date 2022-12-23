@@ -183,6 +183,7 @@ Rails.application.routes.draw do
 
     resources :ownership_calls, only: :index
     resources :webauthn_credentials, only: :destroy
+    get 'webauthn_verification/:webauthn_token', to: 'webauthn_verifications#verify', as: 'webauthn_verification'
 
     ################################################################################
     # Clearance Overrides and Additions
