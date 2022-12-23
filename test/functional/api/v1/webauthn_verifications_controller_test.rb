@@ -32,12 +32,12 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
 
       if format == :plain
         should "return only the Webauthn verification URL with path token" do
-          assert_equal @response.body, "example.com/webauthn/#{@token}"
+          assert_equal @response.body, "http://test.host/webauthn_verification/#{@token}"
         end
       else
         should "return a YAML or JSON document with path token" do
           response = YAML.safe_load(@response.body)
-          assert_equal response["path"], "example.com/webauthn/#{@token}"
+          assert_equal response["path"], "http://test.host/webauthn_verification/#{@token}"
         end
 
         should "return a YAML or JSON document with path expiry" do
