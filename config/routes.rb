@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         end
       end
       resource :multifactor_auth, only: :show
+      resource :webauthn_verification, only: :create
       resources :profiles, only: :show
       get "profile/me", to: "profiles#me"
       resources :downloads, only: :index do
