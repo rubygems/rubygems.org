@@ -27,4 +27,12 @@ module UserWebauthnMethods
       user_verification: "discouraged"
     )
   end
+
+  def refresh_webauthn_verification
+    self.webauthn_verification = WebauthnVerification.create(
+      path_token: SecureRandom.base58(16),
+      path_token_expires_at: 2.minutes.from_now,
+      user_id: id
+    )
+  end
 end
