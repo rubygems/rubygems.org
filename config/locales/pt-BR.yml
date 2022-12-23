@@ -385,6 +385,10 @@ pt-BR:
       owner_heading:
       owner_request_heading:
       push_heading:
+  webauthn_verification:
+    title:
+    authenticating_as:
+    authenticate:
   owners:
     confirm:
       confirmed_email:
