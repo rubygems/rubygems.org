@@ -27,11 +27,11 @@ Lint/UselessMethodDefinition:
   Exclude:
     - 'config/initializers/gem_version_monkeypatch.rb'
 
-# Offense count: 15
+# Offense count: 16
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
 Metrics/BlockLength:
-  Max: 186
+  Max: 187
 
 # Offense count: 1
 # Configuration parameters: IgnoredMethods.
