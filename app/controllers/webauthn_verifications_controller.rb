@@ -8,11 +8,11 @@ class WebauthnVerificationsController < ApplicationController
   private
 
   def set_user
-    token = WebauthnVerification.find_by(path_token: webauthn_token_param)
-    if !token || token.path_token_expires_at < Time.now.utc
+    verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
+    if !verification || verification.path_token_expires_at < Time.now.utc
       render_not_found
     else
-      @user = token.user
+      @user = verification.user
     end
   end
 
