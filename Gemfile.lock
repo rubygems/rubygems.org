@@ -151,11 +151,11 @@ GEM
     elasticsearch-api (7.10.1)
       multi_json
     elasticsearch-dsl (0.1.10)
-    elasticsearch-model (7.1.1)
+    elasticsearch-model (7.2.1)
       activesupport (> 3)
-      elasticsearch (> 1)
+      elasticsearch (~> 7)
       hashie
-    elasticsearch-rails (7.1.1)
+    elasticsearch-rails (7.2.1)
     elasticsearch-transport (7.10.1)
       faraday (~> 1)
       multi_json
@@ -168,7 +168,7 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faraday (1.10.0)
+    faraday (1.10.2)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
@@ -184,8 +184,8 @@ GEM
     faraday-em_synchrony (1.0.0)
     faraday-excon (1.1.0)
     faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.3)
-      multipart-post (>= 1.2, < 3)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
@@ -201,7 +201,7 @@ GEM
     globalid (1.0.0)
       activesupport (>= 5.0)
     gravtastic (3.2.6)
-    hashie (4.1.0)
+    hashie (5.0.0)
     high_voltage (3.1.2)
     honeybadger (5.0.2)
     http-accept (1.7.0)
@@ -264,7 +264,7 @@ GEM
       ruby2_keywords (>= 0.0.5)
     msgpack (1.6.0)
     multi_json (1.15.0)
-    multipart-post (2.1.1)
+    multipart-post (2.2.3)
     net-imap (0.2.3)
       digest
       net-protocol

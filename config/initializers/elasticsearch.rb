@@ -29,5 +29,5 @@ end
 if Rails.env.development?
   tracer = ActiveSupport::Logger.new('log/elasticsearch.log')
   tracer.level = Logger::DEBUG
-  Elasticsearch::Model.client.transport.tracer = tracer
+  Elasticsearch::Model.client.transport.transport.tracer = tracer
 end
