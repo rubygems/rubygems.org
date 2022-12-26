@@ -12,8 +12,8 @@ jobs:
     name: Rubocop
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
+    - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+    - uses: ruby/setup-ruby@03b78bdda287ae04217ee12e4b64996630a03542 # v1.131.0
       with:
         bundler-cache: true
     - name: Rubocop
@@ -22,8 +22,8 @@ jobs:
     name: Brakeman
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
+    - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+    - uses: ruby/setup-ruby@03b78bdda287ae04217ee12e4b64996630a03542 # v1.131.0
       with:
         bundler-cache: true
     - name: Brakeman
