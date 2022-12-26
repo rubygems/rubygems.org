@@ -298,6 +298,10 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@version.dependencies.runtime.count)
       assert page.has_content?(@version.dependencies.development.count)
     end
+    should "show proper links to dependencies" do
+      assert page.has_link?(@runtime.rubygem.name, href: "/gems/#{@runtime.rubygem.name}")
+      assert page.has_link?(@development.rubygem.name, href: "/gems/#{@development.rubygem.name}")
+    end
   end
 
   context "On GET to show for a gem with dependencies that are unresolved" do

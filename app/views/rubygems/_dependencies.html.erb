@@ -5,7 +5,7 @@
       <% dependencies.each do |dependency| %>
         <% dependency.rubygem.tap do |rubygem| %>
           <div class="<%= class_names("gem__requirement-wrap", "gem__unregistered": !rubygem) %>">
-            <%= link_to_if rubygem, tag.strong(rubygem&.name || dependency.name), {}, class: "t-list__item" %>
+            <%= link_to_if rubygem, tag.strong(rubygem&.name || dependency.name), rubygem, class: "t-list__item" %>
             <%= dependency.clean_requirements %>
           </div>
         <% end %>
