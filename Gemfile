@@ -29,7 +29,7 @@ gem "shoryuken", "~> 4.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
 gem "unicorn", "~> 5.8.0"
 gem "validates_formatting_of"
-gem "elasticsearch", "~> 7.17"
+gem "elasticsearch", "= 7.13.3"
 gem "elasticsearch-model", "~> 7.2"
 gem "elasticsearch-rails", "~> 7.2"
 gem "elasticsearch-dsl", "~> 0.1.2"
