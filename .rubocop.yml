@@ -36,7 +36,6 @@ Rails/FilePath:
 Rails/RakeEnvironment:
   Exclude:
     - lib/tasks/gen_erd.rake
-    - lib/tasks/elasticsearch.rake
 
 Rails/UnknownEnv:
   Environments:

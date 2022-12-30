@@ -151,11 +151,6 @@ GEM
     elasticsearch-api (7.10.1)
       multi_json
     elasticsearch-dsl (0.1.10)
-    elasticsearch-model (7.1.1)
-      activesupport (> 3)
-      elasticsearch (> 1)
-      hashie
-    elasticsearch-rails (7.1.1)
     elasticsearch-transport (7.10.1)
       faraday (~> 1)
       multi_json
@@ -201,7 +196,7 @@ GEM
     globalid (1.0.0)
       activesupport (>= 5.0)
     gravtastic (3.2.6)
-    hashie (4.1.0)
+    hashie (5.0.0)
     high_voltage (3.1.2)
     honeybadger (5.0.2)
     http-accept (1.7.0)
@@ -413,6 +408,9 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    searchkick (5.1.1)
+      activemodel (>= 5.2)
+      hashie
     selenium-webdriver (4.7.1)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -510,10 +508,7 @@ DEPENDENCIES
   delayed_job
   delayed_job_active_record
   elasticsearch (~> 7.10.1)
-  elasticsearch-api (~> 7.10.1)
   elasticsearch-dsl (~> 0.1.2)
-  elasticsearch-model (~> 7.0)
-  elasticsearch-rails (~> 7.0)
   elasticsearch-transport (~> 7.10.1)
   factory_bot_rails
   faraday_middleware-aws-sigv4 (~> 0.3)
@@ -551,6 +546,7 @@ DEPENDENCIES
   rubocop-performance (~> 1.12)
   rubocop-rails (~> 2.16)
   sassc-rails
+  searchkick
   selenium-webdriver
   shoryuken (~> 4.0)
   shoulda

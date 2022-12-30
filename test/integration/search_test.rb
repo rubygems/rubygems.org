@@ -1,7 +1,7 @@
 require "test_helper"
 
 class SearchTest < SystemTest
-  include ESHelper
+  include SearchKickHelper
 
   setup do
     Rubygem.__elasticsearch__.create_index! force: true

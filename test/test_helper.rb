@@ -31,6 +31,8 @@ Mocha.configure do |c|
   c.strict_keyword_argument_matching = true
 end
 
+Rubygem.searchkick_reindex(import: false)
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include GemHelpers

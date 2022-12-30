@@ -2,7 +2,7 @@ require "test_helper"
 require "capybara/minitest"
 
 class AdvancedSearchTest < SystemTest
-  include ESHelper
+  include SearchKickHelper
 
   setup do
     headless_chrome_driver
@@ -24,6 +24,8 @@ class AdvancedSearchTest < SystemTest
   end
 
   test "enter inside any field will submit form" do
+    import_and_refresh
+
     ["#name", "#summary", "#description", "#downloads", "#updated"].each do |el|
       visit advanced_search_path
       find(el).send_keys(:return)
@@ -32,6 +34,8 @@ class AdvancedSearchTest < SystemTest
   end
 
   test "forms search query out of advanced attributes" do
+    import_and_refresh
+
     fill_in "name", with: "hello"
     fill_in "summary", with: "world"
     fill_in "description", with: "foo"

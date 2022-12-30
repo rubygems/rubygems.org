@@ -1,7 +1,7 @@
 require "test_helper"
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
-  include ESHelper
+  include SearchKickHelper
 
   setup do
     @sample_log = Rails.root.join("test", "sample_logs", "fastly-fake.log").read
@@ -20,7 +20,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
     }
     @job = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
     create(:gem_download)
-    Rubygem.__elasticsearch__.create_index! force: true
+    import_and_refresh
   end
 
   teardown do

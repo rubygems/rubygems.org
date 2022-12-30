@@ -119,7 +119,7 @@ class Pusher
       Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
     end
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
-    rubygem.delay.index_document
+    rubygem.delay.reindex
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?
     StatsD.increment "push.success"

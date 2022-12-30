@@ -1,17 +1,17 @@
 require "test_helper"
 
 class RubygemSearchableTest < ActiveSupport::TestCase
-  include ESHelper
+  include SearchKickHelper
 
   setup do
-    Rubygem.__elasticsearch__.create_index! force: true
+    Rubygem.searchkick_index.delete if Rubygem.searchkick_index.exists?
   end
 
-  context "#as_indexed_json" do
+  context "#search_data" do
     setup do
       @rubygem = create(:rubygem, name: "example_gem", downloads: 10)
       create(:version, number: "1.0.0", rubygem: @rubygem)
-      create(:version,
+      version = create(:version,
         number: "1.0.1",
         rubygem: @rubygem,
         summary: "some summary",
@@ -25,15 +25,19 @@ class RubygemSearchableTest < ActiveSupport::TestCase
           "funding_uri"       => "http://example.com",
           "documentation_uri" => "http://example.com"
         })
+      dev_gem = create(:rubygem, name: "example_gem_dev_dep")
+      run_gem = create(:rubygem, name: "example_gem_run_dep")
+      @dev_dep = create(:dependency, :development, rubygem: dev_gem, version: version)
+      @run_dep = create(:dependency, :runtime, rubygem: run_gem, version: version)
     end
 
     should "return a hash" do
-      json = @rubygem.as_indexed_json
+      json = @rubygem.search_data
       assert_equal json.class, Hash
     end
 
     should "set values from most recent versions" do
-      json = @rubygem.as_indexed_json
+      json = @rubygem.search_data
 
       expected_hash = {
         name:              "example_gem",
@@ -67,7 +71,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         summary:           "some summary",
         description:       "some description",
         updated:           @rubygem.updated_at,
-        dependencies:      { development: [], runtime: [] }
+        dependencies:      { development: [@dev_dep], runtime: [@run_dep] }
       }
 
       expected_hash.each do |k, v|
@@ -152,15 +156,17 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
     should "return all terms of source" do
       _, response = ElasticSearcher.new("example_gem").search
+      result = response.response["hits"]["hits"].first["_source"]
+
       hash = {
-        name: "example_gem",
-        downloads: 10,
-        summary: "some summary",
-        description: "some description"
+        "name" => "example_gem",
+        "downloads" => 10,
+        "summary" => "some summary",
+        "description" => "some description"
       }
 
       hash.each do |k, v|
-        assert_equal v, response.results.first._source[k]
+        assert_equal v, result[k]
       end
     end
   end
@@ -177,7 +183,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     should "suggest names of possible gems" do
       _, response = ElasticSearcher.new("keywor").search
       suggestions = %w[keyword keywo keywordo]
-      assert_equal suggestions, response.suggestions.terms
+      assert_equal suggestions, response.suggestions
     end
 
     should "return names of suggestion gems" do
@@ -263,7 +269,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     context "exception handling" do
       setup { import_and_refresh }
 
-      context "Elasticsearch::Transport::Transport::Errors::BadRequest" do
+      context "Searchkick::InvalidQueryError" do
         setup do
           @ill_formated_query = "updated:[2016-08-10 TO }"
         end
@@ -330,6 +336,19 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
       assert_equal 1, response.size
       assert_equal "term-ansicolor", response.first.name
+    end
+  end
+
+  # ensure search indexing doesn't block storing of model
+  # changes since ES can be down and indexing is done in async way
+  context "automated indexing" do
+    should "be disabled" do
+      requires_toxiproxy
+
+      Toxiproxy[:elasticsearch].down do
+        rubygem = create(:rubygem, name: "common-gem", number: "0.0.1", downloads: 10)
+        assert rubygem.update(name: "renamed-gem")
+      end
     end
   end
 end
