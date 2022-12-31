@@ -289,7 +289,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         end
       end
 
-      context "Elasticsearch::Transport::Transport::Errors" do
+      context "OpenSearch::Transport::Transport::Errors" do
         setup do
           Rubygem.expects(:legacy_search).with("something").returns(Rubygem.all)
         end
