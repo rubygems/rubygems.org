@@ -1,12 +1,12 @@
 require "test_helper"
 
 class WebauthnVerificationsControllerTest < ActionController::TestCase
-  context "#verify" do
+  context "#prompt" do
     context "when given an expired webauthn token" do
       setup do
         @user = create(:user)
         token = create(:webauthn_verification, user: @user, path_token_expires_at: 1.minute.ago).path_token
-        get :verify, params: { webauthn_token: token }
+        get :prompt, params: { webauthn_token: token }
       end
 
       should "return a 404" do
@@ -17,7 +17,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     context "when given an invalid webauthn token" do
       setup do
         @user = create(:user)
-        get :verify, params: { webauthn_token: "not_valid1234" }
+        get :prompt, params: { webauthn_token: "not_valid1234" }
       end
 
       should "return a 404" do
@@ -30,7 +30,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         @user = create(:user)
         create(:webauthn_credential, user: @user)
         token = create(:webauthn_verification, user: @user).path_token
-        get :verify, params: { webauthn_token: token }
+        get :prompt, params: { webauthn_token: token }
       end
 
       should respond_with :success
