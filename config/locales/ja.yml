@@ -403,6 +403,7 @@ ja:
       email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
       enter_password: パスワードを入力してください。
       hide_email: メールアドレスを公開しない
+      optional_mastodon_handle: Mastodonのユーザー名(任意,公開)
       optional_twitter_username: Twitterのユーザー名(任意,公開)
       title: プロフィールを編集する
       delete:

@@ -422,6 +422,7 @@ nl:
       email_awaiting_confirmation:
       enter_password:
       hide_email:
+      optional_mastodon_handle:
       optional_twitter_username:
       title: Wijzig profiel
       delete:

@@ -73,6 +73,18 @@
           </p>
         <% end %>
 
+        <% if @user.mastodon_handle.present? %>
+          <%=
+            image_tag(
+              "/images/mastodon_icon.png",
+              alt: "Mastodon icon",
+              class: "profile__header__icon"
+            )
+          %>
+
+          <%= mastodon_handle(user) %>
+        <% end %>
+
         <% if @user.twitter_username.present? %>
           <%=
             image_tag(

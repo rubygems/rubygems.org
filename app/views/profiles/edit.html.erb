@@ -17,6 +17,25 @@
   </div>
 
   <div class="text_field">
+    <%= form.label :mastodon_handle, class: 'form__label form__label__icon-container' do %>
+      <%=
+        image_tag("/images/mastodon_icon.png", alt: 'Mastodon icon', class: 'form__label__icon')
+      %>
+
+      <span class='form__label__text'>Mastodon handle</span>
+    <% end %>
+
+    <p class='form__field__instructions'>
+      <%= t('.optional_mastodon_handle') %>
+    </p>
+
+    <div class="form__input__addon-container form__input__addon-left">
+      <span class="form__input__addon">@</span>
+      <%= form.text_field(:mastodon_handle, class: 'form__input') %>
+    </div>
+  </div>
+
+  <div class="text_field">
     <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
       <%=
         image_tag("/images/twitter_icon.png", alt: 'Twitter icon', class: 'form__label__icon')

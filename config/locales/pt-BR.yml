@@ -433,6 +433,7 @@ pt-BR:
       email_awaiting_confirmation:
       enter_password:
       hide_email: Não mostrar meu email
+      optional_mastodon_handle:
       optional_twitter_username:
       title: Editar Perfil
       delete:
