@@ -1,8 +1,8 @@
 class WebauthnVerificationsController < ApplicationController
-  before_action :set_user, only: :verify
+  before_action :set_user, only: :prompt
 
-  def verify
-    # TODO: Verify webauthn
+  def prompt
+    # TODO: Set challenge variables
   end
 
   private
