@@ -319,6 +319,7 @@ pt-BR:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp:
+    session_expired:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
