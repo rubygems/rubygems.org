@@ -338,11 +338,11 @@ en:
       owner_heading: Ownership Notifications
       owner_request_heading: Ownership Request Notifications
       push_heading: Push Notifications
-  webauthn_verification:
-    title: Authenticate with Security Device
-    authenticating_as: Authenticating as
-    authenticate: Authenticate
+  webauthn_verifications:
     prompt:
+      title: Authenticate with Security Device
+      authenticating_as: Authenticating as
+      authenticate: Authenticate
       no_webauthn_devices: You don't have any security devices enabled
   owners:
     confirm:
