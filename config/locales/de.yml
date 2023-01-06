@@ -374,6 +374,8 @@ de:
     title:
     authenticating_as:
     authenticate:
+    prompt:
+      no_webauthn_devices:
   owners:
     confirm:
       confirmed_email:
