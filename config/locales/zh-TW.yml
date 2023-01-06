@@ -340,6 +340,8 @@ zh-TW:
     title:
     authenticating_as:
     authenticate:
+    prompt:
+      no_webauthn_devices:
   owners:
     confirm:
       confirmed_email:
@@ -531,7 +533,6 @@ zh-TW:
       otp_or_recovery:
       security_device:
       verify_code:
-
   stats:
     index:
       title:
