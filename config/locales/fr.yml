@@ -394,11 +394,11 @@ fr:
       owner_heading:
       owner_request_heading:
       push_heading:
-  webauthn_verification:
-    title:
-    authenticating_as:
-    authenticate:
+  webauthn_verifications:
     prompt:
+      title:
+      authenticating_as:
+      authenticate:
       no_webauthn_devices:
   owners:
     confirm:
