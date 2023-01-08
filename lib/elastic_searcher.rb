@@ -13,7 +13,7 @@ class ElasticSearcher
     )
     result.response # ES query is triggered here to allow fallback. avoids lazy loading done in the view
     [nil, result]
-  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, Elasticsearch::Transport::Transport::Error => e
+  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, OpenSearch::Transport::Transport::Error => e
     result = Rubygem.legacy_search(@query).page(@page)
     [error_msg(e), result]
   end
@@ -22,7 +22,7 @@ class ElasticSearcher
     result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash, page: @page, per_page: Kaminari.config.default_per_page,
 load: false)
     result.response["hits"]["hits"].map { |hit| hit["_source"] }
-  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, Elasticsearch::Transport::Transport::Error
+  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, OpenSearch::Transport::Transport::Error
     Rubygem.legacy_search(@query).page(@page)
   end
 
@@ -30,7 +30,7 @@ load: false)
     result = Rubygem.searchkick_search(body: suggestions_definition.to_hash, page: @page, per_page: Kaminari.config.default_per_page, load: false)
     result = result.response["suggest"]["completion_suggestion"][0]["options"]
     result.map { |gem| gem["_source"]["name"] }
-  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, Elasticsearch::Transport::Transport::Error
+  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, OpenSearch::Transport::Transport::Error
     Array(nil)
   end
 
@@ -40,7 +40,7 @@ load: false)
     query_str = @query
     source_array = for_api ? api_source : ui_source
 
-    Elasticsearch::DSL::Search.search do
+    OpenSearch::DSL::Search.search do
       query do
         function_score do
           query do
@@ -96,7 +96,7 @@ load: false)
   def suggestions_definition
     query_str = @query
 
-    Elasticsearch::DSL::Search.search do
+    OpenSearch::DSL::Search.search do
       suggest :completion_suggestion, prefix: query_str, completion: { field: "suggest", contexts: { yanked: false }, size: 30 }
       source "name"
     end

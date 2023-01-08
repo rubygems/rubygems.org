@@ -145,15 +145,6 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    elasticsearch (7.10.1)
-      elasticsearch-api (= 7.10.1)
-      elasticsearch-transport (= 7.10.1)
-    elasticsearch-api (7.10.1)
-      multi_json
-    elasticsearch-dsl (0.1.10)
-    elasticsearch-transport (7.10.1)
-      faraday (~> 1)
-      multi_json
     email_validator (2.2.3)
       activemodel
     erubi (1.11.0)
@@ -280,6 +271,15 @@ GEM
     nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    opensearch-api (1.0.0)
+      multi_json
+    opensearch-dsl (0.2.1)
+    opensearch-ruby (1.0.1)
+      opensearch-api (= 1.0.0)
+      opensearch-transport (~> 1.0.0)
+    opensearch-transport (1.0.1)
+      faraday (>= 1.0, < 3)
+      multi_json
     openssl (3.0.1)
     openssl-signature_algorithm (1.2.1)
       openssl (> 2.0, < 3.1)
@@ -507,9 +507,6 @@ DEPENDENCIES
   dalli
   delayed_job
   delayed_job_active_record
-  elasticsearch (~> 7.10.1)
-  elasticsearch-dsl (~> 0.1.2)
-  elasticsearch-transport (~> 7.10.1)
   factory_bot_rails
   faraday_middleware-aws-sigv4 (~> 0.3)
   gravtastic
@@ -526,6 +523,8 @@ DEPENDENCIES
   minitest
   mocha
   newrelic_rpm
+  opensearch-dsl (~> 0.2.0)
+  opensearch-ruby (~> 1.0.0)
   pg
   pry-byebug
   rack
