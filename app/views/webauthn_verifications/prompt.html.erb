@@ -1,8 +1,8 @@
-<% @title = t("webauthn_verification.title")%>
+<% @title = t(".title")%>
 
 <% if @user.webauthn_credentials.any? %>
   <div class="t-body">
-    <h2><%= t("webauthn_verification.authenticating_as") %> <%= @user.name %></h2>
+    <h2><%= t(".authenticating_as") %> <%= @user.name %></h2>
     <p><%= t("settings.edit.webauthn_credential_note") %></p>
   </div>
 
@@ -10,7 +10,7 @@
     <div class="form_bottom">
       <p hidden class="l-text-red-600 js-webauthn-session--error"></p>
 
-      <%= submit_tag t("webauthn_verification.authenticate"), class: 'js-webauthn-session--submit form__submit form__submit--no-hover' %>
+      <%= submit_tag t(".authenticate"), class: 'js-webauthn-session--submit form__submit form__submit--no-hover' %>
     </div>
   <% end %>
 <% end %>
