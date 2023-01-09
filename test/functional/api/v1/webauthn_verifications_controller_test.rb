@@ -1,5 +1,7 @@
 require "test_helper"
 
+# Not to be confused with WebauthnVerificationsControllerTest. This is for the API.
+
 class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
   should "route new paths to new controller" do
     route = { controller: "api/v1/webauthn_verifications", action: "create" }

@@ -1,3 +1,5 @@
+# This controller is for the user interface Webauthn challenge after a user follows a link generated
+# by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
   before_action :set_user
 

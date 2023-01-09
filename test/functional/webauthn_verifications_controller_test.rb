@@ -1,5 +1,7 @@
 require "test_helper"
 
+# Not to be confused with Api::V1::WebauthnVerificationsControllerTest. This is for the UI.
+
 class WebauthnVerificationsControllerTest < ActionController::TestCase
   context "#prompt" do
     context "when given an expired webauthn token" do
