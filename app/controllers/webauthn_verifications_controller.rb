@@ -1,16 +1,16 @@
 # This controller is for the user interface Webauthn challenge after a user follows a link generated
 # by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
-  before_action :set_user
+  before_action :set_verification, :set_user
+  after_action :expire_webauthn_verification, only: :authenticate
 
   def prompt
-    redirect_to root_path, alert: t("webauthn_verifications.prompt.no_webauthn_devices") if @user.webauthn_credentials.blank?
+    redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
     @webauthn_options = @user.webauthn_options_for_get
 
     session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge,
-      "user" => @user.id
+      "challenge" => @webauthn_options.challenge
     }
   end
 
@@ -37,13 +37,20 @@ class WebauthnVerificationsController < ApplicationController
 
   private
 
+  def set_verification
+    @verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
+
+    render_not_found and return unless @verification
+    redirect_to root_path, alert: t(".expired_or_already_used") if @verification.path_token_expires_at < Time.now.utc
+  end
+
   def set_user
-    verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
-    if !verification || verification.path_token_expires_at < Time.now.utc
-      render_not_found
-    else
-      @user = verification.user
-    end
+    @user = @verification.user
+  end
+
+  def expire_webauthn_verification
+    @verification.path_token_expires_at = 1.second.ago
+    @verification.save!
   end
 
   def webauthn_credential
