@@ -1,3 +1,5 @@
+# This controller generates a single-use link as part of the Webauthn CLI flow. It does not challenge
+# the user with a Webauthn login. That is done in controllers/webauthn_verifications_controller.
 class Api::V1::WebauthnVerificationsController < Api::BaseController
   def create
     authenticate_or_request_with_http_basic do |username, password|
