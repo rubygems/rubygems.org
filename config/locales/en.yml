@@ -375,6 +375,8 @@ en:
       authenticating_as: Authenticating as
       authenticate: Authenticate
       no_webauthn_devices: You don't have any security devices enabled
+    authenticate:
+      expired_or_already_used: The token in the link you used has either expired or been used already.
   owners:
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem
