@@ -320,6 +320,7 @@ es:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.
+    session_expired:
     otp_code: código OTP
     require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para
       reconfigurarla, primero tendrás que desactivarla.

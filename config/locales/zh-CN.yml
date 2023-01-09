@@ -291,6 +291,7 @@ zh-CN:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: 你的 OTP 码 不正确。
+    session_expired:
     otp_code: OTP 码
     require_mfa_disabled:
     require_mfa_enabled: 你的多重要素验证已停用，请先启用。

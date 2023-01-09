@@ -21,6 +21,10 @@ class SessionsControllerTest < ActionController::TestCase
     end
 
     context "on POST to mfa_create" do
+      setup do
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+      end
+
       context "when OTP is correct" do
         setup do
           @controller.session[:mfa_user] = @user.id
@@ -78,6 +82,35 @@ class SessionsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when OTP is correct but session expired" do
+      setup do
+        @controller.session[:mfa_user] = @user.id
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+        travel 30.minutes
+
+        post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+      end
+
+      should set_flash.now[:notice]
+      should respond_with :unauthorized
+
+      should "clear mfa_expires_at" do
+        assert_nil @controller.session[:mfa_expires_at]
+      end
+
+      should "render sign in page" do
+        assert page.has_content? "Sign in"
+      end
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "clear user name in session" do
+        assert_nil @controller.session[:mfa_user]
+      end
+    end
   end
 
   context "on POST to create" do
@@ -86,6 +119,7 @@ class SessionsControllerTest < ActionController::TestCase
         user = User.new(email_confirmed: true)
         User.expects(:authenticate).with("login", "pass").returns user
         post :create, params: { session: { who: "login", password: "pass" } }
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now
       end
 
       should respond_with :redirect
@@ -452,6 +486,47 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+    end
+
+    context "when providing credentials but the session expired" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+        @challenge = session[:webauthn_authentication]["challenge"]
+        @origin = "http://localhost:3000"
+        @rp_id = URI.parse(@origin).host
+        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        travel 30.minutes
+        post(
+          :webauthn_create,
+          params: {
+            credentials:
+              WebauthnHelpers.get_result(
+                client: @client,
+                challenge: @challenge
+              )
+          },
+          format: :json
+        )
+      end
+
+      should respond_with :unauthorized
+
+      should "clear mfa_expires_at" do
+        assert_nil @controller.session[:mfa_expires_at]
+      end
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
     end
   end
 
