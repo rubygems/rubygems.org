@@ -7,8 +7,7 @@ class WebauthnVerificationsController < ApplicationController
     @webauthn_options = @user.webauthn_options_for_get
 
     session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge,
-      "user" => @user.id
+      "challenge" => @webauthn_options.challenge
     }
   end
 
