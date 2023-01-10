@@ -59,7 +59,9 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - test/**/*.rb
-    - 'config/routes.rb'
+    - lib/tasks/**/*.rake
+    - app/models/concerns/**/*.rb
+    - config/routes.rb
 
 Metrics/ClassLength:
   Max: 350 # TODO: Lower to 100
