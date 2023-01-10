@@ -58,6 +58,8 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - test/**/*.rb
+    - lib/tasks/**/*.rake
+    - app/models/concerns/**/*.rb
     - config/routes.rb
 
 Metrics/ClassLength:
