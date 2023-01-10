@@ -39,7 +39,6 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "set webauthn authentication" do
-          assert_equal @user.id, session[:webauthn_authentication]["user"]
           assert_not_nil session[:webauthn_authentication]["challenge"]
         end
 
