@@ -6,7 +6,7 @@
     <p><%= t("settings.edit.webauthn_credential_note") %></p>
   </div>
 
-  <%= form_tag webauthn_verification_path, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
+  <%= form_tag authenticate_webauthn_verification_path, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
     <div class="form_bottom">
       <p hidden class="l-text-red-600 js-webauthn-session--error"></p>
 
