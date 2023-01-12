@@ -123,6 +123,11 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should "return error message" do
         assert_equal "Credentials required", JSON.parse(response.body)["message"]
       end
+
+      should "not expire the path token" do
+        verification = WebauthnVerification.find_by!(path_token: @token)
+        assert_equal Time.utc(2023, 1, 1, 0, 2, 0), verification.path_token_expires_at
+      end
     end
 
     context "when providing wrong credentials" do
