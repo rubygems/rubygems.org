@@ -23,15 +23,17 @@ class WebauthnVerificationsController < ApplicationController
 
     user_webauthn_credential.update!(sign_count: webauthn_credential.sign_count)
     # TODO: generate webauthn verification otp
+    @webauthn_otp = 12_345
 
     @verification.expire_path_token
 
-    # TODO: render html with webauthn verification otp instead of json
-    render json: { message: "success" }
+    render :success
   rescue WebAuthn::Error => e
-    render json: { message: e.message }, status: :unauthorized
+    flash.now.notice = e.message
+    render :prompt, status: :unauthorized
   rescue ActionController::ParameterMissing
-    render json: { message: "Credentials required" }, status: :unauthorized
+    flash.now.notice = "Credentials required"
+    render :prompt, status: :unauthorized
   ensure
     session.delete(:webauthn_authentication)
   end

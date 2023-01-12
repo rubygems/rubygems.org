@@ -185,8 +185,7 @@ Rails.application.routes.draw do
     resources :webauthn_credentials, only: :destroy
     resource :webauthn_verification, only: [] do
       get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
-      # TODO: add html as a valid format
-      post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate, constraints: { format: /json/ }
+      post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate
     end
 
     ################################################################################
