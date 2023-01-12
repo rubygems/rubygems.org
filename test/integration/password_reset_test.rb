@@ -97,6 +97,29 @@ class PasswordResetTest < SystemTest
     assert page.has_content?("Sign out")
   end
 
+  test "resetting password when webauthn is enabled" do
+    create_webauthn_credential
+
+    forgot_password_with @user.email
+
+    visit password_reset_link
+
+    assert page.has_content? "Multi-factor authentication"
+    assert page.has_content? "Security Device"
+
+    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+
+    click_on "Authenticate with security device"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    find(:css, ".header__popup-link").click
+    assert page.has_content?("SIGN OUT")
+
+    @authenticator.remove!
+  end
+
   test "resetting password with pending email change" do
     visit sign_in_path
 
@@ -127,5 +150,33 @@ class PasswordResetTest < SystemTest
 
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
     assert_equal email, @user.email
+  end
+
+  def create_webauthn_credential
+    fullscreen_headless_chrome_driver
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.reload.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+    visit edit_settings_path
+
+    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
+    @authenticator = page.driver.browser.add_virtual_authenticator(options)
+    WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
+
+    credential_nickname = "new cred"
+    fill_in "Nickname", with: credential_nickname
+    click_on "Register device"
+
+    find("div", text: credential_nickname, match: :first)
+
+    find(:css, ".header__popup-link").click
+    click_on "Sign out"
+  end
+
+  teardown do
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 end

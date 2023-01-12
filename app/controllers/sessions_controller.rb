@@ -24,10 +24,10 @@ class SessionsController < Clearance::SessionsController
     @challenge = session.dig(:webauthn_authentication, "challenge")
 
     if params[:credentials].blank?
-      login_failure("Credentials required")
+      webauthn_verification_failure("Credentials required")
       return
     elsif !session_active?
-      login_failure(t("multifactor_auths.session_expired"))
+      webauthn_verification_failure(t("multifactor_auths.session_expired"))
       return
     end
 
@@ -47,7 +47,7 @@ class SessionsController < Clearance::SessionsController
 
     do_login
   rescue WebAuthn::Error => e
-    login_failure(e.message)
+    webauthn_verification_failure(e.message)
   ensure
     session.delete(:webauthn_authentication)
     session.delete(:mfa_expires_at)
@@ -105,16 +105,13 @@ class SessionsController < Clearance::SessionsController
 
   def login_failure(message)
     StatsD.increment "login.failure"
+    flash.now.notice = message
+    render "sessions/new", status: :unauthorized
+  end
 
-    respond_to do |format|
-      format.json do
-        render json: { message: message }, status: :unauthorized
-      end
-      format.html do
-        flash.now.notice = message
-        render template: "sessions/new", status: :unauthorized
-      end
-    end
+  def webauthn_verification_failure(message = nil)
+    flash.now.notice = message
+    render "sessions/prompt", status: :unauthorized
   end
 
   def session_params

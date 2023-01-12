@@ -6,8 +6,6 @@ class PasswordsController < Clearance::PasswordsController
       setup_mfa_authentication
       setup_webauthn_authentication
 
-      # TODO: Add session expiry
-
       render template: "multifactor_auths/otp_prompt"
     else
       render template: "passwords/edit"
@@ -30,12 +28,11 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def mfa_edit
-    if @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+    if mfa_edit_conditions_met?
       render template: "passwords/edit"
     else
-      @form_url       = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
-      flash.now.alert = t("multifactor_auths.incorrect_otp")
-      render template: "multifactor_auths/otp_prompt", status: :unauthorized
+      @form_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
+      login_failure(t("multifactor_auths.incorrect_otp"))
     end
   end
 
@@ -46,9 +43,6 @@ class PasswordsController < Clearance::PasswordsController
     if params[:credentials].blank?
       login_failure("Credentials required")
       return
-    # elsif !session_active?
-    #   login_failure(t("multifactor_auths.session_expired"))
-    #   return
     end
 
     @credential = WebAuthn::Credential.from_get(params[:credentials])
@@ -64,8 +58,9 @@ class PasswordsController < Clearance::PasswordsController
     )
 
     @webauthn_credential.update!(sign_count: @credential.sign_count)
-
     render template: "passwords/edit"
+  rescue WebAuthn::Error => e
+    webauthn_verification_failure(e.message)
   end
 
   private
@@ -79,6 +74,11 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def validate_confirmation_token
+    if params[:token].nil?
+      redirect_to root_path, alert: t("failure_when_forbidden")
+      return
+    end
+
     params[:token] = params[:token].gsub(/(\.json|\.html)$/, "")
 
     @user = find_user_for_edit
@@ -106,5 +106,19 @@ class PasswordsController < Clearance::PasswordsController
       "challenge" => @webauthn_options.challenge,
       "user" => @user.id
     }
+  end
+
+  def mfa_edit_conditions_met?
+    @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+  end
+
+  def webauthn_verification_failure(message = nil)
+    flash.now.alert = message
+    render template: "multifactor_auths/otp_prompt", status: :unauthorized
+  end
+
+  def login_failure(message)
+    flash.now.alert = message
+    render template: "multifactor_auths/otp_prompt", status: :unauthorized
   end
 end

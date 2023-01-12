@@ -10,12 +10,24 @@
     error.text(message);
   };
 
-  var handleResponse = function(submit, responseError, response) {
+  var handleJsonResponse = function(submit, responseError, response) {
     if (response.redirected) {
       window.location.href = response.url;
     } else {
       response.json().then(function (json) {
         setError(submit, responseError, json.message);
+      }).catch(function (error) {
+        setError(submit, responseError, error);
+      });
+    }
+  };
+
+  var handleHtmlResponse = function(submit, responseError, response) {
+    if (response.redirected) {
+      window.location.href = response.url;
+    } else {
+      response.text().then(function (html) {
+        document.body.innerHTML = html;
       }).catch(function (error) {
         setError(submit, responseError, error);
       });
@@ -83,7 +95,7 @@
           })
         });
       }).then(function (response) {
-        handleResponse(credentialSubmit, credentialError, response);
+        handleJsonResponse(credentialSubmit, credentialError, response);
       }).catch(function (error) {
         setError(credentialSubmit, credentialError, error);
       });
@@ -104,7 +116,7 @@
       navigator.credentials.get({
         publicKey: options
       }).then(function (credentials) {
-        return fetch(form.action + ".json", {
+        return fetch(form.action + ".html", {
           method: "POST",
           credentials: "same-origin",
           headers: {
@@ -116,7 +128,7 @@
           })
         });
       }).then(function (response) {
-        handleResponse(sessionSubmit, sessionError, response);
+        handleHtmlResponse(sessionSubmit, sessionError, response);
       }).catch(function (error) {
         setError(sessionSubmit, sessionError, error);
       });
