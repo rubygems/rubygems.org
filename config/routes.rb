@@ -202,6 +202,7 @@ Rails.application.routes.draw do
 
     resource :session, only: %i[create destroy] do
       post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+      post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
     end
@@ -220,11 +221,8 @@ Rails.application.routes.draw do
 
   ################################################################################
   # UI API
-  scope constraints: { format: :json }, defaults: { format: :json } do
-    resource :session, only: [] do
-      post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
-    end
 
+  scope constraints: { format: :json }, defaults: { format: :json } do
     resources :webauthn_credentials, only: :create do
       post :callback, on: :collection
     end

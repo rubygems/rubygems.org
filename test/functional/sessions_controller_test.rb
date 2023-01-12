@@ -428,7 +428,7 @@ class SessionsControllerTest < ActionController::TestCase
                 challenge: @challenge
               )
           },
-          format: :json
+          format: :html
         )
       end
 
@@ -449,11 +449,14 @@ class SessionsControllerTest < ActionController::TestCase
         )
         post(
           :webauthn_create,
-          format: :json
+          format: :html
         )
       end
 
       should respond_with :unauthorized
+      should "set flash notice" do
+        assert_equal "Credentials required", flash[:notice]
+      end
     end
 
     context "when providing wrong credentials" do
@@ -481,11 +484,14 @@ class SessionsControllerTest < ActionController::TestCase
                 challenge: @wrong_challenge
               )
           },
-          format: :json
+          format: :html
         )
       end
 
       should respond_with :unauthorized
+      should "set flash notice" do
+        assert_equal "WebAuthn::ChallengeVerificationError", flash[:notice]
+      end
     end
 
     context "when providing credentials but the session expired" do
@@ -514,7 +520,7 @@ class SessionsControllerTest < ActionController::TestCase
                 challenge: @challenge
               )
           },
-          format: :json
+          format: :html
         )
       end
 
@@ -526,6 +532,10 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "set flash notice" do
+        assert_equal "Your login page session has expired.", flash[:notice]
       end
     end
   end
