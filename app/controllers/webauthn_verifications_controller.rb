@@ -2,7 +2,6 @@
 # by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
   before_action :set_verification, :set_user
-  after_action :expire_webauthn_verification, only: :authenticate
 
   def prompt
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
@@ -24,6 +23,8 @@ class WebauthnVerificationsController < ApplicationController
 
     user_webauthn_credential.update!(sign_count: webauthn_credential.sign_count)
     # TODO: generate webauthn verification otp
+
+    expire_webauthn_verification
 
     # TODO: render html with webauthn verification otp instead of json
     render json: { message: "success" }
