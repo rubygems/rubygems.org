@@ -64,7 +64,8 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
       travel_to Time.utc(2023, 1, 1, 0, 0, 0) do
-        @token = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil).path_token
+        @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
+        @token = @verification.path_token
         get :prompt, params: { webauthn_token: @token }
       end
     end
@@ -94,7 +95,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
             format: :json
           )
         end
-        @user.webauthn_verification.reload
+        @verification.reload
       end
 
       should respond_with :success
@@ -124,7 +125,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
             format: :json
           )
         end
-        @user.webauthn_verification.reload
+        @verification.reload
       end
 
       should respond_with :unauthorized
@@ -138,8 +139,8 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should "not generate OTP" do
-        assert_nil @user.webauthn_verification.otp
-        assert_nil @user.webauthn_verification.otp_expires_at
+        assert_nil @verification.otp
+        assert_nil @verification.otp_expires_at
       end
     end
 
@@ -167,6 +168,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
             format: :json
           )
         end
+        @verification.reload
       end
 
       should respond_with :unauthorized
@@ -175,8 +177,8 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should "not generate OTP" do
-        assert_nil @user.webauthn_verification.otp
-        assert_nil @user.webauthn_verification.otp_expires_at
+        assert_nil @verification.otp
+        assert_nil @verification.otp_expires_at
       end
     end
 
