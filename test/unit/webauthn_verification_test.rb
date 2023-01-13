@@ -50,4 +50,23 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#generate_otp" do
+    setup do
+      @webauthn_verification = create(:webauthn_verification, otp: nil, otp_expires_at: nil)
+      @generated_time = Time.utc(2023, 1, 1, 0, 0, 0)
+      travel_to @generated_time do
+        @webauthn_verification.generate_otp
+      end
+      @webauthn_verification.reload
+    end
+
+    should "create a token that is 16 characters long" do
+      assert_equal 16, @webauthn_verification.otp.length
+    end
+
+    should "set a 2 minute expiry" do
+      assert_equal @generated_time + 2.minutes, @webauthn_verification.otp_expires_at
+    end
+  end
 end
