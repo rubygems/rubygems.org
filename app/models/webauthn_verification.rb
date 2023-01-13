@@ -13,4 +13,10 @@ class WebauthnVerification < ApplicationRecord
   def path_token_expired?
     path_token_expires_at < Time.now.utc
   end
+
+  def generate_otp
+    self.otp = SecureRandom.base58(16)
+    self.otp_expires_at = 2.minutes.from_now
+    save!
+  end
 end
