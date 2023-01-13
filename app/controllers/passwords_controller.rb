@@ -1,9 +1,13 @@
 class PasswordsController < Clearance::PasswordsController
-  before_action :validate_confirmation_token, only: %i[edit mfa_edit]
+  before_action :validate_confirmation_token, only: %i[edit mfa_edit webauthn_edit]
 
   def edit
-    if @user.mfa_enabled?
-      @form_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
+    if @user.mfa_enabled? || @user.webauthn_credentials.any?
+      setup_mfa_authentication
+      setup_webauthn_authentication
+
+      # TODO: Add session expiry
+
       render template: "multifactor_auths/otp_prompt"
     else
       render template: "passwords/edit"
@@ -35,6 +39,35 @@ class PasswordsController < Clearance::PasswordsController
     end
   end
 
+  def webauthn_edit
+    @user = User.find(session.dig(:webauthn_authentication, "user"))
+    @challenge = session.dig(:webauthn_authentication, "challenge")
+
+    if params[:credentials].blank?
+      login_failure("Credentials required")
+      return
+    # elsif !session_active?
+    #   login_failure(t("multifactor_auths.session_expired"))
+    #   return
+    end
+
+    @credential = WebAuthn::Credential.from_get(params[:credentials])
+
+    @webauthn_credential = @user.webauthn_credentials.find_by(
+      external_id: @credential.id
+    )
+
+    @credential.verify(
+      @challenge,
+      public_key: @webauthn_credential.public_key,
+      sign_count: @webauthn_credential.sign_count
+    )
+
+    @webauthn_credential.update!(sign_count: @credential.sign_count)
+
+    render template: "passwords/edit"
+  end
+
   private
 
   def url_after_update
@@ -46,6 +79,8 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def validate_confirmation_token
+    params[:token] = params[:token].gsub(/(\.json|\.html)$/, "")
+
     @user = find_user_for_edit
     redirect_to root_path, alert: t("failure_when_forbidden") unless @user&.valid_confirmation_token?
   end
@@ -53,5 +88,23 @@ class PasswordsController < Clearance::PasswordsController
   def deliver_email(user)
     mail = ::ClearanceMailer.change_password(user)
     mail.deliver_later
+  end
+
+  def setup_mfa_authentication
+    return if @user.mfa_disabled?
+    @form_mfa_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
+  end
+
+  def setup_webauthn_authentication
+    return if @user.webauthn_credentials.none?
+
+    @form_webauthn_url = webauthn_edit_user_password_url(@user, token: @user.confirmation_token)
+
+    @webauthn_options = @user.webauthn_options_for_get
+
+    session[:webauthn_authentication] = {
+      "challenge" => @webauthn_options.challenge,
+      "user" => @user.id
+    }
   end
 end

@@ -96,6 +96,43 @@ class PasswordsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on POST to webauthn_edit" do
+    context "with webauthn enabled" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        post(
+          :edit,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+        @challenge = session[:webauthn_authentication]["challenge"]
+        @origin = "http://localhost:3000"
+        @rp_id = URI.parse(@origin).host
+        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        post(
+          :webauthn_edit,
+          params: {
+            credentials:
+              WebauthnHelpers.get_result(
+                client: @client,
+                challenge: @challenge
+              )
+          },
+          format: :json
+        )
+      end
+
+      should respond_with :success
+      should "display edit form" do
+        assert page.has_content?("Reset password")
+      end
+    end
+  end
+
   context "on PUT to update" do
     setup do
       @user = create(:user)

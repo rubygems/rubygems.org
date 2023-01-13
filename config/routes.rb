@@ -203,6 +203,7 @@ Rails.application.routes.draw do
     resources :users, only: %i[new create] do
       resource :password, only: %i[create edit update] do
         post 'mfa_edit', to: 'passwords#mfa_edit', as: :mfa_edit
+        post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
       end
     end
 
