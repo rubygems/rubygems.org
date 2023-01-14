@@ -35,7 +35,7 @@ class SessionsController < Clearance::SessionsController
       session[:verification]  = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
       redirect_to session.delete(:redirect_uri) || root_path
     else
-      flash[:alert] = t("profiles.request_denied")
+      flash.now[:alert] = t("profiles.request_denied")
       render :verify, status: :unauthorized
     end
   end
