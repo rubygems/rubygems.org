@@ -266,19 +266,40 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "with correct credentials" do
       setup do
         authorize_with("#{@user.email}:#{@user.password}")
-        post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
-        Delayed::Worker.new.work_off
       end
 
-      should_return_api_key_successfully
+      context "oh successful save" do
+        setup do
+          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+          Delayed::Worker.new.work_off
+        end
 
-      should "deliver api key created email" do
-        refute_empty ActionMailer::Base.deliveries
-        email = ActionMailer::Base.deliveries.last
-        assert_equal [@user.email], email.to
-        assert_equal ["no-reply@mailer.rubygems.org"], email.from
-        assert_equal "New API key created for rubygems.org", email.subject
-        assert_match "test-key", email.body.to_s
+        should_return_api_key_successfully
+
+        should "deliver api key created email" do
+          refute_empty ActionMailer::Base.deliveries
+          email = ActionMailer::Base.deliveries.last
+          assert_equal [@user.email], email.to
+          assert_equal ["no-reply@mailer.rubygems.org"], email.from
+          assert_equal "New API key created for rubygems.org", email.subject
+          assert_match "test-key", email.body.to_s
+        end
+      end
+
+      context "on unsuccessful save" do
+        setup do
+          post :create, params: { name: "test-key", index_rubygems: "true", show_dashboard: "true" }, format: "text"
+        end
+
+        should respond_with :unprocessable_entity
+
+        should "not create api key" do
+          assert_empty @user.reload.api_keys
+        end
+
+        should "respond with error message" do
+          assert_equal "Show dashboard scope must be enabled exclusively", @response.body
+        end
       end
 
       context "with MFA param set" do
@@ -400,18 +421,40 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       setup do
         @api_key = create(:api_key, user: @user, key: "12345", push_rubygem: true)
         authorize_with("#{@user.email}:#{@user.password}")
-        put :update, params: { api_key: "12345", index_rubygems: "true", mfa: "true" }
-        @api_key.reload
       end
 
-      should respond_with :success
-      should "keep current scope enabled and update scope in params" do
-        assert_predicate @api_key, :can_index_rubygems?
-        assert_predicate @api_key, :can_push_rubygem?
+      context "on successful save" do
+        setup do
+          put :update, params: { api_key: "12345", index_rubygems: "true", mfa: "true" }
+          @api_key.reload
+        end
+
+        should respond_with :success
+        should "keep current scope enabled and update scope in params" do
+          assert_predicate @api_key, :can_index_rubygems?
+          assert_predicate @api_key, :can_push_rubygem?
+        end
+
+        should "update MFA" do
+          assert @api_key.mfa
+        end
       end
 
-      should "update MFA" do
-        assert @api_key.mfa
+      context "on unsucessful save" do
+        setup do
+          put :update, params: { api_key: "12345", push_rubygem: "true", show_dashboard: "true" }
+          @api_key.reload
+        end
+
+        should respond_with :unprocessable_entity
+        should "not update api key" do
+          refute_predicate @api_key, :can_show_dashboard?
+        end
+
+        should "respond with error message" do
+          error = "Failed to update scopes for the API key ci-key: [\"Show dashboard scope must be enabled exclusively\"]"
+          assert_equal @response.body, error
+        end
       end
     end
 

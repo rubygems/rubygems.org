@@ -8,7 +8,7 @@ class ClearanceMailer < ApplicationMailer
     @user = User.find(user["id"])
     mail from: Clearance.configuration.mailer_sender,
          to: @user.email,
-         subject: I18n.t(:change_password, scope: %i[clearance models clearance_mailer]) do |format|
+         subject: I18n.t("clearance.models.clearance_mailer.change_password") do |format|
            format.html
            format.text
          end

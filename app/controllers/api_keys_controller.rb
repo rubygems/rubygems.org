@@ -21,7 +21,7 @@ class ApiKeysController < ApplicationController
     @api_key = ApiKey.new(build_params)
 
     if @api_key.errors.present?
-      flash[:error] = @api_key.errors.full_messages.to_sentence
+      flash.now[:error] = @api_key.errors.full_messages.to_sentence
       @api_key = current_user.api_keys.build(api_key_params.merge(rubygem_id: nil))
       return render :new
     end
@@ -32,7 +32,7 @@ class ApiKeysController < ApplicationController
       session[:api_key] = key
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
-      flash[:error] = @api_key.errors.full_messages.to_sentence
+      flash.now[:error] = @api_key.errors.full_messages.to_sentence
       render :new
     end
   end
@@ -50,14 +50,14 @@ class ApiKeysController < ApplicationController
     @api_key.assign_attributes(api_key_params)
 
     if @api_key.errors.present?
-      flash[:error] = @api_key.errors.full_messages.to_sentence
+      flash.now[:error] = @api_key.errors.full_messages.to_sentence
       return render :edit
     end
 
     if @api_key.save
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
-      flash[:error] = @api_key.errors.full_messages.to_sentence
+      flash.now[:error] = @api_key.errors.full_messages.to_sentence
       render :edit
     end
   end

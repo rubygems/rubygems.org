@@ -2,7 +2,7 @@ require "test_helper"
 require "capybara/minitest"
 
 class AutocompletesTest < SystemTest
-  include ESHelper
+  include SearchKickHelper
 
   setup do
     headless_chrome_driver

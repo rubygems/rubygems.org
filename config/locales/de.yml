@@ -305,6 +305,7 @@ de:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp:
+    session_expired:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
@@ -326,6 +327,7 @@ de:
       qrcode_expired:
       success:
     recovery:
+      copied:
       continue:
       title:
       copy:
@@ -346,6 +348,7 @@ de:
       title:
       update:
       owner_heading:
+      owner_request_heading:
       push_heading:
   owners:
     confirm:
@@ -376,6 +379,11 @@ de:
   settings:
     edit:
       title:
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: Sind Sie sicher? Das kann nicht rückgängig gemacht werden.
         credentials_html: 'Wenn du %{gem_commands_link} über das Terminal oder über
@@ -384,11 +392,13 @@ de:
         key_is_html: Dein API-Schlüssel ist %{key}.
         link_text: Gem-Befehle
         reset: Zurücksetzen meines API-Schlüssels
+        reset_all:
         title: API-Zugang
       reset_password:
         title: Zurücksetzen des Passworts
       mfa:
         multifactor_auth:
+        otp:
         disabled_html:
         go_settings:
         enabled_html:
@@ -509,6 +519,7 @@ de:
       description:
       downloads:
       updated:
+      yanked:
     show:
       subtitle: für %{query}
       month_update:
@@ -526,6 +537,13 @@ de:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -603,3 +621,20 @@ de:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

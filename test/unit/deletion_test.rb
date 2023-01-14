@@ -1,12 +1,13 @@
 require "test_helper"
 
 class DeletionTest < ActiveSupport::TestCase
+  include SearchKickHelper
+
   setup do
     @user = create(:user)
     Pusher.new(@user, gem_file).process
     @version = Version.last
-    Rubygem.__elasticsearch__.create_index! force: true
-    Rubygem.import
+    import_and_refresh
   end
 
   should "be indexed" do
@@ -80,7 +81,7 @@ class DeletionTest < ActiveSupport::TestCase
 
     Delayed::Worker.new.work_off
 
-    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+    response = Searchkick.client.get index: "rubygems-#{Rails.env}",
                                                     id: @version.rubygem_id
     assert response["_source"]["yanked"]
   end
@@ -120,8 +121,8 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "purge fastly" do
-        Fastly.expects(:purge).with(path: "gems/#{@version.full_name}.gem").times(2)
-        Fastly.expects(:purge).with(path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz").times(2)
+        Fastly.expects(:purge).with({ path: "gems/#{@version.full_name}.gem" }).times(2)
+        Fastly.expects(:purge).with({ path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz" }).times(2)
 
         Delayed::Worker.new.work_off
       end

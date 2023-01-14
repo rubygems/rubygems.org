@@ -61,7 +61,7 @@ class SettingsTest < SystemTest
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
-    assert page.has_content? "You have not yet enabled multi-factor authentication."
+    assert page.has_content? "You have not yet enabled OTP based multi-factor authentication."
   end
 
   test "disabling multi-factor authentication with valid otp" do
@@ -72,7 +72,7 @@ class SettingsTest < SystemTest
     page.fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
     change_auth_level "Disabled"
 
-    assert page.has_content? "You have not yet enabled multi-factor authentication."
+    assert page.has_content? "You have not yet enabled OTP based multi-factor authentication."
     css = %(a[href="https://guides.rubygems.org/setting-up-multifactor-authentication"])
     assert page.has_css?(css)
   end
@@ -108,7 +108,7 @@ class SettingsTest < SystemTest
     page.fill_in "otp", with: recoveries.sample
     change_auth_level "Disabled"
 
-    assert page.has_content? "You have not yet enabled multi-factor authentication."
+    assert page.has_content? "You have not yet enabled OTP based multi-factor authentication."
   end
 
   test "Clicking MFA continue button without copying recovery codes creates confirm popup" do

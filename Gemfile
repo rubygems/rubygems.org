@@ -29,12 +29,9 @@ gem "shoryuken", "~> 4.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
 gem "unicorn", "~> 5.8.0"
 gem "validates_formatting_of"
-gem "elasticsearch", "~> 7.10.1"
-gem "elasticsearch-api", "~> 7.10.1"
-gem "elasticsearch-transport", "~> 7.10.1"
-gem "elasticsearch-model", "~> 7.0"
-gem "elasticsearch-rails", "~> 7.0"
-gem "elasticsearch-dsl", "~> 0.1.2"
+gem "opensearch-dsl", "~> 0.2.0"
+gem "opensearch-ruby", "~> 1.0.0"
+gem "searchkick"
 gem "faraday_middleware-aws-sigv4", "~> 0.3"
 gem "xml-simple"
 gem "compact_index", "~> 0.14.0"
@@ -43,6 +40,7 @@ gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
 gem "unpwn"
+gem "webauthn"
 
 # Logging
 gem "lograge"
@@ -62,7 +60,7 @@ group :development, :test do
 
   gem "brakeman", require: false
   gem "rubocop", "~> 1.23", require: false
-  gem "rubocop-rails", "~> 2.12", require: false
+  gem "rubocop-rails", "~> 2.16", require: false
   gem "rubocop-performance", "~> 1.12", require: false
   gem "rubocop-minitest", "~> 0.16", require: false
 end

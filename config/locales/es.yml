@@ -321,6 +321,7 @@ es:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.
+    session_expired:
     otp_code: código OTP
     require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para
       reconfigurarla, primero tendrás que desactivarla.
@@ -347,6 +348,7 @@ es:
         registrar un nuevo dispositivo.
       success: Has activado exitosamente la autenticación de múltiples factores.
     recovery:
+      copied:
       continue: Continuar
       title: Códigos de recuperación
       copy:
@@ -368,6 +370,7 @@ es:
       title: Notificación de email
       update: Actualizar
       owner_heading:
+      owner_request_heading:
       push_heading:
   owners:
     confirm:
@@ -398,6 +401,11 @@ es:
   settings:
     edit:
       title: Editar configuración
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: "¿Seguro? Este cambio no puede deshacerse."
         credentials_html: 'Si quieres usar %{gem_commands_link} desde la línea de
@@ -406,11 +414,13 @@ es:
         key_is_html: Tu clave de API es %{key}.
         link_text: Comandos de la gema
         reset: Reestablecer mi clave de API
+        reset_all:
         title: Acceso por API
       reset_password:
         title: Reestablecer contraseña
       mfa:
         multifactor_auth: Autenticación de múltiples factores
+        otp:
         disabled_html:
         go_settings: Registrar un nuevo dispositivo
         enabled_html:
@@ -554,6 +564,7 @@ es:
       description: Descripción
       downloads: Descargas
       updated: Actualizada
+      yanked:
     show:
       subtitle: para %{query}
       month_update: Actualizadas en el último mes (%{count})
@@ -571,6 +582,13 @@ es:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -648,3 +666,20 @@ es:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

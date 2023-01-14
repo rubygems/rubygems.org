@@ -254,6 +254,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           context "on PATCH to unconfirmed" do
             setup { patch :unconfirmed }
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+            should "set mfa_redirect_uri" do
+              assert_equal unconfirmed_email_confirmations_path, session[:mfa_redirect_uri]
+            end
           end
 
           context "on GET to new" do
@@ -302,6 +305,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           context "on PATCH to unconfirmed" do
             setup { patch :unconfirmed }
             should redirect_to("the edit settings page") { edit_settings_path }
+            should "set mfa_redirect_uri" do
+              assert_equal unconfirmed_email_confirmations_path, session[:mfa_redirect_uri]
+            end
           end
 
           context "on GET to new" do

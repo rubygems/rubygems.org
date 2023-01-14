@@ -92,8 +92,8 @@ class GemDownload < ApplicationRecord
       increment_rubygems(updates_by_gem.keys, updates_by_gem.values)
 
       # update ES index of rubygems
-      Rubygem.__elasticsearch__.client.bulk body: bulk_update_query
-    rescue Faraday::ConnectionFailed, Elasticsearch::Transport::Transport::Error => e
+      Searchkick.client.bulk body: bulk_update_query
+    rescue Faraday::ConnectionFailed, Searchkick::Error, OpenSearch::Transport::Transport::Error => e
       Rails.logger.debug { "ES update: #{updates_by_gem} has failed: #{e.message}" }
     end
 

@@ -293,6 +293,7 @@ zh-TW:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: 你的 OTP 碼 不正確。
+    session_expired:
     otp_code: OTP 碼
     require_mfa_disabled:
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
@@ -314,6 +315,7 @@ zh-TW:
       qrcode_expired: QR-code 和金鑰已過期。請再重新註冊裝置。
       success: 你已成功啟用多重要素驗證。
     recovery:
+      copied:
       continue: 繼續
       title: 復原碼
       copy:
@@ -334,6 +336,7 @@ zh-TW:
       title:
       update:
       owner_heading:
+      owner_request_heading:
       push_heading:
   owners:
     confirm:
@@ -364,6 +367,11 @@ zh-TW:
   settings:
     edit:
       title:
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: 確定要重設嗎？此動作無法還原
         credentials_html: 如果你需要從 command line 中執行 %{gem_commands_link}，你需要先準備 %{gem_credentials_file}
@@ -371,11 +379,13 @@ zh-TW:
         key_is_html: 你的 API key 是 %{key}。
         link_text: Gem 指令
         reset: 重設 API key
+        reset_all:
         title: API 存取
       reset_password:
         title: 重設密碼
       mfa:
         multifactor_auth: 多重要素驗證
+        otp:
         disabled_html:
         go_settings: 註冊新裝置
         enabled_html:
@@ -496,6 +506,7 @@ zh-TW:
       description: 描述
       downloads: 下載數
       updated: 最後更新時間
+      yanked:
     show:
       subtitle: "%{query}"
       month_update:
@@ -513,6 +524,13 @@ zh-TW:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -590,3 +608,20 @@ zh-TW:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

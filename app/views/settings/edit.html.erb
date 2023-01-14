@@ -1,8 +1,9 @@
 <% @title = t(".title") %>
 
 <div class="t-body">
-  <h2><%= t ".mfa.multifactor_auth" %></h2>
+  <h2 class="page__subheading"><%= t ".mfa.multifactor_auth" %></h2>
   <% if @user.mfa_enabled? %>
+    <h2><%= t(".mfa.otp")%></h2>
     <p><%= t(".mfa.enabled_html") %></p>
     <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit" do %>
       <%= label_tag :level, t(".mfa.level.title"), class: "form__label" %>
@@ -11,17 +12,35 @@
       <%= select_tag :level, options_for_select(@mfa_options, @user.mfa_level), class: "form__input form__select" %>
 
       <div class="text_field">
-        <%= label_tag :otp, "OTP code", class: "form__label" %>
+        <%= label_tag :otp, t(".otp_code"), class: "form__label" %>
         <%= text_field_tag :otp, "", class: "form__input", autocomplete: :off %>
       </div>
       <%= submit_tag t(".mfa.update"), class: "form__submit" %>
     <% end %>
   <% else %>
-    <p>
+    <div class="t-body">
+      <h2><%= t(".mfa.otp")%></h2>
+
+      <p>
       <%= t(".mfa.disabled_html") %>
       <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
-    </p>
+      </p>
+    </div>
   <% end %>
+
+  <h2><%= t(".webauthn_credentials") %></h2>
+
+  <p><%= t(".webauthn_credential_note")%> <b><%= t(".webauthn_warning")%></b></p>
+
+  <% if @user.webauthn_credentials.none? %>
+    <p><i><%= t(".no_webauthn_credentials") %></i></p>
+  <% else %>
+    <div class="l-mb-8">
+      <%= render @user.webauthn_credentials %>
+    </div>
+  <% end %>
+
+  <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
 </div>
 
 <div class="t-body">
@@ -29,7 +48,7 @@
 </div>
 
 <div class="t-body">
-  <h2><%= link_to t('.api_keys'), profile_api_keys_path %></h2>
+  <h2><%= link_to t('api_keys.index.api_keys'), profile_api_keys_path %></h2>
 </div>
 
 <% if @user.ownerships.any? %>

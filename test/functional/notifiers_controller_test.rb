@@ -26,17 +26,20 @@ class NotifiersControllerTest < ActionController::TestCase
       end
 
       redirect_scenarios = {
-        "GET to show" => [:show, { method: "GET" }],
-        "PATCH to update" => [:update, { method: "PATCH", params: { ownerships: { 1 => { push: "off" } } } }],
-        "PUT to update" => [:update, { method: "PUT", params: { ownerships: { 1 => { push: "off" } } } }]
+        "GET to show" => { action: :show, request: { method: "GET" }, path: "/notifier" },
+        "PATCH to update" => { action: :update, request: { method: "PATCH", params: { ownerships: { 1 => { push: "off" } } } }, path: "/notifier" },
+        "PUT to update" => { action: :update, request: { method: "PUT", params: { ownerships: { 1 => { push: "off" } } } }, path: "/notifier" }
       }
 
       context "user has mfa disabled" do
         redirect_scenarios.each do |label, request_params|
           context "on #{label}" do
-            setup { process(request_params.first, **request_params.last) }
+            setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+            should "set mfa_redirect_uri" do
+              assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
+            end
           end
         end
       end
@@ -48,9 +51,12 @@ class NotifiersControllerTest < ActionController::TestCase
 
         redirect_scenarios.each do |label, request_params|
           context "on #{label}" do
-            setup { process(request_params.first, **request_params.last) }
+            setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the settings page") { edit_settings_path }
+            should "set mfa_redirect_uri" do
+              assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
+            end
           end
         end
       end

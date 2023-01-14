@@ -12,6 +12,10 @@
     <%= form.check_box :reset_api_key, { :class => 'form__checkbox__input' } , 'true', 'false' %>
     <%= form.label :reset_api_key, t('settings.edit.api_access.reset'), :class => 'form__checkbox__label' %>
   </div>
+  <div class="form__checkbox">
+    <%= form.check_box :reset_api_keys, { :class => 'form__checkbox__input' } , 'true', 'false' %>
+    <%= form.label :reset_api_keys, t('settings.edit.api_access.reset_all'), :class => 'form__checkbox__label' %>
+  </div>
 
   <div class="form_bottom">
     <%= form.submit t('.submit'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>

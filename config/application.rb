@@ -14,7 +14,6 @@ require "action_view/railtie"
 # require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
-require "elasticsearch/rails/instrumentation"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -53,6 +52,8 @@ module Gemcutter
 
     config.eager_load_paths << Rails.root.join("lib")
     config.toxic_domains_filepath = Rails.root.join("vendor", "toxic_domains_whole.txt")
+
+    config.active_job.queue_adapter = :delayed_job
   end
 
   def self.config

@@ -309,6 +309,7 @@ nl:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp:
+    session_expired:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
@@ -330,6 +331,7 @@ nl:
       qrcode_expired:
       success:
     recovery:
+      copied:
       continue:
       title:
       copy:
@@ -350,6 +352,7 @@ nl:
       title:
       update:
       owner_heading:
+      owner_request_heading:
       push_heading:
   owners:
     confirm:
@@ -380,6 +383,11 @@ nl:
   settings:
     edit:
       title:
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
         credentials_html: 'Als je de %{gem_commands_link} vanaf de command-line wilt
@@ -388,11 +396,13 @@ nl:
         key_is_html: Je API key is %{key}
         link_text: gem commando’s
         reset: Reset mijn API key
+        reset_all:
         title: API toegang
       reset_password:
         title: Reset wachtwoord
       mfa:
         multifactor_auth:
+        otp:
         disabled_html:
         go_settings:
         enabled_html:
@@ -513,6 +523,7 @@ nl:
       description:
       downloads:
       updated:
+      yanked:
     show:
       subtitle: voor %{query}
       month_update:
@@ -530,6 +541,13 @@ nl:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -606,3 +624,20 @@ nl:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

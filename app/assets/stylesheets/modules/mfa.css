@@ -1,0 +1,15 @@
+.mfa__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.mfa__option {
+  flex: 1;
+}
+
+@media (min-width: 780px) {
+  .mfa__container {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}

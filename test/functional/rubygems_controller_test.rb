@@ -163,7 +163,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
-      css = "small:contains('#{@latest_version.authored_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@latest_version.authored_at.to_date.to_fs(:long)}')"
       assert page.has_css?(css)
       assert page.has_content?("Links")
     end
@@ -207,12 +207,12 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@versions[0].number)
-      css = "small:contains('#{@versions[0].built_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@versions[0].built_at.to_date.to_fs(:long)}')"
       assert page.has_css?(css)
 
       assert page.has_content?("Versions")
       assert page.has_content?(@versions[2].number)
-      css = "small:contains('#{@versions[2].built_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@versions[2].built_at.to_date.to_fs(:long)}')"
       assert page.has_css?(css)
     end
 
@@ -298,6 +298,10 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@version.dependencies.runtime.count)
       assert page.has_content?(@version.dependencies.development.count)
     end
+    should "show proper links to dependencies" do
+      assert page.has_link?(@runtime.rubygem.name, href: "/gems/#{@runtime.rubygem.name}")
+      assert page.has_link?(@development.rubygem.name, href: "/gems/#{@development.rubygem.name}")
+    end
   end
 
   context "On GET to show for a gem with dependencies that are unresolved" do
@@ -332,9 +336,9 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should "show only dependencies that have rubygem" do
+    should "show dependencies that have rubygem with version" do
       assert page.has_content?(@runtime.rubygem.name)
-      assert page.has_no_content?("1.2.0")
+      assert page.has_content?("1.2.0")
     end
   end
 

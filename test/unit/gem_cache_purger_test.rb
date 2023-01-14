@@ -15,10 +15,13 @@ class GemCachePurgerTest < ActiveSupport::TestCase
     end
 
     should "purge cdn cache" do
-      Fastly.expects(:purge).with(path: "info/#{@gem_name}", soft: true)
-      Fastly.expects(:purge).with(path: "gem/#{@gem_name}", soft: true)
-      Fastly.expects(:purge).with(path: "names", soft: true)
-      Fastly.expects(:purge).with(path: "versions", soft: true)
+      # Purposely uses a hash because delayed_job lacks correct support for kwargs.
+      # Mocha handles kwargs correctly and complains if we expect kwargs when delay sends a hash.
+      # See: https://github.com/collectiveidea/delayed_job/issues/1134
+      Fastly.expects(:purge).with({ path: "info/#{@gem_name}", soft: true })
+      Fastly.expects(:purge).with({ path: "gem/#{@gem_name}", soft: true })
+      Fastly.expects(:purge).with({ path: "names", soft: true })
+      Fastly.expects(:purge).with({ path: "versions", soft: true })
 
       GemCachePurger.call(@gem_name)
       Delayed::Worker.new.work_off

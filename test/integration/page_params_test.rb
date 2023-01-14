@@ -1,7 +1,7 @@
 require "test_helper"
 
 class PageParamsTest < SystemTest
-  include ESHelper
+  include SearchKickHelper
 
   test "stats with page param more than 10" do
     visit stats_path(page: "11")

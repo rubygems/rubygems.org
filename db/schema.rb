@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -221,6 +221,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
     t.integer "mail_fails", default: 0
     t.string "blocked_email"
     t.string "full_name"
+    t.string "webauthn_id"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
@@ -281,5 +282,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 
+  create_table "webauthn_credentials", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "external_id", null: false
+    t.string "public_key", null: false
+    t.string "nickname", null: false
+    t.bigint "sign_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["external_id"], name: "index_webauthn_credentials_on_external_id", unique: true
+    t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
+  end
+
   add_foreign_key "api_keys", "users"
+  add_foreign_key "webauthn_credentials", "users"
+  add_foreign_key "ownerships", "users", on_delete: :cascade
 end

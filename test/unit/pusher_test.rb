@@ -448,8 +448,8 @@ class PusherTest < ActiveSupport::TestCase
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 07, 04))
         Delayed::Worker.new.work_off
-        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                        id:    @rubygem.id
+        response = Searchkick.client.get index: "rubygems-#{Rails.env}",
+                                         id:    @rubygem.id
         expected_response = {
           "name"              => "gemsgemsgems",
           "downloads"         => 0,
@@ -516,8 +516,8 @@ class PusherTest < ActiveSupport::TestCase
 
     should "update rubygem index" do
       Delayed::Worker.new.work_off
-      response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                      id:    @rubygem.id
+      response = Searchkick.client.get index: "rubygems-#{Rails.env}",
+                                       id:    @rubygem.id
       assert_equal "new summary", response["_source"]["summary"]
     end
 
@@ -582,7 +582,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_not_nil @cutter.version
       assert_not_nil @cutter.version.cert_chain
       assert_equal 1, @cutter.version.cert_chain.size
-      assert_equal "/CN=snakeoil/DC=example/DC=invalid", @cutter.version.cert_chain.first.subject.to_s
+      assert_equal "CN=snakeoil/DC=example/DC=invalid", @cutter.version.cert_chain.first.subject.to_utf8
     end
 
     teardown { RubygemFs.mock! }

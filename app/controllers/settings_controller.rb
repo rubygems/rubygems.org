@@ -5,6 +5,7 @@ class SettingsController < ApplicationController
 
   def edit
     @user = current_user
+    @webauthn_credential = WebauthnCredential.new(user: @user)
     @mfa_options = [
       [t(".mfa.level.ui_and_api"), "ui_and_api"],
       [t(".mfa.level.ui_and_gem_signin"), "ui_and_gem_signin"],

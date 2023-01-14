@@ -52,27 +52,42 @@ gem server, please consider checking out
 provide pass-through caching for RubyGems.org, as well as host private
 gems for your organization..**
 
+### Getting the code
+
+Clone the repo: `git clone https://github.com/rubygems/rubygems.org.git`
+Move to the newly cloned repository directory: `cd rubygems.org`
+
+### Setting up the environment
+
+Rubygems.org is a Ruby on Rails application.
+The app depends on Elasticsearch, Memcached, and PostgreSQL.
+Google Chrome is used for tests.
+
+Setup the development environment using one of the approaches below.
+
 #### Environment (Docker)
 
 There is a `docker-compose.yml` file inside the project that easily lets you spin up
-services that the application depends on such as: postgresql, memcached & elasticsearch.
+postgresql, memcached & elasticsearch.
 
-* Install Docker. See instructions at https://docs.docker.com/engine/installation/
-* run `docker-compose up` to start the required services.
+Note: Docker compose does not run the rubygems.org application itself.
+
+* Install Docker. See instructions at https://docs.docker.com/get-docker/
+* run `docker compose up` to start the required services.
 
 Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (OS X)
 
-* Use Ruby 3.0.x (`.ruby-version` is present and can be used)
-* Use Rubygems 3.2.31
-* Install bundler: `gem install bundler`
 * Install Elasticsearch:
+
   * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
   * Running Elasticsearch from the command line:
+
   ```
   docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
   ```
+
   * Note that `-e "xpack.security.enabled=false"` disables authentication.
 
 * Install PostgreSQL (>= 11.13.x): `brew install postgres`
@@ -83,10 +98,6 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 3.0.x `apt-get install ruby3.0`
-  * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 3.2.31
-* Install bundler: `gem install bundler`
 * Install Elasticsearch (see the docker installation instructions above):
   * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
   * Running Elasticsearch from the command line:
@@ -101,28 +112,34 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Download latest stable: `wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb`
   * Install chrome: `sudo dpkg -i google-chrome-stable_current_amd64.deb`
 
-#### Getting the code
+### Installing ruby, gem dependencies, and setting up the database
 
-* Clone the repo: `git clone git://github.com/rubygems/rubygems.org`
-* Move into your cloned rubygems directory if you haven’t already:
-    `cd rubygems.org`
-* Install dependencies:
-    `bundle install`
-
-#### Setting up the database
-
-* Get set up: `./script/setup`
-* Run the database rake tasks if needed:
-    `bundle exec rake db:reset db:test:prepare --trace`
+* Use Ruby 3.1.x
+  * See: [Ruby install instructions](https://www.ruby-lang.org/en/downloads/).
+  * `.ruby-version` is present and can be used.
+* Use Rubygems 3.3.x
+* Install bundler:
+  `gem install bundler`
+* Install dependencies and setup the database:
+  `./bin/setup`
 * Set up elasticsearch indexes:
-    `bundle exec rake environment elasticsearch:import:all DIR=app/models FORCE=y`
+    `bundle exec rake searchkick:reindex CLASS=Rubygem`
 
-#### Running tests
+### Running tests
 
-* Start elasticsearch: `elasticsearch`
-* Start memcached: `memcached`
+Make sure that the tests run successfully before making changes.
+
+* Depending on how you setup your environment, run `docker compose up` or
+  ensure elasticsearch, memcached, and postgres are running.
 * Run the tests: `bin/rails test`
-* See the [rails documentation](https://guides.rubyonrails.org/testing.html) for more testing options.
+* See also: [Ruby on Rails testing documentation](https://guides.rubyonrails.org/testing.html).
+
+### Running the application
+
+* Depending on how you setup your environment, run `docker compose up` or
+  ensure elasticsearch, memcached, and postgres are running.
+* Start the application: `bin/rails s`
+* Visit http://localhost:3000 in your browser.
 
 #### Confirmation emails links
 
@@ -145,7 +162,7 @@ can try running:
 #### Importing gems into the database
 
 * Import gems into the database with Rake task.
-    `bundle exec rake gemcutter:import:process vendor/cache`
+    `bundle exec rake "gemcutter:import:process[vendor/cache]"`
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
@@ -156,7 +173,7 @@ can try running:
 
 * A good way to get some test data is to import from a local gem directory.
 `gem env` will tell you where rubygems stores your gems. Run
-`bundle exec rake gemcutter:import:process #{INSTALLATION_DIRECTORY}/cache`
+`bundle exec rake "gemcutter:import:process[#{INSTALLATION_DIRECTORY}/cache'"`
 
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.
@@ -181,7 +198,7 @@ application in a development environment, especially for performance-related iss
 ---
 
 When everything is set up, start the web server with `rails server` and browse to
-[localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
+[localhost:3000](http://localhost:3000)!
 
 Database Layout
 ---------------

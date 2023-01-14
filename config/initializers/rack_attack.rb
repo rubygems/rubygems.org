@@ -46,12 +46,21 @@ class Rack::Attack
     { controller: "multifactor_auths",   action: "update" }
   ]
 
+  protected_api_key_actions = [
+    { controller: "api/v1/api_keys", action: "show" },
+    { controller: "api/v1/api_keys", action: "create" },
+    { controller: "api/v1/api_keys", action: "update" },
+
+    # not technically API key, but it's the only other action that uses authenticate_or_request_with_http_basic
+    # and we don't want to make it easy to guess user passwords (or figure out who has mfa enabled...)
+    { controller: "api/v1/profiles", action: "me" }
+  ]
+
   protected_api_mfa_actions = [
     { controller: "api/v1/deletions", action: "create" },
     { controller: "api/v1/owners",    action: "create" },
-    { controller: "api/v1/owners",    action: "destroy" },
-    { controller: "api/v1/api_keys",  action: "show" }
-  ]
+    { controller: "api/v1/owners",    action: "destroy" }
+  ] + protected_api_key_actions
 
   protected_ui_owners_actions = [
     { controller: "owners", action: "resend_confirmation" },
@@ -162,10 +171,8 @@ class Rack::Attack
     User.normalize_email(req.params['session']['who']).presence if protected_route && req.params['session']
   end
 
-  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
-
   throttle("api_key/basic_auth", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    if protected_route?(protected_api_key_action, req.path, req.request_method)
+    if protected_route?(protected_api_key_actions, req.path, req.request_method)
       action_dispatch_req = ActionDispatch::Request.new(req.env)
       who = ActionController::HttpAuthentication::Basic.user_name_and_password(action_dispatch_req).first
       User.normalize_email(who).presence
