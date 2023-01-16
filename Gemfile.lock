@@ -294,7 +294,7 @@ GEM
     public_suffix (5.0.1)
     pwned (2.3.0)
     racc (1.6.1)
-    rack (2.2.5)
+    rack (2.2.6)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
     rack-test (2.0.2)
