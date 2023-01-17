@@ -9,4 +9,8 @@ class WebauthnVerification < ApplicationRecord
     self.path_token_expires_at = 1.second.ago
     self.save!
   end
+
+  def path_token_expired?
+    self.path_token_expires_at < Time.now.utc
+  end
 end
