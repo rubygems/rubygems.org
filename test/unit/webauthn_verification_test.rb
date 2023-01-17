@@ -37,7 +37,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
     context "when the token is still live" do
       should "return false" do
         travel_to Time.utc(2023, 1, 1, 0, 0, 1) do
-          refute @verification.path_token_expired?
+          refute_predicate @verification, :path_token_expired?
         end
       end
     end
@@ -45,7 +45,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
     context "when the token has expired" do
       should "return true" do
         travel_to Time.utc(2023, 9, 9, 9, 9, 9) do
-          assert @verification.path_token_expired?
+          assert_predicate @verification, :path_token_expired?
         end
       end
     end
