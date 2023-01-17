@@ -42,7 +42,7 @@ class WebauthnVerificationsController < ApplicationController
     @verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
 
     render_not_found and return unless @verification
-    redirect_to root_path, alert: t(".expired_or_already_used") if @verification.path_token_expires_at < Time.now.utc
+    redirect_to root_path, alert: t(".expired_or_already_used") if @verification.path_token_expired?
   end
 
   def set_user

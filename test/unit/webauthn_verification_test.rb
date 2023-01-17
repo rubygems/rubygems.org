@@ -25,4 +25,29 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#path_token_expired?" do
+    setup do
+      travel_to Time.utc(2023, 1, 1, 0, 0, 0) do
+        user = create(:user)
+        @verification = create(:webauthn_verification, user: user)
+      end
+    end
+
+    context "when the token is still live" do
+      should "return false" do
+        travel_to Time.utc(2023, 1, 1, 0, 0, 1) do
+          refute @verification.path_token_expired?
+        end
+      end
+    end
+
+    context "when the token has expired" do
+      should "return true" do
+        travel_to Time.utc(2023, 9, 9, 9, 9, 9) do
+          assert @verification.path_token_expired?
+        end
+      end
+    end
+  end
 end
