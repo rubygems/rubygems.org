@@ -24,7 +24,7 @@ class WebauthnVerificationsController < ApplicationController
     user_webauthn_credential.update!(sign_count: webauthn_credential.sign_count)
     # TODO: generate webauthn verification otp
 
-    expire_webauthn_verification
+    @verification.expire_path_token
 
     # TODO: render html with webauthn verification otp instead of json
     render json: { message: "success" }
@@ -47,11 +47,6 @@ class WebauthnVerificationsController < ApplicationController
 
   def set_user
     @user = @verification.user
-  end
-
-  def expire_webauthn_verification
-    @verification.path_token_expires_at = 1.second.ago
-    @verification.save!
   end
 
   def webauthn_credential
