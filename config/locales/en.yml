@@ -291,7 +291,6 @@ en:
   multifactor_auths:
     recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
     incorrect_otp: Your OTP code is incorrect.
-    session_expired: Your login page session has expired.
     otp_code: OTP code
     require_mfa_disabled: Your multi-factor authentication has been enabled. To reconfigure multi-factor authentication, you'll have to disable it first.
     require_mfa_enabled: Your multi-factor authentication has not been enabled. You have to enable it first.

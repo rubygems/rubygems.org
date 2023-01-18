@@ -79,26 +79,6 @@ class SignInTest < SystemTest
     assert page.has_content? "Sign out"
   end
 
-  test "signing in with current valid otp when mfa enabled but 30 minutes has passed" do
-    visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Sign in"
-
-    assert page.has_content? "Multi-factor authentication"
-
-    travel 30.minutes do
-      within(".mfa-form") do
-        fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
-        click_button "Verify code"
-      end
-
-      assert page.has_content? "Sign in"
-      expected_notice = "Your login page session has expired."
-      assert page.has_selector? "#flash_notice", text: expected_notice
-    end
-  end
-
   test "signing in with invalid otp when mfa enabled" do
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
@@ -284,31 +264,6 @@ class SignInTest < SystemTest
 
     # Cleanup test data
     @authenticator.remove!
-  end
-
-  test "sign in with webauthn but it expired" do
-    create_webauthn_credential
-
-    visit sign_in_path
-
-    fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-
-    assert page.has_content? "Multi-factor authentication"
-    assert page.has_content? "Security Device"
-
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
-
-    travel 30.minutes do
-      click_on "Authenticate with security device"
-
-      assert page.has_content? "Your login page session has expired."
-      assert page.has_content? "Multi-factor authentication"
-
-      # Cleanup test data
-      @authenticator.remove!
-    end
   end
 
   test "signing out" do

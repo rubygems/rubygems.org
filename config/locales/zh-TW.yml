@@ -292,7 +292,6 @@ zh-TW:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: 你的 OTP 碼 不正確。
-    session_expired:
     otp_code: OTP 碼
     require_mfa_disabled:
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
@@ -528,6 +527,7 @@ zh-TW:
       otp_or_recovery:
       security_device:
       verify_code:
+
   stats:
     index:
       title:

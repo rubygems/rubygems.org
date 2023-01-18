@@ -323,7 +323,6 @@ fr:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: Votre clé OTP est incorrecte.
-    session_expired:
     otp_code: clé OTP
     require_mfa_disabled: Votre authentification multi-facteur a été activée. Si vous
       voulez la reconfigurer, vous devez d'abord la désactiver.
