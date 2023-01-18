@@ -12,9 +12,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rubygems_version: ['3.3.25', 'latest']
-        coverage_rubygems_version: ['3.3.25']
-        ruby_version: ['3.1.2']
+        rubygems_version: ['3.4.3', 'latest']
+        coverage_rubygems_version: ['3.4.3']
+        ruby_version: ['3.2.0']
     name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
     runs-on: ubuntu-22.04
     env:
