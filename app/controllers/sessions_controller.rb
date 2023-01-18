@@ -168,6 +168,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def session_active?
+    return false if session[:mfa_expires_at].nil?
     session[:mfa_expires_at] > Time.current
   end
 
