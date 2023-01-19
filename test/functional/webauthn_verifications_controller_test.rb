@@ -1,19 +1,9 @@
 require "test_helper"
 
+# Not to be confused with Api::V1::WebauthnVerificationsControllerTest. This is for the UI.
+
 class WebauthnVerificationsControllerTest < ActionController::TestCase
   context "#prompt" do
-    context "when given an expired webauthn token" do
-      setup do
-        @user = create(:user)
-        token = create(:webauthn_verification, user: @user, path_token_expires_at: 1.minute.ago).path_token
-        get :prompt, params: { webauthn_token: token }
-      end
-
-      should "return a 404" do
-        assert_response :not_found
-      end
-    end
-
     context "when given an invalid webauthn token" do
       setup do
         @user = create(:user)
@@ -73,8 +63,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
-      @token = create(:webauthn_verification, user: @user).path_token
-      get :prompt, params: { webauthn_token: @token }
+      travel_to Time.utc(2023, 1, 1, 0, 0, 0) do
+        @token = create(:webauthn_verification, user: @user).path_token
+        get :prompt, params: { webauthn_token: @token }
+      end
     end
 
     context "when verifying the challenge" do
@@ -87,40 +79,54 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        post(
-          :authenticate,
-          params: {
-            credentials:
-              WebauthnHelpers.get_result(
-                client: @client,
-                challenge: @challenge
-              ),
-            webauthn_token: @token
-          },
-          format: :json
-        )
+        travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
+          post(
+            :authenticate,
+            params: {
+              credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: @challenge
+                ),
+              webauthn_token: @token
+            },
+            format: :json
+          )
+        end
       end
 
       should respond_with :success
       should "return success message" do
         assert_equal "success", JSON.parse(response.body)["message"]
       end
+
+      should "expire the path token by setting its expiry to 1 second prior" do
+        verification = WebauthnVerification.find_by!(path_token: @token)
+        assert_equal Time.utc(2023, 1, 1, 0, 0, 2), verification.path_token_expires_at
+      end
     end
 
     context "when not providing credentials" do
       setup do
-        post(
-          :authenticate,
-          params: {
-            webauthn_token: @token
-          },
-          format: :json
-        )
+        travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
+          post(
+            :authenticate,
+            params: {
+              webauthn_token: @token
+            },
+            format: :json
+          )
+        end
       end
 
       should respond_with :unauthorized
       should "return error message" do
         assert_equal "Credentials required", JSON.parse(response.body)["message"]
+      end
+
+      should "not expire the path token" do
+        verification = WebauthnVerification.find_by!(path_token: @token)
+        assert_equal Time.utc(2023, 1, 1, 0, 2, 0), verification.path_token_expires_at
       end
     end
 
@@ -134,18 +140,20 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        post(
-          :authenticate,
-          params: {
-            credentials:
-              WebauthnHelpers.get_result(
-                client: @client,
-                challenge: @wrong_challenge
-              ),
-            webauthn_token: @token
-          },
-          format: :json
-        )
+        travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
+          post(
+            :authenticate,
+            params: {
+              credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: @wrong_challenge
+                ),
+              webauthn_token: @token
+            },
+            format: :json
+          )
+        end
       end
 
       should respond_with :unauthorized
@@ -165,21 +173,56 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        post(
-          :authenticate,
-          params: {
-            credentials:
-              WebauthnHelpers.get_result(
-                client: @client,
-                challenge: @challenge
-              ),
-            webauthn_token: @wrong_webuthn_token
-          },
-          format: :json
-        )
+        travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
+          post(
+            :authenticate,
+            params: {
+              credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: @challenge
+                ),
+              webauthn_token: @wrong_webuthn_token
+            },
+            format: :json
+          )
+        end
       end
 
       should respond_with :not_found
+    end
+
+    context "when the webauthn token has expired" do
+      setup do
+        @challenge = session[:webauthn_authentication]["challenge"]
+        @origin = "http://localhost:3000"
+        @rp_id = URI.parse(@origin).host
+        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        travel_to Time.utc(2023, 1, 1, 0, 3, 0) do
+          post(
+            :authenticate,
+            params: {
+              credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: @challenge
+                ),
+              webauthn_token: @token
+            },
+            format: :json
+          )
+        end
+      end
+
+      should respond_with :redirect
+      should redirect_to("the homepage") { root_url }
+      should "say the token is consumed or expired" do
+        assert_equal "The token in the link you used has either expired or been used already.", flash[:alert]
+      end
     end
   end
 end

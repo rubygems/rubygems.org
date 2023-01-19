@@ -218,9 +218,9 @@ FactoryBot.define do
   factory :webauthn_verification do
     user
     path_token { SecureRandom.base58(20) }
-    path_token_expires_at { Time.now.utc + 1.minute }
+    path_token_expires_at { Time.now.utc + 2.minutes }
     otp { SecureRandom.base58(20) }
-    otp_expires_at { Time.now.utc + 1.minute }
+    otp_expires_at { Time.now.utc + 2.minutes }
   end
 
   factory :api_key_rubygem_scope do

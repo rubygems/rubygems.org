@@ -1,5 +1,7 @@
+# This controller is for the user interface Webauthn challenge after a user follows a link generated
+# by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
-  before_action :set_user
+  before_action :set_verification, :set_user
 
   def prompt
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
@@ -22,6 +24,8 @@ class WebauthnVerificationsController < ApplicationController
     user_webauthn_credential.update!(sign_count: webauthn_credential.sign_count)
     # TODO: generate webauthn verification otp
 
+    @verification.expire_path_token
+
     # TODO: render html with webauthn verification otp instead of json
     render json: { message: "success" }
   rescue WebAuthn::Error => e
@@ -34,13 +38,15 @@ class WebauthnVerificationsController < ApplicationController
 
   private
 
+  def set_verification
+    @verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
+
+    render_not_found and return unless @verification
+    redirect_to root_path, alert: t(".expired_or_already_used") if @verification.path_token_expired?
+  end
+
   def set_user
-    verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
-    if !verification || verification.path_token_expires_at < Time.now.utc
-      render_not_found
-    else
-      @user = verification.user
-    end
+    @user = @verification.user
   end
 
   def webauthn_credential
