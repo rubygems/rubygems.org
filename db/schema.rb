@@ -295,6 +295,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   end
 
   add_foreign_key "api_keys", "users"
-  add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "webauthn_credentials", "users"
 end
