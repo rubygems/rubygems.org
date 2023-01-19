@@ -14,9 +14,9 @@
     if (response.redirected) {
       window.location.href = response.url;
     } else {
-      response.json().then(function (json) {
+      response.json().then(function(json) {
         setError(submit, responseError, json.message);
-      }).catch(function (error) {
+      }).catch(function(error) {
         setError(submit, responseError, error);
       });
     }
@@ -26,9 +26,9 @@
     if (response.redirected) {
       window.location.href = response.url;
     } else {
-      response.text().then(function (html) {
+      response.text().then(function(html) {
         document.body.innerHTML = html;
-      }).catch(function (error) {
+      }).catch(function(error) {
         setError(submit, responseError, error);
       });
     }
@@ -72,16 +72,16 @@
         method: "POST",
         credentials: "same-origin",
         headers: { "X-CSRF-Token": csrfToken }
-      }).then(function (response) {
+      }).then(function(response) {
         return response.json();
-      }).then(function (json) {
+      }).then(function(json) {
         json.user.id = base64urlToBuffer(json.user.id);
         json.challenge = base64urlToBuffer(json.challenge);
         json.excludeCredentials = credentialsToBuffer(json.excludeCredentials);
         return navigator.credentials.create({
           publicKey: json
         });
-      }).then(function (credentials) {
+      }).then(function(credentials) {
         return fetch(form.action + "/callback.json", {
           method: "POST",
           credentials: "same-origin",
@@ -94,9 +94,9 @@
             webauthn_credential: { nickname: nickname }
           })
         });
-      }).then(function (response) {
+      }).then(function(response) {
         handleJsonResponse(credentialSubmit, credentialError, response);
-      }).catch(function (error) {
+      }).catch(function(error) {
         setError(credentialSubmit, credentialError, error);
       });
     });
@@ -115,7 +115,7 @@
       options.allowCredentials = credentialsToBuffer(options.allowCredentials);
       navigator.credentials.get({
         publicKey: options
-      }).then(function (credentials) {
+      }).then(function(credentials) {
         return fetch(form.action + ".html", {
           method: "POST",
           credentials: "same-origin",
@@ -127,9 +127,9 @@
             credentials: credentialsToBase64(credentials)
           })
         });
-      }).then(function (response) {
+      }).then(function(response) {
         handleHtmlResponse(sessionSubmit, sessionError, response);
-      }).catch(function (error) {
+      }).catch(function(error) {
         setError(sessionSubmit, sessionError, error);
       });
     });
