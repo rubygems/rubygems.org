@@ -614,6 +614,7 @@ en:
     create_req: Create ownership request
     signin_to_create_html: Please <a href="https://rubygems.org/sign_in">sign in</a> to create an ownership request.
   webauthn_credentials:
+    credentials_required: Credentials required
     recovery:
       continue: Continue
       title: You have successfully added a security device

@@ -32,7 +32,7 @@ class WebauthnVerificationsController < ApplicationController
     flash.now.notice = e.message
     render :prompt, status: :unauthorized
   rescue ActionController::ParameterMissing
-    flash.now.notice = "Credentials required"
+    flash.now.notice = t("webauthn_credentials.credentials_required")
     render :prompt, status: :unauthorized
   ensure
     session.delete(:webauthn_authentication)

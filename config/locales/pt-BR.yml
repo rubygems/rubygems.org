@@ -653,6 +653,7 @@ pt-BR:
     create_req:
     signin_to_create_html:
   webauthn_credentials:
+    credentials_required:
     recovery:
       continue:
       title:
