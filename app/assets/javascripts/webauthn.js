@@ -116,7 +116,7 @@
       navigator.credentials.get({
         publicKey: options
       }).then(function (credentials) {
-        return fetch(form.action + ".html", {
+        return fetch(form.action, {
           method: "POST",
           credentials: "same-origin",
           headers: {

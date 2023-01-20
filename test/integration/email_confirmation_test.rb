@@ -67,4 +67,31 @@ class EmailConfirmationTest < SystemTest
 
     assert page.has_content? "Sign out"
   end
+
+  test "requesting confirmation mail with webauthn enabled" do
+    create_webauthn_credential
+
+    request_confirmation_mail @user.email
+
+    link = last_email_link
+    assert_not_nil link
+    visit link
+
+    assert page.has_content? "Multi-factor authentication"
+    assert page.has_content? "Security Device"
+
+    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+
+    click_on "Authenticate with security device"
+
+    find(:css, ".header__popup-link").click
+    assert page.has_content?("SIGN OUT")
+
+    @authenticator.remove!
+  end
+
+  teardown do
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+  end
 end

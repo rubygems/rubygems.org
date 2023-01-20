@@ -82,6 +82,29 @@ class ActiveSupport::TestCase
     fullscreen_height = 1000
     driver.resize_window_to(driver.current_window_handle, fullscreen_width, fullscreen_height)
   end
+
+  def create_webauthn_credential
+    fullscreen_headless_chrome_driver
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.reload.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+    visit edit_settings_path
+
+    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
+    @authenticator = page.driver.browser.add_virtual_authenticator(options)
+    WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
+
+    credential_nickname = "new cred"
+    fill_in "Nickname", with: credential_nickname
+    click_on "Register device"
+
+    find("div", text: credential_nickname, match: :first)
+
+    find(:css, ".header__popup-link").click
+    click_on "Sign out"
+  end
 end
 
 class ActionDispatch::IntegrationTest

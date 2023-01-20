@@ -130,6 +130,94 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on POST to webauthn_update" do
+    setup do
+      @user = create(:user)
+      @webauthn_credential = create(:webauthn_credential, user: @user)
+      get :update, params: { token: @user.confirmation_token, user_id: @user.id }
+      @origin = "http://localhost:3000"
+      @rp_id = URI.parse(@origin).host
+      @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+    end
+
+    context "with webauthn enabled" do
+      setup do
+        @challenge = session[:webauthn_authentication]["challenge"]
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        post(
+          :webauthn_update,
+          params: {
+            user_id: @user.id,
+            token: @user.confirmation_token,
+            credentials:
+            WebauthnHelpers.get_result(
+              client: @client,
+              challenge: @challenge
+            )
+          }
+        )
+      end
+
+      should "redirect to root" do
+        assert_redirected_to root_url
+      end
+
+      should "change the user's email" do
+        assert @user.reload.email_confirmed
+      end
+    end
+
+    context "when not providing credentials" do
+      setup do
+        post(
+          :webauthn_update,
+          params: {
+            user_id: @user.id,
+            token: @user.confirmation_token
+          }
+        )
+      end
+
+      should respond_with :unauthorized
+      should "set flash notice" do
+        assert_equal "Credentials required", flash[:alert]
+      end
+    end
+
+    context "when providing wrong credential" do
+      setup do
+        @wrong_challenge = SecureRandom.hex
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        post(
+          :webauthn_update,
+          params: {
+            user_id: @user.id,
+            token: @user.confirmation_token,
+            credentials:
+            WebauthnHelpers.get_result(
+              client: @client,
+              challenge: @wrong_challenge
+            )
+          }
+        )
+      end
+
+      should respond_with :unauthorized
+      should "set flash notice" do
+        assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
+      end
+      should "still have the webauthn form url" do
+        assert_not_nil page.find(".js-webauthn-session--form")[:action]
+      end
+    end
+  end
+
   context "on GET to new" do
     setup do
       get :new

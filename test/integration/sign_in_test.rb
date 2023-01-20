@@ -346,29 +346,6 @@ class SignInTest < SystemTest
     assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
 
-  def create_webauthn_credential
-    fullscreen_headless_chrome_driver
-
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-    visit edit_settings_path
-
-    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
-    @authenticator = page.driver.browser.add_virtual_authenticator(options)
-    WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
-
-    credential_nickname = "new cred"
-    fill_in "Nickname", with: credential_nickname
-    click_on "Register device"
-
-    find("div", text: credential_nickname, match: :first)
-
-    find(:css, ".header__popup-link").click
-    click_on "Sign out"
-  end
-
   teardown do
     Capybara.reset_sessions!
     Capybara.use_default_driver
