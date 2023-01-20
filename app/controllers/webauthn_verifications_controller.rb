@@ -14,7 +14,6 @@ class WebauthnVerificationsController < ApplicationController
   end
 
   def authenticate
-    # TODO: check if path token is expired
     webauthn_credential.verify(
       challenge,
       public_key: user_webauthn_credential.public_key,
