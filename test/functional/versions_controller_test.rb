@@ -88,6 +88,25 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to index" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, number: "1.1.2", rubygem: @rubygem)
+    end
+
+    should "get paginated result" do
+      # first page includes the only version
+      get :index, params: { rubygem_id: @rubygem.name }
+      assert_response :success
+      assert page.has_content?("1.1.2")
+
+      # second page does not include the only version
+      get :index, params: { rubygem_id: @rubygem.name, page: 2 }
+      assert_response :success
+      refute page.has_content?("1.1.2")
+    end
+  end
+
   context "On GET to show" do
     setup do
       @latest_version = create(:version, built_at: 1.week.ago, created_at: 1.day.ago)
