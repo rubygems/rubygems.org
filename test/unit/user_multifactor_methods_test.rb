@@ -92,14 +92,45 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       @seed = ROTP::Base32.random_base32
     end
 
-    should "return true if mfa is ui_and_api and otp is correct" do
-      @user.enable_mfa!(@seed, :ui_and_api)
-      assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
+    context "with totp" do
+      should "return true when correct and if mfa is ui_and_api" do
+        @user.enable_mfa!(@seed, :ui_and_api)
+        assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
+      end
+
+      should "return true when correct and if mfa is ui_and_gem_signin" do
+        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
+      end
+
+      should "return false when incorrect" do
+        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        refute @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+      end
     end
 
-    should "return true if mfa is ui_and_gem_signin and otp is correct" do
-      @user.enable_mfa!(@seed, :ui_and_gem_signin)
-      assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
+    context "with webauthn otp" do
+      should "return true when correct and if mfa is ui_and_api" do
+        @user.enable_mfa!(@seed, :ui_and_api)
+        webauthn_verification = create(:webauthn_verification, user: @user)
+
+        assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
+      end
+
+      should "return true when correct and if mfa is ui_and_gem_signin" do
+        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        webauthn_verification = create(:webauthn_verification, user: @user)
+
+        assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
+      end
+
+      should "return false when incorrect" do
+        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx7U1i")
+        incorrect_otp = "Yxf57d1wEUSWyXrrLMRv"
+
+        refute @user.mfa_gem_signin_authorized?(incorrect_otp)
+      end
     end
 
     should "return true if mfa is disabled" do
@@ -109,11 +140,6 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     should "return true if mfa is ui_only" do
       @user.enable_mfa!(@seed, :ui_only)
       assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
-    end
-
-    should "return false if otp is incorrect" do
-      @user.enable_mfa!(@seed, :ui_and_gem_signin)
-      refute @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
     end
   end
 
