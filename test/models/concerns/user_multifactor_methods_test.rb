@@ -247,30 +247,94 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
-    should "return true if otp is correct" do
-      assert @user.otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+    context "with totp" do
+      should "return true when correct" do
+        assert @user.otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+      end
+
+      should "return true when correct in last interval" do
+        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        assert @user.otp_verified?(last_otp)
+      end
+
+      should "return true when correct in next interval" do
+        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        assert @user.otp_verified?(next_otp)
+      end
+
+      should "return false when incorrect" do
+        refute @user.otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+      end
     end
 
-    should "return true for otp in last interval" do
-      last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
-
-      assert @user.otp_verified?(last_otp)
-    end
-
-    should "return true for otp in next interval" do
-      next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
-
-      assert @user.otp_verified?(next_otp)
-    end
-
-    should "return false if otp is incorrect" do
-      refute @user.otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+    context "with webauthn otp" do
+      should "return false" do
+        webauthn_verification = create(:webauthn_verification, user: @user)
+        refute @user.otp_verified?(webauthn_verification.otp)
+      end
     end
 
     should "return true if recovery code is correct" do
       recovery_code = @user.mfa_recovery_codes.first
 
       assert @user.otp_verified?(recovery_code)
+      refute_includes @user.mfa_recovery_codes, recovery_code
+    end
+  end
+
+  context "#api_otp_verified?" do
+    setup do
+      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    end
+
+    context "with totp" do
+      should "return true when correct" do
+        assert @user.api_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+      end
+
+      should "return true when correct in last interval" do
+        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        assert @user.api_otp_verified?(last_otp)
+      end
+
+      should "return true when correct in next interval" do
+        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        assert @user.api_otp_verified?(next_otp)
+      end
+
+      should "return false if otp is incorrect" do
+        refute @user.api_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+      end
+    end
+
+    context "with webauthn otp" do
+      should "return true when correct" do
+        webauthn_verification = create(:webauthn_verification, user: @user)
+        assert @user.api_otp_verified?(webauthn_verification.otp)
+      end
+
+      should "return false when incorrect" do
+        create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx")
+        incorrect_otp = "Yxf57d1wEUSWyXrr"
+
+        refute @user.api_otp_verified?(incorrect_otp)
+      end
+
+      should "return false when expired" do
+        webauthn_verification = create(:webauthn_verification, user: @user, otp_expires_at: 2.minutes.ago)
+        refute @user.api_otp_verified?(webauthn_verification.otp)
+      end
+
+      should "return false if not been generated" do
+        create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
+        refute @user.api_otp_verified?("Yxf57d1wEUSWyXrr")
+      end
+    end
+
+    should "return true if recovery code is correct" do
+      recovery_code = @user.mfa_recovery_codes.first
+
+      assert @user.api_otp_verified?(recovery_code)
       refute_includes @user.mfa_recovery_codes, recovery_code
     end
   end
