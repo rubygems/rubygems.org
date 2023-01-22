@@ -34,7 +34,7 @@ module UserMultifactorMethods
 
     def mfa_gem_signin_authorized?(otp)
       return true unless strong_mfa_level?
-      otp_verified?(otp)
+      api_otp_verified?(otp)
     end
 
     def mfa_recommended_not_yet_enabled?
