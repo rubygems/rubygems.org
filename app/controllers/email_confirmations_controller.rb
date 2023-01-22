@@ -104,7 +104,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def mfa_update_conditions_met?
-    @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+    @user.mfa_enabled? && @user.ui_otp_verified?(params[:otp])
   end
 
   def setup_mfa_authentication

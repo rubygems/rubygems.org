@@ -53,7 +53,7 @@ module UserMultifactorMethods
       mfa_required? && mfa_ui_only?
     end
 
-    def otp_verified?(otp)
+    def ui_otp_verified?(otp)
       otp = otp.to_s
       return true if verify_digit_otp(mfa_seed, otp)
       return false unless mfa_recovery_codes.include? otp
@@ -63,7 +63,7 @@ module UserMultifactorMethods
 
     def api_otp_verified?(otp)
       return true if verify_webauthn_otp(otp)
-      return true if otp_verified?(otp)
+      return true if ui_otp_verified?(otp)
       false
     end
 
