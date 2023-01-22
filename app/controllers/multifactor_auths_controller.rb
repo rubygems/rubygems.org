@@ -27,7 +27,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def update
-    if current_user.otp_verified?(otp_param)
+    if current_user.ui_otp_verified?(otp_param)
       handle_new_level_param
       redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
       session.delete("mfa_redirect_uri")
