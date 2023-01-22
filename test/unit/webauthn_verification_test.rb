@@ -69,4 +69,64 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
       assert_equal @generated_time + 2.minutes, @webauthn_verification.otp_expires_at
     end
   end
+
+  context "#verify_otp" do
+    setup do
+      @user = create(:user)
+      @current_time = Time.utc(2023, 1, 1, 0, 1, 0)
+      travel_to @current_time
+      freeze_time
+    end
+
+    context "when otp is correct and not expired" do
+      setup do
+        @verification = create(:webauthn_verification, user: @user)
+      end
+
+      should "return true" do
+        assert @verification.verify_otp(@verification.otp)
+      end
+
+      should "update otp expiry to 1 second in the past" do
+        @verification.verify_otp(@verification.otp)
+        assert_equal @current_time - 1.second, @verification.otp_expires_at
+      end
+    end
+
+    context "when otp is incorrect" do
+      setup do
+        @expires_at = 2.minutes.from_now
+        @verification = create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx7U1i", otp_expires_at: @expires_at)
+      end
+
+      should "return false" do
+        refute @verification.verify_otp("Yxf57d1wEUSWyXrrLMRv")
+      end
+
+      should "not update expiry" do
+        @verification.verify_otp("Yxf57d1wEUSWyXrrLMRv")
+        assert_equal @expires_at, @verification.otp_expires_at
+      end
+    end
+
+    context "when otp is expired" do
+      setup do
+        @expires_at = @current_time - 1.minute
+        @verification = create(:webauthn_verification, user: @user, otp_expires_at: @expires_at)
+      end
+
+      should "return false" do
+        refute @verification.verify_otp(@verification.otp)
+      end
+
+      should "not update expiry" do
+        @verification.verify_otp(@verification.otp)
+        assert_equal @expires_at, @verification.otp_expires_at
+      end
+    end
+
+    teardown do
+      travel_back
+    end
+  end
 end
