@@ -261,42 +261,42 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
   end
 
-  context "#otp_verified?" do
+  context "#ui_otp_verified?" do
     setup do
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
       end
 
       should "return true when correct in last interval" do
         last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
-        assert @user.otp_verified?(last_otp)
+        assert @user.ui_otp_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
         next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
-        assert @user.otp_verified?(next_otp)
+        assert @user.ui_otp_verified?(next_otp)
       end
 
       should "return false when incorrect" do
-        refute @user.otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+        refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
     end
 
     context "with webauthn otp" do
       should "return false" do
         webauthn_verification = create(:webauthn_verification, user: @user)
-        refute @user.otp_verified?(webauthn_verification.otp)
+        refute @user.ui_otp_verified?(webauthn_verification.otp)
       end
     end
 
     should "return true if recovery code is correct" do
       recovery_code = @user.mfa_recovery_codes.first
 
-      assert @user.otp_verified?(recovery_code)
+      assert @user.ui_otp_verified?(recovery_code)
       refute_includes @user.mfa_recovery_codes, recovery_code
     end
   end

@@ -14,7 +14,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def mfa_update
-    if @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+    if @user.mfa_enabled? && @user.ui_otp_verified?(params[:otp])
       confirm_email
     else
       @form_url       = mfa_update_email_confirmations_url(token: @user.confirmation_token)

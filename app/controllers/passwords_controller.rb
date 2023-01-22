@@ -26,7 +26,7 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def mfa_edit
-    if @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+    if @user.mfa_enabled? && @user.ui_otp_verified?(params[:otp])
       render template: "passwords/edit"
     else
       @form_url       = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
