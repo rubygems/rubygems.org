@@ -347,7 +347,7 @@ class SignInTest < SystemTest
   end
 
   def create_webauthn_credential
-    fullscreen_headless_chrome_driver
+    headless_chrome_driver
 
     visit sign_in_path
     fill_in "Email or Username", with: @user.reload.email
