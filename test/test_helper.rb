@@ -33,6 +33,22 @@ end
 
 Rubygem.searchkick_reindex(import: false)
 
+# copied from capybara, added window size
+# https://github.com/teamcapybara/capybara/blob/5d28453d8fe3d30f5a69ed984a28e9357e55f070/lib/capybara/registrations/drivers.rb#L31-L42
+Capybara.register_driver :selenium_chrome_headless do |app|
+  version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
+  browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.add_argument("--headless")
+    opts.add_argument("--disable-gpu") if Gem.win_platform?
+    opts.add_argument("--window-size=1280x1280")
+    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
+    opts.add_argument("--disable-site-isolation-trials")
+  end
+
+  Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
+end
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include GemHelpers
@@ -73,14 +89,6 @@ class ActiveSupport::TestCase
     Capybara.current_driver = :selenium_chrome_headless
     Capybara.default_max_wait_time = 2
     Selenium::WebDriver.logger.level = :error
-  end
-
-  def fullscreen_headless_chrome_driver
-    headless_chrome_driver
-    driver = page.driver
-    fullscreen_width = 1200
-    fullscreen_height = 1000
-    driver.resize_window_to(driver.current_window_handle, fullscreen_width, fullscreen_height)
   end
 end
 
