@@ -62,6 +62,8 @@ class SessionsController < Clearance::SessionsController
     session.delete(:mfa_user)
 
     if login_conditions_met?
+      record_mfa_login_duration(mfa_type: "otp")
+
       do_login
     elsif !session_active?
       login_failure(t("multifactor_auths.session_expired"))
@@ -69,6 +71,7 @@ class SessionsController < Clearance::SessionsController
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
   ensure
+    session.delete(:mfa_login_started_at)
     session.delete(:mfa_expires_at)
   end
 
@@ -181,7 +184,9 @@ class SessionsController < Clearance::SessionsController
   end
 
   def record_mfa_login_duration(mfa_type:)
-    duration = Time.now.utc - session[:mfa_login_started_at]
+    started_at = Time.zone.parse(session[:mfa_login_started_at]).utc
+    duration = Time.now.utc - started_at
+
     StatsD.distribution("login.mfa.#{mfa_type}.duration", duration)
   end
 end

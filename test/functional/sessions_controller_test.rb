@@ -34,7 +34,12 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "on POST to mfa_create" do
       setup do
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+        @current_time = Time.utc(2023, 1, 1, 0, 0, 0)
+        travel_to @current_time
+        freeze_time
+
+        User.expects(:authenticate).with("login", "pass").returns @user
+        post :create, params: { session: { who: "login", password: "pass" } }
       end
 
       context "when OTP is correct" do
@@ -92,6 +97,35 @@ class SessionsControllerTest < ActionController::TestCase
         should "clear user name in session" do
           assert_nil @controller.session[:mfa_user]
         end
+      end
+
+      context "when mfa code is correct" do
+        setup do
+          @start_time = @current_time
+          @end_time = Time.utc(2023, 1, 1, 0, 2, 0)
+          @duration = @end_time - @start_time
+          @controller.session[:mfa_user] = @user.id
+        end
+
+        should "record duration on successful OTP login" do
+          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
+
+          travel_to @end_time do
+            post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          end
+        end
+
+        should "record duration on successful recovery code login" do
+          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
+
+          travel_to @end_time do
+            post :mfa_create, params: { otp: @user.mfa_recovery_codes.first }
+          end
+        end
+      end
+
+      teardown do
+        travel_back
       end
     end
 
