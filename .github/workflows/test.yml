@@ -47,7 +47,7 @@ jobs:
         cp config/database.yml.sample config/database.yml
         bundle exec rake db:setup
     - name: Tests
-      run: bin/rails test
+      run: bin/rails test:all
     - name: Upload coverage to Codecov
       if: matrix.rubygems_version ==  matrix.coverage_rubygems_version && (success() || failure())
       uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1

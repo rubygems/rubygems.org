@@ -1,12 +1,9 @@
-require "test_helper"
-require "capybara/minitest"
+require "application_system_test_case"
 
-class AutocompletesTest < SystemTest
+class AutocompletesTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   setup do
-    headless_chrome_driver
-
     rubygem = create(:rubygem, name: "rubocop")
     create(:version, rubygem: rubygem, indexed: true)
     rubygem = create(:rubygem, name: "rubocop-performance")
@@ -86,10 +83,5 @@ class AutocompletesTest < SystemTest
     find("li", text: "rubocop", match: :first).click
     assert_equal current_path, search_path || "/gems/"
     assert page.has_content? "rubocop"
-  end
-
-  teardown do
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end

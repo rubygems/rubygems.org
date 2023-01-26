@@ -1,9 +1,6 @@
-require "test_helper"
-require "capybara/minitest"
+require "application_system_test_case"
 
-class TransitiveDependenciesTest < SystemTest
-  setup { headless_chrome_driver }
-
+class TransitiveDependenciesTest < ApplicationSystemTestCase
   test "loading transitive dependencies using ajax" do
     version_one = create(:version)
     rubygem_one = version_one.rubygem
@@ -50,11 +47,5 @@ class TransitiveDependenciesTest < SystemTest
     find("span.deps_expanded-link").click
     assert page.has_content?(dep_dep_version.rubygem.name)
     assert page.has_content?(dep_dep_version.slug)
-  end
-
-  # Reset sessions and driver between tests
-  teardown do
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end

@@ -1,8 +1,7 @@
-require "test_helper"
+require "application_system_test_case"
 
-class WebauthnCredentialsTest < SystemTest
+class WebauthnCredentialsTest < ApplicationSystemTestCase
   setup do
-    headless_chrome_driver
     @user = create(:user)
   end
 
@@ -68,10 +67,5 @@ class WebauthnCredentialsTest < SystemTest
 
     # Cleanup test data
     authenticator.remove!
-  end
-
-  teardown do
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end

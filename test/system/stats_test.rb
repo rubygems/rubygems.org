@@ -1,9 +1,7 @@
-require "test_helper"
-require "capybara/minitest"
+require "application_system_test_case"
 
-class StatsTest < SystemTest
+class StatsTest < ApplicationSystemTestCase
   setup do
-    headless_chrome_driver
     @rubygem = create(:rubygem, number: "0.0.1", downloads: 100)
   end
 
@@ -12,6 +10,4 @@ class StatsTest < SystemTest
     assert page.find(:css, ".stats__graph__gem__meter")
     assert page.has_content?(@rubygem.downloads)
   end
-
-  teardown { Capybara.use_default_driver }
 end
