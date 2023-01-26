@@ -73,6 +73,8 @@ GEM
       ffi (~> 1.14)
       ffi-compiler (~> 1.0)
     ast (2.4.2)
+    audited (5.2.0)
+      activerecord (>= 5.0, < 7.1)
     autoprefixer-rails (10.4.7.0)
       execjs (~> 2)
     awrence (1.2.1)
@@ -490,6 +492,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  audited
   autoprefixer-rails
   aws-sdk-s3
   aws-sdk-sqs

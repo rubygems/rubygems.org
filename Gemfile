@@ -3,6 +3,7 @@ source "https://rubygems.org"
 gem "rails", "~> 7.0.0"
 gem "rails-i18n"
 
+gem "audited"
 gem "aws-sdk-s3"
 gem "aws-sdk-sqs"
 gem "bootsnap"

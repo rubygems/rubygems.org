@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_26_055041) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -34,9 +34,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.boolean "remove_owner", default: false, null: false
     t.boolean "access_webhooks", default: false, null: false
     t.boolean "show_dashboard", default: false, null: false
-    t.datetime "last_accessed_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "last_accessed_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "mfa", default: false, null: false
     t.datetime "soft_deleted_at"
     t.string "soft_deleted_rubygem_name"
@@ -44,17 +44,39 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
 
+  create_table "audits", force: :cascade do |t|
+    t.integer "auditable_id"
+    t.string "auditable_type"
+    t.integer "associated_id"
+    t.string "associated_type"
+    t.integer "user_id"
+    t.string "user_type"
+    t.string "username"
+    t.string "action"
+    t.text "audited_changes"
+    t.integer "version", default: 0
+    t.string "comment"
+    t.string "remote_address"
+    t.string "request_uuid"
+    t.datetime "created_at"
+    t.index ["associated_type", "associated_id"], name: "associated_index"
+    t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
+    t.index ["created_at"], name: "index_audits_on_created_at"
+    t.index ["request_uuid"], name: "index_audits_on_request_uuid"
+    t.index ["user_id", "user_type"], name: "user_index"
+  end
+
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "priority", default: 0
     t.integer "attempts", default: 0
     t.text "handler"
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "queue"
   end
 
@@ -63,19 +85,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.string "rubygem"
     t.string "number"
     t.string "platform"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["user_id"], name: "index_deletions_on_user_id"
   end
 
   create_table "dependencies", id: :serial, force: :cascade do |t|
-    t.string "requirements"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string "requirements", limit: 255
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "rubygem_id"
     t.integer "version_id"
-    t.string "scope"
-    t.string "unresolved_name"
+    t.string "scope", limit: 255
+    t.string "unresolved_name", limit: 255
     t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id"
     t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name"
     t.index ["version_id"], name: "index_dependencies_on_version_id"
@@ -93,20 +115,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   create_table "gem_typo_exceptions", force: :cascade do |t|
     t.string "name"
     t.text "info"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "linksets", id: :serial, force: :cascade do |t|
     t.integer "rubygem_id"
-    t.string "home"
-    t.string "wiki"
-    t.string "docs"
-    t.string "mail"
-    t.string "code"
-    t.string "bugs"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string "home", limit: 255
+    t.string "wiki", limit: 255
+    t.string "docs", limit: 255
+    t.string "mail", limit: 255
+    t.string "code", limit: 255
+    t.string "bugs", limit: 255
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["rubygem_id"], name: "index_linksets_on_rubygem_id"
   end
 
@@ -115,8 +137,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.string "directory"
     t.integer "backend", default: 0
     t.string "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "processed_count"
     t.index ["directory", "key"], name: "index_log_tickets_on_directory_and_key", unique: true
   end
@@ -126,8 +148,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.bigint "user_id"
     t.text "note"
     t.boolean "status", default: true, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["rubygem_id"], name: "index_ownership_calls_on_rubygem_id"
     t.index ["user_id"], name: "index_ownership_calls_on_user_id"
   end
@@ -139,8 +161,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.text "note"
     t.integer "status", limit: 2, default: 0, null: false
     t.integer "approver_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["ownership_call_id"], name: "index_ownership_requests_on_ownership_call_id"
     t.index ["rubygem_id"], name: "index_ownership_requests_on_rubygem_id"
     t.index ["user_id"], name: "index_ownership_requests_on_user_id"
@@ -150,11 +172,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.integer "rubygem_id"
     t.integer "user_id"
     t.string "token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.boolean "push_notifier", default: true, null: false
-    t.datetime "confirmed_at"
-    t.datetime "token_expires_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "token_expires_at", precision: nil
     t.boolean "owner_notifier", default: true, null: false
     t.integer "authorizer_id"
     t.boolean "ownership_request_notifier", default: true, null: false
@@ -164,10 +186,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   end
 
   create_table "rubygems", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "slug"
+    t.string "name", limit: 255
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.string "slug", limit: 255
     t.boolean "indexed", default: false, null: false
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
@@ -179,11 +201,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.string "sendgrid_id", null: false
     t.string "email"
     t.string "event_type"
-    t.datetime "occurred_at"
+    t.datetime "occurred_at", precision: nil
     t.jsonb "payload", null: false
     t.string "status", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["email"], name: "index_sendgrid_events_on_email"
     t.index ["sendgrid_id"], name: "index_sendgrid_events_on_sendgrid_id", unique: true
   end
@@ -191,8 +213,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   create_table "subscriptions", id: :serial, force: :cascade do |t|
     t.integer "rubygem_id"
     t.integer "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["rubygem_id"], name: "index_subscriptions_on_rubygem_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
@@ -202,19 +224,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.string "encrypted_password", limit: 128
     t.string "salt", limit: 128
     t.string "token", limit: 128
-    t.datetime "token_expires_at"
+    t.datetime "token_expires_at", precision: nil
     t.boolean "email_confirmed", default: false, null: false
     t.string "api_key"
     t.string "confirmation_token", limit: 128
     t.string "remember_token", limit: 128
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.boolean "email_reset"
     t.string "handle"
     t.boolean "hide_email", default: true
     t.string "twitter_username"
     t.string "unconfirmed_email"
-    t.datetime "remember_token_expires_at"
+    t.datetime "remember_token_expires_at", precision: nil
     t.string "mfa_seed"
     t.integer "mfa_level", default: 0
     t.string "mfa_recovery_codes", default: [], array: true
@@ -232,31 +254,31 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   create_table "versions", id: :serial, force: :cascade do |t|
     t.text "authors"
     t.text "description"
-    t.string "number"
+    t.string "number", limit: 255
     t.integer "rubygem_id"
-    t.datetime "built_at"
-    t.datetime "updated_at"
+    t.datetime "built_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.text "summary"
-    t.string "platform"
-    t.datetime "created_at"
+    t.string "platform", limit: 255
+    t.datetime "created_at", precision: nil
     t.boolean "indexed", default: true
     t.boolean "prerelease"
     t.integer "position"
     t.boolean "latest"
-    t.string "full_name"
+    t.string "full_name", limit: 255
+    t.string "licenses", limit: 255
     t.integer "size"
-    t.string "licenses"
     t.text "requirements"
-    t.string "required_ruby_version"
-    t.string "sha256"
+    t.string "required_ruby_version", limit: 255
+    t.string "sha256", limit: 255
     t.hstore "metadata", default: {}, null: false
-    t.datetime "yanked_at"
     t.string "required_rubygems_version", limit: 255
+    t.datetime "yanked_at", precision: nil
     t.string "info_checksum"
     t.string "yanked_info_checksum"
     t.bigint "pusher_id"
-    t.text "cert_chain"
     t.string "canonical_number"
+    t.text "cert_chain"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"
@@ -275,8 +297,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
     t.integer "user_id"
     t.string "url"
     t.integer "failure_count", default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
@@ -294,6 +316,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   end
 
   add_foreign_key "api_keys", "users"
-  add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "webauthn_credentials", "users"
 end
