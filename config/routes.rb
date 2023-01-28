@@ -154,6 +154,7 @@ Rails.application.routes.draw do
       get :popular, on: :collection
     end
     resource :notifier, only: %i[update show]
+    get '/admin', to: 'admin#index'
 
     resources :rubygems,
       only: %i[index show],
@@ -210,6 +211,9 @@ Rails.application.routes.draw do
     delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+
+    get 'auth/:provider/callback', to: 'oauth#create'
+    get 'auth/failure', to: 'oauth#failure'
   end
 
   ################################################################################

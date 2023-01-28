@@ -17,6 +17,9 @@
     <%= form.password_field :password, :class => 'form__input' %>
   </div>
   <div class="form_bottom">
+    <a href="https://github.com/login/oauth/authorize?scope=read:org,read:user&client_id=865362df5bb4a371a8d4">Log in with Github</a>
+  </div>
+  <div class="form_bottom">
     <%= form.submit t('sign_in'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>
 <% end %>

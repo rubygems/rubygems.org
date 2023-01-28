@@ -18,6 +18,7 @@ gem "jquery-rails"
 gem "kaminari"
 gem "mail"
 gem "newrelic_rpm"
+gem 'omniauth-github'
 gem "pg"
 gem "rack"
 gem "rack-utf8_sanitizer"
