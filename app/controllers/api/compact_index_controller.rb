@@ -27,11 +27,6 @@ class Api::CompactIndexController < Api::BaseController
 
   private
 
-  def cache_expiry_headers(fastly_expiry: 3600)
-    expires_in 60, public: true
-    fastly_expires_in fastly_expiry
-  end
-
   def render_range(response_body)
     headers["ETag"] = '"' << Digest::MD5.hexdigest(response_body) << '"'
 

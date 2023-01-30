@@ -17,6 +17,9 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def show
+    cache_expiry_headers
+    set_surrogate_key "gem/#{@rubygem.name}"
+
     if @rubygem.hosted? && @rubygem.public_versions.indexed.count.nonzero?
       respond_to do |format|
         format.json { render json: @rubygem }
@@ -39,6 +42,8 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def reverse_dependencies
+    cache_expiry_headers(fastly_expiry: 30)
+
     names = case params[:only]
             when "development"
               @rubygem.reverse_development_dependencies.pluck(:name)

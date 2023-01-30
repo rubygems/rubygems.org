@@ -40,6 +40,11 @@ class ApplicationController < ActionController::Base
     options[:password].present? && options[:name].present?
   end
 
+  def cache_expiry_headers(expiry: 60, fastly_expiry: 3600)
+    expires_in expiry, public: true
+    fastly_expires_in fastly_expiry
+  end
+
   def fastly_expires_in(seconds)
     response.headers["Surrogate-Control"] = "max-age=#{seconds}"
   end
