@@ -403,7 +403,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    searchkick (5.1.1)
+    searchkick (5.1.2)
       activemodel (>= 5.2)
       hashie
     selenium-webdriver (4.8.0)
@@ -446,7 +446,7 @@ GEM
       bindata (~> 2.4)
       openssl (> 2.0, < 3.1)
       openssl-signature_algorithm (~> 1.0)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
