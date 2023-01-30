@@ -20,7 +20,7 @@ jobs:
       id: buildx
       uses: docker/setup-buildx-action@7932f6210d7d60bffb2f9bcfa60e9e2c4800d96d # master
     - name: Cache Docker layers
-      uses: actions/cache@58c146cc91c5b9e778e71775dfe9bf1442ad9a12 # v3.2.3
+      uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920 # v3.2.4
       with:
         path: /tmp/.buildx-cache
         key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
