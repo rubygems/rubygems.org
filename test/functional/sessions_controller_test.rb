@@ -111,6 +111,23 @@ class SessionsControllerTest < ActionController::TestCase
         assert_nil @controller.session[:mfa_user]
       end
     end
+
+    context "when no mfa_expires_at session is present" do
+      setup do
+        @controller.session[:mfa_user] = @user.id
+        travel 30.minutes do
+          post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+        end
+      end
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "display the error message" do
+        assert page.has_content? "Your login page session has expired."
+      end
+    end
   end
 
   context "on POST to create" do

@@ -3,8 +3,12 @@ class Api::BaseController < ApplicationController
 
   private
 
+  def name_params
+    params.permit(:gem_name, :rubygem_name)
+  end
+
   def gem_name
-    params[:gem_name] || params[:rubygem_name]
+    name_params[:gem_name] || name_params[:rubygem_name]
   end
 
   def find_rubygem_by_name

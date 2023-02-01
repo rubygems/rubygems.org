@@ -25,6 +25,11 @@ require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/webauthn_helpers"
 
+Capybara.default_max_wait_time = 2
+Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
+Capybara.always_include_port = true
+Capybara.server = :webrick
+
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
 Mocha.configure do |c|
@@ -111,14 +116,14 @@ class ActionDispatch::IntegrationTest
   setup { host! Gemcutter::HOST }
 end
 
-Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
-Capybara.always_include_port = true
-Capybara.server = :webrick
-
 Gemcutter::Application.load_tasks
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
+
+  setup do
+    Capybara.current_driver = :rack_test
+  end
 
   teardown { reset_session! }
 end

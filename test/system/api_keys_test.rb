@@ -1,8 +1,7 @@
-require "test_helper"
+require "application_system_test_case"
 
-class ApiKeysTest < SystemTest
+class ApiKeysTest < ApplicationSystemTestCase
   setup do
-    headless_chrome_driver
     @user = create(:user)
     @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
 
@@ -293,10 +292,5 @@ class ApiKeysTest < SystemTest
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
-  end
-
-  teardown do
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end

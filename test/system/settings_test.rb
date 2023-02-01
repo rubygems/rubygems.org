@@ -1,9 +1,8 @@
-require "test_helper"
+require "application_system_test_case"
 
-class SettingsTest < SystemTest
+class SettingsTest < ApplicationSystemTestCase
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
-    headless_chrome_driver
   end
 
   def sign_in
@@ -173,10 +172,5 @@ class SettingsTest < SystemTest
 
     refute page.has_selector?("#level > option:nth-child(4)")
     refute page.has_content? "UI Only"
-  end
-
-  teardown do
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end

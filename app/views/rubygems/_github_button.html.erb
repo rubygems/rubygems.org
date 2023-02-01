@@ -1,7 +1,7 @@
-<span class="github-btn" data-params=<%= github_data_params %> %>
+<%= content_tag :span, class: 'github-btn', data: github_data_params do %>
   <a class="gh-btn" href="#" rel="noopener noreferrer" target="_blank">
     <span class="gh-ico" aria-hidden="true"></span>
     <span class="gh-text"></span>
   </a>
   <a class="gh-count" href="#" rel="noopener noreferrer" target="_blank" aria-hidden="true"></a>
-</span>
+<% end %>

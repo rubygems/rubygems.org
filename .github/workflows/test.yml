@@ -12,24 +12,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rubygems_version: ['3.3.25', 'latest']
-        coverage_rubygems_version: ['3.3.25']
-        ruby_version: ['3.1.2']
+        rubygems_version: ['3.4.3', 'latest']
+        coverage_rubygems_version: ['3.4.3']
+        ruby_version: ['3.2.0']
     name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems_version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
     - name: Install and start services
       run: |
         docker-compose up -d
     - name: Wait for ES to boot
       run: |
         timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
-    - uses: ruby/setup-ruby@v1
+    - uses: ruby/setup-ruby@ee26e27437bde475b19a6bf8cb73c9fa658876a2 # v1.134.0
       with:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: true
@@ -47,7 +47,7 @@ jobs:
         cp config/database.yml.sample config/database.yml
         bundle exec rake db:setup
     - name: Tests
-      run: bin/rails test
+      run: bin/rails test:all
     - name: Upload coverage to Codecov
       if: matrix.rubygems_version ==  matrix.coverage_rubygems_version && (success() || failure())
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1

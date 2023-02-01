@@ -264,53 +264,6 @@ class SignInTest < SystemTest
     assert page.has_content? "Sign out"
   end
 
-  test "sign in with webauthn" do
-    create_webauthn_credential
-
-    visit sign_in_path
-
-    fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-
-    assert page.has_content? "Multi-factor authentication"
-    assert page.has_content? "Security Device"
-
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
-
-    click_on "Authenticate with security device"
-
-    assert page.has_content? "Dashboard"
-
-    # Cleanup test data
-    @authenticator.remove!
-  end
-
-  test "sign in with webauthn but it expired" do
-    create_webauthn_credential
-
-    visit sign_in_path
-
-    fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-
-    assert page.has_content? "Multi-factor authentication"
-    assert page.has_content? "Security Device"
-
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
-
-    travel 30.minutes do
-      click_on "Authenticate with security device"
-
-      assert page.has_content? "Your login page session has expired."
-      assert page.has_content? "Multi-factor authentication"
-
-      # Cleanup test data
-      @authenticator.remove!
-    end
-  end
-
   test "signing out" do
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"

@@ -1,8 +1,7 @@
-require "test_helper"
+require "application_system_test_case"
 
-class MultifactorAuthsTest < SystemTest
+class MultifactorAuthsTest < ApplicationSystemTestCase
   setup do
-    headless_chrome_driver
     @user = create(:user, email: "testuser@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "testuser")
     @rubygem = create(:rubygem)
     create(:ownership, rubygem: @rubygem, user: @user)
@@ -12,6 +11,10 @@ class MultifactorAuthsTest < SystemTest
     )
     @seed = ROTP::Base32.random_base32
     @totp = ROTP::TOTP.new(@seed)
+  end
+
+  teardown do
+    @user.disable_mfa!
   end
 
   test "user with mfa disabled gets redirected back to adoptions after setting up mfa" do
@@ -132,11 +135,5 @@ class MultifactorAuthsTest < SystemTest
   def change_auth_level(type)
     page.select type
     click_button "Update"
-  end
-
-  teardown do
-    @user.disable_mfa!
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end
