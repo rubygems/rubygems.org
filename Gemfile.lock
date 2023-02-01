@@ -189,7 +189,7 @@ GEM
     gravtastic (3.2.6)
     hashie (5.0.0)
     high_voltage (3.1.2)
-    honeybadger (5.0.2)
+    honeybadger (5.1.0)
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
