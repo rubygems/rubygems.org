@@ -57,7 +57,7 @@ class ActiveSupport::TestCase
     Octokit.middleware = Octokit.middleware.dup.tap do |builder|
       @octokit_stubs = Faraday::Adapter::Test::Stubs.new
       builder.adapter :test, @octokit_stubs
-    end    
+    end
   end
 
   def page

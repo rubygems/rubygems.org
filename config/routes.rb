@@ -248,7 +248,7 @@ Rails.application.routes.draw do
       root to: 'admin#index'
     end
   end
-  
+
   get 'auth/:provider/callback', to: 'oauth#create'
   get 'auth/failure', to: 'oauth#failure'
 end
