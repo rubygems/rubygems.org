@@ -153,6 +153,16 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: sendgrid_webhook_password
+          - name: GITHUB_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: github_key
+          - name: GITHUB_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: github_secret
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
