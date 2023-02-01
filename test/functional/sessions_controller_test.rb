@@ -132,7 +132,7 @@ class SessionsControllerTest < ActionController::TestCase
     context "when OTP is correct but session expired" do
       setup do
         @controller.session[:mfa_user] = @user.id
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
         travel 30.minutes
 
         post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
@@ -182,7 +182,7 @@ class SessionsControllerTest < ActionController::TestCase
         user = User.new(email_confirmed: true)
         User.expects(:authenticate).with("login", "pass").returns user
         post :create, params: { session: { who: "login", password: "pass" } }
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
       end
 
       should respond_with :redirect
@@ -216,7 +216,7 @@ class SessionsControllerTest < ActionController::TestCase
 
         context "when mfa is enabled" do
           setup do
-            @controller.session[:mfa_login_started_at] = Time.now.utc
+            @controller.session[:mfa_login_started_at] = Time.now.utc.to_s
             @controller.session[:mfa_user] = @user.id
             User.expects(:find).with(@user.id).returns @user
           end

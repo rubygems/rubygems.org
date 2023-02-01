@@ -11,8 +11,8 @@ class SessionsController < Clearance::SessionsController
       setup_webauthn_authentication
       setup_mfa_authentication
 
-      session[:mfa_login_started_at] = Time.now.utc
-      session[:mfa_expires_at] = 15.minutes.from_now
+      session[:mfa_login_started_at] = Time.now.utc.to_s
+      session[:mfa_expires_at] = 15.minutes.from_now.to_s
 
       render "sessions/prompt"
     else
