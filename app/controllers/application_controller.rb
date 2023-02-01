@@ -14,7 +14,6 @@ class ApplicationController < ActionController::Base
 
   add_flash_types :notice_html
 
-
   def set_locale
     I18n.locale = user_locale
 

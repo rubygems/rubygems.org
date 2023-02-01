@@ -249,6 +249,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'auth/:provider/callback', to: 'oauth#create'
-  get 'auth/failure', to: 'oauth#failure'
+  scope :oauth do
+    get ':provider/callback', to: 'oauth#create'
+    get 'failure', to: 'oauth#failure'
+  end
 end

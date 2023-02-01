@@ -1,3 +1,5 @@
+require_relative "../middleware"
+
 class Gemcutter::Middleware::AdminAuth
   def initialize(app)
     @app = app
@@ -19,7 +21,7 @@ class Gemcutter::Middleware::AdminAuth
     [200, { "Cache-Control" => "private, max-age=0" }, [ApplicationController.renderer.new(env).render(inline: <<~ERB, locals: { request: })]]
       <div class="t-body">
         <%= button_to("Login with GitHub",
-                      ActionDispatch::Http::URL.path_for(path: '/auth/github', params: { origin: request.fullpath }),
+                      ActionDispatch::Http::URL.path_for(path: '/oauth/github', params: { origin: request.fullpath }),
                       method: 'post',
                       authenticity_token: true,
                       form: {
