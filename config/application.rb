@@ -42,6 +42,9 @@ module Gemcutter
     config.middleware.use Rack::Attack
     config.middleware.use Rack::Deflater
 
+    require_relative '../lib/gemcutter/middleware/admin_auth'
+    config.middleware.use ::Gemcutter::Middleware::AdminAuth
+
     config.active_record.include_root_in_json = false
 
     config.after_initialize do
