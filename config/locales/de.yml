@@ -30,6 +30,7 @@ de:
   try_again:
   advanced_search:
   authenticate:
+  credentials_required:
   activerecord:
     attributes:
       linkset:

@@ -41,6 +41,7 @@ es:
   try_again: Algo salió mal. Por favor inténtalo nuevamente.
   advanced_search: Búsqueda avanzada
   authenticate: Autenticar
+  credentials_required:
   activerecord:
     attributes:
       linkset:

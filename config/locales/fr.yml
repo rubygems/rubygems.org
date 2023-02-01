@@ -42,6 +42,7 @@ fr:
   try_again: Une erreur est survenue. Veuillez réessayer.
   advanced_search: Recherche avancée
   authenticate:
+  credentials_required:
   activerecord:
     attributes:
       linkset:

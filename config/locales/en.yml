@@ -36,6 +36,7 @@ en:
   try_again: Something went wrong. Please try again.
   advanced_search: Advanced Search
   authenticate: Authenticate
+  credentials_required: Credentials required
   activerecord:
     attributes:
       linkset:

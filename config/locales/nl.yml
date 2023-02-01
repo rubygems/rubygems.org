@@ -33,6 +33,7 @@ nl:
   try_again: Er is iets fout gegaan, probeer het opnieuw.
   advanced_search: Uitgebreid zoeken
   authenticate:
+  credentials_required:
   activerecord:
     attributes:
       linkset:

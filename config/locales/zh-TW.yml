@@ -30,6 +30,7 @@ zh-TW:
   try_again: 請再試一次
   advanced_search: 進階搜尋
   authenticate:
+  credentials_required:
   activerecord:
     attributes:
       linkset:

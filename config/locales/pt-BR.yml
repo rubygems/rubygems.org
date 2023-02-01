@@ -40,6 +40,7 @@ pt-BR:
   try_again: Algo deu errado. Por favor, tente novamente.
   advanced_search: Busca avançada
   authenticate:
+  credentials_required:
   activerecord:
     attributes:
       linkset:

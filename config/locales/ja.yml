@@ -34,6 +34,7 @@ ja:
   try_again: エラーが発生しました。再試行してください。
   advanced_search: 高度な検索
   authenticate:
+  credentials_required:
   activerecord:
     attributes:
       linkset:

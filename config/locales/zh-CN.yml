@@ -30,6 +30,7 @@ zh-CN:
   try_again: 请重试
   advanced_search: 高级搜索
   authenticate:
+  credentials_required:
   activerecord:
     attributes:
       linkset:
