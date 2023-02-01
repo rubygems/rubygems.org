@@ -8,11 +8,48 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :render_forbidden
 
+  before_action :require_auth_for_admin
   before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_null_char_cookie
 
   add_flash_types :notice_html
+
+  def requires_auth_for_admin?
+    if Rails.env.production? && ENV['RUBYGEMS_ENABLE_ADMIN']
+      # always required on the admin instance
+      true
+    elsif request.path.match?(/\A\/admin(\/|\z)/)
+      # always required for admin namespace
+      true
+    else
+      # running locally/staging, not trying to access admin namespace, safe to not require the admin auth
+      false
+    end
+  end
+
+  def require_auth_for_admin
+    return unless requires_auth_for_admin?
+
+    cookie = cookies.encrypted["rubygems_admin_oauth_github"]
+    if cookie
+      flash.now[:notice] = "Logged in as a admin via GitHub as #{cookie["username"]}"
+      return
+    end
+
+    return if params[:controller] == 'oauth'
+
+    response.headers["Cache-Control"] = "private, max-age=0"
+    render inline: <<~ERB
+      <div class="t-body">
+        <p>
+        <%= form_tag(ActionDispatch::Http::URL.path_for(path: '/auth/github', params: { origin: request.fullpath }), method: 'post', data: {turbo: false}) do %>
+          <button type='submit'>Login with GitHub</button>
+        <% end %>
+        </p>
+      </div>
+    ERB
+  end
 
   def set_locale
     I18n.locale = user_locale

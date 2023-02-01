@@ -1,0 +1,9 @@
+<% content_for :title do %>
+  <h1 class="t-display page__heading page__heading--small">
+    RubyGems.org admin page
+  </h1>
+<% end %>
+
+<p>
+  You are currently logged in as <%= link_to controller.admin_github_username, "https://github.com/#{controller.admin_github_username}" %>
+</p>

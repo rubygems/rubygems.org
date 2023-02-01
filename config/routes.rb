@@ -239,4 +239,16 @@ Rails.application.routes.draw do
   ################################################################################
   # Incoming Webhook Endpoint
   resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
+
+  ################################################################################
+  # Admin routes
+
+  constraints(->(_req) { !Rails.env.production? || ENV['RUBYGEMS_ENABLE_ADMIN'] }) do
+    namespace :admin do
+      root to: 'admin#index'
+    end
+  end
+  
+  get 'auth/:provider/callback', to: 'oauth#create'
+  get 'auth/failure', to: 'oauth#failure'
 end

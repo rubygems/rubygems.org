@@ -38,6 +38,8 @@ end
 
 Rubygem.searchkick_reindex(import: false)
 
+OmniAuth.config.test_mode = true
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include GemHelpers
@@ -50,6 +52,12 @@ class ActiveSupport::TestCase
     Rack::Attack.cache.store.clear
 
     Unpwn.offline = true
+    OmniAuth.config.mock_auth.clear
+
+    Octokit.middleware = Octokit.middleware.dup.tap do |builder|
+      @octokit_stubs = Faraday::Adapter::Test::Stubs.new
+      builder.adapter :test, @octokit_stubs
+    end    
   end
 
   def page
