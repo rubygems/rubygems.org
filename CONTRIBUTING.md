@@ -131,7 +131,7 @@ Make sure that the tests run successfully before making changes.
 
 * Depending on how you setup your environment, run `docker compose up` or
   ensure elasticsearch, memcached, and postgres are running.
-* Run the tests: `bin/rails test`
+* Run the tests: `bin/rails test:all`
 * See also: [Ruby on Rails testing documentation](https://guides.rubyonrails.org/testing.html).
 
 ### Running the application

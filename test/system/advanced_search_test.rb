@@ -1,12 +1,9 @@
-require "test_helper"
-require "capybara/minitest"
+require "application_system_test_case"
 
-class AdvancedSearchTest < SystemTest
+class AdvancedSearchTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   setup do
-    headless_chrome_driver
-
     visit advanced_search_path
   end
 
@@ -43,10 +40,5 @@ class AdvancedSearchTest < SystemTest
     fill_in "updated", with: ">2021-05-05"
 
     assert has_field? "Search Gems…", with: "name: hello summary: world description: foo downloads: >69 updated: >2021-05-05"
-  end
-
-  teardown do
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end
