@@ -172,6 +172,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "allow mfa forgot password" do
           @user.forgot_password!
+          get "/users/#{@user.id}/password/edit",
+            params: { token: @user.confirmation_token, user_id: @user.id }
           post "/users/#{@user.id}/password/mfa_edit",
             params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now },
             headers: { REMOTE_ADDR: @ip_address }
