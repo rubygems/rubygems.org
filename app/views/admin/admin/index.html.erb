@@ -5,5 +5,5 @@
 <% end %>
 
 <p>
-  You are currently logged in as <%= link_to controller.admin_github_username, "https://github.com/#{controller.admin_github_username}" %>
+  You are currently logged in as <%= link_to controller.admin_user.name, "https://github.com/#{controller.admin_user.name}" %>
 </p>

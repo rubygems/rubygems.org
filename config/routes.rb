@@ -246,6 +246,7 @@ Rails.application.routes.draw do
   constraints(->(_req) { !Rails.env.production? || ENV['RUBYGEMS_ENABLE_ADMIN'] }) do
     namespace :admin do
       root to: 'admin#index'
+      delete 'logout', to: 'admin#logout', as: :logout
     end
   end
 

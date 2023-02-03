@@ -56,9 +56,28 @@ class OAuthTest < ActionDispatch::IntegrationTest
   end
 
   test "sets auth cookie when successful" do
-    @octokit_stubs.get("/user/memberships/orgs/rubygems") { |_env| [200, { "Content-Type" => "application/json" }, JSON.generate(state: :active)] }
-    @octokit_stubs.get("/orgs/rubygems/teams/rubygems-org/memberships/jackson-keeling") do |_env|
-      [200, { "Content-Type" => "application/json" }, JSON.generate(state: :active)]
+    @octokit_stubs.post("/graphql",
+      {
+        query: GitHubOAuthable::User::INFO_QUERY,
+        variables: { organization_name: "rubygems" }
+      }.to_json) do |_env|
+      [200, { "Content-Type" => "application/json" }, JSON.generate(
+        data: {
+          viewer: {
+            login: "jackson-keeling",
+            organization: {
+              name: "RubyGems",
+              viewerIsAMember: true,
+              teams: {
+                edges: [
+                  { node: { slug: "rubygems-org" } },
+                  { node: { slug: "security" } }
+                ]
+              }
+            }
+          }
+        }
+      )]
     end
 
     get admin_root_path(params: { a: :b })
@@ -76,8 +95,18 @@ class OAuthTest < ActionDispatch::IntegrationTest
   end
 
   test "fails when user is not a member of the rubygems org" do
-    @octokit_stubs.get("/user/memberships/orgs/rubygems") do |_env|
-      [403, { "Content-Type" => "application/json" }, JSON.generate({ message: "bad" })]
+    @octokit_stubs.post("/graphql", {
+      query: GitHubOAuthable::User::INFO_QUERY,
+      variables: { organization_name: "rubygems" }
+    }.to_json) do
+      [200, { "Content-Type" => "application/json" }, JSON.generate(
+        data: {
+          viewer: {
+            login: "jackson-keeling",
+            organization: nil
+          }
+        }
+      )]
     end
 
     get admin_root_path
@@ -90,9 +119,27 @@ class OAuthTest < ActionDispatch::IntegrationTest
   end
 
   test "fails when user is not a member of the rubygems-org team" do
-    @octokit_stubs.get("/user/memberships/orgs/rubygems") { |_env| [200, { "Content-Type" => "application/json" }, JSON.generate(state: :active)] }
-    @octokit_stubs.get("/orgs/rubygems/teams/rubygems-org/memberships/jackson-keeling") do |_env|
-      [400, { "Content-Type" => "application/json" }, JSON.generate(message: "bad")]
+    @octokit_stubs.post("/graphql",
+      {
+        query: GitHubOAuthable::User::INFO_QUERY,
+        variables: { organization_name: "rubygems" }
+      }.to_json) do |_env|
+      [200, { "Content-Type" => "application/json" }, JSON.generate(
+        data: {
+          viewer: {
+            login: "jackson-keeling",
+            organization: {
+              name: "RubyGems",
+              viewerIsAMember: true,
+              teams: {
+                edges: [
+                  { node: { slug: "security" } }
+                ]
+              }
+            }
+          }
+        }
+      )]
     end
 
     get admin_root_path
