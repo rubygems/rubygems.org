@@ -4,8 +4,7 @@ class Api::V1::DependenciesController < Api::BaseController
   def index
     deps = GemDependent.new(gem_names).to_a
 
-    expires_in 30, public: true
-    fastly_expires_in 60
+    cache_expiry_headers(expiry: 30, fastly_expiry: 60)
     set_surrogate_key("dependencyapi", gem_names.map { |name| "gem/#{name}" })
 
     respond_to do |format|

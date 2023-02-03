@@ -276,7 +276,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_163648) do
     t.index ["indexed", "yanked_at"], name: "index_versions_on_indexed_and_yanked_at"
     t.index ["indexed"], name: "index_versions_on_indexed"
     t.index ["number"], name: "index_versions_on_number"
-    t.index ["position"], name: "index_versions_on_position"
+    t.index ["position", "rubygem_id"], name: "index_versions_on_position_and_rubygem_id"
     t.index ["prerelease"], name: "index_versions_on_prerelease"
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
