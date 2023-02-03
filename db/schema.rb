@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_21_005809) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_03_041509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
+
+  create_table "admin_github_users", force: :cascade do |t|
+    t.string "login"
+    t.string "avatar_url"
+    t.string "github_id"
+    t.json "info_data"
+    t.string "oauth_token"
+    t.boolean "is_admin"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["github_id"], name: "index_admin_github_users_on_github_id", unique: true
+  end
 
   create_table "api_key_rubygem_scopes", force: :cascade do |t|
     t.bigint "api_key_id", null: false

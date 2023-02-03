@@ -55,99 +55,247 @@ class OAuthTest < ActionDispatch::IntegrationTest
                                                                 })
   end
 
+  def do_login
+    get admin_root_path(params: { a: :b })
+    post html_document.at_css("form").attribute("action").value
+    follow_redirect!
+  end
+
   test "sets auth cookie when successful" do
+    info_data = {
+      viewer: {
+        login: "jackson-keeling",
+        id: "95144751",
+        organization: {
+          name: "RubyGems",
+          login: "rubygems",
+          viewerIsAMember: true,
+          teams: {
+            edges: [
+              { node: { slug: "rubygems-org" } },
+              { node: { slug: "security" } }
+            ]
+          }
+        }
+      }
+    }
     @octokit_stubs.post("/graphql",
       {
-        query: GitHubOAuthable::User::INFO_QUERY,
+        query: GitHubOAuthable::INFO_QUERY,
         variables: { organization_name: "rubygems" }
       }.to_json) do |_env|
       [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: {
-          viewer: {
-            login: "jackson-keeling",
-            organization: {
-              name: "RubyGems",
-              viewerIsAMember: true,
-              teams: {
-                edges: [
-                  { node: { slug: "rubygems-org" } },
-                  { node: { slug: "security" } }
-                ]
-              }
-            }
-          }
-        }
+        data: info_data
       )]
     end
 
-    get admin_root_path(params: { a: :b })
-
-    post html_document.at_css("form").attribute("action").value
-    follow_redirect!
+    do_login
 
     assert_redirected_to admin_root_path(params: { a: :b })
-    assert_not_nil cookies["rubygems_admin_oauth_github"]
+    assert_not_nil cookies["rubygems_admin_oauth_github_user"]
     follow_redirect!
 
     assert_response :success
     assert page.has_selector? "h1", text: "RubyGems.org admin page"
     assert page.has_selector? "p", text: "You are currently logged in as jackson-keeling"
+
+    Admin::GitHubUser.admins.sole.tap do |user|
+      assert user.is_admin
+      assert_equal [{ slug: "rubygems-org" }, { slug: "security" }], user.teams
+      assert user.team_member?("rubygems-org")
+      refute user.team_member?("rubygems-org-not")
+      assert_equal info_data, user.info_data
+    end
   end
 
   test "fails when user is not a member of the rubygems org" do
     @octokit_stubs.post("/graphql", {
-      query: GitHubOAuthable::User::INFO_QUERY,
+      query: GitHubOAuthable::INFO_QUERY,
       variables: { organization_name: "rubygems" }
     }.to_json) do
       [200, { "Content-Type" => "application/json" }, JSON.generate(
         data: {
           viewer: {
             login: "jackson-keeling",
+            id: "95144751",
             organization: nil
           }
         }
       )]
     end
 
-    get admin_root_path
+    do_login
 
-    post html_document.at_css("form").attribute("action").value
-    follow_redirect!
-
-    assert_response :not_found
+    assert_response :forbidden
     assert_nil cookies["rubygems_admin_oauth_github"]
+    assert_equal "Validation failed: Is admin missing rubygems org, Is admin not a member of the rubygems org", response.body
+    assert_empty Admin::GitHubUser.admins
   end
 
-  test "fails when user is not a member of the rubygems-org team" do
-    @octokit_stubs.post("/graphql",
-      {
-        query: GitHubOAuthable::User::INFO_QUERY,
-        variables: { organization_name: "rubygems" }
-      }.to_json) do |_env|
-      [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: {
+  context "with an existing user for the github_id" do
+    setup do
+      @existing = FactoryBot.create(
+        :admin_github_user,
+        :is_admin
+      )
+    end
+
+    should "login updates info data" do
+      info_data = {
+        viewer: {
+          login: "#{@existing.login}_update",
+          id: @existing.github_id,
+          organization: {
+            name: "RubyGems",
+            login: "rubygems",
+            viewerIsAMember: true,
+            teams: {
+              edges: [
+                { node: { slug: "other-team" } }
+              ]
+            }
+          }
+        }
+      }
+      @octokit_stubs.post("/graphql",
+        {
+          query: GitHubOAuthable::INFO_QUERY,
+          variables: { organization_name: "rubygems" }
+        }.to_json) do |_env|
+        [200, { "Content-Type" => "application/json" }, JSON.generate(
+          data: info_data
+        )]
+      end
+      OmniAuth.config.mock_auth[:github].credentials.token += "_update"
+
+      do_login
+
+      assert_redirected_to admin_root_path(params: { a: :b })
+      assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+      follow_redirect!
+      assert_response :success
+
+      Admin::GitHubUser.admins.sole.tap do |user|
+        assert user.is_admin
+        assert user.login.ends_with?("_update")
+        assert_equal @existing.github_id, user.github_id
+        assert user.oauth_token.ends_with?("_update")
+        assert_equal [{ slug: "other-team" }], user.teams
+        assert_equal info_data, user.info_data
+      end
+    end
+
+    should "login updates to non-admin" do
+      info_data = {
+        viewer: {
+          login: @existing.login,
+          id: @existing.github_id,
+          organization: nil
+        }
+      }
+      @octokit_stubs.post("/graphql",
+        {
+          query: GitHubOAuthable::INFO_QUERY,
+          variables: { organization_name: "rubygems" }
+        }.to_json) do |_env|
+        [200, { "Content-Type" => "application/json" }, JSON.generate(
+          data: info_data
+        )]
+      end
+
+      do_login
+      assert_nil cookies["rubygems_admin_oauth_github_user"]
+      assert_response :forbidden
+
+      Admin::GitHubUser.sole.tap do |user|
+        refute user.is_admin
+        assert_empty user.teams
+        assert_equal info_data, user.info_data
+      end
+    end
+
+    context "existing user is not an admin" do
+      setup do
+        @existing.update!(
+          is_admin: false,
+          info_data: {
+            viewer: {
+              login: @existing.login,
+              id: @existing.github_id,
+              organization: nil
+            }
+          }
+        )
+      end
+
+      should "update to admin" do
+        info_data = {
           viewer: {
-            login: "jackson-keeling",
+            login: @existing.login,
+            id: @existing.github_id,
             organization: {
               name: "RubyGems",
+              login: "rubygems",
               viewerIsAMember: true,
               teams: {
                 edges: [
-                  { node: { slug: "security" } }
+                  { node: { slug: "rubygems_org" } }
                 ]
               }
             }
           }
         }
-      )]
+        @octokit_stubs.post("/graphql",
+          {
+            query: GitHubOAuthable::INFO_QUERY,
+            variables: { organization_name: "rubygems" }
+          }.to_json) do |_env|
+          [200, { "Content-Type" => "application/json" }, JSON.generate(
+            data: info_data
+          )]
+        end
+
+        do_login
+
+        assert_redirected_to admin_root_path(params: { a: :b })
+        assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+        follow_redirect!
+        assert_response :success
+
+        Admin::GitHubUser.sole.tap do |user|
+          assert user.is_admin
+          assert_equal info_data, user.info_data
+        end
+      end
+
+      should "stay non-admin" do
+        info_data = {
+          viewer: {
+            login: @existing.login,
+            id: @existing.github_id,
+            organization: nil
+          }
+        }
+        @octokit_stubs.post("/graphql",
+          {
+            query: GitHubOAuthable::INFO_QUERY,
+            variables: { organization_name: "rubygems" }
+          }.to_json) do |_env|
+          [200, { "Content-Type" => "application/json" }, JSON.generate(
+            data: info_data
+          )]
+        end
+
+        do_login
+        assert_nil cookies["rubygems_admin_oauth_github_user"]
+        assert_response :forbidden
+
+        Admin::GitHubUser.sole.tap do |user|
+          refute user.is_admin
+          assert_empty user.teams
+          assert_equal info_data, user.info_data
+        end
+      end
     end
-
-    get admin_root_path
-
-    post html_document.at_css("form").attribute("action").value
-    follow_redirect!
-
-    assert_response :not_found
-    assert_nil cookies["rubygems_admin_oauth_github"]
   end
 end

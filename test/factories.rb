@@ -1,4 +1,35 @@
 FactoryBot.define do
+  factory :admin_github_user, class: "Admin::GitHubUser" do
+    login { "jackson-keeling" }
+    avatar_url { "MyString" }
+    github_id { "1" }
+
+    oauth_token { SecureRandom.hex(10) }
+
+    trait :is_admin do
+      is_admin { true }
+      info_data do
+        {
+          viewer: {
+            login: login,
+            id: github_id,
+            organization: {
+              name: "RubyGems",
+              login: "rubygems",
+              viewerIsAMember: true,
+              teams: {
+                edges: [
+                  { node: { slug: "rubygems-org" } },
+                  { node: { slug: "security" } }
+                ]
+              }
+            }
+          }
+        }
+      end
+    end
+  end
+
   sequence :email do |n|
     "user#{n}@example.com"
   end
