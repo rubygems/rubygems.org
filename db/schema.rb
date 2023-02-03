@@ -51,6 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_163648) do
     t.string "github_user_id"
     t.text "audited_changes"
     t.string "comment"
+    t.string "action"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["auditable_type", "auditable_id"], name: "index_audits_on_auditable"

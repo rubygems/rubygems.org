@@ -6,6 +6,7 @@ class CreateAudits < ActiveRecord::Migration[7.0]
       t.string :github_user_id
       t.text :audited_changes
       t.string :comment
+      t.string :action
       t.timestamps
     end
   end
