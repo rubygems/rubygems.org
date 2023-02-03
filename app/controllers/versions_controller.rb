@@ -2,7 +2,8 @@ class VersionsController < ApplicationController
   before_action :find_rubygem
 
   def index
-    @versions = @rubygem.versions.by_position
+    set_page
+    @versions = @rubygem.versions.by_position.page(@page).per(Gemcutter::VERSIONS_PER_PAGE)
   end
 
   def show

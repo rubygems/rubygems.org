@@ -69,6 +69,7 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
+    StatsD.expects(:distribution)
     assert page.has_content? "Multi-factor authentication"
 
     within(".mfa-form") do

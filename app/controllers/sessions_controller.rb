@@ -11,7 +11,8 @@ class SessionsController < Clearance::SessionsController
       setup_webauthn_authentication
       setup_mfa_authentication
 
-      session[:mfa_expires_at] = 15.minutes.from_now
+      session[:mfa_login_started_at] = Time.now.utc.to_s
+      session[:mfa_expires_at] = 15.minutes.from_now.to_s
 
       render "sessions/prompt"
     else
@@ -45,11 +46,14 @@ class SessionsController < Clearance::SessionsController
 
     @webauthn_credential.update!(sign_count: @credential.sign_count)
 
+    record_mfa_login_duration(mfa_type: "webauthn")
+
     do_login
   rescue WebAuthn::Error => e
     webauthn_verification_failure(e.message)
   ensure
     session.delete(:webauthn_authentication)
+    session.delete(:mfa_login_started_at)
     session.delete(:mfa_expires_at)
   end
 
@@ -58,6 +62,8 @@ class SessionsController < Clearance::SessionsController
     session.delete(:mfa_user)
 
     if login_conditions_met?
+      record_mfa_login_duration(mfa_type: "otp")
+
       do_login
     elsif !session_active?
       login_failure(t("multifactor_auths.session_expired"))
@@ -65,6 +71,7 @@ class SessionsController < Clearance::SessionsController
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
   ensure
+    session.delete(:mfa_login_started_at)
     session.delete(:mfa_expires_at)
   end
 
@@ -171,5 +178,12 @@ class SessionsController < Clearance::SessionsController
 
   def login_conditions_met?
     @user&.mfa_enabled? && @user&.otp_verified?(params[:otp]) && session_active?
+  end
+
+  def record_mfa_login_duration(mfa_type:)
+    started_at = Time.zone.parse(session[:mfa_login_started_at]).utc
+    duration = Time.now.utc - started_at
+
+    StatsD.distribution("login.mfa.#{mfa_type}.duration", duration)
   end
 end
