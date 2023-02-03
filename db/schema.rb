@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_27_114605) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_26_163648) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -47,13 +47,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_27_114605) do
   create_table "audits", force: :cascade do |t|
     t.string "auditable_type"
     t.bigint "auditable_id"
-    t.bigint "user_id"
+    t.string "github_username"
+    t.string "github_user_id"
     t.text "audited_changes"
     t.string "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["auditable_type", "auditable_id"], name: "index_audits_on_auditable"
-    t.index ["user_id"], name: "index_audits_on_user_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
