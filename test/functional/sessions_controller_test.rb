@@ -472,17 +472,6 @@ class SessionsControllerTest < ActionController::TestCase
         @user = create(:user)
         @webauthn_credential = create(:webauthn_credential, user: @user)
         login_to_session_with_webauthn
-        post(
-          :webauthn_create,
-          params: {
-            credentials:
-              WebauthnHelpers.get_result(
-                client: @client,
-                challenge: @challenge
-              )
-          },
-          format: :html
-        )
       end
 
       context "redirect to dashboard" do
@@ -723,7 +712,7 @@ class SessionsControllerTest < ActionController::TestCase
             challenge: @challenge
           )
       },
-      format: :json
+      format: :html
     )
   end
 end
