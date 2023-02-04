@@ -13,6 +13,19 @@ node[ shape  =  "Mrecord" , fontsize  =  "10" , fontname  =  "Arial" , margin  =
 edge[ fontname  =  "Arial" , fontsize  =  "7" , dir  =  "both" , arrowsize  =  "0.9" , penwidth  =  "1.0" , labelangle  =  "32" , labeldistance  =  "1.8"];
 rankdir = "TB";
 label = "RubyGems.org domain model\n\n";
+"m_Admin::GitHubUser" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Admin::GitHubUser</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="avatar_url">avatar_url <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="github_id">github_id <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="info_data">info_data <font face="Arial Italic" color="grey60">json ∗</font></td></tr>
+  <tr><td align="left" width="130" port="is_admin">is_admin <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="login">login <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="oauth_token">oauth_token <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
 m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">ApiKey</font></td></tr>
 </table>
@@ -22,7 +35,7 @@ m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpaddin
   <tr><td align="left" width="130" port="add_owner">add_owner <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="hashed_key">hashed_key <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="index_rubygems">index_rubygems <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
-  <tr><td align="left" width="130" port="last_accessed_at">last_accessed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="last_accessed_at">last_accessed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="mfa">mfa <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="push_rubygem">push_rubygem <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
@@ -43,14 +56,14 @@ m_ApiKeyRubygemScope [label = <<table border="0" align="center" cellspacing="0.5
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="attempts">attempts <font face="Arial Italic" color="grey60">integer</font></td></tr>
-  <tr><td align="left" width="130" port="failed_at">failed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="failed_at">failed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="handler">handler <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="last_error">last_error <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="locked_at">locked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="locked_at">locked_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="locked_by">locked_by <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="queue">queue <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="run_at">run_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="run_at">run_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
 </table>
 >];
 m_Deletion [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -120,12 +133,12 @@ m_Ownership [label = <<table border="0" align="center" cellspacing="0.5" cellpad
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="confirmed_at">confirmed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="confirmed_at">confirmed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="owner_notifier">owner_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="ownership_request_notifier">ownership_request_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="push_notifier">push_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
 </table>
 >];
 m_OwnershipCall [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -163,7 +176,7 @@ m_SendgridEvent [label = <<table border="0" align="center" cellspacing="0.5" cel
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="email">email <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="event_type">event_type <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="occurred_at">occurred_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="occurred_at">occurred_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="payload">payload <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
   <tr><td align="left" width="130" port="sendgrid_id">sendgrid_id <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
@@ -192,10 +205,10 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
@@ -220,10 +233,10 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
@@ -235,7 +248,7 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="authors">authors <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="built_at">built_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="built_at">built_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="canonical_number">canonical_number <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="cert_chain">cert_chain <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="description">description <font face="Arial Italic" color="grey60">text</font></td></tr>
@@ -255,7 +268,7 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="size">size <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="summary">summary <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="yanked_info_checksum">yanked_info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
