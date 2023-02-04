@@ -10,92 +10,113 @@
 <title>Gemcutter</title>
 <polygon fill="white" stroke="none" points="-28.8,28.8 -28.8,-781.8 4265.3,-781.8 4265.3,28.8 -28.8,28.8"/>
 <text text-anchor="middle" x="2118.25" y="-738.6" font-family="Arial Bold" font-size="13.00">RubyGems.org domain model</text>
-<!-- m_ApiKey -->
+<!-- m_Admin::GitHubUser -->
 <g id="node1" class="node">
-<title>m_ApiKey</title>
-<path fill="none" stroke="black" d="M646,-151.5C646,-151.5 934,-151.5 934,-151.5 940,-151.5 946,-157.5 946,-163.5 946,-163.5 946,-318.5 946,-318.5 946,-324.5 940,-330.5 934,-330.5 934,-330.5 646,-330.5 646,-330.5 640,-330.5 634,-324.5 634,-318.5 634,-318.5 634,-163.5 634,-163.5 634,-157.5 640,-151.5 646,-151.5"/>
-<text text-anchor="start" x="684.5" y="-238.2" font-family="Arial Bold" font-size="11.00">ApiKey</text>
-<polyline fill="none" stroke="black" points="778,-151.5 778,-330.5"/>
-<text text-anchor="start" x="785" y="-317" font-family="Arial" font-size="10.00">access_webhooks </text>
-<text text-anchor="start" x="870" y="-317" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="785" y="-304" font-family="Arial" font-size="10.00">add_owner </text>
-<text text-anchor="start" x="836" y="-304" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="785" y="-291" font-family="Arial" font-size="10.00">hashed_key </text>
-<text text-anchor="start" x="841" y="-291" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="785" y="-278" font-family="Arial" font-size="10.00">index_rubygems </text>
-<text text-anchor="start" x="860" y="-278" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="785" y="-265" font-family="Arial" font-size="10.00">last_accessed_at </text>
-<text text-anchor="start" x="865" y="-265" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="785" y="-252" font-family="Arial" font-size="10.00">mfa </text>
-<text text-anchor="start" x="805" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="785" y="-239" font-family="Arial" font-size="10.00">name </text>
-<text text-anchor="start" x="813" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="785" y="-226" font-family="Arial" font-size="10.00">push_rubygem </text>
-<text text-anchor="start" x="852" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="785" y="-213" font-family="Arial" font-size="10.00">remove_owner </text>
-<text text-anchor="start" x="852" y="-213" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="785" y="-200" font-family="Arial" font-size="10.00">show_dashboard </text>
-<text text-anchor="start" x="862" y="-200" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="785" y="-187" font-family="Arial" font-size="10.00">soft_deleted_at </text>
-<text text-anchor="start" x="855" y="-187" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime (6,0)</text>
-<text text-anchor="start" x="785" y="-174" font-family="Arial" font-size="10.00">soft_deleted_rubygem_name </text>
-<text text-anchor="start" x="914" y="-174" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="785" y="-161" font-family="Arial" font-size="10.00">yank_rubygem </text>
-<text text-anchor="start" x="852" y="-161" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-</g>
-<!-- m_ApiKeyRubygemScope -->
-<g id="node2" class="node">
-<title>m_ApiKeyRubygemScope</title>
-<path fill="none" stroke="black" d="M975,-7C975,-7 1095,-7 1095,-7 1101,-7 1107,-13 1107,-19 1107,-19 1107,-31 1107,-31 1107,-37 1101,-43 1095,-43 1095,-43 975,-43 975,-43 969,-43 963,-37 963,-31 963,-31 963,-19 963,-19 963,-13 969,-7 975,-7"/>
-<text text-anchor="start" x="972" y="-22.2" font-family="Arial Bold" font-size="11.00">ApiKeyRubygemScope</text>
-</g>
-<!-- m_ApiKey&#45;&gt;m_ApiKeyRubygemScope -->
-<g id="edge24" class="edge">
-<title>m_ApiKey&#45;&gt;m_ApiKeyRubygemScope</title>
-<path fill="none" stroke="black" d="M885.28,-151.81C909.4,-130.01 935.44,-106.91 960,-86 977.52,-71.08 997.95,-54.81 1013.05,-42.98"/>
-</g>
-<!-- m_Ownership -->
-<g id="node11" class="node">
-<title>m_Ownership</title>
-<path fill="none" stroke="black" d="M987,-197C987,-197 1281,-197 1281,-197 1287,-197 1293,-203 1293,-209 1293,-209 1293,-273 1293,-273 1293,-279 1287,-285 1281,-285 1281,-285 987,-285 987,-285 981,-285 975,-279 975,-273 975,-273 975,-209 975,-209 975,-203 981,-197 987,-197"/>
-<text text-anchor="start" x="1016.5" y="-238.2" font-family="Arial Bold" font-size="11.00">Ownership</text>
-<polyline fill="none" stroke="black" points="1119,-197 1119,-285"/>
-<text text-anchor="start" x="1126" y="-272" font-family="Arial" font-size="10.00">confirmed_at </text>
-<text text-anchor="start" x="1186" y="-272" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="1126" y="-259" font-family="Arial" font-size="10.00">owner_notifier </text>
-<text text-anchor="start" x="1190" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="1126" y="-246" font-family="Arial" font-size="10.00">ownership_request_notifier </text>
-<text text-anchor="start" x="1246" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="1126" y="-233" font-family="Arial" font-size="10.00">push_notifier </text>
-<text text-anchor="start" x="1185" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="1126" y="-220" font-family="Arial" font-size="10.00">token </text>
-<text text-anchor="start" x="1154" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="1126" y="-207" font-family="Arial" font-size="10.00">token_expires_at </text>
-<text text-anchor="start" x="1204" y="-207" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<title>m_Admin::GitHubUser</title>
+<path fill="none" stroke="black" d="M12,-530C12,-530 276,-530 276,-530 282,-530 288,-536 288,-542 288,-542 288,-606 288,-606 288,-612 282,-618 276,-618 276,-618 12,-618 12,-618 6,-618 0,-612 0,-606 0,-606 0,-542 0,-542 0,-536 6,-530 12,-530"/>
+<text text-anchor="start" x="18" y="-571.2" font-family="Arial Bold" font-size="11.00">Admin::GitHubUser</text>
+<polyline fill="none" stroke="black" points="144,-530 144,-618"/>
+<text text-anchor="start" x="151" y="-605" font-family="Arial" font-size="10.00">avatar_url </text>
+<text text-anchor="start" x="197" y="-605" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="151" y="-592" font-family="Arial" font-size="10.00">github_id </text>
+<text text-anchor="start" x="194" y="-592" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="151" y="-579" font-family="Arial" font-size="10.00">info_data </text>
+<text text-anchor="start" x="194" y="-579" font-family="Arial Italic" font-size="10.00" fill="#999999">json</text>
+<text text-anchor="start" x="151" y="-566" font-family="Arial" font-size="10.00">is_admin </text>
+<text text-anchor="start" x="194" y="-566" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="151" y="-553" font-family="Arial" font-size="10.00">login </text>
+<text text-anchor="start" x="175" y="-553" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="151" y="-540" font-family="Arial" font-size="10.00">oauth_token </text>
+<text text-anchor="start" x="208" y="-540" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_Audit -->
-<g id="node3" class="node">
+<g id="node4" class="node">
 <title>m_Audit</title>
-<path fill="none" stroke="black" d="M2272,-523.5C2272,-523.5 2536,-523.5 2536,-523.5 2542,-523.5 2548,-529.5 2548,-535.5 2548,-535.5 2548,-612.5 2548,-612.5 2548,-618.5 2542,-624.5 2536,-624.5 2536,-624.5 2272,-624.5 2272,-624.5 2266,-624.5 2260,-618.5 2260,-612.5 2260,-612.5 2260,-535.5 2260,-535.5 2260,-529.5 2266,-523.5 2272,-523.5"/>
-<text text-anchor="start" x="2315.5" y="-571.2" font-family="Arial Bold" font-size="11.00">Audit</text>
-<polyline fill="none" stroke="black" points="2404,-523.5 2404,-624.5"/>
-<text text-anchor="start" x="2411" y="-611" font-family="Arial" font-size="10.00">action </text>
-<text text-anchor="start" x="2441" y="-611" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="2411" y="-598" font-family="Arial" font-size="10.00">auditable_id </text>
-<text text-anchor="start" x="2466" y="-598" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8)</text>
-<text text-anchor="start" x="2411" y="-585" font-family="Arial" font-size="10.00">auditable_type </text>
-<text text-anchor="start" x="2478" y="-585" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2411" y="-572" font-family="Arial" font-size="10.00">audited_changes </text>
-<text text-anchor="start" x="2488" y="-572" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="2411" y="-559" font-family="Arial" font-size="10.00">comment </text>
-<text text-anchor="start" x="2455" y="-559" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2411" y="-546" font-family="Arial" font-size="10.00">github_user_id </text>
-<text text-anchor="start" x="2478" y="-546" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="2411" y="-533" font-family="Arial" font-size="10.00">github_username </text>
-<text text-anchor="start" x="2489" y="-533" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<path fill="none" stroke="black" d="M12,-203.5C12,-203.5 276,-203.5 276,-203.5 282,-203.5 288,-209.5 288,-215.5 288,-215.5 288,-266.5 288,-266.5 288,-272.5 282,-278.5 276,-278.5 276,-278.5 12,-278.5 12,-278.5 6,-278.5 0,-272.5 0,-266.5 0,-266.5 0,-215.5 0,-215.5 0,-209.5 6,-203.5 12,-203.5"/>
+<text text-anchor="start" x="55.5" y="-238.2" font-family="Arial Bold" font-size="11.00">Audit</text>
+<polyline fill="none" stroke="black" points="144,-203.5 144,-278.5"/>
+<text text-anchor="start" x="151" y="-265" font-family="Arial" font-size="10.00">action </text>
+<text text-anchor="start" x="181" y="-265" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="151" y="-252" font-family="Arial" font-size="10.00">auditable_id </text>
+<text text-anchor="start" x="206" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8)</text>
+<text text-anchor="start" x="151" y="-239" font-family="Arial" font-size="10.00">auditable_type </text>
+<text text-anchor="start" x="218" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="151" y="-226" font-family="Arial" font-size="10.00">audited_changes </text>
+<text text-anchor="start" x="228" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="151" y="-213" font-family="Arial" font-size="10.00">comment </text>
+<text text-anchor="start" x="195" y="-213" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+</g>
+<!-- m_Admin::GitHubUser&#45;&gt;m_Audit -->
+<g id="edge24" class="edge">
+<title>m_Admin::GitHubUser&#45;&gt;m_Audit</title>
+<path fill="none" stroke="black" d="M144,-530.07C144,-467.76 144,-352.74 144,-288.5"/>
+<polygon fill="black" stroke="black" points="147.15,-288.77 144,-279.77 140.85,-288.77 147.15,-288.77"/>
+</g>
+<!-- m_ApiKey -->
+<g id="node2" class="node">
+<title>m_ApiKey</title>
+<path fill="none" stroke="black" d="M963,-151.5C963,-151.5 1251,-151.5 1251,-151.5 1257,-151.5 1263,-157.5 1263,-163.5 1263,-163.5 1263,-318.5 1263,-318.5 1263,-324.5 1257,-330.5 1251,-330.5 1251,-330.5 963,-330.5 963,-330.5 957,-330.5 951,-324.5 951,-318.5 951,-318.5 951,-163.5 951,-163.5 951,-157.5 957,-151.5 963,-151.5"/>
+<text text-anchor="start" x="1001.5" y="-238.2" font-family="Arial Bold" font-size="11.00">ApiKey</text>
+<polyline fill="none" stroke="black" points="1095,-151.5 1095,-330.5"/>
+<text text-anchor="start" x="1102" y="-317" font-family="Arial" font-size="10.00">access_webhooks </text>
+<text text-anchor="start" x="1187" y="-317" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1102" y="-304" font-family="Arial" font-size="10.00">add_owner </text>
+<text text-anchor="start" x="1153" y="-304" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1102" y="-291" font-family="Arial" font-size="10.00">hashed_key </text>
+<text text-anchor="start" x="1158" y="-291" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="1102" y="-278" font-family="Arial" font-size="10.00">index_rubygems </text>
+<text text-anchor="start" x="1177" y="-278" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1102" y="-265" font-family="Arial" font-size="10.00">last_accessed_at </text>
+<text text-anchor="start" x="1182" y="-265" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="1102" y="-252" font-family="Arial" font-size="10.00">mfa </text>
+<text text-anchor="start" x="1122" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1102" y="-239" font-family="Arial" font-size="10.00">name </text>
+<text text-anchor="start" x="1130" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="1102" y="-226" font-family="Arial" font-size="10.00">push_rubygem </text>
+<text text-anchor="start" x="1169" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1102" y="-213" font-family="Arial" font-size="10.00">remove_owner </text>
+<text text-anchor="start" x="1169" y="-213" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1102" y="-200" font-family="Arial" font-size="10.00">show_dashboard </text>
+<text text-anchor="start" x="1179" y="-200" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1102" y="-187" font-family="Arial" font-size="10.00">soft_deleted_at </text>
+<text text-anchor="start" x="1172" y="-187" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime (6,0)</text>
+<text text-anchor="start" x="1102" y="-174" font-family="Arial" font-size="10.00">soft_deleted_rubygem_name </text>
+<text text-anchor="start" x="1231" y="-174" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1102" y="-161" font-family="Arial" font-size="10.00">yank_rubygem </text>
+<text text-anchor="start" x="1169" y="-161" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+</g>
+<!-- m_ApiKeyRubygemScope -->
+<g id="node3" class="node">
+<title>m_ApiKeyRubygemScope</title>
+<path fill="none" stroke="black" d="M1292,-7C1292,-7 1412,-7 1412,-7 1418,-7 1424,-13 1424,-19 1424,-19 1424,-31 1424,-31 1424,-37 1418,-43 1412,-43 1412,-43 1292,-43 1292,-43 1286,-43 1280,-37 1280,-31 1280,-31 1280,-19 1280,-19 1280,-13 1286,-7 1292,-7"/>
+<text text-anchor="start" x="1289" y="-22.2" font-family="Arial Bold" font-size="11.00">ApiKeyRubygemScope</text>
+</g>
+<!-- m_ApiKey&#45;&gt;m_ApiKeyRubygemScope -->
+<g id="edge25" class="edge">
+<title>m_ApiKey&#45;&gt;m_ApiKeyRubygemScope</title>
+<path fill="none" stroke="black" d="M1202.28,-151.81C1226.4,-130.01 1252.44,-106.91 1277,-86 1294.52,-71.08 1314.95,-54.81 1330.05,-42.98"/>
+</g>
+<!-- m_Ownership -->
+<g id="node12" class="node">
+<title>m_Ownership</title>
+<path fill="none" stroke="black" d="M1304,-197C1304,-197 1598,-197 1598,-197 1604,-197 1610,-203 1610,-209 1610,-209 1610,-273 1610,-273 1610,-279 1604,-285 1598,-285 1598,-285 1304,-285 1304,-285 1298,-285 1292,-279 1292,-273 1292,-273 1292,-209 1292,-209 1292,-203 1298,-197 1304,-197"/>
+<text text-anchor="start" x="1333.5" y="-238.2" font-family="Arial Bold" font-size="11.00">Ownership</text>
+<polyline fill="none" stroke="black" points="1436,-197 1436,-285"/>
+<text text-anchor="start" x="1443" y="-272" font-family="Arial" font-size="10.00">confirmed_at </text>
+<text text-anchor="start" x="1503" y="-272" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="1443" y="-259" font-family="Arial" font-size="10.00">owner_notifier </text>
+<text text-anchor="start" x="1507" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1443" y="-246" font-family="Arial" font-size="10.00">ownership_request_notifier </text>
+<text text-anchor="start" x="1563" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1443" y="-233" font-family="Arial" font-size="10.00">push_notifier </text>
+<text text-anchor="start" x="1502" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1443" y="-220" font-family="Arial" font-size="10.00">token </text>
+<text text-anchor="start" x="1471" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1443" y="-207" font-family="Arial" font-size="10.00">token_expires_at </text>
+<text text-anchor="start" x="1521" y="-207" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
 </g>
 <!-- m_Delayed::Backend::ActiveRecord::Job -->
-<g id="node4" class="node">
+<g id="node5" class="node">
 <title>m_Delayed::Backend::ActiveRecord::Job</title>
 <path fill="none" stroke="black" d="M2589,-510.5C2589,-510.5 2921,-510.5 2921,-510.5 2927,-510.5 2933,-516.5 2933,-522.5 2933,-522.5 2933,-625.5 2933,-625.5 2933,-631.5 2927,-637.5 2921,-637.5 2921,-637.5 2589,-637.5 2589,-637.5 2583,-637.5 2577,-631.5 2577,-625.5 2577,-625.5 2577,-522.5 2577,-522.5 2577,-516.5 2583,-510.5 2589,-510.5"/>
 <text text-anchor="start" x="2582" y="-571.2" font-family="Arial Bold" font-size="11.00">Delayed::Backend::ActiveRecord::Job</text>
@@ -120,42 +141,42 @@
 <text text-anchor="start" x="2827" y="-520" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
 </g>
 <!-- m_Deletion -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>m_Deletion</title>
-<path fill="none" stroke="black" d="M329,-216.5C329,-216.5 593,-216.5 593,-216.5 599,-216.5 605,-222.5 605,-228.5 605,-228.5 605,-253.5 605,-253.5 605,-259.5 599,-265.5 593,-265.5 593,-265.5 329,-265.5 329,-265.5 323,-265.5 317,-259.5 317,-253.5 317,-253.5 317,-228.5 317,-228.5 317,-222.5 323,-216.5 329,-216.5"/>
-<text text-anchor="start" x="365" y="-238.2" font-family="Arial Bold" font-size="11.00">Deletion</text>
-<polyline fill="none" stroke="black" points="461,-216.5 461,-265.5"/>
-<text text-anchor="start" x="468" y="-252" font-family="Arial" font-size="10.00">number </text>
-<text text-anchor="start" x="504" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="468" y="-239" font-family="Arial" font-size="10.00">platform </text>
-<text text-anchor="start" x="507" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="468" y="-226" font-family="Arial" font-size="10.00">rubygem </text>
-<text text-anchor="start" x="509" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<path fill="none" stroke="black" d="M646,-216.5C646,-216.5 910,-216.5 910,-216.5 916,-216.5 922,-222.5 922,-228.5 922,-228.5 922,-253.5 922,-253.5 922,-259.5 916,-265.5 910,-265.5 910,-265.5 646,-265.5 646,-265.5 640,-265.5 634,-259.5 634,-253.5 634,-253.5 634,-228.5 634,-228.5 634,-222.5 640,-216.5 646,-216.5"/>
+<text text-anchor="start" x="682" y="-238.2" font-family="Arial Bold" font-size="11.00">Deletion</text>
+<polyline fill="none" stroke="black" points="778,-216.5 778,-265.5"/>
+<text text-anchor="start" x="785" y="-252" font-family="Arial" font-size="10.00">number </text>
+<text text-anchor="start" x="821" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="785" y="-239" font-family="Arial" font-size="10.00">platform </text>
+<text text-anchor="start" x="824" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="785" y="-226" font-family="Arial" font-size="10.00">rubygem </text>
+<text text-anchor="start" x="826" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 </g>
 <!-- m_Dependency -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>m_Dependency</title>
-<path fill="none" stroke="black" d="M2388,-0.5C2388,-0.5 2652,-0.5 2652,-0.5 2658,-0.5 2664,-6.5 2664,-12.5 2664,-12.5 2664,-37.5 2664,-37.5 2664,-43.5 2658,-49.5 2652,-49.5 2652,-49.5 2388,-49.5 2388,-49.5 2382,-49.5 2376,-43.5 2376,-37.5 2376,-37.5 2376,-12.5 2376,-12.5 2376,-6.5 2382,-0.5 2388,-0.5"/>
-<text text-anchor="start" x="2413" y="-22.2" font-family="Arial Bold" font-size="11.00">Dependency</text>
-<polyline fill="none" stroke="black" points="2520,-0.5 2520,-49.5"/>
-<text text-anchor="start" x="2527" y="-36" font-family="Arial" font-size="10.00">requirements </text>
-<text text-anchor="start" x="2587" y="-36" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="2527" y="-23" font-family="Arial" font-size="10.00">scope </text>
-<text text-anchor="start" x="2557" y="-23" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2527" y="-10" font-family="Arial" font-size="10.00">unresolved_name </text>
-<text text-anchor="start" x="2607" y="-10" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<path fill="none" stroke="black" d="M2705,-0.5C2705,-0.5 2969,-0.5 2969,-0.5 2975,-0.5 2981,-6.5 2981,-12.5 2981,-12.5 2981,-37.5 2981,-37.5 2981,-43.5 2975,-49.5 2969,-49.5 2969,-49.5 2705,-49.5 2705,-49.5 2699,-49.5 2693,-43.5 2693,-37.5 2693,-37.5 2693,-12.5 2693,-12.5 2693,-6.5 2699,-0.5 2705,-0.5"/>
+<text text-anchor="start" x="2730" y="-22.2" font-family="Arial Bold" font-size="11.00">Dependency</text>
+<polyline fill="none" stroke="black" points="2837,-0.5 2837,-49.5"/>
+<text text-anchor="start" x="2844" y="-36" font-family="Arial" font-size="10.00">requirements </text>
+<text text-anchor="start" x="2904" y="-36" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255) ∗</text>
+<text text-anchor="start" x="2844" y="-23" font-family="Arial" font-size="10.00">scope </text>
+<text text-anchor="start" x="2874" y="-23" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="2844" y="-10" font-family="Arial" font-size="10.00">unresolved_name </text>
+<text text-anchor="start" x="2924" y="-10" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
 </g>
 <!-- m_GemDownload -->
-<g id="node7" class="node">
+<g id="node8" class="node">
 <title>m_GemDownload</title>
-<path fill="none" stroke="black" d="M2071,-7C2071,-7 2335,-7 2335,-7 2341,-7 2347,-13 2347,-19 2347,-19 2347,-31 2347,-31 2347,-37 2341,-43 2335,-43 2335,-43 2071,-43 2071,-43 2065,-43 2059,-37 2059,-31 2059,-31 2059,-19 2059,-19 2059,-13 2065,-7 2071,-7"/>
-<text text-anchor="start" x="2090.5" y="-22.2" font-family="Arial Bold" font-size="11.00">GemDownload</text>
-<polyline fill="none" stroke="black" points="2203,-7 2203,-43"/>
-<text text-anchor="start" x="2210" y="-23" font-family="Arial" font-size="10.00">count </text>
-<text text-anchor="start" x="2238" y="-23" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8)</text>
+<path fill="none" stroke="black" d="M2388,-7C2388,-7 2652,-7 2652,-7 2658,-7 2664,-13 2664,-19 2664,-19 2664,-31 2664,-31 2664,-37 2658,-43 2652,-43 2652,-43 2388,-43 2388,-43 2382,-43 2376,-37 2376,-31 2376,-31 2376,-19 2376,-19 2376,-13 2382,-7 2388,-7"/>
+<text text-anchor="start" x="2407.5" y="-22.2" font-family="Arial Bold" font-size="11.00">GemDownload</text>
+<polyline fill="none" stroke="black" points="2520,-7 2520,-43"/>
+<text text-anchor="start" x="2527" y="-23" font-family="Arial" font-size="10.00">count </text>
+<text text-anchor="start" x="2555" y="-23" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8)</text>
 </g>
 <!-- m_GemTypoException -->
-<g id="node8" class="node">
+<g id="node9" class="node">
 <title>m_GemTypoException</title>
 <path fill="none" stroke="black" d="M2974,-556C2974,-556 3238,-556 3238,-556 3244,-556 3250,-562 3250,-568 3250,-568 3250,-580 3250,-580 3250,-586 3244,-592 3238,-592 3238,-592 2974,-592 2974,-592 2968,-592 2962,-586 2962,-580 2962,-580 2962,-568 2962,-568 2962,-562 2968,-556 2974,-556"/>
 <text text-anchor="start" x="2980.5" y="-571.2" font-family="Arial Bold" font-size="11.00">GemTypoException</text>
@@ -166,26 +187,26 @@
 <text text-anchor="start" x="3141" y="-566" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
 </g>
 <!-- m_Linkset -->
-<g id="node9" class="node">
+<g id="node10" class="node">
 <title>m_Linkset</title>
-<path fill="none" stroke="black" d="M2618,-197C2618,-197 2882,-197 2882,-197 2888,-197 2894,-203 2894,-209 2894,-209 2894,-273 2894,-273 2894,-279 2888,-285 2882,-285 2882,-285 2618,-285 2618,-285 2612,-285 2606,-279 2606,-273 2606,-273 2606,-209 2606,-209 2606,-203 2612,-197 2618,-197"/>
-<text text-anchor="start" x="2656.5" y="-238.2" font-family="Arial Bold" font-size="11.00">Linkset</text>
-<polyline fill="none" stroke="black" points="2750,-197 2750,-285"/>
-<text text-anchor="start" x="2757" y="-272" font-family="Arial" font-size="10.00">bugs </text>
-<text text-anchor="start" x="2782" y="-272" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2757" y="-259" font-family="Arial" font-size="10.00">code </text>
-<text text-anchor="start" x="2782" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2757" y="-246" font-family="Arial" font-size="10.00">docs </text>
-<text text-anchor="start" x="2782" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2757" y="-233" font-family="Arial" font-size="10.00">home </text>
-<text text-anchor="start" x="2785" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2757" y="-220" font-family="Arial" font-size="10.00">mail </text>
-<text text-anchor="start" x="2779" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2757" y="-207" font-family="Arial" font-size="10.00">wiki </text>
-<text text-anchor="start" x="2778" y="-207" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<path fill="none" stroke="black" d="M2935,-197C2935,-197 3199,-197 3199,-197 3205,-197 3211,-203 3211,-209 3211,-209 3211,-273 3211,-273 3211,-279 3205,-285 3199,-285 3199,-285 2935,-285 2935,-285 2929,-285 2923,-279 2923,-273 2923,-273 2923,-209 2923,-209 2923,-203 2929,-197 2935,-197"/>
+<text text-anchor="start" x="2973.5" y="-238.2" font-family="Arial Bold" font-size="11.00">Linkset</text>
+<polyline fill="none" stroke="black" points="3067,-197 3067,-285"/>
+<text text-anchor="start" x="3074" y="-272" font-family="Arial" font-size="10.00">bugs </text>
+<text text-anchor="start" x="3099" y="-272" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="3074" y="-259" font-family="Arial" font-size="10.00">code </text>
+<text text-anchor="start" x="3099" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="3074" y="-246" font-family="Arial" font-size="10.00">docs </text>
+<text text-anchor="start" x="3099" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="3074" y="-233" font-family="Arial" font-size="10.00">home </text>
+<text text-anchor="start" x="3102" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="3074" y="-220" font-family="Arial" font-size="10.00">mail </text>
+<text text-anchor="start" x="3096" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="3074" y="-207" font-family="Arial" font-size="10.00">wiki </text>
+<text text-anchor="start" x="3095" y="-207" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
 </g>
 <!-- m_LogTicket -->
-<g id="node10" class="node">
+<g id="node11" class="node">
 <title>m_LogTicket</title>
 <path fill="none" stroke="black" d="M3291,-536.5C3291,-536.5 3555,-536.5 3555,-536.5 3561,-536.5 3567,-542.5 3567,-548.5 3567,-548.5 3567,-599.5 3567,-599.5 3567,-605.5 3561,-611.5 3555,-611.5 3555,-611.5 3291,-611.5 3291,-611.5 3285,-611.5 3279,-605.5 3279,-599.5 3279,-599.5 3279,-548.5 3279,-548.5 3279,-542.5 3285,-536.5 3291,-536.5"/>
 <text text-anchor="start" x="3323" y="-571.2" font-family="Arial Bold" font-size="11.00">LogTicket</text>
@@ -204,175 +225,175 @@
 <!-- m_Ownership&#45;&gt;m_ApiKeyRubygemScope -->
 <g id="edge22" class="edge">
 <title>m_Ownership&#45;&gt;m_ApiKeyRubygemScope</title>
-<path fill="none" stroke="black" d="M1114.2,-197.21C1094.19,-153.95 1063.9,-88.47 1047.17,-52.31"/>
-<polygon fill="black" stroke="black" points="1050.11,-51.15 1043.47,-44.31 1044.39,-53.8 1050.11,-51.15"/>
+<path fill="none" stroke="black" d="M1431.2,-197.21C1411.19,-153.95 1380.9,-88.47 1364.17,-52.31"/>
+<polygon fill="black" stroke="black" points="1367.11,-51.15 1360.47,-44.31 1361.39,-53.8 1367.11,-51.15"/>
 </g>
 <!-- m_OwnershipCall -->
-<g id="node12" class="node">
+<g id="node13" class="node">
 <title>m_OwnershipCall</title>
-<path fill="none" stroke="black" d="M1393,-223C1393,-223 1657,-223 1657,-223 1663,-223 1669,-229 1669,-235 1669,-235 1669,-247 1669,-247 1669,-253 1663,-259 1657,-259 1657,-259 1393,-259 1393,-259 1387,-259 1381,-253 1381,-247 1381,-247 1381,-235 1381,-235 1381,-229 1387,-223 1393,-223"/>
-<text text-anchor="start" x="1412.5" y="-238.2" font-family="Arial Bold" font-size="11.00">OwnershipCall</text>
-<polyline fill="none" stroke="black" points="1525,-223 1525,-259"/>
-<text text-anchor="start" x="1532" y="-246" font-family="Arial" font-size="10.00">note </text>
-<text text-anchor="start" x="1554" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">text ∗</text>
-<text text-anchor="start" x="1532" y="-233" font-family="Arial" font-size="10.00">status </text>
-<text text-anchor="start" x="1563" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<path fill="none" stroke="black" d="M1710,-223C1710,-223 1974,-223 1974,-223 1980,-223 1986,-229 1986,-235 1986,-235 1986,-247 1986,-247 1986,-253 1980,-259 1974,-259 1974,-259 1710,-259 1710,-259 1704,-259 1698,-253 1698,-247 1698,-247 1698,-235 1698,-235 1698,-229 1704,-223 1710,-223"/>
+<text text-anchor="start" x="1729.5" y="-238.2" font-family="Arial Bold" font-size="11.00">OwnershipCall</text>
+<polyline fill="none" stroke="black" points="1842,-223 1842,-259"/>
+<text text-anchor="start" x="1849" y="-246" font-family="Arial" font-size="10.00">note </text>
+<text text-anchor="start" x="1871" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">text ∗</text>
+<text text-anchor="start" x="1849" y="-233" font-family="Arial" font-size="10.00">status </text>
+<text text-anchor="start" x="1880" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
 </g>
 <!-- m_OwnershipRequest -->
-<g id="node13" class="node">
+<g id="node14" class="node">
 <title>m_OwnershipRequest</title>
-<path fill="none" stroke="black" d="M1299,-7C1299,-7 1563,-7 1563,-7 1569,-7 1575,-13 1575,-19 1575,-19 1575,-31 1575,-31 1575,-37 1569,-43 1563,-43 1563,-43 1299,-43 1299,-43 1293,-43 1287,-37 1287,-31 1287,-31 1287,-19 1287,-19 1287,-13 1293,-7 1299,-7"/>
-<text text-anchor="start" x="1307" y="-22.2" font-family="Arial Bold" font-size="11.00">OwnershipRequest</text>
-<polyline fill="none" stroke="black" points="1431,-7 1431,-43"/>
-<text text-anchor="start" x="1438" y="-30" font-family="Arial" font-size="10.00">note </text>
-<text text-anchor="start" x="1460" y="-30" font-family="Arial Italic" font-size="10.00" fill="#999999">text ∗</text>
-<text text-anchor="start" x="1438" y="-17" font-family="Arial" font-size="10.00">status </text>
-<text text-anchor="start" x="1469" y="-17" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (2) ∗</text>
+<path fill="none" stroke="black" d="M1616,-7C1616,-7 1880,-7 1880,-7 1886,-7 1892,-13 1892,-19 1892,-19 1892,-31 1892,-31 1892,-37 1886,-43 1880,-43 1880,-43 1616,-43 1616,-43 1610,-43 1604,-37 1604,-31 1604,-31 1604,-19 1604,-19 1604,-13 1610,-7 1616,-7"/>
+<text text-anchor="start" x="1624" y="-22.2" font-family="Arial Bold" font-size="11.00">OwnershipRequest</text>
+<polyline fill="none" stroke="black" points="1748,-7 1748,-43"/>
+<text text-anchor="start" x="1755" y="-30" font-family="Arial" font-size="10.00">note </text>
+<text text-anchor="start" x="1777" y="-30" font-family="Arial Italic" font-size="10.00" fill="#999999">text ∗</text>
+<text text-anchor="start" x="1755" y="-17" font-family="Arial" font-size="10.00">status </text>
+<text text-anchor="start" x="1786" y="-17" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (2) ∗</text>
 </g>
 <!-- m_OwnershipCall&#45;&gt;m_OwnershipRequest -->
 <g id="edge21" class="edge">
 <title>m_OwnershipCall&#45;&gt;m_OwnershipRequest</title>
-<path fill="none" stroke="black" d="M1517.62,-223.21C1501.32,-186.09 1462.12,-96.86 1442.54,-52.27"/>
-<polygon fill="black" stroke="black" points="1445.45,-51.07 1438.95,-44.1 1439.69,-53.61 1445.45,-51.07"/>
+<path fill="none" stroke="black" d="M1834.62,-223.21C1818.32,-186.09 1779.12,-96.86 1759.54,-52.27"/>
+<polygon fill="black" stroke="black" points="1762.45,-51.07 1755.95,-44.1 1756.69,-53.61 1762.45,-51.07"/>
 </g>
 <!-- m_Rubygem -->
-<g id="node14" class="node">
+<g id="node15" class="node">
 <title>m_Rubygem</title>
-<path fill="none" stroke="black" d="M1955,-549.5C1955,-549.5 2219,-549.5 2219,-549.5 2225,-549.5 2231,-555.5 2231,-561.5 2231,-561.5 2231,-586.5 2231,-586.5 2231,-592.5 2225,-598.5 2219,-598.5 2219,-598.5 1955,-598.5 1955,-598.5 1949,-598.5 1943,-592.5 1943,-586.5 1943,-586.5 1943,-561.5 1943,-561.5 1943,-555.5 1949,-549.5 1955,-549.5"/>
-<text text-anchor="start" x="1987.5" y="-571.2" font-family="Arial Bold" font-size="11.00">Rubygem</text>
-<polyline fill="none" stroke="black" points="2087,-549.5 2087,-598.5"/>
-<text text-anchor="start" x="2094" y="-585" font-family="Arial" font-size="10.00">indexed </text>
-<text text-anchor="start" x="2131" y="-585" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="2094" y="-572" font-family="Arial" font-size="10.00">name </text>
-<text text-anchor="start" x="2122" y="-572" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
-<text text-anchor="start" x="2094" y="-559" font-family="Arial" font-size="10.00">slug </text>
-<text text-anchor="start" x="2116" y="-559" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<path fill="none" stroke="black" d="M2272,-549.5C2272,-549.5 2536,-549.5 2536,-549.5 2542,-549.5 2548,-555.5 2548,-561.5 2548,-561.5 2548,-586.5 2548,-586.5 2548,-592.5 2542,-598.5 2536,-598.5 2536,-598.5 2272,-598.5 2272,-598.5 2266,-598.5 2260,-592.5 2260,-586.5 2260,-586.5 2260,-561.5 2260,-561.5 2260,-555.5 2266,-549.5 2272,-549.5"/>
+<text text-anchor="start" x="2304.5" y="-571.2" font-family="Arial Bold" font-size="11.00">Rubygem</text>
+<polyline fill="none" stroke="black" points="2404,-549.5 2404,-598.5"/>
+<text text-anchor="start" x="2411" y="-585" font-family="Arial" font-size="10.00">indexed </text>
+<text text-anchor="start" x="2448" y="-585" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="2411" y="-572" font-family="Arial" font-size="10.00">name </text>
+<text text-anchor="start" x="2439" y="-572" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255) ∗ U</text>
+<text text-anchor="start" x="2411" y="-559" font-family="Arial" font-size="10.00">slug </text>
+<text text-anchor="start" x="2433" y="-559" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Dependency -->
 <g id="edge23" class="edge">
 <title>m_Rubygem&#45;&gt;m_Dependency</title>
-<path fill="none" stroke="black" d="M2104.48,-549.77C2130.92,-516.69 2184.57,-457.24 2246,-432 2314.24,-403.96 2858.27,-449.56 2909,-396 3003.75,-295.97 2998.69,-190.59 2909,-86 2878.53,-50.47 2769.25,-35.78 2674.25,-29.81"/>
-<polygon fill="black" stroke="black" points="2674.61,-26.67 2665.44,-29.28 2674.23,-32.96 2674.61,-26.67"/>
+<path fill="none" stroke="black" d="M2421.48,-549.77C2447.92,-516.69 2501.57,-457.24 2563,-432 2631.24,-403.96 3175.27,-449.56 3226,-396 3320.75,-295.97 3315.69,-190.59 3226,-86 3195.53,-50.47 3086.25,-35.78 2991.25,-29.81"/>
+<polygon fill="black" stroke="black" points="2991.61,-26.67 2982.44,-29.28 2991.23,-32.96 2991.61,-26.67"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_GemDownload -->
 <g id="edge18" class="edge">
 <title>m_Rubygem&#45;&gt;m_GemDownload</title>
-<path fill="none" stroke="black" d="M2203,-240C2176.77,-170.88 2191.32,-79.91 2199.1,-42.82"/>
+<path fill="none" stroke="black" d="M2520,-240C2493.77,-170.88 2508.32,-79.91 2516.1,-42.82"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Linkset -->
 <g id="edge17" class="edge">
 <title>m_Rubygem&#45;&gt;m_Linkset</title>
-<path fill="none" stroke="black" d="M2105.09,-549.62C2131.9,-516.94 2185.55,-458.6 2246,-432 2387.51,-369.72 2452,-461.59 2592,-396 2645.07,-371.14 2691.14,-320.99 2719.62,-284.65"/>
+<path fill="none" stroke="black" d="M2422.09,-549.62C2448.9,-516.94 2502.55,-458.6 2563,-432 2704.51,-369.72 2769,-461.59 2909,-396 2962.07,-371.14 3008.14,-320.99 3036.62,-284.65"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Ownership -->
 <g id="edge16" class="edge">
 <title>m_Rubygem&#45;&gt;m_Ownership</title>
-<path fill="none" stroke="black" d="M1943.07,-552.69C1794.05,-528.25 1556.77,-479.68 1366,-396 1303.69,-368.67 1239.77,-324.84 1194.85,-290.92"/>
-<polygon fill="black" stroke="black" points="1196.96,-288.57 1187.89,-285.62 1193.14,-293.58 1196.96,-288.57"/>
+<path fill="none" stroke="black" d="M2260.07,-552.69C2111.05,-528.25 1873.77,-479.68 1683,-396 1620.69,-368.67 1556.77,-324.84 1511.85,-290.92"/>
+<polygon fill="black" stroke="black" points="1513.96,-288.57 1504.89,-285.62 1510.14,-293.58 1513.96,-288.57"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_OwnershipCall -->
 <g id="edge19" class="edge">
 <title>m_Rubygem&#45;&gt;m_OwnershipCall</title>
-<path fill="none" stroke="black" d="M2013.15,-549.5C1929.15,-520.81 1789.92,-467.17 1684,-396 1627.84,-358.26 1573.71,-299.58 1545.39,-266.62"/>
-<polygon fill="black" stroke="black" points="1547.97,-264.79 1539.74,-259.98 1543.17,-268.88 1547.97,-264.79"/>
+<path fill="none" stroke="black" d="M2330.15,-549.5C2246.15,-520.81 2106.92,-467.17 2001,-396 1944.84,-358.26 1890.71,-299.58 1862.39,-266.62"/>
+<polygon fill="black" stroke="black" points="1864.97,-264.79 1856.74,-259.98 1860.17,-268.88 1864.97,-264.79"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_OwnershipRequest -->
 <g id="edge20" class="edge">
 <title>m_Rubygem&#45;&gt;m_OwnershipRequest</title>
-<path fill="none" stroke="black" d="M2203,-240C2178.29,-174.88 2225.78,-132.58 2174,-86 2131.25,-47.54 1789.66,-33.56 1584.84,-28.61"/>
-<polygon fill="black" stroke="black" points="1585.17,-25.47 1576.1,-28.4 1585.02,-31.77 1585.17,-25.47"/>
-<path fill="none" stroke="black" d="M2106.78,-549.58C2150.15,-495.22 2246.43,-356.43 2203,-242"/>
+<path fill="none" stroke="black" d="M2520,-240C2495.29,-174.88 2542.78,-132.58 2491,-86 2448.25,-47.54 2106.66,-33.56 1901.84,-28.61"/>
+<polygon fill="black" stroke="black" points="1902.17,-25.47 1893.1,-28.4 1902.02,-31.77 1902.17,-25.47"/>
+<path fill="none" stroke="black" d="M2423.78,-549.58C2467.15,-495.22 2563.43,-356.43 2520,-242"/>
 </g>
 <!-- m_Subscription -->
-<g id="node16" class="node">
+<g id="node17" class="node">
 <title>m_Subscription</title>
-<path fill="none" stroke="black" d="M2027,-223C2027,-223 2147,-223 2147,-223 2153,-223 2159,-229 2159,-235 2159,-235 2159,-247 2159,-247 2159,-253 2153,-259 2147,-259 2147,-259 2027,-259 2027,-259 2021,-259 2015,-253 2015,-247 2015,-247 2015,-235 2015,-235 2015,-229 2021,-223 2027,-223"/>
-<text text-anchor="start" x="2051" y="-238.2" font-family="Arial Bold" font-size="11.00">Subscription</text>
+<path fill="none" stroke="black" d="M2344,-223C2344,-223 2464,-223 2464,-223 2470,-223 2476,-229 2476,-235 2476,-235 2476,-247 2476,-247 2476,-253 2470,-259 2464,-259 2464,-259 2344,-259 2344,-259 2338,-259 2332,-253 2332,-247 2332,-247 2332,-235 2332,-235 2332,-229 2338,-223 2344,-223"/>
+<text text-anchor="start" x="2368" y="-238.2" font-family="Arial Bold" font-size="11.00">Subscription</text>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Subscription -->
 <g id="edge15" class="edge">
 <title>m_Rubygem&#45;&gt;m_Subscription</title>
-<path fill="none" stroke="black" d="M2087,-549.72C2087,-490.17 2087,-332.5 2087,-269.03"/>
-<polygon fill="black" stroke="black" points="2090.15,-269.18 2087,-260.18 2083.85,-269.18 2090.15,-269.18"/>
+<path fill="none" stroke="black" d="M2404,-549.72C2404,-490.17 2404,-332.5 2404,-269.03"/>
+<polygon fill="black" stroke="black" points="2407.15,-269.18 2404,-260.18 2400.85,-269.18 2407.15,-269.18"/>
 </g>
 <!-- m_Version -->
-<g id="node19" class="node">
+<g id="node20" class="node">
 <title>m_Version</title>
-<path fill="none" stroke="black" d="M2259,-86.5C2259,-86.5 2565,-86.5 2565,-86.5 2571,-86.5 2577,-92.5 2577,-98.5 2577,-98.5 2577,-383.5 2577,-383.5 2577,-389.5 2571,-395.5 2565,-395.5 2565,-395.5 2259,-395.5 2259,-395.5 2253,-395.5 2247,-389.5 2247,-383.5 2247,-383.5 2247,-98.5 2247,-98.5 2247,-92.5 2253,-86.5 2259,-86.5"/>
-<text text-anchor="start" x="2297" y="-238.2" font-family="Arial Bold" font-size="11.00">Version</text>
-<polyline fill="none" stroke="black" points="2391,-86.5 2391,-395.5"/>
-<text text-anchor="start" x="2398" y="-382" font-family="Arial" font-size="10.00">authors </text>
-<text text-anchor="start" x="2434" y="-382" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="2398" y="-369" font-family="Arial" font-size="10.00">built_at </text>
-<text text-anchor="start" x="2433" y="-369" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="2398" y="-356" font-family="Arial" font-size="10.00">canonical_number </text>
-<text text-anchor="start" x="2480" y="-356" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2398" y="-343" font-family="Arial" font-size="10.00">cert_chain </text>
-<text text-anchor="start" x="2447" y="-343" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="2398" y="-330" font-family="Arial" font-size="10.00">description </text>
-<text text-anchor="start" x="2449" y="-330" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="2398" y="-317" font-family="Arial" font-size="10.00">full_name </text>
-<text text-anchor="start" x="2444" y="-317" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
-<text text-anchor="start" x="2398" y="-304" font-family="Arial" font-size="10.00">indexed </text>
-<text text-anchor="start" x="2435" y="-304" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
-<text text-anchor="start" x="2398" y="-291" font-family="Arial" font-size="10.00">info_checksum </text>
-<text text-anchor="start" x="2468" y="-291" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2398" y="-278" font-family="Arial" font-size="10.00">latest </text>
-<text text-anchor="start" x="2426" y="-278" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
-<text text-anchor="start" x="2398" y="-265" font-family="Arial" font-size="10.00">licenses </text>
-<text text-anchor="start" x="2438" y="-265" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2398" y="-252" font-family="Arial" font-size="10.00">metadata </text>
-<text text-anchor="start" x="2442" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">hstore ∗</text>
-<text text-anchor="start" x="2398" y="-239" font-family="Arial" font-size="10.00">number </text>
-<text text-anchor="start" x="2434" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2398" y="-226" font-family="Arial" font-size="10.00">platform </text>
-<text text-anchor="start" x="2437" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2398" y="-213" font-family="Arial" font-size="10.00">position </text>
-<text text-anchor="start" x="2435" y="-213" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
-<text text-anchor="start" x="2398" y="-200" font-family="Arial" font-size="10.00">prerelease </text>
-<text text-anchor="start" x="2447" y="-200" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
-<text text-anchor="start" x="2398" y="-187" font-family="Arial" font-size="10.00">required_ruby_version </text>
-<text text-anchor="start" x="2497" y="-187" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2398" y="-174" font-family="Arial" font-size="10.00">required_rubygems_version </text>
-<text text-anchor="start" x="2521" y="-174" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
-<text text-anchor="start" x="2398" y="-161" font-family="Arial" font-size="10.00">requirements </text>
-<text text-anchor="start" x="2458" y="-161" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="2398" y="-148" font-family="Arial" font-size="10.00">sha256 </text>
-<text text-anchor="start" x="2433" y="-148" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2398" y="-135" font-family="Arial" font-size="10.00">size </text>
-<text text-anchor="start" x="2420" y="-135" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
-<text text-anchor="start" x="2398" y="-122" font-family="Arial" font-size="10.00">summary </text>
-<text text-anchor="start" x="2442" y="-122" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="2398" y="-109" font-family="Arial" font-size="10.00">yanked_at </text>
-<text text-anchor="start" x="2447" y="-109" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="2398" y="-96" font-family="Arial" font-size="10.00">yanked_info_checksum </text>
-<text text-anchor="start" x="2504" y="-96" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<path fill="none" stroke="black" d="M2576,-86.5C2576,-86.5 2882,-86.5 2882,-86.5 2888,-86.5 2894,-92.5 2894,-98.5 2894,-98.5 2894,-383.5 2894,-383.5 2894,-389.5 2888,-395.5 2882,-395.5 2882,-395.5 2576,-395.5 2576,-395.5 2570,-395.5 2564,-389.5 2564,-383.5 2564,-383.5 2564,-98.5 2564,-98.5 2564,-92.5 2570,-86.5 2576,-86.5"/>
+<text text-anchor="start" x="2614" y="-238.2" font-family="Arial Bold" font-size="11.00">Version</text>
+<polyline fill="none" stroke="black" points="2708,-86.5 2708,-395.5"/>
+<text text-anchor="start" x="2715" y="-382" font-family="Arial" font-size="10.00">authors </text>
+<text text-anchor="start" x="2751" y="-382" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="2715" y="-369" font-family="Arial" font-size="10.00">built_at </text>
+<text text-anchor="start" x="2750" y="-369" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="2715" y="-356" font-family="Arial" font-size="10.00">canonical_number </text>
+<text text-anchor="start" x="2797" y="-356" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="2715" y="-343" font-family="Arial" font-size="10.00">cert_chain </text>
+<text text-anchor="start" x="2764" y="-343" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="2715" y="-330" font-family="Arial" font-size="10.00">description </text>
+<text text-anchor="start" x="2766" y="-330" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="2715" y="-317" font-family="Arial" font-size="10.00">full_name </text>
+<text text-anchor="start" x="2761" y="-317" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255) ∗ U</text>
+<text text-anchor="start" x="2715" y="-304" font-family="Arial" font-size="10.00">indexed </text>
+<text text-anchor="start" x="2752" y="-304" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="2715" y="-291" font-family="Arial" font-size="10.00">info_checksum </text>
+<text text-anchor="start" x="2785" y="-291" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="2715" y="-278" font-family="Arial" font-size="10.00">latest </text>
+<text text-anchor="start" x="2743" y="-278" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="2715" y="-265" font-family="Arial" font-size="10.00">licenses </text>
+<text text-anchor="start" x="2755" y="-265" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="2715" y="-252" font-family="Arial" font-size="10.00">metadata </text>
+<text text-anchor="start" x="2759" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">hstore ∗</text>
+<text text-anchor="start" x="2715" y="-239" font-family="Arial" font-size="10.00">number </text>
+<text text-anchor="start" x="2751" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="2715" y="-226" font-family="Arial" font-size="10.00">platform </text>
+<text text-anchor="start" x="2754" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="2715" y="-213" font-family="Arial" font-size="10.00">position </text>
+<text text-anchor="start" x="2752" y="-213" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="2715" y="-200" font-family="Arial" font-size="10.00">prerelease </text>
+<text text-anchor="start" x="2764" y="-200" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="2715" y="-187" font-family="Arial" font-size="10.00">required_ruby_version </text>
+<text text-anchor="start" x="2814" y="-187" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="2715" y="-174" font-family="Arial" font-size="10.00">required_rubygems_version </text>
+<text text-anchor="start" x="2838" y="-174" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="2715" y="-161" font-family="Arial" font-size="10.00">requirements </text>
+<text text-anchor="start" x="2775" y="-161" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="2715" y="-148" font-family="Arial" font-size="10.00">sha256 </text>
+<text text-anchor="start" x="2750" y="-148" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="2715" y="-135" font-family="Arial" font-size="10.00">size </text>
+<text text-anchor="start" x="2737" y="-135" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="2715" y="-122" font-family="Arial" font-size="10.00">summary </text>
+<text text-anchor="start" x="2759" y="-122" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="2715" y="-109" font-family="Arial" font-size="10.00">yanked_at </text>
+<text text-anchor="start" x="2764" y="-109" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="2715" y="-96" font-family="Arial" font-size="10.00">yanked_info_checksum </text>
+<text text-anchor="start" x="2821" y="-96" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Version -->
 <g id="edge4" class="edge">
 <title>m_Rubygem&#45;&gt;m_Version</title>
-<path fill="none" stroke="black" d="M2109.85,-549.72C2140.54,-518.47 2197.78,-460.18 2254.24,-402.67"/>
-<polygon fill="black" stroke="black" points="2256.36,-405.01 2260.42,-396.38 2251.87,-400.59 2256.36,-405.01"/>
+<path fill="none" stroke="black" d="M2426.85,-549.72C2457.54,-518.47 2514.78,-460.18 2571.24,-402.67"/>
+<polygon fill="black" stroke="black" points="2573.36,-405.01 2577.42,-396.38 2568.87,-400.59 2573.36,-405.01"/>
 </g>
 <!-- m_WebHook -->
-<g id="node20" class="node">
+<g id="node21" class="node">
 <title>m_WebHook</title>
-<path fill="none" stroke="black" d="M1710,-223C1710,-223 1974,-223 1974,-223 1980,-223 1986,-229 1986,-235 1986,-235 1986,-247 1986,-247 1986,-253 1980,-259 1974,-259 1974,-259 1710,-259 1710,-259 1704,-259 1698,-253 1698,-247 1698,-247 1698,-235 1698,-235 1698,-229 1704,-223 1710,-223"/>
-<text text-anchor="start" x="1742" y="-238.2" font-family="Arial Bold" font-size="11.00">WebHook</text>
-<polyline fill="none" stroke="black" points="1842,-223 1842,-259"/>
-<text text-anchor="start" x="1849" y="-246" font-family="Arial" font-size="10.00">failure_count </text>
-<text text-anchor="start" x="1908" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
-<text text-anchor="start" x="1849" y="-233" font-family="Arial" font-size="10.00">url </text>
-<text text-anchor="start" x="1863" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<path fill="none" stroke="black" d="M2027,-223C2027,-223 2291,-223 2291,-223 2297,-223 2303,-229 2303,-235 2303,-235 2303,-247 2303,-247 2303,-253 2297,-259 2291,-259 2291,-259 2027,-259 2027,-259 2021,-259 2015,-253 2015,-247 2015,-247 2015,-235 2015,-235 2015,-229 2021,-223 2027,-223"/>
+<text text-anchor="start" x="2059" y="-238.2" font-family="Arial Bold" font-size="11.00">WebHook</text>
+<polyline fill="none" stroke="black" points="2159,-223 2159,-259"/>
+<text text-anchor="start" x="2166" y="-246" font-family="Arial" font-size="10.00">failure_count </text>
+<text text-anchor="start" x="2225" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="2166" y="-233" font-family="Arial" font-size="10.00">url </text>
+<text text-anchor="start" x="2180" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 </g>
 <!-- m_Rubygem&#45;&gt;m_WebHook -->
 <g id="edge3" class="edge">
 <title>m_Rubygem&#45;&gt;m_WebHook</title>
-<path fill="none" stroke="black" d="M2069.77,-549.72C2025.24,-489.56 1906.56,-329.23 1860.57,-267.09"/>
-<polygon fill="black" stroke="black" points="1863.12,-265.24 1855.23,-259.88 1858.06,-268.99 1863.12,-265.24"/>
+<path fill="none" stroke="black" d="M2386.77,-549.72C2342.24,-489.56 2223.56,-329.23 2177.57,-267.09"/>
+<polygon fill="black" stroke="black" points="2180.12,-265.24 2172.23,-259.88 2175.06,-268.99 2180.12,-265.24"/>
 </g>
 <!-- m_SendgridEvent -->
-<g id="node15" class="node">
+<g id="node16" class="node">
 <title>m_SendgridEvent</title>
 <path fill="none" stroke="black" d="M3608,-530C3608,-530 3872,-530 3872,-530 3878,-530 3884,-536 3884,-542 3884,-542 3884,-606 3884,-606 3884,-612 3878,-618 3872,-618 3872,-618 3608,-618 3608,-618 3602,-618 3596,-612 3596,-606 3596,-606 3596,-542 3596,-542 3596,-536 3602,-530 3608,-530"/>
 <text text-anchor="start" x="3626.5" y="-571.2" font-family="Arial Bold" font-size="11.00">SendgridEvent</text>
@@ -391,125 +412,125 @@
 <text text-anchor="start" x="3778" y="-540" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 </g>
 <!-- m_User -->
-<g id="node17" class="node">
+<g id="node18" class="node">
 <title>m_User</title>
-<path fill="none" stroke="black" d="M984.5,-432.5C984.5,-432.5 1283.5,-432.5 1283.5,-432.5 1289.5,-432.5 1295.5,-438.5 1295.5,-444.5 1295.5,-444.5 1295.5,-703.5 1295.5,-703.5 1295.5,-709.5 1289.5,-715.5 1283.5,-715.5 1283.5,-715.5 984.5,-715.5 984.5,-715.5 978.5,-715.5 972.5,-709.5 972.5,-703.5 972.5,-703.5 972.5,-444.5 972.5,-444.5 972.5,-438.5 978.5,-432.5 984.5,-432.5"/>
-<text text-anchor="start" x="1030" y="-571.2" font-family="Arial Bold" font-size="11.00">User</text>
-<polyline fill="none" stroke="black" points="1116.5,-432.5 1116.5,-715.5"/>
-<text text-anchor="start" x="1124" y="-702" font-family="Arial" font-size="10.00">api_key </text>
-<text text-anchor="start" x="1161" y="-702" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="1124" y="-689" font-family="Arial" font-size="10.00">blocked_email </text>
-<text text-anchor="start" x="1190" y="-689" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="1124" y="-676" font-family="Arial" font-size="10.00">confirmation_token </text>
-<text text-anchor="start" x="1210" y="-676" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="1124" y="-663" font-family="Arial" font-size="10.00">email </text>
-<text text-anchor="start" x="1151" y="-663" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
-<text text-anchor="start" x="1124" y="-650" font-family="Arial" font-size="10.00">email_confirmed </text>
-<text text-anchor="start" x="1199" y="-650" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
-<text text-anchor="start" x="1124" y="-637" font-family="Arial" font-size="10.00">email_reset </text>
-<text text-anchor="start" x="1178" y="-637" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
-<text text-anchor="start" x="1124" y="-624" font-family="Arial" font-size="10.00">encrypted_password </text>
-<text text-anchor="start" x="1218" y="-624" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="1124" y="-611" font-family="Arial" font-size="10.00">handle </text>
-<text text-anchor="start" x="1156" y="-611" font-family="Arial Italic" font-size="10.00" fill="#999999">string U</text>
-<text text-anchor="start" x="1124" y="-598" font-family="Arial" font-size="10.00">hide_email </text>
-<text text-anchor="start" x="1174" y="-598" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
-<text text-anchor="start" x="1124" y="-585" font-family="Arial" font-size="10.00">mail_fails </text>
-<text text-anchor="start" x="1169" y="-585" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
-<text text-anchor="start" x="1124" y="-572" font-family="Arial" font-size="10.00">mfa_level </text>
-<text text-anchor="start" x="1170" y="-572" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
-<text text-anchor="start" x="1124" y="-559" font-family="Arial" font-size="10.00">mfa_recovery_codes </text>
-<text text-anchor="start" x="1218" y="-559" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="1124" y="-546" font-family="Arial" font-size="10.00">mfa_seed </text>
-<text text-anchor="start" x="1170" y="-546" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="1124" y="-533" font-family="Arial" font-size="10.00">remember_token </text>
-<text text-anchor="start" x="1200" y="-533" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="1124" y="-520" font-family="Arial" font-size="10.00">remember_token_expires_at </text>
-<text text-anchor="start" x="1251" y="-520" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="1124" y="-507" font-family="Arial" font-size="10.00">salt </text>
-<text text-anchor="start" x="1143" y="-507" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="1124" y="-494" font-family="Arial" font-size="10.00">token </text>
-<text text-anchor="start" x="1152" y="-494" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="1124" y="-481" font-family="Arial" font-size="10.00">token_expires_at </text>
-<text text-anchor="start" x="1202" y="-481" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="1124" y="-468" font-family="Arial" font-size="10.00">twitter_username </text>
-<text text-anchor="start" x="1203" y="-468" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="1124" y="-455" font-family="Arial" font-size="10.00">unconfirmed_email </text>
-<text text-anchor="start" x="1209" y="-455" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="1124" y="-442" font-family="Arial" font-size="10.00">webauthn_id </text>
-<text text-anchor="start" x="1182" y="-442" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<path fill="none" stroke="black" d="M1301.5,-432.5C1301.5,-432.5 1600.5,-432.5 1600.5,-432.5 1606.5,-432.5 1612.5,-438.5 1612.5,-444.5 1612.5,-444.5 1612.5,-703.5 1612.5,-703.5 1612.5,-709.5 1606.5,-715.5 1600.5,-715.5 1600.5,-715.5 1301.5,-715.5 1301.5,-715.5 1295.5,-715.5 1289.5,-709.5 1289.5,-703.5 1289.5,-703.5 1289.5,-444.5 1289.5,-444.5 1289.5,-438.5 1295.5,-432.5 1301.5,-432.5"/>
+<text text-anchor="start" x="1347" y="-571.2" font-family="Arial Bold" font-size="11.00">User</text>
+<polyline fill="none" stroke="black" points="1433.5,-432.5 1433.5,-715.5"/>
+<text text-anchor="start" x="1441" y="-702" font-family="Arial" font-size="10.00">api_key </text>
+<text text-anchor="start" x="1478" y="-702" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1441" y="-689" font-family="Arial" font-size="10.00">blocked_email </text>
+<text text-anchor="start" x="1507" y="-689" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1441" y="-676" font-family="Arial" font-size="10.00">confirmation_token </text>
+<text text-anchor="start" x="1527" y="-676" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="1441" y="-663" font-family="Arial" font-size="10.00">email </text>
+<text text-anchor="start" x="1468" y="-663" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
+<text text-anchor="start" x="1441" y="-650" font-family="Arial" font-size="10.00">email_confirmed </text>
+<text text-anchor="start" x="1516" y="-650" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
+<text text-anchor="start" x="1441" y="-637" font-family="Arial" font-size="10.00">email_reset </text>
+<text text-anchor="start" x="1495" y="-637" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="1441" y="-624" font-family="Arial" font-size="10.00">encrypted_password </text>
+<text text-anchor="start" x="1535" y="-624" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="1441" y="-611" font-family="Arial" font-size="10.00">handle </text>
+<text text-anchor="start" x="1473" y="-611" font-family="Arial Italic" font-size="10.00" fill="#999999">string U</text>
+<text text-anchor="start" x="1441" y="-598" font-family="Arial" font-size="10.00">hide_email </text>
+<text text-anchor="start" x="1491" y="-598" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="1441" y="-585" font-family="Arial" font-size="10.00">mail_fails </text>
+<text text-anchor="start" x="1486" y="-585" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="1441" y="-572" font-family="Arial" font-size="10.00">mfa_level </text>
+<text text-anchor="start" x="1487" y="-572" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="1441" y="-559" font-family="Arial" font-size="10.00">mfa_recovery_codes </text>
+<text text-anchor="start" x="1535" y="-559" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1441" y="-546" font-family="Arial" font-size="10.00">mfa_seed </text>
+<text text-anchor="start" x="1487" y="-546" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1441" y="-533" font-family="Arial" font-size="10.00">remember_token </text>
+<text text-anchor="start" x="1517" y="-533" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="1441" y="-520" font-family="Arial" font-size="10.00">remember_token_expires_at </text>
+<text text-anchor="start" x="1568" y="-520" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="1441" y="-507" font-family="Arial" font-size="10.00">salt </text>
+<text text-anchor="start" x="1460" y="-507" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="1441" y="-494" font-family="Arial" font-size="10.00">token </text>
+<text text-anchor="start" x="1469" y="-494" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="1441" y="-481" font-family="Arial" font-size="10.00">token_expires_at </text>
+<text text-anchor="start" x="1519" y="-481" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="1441" y="-468" font-family="Arial" font-size="10.00">twitter_username </text>
+<text text-anchor="start" x="1520" y="-468" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1441" y="-455" font-family="Arial" font-size="10.00">unconfirmed_email </text>
+<text text-anchor="start" x="1526" y="-455" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="1441" y="-442" font-family="Arial" font-size="10.00">webauthn_id </text>
+<text text-anchor="start" x="1499" y="-442" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_User&#45;&gt;m_ApiKey -->
 <g id="edge12" class="edge">
 <title>m_User&#45;&gt;m_ApiKey</title>
-<path fill="none" stroke="black" d="M988.11,-432.63C954.72,-400.49 919.97,-367.06 889.08,-337.34"/>
-<polygon fill="black" stroke="black" points="891.49,-335.28 882.82,-331.31 887.12,-339.82 891.49,-335.28"/>
+<path fill="none" stroke="black" d="M1305.11,-432.63C1271.72,-400.49 1236.97,-367.06 1206.08,-337.34"/>
+<polygon fill="black" stroke="black" points="1208.49,-335.28 1199.82,-331.31 1204.12,-339.82 1208.49,-335.28"/>
 </g>
 <!-- m_User&#45;&gt;m_Deletion -->
 <g id="edge11" class="edge">
 <title>m_User&#45;&gt;m_Deletion</title>
-<path fill="none" stroke="black" d="M972.79,-537.22C867,-509.15 728.49,-463.4 619,-396 564.79,-362.63 514.38,-307.69 485.68,-273.25"/>
-<polygon fill="black" stroke="black" points="488.32,-271.5 480.17,-266.55 483.46,-275.5 488.32,-271.5"/>
+<path fill="none" stroke="black" d="M1289.79,-537.22C1184,-509.15 1045.49,-463.4 936,-396 881.79,-362.63 831.38,-307.69 802.68,-273.25"/>
+<polygon fill="black" stroke="black" points="805.32,-271.5 797.17,-266.55 800.46,-275.5 805.32,-271.5"/>
 </g>
 <!-- m_User&#45;&gt;m_Ownership -->
 <g id="edge8" class="edge">
 <title>m_User&#45;&gt;m_Ownership</title>
-<path fill="none" stroke="black" d="M1134,-432.63C1134,-383.83 1134,-332.04 1134,-294.78"/>
-<polygon fill="black" stroke="black" points="1137.15,-295.18 1134,-286.18 1130.85,-295.18 1137.15,-295.18"/>
+<path fill="none" stroke="black" d="M1451,-432.63C1451,-383.83 1451,-332.04 1451,-294.78"/>
+<polygon fill="black" stroke="black" points="1454.15,-295.18 1451,-286.18 1447.85,-295.18 1454.15,-295.18"/>
 </g>
 <!-- m_User&#45;&gt;m_OwnershipCall -->
 <g id="edge13" class="edge">
 <title>m_User&#45;&gt;m_OwnershipCall</title>
-<path fill="none" stroke="black" d="M1295.38,-448.63C1316.99,-431.23 1338.69,-413.36 1359,-396 1410.79,-351.73 1468.54,-296.82 1500.44,-265.97"/>
-<polygon fill="black" stroke="black" points="1502.62,-268.24 1506.89,-259.71 1498.24,-263.72 1502.62,-268.24"/>
+<path fill="none" stroke="black" d="M1612.38,-448.63C1633.99,-431.23 1655.69,-413.36 1676,-396 1727.79,-351.73 1785.54,-296.82 1817.44,-265.97"/>
+<polygon fill="black" stroke="black" points="1819.62,-268.24 1823.89,-259.71 1815.24,-263.72 1819.62,-268.24"/>
 </g>
 <!-- m_User&#45;&gt;m_OwnershipRequest -->
 <g id="edge14" class="edge">
 <title>m_User&#45;&gt;m_OwnershipRequest</title>
-<path fill="none" stroke="black" d="M1284.18,-432.68C1292.7,-420.84 1300.44,-408.57 1307,-396 1371.89,-271.66 1297.93,-208.63 1366,-86 1373.81,-71.93 1386.12,-59.32 1397.94,-49.34"/>
-<polygon fill="black" stroke="black" points="1399.77,-51.91 1404.8,-43.81 1395.82,-47 1399.77,-51.91"/>
+<path fill="none" stroke="black" d="M1601.18,-432.68C1609.7,-420.84 1617.44,-408.57 1624,-396 1688.89,-271.66 1614.93,-208.63 1683,-86 1690.81,-71.93 1703.12,-59.32 1714.94,-49.34"/>
+<polygon fill="black" stroke="black" points="1716.77,-51.91 1721.8,-43.81 1712.82,-47 1716.77,-51.91"/>
 </g>
 <!-- m_User&#45;&gt;m_Subscription -->
 <g id="edge10" class="edge">
 <title>m_User&#45;&gt;m_Subscription</title>
-<path fill="none" stroke="black" d="M1295.31,-547.52C1530.17,-509.32 1944.58,-437.26 2001,-396 2044.46,-364.22 2068.79,-303.46 2079.76,-268.51"/>
-<polygon fill="black" stroke="black" points="2082.75,-269.53 2082.31,-260 2076.71,-267.72 2082.75,-269.53"/>
+<path fill="none" stroke="black" d="M1612.31,-547.52C1847.17,-509.32 2261.58,-437.26 2318,-396 2361.46,-364.22 2385.79,-303.46 2396.76,-268.51"/>
+<polygon fill="black" stroke="black" points="2399.75,-269.53 2399.31,-260 2393.71,-267.72 2399.75,-269.53"/>
 </g>
 <!-- m_User&#45;&gt;m_Version -->
 <g id="edge7" class="edge">
 <title>m_User&#45;&gt;m_Version</title>
-<path fill="none" stroke="black" d="M1295.35,-541.72C1455.67,-511.27 1708.74,-464.9 1929,-432 2060.07,-412.42 2103.19,-448.21 2225,-396 2229.3,-394.16 2233.58,-392.18 2237.84,-390.09"/>
-<polygon fill="black" stroke="black" points="2239.19,-392.94 2245.76,-386.03 2236.31,-387.33 2239.19,-392.94"/>
+<path fill="none" stroke="black" d="M1612.35,-541.72C1772.67,-511.27 2025.74,-464.9 2246,-432 2377.07,-412.42 2420.19,-448.21 2542,-396 2546.3,-394.16 2550.58,-392.18 2554.84,-390.09"/>
+<polygon fill="black" stroke="black" points="2556.19,-392.94 2562.76,-386.03 2553.31,-387.33 2556.19,-392.94"/>
 </g>
 <!-- m_User&#45;&gt;m_WebHook -->
 <g id="edge2" class="edge">
 <title>m_User&#45;&gt;m_WebHook</title>
-<path fill="none" stroke="black" d="M1295.42,-541.74C1409.66,-514.83 1563.37,-468.63 1684,-396 1742.08,-361.03 1795.38,-300.8 1822.74,-266.95"/>
-<polygon fill="black" stroke="black" points="1825.03,-269.13 1828.18,-260.13 1820.11,-265.2 1825.03,-269.13"/>
+<path fill="none" stroke="black" d="M1612.42,-541.74C1726.66,-514.83 1880.37,-468.63 2001,-396 2059.08,-361.03 2112.38,-300.8 2139.74,-266.95"/>
+<polygon fill="black" stroke="black" points="2142.03,-269.13 2145.18,-260.13 2137.11,-265.2 2142.03,-269.13"/>
 </g>
 <!-- m_WebauthnCredential -->
-<g id="node21" class="node">
+<g id="node22" class="node">
 <title>m_WebauthnCredential</title>
-<path fill="none" stroke="black" d="M12,-210C12,-210 276,-210 276,-210 282,-210 288,-216 288,-222 288,-222 288,-260 288,-260 288,-266 282,-272 276,-272 276,-272 12,-272 12,-272 6,-272 0,-266 0,-260 0,-260 0,-222 0,-222 0,-216 6,-210 12,-210"/>
-<text text-anchor="start" x="16" y="-238.2" font-family="Arial Bold" font-size="11.00">WebauthnCredential</text>
-<polyline fill="none" stroke="black" points="144,-210 144,-272"/>
-<text text-anchor="start" x="151" y="-259" font-family="Arial" font-size="10.00">external_id </text>
-<text text-anchor="start" x="202" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
-<text text-anchor="start" x="151" y="-246" font-family="Arial" font-size="10.00">nickname </text>
-<text text-anchor="start" x="197" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
-<text text-anchor="start" x="151" y="-233" font-family="Arial" font-size="10.00">public_key </text>
-<text text-anchor="start" x="201" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="151" y="-220" font-family="Arial" font-size="10.00">sign_count </text>
-<text text-anchor="start" x="202" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8) ∗</text>
+<path fill="none" stroke="black" d="M329,-210C329,-210 593,-210 593,-210 599,-210 605,-216 605,-222 605,-222 605,-260 605,-260 605,-266 599,-272 593,-272 593,-272 329,-272 329,-272 323,-272 317,-266 317,-260 317,-260 317,-222 317,-222 317,-216 323,-210 329,-210"/>
+<text text-anchor="start" x="333" y="-238.2" font-family="Arial Bold" font-size="11.00">WebauthnCredential</text>
+<polyline fill="none" stroke="black" points="461,-210 461,-272"/>
+<text text-anchor="start" x="468" y="-259" font-family="Arial" font-size="10.00">external_id </text>
+<text text-anchor="start" x="519" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
+<text text-anchor="start" x="468" y="-246" font-family="Arial" font-size="10.00">nickname </text>
+<text text-anchor="start" x="514" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
+<text text-anchor="start" x="468" y="-233" font-family="Arial" font-size="10.00">public_key </text>
+<text text-anchor="start" x="518" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="468" y="-220" font-family="Arial" font-size="10.00">sign_count </text>
+<text text-anchor="start" x="519" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8) ∗</text>
 </g>
 <!-- m_User&#45;&gt;m_WebauthnCredential -->
 <g id="edge1" class="edge">
 <title>m_User&#45;&gt;m_WebauthnCredential</title>
-<path fill="none" stroke="black" d="M972.82,-565.2C798.24,-550.92 516.06,-510.48 302,-396 248.68,-367.49 201.05,-315.59 172.36,-279.98"/>
-<polygon fill="black" stroke="black" points="174.83,-278.03 166.77,-272.94 169.89,-281.95 174.83,-278.03"/>
+<path fill="none" stroke="black" d="M1289.82,-565.2C1115.24,-550.92 833.06,-510.48 619,-396 565.68,-367.49 518.05,-315.59 489.36,-279.98"/>
+<polygon fill="black" stroke="black" points="491.83,-278.03 483.77,-272.94 486.89,-281.95 491.83,-278.03"/>
 </g>
 <!-- m_User::WithPrivateFields -->
-<g id="node18" class="node">
+<g id="node19" class="node">
 <title>m_User::WithPrivateFields</title>
 <path fill="none" stroke="black" d="M3925.5,-432.5C3925.5,-432.5 4224.5,-432.5 4224.5,-432.5 4230.5,-432.5 4236.5,-438.5 4236.5,-444.5 4236.5,-444.5 4236.5,-703.5 4236.5,-703.5 4236.5,-709.5 4230.5,-715.5 4224.5,-715.5 4224.5,-715.5 3925.5,-715.5 3925.5,-715.5 3919.5,-715.5 3913.5,-709.5 3913.5,-703.5 3913.5,-703.5 3913.5,-444.5 3913.5,-444.5 3913.5,-438.5 3919.5,-432.5 3925.5,-432.5"/>
 <text text-anchor="start" x="3921" y="-571.2" font-family="Arial Bold" font-size="11.00">User::WithPrivateFields</text>
@@ -560,13 +581,13 @@
 <!-- m_Version&#45;&gt;m_Dependency -->
 <g id="edge5" class="edge">
 <title>m_Version&#45;&gt;m_Dependency</title>
-<path fill="none" stroke="black" d="M2489.34,-86.75C2494.54,-76.45 2499.38,-66.85 2503.61,-58.47"/>
-<polygon fill="black" stroke="black" points="2506.36,-60.02 2507.6,-50.56 2500.74,-57.18 2506.36,-60.02"/>
+<path fill="none" stroke="black" d="M2806.34,-86.75C2811.54,-76.45 2816.38,-66.85 2820.61,-58.47"/>
+<polygon fill="black" stroke="black" points="2823.36,-60.02 2824.6,-50.56 2817.74,-57.18 2823.36,-60.02"/>
 </g>
 <!-- m_Version&#45;&gt;m_GemDownload -->
 <g id="edge6" class="edge">
 <title>m_Version&#45;&gt;m_GemDownload</title>
-<path fill="none" stroke="black" d="M2262.33,-86.75C2245.19,-69.2 2230.05,-53.7 2219.36,-42.75"/>
+<path fill="none" stroke="black" d="M2579.33,-86.75C2562.19,-69.2 2547.05,-53.7 2536.36,-42.75"/>
 </g>
 </g>
 </svg>

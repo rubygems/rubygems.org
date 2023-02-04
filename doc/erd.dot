@@ -13,6 +13,19 @@ node[ shape  =  "Mrecord" , fontsize  =  "10" , fontname  =  "Arial" , margin  =
 edge[ fontname  =  "Arial" , fontsize  =  "7" , dir  =  "both" , arrowsize  =  "0.9" , penwidth  =  "1.0" , labelangle  =  "32" , labeldistance  =  "1.8"];
 rankdir = "TB";
 label = "RubyGems.org domain model\n\n";
+"m_Admin::GitHubUser" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Admin::GitHubUser</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="avatar_url">avatar_url <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="github_id">github_id <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="info_data">info_data <font face="Arial Italic" color="grey60">json</font></td></tr>
+  <tr><td align="left" width="130" port="is_admin">is_admin <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="login">login <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="oauth_token">oauth_token <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
 m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">ApiKey</font></td></tr>
 </table>
@@ -47,8 +60,6 @@ m_Audit [label = <<table border="0" align="center" cellspacing="0.5" cellpadding
   <tr><td align="left" width="130" port="auditable_type">auditable_type <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="audited_changes">audited_changes <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="comment">comment <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="github_user_id">github_user_id <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
-  <tr><td align="left" width="130" port="github_username">github_username <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
 </table>
 >];
 "m_Delayed::Backend::ActiveRecord::Job" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -82,9 +93,9 @@ m_Dependency [label = <<table border="0" align="center" cellspacing="0.5" cellpa
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
-  <tr><td align="left" width="130" port="scope">scope <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="unresolved_name">unresolved_name <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">string (255) ∗</font></td></tr>
+  <tr><td align="left" width="130" port="scope">scope <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="unresolved_name">unresolved_name <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
 </table>
 >];
 m_GemDownload [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -109,12 +120,12 @@ m_Linkset [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="bugs">bugs <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="code">code <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="docs">docs <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="home">home <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="mail">mail <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="wiki">wiki <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="bugs">bugs <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="code">code <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="docs">docs <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="home">home <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="mail">mail <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="wiki">wiki <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
 </table>
 >];
 m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -166,8 +177,8 @@ m_Rubygem [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="indexed">indexed <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
-  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
-  <tr><td align="left" width="130" port="slug">slug <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string (255) ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="slug">slug <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
 </table>
 >];
 m_SendgridEvent [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -253,20 +264,20 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="canonical_number">canonical_number <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="cert_chain">cert_chain <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="description">description <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="full_name">full_name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="full_name">full_name <font face="Arial Italic" color="grey60">string (255) ∗ U</font></td></tr>
   <tr><td align="left" width="130" port="indexed">indexed <font face="Arial Italic" color="grey60">boolean</font></td></tr>
   <tr><td align="left" width="130" port="info_checksum">info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="latest">latest <font face="Arial Italic" color="grey60">boolean</font></td></tr>
-  <tr><td align="left" width="130" port="licenses">licenses <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="licenses">licenses <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="metadata">metadata <font face="Arial Italic" color="grey60">hstore ∗</font></td></tr>
-  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="position">position <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="prerelease">prerelease <font face="Arial Italic" color="grey60">boolean</font></td></tr>
-  <tr><td align="left" width="130" port="required_ruby_version">required_ruby_version <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="required_ruby_version">required_ruby_version <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="required_rubygems_version">required_rubygems_version <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="size">size <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="summary">summary <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
@@ -316,6 +327,7 @@ m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5
   m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  "m_Admin::GitHubUser" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
 }
