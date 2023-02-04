@@ -56,7 +56,7 @@ m_Audit [label = <<table border="0" align="center" cellspacing="0.5" cellpadding
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="action">action <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
-  <tr><td align="left" width="130" port="auditable_type">auditable_type <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="auditable_type">auditable_type <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="audited_changes">audited_changes <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="comment">comment <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>

@@ -38,7 +38,7 @@
 <text text-anchor="start" x="151" y="-259" font-family="Arial" font-size="10.00">action </text>
 <text text-anchor="start" x="181" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 <text text-anchor="start" x="151" y="-246" font-family="Arial" font-size="10.00">auditable_type </text>
-<text text-anchor="start" x="218" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="218" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 <text text-anchor="start" x="151" y="-233" font-family="Arial" font-size="10.00">audited_changes </text>
 <text text-anchor="start" x="228" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
 <text text-anchor="start" x="151" y="-220" font-family="Arial" font-size="10.00">comment </text>

@@ -57,12 +57,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_041509) do
   end
 
   create_table "audits", force: :cascade do |t|
-    t.string "auditable_type"
-    t.bigint "auditable_id"
-    t.bigint "admin_github_user_id"
+    t.string "auditable_type", null: false
+    t.bigint "auditable_id", null: false
+    t.bigint "admin_github_user_id", null: false
     t.text "audited_changes"
     t.string "comment"
-    t.string "action"
+    t.string "action", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["admin_github_user_id"], name: "index_audits_on_admin_github_user_id"
