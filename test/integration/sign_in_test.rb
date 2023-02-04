@@ -299,4 +299,9 @@ class SignInTest < SystemTest
     assert page.has_content? "Sign in"
     assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
+
+  teardown do
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+  end
 end
