@@ -56,7 +56,6 @@ m_Audit [label = <<table border="0" align="center" cellspacing="0.5" cellpadding
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="action">action <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
-  <tr><td align="left" width="130" port="auditable_id">auditable_id <font face="Arial Italic" color="grey60">integer (8)</font></td></tr>
   <tr><td align="left" width="130" port="auditable_type">auditable_type <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="audited_changes">audited_changes <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="comment">comment <font face="Arial Italic" color="grey60">string</font></td></tr>
@@ -324,6 +323,7 @@ m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5
   m_Rubygem -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];

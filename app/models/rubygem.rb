@@ -18,6 +18,7 @@ class Rubygem < ApplicationRecord
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
+  has_many :audits, as: :auditable, inverse_of: :auditable
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
