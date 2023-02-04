@@ -5,6 +5,8 @@ FactoryBot.define do
     github_id { "1" }
 
     oauth_token { SecureRandom.hex(10) }
+    is_admin { false }
+    info_data { { viewer: { login: login, id: github_id } } }
 
     trait :is_admin do
       is_admin { true }
