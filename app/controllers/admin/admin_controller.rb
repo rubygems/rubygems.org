@@ -3,4 +3,8 @@ class Admin::AdminController < ApplicationController
 
   def index
   end
+
+  def logout
+    admin_logout
+  end
 end
