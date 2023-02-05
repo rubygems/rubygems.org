@@ -61,7 +61,4 @@ Rails.application.configure do
   config.active_job.queue_adapter = :test
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
-
-  # We don't use view_component, it's coming in only as an avo dependency
-  config.view_component.show_previews = false
 end
