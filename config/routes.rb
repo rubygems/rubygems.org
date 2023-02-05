@@ -244,13 +244,13 @@ Rails.application.routes.draw do
   # Admin routes
 
   constraints(->(_req) { !Rails.env.production? || ENV['RUBYGEMS_ENABLE_ADMIN'] }) do
-    namespace :admin do
+    namespace :admin, constraints: { format: :html }, defaults: { format: 'html' } do
       root to: 'admin#index'
-      delete 'logout', to: 'admin#logout', as: :logout
+      delete 'logout' => 'admin#logout', as: :logout
     end
   end
 
-  scope :oauth do
+  scope :oauth, constraints: { format: :html }, defaults: { format: 'html' } do
     get ':provider/callback', to: 'oauth#create'
     get 'failure', to: 'oauth#failure'
   end

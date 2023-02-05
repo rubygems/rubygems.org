@@ -6,23 +6,28 @@ class OAuthController < ApplicationController
     render_forbidden e.message
   end
 
+  with_options only: :create do
+    before_action :check_valid_omniauth
+    before_action :check_supported_omniauth_provider
+  end
+
   def create
-    user_info = request.env["omniauth.auth"]
-    unless user_info&.valid?
-      Rails.logger.info("Invalid omniauth.auth")
-      return render_not_found
-    end
-    unless user_info.provider == "github"
-      Rails.logger.info("Not from github")
-      return render_not_found
-    end
+    admin_github_login!(token: request.env["omniauth.auth"].credentials.token)
 
-    admin_github_login!(token: user_info.credentials.token)
-
-    redirect_to request.env["omniauth.origin"].presence || avo_root
+    redirect_to request.env["omniauth.origin"].presence || avo_root_path
   end
 
   def failure
     render_forbidden params.require(:message)
+  end
+
+  private
+
+  def check_valid_omniauth
+    render_not_found unless request.env["omniauth.auth"]&.valid?
+  end
+
+  def check_supported_omniauth_provider
+    render_not_found unless request.env["omniauth.auth"].provider == "github"
   end
 end
