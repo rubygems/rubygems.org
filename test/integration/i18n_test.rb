@@ -13,6 +13,8 @@ class I18nTest < ActionDispatch::IntegrationTest
     locales_path = File.expand_path("../../config/locales", __dir__)
     locales = Dir.glob("#{locales_path}/*.yml").collect do |file_path|
       File.basename(file_path, ".yml")
+    end.reject do |file_path|
+      file_path.starts_with?("avo.")
     end
 
     # collecting all locales

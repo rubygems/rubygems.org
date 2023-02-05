@@ -245,9 +245,10 @@ Rails.application.routes.draw do
 
   constraints({ host: Gemcutter::SEPARATE_ADMIN_HOST }.compact) do
     namespace :admin, constraints: { format: :html }, defaults: { format: 'html' } do
-      root to: 'admin#index'
       delete 'logout' => 'admin#logout', as: :logout
     end
+
+    mount Avo::Engine, at: Avo.configuration.root_path
   end
 
   scope :oauth, constraints: { format: :html }, defaults: { format: 'html' } do

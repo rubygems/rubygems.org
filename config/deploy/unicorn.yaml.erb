@@ -163,6 +163,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: github_secret
+          - name: AVO_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: avo_license_key
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"

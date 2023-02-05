@@ -56,7 +56,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
   end
 
   def do_login
-    get admin_root_path(params: { a: :b })
+    get avo_path(params: { a: :b })
     post html_document.at_css("form").attribute("action").value
     follow_redirect!
   end
@@ -91,13 +91,13 @@ class OAuthTest < ActionDispatch::IntegrationTest
 
     do_login
 
-    assert_redirected_to admin_root_path(params: { a: :b })
+    assert_redirected_to avo_path(params: { a: :b })
     assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+    follow_redirect!
     follow_redirect!
 
     assert_response :success
-    assert page.has_selector? "h1", text: "RubyGems.org admin page"
-    assert page.has_selector? "p", text: "You are currently logged in as jackson-keeling"
+    assert page.assert_text "jackson-keeling"
 
     Admin::GitHubUser.admins.sole.tap do |user|
       assert user.is_admin
@@ -107,7 +107,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
       assert_equal info_data, user.info_data
     end
 
-    delete admin_logout_path
+    delete "/admin/logout"
     assert_redirected_to root_path
     assert_empty cookies["rubygems_admin_oauth_github_user"]
   end
@@ -155,7 +155,8 @@ class OAuthTest < ActionDispatch::IntegrationTest
             viewerIsAMember: true,
             teams: {
               edges: [
-                { node: { slug: "other-team" } }
+                { node: { slug: "other-team" } },
+                { node: { slug: "rubygems-org" } }
               ]
             }
           }
@@ -174,8 +175,9 @@ class OAuthTest < ActionDispatch::IntegrationTest
 
       do_login
 
-      assert_redirected_to admin_root_path(params: { a: :b })
+      assert_redirected_to avo_path(params: { a: :b })
       assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+      follow_redirect!
       follow_redirect!
       assert_response :success
 
@@ -184,7 +186,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
         assert user.login.ends_with?("_update")
         assert_equal @existing.github_id, user.github_id
         assert user.oauth_token.ends_with?("_update")
-        assert_equal [{ slug: "other-team" }], user.teams
+        assert_equal [{ slug: "other-team" }, { slug: "rubygems-org" }], user.teams
         assert_equal info_data, user.info_data
       end
     end
@@ -243,7 +245,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
               viewerIsAMember: true,
               teams: {
                 edges: [
-                  { node: { slug: "rubygems_org" } }
+                  { node: { slug: "rubygems-org" } }
                 ]
               }
             }
@@ -261,8 +263,9 @@ class OAuthTest < ActionDispatch::IntegrationTest
 
         do_login
 
-        assert_redirected_to admin_root_path(params: { a: :b })
+        assert_redirected_to avo_path(params: { a: :b })
         assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+        follow_redirect!
         follow_redirect!
         assert_response :success
 
