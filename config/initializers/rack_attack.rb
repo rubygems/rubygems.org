@@ -81,6 +81,13 @@ class Rack::Attack
     false
   end
 
+  def self.api_hashed_key(req)
+    key = req.get_header("HTTP_AUTHORIZATION") || ""
+    return if key.blank?
+    hashed_key = Digest::SHA256.hexdigest(key)
+    ApiKey.find_by_hashed_key(hashed_key)
+  end
+
   safelist("assets path") do |req|
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
@@ -119,9 +126,7 @@ class Rack::Attack
 
     ########################### rate limit per api key ###########################
     throttle("api/key/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      hashed_key = Digest::SHA256.hexdigest(req.get_header("HTTP_AUTHORIZATION") || "")
-      api_key    = ApiKey.find_by_hashed_key(hashed_key)
-      api_key&.user&.display_id.presence if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
+      api_hashed_key(req)&.user&.display_id.presence if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 
@@ -137,9 +142,7 @@ class Rack::Attack
     end
 
     throttle("#{PUSH_THROTTLE_PER_USER_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      hashed_key = Digest::SHA256.hexdigest(req.get_header("HTTP_AUTHORIZATION") || "")
-      api_key    = ApiKey.find_by_hashed_key(hashed_key)
-      api_key&.user&.display_id.presence if protected_route?(protected_push_action, req.path, req.request_method)
+      api_hashed_key(req)&.user&.display_id.presence if protected_route?(protected_push_action, req.path, req.request_method)
     end
   end
 
