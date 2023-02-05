@@ -106,6 +106,10 @@ class OAuthTest < ActionDispatch::IntegrationTest
       refute user.team_member?("rubygems-org-not")
       assert_equal info_data, user.info_data
     end
+
+    delete admin_logout_path
+    assert_redirected_to root_path
+    assert_empty cookies["rubygems_admin_oauth_github_user"]
   end
 
   test "fails when user is not a member of the rubygems org" do
