@@ -133,7 +133,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
     assert_nil cookies["rubygems_admin_oauth_github"]
     assert_equal "Validation failed: Is admin missing rubygems org, Is admin not a member of the rubygems org", response.body
-    assert_empty Admin::GitHubUser.admins
+    assert_empty Admin::GitHubUser.all
   end
 
   context "with an existing user for the github_id" do

@@ -1,6 +1,4 @@
 class Admin::GitHubUser < ApplicationRecord
-  # serialize :info_data, Hash
-
   scope :admins, -> { where(is_admin: true) }
 
   # for avo
