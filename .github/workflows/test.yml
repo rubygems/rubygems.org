@@ -29,7 +29,7 @@ jobs:
     - name: Wait for ES to boot
       run: |
         timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
-    - uses: ruby/setup-ruby@ee26e27437bde475b19a6bf8cb73c9fa658876a2 # v1.134.0
+    - uses: ruby/setup-ruby@8df78e55761745aad83acaf3ff12976382356e6d # v1.135.0
       with:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: true
