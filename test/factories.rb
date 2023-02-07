@@ -1,4 +1,7 @@
 FactoryBot.define do
+  factory :admin_github_user, class: "Admin::GitHubUser" do
+  end
+
   sequence :email do |n|
     "user#{n}@example.com"
   end
