@@ -163,11 +163,11 @@
 <text text-anchor="start" x="493" y="-22.2" font-family="Arial Bold" font-size="11.00">Dependency</text>
 <polyline fill="none" stroke="black" points="600,-0.5 600,-49.5"/>
 <text text-anchor="start" x="607" y="-36" font-family="Arial" font-size="10.00">requirements </text>
-<text text-anchor="start" x="667" y="-36" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255) ∗</text>
+<text text-anchor="start" x="667" y="-36" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 <text text-anchor="start" x="607" y="-23" font-family="Arial" font-size="10.00">scope </text>
-<text text-anchor="start" x="637" y="-23" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="637" y="-23" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="607" y="-10" font-family="Arial" font-size="10.00">unresolved_name </text>
-<text text-anchor="start" x="687" y="-10" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="687" y="-10" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_GemDownload -->
 <g id="node8" class="node">
@@ -196,17 +196,17 @@
 <text text-anchor="start" x="426.5" y="-238.2" font-family="Arial Bold" font-size="11.00">Linkset</text>
 <polyline fill="none" stroke="black" points="520,-197 520,-285"/>
 <text text-anchor="start" x="527" y="-272" font-family="Arial" font-size="10.00">bugs </text>
-<text text-anchor="start" x="552" y="-272" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="552" y="-272" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="527" y="-259" font-family="Arial" font-size="10.00">code </text>
-<text text-anchor="start" x="552" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="552" y="-259" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="527" y="-246" font-family="Arial" font-size="10.00">docs </text>
-<text text-anchor="start" x="552" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="552" y="-246" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="527" y="-233" font-family="Arial" font-size="10.00">home </text>
-<text text-anchor="start" x="555" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="555" y="-233" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="527" y="-220" font-family="Arial" font-size="10.00">mail </text>
-<text text-anchor="start" x="549" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="549" y="-220" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="527" y="-207" font-family="Arial" font-size="10.00">wiki </text>
-<text text-anchor="start" x="548" y="-207" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="548" y="-207" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_LogTicket -->
 <g id="node11" class="node">
@@ -268,9 +268,9 @@
 <text text-anchor="start" x="1133" y="-585" font-family="Arial" font-size="10.00">indexed </text>
 <text text-anchor="start" x="1170" y="-585" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean ∗</text>
 <text text-anchor="start" x="1133" y="-572" font-family="Arial" font-size="10.00">name </text>
-<text text-anchor="start" x="1161" y="-572" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255) ∗ U</text>
+<text text-anchor="start" x="1161" y="-572" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
 <text text-anchor="start" x="1133" y="-559" font-family="Arial" font-size="10.00">slug </text>
-<text text-anchor="start" x="1155" y="-559" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="1155" y="-559" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Audit -->
 <g id="edge21" class="edge">
@@ -341,7 +341,7 @@
 <text text-anchor="start" x="903" y="-330" font-family="Arial" font-size="10.00">description </text>
 <text text-anchor="start" x="954" y="-330" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
 <text text-anchor="start" x="903" y="-317" font-family="Arial" font-size="10.00">full_name </text>
-<text text-anchor="start" x="949" y="-317" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255) ∗ U</text>
+<text text-anchor="start" x="949" y="-317" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
 <text text-anchor="start" x="903" y="-304" font-family="Arial" font-size="10.00">indexed </text>
 <text text-anchor="start" x="940" y="-304" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
 <text text-anchor="start" x="903" y="-291" font-family="Arial" font-size="10.00">info_checksum </text>
@@ -349,25 +349,25 @@
 <text text-anchor="start" x="903" y="-278" font-family="Arial" font-size="10.00">latest </text>
 <text text-anchor="start" x="931" y="-278" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
 <text text-anchor="start" x="903" y="-265" font-family="Arial" font-size="10.00">licenses </text>
-<text text-anchor="start" x="943" y="-265" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="943" y="-265" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="903" y="-252" font-family="Arial" font-size="10.00">metadata </text>
 <text text-anchor="start" x="947" y="-252" font-family="Arial Italic" font-size="10.00" fill="#999999">hstore ∗</text>
 <text text-anchor="start" x="903" y="-239" font-family="Arial" font-size="10.00">number </text>
-<text text-anchor="start" x="939" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="939" y="-239" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="903" y="-226" font-family="Arial" font-size="10.00">platform </text>
-<text text-anchor="start" x="942" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="942" y="-226" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="903" y="-213" font-family="Arial" font-size="10.00">position </text>
 <text text-anchor="start" x="940" y="-213" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
 <text text-anchor="start" x="903" y="-200" font-family="Arial" font-size="10.00">prerelease </text>
 <text text-anchor="start" x="952" y="-200" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
 <text text-anchor="start" x="903" y="-187" font-family="Arial" font-size="10.00">required_ruby_version </text>
-<text text-anchor="start" x="1002" y="-187" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="1002" y="-187" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="903" y="-174" font-family="Arial" font-size="10.00">required_rubygems_version </text>
 <text text-anchor="start" x="1026" y="-174" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
 <text text-anchor="start" x="903" y="-161" font-family="Arial" font-size="10.00">requirements </text>
 <text text-anchor="start" x="963" y="-161" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
 <text text-anchor="start" x="903" y="-148" font-family="Arial" font-size="10.00">sha256 </text>
-<text text-anchor="start" x="938" y="-148" font-family="Arial Italic" font-size="10.00" fill="#999999">string (255)</text>
+<text text-anchor="start" x="938" y="-148" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="903" y="-135" font-family="Arial" font-size="10.00">size </text>
 <text text-anchor="start" x="925" y="-135" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
 <text text-anchor="start" x="903" y="-122" font-family="Arial" font-size="10.00">summary </text>
