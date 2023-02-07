@@ -54,10 +54,7 @@ class Indexer
   end
 
   def purge_cdn
-    return unless ENV["FASTLY_SERVICE_ID"] && ENV["FASTLY_API_KEY"]
-
-    Fastly.purge_key("full-index")
-    log "Purged index urls from fastly"
+    log "Purged index urls from fastly" if Fastly.purge_key("full-index")
   end
 
   def minimize_specs(data)
