@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
+  include AdminUser
+
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -36,15 +38,9 @@ class ApplicationPolicy
     false
   end
 
-  def admin?
-    user.is_a?(Admin::GitHubUser) && user.is_admin
-  end
-
-  def belongs_to_team?(slug)
-    admin? && user.team_member?(slug)
-  end
-
   class Scope
+    include AdminUser
+
     def initialize(user, scope)
       @user = user
       @scope = scope
