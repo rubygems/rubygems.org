@@ -419,6 +419,7 @@ de:
       email_awaiting_confirmation:
       enter_password:
       hide_email: Verberge E-Mails in öffentlichem Profil
+      optional_mastodon_handle:
       optional_twitter_username:
       title: Bearbeite Profil
       delete:

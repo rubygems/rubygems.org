@@ -14,6 +14,7 @@ class User < ApplicationRecord
     password
     website
     twitter_username
+    mastodon_handle
   ].freeze
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
@@ -51,7 +52,13 @@ class User < ApplicationRecord
     message: "can only contain letters, numbers, and underscores"
   }, allow_nil: true
 
+  # https://rubular.com/r/Zjjh8UbLfAFBCm
+  validates :mastodon_handle, format: {
+    with: /\A[a-zA-Z0-9_]+@[a-zA-Z0-9_\.]+\z/
+  }, allow_nil: true
+
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
+  validates :mastodon_handle, length: { within: 0..20 }, allow_nil: true
   validates :password,
     length: { within: 10..200 },
     unpwn: true,

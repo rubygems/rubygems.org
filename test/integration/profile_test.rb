@@ -93,6 +93,21 @@ class ProfileTest < SystemTest
     refute page.has_content?("Email Me")
   end
 
+  test "adding Mastodon username" do
+    sign_in
+    visit profile_path("nick1")
+
+    click_link "Edit Profile"
+    fill_in "Mastodon handle", with: "nick1@ruby.social"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Update"
+
+    click_link "Sign out"
+    visit profile_path("nick1")
+
+    assert page.has_content?("@nick1@ruby.social")
+  end
+
   test "adding Twitter username" do
     sign_in
     visit profile_path("nick1")
