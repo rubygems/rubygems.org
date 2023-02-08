@@ -470,6 +470,8 @@ GEM
       sprockets (>= 3.0.0)
     statsd-instrument (2.3.5)
     stringio (3.0.2)
+    terser (1.1.13)
+      execjs (>= 0.3.0, < 3)
     thor (1.2.1)
     tilt (2.0.10)
     timeout (0.3.1)
@@ -480,8 +482,6 @@ GEM
       openssl-signature_algorithm (~> 1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
@@ -584,8 +584,8 @@ DEPENDENCIES
   simplecov-cobertura
   sprockets-rails
   statsd-instrument (~> 2.3.0)
+  terser
   toxiproxy (~> 2.0.0)
-  uglifier (>= 1.0.3)
   unicorn (~> 5.8.0)
   unpwn
   validates_formatting_of

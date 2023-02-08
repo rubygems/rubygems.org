@@ -51,7 +51,7 @@ gem "lograge"
 
 group :assets do
   gem "sassc-rails"
-  gem "uglifier", ">= 1.0.3"
+  gem "terser"
   gem "autoprefixer-rails"
 end
 
