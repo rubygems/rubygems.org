@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_null_char_cookie
+  before_action :set_error_context_user
 
   add_flash_types :notice_html
 
@@ -141,5 +142,14 @@ class ApplicationController < ActionController::Base
 
   def password_session_active?
     session[:verification] && session[:verification] > Time.current && session.fetch(:verified_user, "") == current_user.id
+  end
+
+  def set_error_context_user
+    return unless current_user
+
+    Rails.error.set_context(
+      user_id: current_user.id,
+      user_email: current_user.email
+    )
   end
 end

@@ -27,6 +27,8 @@ module GitHubOAuthable
   GRAPHQL
 
   included do
+    before_action :set_error_context_user if respond_to?(:before_action)
+
     def admin_user
       request.fetch_header(admin_user_request_header) do
         find_admin_user
@@ -88,6 +90,14 @@ module GitHubOAuthable
         Rails.logger.warn("GitHub graphql errors: #{errors}")
       end
       graphql.data.to_h.deep_symbolize_keys
+    end
+
+    def set_error_context_user
+      return unless admin_user
+
+      Rails.error.set_context(
+        user_id: admin_user.github_id
+      )
     end
   end
 end
