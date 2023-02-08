@@ -243,7 +243,7 @@ Rails.application.routes.draw do
   ################################################################################
   # Admin routes
 
-  constraints(->(_req) { !Rails.env.production? || ENV['RUBYGEMS_ENABLE_ADMIN'] }) do
+  constraints({ host: Gemcutter::SEPARATE_ADMIN_HOST }.compact) do
     namespace :admin, constraints: { format: :html }, defaults: { format: 'html' } do
       root to: 'admin#index'
       delete 'logout' => 'admin#logout', as: :logout

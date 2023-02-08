@@ -86,4 +86,5 @@ module Gemcutter
   OWNERSHIP_CALLS_PER_PAGE = 10
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
+  SEPARATE_ADMIN_HOST = config["separate_admin_host"]
 end
