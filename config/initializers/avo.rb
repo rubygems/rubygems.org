@@ -32,7 +32,7 @@ Avo.configure do |config|
     new: 'avo_new?',
     update: 'avo_update?',
     create: 'avo_create?',
-    destroy: 'avo_destroy?',
+    destroy: 'avo_destroy?'
   }
   config.raise_error_on_missing_policy = true
   config.authorization_client = :pundit
@@ -93,7 +93,7 @@ Avo.configure do |config|
   # end
 
   ## == Menus ==
-  config.main_menu = -> {
+  config.main_menu = lambda {
     section "Dashboards", icon: "dashboards" do
       all_dashboards
     end
@@ -102,12 +102,14 @@ Avo.configure do |config|
       all_resources
     end
 
-    section "Tools", icon: "tools" do
-      all_tools
-    end unless all_tools.empty?
+    unless all_tools.empty?
+      section "Tools", icon: "tools" do
+        all_tools
+      end
+    end
   }
 
-  config.profile_menu = ->() {
+  config.profile_menu = lambda {
     link_to "Admin Profile",
       path: avo.resources_admin_github_user_path(current_user),
       icon: "user-circle"

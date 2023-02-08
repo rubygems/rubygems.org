@@ -3,9 +3,9 @@ class Dashy < Avo::Dashboards::BaseDashboard
   self.name = "Dashy"
   # self.description = "Tiny dashboard description"
   # self.grid_cols = 3
-  self.visible = -> do
+  self.visible = lambda {
     current_user.team_member?("rubygems-org")
-  end
+  }
 
   # cards go here
   card DashboardWelcomeCard
