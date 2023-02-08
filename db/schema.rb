@@ -56,6 +56,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_041509) do
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
 
+  create_table "audits", force: :cascade do |t|
+    t.string "auditable_type", null: false
+    t.bigint "auditable_id", null: false
+    t.bigint "admin_github_user_id", null: false
+    t.text "audited_changes"
+    t.string "comment"
+    t.string "action", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_github_user_id"], name: "index_audits_on_admin_github_user_id"
+    t.index ["auditable_type", "auditable_id"], name: "index_audits_on_auditable"
+  end
+
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "priority", default: 0
     t.integer "attempts", default: 0

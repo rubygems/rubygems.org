@@ -7,6 +7,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
     subject { @rubygem }
 
+    should have_many(:audits)
     should have_many(:owners).through(:ownerships)
     should have_many(:ownerships).dependent(:destroy)
     should have_many(:subscribers).through(:subscriptions)

@@ -50,6 +50,17 @@ m_ApiKeyRubygemScope [label = <<table border="0" align="center" cellspacing="0.5
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">ApiKeyRubygemScope</font></td></tr>
 </table>
 >];
+m_Audit [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Audit</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="action">action <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="auditable_type">auditable_type <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="audited_changes">audited_changes <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="comment">comment <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
 "m_Delayed::Backend::ActiveRecord::Job" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Delayed::Backend::ActiveRecord::Job</font></td></tr>
 </table>
@@ -312,9 +323,11 @@ m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5
   m_Rubygem -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  "m_Admin::GitHubUser" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
 }
