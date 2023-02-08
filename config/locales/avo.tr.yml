@@ -1,0 +1,120 @@
+---
+tr:
+  avo:
+    action_ran_successfully: Eylem başarıyla gerçekleşti!
+    actions: Aksiyonlar
+    and_x_other_resources: ve %{count} diğer kaynak
+    are_you_sure: Emin misiniz?
+    are_you_sure_detach_item: "%{item} öğesini ayırmak istediğinizden emin misiniz?"
+    are_you_sure_you_want_to_run_this_option: Bu işlemi gerçekleştirmek istediğinize emin misiniz?
+    attach: İlişkilendir
+    attach_and_attach_another: İlişkilendir & Bir başka daha İlişkilendir
+    attach_item: "%{item} öğesini ilişkilendir"
+    attachment_class_attached: "%{attachment_class} ilişkilendirildi."
+    attachment_class_detached: "%{attachment_class} ilişkisi kesildi."
+    attachment_destroyed: Ek silindi
+    cancel: İptal et
+    choose_a_country: Bir ülke seç
+    choose_an_option: Bir seçenek seç
+    choose_item: "%{item} seçin"
+    clear_value: Değeri temizle
+    click_to_reveal_filters: Filtreleri ortaya çıkarmak için tıklayın
+    confirm: Onayla
+    create_new_item: Yeni bir %{item} oluşturun
+    dashboard: Yönetim Paneli
+    dashboards: Yönetim Panelleri
+    delete: sil
+    delete_file: Dosyayı sil
+    delete_item: "%{item} öğresini sil"
+    detach_item: "%{item} öğesinin ilişkisini kes"
+    details: detaylar
+    download: İndir
+    download_file: Dosya indir
+    download_item: "%{item} öğesini indir"
+    edit: düzenle
+    edit_item: "%{item} öğesini düzenle"
+    empty_dashboard_message: Kartları yönetim paneline ekle
+    failed: Başarısız
+    failed_to_find_attachment: Ek bulunamadı
+    failed_to_load: Yüklenemedi
+    field_translations:
+      file:
+        one: dosya
+        other: dosya
+        zero: dosya
+      people:
+        one: kişi
+        other: kişi
+        zero: kişi
+    filter_by: Tarafından filtre
+    filters: Filtreler
+    go_back: Geri dön
+    grid_view: Grid görünümü
+    hide_content: İçeriği gizle
+    home: Anasayfa
+    key_value_field:
+      add_row: Satır ekle
+      delete_row: Satır sil
+      key: Anahtar
+      value: Değer
+    list_is_empty: Boş liste
+    loading: Yükleniyor
+    more: Daha fazla
+    new: yeni
+    next_page: Sonraki sayfa
+    no_cards_present: Kart yok
+    no_item_found: Hiç bulunamadı
+    no_options_available: Seçenek yok
+    no_related_item_found: İlişkili bulunamadı
+    not_authorized: Bu eylemi gerçekleştirme yetkiniz yok.
+    number_of_items:
+      one: bir %{item}
+      other: "%{count} %{item}"
+      zero: sıfır %{item}
+    oops_nothing_found: Hata! Hiçbir şey bulunamadı
+    order:
+      higher: Kaydı yüksekten sırala
+      lower: Kaydı düşükten sırala
+      reorder_record: Kaydı yeniden sırala
+      to_bottom: Kaydı en alta taşı
+      to_top: Kaydı en üste taşı
+    per_page: Sayfa başına
+    prev_page: Önceki sayfa
+    remove_selection: Seçimi sil
+    reset_filters: Filtreleri sıfırla
+    resource_created: Kayıt oluşturuldu
+    resource_destroyed: Kayıt silindi
+    resource_translations:
+      user:
+        one: kullanıcı
+        other: kullanıcı
+        zero: kullanıcı
+    resource_updated: Kayıt güncellendi
+    resources: Kaynaklar
+    run: Başlat
+    save: Kaydet
+    search:
+      cancel_button: İptal et
+      placeholder: Ara
+    select_all: Tümünü seç
+    select_all_matching: Tüm eşleşenleri seç
+    select_item: Öğe seç
+    show_content: İçeriği göster
+    sign_out: Çıkış yap
+    switch_to_view: "%{view_type} görünümüne kay"
+    table_view: Tablo görünümü
+    tools: Araçlar
+    type_to_search: Aramak için yazın.
+    unauthorized: Yetkisiz
+    undo: geri al
+    view: Görünüm
+    view_item: "%{item} öğresini görüntüle"
+    was_successfully_created: başarıyla oluşturuldu
+    was_successfully_updated: başarıyla güncellendi
+    x_items_more:
+      one: bir öğe daha
+      other: "%{count} öğe daha"
+      zero: daha fazla öğe yok
+    x_records_selected_from_a_total_of_x_html: <span class="font-bold text-gray-700">%{selected}</span> bu sayfada seçilen toplam kayıtlar <span class="font-bold text-gray-700">%{count}</span>
+    x_records_selected_from_all_pages_html: <span class="font-bold text-gray-700">%{count}</span> tüm sayfalardan seçilen kayıtlar
+    you_missed_something_check_form: Bir şeyleri kaçırmış olabilirsiniz. Lütfen formu kontrol edin.

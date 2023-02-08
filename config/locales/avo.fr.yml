@@ -1,0 +1,120 @@
+---
+fr:
+  avo:
+    action_ran_successfully: L'action s'est exécutée avec succès !
+    actions: Actions
+    and_x_other_resources: et %{count} autres ressources
+    are_you_sure: Êtes-vous sûr ?
+    are_you_sure_detach_item: Êtes-vous sûr de vouloir détacher %{item}.
+    are_you_sure_you_want_to_run_this_option: Etes-vous sûr de vouloir exécuter cette action ?
+    attach: Attacher
+    attach_and_attach_another: joindre et joindre un autre
+    attach_item: Attacher %{item}
+    attachment_class_attached: "%{attachment_class} attaché."
+    attachment_class_detached: "%{attachment_class} détaché."
+    attachment_destroyed: Pièce jointe détruite
+    cancel: Annuler
+    choose_a_country: Sélectionnez un pays
+    choose_an_option: Sélectionnez une option
+    choose_item: Choisir %{item}
+    clear_value: Effacer la valeur
+    click_to_reveal_filters: Cliquez pour révéler les filtres
+    confirm: Confirmer
+    create_new_item: Créer un nouveau %{item}
+    dashboard: Tableau de bord
+    dashboards: Tableaux de bord
+    delete: supprimer
+    delete_file: Supprimer le fichier
+    delete_item: Supprimer %{item}
+    detach_item: détacher %{item}
+    details: détails
+    download: Télécharger
+    download_file: Télécharger le fichier
+    download_item: Télécharger %{item}
+    edit: éditer
+    edit_item: éditer %{item}
+    empty_dashboard_message: Ajouter des cartes à ce tableau de bord
+    failed: Échec
+    failed_to_find_attachment: Impossible de trouver la pièce jointe
+    failed_to_load: Impossible de charger
+    field_translations:
+      file:
+        one: fichier
+        other: fichiers
+        zero: fichier
+      people:
+        one: personne
+        other: personnes
+        zero: personne
+    filter_by: Filtrer par
+    filters: Filtres
+    go_back: Retourner en arrière
+    grid_view: Vue grille
+    hide_content: Cacher le contenu
+    home: Accueil
+    key_value_field:
+      add_row: Ajouter une ligne
+      delete_row: Supprimer une ligne
+      key: Clé
+      value: Valeur
+    list_is_empty: La liste est vide
+    loading: Chargement
+    more: Plus
+    new: Nouveau
+    next_page: Page suivante
+    no_cards_present: Aucune carte présente
+    no_item_found: Enregistrement non trouvé
+    no_options_available: Aucune option disponible
+    no_related_item_found: Enregistrement connexe introuvable
+    not_authorized: Vous n'êtes pas autorisé à effectuer cette action.
+    number_of_items:
+      one: un %{item}
+      other: "%{count} %{item}"
+      zero: aucun %{item}
+    oops_nothing_found: Oups ! Rien n'a été trouvé...
+    order:
+      higher: Déplacer plus haut
+      lower: Déplacer plus bas
+      reorder_record: Réorganiser
+      to_bottom: Déplacer tout en bas
+      to_top: Déplacer tout en haut
+    per_page: Par page
+    prev_page: Page précédente
+    remove_selection: Supprimer la sélection
+    reset_filters: Réinitialiser les filtres
+    resource_created: Ressource créee
+    resource_destroyed: Ressource détruite
+    resource_translations:
+      user:
+        one: utilisateurs
+        other: utilisateurs
+        zero: utilisateur
+    resource_updated: Ressource mise à jour
+    resources: Ressources
+    run: Exécuter
+    save: Enregistrer
+    search:
+      cancel_button: Annuler
+      placeholder: Rechercher
+    select_all: Sélectionner tout sur la page
+    select_all_matching: Sélectionner toutes les correspondances
+    select_item: Sélectionnez un élément
+    show_content: Afficher le contenu
+    sign_out: Se déconnecter
+    switch_to_view: Passez à la vue %{view_type}
+    table_view: Vue table
+    tools: Outils
+    type_to_search: Type à rechercher.
+    unauthorized: Non autorisé
+    undo: annuler
+    view: Vue
+    view_item: voir %{item}
+    was_successfully_created: a été créé avec succès
+    was_successfully_updated: a été mis à jour avec succès
+    x_items_more:
+      one: un élément de plus
+      other: "%{count} éléments en plus"
+      zero: aucun élément supplémentaire
+    x_records_selected_from_a_total_of_x_html: <span class="font-bold text-gray-700">%{selected}</span> enregistrements sélectionnés sur cette page sur un total de <span class="font-bold text-gray-700">%{count}</span>
+    x_records_selected_from_all_pages_html: <span class="font-bold text-gray-700">%{count}</span> enregistrements sélectionnés dans toutes les pages
+    you_missed_something_check_form: Vous avez peut-être oublié quelque chose. Veuillez vérifier le formulaire

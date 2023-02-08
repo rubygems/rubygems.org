@@ -14,6 +14,9 @@ class I18nTest < ActionDispatch::IntegrationTest
     locales = Dir.glob("#{locales_path}/*.yml").collect do |file_path|
       File.basename(file_path, ".yml")
     end
+    locales.reject! do |file_path|
+      file_path.starts_with?("avo.")
+    end
 
     # collecting all locales
     locale_keys = {}

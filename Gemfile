@@ -46,6 +46,12 @@ gem "rotp"
 gem "unpwn"
 gem "webauthn"
 
+# Admin dashboard
+gem "avo"
+gem "pundit"
+gem "chartkick"
+gem "groupdate"
+
 # Logging
 gem "lograge"
 

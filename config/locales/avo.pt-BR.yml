@@ -1,0 +1,120 @@
+---
+pt-BR:
+  avo:
+    action_ran_successfully: Ação executada com sucesso!
+    actions: Ações
+    and_x_other_resources: e %{count} outros recursos
+    are_you_sure: Você tem certeza?
+    are_you_sure_detach_item: Você tem certeza que deseja separar este %{item}.
+    are_you_sure_you_want_to_run_this_option: Você tem certeza que deseja executar esta ação?
+    attach: Anexar
+    attach_and_attach_another: Anexar & anexar outro
+    attach_item: Anexar %{item}
+    attachment_class_attached: "%{attachment_class} anexado."
+    attachment_class_detached: "%{attachment_class} separado."
+    attachment_destroyed: Anexo destruído
+    cancel: Cancelar
+    choose_a_country: Escolha um país
+    choose_an_option: Escolha uma opção
+    choose_item: Escolher %{item}
+    clear_value: Limpar valor
+    click_to_reveal_filters: Clique para revelar os filtros
+    confirm: Confirmar
+    create_new_item: Criar novo %{item}
+    dashboard: Painel
+    dashboards: Painéis
+    delete: deletar
+    delete_file: Deletar arquivo
+    delete_item: Deletar %{item}
+    detach_item: separar %{item}
+    details: detalhe
+    download: Baixar
+    download_file: Baixar arquivo
+    download_item: Baixar %{item}
+    edit: editar
+    edit_item: editar %{item}
+    empty_dashboard_message: Adicionar cartões a este painel
+    failed: Falhou
+    failed_to_find_attachment: Falhou ao achar anexo
+    failed_to_load: Falha ao carregar
+    field_translations:
+      file:
+        one: arquivo
+        other: arquivos
+        zero: arquivos
+      people:
+        one: pessoa
+        other: pessoas
+        zero: ninguém
+    filter_by: Filtrar por
+    filters: Filtros
+    go_back: Voltar
+    grid_view: Visualização em grade
+    hide_content: Esconder conteúdo
+    home: Início
+    key_value_field:
+      add_row: Adicionar linha
+      delete_row: Remover linha
+      key: Chave
+      value: Valor
+    list_is_empty: Lista vazia
+    loading: Carregando
+    more: Mais
+    new: novo
+    next_page: Próxima página
+    no_cards_present: Nenhum cartão presente
+    no_item_found: Nenhum registro encontrado
+    no_options_available: Nenhuma opção disponível
+    no_related_item_found: Nenhum registro relacionado encontrado
+    not_authorized: Você não está autorizado à executar essa ação.
+    number_of_items:
+      one: um %{item}
+      other: "%{count} %{item}"
+      zero: sem %{item}
+    oops_nothing_found: Oops! Nada encontrado...
+    order:
+      higher: Mover registro um para cima
+      lower: Mover registro um para baixo
+      reorder_record: Reordenar registro
+      to_bottom: Mover registro para baixo
+      to_top: Mover registro para cima
+    per_page: Por página
+    prev_page: Página anterior
+    remove_selection: Remover seleção
+    reset_filters: Limpar filtros
+    resource_created: Recurso criado
+    resource_destroyed: Recurso destruído
+    resource_translations:
+      user:
+        one: usuário
+        other: usuários
+        zero: usuários
+    resource_updated: Recurso atualizado
+    resources: Recursos
+    run: Executar
+    save: Salvar
+    search:
+      cancel_button: Cancelar
+      placeholder: Procurar
+    select_all: Selecionar tudo
+    select_all_matching: Selecione todas as correspondências
+    select_item: Selecionar item
+    show_content: Mostrar conteúdo
+    sign_out: sair
+    switch_to_view: Alterar para visão %{view_type}
+    table_view: Visualização em tabela
+    tools: Ferramentas
+    type_to_search: Digite para buscar.
+    unauthorized: Não autorizado
+    undo: desfazer
+    view: Visualizar
+    view_item: visualizar %{item}
+    was_successfully_created: foi criado com sucesso
+    was_successfully_updated: foi atualizado com sucesso
+    x_items_more:
+      one: mais um item
+      other: "%{count} mais items"
+      zero: mais nenhum item
+    x_records_selected_from_a_total_of_x_html: <span class="font-bold text-gray-700">%{selected}</span> registros selecionados nesta página de um total de <span class="font-bold text-gray-700">%{count}</span>
+    x_records_selected_from_all_pages_html: <span class="font-bold text-gray-700">%{count}</span> registros selecionados de todas as páginas
+    you_missed_something_check_form: Você pode ter esquecido algo. Por favor, cheque o formulário.
