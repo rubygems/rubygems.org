@@ -239,4 +239,19 @@ Rails.application.routes.draw do
   ################################################################################
   # Incoming Webhook Endpoint
   resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
+
+  ################################################################################
+  # Admin routes
+
+  constraints({ host: Gemcutter::SEPARATE_ADMIN_HOST }.compact) do
+    namespace :admin, constraints: { format: :html }, defaults: { format: 'html' } do
+      root to: 'admin#index'
+      delete 'logout' => 'admin#logout', as: :logout
+    end
+  end
+
+  scope :oauth, constraints: { format: :html }, defaults: { format: 'html' } do
+    get ':provider/callback', to: 'oauth#create'
+    get 'failure', to: 'oauth#failure'
+  end
 end

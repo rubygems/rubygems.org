@@ -13,6 +13,19 @@ node[ shape  =  "Mrecord" , fontsize  =  "10" , fontname  =  "Arial" , margin  =
 edge[ fontname  =  "Arial" , fontsize  =  "7" , dir  =  "both" , arrowsize  =  "0.9" , penwidth  =  "1.0" , labelangle  =  "32" , labeldistance  =  "1.8"];
 rankdir = "TB";
 label = "RubyGems.org domain model\n\n";
+"m_Admin::GitHubUser" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Admin::GitHubUser</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="avatar_url">avatar_url <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="github_id">github_id <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="info_data">info_data <font face="Arial Italic" color="grey60">json ∗</font></td></tr>
+  <tr><td align="left" width="130" port="is_admin">is_admin <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="login">login <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="oauth_token">oauth_token <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
 m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">ApiKey</font></td></tr>
 </table>

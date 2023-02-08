@@ -42,6 +42,9 @@ module Gemcutter
     config.middleware.use Rack::Attack
     config.middleware.use Rack::Deflater
 
+    require_relative '../lib/gemcutter/middleware/admin_auth'
+    config.middleware.use ::Gemcutter::Middleware::AdminAuth
+
     config.active_record.include_root_in_json = false
 
     config.after_initialize do
@@ -83,4 +86,5 @@ module Gemcutter
   OWNERSHIP_CALLS_PER_PAGE = 10
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
+  SEPARATE_ADMIN_HOST = config["separate_admin_host"]
 end
