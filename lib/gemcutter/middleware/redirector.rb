@@ -7,7 +7,7 @@ module Gemcutter::Middleware
     def call(env)
       request = Rack::Request.new(env)
 
-      allowed_hosts = [Gemcutter::HOST, "index.rubygems.org", "fastly.rubygems.org", "bundler.rubygems.org"]
+      allowed_hosts = [Gemcutter::HOST, "index.rubygems.org", "fastly.rubygems.org", "bundler.rubygems.org", "rubygems.team"]
 
       if allowed_hosts.exclude?(request.host) && request.path !~ %r{^/api|^/internal} && request.host !~ /docs/
         fake_request = Rack::Request.new(env.merge("HTTP_HOST" => Gemcutter::HOST))
