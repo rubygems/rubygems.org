@@ -54,7 +54,7 @@ class Gemcutter::Middleware::AdminAuth
     end
 
     def allow_unauthenticated_request?(request)
-      request.path.match?(%r{\A/auth(/|\z)})
+      request.path.match?(%r{\A/oauth(/|\z)})
     end
   end
 end
