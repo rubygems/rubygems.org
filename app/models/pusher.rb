@@ -59,8 +59,9 @@ class Pusher
 
   def pull_spec
     package = Gem::Package.new(body, gem_security_policy)
-    @spec = package.spec
+    @spec = package.spec # order is important here, files is populated by spec
     @files = package.files
+    GemInclusions::Package.new(package).validate
   rescue StandardError => e
     notify <<~MSG, 422
       RubyGems.org cannot process this gem.
