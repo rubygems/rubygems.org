@@ -2,9 +2,9 @@ class AdminGitHubUserResource < Avo::BaseResource
   self.title = :login
   self.includes = []
   self.model_class = ::Admin::GitHubUser
-  # self.search_query = -> do
-  #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
-  # end
+  self.search_query = -> do
+    scope.where("login LIKE ?", "%#{params[:q]}%")
+  end
 
   self.description = "GitHub users that have authenticated via the admin OAuth flow."
 
