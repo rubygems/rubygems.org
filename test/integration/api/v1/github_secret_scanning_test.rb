@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Api::V1::GithubSecretScanningTest < ActionDispatch::IntegrationTest
+class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
   HEADER_KEYID = "GITHUB-PUBLIC-KEY-IDENTIFIER".freeze
   HEADER_SIGNATURE = "GITHUB-PUBLIC-KEY-SIGNATURE".freeze
 
@@ -20,7 +20,7 @@ class Api::V1::GithubSecretScanningTest < ActionDispatch::IntegrationTest
 
       h = KEYS_RESPONSE_BODY.dup
       h["public_keys"][0]["key"] = @public_key_pem
-      GithubSecretScanning.stubs(:secret_scanning_keys).returns(JSON.dump(h))
+      GitHubSecretScanning.stubs(:secret_scanning_keys).returns(JSON.dump(h))
 
       @tokens = [
         { "token" => "some_token", "type" => "some_type", "url" => "some_url" }
