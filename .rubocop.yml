@@ -58,6 +58,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - test/**/*.rb
+    - config/routes.rb
 
 Metrics/ClassLength:
   Max: 350 # TODO: Lower to 100

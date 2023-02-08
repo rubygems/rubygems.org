@@ -42,6 +42,9 @@ module Gemcutter
     config.middleware.use Rack::Attack
     config.middleware.use Rack::Deflater
 
+    require_relative '../lib/gemcutter/middleware/admin_auth'
+    config.middleware.use ::Gemcutter::Middleware::AdminAuth
+
     config.active_record.include_root_in_json = false
 
     config.after_initialize do
@@ -73,6 +76,7 @@ module Gemcutter
   POPULAR_DAYS_LIMIT = 70.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
+  SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
   STATS_PER_PAGE = 10
@@ -82,4 +86,5 @@ module Gemcutter
   OWNERSHIP_CALLS_PER_PAGE = 10
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
+  SEPARATE_ADMIN_HOST = config["separate_admin_host"]
 end

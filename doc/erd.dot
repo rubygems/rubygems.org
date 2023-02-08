@@ -19,10 +19,10 @@ label = "RubyGems.org domain model\n\n";
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="avatar_url">avatar_url <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="github_id">github_id <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="info_data">info_data <font face="Arial Italic" color="grey60">json</font></td></tr>
+  <tr><td align="left" width="130" port="github_id">github_id <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="info_data">info_data <font face="Arial Italic" color="grey60">json ∗</font></td></tr>
   <tr><td align="left" width="130" port="is_admin">is_admin <font face="Arial Italic" color="grey60">boolean</font></td></tr>
-  <tr><td align="left" width="130" port="login">login <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="login">login <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="oauth_token">oauth_token <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];

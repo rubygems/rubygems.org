@@ -19,13 +19,13 @@
 <text text-anchor="start" x="151" y="-605" font-family="Arial" font-size="10.00">avatar_url </text>
 <text text-anchor="start" x="197" y="-605" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="151" y="-592" font-family="Arial" font-size="10.00">github_id </text>
-<text text-anchor="start" x="194" y="-592" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="194" y="-592" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
 <text text-anchor="start" x="151" y="-579" font-family="Arial" font-size="10.00">info_data </text>
-<text text-anchor="start" x="194" y="-579" font-family="Arial Italic" font-size="10.00" fill="#999999">json</text>
+<text text-anchor="start" x="194" y="-579" font-family="Arial Italic" font-size="10.00" fill="#999999">json ∗</text>
 <text text-anchor="start" x="151" y="-566" font-family="Arial" font-size="10.00">is_admin </text>
 <text text-anchor="start" x="194" y="-566" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
 <text text-anchor="start" x="151" y="-553" font-family="Arial" font-size="10.00">login </text>
-<text text-anchor="start" x="175" y="-553" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="175" y="-553" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 <text text-anchor="start" x="151" y="-540" font-family="Arial" font-size="10.00">oauth_token </text>
 <text text-anchor="start" x="208" y="-540" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>

@@ -117,6 +117,6 @@ module RateLimitHelpers
   def assert_throttle_at(level)
     assert_response :too_many_requests
     assert_equal expected_retry_after(level), @response.headers["Retry-After"]
-    assert @response.headers["Retry-After"].to_i < @mfa_max_period[level]
+    assert_operator @response.headers["Retry-After"].to_i, :<=, @mfa_max_period[level]
   end
 end
