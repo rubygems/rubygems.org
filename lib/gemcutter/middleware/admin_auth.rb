@@ -56,7 +56,7 @@ class Gemcutter::Middleware::AdminAuth
          </head>
 
          <body>
-           <%= form_tag "/oauth/github" do %>
+           <%= form_tag ActionDispatch::Http::URL.path_for(path: '/oauth/github', params: { origin: request.fullpath }) do %>
              <svg viewBox="0 0 16 16" height="48" width="48" focusable="false" role="img" fill="currentColor"
                xmlns="http://www.w3.org/2000/svg">
                <path
