@@ -2,11 +2,11 @@ class Admin::GitHubUserPolicy < ApplicationPolicy
   class Scope < Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
-      # if user.belongs_to_team?("rubygems-org")
-      #   scope.all
-      # else
+      if user.belongs_to_team?("rubygems-org")
+        scope.all
+      else
         scope.where(id: user.id)
-      # end
+      end
     end
   end
 
