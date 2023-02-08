@@ -7,36 +7,36 @@ class Admin::GitHubUserPolicyTest < ActiveSupport::TestCase
   end
 
   def test_scope
-    assert_equal [@user], Admin::GitHubUserPolicy::Scope.new(
+    assert_equal [@user], Pundit.policy_scope!(
       @user,
-      Admin::GitHubUser.all
-    ).resolve.to_a
+      Admin::GitHubUser
+    ).to_a
 
-    assert_equal [@user, @admin], Admin::GitHubUserPolicy::Scope.new(
+    assert_equal [@user, @admin], Pundit.policy_scope!(
       @admin,
-      Admin::GitHubUser.all
-    ).resolve.to_a
+      Admin::GitHubUser
+    ).to_a
   end
 
   def test_avo_show
-    assert_predicate Admin::GitHubUserPolicy.new(@admin, @user), :avo_show?
-    assert_predicate Admin::GitHubUserPolicy.new(@admin, @admin), :avo_show?
-    refute_predicate Admin::GitHubUserPolicy.new(@user, @user), :avo_show?
-    refute_predicate Admin::GitHubUserPolicy.new(@user, @admin), :avo_show?
+    assert_predicate Pundit.policy!(@admin, @user), :avo_show?
+    assert_predicate Pundit.policy!(@admin, @admin), :avo_show?
+    refute_predicate Pundit.policy!(@user, @user), :avo_show?
+    refute_predicate Pundit.policy!(@user, @admin), :avo_show?
   end
 
   def test_avo_create
-    refute_predicate Admin::GitHubUserPolicy.new(@user, @user), :avo_create?
-    refute_predicate Admin::GitHubUserPolicy.new(@admin, @admin), :avo_create?
+    refute_predicate Pundit.policy!(@user, @user), :avo_create?
+    refute_predicate Pundit.policy!(@admin, @admin), :avo_create?
   end
 
   def test_avo_update
-    refute_predicate Admin::GitHubUserPolicy.new(@user, @user), :avo_update?
-    refute_predicate Admin::GitHubUserPolicy.new(@admin, @admin), :avo_update?
+    refute_predicate Pundit.policy!(@user, @user), :avo_update?
+    refute_predicate Pundit.policy!(@admin, @admin), :avo_update?
   end
 
   def test_avo_destroy
-    refute_predicate Admin::GitHubUserPolicy.new(@user, @user), :avo_destroy?
-    refute_predicate Admin::GitHubUserPolicy.new(@admin, @admin), :avo_destroy?
+    refute_predicate Pundit.policy!(@user, @user), :avo_destroy?
+    refute_predicate Pundit.policy!(@admin, @admin), :avo_destroy?
   end
 end
