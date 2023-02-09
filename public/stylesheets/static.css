@@ -26,7 +26,6 @@ img {
   width: 100%;
 }
 
-
 .wrapper {
   margin-right: auto;
   margin-left: auto;
@@ -75,4 +74,18 @@ img {
     transform: translateY(-8px);
     animation-timing-function: ease-in-out;
   }
+}
+
+button#github-login {
+  background-color: black;
+  color: white;
+  margin: auto;
+  margin-top: 30vh;
+  padding: 15px 20px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 18px;
+  font-weight: bold;
 }
