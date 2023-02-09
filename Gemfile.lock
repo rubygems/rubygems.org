@@ -464,7 +464,7 @@ GEM
     sawyer (0.9.2)
       addressable (>= 2.3.5)
       faraday (>= 0.17.3, < 3)
-    searchkick (5.1.2)
+    searchkick (5.2.0)
       activemodel (>= 5.2)
       hashie
     selenium-webdriver (4.8.0)
