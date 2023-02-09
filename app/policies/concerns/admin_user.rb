@@ -9,5 +9,9 @@ module AdminUser
     def belongs_to_team?(slug)
       admin? && user.team_member?(slug)
     end
+
+    def rubygems_org_admin?
+      belongs_to_team?("rubygems-org")
+    end
   end
 end

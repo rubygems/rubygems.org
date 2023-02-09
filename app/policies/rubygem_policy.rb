@@ -1,11 +1,11 @@
-class Admin::GitHubUserPolicy < ApplicationPolicy
+class RubygemPolicy < ApplicationPolicy
   class Scope < Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
       if rubygems_org_admin?
         scope.all
       else
-        scope.where(id: user.id)
+        scope.with_versions
       end
     end
   end
