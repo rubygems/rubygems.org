@@ -11,7 +11,9 @@ class UserResource < Avo::BaseResource
   field :gravatar,
     as: :gravatar,
     rounded: true,
-    size: 48, &:email
+    size: 48 do |_, _, _|
+      model.email
+    end
 
   field :email_confirmed, as: :boolean
 
