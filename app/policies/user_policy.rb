@@ -14,6 +14,10 @@ class UserPolicy < ApplicationPolicy
     rubygems_org_admin?
   end
 
+  def act_on?
+    rubygems_org_admin?
+  end
+
   has_association :webauthn_credentials
   has_association :ownerships
   has_association :rubygems
@@ -25,4 +29,5 @@ class UserPolicy < ApplicationPolicy
   has_association :api_keys
   has_association :ownership_calls
   has_association :ownership_requests
+  has_association :audits
 end

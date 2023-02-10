@@ -36,6 +36,8 @@ class User < ApplicationRecord
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :user
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :user
 
+  has_many :audits, as: :auditable, dependent: :nullify
+
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
