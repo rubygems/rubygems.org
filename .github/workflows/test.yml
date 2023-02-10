@@ -12,13 +12,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rubygems_version: ['3.4.3', 'latest']
-        coverage_rubygems_version: ['3.4.3']
+        rubygems:
+          - name: locked
+            version: '3.4.3'
+          - name: latest
+            version: latest
         ruby_version: ['3.2.0']
-    name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
+    name: Rails tests (RubyGems ${{ matrix.rubygems.name }})
     runs-on: ubuntu-22.04
     env:
-      RUBYGEMS_VERSION: ${{ matrix.rubygems_version }}
+      RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
@@ -49,5 +52,5 @@ jobs:
     - name: Tests
       run: bin/rails test:all
     - name: Upload coverage to Codecov
-      if: matrix.rubygems_version ==  matrix.coverage_rubygems_version && (success() || failure())
+      if: matrix.rubygems.name == 'locked' && (success() || failure())
       uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1
