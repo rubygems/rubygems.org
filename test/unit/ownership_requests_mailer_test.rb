@@ -5,7 +5,6 @@ class OwnershipRequestMailerTest < ActiveSupport::TestCase
     setup do
       @ownership = create(:ownership)
       create(:ownership_request, rubygem: @ownership.rubygem, created_at: 1.hour.ago)
-      Gemcutter::Application.load_tasks
       Rake::Task["ownership_request_notification:send"].invoke
       Delayed::Worker.new.work_off
     end
