@@ -5,7 +5,6 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
     @tmp_versions_file = Tempfile.new("tmp_versions_file")
     tmp_path = @tmp_versions_file.path
     Rails.application.config.rubygems.stubs(:[]).with("versions_file_location").returns(tmp_path)
-    Gemcutter::Application.load_tasks
   end
 
   def update_versions_file
