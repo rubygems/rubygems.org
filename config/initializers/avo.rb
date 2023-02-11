@@ -118,4 +118,8 @@ end
 
 Rails.configuration.to_prepare do
   Avo::ApplicationController.include GitHubOAuthable
+
+  Avo::ApplicationController.content_security_policy do |policy|
+    policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline
+  end
 end
