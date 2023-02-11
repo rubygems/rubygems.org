@@ -14,10 +14,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: '3.4.3'
+            version: '3.4.6'
           - name: latest
             version: latest
-        ruby_version: ['3.2.0']
+        ruby_version: ['3.2.1']
     name: Rails tests (RubyGems ${{ matrix.rubygems.name }})
     runs-on: ubuntu-22.04
     env:
