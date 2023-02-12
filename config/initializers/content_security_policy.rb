@@ -7,7 +7,8 @@
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self
   policy.font_src    :self, "https://fonts.gstatic.com"
-  policy.img_src     :self, "https://secure.gaug.es", "https://gravatar.com", "https://secure.gravatar.com", "https://*.fastly-insights.com", "https://avatars.githubusercontent.com"
+  policy.img_src     :self, "https://secure.gaug.es", "https://gravatar.com", "https://www.gravatar.com", "https://secure.gravatar.com",
+    "https://*.fastly-insights.com", "https://avatars.githubusercontent.com"
   policy.object_src  :none
   policy.script_src  :self, "https://secure.gaug.es", "https://www.fastly-insights.com"
   policy.style_src   :self, "https://fonts.googleapis.com"
