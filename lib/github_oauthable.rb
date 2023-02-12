@@ -28,8 +28,14 @@ module GitHubOAuthable
 
   included do
     def admin_user
+      request.fetch_header(admin_user_request_header) do
+        find_admin_user
+      end
+    end
+
+    def find_admin_user
       return unless (cookie = cookies.encrypted[admin_cookie_name].presence)
-      Admin::GitHubUser.admins.find(cookie)
+      Admin::GitHubUser.admins.find_by(id: cookie)
     end
 
     def admin_logout
@@ -66,6 +72,10 @@ module GitHubOAuthable
 
     def admin_cookie_name
       "rubygems_admin_oauth_github_user"
+    end
+
+    def admin_user_request_header
+      "gemcutter.rubygems_admin_oauth_github_user"
     end
 
     def fetch_admin_user_info(oauth_token)

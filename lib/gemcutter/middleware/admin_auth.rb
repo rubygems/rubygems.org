@@ -22,6 +22,8 @@ class Gemcutter::Middleware::AdminAuth
 
     def call
       return unless requires_auth_for_admin?(request)
+      admin_user = find_admin_user
+      request.set_header(admin_user_request_header, admin_user)
       return if admin_user.present?
       return if allow_unauthenticated_request?(request)
 
