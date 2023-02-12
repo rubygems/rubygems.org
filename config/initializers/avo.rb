@@ -18,9 +18,7 @@ Avo.configure do |config|
   ## == Authentication ==
   config.current_user_method = :admin_user
   config.authenticate_with do
-    config.authenticate_with do
-      redirect_to '/' unless admin_user&.valid?
-    end
+    redirect_to '/' unless admin_user&.valid?
   end
   config.sign_out_path_name = :admin_logout_path
 
