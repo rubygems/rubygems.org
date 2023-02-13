@@ -11,6 +11,8 @@ class ApiKeyResource < Avo::BaseResource
   field :soft_deleted_at, as: :date_time
   field :soft_deleted_rubygem_name, as: :text
 
+  field :enabled_scopes, as: :tags
+
   sidebar do
     heading "Permissions"
 
