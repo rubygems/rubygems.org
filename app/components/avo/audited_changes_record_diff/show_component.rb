@@ -24,7 +24,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
       unless field.visible?
         if changes.key?(field.id.to_s)
           # dummy field to avoid ever printing out the contents... we just want the label
-          yield :changed, Avo::Fields::IdField::ShowComponent.new(field: field)
+          yield :changed, Avo::Fields::BooleanField::ShowComponent.new(field: field)
         end
         next
       end
@@ -62,7 +62,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
     when :changed
       %w[bg-orange-400]
     when :new
-      %w[bg-green-400]
+      %w[bg-green-500]
     when :old
       %w[bg-red-400]
     else []
