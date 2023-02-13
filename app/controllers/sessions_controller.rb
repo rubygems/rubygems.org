@@ -25,7 +25,7 @@ class SessionsController < Clearance::SessionsController
     @challenge = session.dig(:webauthn_authentication, "challenge")
 
     if params[:credentials].blank?
-      webauthn_verification_failure("Credentials required")
+      webauthn_verification_failure(t("credentials_required"))
       return
     elsif !session_active?
       webauthn_verification_failure(t("multifactor_auths.session_expired"))

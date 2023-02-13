@@ -27,7 +27,7 @@ class EmailConfirmationsController < ApplicationController
     @challenge = session.dig(:webauthn_authentication, "challenge")
 
     if params[:credentials].blank?
-      login_failure("Credentials required")
+      login_failure(t("credentials_required"))
       return
     end
 
