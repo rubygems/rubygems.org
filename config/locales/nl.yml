@@ -1,5 +1,6 @@
 ---
 nl:
+  credentials_required:
   edit: Wijzig
   failure_when_forbidden: Controleer het webadres, en probeer het opnieuw.
   feed_latest: RubyGems.org | Nieuwste Gems

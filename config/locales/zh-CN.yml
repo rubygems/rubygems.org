@@ -1,5 +1,6 @@
 ---
 zh-CN:
+  credentials_required:
   edit: 编辑
   failure_when_forbidden: 请确认 URL 或再次提交
   feed_latest: RubyGems.org | 最新 Gems
