@@ -5,6 +5,8 @@ class UserResource < Avo::BaseResource
     scope.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
   }
 
+  action ResetUser2fa
+
   field :id, as: :id
   # Fields generated from the model
   field :email, as: :text
@@ -28,6 +30,7 @@ class UserResource < Avo::BaseResource
 
   tabs style: :pills do
     tab "Auth" do
+      field :encrypted_password, as: :password, visible: ->(_) { false }
       field :mfa_seed, as: :text, visible: ->(_) { false }
       field :mfa_level, as: :select, enum: ::User.mfa_levels
       field :mfa_recovery_codes, as: :text, visible: ->(_) { false }
@@ -51,5 +54,7 @@ class UserResource < Avo::BaseResource
     field :api_keys, as: :has_many, name: "API Keys"
     field :ownership_calls, as: :has_many
     field :ownership_requests, as: :has_many
+
+    field :audits, as: :has_many
   end
 end
