@@ -17,10 +17,14 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
 
   attr_reader :gid, :changes, :unchanged, :user, :resource, :old_resource, :new_resource
 
-  def each_field
-    @resource.fields.each do |field|
-      next if field.is_a?(Avo::Fields::HasBaseField)
+  def sorted_fields
+    @resource.fields
+      .reject { _1.is_a?(Avo::Fields::HasBaseField) }
+      .sort_by.with_index { |f, i| [changes.key?(f.id.to_s) ? -1 : 1, i] }
+  end
 
+  def each_field
+    sorted_fields.each do |field|
       unless field.visible?
         if changes.key?(field.id.to_s)
           # dummy field to avoid ever printing out the contents... we just want the label
