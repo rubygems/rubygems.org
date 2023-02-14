@@ -78,7 +78,7 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.4.7.0)
       execjs (~> 2)
-    avo (2.25.0)
+    avo (2.26.0)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -203,7 +203,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    globalid (1.0.1)
+    globalid (1.1.0)
       activesupport (>= 5.0)
     gravtastic (3.2.6)
     groupdate (6.2.0)
@@ -293,7 +293,7 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (8.16.0)
     nio4r (2.5.8)
-    nokogiri (1.14.0)
+    nokogiri (1.14.2)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -557,7 +557,7 @@ GEM
       rexml
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.6)
+    zeitwerk (2.6.7)
 
 PLATFORMS
   ruby
