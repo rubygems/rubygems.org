@@ -49,11 +49,6 @@ class BaseAction < Avo::BaseAction
       @action.response[:messages].any? { _1[:type] == :error }
     end
 
-    def sole_model
-      error "Expected a single model, but #{models.size} given" unless models.size == 1
-      models.sole
-    end
-
     def in_audited_transaction(&)
       User.transaction do
         changed_records = {}
