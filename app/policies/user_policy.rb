@@ -29,5 +29,6 @@ class UserPolicy < ApplicationPolicy
   has_association :api_keys
   has_association :ownership_calls
   has_association :ownership_requests
+  has_association :pushed_versions
   has_association :audits
 end
