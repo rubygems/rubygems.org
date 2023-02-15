@@ -195,6 +195,16 @@ application in a development environment, especially for performance-related iss
     ``` bash
     RUBYGEMS_HOST=http://localhost:3000 gem push hola-0.0.3.gem
     ```
+
+#### Developing with dev secrets
+
+If you're a member of the RubyGems.org team and have access to development secrets in the shared 1Password,
+you can automatically use those secrets by installing the [1Password CLI](https://developer.1password.com/docs/cli)
+and prefixing your commands with `script/dev`.
+
+For example, running `script/dev bin/rails s` will launch the development server with development secrets set in
+the environment.
+
 ---
 
 When everything is set up, start the web server with `rails server` and browse to
