@@ -1,4 +1,4 @@
-class DependencyPolicy < ApplicationPolicy
+class OwnershipPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all
@@ -8,4 +8,6 @@ class DependencyPolicy < ApplicationPolicy
   def avo_show?
     rubygems_org_admin?
   end
+
+  has_association :api_key_rubygem_scopes
 end
