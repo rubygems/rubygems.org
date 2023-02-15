@@ -1,4 +1,6 @@
 class Admin::GitHubUser < ApplicationRecord
+  has_many :audits, inverse_of: :admin_github_user, foreign_key: :admin_github_user_id, dependent: :restrict_with_exception
+
   scope :admins, -> { where(is_admin: true) }
 
   # for avo
