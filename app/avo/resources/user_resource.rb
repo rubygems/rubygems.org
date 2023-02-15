@@ -54,6 +54,7 @@ class UserResource < Avo::BaseResource
     field :api_keys, as: :has_many, name: "API Keys"
     field :ownership_calls, as: :has_many
     field :ownership_requests, as: :has_many
+    field :pushed_versions, as: :has_many
 
     field :audits, as: :has_many
   end
