@@ -280,7 +280,7 @@ class PusherTest < ActiveSupport::TestCase
     setup do
       spec = mock
       spec.expects(:name).returns "some name"
-      spec.expects(:version).times(2).returns Gem::Version.new("1.3.3.7")
+      spec.expects(:version).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
