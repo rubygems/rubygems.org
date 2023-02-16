@@ -7,11 +7,19 @@ class AppRevision
     begin
       revision_file.read
     rescue Errno::ENOENT
-      `git rev-parse HEAD`
+      begin
+        git_revision
+      rescue Errno::ENOENT
+        "UNKNOWN"
+      end
     end.strip
   end
 
   def self.revision_file
     Rails.root.join("REVISION")
+  end
+
+  def self.git_revision
+    `git rev-parse HEAD`
   end
 end
