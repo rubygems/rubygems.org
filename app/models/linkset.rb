@@ -9,7 +9,14 @@ class Linkset < ApplicationRecord
       allow_nil: true,
       allow_blank: true,
       message: "does not appear to be a valid URL"
+    validates url,
+      :linkback => true,
+      on: :verify_linkbacks,
+      allow_nil: true,
+      allow_blank: true
   end
+
+  after_validation :record_linkback_verification, on: :verify_linkbacks
 
   def empty?
     LINKS.map { |link| attributes[link] }.all?(&:blank?)
@@ -17,5 +24,17 @@ class Linkset < ApplicationRecord
 
   def update_attributes_from_gem_specification!(spec)
     update!(home: spec.homepage)
+  end
+
+  def verify_linkbacks
+    return if rubygem[:indexed].blank?
+    validate(:verify_linkbacks)
+    self.save!
+  end
+
+  private
+
+  def record_linkback_verification
+    LINKS.map { |key| self["#{key}_verified"] = self[key].nil? ? nil : self.errors[key].empty? }
   end
 end
