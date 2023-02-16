@@ -24,6 +24,11 @@ requester = User.create_with(
   email_confirmed: true
 ).find_or_create_by!(email: "gem-requester@example.com")
 
+User.create_with(
+  email_confirmed: true,
+  password:
+).find_or_create_by!(email: "security@rubygems.org")
+
 rubygem0 = Rubygem.find_or_create_by!(
   name: "rubygem0"
 ) do |rubygem|
