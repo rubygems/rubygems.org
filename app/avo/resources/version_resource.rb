@@ -32,7 +32,7 @@ class VersionResource < Avo::BaseResource
         field :summary, as: :textarea
         field :description, as: :textarea
         field :authors, as: :textarea
-        field :licenses, as: :tags
+        field :licenses, as: :tags, format_using: method(:Array).to_proc
         field :cert_chain, as: :textarea
         field :built_at, as: :date_time, sortable: true
         field :metadata, as: :key_value, stacked: true

@@ -6,7 +6,7 @@ class GemDownloadResource < Avo::BaseResource
     if model.version
       "#{model.version.full_name} (#{model.count.to_fs(:delimited)})"
     elsif model.rubygem
-      "#{model.rubygem} (#{model.count.to_fs(:delimited)})"
+      "#{model.rubygem.name} (#{model.count.to_fs(:delimited)})"
     else
       "All Gems (#{model.count.to_fs(:delimited)})"
     end

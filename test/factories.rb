@@ -252,4 +252,18 @@ FactoryBot.define do
     ownership
     api_key { create(:api_key, key: SecureRandom.hex(24)) }
   end
+
+  factory :audit do
+    admin_github_user
+    action { "Avo Admin Action" }
+    comment { "This is a comment" }
+    audited_changes do
+      {
+        arguments: { "arg1" => "val1" },
+      fields: { "field1" => "fieldval1" },
+      models: [],
+      records: {}
+      }
+    end
+  end
 end
