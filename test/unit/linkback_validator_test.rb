@@ -60,12 +60,6 @@ class LinkbackValidatorTest < ActiveSupport::TestCase
     URI.stubs(:open).with(links[:bugs]).raises(Net::HTTPBadResponse)
   end
 
-  should "skip a non-indexed gem" do
-    assert_no_changes "@linkset" do
-      @linkset.validate(:verify_linkbacks)
-    end
-  end
-
   should "only run in the correct context" do
     assert @linkset.valid?
     refute @linkset.valid?(:verify_linkbacks)
@@ -96,6 +90,23 @@ class LinkbackValidatorTest < ActiveSupport::TestCase
       Linkset::LINKS.map { |key|
         assert_not_nil @linkset["#{key}_verified"], "value doesn't match for method: #{key}"
       }
+    end
+
+    context "using verify_linkbacks" do
+      should "should save a record even if links fail URLs" do
+        @linkset = create(:linkset)
+        @linkset.rubygem[:indexed] = true
+
+        assert_changed(@linkset, :home_verified) do
+          @linkset.verify_linkbacks
+        end
+      end
+
+      should "skip a non-indexed gem" do
+        assert_no_changes "@linkset" do
+          @linkset.verify_linkbacks
+        end
+      end
     end
 
     should "not verify a rubygem.org gem link with a different gem name" do

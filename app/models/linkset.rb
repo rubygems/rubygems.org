@@ -29,12 +29,13 @@ class Linkset < ApplicationRecord
   def verify_linkbacks
     return if rubygem[:indexed].blank?
     validate(:verify_linkbacks)
-    self.save!
+    save
   end
 
   private
 
   def record_linkback_verification
     LINKS.map { |key| self["#{key}_verified"] = self[key].nil? ? nil : self.errors[key].empty? }
+    return true
   end
 end
