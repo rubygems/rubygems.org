@@ -78,6 +78,7 @@ end
 group :development do
   gem "rails-erd"
   gem "listen"
+  gem "puma"
 end
 
 group :test do
