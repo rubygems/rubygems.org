@@ -108,7 +108,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "record duration on successful OTP login" do
-          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
+          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration, sample_rate: 1.0)
 
           travel_to @end_time do
             post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
@@ -116,7 +116,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "record duration on successful recovery code login" do
-          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
+          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration, sample_rate: 1.0)
 
           travel_to @end_time do
             post :mfa_create, params: { otp: @user.mfa_recovery_codes.first }
@@ -493,7 +493,7 @@ class SessionsControllerTest < ActionController::TestCase
         end_time = Time.utc(2023, 1, 1, 0, 2, 0)
         duration = end_time - start_time
 
-        StatsD.expects(:distribution).with("login.mfa.webauthn.duration", duration)
+        StatsD.expects(:distribution).with("login.mfa.webauthn.duration", duration, sample_rate: 1.0)
 
         travel_to start_time do
           login_to_session_with_webauthn
