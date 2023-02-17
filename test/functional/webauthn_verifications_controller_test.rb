@@ -15,6 +15,20 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "when the webauthn token has expired" do
+      setup do
+        @user = create(:user)
+        @token = create(:webauthn_verification, user: @user, path_token_expires_at: 1.second.ago).path_token
+        get :prompt, params: { webauthn_token: @token }
+      end
+
+      should respond_with :redirect
+      should redirect_to("the homepage") { root_url }
+      should "say the token is consumed or expired" do
+        assert_equal "The token in the link you used has either expired or been used already.", flash[:alert]
+      end
+    end
+
     context "when given a valid webauthn token param" do
       setup do
         @user = create(:user)

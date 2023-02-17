@@ -358,13 +358,12 @@ zh-CN:
       owner_request_heading:
       push_heading:
   webauthn_verifications:
+    expired_or_already_used:
     prompt:
       title:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
-    authenticate:
-      expired_or_already_used:
   owners:
     confirm:
       confirmed_email:
