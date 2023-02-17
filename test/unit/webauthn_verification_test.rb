@@ -125,6 +125,34 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
       end
     end
 
+    context "when webauthn otp has not been generated" do
+      setup do
+        @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
+      end
+
+      context "with a nil otp" do
+        should "return false" do
+          refute @verification.verify_otp(nil)
+        end
+
+        should "not update expiry" do
+          @verification.verify_otp(nil)
+          assert_nil @verification.otp_expires_at
+        end
+      end
+
+      context "with a non nil otp" do
+        should "return false" do
+          refute @verification.verify_otp("Yxf57d1wEUSWyXrrLMRv")
+        end
+
+        should "not update expiry" do
+          @verification.verify_otp("Yxf57d1wEUSWyXrrLMRv")
+          assert_nil @verification.otp_expires_at
+        end
+      end
+    end
+
     teardown do
       travel_back
     end

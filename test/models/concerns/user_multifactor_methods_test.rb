@@ -344,9 +344,18 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         refute @user.api_otp_verified?(webauthn_verification.otp)
       end
 
-      should "return false if not been generated" do
-        create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
-        refute @user.api_otp_verified?("Yxf57d1wEUSWyXrr")
+      context "when webauthn otp has not been generated" do
+        setup do
+          create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
+        end
+
+        should "return false for an otp" do
+          refute @user.api_otp_verified?("Yxf57d1wEUSWyXrr")
+        end
+
+        should "return false if otp is nil" do
+          refute @user.api_otp_verified?(nil)
+        end
       end
     end
 

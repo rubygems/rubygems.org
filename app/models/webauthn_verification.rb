@@ -21,7 +21,7 @@ class WebauthnVerification < ApplicationRecord
   end
 
   def verify_otp(otp)
-    return false if otp != self.otp || otp_expired?
+    return false if self.otp.nil? || otp != self.otp || otp_expired?
     expire_otp
   end
 
