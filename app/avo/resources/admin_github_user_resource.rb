@@ -25,4 +25,6 @@ class AdminGitHubUserResource < Avo::BaseResource
   field :info_data,
     as: :code, readonly: true, language: :javascript,
     format_using: ->(info_data) { JSON.pretty_generate info_data }
+
+  field :audits, as: :has_many
 end
