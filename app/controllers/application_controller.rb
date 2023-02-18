@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
   include ApplicationMultifactorMethods
+  include TraceTagger
 
   helper ActiveSupport::NumberHelper
 
@@ -11,6 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_null_char_cookie
+  before_action :set_user_tag
 
   add_flash_types :notice_html
 
@@ -21,6 +23,10 @@ class ApplicationController < ActionController::Base
     session[:locale] = params[:locale] if params[:locale]
   rescue I18n::InvalidLocale
     I18n.locale = I18n.default_locale
+  end
+
+  def set_user_tag
+    set_tag "gemcutter.user.id", current_user.id if signed_in?
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
