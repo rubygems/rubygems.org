@@ -103,11 +103,6 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: aws_secret_access_key
-          - name: NEW_RELIC_LICENSE_KEY
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: new_relic_license_key
           - name: HONEYBADGER_API_KEY
             valueFrom:
               secretKeyRef:
