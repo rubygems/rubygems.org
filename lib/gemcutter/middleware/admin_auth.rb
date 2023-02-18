@@ -1,5 +1,6 @@
 require_relative "../middleware"
 require_relative "../../github_oauthable"
+require_relative "../../trace_tagger"
 
 class Gemcutter::Middleware::AdminAuth
   def initialize(app)
@@ -12,6 +13,7 @@ class Gemcutter::Middleware::AdminAuth
 
   class Context
     include GitHubOAuthable
+    include TraceTagger
 
     def initialize(env)
       @request = ActionDispatch::Request.new(env)
@@ -24,7 +26,10 @@ class Gemcutter::Middleware::AdminAuth
       return unless requires_auth_for_admin?(request)
       admin_user = find_admin_user
       request.set_header(admin_user_request_header, admin_user)
-      return if admin_user.present?
+      if admin_user.present?
+        set_tag "gemcutter.admin_user.id", admin_user.id
+        return
+      end
       return if allow_unauthenticated_request?(request)
 
       login_page = ApplicationController.renderer.new(request.env).render(template: "avo/login", layout: false, locals: { request: })

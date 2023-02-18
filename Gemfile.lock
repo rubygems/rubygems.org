@@ -153,7 +153,7 @@ GEM
     crass (1.0.6)
     css_parser (1.11.0)
       addressable
-    dalli (3.2.3)
+    dalli (3.2.4)
     date (3.3.3)
     ddtrace (1.9.0)
       debase-ruby_core_source (>= 0.10.16, <= 3.2.0)
@@ -212,6 +212,7 @@ GEM
       rake
     globalid (1.1.0)
       activesupport (>= 5.0)
+    google-protobuf (3.22.0)
     gravtastic (3.2.6)
     groupdate (6.2.0)
       activesupport (>= 5.2)
@@ -590,6 +591,7 @@ DEPENDENCIES
   dogstatsd-ruby
   factory_bot_rails
   faraday_middleware-aws-sigv4 (~> 0.3)
+  google-protobuf
   gravtastic
   groupdate
   high_voltage
