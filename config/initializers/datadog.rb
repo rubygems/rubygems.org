@@ -30,6 +30,8 @@ Datadog.configure do |c|
   c.tracing.instrument :rails
   c.tracing.instrument :rest_client, split_by_domain: true, service_name: c.service
   c.tracing.instrument :shoryuken
+
+  c.profiling.enabled = true
 end
 
 Datadog::Tracing.before_flush(
