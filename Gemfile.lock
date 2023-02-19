@@ -263,7 +263,6 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    kgio (2.11.4)
     launchy (2.5.2)
       addressable (~> 2.8)
     libdatadog (1.0.1.1.0)
@@ -420,7 +419,6 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
-    raindrops (0.19.2)
     rake (13.0.6)
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
@@ -548,9 +546,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (2.2.0)
-    unicorn (5.8.0)
-      kgio (~> 2.6)
-      raindrops (~> 0.7)
     unpwn (1.0.0)
       bloomer (~> 1.0)
       pwned (~> 2.0)
@@ -660,7 +655,6 @@ DEPENDENCIES
   statsd-instrument (~> 2.3.0)
   terser
   toxiproxy (~> 2.0.0)
-  unicorn (~> 5.8.0)
   unpwn
   validates_formatting_of
   webauthn

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: unicorn
+  name: puma
   annotations:
     shipit.shopify.io/restart: 'true'
 spec:
@@ -12,21 +12,21 @@ spec:
       maxUnavailable: 0%
   selector:
     matchLabels:
-      name: unicorn
+      name: puma
   template:
     metadata:
       annotations:
-        ad.datadoghq.com/unicorn.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+        ad.datadoghq.com/puma.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
-        name: unicorn
+        name: puma
     spec:
       containers:
-      - name: unicorn
+      - name: puma
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
-        args: ["unicorn_rails", "-E", "<%= environment %>", "-c", "/app/config/unicorn.conf"]
+        args: ["puma", "--environment", "<%= environment %>", "--config", "/app/config/puma.rb"]
         ports:
         - containerPort: 3000
-          name: http-unicorn
+          name: http-puma
         readinessProbe:
           httpGet:
             path: /internal/ping
