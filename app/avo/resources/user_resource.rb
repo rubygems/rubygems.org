@@ -6,6 +6,7 @@ class UserResource < Avo::BaseResource
   }
 
   action ResetUser2fa
+  action BlockUser
 
   field :id, as: :id
   # Fields generated from the model
