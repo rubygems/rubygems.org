@@ -25,6 +25,7 @@ gem "omniauth-github"
 gem "omniauth"
 gem "omniauth-rails_csrf_protection"
 gem "pg"
+gem "propshaft"
 gem "rack"
 gem "rack-utf8_sanitizer"
 gem "rbtrace", "~> 0.4.8"
@@ -41,7 +42,6 @@ gem "searchkick"
 gem "faraday_middleware-aws-sigv4", "~> 0.3"
 gem "xml-simple"
 gem "compact_index", "~> 0.14.0"
-gem "sprockets-rails"
 gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
@@ -58,9 +58,12 @@ gem "groupdate"
 gem "lograge"
 
 group :assets do
-  gem "sassc-rails"
   gem "terser"
   gem "autoprefixer-rails"
+end
+
+group :assets, :development do
+  gem "cssbundling-rails"
 end
 
 group :development, :test do
@@ -80,6 +83,7 @@ group :development do
   gem "rails-erd"
   gem "listen"
   gem "puma"
+  gem "foreman"
 end
 
 group :test do

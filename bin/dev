@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+PORT="${PORT:-3000}"
+export PORT
+
+if command -v overmind > /dev/null 2>&1; then
+  exec overmind start -f Procfile.dev "$@"
+else
+  exec "$(dirname "${BASH_SOURCE[0]}")/foreman" start -f Procfile.dev "$@"
+fi

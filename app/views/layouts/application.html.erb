@@ -20,6 +20,7 @@
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
     <%= yield :head %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
 
   <body class="<%= 'body--index' if request.path_info == '/' %>">
