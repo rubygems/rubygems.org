@@ -33,7 +33,6 @@ FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} as build-yarn
 
 # Install JavaScript dependencies
 ARG YARN_VERSION=1.22.1
-RUN npm install -g --force yarn@$YARN_VERSION
 RUN corepack enable && \
   corepack prepare yarn@$YARN_VERSION --activate
 WORKDIR /app
