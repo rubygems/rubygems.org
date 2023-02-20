@@ -151,7 +151,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
               "remember_token" => [user_attributes[:remember_token], nil],
-              "blocked_email" => [nil, user_attributes[:email]],
+              "blocked_email" => [nil, user_attributes[:email]]
             },
             "unchanged" => user.attributes
               .except(
