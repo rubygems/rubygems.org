@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def gravatar(size, id = "gravatar", user = current_user)
-    image_tag user.gravatar_url(size: size, secure: request.ssl?).html_safe,
+    image_tag user.gravatar_url(size: size, secure: true).html_safe,
       id: id,
       width: size,
       height: size
