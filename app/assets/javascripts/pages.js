@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 //data page
 $(document).ready(function() {
   var getDumpData = function(target, type) {

@@ -17,7 +17,6 @@ gem "gravtastic"
 gem "high_voltage"
 gem "honeybadger"
 gem "http_accept_language"
-gem "jquery-rails"
 gem "kaminari"
 gem "mail"
 gem "octokit"
@@ -64,6 +63,7 @@ end
 
 group :assets, :development do
   gem "cssbundling-rails"
+  gem "jsbundling-rails"
 end
 
 group :development, :test do

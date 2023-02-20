@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(function() {
   var enableGemScopeCheckboxes = $("#push_rubygem, #yank_rubygem, #add_owner, #remove_owner");
   var hiddenRubygemId = "hidden_api_key_rubygem_id";

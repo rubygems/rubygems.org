@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import {create, parseCreationOptionsFromJSON, get, parseRequestOptionsFromJSON} from '@github/webauthn-json/browser-ponyfill';
+
 (function() {
   var handleEvent = function(event) {
     event.preventDefault();
@@ -49,15 +52,6 @@
     };
   };
 
-  var credentialsToBuffer = function(credentials) {
-    return credentials.map(function(credential) {
-      return {
-        id: base64urlToBuffer(credential.id),
-        type: credential.type
-      };
-    });
-  };
-
   $(function() {
     var credentialForm = $(".js-new-webauthn-credential--form");
     var credentialError = $(".js-new-webauthn-credential--error");
@@ -75,12 +69,9 @@
       }).then(function (response) {
         return response.json();
       }).then(function (json) {
-        json.user.id = base64urlToBuffer(json.user.id);
-        json.challenge = base64urlToBuffer(json.challenge);
-        json.excludeCredentials = credentialsToBuffer(json.excludeCredentials);
-        return navigator.credentials.create({
+        return create(parseCreationOptionsFromJSON({
           publicKey: json
-        });
+        }))
       }).then(function (credentials) {
         return fetch(form.action + "/callback.json", {
           method: "POST",
@@ -90,7 +81,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            credentials: credentialsToBase64(credentials),
+            credentials: credentials,
             webauthn_credential: { nickname: nickname }
           })
         });
@@ -111,11 +102,9 @@
     sessionForm.submit(function(event) {
       var form = handleEvent(event);
       var options = JSON.parse(form.dataset.options);
-      options.challenge = base64urlToBuffer(options.challenge);
-      options.allowCredentials = credentialsToBuffer(options.allowCredentials);
-      navigator.credentials.get({
+      get(parseRequestOptionsFromJSON({
         publicKey: options
-      }).then(function (credentials) {
+      })).then(function (credentials) {
         return fetch(form.action, {
           method: "POST",
           credentials: "same-origin",
@@ -124,7 +113,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            credentials: credentialsToBase64(credentials)
+            credentials: credentials
           })
         });
       }).then(function (response) {

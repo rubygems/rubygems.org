@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import ClipboardJS from 'clipboard';
+
 function popUp (e) {
   e.preventDefault();
   e.returnValue = "";

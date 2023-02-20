@@ -1,3 +1,8 @@
+import $ from 'jquery';
+import {handleClick} from './handleClick';
+
+
+
 $(function() {
   var arrowIcon        = $('.header__popup-link');
   var popupNav         = $('.header__popup__nav-links');

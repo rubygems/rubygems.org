@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 if($("#advanced-search").length){
   var $main        = $('#home_query');
   var $name        = $('input#name');

@@ -11,14 +11,19 @@
 //= require webauthn-json
 //= require_tree .
 
-function handleClick(event, nav, removeNavExpandedClass, addNavExpandedClass) {
-  var isMobileNavExpanded = nav.popUp.hasClass(nav.expandedClass);
+import $ from "jquery";
+import jqueryUjsInit from "jquery-ujs";
+jqueryUjsInit($);
+import "@rails/ujs";
+import "../../../vendor/assets/javascripts/github_buttons";
 
-  event.preventDefault();
-
-  if (isMobileNavExpanded) {
-    removeNavExpandedClass();
-  } else {
-    addNavExpandedClass();
-  }
-}
+import "./api_key_form";
+import "./autocomplete";
+import "./clipboard_buttons";
+import "./mobile-nav";
+import "./multifactor_auths";
+import "./pages";
+import "./popup-nav";
+import "./search";
+import "./transitive_dependencies";
+import "./webauthn";

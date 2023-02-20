@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(function() {
   if ($('#home_query').length){
     autocomplete($('#home_query'));

@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import ClipboardJS from 'clipboard';
+
 $(function() {
   var clipboard = new ClipboardJS('.gem__code__icon');
   var copyTooltip = $('.gem__code__tooltip--copy');
