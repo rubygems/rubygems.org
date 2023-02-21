@@ -184,6 +184,6 @@ class SessionsController < Clearance::SessionsController
     started_at = Time.zone.parse(session[:mfa_login_started_at]).utc
     duration = Time.now.utc - started_at
 
-    StatsD.distribution("login.mfa.#{mfa_type}.duration", duration, sample_rate: 1.0)
+    StatsD.distribution("login.mfa.#{mfa_type}.duration", duration)
   end
 end
