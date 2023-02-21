@@ -21,25 +21,28 @@ class EmailConfirmationTest < SystemTest
   end
 
   test "requesting confirmation mail with email of existing user" do
+    fullscreen_headless_chrome_driver
     request_confirmation_mail @user.email
 
     link = last_email_link
     assert_not_nil link
     visit link
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
   end
 
   test "re-using confirmation link does not sign in user" do
+    fullscreen_headless_chrome_driver
     request_confirmation_mail @user.email
 
     link = last_email_link
     visit link
+    click_link "More items"
     click_link "Sign out"
 
     visit link
-    assert page.has_content? "Sign in"
+    assert page.has_content? :all, "Sign in"
     assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
   end
 
@@ -56,6 +59,7 @@ class EmailConfirmationTest < SystemTest
 
   test "requesting confirmation mail with mfa enabled" do
     @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    fullscreen_headless_chrome_driver
     request_confirmation_mail @user.email
 
     link = last_email_link
@@ -65,7 +69,7 @@ class EmailConfirmationTest < SystemTest
     fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
     click_button "Authenticate"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "requesting confirmation mail with webauthn enabled" do

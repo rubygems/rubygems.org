@@ -63,6 +63,7 @@ class SignUpTest < SystemTest
   end
 
   test "email confirmation" do
+    fullscreen_headless_chrome_driver
     visit sign_up_path
 
     fill_in "Email", with: "email@person.com"
@@ -74,7 +75,7 @@ class SignUpTest < SystemTest
     assert_not_nil link
     visit link
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
   end
 

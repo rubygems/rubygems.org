@@ -134,7 +134,10 @@ class SystemTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = :rack_test
   end
 
-  teardown { reset_session! }
+  teardown do
+    reset_session!
+    Capybara.use_default_driver
+  end
 end
 
 Shoulda::Matchers.configure do |config|

@@ -9,6 +9,7 @@ class OwnerTest < SystemTest
     @rubygem = create(:rubygem, number: "1.0.0")
     @ownership = create(:ownership, user: @user, rubygem: @rubygem)
 
+    fullscreen_headless_chrome_driver
     sign_in_as(@user)
     ActionMailer::Base.deliveries.clear
   end
@@ -73,8 +74,10 @@ class OwnerTest < SystemTest
 
     visit_ownerships_page
 
-    within_element owner_row(@other_user) do
-      click_button "Remove"
+    accept_alert do
+      within_element owner_row(@other_user) do
+        click_button "Remove"
+      end
     end
 
     refute page.has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
@@ -90,8 +93,10 @@ class OwnerTest < SystemTest
   test "removing last owner shows error message" do
     visit_ownerships_page
 
-    within_element owner_row(@user) do
-      click_button "Remove"
+    accept_alert do
+      within_element owner_row(@user) do
+        click_button "Remove"
+      end
     end
 
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
@@ -164,6 +169,7 @@ class OwnerTest < SystemTest
   end
 
   test "hides ownership link when not owner" do
+    click_link "More items"
     page.find("a[href='/sign_out']").click
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem)
@@ -171,12 +177,14 @@ class OwnerTest < SystemTest
   end
 
   test "hides ownership link when not signed in" do
+    click_link "More items"
     page.find("a[href='/sign_out']").click
     visit rubygem_path(@rubygem)
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
   end
 
   test "shows resend confirmation link when unconfirmed" do
+    click_link "More items"
     page.find("a[href='/sign_out']").click
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
     sign_in_as(@other_user)
