@@ -1,11 +1,11 @@
 import $ from "jquery";
 import { handleClick } from "src/handle-click";
 
-$(function() {
-  var arrowIcon        = $('.header__popup-link');
-  var popupNav         = $('.header__popup__nav-links');
+function bindPopupNav() {
+  var arrowIcon = $(".header__popup-link");
+  var popupNav = $(".header__popup__nav-links");
 
-  var navExpandedClass = 'is-expanded';
+  var navExpandedClass = "is-expanded";
 
   function removeNavExpandedClass() {
     popupNav.removeClass(navExpandedClass);
@@ -15,8 +15,10 @@ $(function() {
     popupNav.addClass(navExpandedClass);
   }
 
-  arrowIcon.click(function(e){
-    var nav = {expandedClass: navExpandedClass, popUp: popupNav}
+  arrowIcon.click(function (e) {
+    var nav = { expandedClass: navExpandedClass, popUp: popupNav };
     handleClick(e, nav, removeNavExpandedClass, addNavExpandedClass);
   });
-});
+}
+
+export { bindPopupNav };

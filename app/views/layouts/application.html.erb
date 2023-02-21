@@ -52,12 +52,8 @@
           <% end %>
 
           <nav class="header__nav-links">
-            <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
-                <span><%= current_user.name %></span>
-                <%= avatar 80, "user_gravatar", theme: :dark %>
-              </a>
-            <% end %>
+            <span id="mobile_nav_profile_links">
+            </span>
 
             <%= link_to "Releases", news_url, class: "header__nav-link #{active?(news_path)}" %>
             <%= link_to t('.footer.blog'), "https://blog.rubygems.org", class: "header__nav-link" %>
@@ -70,26 +66,12 @@
 
             <%= link_to t('.footer.guides'), "https://guides.rubygems.org", class: "header__nav-link" %>
 
-            <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
-                <span><%= current_user.name %></span>
-                <%= avatar 80, "user_gravatar", theme: :dark %>
-              </a>
-              <a href="#" class="header__popup-link" data-icon="▼" data-nav-target="dropdownButton">
-                <span class="t-hidden">More items</span>
-              </a>
-              <div class="header__popup__nav-links" data-nav-target="dropdown">
-                <%= link_to t('.header.settings'), edit_settings_path, class: "header__nav-link" %>
-                <%= link_to t('.header.dashboard'), dashboard_path, class: "header__nav-link" %>
-                <%= link_to t('.header.edit_profile'), edit_profile_path, class: "header__nav-link" %>
-                <%= link_to t('.header.sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
-              </div>
-            <% else %>
+            <span id="nav_profile_links">
               <%= link_to t('.header.sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
               <% if Clearance.configuration.allow_sign_up? %>
                 <%= link_to t('.header.sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
               <% end %>
-            <% end %>
+            </span>
           </nav>
         </div>
       </div>

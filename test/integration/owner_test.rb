@@ -10,6 +10,7 @@ class OwnerTest < SystemTest
     @rubygem = create(:rubygem, number: "1.0.0")
     @ownership = create(:ownership, user: @user, rubygem: @rubygem)
 
+    fullscreen_headless_chrome_driver
     sign_in_as(@user)
   end
 
@@ -84,9 +85,11 @@ class OwnerTest < SystemTest
 
     visit_ownerships_page
 
-    within_element owner_row(@other_user) do
-      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-        click_button "Remove"
+    accept_alert do
+      within_element owner_row(@other_user) do
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          click_button "Remove"
+        end
       end
     end
 
@@ -102,8 +105,10 @@ class OwnerTest < SystemTest
   test "removing last owner shows error message" do
     visit_ownerships_page
 
-    within_element owner_row(@user) do
-      click_button "Remove"
+    accept_alert do
+      within_element owner_row(@user) do
+        click_button "Remove"
+      end
     end
 
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
@@ -224,6 +229,7 @@ class OwnerTest < SystemTest
   end
 
   test "hides ownership link when not owner" do
+    click_link "More items"
     page.click_link(nil, href: "/sign_out")
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem.slug)
@@ -232,6 +238,7 @@ class OwnerTest < SystemTest
   end
 
   test "hides ownership link when not signed in" do
+    click_link "More items"
     page.click_link(nil, href: "/sign_out")
     visit rubygem_path(@rubygem.slug)
 
@@ -239,6 +246,7 @@ class OwnerTest < SystemTest
   end
 
   test "shows resend confirmation link when unconfirmed" do
+    click_link "More items"
     page.click_link(nil, href: "/sign_out")
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
     sign_in_as(@other_user)
