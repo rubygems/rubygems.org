@@ -4,6 +4,7 @@ class WebauthnVerificationsController < ApplicationController
   before_action :set_verification, :set_user
 
   def prompt
+    redirect_to root_path, alert: t(".no_port") unless params[:port]
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
     @webauthn_options = @user.webauthn_options_for_get
