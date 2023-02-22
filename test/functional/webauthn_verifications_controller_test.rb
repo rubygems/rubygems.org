@@ -91,7 +91,8 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
       @port = 1
-      travel_to Time.utc(2023, 1, 1, 0, 0, 0) do
+      @verification_created_at = Time.utc(2023, 1, 1, 0, 0, 0)
+      travel_to @verification_created_at do
         @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
         @token = @verification.path_token
         get :prompt, params: { webauthn_token: @token, port: @port }
@@ -109,20 +110,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           client: @client
         )
         @generated_time = Time.utc(2023, 1, 1, 0, 0, 3)
-        travel_to @generated_time do
-          post(
-            :authenticate,
-            params: {
-              credentials:
-                WebauthnHelpers.get_result(
-                  client: @client,
-                  challenge: @challenge
-                ),
-              webauthn_token: @token
-            },
-            format: :json
-          )
-        end
+        authenticate_request(time: @generated_time)
         @verification.reload
       end
 
@@ -179,20 +167,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
-          post(
-            :authenticate,
-            params: {
-              credentials:
-                WebauthnHelpers.get_result(
-                  client: @client,
-                  challenge: @wrong_challenge
-                ),
-              webauthn_token: @token
-            },
-            format: :json
-          )
-        end
+        authenticate_request(challenge: @wrong_challenge)
         @verification.reload
       end
 
@@ -209,7 +184,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
     context "when given an invalid webauthn token" do
       setup do
-        @wrong_webuthn_token = "pRpwn2mTH2D18t58"
+        @wrong_webauthn_token = "pRpwn2mTH2D18t58"
         @challenge = session[:webauthn_authentication]["challenge"]
         @origin = "http://localhost:3000"
         @rp_id = URI.parse(@origin).host
@@ -218,20 +193,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
-          post(
-            :authenticate,
-            params: {
-              credentials:
-                WebauthnHelpers.get_result(
-                  client: @client,
-                  challenge: @challenge
-                ),
-              webauthn_token: @wrong_webuthn_token
-            },
-            format: :json
-          )
-        end
+        authenticate_request(token: @wrong_webauthn_token)
       end
 
       should respond_with :not_found
@@ -247,20 +209,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        travel_to Time.utc(2023, 1, 1, 0, 3, 0) do
-          post(
-            :authenticate,
-            params: {
-              credentials:
-                WebauthnHelpers.get_result(
-                  client: @client,
-                  challenge: @challenge
-                ),
-              webauthn_token: @token
-            },
-            format: :json
-          )
-        end
+        authenticate_request(time: Time.utc(2023, 1, 1, 0, 3, 0))
       end
 
       should respond_with :redirect
@@ -281,21 +230,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        @generated_time = Time.utc(2023, 1, 1, 0, 0, 3)
-        travel_to @generated_time do
-          post(
-            :authenticate,
-            params: {
-              credentials:
-                WebauthnHelpers.get_result(
-                  client: @client,
-                  challenge: @challenge
-                ),
-              webauthn_token: @token
-            },
-            format: :json
-          )
-        end
+        authenticate_request
         @verification.reload
       end
 
@@ -303,6 +238,25 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should "display error that no port was given" do
         assert_equal "No port provided. Please try again.", flash[:alert]
       end
+    end
+  end
+
+  private
+
+  def authenticate_request(time: @verification_created_at + 3.seconds, token: @token, challenge: @challenge)
+    travel_to time do
+      post(
+        :authenticate,
+        params: {
+          credentials:
+            WebauthnHelpers.get_result(
+              client: @client,
+              challenge: challenge
+            ),
+          webauthn_token: token
+        },
+        format: :json
+      )
     end
   end
 end
