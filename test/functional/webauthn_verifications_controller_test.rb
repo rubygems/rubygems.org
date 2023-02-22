@@ -114,7 +114,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         @verification.reload
       end
 
-      should redirect_to("localhost with provided port") { "http://localhost:#{@port}" }
+      should redirect_to("localhost with provided port and verification code") { "http://localhost:#{@port}\?code=#{@verification.otp}" }
 
       should "set OTP with expiry" do
         assert_equal 16, @user.webauthn_verification.otp.length
