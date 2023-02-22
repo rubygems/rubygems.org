@@ -377,12 +377,12 @@ fr:
       push_heading:
   webauthn_verifications:
     expired_or_already_used:
+    no_port:
     prompt:
       title:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
-      no_port:
   owners:
     confirm:
       confirmed_email:
