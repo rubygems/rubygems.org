@@ -346,6 +346,7 @@ en:
       authenticating_as: Authenticating as
       authenticate: Authenticate
       no_webauthn_devices: You don't have any security devices enabled
+      no_port: No port provided. Please try again.
   owners:
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem

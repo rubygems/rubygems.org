@@ -7,7 +7,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     context "when given an invalid webauthn token" do
       setup do
         @user = create(:user)
-        get :prompt, params: { webauthn_token: "not_valid1234" }
+        get :prompt, params: { webauthn_token: "not_valid1234", port: 1 }
       end
 
       should "return a 404" do
@@ -38,7 +38,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       context "with webauthn devices enabled" do
         setup do
           create(:webauthn_credential, user: @user)
-          get :prompt, params: { webauthn_token: @token }
+          get :prompt, params: { webauthn_token: @token, port: 1 }
         end
 
         should respond_with :success
@@ -59,9 +59,21 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         end
       end
 
+      context "when no port is given" do
+        setup do
+          create(:webauthn_credential, user: @user)
+          get :prompt, params: { webauthn_token: @token }
+        end
+
+        should redirect_to("the homepage") { root_url }
+        should "display error that no port was given" do
+          assert_equal "No port provided. Please try again.", flash[:alert]
+        end
+      end
+
       context "with no webauthn devices enabled" do
         setup do
-          get :prompt, params: { webauthn_token: @token }
+          get :prompt, params: { webauthn_token: @token, port: 1 }
         end
 
         should respond_with :redirect

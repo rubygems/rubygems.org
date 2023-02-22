@@ -357,6 +357,7 @@ de:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
+      no_port:
   owners:
     confirm:
       confirmed_email:
