@@ -28,6 +28,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     should "allow sign up" do
       stay_under_limit_for("clearance/ip")
+      stay_under_sign_up_limit_for("sign_up/ip")
 
       user = build(:user)
       post "/users",
@@ -274,7 +275,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle sign up" do
-      exceed_limit_for("clearance/ip")
+      exceed_sign_up_limit_for("sign_up/ip")
 
       user = build(:user)
       post "/users",

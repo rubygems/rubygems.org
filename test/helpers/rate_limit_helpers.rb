@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength
 module RateLimitHelpers
   def exceeding_limit
     (Rack::Attack::REQUEST_LIMIT * 1.25).to_i
@@ -15,6 +16,10 @@ module RateLimitHelpers
     (Rack::Attack::LOGIN_LIMIT * 1.25).to_i
   end
 
+  def exceeding_sign_up_limit
+    (Rack::Attack::SIGN_UP_LIMIT * 1.25).to_i
+  end
+
   def under_limit
     (Rack::Attack::REQUEST_LIMIT * 0.5).to_i
   end
@@ -25,6 +30,10 @@ module RateLimitHelpers
 
   def under_login_limit
     (Rack::Attack::LOGIN_LIMIT * 0.5).to_i
+  end
+
+  def under_sign_up_limit
+    (Rack::Attack::SIGN_UP_LIMIT * 0.5).to_i
   end
 
   def limit_period
@@ -64,6 +73,10 @@ module RateLimitHelpers
     update_limit_for("#{scope}:#{@user.email}", exceeding_login_limit, Rack::Attack::LOGIN_LIMIT_PERIOD)
   end
 
+  def exceed_sign_up_limit_for(scope)
+    update_limit_for("#{scope}:#{@ip_address}", exceeding_sign_up_limit, Rack::Attack::SIGN_UP_LIMIT_PERIOD)
+  end
+
   def stay_under_limit_for(scope)
     update_limit_for("#{scope}:#{@ip_address}", under_limit)
   end
@@ -83,6 +96,10 @@ module RateLimitHelpers
 
   def stay_under_login_limit_for(scope)
     update_limit_for("#{scope}:#{@user.email}", under_login_limit, Rack::Attack::LOGIN_LIMIT_PERIOD)
+  end
+
+  def stay_under_sign_up_limit_for(scope)
+    update_limit_for("#{scope}:#{@ip_address}", under_sign_up_limit, Rack::Attack::SIGN_UP_LIMIT_PERIOD)
   end
 
   def stay_under_exponential_limit(scope)
@@ -136,3 +153,4 @@ module RateLimitHelpers
     assert_operator @response.headers["Retry-After"].to_i, :<=, @mfa_max_period[level]
   end
 end
+# rubocop:enable Metrics/ModuleLength
