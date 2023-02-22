@@ -90,10 +90,11 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
+      @port = 1
       travel_to Time.utc(2023, 1, 1, 0, 0, 0) do
         @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
         @token = @verification.path_token
-        get :prompt, params: { webauthn_token: @token }
+        get :prompt, params: { webauthn_token: @token, port: @port }
       end
     end
 
@@ -125,10 +126,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         @verification.reload
       end
 
-      should respond_with :success
-      should "return success message" do
-        assert_equal "success", JSON.parse(response.body)["message"]
-      end
+      should redirect_to("localhost with provided port") { "http://localhost:#{@port}" }
 
       should "set OTP with expiry" do
         assert_equal 16, @user.webauthn_verification.otp.length
@@ -269,6 +267,41 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should redirect_to("the homepage") { root_url }
       should "say the token is consumed or expired" do
         assert_equal "The token in the link you used has either expired or been used already.", flash[:alert]
+      end
+    end
+
+    context "when no port is given" do
+      setup do
+        @challenge = session[:webauthn_authentication]["challenge"]
+        session[:webauthn_authentication]["port"] = nil
+        @origin = "http://localhost:3000"
+        @rp_id = URI.parse(@origin).host
+        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        @generated_time = Time.utc(2023, 1, 1, 0, 0, 3)
+        travel_to @generated_time do
+          post(
+            :authenticate,
+            params: {
+              credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: @challenge
+                ),
+              webauthn_token: @token
+            },
+            format: :json
+          )
+        end
+        @verification.reload
+      end
+
+      should redirect_to("the homepage") { root_url }
+      should "display error that no port was given" do
+        assert_equal "No port provided. Please try again.", flash[:alert]
       end
     end
   end

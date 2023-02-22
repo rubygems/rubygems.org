@@ -16,6 +16,12 @@ class WebauthnVerificationsController < ApplicationController
   end
 
   def authenticate
+    port = session.dig(:webauthn_authentication, "port")
+    unless port
+      redirect_to root_path, alert: t(".no_port")
+      return
+    end
+
     webauthn_credential.verify(
       challenge,
       public_key: user_webauthn_credential.public_key,
@@ -27,8 +33,7 @@ class WebauthnVerificationsController < ApplicationController
     @verification.generate_otp
     @verification.expire_path_token
 
-    # TODO: render html with webauthn verification otp instead of json
-    render json: { message: "success" }
+    redirect_to "http://localhost:#{port}"
   rescue WebAuthn::Error => e
     render json: { message: e.message }, status: :unauthorized
   rescue ActionController::ParameterMissing
