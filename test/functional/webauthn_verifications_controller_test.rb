@@ -44,6 +44,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         should respond_with :success
         should "set webauthn authentication" do
           assert_not_nil session[:webauthn_authentication]["challenge"]
+          assert_equal "1", session[:webauthn_authentication]["port"]
         end
 
         should "render the verification page" do
