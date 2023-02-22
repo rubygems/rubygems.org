@@ -11,6 +11,8 @@ class Rack::Attack
   EXP_BACKOFF_LEVELS = [1, 2].freeze
   PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
   PUSH_THROTTLE_PER_USER_KEY = "api/exp/push/user".freeze
+  LOGIN_LIMIT = 15
+  LOGIN_LIMIT_PERIOD = 1.hour
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -171,7 +173,7 @@ class Rack::Attack
   # on wood!)
   protected_sessions_action = [{ controller: "sessions", action: "create" }]
 
-  throttle("logins/handle", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+  throttle("logins/handle", limit: LOGIN_LIMIT, period: LOGIN_LIMIT_PERIOD) do |req|
     protected_route = protected_route?(protected_sessions_action, req.path, req.request_method)
     User.normalize_email(req.params['session']['who']).presence if protected_route && req.params['session']
   end
