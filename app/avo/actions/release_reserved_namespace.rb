@@ -8,7 +8,7 @@ class ReleaseReservedNamespace < BaseAction
     "Are you sure you would like to Release #{record.name} namespace?"
   }
 
-  self.confirm_button_label = "Release Namespace"
+  self.confirm_button_label = "Release namespace"
 
   class ActionHandler < ActionHandler
     def handle_model(rubygem)
@@ -16,4 +16,3 @@ class ReleaseReservedNamespace < BaseAction
     end
   end
 end
-
