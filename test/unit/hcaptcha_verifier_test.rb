@@ -43,6 +43,36 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
     end
   end
 
+  context ".should_verify_sign_up?" do
+    context "when the user has not yet tried to sign up in the past hour" do
+      should "returns false" do
+        refute HcaptchaVerifier.should_verify_sign_up?(@ip)
+      end
+    end
+
+    context "when the user has tried to sign up once in the past hour" do
+      setup do
+        scope = Rack::Attack::SIGN_UP_THROTTLE_PER_IP_KEY
+        update_limit_for("#{scope}:#{@ip}", 1, Rack::Attack::SIGN_UP_LIMIT_PERIOD)
+      end
+
+      should "returns false" do
+        refute HcaptchaVerifier.should_verify_sign_up?(@ip)
+      end
+    end
+
+    context "when the user has tried to sign up 2 or more times in the past hour" do
+      setup do
+        scope = Rack::Attack::SIGN_UP_THROTTLE_PER_IP_KEY
+        update_limit_for("#{scope}:#{@ip}", 2, Rack::Attack::SIGN_UP_LIMIT_PERIOD)
+      end
+
+      should "returns true" do
+        assert HcaptchaVerifier.should_verify_sign_up?(@ip)
+      end
+    end
+  end
+
   context ".call" do
     setup do
       @client_response_token = "10000000-aaaa-bbbb-cccc-000000000001"
