@@ -3,14 +3,14 @@
 module HcaptchaVerifier
   class << self
     VERIFY_ENDPOINT = "https://hcaptcha.com/siteverify"
-    LOGIN_CAPTCHA_THRESHOLD = 4
+    SIGN_IN_CAPTCHA_THRESHOLD = 4
 
-    def should_verify_login?(user_display_id)
+    def should_verify_sign_in?(user_display_id)
       key = Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY
       period = Rack::Attack::LOGIN_LIMIT_PERIOD
 
       keys = keys(key, period, user_display_id)
-      should_verify(keys, LOGIN_CAPTCHA_THRESHOLD)
+      should_verify(keys, SIGN_IN_CAPTCHA_THRESHOLD)
     end
 
     def call(client_response, remote_ip)

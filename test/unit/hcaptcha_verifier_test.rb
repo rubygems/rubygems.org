@@ -13,10 +13,10 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
                   remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
   end
 
-  context ".should_verify_login?" do
+  context ".should_verify_sign_in?" do
     context "when the user has not yet tried to login in the past hour" do
       should "returns false" do
-        refute HcaptchaVerifier.should_verify_login?(@user.email)
+        refute HcaptchaVerifier.should_verify_sign_in?(@user.email)
       end
     end
 
@@ -27,7 +27,7 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
       end
 
       should "returns false" do
-        refute HcaptchaVerifier.should_verify_login?(@user.email)
+        refute HcaptchaVerifier.should_verify_sign_in?(@user.email)
       end
     end
 
@@ -38,7 +38,7 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
       end
 
       should "returns true" do
-        assert HcaptchaVerifier.should_verify_login?(@user.email)
+        assert HcaptchaVerifier.should_verify_sign_in?(@user.email)
       end
     end
   end

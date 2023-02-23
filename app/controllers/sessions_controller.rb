@@ -9,7 +9,7 @@ class SessionsController < Clearance::SessionsController
 
   def create
     @user = find_user
-    if HcaptchaVerifier.should_verify_login?(who)
+    if HcaptchaVerifier.should_verify_sign_in?(who)
       setup_captcha_verification
       render "sessions/captcha"
     elsif @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
