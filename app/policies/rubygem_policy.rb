@@ -17,4 +17,8 @@ class RubygemPolicy < ApplicationPolicy
   def avo_show?
     rubygems_org_admin?
   end
+
+  def act_on?
+    rubygems_org_admin?
+  end
 end

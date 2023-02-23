@@ -5,11 +5,14 @@ class RubygemResource < Avo::BaseResource
     scope.where("name LIKE ?", "%#{params[:q]}%")
   }
 
+  action ReleaseReservedNamespace
+
   # Fields generated from the model
   field :name, as: :text, link_to_resource: true
   field :indexed, as: :boolean
   field :slug, as: :text, hide_on: :index
   field :id, as: :id, hide_on: :index
+  field :protected_days, as: :text
 
   heading "Versions"
 
