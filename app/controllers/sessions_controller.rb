@@ -76,7 +76,7 @@ class SessionsController < Clearance::SessionsController
     @user = User.find(session[:captcha_user])
     session.delete(:captcha_user)
 
-    captcha_success = HcaptchaVerifier.call(captcha_response, request.ip)
+    captcha_success = HcaptchaVerifier.call(captcha_response, request.remote_ip)
     should_mfa = @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
     if captcha_success
       should_mfa ? webauthn_and_mfa_new : do_login
