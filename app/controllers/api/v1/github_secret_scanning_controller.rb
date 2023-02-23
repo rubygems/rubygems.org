@@ -1,4 +1,4 @@
-class Api::V1::GithubSecretScanningController < Api::BaseController
+class Api::V1::GitHubSecretScanningController < Api::BaseController
   include ApiKeyable
 
   # API called by GitHub Secret Scanning tool
@@ -54,6 +54,6 @@ class Api::V1::GithubSecretScanningController < Api::BaseController
   end
 
   def secret_scanning_key(key_id)
-    GithubSecretScanning.new(key_id)
+    GitHubSecretScanning.new(key_id)
   end
 end

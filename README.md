@@ -9,29 +9,22 @@ The Ruby community's gem host.
 
 ## Support
 
-<a href="https://rubytogether.org/"><img src="https://rubytogether.org/images/rubies.svg" width=200></a>
 <a href="https://rubycentral.org/"><img src="doc/ruby_central_logo.png" height=110></a><br/>
 
-[RubyGems.org](https://rubygems.org) is managed by [Ruby Central](https://rubycentral.org), a community-funded organization supported by conference participation for [RailsConf](https://railsconf.org) and [RubyConf](https://rubyconf.org) through tickets and sponsorships.
+[RubyGems.org](https://rubygems.org) is managed by [Ruby Central](https://rubycentral.org), a non-profit organization that supports the Ruby community through projects like this one, as well as [RubyConf](https://rubyconf.org), [RailsConf](https://railsconf.org), and [Bundler](https://bundler.io). You can support Ruby Central by attending or [sponsoring](sponsors@rubycentral.org) a conference, or by [joining as a supporting member](https://rubycentral.org/#/portal/signup).
 
-Hosting fees are paid by Ruby Central and CDN fees are generously donated by [Fastly](https://fastly.com).
-
-Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to work on development and operations work for RubyGems.org which augments volunteer efforts from the Ruby community.
+Hosting is donated by [Amazon Web Services](https://aws.amazon.com), with CDN service donated by [Fastly](https://fastly.com).
 
 [Learn more about our sponsors and how they work together.](https://rubygems.org/pages/sponsors)
 
 ## Links
 
-* [Slack][]: #rubygems-org
+* [Slack](https://bundler.slack.com/)
 * [RFCs](https://github.com/rubygems/rfcs)
 * [Support](mailto:support@rubygems.org)
 * [GitHub Workflow][]: [![test workflow](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml) [![lint workflow](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml) [![docker workflow](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml)
-* [Code Climate][]: [![Maintainability](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/maintainability)](https://codeclimate.com/github/rubygems/rubygems.org/maintainability)
-* [Code Climate][]: [![Test Coverage](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/test_coverage)](https://codeclimate.com/github/rubygems/rubygems.org/test_coverage)
 
-[Slack]: https://bundler.slack.com/
 [github workflow]: https://github.com/rubygems/rubygems.org/actions/
-[code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 
 ## Contributions
 

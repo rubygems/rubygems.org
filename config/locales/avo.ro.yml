@@ -1,0 +1,120 @@
+---
+ro:
+  avo:
+    action_ran_successfully: Acțiunea a rulat cu succes!
+    actions: Acțiuni
+    and_x_other_resources: plus alte %{count} recorduri
+    are_you_sure: Ești sigur?
+    are_you_sure_detach_item: Sigur vrei să detașezi asta %{item}.
+    are_you_sure_you_want_to_run_this_option: Ești sigur că vrei să rulezi aceasta acțiune?
+    attach: Atașează
+    attach_and_attach_another: Atașează și atașează inca unul
+    attach_item: Atașează %{item}
+    attachment_class_attached: "%{attachment_class} anexat."
+    attachment_class_detached: "%{attachment_class} separat."
+    attachment_destroyed: Atașamentul a fost distrus
+    cancel: Anulează
+    choose_a_country: Alege o țară
+    choose_an_option: Alege o opțiune
+    choose_item: Alege %{item}
+    clear_value: Șterge valoarea
+    click_to_reveal_filters: Faceți clic pentru a afișa filtrele
+    confirm: Confirm
+    create_new_item: Creează %{item}
+    dashboard: Panou de control
+    dashboards: Panouri de control
+    delete: șterge
+    delete_file: Șterge fișierul
+    delete_item: Șterge %{item}
+    detach_item: detașează %{item}
+    details: detalii
+    download: Descarcă
+    download_file: Descarcă fișier
+    download_item: Descarcă %{item}
+    edit: modifică
+    edit_item: modifică %{item}
+    empty_dashboard_message: Adaugă carduri în acest dashboard
+    failed: A eșuat
+    failed_to_find_attachment: Atașamentul nu a fost găsit
+    failed_to_load: Încărcarea a eșuat
+    field_translations:
+      file:
+        one: fișier
+        other: fișiere
+        zero: fișiere
+      people:
+        one: peep
+        other: peeps
+        zero: peeps
+    filter_by: Filtează după
+    filters: Filtre
+    go_back: Înapoi
+    grid_view: Vezi sub formă de grid
+    hide_content: Ascunde conținutul
+    home: Acasă
+    key_value_field:
+      add_row: Adaugă rând
+      delete_row: Șterge rând
+      key: Cheie
+      value: Valoare
+    list_is_empty: Lista este goală
+    loading: Se incarcă
+    more: Mai multe
+    new: nou
+    next_page: Pagina următoare
+    no_cards_present: Niciun card disponibil
+    no_item_found: Nici un articol găsit
+    no_options_available: Nicio opțiune disponibilă
+    no_related_item_found: Nici un articol asociat găsit
+    not_authorized: Nu sunteți autorizat să efectuați această acțiune.
+    number_of_items:
+      one: un %{item}
+      other: "%{count} %{item}"
+      zero: 0 %{item}
+    oops_nothing_found: Oups! Nu am găsit rezultate...
+    order:
+      higher: Mutați înregistrarea mai sus
+      lower: Mutați înregistrarea mai jos
+      reorder_record: Reordonați înregistrarea
+      to_bottom: Mutați înregistrarea jos de tot
+      to_top: Mutați înregistrarea sus de tot
+    per_page: Pe pagină
+    prev_page: Pagina anterioara
+    remove_selection: Șterge selecția
+    reset_filters: Resetați filtrele
+    resource_created: Resursă creata
+    resource_destroyed: Resursă ștearsă
+    resource_translations:
+      user:
+        one: utilizator
+        other: utilizatori
+        zero: utilizatori
+    resource_updated: Resursă actualizata
+    resources: Resurse
+    run: Rulează
+    save: Salvează
+    search:
+      cancel_button: Anulare
+      placeholder: Caută
+    select_all: Selectează totul
+    select_all_matching: Selectează toate care se potrivesc
+    select_item: Selectează record
+    show_content: Arată conținutul
+    sign_out: Delogare
+    switch_to_view: Comutați la vizualizarea %{view_type}
+    table_view: Vezi sub formă de tabel
+    tools: Instrumente
+    type_to_search: Caută aici...
+    unauthorized: Neautorizat
+    undo: Anulează
+    view: vezi
+    view_item: vezi %{item}
+    was_successfully_created: a fost creat
+    was_successfully_updated: a fost actualizat
+    x_items_more:
+      one: încă un articol
+      other: "%{count} mai multe articole"
+      zero: zero articole
+    x_records_selected_from_a_total_of_x_html: <span class="font-bold text-gray-700">%{selected}</span> selectate dintr-un total de <span class="font-bold text-gray-700">%{count}</span>
+    x_records_selected_from_all_pages_html: <span class="font-bold text-gray-700">%{count}</span> selectate din toate paginile
+    you_missed_something_check_form: S-ar putea să fi omis ceva. Vă rugăm să verificați formularul.

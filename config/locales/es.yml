@@ -1,5 +1,6 @@
 ---
 es:
+  credentials_required:
   edit: Editar
   failure_when_forbidden: Por favor verifica la URL o inténtalo nuevamente.
   feed_latest: RubyGems.org | Gemas más recientes

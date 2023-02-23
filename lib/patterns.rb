@@ -24,7 +24,9 @@ module Patterns
     thread
     unicode_normalize
     ubygems
+
     update_with_your_gem_name_prior_to_release_to_rubygems_org
+    update_with_your_gem_name_immediately_after_release_to_rubygems_org
 
     jruby
     mri

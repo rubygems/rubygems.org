@@ -2,7 +2,7 @@ require "test_helper"
 
 class RoutingTest < ActionDispatch::IntegrationTest
   def contoller_in_ui?(controller)
-    !controller.nil? && controller !~ /^api|internal|sendgrid_events.*$/
+    !controller.nil? && controller !~ %r{^api|internal|sendgrid_events.*|view_components(_system_test)?|turbo|admin/admin$}
   end
 
   setup do

@@ -139,6 +139,14 @@ module RubygemsHelper
 
   def github_params(rubygem)
     link = link_to_github(rubygem)
-    "user=#{link.path.split('/').second}&repo=#{link.path.split('/').third}&type=star&count=true&size=large" if link
+    return unless link
+
+    {
+      user: link.path.split("/").second,
+      repo: link.path.split("/").third,
+      type: "star",
+      count: "true",
+      size: "large"
+    }
   end
 end

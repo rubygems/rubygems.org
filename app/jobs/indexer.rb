@@ -1,5 +1,6 @@
 class Indexer
   extend StatsD::Instrument
+  include TraceTagger
 
   def perform
     log "Updating the index"
@@ -45,19 +46,22 @@ class Indexer
   end
 
   def update_index
-    upload("specs.4.8.gz", specs_index)
-    log "Uploaded all specs index"
-    upload("latest_specs.4.8.gz", latest_index)
-    log "Uploaded latest specs index"
-    upload("prerelease_specs.4.8.gz", prerelease_index)
-    log "Uploaded prerelease specs index"
+    trace("gemcutter.indexer.index", resource: "specs.4.8.gz") do
+      upload("specs.4.8.gz", specs_index)
+      log "Uploaded all specs index"
+    end
+    trace("gemcutter.indexer.index", resource: "latest_specs.4.8.gz") do
+      upload("latest_specs.4.8.gz", latest_index)
+      log "Uploaded latest specs index"
+    end
+    trace("gemcutter.indexer.index", resource: "prerelease_specs.4.8.gz") do
+      upload("prerelease_specs.4.8.gz", prerelease_index)
+      log "Uploaded prerelease specs index"
+    end
   end
 
   def purge_cdn
-    return unless ENV["FASTLY_SERVICE_ID"] && ENV["FASTLY_API_KEY"]
-
-    Fastly.purge_key("full-index")
-    log "Purged index urls from fastly"
+    log "Purged index urls from fastly" if Fastly.purge_key("full-index")
   end
 
   def minimize_specs(data)

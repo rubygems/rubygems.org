@@ -3,8 +3,12 @@ class Api::BaseController < ApplicationController
 
   private
 
+  def name_params
+    params.permit(:gem_name, :rubygem_name)
+  end
+
   def gem_name
-    params[:gem_name] || params[:rubygem_name]
+    name_params[:gem_name] || name_params[:rubygem_name]
   end
 
   def find_rubygem_by_name
@@ -95,6 +99,7 @@ class Api::BaseController < ApplicationController
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.find_by_hashed_key(hashed_key)
     return render_unauthorized unless @api_key
+    set_tags "gemcutter.user.id" => @api_key.user_id, "gemcutter.user.api_key_id" => @api_key.id
     render_soft_deleted_api_key if @api_key.soft_deleted?
   end
 

@@ -1,0 +1,120 @@
+---
+nn:
+  avo:
+    action_ran_successfully: Suksess!
+    actions: Handlingar
+    and_x_other_resources: og %{count} andre ressursar
+    are_you_sure: Er du sikker?
+    are_you_sure_detach_item: Er du sikker på at du vil koble frå %{item}.
+    are_you_sure_you_want_to_run_this_option: Er du sikker?
+    attach: Legg til
+    attach_and_attach_another: Legg til & Legg til ny
+    attach_item: Legg til %{item}
+    attachment_class_attached: "%{attachment_class} lagt til."
+    attachment_class_detached: "%{attachment_class} fjerna."
+    attachment_destroyed: Vedlegg sletta
+    cancel: Avbryt
+    choose_a_country: Vel eit land
+    choose_an_option: Vel eit alternativ
+    choose_item: Vel %{item}
+    clear_value: Nullstill verdi
+    click_to_reveal_filters: Vis filter
+    confirm: Stadfest
+    create_new_item: Lag ny %{item}
+    dashboard: Dashboard
+    dashboards: Dashboards
+    delete: slett
+    delete_file: Slett fil
+    delete_item: Slett %{item}
+    detach_item: koble frå %{item}
+    details: detaljar
+    download: Last ned
+    download_file: Last ned fil
+    download_item: Last ned %{item}
+    edit: endre
+    edit_item: endre %{item}
+    empty_dashboard_message: Legg til kort i dette dashbordet
+    failed: Feila
+    failed_to_find_attachment: Fann ikkje vedlegg
+    failed_to_load: Lasting feila
+    field_translations:
+      file:
+        one: fil
+        other: filer
+        zero: filer
+      people:
+        one: person
+        other: personar
+        zero: personar
+    filter_by: Filtrer etter
+    filters: Filter
+    go_back: Gå tilbake
+    grid_view: Gridvisning
+    hide_content: Skjul innhald
+    home: Heim
+    key_value_field:
+      add_row: Legg til rad
+      delete_row: Slett rad
+      key: Nøkkel
+      value: Verdi
+    list_is_empty: Lista er tom
+    loading: Lastar
+    more: Meir
+    new: ny
+    next_page: Neste side
+    no_cards_present: Ingen kort til stades
+    no_item_found: Fann ingen
+    no_options_available: Ingen tilgjengelege alternativ
+    no_related_item_found: Fann ingen relaterte
+    not_authorized: Du er ikkje autorisert til å gjere denne handlinga.
+    number_of_items:
+      one: en %{item}
+      other: "%{count} %{item}"
+      zero: ingen %{item}
+    oops_nothing_found: Oops! Fann ikkje noko...
+    order:
+      higher: Flytt elementet opp
+      lower: Flytt elementet ned
+      reorder_record: Sorter element
+      to_bottom: Flytt elementet til botnen
+      to_top: Flytt elementet til toppen
+    per_page: Per side
+    prev_page: Førre side
+    remove_selection: Fjern val
+    reset_filters: Nullstill filter
+    resource_created: Ressurs generert
+    resource_destroyed: Ressurs sletta
+    resource_translations:
+      user:
+        one: brukar
+        other: brukarar
+        zero: brukarar
+    resource_updated: Ressurs oppdatert
+    resources: Ressursar
+    run: Køyr
+    save: Lagre
+    search:
+      cancel_button: Avbryt
+      placeholder: Søk
+    select_all: Vel alle
+    select_all_matching: Vel alle samsvarende
+    select_item: Vel
+    show_content: Vis innhald
+    sign_out: Logg ut
+    switch_to_view: Bytt til %{view_type} vis
+    table_view: Tabellvisning
+    tools: Reiskapane
+    type_to_search: Søk.
+    unauthorized: Ikkje autorisert
+    undo: angre
+    view: Vis
+    view_item: vis %{item}
+    was_successfully_created: vart oppretta
+    was_successfully_updated: vart oppdatert
+    x_items_more:
+      one: eitt element til
+      other: "%{count} fleire element"
+      zero: ingen fleire element
+    x_records_selected_from_a_total_of_x_html: <span class="font-bold text-gray-700">%{selected}</span> valde postar på denne sida av totalt <span class="font-bold text-gray-700">%{count}</span>
+    x_records_selected_from_all_pages_html: <span class="font-bold text-gray-700">%{count}</span> valde postar frå alle sider
+    you_missed_something_check_form: Her manglar du noko. Ver venleg og sjekk skjemaet.

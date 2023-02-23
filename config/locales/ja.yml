@@ -1,5 +1,6 @@
 ---
 ja:
+  credentials_required:
   edit: 編集
   failure_when_forbidden: URLを確認するか、再試行してください。
   feed_latest: RubyGems.org | 最新のGemの一覧

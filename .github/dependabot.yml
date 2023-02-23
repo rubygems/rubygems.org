@@ -16,3 +16,7 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: /
+  schedule:
+    interval: daily

@@ -4,8 +4,7 @@ class Api::V1::VersionsController < Api::BaseController
   def show
     return unless stale?(@rubygem)
 
-    expires_in 0, public: true
-    fastly_expires_in 60
+    cache_expiry_headers
     set_surrogate_key "gem/#{@rubygem.name}"
 
     if @rubygem.public_versions.count.nonzero?
@@ -20,14 +19,19 @@ class Api::V1::VersionsController < Api::BaseController
 
   def latest
     rubygem = Rubygem.find_by_name(params[:id])
-    version = nil
 
+    cache_expiry_headers
+    set_surrogate_key "gem/#{params[:id]}"
+
+    version = nil
     version = rubygem.versions.most_recent if rubygem&.public_versions&.indexed&.count&.nonzero?
     number = version.number if version
     render json: { "version" => number || "unknown" }, callback: params["callback"]
   end
 
   def reverse_dependencies
+    cache_expiry_headers(fastly_expiry: 30)
+
     names = Version.reverse_dependencies(params[:id]).pluck(:full_name)
     respond_to do |format|
       format.json { render json: names }

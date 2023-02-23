@@ -9,6 +9,10 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "on POST to create" do
       setup do
+        @current_time = Time.utc(2023, 1, 1, 0, 0, 0)
+        travel_to @current_time
+        freeze_time
+
         User.expects(:authenticate).with("login", "pass").returns @user
         post :create, params: { session: { who: "login", password: "pass" } }
       end
@@ -18,11 +22,24 @@ class SessionsControllerTest < ActionController::TestCase
         assert_equal @controller.session[:mfa_user], @user.id
         assert page.has_content? "Multi-factor authentication"
       end
+
+      should "set mfa_login_started_at in session " do
+        assert_equal @current_time, @controller.session[:mfa_login_started_at]
+      end
+
+      teardown do
+        travel_back
+      end
     end
 
     context "on POST to mfa_create" do
       setup do
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+        @current_time = Time.utc(2023, 1, 1, 0, 0, 0)
+        travel_to @current_time
+        freeze_time
+
+        User.expects(:authenticate).with("login", "pass").returns @user
+        post :create, params: { session: { who: "login", password: "pass" } }
       end
 
       context "when OTP is correct" do
@@ -81,12 +98,41 @@ class SessionsControllerTest < ActionController::TestCase
           assert_nil @controller.session[:mfa_user]
         end
       end
+
+      context "when mfa code is correct" do
+        setup do
+          @start_time = @current_time
+          @end_time = Time.utc(2023, 1, 1, 0, 2, 0)
+          @duration = @end_time - @start_time
+          @controller.session[:mfa_user] = @user.id
+        end
+
+        should "record duration on successful OTP login" do
+          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
+
+          travel_to @end_time do
+            post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          end
+        end
+
+        should "record duration on successful recovery code login" do
+          StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
+
+          travel_to @end_time do
+            post :mfa_create, params: { otp: @user.mfa_recovery_codes.first }
+          end
+        end
+      end
+
+      teardown do
+        travel_back
+      end
     end
 
     context "when OTP is correct but session expired" do
       setup do
         @controller.session[:mfa_user] = @user.id
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
         travel 30.minutes
 
         post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
@@ -111,6 +157,23 @@ class SessionsControllerTest < ActionController::TestCase
         assert_nil @controller.session[:mfa_user]
       end
     end
+
+    context "when no mfa_expires_at session is present" do
+      setup do
+        @controller.session[:mfa_user] = @user.id
+        travel 30.minutes do
+          post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+        end
+      end
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "display the error message" do
+        assert page.has_content? "Your login page session has expired."
+      end
+    end
   end
 
   context "on POST to create" do
@@ -119,7 +182,7 @@ class SessionsControllerTest < ActionController::TestCase
         user = User.new(email_confirmed: true)
         User.expects(:authenticate).with("login", "pass").returns user
         post :create, params: { session: { who: "login", password: "pass" } }
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
       end
 
       should respond_with :redirect
@@ -153,6 +216,7 @@ class SessionsControllerTest < ActionController::TestCase
 
         context "when mfa is enabled" do
           setup do
+            @controller.session[:mfa_login_started_at] = Time.now.utc.to_s
             @controller.session[:mfa_user] = @user.id
             User.expects(:find).with(@user.id).returns @user
           end
@@ -403,39 +467,41 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   context "#webauthn_create" do
-    context "when verifying the challenge" do
+    context "when providing correct credentials" do
       setup do
         @user = create(:user)
         @webauthn_credential = create(:webauthn_credential, user: @user)
-        post(
-          :create,
-          params: { session: { who: @user.handle, password: @user.password } }
-        )
-        @challenge = session[:webauthn_authentication]["challenge"]
-        @origin = "http://localhost:3000"
-        @rp_id = URI.parse(@origin).host
-        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
-        post(
-          :webauthn_create,
-          params: {
-            credentials:
-              WebauthnHelpers.get_result(
-                client: @client,
-                challenge: @challenge
-              )
-          },
-          format: :json
-        )
+        login_to_session_with_webauthn
       end
 
-      should redirect_to :dashboard
+      context "redirect to dashboard" do
+        setup do
+          verify_challenge
+        end
+
+        should redirect_to :dashboard
+      end
 
       should "log in the user" do
+        verify_challenge
+
         assert_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "record mfa login duration" do
+        start_time = Time.utc(2023, 1, 1, 0, 0, 0)
+        end_time = Time.utc(2023, 1, 1, 0, 2, 0)
+        duration = end_time - start_time
+
+        StatsD.expects(:distribution).with("login.mfa.webauthn.duration", duration)
+
+        travel_to start_time do
+          login_to_session_with_webauthn
+        end
+
+        travel_to end_time do
+          verify_challenge
+        end
       end
     end
 
@@ -449,11 +515,14 @@ class SessionsControllerTest < ActionController::TestCase
         )
         post(
           :webauthn_create,
-          format: :json
+          format: :html
         )
       end
 
       should respond_with :unauthorized
+      should "set flash notice" do
+        assert_equal "Credentials required", flash[:notice]
+      end
     end
 
     context "when providing wrong credentials" do
@@ -481,11 +550,14 @@ class SessionsControllerTest < ActionController::TestCase
                 challenge: @wrong_challenge
               )
           },
-          format: :json
+          format: :html
         )
       end
 
       should respond_with :unauthorized
+      should "set flash notice" do
+        assert_equal "WebAuthn::ChallengeVerificationError", flash[:notice]
+      end
     end
 
     context "when providing credentials but the session expired" do
@@ -514,7 +586,7 @@ class SessionsControllerTest < ActionController::TestCase
                 challenge: @challenge
               )
           },
-          format: :json
+          format: :html
         )
       end
 
@@ -526,6 +598,10 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "set flash notice" do
+        assert_equal "Your login page session has expired.", flash[:notice]
       end
     end
   end
@@ -607,5 +683,36 @@ class SessionsControllerTest < ActionController::TestCase
         should redirect_to("redirect uri") { rubygem_owners_path(@rubygem) }
       end
     end
+  end
+
+  private
+
+  def login_to_session_with_webauthn
+    post(
+      :create,
+      params: { session: { who: @user.handle, password: @user.password } }
+    )
+    @challenge = session[:webauthn_authentication]["challenge"]
+    @origin = "http://localhost:3000"
+    @rp_id = URI.parse(@origin).host
+    @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+    WebauthnHelpers.create_credential(
+      webauthn_credential: @webauthn_credential,
+      client: @client
+    )
+  end
+
+  def verify_challenge
+    post(
+      :webauthn_create,
+      params: {
+        credentials:
+          WebauthnHelpers.get_result(
+            client: @client,
+            challenge: @challenge
+          )
+      },
+      format: :html
+    )
   end
 end

@@ -1,5 +1,6 @@
 ---
 pt-BR:
+  credentials_required:
   edit: Editar
   failure_when_forbidden: Por favor, confira a URL ou tente submetê-la novamente.
   feed_latest: RubyGems.org | Últimas Gems

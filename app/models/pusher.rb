@@ -1,6 +1,8 @@
 require "digest/sha2"
 
 class Pusher
+  include TraceTagger
+
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
   def initialize(user, body, remote_ip = "", scoped_rubygem = nil)
@@ -13,7 +15,9 @@ class Pusher
   end
 
   def process
-    pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
+    trace("gemcutter.pusher.process", tags: { "gemcutter.user.id" => user.id }) do
+      pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
+    end
   end
 
   def authorize
@@ -45,11 +49,11 @@ class Pusher
     @indexer.write_gem @body, @spec
   rescue ArgumentError => e
     @version.destroy
-    Honeybadger.notify(e)
+    Rails.error.report(e, handled: true)
     notify("There was a problem saving your gem. #{e}", 400)
   rescue StandardError => e
     @version.destroy
-    Honeybadger.notify(e)
+    Rails.error.report(e, handled: true)
     notify("There was a problem saving your gem. Please try again.", 500)
   else
     after_write
@@ -72,6 +76,7 @@ class Pusher
 
   def find
     name = spec.name.to_s
+    set_tag "gemcutter.rubygem.name", name
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
@@ -93,12 +98,13 @@ class Pusher
     sha256 = Digest::SHA2.base64digest(body.string)
 
     @version = @rubygem.versions.new number: spec.version.to_s,
-                                     canonical_number: spec.version.canonical_segments.join("."),
                                      platform: spec.original_platform.to_s,
                                      size: size,
                                      sha256: sha256,
                                      pusher: user,
                                      cert_chain: spec.cert_chain
+
+    set_tags "gemcutter.rubygem.version" => @version.number, "gemcutter.rubygem.platform" => @version.platform
 
     true
   end

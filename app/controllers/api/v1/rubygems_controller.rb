@@ -17,6 +17,9 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def show
+    cache_expiry_headers
+    set_surrogate_key "gem/#{@rubygem.name}"
+
     if @rubygem.hosted? && @rubygem.public_versions.indexed.count.nonzero?
       respond_to do |format|
         format.json { render json: @rubygem }
@@ -34,11 +37,13 @@ class Api::V1::RubygemsController < Api::BaseController
     enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue StandardError => e
-    Honeybadger.notify(e)
+    Rails.error.report(e, handled: true)
     render plain: "Server error. Please try again.", status: :internal_server_error
   end
 
   def reverse_dependencies
+    cache_expiry_headers(fastly_expiry: 30)
+
     names = case params[:only]
             when "development"
               @rubygem.reverse_development_dependencies.pluck(:name)

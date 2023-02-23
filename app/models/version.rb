@@ -8,6 +8,7 @@ class Version < ApplicationRecord
   has_one :gem_download, inverse_of: :version, dependent: :destroy
   belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
 
+  before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
@@ -321,7 +322,7 @@ class Version < ApplicationRecord
     if number[0] == "0" || prerelease?
       %(gem '#{rubygem.name}', '~> #{number}')
     else
-      release = feature_release(number)
+      release = feature_release
       if release == Gem::Version.new(number)
         %(gem '#{rubygem.name}', '~> #{release}')
       else
@@ -400,8 +401,13 @@ class Version < ApplicationRecord
     full_name << "-#{platform}" if platformed?
   end
 
-  def feature_release(number)
-    feature_version = Gem::Version.new(number).segments[0, 2].join(".")
+  def set_canonical_number
+    return unless Gem::Version.correct?(number)
+    self.canonical_number = to_gem_version.canonical_segments.join(".")
+  end
+
+  def feature_release
+    feature_version = to_gem_version.release.segments[0, 2].join(".")
     Gem::Version.new(feature_version)
   end
 

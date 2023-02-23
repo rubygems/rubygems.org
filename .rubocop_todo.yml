@@ -31,7 +31,7 @@ Lint/UselessMethodDefinition:
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
 Metrics/BlockLength:
-  Max: 186
+  Max: 195
 
 # Offense count: 1
 # Configuration parameters: IgnoredMethods.
@@ -54,8 +54,8 @@ Naming/MemoizedInstanceVariableName:
 Naming/VariableNumber:
   Exclude:
     - 'test/functional/api/v1/downloads_controller_test.rb'
-    - 'test/unit/gem_download_test.rb'
-    - 'test/unit/rubygem_searchable_test.rb'
+    - 'test/models/gem_download_test.rb'
+    - 'test/models/concerns/rubygem_searchable_test.rb'
 
 # Offense count: 1
 Rails/DeprecatedActiveModelErrorsMethods:
@@ -139,9 +139,9 @@ Security/JSONLoad:
     - 'test/functional/api/v1/web_hooks_controller_test.rb'
     - 'test/functional/api/v2/versions_controller_test.rb'
     - 'test/integration/api/v2/version_information_test.rb'
-    - 'test/unit/dependency_test.rb'
-    - 'test/unit/rubygem_test.rb'
-    - 'test/unit/web_hook_test.rb'
+    - 'test/models/dependency_test.rb'
+    - 'test/models/rubygem_test.rb'
+    - 'test/models/web_hook_test.rb'
 
 # Offense count: 2
 # This cop supports safe auto-correction (--auto-correct).
@@ -149,7 +149,7 @@ Security/JSONLoad:
 # SupportedOctalStyles: zero_with_o, zero_only
 Style/NumericLiteralPrefix:
   Exclude:
-    - 'test/unit/pusher_test.rb'
+    - 'test/models/pusher_test.rb'
 
 # Offense count: 3
 # This cop supports unsafe auto-correction (--auto-correct-all).

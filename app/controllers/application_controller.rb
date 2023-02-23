@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
   include ApplicationMultifactorMethods
+  include TraceTagger
 
   helper ActiveSupport::NumberHelper
 
@@ -11,6 +12,8 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_null_char_cookie
+  before_action :set_error_context_user
+  before_action :set_user_tag
 
   add_flash_types :notice_html
 
@@ -21,6 +24,10 @@ class ApplicationController < ActionController::Base
     session[:locale] = params[:locale] if params[:locale]
   rescue I18n::InvalidLocale
     I18n.locale = I18n.default_locale
+  end
+
+  def set_user_tag
+    set_tag "gemcutter.user.id", current_user.id if signed_in?
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
@@ -38,6 +45,11 @@ class ApplicationController < ActionController::Base
 
   def http_basic_authentication_options_valid?(**options)
     options[:password].present? && options[:name].present?
+  end
+
+  def cache_expiry_headers(expiry: 60, fastly_expiry: 3600)
+    expires_in expiry, public: true
+    fastly_expires_in fastly_expiry
   end
 
   def fastly_expires_in(seconds)
@@ -136,5 +148,14 @@ class ApplicationController < ActionController::Base
 
   def password_session_active?
     session[:verification] && session[:verification] > Time.current && session.fetch(:verified_user, "") == current_user.id
+  end
+
+  def set_error_context_user
+    return unless current_user
+
+    Rails.error.set_context(
+      user_id: current_user.id,
+      user_email: current_user.email
+    )
   end
 end

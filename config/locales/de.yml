@@ -1,5 +1,6 @@
 ---
 de:
+  credentials_required:
   edit: Bearbeiten
   failure_when_forbidden:
   feed_latest: RubyGems.org | Neueste Gems

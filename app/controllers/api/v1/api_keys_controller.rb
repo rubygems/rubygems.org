@@ -32,7 +32,7 @@ class Api::V1::ApiKeysController < Api::BaseController
       user = User.authenticate(username, password)
 
       check_mfa(user) do
-        api_key = user.api_keys.find_by!(hashed_key: hashed_key(params[:api_key]))
+        api_key = user.api_keys.find_by!(hashed_key: hashed_key(key_param))
 
         if api_key.update(api_key_update_params)
           respond_with "Scopes for the API key #{api_key.name} updated"
@@ -79,6 +79,10 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def otp
     request.headers["HTTP_OTP"]
+  end
+
+  def key_param
+    params.permit(:api_key).require(:api_key)
   end
 
   def api_key_create_params

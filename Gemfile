@@ -8,6 +8,9 @@ gem "aws-sdk-sqs"
 gem "bootsnap"
 gem "clearance"
 gem "dalli"
+gem "ddtrace", require: "ddtrace/auto_instrument"
+gem "dogstatsd-ruby"
+gem "google-protobuf"
 gem "delayed_job"
 gem "delayed_job_active_record"
 gem "gravtastic"
@@ -17,7 +20,10 @@ gem "http_accept_language"
 gem "jquery-rails"
 gem "kaminari"
 gem "mail"
-gem "newrelic_rpm"
+gem "octokit"
+gem "omniauth-github"
+gem "omniauth"
+gem "omniauth-rails_csrf_protection"
 gem "pg"
 gem "rack"
 gem "rack-utf8_sanitizer"
@@ -42,12 +48,18 @@ gem "rotp"
 gem "unpwn"
 gem "webauthn"
 
+# Admin dashboard
+gem "avo"
+gem "pundit"
+gem "chartkick"
+gem "groupdate"
+
 # Logging
 gem "lograge"
 
 group :assets do
   gem "sassc-rails"
-  gem "uglifier", ">= 1.0.3"
+  gem "terser"
   gem "autoprefixer-rails"
 end
 
@@ -55,7 +67,6 @@ group :development, :test do
   gem "m", "~> 1.5", require: false
   gem "pry-byebug"
   gem "toxiproxy", "~> 2.0.0"
-  gem "webrick"
   gem "factory_bot_rails"
 
   gem "brakeman", require: false
@@ -68,6 +79,7 @@ end
 group :development do
   gem "rails-erd"
   gem "listen"
+  gem "puma"
 end
 
 group :test do

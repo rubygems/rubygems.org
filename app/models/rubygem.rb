@@ -18,6 +18,7 @@ class Rubygem < ApplicationRecord
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
+  has_many :audits, as: :auditable, inverse_of: :auditable
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
@@ -43,70 +44,70 @@ class Rubygem < ApplicationRecord
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
   end
 
-  def self.with_versions
+  scope :with_versions, lambda {
     where(indexed: true)
-  end
+  }
 
-  def self.with_one_version
+  scope :with_one_version, lambda {
     select("rubygems.*")
       .joins(:versions)
       .group(column_names.map { |name| "rubygems.#{name}" }.join(", "))
       .having("COUNT(versions.id) = 1")
-  end
+  }
 
-  def self.name_is(name)
+  scope :name_is, lambda { |name|
     sensitive = where(name: name.strip).limit(1)
     return sensitive unless sensitive.empty?
 
     where("UPPER(name) = UPPER(?)", name.strip).limit(1)
-  end
+  }
 
-  def self.name_starts_with(letter)
+  scope :name_starts_with, lambda { |letter|
     where("UPPER(name) LIKE UPPER(?)", "#{letter}%")
-  end
+  }
 
-  def self.total_count
-    Rubygem.with_versions.count
-  end
+  scope :total_count, lambda {
+    with_versions.count
+  }
 
-  def self.latest(limit = 5)
+  scope :latest, lambda { |limit = 5|
     with_one_version.order(created_at: :desc).limit(limit)
-  end
+  }
 
-  def self.downloaded(limit = 5)
+  scope :downloaded, lambda { |limit = 5|
     with_versions.by_downloads.limit(limit)
-  end
+  }
 
-  def self.letter(letter)
+  scope :letter, lambda { |letter|
     name_starts_with(letter).by_name.with_versions
-  end
+  }
+
+  scope :by_name, lambda {
+    order(name: :asc)
+  }
+
+  scope :by_downloads, lambda {
+    joins(:gem_download).order("gem_downloads.count DESC")
+  }
+
+  scope :news, lambda { |days|
+    joins(:latest_version)
+      .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)
+      .group(:id)
+      .order("MAX(versions.created_at) DESC")
+  }
+
+  scope :popular, lambda { |days|
+    joins(:gem_download).order("MAX(gem_downloads.count) DESC").news(days)
+  }
 
   def self.letterize(letter)
     /\A[A-Za-z]\z/.match?(letter) ? letter.upcase : "A"
   end
 
-  def self.by_name
-    order(name: :asc)
-  end
-
-  def self.by_downloads
-    joins(:gem_download).order("gem_downloads.count DESC")
-  end
-
   def self.current_rubygems_release
     rubygem = find_by(name: "rubygems-update")
     rubygem && rubygem.versions.release.indexed.latest.first
-  end
-
-  def self.news(days)
-    joins(:latest_version)
-      .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)
-      .group(:id)
-      .order("MAX(versions.created_at) DESC")
-  end
-
-  def self.popular(days)
-    joins(:gem_download).order("MAX(gem_downloads.count) DESC").news(days)
   end
 
   def all_errors(version = nil)

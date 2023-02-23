@@ -1,0 +1,31 @@
+<% @title = t("multifactor_authentication") %>
+
+<div class="mfa__container">
+  <% if @user.webauthn_credentials.any?%>
+    <div class="mfa__option">
+        <h2 class="page__subheading--block"> <%= t("sessions.prompt.security_device") %></h2>
+        <div class="t-body">
+          <p><%= t("sessions.prompt.webauthn_credential_note") %></p>
+        </div>
+        <%= form_tag @form_webauthn_url, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
+          <div class="form_bottom">
+            <p hidden class="l-text-red-600 js-webauthn-session--error"></p>
+
+            <%= submit_tag t('sessions.prompt.sign_in_with_webauthn_credential'), class: 'js-webauthn-session--submit form__submit form__submit--no-hover' %>
+          </div>
+        <% end %>
+      </div>
+  <% end %>
+
+  <% if @user.mfa_enabled? %>
+    <%= form_tag @form_mfa_url, method: :post do %>
+      <div class="text_field">
+        <%= label_tag :otp, t("multifactor_auths.otp_code"), class: "form__label" %>
+        <%= text_field_tag :otp, "", class: "form__input", autofocus: true, autocomplete: :off %>
+      </div>
+      <div class="form_bottom">
+        <%= submit_tag t("authenticate"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

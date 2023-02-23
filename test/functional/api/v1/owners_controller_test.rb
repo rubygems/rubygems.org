@@ -111,6 +111,20 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
         end
 
+        context "array of emails" do
+          setup do
+            @third_user = create(:user)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            post :create, params: { rubygem_id: @rubygem.to_param, email: [@second_user.email, @third_user.email] }, format: :json
+          end
+
+          should respond_with :bad_request
+          should "fail to add new owner" do
+            refute_includes @rubygem.owners_including_unconfirmed, @second_user
+            refute_includes @rubygem.owners_including_unconfirmed, @third_user
+          end
+        end
+
         context "adding other user as gem owner without OTP" do
           setup do
             post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json

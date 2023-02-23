@@ -27,6 +27,8 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
+  has_many :pushed_versions, -> { by_created_at }, dependent: :nullify, inverse_of: :pusher, class_name: "Version", foreign_key: :pusher_id
+
   has_many :deletions, dependent: :nullify
   has_many :web_hooks, dependent: :destroy
 
@@ -36,6 +38,8 @@ class User < ApplicationRecord
 
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :user
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :user
+
+  has_many :audits, as: :auditable, dependent: :nullify
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true

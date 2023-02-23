@@ -33,8 +33,8 @@ class AdoptionsControllerTest < ActionController::TestCase
 
           should "have button for approve and close all ownership requests" do
             assert page.has_content?("example request")
-            assert page.has_selector?("input[value='Close']")
-            assert page.has_selector?("input[value='Close all']")
+            assert page.has_selector?("button[type='submit']", text: "Close")
+            assert page.has_selector?("button[type='submit']", text: "Close all")
           end
         end
 
@@ -46,7 +46,7 @@ class AdoptionsControllerTest < ActionController::TestCase
 
           should "have button to close ownership call" do
             assert page.has_content?("example call")
-            assert page.has_selector?("input[value='Close']")
+            assert page.has_selector?("button[type='submit']", text: "Close")
           end
         end
       end
@@ -94,7 +94,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           should respond_with :success
           should "have button to close ownership request" do
             assert page.has_content?("example request")
-            assert page.has_selector?("input[value='Close']")
+            assert page.has_selector?("button[type='submit']", text: "Close")
           end
         end
 

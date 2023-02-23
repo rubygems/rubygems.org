@@ -1,5 +1,6 @@
 ---
 zh-TW:
+  credentials_required:
   edit: 編輯
   failure_when_forbidden: 請確認 URL 或再次提交
   feed_latest: RubyGems.org | 最新 Gems

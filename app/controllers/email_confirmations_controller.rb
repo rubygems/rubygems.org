@@ -2,25 +2,52 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
-  before_action :validate_confirmation_token, only: %i[update mfa_update]
+  before_action :validate_confirmation_token, only: %i[update mfa_update webauthn_update]
 
   def update
-    if @user.mfa_enabled?
-      @form_url = mfa_update_email_confirmations_url(token: @user.confirmation_token)
-      render template: "multifactor_auths/otp_prompt"
+    if @user.mfa_enabled? || @user.webauthn_credentials.any?
+      setup_mfa_authentication
+      setup_webauthn_authentication
+
+      render template: "multifactor_auths/mfa_prompt"
     else
       confirm_email
     end
   end
 
   def mfa_update
-    if @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+    if mfa_update_conditions_met?
       confirm_email
     else
-      @form_url       = mfa_update_email_confirmations_url(token: @user.confirmation_token)
-      flash.now.alert = t("multifactor_auths.incorrect_otp")
-      render template: "multifactor_auths/otp_prompt", status: :unauthorized
+      login_failure(t("multifactor_auths.incorrect_otp"))
     end
+  end
+
+  def webauthn_update
+    @challenge = session.dig(:webauthn_authentication, "challenge")
+
+    if params[:credentials].blank?
+      login_failure(t("credentials_required"))
+      return
+    end
+
+    @credential = WebAuthn::Credential.from_get(params[:credentials])
+
+    @webauthn_credential = @user.webauthn_credentials.find_by(
+      external_id: @credential.id
+    )
+
+    @credential.verify(
+      @challenge,
+      public_key: @webauthn_credential.public_key,
+      sign_count: @webauthn_credential.sign_count
+    )
+
+    @webauthn_credential.update!(sign_count: @credential.sign_count)
+
+    confirm_email
+  rescue WebAuthn::Error => e
+    login_failure(e.message)
   end
 
   def new
@@ -74,5 +101,31 @@ class EmailConfirmationsController < ApplicationController
 
   def token_params
     params.permit(:token).require(:token)
+  end
+
+  def mfa_update_conditions_met?
+    @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+  end
+
+  def setup_mfa_authentication
+    return if @user.mfa_disabled?
+    @form_mfa_url = mfa_update_email_confirmations_url(token: @user.confirmation_token)
+  end
+
+  def setup_webauthn_authentication
+    return if @user.webauthn_credentials.none?
+
+    @form_webauthn_url = webauthn_update_email_confirmations_url(token: @user.confirmation_token)
+
+    @webauthn_options = @user.webauthn_options_for_get
+
+    session[:webauthn_authentication] = {
+      "challenge" => @webauthn_options.challenge
+    }
+  end
+
+  def login_failure(message)
+    flash.now.alert = message
+    render template: "multifactor_auths/mfa_prompt", status: :unauthorized
   end
 end
