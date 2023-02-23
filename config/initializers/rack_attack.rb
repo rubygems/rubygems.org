@@ -11,6 +11,7 @@ class Rack::Attack
   EXP_BACKOFF_LEVELS = [1, 2].freeze
   PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
   PUSH_THROTTLE_PER_USER_KEY = "api/exp/push/user".freeze
+  SIGN_UP_THROTTLE_PER_IP_KEY = "sign_up/ip".freeze
   SIGN_UP_LIMIT = 50
   SIGN_UP_LIMIT_PERIOD = 1.hour
   LOGIN_THROTTLE_PER_USER_KEY = "logins/handle".freeze
@@ -183,7 +184,7 @@ class Rack::Attack
 
   protected_sign_ups_action = [{ controller: "users", action: "create" }]
 
-  throttle("sign_up/ip", limit: SIGN_UP_LIMIT, period: SIGN_UP_LIMIT_PERIOD) do |req|
+  throttle(SIGN_UP_THROTTLE_PER_IP_KEY, limit: SIGN_UP_LIMIT, period: SIGN_UP_LIMIT_PERIOD) do |req|
     req.ip if protected_route?(protected_sign_ups_action, req.path, req.request_method)
   end
 
