@@ -34,6 +34,7 @@ class BaseAction < Avo::BaseAction
       begin
         block.call
       rescue StandardError => e
+        Rails.error.report(e, handled: true)
         error e.message.truncate(300)
       end
     }
@@ -49,28 +50,33 @@ class BaseAction < Avo::BaseAction
       @action.response[:messages].any? { _1[:type] == :error }
     end
 
+    def merge_changes!(changes, changes_to_save)
+      changes.merge!(changes_to_save) do |_key, (old, _), (_, new)|
+        [old, new]
+      end
+    end
+
     def in_audited_transaction(&)
       User.transaction do
         changed_records = {}
         ActiveSupport::Notifications.subscribed(proc do |_name, _started, _finished, _unique_id, data|
-          data[:connection].transaction_manager.current_transaction.records.uniq(&:__id__).each do |record|
-            (changed_records[record] ||= {}).merge!(record.changes_to_save) do |_key, (old, _), (_, new)|
-              [old, new]
-            end
+          records = data[:connection].transaction_manager.current_transaction.records || []
+          records.uniq(&:__id__).each do |record|
+            merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
           end
         end, "sql.active_record", &)
 
         audited_changed_records = changed_records.to_h do |record, changes|
-          [
-            record.to_global_id.uri,
-            { changes:, unchanged: record.attributes.except(*changes.keys) }
-          ]
+          key = record.to_global_id.uri
+          changes = merge_changes!(changes, record.attributes.compact.transform_values { [_1, nil] }) if record.destroyed?
+
+          [key, { changes:, unchanged: record.attributes.except(*changes.keys) }]
         end
 
         audit = Audit.create!(
           admin_github_user: current_user,
           auditable: @current_model,
-          action: @action.name,
+          action: @action.action_name,
           comment: fields[:comment],
           audited_changes: {
             records: audited_changed_records,
