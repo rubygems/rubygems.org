@@ -245,8 +245,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_041509) do
     t.string "mfa_recovery_codes", default: [], array: true
     t.integer "mail_fails", default: 0
     t.string "blocked_email"
-    t.string "full_name"
     t.string "webauthn_id"
+    t.string "full_name"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
