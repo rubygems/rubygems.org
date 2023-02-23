@@ -561,6 +561,10 @@ en:
       otp_or_recovery: OTP or recovery code
       security_device: Security Device
       verify_code: Verify code
+    captcha:
+      verification: Verify you're human
+      submit: Verify
+      invalid: Unable to verify CAPTCHA
   stats:
     index:
       title: Stats

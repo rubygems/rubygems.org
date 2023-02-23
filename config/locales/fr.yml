@@ -613,6 +613,10 @@ fr:
       otp_or_recovery:
       security_device:
       verify_code:
+    captcha:
+      verification:
+      submit:
+      invalid:
   stats:
     index:
       title:
