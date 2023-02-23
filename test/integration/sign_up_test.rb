@@ -1,6 +1,14 @@
 require "test_helper"
+require "helpers/rate_limit_helpers"
 
 class SignUpTest < SystemTest
+  include RateLimitHelpers
+
+  setup do
+    Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+    Rails.cache.clear
+  end
+
   test "sign up" do
     visit sign_up_path
 
@@ -61,6 +69,46 @@ class SignUpTest < SystemTest
     assert_nothing_raised do
       get "/sign_up?user=JJJ12QQQ"
     end
+  end
+
+  test "sign up when captcha verification is triggered and verified" do
+    @ip = "127.0.0.1"
+    @scope = Rack::Attack::SIGN_UP_THROTTLE_PER_IP_KEY
+    update_limit_for("#{@scope}:#{@ip}", 2, Rack::Attack::SIGN_UP_LIMIT_PERIOD)
+    # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
+    HcaptchaVerifier.expects(:call).with(anything, anything).returns(true)
+
+    visit sign_up_path
+
+    fill_in "Email", with: "email@person.com"
+    fill_in "Username", with: "nick"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign up"
+
+    assert page.has_content? "Verify you're human"
+    click_button "Verify"
+
+    assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
+  end
+
+  test "sign up when captcha verification is triggered and not verified" do
+    @ip = "127.0.0.1"
+    @scope = Rack::Attack::SIGN_UP_THROTTLE_PER_IP_KEY
+    update_limit_for("#{@scope}:#{@ip}", 2, Rack::Attack::SIGN_UP_LIMIT_PERIOD)
+    # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
+    HcaptchaVerifier.expects(:call).with(anything, anything).returns(false)
+
+    visit sign_up_path
+
+    fill_in "Email", with: "email@person.com"
+    fill_in "Username", with: "nick"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign up"
+
+    assert page.has_content? "Verify you're human"
+    click_button "Verify"
+
+    assert page.has_content? "Unable to verify CAPTCHA"
   end
 
   test "email confirmation" do

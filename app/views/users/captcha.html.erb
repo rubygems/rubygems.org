@@ -1,0 +1,9 @@
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<% @title = t('captcha.verification') %>
+
+<%= form_tag captcha_create_user_path, method: :post do %>
+  <div class="h-captcha" data-sitekey="<%= ENV.fetch("HCAPTCHA_SITE_KEY", "10000000-ffff-ffff-ffff-000000000001") %>"></div>
+  <%= submit_tag t('captcha.submit'), data: { disable_with: t('form_disable_with') }, class: 'form__submit' %>
+<% end %>
+
+  

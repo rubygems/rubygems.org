@@ -211,6 +211,10 @@ Rails.application.routes.draw do
       end
     end
 
+    resource :user, only: [] do
+      post 'captcha_create', to: 'users#captcha_create', as: :captcha_create
+    end
+
     get '/sign_in' => 'clearance/sessions#new', as: 'sign_in'
     delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
 
