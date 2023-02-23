@@ -9,15 +9,11 @@ class SessionsController < Clearance::SessionsController
 
   def create
     @user = find_user
-
-    if @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
-      setup_webauthn_authentication
-      setup_mfa_authentication
-
-      session[:mfa_login_started_at] = Time.now.utc.to_s
-      create_new_mfa_expiry
-
-      render "sessions/prompt"
+    if HcaptchaVerifier.should_verify_login?(who)
+      setup_captcha_verification
+      render "sessions/captcha"
+    elsif @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
+      webauthn_and_mfa_new
     else
       do_login
     end
@@ -76,6 +72,19 @@ class SessionsController < Clearance::SessionsController
     session.delete(:mfa_login_started_at)
   end
 
+  def captcha_create
+    @user = User.find(session[:captcha_user])
+    session.delete(:captcha_user)
+
+    captcha_success = HcaptchaVerifier.call(captcha_response, request.ip)
+    should_mfa = @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
+    if captcha_success
+      should_mfa ? webauthn_and_mfa_new : do_login
+    else
+      login_failure(t("sessions.captcha.invalid"))
+    end
+  end
+
   def verify
   end
 
@@ -98,6 +107,16 @@ class SessionsController < Clearance::SessionsController
 
   def verify_password_params
     params.require(:verify_password).permit(:password)
+  end
+
+  def webauthn_and_mfa_new
+    setup_webauthn_authentication
+    setup_mfa_authentication
+
+    session[:mfa_login_started_at] = Time.now.utc.to_s
+    create_new_mfa_expiry
+
+    render "sessions/prompt"
   end
 
   def do_login
@@ -124,6 +143,10 @@ class SessionsController < Clearance::SessionsController
 
   def session_params
     params.require(:session)
+  end
+
+  def captcha_response
+    params.permit("h-captcha-response")["h-captcha-response"]
   end
 
   def find_user
@@ -170,6 +193,10 @@ class SessionsController < Clearance::SessionsController
   def setup_mfa_authentication
     return if @user.mfa_disabled?
     session[:mfa_user] = @user.id
+  end
+
+  def setup_captcha_verification
+    session[:captcha_user] = @user.id
   end
 
   def login_conditions_met?

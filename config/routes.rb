@@ -199,6 +199,7 @@ Rails.application.routes.draw do
     resource :session, only: %i[create destroy] do
       post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
       post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
+      post 'captcha_create', to: 'sessions#captcha_create', as: :captcha_create
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
     end

@@ -1,7 +1,13 @@
 require "test_helper"
+require "helpers/rate_limit_helpers"
 
 class SignInTest < SystemTest
+  include RateLimitHelpers
+
   setup do
+    Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+    Rails.cache.clear
+
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
     @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                   mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
@@ -266,6 +272,65 @@ class SignInTest < SystemTest
     end
 
     assert page.has_content? "john@example.com"
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in when captcha verification is triggered and verified" do
+    @scope = Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY
+    update_limit_for("#{@scope}:#{@user.email}", 4, Rack::Attack::LOGIN_LIMIT_PERIOD)
+    # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
+    HcaptchaVerifier.expects(:call).with(anything, anything).returns(true)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Verify you're human"
+    click_button "Verify"
+
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in when captcha verification is triggered and not verified" do
+    @scope = Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY
+    update_limit_for("#{@scope}:#{@user.email}", 4, Rack::Attack::LOGIN_LIMIT_PERIOD)
+    # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
+    HcaptchaVerifier.expects(:call).with(anything, anything).returns(false)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Verify you're human"
+    click_button "Verify"
+
+    assert page.has_content? "Unable to verify CAPTCHA"
+  end
+
+  test "signing in when captcha verification is triggered and current valid otp when mfa enabled" do
+    @scope = Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY
+    update_limit_for("#{@scope}:#{@mfa_user.email}", 4, Rack::Attack::LOGIN_LIMIT_PERIOD)
+    # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
+    HcaptchaVerifier.expects(:call).with(anything, anything).returns(true)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @mfa_user.email
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Verify you're human"
+    click_button "Verify"
+
+    StatsD.expects(:distribution)
+    assert page.has_content? "Multi-factor authentication"
+
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
+      click_button "Verify code"
+    end
+
     assert page.has_content? "Sign out"
   end
 
