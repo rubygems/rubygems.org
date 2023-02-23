@@ -81,7 +81,7 @@ class SessionsController < Clearance::SessionsController
     if captcha_success
       should_mfa ? webauthn_and_mfa_new : do_login
     else
-      login_failure(t("sessions.captcha.invalid"))
+      login_failure(t("captcha.invalid"))
     end
   end
 

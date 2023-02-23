@@ -112,6 +112,10 @@ en:
       invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
     all_gems: All Gems
     gem_ownership_removed: Ownership of %{rubygem_name} has been removed after being scoped to this key.
+  captcha:
+    verification: Verify you're human
+    submit: Verify
+    invalid: Unable to verify CAPTCHA
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD
@@ -561,10 +565,6 @@ en:
       otp_or_recovery: OTP or recovery code
       security_device: Security Device
       verify_code: Verify code
-    captcha:
-      verification: Verify you're human
-      submit: Verify
-      invalid: Unable to verify CAPTCHA
   stats:
     index:
       title: Stats

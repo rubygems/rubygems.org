@@ -106,6 +106,10 @@ nl:
       invalid_key:
     all_gems:
     gem_ownership_removed:
+  captcha:
+    verification:
+    submit:
+    invalid:
   clearance_mailer:
     change_password:
       title:
@@ -566,10 +570,6 @@ nl:
       otp_or_recovery:
       security_device:
       verify_code:
-    captcha:
-      verification:
-      submit:
-      invalid:
   stats:
     index:
       title:
