@@ -14,10 +14,15 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
     rescue ActiveRecord::RecordNotFound
       global_id.model_class.new(id: global_id.model_id)
     end
-    @resource = Avo::App.get_resource_by_name(global_id.model_class.name).hydrate(model:, user:)
+    return unless (@resource = Avo::App.get_resource_by_name(global_id.model_class.name))
+    @resource.hydrate(model:, user:)
 
     @old_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:first)))
     @new_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:last)))
+  end
+
+  def render?
+    @resource.present?
   end
 
   attr_reader :gid, :changes, :unchanged, :user, :resource, :old_resource, :new_resource
