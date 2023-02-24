@@ -49,6 +49,9 @@ Version.create_with(
   dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))]
 ).find_or_create_by!(rubygem: rubygem1, number: "1.1.0.pre.2", platform: "ruby")
 
+user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
+user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
+
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Three users  were created, you can login with following combinations:
     - email: #{author.email}, password: #{password} -> gem author owning few example gems
