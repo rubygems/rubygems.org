@@ -252,6 +252,16 @@ nl:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title:
