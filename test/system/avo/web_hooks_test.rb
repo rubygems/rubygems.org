@@ -81,5 +81,9 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
     )
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
+
+    Delayed::Worker.new.work_off
+
+    assert_equal I18n.t("mailer.web_hook_deleted.subject"), last_email.subject
   end
 end
