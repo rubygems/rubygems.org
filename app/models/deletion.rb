@@ -52,8 +52,10 @@ class Deletion < ApplicationRecord
   end
 
   def remove_from_storage
-    RubygemFs.instance.remove("gems/#{@version.full_name}.gem")
-    RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    RubygemFs.instance.remove(
+      "gems/#{@version.full_name}.gem",
+      "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"
+    )
   end
 
   def restore_to_storage
