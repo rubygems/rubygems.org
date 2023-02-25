@@ -61,7 +61,7 @@ module GitHubOAuthable
 
       if user.is_admin
         request.flash.now[:warning] = "Logged in as a admin via GitHub as #{user.name}"
-        log_in_as(user)
+        log_in_as(user:)
       else
         request.flash[:error] = "#{user.name} on GitHub is not a valid admin"
         raise is_admin_error
