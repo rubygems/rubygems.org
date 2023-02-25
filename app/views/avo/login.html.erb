@@ -17,6 +17,15 @@
             <span>Log in with GitHub</span>
           </button>
         <% end %>
+
+        <% if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN %>
+          <h2>Log in as a fake user, for development only</h2>
+          <ul>
+            <% Admin::GitHubUser.find_each do |user| %>
+              <li><%= link_to user.login, controller: :oauth, action: :development_log_in_as, admin_github_user_id: user.id %></li>
+            <% end %>
+          </ul>
+        <% end%>
       </div>
     </div>
   </body>

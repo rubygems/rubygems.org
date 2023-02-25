@@ -52,6 +52,77 @@ Version.create_with(
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
 
+Admin::GitHubUser.create_with(
+  is_admin: true,
+  oauth_token: 'fake',
+  info_data: {
+  "viewer": {
+    "name": "Rad Admin",
+    "login": "rad_admin",
+    "email": "rad_admin@rubygems.team",
+    "avatarUrl": "/favicon.ico",
+    "organization": {
+      "login": "rubygems",
+      "name": "RubyGems",
+      "viewerIsAMember": true,
+      "teams": {
+        "edges": [
+          {
+            "node": {
+              "name": "Infrastructure",
+              "slug": "infrastructure"
+            }
+          },
+          {
+            "node": {
+              "name": "Maintainers",
+              "slug": "maintainers"
+            }
+          },
+          {
+            "node": {
+              "name": "Monitoring",
+              "slug": "monitoring"
+            }
+          },
+          {
+            "node": {
+              "name": "RubyGems.org",
+              "slug": "rubygems-org"
+            }
+          },
+          {
+            "node": {
+              "name": "Rubygems.org Deployers",
+              "slug": "rubygems-org-deployers"
+            }
+          },
+          {
+            "node": {
+              "name": "Security",
+              "slug": "security"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+).find_or_create_by!(github_id: "FAKE-rad_admin")
+
+Admin::GitHubUser.create_with(
+  is_admin: false,
+  info_data: {
+  "viewer": {
+    "name": "Not An Admin",
+    "login": "not_an_admin",
+    "email": "not_an_admin@rubygems.team",
+    "avatarUrl": "/favicon.ico",
+    "organization": nil
+  }
+}
+).find_or_create_by!(github_id: "FAKE-not_an_admin")
+
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Three users  were created, you can login with following combinations:
     - email: #{author.email}, password: #{password} -> gem author owning few example gems
