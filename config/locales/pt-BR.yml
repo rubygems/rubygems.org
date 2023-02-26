@@ -468,11 +468,7 @@ pt-BR:
     request_denied:
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
       downloads_for_this_version: Desta versão
-      install: instalar
       required_ruby_version: Versão Requerida do Ruby
       required_rubygems_version: Versão Requerida do RubyGems
       requires_mfa:
@@ -518,6 +514,10 @@ pt-BR:
       downloads: Downloads
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied:
+      copy_to_clipboard:
+      install: instalar
       licenses_header:
         one: Licença
         other: Licenças

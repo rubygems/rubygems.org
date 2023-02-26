@@ -441,11 +441,7 @@ en:
     request_denied: This request was denied. We could not verify your password.
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: Copied!
-      copy_to_clipboard: Copy to clipboard
       downloads_for_this_version: For this version
-      install: install
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa: New versions require MFA
@@ -489,6 +485,10 @@ en:
       downloads: Downloads
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: Copied!
+      copy_to_clipboard: Copy to clipboard
+      install: install
       licenses_header:
         one: License
         other: Licenses

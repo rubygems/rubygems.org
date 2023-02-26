@@ -492,11 +492,7 @@ fr:
       mot de passe.
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: Copié!
-      copy_to_clipboard: Copier
       downloads_for_this_version: Pour cette version
-      install: installation
       required_ruby_version: Version de Ruby requise
       required_rubygems_version:
       requires_mfa:
@@ -540,6 +536,10 @@ fr:
       downloads: Téléchargements
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: Copié!
+      copy_to_clipboard: Copier
+      install: installation
       licenses_header:
         one: License
         other: Licenses

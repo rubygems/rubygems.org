@@ -19,6 +19,25 @@
           <%= simple_markup(@latest_version.info) %>
         </div>
       </div>
+
+      <div class="gem__install">
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t '.bundler_header' %>:
+          <div class="gem__code-wrap">
+            <input type="text" class="gem__code" id="gemfile_text" value="<%= @latest_version.to_bundler %>" readonly="readonly">
+            <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-target="#gemfile_text">=</span>
+            <span class="gem__code__tooltip--copy"><%= t('.copy_to_clipboard') %></span>
+            <span class="gem__code__tooltip--copied"><%= t('.copied') %></span>
+          </div>
+        </h2>
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t '.install' %>:
+          <div class="gem__code-wrap">
+            <input type="text" class="gem__code" id="install_text" value="<%= @latest_version.to_install %>" readonly="readonly">
+            <span class="gem__code__icon" id="js-gem__code--install" data-clipboard-target="#install_text">=</span>
+          </div>
+        </h2>
+      </div>
     <% else %>
       <div class="t-body">
         <p><%=t '.yanked_notice' %></p>
