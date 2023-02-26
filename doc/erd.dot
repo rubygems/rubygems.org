@@ -321,6 +321,7 @@ m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5
   m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_User -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_WebHook -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   "m_Admin::GitHubUser" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_Version -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "2"];

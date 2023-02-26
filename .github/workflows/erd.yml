@@ -2,6 +2,7 @@ name: ERD
 on:
   pull_request:
     paths:
+      - ".github/workflows/erd.yml"
       - "db/schema.rb"
       - "doc/erd.svg"
       - "doc/erd.dot"
@@ -41,7 +42,7 @@ jobs:
         # `sort`: sorts line since Graphviz instruction order is non-deterministic
         # diff to check the source controlled-file against CI-generated file
         # Inspired by: https://github.com/voormedia/rails-erd/issues/281#issuecomment-1048721398
-        run: diff <(tr -d "[:blank:]" < doc/erd-ci.dot | sort) <(tr -d "[:blank:]" < doc/erd.dot | sort)
+        run: diff --unified <(tr -d "[:blank:]" < doc/erd-ci.dot | sort) <(tr -d "[:blank:]" < doc/erd.dot | sort)
       - name: Print error
         if: ${{ failure() }}
         run: |
