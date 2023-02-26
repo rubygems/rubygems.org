@@ -12,7 +12,7 @@
         <img height="530" alt="422 error" src="/images/sea_level.svg">
       </div>
       <div class="content">
-        <p>To reach admin panel, please login via GitHub first.</p>
+        <p>To reach the admin panel, please log in via GitHub.</p>
         <%= form_tag ActionDispatch::Http::URL.path_for(path: '/oauth/github', params: { origin: request.fullpath }) do %>
           <button id="github-login" type="submit" autofocus>
             <svg viewBox="0 0 16 16" height="48" width="48" focusable="false" role="img" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -23,15 +23,15 @@
         <% end %>
 
         <% if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN %>
-          <p>Alternativelly (since app is running in development mode) you can select admin user manually.</p>
+          <p>Since this is development mode, you can choose any admin from the list below to log in as that admin.</p>
           <% if Admin::GitHubUser.any? %>
-          <ul class="admin-list">
-            <% Admin::GitHubUser.find_each do |user| %>
-              <li><%= link_to "login as #{user.login}", controller: :oauth, action: :development_log_in_as, admin_github_user_id: user.id %></li>
-            <% end %>
-          </ul>
+            <ul class="admin-list">
+              <% Admin::GitHubUser.find_each do |user| %>
+                <li><%= link_to "login as #{user.login}", controller: :oauth, action: :development_log_in_as, admin_github_user_id: user.id %></li>
+              <% end %>
+            </ul>
           <% else %>
-            <p>Unfortunatelly there are no local admin users created yet.<br />You can create them by running <code>bin/rails db:seed</code>.</p>
+            <p>(To create an admin user for this list, run <code>bin/rails db:seed</code>.)</p>
           <% end %>
         <% end%>
 
