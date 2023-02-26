@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_03_041509) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_23_002712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -284,6 +284,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_041509) do
     t.string "canonical_number"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
+    t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_on_canonical_number_and_rubygem_id_and_platform", unique: true
     t.index ["created_at"], name: "index_versions_on_created_at"
     t.index ["full_name"], name: "index_versions_on_full_name"
     t.index ["indexed", "yanked_at"], name: "index_versions_on_indexed_and_yanked_at"
