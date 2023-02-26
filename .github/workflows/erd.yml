@@ -2,6 +2,7 @@ name: ERD
 on:
   pull_request:
     paths:
+      - ".github/workflows/erd.yml"
       - "db/schema.rb"
       - "doc/erd.svg"
       - "doc/erd.dot"
