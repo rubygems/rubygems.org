@@ -1,6 +1,8 @@
 require "test_helper"
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   should "route old paths to new controller" do
     get_route = { controller: "api/v1/rubygems", action: "show", id: "rails", format: "json" }
     assert_recognizes(get_route, "/api/v1/gems/rails.json")
@@ -310,8 +312,10 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal "Successfully registered gem: test (1.0.0)", @response.body
         end
         should "enqueue jobs" do
-          assert_difference "Delayed::Job.count", 8 do
-            post :create, body: gem_file("test-1.0.0.gem").read
+          assert_difference "Delayed::Job.count", 4 do
+            assert_enqueued_jobs 4, only: FastlyPurgeJob do
+              post :create, body: gem_file("test-1.0.0.gem").read
+            end
           end
         end
       end
