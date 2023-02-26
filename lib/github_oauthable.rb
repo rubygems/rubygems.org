@@ -61,15 +61,19 @@ module GitHubOAuthable
 
       if user.is_admin
         request.flash.now[:warning] = "Logged in as a admin via GitHub as #{user.name}"
-        cookies.encrypted[admin_cookie_name] = {
-          value: user.id,
-          expires: 1.hour,
-          same_site: :lax
-        }
+        log_in_as(user:)
       else
         request.flash[:error] = "#{user.name} on GitHub is not a valid admin"
         raise is_admin_error
       end
+    end
+
+    def log_in_as(user:, expires: 1.hour)
+      cookies.encrypted[admin_cookie_name] = {
+        value: user.id,
+        expires: expires,
+        same_site: :lax
+      }
     end
 
     def admin_cookie_name

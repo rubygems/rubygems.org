@@ -21,6 +21,12 @@ class OAuthController < ApplicationController
     render_forbidden params.require(:message)
   end
 
+  def development_log_in_as
+    user = Admin::GitHubUser.find(params[:admin_github_user_id])
+    log_in_as(user:)
+    redirect_to "/admin"
+  end
+
   private
 
   def check_valid_omniauth

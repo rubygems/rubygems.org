@@ -254,5 +254,7 @@ Rails.application.routes.draw do
   scope :oauth, constraints: { format: :html }, defaults: { format: 'html' } do
     get ':provider/callback', to: 'oauth#create'
     get 'failure', to: 'oauth#failure'
+
+    get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN
   end
 end
