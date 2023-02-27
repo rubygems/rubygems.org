@@ -1,4 +1,4 @@
-class Constraints::IsAdmin
+class Constraints::Admin
   def self.matches?(request)
     Matcher.new(request).admin_user&.valid?
   end

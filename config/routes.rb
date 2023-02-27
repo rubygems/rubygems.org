@@ -248,8 +248,8 @@ Rails.application.routes.draw do
       delete 'logout' => 'admin#logout', as: :logout
     end
 
-    constraints(Constraints::IsAdmin) do
-      namespace :admin, constraints: Constraints::IsAdmin::RubygemsOrgAdmin do
+    constraints(Constraints::Admin) do
+      namespace :admin, constraints: Constraints::Admin::RubygemsOrgAdmin do
         mount GoodJob::Engine, at: 'good_job'
       end
 
