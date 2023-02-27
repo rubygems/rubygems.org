@@ -17,7 +17,7 @@ spec:
     metadata:
       annotations:
         ad.datadoghq.com/unicorn.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
-        ad.datadoghq.com/good_job.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+        ad.datadoghq.com/good-job.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
         name: jobs
     spec:
@@ -136,7 +136,7 @@ spec:
                 key: database_url
         securityContext:
           privileged: false
-      - name: good_job
+      - name: good-job
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
         args: ["good_job", "start"]
         resources:
