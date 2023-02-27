@@ -265,6 +265,16 @@ pt-BR:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title: Novos Releases - Todas as Gems
@@ -461,11 +471,7 @@ pt-BR:
       title: Perfil de %{username}
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
       downloads_for_this_version: Desta versão
-      install: instalar
       required_ruby_version: Versão Requerida do Ruby
       required_rubygems_version: Versão Requerida do RubyGems
       requires_mfa:
@@ -511,6 +517,10 @@ pt-BR:
       downloads: Downloads
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied:
+      copy_to_clipboard:
+      install: instalar
       licenses_header:
         one: Licença
         other: Licenças

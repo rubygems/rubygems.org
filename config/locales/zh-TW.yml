@@ -247,6 +247,16 @@ zh-TW:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title: 最新發佈
@@ -433,11 +443,7 @@ zh-TW:
       title: 简介 %{username}
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: 已複製
-      copy_to_clipboard: 複製
       downloads_for_this_version: 這個版本
-      install: 安裝
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
       requires_mfa:
@@ -481,6 +487,10 @@ zh-TW:
       downloads: 下載
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: 已複製
+      copy_to_clipboard: 複製
+      install: 安裝
       licenses_header:
         one: License
         other: License

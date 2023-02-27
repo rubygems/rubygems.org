@@ -248,11 +248,19 @@ Rails.application.routes.draw do
       delete 'logout' => 'admin#logout', as: :logout
     end
 
-    mount Avo::Engine, at: Avo.configuration.root_path
+    constraints(Constraints::Admin) do
+      namespace :admin, constraints: Constraints::Admin::RubygemsOrgAdmin do
+        mount GoodJob::Engine, at: 'good_job'
+      end
+
+      mount Avo::Engine, at: Avo.configuration.root_path
+    end
   end
 
   scope :oauth, constraints: { format: :html }, defaults: { format: 'html' } do
     get ':provider/callback', to: 'oauth#create'
     get 'failure', to: 'oauth#failure'
+
+    get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN
   end
 end

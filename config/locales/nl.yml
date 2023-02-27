@@ -253,6 +253,16 @@ nl:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title:
@@ -450,11 +460,7 @@ nl:
       title: Profiel van %{username}
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
       downloads_for_this_version: Voor deze versie
-      install: Installeer
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa:
@@ -498,6 +504,10 @@ nl:
       downloads: Downloads
       title: alle gems
     show:
+      bundler_header: Gemfile
+      copied:
+      copy_to_clipboard:
+      install: Installeer
       licenses_header:
         one: Licentie
         other: Licenties

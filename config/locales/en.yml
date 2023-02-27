@@ -252,6 +252,16 @@ en:
       button: OWNERSHIP REQUESTS
       disable_notifications: To stop receiving these messages, update your
       owners_page: OWNERSHIPS
+    web_hook_deleted:
+      title: WEBHOOK DELETED
+      subject: Your RubyGems.org webhook was deleted
+      subtitle: Hi %{handle}!
+      body_text: Your webhook that POSTed to %{url} has been deleted after %{failures} failures.
+      body_html: Your webhook that <code>POST</code>ed to <a href="%{url}"><code>%{url}</code></a> has been deleted after %{failures} failures.
+      global_text: This webhook was previously called when any gem was pushed.
+      global_html: This webhook was previously called when <em>any</em> gem was pushed.
+      gem_text: This webhook was previously called when %{gem} was pushed.
+      gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
   news:
     show:
       title: New Releases — All Gems
@@ -434,11 +444,7 @@ en:
       title: Profile of %{username}
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: Copied!
-      copy_to_clipboard: Copy to clipboard
       downloads_for_this_version: For this version
-      install: install
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa: New versions require MFA
@@ -482,6 +488,10 @@ en:
       downloads: Downloads
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: Copied!
+      copy_to_clipboard: Copy to clipboard
+      install: install
       licenses_header:
         one: License
         other: Licenses

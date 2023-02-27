@@ -250,6 +250,16 @@ ja:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title: 新しくリリースされたGem
@@ -431,11 +441,7 @@ ja:
       title: のプロファイル %{username}
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: コピー完了!
-      copy_to_clipboard: クリップボードにコピー
       downloads_for_this_version: このバージョンのみ
-      install: インストール
       required_ruby_version: 必要Rubyバージョン
       required_rubygems_version: 必要RubyGemsバージョン
       requires_mfa:
@@ -479,6 +485,10 @@ ja:
       downloads: ダウンロード
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: コピー完了!
+      copy_to_clipboard: クリップボードにコピー
+      install: インストール
       licenses_header:
         one: ライセンス
         other: ライセンス

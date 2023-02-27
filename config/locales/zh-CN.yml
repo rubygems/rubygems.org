@@ -247,6 +247,16 @@ zh-CN:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title: 全部新发布 Gems
@@ -432,11 +442,7 @@ zh-CN:
       title: 简介 %{username}
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: 已复制
-      copy_to_clipboard: 复制到剪贴板
       downloads_for_this_version: 这个版本
-      install: 安装
       required_ruby_version: 需要的 Ruby 版本
       required_rubygems_version: 需要的 RubyGems 版本
       requires_mfa:
@@ -480,6 +486,10 @@ zh-CN:
       downloads: 下载
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: 已复制
+      copy_to_clipboard: 复制到剪贴板
+      install: 安装
       licenses_header:
         one: 许可
         other: 许可

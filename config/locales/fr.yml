@@ -269,6 +269,16 @@ fr:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title: Nouvelles Versions - Toutes les Gems
@@ -485,11 +495,7 @@ fr:
       title: Profil de %{username}
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: Copié!
-      copy_to_clipboard: Copier
       downloads_for_this_version: Pour cette version
-      install: installation
       required_ruby_version: Version de Ruby requise
       required_rubygems_version:
       requires_mfa:
@@ -533,6 +539,10 @@ fr:
       downloads: Téléchargements
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: Copié!
+      copy_to_clipboard: Copier
+      install: installation
       licenses_header:
         one: License
         other: Licenses
