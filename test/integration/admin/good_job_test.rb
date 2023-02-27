@@ -1,9 +1,9 @@
 require "test_helper"
 
-class Avo::AuditsControllerTest < ActionDispatch::IntegrationTest
+class Admin::GoodJobTest < ActionDispatch::IntegrationTest
   include AdminHelpers
 
-  test "getting audits as admin" do
+  test "viewing good job admin dashboard" do
     get "/admin/good_job"
     assert_response :success
     page.assert_text "Log in with GitHub"
