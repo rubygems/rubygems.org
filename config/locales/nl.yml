@@ -457,11 +457,7 @@ nl:
     request_denied:
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
       downloads_for_this_version: Voor deze versie
-      install: Installeer
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa:
@@ -505,6 +501,10 @@ nl:
       downloads: Downloads
       title: alle gems
     show:
+      bundler_header: Gemfile
+      copied:
+      copy_to_clipboard:
+      install: Installeer
       licenses_header:
         one: Licentie
         other: Licenties

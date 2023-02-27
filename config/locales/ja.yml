@@ -438,11 +438,7 @@ ja:
     request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: コピー完了!
-      copy_to_clipboard: クリップボードにコピー
       downloads_for_this_version: このバージョンのみ
-      install: インストール
       required_ruby_version: 必要Rubyバージョン
       required_rubygems_version: 必要RubyGemsバージョン
       requires_mfa:
@@ -486,6 +482,10 @@ ja:
       downloads: ダウンロード
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: コピー完了!
+      copy_to_clipboard: クリップボードにコピー
+      install: インストール
       licenses_header:
         one: ライセンス
         other: ライセンス

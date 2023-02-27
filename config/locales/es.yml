@@ -484,11 +484,7 @@ es:
     request_denied: La solicitud fue denegada. No pudimos verificar tu contraseña.
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: "¡Copiado!"
-      copy_to_clipboard: Copiar al portapapeles
       downloads_for_this_version: Para esta versión
-      install: instalar
       required_ruby_version: Versión de Ruby requerida
       required_rubygems_version: Versión de Rubygems requerida
       requires_mfa:
@@ -534,6 +530,10 @@ es:
       downloads: Descargas
       title: Gemas
     show:
+      bundler_header: Gemfile
+      copied: "¡Copiado!"
+      copy_to_clipboard: Copiar al portapapeles
+      install: instalar
       licenses_header:
         one: Licencia
         other: Licencias
