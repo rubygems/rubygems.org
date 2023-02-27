@@ -248,7 +248,13 @@ Rails.application.routes.draw do
       delete 'logout' => 'admin#logout', as: :logout
     end
 
-    mount Avo::Engine, at: Avo.configuration.root_path
+    constraints(Constraints::Admin) do
+      namespace :admin, constraints: Constraints::Admin::RubygemsOrgAdmin do
+        mount GoodJob::Engine, at: 'good_job'
+      end
+
+      mount Avo::Engine, at: Avo.configuration.root_path
+    end
   end
 
   scope :oauth, constraints: { format: :html }, defaults: { format: 'html' } do
