@@ -3,5 +3,6 @@
 export GITHUB_KEY="op://bq25xfqpafelzdxwqu3mdq6rza/zsq3oitss3rbo4njqpjfd5r5cm/GITHUB_KEY"
 export GITHUB_SECRET="op://bq25xfqpafelzdxwqu3mdq6rza/zsq3oitss3rbo4njqpjfd5r5cm/GITHUB_SECRET"
 export AVO_LICENSE_KEY="op://bq25xfqpafelzdxwqu3mdq6rza/netp2leghd7zqdxlkp5asy67d4/license key"
+export DATADOG_CSP_API_KEY="op://bq25xfqpafelzdxwqu3mdq6rza/eisktguwm3pcfkwm7avqamdnxq/credential"
 
 exec op run --account 5MS5DHTO5NH7BAHTSIGT5NOAIE -- "${@}"
