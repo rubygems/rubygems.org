@@ -1,7 +1,7 @@
 # This controller is for the user interface Webauthn challenge after a user follows a link generated
 # by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
-  before_action :set_verification, :set_user
+  before_action :set_verification, :set_user, except: :status
 
   def prompt
     redirect_to root_path, alert: t(".no_port") unless port = params[:port]
@@ -42,6 +42,10 @@ class WebauthnVerificationsController < ApplicationController
     session.delete(:webauthn_authentication)
   end
 
+  def status
+    @result = status_params
+  end
+
   private
 
   def set_verification
@@ -80,5 +84,9 @@ class WebauthnVerificationsController < ApplicationController
 
   def webauthn_token_param
     params.permit(:webauthn_token).require(:webauthn_token)
+  end
+
+  def status_params
+    params.permit(:result).require(:result)
   end
 end
