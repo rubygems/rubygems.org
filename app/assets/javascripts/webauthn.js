@@ -128,15 +128,18 @@
           })
         });
       }).then(function (response) {
-        switch (response.status) {
-          case 200:
+        response.text().then(function (text) {
+          console.log()
+          if (text == "success") {
             window.location.href = `${location.origin}/webauthn_verification/status?result=success`
-            break;
-          default:
+          } else {
             window.location.href = `${location.origin}/webauthn_verification/status?result=failed`
-        }
+          }
+        }).catch(function (error) {
+          setError(submit, responseError, error);
+        });
       }).catch(function (error) {
-        setError(sessionSubmit, sessionError, error);
+        window.location.href = `${location.origin}/webauthn_verification/status?result=failed`
       });
     });
   });

@@ -44,6 +44,13 @@ class WebauthnVerificationsController < ApplicationController
 
   def status
     @result = status_params
+    if @result == "success"
+      @title = t(".success.title")
+      @body = t(".success.body")
+    else
+      @title = t(".fail.title")
+      @body = t(".fail.body")
+    end
   end
 
   private
