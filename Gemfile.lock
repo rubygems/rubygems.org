@@ -528,7 +528,7 @@ GEM
       sprockets (>= 3.0.0)
     statsd-instrument (2.3.5)
     stringio (3.0.2)
-    terser (1.1.13)
+    terser (1.1.14)
       execjs (>= 0.3.0, < 3)
     thor (1.2.1)
     tilt (2.0.10)
