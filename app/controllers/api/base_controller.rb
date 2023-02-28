@@ -23,7 +23,6 @@ class Api::BaseController < ApplicationController
       job.fire(
         request.protocol.delete("://"),
         request.host_with_port,
-        version.rubygem,
         version
       )
     end
