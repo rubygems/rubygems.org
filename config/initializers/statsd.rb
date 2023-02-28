@@ -8,36 +8,72 @@ class StatsD::Instrument::Metric
   end
 end
 
-ActiveSupport::Notifications.subscribe(/process_action.action_controller/) do |*args|
-  event = ActiveSupport::Notifications::Event.new(*args)
+ActiveSupport::Notifications.subscribe(/process_action.action_controller/) do |event|
   event.payload[:format] = event.payload[:format] || 'all'
   event.payload[:format] = 'all' if event.payload[:format] == '*/*'
   status = event.payload[:status]
-  ActiveSupport::Notifications.instrument :performance,
+  statsd_measure_performance :performance,
     event.payload.merge(statsd_method: :measure,
                         measurement: 'total_duration',
                         value: event.duration)
-  ActiveSupport::Notifications.instrument :performance,
+  statsd_measure_performance :performance,
     event.payload.merge(statsd_method: :measure,
                         measurement: 'db_time',
                         value: event.payload[:db_runtime])
-  ActiveSupport::Notifications.instrument :performance,
+  statsd_measure_performance :performance,
     event.payload.merge(statsd_method: :measure,
                         measurement: 'view_time',
                         value: event.payload[:view_runtime])
-  ActiveSupport::Notifications.instrument :performance,
+  statsd_measure_performance :performance,
+    event.payload.merge(statsd_method: :histogram,
+                        measurement: "allocations",
+                        value: event.allocations)
+  statsd_measure_performance :performance,
     event.payload.merge(measurement: "status.#{status}")
 end
 
-ActiveSupport::Notifications.subscribe(/performance/) do |name, _, _, _, payload|
+ActiveSupport::Notifications.subscribe(/\.active_job/) do |event|
+  job = event.payload[:job]
+  adapter = event.payload[:adapter]
+
+  statsd_tags = job.statsd_tags.merge(
+    adapter: adapter.class.name,
+    error: event.payload[:error]&.class&.name,
+    exception: event.payload.dig(:exception, 0)
+  )
+
+  statsd_measure_performance event.name,
+    event.payload.merge(statsd_method: :measure,
+                        measurement: 'total_duration',
+                        value: event.duration,
+                        statsd_tags:)
+  statsd_measure_performance event.name,
+    event.payload.merge(statsd_method: :histogram,
+                        measurement: "allocations",
+                        value: event.allocations,
+                        statsd_tags:)
+  statsd_measure_performance event.name,
+    event.payload.merge(
+      measurement: statsd_tags[:exception] ? "failure" : "success",
+      statsd_tags:
+    )
+end
+
+def statsd_measure_performance(name, payload)
   method = payload[:statsd_method] || :increment
   measurement = payload[:measurement]
-  value = payload[:value]
+  value = payload[:value] || 1
   key_name = "rails.#{name}.#{measurement}"
-  StatsD.__send__ method.to_s,
+  StatsD.__send__ method,
     key_name,
-    (value || 1),
-    tags: ["controller:#{payload[:controller]}",
-           "action:#{payload[:action]}",
-           "format:#{payload[:format]}"]
+    value,
+    tags: payload.slice(:controller, :action, :format).merge(payload.fetch(:statsd_tags, {})).compact
+end
+
+ActiveSupport::Notifications.subscribe(/performance/) do |name, _, _, _, payload|
+  statsd_measure_performance(name, payload)
+end
+
+Rails.configuration.to_prepare do
+  ActiveJob::Base.include JobTags
 end
