@@ -18,12 +18,13 @@ Rails.application.config.content_security_policy do |policy|
 
   # Specify URI for violation reports
   policy.report_uri lambda {
-    ActionDispatch::Http::URL.url_for(
+    dd_api_key = ENV['DATADOG_CSP_API_KEY'].presence
+    url = ActionDispatch::Http::URL.url_for(
       protocol: 'https',
       host: 'csp-report.browser-intake-datadoghq.com',
       path: '/api/v2/logs',
       params: {
-        "dd-api-key": ENV['DATADOG_CSP_API_KEY'].presence,
+        "dd-api-key": dd_api_key,
         "dd-evp-origin": 'content-security-policy',
         ddsource: 'csp-report',
         ddtags: {
@@ -33,8 +34,11 @@ Rails.application.config.content_security_policy do |policy|
           trace_id: Datadog::Tracing.correlation&.trace_id,
           "gemcutter.user.id": (current_user.id if respond_to?(:signed_in?) && signed_in?)
         }.compact.map { |k, v| "#{k}:#{v}" }.join(',')
-      }.compact
+      }
     )
+    # ensure we compute the URL on development/test,
+    # but onlu return it if the API key is configures
+    url if dd_api_key
   }
 end
 
