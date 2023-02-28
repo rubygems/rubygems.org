@@ -74,6 +74,6 @@ ActiveSupport::Notifications.subscribe(/performance/) do |name, _, _, _, payload
   statsd_measure_performance(name, payload)
 end
 
-Rails.configuration.to_prepare do
-  ActiveJob::Base.include JobTags
+Rails.application.config.after_initialize do
+  ActiveSupport.on_load(:active_job) { include JobTags }
 end
