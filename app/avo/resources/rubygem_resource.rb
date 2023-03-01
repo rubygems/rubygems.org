@@ -5,7 +5,7 @@ class RubygemResource < Avo::BaseResource
     scope.where("name LIKE ?", "%#{params[:q]}%")
   }
 
-  self.find_record_method = lambda { |model_class:, id:, _params:|
+  self.find_record_method = lambda { |model_class:, id:, params:|
     # In case of perfoming action `id` becomes an array of `ids`
     if id.is_a?(Array)
       model_class.where(id: id)
