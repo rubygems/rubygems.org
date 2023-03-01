@@ -50,7 +50,7 @@ module HcaptchaVerifier
     def should_verify(keys, limit)
       keys.any? do |key|
         attempts = Rack::Attack.cache.store.read(key)
-        attempts && attempts >= limit
+        attempts && attempts.to_i >= limit
       end
     end
 
