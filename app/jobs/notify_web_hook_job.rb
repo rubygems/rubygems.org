@@ -67,6 +67,7 @@ class NotifyWebHookJob < ApplicationJob
 
   def post_directly
     post(webhook.url)
+    true
   rescue *ERRORS
     webhook.increment! :failure_count
     false
