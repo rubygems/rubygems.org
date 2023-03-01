@@ -21,6 +21,10 @@ class Linkset < ApplicationRecord
     update!(home: spec.homepage)
   end
 
+  def verified?(link)
+    !!read_attribute("#{link}_verified_at")
+  end
+
   def verify_linkbacks
     VerifyLinkbacksJob.perform_later(rubygem.id)
   end
