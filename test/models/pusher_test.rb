@@ -1,6 +1,8 @@
 require "test_helper"
 
 class PusherTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user, email: "user@example.com")
     @gem = gem_file
@@ -494,8 +496,10 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
-      assert_difference "Delayed::Job.count", 7 do
-        @cutter.save
+      assert_difference "Delayed::Job.count", 3 do
+        assert_enqueued_jobs 4, only: FastlyPurgeJob do
+          @cutter.save
+        end
       end
     end
   end

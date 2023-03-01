@@ -14,7 +14,7 @@
       top: 10px;
       font-size: 42px; } }
 
-.gem__intro {
+.gem__intro, .gem__install {
   margin-bottom: 32px;
   padding-bottom: 30px;
   border-bottom: 1px solid #c1c4ca; }

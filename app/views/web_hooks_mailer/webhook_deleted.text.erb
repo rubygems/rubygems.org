@@ -1,0 +1,9 @@
+<%= t("mailer.web_hook_deleted.subtitle", handle: @user.handle) %>
+
+<%= t("mailer.web_hook_deleted.body_text", url: @url, failures: @failure_count) %>
+
+<% if @rubygem.present? %>
+<%= t("mailer.web_hook_deleted.gem_text", gem: @rubygem.name) %>
+<% else %>
+<%= t("mailer.web_hook_deleted.global_text") %>
+<% end %>

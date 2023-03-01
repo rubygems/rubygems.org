@@ -168,6 +168,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: avo_license_key
+          - name: DATADOG_CSP_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: datadog_csp_api_key
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"

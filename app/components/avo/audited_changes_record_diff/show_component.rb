@@ -8,11 +8,21 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
     @unchanged = unchanged
     @user = user
 
-    model = GlobalID::Locator.locate(gid)
-    @resource = Avo::App.get_resource_by_name(model.class.name).hydrate(model:, user:)
+    global_id = GlobalID.parse(gid)
+    model = begin
+      global_id.find
+    rescue ActiveRecord::RecordNotFound
+      global_id.model_class.new(id: global_id.model_id)
+    end
+    return unless (@resource = Avo::App.get_resource_by_name(global_id.model_class.name))
+    @resource.hydrate(model:, user:)
 
-    @old_resource = resource.dup.hydrate(model: resource.model.class.new(**unchanged, **changes.transform_values(&:first)))
-    @new_resource = resource.dup.hydrate(model: resource.model.class.new(**unchanged, **changes.transform_values(&:last)))
+    @old_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:first)))
+    @new_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:last)))
+  end
+
+  def render?
+    @resource.present?
   end
 
   attr_reader :gid, :changes, :unchanged, :user, :resource, :old_resource, :new_resource
@@ -23,23 +33,33 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
       .sort_by.with_index { |f, i| [changes.key?(f.id.to_s) ? -1 : 1, i] }
   end
 
-  def each_field
+  def each_field # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+    deleted = changes.key?("id") && changes.dig("id", 1).nil?
+    new_record = changes.key?("id") && changes.dig("id", 0).nil?
+
     sorted_fields.each do |field|
+      database_id = field.database_id&.to_s || "#{field.id}_id"
+
       unless field.visible?
-        if changes.key?(field.id.to_s)
+        if changes.key?(database_id)
           # dummy field to avoid ever printing out the contents... we just want the label
-          yield :changed, Avo::Fields::BooleanField::ShowComponent.new(field: field)
+          yield (deleted ? :old : :changed), Avo::Fields::BooleanField::ShowComponent.new(field: field)
         end
         next
       end
 
-      if changes.key?(field.id.to_s)
-        yield :new, field.component_for_view(:show).new(field: field.hydrate(model: new_resource.model), resource: new_resource)
-        yield :old, field.component_for_view(:show).new(field: field.hydrate(model: old_resource.model), resource: old_resource)
-      else
-        yield :unchanged, field.component_for_view(:show).new(field: field.hydrate(model: new_resource.model), resource: new_resource)
+      if changes.key?(database_id)
+        yield :new, component_for_field(field, new_resource) unless deleted
+        yield :old, component_for_field(field, old_resource) unless new_record
+      elsif unchanged.key?(database_id)
+        yield :unchanged, component_for_field(field, new_resource)
       end
     end
+  end
+
+  def component_for_field(field, resource)
+    field = field.hydrate(model: resource.model)
+    field.component_for_view(:show).new(field:, resource:)
   end
 
   def authorized?
