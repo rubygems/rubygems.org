@@ -1,5 +1,6 @@
 class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
+  include PrivacyPassSupportable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
@@ -9,7 +10,6 @@ class SessionsController < Clearance::SessionsController
 
   def new
     if request.headers["Authorization"] && redeem_privacy_pass_token
-      session[:redeemed_privacy_pass] = true
       super
     else
       setup_privacy_pass_challenge
@@ -133,6 +133,7 @@ class SessionsController < Clearance::SessionsController
     sign_in(@user) do |status|
       if status.success?
         StatsD.increment "login.success"
+        session.delete(:redeemed_privacy_pass)
         redirect_back_or(url_after_create)
       else
         login_failure(status.failure_message)
