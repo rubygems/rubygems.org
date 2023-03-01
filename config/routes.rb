@@ -98,6 +98,7 @@ Rails.application.routes.draw do
         collection do
           delete :remove
           post :fire
+          post :hook_relay_report, to: 'hook_relay#report', defaults: { format: :json }
         end
       end
 
