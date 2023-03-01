@@ -7,9 +7,19 @@ class SessionsController < Clearance::SessionsController
   before_action :ensure_not_blocked, only: :create
   after_action :delete_mfa_expiry_session, only: %i[webauthn_create mfa_create]
 
+  def new
+    if request.headers["Authorization"] && redeem_privacy_pass_token
+      session[:redeemed_privacy_pass] = true
+      super
+    else
+      setup_privacy_pass_challenge
+      render "sessions/new", status: :unauthorized
+    end
+  end
+
   def create
     @user = find_user
-    if HcaptchaVerifier.should_verify_sign_in?(who)
+    if !session[:redeemed_privacy_pass] && HcaptchaVerifier.should_verify_sign_in?(who)
       setup_captcha_verification
       render "sessions/captcha"
     elsif @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
@@ -197,6 +207,17 @@ class SessionsController < Clearance::SessionsController
 
   def setup_captcha_verification
     session[:captcha_user] = @user.id
+  end
+
+  def setup_privacy_pass_challenge
+    tokenizer = PrivacyPassTokenizer.new
+    tokenizer.register_challenge_for_redemption(session.id)
+    challenge = tokenizer.challenge_token
+    response.set_header("WWW-Authenticate", "PrivateToken challenge=#{challenge}, token-key=#{PrivacyPassTokenizer.issuer_public_key}")
+  end
+
+  def redeem_privacy_pass_token
+    PrivacyPassRedeemer.call(request.headers["Authorization"], session.id)
   end
 
   def login_conditions_met?

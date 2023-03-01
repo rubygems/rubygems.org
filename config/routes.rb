@@ -215,7 +215,7 @@ Rails.application.routes.draw do
       post 'captcha_create', to: 'users#captcha_create', as: :captcha_create
     end
 
-    get '/sign_in' => 'clearance/sessions#new', as: 'sign_in'
+    get '/sign_in' => 'sessions#new', as: 'sign_in'
     delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
