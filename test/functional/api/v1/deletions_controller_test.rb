@@ -1,6 +1,8 @@
 require "test_helper"
 
 class Api::V1::DeletionsControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   context "with yank rubygem api key scope" do
     setup do
       @api_key = create(:api_key, key: "12345", yank_rubygem: true)
@@ -385,7 +387,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
                                         number: @v1.number).first
         end
         should "have enqueued a webhook" do
-          assert_instance_of Notifier, Delayed::Job.last.payload_object
+          assert_enqueued_jobs 1, only: NotifyWebHookJob
         end
       end
 

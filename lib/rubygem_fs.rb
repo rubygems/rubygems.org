@@ -26,29 +26,63 @@ module RubygemFs
   end
 
   class Local
+    attr_reader :base_dir
+
     def initialize(base_dir = nil)
-      @base_dir = base_dir
+      base_dir ||= Rails.root.join("server")
+      @base_dir = Pathname.new(base_dir).expand_path
     end
 
-    def store(key, body, _metadata = {})
-      FileUtils.mkdir_p File.dirname("#{base_dir}/#{key}")
-      File.binwrite("#{base_dir}/#{key}", body)
+    def store(key, body, **)
+      path = path_for(key)
+      path.dirname.mkpath
+      path.binwrite(body)
     end
 
     def get(key)
-      File.read("#{base_dir}/#{key}")
+      path_for(key).binread
     rescue Errno::ENOENT
       nil
     end
 
-    def remove(key)
-      FileUtils.rm("#{base_dir}/#{key}")
+    def each_key(prefix: "", &)
+      return enum_for(__method__, prefix: prefix) unless block_given?
+      # it's easier to list everything and filter on strings because file systems don't act like S3
+      @base_dir.find do |entry|
+        path = entry.relative_path_from(@base_dir).to_s
+        next unless path.start_with?(prefix)
+        next if entry.directory?
+        yield path
+      end
+    end
+
+    def remove(*keys)
+      keys.flatten.reject { |key| delete(key) }
+    end
+
+    private
+
+    def delete(key)
+      path = path_for(key)
+      return false unless descendant?(path)
+      path.ascend do |entry|
+        break unless descendant?(entry)
+        entry.delete
+      end
+      true
+    rescue Errno::ENOTEMPTY
+      true
     rescue Errno::ENOENT
       false
     end
 
-    def base_dir
-      @base_dir || Rails.root.join("server")
+    def path_for(key)
+      key = key.sub(%r{^/+}, "")
+      @base_dir.join(key).expand_path
+    end
+
+    def descendant?(path)
+      path.to_s.start_with?(@base_dir.to_s) && path != @base_dir
     end
   end
 
@@ -63,13 +97,15 @@ module RubygemFs
       }.merge(config)
     end
 
-    def store(key, body, metadata = {})
+    def store(key, body, metadata: {}, **kwargs)
+      allowed_args = kwargs.slice(:content_type, :checksum_sha256, :content_encoding)
       s3.put_object(key: key,
                     body: body,
                     bucket: bucket,
                     acl: "public-read",
                     metadata: metadata,
-                    cache_control: "max-age=31536000")
+                    cache_control: "max-age=31536000",
+                    **allowed_args)
     end
 
     def get(key)
@@ -78,8 +114,27 @@ module RubygemFs
       nil
     end
 
-    def remove(key)
-      s3.delete_object(key: key, bucket: bucket)
+    def each_key(prefix: nil, &)
+      return enum_for(__method__, prefix: prefix) unless block_given?
+      s3.list_objects_v2(bucket: bucket, prefix: prefix).each do |response|
+        response.contents.each { |object| yield object.key }
+      end
+    end
+
+    def remove(*keys)
+      errors = []
+      # API is limited to 1000 keys per request.
+      keys.flatten.each_slice(1000) do |group|
+        resp = s3.delete_objects(
+          bucket: bucket,
+          delete: {
+            objects: group.map { |key| { key: key } },
+            quiet: true # only return errors
+          }
+        )
+        errors << resp.errors.map(&:key)
+      end
+      errors.flatten
     end
 
     def restore(key)

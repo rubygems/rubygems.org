@@ -67,7 +67,7 @@ class LogTicketTest < ActiveSupport::TestCase
       end
 
       should "set the right base directory" do
-        assert_equal "test", @log_ticket.fs.base_dir
+        assert_equal Rails.root.join("test"), @log_ticket.fs.base_dir
       end
 
       should "body return the file body" do

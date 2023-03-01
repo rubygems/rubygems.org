@@ -14,7 +14,7 @@ class AuditResource < Avo::BaseResource
 
     field :auditable, as: :belongs_to,
       polymorphic_as: :auditable,
-      types: [::User],
+      types: [::User, ::WebHook],
       name: "Edited Record"
 
     heading "Action Details"

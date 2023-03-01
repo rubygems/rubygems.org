@@ -2,6 +2,7 @@ require "test_helper"
 
 class DeletionTest < ActiveSupport::TestCase
   include SearchKickHelper
+  include ActiveJob::TestHelper
 
   setup do
     @user = create(:user)
@@ -75,11 +76,14 @@ class DeletionTest < ActiveSupport::TestCase
   end
 
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference "Delayed::Job.count", 9 do
-      delete_gem
+    assert_difference "Delayed::Job.count", 3 do
+      assert_enqueued_jobs 6, only: FastlyPurgeJob do
+        delete_gem
+      end
     end
 
     Delayed::Worker.new.work_off
+    perform_enqueued_jobs
 
     response = Searchkick.client.get index: "rubygems-#{Rails.env}",
                                                     id: @version.rubygem_id
@@ -121,10 +125,16 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "purge fastly" do
-        Fastly.expects(:purge).with({ path: "gems/#{@version.full_name}.gem" }).times(2)
-        Fastly.expects(:purge).with({ path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz" }).times(2)
+        Fastly.expects(:purge).with({ path: "info/#{@version.rubygem.name}", soft: true })
+        Fastly.expects(:purge).with({ path: "names", soft: true })
+        Fastly.expects(:purge).with({ path: "versions", soft: true })
+        Fastly.expects(:purge).with({ path: "gem/#{@version.rubygem.name}", soft: true })
+
+        Fastly.expects(:purge).with({ path: "gems/#{@version.full_name}.gem", soft: false }).times(2)
+        Fastly.expects(:purge).with({ path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz", soft: false }).times(2)
 
         Delayed::Worker.new.work_off
+        perform_enqueued_jobs
       end
 
       should "remove deletion record" do
