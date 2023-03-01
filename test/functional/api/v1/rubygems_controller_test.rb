@@ -312,9 +312,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal "Successfully registered gem: test (1.0.0)", @response.body
         end
         should "enqueue jobs" do
-          assert_difference "Delayed::Job.count", 4 do
+          assert_difference "Delayed::Job.count", 3 do
             assert_enqueued_jobs 4, only: FastlyPurgeJob do
-              post :create, body: gem_file("test-1.0.0.gem").read
+              assert_enqueued_jobs 1, only: NotifyWebHookJob do
+                post :create, body: gem_file("test-1.0.0.gem").read
+              end
             end
           end
         end
