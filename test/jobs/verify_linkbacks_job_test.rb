@@ -40,6 +40,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
 
   setup do
     @links = {
+      home: "http://example.com",
       wiki: "https://example.com/no-linkback/",
       mail: nil,
       docs: nil,
@@ -48,12 +49,13 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
     }
 
     @rubygem = create(:rubygem, name: "mygem")
-    @linkset = create(:linkset, **@links, rubygem: @rubygem)
+    @linkset = @rubygem.linkset
+    @linkset.update!(@links)
 
-    URI.stubs(:open).with("http://example.com").returns(stub(read: LINKBACK_HTML))
-    URI.stubs(:open).with(@links[:code]).returns(stub(read: GITHUB_HTML))
-    URI.stubs(:open).with(@links[:wiki]).returns(stub(read: NO_LINKBACK_HTML))
-    URI.stubs(:open).with(@links[:bugs]).raises(Net::HTTPBadResponse)
+    RestClient.stubs(:get).with { |url, **| url == @links[:home] }.returns(stub(body: LINKBACK_HTML))
+    RestClient.stubs(:get).with { |url, **| url == @links[:code] }.returns(stub(body: GITHUB_HTML))
+    RestClient.stubs(:get).with { |url, **| url == @links[:wiki] }.returns(stub(body: NO_LINKBACK_HTML))
+    RestClient.stubs(:get).with { |url, **| url == @links[:bugs] }.raises(Net::HTTPBadResponse)
   end
 
   def perform(rubygem_id = @rubygem.id)
@@ -81,70 +83,43 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
     end
   end
 
-  #   should "only run in the correct context" do
-  #     assert @linkset.valid?
-  #     refute @linkset.valid?(:verify_linkbacks)
-  #   end
-  #
-  #   context "Verifying links for an indexed gem" do
-  #     setup do
-  #       version = build(:version, indexed: true)
-  #       rubygem = build(
-  #         :rubygem,
-  #         versions: [version],
-  #       )
-  #       rubygem[:name] = "mygem"
-  #
-  #       @linkset = build(
-  #         :linkset,
-  #         **@links,
-  #         rubygem: rubygem,
-  #       )
-  #
-  #       @linkset.validate(:verify_linkbacks)
-  #     end
-  #
-  #     should "record the results" do
-  #       @linkset = build(:linkset)
-  #       @linkset.validate(:verify_linkbacks)
-  #
-  #       Linkset::LINKS.map { |key|
-  #         assert_not_nil @linkset["#{key}_verified"], "value doesn't match for method: #{key}"
-  #       }
-  #     end
-  #
-  #     context "using verify_linkbacks" do
-  #       should "should save a record even if links fail URLs" do
-  #         @linkset = create(:linkset)
-  #         @linkset.rubygem[:indexed] = true
-  #
-  #         assert_changed(@linkset, :home_verified) do
-  #           @linkset.verify_linkbacks
-  #         end
-  #       end
-  #
-  #       should "skip a non-indexed gem" do
-  #       end
-  #     end
-  #
-  #     should "not verify a rubygem.org gem link with a different gem name" do
-  #       @linkset.rubygem.send("name=", "myOtherGem")
-  #       @linkset.validate(:verify_linkbacks)
-  #       refute @linkset[:home_verified]
-  #       refute @linkset[:code_verified]
-  #     end
-  #
-  #     should "find linkbacks on websites and Github" do
-  #       assert @linkset[:home_verified]
-  #       assert @linkset[:code_verified]
-  #     end
-  #
-  #     should "not verify a site without a linkback" do
-  #       refute @linkset[:wiki_verified]
-  #     end
-  #
-  #     should "fail a bad URL" do
-  #       refute @linkset[:bugs_verified]
-  #     end
-  #   end
+  context "indexed" do
+    setup do
+      @rubygem.update!(indexed: true)
+    end
+
+    should "record which links are verified" do
+      perform
+
+      @linkset.reload
+
+      assert @linkset.home_verified, "value doesn't match for method: home"
+      refute @linkset.wiki_verified, "value doesn't match for method: wiki"
+      assert_nil @linkset.mail_verified, "value doesn't match for method: mail"
+      assert_nil @linkset.docs_verified, "value doesn't match for method: docs"
+      assert @linkset.code_verified, "value doesn't match for method: code"
+      refute @linkset.bugs_verified, "value doesn't match for method: bugs"
+    end
+
+    should "not verify a rubygem.org gem link with a different gem name" do
+      @rubygem.update!(name: "myOtherGem")
+
+      perform
+
+      @linkset.reload
+
+      refute @linkset.home_verified, "value doesn't match for method: home"
+      refute @linkset.code_verified, "value doesn't match for method: code"
+    end
+
+    should "timeout safely when a link doesn't respond" do
+      URI.stubs(:open).with(@links[:bugs]).raises(Timeout::Error)
+
+      perform
+
+      @linkset.reload
+
+      refute @linkset.bugs_verified, "value doesn't match for method: home"
+    end
+  end
 end

@@ -23,6 +23,12 @@ class LinksetTest < ActiveSupport::TestCase
 
       assert_empty @linkset
     end
+
+    should "enqueue a job to verify linkbacks" do
+      assert_enqueued_with(job: VerifyLinkbacksJob, args: [@linkset.rubygem_id]) do
+        @linkset.save!
+      end
+    end
   end
 
   context "with a Gem::Specification" do

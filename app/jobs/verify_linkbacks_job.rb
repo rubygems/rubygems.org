@@ -7,20 +7,29 @@ class VerifyLinkbacksJob < ApplicationJob
 
   def perform(rubygem_id)
     linkset = Rubygem.with_versions.find(rubygem_id).linkset
+    gem_name = linkset.rubygem.name
 
-    Linkset::LINKS.each do |attribute|
-      validate_linkset(linkset, attribute, linkset[attribute])
+    Linkset::LINKS.each do |link|
+      url = linkset.read_attribute(link)
+      next if url.blank?
+      linkset["#{link}_verified"] = valid_link?(url, gem_name)
     end
+    linkset.save!
   end
 
-  def validate_linkset(record, attribute, url)
-    doc = Nokogiri::HTML(URI.open(url).read)
-    selector = url.include?("github.com") ? "[role='link']" : "[rel='rubygem']"
-    rel_links = doc.css(selector)
-
-    has_linkback = rel_links.css("[href*='rubygems.org/gem/#{record.rubygem.name}']").present?
-    record.errors.add(attribute, "does not contain a #{selector} link back to the gem on rubygems.org") unless has_linkback
+  def valid_link?(url, gem_name)
+    Timeout.timeout(5) do
+      response = RestClient.get(
+        url,
+        timeout: 5,
+        open_timeout: 5,
+        accept: :html
+      )
+      doc = Nokogiri::HTML(response.body)
+      selector = url.include?("github.com") ? "[role='link']" : "[rel='rubygem']"
+      doc.css(selector).css("[href*='rubygems.org/gem/#{gem_name}']").present?
+    end
   rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError])
-    record.errors.add(attribute, "server error")
+    false
   end
 end
