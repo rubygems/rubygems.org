@@ -1,0 +1,29 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "952a7d74123607aba495fea6b6bdb2009eebc024151ef3297547e9f2a690d0b8",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/api/v1/hook_relay_controller.rb",
+      "line": 23,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.permit(:attempts, :account_id, :hook_id, :id, :max_attempts, :status, :stream, :failure_reason, :completed_at, :created_at, :request => ([:target_url]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::HookRelayController",
+        "method": "set_hook_relay_report_params"
+      },
+      "user_input": ":account_id",
+      "confidence": "High",
+      "cwe_id": [
+        915
+      ],
+      "note": "account_id is used to validate that the request indeed comes from hook relay"
+    }
+  ],
+  "updated": "2023-03-01 02:46:07 -0800",
+  "brakeman_version": "5.4.1"
+}
