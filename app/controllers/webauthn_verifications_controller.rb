@@ -4,14 +4,14 @@ class WebauthnVerificationsController < ApplicationController
   before_action :set_verification, :set_user, except: :status
 
   def prompt
-    redirect_to root_path, alert: t(".no_port") unless port = params[:port]
+    redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
     @webauthn_options = @user.webauthn_options_for_get
 
     session[:webauthn_authentication] = {
       "challenge" => @webauthn_options.challenge,
-      "port" => port,
+      "port" => port
     }
   end
 
@@ -43,8 +43,8 @@ class WebauthnVerificationsController < ApplicationController
   end
 
   def status
-    @result = status_params
-    if @result == "success"
+    redirect_to root_path, alert: t(".no_result") unless (result = params[:result])
+    if result == "success"
       @title = t(".success.title")
       @body = t(".success.body")
     else
@@ -91,9 +91,5 @@ class WebauthnVerificationsController < ApplicationController
 
   def webauthn_token_param
     params.permit(:webauthn_token).require(:webauthn_token)
-  end
-
-  def status_params
-    params.permit(:result).require(:result)
   end
 end
