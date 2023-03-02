@@ -66,8 +66,7 @@ class PrivacyPassTokenizer
   end
 
   def origin_info
-    # "a55c-2600-1700-3040-74a0-240f-fda0-91b0-1cff.ngrok.io"
-    ""
+    "" # this is optional, omitting for now
   end
 
   def origin_info_length

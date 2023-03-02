@@ -1,5 +1,4 @@
 class PrivacyPassRedeemer
-  # TEST_HEADER = "PrivateToken token=AALLcAly6EBWhQyLe7d2jQVMqj_w7v2hckQXu5eKu54mU80z0u0E7GYrFJZIgA9ThFzYXSj_ClklhsUFukcUko1h4Wnyhorwo9CdnHxm9RcdbiX5wzcNo47zc4Al24lDNrehyirOcQyXbw1MIki0dHfjP0w5IshPGULtqYXdY0dQBeu9r_94BTFWThH2RiX6saYBWyj8t-AZS8wI6ZgBVleng8t611TYgacqua_NBpQ4zzWy44fsqNM6j5HhpmZEUWnh0_DwS1i4CsutizdljoVrMkzmHPf-x2PaPVN5gUbFDGf49u0nrcg80HiEeRzNjeek79duhJLHCdVZ-W3pX64zcLhlRiA4HHGdnx4eCC1IqY6o-iXl68nd0lcopz8GReSsKw4tKlmhuj8pk5kTpqZ7qdLdW4x2a-TSfpidzwUv9VYMVFwaVxZXjMpzQlbaKSTvXC5dQ2EAWC-4S7k1GnMWdOJ_YMmnWRXKGfuc_UyJP5UJ8yDcGWLr3HIXS5dDmVIM4_d0ncxFd1GIcSXliHt3ih1zUE5x6f7u5M7D0RrY37eqsCBYM3azOVPqKvPnF5hryzdBlY8vjuBSu__2_XAzBgOfkn1gouXU4ebYeWW5A0t6lEDII6T3hv-YsdmB8oMC-_V0qDyGQjYBM3LeKTYqXD9ndufQXwMaHy6XQzZkhRYpUYHSI7BagNS_rK4ogYLUdo1mqczbQMBedMRAfSlINBF01FTW9aTC0RHpVD7auDEQ4YVBUaAN1dt9K1X59LTFOBvrN8e6Ahi8RU2wWMz-wfq6NRzNg7o391h9jHicTA==".freeze
   HEADER_FORMAT = /^PrivateToken token=(?<token>.*)$/
   # See https://www.ietf.org/archive/id/draft-ietf-privacypass-protocol-04.html#name-token-type
   # See https://www.ietf.org/archive/id/draft-ietf-privacypass-protocol-04.html#section-6.3
@@ -10,7 +9,6 @@ class PrivacyPassRedeemer
   #   uint8_t token_key_id[32];
   #   uint8_t authenticator[Nk];
   # } Token;
-
   TOKEN_TYPE_LENGTH = 1
   NONCE_LENGTH = 32
   CHALLENGE_DIGEST_LENGTH = 32
@@ -105,7 +103,6 @@ class PrivacyPassRedeemer
   end
 
   def public_key
-    # gsubbed = issuer_public_key.tr("-", "+").tr("_", "/").gsub("\r\n", "").scan(/.{1,64}/).join("\n")
     gsubbed = PrivacyPassTokenizer.issuer_public_key.tr("-", "+").tr("_", "/")
     with_line_endings = gsubbed[0] + gsubbed[1..].scan(/.{1,64}/).join("\n")
     pem = "-----BEGIN PUBLIC KEY-----\n#{with_line_endings}\n-----END PUBLIC KEY-----\n"
