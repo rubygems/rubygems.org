@@ -5,7 +5,7 @@ Rails.application.configure do
   config.good_job.queues = '*'
   config.good_job.shutdown_timeout = 25 # seconds
 
-  config.good_job.enable_cron = true
+  config.good_job.enable_cron = !Rails.env.development?
   config.good_job.cron = {
     good_job_statsd: {
       cron: "every 15s",
@@ -16,4 +16,18 @@ Rails.application.configure do
   }
 
   GoodJob.active_record_parent_class = "ApplicationRecord"
+
+  if Rails.env.development? && GoodJob::CLI.within_exe?
+    GoodJob::CLI.log_to_stdout = false
+
+    console = ActiveSupport::Logger.new($stdout)
+    console.formatter = Rails.logger.formatter
+    console.level = Rails.logger.level
+
+    Rails.logger.extend(ActiveSupport::Logger.broadcast(console)) unless ActiveSupport::Logger.logger_outputs_to?(Rails.logger, $stderr, $stdout)
+
+    ActiveRecord::Base.logger = nil
+    GoodJob.logger = Rails.logger
+    StatsD.backend = StatsD::Instrument::Backends::NullBackend.new
+  end
 end
