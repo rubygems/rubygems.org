@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-# The TokenChallenge structure contains the type of token, the hostname of the issuer, an optional context to bind to your challenge, and the hostname of your server. iOS 16 and macOS Ventura support token type 2, which uses publicly verifiable RSA Blind Signatures.
+# The TokenChallenge structure contains the type of token, the hostname of the issuer,
+# an optional context to bind to your challenge, and the hostname of your server.
+# iOS 16 and macOS Ventura support token type 2, which uses publicly verifiable RSA Blind Signatures.
 
 # struct {
 #     uint16_t token_type;               // 0x0002, in network-byte order
@@ -18,9 +20,22 @@ class PrivacyPassTokenizer
 
   # Base64 url encoded
   def self.issuer_public_key
-    # fastly demo fallback
-    ENV.fetch("PRIVACY_PASS_ISSUER_PUBLIC_KEY",
-    "MIICUjA9BgkqhkiG9w0BAQowMKANMAsGCWCGSAFlAwQCAqEaMBgGCSqGSIb3DQEBCDALBglghkgBZQMEAgKiAwIBMAOCAg8AMIICCgKCAgEAubzND7lvK-u5aIFHSt_NHIzsUFuHCiwVm88kvUvbvJbjj4be_IdNwpfdfXz-vq6NeEwlKEDLtD9oMVop_kEf5HEBkiipBrcn10h17XvYPuc6lA7Z4Y8IjvSjLVydXmcabmslwreMysD1ZINjzadjlJxiIKWCeS_3OJ4dxMTirt8HMUl8cRQafTjSOBJIZNtoNiT5rr5_5SYfEQW8v25RZcitkL0Lrg1mkSutRR00EE3zMelQBGR0sf8jDgBRiPQ1-sSgaIicIciZ2ysiPdkQZBIDpIFnvqed4yKY9gZCn-ASztoe1JhJvzWUwO7Nyz1Mb6pxAV0aQNfb0rDMTPNtyF4z7kgtFcsr5SXiJUa13bm0G2QvEdhl177poghh2RDaT5tcEmiRRvdQWBTeVgFyjrX3-29TZCT4z8VyvDxPPIUIi2rN8-9lN6mmsF0KhlyKe4jUuDwK7dc6Q0gZyjKiE3n-ygErrlbOYU16MGQiJQRV6Z8j38OSD4Lf5-SzsgkAa6Zbv95Zf8TZRS-fuagiXGZcmfdO9zXkuNlRlGguEUpx520SANRciPIBZxFBDXga6kcT9Hfha0n97Mhq57kFRe2Cox7qpq79x9TjUvHOZkWMSv2KmZpoF0wbI2NvlZngbW6Z1hC-X4C3evilX7O498r45Ct7PNjq11Qjso82DwMCAwEAAQ==")
+    fastly_demo_fallback = <<-KEY
+      MIICUjA9BgkqhkiG9w0BAQowMKANMAsGCWCGSAFlAwQCAqEaMBgGCSqGSIb3DQEBCD
+      ALBglghkgBZQMEAgKiAwIBMAOCAg8AMIICCgKCAgEAubzND7lvK-u5aIFHSt_NHIzs
+      UFuHCiwVm88kvUvbvJbjj4be_IdNwpfdfXz-vq6NeEwlKEDLtD9oMVop_kEf5HEBkii
+      pBrcn10h17XvYPuc6lA7Z4Y8IjvSjLVydXmcabmslwreMysD1ZINjzadjlJxiIKWCeS
+      _3OJ4dxMTirt8HMUl8cRQafTjSOBJIZNtoNiT5rr5_5SYfEQW8v25RZcitkL0Lrg1mk
+      SutRR00EE3zMelQBGR0sf8jDgBRiPQ1-sSgaIicIciZ2ysiPdkQZBIDpIFnvqed4yKY9
+      gZCn-ASztoe1JhJvzWUwO7Nyz1Mb6pxAV0aQNfb0rDMTPNtyF4z7kgtFcsr5SXiJUa13
+      bm0G2QvEdhl177poghh2RDaT5tcEmiRRvdQWBTeVgFyjrX3-29TZCT4z8VyvDxPPIUIi2
+      rN8-9lN6mmsF0KhlyKe4jUuDwK7dc6Q0gZyjKiE3n-ygErrlbOYU16MGQiJQRV6Z8j38O
+      SD4Lf5-SzsgkAa6Zbv95Zf8TZRS-fuagiXGZcmfdO9zXkuNlRlGguEUpx520SANRciPIBZ
+      xFBDXga6kcT9Hfha0n97Mhq57kFRe2Cox7qpq79x9TjUvHOZkWMSv2KmZpoF0wbI2NvlZn
+      gbW6Z1hC-X4C3evilX7O498r45Ct7PNjq11Qjso82DwMCAwEAAQ==
+    KEY
+
+    ENV.fetch("PRIVACY_PASS_ISSUER_PUBLIC_KEY", fastly_demo_fallback)
   end
 
   def challenge_token
