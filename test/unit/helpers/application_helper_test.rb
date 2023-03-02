@@ -29,6 +29,15 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_predicate short_info(rubygem.versions.most_recent), :html_safe?
   end
 
+  should "use gem summary before gem description" do
+    desc = "this is an awesome gem that does so many wonderful things"
+    summary = "an awesome gem"
+    rubygem = create(:rubygem, name: "SomeGem")
+    create(:version, rubygem: rubygem, number: "3.0.0", platform: "ruby", description: desc, summary: summary)
+
+    assert_equal "an awesome gem", short_info(rubygem.versions.most_recent)
+  end
+
   context "rubygem" do
     setup do
       @rubygem = create(:rubygem)
