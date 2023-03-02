@@ -378,6 +378,7 @@ en:
       authenticate: Authenticate
       no_webauthn_devices: You don't have any security devices enabled
     status:
+      no_result: No result provided. Please try again.
       success:
         title: Success!
         body: Please close this browser.

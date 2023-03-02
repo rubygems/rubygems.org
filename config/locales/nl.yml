@@ -382,6 +382,14 @@ nl:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
+    status:
+      no_result:
+      success:
+        title:
+        body:
+      fail:
+        title:
+        body:
   owners:
     confirm:
       confirmed_email:
