@@ -21,7 +21,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       post "/session",
         params: { session: { who: @user.email, password: @user.password } },
         headers: { REMOTE_ADDR: @ip_address }
-      follow_redirect!
 
       assert_response :success
     end
@@ -34,7 +33,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       post "/users",
         params: { user: { email: user.email, password: user.password } },
         headers: { REMOTE_ADDR: @ip_address }
-      follow_redirect!
 
       assert_response :success
     end
