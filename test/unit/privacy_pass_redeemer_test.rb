@@ -43,14 +43,16 @@ class PrivacyPassRedeemerTest < ActiveSupport::TestCase
   end
 
   context "#redeem" do
-    should "raises error with a malformed authorization header" do
+    should "return false with a missing authorization header" do
+      refute PrivacyPassRedeemer.call(nil, 1)
+    end
+
+    should "return false with a malformed authorization header" do
       token = encode("#{@token_type}#{@nonce}#{@challenge_digest}#{@token_key_id}#{@authenticator}")
       # missing 'PrivateToken token='
       auth_header = token
 
-      assert_raises ArgumentError do
-        PrivacyPassRedeemer.call(auth_header, 1)
-      end
+      refute PrivacyPassRedeemer.call(auth_header, 1)
     end
 
     should "return false when token type is not 2 (publicly verifiable RSA Blind Signatures)" do

@@ -18,12 +18,16 @@ class PrivacyPassRedeemer
   NK_AUTHENTICATOR_LENGTH = 512
 
   def self.call(authorization_header, session_id)
+    return false unless authorization_header
+
     new(authorization_header, session_id).redeem
+  rescue ArgumentError
+    false
   end
 
   def initialize(authorization_header, session_id)
     matches = HEADER_FORMAT.match(authorization_header)
-    raise ArgumentError, "invalid Authorization header format" if matches.nil?
+    raise ArgumentError, "invalid Privacy Pass Authorization header format" if matches.nil?
 
     token = matches.named_captures["token"]
     decoded_token = Base64.urlsafe_decode64(token)
