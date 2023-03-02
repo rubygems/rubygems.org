@@ -334,6 +334,50 @@ class SignInTest < SystemTest
     assert page.has_content? "Sign out"
   end
 
+  test "signing in when privacy pass is verified" do
+    # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
+    PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(true)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in when privacy pass is not verified and captcha is not triggered" do
+    # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
+    PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(false)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in when privacy pass is not verified and captcha is triggered" do
+    @scope = Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY
+    update_limit_for("#{@scope}:#{@user.email}", 4, Rack::Attack::LOGIN_LIMIT_PERIOD)
+    # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
+    HcaptchaVerifier.expects(:call).with(anything, anything).returns(true)
+
+    # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
+    PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(false)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Verify you're human"
+    click_button "Verify"
+
+    assert page.has_content? "Sign out"
+  end
+
   test "signing out" do
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"

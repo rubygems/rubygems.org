@@ -111,6 +111,57 @@ class SignUpTest < SystemTest
     assert page.has_content? "Unable to verify CAPTCHA"
   end
 
+  test "sign up when privacy pass is verified" do
+    # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
+    PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(true)
+
+    visit sign_up_path
+
+    fill_in "Email", with: "email@person.com"
+    fill_in "Username", with: "nick"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign up"
+
+    assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
+  end
+
+  test "sign up when privacy pass is not verified and captcha is not triggered" do
+    # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
+    PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(false)
+
+    visit sign_up_path
+
+    fill_in "Email", with: "email@person.com"
+    fill_in "Username", with: "nick"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign up"
+
+    assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
+  end
+
+  test "sign up when privacy pass is not verified and captcha verification is triggered" do
+    # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
+    PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(false)
+
+    @ip = "127.0.0.1"
+    @scope = Rack::Attack::SIGN_UP_THROTTLE_PER_IP_KEY
+    update_limit_for("#{@scope}:#{@ip}", 2, Rack::Attack::SIGN_UP_LIMIT_PERIOD)
+    # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
+    HcaptchaVerifier.expects(:call).with(anything, anything).returns(true)
+
+    visit sign_up_path
+
+    fill_in "Email", with: "email@person.com"
+    fill_in "Username", with: "nick"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign up"
+
+    assert page.has_content? "Verify you're human"
+    click_button "Verify"
+
+    assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
+  end
+
   test "email confirmation" do
     visit sign_up_path
 

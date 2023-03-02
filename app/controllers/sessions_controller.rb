@@ -9,7 +9,7 @@ class SessionsController < Clearance::SessionsController
   after_action :delete_mfa_expiry_session, only: %i[webauthn_create mfa_create]
 
   def new
-    if request.headers["Authorization"] && redeem_privacy_pass_token
+    if redeem_privacy_pass_token
       super
     else
       setup_privacy_pass_challenge
