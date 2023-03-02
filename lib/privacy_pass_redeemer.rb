@@ -25,9 +25,9 @@ class PrivacyPassRedeemer
     matches = HEADER_FORMAT.match(authorization_header)
     raise ArgumentError, "invalid Authorization header format" if matches.nil?
 
-    @token = matches.named_captures["token"]
-    decoded_token = Base64.urlsafe_decode64(@token)
-    @unpacked_token = decoded_token.unpack("nC#{NONCE_LENGTH}C#{CHALLENGE_DIGEST_LENGTH}C#{TOKEN_KEY_ID_LENGTH}C#{NK_AUTHENTICATOR_LENGTH}")
+    token = matches.named_captures["token"]
+    decoded_token = Base64.urlsafe_decode64(token)
+    @unpacked_token = decoded_token.unpack("nC#{NONCE_LENGTH}C#{CHALLENGE_DIGEST_LENGTH}C#{TOKEN_KEY_ID_LENGTH}C*")
     @token_type = @unpacked_token.slice(0, TOKEN_TYPE_LENGTH)
 
     @session_id = session_id
