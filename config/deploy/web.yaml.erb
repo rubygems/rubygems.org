@@ -201,16 +201,16 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: hcaptcha_secret
-          - name: PRIVACY_PASS_ISSUER_PUBLIC_KEY
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: privacy_pass_issuer_public_key
-          - name: PRIVACY_PASS_ISSUER_NAME
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: privacy_pass_issuer_name
+          # - name: PRIVACY_PASS_ISSUER_PUBLIC_KEY
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: <%= environment %>
+          #       key: privacy_pass_issuer_public_key
+          # - name: PRIVACY_PASS_ISSUER_NAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: <%= environment %>
+          #       key: privacy_pass_issuer_name
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
