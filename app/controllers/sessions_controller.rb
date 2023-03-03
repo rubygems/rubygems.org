@@ -1,11 +1,13 @@
 class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
+  include CaptchaVerifiable
   include PrivacyPassSupportable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify authenticate]
   before_action :ensure_not_blocked, only: :create
+  before_action :present_privacy_pass_challenge, unless: :redeemed_privacy_pass_token?, only: :new
   after_action :delete_mfa_expiry_session, only: %i[webauthn_create mfa_create]
 
   def new
@@ -83,12 +85,11 @@ class SessionsController < Clearance::SessionsController
   end
 
   def captcha_create
-    @user = User.find(session[:captcha_user])
-    session.delete(:captcha_user)
+    if verified_captcha?
+      @user = User.find(session[:captcha_user])
+      session.delete(:captcha_user)
+      should_mfa = @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
 
-    captcha_success = HcaptchaVerifier.call(captcha_response, request.remote_ip)
-    should_mfa = @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
-    if captcha_success
       should_mfa ? webauthn_and_mfa_new : do_login
     else
       login_failure(t("captcha.invalid"))
@@ -156,10 +157,6 @@ class SessionsController < Clearance::SessionsController
     params.require(:session)
   end
 
-  def captcha_response
-    params.permit("h-captcha-response")["h-captcha-response"]
-  end
-
   def find_user
     password = session_params[:password].is_a?(String) && session_params.fetch(:password)
 
@@ -210,15 +207,9 @@ class SessionsController < Clearance::SessionsController
     session[:captcha_user] = @user.id
   end
 
-  def setup_privacy_pass_challenge
-    tokenizer = PrivacyPassTokenizer.new
-    tokenizer.register_challenge_for_redemption(session.id)
-    challenge = tokenizer.challenge_token
-    response.set_header("WWW-Authenticate", "PrivateToken challenge=#{challenge}, token-key=#{PrivacyPassTokenizer.issuer_public_key}")
-  end
-
-  def redeem_privacy_pass_token
-    PrivacyPassRedeemer.call(request.headers["Authorization"], session.id)
+  def present_privacy_pass_challenge
+    setup_privacy_pass_challenge
+    render "sessions/new", status: :unauthorized
   end
 
   def login_conditions_met?

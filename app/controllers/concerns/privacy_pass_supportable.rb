@@ -10,7 +10,7 @@ module PrivacyPassSupportable
     response.set_header("WWW-Authenticate", "PrivateToken challenge=#{challenge}, token-key=#{PrivacyPassTokenizer.issuer_public_key}")
   end
 
-  def redeem_privacy_pass_token
+  def redeemed_privacy_pass_token?
     success = PrivacyPassRedeemer.call(request.headers["Authorization"], session.id)
     session[:redeemed_privacy_pass] = success
     success

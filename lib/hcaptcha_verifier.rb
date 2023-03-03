@@ -36,7 +36,8 @@ module HcaptchaVerifier
         payload,
         :timeout        => 5,
         :open_timeout   => 5,
-        "Content-Type"  => "application/x-www-form-urlencoded"
+        "Content-Type"  => "application/x-www-form-urlencoded",
+        "Accept" => "application/json"
 
       response_json = JSON.parse(response)
 

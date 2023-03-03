@@ -1,15 +1,11 @@
 class UsersController < Clearance::UsersController
+  include CaptchaVerifiable
   include PrivacyPassSupportable
+
+  before_action :present_privacy_pass_challenge, unless: :redeemed_privacy_pass_token?, only: :new
 
   def new
     @user = user_from_params
-
-    if redeem_privacy_pass_token
-      super
-    else
-      setup_privacy_pass_challenge
-      render "users/new", status: :unauthorized
-    end
   end
 
   def create
@@ -27,13 +23,12 @@ class UsersController < Clearance::UsersController
 
   def captcha_create
     @user = user_from_params
-    session.delete(:captcha_user)
-
-    captcha_success = HcaptchaVerifier.call(captcha_response, request.remote_ip)
-    if captcha_success && @user.save
+    verified = verified_captcha?
+    if verified && @user.save
       handle_user_after_save
+      session.delete(:captcha_user)
     else
-      flash[:notice] = t("captcha.invalid") unless captcha_success
+      flash[:notice] = t("captcha.invalid") unless verified
       render template: "users/new"
     end
   end
@@ -51,8 +46,10 @@ class UsersController < Clearance::UsersController
     session[:captcha_user] = user_params.to_h
   end
 
-  def captcha_response
-    params.permit("h-captcha-response")["h-captcha-response"]
+  def present_privacy_pass_challenge
+    @user = user_from_params
+    setup_privacy_pass_challenge
+    render "users/new", status: :unauthorized
   end
 
   def user_params

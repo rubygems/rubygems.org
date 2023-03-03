@@ -16,8 +16,6 @@ class PrivacyPassRedeemer
   NK_AUTHENTICATOR_LENGTH = 512
 
   def self.call(authorization_header, session_id)
-    return false unless authorization_header
-
     new(authorization_header, session_id).redeem
   rescue ArgumentError
     false
@@ -25,12 +23,18 @@ class PrivacyPassRedeemer
 
   def initialize(authorization_header, session_id)
     matches = HEADER_FORMAT.match(authorization_header)
-    raise ArgumentError, "invalid Privacy Pass Authorization header format" if matches.nil?
+    raise ArgumentError, "invalid Privacy Pass Authorization header format" if authorization_header.nil? || matches.nil?
 
     token = matches.named_captures["token"]
     decoded_token = Base64.urlsafe_decode64(token)
-    @unpacked_token = decoded_token.unpack("nC#{NONCE_LENGTH}C#{CHALLENGE_DIGEST_LENGTH}C#{TOKEN_KEY_ID_LENGTH}C*")
-    @token_type = @unpacked_token.slice(0, TOKEN_TYPE_LENGTH)
+    unpacked_token = decoded_token.unpack("nC#{NONCE_LENGTH}C#{CHALLENGE_DIGEST_LENGTH}C#{TOKEN_KEY_ID_LENGTH}C*")
+
+    @token_length = unpacked_token.length
+    @token_type_bytes = unpacked_token.slice!(0, TOKEN_TYPE_LENGTH)
+    @nonce_bytes = unpacked_token.slice!(0, NONCE_LENGTH)
+    @challenge_digest_bytes = unpacked_token.slice!(0, CHALLENGE_DIGEST_LENGTH)
+    @token_key_id_bytes = unpacked_token.slice!(0, TOKEN_KEY_ID_LENGTH)
+    @authenticator_bytes = unpacked_token.slice!(0, NK_AUTHENTICATOR_LENGTH)
 
     @session_id = session_id
   end
@@ -45,15 +49,15 @@ class PrivacyPassRedeemer
 
   private
 
-  attr_reader :token_type, :unpacked_token, :session_id
+  attr_reader :token_length, :token_type_bytes, :nonce_bytes, :challenge_digest_bytes, :token_key_id_bytes, :authenticator_bytes, :session_id
 
   def valid_token_type?
-    token_type == [PrivacyPassTokenizer::TOKEN_TYPE]
+    token_type_bytes == [PrivacyPassTokenizer::TOKEN_TYPE]
   end
 
   def valid_token_length?
     expected_token_length = TOKEN_TYPE_LENGTH + NONCE_LENGTH + CHALLENGE_DIGEST_LENGTH + TOKEN_KEY_ID_LENGTH + NK_AUTHENTICATOR_LENGTH
-    unpacked_token.length == expected_token_length
+    token_length == expected_token_length
   end
 
   def confirm_single_redemption?
@@ -64,33 +68,8 @@ class PrivacyPassRedeemer
     exists
   end
 
-  def token_type_bytes
-    start_index = 0
-    unpacked_token.slice(start_index, TOKEN_TYPE_LENGTH)
-  end
-
-  def nonce_bytes
-    start_index = TOKEN_TYPE_LENGTH
-    unpacked_token.slice(start_index, NONCE_LENGTH)
-  end
-
-  def challenge_digest_bytes
-    start_index = TOKEN_TYPE_LENGTH + NONCE_LENGTH
-    unpacked_token.slice(start_index, CHALLENGE_DIGEST_LENGTH)
-  end
-
   def challenge_digest_hex
     challenge_digest_bytes.pack("C*").unpack1("H*")
-  end
-
-  def token_key_id_bytes
-    start_index = TOKEN_TYPE_LENGTH + NONCE_LENGTH + CHALLENGE_DIGEST_LENGTH
-    unpacked_token.slice(start_index, TOKEN_KEY_ID_LENGTH)
-  end
-
-  def authenticator_bytes
-    start_index = TOKEN_TYPE_LENGTH + NONCE_LENGTH + CHALLENGE_DIGEST_LENGTH + TOKEN_KEY_ID_LENGTH
-    unpacked_token.slice(start_index, NK_AUTHENTICATOR_LENGTH)
   end
 
   def authenticator_string
