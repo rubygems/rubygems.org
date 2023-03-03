@@ -687,6 +687,7 @@ DEPENDENCIES
   sassc-rails
   searchkick
   selenium-webdriver
+  semantic_logger
   shoryuken (~> 4.0)
   shoulda
   simplecov

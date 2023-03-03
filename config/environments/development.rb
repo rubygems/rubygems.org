@@ -80,6 +80,9 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.rails_semantic_logger.semantic = false
+  config.rails_semantic_logger.started    = true
+  config.rails_semantic_logger.processing = true
+  config.rails_semantic_logger.rendered   = true
 
   # Rubygems.org checks for the presence of an env variable called PROFILE that
   # switches several settings to a more "production-like" value for profiling
@@ -91,6 +94,10 @@ Rails.application.configure do
 
     config.logger = ActiveSupport::Logger.new($stdout)
     config.log_level = :info
+    config.rails_semantic_logger.format = :json
+    config.rails_semantic_logger.started    = false
+    config.rails_semantic_logger.processing = false
+    config.rails_semantic_logger.rendered   = false
 
     config.public_file_server.enabled = true
     config.public_file_server.headers = {
