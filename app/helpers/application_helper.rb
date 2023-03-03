@@ -18,7 +18,7 @@ module ApplicationHelper
 
   def gem_info(rubygem)
     if rubygem.respond_to?(:description)
-      [rubygem.description, rubygem.summary, "This rubygem does not have a description or summary."].find(&:present?)
+      [rubygem.summary, rubygem.description, "This rubygem does not have a description or summary."].find(&:present?)
     else
       version = rubygem.latest_version || rubygem.versions.last
       version.info
