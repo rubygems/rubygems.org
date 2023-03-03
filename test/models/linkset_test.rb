@@ -1,7 +1,6 @@
 require "test_helper"
 
 class LinksetTest < ActiveSupport::TestCase
-  include ActiveJob::TestHelper
   should belong_to :rubygem
 
   context "with a linkset" do
@@ -25,9 +24,13 @@ class LinksetTest < ActiveSupport::TestCase
       assert_empty @linkset
     end
 
-    should "enqueue a job to verify linkbacks" do
-      assert_enqueued_with(job: VerifyLinkbacksJob, args: [@linkset.rubygem_id]) do
-        @linkset.save!
+    should "tell whether a link is verified" do
+      @linkset.send(:home_verified_at=, Date.current)
+      empty_keys = Linkset::LINKS.reject { |k| k == "home" }
+
+      assert @linkset.verified?("home")
+      empty_keys.each do |link|
+        refute @linkset.verified?(link)
       end
     end
   end

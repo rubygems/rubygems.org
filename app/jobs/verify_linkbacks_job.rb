@@ -3,7 +3,7 @@
 class VerifyLinkbacksJob < ApplicationJob
   queue_as :default
 
-  retry_on ActiveRecord::RecordNotFound, wait: :exponentially_longer, attempts: 3
+  retry_on ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid, wait: :exponentially_longer, attempts: 3
 
   def perform(rubygem_id)
     rubygem = Rubygem.with_versions.find(rubygem_id)
