@@ -13,6 +13,8 @@ class Fastly
     end
   end
 
+  include SemanticLogger::Loggable
+
   # These are not kwargs because delayed_job doesn't correctly support kwargs in Fastly.delay.purge
   # See: https://github.com/collectiveidea/delayed_job/issues/1134
   def self.purge(options = {})
@@ -30,7 +32,7 @@ class Fastly
                                               timeout: 10,
                                               headers: headers)
         json = JSON.parse(response)
-        Rails.logger.debug { "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}" }
+        logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
       end
     end
   end
@@ -48,7 +50,7 @@ class Fastly
                                             timeout: 10,
                                             headers: headers)
       json = JSON.parse(response)
-      Rails.logger.debug { "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}" }
+      logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
       json
     end
   end

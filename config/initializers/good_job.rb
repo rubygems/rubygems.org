@@ -4,6 +4,7 @@ Rails.application.configure do
   config.good_job.on_thread_error = ->(exception) { Rails.error.report(exception) }
   config.good_job.queues = '*'
   config.good_job.shutdown_timeout = 25 # seconds
+  config.good_job.logger = SemanticLogger[GoodJob]
 
   config.good_job.enable_cron = !Rails.env.development?
   config.good_job.cron = {

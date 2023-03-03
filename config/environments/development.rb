@@ -79,6 +79,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  config.rails_semantic_logger.semantic = false
+
   # Rubygems.org checks for the presence of an env variable called PROFILE that
   # switches several settings to a more "production-like" value for profiling
   # and benchmarking the application locally. All changes you make to the app

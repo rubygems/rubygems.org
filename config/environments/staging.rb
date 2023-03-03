@@ -105,6 +105,7 @@ Rails.application.configure do
 
   # Custom logging config.
   config.logger = ActiveSupport::Logger.new($stdout)
+  config.rails_semantic_logger.format = :json
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

@@ -1,4 +1,26 @@
 # TODO: add feature to statsd-instrument for default tags
+
+StatsD.logger = SemanticLogger[StatsD]
+
+StatsD::Instrument::Backends::LoggerBackend.include(Module.new do
+  extend ActiveSupport::Concern
+  included do
+    def collect_metric(metric)
+      type = StatsD::Instrument::Metric::TYPES[metric.type]
+      log = {
+        message: "#{type} #{metric.name}",
+        type:,
+        name: metric.name,
+        value: metric.value,
+        sample_rate: metric.sample_rate,
+        tags: metric.tags.to_h { _1.split(':', 2) }.presence,
+        metadata: metric.metadata.presence
+      }
+      StatsD.logger.info log.compact
+    end
+  end
+end)
+
 class StatsD::Instrument::Metric
   def self.normalize_tags(tags)
     tags ||= []

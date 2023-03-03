@@ -1,4 +1,6 @@
 class GemDownload < ApplicationRecord
+  include SemanticLogger::Loggable
+
   belongs_to :rubygem, optional: true
   belongs_to :version, optional: true
 
@@ -108,7 +110,7 @@ class GemDownload < ApplicationRecord
       # update ES index of rubygems
       Searchkick.client.bulk body: bulk_update_query
     rescue Faraday::ConnectionFailed, Searchkick::Error, OpenSearch::Transport::Transport::Error => e
-      Rails.logger.debug { "ES update: #{updates_by_gem} has failed: #{e.message}" }
+      logger.debug { { message: "ES update failed", exception: e, updates_by_gem: } }
     end
 
     def increment_versions(rubygem_ids, version_ids, downloads)
