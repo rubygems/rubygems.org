@@ -45,7 +45,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
       mail: nil,
       docs: nil,
       code: "https://github.com/rubygems/mygem",
-      bugs: "http://bad-url.com"
+      bugs: "http://bad-url.com",
     }
 
     @rubygem = create(:rubygem, name: "mygem")
@@ -83,43 +83,45 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
     end
   end
 
-  context "indexed" do
+  context "indexed gem" do
     setup do
       @rubygem.update!(indexed: true)
     end
 
     should "record which links are verified" do
-      perform
+      freeze_time do
+        perform
 
-      @linkset.reload
+        @linkset.reload
 
-      assert @linkset.home_verified, "value doesn't match for method: home"
-      refute @linkset.wiki_verified, "value doesn't match for method: wiki"
-      assert_nil @linkset.mail_verified, "value doesn't match for method: mail"
-      assert_nil @linkset.docs_verified, "value doesn't match for method: docs"
-      assert @linkset.code_verified, "value doesn't match for method: code"
-      refute @linkset.bugs_verified, "value doesn't match for method: bugs"
+        assert_equal Date.current, @linkset.code_verified_at
+        assert_equal Date.current, @linkset.home_verified_at
+        assert_nil @linkset.docs_verified_at
+        assert_nil @linkset.mail_verified_at
+        assert_nil @linkset.bugs_verified_at
+        assert_nil @linkset.wiki_verified_at
+      end
     end
 
-    should "not verify a rubygem.org gem link with a different gem name" do
+    should "not verify a rubygem.org gem link with the wrong gem name" do
       @rubygem.update!(name: "myOtherGem")
 
       perform
 
       @linkset.reload
 
-      refute @linkset.home_verified, "value doesn't match for method: home"
-      refute @linkset.code_verified, "value doesn't match for method: code"
+      refute @linkset.code_verified_at
+      refute @linkset.home_verified_at
     end
 
-    should "timeout safely when a link doesn't respond" do
+    should "time out safely when a link doesn't respond" do
       URI.stubs(:open).with(@links[:bugs]).raises(Timeout::Error)
 
       perform
 
       @linkset.reload
 
-      refute @linkset.bugs_verified, "value doesn't match for method: home"
+      refute @linkset.bugs_verified_at
     end
   end
 end

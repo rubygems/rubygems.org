@@ -204,12 +204,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_25_183453) do
     t.string "bugs"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
-    t.boolean "home_verified"
-    t.boolean "code_verified"
-    t.boolean "docs_verified"
-    t.boolean "wiki_verified"
-    t.boolean "mail_verified"
-    t.boolean "bugs_verified"
+    t.date "home_verified_at"
+    t.date "code_verified_at"
+    t.date "docs_verified_at"
+    t.date "wiki_verified_at"
+    t.date "mail_verified_at"
+    t.date "bugs_verified_at"
     t.index ["rubygem_id"], name: "index_linksets_on_rubygem_id"
   end
 

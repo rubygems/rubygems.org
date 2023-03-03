@@ -12,7 +12,7 @@ class VerifyLinkbacksJob < ApplicationJob
     Linkset::LINKS.each do |link|
       url = linkset.read_attribute(link)
       next if url.blank?
-      linkset["#{link}_verified_at"] = valid_link?(url, gem_name) : Time.current : nil
+      linkset["#{link}_verified_at"] = valid_link?(url, gem_name) ? Time.current : nil
     end
     linkset.save!
   end
@@ -23,7 +23,7 @@ class VerifyLinkbacksJob < ApplicationJob
         url,
         timeout: 5,
         open_timeout: 5,
-        accept: :html
+        accept: :html,
       )
       doc = Nokogiri::HTML(response.body)
       selector = url.include?("github.com") ? "[role='link']" : "[rel='rubygem']"
