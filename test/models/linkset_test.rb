@@ -1,6 +1,7 @@
 require "test_helper"
 
 class LinksetTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
   should belong_to :rubygem
 
   context "with a linkset" do
