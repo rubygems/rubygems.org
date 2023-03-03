@@ -69,7 +69,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
   end
 
-  context "not indexed" do
+  context "Linkback verification of a non-indexed gem" do
     setup do
       @linkset = create(:linkset, @links)
     end
@@ -83,7 +83,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
     end
   end
 
-  context "indexed gem" do
+  context "Linkback verification of an indexed gem" do
     setup do
       @rubygem.update!(indexed: true)
     end
