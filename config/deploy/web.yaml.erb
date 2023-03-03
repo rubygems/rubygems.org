@@ -12,13 +12,13 @@ spec:
       maxUnavailable: 0%
   selector:
     matchLabels:
-      name: puma
+      name: web
   template:
     metadata:
       annotations:
         ad.datadoghq.com/puma.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
-        name: puma
+        name: web
     spec:
       containers:
       - name: puma
