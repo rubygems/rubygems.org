@@ -45,7 +45,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
       mail: nil,
       docs: nil,
       code: "https://github.com/rubygems/mygem",
-      bugs: "http://bad-url.com",
+      bugs: "http://bad-url.com"
     }
 
     @rubygem = create(:rubygem, name: "mygem")

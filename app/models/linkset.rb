@@ -22,7 +22,7 @@ class Linkset < ApplicationRecord
   end
 
   def verified?(link)
-    !!read_attribute("#{link}_verified_at")
+    !!self["#{link}_verified_at"]
   end
 
   def verify_linkbacks

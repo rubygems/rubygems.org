@@ -23,7 +23,7 @@ class VerifyLinkbacksJob < ApplicationJob
         url,
         timeout: 5,
         open_timeout: 5,
-        accept: :html,
+        accept: :html
       )
       doc = Nokogiri::HTML(response.body)
       selector = url.include?("github.com") ? "[role='link']" : "[rel='rubygem']"
