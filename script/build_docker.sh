@@ -31,7 +31,7 @@ docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postg
   -- bin/rails db:create db:migrate
 docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
   --net host $DOCKER_TAG \
-  -- unicorn_rails -E production -c /app/config/unicorn.conf
+  -- puma --environment production --config /app/config/puma.rb
 
 sleep 5
 pong=$(curl -m 5 http://localhost:3000/internal/ping || true)

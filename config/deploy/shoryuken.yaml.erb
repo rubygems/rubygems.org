@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        ad.datadoghq.com/unicorn.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+        ad.datadoghq.com/shoryuken.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
         name: shoryuken
     spec:

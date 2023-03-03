@@ -26,6 +26,7 @@ gem "omniauth-github"
 gem "omniauth"
 gem "omniauth-rails_csrf_protection"
 gem "pg"
+gem "puma"
 gem "rack"
 gem "rack-utf8_sanitizer"
 gem "rbtrace", "~> 0.4.8"
@@ -34,7 +35,6 @@ gem "rest-client", require: "rest_client"
 gem "roadie-rails"
 gem "shoryuken", "~> 4.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
-gem "unicorn", "~> 5.8.0"
 gem "validates_formatting_of"
 gem "opensearch-dsl", "~> 0.2.0"
 gem "opensearch-ruby", "~> 1.0.0"
@@ -80,7 +80,6 @@ end
 group :development do
   gem "rails-erd"
   gem "listen"
-  gem "puma"
 end
 
 group :test do
