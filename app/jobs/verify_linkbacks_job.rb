@@ -6,8 +6,9 @@ class VerifyLinkbacksJob < ApplicationJob
   retry_on ActiveRecord::RecordNotFound, wait: :exponentially_longer, attempts: 3
 
   def perform(rubygem_id)
-    linkset = Rubygem.with_versions.find(rubygem_id).linkset
-    gem_name = linkset.rubygem.name
+    rubygem = Rubygem.with_versions.find(rubygem_id)
+    linkset = rubygem.linkset
+    gem_name = rubygem.name
 
     Linkset::LINKS.each do |link|
       url = linkset.read_attribute(link)
