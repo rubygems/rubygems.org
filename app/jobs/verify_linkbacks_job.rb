@@ -26,7 +26,7 @@ class VerifyLinkbacksJob < ApplicationJob
         accept: :html
       )
       doc = Nokogiri::HTML(response.body)
-      selector = URI(url).host.include?("github.com") ? "[role='link']" : "[rel='rubygem']"
+      selector = ["github.com"].include?(URI(url).host) ? "[role='link']" : "[rel='rubygem']"
       doc.css(selector).css("[href*='rubygems.org/gem/#{gem_name}']").present?
     end
   rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError])
