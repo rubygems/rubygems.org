@@ -8,13 +8,12 @@ class VerifyLinkbacksJob < ApplicationJob
   def perform(rubygem_id)
     rubygem = Rubygem.with_versions.find(rubygem_id)
     linkset = rubygem.linkset
-    gem_name = rubygem.name
 
-    Linkset::LINKS.each do |link|
-      url = linkset.read_attribute(link)
-      if url.present?
-        linkset["#{link}_verified_at"] = valid_link?(url, gem_name) ? Time.current : nil
-      end
+    Linkset::LINKS.map do |link|
+      url = linkset[link.to_s]
+      next if url.blank?
+
+      linkset["#{link}_verified_at"] = valid_link?(url, rubygem.name) ? Time.current : nil
     end
     linkset.save!
   end
