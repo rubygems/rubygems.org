@@ -12,8 +12,9 @@ class VerifyLinkbacksJob < ApplicationJob
 
     Linkset::LINKS.each do |link|
       url = linkset.read_attribute(link)
-      next if url.blank?
-      linkset["#{link}_verified_at"] = valid_link?(url, gem_name) ? Time.current : nil
+      if url.present?
+        linkset["#{link}_verified_at"] = valid_link?(url, gem_name) ? Time.current : nil
+      end
     end
     linkset.save!
   end
