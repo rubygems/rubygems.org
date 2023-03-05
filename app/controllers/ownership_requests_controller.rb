@@ -45,18 +45,20 @@ class OwnershipRequestsController < ApplicationController
   end
 
   def notify_request_closed
-    OwnersMailer.delay.ownership_request_closed(@ownership_request.id) unless @ownership_request.user == current_user
+    OwnersMailer.ownership_request_closed(@ownership_request.id).deliver_later unless @ownership_request.user == current_user
   end
 
   def notify_request_approved
     @rubygem.ownership_notifiable_owners.each do |notified_user|
-      OwnersMailer.delay.owner_added(notified_user.id,
+      OwnersMailer.owner_added(
+        notified_user.id,
         @ownership_request.user_id,
         current_user.id,
-        @ownership_request.rubygem_id)
+        @ownership_request.rubygem_id
+      ).deliver_later
     end
 
-    OwnersMailer.delay.ownership_request_approved(@ownership_request.id)
+    OwnersMailer.ownership_request_approved(@ownership_request.id).deliver_later
   end
 
   def status_params

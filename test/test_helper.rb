@@ -7,6 +7,11 @@ SimpleCov.start "rails" do
   add_filter "app/jobs/*_mailer.rb"
   add_filter "app/jobs/delete_user.rb"
 
+  # to be deleted after initial deploy of mailer migration to AM/AJ
+  add_filter "app/jobs/email_confirmation_mailer.rb"
+  add_filter "app/jobs/email_reset_mailer.rb"
+  add_filter "app/jobs/ownership_confirmation_mailer.rb"
+
   if ENV["CI"]
     require "simplecov-cobertura"
     formatter SimpleCov::Formatter::CoberturaFormatter

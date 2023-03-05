@@ -37,9 +37,7 @@ class OwnershipRequestsTest < SystemTest
 
     click_button "Approve"
 
-    Delayed::Worker.new.work_off
-
-    assert_emails 3
+    assert_enqueued_emails 3
     assert_includes(rubygem.owners, user)
   end
 
@@ -54,9 +52,7 @@ class OwnershipRequestsTest < SystemTest
     click_button "Close"
 
     assert_empty rubygem.ownership_requests
-    Delayed::Worker.new.work_off
-
-    assert_no_emails
+    assert_enqueued_emails 0
   end
 
   test "close ownership request by owner" do
@@ -67,11 +63,11 @@ class OwnershipRequestsTest < SystemTest
 
     visit_rubygem_adoptions_path(rubygem, @owner)
 
-    page.find_by_id("owner_close_request").click
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      page.find_by_id("owner_close_request").click
+    end
 
     assert_empty rubygem.ownership_requests
-    Delayed::Worker.new.work_off
-
     assert_emails 1
     assert_equal "Your ownership request was closed.", last_email.subject
   end

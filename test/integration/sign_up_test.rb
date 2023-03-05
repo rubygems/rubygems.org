@@ -69,7 +69,10 @@ class SignUpTest < SystemTest
     fill_in "Email", with: "email@person.com"
     fill_in "Username", with: "nick"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Sign up"
+
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      click_button "Sign up"
+    end
 
     link = last_email_link
 

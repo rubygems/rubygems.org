@@ -1,6 +1,8 @@
 require "test_helper"
 
 class ApiKeysControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   context "when not logged in" do
     context "on GET to index" do
       setup { get :index }
@@ -94,8 +96,9 @@ class ApiKeysControllerTest < ActionController::TestCase
     context "on POST to create" do
       context "with successful save" do
         setup do
-          post :create, params: { api_key: { name: "test", add_owner: true } }
-          Delayed::Worker.new.work_off
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+            post :create, params: { api_key: { name: "test", add_owner: true } }
+          end
         end
 
         should redirect_to("the key index page") { profile_api_keys_path }

@@ -1,6 +1,8 @@
 require "test_helper"
 
 class Api::V1::ApiKeysControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   should "route new paths to new controller" do
     route = { controller: "api/v1/api_keys", action: "show" }
 
@@ -102,8 +104,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "with correct OTP" do
       setup do
         @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-        get :show
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          get :show
+        end
       end
 
       should_return_api_key_successfully
@@ -208,8 +211,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       setup do
         @user = create(:user)
         authorize_with("#{@user.email}:#{@user.password}")
-        get :show, format: "text"
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          get :show, format: "text"
+        end
       end
 
       should_return_api_key_successfully
@@ -275,8 +279,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       context "oh successful save" do
         setup do
-          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
-          Delayed::Worker.new.work_off
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+            post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+          end
         end
 
         should_return_api_key_successfully

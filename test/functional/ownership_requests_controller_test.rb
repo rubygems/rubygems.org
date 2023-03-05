@@ -127,8 +127,10 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         context "on close" do
           setup do
             @requester = create(:user)
-            request = create(:ownership_request, rubygem: @rubygem, user: @requester)
-            patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "close" }
+            ownership_request = create(:ownership_request, rubygem: @rubygem, user: @requester)
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              patch :update, params: { rubygem_id: @rubygem.name, id: ownership_request.id, status: "close" }
+            end
           end
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set success notice flash" do
@@ -137,8 +139,6 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             assert_equal expected_notice, flash[:notice]
           end
           should "send email notifications" do
-            Delayed::Worker.new.work_off
-
             assert_emails 1
             assert_equal "Your ownership request was closed.", last_email.subject
             assert_equal [@requester.email], last_email.to
@@ -148,8 +148,10 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         context "on approve" do
           setup do
             @requester = create(:user)
-            request = create(:ownership_request, rubygem: @rubygem, user: @requester)
-            patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "approve" }
+            ownership_request = create(:ownership_request, rubygem: @rubygem, user: @requester)
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              patch :update, params: { rubygem_id: @rubygem.name, id: ownership_request.id, status: "approve" }
+            end
           end
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set success notice flash" do
@@ -164,8 +166,6 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             assert_predicate ownership, :confirmed?
           end
           should "send email notification" do
-            Delayed::Worker.new.work_off
-
             assert_emails 3
             request_approved_subjects = ActionMailer::Base.deliveries.map(&:subject)
 

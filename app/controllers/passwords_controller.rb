@@ -87,8 +87,7 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def deliver_email(user)
-    mail = ::ClearanceMailer.change_password(user)
-    mail.deliver_later
+    ::ClearanceMailer.change_password(user).deliver_later
   end
 
   def setup_mfa_authentication
