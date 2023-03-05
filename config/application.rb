@@ -31,7 +31,7 @@ module Gemcutter
     # Using true enables origin-checking CSRF mitigation. Our API can"t use this check.
     config.action_controller.forgery_protection_origin_check = false
 
-    config.rubygems = Application.config_for :rubygems
+    config.rubygems = Application.config_for :rubygems || raise("No rubygems config found for environment #{Rails.env.inspect}")
 
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
@@ -87,5 +87,5 @@ module Gemcutter
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
-  ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.development? || Rails.env.test?
+  ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.development? || Rails.env.test? || Rails.env.review?
 end

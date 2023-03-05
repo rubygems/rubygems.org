@@ -1,0 +1,90 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  annotations:
+    shipit.shopify.io/restart: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: db
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/postgres.logs: '[{"source":"postgres","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+      labels:
+        name: db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:11.13
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: <%= rails_env %>
+                  key: database_password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: <%= rails_env %>
+                  key: database_name
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-pv-storage
+          resources:
+            requests:
+              cpu: 200m
+              memory: 250Mi
+            limits:
+              cpu: 500m
+              memory: 1.2Gi
+          readinessProbe:
+            exec:
+              command: ["psql", "-Upostgres", "-c", "SELECT 1"]
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["psql", "-Upostgres", "-c", "SELECT 1"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+      volumes:
+        - name: postgres-pv-storage
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    name: db
+  annotations: {}
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    name: db

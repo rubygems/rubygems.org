@@ -1,4 +1,4 @@
-if Rails.env.production? || Rails.env.staging?
+if Rails.env.production? || Rails.env.staging? || Rails.env.review?
   require_relative "../../lib/lograge/formatters/datadog"
 
   Rails.application.configure do

@@ -36,22 +36,22 @@ spec:
           - name: PG_DATABASE
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: database_name
           - name: PG_HOST
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: database_host
           - name: PG_USER
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: database_user
           - name: PG_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: database_password
         securityContext:
           privileged: false

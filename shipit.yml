@@ -8,11 +8,11 @@ dependencies:
 
 deploy:
   override:
-    - krane render -f config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT --current-sha=$REVISION | krane deploy rubygems-$ENVIRONMENT rubygems --stdin -f config/deploy/$ENVIRONMENT/secrets.ejson
+    - ./config/deploy/deploy
 
 rollback:
   override:
-    - krane render -f config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT --current-sha=$REVISION | krane deploy rubygems-$ENVIRONMENT rubygems  --stdin -f config/deploy/$ENVIRONMENT/secrets.ejson
+    - ./config/deploy/deploy
 
 tasks:
   restart:

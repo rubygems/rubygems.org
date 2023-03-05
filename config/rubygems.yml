@@ -30,3 +30,11 @@ production:
   s3_endpoint: s3-us-west-2.amazonaws.com
   versions_file_location: "./config/versions.list"
   separate_admin_host: rubygems.team
+
+review:
+  protocol: https
+  host: <%= ENV["ENV"] %>.review.rubygems.org
+  s3_bucket: oregon.<%= ENV["ENV"] %>.s3.rubygems.org
+  s3_region: us-west-2
+  s3_endpoint: s3-us-west-2.amazonaws.com
+  versions_file_location: "./config/versions.list"

@@ -37,7 +37,7 @@ spec:
               <% end %>
             env:
             - name: RAILS_ENV
-              value: "<%= environment %>"
+              value: "<%= rails_env %>"
             - name: ENV
               value: "<%= environment %>"
             - name: DD_AGENT_HOST
@@ -57,39 +57,39 @@ spec:
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: secret_key_base
             - name: AWS_REGION
               value: "us-west-2"
             - name: S3_KEY
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: aws_access_key_id
             - name: S3_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: aws_secret_access_key
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: aws_access_key_id
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: aws_secret_access_key
             - name: HONEYBADGER_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: honeybadger_api_key
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: database_url
             securityContext:
               privileged: false

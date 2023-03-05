@@ -37,7 +37,7 @@ spec:
               <% end %>
             env:
             - name: RAILS_ENV
-              value: "<%= environment %>"
+              value: "<%= rails_env %>"
             - name: ENV
               value: "<%= environment %>"
             - name: DD_AGENT_HOST
@@ -57,27 +57,27 @@ spec:
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: secret_key_base
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: client_id
             - name: SLACK_HOOK
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: slack_hook
             - name: HONEYBADGER_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: honeybadger_api_key
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: <%= environment %>
+                  name: <%= rails_env %>
                   key: database_url
             volumeMounts:
             - mountPath: /app/lib/tasks/users_verify.rake

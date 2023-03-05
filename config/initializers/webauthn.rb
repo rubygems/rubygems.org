@@ -1,5 +1,5 @@
 WebAuthn.configure do |config|
-  config.origin = if Rails.env.staging? || Rails.env.production?
+  config.origin = if Rails.env.staging? || Rails.env.production? || Rails.env.review?
                     "#{Rails.application.config.rubygems.protocol}://#{Rails.application.config.rubygems.host}"
                   else
                     ENV.fetch("WEBAUTHN_ORIGIN", "http://localhost:3000")

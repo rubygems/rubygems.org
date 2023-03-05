@@ -43,7 +43,7 @@ spec:
           <% end %>
         env:
           - name: RAILS_ENV
-            value: "<%= environment %>"
+            value: "<%= rails_env %>"
           - name: ENV
             value: "<%= environment %>"
           - name: DD_AGENT_HOST
@@ -63,7 +63,7 @@ spec:
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: secret_key_base
           - name: AWS_REGION
             value: "us-west-2"
@@ -72,67 +72,67 @@ spec:
           - name: S3_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_access_key_id
           - name: S3_SECRET
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_secret_access_key
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_access_key_id
           - name: AWS_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_secret_access_key
           - name: HONEYBADGER_API_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: honeybadger_api_key
           - name: FASTLY_API_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_api_key
           - name: FASTLY_SERVICE_ID
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_service_id
           - name: FASTLY_DOMAINS
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_domains
           - name: ELASTICSEARCH_URL
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: elasticsearch_url
           - name: MEMCACHED_ENDPOINT
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: memcached_endpoint
           - name: SENDGRID_USERNAME
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_username
           - name: SENDGRID_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_password
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: database_url
         securityContext:
           privileged: false
@@ -172,7 +172,7 @@ spec:
           periodSeconds: 10
         env:
           - name: RAILS_ENV
-            value: "<%= environment %>"
+            value: "<%= rails_env %>"
           - name: ENV
             value: "<%= environment %>"
           - name: GOOD_JOB_PROBE_PORT
@@ -194,7 +194,7 @@ spec:
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: secret_key_base
           - name: AWS_REGION
             value: "us-west-2"
@@ -203,67 +203,67 @@ spec:
           - name: S3_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_access_key_id
           - name: S3_SECRET
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_secret_access_key
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_access_key_id
           - name: AWS_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_secret_access_key
           - name: HONEYBADGER_API_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: honeybadger_api_key
           - name: FASTLY_API_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_api_key
           - name: FASTLY_SERVICE_ID
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_service_id
           - name: FASTLY_DOMAINS
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_domains
           - name: ELASTICSEARCH_URL
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: elasticsearch_url
           - name: MEMCACHED_ENDPOINT
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: memcached_endpoint
           - name: SENDGRID_USERNAME
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_username
           - name: SENDGRID_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_password
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: database_url
         securityContext:
           privileged: false

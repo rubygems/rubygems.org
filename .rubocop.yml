@@ -43,6 +43,7 @@ Rails/UnknownEnv:
     - development
     - staging
     - test
+    - review
 
 Rails/UniqueValidationWithoutIndex:
   Enabled: false

@@ -23,7 +23,7 @@ spec:
       containers:
       - name: puma
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
-        args: ["puma", "--environment", "<%= environment %>", "--config", "/app/config/puma.rb"]
+        args: ["puma", "--environment", "<%= rails_env %>", "--config", "/app/config/puma.rb"]
         ports:
         - containerPort: 3000
           name: http-puma
@@ -55,7 +55,7 @@ spec:
           <% end %>
         env:
           - name: RAILS_ENV
-            value: "<%= environment %>"
+            value: "<%= rails_env %>"
           - name: ENV
             value: "<%= environment %>"
           - name: DD_AGENT_HOST
@@ -63,6 +63,8 @@ spec:
               fieldRef:
                 apiVersion: v1
                 fieldPath: status.hostIP
+          - name: WEB_CONCURRENCY
+            value: "1"
           - name: STATSD_IMPLEMENTATION
             value: "datadog"
           - name: STATSD_HOST
@@ -75,7 +77,7 @@ spec:
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: secret_key_base
           - name: RAILS_SERVE_STATIC_FILES
             value: "true"
@@ -86,94 +88,94 @@ spec:
           - name: S3_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_access_key_id
           - name: S3_SECRET
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_secret_access_key
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_access_key_id
           - name: AWS_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: aws_secret_access_key
           - name: HONEYBADGER_API_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: honeybadger_api_key
           - name: FASTLY_API_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_api_key
           - name: FASTLY_SERVICE_ID
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_service_id
           - name: FASTLY_DOMAINS
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: fastly_domains
           - name: ELASTICSEARCH_URL
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: elasticsearch_url
           - name: MEMCACHED_ENDPOINT
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: memcached_endpoint
           - name: SENDGRID_USERNAME
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_username
           - name: SENDGRID_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_password
           - name: SENDGRID_WEBHOOK_USERNAME
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_webhook_username
           - name: SENDGRID_WEBHOOK_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: sendgrid_webhook_password
           - name: GITHUB_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: github_key
           - name: GITHUB_SECRET
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: github_secret
           - name: AVO_LICENSE_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: avo_license_key
           - name: DATADOG_CSP_API_KEY
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: datadog_csp_api_key
-          <% if environment == 'staging' %>
+          <% if rails_env == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
           - name: RAILS_LOG_LEVEL
@@ -182,7 +184,7 @@ spec:
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
-                name: <%= environment %>
+                name: <%= rails_env %>
                 key: database_url
         securityContext:
           privileged: false
@@ -225,7 +227,7 @@ spec:
             mountPath: /var/log/nginx
           - name: nginxcache
             mountPath: /var/lib/nginx/cache
-          <% if environment == 'staging' %>
+          <% if rails_env == 'staging' || rails_env == 'review' %>
           - name: nginxbasicauth
             mountPath: /etc/nginxbasicauth
             readOnly: true
@@ -252,12 +254,12 @@ spec:
               - key: logging
                 path: conf.d/logging.conf
               - key: rubygems
-                path: sites-enabled/<%= environment %>.ruybgems.conf
+                path: sites-enabled/<%= rails_env %>.ruybgems.conf
         - name: nginxlog
           emptyDir: {}
         - name: nginxcache
           emptyDir: {}
-        <% if environment == 'staging' %>
+        <% if rails_env == 'staging' || rails_env == 'review' %>
         - name: nginxbasicauth
           secret:
             secretName: nginx-basic-auth

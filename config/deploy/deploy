@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require "open3"
+
+# kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.23/deploy/local-path-storage.yaml
+
+def deploy(environment:, rails_env:, revision:, context:, only: nil)
+  render = %W[krane render --bindings=environment=#{environment},rails_env=#{rails_env} --current-sha=#{revision}]
+  (only || [nil]).each do |path|
+    render << '-f' << "config/deploy/#{rails_env}#{"/#{path}" if path}"
+  end
+  deploy = %W[krane deploy rubygems-#{environment} #{context} --stdin -f config/deploy/#{rails_env}/secrets.ejson]
+  deploy << '--no-prune' if only
+
+  status_list = Open3.pipeline(
+    render,
+    deploy
+  )
+  raise "Pipeline failed" unless status_list.all?(&:success?)
+end
+
+environment, revision, review_app = ENV.values_at("ENVIRONMENT", "REVISION", "REVIEW_APP")
+rails_env = environment
+# environment = "pr0"
+# revision = "4985a916480e04e9876d3e76ccdc87cb5beabe9b"
+# review_app = true
+# context = "minikube"
+context = "rubygems"
+rails_env = "review" if review_app
+
+# TODO: include search
+deploy(environment:, context:, revision:, rails_env:, only: %w[db.yaml.erb cache.yaml.erb]) if review_app
+deploy(environment:, context:, revision:, rails_env:)

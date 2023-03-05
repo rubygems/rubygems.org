@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache
+  annotations:
+    shipit.shopify.io/restart: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cache
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/memcached.logs: '[{"source":"memcached","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+      labels:
+        name: cache
+    spec:
+      containers:
+        - name: memcached
+          image: memcached:1.4.35
+          resources:
+            limits:
+              cpu: 200m
+              memory: 2000Mi
+            requests:
+              cpu: 100m
+              memory: 1000Mi
+          ports:
+            - containerPort: 11211
+              protocol: TCP
+          args:
+            - -m 2047
+            - -I 50M
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache
+  labels:
+    name: cache
+  annotations: {}
+spec:
+  type: NodePort
+  ports:
+    - port: 11211
+  selector:
+    name: cache

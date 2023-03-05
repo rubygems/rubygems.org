@@ -25,7 +25,7 @@ if Rails.env.development?
 end
 
 Searchkick.client = OpenSearch::Client.new(**options.compact) do |f|
-  if Rails.env.staging? || Rails.env.production?
+  if Rails.env.staging? || Rails.env.production? || Rails.env.review?
     f.request :aws_sigv4,
       service: 'es',
       region: ENV['AWS_REGION'],
