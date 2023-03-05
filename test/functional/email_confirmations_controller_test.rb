@@ -344,9 +344,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
     context "user does not exist" do
       should "not deliver confirmation email" do
-        Mailer.expects(:email_confirmation).times(0)
         post :create, params: { email_confirmation: { email: "someone@else.com" } }
-        Delayed::Worker.new.work_off
+
+        assert_no_enqueued_emails
       end
     end
   end

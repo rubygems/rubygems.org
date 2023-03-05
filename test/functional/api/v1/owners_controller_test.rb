@@ -590,8 +590,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       context "when mfa for UI and API is disabled" do
         context "user is not the only confirmed owner" do
           setup do
-            delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
-            Delayed::Worker.new.work_off
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+            end
           end
 
           should "remove user as gem owner" do

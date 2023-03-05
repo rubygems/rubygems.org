@@ -114,12 +114,12 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
         @tokens << { "token" => key, "type" => "rubygems", "url" => "some_url" }
         signature = sign_body(JSON.dump(@tokens))
 
-        post revoke_api_v1_api_key_path(@rubygem),
-          params: @tokens,
-          headers: { HEADER_KEYID => "test_key_id", HEADER_SIGNATURE => Base64.encode64(signature) },
-          as: :json
-
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          post revoke_api_v1_api_key_path(@rubygem),
+            params: @tokens,
+            headers: { HEADER_KEYID => "test_key_id", HEADER_SIGNATURE => Base64.encode64(signature) },
+            as: :json
+        end
       end
 
       should "returns success and remove the token" do

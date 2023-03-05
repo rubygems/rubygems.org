@@ -27,7 +27,7 @@ namespace :mfa_policy do
 
     i = 0
     users.each do |user|
-      Mailer.delay.mfa_recommendation_announcement(user.id) if mx_exists?(user.email)
+      Mailer.mfa_recommendation_announcement(user.id).deliver_later if mx_exists?(user.email)
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total_users * 100.0, i, total_users)
     end
@@ -46,7 +46,7 @@ namespace :mfa_policy do
 
     i = 0
     users.each do |user|
-      Mailer.delay.mfa_required_soon_announcement(user.id) if mx_exists?(user.email)
+      Mailer.mfa_required_soon_announcement(user.id).deliver_later if mx_exists?(user.email)
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total_users * 100.0, i, total_users)
     end
@@ -68,7 +68,7 @@ namespace :mfa_policy do
     unsent_mailer_emails = []
     users.each do |user|
       if mx_exists?(user.email)
-        Mailer.delay.mfa_required_popular_gems_announcement(user.id)
+        Mailer.mfa_required_popular_gems_announcement(user.id).deliver_later
         mailers_sent += 1
         print format("\r%.2f%% (%d/%d) complete", mailers_sent.to_f / total_users * 100.0, mailers_sent, total_users)
       else

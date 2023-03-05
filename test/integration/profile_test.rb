@@ -62,7 +62,9 @@ class ProfileTest < SystemTest
     fill_in "Email address", with: "nick2@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
 
-    click_button "Update"
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      click_button "Update"
+    end
 
     assert page.has_selector? "input[value='nick@example.com']"
     assert page.has_selector? "#flash_notice", text: "You will receive " \

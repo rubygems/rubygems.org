@@ -35,7 +35,7 @@ class ApiKeysController < ApplicationController
     end
 
     if @api_key.save
-      Mailer.delay.api_key_created(@api_key.id)
+      Mailer.api_key_created(@api_key.id).deliver_later
 
       session[:api_key] = key
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
