@@ -2,7 +2,6 @@ class Indexer < ApplicationJob
   extend StatsD::Instrument
   include TraceTagger
 
-  self.queue_adapter = :good_job
   queue_with_priority PRIORITIES.fetch(:push)
 
   def perform
