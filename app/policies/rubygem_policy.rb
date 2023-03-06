@@ -20,7 +20,7 @@ class RubygemPolicy < ApplicationPolicy
   def act_on?
     rubygems_org_admin?
   end
-  
+
   has_association :versions
   has_association :latest_version
   has_association :ownerships
