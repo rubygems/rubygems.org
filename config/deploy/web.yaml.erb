@@ -173,6 +173,16 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: datadog_csp_api_key
+          - name: HOOK_RELAY_ACCOUNT_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_account_id
+          - name: HOOK_RELAY_HOOK_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_hook_id
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
