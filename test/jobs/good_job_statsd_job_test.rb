@@ -3,7 +3,8 @@ require "test_helper"
 class GoodJobStatsDJobTest < ActiveSupport::TestCase
   include StatsD::Instrument::Assertions
 
-  class FailureJob < ApplicationJob
+  # opt-out default retries
+  class FailureJob < ActiveJob::Base # rubocop:disable Rails/ApplicationJob
     self.queue_adapter = ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :async)
     queue_as :fail_once
     def perform
