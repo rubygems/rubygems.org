@@ -147,7 +147,7 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "include an Authorization header" do
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
-      RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
+      RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
       @hook.fire("https", "rubygems.org", @version)
     end
@@ -155,7 +155,7 @@ class WebHookTest < ActiveSupport::TestCase
     should "include an Authorization header for a user with no API key" do
       @hook.user.update(api_key: nil)
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number)
-      RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
+      RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
       @hook.fire("https", "rubygems.org", @version)
     end
@@ -164,7 +164,7 @@ class WebHookTest < ActiveSupport::TestCase
       @hook.user.update(api_key: nil)
       create(:api_key, user: @hook.user)
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_keys.first.hashed_key)
-      RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
+      RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
       @hook.fire("https", "rubygems.org", @version)
     end
