@@ -265,5 +265,15 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: database_url
+          - name: HOOK_RELAY_ACCOUNT_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_account_id
+          - name: HOOK_RELAY_HOOK_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_hook_id
         securityContext:
           privileged: false
