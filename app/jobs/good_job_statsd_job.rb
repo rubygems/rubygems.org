@@ -1,5 +1,5 @@
 class GoodJobStatsDJob < ApplicationJob
-  queue_as :default
+  queue_as "stats"
   self.queue_adapter = :good_job
 
   class Filter < GoodJob::JobsFilter

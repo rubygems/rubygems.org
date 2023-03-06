@@ -422,7 +422,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.stubs(:version).returns @rubygem.versions[0]
       @cutter.stubs(:spec).returns(@spec)
       @rubygem.stubs(:update_attributes_from_gem_specification!)
-      Indexer.any_instance.stubs(:write_gem)
+      @cutter.stubs(:write_gem)
     end
 
     context "when cutter is saved" do
@@ -496,9 +496,11 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
-      assert_difference "Delayed::Job.count", 3 do
+      assert_difference "Delayed::Job.count", 2 do
         assert_enqueued_jobs 4, only: FastlyPurgeJob do
-          @cutter.save
+          assert_enqueued_jobs 1, only: Indexer do
+            @cutter.save
+          end
         end
       end
     end
@@ -514,7 +516,7 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem.stubs(:update_attributes_from_gem_specification!)
       @cutter.stubs(:version).returns @version
       GemCachePurger.stubs(:call)
-      Indexer.any_instance.stubs(:write_gem)
+      @cutter.stubs(:write_gem)
       @cutter.save
     end
 

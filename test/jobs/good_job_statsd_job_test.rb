@@ -60,13 +60,13 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
 
     assert_statsd_calls [
       metric(name: "rails.perform_start.active_job.total_duration", type: :ms,
-             tags: { "queue" => "default", "job_class" => "GoodJobStatsDJob",
+             tags: { "queue" => "stats", "job_class" => "GoodJobStatsDJob",
                      "adapter" => "ActiveJob::QueueAdapters::GoodJobAdapter", "env" => "test" }),
       metric(name: "rails.perform_start.active_job.allocations", type: :h,
-             tags: { "queue" => "default", "job_class" => "GoodJobStatsDJob" }),
+             tags: { "queue" => "stats", "job_class" => "GoodJobStatsDJob" }),
       metric(name: "rails.perform_start.active_job.success", type: :c,
              value: 1,
-             tags: { "queue" => "default", "job_class" => "GoodJobStatsDJob" }),
+             tags: { "queue" => "stats", "job_class" => "GoodJobStatsDJob" }),
 
       # Retry job
       metric(name: "good_job.count", type: :g,
@@ -112,12 +112,12 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
                      "job_class" => "GoodJobStatsDJobTest::DiscardJob", "env" => "test" }),
 
       metric(name: "rails.perform.active_job.total_duration", type: :ms,
-             tags: { "queue" => "default", "job_class" => "GoodJobStatsDJob" }),
+             tags: { "queue" => "stats", "job_class" => "GoodJobStatsDJob" }),
       metric(name: "rails.perform.active_job.allocations", type: :h,
-             tags: { "queue" => "default", "job_class" => "GoodJobStatsDJob" }),
+             tags: { "queue" => "stats", "job_class" => "GoodJobStatsDJob" }),
       metric(name: "rails.perform.active_job.success", type: :c,
              value: 1,
-             tags: { "queue" => "default", "job_class" => "GoodJobStatsDJob" })
+             tags: { "queue" => "stats", "job_class" => "GoodJobStatsDJob" })
     ] do
       GoodJobStatsDJob.perform_now
     end
