@@ -1,6 +1,6 @@
 require "test_helper"
 
-class FastlyLogProcessorTest < ActiveSupport::TestCase
+class FastlyLogProcessorJobTest < ActiveJob::TestCase
   include SearchKickHelper
 
   setup do
@@ -18,7 +18,8 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
     Aws.config[:s3] = {
       stub_responses: { get_object: { body: @sample_log } }
     }
-    @job = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
+    @processor = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
+    @job = FastlyLogProcessorJob.new(bucket: "test-bucket", key: "fastly-fake.log")
     create(:gem_download)
     import_and_refresh
   end
@@ -30,18 +31,18 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
 
   context "#download_counts" do
     should "process file from s3" do
-      assert_equal @sample_log_counts, @job.download_counts(@log_ticket)
+      assert_equal @sample_log_counts, @processor.download_counts(@log_ticket)
     end
 
     should "process file from local fs" do
       @log_ticket.update(backend: "local", directory: "test/sample_logs")
-      assert_equal @sample_log_counts, @job.download_counts(@log_ticket)
+      assert_equal @sample_log_counts, @processor.download_counts(@log_ticket)
     end
 
     should "fail if dont find the file" do
       @log_ticket.update(backend: "local", directory: "foobar")
       assert_raises FastlyLogProcessor::LogFileNotFoundError do
-        @job.download_counts(@log_ticket)
+        @processor.download_counts(@log_ticket)
       end
     end
   end
@@ -64,13 +65,13 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       should "not double count" do
         json = Rubygem.find_by_name("json")
         assert_equal 0, GemDownload.count_for_rubygem(json.id)
-        3.times { @job.perform }
+        3.times { @job.perform_now }
         assert_equal 7, es_downloads(json.id)
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
       end
 
       should "update download counts" do
-        @job.perform
+        @job.perform_now
         @sample_log_counts
           .each do |name, expected_count|
           version = Version.find_by(full_name: name)
@@ -91,26 +92,25 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)
         @log_ticket.update(status: "processed")
-        @job.perform
+        @job.perform_now
 
         assert_equal 0, es_downloads(json.id)
         assert_equal 0, json.downloads
       end
 
       should "not mark as processed if anything fails" do
-        @job.stubs(:download_counts).raises("woops")
-        assert_raises(RuntimeError) { @job.perform }
+        @processor.class.any_instance.stubs(:download_counts).raises("woops")
+        assert_raises(RuntimeError) { @job.perform_now }
 
         refute_equal "processed", @log_ticket.reload.status
         assert_equal "failed", @log_ticket.reload.status
       end
 
       should "not re-process if it failed" do
-        @job.stubs(:download_counts).raises("woops")
-        assert_raises(RuntimeError) { @job.perform }
+        @processor.class.any_instance.stubs(:download_counts).raises("woops")
+        assert_raises(RuntimeError) { @job.perform_now }
 
-        @job = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
-        @job.perform
+        @job.perform_now
         json = Rubygem.find_by_name("json")
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)
@@ -119,19 +119,19 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       should "only process the right file" do
         ticket = LogTicket.create!(backend: "s3", directory: "test-bucket", key: "fastly-fake.2.log", status: "pending")
 
-        @job.perform
+        @job.perform_now
         assert_equal "pending", ticket.reload.status
         assert_equal "processed", @log_ticket.reload.status
       end
 
       should "update the processed count" do
-        @job.perform
+        @job.perform_now
         assert_equal 10, @log_ticket.reload.processed_count
       end
 
       should "update the total gem count" do
         assert_equal 0, GemDownload.total_count
-        @job.perform
+        @job.perform_now
         assert_equal 9, GemDownload.total_count
       end
     end
