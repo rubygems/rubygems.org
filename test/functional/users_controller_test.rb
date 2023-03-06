@@ -1,6 +1,8 @@
 require "test_helper"
 
 class UsersControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   context "on GET to new" do
     setup do
       get :new
@@ -41,8 +43,9 @@ class UsersControllerTest < ActionController::TestCase
 
     context "confirmation mail" do
       setup do
-        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
+        end
       end
 
       should "set email_confirmation_token" do

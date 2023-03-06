@@ -83,8 +83,8 @@ class OwnersControllerTest < ActionController::TestCase
             assert_equal expected_notice, flash[:notice]
           end
           should "send confirmation email" do
-            ActionMailer::Base.deliveries.clear
-            Delayed::Worker.new.work_off
+            assert_enqueued_emails 1
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
             assert_emails 1
             assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
             assert_equal [@new_owner.email], last_email.to
@@ -295,7 +295,8 @@ class OwnersControllerTest < ActionController::TestCase
         end
         should "resend confirmation email" do
           ActionMailer::Base.deliveries.clear
-          Delayed::Worker.new.work_off
+          assert_enqueued_emails 1
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
           assert_emails 1
           assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
           assert_equal [@new_owner.email], last_email.to

@@ -1,4 +1,6 @@
 class ProfilesController < ApplicationController
+  include EmailResettable
+
   before_action :redirect_to_signin, unless: :signed_in?, except: :show
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, except: :show
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, except: :show
@@ -20,7 +22,7 @@ class ProfilesController < ApplicationController
     @user = current_user.clone
     if @user.update(params_user)
       if @user.unconfirmed_email
-        Delayed::Job.enqueue EmailResetMailer.new(current_user.id)
+        email_reset(current_user)
         flash[:notice] = t(".confirmation_mail_sent")
       else
         flash[:notice] = t(".updated")

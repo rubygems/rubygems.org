@@ -1,6 +1,7 @@
 require "test_helper"
 
 class OwnerTest < SystemTest
+  include ActiveJob::TestHelper
   include RubygemsHelper
 
   setup do
@@ -27,7 +28,7 @@ class OwnerTest < SystemTest
     assert_cell(@other_user, "Added By", @user.handle)
     assert_cell(@other_user, "Confirmed At", "")
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
     assert_emails 1
     assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
@@ -41,7 +42,7 @@ class OwnerTest < SystemTest
     assert_cell(@other_user, "Confirmed", "Pending")
     assert_cell(@other_user, "Added By", @user.handle)
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
     assert_emails 1
     assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
@@ -79,8 +80,8 @@ class OwnerTest < SystemTest
 
     refute page.has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
 
-    ActionMailer::Base.deliveries.clear
     Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_emails 1
     assert_contains last_email.subject, "You were removed as an owner from #{@rubygem.name} gem"
@@ -97,7 +98,7 @@ class OwnerTest < SystemTest
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
     assert page.has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
     assert_no_emails
   end
 
@@ -142,6 +143,7 @@ class OwnerTest < SystemTest
     assert page.has_selector? "#flash_notice", text: "You were added as an owner to #{@rubygem.name} gem"
 
     Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
     assert_emails 2
 
     owner_added_email_subjects = ActionMailer::Base.deliveries.map(&:subject)

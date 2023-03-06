@@ -1,6 +1,9 @@
 require "test_helper"
 
 class EmailConfirmationsControllerTest < ActionController::TestCase
+  include ActionMailer::TestHelper
+  include ActiveJob::TestHelper
+
   context "on GET to update" do
     setup { @user = create(:user) }
 
@@ -234,8 +237,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     context "user exists" do
       setup do
         create(:user, email: "foo@bar.com")
-        post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          post :create, params: { email_confirmation: { email: "foo@bar.com" } }
+        end
       end
 
       should respond_with :redirect
@@ -298,9 +302,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "send confirmation mail" do
-        Mailer.expects(:email_reset).times(1)
-        post :unconfirmed
-        Delayed::Worker.new.work_off
+        assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+          post :unconfirmed
+        end
       end
 
       should "set success flash and redirect to edit path" do
