@@ -1,0 +1,9 @@
+<%= t("mailer.web_hook_disabled.subtitle", handle: @web_hook.user.handle) %>
+
+<%= t("mailer.web_hook_disabled.body_text", url: @web_hook.url, last_success: @web_hook.last_success, failures_since_last_success: @web_hook.failures_since_last_success, delete_command: @delete_command, disabled_reason: @web_hook.disabled_reason) %>
+
+<% if @web_hook.rubygem.present? %>
+<%= t("mailer.web_hook_disabled.gem_text", gem: @web_hook.rubygem.name) %>
+<% else %>
+<%= t("mailer.web_hook_disabled.global_text") %>
+<% end %>

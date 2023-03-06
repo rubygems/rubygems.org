@@ -203,7 +203,11 @@ class PushTest < ActionDispatch::IntegrationTest
       },
       as: :json
     assert_response :success
+    perform_enqueued_jobs only: HookRelayReportJob
     assert_predicate hook.reload.failure_count, :zero?
+    assert_equal 1, hook.successes_since_last_failure
+    assert_equal 0, hook.failures_since_last_success
+    assert_equal "2023-03-01T09:50:31+00:00".to_datetime, hook.last_success
 
     post hook_relay_report_api_v1_web_hooks_path,
       params: {
@@ -228,11 +232,16 @@ class PushTest < ActionDispatch::IntegrationTest
         last_attempted_at: "2023-03-01T09:50:31+00:00",
         stream: "hook:act:id:webhook_id-#{hook.id}",
         failure_reason: "Exhausted attempts",
-        completed_at: "2023-03-01T09:50:31+00:00"
+        completed_at: "2023-03-01T09:51:31+00:00"
       },
       as: :json
     assert_response :success
+    perform_enqueued_jobs only: HookRelayReportJob
     assert_equal 1, hook.reload.failure_count
+    assert_equal 0, hook.successes_since_last_failure
+    assert_equal 1, hook.failures_since_last_success
+    assert_equal "2023-03-01T09:50:31+00:00".to_datetime, hook.last_success
+    assert_equal "2023-03-01T09:51:31+00:00".to_datetime, hook.last_failure
   end
 
   def push_gem(path)
