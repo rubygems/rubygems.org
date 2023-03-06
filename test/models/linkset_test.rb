@@ -25,7 +25,7 @@ class LinksetTest < ActiveSupport::TestCase
     end
 
     should "tell whether a link is verified" do
-      @linkset.send(:home_verified_at=, Date.current)
+      @linkset.home_verified_at = Date.current
       empty_keys = Linkset::LINKS.reject { |k| k == "home" }
 
       assert @linkset.verified?("home")
