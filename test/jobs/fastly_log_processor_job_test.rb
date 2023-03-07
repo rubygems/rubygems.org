@@ -100,7 +100,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
       should "not mark as processed if anything fails" do
         @processor.class.any_instance.stubs(:download_counts).raises("woops")
-        assert_raises(RuntimeError) { @job.perform_now }
+        assert_kind_of RuntimeError, @job.perform_now
 
         refute_equal "processed", @log_ticket.reload.status
         assert_equal "failed", @log_ticket.reload.status
@@ -108,7 +108,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
       should "not re-process if it failed" do
         @processor.class.any_instance.stubs(:download_counts).raises("woops")
-        assert_raises(RuntimeError) { @job.perform_now }
+        assert_kind_of RuntimeError, @job.perform_now
 
         @job.perform_now
         json = Rubygem.find_by_name("json")
