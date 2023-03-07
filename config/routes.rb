@@ -264,4 +264,9 @@ Rails.application.routes.draw do
 
     get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN
   end
+
+  ################################################################################
+  # Development routes
+
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end
