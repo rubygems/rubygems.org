@@ -123,7 +123,7 @@ class Pusher
     version.rubygem.push_notifiable_owners.each do |notified_user|
       Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
     end
-    Indexer.perform_later
+    Indexer.batch_perform_later
     rubygem.delay.reindex
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?

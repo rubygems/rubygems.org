@@ -43,12 +43,12 @@ class Deletion < ApplicationRecord
 
   def remove_from_index
     @version.update!(indexed: false, yanked_at: Time.now.utc)
-    Indexer.perform_later
+    Indexer.batch_perform_later
   end
 
   def restore_to_index
     version.update!(indexed: true, yanked_at: nil, yanked_info_checksum: nil)
-    Indexer.perform_later
+    Indexer.batch_perform_later
   end
 
   def remove_from_storage

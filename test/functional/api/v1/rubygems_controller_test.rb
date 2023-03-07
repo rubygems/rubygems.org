@@ -315,7 +315,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_difference "Delayed::Job.count", 2 do
             assert_enqueued_jobs 4, only: FastlyPurgeJob do
               assert_enqueued_jobs 1, only: NotifyWebHookJob do
-                assert_enqueued_jobs 1, only: Indexer do
+                assert_enqueued_jobs 3, only: Indexer do
                   post :create, body: gem_file("test-1.0.0.gem").read
                 end
               end
