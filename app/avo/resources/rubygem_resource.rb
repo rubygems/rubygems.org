@@ -21,7 +21,7 @@ class RubygemResource < Avo::BaseResource
   field :indexed, as: :boolean
   field :slug, as: :text, hide_on: :index
   field :id, as: :id, hide_on: :index
-  field :protected_days, as: :text
+  field :protected_days, as: :number, hide_on: :index
 
   tabs style: :pills do
     field :versions, as: :has_many
