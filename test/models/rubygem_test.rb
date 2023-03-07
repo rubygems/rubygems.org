@@ -806,6 +806,17 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context "#release_reserved_namespace!" do
+    setup do
+      @rubygem = create(:rubygem)
+      @rubygem.release_reserved_namespace!
+    end
+
+    should "update set `updated_at` to 101 days ago" do
+      assert_equal (Time.zone.today - 101.days), @rubygem.updated_at.to_date
+    end
+  end
+
   context "with downloaded gems and versions created at specific times" do
     setup do
       @rubygem1 = create(:rubygem, downloads: 10)

@@ -8,6 +8,6 @@ ENV["RAILS_ENV"] ||= "production"
 require_relative "../config/environment"
 
 rubygem = Rubygem.find_by_name!(rubygem_name)
-rubygem.update_attribute(:updated_at, 101.days.ago)
+rubygem.release_reserved_namespace!
 
 puts "#{rubygem_name} was released."

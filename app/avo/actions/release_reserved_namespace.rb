@@ -12,7 +12,7 @@ class ReleaseReservedNamespace < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(rubygem)
-      rubygem.update_attribute(:updated_at, 101.days.ago)
+      rubygem.release_reserved_namespace!
     end
   end
 end
