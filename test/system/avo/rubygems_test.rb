@@ -30,7 +30,6 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
   end
 
   test "release reserved namespace" do
-    Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
 
