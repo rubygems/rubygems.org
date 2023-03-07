@@ -4,7 +4,6 @@ class NotifyWebHookJob < ApplicationJob
 
   queue_as :default
   queue_with_priority PRIORITIES.fetch(:web_hook)
-  self.queue_adapter = :good_job
 
   TIMEOUT_SEC = 5
 
