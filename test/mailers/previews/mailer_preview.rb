@@ -108,4 +108,21 @@ class MailerPreview < ActionMailer::Preview
     ownership_request = OwnershipRequest.last
     OwnersMailer.ownership_request_approved(ownership_request.id)
   end
+
+  def webhook_deleted_global
+    user = User.last
+    url = "https://example.com/webhook"
+    failure_count = 9999
+
+    WebHooksMailer.webhook_deleted(user.id, nil, url, failure_count)
+  end
+
+  def webhook_deleted_single_gem
+    gem = Rubygem.order(updated_at: :desc).last
+    user = gem.owners.last
+    url = "https://example.com/webhook"
+    failure_count = 9999
+
+    WebHooksMailer.webhook_deleted(user.id, gem.id, url, failure_count)
+  end
 end

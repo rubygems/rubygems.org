@@ -9,10 +9,10 @@ ja:
     href="%{install_docs}">インストール</a>できます。 <a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なGem</a>を発見できます。
     あなた自身が<a href="%{contributing_docs}">コントリビューターとなって</a>サイトをよりよくしてください。
   footer_sponsors_html: RubyGems.orgは広範囲のRubyコミュニティとのパートナーシップを通じて作られました。 <a href="https://www.fastly.com/">Fastly</a>がCDNとネットワーク帯域の費用をサポートしています。
-    <a href="https://www.rubycentral.org/">Ruby Central</a>がインフラ費用を負担し、 <a href="https://rubytogether.org/?source=rubygems">Ruby
-    Together</a>が開発や運用の費用を捻出しています。 <a href="%{sponsors_page}">スポンサーと彼らがどのように機能しているか確認する</a>。
+    <a href="https://www.rubycentral.org/">Ruby Central</a>がインフラや開発や運用の費用を捻出しています。
+    <a href="%{sponsors_page}">スポンサーと彼らがどのように機能しているか確認する</a>。
   footer_join_rt_html: RubyGems.orgをすべての人がスムーズに使えるよう続けていくために、開発者の時間を賄うためのあなたの援助が必要です。
-    <a href="https://rubytogether.org/join?source=rubygems">Ruby Togetherに参加する</a>。
+    <a href="https://rubycentral.org/#/portal/signup">Ruby Centralに参加する</a>。
   form_disable_with: お待ちください...
   invalid_page:
   locale_name: 日本語
@@ -249,6 +249,16 @@ ja:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title: 新しくリリースされたGem
@@ -435,11 +445,7 @@ ja:
     request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: コピー完了!
-      copy_to_clipboard: クリップボードにコピー
       downloads_for_this_version: このバージョンのみ
-      install: インストール
       required_ruby_version: 必要Rubyバージョン
       required_rubygems_version: 必要RubyGemsバージョン
       requires_mfa:
@@ -483,6 +489,10 @@ ja:
       downloads: ダウンロード
       title: Gems
     show:
+      bundler_header: Gemfile
+      copied: コピー完了!
+      copy_to_clipboard: クリップボードにコピー
+      install: インストール
       licenses_header:
         one: ライセンス
         other: ライセンス

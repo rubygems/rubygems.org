@@ -1,0 +1,14 @@
+<%= render Avo::PanelComponent.new(title: title_link, classes: %w[w-full]) do |c| %>
+  <% c.body do %>
+    <% next unless authorized? %>
+
+    <div class="divide-y divide-dashed">
+      <% each_field do |type, component| %>
+        <%= tag.div class: change_type_row_classes(type) do %>
+          <span class="px-1 w-4"><%= change_type_icon type %></span>
+          <%= render component %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

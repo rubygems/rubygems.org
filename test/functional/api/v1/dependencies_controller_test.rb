@@ -1,6 +1,10 @@
 require "test_helper"
 
 class Api::V1::DependenciesControllerTest < ActionController::TestCase
+  setup do
+    travel_to Time.utc(2023, 2, 20)
+  end
+
   ## JSON ENDPOINTS:
   # NO GEMS:
   context "On GET to index --> with empty gems param --> JSON" do
@@ -210,6 +214,51 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
 
     should "return an error body" do
       assert_equal "Too many gems! (use --full-index instead)", response.body
+    end
+  end
+
+  ## BROWNOUT / DEPRECATION:
+  context "On GET to index -> during brownout range" do
+    setup do
+      travel_to Time.utc(2023, 3, 29, 0, 5)
+    end
+
+    context "with empty gems param --> JSON" do
+      setup do
+        get :index, params: { gems: "" }, format: "json"
+      end
+
+      should "return 404" do
+        assert_response :not_found
+      end
+
+      should "return body" do
+        result = {
+          "error" => "The dependency API is going away. See " \
+                     "https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html " \
+                     "for more information",
+          "code" => 404
+        }
+
+        assert_equal result, JSON.load(response.body)
+      end
+    end
+
+    context "with gems --> Marshal" do
+      setup do
+        get :index, params: { gems: "testgem" }, format: "marshal"
+      end
+
+      should "return 200" do
+        assert_response :not_found
+      end
+
+      should "return error body" do
+        assert_equal "The dependency API is going away. See " \
+                     "https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html " \
+                     "for more information",
+                     response.body
+      end
     end
   end
 end

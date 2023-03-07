@@ -8,8 +8,12 @@ gem "aws-sdk-sqs"
 gem "bootsnap"
 gem "clearance"
 gem "dalli"
+gem "ddtrace", require: "ddtrace/auto_instrument"
+gem "dogstatsd-ruby"
+gem "google-protobuf"
 gem "delayed_job"
 gem "delayed_job_active_record"
+gem "good_job"
 gem "gravtastic"
 gem "high_voltage"
 gem "honeybadger"
@@ -17,12 +21,12 @@ gem "http_accept_language"
 gem "jquery-rails"
 gem "kaminari"
 gem "mail"
-gem "newrelic_rpm"
 gem "octokit"
 gem "omniauth-github"
 gem "omniauth"
 gem "omniauth-rails_csrf_protection"
 gem "pg"
+gem "puma"
 gem "rack"
 gem "rack-utf8_sanitizer"
 gem "rbtrace", "~> 0.4.8"
@@ -31,7 +35,6 @@ gem "rest-client", require: "rest_client"
 gem "roadie-rails"
 gem "shoryuken", "~> 4.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
-gem "unicorn", "~> 5.8.0"
 gem "validates_formatting_of"
 gem "opensearch-dsl", "~> 0.2.0"
 gem "opensearch-ruby", "~> 1.0.0"
@@ -65,7 +68,6 @@ group :development, :test do
   gem "m", "~> 1.5", require: false
   gem "pry-byebug"
   gem "toxiproxy", "~> 2.0.0"
-  gem "webrick"
   gem "factory_bot_rails"
 
   gem "brakeman", require: false
@@ -78,6 +80,8 @@ end
 group :development do
   gem "rails-erd"
   gem "listen"
+  gem "letter_opener"
+  gem "letter_opener_web"
 end
 
 group :test do

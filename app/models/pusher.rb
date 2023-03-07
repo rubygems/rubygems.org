@@ -1,19 +1,22 @@
 require "digest/sha2"
 
 class Pusher
+  include TraceTagger
+
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
   def initialize(user, body, remote_ip = "", scoped_rubygem = nil)
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
-    @indexer = Indexer.new
     @remote_ip = remote_ip
     @scoped_rubygem = scoped_rubygem
   end
 
   def process
-    pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
+    trace("gemcutter.pusher.process", tags: { "gemcutter.user.id" => user.id }) do
+      pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
+    end
   end
 
   def authorize
@@ -42,14 +45,14 @@ class Pusher
     # Restructured so that if we fail to write the gem (ie, s3 is down)
     # can clean things up well.
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
-    @indexer.write_gem @body, @spec
+    write_gem @body, @spec
   rescue ArgumentError => e
     @version.destroy
-    Honeybadger.notify(e)
+    Rails.error.report(e, handled: true)
     notify("There was a problem saving your gem. #{e}", 400)
   rescue StandardError => e
     @version.destroy
-    Honeybadger.notify(e)
+    Rails.error.report(e, handled: true)
     notify("There was a problem saving your gem. Please try again.", 500)
   else
     after_write
@@ -72,6 +75,7 @@ class Pusher
 
   def find
     name = spec.name.to_s
+    set_tag "gemcutter.rubygem.name", name
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
@@ -93,12 +97,13 @@ class Pusher
     sha256 = Digest::SHA2.base64digest(body.string)
 
     @version = @rubygem.versions.new number: spec.version.to_s,
-                                     canonical_number: spec.version.canonical_segments.join("."),
                                      platform: spec.original_platform.to_s,
                                      size: size,
                                      sha256: sha256,
                                      pusher: user,
                                      cert_chain: spec.cert_chain
+
+    set_tags "gemcutter.rubygem.version" => @version.number, "gemcutter.rubygem.platform" => @version.platform
 
     true
   end
@@ -118,7 +123,7 @@ class Pusher
     version.rubygem.push_notifiable_owners.each do |notified_user|
       Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
     end
-    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
+    Indexer.perform_later
     rubygem.delay.reindex
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?
@@ -190,5 +195,24 @@ class Pusher
 
   def version_mfa_required?
     ActiveRecord::Type::Boolean.new.cast(spec.metadata["rubygems_mfa_required"])
+  end
+
+  def write_gem(body, spec)
+    original_name = spec.original_name
+
+    gem_path = "gems/#{original_name}.gem"
+    gem_contents = body.string
+
+    spec.abbreviate
+    spec.sanitize
+    spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
+    spec_contents = Gem.deflate(Marshal.dump(spec))
+
+    # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
+    RubygemFs.instance.store(gem_path, gem_contents)
+    RubygemFs.instance.store(spec_path, spec_contents)
+
+    Fastly.purge(path: gem_path)
+    Fastly.purge(path: spec_path)
   end
 end

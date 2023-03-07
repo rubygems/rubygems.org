@@ -91,6 +91,7 @@ RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
 RUN mkdir -p /app
 WORKDIR /app
 
+RUN mkdir -p tmp/pids
 
 # Copy built application from previous stage
 COPY --link --from=build /app/ /app/

@@ -1,0 +1,8 @@
+<%= field_wrapper **field_wrapper_args do %>
+  <%= render Avo::Fields::Common::GravatarViewerComponent.new(
+    md5: @field.md5,
+    default: @field.default,
+    size: 144,
+  )
+  %>
+<% end %>

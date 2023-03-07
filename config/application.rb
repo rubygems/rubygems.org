@@ -56,7 +56,7 @@ module Gemcutter
     config.eager_load_paths << Rails.root.join("lib")
     config.toxic_domains_filepath = Rails.root.join("vendor", "toxic_domains_whole.txt")
 
-    config.active_job.queue_adapter = :delayed_job
+    config.active_job.queue_adapter = :good_job
   end
 
   def self.config
@@ -87,4 +87,5 @@ module Gemcutter
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
+  ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.development? || Rails.env.test?
 end

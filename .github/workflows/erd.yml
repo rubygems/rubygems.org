@@ -2,6 +2,7 @@ name: ERD
 on:
   pull_request:
     paths:
+      - ".github/workflows/erd.yml"
       - "db/schema.rb"
       - "doc/erd.svg"
       - "doc/erd.dot"
@@ -24,7 +25,7 @@ jobs:
       - name: Install and start database service
         run: |
           docker-compose up -d db
-      - uses: ruby/setup-ruby@f60ef1e8084a2e64569f928c3f1cfac6c7e12ad7 # v1.137.2
+      - uses: ruby/setup-ruby@31a7f6d628878b80bc63375a93ae079ec50a1601 # v1.143.0
         with:
           bundler-cache: true
       - name: Install Graphviz
@@ -41,7 +42,7 @@ jobs:
         # `sort`: sorts line since Graphviz instruction order is non-deterministic
         # diff to check the source controlled-file against CI-generated file
         # Inspired by: https://github.com/voormedia/rails-erd/issues/281#issuecomment-1048721398
-        run: diff <(tr -d "[:blank:]" < doc/erd-ci.dot | sort) <(tr -d "[:blank:]" < doc/erd.dot | sort)
+        run: diff --unified <(tr -d "[:blank:]" < doc/erd-ci.dot | sort) <(tr -d "[:blank:]" < doc/erd.dot | sort)
       - name: Print error
         if: ${{ failure() }}
         run: |

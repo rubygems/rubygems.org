@@ -1,0 +1,19 @@
+<%= field_wrapper **field_wrapper_args, full_width: true do %>
+  <div data-controller="code-field" style="--height: <%= @field.height %>">
+    <%= text_area_tag @field.id, pretty_json,
+      class: helpers.input_classes('w-full'),
+      placeholder: @field.placeholder,
+      disabled: true,
+      data: {
+        'code-field-target': 'element',
+        view: view,
+        language: :javascript,
+        theme: @field.theme,
+        'tab-size': @field.tab_size,
+        'read-only': true,
+        'indent-with-tabs': @field.indent_with_tabs,
+        'line-wrapping': @field.line_wrapping,
+      }
+    %>
+  </div>
+<% end %>

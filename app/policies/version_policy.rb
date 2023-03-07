@@ -1,11 +1,10 @@
 class VersionPolicy < ApplicationPolicy
   class Scope < Scope
-    # NOTE: Be explicit about which records you allow access to!
     def resolve
       if rubygems_org_admin?
         scope.all
       else
-        super
+        scope.indexed
       end
     end
   end

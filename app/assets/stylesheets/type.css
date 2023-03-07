@@ -46,7 +46,7 @@ label.t-hidden {
   text-transform: uppercase;
   color: #e9573f; }
   .t-list__heading:not(:first-child) {
-    margin-top: 25px; }
+    margin-top: 30px; }
 
 .t-list__items, .t-bulleted-items, .t-bulleted-item {
   margin-top: 18px; }

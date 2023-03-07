@@ -17,4 +17,6 @@ class Admin::GitHubUserPolicy < ApplicationPolicy
   def avo_show?
     rubygems_org_admin?
   end
+
+  has_association :audits
 end
