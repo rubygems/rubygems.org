@@ -3,6 +3,9 @@ SimpleCov.start "rails" do
   add_filter "lib/tasks"
   add_filter "lib/lograge"
 
+  # Will be deleted after all the delayed jobs have run
+  add_filter "app/jobs/*_mailer.rb"
+
   if ENV["CI"]
     require "simplecov-cobertura"
     formatter SimpleCov::Formatter::CoberturaFormatter
