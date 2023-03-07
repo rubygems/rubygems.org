@@ -1,6 +1,8 @@
 require "test_helper"
 
 class SeedsTest < ActiveSupport::TestCase
+  make_my_diffs_pretty!
+
   def all_records
     ApplicationRecord.descendants.reject(&:abstract_class?).map do |record_class|
       [record_class.name, record_class.all.map(&:attributes)]

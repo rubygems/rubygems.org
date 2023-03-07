@@ -18,6 +18,12 @@ user = User.create_with(
   email_confirmed: true
 ).find_or_create_by!(email: "gem-user@example.com")
 
+requester = User.create_with(
+  handle: "gem-requester",
+  password: password,
+  email_confirmed: true
+).find_or_create_by!(email: "gem-requester@example.com")
+
 rubygem0 = Rubygem.find_or_create_by!(
   name: "rubygem0"
 ) do |rubygem|
@@ -30,6 +36,23 @@ rubygem1 = Rubygem.find_or_create_by!(
   rubygem.ownerships.new(user: author, authorizer: author).confirm!
   rubygem.ownerships.new(user: maintainer, authorizer: author).confirm!
 end
+
+rubygem_requestable = Rubygem.find_or_create_by!(
+  name: "rubygem_requestable"
+) do |rubygem|
+  rubygem.ownerships.new(user: author, authorizer: author).confirm!
+end
+
+rubygem_requestable.ownership_calls.create_with(
+  note: "closed ownership call note!",
+  status: :closed
+).find_or_create_by!(user: author)
+rubygem_requestable.ownership_calls.create_with(
+  note: "open ownership call note!"
+).find_or_create_by!(user: author)
+rubygem_requestable.ownership_requests.create_with(
+  note: "open ownership request"
+).find_or_create_by!(ownership_call: rubygem_requestable.ownership_call, user: requester)
 
 Version.create_with(
   indexed: true,
@@ -48,9 +71,16 @@ Version.create_with(
   pusher: maintainer,
   dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))]
 ).find_or_create_by!(rubygem: rubygem1, number: "1.1.0.pre.2", platform: "ruby")
+Version.create_with(
+  indexed: false,
+  pusher: author,
+  yanked_at: Time.utc(2020, 3, 3)
+).find_or_create_by!(rubygem: rubygem_requestable, number: "1.0.0", platform: "ruby")
 
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
+
+author.api_keys.find_or_create_by!(hashed_key: "securehashedkey", name: "api key", push_rubygem: true)
 
 Admin::GitHubUser.create_with(
   is_admin: true,
@@ -128,4 +158,5 @@ puts <<~MESSAGE # rubocop:disable Rails/Output
     - email: #{author.email}, password: #{password} -> gem author owning few example gems
     - email: #{maintainer.email}, password: #{password} -> gem maintainer having push access to one author's example gem
     - email: #{user.email}, password: #{password} -> user with no gems
+    - email: #{requester.email}, password: #{password} -> user with an ownership request
 MESSAGE

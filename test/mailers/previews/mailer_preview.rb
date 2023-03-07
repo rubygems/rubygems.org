@@ -65,7 +65,7 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def ownership_confirmation
-    OwnersMailer.ownership_confirmation(Ownership.last.id)
+    OwnersMailer.ownership_confirmation(Ownership.last)
   end
 
   def owner_removed
