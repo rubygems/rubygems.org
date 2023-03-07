@@ -4,11 +4,30 @@ class Indexer < ApplicationJob
 
   queue_with_priority PRIORITIES.fetch(:push)
 
-  def perform
-    log "Updating the index"
+  def self.batch_perform_later
+    GoodJob::Batch.enqueue(on_finish: OnFinish) do
+      Indexer.perform_later(resource: "specs.4.8.gz")
+      Indexer.perform_later(resource: "latest_specs.4.8.gz")
+      Indexer.perform_later(resource: "prerelease_specs.4.8.gz")
+    end
+  end
+
+  class OnFinish < ApplicationJob
+    queue_with_priority PRIORITIES.fetch(:push)
+    def perform(batch, params)
+      purge_cdn
+    end
+
+    def purge_cdn
+      Rails.logger.info "Purged index urls from fastly" if Fastly.purge_key("full-index")
+    end
+  end
+
+  before_perform { @resource = arguments.dig(0, :resource) }
+
+  def perform(...)
     update_index
-    purge_cdn
-    log "Finished updating the index"
+    OnFinish.perform_now if @resource.blank?
   end
   statsd_count_success :perform, "Indexer.perform"
   statsd_measure :perform, "Indexer.perform"
@@ -29,22 +48,18 @@ class Indexer < ApplicationJob
   end
 
   def update_index
-    trace("gemcutter.indexer.index", resource: "specs.4.8.gz") do
-      upload("specs.4.8.gz", specs_index)
-      log "Uploaded all specs index"
-    end
-    trace("gemcutter.indexer.index", resource: "latest_specs.4.8.gz") do
-      upload("latest_specs.4.8.gz", latest_index)
-      log "Uploaded latest specs index"
-    end
-    trace("gemcutter.indexer.index", resource: "prerelease_specs.4.8.gz") do
-      upload("prerelease_specs.4.8.gz", prerelease_index)
-      log "Uploaded prerelease specs index"
-    end
+    generate_and_upload("specs.4.8.gz") { Version.rows_for_index }
+    generate_and_upload("latest_specs.4.8.gz") { Version.rows_for_latest_index }
+    generate_and_upload("prerelease_specs.4.8.gz") { Version.rows_for_prerelease_index }
   end
 
-  def purge_cdn
-    log "Purged index urls from fastly" if Fastly.purge_key("full-index")
+  def generate_and_upload(resource, &)
+    return if @resource.present? && @resource != resource
+
+    trace("gemcutter.indexer.index", resource:) do
+      upload(resource, minimize_specs(yield))
+      Rails.logger.info "Uploaded #{resource}"
+    end
   end
 
   def minimize_specs(data)
@@ -59,21 +74,5 @@ class Indexer < ApplicationJob
     end
 
     data
-  end
-
-  def specs_index
-    minimize_specs Version.rows_for_index
-  end
-
-  def latest_index
-    minimize_specs Version.rows_for_latest_index
-  end
-
-  def prerelease_index
-    minimize_specs Version.rows_for_prerelease_index
-  end
-
-  def log(message)
-    Rails.logger.info "[GEMCUTTER:#{Time.zone.now}] #{message}"
   end
 end

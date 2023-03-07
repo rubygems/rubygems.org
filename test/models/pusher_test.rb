@@ -498,7 +498,7 @@ class PusherTest < ActiveSupport::TestCase
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
       assert_difference "Delayed::Job.count", 2 do
         assert_enqueued_jobs 4, only: FastlyPurgeJob do
-          assert_enqueued_jobs 1, only: Indexer do
+          assert_enqueued_jobs 3, only: Indexer do
             @cutter.save
           end
         end

@@ -6,7 +6,7 @@ namespace :gemcutter do
     task update: :environment do
       require "benchmark"
       Benchmark.bm do |b|
-        b.report("update index") { Indexer.new.perform }
+        b.report("update index") { Indexer.perform_now }
       end
     end
   end
