@@ -9,7 +9,7 @@ class DelayedJobResource < Avo::BaseResource
   field :priority, as: :number, sortable: true
   field :attempts, as: :number, sortable: true
   field :handler, as: :code, language: :yaml
-  field :last_error, as: :textarea
+  field :last_error, as: :code
 
   field :max_attempts, as: :number, sortable: true
   field :max_run_time, as: :number, sortable: true

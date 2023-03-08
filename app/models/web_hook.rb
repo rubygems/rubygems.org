@@ -1,5 +1,8 @@
 class WebHook < ApplicationRecord
   GLOBAL_PATTERN = "*".freeze
+  TOO_MANY_FAILURES_DISABLED_REASON = "too many failures since the last success".freeze
+  FAILURE_DISABLE_THRESHOLD = 25
+  FAILURE_DISABLE_DURATION = 1.month
 
   belongs_to :user
   belongs_to :rubygem, optional: true
@@ -10,13 +13,11 @@ class WebHook < ApplicationRecord
   validates :url, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, presence: true
   validate :unique_hook, on: :create
 
-  def self.global
-    where(rubygem_id: nil)
-  end
+  scope :global, -> { where(rubygem_id: nil) }
 
-  def self.specific
-    where.not(rubygem_id: nil)
-  end
+  scope :specific, -> { where.not(rubygem_id: nil) }
+
+  scope :enabled, -> { where(disabled_at: nil) }
 
   def fire(protocol, host_with_port, version, delayed: true)
     job = NotifyWebHookJob.new(webhook: self, protocol:, host_with_port:, version:)
@@ -34,6 +35,10 @@ class WebHook < ApplicationRecord
 
   def global?
     rubygem_id.blank?
+  end
+
+  def enabled?
+    disabled_at.blank?
   end
 
   def success_message
@@ -85,6 +90,42 @@ class WebHook < ApplicationRecord
     coder.map = payload
   end
 
+  def success!(completed_at:)
+    transaction do
+      if happened_after?(completed_at, last_failure)
+        increment :successes_since_last_failure
+        self.failures_since_last_success = 0
+      end
+      self.last_success = completed_at if happened_after?(completed_at, last_success)
+      save!
+    end
+  end
+
+  def failure!(completed_at:)
+    transaction do
+      increment :failure_count
+      if happened_after?(completed_at, last_success)
+        increment :failures_since_last_success
+        self.successes_since_last_failure = 0
+      end
+      self.last_failure = completed_at if happened_after?(completed_at, last_failure)
+      save!
+    end
+
+    return unless failures_since_last_success >= FAILURE_DISABLE_THRESHOLD && ((last_success.presence || created_at) < FAILURE_DISABLE_DURATION.ago)
+    disable!(TOO_MANY_FAILURES_DISABLED_REASON)
+  end
+
+  def disable!(disabled_reason)
+    transaction do
+      next if disabled_at.present?
+      update!(disabled_reason:)
+      touch(:disabled_at)
+
+      WebHooksMailer.webhook_disabled(self).deliver_later
+    end
+  end
+
   private
 
   def unique_hook
@@ -103,5 +144,11 @@ class WebHook < ApplicationRecord
     else
       errors.add(:base, "A user is required for this hook")
     end
+  end
+
+  def happened_after?(event, reference)
+    return true if reference.nil?
+
+    event.after?(reference)
   end
 end

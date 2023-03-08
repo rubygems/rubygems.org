@@ -1,6 +1,8 @@
 require "test_helper"
 
 class WebHookTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   should belong_to :user
   should belong_to(:rubygem).optional(true)
 
@@ -149,7 +151,9 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
       RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
     end
 
     should "include an Authorization header for a user with no API key" do
@@ -157,7 +161,9 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number)
       RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
     end
 
     should "include an Authorization header for a user with many API keys" do
@@ -166,11 +172,15 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_keys.first.hashed_key)
       RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
     end
 
     should "not increment failure count for hook" do
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
 
       assert_predicate @hook.failure_count, :zero?
     end
@@ -196,7 +206,9 @@ class WebHookTest < ActiveSupport::TestCase
        Net::ProtocolError].each_with_index do |exception, index|
         RestClient.stubs(:post).raises(exception)
 
-        @hook.fire("https", "rubygems.org", @version)
+        perform_enqueued_jobs only: NotifyWebHookJob do
+          @hook.fire("https", "rubygems.org", @version)
+        end
 
         assert_equal index + 1, @hook.reload.failure_count
         assert_predicate @hook, :global?
@@ -215,6 +227,129 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "nest properly" do
       assert_equal [@webhook.payload], YAML.safe_load([@webhook].to_yaml)
+    end
+  end
+
+  context "#success!" do
+    setup do
+      @web_hook = create(:web_hook)
+    end
+
+    should "increment the successes_since_last_failure" do
+      assert_difference -> { @web_hook.reload.successes_since_last_failure } do
+        @web_hook.success!(completed_at: DateTime.now)
+      end
+    end
+
+    should "reset failures_since_last_success" do
+      @web_hook.increment! :failures_since_last_success
+      @web_hook.success!(completed_at: DateTime.now)
+
+      assert_equal 0, @web_hook.failures_since_last_success
+    end
+
+    should "set last_success" do
+      completed_at = 1.minute.ago
+      @web_hook.success!(completed_at:)
+
+      assert_equal completed_at, @web_hook.last_success
+    end
+
+    should "not change last_failure" do
+      @web_hook.update!(last_failure: 2.minutes.ago)
+      assert_no_changes -> { @web_hook.last_failure } do
+        completed_at = 1.minute.ago
+        @web_hook.success!(completed_at:)
+      end
+    end
+
+    should "not change failure_count" do
+      @web_hook.increment! :failure_count
+      assert_no_changes -> { @web_hook.failure_count } do
+        completed_at = 1.minute.ago
+        @web_hook.success!(completed_at:)
+      end
+    end
+  end
+
+  context "#failure!" do
+    setup do
+      @web_hook = create(:web_hook)
+    end
+
+    should "increment the failure_count" do
+      assert_difference -> { @web_hook.reload.failures_since_last_success } do
+        @web_hook.failure!(completed_at: DateTime.now)
+      end
+    end
+
+    should "increment the failures_since_last_success" do
+      assert_difference -> { @web_hook.reload.failures_since_last_success } do
+        @web_hook.failure!(completed_at: DateTime.now)
+      end
+    end
+
+    should "reset successes_since_last_failure" do
+      @web_hook.increment! :successes_since_last_failure
+      @web_hook.failure!(completed_at: DateTime.now)
+
+      assert_equal 0, @web_hook.successes_since_last_failure
+    end
+
+    should "set last_failure" do
+      completed_at = 1.minute.ago
+      @web_hook.failure!(completed_at:)
+
+      assert_equal completed_at, @web_hook.last_failure
+    end
+
+    should "not change last_success" do
+      @web_hook.update!(last_success: 2.minutes.ago)
+      assert_no_changes -> { @web_hook.last_success } do
+        completed_at = 1.minute.ago
+        @web_hook.failure!(completed_at:)
+      end
+    end
+
+    should "disable when too many failures since last success" do
+      @web_hook.update!(
+        failures_since_last_success: WebHook::FAILURE_DISABLE_THRESHOLD - 1,
+        last_success: (WebHook::FAILURE_DISABLE_DURATION + 1.minute).ago
+      )
+      @web_hook.failure!(completed_at: DateTime.now)
+
+      refute_predicate @web_hook, :enabled?
+    end
+
+    should "disable when too many failures since creation with no success" do
+      @web_hook.update!(
+        failures_since_last_success: WebHook::FAILURE_DISABLE_THRESHOLD - 1,
+        last_success: nil,
+        created_at: (WebHook::FAILURE_DISABLE_DURATION + 1.minute).ago
+      )
+      @web_hook.failure!(completed_at: DateTime.now)
+
+      refute_predicate @web_hook, :enabled?
+    end
+
+    should "not disable when too many failures but recent success" do
+      @web_hook.update!(
+        failures_since_last_success: WebHook::FAILURE_DISABLE_THRESHOLD + 100,
+        last_success: 1.minute.ago
+      )
+      @web_hook.failure!(completed_at: DateTime.now)
+
+      assert_predicate @web_hook, :enabled?
+    end
+
+    should "not disable when too many failures but recent creation" do
+      @web_hook.update!(
+        failures_since_last_success: WebHook::FAILURE_DISABLE_THRESHOLD + 100,
+        created_at: 1.minute.ago
+      )
+      @web_hook.failure!(completed_at: DateTime.now)
+
+      assert_predicate @web_hook, :enabled?
     end
   end
 end

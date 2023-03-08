@@ -5,11 +5,7 @@ class Api::V1::HookRelayController < Api::BaseController
   rescue_from ActiveSupport::SecureCompareRotator::InvalidMatch, with: :render_not_found
 
   def report
-    Rails.logger.info({ hook_relay_report: @hook_relay_report_params }.to_json)
-
-    stream = @hook_relay_report_params.require(:stream).slice(/:webhook_id-(\d+)\z/, 1)&.to_i
-    hook = WebHook.find(stream)
-    hook.increment! :failure_count if @hook_relay_report_params.require(:status) == "failure"
+    HookRelayReportJob.perform_later(@hook_relay_report_params)
 
     respond_to do |format|
       format.json { render json: {} }

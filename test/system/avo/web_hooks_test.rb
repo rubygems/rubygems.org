@@ -66,10 +66,16 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
               "url" => [web_hook.url, nil],
               "failure_count" => [0, nil],
               "created_at" => [web_hook.created_at.as_json, nil],
-              "updated_at" => [web_hook.updated_at.as_json, nil]
+              "updated_at" => [web_hook.updated_at.as_json, nil],
+              "successes_since_last_failure" => [0, nil],
+              "failures_since_last_success" => [0, nil]
             },
             "unchanged" => {
-              "rubygem_id" => nil
+              "rubygem_id" => nil,
+              "disabled_reason" => nil,
+              "disabled_at" => nil,
+              "last_success" => nil,
+              "last_failure" => nil
             }
           }
         }.merge(audit.audited_changes["records"].select { |k, _| k =~ %r{gid://gemcutter/Delayed::Backend::ActiveRecord::Job/\d+} }),

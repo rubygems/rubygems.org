@@ -18,4 +18,15 @@ class WebHooksMailer < ApplicationMailer
            format.text
          end
   end
+
+  def webhook_disabled(web_hook)
+    @web_hook = web_hook
+    @delete_command = "gem install gemcutter && gem webhook#{" #{web_hook.rubygem.name}" unless web_hook.global?} --remove '#{web_hook.url}'"
+
+    mail to: web_hook.user.email,
+         subject: t("mailer.web_hook_disabled.subject") do |format|
+           format.html
+           format.text
+         end
+  end
 end

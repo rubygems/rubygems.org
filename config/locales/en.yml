@@ -4,16 +4,19 @@ en:
   failure_when_forbidden: Please double check the URL or try submitting it again.
   feed_latest: RubyGems.org | Latest Gems
   feed_subscribed: RubyGems.org | Subscribed Gems
-  footer_about_html: RubyGems.org is the Ruby community&rsquo;s gem hosting service.
+  footer_about_html:
+    RubyGems.org is the Ruby community&rsquo;s gem hosting service.
     Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>.
     Use <a href="%{api_docs}">the API</a> to find out more about <a href="%{gem_list}">available gems</a>.
     <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
-  footer_sponsors_html: RubyGems.org is made possible through a partnership with the greater Ruby community.
+  footer_sponsors_html:
+    RubyGems.org is made possible through a partnership with the greater Ruby community.
     <a href="https://www.fastly.com/">Fastly</a> provides bandwidth and CDN support,
     <a href="https://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, and
     funds ongoing development and ops work.
     <a href="%{sponsors_page}">Learn more about our sponsors and how they work together</a>.
-  footer_join_rt_html: We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
+  footer_join_rt_html:
+    We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
     <a href="https://rubycentral.org/#/portal/signup">Join Ruby Central today</a>.
   form_disable_with: Please wait...
   invalid_page: Page number is out of range. Redirected to default page.
@@ -206,7 +209,7 @@ en:
       subject: You changed your RubyGems.org email notification settings
       title: EMAIL NOTIFICATIONS
       subtitle: Hi %{handle}
-      'on': 'ON'
+      "on": "ON"
       off_html: <b>OFF</b>
     gem_pushed:
       subject: Gem %{gem} pushed to RubyGems.org
@@ -225,7 +228,7 @@ en:
       subject: Please confirm the ownership of %{gem} gem on RubyGems.org
       title: OWNERSHIP CONFIRMATION
       subtitle: Hi %{handle}!
-      body_text:  You were added as an owner to %{gem} gem by %{authorizer}. Please visit link below to confirm your ownership.
+      body_text: You were added as an owner to %{gem} gem by %{authorizer}. Please visit link below to confirm your ownership.
       body_html: You were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
       link_expiration_explanation_html: Please note that this link is valid for only %{expiry_hours}. You can resend confirmation mail from the  <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem page after sign in.
     owner_added:
@@ -261,6 +264,22 @@ en:
       global_html: This webhook was previously called when <em>any</em> gem was pushed.
       gem_text: This webhook was previously called when %{gem} was pushed.
       gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
+    web_hook_disabled:
+      title: WEBHOOK DISABLED
+      subject: Your RubyGems.org webhook was disabled
+      subtitle: Hi %{handle}!
+      body_text: |
+        Your webhook that POSTed to %{url} has been disabled due to %{disabled_reason}.
+        It last succeeded at %{last_success} and has failed %{failures_since_last_success} times since then.
+        You may delete this webhook by running `%{delete_command}`.
+      body_html: |
+        <p>Your webhook that <code>POST</code>ed to <a href="%{url}"><code>%{url}</code></a> has been disabled due to %{disabled_reason}.</p>
+        <p>It last succeeded at <code>%{last_success}</code> and has failed %{failures_since_last_success} times since then.</p>
+        <p>You may delete this webhook by running <code>%{delete_command}</code>.</p>
+      global_text: This webhook was previously called when any gem was pushed.
+      global_html: This webhook was previously called when <em>any</em> gem was pushed.
+      gem_text: This webhook was previously called when %{gem} was pushed.
+      gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
   news:
     show:
       title: New Releases — All Gems
@@ -272,12 +291,12 @@ en:
     about:
       founding_html: The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community.
       support_html: Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on. Our infrastructure is currently hosted on %{aws}.
-      technical_html: 'Some insights into the technical aspects of the site: It''s 100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3}, served by %{fastly}, and the time between publishing a new gem and having it ready for installation is usually just a few seconds. For more info, %{source_code}, which is %{license} over at GitHub.'
+      technical_html: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3}, served by %{fastly}, and the time between publishing a new gem and having it ready for installation is usually just a few seconds. For more info, %{source_code}, which is %{license} over at GitHub."
       title: About
       purpose:
         better_api: Provide a better API for dealing with gems
         enable_community: Enable the community to improve and enhance the site
-        header: 'Welcome to %{site}, the Ruby community''s gem hosting service. The purpose of this project is three-fold:'
+        header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
         transparent_pages: Create more transparent and accessible project pages
     data:
       title: RubyGems.org Data Dumps
@@ -338,11 +357,12 @@ en:
     update:
       success: You have successfully updated your email notification settings.
     show:
-      info: To aid detection of unauthorized gem or ownership changes, we email you each time a new version of a
+      info:
+        To aid detection of unauthorized gem or ownership changes, we email you each time a new version of a
         gem you own is pushed, yanked or a new owner was added. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
-      'on': 'On'
-      'off': 'Off'
+      "on": "On"
+      "off": "Off"
       recommended: recommended
       title: Email notifications
       update: Update
@@ -392,7 +412,7 @@ en:
       otp_code: OTP code or recovery code
       api_access:
         confirm_reset: Are you sure? This cannot be undone.
-        credentials_html: 'If you want to use %{gem_commands_link} from the command line, you''ll need a %{gem_credentials_file} file, which you can generate using the following command:'
+        credentials_html: "If you want to use %{gem_commands_link} from the command line, you'll need a %{gem_credentials_file} file, which you can generate using the following command:"
         key_is_html: Your API key is %{key}.
         link_text: gem commands
         reset: Reset my API key
@@ -405,7 +425,8 @@ en:
         otp: Authentication app
         disabled_html: You have not yet enabled OTP based multi-factor authentication. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
         go_settings: Register a new device
-        enabled_html: You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your MFA level or disable it.
+        enabled_html:
+          You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your MFA level or disable it.
           Refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on these levels.
         update: Update
         level:
