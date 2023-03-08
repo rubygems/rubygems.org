@@ -129,14 +129,13 @@
         });
       }).then(function (response) {
         response.text().then(function (text) {
-          console.log()
           if (text == "success") {
             window.location.href = `${location.origin}/webauthn_verification/status?result=success`
           } else {
             window.location.href = `${location.origin}/webauthn_verification/status?result=failed`
           }
-        }).catch(function (error) {
-          setError(submit, responseError, error);
+        }).catch(function (responseError) {
+          setError(submit, sessionError, responseError);
         });
       }).catch(function (error) {
         window.location.href = `${location.origin}/webauthn_verification/status?result=failed`
