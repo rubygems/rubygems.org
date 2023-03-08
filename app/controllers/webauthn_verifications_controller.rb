@@ -33,7 +33,7 @@ class WebauthnVerificationsController < ApplicationController
     @verification.generate_otp
     @verification.expire_path_token
 
-    redirect_to  URI.parse("http://localhost:#{port}\?code=#{@verification.otp}").to_s
+    redirect_to(URI.parse("http://localhost:#{port}\?code=#{@verification.otp}").to_s, allow_other_host: true)
   rescue WebAuthn::Error => e
     render json: { message: e.message }, status: :unauthorized
   rescue ActionController::ParameterMissing
