@@ -1,6 +1,8 @@
 require "test_helper"
 
 class PushTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper
+
   setup do
     Dir.chdir(Dir.mktmpdir)
     @key = "12345"
@@ -140,6 +142,106 @@ class PushTest < ActionDispatch::IntegrationTest
     push_gem "sandworm-2.0.0.gem"
     assert_response :forbidden
     assert_match(/You have added cert_chain in gemspec but signature was empty/, response.body)
+  end
+
+  setup do
+    @act = ENV["HOOK_RELAY_ACCOUNT_ID"]
+    @id = ENV["HOOK_RELAY_HOOK_ID"]
+    ENV["HOOK_RELAY_ACCOUNT_ID"] = "act"
+    ENV["HOOK_RELAY_HOOK_ID"] = "id"
+  end
+
+  teardown do
+    ENV["HOOK_RELAY_ACCOUNT_ID"] = @act
+    ENV["HOOK_RELAY_HOOK_ID"] = @id
+  end
+
+  test "publishing a gem with webhook subscribers" do
+    hook = create(:global_web_hook)
+
+    build_gem "sandworm", "2.0.0"
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :success
+
+    RestClient::Request.expects(:execute).with(has_entries(
+                                                 method: :post,
+                                                 url: "https://api.hookrelay.dev/hooks/act/id/webhook_id-#{hook.id}",
+                                                 headers: has_entries(
+                                                   "Content-Type" => "application/json",
+                                                   "HR_TARGET_URL" => hook.url,
+                                                   "HR_MAX_ATTEMPTS" => "3"
+                                                 )
+                                               )).returns({ id: :id123 }.to_json)
+    perform_enqueued_jobs only: NotifyWebHookJob
+
+    assert_predicate hook.reload.failure_count, :zero?
+
+    post hook_relay_report_api_v1_web_hooks_path,
+      params: {
+        attempts: 3,
+        account_id: "act",
+        hook_id: "id",
+        id: "01GTE93BNWPD0VF0V4QCJ7NDSF",
+        created_at: "2023-03-01T09:47:18Z",
+        request: {
+          body: "{}",
+            headers: {
+              Authorization: "51bf53d06ac382585b83e6f3241c950710ee53368e948ac309b7869c974338e9",
+                "User-Agent": "rest-client/2.1.0 (darwin22 arm64) ruby/3.2.1p31",
+                Accept: "*/*",
+                "Content-Type": "application/json"
+            },
+            target_url: "https://example.com/rubygem0"
+        },
+        report_url: "https://rubygems.org/api/v1/web_hooks/hook_relay_report",
+        max_attempts: 3,
+        status: "success",
+        last_attempted_at: "2023-03-01T09:50:31+00:00",
+        stream: "hook:act:id:webhook_id-#{hook.id}",
+        completed_at: "2023-03-01T09:50:31+00:00"
+      },
+      as: :json
+    assert_response :success
+    perform_enqueued_jobs only: HookRelayReportJob
+    assert_predicate hook.reload.failure_count, :zero?
+    assert_equal 1, hook.successes_since_last_failure
+    assert_equal 0, hook.failures_since_last_success
+    assert_equal "2023-03-01T09:50:31+00:00".to_datetime, hook.last_success
+
+    post hook_relay_report_api_v1_web_hooks_path,
+      params: {
+        attempts: 3,
+        account_id: "act",
+        hook_id: "id",
+        id: "01GTE93BNWPD0VF0V4QCJ7NDSF",
+        created_at: "2023-03-01T09:47:18Z",
+        request: {
+          body: "{}",
+            headers: {
+              Authorization: "51bf53d06ac382585b83e6f3241c950710ee53368e948ac309b7869c974338e9",
+                "User-Agent": "rest-client/2.1.0 (darwin22 arm64) ruby/3.2.1p31",
+                Accept: "*/*",
+                "Content-Type": "application/json"
+            },
+            target_url: "https://example.com/rubygem0"
+        },
+        report_url: "https://rubygems.org/api/v1/web_hooks/hook_relay_report",
+        max_attempts: 3,
+        status: "failure",
+        last_attempted_at: "2023-03-01T09:50:31+00:00",
+        stream: "hook:act:id:webhook_id-#{hook.id}",
+        failure_reason: "Exhausted attempts",
+        completed_at: "2023-03-01T09:51:31+00:00"
+      },
+      as: :json
+    assert_response :success
+    perform_enqueued_jobs only: HookRelayReportJob
+    assert_equal 1, hook.reload.failure_count
+    assert_equal 0, hook.successes_since_last_failure
+    assert_equal 1, hook.failures_since_last_success
+    assert_equal "2023-03-01T09:50:31+00:00".to_datetime, hook.last_success
+    assert_equal "2023-03-01T09:51:31+00:00".to_datetime, hook.last_failure
   end
 
   def push_gem(path)

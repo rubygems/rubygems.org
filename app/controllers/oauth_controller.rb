@@ -24,7 +24,7 @@ class OAuthController < ApplicationController
   def development_log_in_as
     user = Admin::GitHubUser.find(params[:admin_github_user_id])
     log_in_as(user:)
-    redirect_to "/admin"
+    redirect_back_or_to "/admin"
   end
 
   private

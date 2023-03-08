@@ -65,7 +65,7 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def ownership_confirmation
-    OwnersMailer.ownership_confirmation(Ownership.last.id)
+    OwnersMailer.ownership_confirmation(Ownership.last)
   end
 
   def owner_removed
@@ -124,5 +124,38 @@ class MailerPreview < ActionMailer::Preview
     failure_count = 9999
 
     WebHooksMailer.webhook_deleted(user.id, gem.id, url, failure_count)
+  end
+
+  def webhook_disabled_global
+    web_hook = WebHook.new(
+      user: User.last,
+      last_failure: 2.minutes.ago,
+      last_success: 1.week.ago,
+      successes_since_last_failure: 0,
+      failures_since_last_success: 10,
+      failure_count: 200,
+      url: "https://example.com/webhook",
+      disabled_reason: WebHook::TOO_MANY_FAILURES_DISABLED_REASON
+    )
+
+    WebHooksMailer.webhook_disabled(web_hook)
+  end
+
+  def webhook_disabled_single_gem
+    rubygem = Rubygem.order(updated_at: :desc).last
+    user = rubygem.owners.last
+    web_hook = WebHook.new(
+      rubygem:,
+      user:,
+      last_failure: 2.minutes.ago,
+      last_success: 1.week.ago,
+      successes_since_last_failure: 0,
+      failures_since_last_success: 10,
+      failure_count: 200,
+      url: "https://example.com/webhook",
+      disabled_reason: WebHook::TOO_MANY_FAILURES_DISABLED_REASON
+    )
+
+    WebHooksMailer.webhook_disabled(web_hook)
   end
 end

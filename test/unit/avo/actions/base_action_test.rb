@@ -90,8 +90,9 @@ class BaseActionTest < ActiveSupport::TestCase
       "audited_changes" => {
         "records" => {
           webhook.to_global_id.uri.to_s => {
-            "changes" => { "id" => [webhook.id, nil], "failure_count" => [0, nil], "user_id" => [webhook.user.id, nil], "url" => [webhook.url, nil] },
-            "unchanged" => { "rubygem_id" => nil }
+            "changes" => { "id" => [webhook.id, nil], "failure_count" => [0, nil], "user_id" => [webhook.user.id, nil], "url" => [webhook.url, nil],
+                           "successes_since_last_failure" => [0, nil], "failures_since_last_success" => [0, nil] },
+            "unchanged" => { "rubygem_id" => nil, "disabled_reason" => nil, "disabled_at" => nil, "last_success" => nil, "last_failure" => nil }
           }
         },
         "fields" => {},
@@ -173,7 +174,17 @@ class BaseActionTest < ActiveSupport::TestCase
         "records" => {
           webhook.to_global_id.uri.to_s => {
             "changes" => { "user_id" => [nil, user.id], "url" => [nil, "https://example.com/path"] },
-            "unchanged" => { "id" => webhook.id, "failure_count" => 0, "rubygem_id" => nil }
+            "unchanged" => {
+              "id" => webhook.id,
+              "failure_count" => 0,
+              "rubygem_id" => nil,
+         "disabled_reason" => nil,
+         "disabled_at" => nil,
+         "last_success" => nil,
+         "last_failure" => nil,
+         "successes_since_last_failure" => 0,
+         "failures_since_last_success" => 0
+            }
           }
         },
         "fields" => {},

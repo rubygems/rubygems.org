@@ -1,6 +1,5 @@
 class GoodJobStatsDJob < ApplicationJob
   queue_as "stats"
-  self.queue_adapter = :good_job
 
   class Filter < GoodJob::JobsFilter
     def filtered_query(filter_params = params)

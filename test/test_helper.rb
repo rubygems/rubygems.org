@@ -3,6 +3,8 @@ SimpleCov.start "rails" do
   add_filter "lib/tasks"
   add_filter "lib/lograge"
 
+  add_filter "app/jobs/delete_user.rb"
+
   if ENV["CI"]
     require "simplecov-cobertura"
     formatter SimpleCov::Formatter::CoberturaFormatter
