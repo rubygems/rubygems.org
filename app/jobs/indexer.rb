@@ -11,7 +11,8 @@ class Indexer < ApplicationJob
     #
     # Because the indexer job only uses current state at time of perform,
     # it makes no sense to enqueue more than one at a time
-    enqueue_limit: 1
+    enqueue_limit: 1,
+    concurrency_key: name
   )
 
   def perform
