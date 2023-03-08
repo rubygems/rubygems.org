@@ -62,7 +62,7 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Max: 350 # TODO: Lower to 100
   Exclude:
-    - test/**/*.rb
+    - test/**/*
 
 Metrics/CyclomaticComplexity:
   Max: 9 # TODO: Lower to 6
