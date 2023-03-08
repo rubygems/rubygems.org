@@ -10,7 +10,7 @@ class FastlyLogProcessorJob < ApplicationJob
     # Limited to avoid overloading the gem_download table with
     # Too many concurrent conflicting updates
     perform_limit: 5,
-    concurrency_key: name
+    key: name
   )
 
   def perform(bucket:, key:)
