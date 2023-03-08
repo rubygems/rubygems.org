@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: unicorn
+  name: web
   annotations:
     shipit.shopify.io/restart: 'true'
 spec:
@@ -12,21 +12,21 @@ spec:
       maxUnavailable: 0%
   selector:
     matchLabels:
-      name: unicorn
+      name: web
   template:
     metadata:
       annotations:
-        ad.datadoghq.com/unicorn.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+        ad.datadoghq.com/puma.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
-        name: unicorn
+        name: web
     spec:
       containers:
-      - name: unicorn
+      - name: puma
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
-        args: ["unicorn_rails", "-E", "<%= environment %>", "-c", "/app/config/unicorn.conf"]
+        args: ["puma", "--environment", "<%= environment %>", "--config", "/app/config/puma.rb"]
         ports:
         - containerPort: 3000
-          name: http-unicorn
+          name: http-puma
         readinessProbe:
           httpGet:
             path: /internal/ping
@@ -58,6 +58,11 @@ spec:
             value: "<%= environment %>"
           - name: ENV
             value: "<%= environment %>"
+          - name: DD_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
           - name: STATSD_IMPLEMENTATION
             value: "datadog"
           - name: STATSD_HOST
@@ -98,11 +103,6 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: aws_secret_access_key
-          - name: NEW_RELIC_LICENSE_KEY
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: new_relic_license_key
           - name: HONEYBADGER_API_KEY
             valueFrom:
               secretKeyRef:
@@ -168,6 +168,21 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: avo_license_key
+          - name: DATADOG_CSP_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: datadog_csp_api_key
+          - name: HOOK_RELAY_ACCOUNT_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_account_id
+          - name: HOOK_RELAY_HOOK_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_hook_id
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"

@@ -1,5 +1,19 @@
-class Indexer
+class Indexer < ApplicationJob
   extend StatsD::Instrument
+  include TraceTagger
+
+  queue_with_priority PRIORITIES.fetch(:push)
+
+  include GoodJob::ActiveJobExtensions::Concurrency
+  good_job_control_concurrency_with(
+    # Maximum number of jobs with the concurrency key to be
+    # concurrently enqueued (excludes performing jobs)
+    #
+    # Because the indexer job only uses current state at time of perform,
+    # it makes no sense to enqueue more than one at a time
+    enqueue_limit: 1,
+    key: name
+  )
 
   def perform
     log "Updating the index"
@@ -9,25 +23,6 @@ class Indexer
   end
   statsd_count_success :perform, "Indexer.perform"
   statsd_measure :perform, "Indexer.perform"
-
-  def write_gem(body, spec)
-    original_name = spec.original_name
-
-    gem_path = "gems/#{original_name}.gem"
-    gem_contents = body.string
-
-    spec.abbreviate
-    spec.sanitize
-    spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
-    spec_contents = Gem.deflate(Marshal.dump(spec))
-
-    # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
-    RubygemFs.instance.store(gem_path, gem_contents)
-    RubygemFs.instance.store(spec_path, spec_contents)
-
-    Fastly.purge(path: gem_path)
-    Fastly.purge(path: spec_path)
-  end
 
   private
 
@@ -41,16 +36,22 @@ class Indexer
   end
 
   def upload(key, value)
-    RubygemFs.instance.store(key, stringify(value), "surrogate-key" => "full-index")
+    RubygemFs.instance.store(key, stringify(value), metadata: { "surrogate-key" => "full-index" })
   end
 
   def update_index
-    upload("specs.4.8.gz", specs_index)
-    log "Uploaded all specs index"
-    upload("latest_specs.4.8.gz", latest_index)
-    log "Uploaded latest specs index"
-    upload("prerelease_specs.4.8.gz", prerelease_index)
-    log "Uploaded prerelease specs index"
+    trace("gemcutter.indexer.index", resource: "specs.4.8.gz") do
+      upload("specs.4.8.gz", specs_index)
+      log "Uploaded all specs index"
+    end
+    trace("gemcutter.indexer.index", resource: "latest_specs.4.8.gz") do
+      upload("latest_specs.4.8.gz", latest_index)
+      log "Uploaded latest specs index"
+    end
+    trace("gemcutter.indexer.index", resource: "prerelease_specs.4.8.gz") do
+      upload("prerelease_specs.4.8.gz", prerelease_index)
+      log "Uploaded prerelease specs index"
+    end
   end
 
   def purge_cdn

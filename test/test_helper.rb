@@ -3,6 +3,8 @@ SimpleCov.start "rails" do
   add_filter "lib/tasks"
   add_filter "lib/lograge"
 
+  add_filter "app/jobs/delete_user.rb"
+
   if ENV["CI"]
     require "simplecov-cobertura"
     formatter SimpleCov::Formatter::CoberturaFormatter
@@ -29,7 +31,7 @@ require "helpers/webauthn_helpers"
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
-Capybara.server = :webrick
+Capybara.server = :puma
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true

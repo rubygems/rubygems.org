@@ -19,6 +19,11 @@ spec:
         env:
           - name: ENV
             value: "<%= environment %>"
+          - name: DD_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
           - name: STATSD_IMPLEMENTATION
             value: "datadog"
           - name: STATSD_HOST

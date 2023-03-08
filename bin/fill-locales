@@ -3,7 +3,7 @@
 require "yaml"
 
 EN_PATH = "config/locales/en.yml"
-OTHER_PATHS = Dir["config/locales/*"] - [EN_PATH]
+OTHER_PATHS = Dir["config/locales/*.yml"] - [EN_PATH] - Dir["config/locales/avo.*.yml"]
 
 EN = YAML.safe_load_file(EN_PATH)
 

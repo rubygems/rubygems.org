@@ -1,6 +1,8 @@
 require "test_helper"
 
 class PusherTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user, email: "user@example.com")
     @gem = gem_file
@@ -280,7 +282,7 @@ class PusherTest < ActiveSupport::TestCase
     setup do
       spec = mock
       spec.expects(:name).returns "some name"
-      spec.expects(:version).times(2).returns Gem::Version.new("1.3.3.7")
+      spec.expects(:version).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
@@ -420,7 +422,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.stubs(:version).returns @rubygem.versions[0]
       @cutter.stubs(:spec).returns(@spec)
       @rubygem.stubs(:update_attributes_from_gem_specification!)
-      Indexer.any_instance.stubs(:write_gem)
+      @cutter.stubs(:write_gem)
     end
 
     context "when cutter is saved" do
@@ -494,8 +496,12 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
-      assert_difference "Delayed::Job.count", 7 do
-        @cutter.save
+      assert_difference "Delayed::Job.count", 2 do
+        assert_enqueued_jobs 4, only: FastlyPurgeJob do
+          assert_enqueued_jobs 1, only: Indexer do
+            @cutter.save
+          end
+        end
       end
     end
   end
@@ -510,7 +516,7 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem.stubs(:update_attributes_from_gem_specification!)
       @cutter.stubs(:version).returns @version
       GemCachePurger.stubs(:call)
-      Indexer.any_instance.stubs(:write_gem)
+      @cutter.stubs(:write_gem)
       @cutter.save
     end
 

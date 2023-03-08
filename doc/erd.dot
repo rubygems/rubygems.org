@@ -35,7 +35,7 @@ m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpaddin
   <tr><td align="left" width="130" port="add_owner">add_owner <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="hashed_key">hashed_key <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="index_rubygems">index_rubygems <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
-  <tr><td align="left" width="130" port="last_accessed_at">last_accessed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="last_accessed_at">last_accessed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="mfa">mfa <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="push_rubygem">push_rubygem <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
@@ -67,14 +67,14 @@ m_Audit [label = <<table border="0" align="center" cellspacing="0.5" cellpadding
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="attempts">attempts <font face="Arial Italic" color="grey60">integer</font></td></tr>
-  <tr><td align="left" width="130" port="failed_at">failed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="failed_at">failed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="handler">handler <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="last_error">last_error <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="locked_at">locked_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="locked_at">locked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="locked_by">locked_by <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="queue">queue <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="run_at">run_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="run_at">run_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
 </table>
 >];
 m_Deletion [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -114,6 +114,99 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
 </table>
 >];
+"m_GoodJob::ActiveJobJob" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::ActiveJobJob</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="active_job_id">active_job_id <font face="Arial Italic" color="grey60">uuid</font></td></tr>
+  <tr><td align="left" width="130" port="batch_callback_id">batch_callback_id <font face="Arial Italic" color="grey60">uuid</font></td></tr>
+  <tr><td align="left" width="130" port="batch_id">batch_id <font face="Arial Italic" color="grey60">uuid</font></td></tr>
+  <tr><td align="left" width="130" port="concurrency_key">concurrency_key <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="performed_at">performed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="retried_good_job_id">retried_good_job_id <font face="Arial Italic" color="grey60">uuid</font></td></tr>
+  <tr><td align="left" width="130" port="scheduled_at">scheduled_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="serialized_params">serialized_params <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
+"m_GoodJob::BatchRecord" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::BatchRecord</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="callback_priority">callback_priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="callback_queue_name">callback_queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="description">description <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="discarded_at">discarded_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="enqueued_at">enqueued_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="on_discard">on_discard <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="on_finish">on_finish <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="on_success">on_success <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="serialized_properties">serialized_properties <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
+"m_GoodJob::Execution" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::Execution</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="batch_callback_id">batch_callback_id <font face="Arial Italic" color="grey60">uuid</font></td></tr>
+  <tr><td align="left" width="130" port="concurrency_key">concurrency_key <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="performed_at">performed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="retried_good_job_id">retried_good_job_id <font face="Arial Italic" color="grey60">uuid</font></td></tr>
+  <tr><td align="left" width="130" port="scheduled_at">scheduled_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="serialized_params">serialized_params <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
+"m_GoodJob::Job" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::Job</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="concurrency_key">concurrency_key <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="id">id <font face="Arial Italic" color="grey60">uuid ∗</font></td></tr>
+  <tr><td align="left" width="130" port="performed_at">performed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="retried_good_job_id">retried_good_job_id <font face="Arial Italic" color="grey60">uuid</font></td></tr>
+  <tr><td align="left" width="130" port="scheduled_at">scheduled_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="serialized_params">serialized_params <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
+"m_GoodJob::Process" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::Process</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="state">state <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
+"m_GoodJob::Setting" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::Setting</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="key">key <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="value">value <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
 m_Linkset [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Linkset</font></td></tr>
 </table>
@@ -144,12 +237,12 @@ m_Ownership [label = <<table border="0" align="center" cellspacing="0.5" cellpad
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="confirmed_at">confirmed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="confirmed_at">confirmed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="owner_notifier">owner_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="ownership_request_notifier">ownership_request_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="push_notifier">push_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
 </table>
 >];
 m_OwnershipCall [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -187,7 +280,7 @@ m_SendgridEvent [label = <<table border="0" align="center" cellspacing="0.5" cel
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="email">email <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="event_type">event_type <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="occurred_at">occurred_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="occurred_at">occurred_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="payload">payload <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
   <tr><td align="left" width="130" port="sendgrid_id">sendgrid_id <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
@@ -216,12 +309,13 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
 "m_User::WithPrivateFields" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -243,12 +337,13 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
-  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
 m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -257,7 +352,7 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="authors">authors <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="built_at">built_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="built_at">built_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="canonical_number">canonical_number <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="cert_chain">cert_chain <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="description">description <font face="Arial Italic" color="grey60">text</font></td></tr>
@@ -277,7 +372,7 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="size">size <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="summary">summary <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="yanked_info_checksum">yanked_info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
@@ -286,7 +381,13 @@ m_WebHook [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="disabled_at">disabled_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="disabled_reason">disabled_reason <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="failure_count">failure_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="failures_since_last_success">failures_since_last_success <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="last_failure">last_failure <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="last_success">last_success <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="successes_since_last_failure">successes_since_last_failure <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="url">url <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
 </table>
 >];
@@ -314,8 +415,6 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
 >];
   m_User -> m_WebauthnVerification [arrowhead = "none", arrowtail = "none", weight = "3"];
   m_User -> m_WebauthnCredential [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_User -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_Rubygem -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
@@ -323,21 +422,28 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_User -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_Rubygem -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "6"];
-  m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
-  m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
-  "m_Admin::GitHubUser" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
-  m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
+  m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_User -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_WebHook -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  "m_Admin::GitHubUser" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_Version -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Version -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "6"];
   m_Rubygem -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
   m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  "m_GoodJob::BatchRecord" -> "m_GoodJob::Job" [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  "m_GoodJob::BatchRecord" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  "m_GoodJob::Job" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "3"];
 }

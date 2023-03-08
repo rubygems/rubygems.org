@@ -18,7 +18,29 @@ Rails.application.config.content_security_policy do |policy|
   policy.frame_ancestors :self
 
   # Specify URI for violation reports
-  # policy.report_uri "/csp-violation-report-endpoint"
+  policy.report_uri lambda {
+    dd_api_key = ENV['DATADOG_CSP_API_KEY'].presence
+    url = ActionDispatch::Http::URL.url_for(
+      protocol: 'https',
+      host: 'csp-report.browser-intake-datadoghq.com',
+      path: '/api/v2/logs',
+      params: {
+        "dd-api-key": dd_api_key,
+        "dd-evp-origin": 'content-security-policy',
+        ddsource: 'csp-report',
+        ddtags: {
+          service: "rubygems.org",
+          version: AppRevision.version,
+          env: Rails.env,
+          trace_id: Datadog::Tracing.correlation&.trace_id,
+          "gemcutter.user.id": (current_user.id if respond_to?(:signed_in?) && signed_in?)
+        }.compact.map { |k, v| "#{k}:#{v}" }.join(',')
+      }
+    )
+    # ensure we compute the URL on development/test,
+    # but onlu return it if the API key is configures
+    url if dd_api_key
+  }
 end
 
 # Generate session nonces for permitted importmap and inline scripts

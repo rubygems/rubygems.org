@@ -59,6 +59,7 @@ Metrics/BlockLength:
   Exclude:
     - test/**/*.rb
     - lib/tasks/**/*.rake
+    - lib/github_oauthable.rb
     - app/models/concerns/**/*.rb
     - config/routes.rb
 

@@ -106,7 +106,7 @@ load: false)
     if error.is_a? Searchkick::InvalidQueryError
       "Failed to parse: '#{@query}'. Falling back to legacy search."
     else
-      Honeybadger.notify(error)
+      Rails.error.report(error, handled: true)
       "Advanced search is currently unavailable. Falling back to legacy search."
     end
   end

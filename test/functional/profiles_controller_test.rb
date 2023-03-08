@@ -1,6 +1,8 @@
 require "test_helper"
 
 class ProfilesControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   context "for a user that doesn't exist" do
     should "render not found page" do
       get :show, params: { id: "unknown" }
@@ -204,7 +206,7 @@ class ProfilesControllerTest < ActionController::TestCase
     context "on DELETE to destroy" do
       context "correct password" do
         should "enqueue deletion request" do
-          assert_difference "Delayed::Job.count", 1 do
+          assert_enqueued_jobs 1, only: DeleteUserJob do
             delete :destroy, params: { user: { password: @user.password } }
           end
         end
@@ -222,7 +224,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       context "incorrect password" do
         should "not enqueue deletion request" do
-          assert_no_difference "Delayed::Job.count" do
+          assert_enqueued_jobs 0 do
             post :destroy, params: { user: { password: "youshallnotpass" } }
           end
         end

@@ -2,6 +2,7 @@ require "timeout"
 
 Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api_key) do
   extend StatsD::Instrument
+  include TraceTagger
 
   def payload
     rubygem.payload(version, protocol, host_with_port).to_json
@@ -12,6 +13,8 @@ Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api
   end
 
   def perform
+    set_tag "gemcutter.notifier.url", url
+
     timeout(5) do
       RestClient.post url,
         payload,

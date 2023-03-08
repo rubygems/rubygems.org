@@ -18,18 +18,19 @@ module ApplicationHelper
 
   def gem_info(rubygem)
     if rubygem.respond_to?(:description)
-      [rubygem.description, rubygem.summary, "This rubygem does not have a description or summary."].find(&:present?)
+      [rubygem.summary, rubygem.description, "This rubygem does not have a description or summary."].find(&:present?)
     else
       version = rubygem.latest_version || rubygem.versions.last
       version.info
     end
   end
 
-  def gravatar(size, id = "gravatar", user = current_user)
-    image_tag user.gravatar_url(size: size, secure: request.ssl?).html_safe,
+  def gravatar(size, id = "gravatar", user = current_user, **options)
+    image_tag user.gravatar_url(size: size, secure: true).html_safe,
       id: id,
       width: size,
-      height: size
+      height: size,
+      **options
   end
 
   def download_count(rubygem)

@@ -18,12 +18,11 @@ class Api::BaseController < ApplicationController
   end
 
   def enqueue_web_hook_jobs(version)
-    jobs = version.rubygem.web_hooks + WebHook.global
+    jobs = version.rubygem.web_hooks.enabled + WebHook.global.enabled
     jobs.each do |job|
       job.fire(
         request.protocol.delete("://"),
         request.host_with_port,
-        version.rubygem,
         version
       )
     end
@@ -99,6 +98,7 @@ class Api::BaseController < ApplicationController
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.find_by_hashed_key(hashed_key)
     return render_unauthorized unless @api_key
+    set_tags "gemcutter.user.id" => @api_key.user_id, "gemcutter.user.api_key_id" => @api_key.id
     render_soft_deleted_api_key if @api_key.soft_deleted?
   end
 

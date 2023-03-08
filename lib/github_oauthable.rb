@@ -27,6 +27,8 @@ module GitHubOAuthable
   GRAPHQL
 
   included do
+    before_action :set_error_context_user if respond_to?(:before_action)
+
     def admin_user
       request.fetch_header(admin_user_request_header) do
         find_admin_user
@@ -59,15 +61,19 @@ module GitHubOAuthable
 
       if user.is_admin
         request.flash.now[:warning] = "Logged in as a admin via GitHub as #{user.name}"
-        cookies.encrypted[admin_cookie_name] = {
-          value: user.id,
-          expires: 1.hour,
-          same_site: :lax
-        }
+        log_in_as(user:)
       else
         request.flash[:error] = "#{user.name} on GitHub is not a valid admin"
         raise is_admin_error
       end
+    end
+
+    def log_in_as(user:, expires: 1.hour)
+      cookies.encrypted[admin_cookie_name] = {
+        value: user.id,
+        expires: expires,
+        same_site: :lax
+      }
     end
 
     def admin_cookie_name
@@ -88,6 +94,14 @@ module GitHubOAuthable
         Rails.logger.warn("GitHub graphql errors: #{errors}")
       end
       graphql.data.to_h.deep_symbolize_keys
+    end
+
+    def set_error_context_user
+      return unless admin_user
+
+      Rails.error.set_context(
+        user_id: admin_user.github_id
+      )
     end
   end
 end

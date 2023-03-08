@@ -20,9 +20,10 @@ class SqsWorker
       StatsD.increment("fastly_log_processor.enqueued")
       begin
         LogTicket.create!(backend: "s3", key: key, directory: bucket, status: "pending")
-        Delayed::Job.enqueue FastlyLogProcessor.new(bucket, key), priority: PRIORITIES[:stats]
       rescue ActiveRecord::RecordNotUnique
         StatsD.increment("fastly_log_processor.duplicated")
+      else
+        FastlyLogProcessorJob.perform_later(bucket:, key:)
       end
     end
   end

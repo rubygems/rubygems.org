@@ -1,6 +1,8 @@
 require "test_helper"
 
 class GemCachePurgerTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   context "#call" do
     setup do
       @gem_name = "test123"
@@ -24,7 +26,7 @@ class GemCachePurgerTest < ActiveSupport::TestCase
       Fastly.expects(:purge).with({ path: "versions", soft: true })
 
       GemCachePurger.call(@gem_name)
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs
     end
   end
 end

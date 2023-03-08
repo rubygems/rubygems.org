@@ -13,12 +13,12 @@ es:
   footer_sponsors_html: RubyGems.org es posible gracias la colaboración de la fantástica
     comunidad de Ruby. <a href="https://www.fastly.com/">Fastly</a> provee ancho de
     banda y soporte de CDN <a href="https://www.rubycentral.org/">Ruby Central</a>
-    cubre los costos de infraestructura y <a href="https://rubytogether.org/?source=rubygems">Ruby
-    Together</a> financia el desarrollo y el trabajo en los servidores. <a href="%{sponsors_page}">Aprende
-    más sobre nuestros sponsors y cómo trabajan en conjunto</a>
+    cubre los costos de infraestructura y financia el desarrollo y el trabajo en los
+    servidores. <a href="%{sponsors_page}">Aprende más sobre nuestros sponsors y cómo
+    trabajan en conjunto</a>
   footer_join_rt_html: Necesitamos tu ayuda para financiar el tiempo de los desarrolladores
-    que mantienen RubyGems.org funcionando correctamente para todo el mundo. <a href="https://rubytogether.org/join?source=rubygems">Únete
-    a Ruby Together hoy</a>.
+    que mantienen RubyGems.org funcionando correctamente para todo el mundo. <a href="https://rubycentral.org/#/portal/signup">Únete
+    a Ruby Central hoy</a>.
   form_disable_with: Un momento por favor...
   invalid_page: Número de página inexistente. Redireccionando a la página por defecto.
   locale_name: Español
@@ -265,6 +265,26 @@ es:
       button:
       disable_notifications:
       owners_page:
+    web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
+    web_hook_disabled:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -490,11 +510,7 @@ es:
     request_denied: La solicitud fue denegada. No pudimos verificar tu contraseña.
   rubygems:
     aside:
-      bundler_header: Gemfile
-      copied: "¡Copiado!"
-      copy_to_clipboard: Copiar al portapapeles
       downloads_for_this_version: Para esta versión
-      install: instalar
       required_ruby_version: Versión de Ruby requerida
       required_rubygems_version: Versión de Rubygems requerida
       requires_mfa:
@@ -540,6 +556,10 @@ es:
       downloads: Descargas
       title: Gemas
     show:
+      bundler_header: Gemfile
+      copied: "¡Copiado!"
+      copy_to_clipboard: Copiar al portapapeles
+      install: instalar
       licenses_header:
         one: Licencia
         other: Licencias

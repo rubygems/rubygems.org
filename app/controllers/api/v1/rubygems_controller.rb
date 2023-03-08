@@ -37,7 +37,7 @@ class Api::V1::RubygemsController < Api::BaseController
     enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue StandardError => e
-    Honeybadger.notify(e)
+    Rails.error.report(e, handled: true)
     render plain: "Server error. Please try again.", status: :internal_server_error
   end
 
