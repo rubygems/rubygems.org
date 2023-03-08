@@ -5,6 +5,7 @@ SimpleCov.start "rails" do
 
   # Will be deleted after all the delayed jobs have run
   add_filter "app/jobs/*_mailer.rb"
+  add_filter "app/jobs/delete_user.rb"
 
   if ENV["CI"]
     require "simplecov-cobertura"

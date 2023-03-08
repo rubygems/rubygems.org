@@ -2,8 +2,18 @@ class Indexer < ApplicationJob
   extend StatsD::Instrument
   include TraceTagger
 
-  self.queue_adapter = :good_job
   queue_with_priority PRIORITIES.fetch(:push)
+
+  include GoodJob::ActiveJobExtensions::Concurrency
+  good_job_control_concurrency_with(
+    # Maximum number of jobs with the concurrency key to be
+    # concurrently enqueued (excludes performing jobs)
+    #
+    # Because the indexer job only uses current state at time of perform,
+    # it makes no sense to enqueue more than one at a time
+    enqueue_limit: 1,
+    key: name
+  )
 
   def perform
     log "Updating the index"

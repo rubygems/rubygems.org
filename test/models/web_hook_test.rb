@@ -1,6 +1,8 @@
 require "test_helper"
 
 class WebHookTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   should belong_to :user
   should belong_to(:rubygem).optional(true)
 
@@ -149,7 +151,9 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
       RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
     end
 
     should "include an Authorization header for a user with no API key" do
@@ -157,7 +161,9 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number)
       RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
     end
 
     should "include an Authorization header for a user with many API keys" do
@@ -166,11 +172,15 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_keys.first.hashed_key)
       RestClient::Request.expects(:execute).with(has_entries(headers: has_entries("Authorization" => authorization)))
 
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
     end
 
     should "not increment failure count for hook" do
-      @hook.fire("https", "rubygems.org", @version)
+      perform_enqueued_jobs only: NotifyWebHookJob do
+        @hook.fire("https", "rubygems.org", @version)
+      end
 
       assert_predicate @hook.failure_count, :zero?
     end
@@ -196,7 +206,9 @@ class WebHookTest < ActiveSupport::TestCase
        Net::ProtocolError].each_with_index do |exception, index|
         RestClient.stubs(:post).raises(exception)
 
-        @hook.fire("https", "rubygems.org", @version)
+        perform_enqueued_jobs only: NotifyWebHookJob do
+          @hook.fire("https", "rubygems.org", @version)
+        end
 
         assert_equal index + 1, @hook.reload.failure_count
         assert_predicate @hook, :global?

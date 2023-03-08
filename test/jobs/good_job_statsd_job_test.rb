@@ -39,6 +39,11 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
     StatsD::Instrument::MetricExpectation.new(args.reverse_merge(times: 1))
   end
 
+  setup do
+    GoodJobStatsDJob.disable_test_adapter
+    GoodJobStatsDJob.stubs(:queue_adapter).returns(ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :async))
+  end
+
   test "reports metrics to statsd" do
     FailureJob.perform_later
     DiscardJob.perform_later
