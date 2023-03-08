@@ -357,6 +357,10 @@ class Rubygem < ApplicationRecord
     end
   end
 
+  def release_reserved_namespace!
+    update_attribute(:updated_at, 101.days.ago)
+  end
+
   private
 
   # a gem namespace is not protected if it is
