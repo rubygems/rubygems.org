@@ -16,7 +16,7 @@ class HookRelayReportJob < ApplicationJob
     stream = arguments[0].fetch(:stream)
     id = stream.slice(/:webhook_id-(\d+)\z/, 1)
     raise MalformedStreamError, stream.inspect unless id
-    @hook = WebHook.find(id.to_i)
+    @hook = WebHook.unscoped.find(id.to_i)
   end
 
   def perform(params)

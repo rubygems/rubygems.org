@@ -120,6 +120,7 @@ class WebHook < ApplicationRecord
 
   def disable!(disabled_reason)
     transaction do
+      return if disabled_at.present?
       update!(disabled_reason:)
       touch(:disabled_at)
 
