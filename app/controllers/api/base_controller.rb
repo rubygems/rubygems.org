@@ -18,7 +18,7 @@ class Api::BaseController < ApplicationController
   end
 
   def enqueue_web_hook_jobs(version)
-    jobs = version.rubygem.web_hooks + WebHook.global
+    jobs = version.rubygem.web_hooks.enabled + WebHook.global.enabled
     jobs.each do |job|
       job.fire(
         request.protocol.delete("://"),

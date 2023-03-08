@@ -3,7 +3,6 @@ class WebHookResource < Avo::BaseResource
   self.includes = %i[user rubygem]
 
   action DeleteWebhook
-  self.unscoped_queries_on_index = true
 
   field :id, as: :id, link_to_resource: true
 
