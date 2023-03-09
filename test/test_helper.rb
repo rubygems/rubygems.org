@@ -101,6 +101,13 @@ class ActiveSupport::TestCase
     skip("Toxiproxy is not running, but was required for this test.")
   end
 
+  def requires_timescale
+    Download.hypertable?
+  rescue StandardError
+    raise "Timescale not running, but REQUIRE_TIMESCALE was set." if ENV["REQUIRE_TIMESCALE"]
+    skip("Timescale is not running, but was required for this test.")
+  end
+
   def assert_changed(object, *attributes)
     original_attributes = attributes.index_with { |a| object.send(a) }
     yield if block_given?

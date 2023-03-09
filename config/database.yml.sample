@@ -3,34 +3,70 @@ default: &default
   encoding: utf8
   username: postgres
 
-development:
-  <<: *default
-  database: rubygems_development
-  host: localhost
-  password: devpassword
-  pool: 5
-  timeout: 5000
+timescale: &timescale
+  adapter: postgresql
+  encoding: utf8
+  username: postgres
+  migrations_paths: db/downloads_migrate
 
+development:
+  primary:
+    <<: *default
+    database: rubygems_development
+    host: localhost
+    password: devpassword
+    pool: 5
+    timeout: 5000
+  downloads:
+    <<: *timescale
+    database: rubygems_tsdb_development
+    host: localhost
+    port: 5434
+    pool: 5
+    timeout: 5000
 
 test:
-  <<: *default
-  database: rubygems_test
-  host: localhost
-  min_messages: warning
-  password: testpassword
-  pool: 5
-  timeout: 5000
+  primary:
+    <<: *default
+    database: rubygems_test
+    host: localhost
+    min_messages: warning
+    password: testpassword
+    pool: 5
+    timeout: 5000
+  downloads:
+    <<: *timescale
+    database: rubygems_tsdb_test
+    host: localhost
+    min_messages: warning
+    port: 5434
+    pool: 5
+    timeout: 5000
 
 staging:
-  <<: *default
-  database: rubygems_staging
-  min_messages: error
-  pool: 30
-  reconnect: true
+  primary:
+    <<: *default
+    database: rubygems_staging
+    min_messages: error
+    pool: 30
+    reconnect: true
+  downloads:
+    <<: *timescale
+    database: rubygems_tsdb_staging
+    min_messages: error
+    pool: 30
+    reconnect: true
 
 production:
-  <<: *default
-  database: rubygems_production
-  min_messages: error
-  pool: 30
-  reconnect: true
+  primary:
+    <<: *default
+    database: rubygems_production
+    min_messages: error
+    pool: 30
+    reconnect: true
+  downloads:
+    <<: *timescale
+    database: rubygems_tsdb_production
+    min_messages: error
+    pool: 30
+    reconnect: true

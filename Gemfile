@@ -49,6 +49,8 @@ gem "rotp", "~> 6.2"
 gem "unpwn", "~> 1.0"
 gem "webauthn", "~> 3.0"
 
+gem "timescaledb-rails", git: "https://github.com/segiddins/timescaledb-rails", branch: "segiddins/support-for-timescale-in-other-database"
+
 # Admin dashboard
 gem "avo", "~> 2.28"
 gem "pundit", "~> 2.3"

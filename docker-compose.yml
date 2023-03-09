@@ -6,6 +6,12 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
+  timescale:
+    image: timescale/timescaledb-ha:pg15-ts2.10-latest
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
   cache:
     image: memcached:1.4.24
     ports:
