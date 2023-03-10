@@ -67,7 +67,7 @@ class OwnershipRequestsTest < SystemTest
 
     visit_rubygem_adoptions_path(rubygem, @owner)
 
-    page.find("#owner_close_request").click
+    page.find_by_id("owner_close_request").click
 
     assert_empty rubygem.ownership_requests
     Delayed::Worker.new.work_off

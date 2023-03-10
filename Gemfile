@@ -75,6 +75,7 @@ group :development, :test do
   gem "rubocop-rails", "~> 2.18", require: false
   gem "rubocop-performance", "~> 1.16", require: false
   gem "rubocop-minitest", "~> 0.29", require: false
+  gem "rubocop-capybara", "~> 2.17", require: false
 end
 
 group :development do
