@@ -15,5 +15,10 @@ Rails.application.configure do
     }
   }
 
+  # see https://github.com/bensheldon/good_job/pull/883
+  # this makes good_job consistent with the priorities we used
+  # previously for delayed job
+  config.good_job.smaller_number_is_higher_priority = true
+
   GoodJob.active_record_parent_class = "ApplicationRecord"
 end
