@@ -178,7 +178,7 @@ class OwnerTest < SystemTest
   end
 
   test "hides ownership link when not owner" do
-    page.find("a[href='/sign_out']").click
+    page.click_link(nil, href: "/sign_out")
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem)
 
@@ -186,14 +186,14 @@ class OwnerTest < SystemTest
   end
 
   test "hides ownership link when not signed in" do
-    page.find("a[href='/sign_out']").click
+    page.click_link(nil, href: "/sign_out")
     visit rubygem_path(@rubygem)
 
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
   end
 
   test "shows resend confirmation link when unconfirmed" do
-    page.find("a[href='/sign_out']").click
+    page.click_link(nil, href: "/sign_out")
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem)

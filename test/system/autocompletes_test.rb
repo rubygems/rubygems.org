@@ -74,13 +74,13 @@ class AutocompletesTest < ApplicationSystemTestCase
   test "down arrow key should loop" do
     @fill_field.native.send_keys :down, :down, :down, :down
 
-    assert find("#suggest-home").all(".menu-item").last.matches_css?(".selected")
+    assert find_by_id("suggest-home").all(".menu-item").last.matches_css?(".selected")
   end
 
   test "up arrow key should loop" do
     @fill_field.native.send_keys :up, :up, :up, :up
 
-    assert find("#suggest-home").all(".menu-item").first.matches_css?(".selected")
+    assert find_by_id("suggest-home").all(".menu-item").first.matches_css?(".selected")
   end
 
   test "mouse hover a suggest item to choose suggestion" do
