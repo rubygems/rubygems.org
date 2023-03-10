@@ -21,6 +21,44 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "routing to show" do
+    should "route to show" do
+      expected = { controller: "api/v2/versions", action: "show", rubygem_name: "foo", number: "1.0.0" }
+
+      assert_recognizes expected, "/api/v2/rubygems/foo/versions/1.0.0"
+    end
+
+    should "route to show with .json" do
+      expected = { controller: "api/v2/versions", action: "show", rubygem_name: "foo", number: "1.0.0", format: "json" }
+
+      assert_recognizes expected, "/api/v2/rubygems/foo/versions/1.0.0.json"
+    end
+
+    should "route to show with .yaml" do
+      expected = { controller: "api/v2/versions", action: "show", rubygem_name: "foo", number: "1.0.0", format: "yaml" }
+
+      assert_recognizes expected, "/api/v2/rubygems/foo/versions/1.0.0.yaml"
+    end
+
+    should "route to show with .sha256" do
+      expected = { controller: "api/v2/versions", action: "show", rubygem_name: "foo", number: "1.0.0", format: "sha256" }
+
+      assert_recognizes expected, "/api/v2/rubygems/foo/versions/1.0.0.sha256"
+    end
+
+    should "not be confused by prerelease versions" do
+      expected = { controller: "api/v2/versions", action: "show", rubygem_name: "foo", number: "1.0.0-a.pre" }
+
+      assert_recognizes expected, "/api/v2/rubygems/foo/versions/1.0.0-a.pre"
+    end
+
+    should "not route when disallowed characters are used" do
+      assert_raises(ActionController::UrlGenerationError) do
+        get :show, params: { rumgem_name: "foo", number: "bad%20version", format: "json" }
+      end
+    end
+  end
+
   context "on GET to show" do
     setup do
       @rubygem = create(:rubygem)
@@ -35,11 +73,45 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      JSON.load(body)
+      JSON.parse(body)
     end
 
     should_respond_to(:yaml) do |body|
       YAML.safe_load(body)
+    end
+
+    context "with .sha256 format" do
+      setup do
+        @checksums = { "file" => "hash", "file2" => "hash2" }
+        manifest = VersionManifest.new(gem: @rubygem.name, number: "2.0.0")
+        manifest.store_checksums(@checksums)
+      end
+
+      should "return not found when the hashed files are not available" do
+        get_show(@rubygem, "1.0.0.pre", :sha256)
+
+        assert_response :not_found
+      end
+
+      should "return not found when the gem is not indexed" do
+        get_show(@rubygem, "3.0.0", :sha256)
+
+        assert_response :not_found
+      end
+
+      should "have a list of versions for the first gem" do
+        get_show(@rubygem, "2.0.0", :sha256)
+
+        assert_response :success
+        assert_equal ShasumFormat.generate(@checksums), @response.body
+      end
+
+      should "not be confused by ruby platform" do
+        get :show, params: { rubygem_name: @rubygem.name, number: "2.0.0", platform: "ruby", format: :sha256 }
+
+        assert_response :success
+        assert_equal ShasumFormat.generate(@checksums), @response.body
+      end
     end
 
     should "return Last-Modified header" do
