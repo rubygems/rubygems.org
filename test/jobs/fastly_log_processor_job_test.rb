@@ -78,11 +78,10 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
         @sample_log_counts
           .each do |name, expected_count|
           version = Version.find_by(full_name: name)
-          if version
-            count = GemDownload.find_by(rubygem_id: version.rubygem.id, version_id: version.id).count
+          next unless version
+          count = GemDownload.find_by(rubygem_id: version.rubygem.id, version_id: version.id).count
 
-            assert_equal expected_count, count, "invalid value for #{name}"
-          end
+          assert_equal expected_count, count, "invalid value for #{name}"
         end
 
         json = Rubygem.find_by_name("json")
