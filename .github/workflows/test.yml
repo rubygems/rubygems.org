@@ -14,7 +14,7 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: '3.4.6'
+            version: '3.4.8'
           - name: latest
             version: latest
         ruby_version: ['3.2.1']
