@@ -19,8 +19,8 @@ class ApiKeysController < ApplicationController
     @api_key = current_user.api_keys.find(params.require(:id))
     return unless @api_key.soft_deleted?
 
-    redirect_to profile_api_keys_path
     flash[:error] = t(".invalid_key")
+    redirect_to profile_api_keys_path
   end
 
   def create
