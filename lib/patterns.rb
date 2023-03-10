@@ -33,6 +33,7 @@ module Patterns
     mruby
     ruby
     rubygems
+    gem
     update_rubygems
     install
     uninstall
