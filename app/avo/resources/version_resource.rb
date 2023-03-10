@@ -5,6 +5,9 @@ class VersionResource < Avo::BaseResource
     scope.where("full_name LIKE ?", "#{params[:q]}%")
   }
 
+  class IndexedFilter < ScopeBooleanFilter; end
+  filter IndexedFilter, arguments: { default: { indexed: true, yanked: true } }
+
   field :full_name, as: :text, link_to_resource: true
   field :id, as: :id, hide_on: :index, as_html: true do |_id, *_args|
     link_to model.id, main_app.rubygem_version_url(model.rubygem, model.slug)
