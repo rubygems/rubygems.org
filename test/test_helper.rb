@@ -61,6 +61,10 @@ class ActiveSupport::TestCase
       @octokit_stubs = Faraday::Adapter::Test::Stubs.new
       builder.adapter :test, @octokit_stubs
     end
+
+    @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
+    config = LaunchDarkly::Config.new(data_source: @launch_darkly)
+    Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)
   end
 
   def page

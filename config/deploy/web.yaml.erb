@@ -186,6 +186,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: hook_relay_hook_id
+          - name: LAUNCH_DARKLY_SDK_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: launch_darkly_sdk_key
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
