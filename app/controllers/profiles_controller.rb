@@ -5,15 +5,15 @@ class ProfilesController < ApplicationController
   before_action :verify_password, only: %i[update destroy]
   before_action :set_cache_headers, only: :edit
 
-  def edit
-    @user = current_user
-  end
-
   def show
     @user           = User.find_by_slug!(params[:id])
     rubygems        = @user.rubygems_downloaded
     @rubygems       = rubygems.slice!(0, 10)
     @extra_rubygems = rubygems
+  end
+
+  def edit
+    @user = current_user
   end
 
   def update

@@ -20,6 +20,7 @@ class LinksetTest < ActiveSupport::TestCase
       Linkset::LINKS.each do |link|
         @linkset.send("#{link}=", nil)
       end
+
       assert_empty @linkset
     end
   end

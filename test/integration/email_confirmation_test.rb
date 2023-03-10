@@ -24,6 +24,7 @@ class EmailConfirmationTest < SystemTest
     request_confirmation_mail @user.email
 
     link = last_email_link
+
     assert_not_nil link
     visit link
 
@@ -39,6 +40,7 @@ class EmailConfirmationTest < SystemTest
     click_link "Sign out"
 
     visit link
+
     assert page.has_content? "Sign in"
     assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
   end
@@ -51,6 +53,7 @@ class EmailConfirmationTest < SystemTest
     visit link
 
     Delayed::Worker.new.work_off
+
     assert_empty Delayed::Job.all
   end
 
@@ -59,6 +62,7 @@ class EmailConfirmationTest < SystemTest
     request_confirmation_mail @user.email
 
     link = last_email_link
+
     assert_not_nil link
     visit link
 
@@ -74,6 +78,7 @@ class EmailConfirmationTest < SystemTest
     request_confirmation_mail @user.email
 
     link = last_email_link
+
     assert_not_nil link
     visit link
 
@@ -85,6 +90,7 @@ class EmailConfirmationTest < SystemTest
     click_on "Authenticate with security device"
 
     find(:css, ".header__popup-link").click
+
     assert page.has_content?("SIGN OUT")
 
     @authenticator.remove!

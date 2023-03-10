@@ -77,6 +77,7 @@ class LinksTest < ActiveSupport::TestCase
 
     should "create method for known keys" do
       known_keys = Links::LINKS.values.reject! { |k| k == "download_uri" }
+
       known_keys.each do |key|
         assert_equal "https://example.com", @links.send(key), "value doesn't match for method: #{key}"
       end

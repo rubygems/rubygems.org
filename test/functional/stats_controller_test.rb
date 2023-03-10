@@ -61,6 +61,7 @@ class StatsControllerTest < ActionController::TestCase
       assert_select ".stats__graph__gem__meter" do |element|
         element.pluck(:style).each do |width|
           width =~ /width: (\d+[,.]\d+)%/
+
           assert Regexp.last_match(1).to_f <= 100, "#{Regexp.last_match(1)} is greater than 100"
         end
       end

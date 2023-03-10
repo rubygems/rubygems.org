@@ -7,6 +7,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
                 action: "show",
                 rubygem_id: "rails",
                 format: format.to_s }
+
       assert_recognizes(route, "/api/v1/gems/rails/owners.#{format}")
     end
 
@@ -22,6 +23,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should "return an array" do
         response = yield(@response.body)
+
         assert_kind_of Array, response
       end
 
@@ -30,7 +32,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
 
       should "not return other owner handle" do
-        assert yield(@response.body).map { |owner| owner["handle"] }.exclude?(@other_user.handle)
+        assert yield(@response.body).pluck("handle").exclude?(@other_user.handle)
       end
     end
   end
@@ -91,6 +93,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               action: "create",
               rubygem_id: "rails",
               format: "json" }
+
     assert_recognizes(route, path: "/api/v1/gems/rails/owners.json", method: :post)
   end
 
@@ -131,6 +134,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :unauthorized
+
           should "fail to add new owner" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -146,6 +150,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :unauthorized
+
           should "fail to add new owner" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -158,6 +163,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :success
+
           should "succeed to add new owner" do
             assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -230,6 +236,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
 
         should respond_with :unprocessable_entity
+
         should "respond with error message" do
           assert_equal "User has already been taken", @response.body
         end
@@ -249,6 +256,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "add other user as gem owner" do
             post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+
             assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
@@ -259,6 +267,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :forbidden
+
           should "refuse to add other user as gem owner" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -290,6 +299,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :forbidden
+
           should "not add other user as gem owner" do
             refute_includes @rubygem.owners, @second_user
           end
@@ -302,6 +312,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :success
+
           should "adds other user as gem owner" do
             assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -316,6 +327,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :forbidden
+
           should "#render_soft_deleted_api_key and display an error" do
             assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
           end
@@ -330,6 +342,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
 
         should respond_with :forbidden
+
         should "#render_soft_deleted_api_key and display an error" do
           assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
         end
@@ -495,6 +508,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
 
       should respond_with :forbidden
+
       should "return body that starts with denied access message" do
         assert @response.body.start_with?("The API key doesn't have access")
       end
@@ -506,6 +520,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               action: "destroy",
               rubygem_id: "rails",
               format: "json" }
+
     assert_recognizes(route, path: "/api/v1/gems/rails/owners.json", method: :delete)
   end
 
@@ -533,6 +548,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :unauthorized
+
           should "fail to remove gem owner" do
             assert_includes @rubygem.owners, @second_user
           end
@@ -548,6 +564,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :unauthorized
+
           should "fail to remove gem owner" do
             assert_includes @rubygem.owners, @second_user
           end
@@ -560,6 +577,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :success
+
           should "succeed to remove gem owner" do
             refute_includes @rubygem.owners, @second_user
           end
@@ -609,6 +627,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :forbidden
+
           should "fail to remove gem owner" do
             assert_includes @rubygem.owners, @second_user
           end
@@ -627,6 +646,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             end
 
             should respond_with :success
+
             should "succeed to remove gem owner" do
               refute_includes @rubygem.owners, @second_user
             end
@@ -657,6 +677,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :success
+
           should "removes other user as gem owner" do
             refute_includes @rubygem.owners, @second_user
           end
@@ -671,6 +692,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should respond_with :forbidden
+
           should "#render_soft_deleted_api_key and display an error" do
             assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
           end
@@ -685,6 +707,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
 
         should respond_with :forbidden
+
         should "#render_soft_deleted_api_key and display an error" do
           assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
         end
@@ -850,6 +873,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
 
       should respond_with :forbidden
+
       should "return body that starts with denied access message" do
         assert @response.body.start_with?("The API key doesn't have access")
       end
@@ -861,6 +885,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               action: "gems",
               handle: "example",
               format: "json" }
+
     assert_recognizes(route, path: "/api/v1/owners/example/gems.json", method: :get)
   end
 
@@ -869,6 +894,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     @request.env["HTTP_AUTHORIZATION"] = "12223"
     @request.accept = "*/*"
     post :create, params: { rubygem_id: "bananas" }
+
     assert_equal "This rubygem could not be found.", @response.body
   end
 end

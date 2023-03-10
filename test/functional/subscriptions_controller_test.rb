@@ -13,6 +13,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }
+
     should "not set flash error" do
       assert_nil flash[:error]
     end
@@ -25,6 +26,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }
+
     should "set flash error" do
       assert_equal "Something went wrong. Please try again.", flash[:error]
     end
@@ -36,6 +38,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }
+
     should "set flash error" do
       assert_equal "Something went wrong. Please try again.", flash[:error]
     end
@@ -48,6 +51,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }
+
     should "not set flash error" do
       assert_nil flash[:error]
     end

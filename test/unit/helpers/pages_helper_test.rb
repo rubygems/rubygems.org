@@ -19,6 +19,7 @@ class PagesHelperTest < ActionView::TestCase
 
     should "return 0.0.0 as version number if version doesn't exist" do
       @rubygem.versions.each(&:destroy)
+
       assert_equal "0.0.0", version_number
     end
 

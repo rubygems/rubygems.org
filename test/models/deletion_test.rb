@@ -13,6 +13,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   should "be indexed" do
     @version.indexed = false
+
     assert_predicate Deletion.new(version: @version, user: @user), :invalid?,
       "Deletion should only work on indexed gems"
   end
@@ -63,6 +64,7 @@ class DeletionTest < ActiveSupport::TestCase
         Delayed::Worker.new.work_off
 
         email = ActionMailer::Base.deliveries.last
+
         assert_equal "Gem #{@version.to_title} yanked from RubyGems.org", email.subject
         assert_equal [@user.email], email.to
       end
@@ -89,13 +91,16 @@ class DeletionTest < ActiveSupport::TestCase
 
     response = Searchkick.client.get index: "rubygems-#{Rails.env}",
                                                     id: @version.rubygem_id
+
     assert response["_source"]["yanked"]
   end
 
   should "record version metadata" do
     deletion = Deletion.new(version: @version, user: @user)
+
     assert_nil deletion.rubygem
     deletion.valid?
+
     assert_equal deletion.rubygem, @version.rubygem.name
   end
 

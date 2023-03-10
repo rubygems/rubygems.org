@@ -15,6 +15,7 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
 
     should "have gem properties encoded in JSON" do
       payload = @job.run_callbacks(:perform) { JSON.parse(@job.payload) }
+
       assert_equal "foogem",    payload["name"]
       assert_equal "3.2.1",     payload["version"]
       assert_equal "ruby",      payload["platform"]
@@ -61,6 +62,7 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
       perform_enqueued_jobs do
         @job.enqueue
       end
+
       assert_performed_jobs 1, only: NotifyWebHookJob
       assert_enqueued_jobs 0, only: NotifyWebHookJob
     end
@@ -80,6 +82,7 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
       perform_enqueued_jobs do
         @job.enqueue
       end
+
       assert_performed_jobs 1, only: NotifyWebHookJob
       assert_enqueued_jobs 0, only: NotifyWebHookJob
     end

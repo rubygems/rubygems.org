@@ -4,6 +4,20 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
   before_action :validate_confirmation_token, only: %i[update mfa_update webauthn_update]
 
+  def new
+  end
+
+  # used to resend confirmation mail for email validation
+  def create
+    user = find_user_for_create
+
+    if user
+      user.generate_confirmation_token(reset_unconfirmed_email: false)
+      Delayed::Job.enqueue(EmailConfirmationMailer.new(user.id)) if user.save
+    end
+    redirect_to root_path, notice: t(".promise_resend")
+  end
+
   def update
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
       setup_mfa_authentication
@@ -48,20 +62,6 @@ class EmailConfirmationsController < ApplicationController
     confirm_email
   rescue WebAuthn::Error => e
     login_failure(e.message)
-  end
-
-  def new
-  end
-
-  # used to resend confirmation mail for email validation
-  def create
-    user = find_user_for_create
-
-    if user
-      user.generate_confirmation_token(reset_unconfirmed_email: false)
-      Delayed::Job.enqueue(EmailConfirmationMailer.new(user.id)) if user.save
-    end
-    redirect_to root_path, notice: t(".promise_resend")
   end
 
   # used to resend confirmation mail for unconfirmed_email validation

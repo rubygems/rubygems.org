@@ -15,6 +15,14 @@ class ApiKeysController < ApplicationController
     @api_key = current_user.api_keys.build
   end
 
+  def edit
+    @api_key = current_user.api_keys.find(params.require(:id))
+    return unless @api_key.soft_deleted?
+
+    flash[:error] = t(".invalid_key")
+    redirect_to profile_api_keys_path
+  end
+
   def create
     key = generate_unique_rubygems_key
     build_params = { user: current_user, hashed_key: hashed_key(key), **api_key_params }
@@ -35,14 +43,6 @@ class ApiKeysController < ApplicationController
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
       render :new
     end
-  end
-
-  def edit
-    @api_key = current_user.api_keys.find(params.require(:id))
-    return unless @api_key.soft_deleted?
-
-    redirect_to profile_api_keys_path
-    flash[:error] = t(".invalid_key")
   end
 
   def update

@@ -24,9 +24,11 @@ class YankTest < SystemTest
     page.driver.delete yank_api_v1_rubygems_path(gem_name: @rubygem.name, version: "2.2.2")
 
     visit dashboard_path
+
     assert page.has_content? "sandworm"
 
     click_link "sandworm"
+
     assert page.has_content?("1.1.1")
     refute page.has_content?("2.2.2")
 
@@ -34,12 +36,14 @@ class YankTest < SystemTest
       click_link "Show all versions (2 total)"
     end
     click_link "2.2.2"
+
     assert page.has_content? "This version has been yanked"
     assert page.has_css? 'meta[name="robots"][content="noindex"]', visible: false
 
     assert page.has_content?("Yanked by")
 
     css = %(div.gem__users a[alt=#{@user.handle}])
+
     assert page.has_css?(css, count: 3)
   end
 
@@ -47,6 +51,7 @@ class YankTest < SystemTest
     create(:version, rubygem: @rubygem, number: "0.0.0")
 
     visit rubygem_path(@rubygem)
+
     assert page.has_content? "sandworm"
     assert page.has_content? "0.0.0"
 
@@ -54,6 +59,7 @@ class YankTest < SystemTest
     page.driver.delete yank_api_v1_rubygems_path(gem_name: @rubygem.name, version: "0.0.0")
 
     visit rubygem_path(@rubygem)
+
     assert page.has_content? "sandworm"
     assert page.has_content? "This gem is not currently hosted on RubyGems.org"
 
@@ -66,6 +72,7 @@ class YankTest < SystemTest
       "CONTENT_TYPE" => "application/octet-stream"
 
     visit rubygem_path(@rubygem)
+
     assert page.has_content? "sandworm"
     assert page.has_content? "1.0.0"
     assert page.has_selector?("a[alt='#{other_api_key.user.handle}']")

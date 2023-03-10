@@ -3,6 +3,7 @@ require "test_helper"
 class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   should "route new paths to new controller" do
     route = { controller: "api/v1/api_keys", action: "show" }
+
     assert_recognizes(route, "/api/v1/api_key")
   end
 
@@ -20,10 +21,12 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       should respond_with :success
       should "return API key" do
         response = yield(@response.body)
+
         assert_not_nil response
         assert_kind_of Hash, response
 
         hashed_key = @user.api_keys.first.hashed_key
+
         assert_equal hashed_key, Digest::SHA256.hexdigest(response["rubygems_api_key".send(to_meth)])
       end
     end
@@ -58,6 +61,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     should respond_with :success
     should "return API key" do
       hashed_key = @user.api_keys.first.hashed_key
+
       assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
     end
   end
@@ -66,6 +70,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     should "deliver api key created email" do
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [@user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "New API key created for rubygems.org", email.subject
@@ -279,6 +284,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         should "deliver api key created email" do
           refute_empty ActionMailer::Base.deliveries
           email = ActionMailer::Base.deliveries.last
+
           assert_equal [@user.email], email.to
           assert_equal ["no-reply@mailer.rubygems.org"], email.from
           assert_equal "New API key created for rubygems.org", email.subject
@@ -309,6 +315,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
         should "have MFA" do
           created_key = @user.api_keys.find_by(name: "mfa")
+
           assert created_key.mfa
         end
       end
@@ -382,6 +389,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
 
         should_expect_otp_for_create
+
         should "not show error message" do
           refute_includes @response.body, "For protection of your account and your gems"
         end
@@ -394,6 +402,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
 
         should_expect_otp_for_create
+
         should "not show error message" do
           refute_includes @response.body, "For protection of your account and your gems"
         end
@@ -447,12 +456,14 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
 
         should respond_with :unprocessable_entity
+
         should "not update api key" do
           refute_predicate @api_key, :can_show_dashboard?
         end
 
         should "respond with error message" do
           error = "Failed to update scopes for the API key ci-key: [\"Show dashboard scope must be enabled exclusively\"]"
+
           assert_equal @response.body, error
         end
       end

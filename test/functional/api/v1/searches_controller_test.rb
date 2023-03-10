@@ -10,11 +10,13 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "contain a hash" do
         assert_kind_of Hash, yield(@response.body).first
       end
       should "only include matching gems" do
         gems = yield(@response.body)
+
         assert_equal 1, gems.size
         assert_equal "match", gems.first["name"]
       end
@@ -26,6 +28,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       end
 
       should respond_with :bad_request
+
       should "explain failed request" do
         assert page.has_content?("Request is missing param 'query'")
       end
@@ -54,6 +57,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         requires_toxiproxy
         Toxiproxy[:elasticsearch].down do
           get :show, params: { query: "other" }, format: :json
+
           assert_response :success
           assert_equal "other", JSON.parse(@response.body).first["name"]
         end
@@ -93,6 +97,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         requires_toxiproxy
         Toxiproxy[:elasticsearch].down do
           get :autocomplete, params: { query: "ot" }
+
           assert_response :success
           assert_empty JSON.parse(@response.body)
         end

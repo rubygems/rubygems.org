@@ -109,6 +109,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         should "deliver api key created email" do
           refute_empty ActionMailer::Base.deliveries
           email = ActionMailer::Base.deliveries.last
+
           assert_equal [@user.email], email.to
           assert_equal ["no-reply@mailer.rubygems.org"], email.from
           assert_equal "New API key created for rubygems.org", email.subject
@@ -136,6 +137,7 @@ class ApiKeysControllerTest < ActionController::TestCase
           post :create, params: { api_key: { name: "gem scope", add_owner: true, rubygem_id: @ownership.rubygem.id } }
 
           created_key = @user.reload.api_keys.find_by(name: "gem scope")
+
           assert_equal @ownership.rubygem, created_key.rubygem
         end
 
@@ -187,6 +189,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         end
 
         should redirect_to("the key index page") { profile_api_keys_path }
+
         should "update test key scope" do
           assert_predicate @api_key, :can_add_owner?
         end
@@ -251,6 +254,7 @@ class ApiKeysControllerTest < ActionController::TestCase
           setup { delete :destroy, params: { id: @api_key.id } }
 
           should redirect_to("the index api key page") { profile_api_keys_path }
+
           should "delete api key of user" do
             assert_empty @user.api_keys
           end
@@ -263,6 +267,7 @@ class ApiKeysControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the index api key page") { profile_api_keys_path }
+
           should "not delete api key of user" do
             refute_empty @user.api_keys
           end
@@ -276,6 +281,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         end
 
         should respond_with :not_found
+
         should "not delete the api key" do
           assert ApiKey.find(@api_key.id)
         end
@@ -291,6 +297,7 @@ class ApiKeysControllerTest < ActionController::TestCase
       end
 
       should redirect_to("the index api key page") { profile_api_keys_path }
+
       should "delete all api key of user" do
         assert_empty @user.api_keys
       end
@@ -324,6 +331,7 @@ path: "/profile/api_keys/1" },
             setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
             should "set mfa_redirect_uri" do
               assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
             end
@@ -341,6 +349,7 @@ path: "/profile/api_keys/1" },
             setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the settings page") { edit_settings_path }
+
             should "set mfa_redirect_uri" do
               assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
             end
@@ -372,6 +381,7 @@ path: "/profile/api_keys/1" },
           setup { get :new }
 
           should respond_with :success
+
           should "render new api key form" do
             assert page.has_content? "New API key"
           end

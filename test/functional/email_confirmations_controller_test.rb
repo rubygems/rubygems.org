@@ -34,6 +34,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :bad_request
+
       should "not sign in user" do
         refute cookies[:remember_token]
       end
@@ -90,6 +91,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "display otp form" do
         assert page.has_content?("Multi-factor authentication")
       end
@@ -109,6 +111,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         end
 
         should redirect_to("the homepage") { root_url }
+
         should "should confirm user account" do
           assert @user.email_confirmed
         end
@@ -123,6 +126,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         end
 
         should respond_with :unauthorized
+
         should "alert about otp being incorrect" do
           assert_equal "Your OTP code is incorrect.", flash[:alert]
         end
@@ -182,6 +186,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "set flash notice" do
         assert_equal "Credentials required", flash[:alert]
       end
@@ -209,6 +214,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "set flash notice" do
         assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
       end
@@ -244,6 +250,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       should "deliver confirmation email" do
         refute_empty ActionMailer::Base.deliveries
         email = ActionMailer::Base.deliveries.last
+
         assert_equal ["foo@bar.com"], email.to
         assert_equal ["no-reply@mailer.rubygems.org"], email.from
         assert_equal "Please confirm your email address with RubyGems.org", email.subject
@@ -257,6 +264,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     context "invalid params" do
       should "fail friendly" do
         post :create, params: { email_confirmation: "ABC" }
+
         assert_response 400 # bad status raised by strong params
       end
     end
@@ -294,6 +302,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should "regenerate confirmation token" do
         post :unconfirmed
+
         assert_not_equal "something", @user.reload.confirmation_token
       end
 
@@ -305,8 +314,10 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should "set success flash and redirect to edit path" do
         post :unconfirmed
+
         assert_redirected_to edit_profile_path
         expected_notice = "You will receive an email within the next few minutes. It contains instructions for confirming your new email address."
+
         assert_equal expected_notice, flash[:notice]
       end
 
@@ -342,6 +353,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           context "on PATCH to unconfirmed" do
             setup { patch :unconfirmed }
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
             should "set mfa_redirect_uri" do
               assert_equal unconfirmed_email_confirmations_path, session[:mfa_redirect_uri]
             end
@@ -393,6 +405,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           context "on PATCH to unconfirmed" do
             setup { patch :unconfirmed }
             should redirect_to("the edit settings page") { edit_settings_path }
+
             should "set mfa_redirect_uri" do
               assert_equal unconfirmed_email_confirmations_path, session[:mfa_redirect_uri]
             end

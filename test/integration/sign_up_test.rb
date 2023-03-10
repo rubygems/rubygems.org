@@ -50,6 +50,7 @@ class SignUpTest < SystemTest
     Rails.application.reload_routes!
 
     visit root_path
+
     refute page.has_content? "Sign up"
     assert_raises(ActionController::RoutingError) do
       visit "/sign_up"
@@ -71,6 +72,7 @@ class SignUpTest < SystemTest
     click_button "Sign up"
 
     link = last_email_link
+
     assert_not_nil link
     visit link
 

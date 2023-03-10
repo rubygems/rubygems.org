@@ -48,6 +48,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
     click_button "Delete Webhook"
+
     page.assert_text "Action ran successfully!"
     page.assert_text web_hook.to_global_id.uri.to_s
 

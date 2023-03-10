@@ -5,9 +5,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   should "route old paths to new controller" do
     get_route = { controller: "api/v1/rubygems", action: "show", id: "rails", format: "json" }
+
     assert_recognizes(get_route, "/api/v1/gems/rails.json")
 
     post_route = { controller: "api/v1/rubygems", action: "create" }
+
     assert_recognizes(post_route, path: "/api/v1/gems", method: :post)
   end
 
@@ -15,6 +17,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should "return a hash" do
       response = yield(@response.body) if block_given?
+
       assert_not_nil response
       assert_kind_of Hash, response
     end
@@ -71,11 +74,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that not hosted" do
       setup do
         @rubygem = create(:rubygem)
+
         assert_predicate @rubygem.versions.count, :zero?
         get :show, params: { id: @rubygem.to_param }, format: "json"
       end
 
       should respond_with :not_found
+
       should "say gem could not be found" do
         assert_equal "This rubygem could not be found.", @response.body
       end
@@ -84,11 +89,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that doesn't exist" do
       setup do
         @name = generate(:name)
+
         refute Rubygem.exists?(name: @name)
         get :show, params: { id: @name }, format: "json"
       end
 
       should respond_with :not_found
+
       should "say the rubygem was not found" do
         assert_match(/not be found/, @response.body)
       end
@@ -102,6 +109,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :not_found
+
       should "say gem could not be found" do
         assert_equal "This rubygem could not be found.", @response.body
       end
@@ -176,11 +184,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "return a hash" do
         assert_not_nil yield(@response.body)
       end
       should "only return my gems" do
-        gem_names = yield(@response.body).map { |rubygem| rubygem["name"] }.sort
+        gem_names = yield(@response.body).pluck("name").sort
+
         assert_equal %w[AnotherGem SomeGem], gem_names
       end
     end
@@ -214,6 +224,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           post :create, body: gem_file.read
         end
         should respond_with :unauthorized
+
         should "return body that starts with MFA enabled message" do
           assert @response.body.start_with?("You have enabled multifactor authentication")
         end
@@ -302,10 +313,12 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
         should "respond_with success" do
           post :create, body: gem_file("test-1.0.0.gem").read
+
           assert_response :success
         end
         should "register new version" do
           post :create, body: gem_file("test-1.0.0.gem").read
+
           assert_equal @user, Rubygem.last.ownerships.first.user
           assert_equal 1, Rubygem.last.ownerships.count
           assert_equal 2, Rubygem.last.versions.count
@@ -358,6 +371,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :conflict
       should "not register new version" do
         version = Rubygem.last.reload.versions.most_recent
+
         assert_equal @date.to_fs(:db), version.built_at.to_fs(:db), "(date)"
         assert_equal "Freewill", version.summary, "(summary)"
         assert_equal "Geddy Lee", version.authors, "(authors)"
@@ -434,6 +448,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         requires_toxiproxy
         Toxiproxy[:elasticsearch].down do
           post :create, body: gem_file("test-1.0.0.gem").read
+
           assert_response :success
           assert_equal @user, Rubygem.last.ownerships.first.user
           assert_equal 1, Rubygem.last.ownerships.count
@@ -589,6 +604,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
+
         should "not show error message" do
           refute_includes @response.body, "For protection of your account and your gems"
         end
@@ -602,6 +618,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
+
         should "not show error message" do
           refute_includes @response.body, "For protection of your account and your gems"
         end
@@ -693,6 +710,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :forbidden
+
       should "#render_soft_deleted_api_key and display an error" do
         assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
       end
@@ -708,6 +726,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :forbidden
+
       should "say gem scope is invalid" do
         assert_equal "This API key cannot perform the specified action on this gem.", @response.body
       end
@@ -736,6 +755,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :forbidden
+
     should "#render_soft_deleted_api_key and display an error" do
       assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
     end
@@ -771,6 +791,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         post :create, body: gem_file("test-1.0.0.gem").read
       end
       should respond_with :forbidden
+
       should "return body that starts with denied access message" do
         assert @response.body.start_with?("The API key doesn't have access")
       end

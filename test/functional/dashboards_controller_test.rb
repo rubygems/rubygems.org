@@ -54,6 +54,7 @@ class DashboardsControllerTest < ActionController::TestCase
         @gems.each do |g|
           assert page.has_content?(g.name)
           selector = "a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']"
+
           assert page.has_selector?(selector)
         end
       end
@@ -121,6 +122,7 @@ class DashboardsControllerTest < ActionController::TestCase
       context "user has mfa disabled" do
         setup { get :show }
         should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
         should "set mfa_redirect_uri" do
           assert_equal dashboard_path, session[:mfa_redirect_uri]
         end
@@ -133,6 +135,7 @@ class DashboardsControllerTest < ActionController::TestCase
         end
 
         should redirect_to("the settings page") { edit_settings_path }
+
         should "set mfa_redirect_uri" do
           assert_equal dashboard_path, session[:mfa_redirect_uri]
         end

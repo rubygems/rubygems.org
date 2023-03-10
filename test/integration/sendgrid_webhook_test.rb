@@ -28,6 +28,7 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
     error = assert_raises(RuntimeError) do
       post "/sendgrid_events", params: params, as: :json, headers: authorization_header
     end
+
     assert_equal("Invalid authentication options", error.message)
   end
 
@@ -41,6 +42,7 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
     assert_response :ok
 
     events = SendgridEvent.all
+
     assert_equal 2, events.size
     assert_equal "user1@example.com", events.first.email
     assert_equal "user2@example.com", events.last.email
