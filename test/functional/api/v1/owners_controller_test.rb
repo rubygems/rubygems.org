@@ -32,7 +32,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
 
       should "not return other owner handle" do
-        assert yield(@response.body).map { |owner| owner["handle"] }.exclude?(@other_user.handle)
+        assert yield(@response.body).pluck("handle").exclude?(@other_user.handle)
       end
     end
   end

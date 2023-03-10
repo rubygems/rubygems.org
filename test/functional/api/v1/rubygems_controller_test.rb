@@ -189,7 +189,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_not_nil yield(@response.body)
       end
       should "only return my gems" do
-        gem_names = yield(@response.body).map { |rubygem| rubygem["name"] }.sort
+        gem_names = yield(@response.body).pluck("name").sort
 
         assert_equal %w[AnotherGem SomeGem], gem_names
       end
