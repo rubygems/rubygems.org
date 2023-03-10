@@ -47,6 +47,9 @@ Rails/UnknownEnv:
 Rails/UniqueValidationWithoutIndex:
   Enabled: false
 
+Rails/ActionControllerTestCase:
+  Enabled: false # Causes every integration test to fail
+
 Layout/ArgumentAlignment:
   Enabled: false
 
@@ -57,7 +60,7 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
-    - test/**/*.rb
+    - test/**/*
     - config/routes.rb
 
 Metrics/ClassLength:
