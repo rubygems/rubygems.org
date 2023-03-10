@@ -19,6 +19,9 @@ spec:
         ad.datadoghq.com/puma.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
         name: web
+        tags.datadoghq.com/env: "<%= environment %>"
+        tags.datadoghq.com/service: rubygems.org
+        tags.datadoghq.com/version: <%= current_sha %>
     spec:
       containers:
       - name: puma
