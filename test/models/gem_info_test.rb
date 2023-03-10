@@ -25,6 +25,7 @@ class GemInfoTest < ActiveSupport::TestCase
 
     should "return gem version and dependency" do
       info = GemInfo.new("example").compact_index_info
+
       assert_equal @expected_info, info
     end
 
@@ -52,6 +53,7 @@ class GemInfoTest < ActiveSupport::TestCase
 
     should "order rubygems by name" do
       names = GemInfo.ordered_names
+
       assert_equal @ordered_names, names
     end
 
@@ -84,6 +86,7 @@ class GemInfoTest < ActiveSupport::TestCase
 
     should "return all versions created after given date and ordered by created_at" do
       versions = GemInfo.compact_index_versions(4.days.ago)
+
       assert_equal @expected_versions, versions
     end
   end
@@ -103,6 +106,7 @@ class GemInfoTest < ActiveSupport::TestCase
         @version.rubygem.name,
         [CompactIndex::GemVersion.new(@version.number, @version.platform, @version.sha256, @version.info_checksum)]
       )]
+
       assert_equal expected_versions, versions
     end
   end

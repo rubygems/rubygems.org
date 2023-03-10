@@ -8,6 +8,7 @@ class Avo::AuditsControllerTest < ActionDispatch::IntegrationTest
     admin_sign_in_as admin
 
     get avo.resources_audits_path
+
     assert_response :success
 
     user = create(:user)
@@ -44,6 +45,7 @@ class Avo::AuditsControllerTest < ActionDispatch::IntegrationTest
     empty_audit = create(:audit, auditable: user)
 
     get avo.resources_audits_path
+
     assert_response :success
     page.assert_text audit.action
     page.assert_text deletion_audit.action
@@ -51,21 +53,25 @@ class Avo::AuditsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text empty_audit.action
 
     get avo.resources_audit_path(audit)
+
     assert_response :success
     page.assert_text audit.action
     page.assert_text audit.comment
 
     get avo.resources_audit_path(deletion_audit)
+
     assert_response :success
     page.assert_text deletion_audit.action
     page.assert_text deletion_audit.comment
 
     get avo.resources_audit_path(insertion_audit)
+
     assert_response :success
     page.assert_text insertion_audit.action
     page.assert_text insertion_audit.comment
 
     get avo.resources_audit_path(empty_audit)
+
     assert_response :success
     page.assert_text empty_audit.action
     page.assert_text empty_audit.comment

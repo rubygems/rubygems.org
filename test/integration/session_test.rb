@@ -38,6 +38,7 @@ class SessionTest < ActionDispatch::IntegrationTest
     )
 
     patch "/profile", params: { user: { handle: "alice" }, authenticity_token: @last_session_token }
+
     assert_response :forbidden
     refute_equal request.session[:_csrf_token], @last_session_token
   end

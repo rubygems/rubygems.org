@@ -70,6 +70,7 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     StatsD.expects(:distribution)
+
     assert page.has_content? "Multi-factor authentication"
 
     within(".mfa-form") do
@@ -96,6 +97,7 @@ class SignInTest < SystemTest
 
       assert page.has_content? "Sign in"
       expected_notice = "Your login page session has expired."
+
       assert page.has_selector? "#flash_notice", text: expected_notice
     end
   end
@@ -163,6 +165,7 @@ class SignInTest < SystemTest
 
     expected_notice = "For protection of your account and your gems, we encourage you to set up multi-factor authentication. " \
                       "Your account will be required to have MFA enabled in the future."
+
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(new_multifactor_auth_path)
     assert page.has_content? "Sign out"
@@ -191,6 +194,7 @@ class SignInTest < SystemTest
     expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
                       "to \"UI and gem signin\" or \"UI and API\". Your account will be required to have MFA enabled " \
                       "on one of these levels in the future."
+
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(edit_settings_path)
     assert page.has_content? "Sign out"
@@ -284,6 +288,7 @@ class SignInTest < SystemTest
 
     travel 15.days do
       visit edit_profile_path
+
       assert page.has_content? "Sign in"
     end
   end

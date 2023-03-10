@@ -36,6 +36,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
     should "process file from local fs" do
       @log_ticket.update(backend: "local", directory: "test/sample_logs")
+
       assert_equal @sample_log_counts, @processor.download_counts(@log_ticket)
     end
 
@@ -64,8 +65,10 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
     context "#perform" do
       should "not double count" do
         json = Rubygem.find_by_name("json")
+
         assert_equal 0, GemDownload.count_for_rubygem(json.id)
         3.times { @job.perform_now }
+
         assert_equal 7, es_downloads(json.id)
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
       end
@@ -77,11 +80,13 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
           version = Version.find_by(full_name: name)
           if version
             count = GemDownload.find_by(rubygem_id: version.rubygem.id, version_id: version.id).count
+
             assert_equal expected_count, count, "invalid value for #{name}"
           end
         end
 
         json = Rubygem.find_by_name("json")
+
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
         assert_equal 7, es_downloads(json.id)
         assert_equal "processed", @log_ticket.reload.status
@@ -89,6 +94,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
       should "not run if already processed" do
         json = Rubygem.find_by_name("json")
+
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)
         @log_ticket.update(status: "processed")
@@ -100,6 +106,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
       should "not mark as processed if anything fails" do
         @processor.class.any_instance.stubs(:download_counts).raises("woops")
+
         assert_kind_of RuntimeError, @job.perform_now
 
         refute_equal "processed", @log_ticket.reload.status
@@ -108,10 +115,12 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
       should "not re-process if it failed" do
         @processor.class.any_instance.stubs(:download_counts).raises("woops")
+
         assert_kind_of RuntimeError, @job.perform_now
 
         @job.perform_now
         json = Rubygem.find_by_name("json")
+
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)
       end
@@ -120,18 +129,21 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
         ticket = LogTicket.create!(backend: "s3", directory: "test-bucket", key: "fastly-fake.2.log", status: "pending")
 
         @job.perform_now
+
         assert_equal "pending", ticket.reload.status
         assert_equal "processed", @log_ticket.reload.status
       end
 
       should "update the processed count" do
         @job.perform_now
+
         assert_equal 10, @log_ticket.reload.processed_count
       end
 
       should "update the total gem count" do
         assert_equal 0, GemDownload.total_count
         @job.perform_now
+
         assert_equal 9, GemDownload.total_count
       end
     end

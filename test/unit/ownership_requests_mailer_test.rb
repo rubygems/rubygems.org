@@ -12,6 +12,7 @@ class OwnershipRequestMailerTest < ActiveSupport::TestCase
     should "send mail to owners" do
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [@ownership.user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "New ownership request(s) for #{@ownership.rubygem.name}", email.subject

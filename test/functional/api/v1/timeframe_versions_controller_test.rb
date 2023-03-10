@@ -19,6 +19,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         }
 
         gems = JSON.parse @response.body
+
         assert_equal 2, gems.length
         assert_equal "rails", gems[0]["name"]
         assert_equal @rails_version2.number, gems[0]["version"]
@@ -35,6 +36,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         }
 
         gems = JSON.parse @response.body
+
         assert_empty gems
       end
     end
@@ -94,6 +96,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         @sinatra_version.save!
         get :index, format: :json, params: { from: Time.zone.now.advance(days: -5).iso8601 }
         gems = JSON.parse @response.body
+
         assert_equal 1, gems.length
         assert_equal "sinatra", gems[0]["name"]
       end

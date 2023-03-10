@@ -41,6 +41,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
       latch.wait
       expected_sha = Digest::SHA2.base64digest(@fs.get("gems/hola-0.0.0.gem"))
+
       assert_equal expected_sha, Version.last.sha256
     end
   end
