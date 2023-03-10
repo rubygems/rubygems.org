@@ -28,6 +28,7 @@ class PasswordResetTest < SystemTest
   end
 
   test "resetting password without handle" do
+    fullscreen_headless_chrome_driver
     forgot_password_with @user.email
 
     visit password_reset_link
@@ -38,6 +39,7 @@ class PasswordResetTest < SystemTest
     click_button "Save this password"
     assert_equal dashboard_path, page.current_path
 
+    click_link "More items"
     click_link "Sign out"
 
     visit sign_in_path
@@ -45,7 +47,7 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "resetting a password with a blank password" do
@@ -83,6 +85,7 @@ class PasswordResetTest < SystemTest
   end
 
   test "restting password when mfa is enabled" do
+    fullscreen_headless_chrome_driver
     @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
     forgot_password_with @user.email
 
@@ -94,7 +97,7 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
-    assert page.has_content?("Sign out")
+    assert page.has_content?(:all, "Sign out")
   end
 
   test "resetting password when webauthn is enabled" do
@@ -122,6 +125,7 @@ class PasswordResetTest < SystemTest
   end
 
   test "resetting password with pending email change" do
+    fullscreen_headless_chrome_driver
     visit sign_in_path
 
     email = @user.email
@@ -140,6 +144,7 @@ class PasswordResetTest < SystemTest
 
     assert_equal new_email, @user.reload.unconfirmed_email
 
+    click_link "More items"
     click_link "Sign out"
 
     forgot_password_with email

@@ -13,6 +13,7 @@ class ProfileTest < SystemTest
   end
 
   test "changing handle" do
+    fullscreen_headless_chrome_driver
     sign_in
 
     visit profile_path("nick1")
@@ -23,7 +24,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "nick2"
+    assert page.has_content? :all, "nick2"
   end
 
   test "changing to an existing handle" do
@@ -41,6 +42,7 @@ class ProfileTest < SystemTest
   end
 
   test "changing to invalid handle does not affect rendering" do
+    fullscreen_headless_chrome_driver
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
@@ -94,6 +96,7 @@ class ProfileTest < SystemTest
   end
 
   test "adding Twitter username" do
+    fullscreen_headless_chrome_driver
     sign_in
     visit profile_path("nick1")
 
@@ -102,6 +105,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
+    click_link "More items"
     click_link "Sign out"
     visit profile_path("nick1")
 

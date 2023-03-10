@@ -214,6 +214,8 @@ Rails.application.routes.draw do
     delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+    get '/nav_profile_links' => 'home#nav_profile_links'
+    get '/mobile_nav_profile_links' => 'home#mobile_nav_profile_links'
   end
 
   ################################################################################

@@ -9,21 +9,22 @@ class SignInTest < SystemTest
   end
 
   test "signing in" do
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
-
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing in with uppercase email" do
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "Nick@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing in with wrong password" do
@@ -64,6 +65,7 @@ class SignInTest < SystemTest
   end
 
   test "signing in with current valid otp when mfa enabled" do
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -77,7 +79,7 @@ class SignInTest < SystemTest
       click_button "Verify code"
     end
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing in with current valid otp when mfa enabled but 30 minutes has passed" do
@@ -117,6 +119,7 @@ class SignInTest < SystemTest
   end
 
   test "signing in with valid recovery code when mfa enabled" do
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -129,7 +132,7 @@ class SignInTest < SystemTest
       click_button "Verify code"
     end
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing in with invalid recovery code when mfa enabled" do
@@ -156,6 +159,7 @@ class SignInTest < SystemTest
       rubygem_id: rubygem.id
     )
 
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -165,7 +169,7 @@ class SignInTest < SystemTest
                       "Your account will be required to have MFA enabled in the future."
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(new_multifactor_auth_path)
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing in with mfa enabled on `ui_only` with gem ownership that exceeds the recommended download threshold" do
@@ -176,6 +180,7 @@ class SignInTest < SystemTest
       rubygem_id: rubygem.id
     )
 
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -193,7 +198,7 @@ class SignInTest < SystemTest
                       "on one of these levels in the future."
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(edit_settings_path)
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing in with mfa enabled on `ui_and_gem_signin` with gem ownership that exceeds the recommended download threshold" do
@@ -205,6 +210,7 @@ class SignInTest < SystemTest
       rubygem_id: rubygem.id
     )
 
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -218,7 +224,7 @@ class SignInTest < SystemTest
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing in with mfa enabled on `ui_and_api` with gem ownership that exceeds the recommended download threshold" do
@@ -230,6 +236,7 @@ class SignInTest < SystemTest
       rubygem_id: rubygem.id
     )
 
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -243,12 +250,13 @@ class SignInTest < SystemTest
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "siging in when user does not have handle" do
     @mfa_user.update_attribute(:handle, nil)
 
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -260,17 +268,18 @@ class SignInTest < SystemTest
       fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
       click_button "Verify code"
     end
-
-    assert page.has_content? "john@example.com"
-    assert page.has_content? "Sign out"
+    assert page.has_content? :all, "john@example.com"
+    assert page.has_content? :all, "Sign out"
   end
 
   test "signing out" do
+    fullscreen_headless_chrome_driver
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
+    click_link "More items"
     click_link "Sign out"
 
     assert page.has_content? "Sign in"
