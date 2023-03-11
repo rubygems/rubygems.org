@@ -5,6 +5,10 @@ class GemDownload < ApplicationRecord
   scope(:most_downloaded_gems, -> { where("version_id != 0").includes(:version).order(count: :desc) })
 
   class << self
+    def for_all_gems
+      GemDownload.create_with(count: 0).find_or_create_by!(version_id: 0, rubygem_id: 0)
+    end
+
     def count_for_version(id)
       v = Version.find(id)
       return 0 unless v
