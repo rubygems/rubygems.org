@@ -48,6 +48,10 @@ class Rubygem < ApplicationRecord
     where(indexed: true)
   }
 
+  scope :without_versions, lambda {
+    where(indexed: false)
+  }
+
   scope :with_one_version, lambda {
     select("rubygems.*")
       .joins(:versions)
