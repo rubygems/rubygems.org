@@ -67,6 +67,10 @@ class ActiveSupport::TestCase
     Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)
   end
 
+  teardown do
+    Rails.configuration.launch_darkly_client.close
+  end
+
   def page
     Capybara::Node::Simple.new(@response.body)
   end
