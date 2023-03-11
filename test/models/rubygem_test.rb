@@ -566,6 +566,12 @@ class RubygemTest < ActiveSupport::TestCase
       assert_includes Rubygem.with_versions, @rubygem_with_versions
     end
 
+    should "return only gems without versions for #without_versions" do
+      assert_includes Rubygem.without_versions, @rubygem_without_version
+      refute_includes Rubygem.without_versions, @rubygem_with_version
+      refute_includes Rubygem.without_versions, @rubygem_with_versions
+    end
+
     should "be hosted or not" do
       refute_predicate @rubygem_without_version, :hosted?
       assert_predicate @rubygem_with_version, :hosted?
