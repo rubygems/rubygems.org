@@ -114,7 +114,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 ### Installing ruby, gem dependencies, and setting up the database
 
-* Use Ruby 3.1.x
+* Use Ruby 3.2.x
   * See: [Ruby install instructions](https://www.ruby-lang.org/en/downloads/).
   * `.ruby-version` is present and can be used.
 * Use Rubygems 3.3.x
