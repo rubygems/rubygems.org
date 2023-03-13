@@ -59,6 +59,65 @@ ActiveSupport::Notifications.subscribe(/\.active_job/) do |event|
     )
 end
 
+ActiveSupport::Notifications.subscribe("perform_job.good_job") do |event|
+  execution = event.payload[:execution]
+
+  result = if event.payload[:retried] || execution.retried_good_job_id.present?
+             :retried
+           elsif event.payload[:unhandled_error]
+             :unhandled_error
+           elsif event.payload[:handled_error]
+             :handled_error
+           else
+             :success
+           end
+
+  statsd_tags = {
+    job_class: execution.serialized_params['job_class'],
+    exception: event.payload.dig(:exception, 0),
+    queue: execution.queue_name,
+    priority: execution.priority,
+    result:
+  }
+
+  statsd_measure_performance event.name,
+    event.payload.merge(statsd_method: :measure,
+                        measurement: 'total_duration',
+                        value: event.duration,
+                        statsd_tags:)
+  statsd_measure_performance event.name,
+    event.payload.merge(statsd_method: :histogram,
+                        measurement: "allocations",
+                        value: event.allocations,
+                        statsd_tags:)
+  statsd_measure_performance event.name,
+    event.payload.merge(statsd_method: :histogram,
+                        measurement: "queue_latency",
+                        value: execution.queue_latency,
+                        statsd_tags:)
+  statsd_measure_performance event.name,
+    event.payload.merge(statsd_method: :histogram,
+                        measurement: "runtime_latency",
+                        value: execution.runtime_latency,
+                        statsd_tags:)
+  statsd_measure_performance event.name,
+    event.payload.merge(statsd_method: :histogram,
+                        measurement: "job_latency",
+                        value: GoodJob::Execution
+                        .where("(serialized_params->>'executions')::integer = 0")
+                        .where(active_job_id: execution.active_job_id)
+                        .pick(
+                          Arel::Nodes.build_quoted(Time.current, GoodJob::Execution.arel_table[:created_at]) -
+                           Arel.sql("COALESCE(scheduled_at, created_at)")
+                        ),
+                        statsd_tags:)
+  statsd_measure_performance event.name,
+    event.payload.merge(
+      measurement: result,
+      statsd_tags:
+    )
+end
+
 def statsd_measure_performance(name, payload)
   method = payload[:statsd_method] || :increment
   measurement = payload[:measurement]
