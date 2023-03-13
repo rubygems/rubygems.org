@@ -35,7 +35,7 @@ gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
 gem "shoryuken", "~> 4.0", require: false
-gem "statsd-instrument", "~> 2.3.0"
+gem "statsd-instrument"
 gem "validates_formatting_of"
 gem "opensearch-dsl", "~> 0.2.0"
 gem "opensearch-ruby", "~> 1.0.0"

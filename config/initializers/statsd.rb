@@ -1,34 +1,8 @@
-# TODO: add feature to statsd-instrument for default tags
-
 StatsD.logger = SemanticLogger[StatsD]
 
-StatsD::Instrument::Backends::LoggerBackend.include(Module.new do
-  extend ActiveSupport::Concern
-  included do
-    def collect_metric(metric)
-      type = StatsD::Instrument::Metric::TYPES[metric.type]
-      log = {
-        message: "#{type} #{metric.name}",
-        type:,
-        name: metric.name,
-        value: metric.value,
-        sample_rate: metric.sample_rate,
-        tags: metric.tags.to_h { _1.split(':', 2) }.presence,
-        metadata: metric.metadata.presence
-      }
-      StatsD.logger.info log.compact
-    end
-  end
-end)
-
-class StatsD::Instrument::Metric
-  def self.normalize_tags(tags)
-    tags ||= []
-    tags = tags.map { |k, v| k.to_s + ":".freeze + v.to_s } if tags.is_a?(Hash)
-    tags.map { |tag| tag.tr('|,'.freeze, ''.freeze) }
-    tags << "env:#{Rails.env}" # Added to allow default env tag on all metrics
-  end
-end
+StatsD.singleton_client = StatsD.singleton_client.clone_with_options(
+  default_tags: ["env:#{Rails.env}"]
+)
 
 ActiveSupport::Notifications.subscribe(/process_action.action_controller/) do |event|
   event.payload[:format] = event.payload[:format] || 'all'
