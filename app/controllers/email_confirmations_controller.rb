@@ -1,4 +1,6 @@
 class EmailConfirmationsController < ApplicationController
+  include MfaExpiryMethods
+
   before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
@@ -9,7 +11,7 @@ class EmailConfirmationsController < ApplicationController
       setup_mfa_authentication
       setup_webauthn_authentication
 
-      session[:mfa_expires_at] = 15.minutes.from_now.to_s
+      create_new_mfa_expiry
 
       render template: "multifactor_auths/mfa_prompt"
     else
@@ -26,7 +28,7 @@ class EmailConfirmationsController < ApplicationController
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
   ensure
-    session.delete(:mfa_expires_at)
+    delete_mfa_expiry_session
   end
 
   def webauthn_update
@@ -58,7 +60,7 @@ class EmailConfirmationsController < ApplicationController
   rescue WebAuthn::Error => e
     login_failure(e.message)
   ensure
-    session.delete(:mfa_expires_at)
+    delete_mfa_expiry_session
   end
 
   def new
@@ -138,10 +140,5 @@ class EmailConfirmationsController < ApplicationController
   def login_failure(message)
     flash.now.alert = message
     render template: "multifactor_auths/mfa_prompt", status: :unauthorized
-  end
-
-  def session_active?
-    return false if session[:mfa_expires_at].nil?
-    session[:mfa_expires_at] > Time.current
   end
 end
