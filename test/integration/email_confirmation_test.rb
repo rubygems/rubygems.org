@@ -90,6 +90,23 @@ class EmailConfirmationTest < SystemTest
     @authenticator.remove!
   end
 
+  test "requesting confirmation mail with mfa enabled, but mfa session is expired" do
+    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    request_confirmation_mail @user.email
+
+    link = last_email_link
+
+    assert_not_nil link
+    visit link
+
+    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    travel 16.minutes do
+      click_button "Authenticate"
+
+      assert page.has_content? "Your login page session has expired."
+    end
+  end
+
   teardown do
     Capybara.reset_sessions!
     Capybara.use_default_driver
