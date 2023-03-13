@@ -28,6 +28,9 @@ require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/webauthn_helpers"
 
+require 'webmock/minitest'
+WebMock.disable_net_connect!(allow_localhost: true)
+
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
