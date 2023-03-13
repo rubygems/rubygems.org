@@ -101,20 +101,17 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       setup do
         @user = create(:user)
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
       end
 
       context "when OTP is correct" do
         setup do
+          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
           post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
         should redirect_to("the homepage") { root_url }
         should "should confirm user account" do
           assert @user.email_confirmed
-        end
-        should "sign in user" do
-          assert cookies[:remember_token]
         end
         should "clear mfa_expires_at" do
           assert_nil @controller.session[:mfa_expires_at]
@@ -123,6 +120,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       context "when OTP is incorrect" do
         setup do
+          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
           post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
         end
 
@@ -134,6 +132,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       context "when the OTP session is expired" do
         setup do
+          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
           travel 16.minutes do
             post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
           end

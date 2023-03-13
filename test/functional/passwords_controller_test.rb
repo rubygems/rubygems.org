@@ -68,7 +68,6 @@ class PasswordsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @user.forgot_password!
-      @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
     end
 
     context "with mfa enabled" do
@@ -76,6 +75,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when OTP is correct" do
         setup do
+          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
           post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
@@ -90,6 +90,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when OTP is incorrect" do
         setup do
+          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
           post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: "eatthis" }
         end
 
@@ -101,8 +102,9 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when the OTP session is expired" do
         setup do
+          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
           travel 16.minutes do
-            post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: "eatthis" }
+            post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
           end
         end
 

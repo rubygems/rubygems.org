@@ -98,7 +98,7 @@ class PasswordResetTest < SystemTest
   end
 
   test "resetting a password when mfa is enabled but mfa session is expired" do
-    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
     forgot_password_with @user.email
 
     visit password_reset_link
