@@ -97,6 +97,20 @@ class PasswordResetTest < SystemTest
     assert page.has_content?("Sign out")
   end
 
+  test "resetting a password when mfa is enabled but mfa session is expired" do
+    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    forgot_password_with @user.email
+
+    visit password_reset_link
+
+    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    travel 16.minutes do
+      click_button "Authenticate"
+
+      assert page.has_content? "Your login page session has expired."
+    end
+  end
+
   test "resetting password when webauthn is enabled" do
     create_webauthn_credential
 
