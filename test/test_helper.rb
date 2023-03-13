@@ -27,9 +27,15 @@ require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/webauthn_helpers"
+require "webmock/minitest"
 
-require 'webmock/minitest'
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(
+  allow_localhost: true,
+  allow: [
+    "chromedriver.storage.googleapis.com",
+    "avohq.io"
+  ]
+)
 
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
