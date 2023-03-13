@@ -63,7 +63,7 @@ class ActiveSupport::TestCase
     end
 
     @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
-    config = LaunchDarkly::Config.new(data_source: @launch_darkly)
+    config = LaunchDarkly::Config.new(data_source: @launch_darkly, send_events: false)
     Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)
   end
 
