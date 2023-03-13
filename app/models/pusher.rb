@@ -124,7 +124,7 @@ class Pusher
       Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
     end
     Indexer.perform_later
-    rubygem.delay.reindex
+    ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?
     StatsD.increment "push.success"
