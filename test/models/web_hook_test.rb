@@ -191,6 +191,8 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "not increment failure count for hook" do
+      stub_request(:post, @url).to_return(status: 200, body: "", headers: {})
+
       perform_enqueued_jobs only: NotifyWebHookJob do
         @hook.fire("https", "rubygems.org", @version)
       end
@@ -209,15 +211,17 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "increment failure count for hook on errors" do
-      [SocketError,
-       Timeout::Error,
-       Errno::EINVAL,
-       Errno::ECONNRESET,
-       EOFError,
-       Net::HTTPBadResponse,
-       Net::HTTPHeaderSyntaxError,
-       Net::ProtocolError].each_with_index do |exception, index|
-        RestClient.stubs(:post).raises(exception)
+      [
+        SocketError,
+        Timeout::Error,
+        Errno::EINVAL,
+        Errno::ECONNRESET,
+        EOFError,
+        Net::HTTPBadResponse,
+        Net::HTTPHeaderSyntaxError,
+        Net::ProtocolError
+      ].each_with_index do |exception, index|
+        stub_request(:post, @url).to_raise(exception)
 
         perform_enqueued_jobs only: NotifyWebHookJob do
           @hook.fire("https", "rubygems.org", @version)
