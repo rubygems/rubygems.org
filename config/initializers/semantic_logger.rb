@@ -1,7 +1,9 @@
+SemanticLogger.application = "rubygems.org"
+
 ActiveSupport.on_load(:action_controller) do
   def append_info_to_payload(payload)
     payload.merge!(
-      timestamp: ::Time.now.utc,
+      timestamp: Time.now.utc,
       env: Rails.env,
       network: {
         client: {

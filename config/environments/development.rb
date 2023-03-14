@@ -79,10 +79,18 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.rails_semantic_logger.semantic = false
-  config.rails_semantic_logger.started    = true
-  config.rails_semantic_logger.processing = true
-  config.rails_semantic_logger.rendered   = true
+  # By default, keep rails logs looking like standard rails logs
+  # (multiple lines per request, no timestamp/thread/process/level/logger name, etc)
+  enable_semantic_log_format = ENV['ENABLE_SEMANTIC_LOG_FORMAT'].present?
+  config.rails_semantic_logger.semantic   = false
+  config.rails_semantic_logger.started    = !enable_semantic_log_format
+  config.rails_semantic_logger.processing = !enable_semantic_log_format
+  config.rails_semantic_logger.rendered   = !enable_semantic_log_format
+  unless enable_semantic_log_format
+    require 'rails_development_log_formatter'
+    SemanticLogger.add_appender(io: $stdout, formatter: RailsDevelopmentLogFormatter.new)
+    config.rails_semantic_logger.format = RailsDevelopmentLogFormatter.new
+  end
 
   # Rubygems.org checks for the presence of an env variable called PROFILE that
   # switches several settings to a more "production-like" value for profiling
@@ -92,9 +100,9 @@ Rails.application.configure do
     config.cache_classes = true
     config.eager_load = true
 
-    config.logger = ActiveSupport::Logger.new($stdout)
     config.log_level = :info
-    config.rails_semantic_logger.format = :json
+    config.rails_semantic_logger.format     = :json
+    config.rails_semantic_logger.semantic   = true
     config.rails_semantic_logger.started    = false
     config.rails_semantic_logger.processing = false
     config.rails_semantic_logger.rendered   = false

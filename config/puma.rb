@@ -48,7 +48,7 @@ on_worker_boot do
   Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new(ENV["LAUNCH_DARKLY_SDK_KEY"].presence || "")
 
   # Re-open appenders after forking the process
-  SemanticLogger.reopen if defined?(SemanticLogger) 
+  SemanticLogger.reopen if defined?(SemanticLogger)
 end
 
 on_restart do
