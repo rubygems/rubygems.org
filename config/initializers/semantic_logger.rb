@@ -17,8 +17,8 @@ ActiveSupport.on_load(:action_controller) do
       action: payload.fetch(:action),
       params: request.filtered_parameters.except('controller', 'action', 'format', 'utf8'),
       format: payload.fetch(:format),
-      view_time_ms: payload.fetch(:view_runtime),
-      db_time_ms: payload.fetch(:db_runtime)
+      view_time_ms: payload.fetch(:view_runtime, 0.0),
+      db_time_ms: payload.fetch(:db_runtime, 0.0)
     }
     payload[:http] = {
       request_id: request.uuid,

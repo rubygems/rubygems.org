@@ -1,6 +1,7 @@
 require "simplecov"
 SimpleCov.start "rails" do
   add_filter "lib/tasks"
+  add_filter "lib/rails_development_log_formatter.rb"
 
   add_filter "app/jobs/delete_user.rb"
 

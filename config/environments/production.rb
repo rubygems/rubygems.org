@@ -60,6 +60,7 @@ Rails.application.configure do
   config.log_level = :info
   config.rails_semantic_logger.format = :json
   config.rails_semantic_logger.semantic = true
+  SemanticLogger.add_appender(io: $stdout, formatter: :json)
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :request_id ]
