@@ -326,7 +326,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
         should "enqueue jobs" do
           assert_difference "Delayed::Job.count", 1 do
-            assert_enqueued_jobs 4, only: FastlyPurgeJob do
+            assert_enqueued_jobs 5, only: FastlyPurgeJob do
               assert_enqueued_jobs 1, only: NotifyWebHookJob do
                 assert_enqueued_jobs 1, only: Indexer do
                   assert_enqueued_jobs 1, only: ReindexRubygemJob do
