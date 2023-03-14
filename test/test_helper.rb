@@ -69,6 +69,7 @@ class ActiveSupport::TestCase
 
   teardown do
     Rails.configuration.launch_darkly_client.close
+    GoodJob::Job.delete_all
   end
 
   def page
