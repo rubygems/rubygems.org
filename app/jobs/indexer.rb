@@ -1,6 +1,7 @@
 class Indexer < ApplicationJob
   extend StatsD::Instrument
   include TraceTagger
+  include SemanticLogger::Loggable
 
   queue_with_priority PRIORITIES.fetch(:push)
 
@@ -86,6 +87,6 @@ class Indexer < ApplicationJob
   end
 
   def log(message)
-    Rails.logger.info "[GEMCUTTER:#{Time.zone.now}] #{message}"
+    logger.info message
   end
 end

@@ -1,7 +1,7 @@
 require "simplecov"
 SimpleCov.start "rails" do
   add_filter "lib/tasks"
-  add_filter "lib/lograge"
+  add_filter "lib/rails_development_log_formatter.rb"
 
   add_filter "app/jobs/delete_user.rb"
 
@@ -57,6 +57,10 @@ class ActiveSupport::TestCase
   include GemHelpers
   include EmailHelpers
   include PasswordHelpers
+
+  parallelize_setup do |_worker|
+    SemanticLogger.reopen
+  end
 
   setup do
     I18n.locale = :en

@@ -15,7 +15,7 @@ threads 1, 1 # TODO: switch to threaded after initial puma deploy
 require "concurrent"
 
 rails_env = ENV.fetch("RAILS_ENV") { "development" }
-production_like = %w[production staging].include?(rails_env)
+production_like = %w[production staging].include?(rails_env) || true
 
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
@@ -45,7 +45,10 @@ before_fork do
 end
 
 on_worker_boot do
-  Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new(ENV["LAUNCH_DARKLY_SDK_KEY"].presence || "")
+  Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new(ENV["LAUNCH_DARKLY_SDK_KEY"].presence || "") if defined?(Rails)
+
+  # Re-open appenders after forking the process
+  SemanticLogger.reopen if defined?(SemanticLogger)
 end
 
 on_restart do

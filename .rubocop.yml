@@ -284,6 +284,5 @@ Minitest/MultipleAssertions:
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
   Exclude:
-    - lib/lograge/formatters/datadog.rb
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb

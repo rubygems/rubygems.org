@@ -57,7 +57,8 @@ gem "chartkick"
 gem "groupdate"
 
 # Logging
-gem "lograge"
+gem "amazing_print"
+gem "rails_semantic_logger"
 
 group :assets do
   gem "sassc-rails"
