@@ -282,4 +282,10 @@ FactoryBot.define do
       audit.update(audited_changes: { records: options.records, fields: options.fields, arguments: options.arguments, models: options.models })
     end
   end
+
+  factory :log_ticket do
+    key { "key" }
+    directory { "directory" }
+    status { :pending }
+  end
 end
