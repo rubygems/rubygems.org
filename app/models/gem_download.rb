@@ -1,6 +1,4 @@
 class GemDownload < ApplicationRecord
-  include SemanticLogger::Loggable
-
   belongs_to :rubygem, optional: true
   belongs_to :version, optional: true
 
