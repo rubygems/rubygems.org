@@ -35,6 +35,18 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
     end
   end
 
+  class ConcurrencyLimitedJob < ApplicationJob
+    self.queue_adapter = ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :async)
+    queue_as :concurrency_limited
+    include GoodJob::ActiveJobExtensions::Concurrency
+    good_job_control_concurrency_with(
+      perform_limit: 0,
+      key: name
+    )
+    def perform
+    end
+  end
+
   def metric(args = {})
     StatsD::Instrument::MetricExpectation.new(args.reverse_merge(times: 1))
   end
@@ -45,10 +57,12 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
   end
 
   test "reports metrics to statsd" do
+    travel_to Time.utc(2023, 3, 6, 1, 2, 3)
     FailureJob.perform_later
     DiscardJob.perform_later
     RetryJob.perform_later
     SuccessJob.perform_later
+    ConcurrencyLimitedJob.perform_later
 
     begin
       GoodJob.perform_inline("retry_once")
@@ -61,6 +75,11 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
       nil
     end
     GoodJob.perform_inline
+
+    3.times do
+      travel 1.day
+      GoodJob.perform_inline("concurrency_limited")
+    end
 
     SuccessJob.set(priority: -2).perform_later
 
@@ -77,11 +96,21 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
       # Retry job
       metric(name: "good_job.count", type: :g,
              value: 1,
-             tags: { "state" => "scheduled", "queue" => "retry_once", "priority" => "0",
+             tags: { "state" => "queued", "queue" => "retry_once", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::RetryJob", "env" => "test" }),
       metric(name: "good_job.staleness", type: :g,
-             tags: { "state" => "scheduled", "queue" => "retry_once", "priority" => "0",
+             tags: { "state" => "queued", "queue" => "retry_once", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::RetryJob", "env" => "test" }),
+
+      # Concurrency limited job
+      metric(name: "good_job.count", type: :g,
+             value: 1,
+              tags: { "state" => "retried", "queue" => "concurrency_limited", "priority" => "0",
+                      "job_class" => "GoodJobStatsDJobTest::ConcurrencyLimitedJob", "env" => "test" }),
+      metric(name: "good_job.staleness", type: :g,
+          value: 3.days,
+              tags: { "state" => "retried", "queue" => "concurrency_limited", "priority" => "0",
+                      "job_class" => "GoodJobStatsDJobTest::ConcurrencyLimitedJob", "env" => "test" }),
 
       # Failure job
       metric(name: "good_job.count", type: :g,
