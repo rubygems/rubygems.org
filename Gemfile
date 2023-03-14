@@ -70,6 +70,7 @@ group :development, :test do
   gem "pry-byebug"
   gem "toxiproxy", "~> 2.0.0"
   gem "factory_bot_rails"
+  gem "dotenv-rails"
 
   gem "brakeman", require: false
   gem "rubocop", "~> 1.48", require: false
