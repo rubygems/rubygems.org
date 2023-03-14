@@ -284,8 +284,8 @@ FactoryBot.define do
   end
 
   factory :log_ticket do
-    key { "key" }
-    directory { "directory" }
+    sequence(:key) { "key-#{_1}" }
+    sequence(:directory) { "directory-#{_1}" }
     status { :pending }
   end
 end
