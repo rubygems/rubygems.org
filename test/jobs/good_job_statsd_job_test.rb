@@ -47,8 +47,8 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
     end
   end
 
-  def metric(args = {})
-    StatsD::Instrument::MetricExpectation.new(args.reverse_merge(times: 1))
+  def metric(**args)
+    StatsD::Instrument::MetricExpectation.new(**args.reverse_merge(times: 1))
   end
 
   setup do
