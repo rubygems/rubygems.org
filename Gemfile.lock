@@ -692,7 +692,7 @@ DEPENDENCIES
   simplecov
   simplecov-cobertura
   sprockets-rails
-  statsd-instrument
+  statsd-instrument (~> 3.5)
   terser
   toxiproxy (~> 2.0.0)
   unpwn
