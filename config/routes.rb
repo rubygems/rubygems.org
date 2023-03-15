@@ -185,7 +185,8 @@ Rails.application.routes.draw do
     resources :ownership_calls, only: :index
     resources :webauthn_credentials, only: :destroy
     resource :webauthn_verification, only: [] do
-      get 'status'
+      get 'successful_verification'
+      get 'failed_verification'
       get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
       # TODO: add html as a valid format
       post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate, constraints: { format: /json/ }
