@@ -2,9 +2,16 @@ class GemDownload < ApplicationRecord
   belongs_to :rubygem, optional: true
   belongs_to :version, optional: true
 
-  scope(:most_downloaded_gems, -> { where("version_id != 0").includes(:version).order(count: :desc) })
+  scope(:most_downloaded_gems, -> { for_versions.includes(:version).order(count: :desc) })
+  scope(:for_versions, -> { where.not(version_id: 0) })
+  scope(:for_rubygems, -> { where(version_id: 0) })
+  scope(:total, -> { where(version_id: 0, rubygem_id: 0) })
 
   class << self
+    def for_all_gems
+      GemDownload.create_with(count: 0).find_or_create_by!(version_id: 0, rubygem_id: 0)
+    end
+
     def count_for_version(id)
       v = Version.find(id)
       return 0 unless v
@@ -55,19 +62,26 @@ class GemDownload < ApplicationRecord
       end
 
       return if updates_by_version.empty?
-      updates_by_version.each_value do |version, version_count|
-        updates_by_gem[version.rubygem_id] ||= 0
-        updates_by_gem[version.rubygem_id] += version_count
-      end
 
-      updates_by_version.values.sort_by { |v, _| v.id }.each do |version, count|
-        # Gem version count
-        increment(count, rubygem_id: version.rubygem_id, version_id: version.id)
+      total_count = 0
+      updates_by_version.each_value.each_slice(1_000) do |versions|
+        rubygem_ids = []
+        version_ids = []
+        downloads = []
+        versions.each do |(version, version_count)|
+          updates_by_gem[version.rubygem_id] ||= 0
+          updates_by_gem[version.rubygem_id] += version_count
+
+          total_count += version_count
+
+          rubygem_ids << version.rubygem_id
+          version_ids << version.id
+          downloads << version_count
+        end
+        increment_versions(rubygem_ids, version_ids, downloads)
       end
 
       update_gem_downloads(updates_by_gem)
-
-      total_count = updates_by_gem.values.sum
 
       # Total count
       increment(total_count, rubygem_id: 0, version_id: 0)
@@ -94,15 +108,27 @@ class GemDownload < ApplicationRecord
       # update ES index of rubygems
       Searchkick.client.bulk body: bulk_update_query
     rescue Faraday::ConnectionFailed, Searchkick::Error, OpenSearch::Transport::Transport::Error => e
-      Rails.logger.debug { "ES update: #{updates_by_gem} has failed: #{e.message}" }
+      logger.debug { { message: "ES update failed", exception: e, updates_by_gem: } }
+    end
+
+    def increment_versions(rubygem_ids, version_ids, downloads)
+      query = <<~SQL.squish
+        count = #{quoted_table_name}.count + updates_by_gem.downloads
+        FROM
+          (SELECT UNNEST(ARRAY[?]) AS r_id, UNNEST(ARRAY[?]) AS v_id, UNNEST(ARRAY[?]) AS downloads) AS updates_by_gem
+        WHERE #{quoted_table_name}.rubygem_id = updates_by_gem.r_id AND #{quoted_table_name}.version_id = updates_by_gem.v_id
+      SQL
+      update_all([query, rubygem_ids, version_ids, downloads])
     end
 
     def increment_rubygems(rubygem_ids, downloads)
-      query = "UPDATE gem_downloads SET count = gem_downloads.count + updates_by_gem.downloads
+      query = <<~SQL.squish
+        count = #{quoted_table_name}.count + updates_by_gem.downloads
         FROM
           (SELECT UNNEST(ARRAY[?]) AS r_id, UNNEST(ARRAY[?]) AS downloads) AS updates_by_gem
-        WHERE gem_downloads.rubygem_id = updates_by_gem.r_id AND gem_downloads.version_id = 0;"
-      find_by_sql([query, rubygem_ids, downloads])
+        WHERE #{quoted_table_name}.rubygem_id = updates_by_gem.r_id AND #{quoted_table_name}.version_id = 0
+      SQL
+      update_all([query, rubygem_ids, downloads])
     end
 
     def downloads_by_gem(rubygem_ids)

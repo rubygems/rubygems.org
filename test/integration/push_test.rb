@@ -14,15 +14,18 @@ class PushTest < ActionDispatch::IntegrationTest
     build_gem "sandworm", "1.0.0"
 
     push_gem "sandworm-1.0.0.gem"
+
     assert_response :success
 
     get rubygem_path("sandworm")
+
     assert_response :success
     assert page.has_content?("sandworm")
     assert page.has_content?("1.0.0")
     assert page.has_content?("Pushed by")
 
     css = %(div.gem__users a[alt=#{@user.handle}])
+
     assert page.has_css?(css, count: 2)
   end
 
@@ -33,9 +36,11 @@ class PushTest < ActionDispatch::IntegrationTest
     build_gem "sandworm", "2.0.0"
 
     push_gem "sandworm-2.0.0.gem"
+
     assert_response :success
 
     get rubygem_path("sandworm")
+
     assert_response :success
     assert page.has_content?("sandworm")
     assert page.has_content?("2.0.0")
@@ -51,6 +56,7 @@ class PushTest < ActionDispatch::IntegrationTest
     push_gem "sandworm-1.0.0.gem"
 
     get rubygem_path("sandworm")
+
     assert_response :success
     assert page.has_content?("crysknife")
     assert page.has_content?("> 0")
@@ -64,6 +70,7 @@ class PushTest < ActionDispatch::IntegrationTest
     push_gem "sandworm-1.0.0.gem"
 
     get rubygem_path("sandworm")
+
     assert_response :success
     assert page.has_content?("mauddib")
     assert page.has_content?("> 1")
@@ -73,6 +80,7 @@ class PushTest < ActionDispatch::IntegrationTest
     push_gem gem_file("valid_signature-0.0.0.gem")
 
     get rubygem_path("valid_signature")
+
     assert_response :success
 
     assert page.has_content?("Signature validity period")
@@ -82,6 +90,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     travel_to Time.zone.local(2121, 8, 8)
     get rubygem_path("valid_signature")
+
     assert page.has_content?("(expired)")
   end
 
@@ -98,6 +107,7 @@ class PushTest < ActionDispatch::IntegrationTest
     build_gem "sandworm", "1.0.0" do |spec|
       spec.instance_variable_set :@authors, "string"
     end
+
     assert_nil Rubygem.find_by(name: "sandworm")
     push_gem "sandworm-1.0.0.gem"
 
@@ -119,6 +129,7 @@ class PushTest < ActionDispatch::IntegrationTest
     build_gem "sandworm", "1.0.0"
 
     push_gem "sandworm-1.0.0.gem"
+
     assert_response :conflict
     assert_match(/A yanked version already exists \(sandworm-1.0.0\)/, response.body)
   end
@@ -130,6 +141,7 @@ class PushTest < ActionDispatch::IntegrationTest
     build_gem "sandworm", "1.0.0"
 
     push_gem "sandworm-1.0.0.gem"
+
     assert_response :conflict
     assert_match(/A yanked version pushed by a previous owner of this gem already exists \(sandworm-1.0.0\)/, response.body)
   end
@@ -140,6 +152,7 @@ class PushTest < ActionDispatch::IntegrationTest
     end
 
     push_gem "sandworm-2.0.0.gem"
+
     assert_response :forbidden
     assert_match(/You have added cert_chain in gemspec but signature was empty/, response.body)
   end
@@ -202,8 +215,10 @@ class PushTest < ActionDispatch::IntegrationTest
         completed_at: "2023-03-01T09:50:31+00:00"
       },
       as: :json
+
     assert_response :success
     perform_enqueued_jobs only: HookRelayReportJob
+
     assert_predicate hook.reload.failure_count, :zero?
     assert_equal 1, hook.successes_since_last_failure
     assert_equal 0, hook.failures_since_last_success
@@ -235,8 +250,10 @@ class PushTest < ActionDispatch::IntegrationTest
         completed_at: "2023-03-01T09:51:31+00:00"
       },
       as: :json
+
     assert_response :success
     perform_enqueued_jobs only: HookRelayReportJob
+
     assert_equal 1, hook.reload.failure_count
     assert_equal 0, hook.successes_since_last_failure
     assert_equal 1, hook.failures_since_last_success

@@ -50,6 +50,7 @@ class SessionsControllerTest < ActionController::TestCase
 
         should respond_with :redirect
         should redirect_to("the dashboard") { dashboard_path }
+
         should "clear user name in session" do
           assert_nil @controller.session[:mfa_user]
         end
@@ -67,6 +68,7 @@ class SessionsControllerTest < ActionController::TestCase
 
         should respond_with :redirect
         should redirect_to("the dashboard") { dashboard_path }
+
         should "clear user name in session" do
           assert_nil @controller.session[:mfa_user]
         end
@@ -210,6 +212,7 @@ class SessionsControllerTest < ActionController::TestCase
           should "set notice flash" do
             expected_notice = "For protection of your account and your gems, we encourage you to set up multi-factor authentication. " \
                               "Your account will be required to have MFA enabled in the future."
+
             assert_equal expected_notice, flash[:notice]
           end
         end
@@ -286,6 +289,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
       end
@@ -411,6 +415,7 @@ class SessionsControllerTest < ActionController::TestCase
         get :verify, params: { user_id: user.id }
       end
       should respond_with :success
+
       should "render password verification form" do
         assert page.has_css? "#verify_password_password"
       end
@@ -451,6 +456,7 @@ class SessionsControllerTest < ActionController::TestCase
           post :authenticate, params: { user_id: @user.id, verify_password: { password: "wrong password" } }
         end
         should respond_with :unauthorized
+
         should "show error flash" do
           assert_equal "This request was denied. We could not verify your password.", flash[:alert]
         end
@@ -520,6 +526,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "set flash notice" do
         assert_equal "Credentials required", flash[:notice]
       end
@@ -555,6 +562,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "set flash notice" do
         assert_equal "WebAuthn::ChallengeVerificationError", flash[:notice]
       end
@@ -624,6 +632,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup { get :verify, params: { user_id: @user.id } }
 
         should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
         should "set mfa_redirect_uri" do
           assert_equal verify_session_path, session[:mfa_redirect_uri]
         end
@@ -633,6 +642,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup { post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } } }
 
         should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
         should "set mfa_redirect_uri" do
           assert_equal authenticate_session_path, session[:mfa_redirect_uri]
         end
@@ -648,6 +658,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup { get :verify, params: { user_id: @user.id } }
 
         should redirect_to("the settings page") { edit_settings_path }
+
         should "set mfa_redirect_uri" do
           assert_equal verify_session_path, session[:mfa_redirect_uri]
         end
@@ -657,6 +668,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup { post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } } }
 
         should redirect_to("the settings page") { edit_settings_path }
+
         should "set mfa_redirect_uri" do
           assert_equal authenticate_session_path, session[:mfa_redirect_uri]
         end
@@ -672,6 +684,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup { get :verify, params: { user_id: @user.id } }
 
         should respond_with :success
+
         should "render password verification form" do
           assert page.has_css? "#verify_password_password"
         end

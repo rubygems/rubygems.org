@@ -5,6 +5,9 @@ metadata:
   name: db-migrate-<%= deployment_id %>
   labels:
     name: db-migrate-<%= deployment_id %>
+    tags.datadoghq.com/env: "<%= environment %>"
+    tags.datadoghq.com/service: rubygems.org
+    tags.datadoghq.com/version: <%= current_sha %>
 spec:
   activeDeadlineSeconds: 300
   automountServiceAccountToken: false

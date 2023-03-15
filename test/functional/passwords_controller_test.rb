@@ -5,6 +5,7 @@ class PasswordsControllerTest < ActionController::TestCase
     context "when missing email" do
       should "alerts about missing email" do
         post :create
+
         assert_equal "Email can't be blank.", flash[:alert]
       end
     end
@@ -33,6 +34,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "display edit form" do
         assert page.has_content?("Reset password")
       end
@@ -45,6 +47,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should redirect_to("the home page") { root_path }
+
       should "warn about invalid url" do
         assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
       end
@@ -58,6 +61,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "display otp form" do
         assert page.has_content?("Multi-factor authentication")
       end
@@ -80,6 +84,7 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
+
         should "display edit form" do
           assert page.has_content?("Reset password")
         end
@@ -95,6 +100,7 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should respond_with :unauthorized
+
         should "alert about otp being incorrect" do
           assert_equal "Your OTP code is incorrect.", flash[:alert]
         end
@@ -158,6 +164,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "display edit form" do
         assert page.has_content?("Reset password")
       end
@@ -173,6 +180,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "set flash notice" do
         assert_equal "Credentials required", flash[:alert]
       end
@@ -200,6 +208,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "set flash notice" do
         assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
       end
@@ -266,6 +275,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "not change api_key" do
         assert_equal(@user.reload.api_key, @api_key)
       end
@@ -284,6 +294,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :found
+
       should "not change api_key" do
         assert_equal(@user.reload.api_key, @api_key)
       end
@@ -302,6 +313,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :found
+
       should "not change api_key" do
         assert_equal(@user.reload.api_key, @api_key)
       end
@@ -320,6 +332,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :found
+
       should "change api_key" do
         refute_equal(@user.reload.api_key, @api_key)
       end
@@ -342,6 +355,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :found
+
       should "change api_key" do
         refute_equal(@user.reload.api_key, @api_key)
       end

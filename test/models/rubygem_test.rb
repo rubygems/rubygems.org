@@ -41,6 +41,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "be invalid with name longer than maximum field length" do
       @rubygem.name = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+
       refute_predicate @rubygem, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @rubygem.errors.messages[:name])
     end
@@ -59,6 +60,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal 2, version1_linux.reload.position
 
       latest_versions = Version.latest
+
       assert_includes latest_versions, version3_ruby
       assert_includes latest_versions, version3_mswin
 
@@ -174,6 +176,7 @@ class RubygemTest < ActiveSupport::TestCase
           number: "0.1.0",
           position: 2)
       end
+
       should "include public versions" do
         assert_includes @rubygem.public_versions_with_extra_version(@extra_version), @first_version
       end
@@ -182,10 +185,12 @@ class RubygemTest < ActiveSupport::TestCase
       end
       should "maintain proper ordering" do
         versions = @rubygem.public_versions_with_extra_version(@extra_version)
+
         assert_equal versions, versions.sort_by(&:position)
       end
       should "not duplicate versions" do
         versions = @rubygem.public_versions_with_extra_version(@first_version)
+
         assert_equal versions.count, versions.uniq.count
       end
     end
@@ -197,6 +202,7 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem.destroy
 
       dependency.reload
+
       assert_nil dependency.rubygem_id
       assert_equal dependency.unresolved_name, @rubygem.name
     end
@@ -237,6 +243,7 @@ class RubygemTest < ActiveSupport::TestCase
     context "#reverse_runtime_dependencies" do
       should "return runtime dependent rubygems" do
         gem_list = @dependency.reverse_runtime_dependencies
+
         assert_equal 1, gem_list.size
 
         assert_includes gem_list, @gem_one
@@ -247,6 +254,7 @@ class RubygemTest < ActiveSupport::TestCase
     context "#reverse_development_dependencies" do
       should "return development dependent rubygems" do
         gem_list = @dependency.reverse_development_dependencies
+
         assert_equal 1, gem_list.size
 
         assert_includes gem_list, @gem_two
@@ -263,6 +271,7 @@ class RubygemTest < ActiveSupport::TestCase
     ["1337", "Snakes!"].each do |bad_name|
       should "not accept #{bad_name.inspect} as a name" do
         @rubygem.name = bad_name
+
         refute_predicate @rubygem, :valid?
         assert_match(/Name/, @rubygem.all_errors)
       end
@@ -270,6 +279,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "not accept an Array as name" do
       @rubygem.name = ["zomg"]
+
       refute_predicate @rubygem, :valid?
     end
 
@@ -298,6 +308,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "return array of author names in #authors_array" do
       @version = build(:version)
+
       assert_equal ["Joe User"], @version.authors_array
     end
 
@@ -323,6 +334,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "be able to assign ownership when no owners exist" do
         @rubygem.create_ownership(@user)
+
         assert_equal @rubygem.reload.owners, [@user]
       end
 
@@ -330,6 +342,7 @@ class RubygemTest < ActiveSupport::TestCase
         @new_user = create(:user)
         create(:ownership, rubygem: @rubygem, user: @new_user)
         @rubygem.create_ownership(@user)
+
         assert_equal @rubygem.reload.owners, [@new_user]
       end
     end
@@ -342,6 +355,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "be owned by a user in ownership" do
         create(:ownership, user: @user, rubygem: @rubygem)
+
         assert @rubygem.owned_by?(@user)
         refute_predicate @rubygem, :unowned?
       end
@@ -374,6 +388,7 @@ class RubygemTest < ActiveSupport::TestCase
     should "return name with version for #to_s" do
       @rubygem.save
       create(:version, number: "0.0.0", rubygem: @rubygem)
+
       assert_equal "#{@rubygem.name} (#{@rubygem.versions.most_recent})", @rubygem.to_s
     end
 
@@ -383,6 +398,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "return name as slug with only allowed characters" do
       @rubygem.name = "rails?!"
+
       assert_equal "rails", @rubygem.to_param
     end
 
@@ -550,6 +566,12 @@ class RubygemTest < ActiveSupport::TestCase
       assert_includes Rubygem.with_versions, @rubygem_with_versions
     end
 
+    should "return only gems without versions for #without_versions" do
+      assert_includes Rubygem.without_versions, @rubygem_without_version
+      refute_includes Rubygem.without_versions, @rubygem_with_version
+      refute_includes Rubygem.without_versions, @rubygem_with_versions
+    end
+
     should "be hosted or not" do
       refute_predicate @rubygem_without_version, :hosted?
       assert_predicate @rubygem_with_version, :hosted?
@@ -573,6 +595,7 @@ class RubygemTest < ActiveSupport::TestCase
       setup do
         @rubygem_with_versions.versions.first.update! indexed: false
       end
+
       should "remain owned" do
         refute_predicate @rubygem_with_versions.reload, :unowned?
       end
@@ -608,11 +631,13 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "be pushable if gem was yanked more than 100 days ago" do
         @haml.update(created_at: 101.days.ago, updated_at: 101.days.ago)
+
         assert_predicate @haml, :pushable?
       end
 
       should "not be pushable if gem is older than a month and yanked less than 100 days ago" do
         @haml.update(created_at: 99.days.ago, updated_at: 99.days.ago)
+
         refute_predicate @haml, :pushable?
       end
     end
@@ -749,6 +774,7 @@ class RubygemTest < ActiveSupport::TestCase
         rubygem = Rubygem.create(name: "rake")
 
         dependency = Dependency.find_by_id(@rack_dep.id)
+
         assert_nil dependency.unresolved_name
         assert_equal rubygem, dependency.rubygem
       end
@@ -838,6 +864,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "order by created_at of gem version" do
         expected_order = [@rubygem1, @rubygem2]
+
         assert_equal expected_order, @news
       end
     end
@@ -853,6 +880,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "order by number of downloads" do
         expected_order = [@rubygem2, @rubygem1]
+
         assert_equal expected_order, @popular_gems
       end
     end
@@ -948,6 +976,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "be satisfied if owner has enabled mfa" do
         @owner.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+
         assert @rubygem.mfa_requirement_satisfied_for?(@owner)
       end
     end

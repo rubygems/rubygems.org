@@ -4,8 +4,9 @@ Rails.application.configure do
   config.good_job.on_thread_error = ->(exception) { Rails.error.report(exception) }
   config.good_job.queues = '*'
   config.good_job.shutdown_timeout = 25 # seconds
+  config.good_job.logger = SemanticLogger[GoodJob]
 
-  config.good_job.enable_cron = true
+  config.good_job.enable_cron = !Rails.env.development?
   config.good_job.cron = {
     good_job_statsd: {
       cron: "every 15s",
@@ -15,5 +16,24 @@ Rails.application.configure do
     }
   }
 
+  # see https://github.com/bensheldon/good_job/pull/883
+  # this makes good_job consistent with the priorities we used
+  # previously for delayed job
+  config.good_job.smaller_number_is_higher_priority = true
+
   GoodJob.active_record_parent_class = "ApplicationRecord"
+
+  if Rails.env.development? && GoodJob::CLI.within_exe?
+    GoodJob::CLI.log_to_stdout = false
+
+    console = ActiveSupport::Logger.new($stdout)
+    console.formatter = Rails.logger.formatter
+    console.level = Rails.logger.level
+
+    Rails.logger.extend(ActiveSupport::Logger.broadcast(console)) unless ActiveSupport::Logger.logger_outputs_to?(Rails.logger, $stderr, $stdout)
+
+    ActiveRecord::Base.logger = nil
+    GoodJob.logger = Rails.logger
+    StatsD.backend = StatsD::Instrument::Backends::NullBackend.new
+  end
 end

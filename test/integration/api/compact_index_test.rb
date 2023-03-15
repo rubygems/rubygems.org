@@ -58,6 +58,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     expected_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
+
     assert_equal expected_body, @response.body
     assert_equal etag(expected_body), @response.headers["ETag"]
     assert_equal %w[gemA gemA1 gemA2 gemB], Rails.cache.read("names")
@@ -68,6 +69,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     assert_response 206
     full_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
+
     assert_equal etag(full_body), @response.headers["ETag"]
     assert_equal "gemA2\ngemB\n", @response.body
   end
@@ -79,6 +81,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     gem_b_match = "gemB 1.0.0 qw2dwe\n"
 
     get versions_path
+
     assert_response :success
     assert_match file_contents, @response.body
     assert_match(/#{gem_b_match}#{gem_a_match}/, @response.body)
@@ -111,12 +114,14 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get versions_path
     full_response_body = @response.body
     get versions_path, env: { range: "bytes=206-" }
+
     assert_equal etag(full_response_body), @response.headers["ETag"]
     assert_equal expected, @response.body
   end
 
   test "/version has surrogate key header" do
     get versions_path
+
     assert_equal "versions", @response.headers["Surrogate-Key"]
     assert_equal "max-age=30", @response.headers["Surrogate-Control"]
   end
@@ -140,6 +145,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/info has surrogate key header" do
     get info_path(gem_name: "gemA")
+
     assert_equal "info/* gem/gemA info/gemA", @response.headers["Surrogate-Key"]
   end
 
@@ -176,12 +182,14 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/info with nonexistent gem" do
     get info_path(gem_name: "donotexist")
+
     assert_response :not_found
     assert_nil @response.headers["ETag"]
   end
 
   test "/info with gzip" do
     get info_path(gem_name: "gemA"), env: { "Accept-Encoding" => "gzip" }
+
     assert_response :success
     assert_equal("gzip", @response.headers["Content-Encoding"])
   end
@@ -200,6 +208,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     VERSIONS_FILE
 
     get info_path(gem_name: "gemB")
+
     assert_response :success
     assert_equal(expected, @response.body)
     assert_equal etag(expected), @response.headers["ETag"]

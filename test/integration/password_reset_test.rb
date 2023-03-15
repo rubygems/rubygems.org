@@ -32,10 +32,12 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
     expected_path = "/users/#{@user.id}/password/edit"
+
     assert_equal expected_path, page.current_path, "removes confirmation token from url"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
+
     assert_equal dashboard_path, page.current_path
 
     click_link "Sign out"
@@ -130,6 +132,7 @@ class PasswordResetTest < SystemTest
     click_button "Save this password"
 
     find(:css, ".header__popup-link").click
+
     assert page.has_content?("SIGN OUT")
 
     @authenticator.remove!

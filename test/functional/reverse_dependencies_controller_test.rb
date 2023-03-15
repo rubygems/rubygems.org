@@ -31,6 +31,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
 
     should "show reverse dependencies" do
       get :index, params: { rubygem_id: @rubygem_one.to_param }
+
       assert page.has_content?(@rubygem_two.name)
       refute page.has_content?(@rubygem_three.name)
     end
@@ -41,6 +42,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
           rubygem_id: @rubygem_two.to_param,
           rdeps_query: @rubygem_three.name
         }
+
       assert page.has_content?(@rubygem_three.name)
       refute page.has_content?(@rubygem_four.name)
     end
@@ -51,6 +53,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
           rubygem_id: @rubygem_two.to_param,
           rdeps_query: @rubygem_one.name
         }
+
       refute page.has_content?(@rubygem_one.name)
     end
   end

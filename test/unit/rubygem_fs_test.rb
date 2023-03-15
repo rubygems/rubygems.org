@@ -10,11 +10,13 @@ class RubygemFsTest < ActiveSupport::TestCase
 
     should "use default bucket when not passing as an argument" do
       fs = RubygemFs::S3.new
+
       assert_equal "test.s3.rubygems.org", fs.bucket
     end
 
     should "use bucket passed" do
       fs = RubygemFs::S3.new(bucket: "foo.com")
+
       assert_equal "foo.com", fs.bucket
     end
 
@@ -23,6 +25,7 @@ class RubygemFsTest < ActiveSupport::TestCase
       def fs.s3_config
         [@config[:access_key_id], @config[:secret_access_key]]
       end
+
       assert_equal %w[foo bar], fs.s3_config
     end
 
@@ -62,6 +65,7 @@ class RubygemFsTest < ActiveSupport::TestCase
 
         keys = []
         @fs.each_key { |key| keys << key }
+
         assert_equal %w[bar foo], keys.sort
       end
 
@@ -118,11 +122,13 @@ class RubygemFsTest < ActiveSupport::TestCase
     context "#initialize" do
       should "convert the path to an absolute path" do
         fs = RubygemFs::Local.new("dir")
+
         assert_equal File.expand_path("dir"), fs.base_dir.to_s
       end
 
       should "default to RAILS_ROOT/server" do
         fs = RubygemFs::Local.new
+
         assert_equal Rails.root.join("server"), fs.base_dir
       end
     end
@@ -134,6 +140,7 @@ class RubygemFsTest < ActiveSupport::TestCase
 
       should "get the file" do
         @fs.store "foo", "123"
+
         assert_equal "123", @fs.get("foo")
       end
     end
@@ -173,6 +180,7 @@ class RubygemFsTest < ActiveSupport::TestCase
       should "yield all keys when a block is given" do
         keys = []
         @fs.each_key { |key| keys << key }
+
         assert_equal %w[.hidden bar/baz/foo bar/foo barbeque baz foo], keys.sort
       end
 
@@ -222,12 +230,14 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_empty @fs.remove("bar/baz/foo/file")
 
         @fs.store "bar/baz", "not a directory anymore"
+
         assert_equal "don't remove me", @fs.get("bar/directory_not_empty")
       end
 
       should "removes multiple files" do
         @fs.store "bar", "123"
         @fs.store "baz", "123"
+
         assert_empty @fs.remove("foo", "bar")
         refute @fs.get("foo")
         refute @fs.get("bar")

@@ -181,6 +181,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       @credential.stubs(:destroy).returns false
 
       delete :destroy, params: { id: @credential.id }
+
       refute_nil flash[:error]
     end
 

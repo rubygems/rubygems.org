@@ -27,12 +27,15 @@ class I18nTest < ActionDispatch::IntegrationTest
 
     # Using en as reference
     reference = locale_keys[locales.delete("en")]
+
     assert_predicate reference, :present?
 
     locale_keys.each do |locale, keys|
       missing = reference - keys
+
       assert_predicate missing, :blank?, "#{locale} locale is missing: #{missing.join(', ')}"
       extra = keys - reference
+
       assert_predicate extra, :blank?, "#{locale} locale has extra: #{extra.join(', ')}"
     end
   end

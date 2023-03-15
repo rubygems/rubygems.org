@@ -48,6 +48,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
     click_button "Release namespace"
+
     page.assert_text "Action ran successfully!"
     page.assert_text rubygem.to_global_id.uri.to_s
 

@@ -5,6 +5,7 @@ class Admin::GoodJobTest < ActionDispatch::IntegrationTest
 
   test "viewing good job admin dashboard" do
     get "/admin/good_job"
+
     assert_response :success
     page.assert_text "Log in with GitHub"
 
@@ -12,6 +13,7 @@ class Admin::GoodJobTest < ActionDispatch::IntegrationTest
     admin_sign_in_as admin
 
     get "/admin/good_job/jobs"
+
     assert_response :success
     page.assert_text "GoodJob 👍"
   end

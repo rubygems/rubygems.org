@@ -20,3 +20,27 @@ tasks:
     description: Trigger the restart of both puma and background workers
     steps:
       - krane restart rubygems-$ENVIRONMENT rubygems
+  autoscale_web:
+    action: Autoscale web deployment
+    description: "Autoscale the web deployment to %{MIN}-%{MAX} replicas"
+    steps:
+      - kubectl autoscale -n rubygems-$ENVIRONMENT --context rubygems deployment/web --min="$MIN" --max="$MAX" --cpu-percentage="$CPU_PERCENTAGE"
+    variables:
+      - name: MIN
+        title: The minimum number of web replicas
+        default: 3
+      - name: MAX
+        title: The maximum number of web replicas
+        default: 10
+      - name: CPU_PERCENTAGE
+        title: The threshold of CPU utilization used for autoscaling
+        default: 75
+  scale_jobs:
+    action: Scale jobs deployment
+    description: "Scale the jobs deployment to %{REPLICAS}"
+    steps:
+      - kubectl scale -n rubygems-$ENVIRONMENT --context rubygems deployment/jobs --replicas="$REPLICAS"
+    variables:
+      - name: REPLICAS
+        title: The number of jobs replicas to scale to
+        default: 5

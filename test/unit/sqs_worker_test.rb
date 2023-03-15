@@ -62,6 +62,7 @@ class SqsWorkerTest < ActiveSupport::TestCase
       end
 
       log_ticket = LogTicket.last
+
       assert_equal "bucket-name", log_ticket.directory
       assert_equal "object-key", log_ticket.key
       assert_equal "pending", log_ticket.status

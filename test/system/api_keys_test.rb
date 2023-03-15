@@ -13,10 +13,12 @@ class ApiKeysTest < ApplicationSystemTestCase
 
   test "creating new api key" do
     visit_profile_api_keys_path
+
     assert_nil URI.parse(page.current_url).query
 
     fill_in "api_key[name]", with: "test"
     check "api_key[index_rubygems]"
+
     refute page.has_content? "Enable MFA"
     click_button "Create"
 
@@ -31,10 +33,12 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     visit_profile_api_keys_path
     click_button "New API key"
+
     assert_empty URI.parse(page.current_url).query
 
     fill_in "api_key[name]", with: "test"
     check "api_key[index_rubygems]"
+
     refute page.has_content? "Enable MFA"
     click_button "Create"
 
@@ -49,6 +53,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     fill_in "api_key[name]", with: "test"
     check "api_key[push_rubygem]"
+
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
     page.select @ownership.rubygem.name
     click_button "Create"
@@ -62,6 +67,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     test "creating new api key cannot set gem scope with #{scope} scope selected" do
       visit_profile_api_keys_path
       check "api_key[#{scope}]"
+
       assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
     end
   end
@@ -86,6 +92,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     fill_in "api_key[name]", with: "test"
     check "api_key[push_rubygem]"
+
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
     page.select @ownership.rubygem.name
 
@@ -133,6 +140,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_empty URI.parse(page.current_url).query
     assert page.has_content? "Edit API key"
     check "api_key[add_owner]"
+
     refute page.has_content? "Enable MFA"
     click_button "Update"
 
@@ -163,6 +171,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert page.has_content? "Edit API key"
     page.check "api_key[index_rubygems]"
     page.uncheck "api_key[push_rubygem]"
+
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
     click_button "Update"
 
@@ -177,6 +186,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     assert page.has_content? "Edit API key"
     page.uncheck "api_key[push_rubygem]"
+
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
 
     page.check "api_key[yank_rubygem]"
@@ -232,6 +242,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     assert page.has_content? "Edit API key"
     check "api_key[add_owner]"
+
     refute page.has_content? "Enable MFA"
     click_button "Update"
 
@@ -246,6 +257,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Delete"
 
     page.accept_alert
+
     assert page.has_content? "New API key"
   end
 
@@ -256,23 +268,27 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Reset"
 
     page.accept_alert
+
     assert page.has_content? "New API key"
   end
 
   test "gem ownership removed displays api key as invalid" do
     api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
     visit_profile_api_keys_path
+
     refute page.has_css? ".owners__row__invalid"
 
     @ownership.destroy!
 
     visit_profile_api_keys_path
+
     assert page.has_css? ".owners__row__invalid"
     assert_predicate api_key.reload, :soft_deleted?
 
     refute page.has_button? "Edit"
     assert_equal "#{@ownership.rubygem.name} [?]", page.find('.owners__cell[data-title="Gem"]').text
     visit_edit_profile_api_key_path(api_key)
+
     assert page.has_content? "An invalid API key cannot be edited. Please delete it and create a new one."
     assert_equal profile_api_keys_path, page.current_path
   end

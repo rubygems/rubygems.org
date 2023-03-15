@@ -13,6 +13,7 @@ class CertificateChainSerializerTest < ActiveSupport::TestCase
 
     should "return an array of certificates when certificates are present" do
       certs = CertificateChainSerializer.load(@cert_chain)
+
       assert_equal 2, certs.size
       assert_equal "379469669351564281569116418161349711273802", certs[0].serial.to_s
       assert_equal "85078157426496920958827089468591623647", certs[1].serial.to_s
@@ -50,11 +51,13 @@ class CertificateChainSerializerTest < ActiveSupport::TestCase
 
     should "return a certificate chain when the chain certificates are in PEMs" do
       pems = @certs.map(&:to_pem)
+
       assert_equal pems.join, CertificateChainSerializer.dump(pems)
     end
 
     should "strip out excessive newlines from the certificate PEMs" do
       pems = @certs.map { |cert| "#{cert.to_pem}\n\n\n" }
+
       assert_equal @certs.map(&:to_pem).join, CertificateChainSerializer.dump(pems)
     end
   end

@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         name: delayed-jobs-statsd
+        tags.datadoghq.com/env: "<%= environment %>"
     spec:
       containers:
       - name: delayed-jobs-statsd

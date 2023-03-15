@@ -33,6 +33,7 @@ class DependenciesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "render gem name" do
       assert page.has_content?(@rubygem.name)
     end
@@ -51,6 +52,7 @@ class DependenciesControllerTest < ActionController::TestCase
         request_endpoint(@rubygem.name, @version.number)
       end
       should respond_with :success
+
       should "render gem name" do
         assert page.has_content?(@rubygem.name)
       end
@@ -93,6 +95,7 @@ class DependenciesControllerTest < ActionController::TestCase
       }
       run = render_str_call("runtime", dependencies)
       dev = render_str_call("development", dependencies)
+
       assert_equal run, @response["run_html"]
       assert_equal dev, @response["dev_html"]
     end

@@ -15,6 +15,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       should "have a list of versions for the first gem" do
         get_show(@rubygem, "2.0.0", format)
         @response.body
+
         assert_response :success
       end
     end
@@ -43,30 +44,36 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
 
     should "return Last-Modified header" do
       get_show(@rubygem, "2.0.0")
+
       assert_equal @response.headers["Last-Modified"], @rubygem.updated_at.httpdate
     end
 
     should "return 304 when If-Modified-Since header is satisfied" do
       get_show(@rubygem, "2.0.0")
+
       assert_response :success
       set_cache_header
 
       get_show(@rubygem, "2.0.0")
+
       assert_response :not_modified
     end
 
     should "return 200 when If-Modified-Since header is not satisfied" do
       get_show(@rubygem, "2.0.0")
+
       assert_response :success
       set_cache_header
 
       @rubygem.update(updated_at: Time.zone.now + 1)
       get_show(@rubygem, "2.0.0")
+
       assert_response :success
     end
 
     should "return 404 if all versions yanked" do
       get_show(@rubygem, "2.0.0")
+
       assert_response :success
       set_cache_header
 
@@ -75,6 +82,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       end
 
       get_show(@rubygem, "2.0.0")
+
       assert_response :not_found
     end
 
@@ -85,15 +93,19 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
 
       should "return version by position without platform param" do
         get_show(@rubygem, "2.0.0")
+
         assert_response :success
         response = JSON.load(@response.body)
+
         assert_equal "jruby", response["platform"]
       end
 
       should "return platform version with platform param" do
         get :show, params: { rubygem_name: @rubygem.name, number: "2.0.0", platform: "ruby", format: "json" }
+
         assert_response :success
         response = JSON.load(@response.body)
+
         assert_equal "ruby", response["platform"]
       end
     end
@@ -132,6 +144,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       set_cache_header
 
       get_show(@rubygem, "2.0.0")
+
       assert_response :not_modified
     end
   end
@@ -146,6 +159,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
 
     should "gives one specific version" do
       get_show(@rubygem, "4.0.0")
+
       assert_kind_of Hash, JSON.load(@response.body)
       assert_equal "4.0.0", JSON.load(@response.body)["number"]
     end

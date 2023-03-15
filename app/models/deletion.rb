@@ -69,7 +69,7 @@ class Deletion < ApplicationRecord
   end
 
   def update_search_index
-    @version.rubygem.delay.reindex
+    ReindexRubygemJob.perform_later(rubygem: @version.rubygem)
   end
 
   def set_yanked_info_checksum

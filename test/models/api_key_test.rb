@@ -13,12 +13,14 @@ class ApiKeyTest < ActiveSupport::TestCase
 
   should "be invalid when name is empty string" do
     api_key = build(:api_key, name: "")
+
     refute_predicate api_key, :valid?
     assert_contains api_key.errors[:name], "can't be blank"
   end
 
   should "be invalid when name is longer than Gemcutter::MAX_FIELD_LENGTH" do
     api_key = build(:api_key, name: "aa" * Gemcutter::MAX_FIELD_LENGTH)
+
     refute_predicate api_key, :valid?
     assert_contains api_key.errors[:name], "is too long (maximum is 255 characters)"
   end
@@ -52,6 +54,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
     should "be invalid if non applicable API scope is enabled" do
       api_key = build(:api_key, index_rubygems: true, user: @ownership.user, ownership: @ownership)
+
       refute_predicate api_key, :valid?
       assert_contains api_key.errors[:rubygem], "scope can only be set for push/yank rubygem, and add/remove owner scopes"
     end
@@ -59,6 +62,7 @@ class ApiKeyTest < ActiveSupport::TestCase
     should "be valid if applicable API scope is enabled" do
       %i[push_rubygem yank_rubygem add_owner remove_owner].each do |scope|
         api_key = build(:api_key, scope => true, user: @ownership.user, ownership: @ownership)
+
         assert_predicate api_key, :valid?
       end
     end
@@ -86,16 +90,19 @@ class ApiKeyTest < ActiveSupport::TestCase
     context "#rubygem_id=" do
       should "set ownership to a gem" do
         api_key = create(:api_key, key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: @ownership.rubygem_id)
+
         assert_equal @ownership.rubygem_id, api_key.rubygem_id
       end
 
       should "set ownership to nil when id is nil" do
         @api_key.rubygem_id = nil
+
         assert_nil @api_key.rubygem_id
       end
 
       should "add error when id is not associated with the user" do
         api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: -1)
+
         assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
       end
     end
@@ -120,6 +127,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
       freeze_time do
         api_key.soft_delete!
+
         assert_equal Time.now.utc, api_key.soft_deleted_at
       end
     end
@@ -158,22 +166,27 @@ class ApiKeyTest < ActiveSupport::TestCase
       refute_predicate @api_key, :mfa_enabled?
 
       @api_key.update(mfa: true)
+
       refute_predicate @api_key, :mfa_enabled?
     end
 
     should "return mfa with MFA UI enabled user" do
       @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+
       refute_predicate @api_key, :mfa_enabled?
 
       @api_key.update(mfa: true)
+
       assert_predicate @api_key, :mfa_enabled?
     end
 
     should "return true with MFA UI and API enabled user" do
       @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+
       assert_predicate @api_key, :mfa_enabled?
 
       @api_key.update(mfa: true)
+
       assert_predicate @api_key, :mfa_enabled?
     end
   end

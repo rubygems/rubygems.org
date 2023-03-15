@@ -50,6 +50,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
     click_button "Reset MFA"
+
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
 
@@ -117,6 +118,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
     click_button "Block User"
+
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
 

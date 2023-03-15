@@ -26,7 +26,7 @@ class FastlyLogProcessor
     Rails.logger.info "Processed Fastly log counts: #{counts.inspect}"
 
     processed_count = counts.sum { |_, v| v }
-    ActiveRecord::Base.connection.transaction do
+    GemDownload.for_all_gems.with_lock do
       GemDownload.bulk_update(counts)
       log_ticket.update(status: "processed", processed_count: processed_count)
     end

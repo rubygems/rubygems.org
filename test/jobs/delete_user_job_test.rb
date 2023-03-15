@@ -7,6 +7,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
     version = create(:version, rubygem:)
     Mailer.expects(:deletion_complete).with(user.email)
     DeleteUserJob.perform_now(user:)
+
     assert_predicate user, :destroyed?
     assert_predicate version.reload, :yanked?
   end
@@ -16,6 +17,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
     user.expects(:destroy).returns(false)
     Mailer.expects(:deletion_failed).with(user.email)
     DeleteUserJob.perform_now(user:)
+
     refute_predicate user.reload, :destroyed?
   end
 end
