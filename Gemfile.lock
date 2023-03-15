@@ -235,7 +235,7 @@ GEM
     hashdiff (1.0.1)
     hashie (5.0.0)
     high_voltage (3.1.2)
-    honeybadger (5.2.0)
+    honeybadger (5.2.1)
     http (5.1.1)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
