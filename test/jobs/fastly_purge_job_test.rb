@@ -10,4 +10,9 @@ class FastlyPurgeJobTest < ActiveJob::TestCase
     Fastly.expects(:purge).with({ path: "path", soft: false })
     FastlyPurgeJob.perform_now(path: "path", soft: false)
   end
+
+  test "calls Fastly.purge_key" do
+    Fastly.expects(:purge_key).with("key", soft: false)
+    FastlyPurgeJob.perform_now(key: "key", soft: false)
+  end
 end
