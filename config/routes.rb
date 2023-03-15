@@ -188,7 +188,7 @@ Rails.application.routes.draw do
       get 'successful_verification'
       get 'failed_verification'
       get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
-      # TODO: add html as a valid format
+      # TODO: add plain text as a valid format
       post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate, constraints: { format: /json/ }
     end
 
