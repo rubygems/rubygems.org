@@ -1,5 +1,3 @@
-require "net/http/purge"
-
 class Fastly
   concerning :TraceTagging do
     class_methods do
