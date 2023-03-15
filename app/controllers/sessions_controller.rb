@@ -5,6 +5,7 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify authenticate]
   before_action :ensure_not_blocked, only: :create
+  after_action :delete_mfa_expiry_session, only: %i[webauthn_create mfa_create]
 
   def create
     @user = find_user
@@ -56,7 +57,6 @@ class SessionsController < Clearance::SessionsController
   ensure
     session.delete(:webauthn_authentication)
     session.delete(:mfa_login_started_at)
-    delete_mfa_expiry_session
   end
 
   def mfa_create
@@ -74,7 +74,6 @@ class SessionsController < Clearance::SessionsController
     end
   ensure
     session.delete(:mfa_login_started_at)
-    delete_mfa_expiry_session
   end
 
   def verify

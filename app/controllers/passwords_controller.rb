@@ -2,6 +2,7 @@ class PasswordsController < Clearance::PasswordsController
   include MfaExpiryMethods
 
   before_action :validate_confirmation_token, only: %i[edit mfa_edit webauthn_edit]
+  after_action :delete_mfa_expiry_session, only: %i[mfa_edit webauthn_edit]
 
   def edit
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
@@ -39,8 +40,6 @@ class PasswordsController < Clearance::PasswordsController
     else
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
-  ensure
-    delete_mfa_expiry_session
   end
 
   def webauthn_edit
@@ -70,8 +69,6 @@ class PasswordsController < Clearance::PasswordsController
     render template: "passwords/edit"
   rescue WebAuthn::Error => e
     login_failure(e.message)
-  ensure
-    delete_mfa_expiry_session
   end
 
   private

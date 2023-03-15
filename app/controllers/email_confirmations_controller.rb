@@ -5,6 +5,7 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
   before_action :validate_confirmation_token, only: %i[update mfa_update webauthn_update]
+  after_action :delete_mfa_expiry_session, only: %i[mfa_update webauthn_update]
 
   def update
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
@@ -27,8 +28,6 @@ class EmailConfirmationsController < ApplicationController
     else
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
-  ensure
-    delete_mfa_expiry_session
   end
 
   def webauthn_update
@@ -59,8 +58,6 @@ class EmailConfirmationsController < ApplicationController
     confirm_email
   rescue WebAuthn::Error => e
     login_failure(e.message)
-  ensure
-    delete_mfa_expiry_session
   end
 
   def new
