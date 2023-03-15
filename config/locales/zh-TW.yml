@@ -366,14 +366,12 @@ zh-TW:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
-    status:
-      no_result:
-      success:
-        title:
-        body:
-      fail:
-        title:
-        body:
+    successful_verification:
+      title:
+      body:
+    failed_verification:
+      title:
+      body:
   owners:
     confirm:
       confirmed_email:

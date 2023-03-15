@@ -241,42 +241,27 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "#status" do
-    context "when no result is given" do
-      setup do
-        get :status
-      end
-
-      should redirect_to("the homepage") { root_url }
-      should "display error that no result was given" do
-        assert_equal "No result provided. Please try again.", flash[:alert]
-      end
+  context "#successful_verification" do
+    setup do
+      get :successful_verification
     end
 
-    context "when given a valid result param" do
-      context "that is 'success'" do
-        setup do
-          get :status, params: { result: "success" }
-        end
+    should respond_with :success
+    should "set the title and body" do
+      assert_includes response.body, "Success!"
+      assert_includes response.body, "Please close this browser."
+    end
+  end
 
-        should respond_with :success
-        should "set the title and body" do
-          assert_includes response.body, "Success!"
-          assert_includes response.body, "Please close this browser."
-        end
-      end
+  context "#failed_verification" do
+    setup do
+      get :failed_verification
+    end
 
-      context "that is not success" do
-        setup do
-          get :status, params: { result: "failed" }
-        end
-
-        should respond_with :success
-        should "set the title and body" do
-          assert_includes response.body, "Error - Verification Failed"
-          assert_includes response.body, "Please close this browser and try again."
-        end
-      end
+    should respond_with :success
+    should "set the title and body" do
+      assert_includes response.body, "Error - Verification Failed"
+      assert_includes response.body, "Please close this browser and try again."
     end
   end
 
