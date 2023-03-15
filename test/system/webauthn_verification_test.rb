@@ -21,6 +21,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(successful_verification_webauthn_verification_path)
     assert page.has_content?("Success!")
+    assert_link_is_expired
   end
 
   test "when client closes connection during verification" do
@@ -36,6 +37,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
     assert page.has_content?("Please close this browser and try again.")
+    assert_link_is_expired
   end
 
   test "when port given does not match the client port" do
@@ -51,6 +53,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert redirect_to("http://localhost:#{wrong_port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
     assert page.has_content?("Please close this browser and try again.")
+    assert_link_is_expired
   end
 
   test "when there is a client error" do
@@ -65,11 +68,19 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert redirect_to(failed_verification_webauthn_verification_path)
     assert page.has_content?("Please close this browser and try again.")
+    assert_link_is_expired
   end
 
   def teardown
     @mock_client.kill_server
     @authenticator.remove!
+  end
+
+  private
+
+  def assert_link_is_expired
+    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
+    assert page.has_content?("The token in the link you used has either expired or been used already.")
   end
 
   class MockClientServer
