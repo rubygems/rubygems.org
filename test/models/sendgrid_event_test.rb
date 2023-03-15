@@ -1,6 +1,8 @@
 require "test_helper"
 
 class SendgridEventTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   context ".fails_since_last_delivery" do
     should "return 0 for email with no events" do
       assert_equal 0, SendgridEvent.fails_since_last_delivery("user@example.com")
@@ -88,13 +90,13 @@ class SendgridEventTest < ActiveSupport::TestCase
     end
 
     should "schedule job to process event later" do
-      SendgridEvent.process_later(
-        email: "user@example.com",
-        sg_event_id: "t61hI0Xpmk8XSR1YX4s0Kg==",
-        timestamp: Time.current.to_i
-      )
-
-      assert_equal 1, Delayed::Job.count
+      assert_enqueued_jobs 1, only: ProcessSendgridEventJob do
+        SendgridEvent.process_later(
+          email: "user@example.com",
+          sg_event_id: "t61hI0Xpmk8XSR1YX4s0Kg==",
+          timestamp: Time.current.to_i
+        )
+      end
     end
 
     should "gracefully ignore duplicate events" do
