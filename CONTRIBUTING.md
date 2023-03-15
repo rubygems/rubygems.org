@@ -173,7 +173,7 @@ can try running:
 
 * A good way to get some test data is to import from a local gem directory.
 `gem env` will tell you where rubygems stores your gems. Run
-`bundle exec rake "gemcutter:import:process[#{INSTALLATION_DIRECTORY}/cache'"`
+`bundle exec rake "gemcutter:import:process[#{INSTALLATION_DIRECTORY}/cache]"`
 
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.
