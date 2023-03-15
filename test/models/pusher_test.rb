@@ -522,6 +522,13 @@ class PusherTest < ActiveSupport::TestCase
         end
       end
     end
+
+    # TODO: Remove this test once this is always enabled
+    should "not enqueue job for storing version contents when ENV disables it" do
+      assert_enqueued_jobs 0, only: StoreVersionContentsJob do
+        @cutter.save
+      end
+    end
   end
 
   context "pushing a new version" do

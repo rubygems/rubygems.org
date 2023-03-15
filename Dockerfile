@@ -38,6 +38,8 @@ RUN \
   ca-certificates \
   build-base \
   bash \
+  libmagic \
+  zstd-libs \
   linux-headers \
   zlib-dev \
   tzdata 
@@ -83,6 +85,8 @@ RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
   --mount=type=cache,id=dev-apk-lib,sharing=locked,target=/var/lib/apk \
   apk add \
   libpq \
+  libmagic \
+  zstd-libs \
   ca-certificates \
   bash \
   tzdata \

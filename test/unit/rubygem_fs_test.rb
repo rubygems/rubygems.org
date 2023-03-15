@@ -1,6 +1,49 @@
 require "test_helper"
 
 class RubygemFsTest < ActiveSupport::TestCase
+  context "#instance" do
+    setup do
+      RubygemFs.instance_variable_set(:@fs, nil)
+    end
+
+    teardown do
+      RubygemFs.mock!
+    end
+
+    should "return S3 by default in Production" do
+      ENV["RAILS_ENV"] = "production"
+
+      assert_kind_of RubygemFs::S3, RubygemFs.instance
+    ensure
+      ENV["RAILS_ENV"] = "test"
+    end
+
+    should "return the default bucket instance" do
+      assert_equal Gemcutter.config.s3_bucket, RubygemFs.instance.bucket
+    end
+
+    should "return the contents bucket instance" do
+      assert_equal Gemcutter.config.s3_contents_bucket, RubygemFs.contents.bucket
+    end
+
+    should "return the same instance each time" do
+      assert_equal RubygemFs.instance, RubygemFs.instance
+      assert_equal RubygemFs.contents, RubygemFs.contents
+    end
+  end
+
+  context "#mock!" do
+    should "set instance to a Local mock" do
+      assert_kind_of RubygemFs::Local, RubygemFs.mock!
+    end
+
+    should "return mock for contents as well" do
+      RubygemFs.mock!
+
+      assert_kind_of RubygemFs::Local, RubygemFs.contents
+    end
+  end
+
   context "s3 filesystem" do
     setup do
       @fs = RubygemFs::S3.new
@@ -18,6 +61,21 @@ class RubygemFsTest < ActiveSupport::TestCase
       fs = RubygemFs::S3.new(bucket: "foo.com")
 
       assert_equal "foo.com", fs.bucket
+    end
+
+    context "#in_bucket" do
+      should "return a new instance with the bucket set" do
+        foo_fs = @fs.in_bucket("foo.com")
+
+        refute_equal @fs, foo_fs
+        assert_equal "foo.com", foo_fs.bucket
+      end
+    end
+
+    context "#bucket" do
+      should "return the S3 bucket" do
+        assert_equal Gemcutter.config.s3_bucket, @fs.bucket
+      end
     end
 
     should "use a custom config when passed" do
@@ -41,6 +99,25 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_equal "foo", key
         assert_equal "hello world", body
         assert_equal "test.s3.rubygems.org", bucket
+      end
+    end
+
+    context "#head" do
+      should "return nil when file doesnt exist" do
+        @s3.stub_responses(:head_object, ->(_) { "NoSuchKey" })
+
+        assert_nil @fs.head("foo")
+        assert_nil @fs.head("foo/bar/baz")
+      end
+
+      should "return s3 response Hash" do
+        metadata = { "size" => "123", "path" => "foo" }
+        @s3.stub_responses(:head_object, ->(_) { { content_type: "text/plain", metadata: metadata } })
+
+        response = @fs.head("paths/foo")
+
+        assert_equal "text/plain", response[:content_type]
+        assert_equal metadata, response[:metadata]
       end
     end
 
@@ -130,18 +207,58 @@ class RubygemFsTest < ActiveSupport::TestCase
         fs = RubygemFs::Local.new
 
         assert_equal Rails.root.join("server"), fs.base_dir
+        assert_equal "server", fs.bucket
+      end
+    end
+
+    context "#in_bucket" do
+      should "return a new instance with the bucket set" do
+        foo_fs = @fs.in_bucket("dir")
+
+        refute_equal @fs, foo_fs
+        assert_equal "dir", foo_fs.bucket
+      end
+    end
+
+    context "#bucket" do
+      should "return the basename of the base_dir to imitate S3" do
+        fs = @fs.in_bucket("dir")
+
+        assert_equal "dir", fs.bucket
       end
     end
 
     context "#get" do
       should "return nil when file doesnt exist" do
-        assert_nil @fs.get "foo"
+        assert_nil @fs.get "missing"
       end
 
       should "get the file" do
         @fs.store "foo", "123"
 
         assert_equal "123", @fs.get("foo")
+      end
+    end
+
+    context "#head" do
+      should "return nil when file doesnt exist" do
+        assert_nil @fs.head("missing")
+      end
+
+      should "return blank metadata for a file stored without any metadata" do
+        @fs.store "nometadata", "123"
+        response = @fs.head("nometadata")
+
+        assert_equal "nometadata", response[:key]
+        assert_empty response[:metadata]
+      end
+
+      should "return metadata for a file stored with metadata" do
+        @fs.store "foo", "123", metadata: { "foo" => "bar" }
+        response = @fs.head("foo")
+
+        assert_equal "foo", response[:key]
+        assert_equal "bar", response[:metadata]["foo"]
       end
     end
 
@@ -161,9 +278,16 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_equal "", @fs.get("/latest_specs.4.8.gz")
       end
 
-      should "work with metadata keyword arguments (even if they are currently ignored)" do
-        assert @fs.store "content/file", "info", metadata: { "foo" => "bar" }, content_type: "text/plain"
-        assert_equal "info", @fs.get("content/file")
+      should "work with metadata keyword arguments" do
+        assert @fs.store "with/metadata", "info", metadata: { "foo" => "bar" }, content_type: "text/plain"
+
+        assert_equal "info", @fs.get("with/metadata")
+
+        response = @fs.head("with/metadata")
+
+        assert_equal "with/metadata", response[:key]
+        assert_equal "text/plain", response[:content_type]
+        assert_equal({ "foo" => "bar" }, response[:metadata])
       end
     end
 
@@ -212,10 +336,10 @@ class RubygemFsTest < ActiveSupport::TestCase
       end
 
       should "not remove anything that causes problems on the filesystem" do
-        assert_equal [""], @fs.remove("")
-        assert_equal ["."], @fs.remove(".")
-        assert_equal [".."], @fs.remove("..")
-        assert_equal ["/"], @fs.remove("/")
+        assert_raise(RubygemFs::Local::UnsafePathError, "blank key") { @fs.remove("") }
+        assert_raise(RubygemFs::Local::UnsafePathError, "pwd") { @fs.remove(".") }
+        assert_raise(RubygemFs::Local::UnsafePathError, "parent dir") { @fs.remove("..") }
+        assert_raise(RubygemFs::Local::UnsafePathError, "root") { @fs.remove("/") }
       end
 
       should "remove empty base folders when removing nested key" do

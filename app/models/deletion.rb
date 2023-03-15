@@ -8,6 +8,7 @@ class Deletion < ApplicationRecord
   before_validation :record_metadata
   after_create :remove_from_index, :set_yanked_info_checksum
   after_commit :remove_from_storage, on: :create
+  after_commit :remove_version_contents, on: :create
   after_commit :expire_cache
   after_commit :update_search_index
   after_commit :send_gem_yanked_mail
@@ -17,6 +18,7 @@ class Deletion < ApplicationRecord
   def restore!
     restore_to_index
     restore_to_storage
+    restore_version_contents
     destroy!
   end
 
@@ -61,6 +63,14 @@ class Deletion < ApplicationRecord
   def restore_to_storage
     RubygemFs.instance.restore("gems/#{@version.full_name}.gem")
     RubygemFs.instance.restore("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+  end
+
+  def remove_version_contents
+    YankVersionContentsJob.perform_later(version:)
+  end
+
+  def restore_version_contents
+    StoreVersionContentsJob.perform_later(version:)
   end
 
   def purge_fastly

@@ -376,6 +376,10 @@ class Version < ApplicationRecord
   end
   alias prerelease? prerelease
 
+  def manifest
+    VersionManifest.new gem: rubygem.name, number: number, platform: platform
+  end
+
   private
 
   def update_prerelease

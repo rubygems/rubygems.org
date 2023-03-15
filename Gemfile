@@ -34,6 +34,7 @@ gem "rbtrace", "~> 0.4.8"
 gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
+gem "ruby-magic"
 gem "shoryuken", "~> 4.0", require: false
 gem "statsd-instrument", "~> 3.5"
 gem "validates_formatting_of"

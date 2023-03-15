@@ -5,6 +5,7 @@ class Gemcutter::Middleware::HostessTest < ActiveSupport::TestCase
   include Rack::Test::Methods
 
   setup do
+    RubygemFs.mock!
     create(:gem_download)
   end
 
