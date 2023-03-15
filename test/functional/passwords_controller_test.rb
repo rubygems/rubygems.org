@@ -57,6 +57,7 @@ class PasswordsControllerTest < ActionController::TestCase
       setup do
         @user.mfa_ui_only!
         get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
       end
 
       should respond_with :success
@@ -78,6 +79,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when OTP is correct" do
         setup do
+          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
           post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
@@ -86,10 +88,14 @@ class PasswordsControllerTest < ActionController::TestCase
         should "display edit form" do
           assert page.has_content?("Reset password")
         end
+        should "clear mfa_expires_at" do
+          assert_nil @controller.session[:mfa_expires_at]
+        end
       end
 
       context "when OTP is incorrect" do
         setup do
+          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
           post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: "eatthis" }
         end
 
@@ -97,6 +103,30 @@ class PasswordsControllerTest < ActionController::TestCase
 
         should "alert about otp being incorrect" do
           assert_equal "Your OTP code is incorrect.", flash[:alert]
+        end
+      end
+
+      context "when the OTP session is expired" do
+        setup do
+          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+          travel 16.minutes do
+            post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          end
+        end
+
+        should set_flash.now[:alert]
+        should respond_with :unauthorized
+
+        should "clear mfa_expires_at" do
+          assert_nil @controller.session[:mfa_expires_at]
+        end
+
+        should "render sign in page" do
+          assert page.has_content? "Sign in"
+        end
+
+        should "not sign in the user" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
         end
       end
     end
@@ -137,6 +167,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should "display edit form" do
         assert page.has_content?("Reset password")
+      end
+
+      should "clear mfa_expires_at" do
+        assert_nil @controller.session[:mfa_expires_at]
       end
     end
 
@@ -180,6 +214,45 @@ class PasswordsControllerTest < ActionController::TestCase
       end
       should "still have the webauthn form url" do
         assert_not_nil page.find(".js-webauthn-session--form")[:action]
+      end
+    end
+
+    context "when webauthn session is expired" do
+      setup do
+        @challenge = session[:webauthn_authentication]["challenge"]
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        travel 16.minutes do
+          post(
+            :webauthn_edit,
+            params: {
+              user_id: @user.id,
+              token: @user.confirmation_token,
+              credentials:
+              WebauthnHelpers.get_result(
+                client: @client,
+                challenge: @challenge
+              )
+            }
+          )
+        end
+      end
+
+      should respond_with :unauthorized
+      should set_flash.now[:alert]
+
+      should "clear mfa_expires_at" do
+        assert_nil @controller.session[:mfa_expires_at]
+      end
+
+      should "render sign in page" do
+        assert page.has_content? "Sign in"
+      end
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
       end
     end
   end
