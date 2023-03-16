@@ -11,7 +11,6 @@ class OwnerTest < SystemTest
     @ownership = create(:ownership, user: @user, rubygem: @rubygem)
 
     sign_in_as(@user)
-    ActionMailer::Base.deliveries.clear
   end
 
   test "adding owner via UI with email" do

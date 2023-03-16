@@ -137,7 +137,6 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             assert_equal expected_notice, flash[:notice]
           end
           should "send email notifications" do
-            ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
 
             assert_emails 1
@@ -165,7 +164,6 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             assert_predicate ownership, :confirmed?
           end
           should "send email notification" do
-            ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
 
             assert_emails 3
