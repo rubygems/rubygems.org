@@ -26,7 +26,7 @@ module PrivacyPassSupportable
   end
 
   def privacy_pass_enabled?
-    ld_context = LaunchDarkly::LDContext.with_key(self.class.name)
+    ld_context = LaunchDarkly::LDContext.with_key(self.class.name, "controller")
     Rails.configuration.launch_darkly_client.variation("gemcutter.privacy_pass.enabled", ld_context, false)
   end
 end
