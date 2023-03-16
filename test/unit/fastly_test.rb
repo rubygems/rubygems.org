@@ -15,20 +15,19 @@ class FastlyTest < ActiveSupport::TestCase
 
   context ".purge" do
     should "purge for each domain" do
-      RestClient::Request.expects(:execute).times(2).returns("{}")
+      stub_request(:purge, "https://domain1.example.com/some-url?Fastly-Key=api-key")
+        .to_return(status: 200, body: "{}")
+      stub_request(:purge, "https://domain2.example.com/some-url?Fastly-Key=api-key")
+        .to_return(status: 200, body: "{}")
       Fastly.purge(path: "some-url")
     end
   end
 
   context ".purge_key" do
     should "send a post request" do
-      params = {
-        method: :post,
-        url: "https://api.fastly.com/service/service-id/purge/some-key",
-        timeout: 10,
-        headers: { "Fastly-Key" => "api-key" }
-      }
-      RestClient::Request.expects(:execute).with(**params).returns("{}")
+      stub_request(:post, "https://api.fastly.com/service/service-id/purge/some-key")
+        .with(headers: { "Fastly-Key" => "api-key" })
+        .to_return(status: 200, body: "{}")
       Fastly.purge_key("some-key")
     end
   end

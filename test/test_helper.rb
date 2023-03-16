@@ -70,11 +70,6 @@ class ActiveSupport::TestCase
     Unpwn.offline = true
     OmniAuth.config.mock_auth.clear
 
-    Octokit.middleware = Octokit.middleware.dup.tap do |builder|
-      @octokit_stubs = Faraday::Adapter::Test::Stubs.new
-      builder.adapter :test, @octokit_stubs
-    end
-
     @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
     config = LaunchDarkly::Config.new(data_source: @launch_darkly, send_events: false)
     Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)

@@ -20,7 +20,13 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
 
       h = KEYS_RESPONSE_BODY.dup
       h["public_keys"][0]["key"] = @public_key_pem
-      GitHubSecretScanning.stubs(:secret_scanning_keys).returns(JSON.dump(h))
+
+      stub_request(:get, GitHubSecretScanning::KEYS_URI)
+        .to_return(
+          status: 200,
+          headers: { "Content-Type" => "application/json" },
+          body: h.to_json
+        )
 
       @tokens = [
         { "token" => "some_token", "type" => "some_type", "url" => "some_url" }

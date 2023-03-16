@@ -177,15 +177,13 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    RestClient::Request.expects(:execute).with(has_entries(
-                                                 method: :post,
-                                                 url: "https://api.hookrelay.dev/hooks/act/id/webhook_id-#{hook.id}",
-                                                 headers: has_entries(
-                                                   "Content-Type" => "application/json",
-                                                   "HR_TARGET_URL" => hook.url,
-                                                   "HR_MAX_ATTEMPTS" => "3"
-                                                 )
-                                               )).returns({ id: :id123 }.to_json)
+    stub_request(:post, "https://api.hookrelay.dev/hooks/act/id/webhook_id-#{hook.id}").with(
+      headers: {
+        "Content-Type" => "application/json",
+        "HR_TARGET_URL" => hook.url,
+        "HR_MAX_ATTEMPTS" => "3"
+      }
+    ).and_return(status: 200, body: { id: :id123 }.to_json)
     perform_enqueued_jobs only: NotifyWebHookJob
 
     assert_predicate hook.reload.failure_count, :zero?
