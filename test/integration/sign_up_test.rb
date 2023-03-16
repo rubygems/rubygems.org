@@ -112,7 +112,8 @@ class SignUpTest < SystemTest
   end
 
   test "sign up when privacy pass is verified" do
-    Rails.configuration.launch_darkly_client.expects(:variation).with("privacy_pass.enabled", anything, anything).returns(true).at_least_once
+    Rails.configuration.launch_darkly_client.expects(:variation).with("gemcutter.privacy_pass.enabled", anything,
+anything).returns(true).at_least_once
     # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
     PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(true)
 
@@ -127,7 +128,8 @@ class SignUpTest < SystemTest
   end
 
   test "sign up when privacy pass is not verified and captcha is not triggered" do
-    Rails.configuration.launch_darkly_client.expects(:variation).with("privacy_pass.enabled", anything, anything).returns(true).at_least_once
+    Rails.configuration.launch_darkly_client.expects(:variation).with("gemcutter.privacy_pass.enabled", anything,
+anything).returns(true).at_least_once
     # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
     PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(false)
 
@@ -142,7 +144,8 @@ class SignUpTest < SystemTest
   end
 
   test "sign up when privacy pass is not verified and captcha verification is triggered" do
-    Rails.configuration.launch_darkly_client.expects(:variation).with("privacy_pass.enabled", anything, anything).returns(true).at_least_once
+    Rails.configuration.launch_darkly_client.expects(:variation).with("gemcutter.privacy_pass.enabled", anything,
+anything).returns(true).at_least_once
     # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
     PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(false)
 

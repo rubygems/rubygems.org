@@ -336,7 +336,7 @@ class SignInTest < SystemTest
   end
 
   test "signing in when privacy pass is verified" do
-    Rails.configuration.launch_darkly_client.expects(:variation).with("privacy_pass.enabled", anything, anything).returns(true).at_least_once
+    Rails.configuration.launch_darkly_client.expects(:variation).with("gemcutter.privacy_pass.enabled", anything, anything).returns(true).at_least_once
     # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
     PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(true)
 
@@ -349,7 +349,7 @@ class SignInTest < SystemTest
   end
 
   test "signing in when privacy pass is not verified and captcha is not triggered" do
-    Rails.configuration.launch_darkly_client.expects(:variation).with("privacy_pass.enabled", anything, anything).returns(true).at_least_once
+    Rails.configuration.launch_darkly_client.expects(:variation).with("gemcutter.privacy_pass.enabled", anything, anything).returns(true).at_least_once
     # privacy pass is meant to _not_ be machine automatable, so we're stubbing in this case
     PrivacyPassRedeemer.expects(:call).with(anything, anything).returns(false)
 
@@ -362,7 +362,7 @@ class SignInTest < SystemTest
   end
 
   test "signing in when privacy pass is not verified and captcha is triggered" do
-    Rails.configuration.launch_darkly_client.expects(:variation).with("privacy_pass.enabled", anything, anything).returns(true).at_least_once
+    Rails.configuration.launch_darkly_client.expects(:variation).with("gemcutter.privacy_pass.enabled", anything, anything).returns(true).at_least_once
     @scope = Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY
     update_limit_for("#{@scope}:#{@user.email}", 4, Rack::Attack::LOGIN_LIMIT_PERIOD)
     # captcha is meant to _not_ be machine automatable, so we're stubbing in this case
