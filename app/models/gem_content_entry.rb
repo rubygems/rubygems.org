@@ -90,11 +90,10 @@ class GemContentEntry
     return false unless mime
     return true if empty?
     return false if mime.end_with?("charset=binary")
-    mime_type = MIME::Types[mime.split(";").first].first
-    return false unless mime_type
-    return true if mime_type.media_type == "text"
-    return false if mime_type.media_type != "application"
-    return true if MIME_TEXTUAL_SUBTYPES.include?(mime_type.sub_type)
+    media_type, sub_type = mime.split(";").first.split("/")
+    return true if media_type == "text"
+    return false if media_type != "application"
+    return true if MIME_TEXTUAL_SUBTYPES.include?(sub_type)
   end
 
   def body
@@ -106,9 +105,9 @@ class GemContentEntry
   def metadata
     {
       "path" => path,
-      "size" => size,
+      "size" => size.to_s,
       "mime" => mime,
-      "lines" => lines,
+      "lines" => lines&.to_s,
       "sha256" => sha256,
       "linkname" => linkname,
       "file_mode" => file_mode,

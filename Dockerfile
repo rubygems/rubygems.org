@@ -47,7 +47,7 @@ RUN \
 WORKDIR /app
 
 ENV RAILS_ENV="production"
-
+ENV MAGIC="/usr/share/misc/magic.mgc"
 
 # Install application gems
 COPY Gemfile* /app/

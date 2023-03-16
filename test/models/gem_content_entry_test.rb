@@ -420,10 +420,10 @@ class GemContentEntryTest < ActiveSupport::TestCase
         "body_persisted" => "true",
         "file_mode" => file_entry.file_mode,
         "sha256" => file_entry.sha256,
-        "lines" => file_entry.lines,
+        "lines" => file_entry.lines.to_s,
         "mime" => file_entry.mime,
         "path" => file_entry.path,
-        "size" => file_entry.size
+        "size" => file_entry.size.to_s
       }
 
       assert_equal expected, file_entry.metadata
@@ -435,7 +435,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
         "file_mode" => symlink_entry.file_mode,
         "linkname" => symlink_entry.linkname,
         "path" => symlink_entry.path,
-        "size" => symlink_entry.size
+        "size" => symlink_entry.size.to_s
       }
 
       assert_equal expected, symlink_entry.metadata

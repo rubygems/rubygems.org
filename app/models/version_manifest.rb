@@ -78,7 +78,11 @@ class VersionManifest
 
   # @param [Hash<String, String>] checksums path => checksum
   def store_checksums(checksums)
-    fs.store checksums_key, checksums_file_format(checksums)
+    fs.store(
+      checksums_key,
+      checksums_file_format(checksums),
+      content_type: "text/plain"
+    )
   end
 
   def spec
@@ -87,7 +91,9 @@ class VersionManifest
 
   # @param [Gem::Specification] spec
   def store_spec(spec)
-    fs.store spec_key, spec.to_ruby
+    ruby_spec = spec.to_ruby
+    mime = Magic.buffer(ruby_spec, Magic::MIME)
+    fs.store spec_key, spec.to_ruby, content_type: mime
   end
 
   def yank
