@@ -29,6 +29,7 @@ require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/webauthn_helpers"
+require "helpers/oauth_helpers"
 require "webmock/minitest"
 
 WebMock.disable_net_connect!(
@@ -146,6 +147,7 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
+  include OauthHelpers
   setup { host! Gemcutter::HOST }
 end
 
