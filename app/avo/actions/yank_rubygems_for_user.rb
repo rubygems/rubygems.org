@@ -14,11 +14,11 @@ class YankRubygemsForUser < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(user)
-      security_user = User.find_by!(email: "security@rubygems.org")
+      rubygems = user.rubygems
 
-      user.rubygems.each do |rubygem|
-        rubygem.versions do |version|
-          security_user.deletions.create!(version: version) unless version.yanked?
+      User.transaction do
+        rubygems.each do |rubygem|
+          YankRubygemService.new(rubygem: rubygem).call
         end
       end
     end
