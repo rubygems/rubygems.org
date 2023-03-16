@@ -61,7 +61,6 @@ class OwnersControllerTest < ActionController::TestCase
           end
 
           should "not send confirmation email" do
-            ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
 
             assert_emails 0
@@ -86,8 +85,8 @@ class OwnersControllerTest < ActionController::TestCase
             assert_equal expected_notice, flash[:notice]
           end
           should "send confirmation email" do
-            ActionMailer::Base.deliveries.clear
-            Delayed::Worker.new.work_off
+            assert_enqueued_emails 1
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
             assert_emails 1
             assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
@@ -98,7 +97,6 @@ class OwnersControllerTest < ActionController::TestCase
             setup { @rubygem.owners_including_unconfirmed.last.destroy }
 
             should "not send confirmation email" do
-              ActionMailer::Base.deliveries.clear
               Delayed::Worker.new.work_off
 
               assert_equal 0, Delayed::Job.where.not(last_error: nil).count
@@ -183,7 +181,6 @@ class OwnersControllerTest < ActionController::TestCase
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
           should "send email notifications about owner removal" do
-            ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
 
             assert_emails 1
@@ -204,7 +201,6 @@ class OwnersControllerTest < ActionController::TestCase
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
           should "send email notifications about owner removal" do
-            ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
 
             assert_emails 1
@@ -227,7 +223,6 @@ class OwnersControllerTest < ActionController::TestCase
             assert_equal "Can't remove the only owner of the gem", flash[:alert]
           end
           should "not send email notifications about owner removal" do
-            ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
 
             assert_emails 0
@@ -310,8 +305,8 @@ class OwnersControllerTest < ActionController::TestCase
           assert_equal success_flash, flash[:notice]
         end
         should "resend confirmation email" do
-          ActionMailer::Base.deliveries.clear
-          Delayed::Worker.new.work_off
+          assert_enqueued_emails 1
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
           assert_emails 1
           assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
@@ -326,7 +321,6 @@ class OwnersControllerTest < ActionController::TestCase
 
         should respond_with :not_found
         should "not resend confirmation email" do
-          ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
 
           assert_emails 0
@@ -341,7 +335,6 @@ class OwnersControllerTest < ActionController::TestCase
 
         should respond_with :not_found
         should "not resend confirmation email" do
-          ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
 
           assert_emails 0
@@ -425,7 +418,6 @@ class OwnersControllerTest < ActionController::TestCase
         end
 
         should "send email notifications about new owner" do
-          ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
 
           owner_added_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
@@ -452,7 +444,6 @@ class OwnersControllerTest < ActionController::TestCase
         end
 
         should "not send email notification about owner added" do
-          ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
 
           assert_emails 0

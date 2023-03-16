@@ -6,7 +6,7 @@ class UsersController < Clearance::UsersController
   def create
     @user = user_from_params
     if @user.save
-      Delayed::Job.enqueue EmailConfirmationMailer.new(@user.id)
+      Mailer.email_confirmation(@user).deliver_later
       flash[:notice] = t(".email_sent")
       redirect_back_or url_after_create
     else

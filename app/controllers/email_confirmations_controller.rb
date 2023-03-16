@@ -1,4 +1,5 @@
 class EmailConfirmationsController < ApplicationController
+  include EmailResettable
   include MfaExpiryMethods
 
   before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
@@ -16,7 +17,7 @@ class EmailConfirmationsController < ApplicationController
 
     if user
       user.generate_confirmation_token(reset_unconfirmed_email: false)
-      Delayed::Job.enqueue(EmailConfirmationMailer.new(user.id)) if user.save
+      Mailer.email_confirmation(user).deliver_later if user.save
     end
     redirect_to root_path, notice: t(".promise_resend")
   end
@@ -77,7 +78,7 @@ class EmailConfirmationsController < ApplicationController
   # used to resend confirmation mail for unconfirmed_email validation
   def unconfirmed
     if current_user.generate_confirmation_token(reset_unconfirmed_email: false) && current_user.save
-      Delayed::Job.enqueue EmailResetMailer.new(current_user.id)
+      email_reset(current_user)
       flash[:notice] = t("profiles.update.confirmation_mail_sent")
     else
       flash[:notice] = t("try_again")

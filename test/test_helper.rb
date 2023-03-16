@@ -3,6 +3,8 @@ SimpleCov.start "rails" do
   add_filter "lib/tasks"
   add_filter "lib/rails_development_log_formatter.rb"
 
+  # Will be deleted after all the delayed jobs have run
+  add_filter "app/jobs/*_mailer.rb"
   add_filter "app/jobs/delete_user.rb"
 
   if ENV["CI"]
@@ -78,6 +80,8 @@ class ActiveSupport::TestCase
     @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
     config = LaunchDarkly::Config.new(data_source: @launch_darkly, send_events: false)
     Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)
+
+    ActionMailer::Base.deliveries.clear
   end
 
   teardown do

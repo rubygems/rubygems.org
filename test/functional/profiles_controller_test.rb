@@ -1,6 +1,7 @@
 require "test_helper"
 
 class ProfilesControllerTest < ActionController::TestCase
+  include ActionMailer::TestHelper
   include ActiveJob::TestHelper
 
   context "for a user that doesn't exist" do
@@ -198,13 +199,11 @@ class ProfilesControllerTest < ActionController::TestCase
           end
 
           should "send email reset mails to new and current email addresses" do
-            mailer = mock
-            mailer.stubs(:deliver)
-
-            Mailer.expects(:email_reset).returns(mailer).times(1)
-            Mailer.expects(:email_reset_update).returns(mailer).times(1)
-            put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
-            Delayed::Worker.new.work_off
+            assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+              assert_enqueued_email_with Mailer, :email_reset_update, args: [@user] do
+                put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
+              end
+            end
           end
         end
       end
