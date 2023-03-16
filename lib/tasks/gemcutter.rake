@@ -13,8 +13,8 @@ namespace :gemcutter do
 
   namespace :import do
     desc "Bring the gems through the gemcutter process"
-    task process: :environment do
-      gems = Dir[File.join(ARGV[1] || "#{Gem.path.first}/cache", "*.gem")].reverse
+    task :process, %i[gems_cache_path] => :environment do |_task, args|
+      gems = Dir[File.join(args[:gems_cache_path] || "#{Gem.path.first}/cache", "*.gem")].reverse
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts "Processing #{path}"
