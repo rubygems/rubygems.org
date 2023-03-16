@@ -15,9 +15,11 @@ class FastlyTest < ActiveSupport::TestCase
 
   context ".purge" do
     should "purge for each domain" do
-      stub_request(:purge, "https://domain1.example.com/some-url?Fastly-Key=api-key")
+      stub_request(:purge, "https://domain1.example.com/some-url")
+        .with(headers: { "Fastly-Key" => "api-key" })
         .to_return(status: 200, body: "{}")
-      stub_request(:purge, "https://domain2.example.com/some-url?Fastly-Key=api-key")
+      stub_request(:purge, "https://domain2.example.com/some-url")
+        .with(headers: { "Fastly-Key" => "api-key" })
         .to_return(status: 200, body: "{}")
       Fastly.purge(path: "some-url")
     end
