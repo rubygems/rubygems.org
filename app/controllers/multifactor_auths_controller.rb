@@ -71,6 +71,7 @@ class MultifactorAuthsController < ApplicationController
     end
   end
 
+  # rubocop:disable Rails/ActionControllerFlashBeforeRender
   def handle_new_level_param
     case level_param
     when "disabled"
@@ -83,4 +84,5 @@ class MultifactorAuthsController < ApplicationController
       current_user.update!(mfa_level: level_param)
     end
   end
+  # rubocop:enable Rails/ActionControllerFlashBeforeRender
 end

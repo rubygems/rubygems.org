@@ -16,6 +16,7 @@ class MailerTest < ActionMailer::TestCase
     should "send mail to users" do
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [@user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "Please enable multi-factor authentication on your RubyGems account", email.subject
@@ -34,6 +35,7 @@ class MailerTest < ActionMailer::TestCase
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Enable multi-factor authentication on your RubyGems account by August 15", email.subject
@@ -50,6 +52,7 @@ class MailerTest < ActionMailer::TestCase
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Upgrade the multi-factor authentication level on your RubyGems account by August 15", email.subject
@@ -90,6 +93,7 @@ class MailerTest < ActionMailer::TestCase
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Enabling multi-factor authentication is required on your RubyGems account", email.subject
@@ -106,6 +110,7 @@ class MailerTest < ActionMailer::TestCase
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Upgrading the multi-factor authentication level is required on your RubyGems account", email.subject

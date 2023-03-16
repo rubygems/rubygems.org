@@ -6,14 +6,25 @@ class RubygemResource < Avo::BaseResource
   }
 
   self.find_record_method = lambda { |model_class:, id:, params:| # rubocop:disable Lint/UnusedBlockArgument
-    model_class.find_by!(name: id)
+    # In case of perfoming action `id` becomes an array of `ids`
+    if id.is_a?(Array)
+      model_class.where(id: id)
+    else
+      model_class.find_by!(name: id)
+    end
   }
+
+  action ReleaseReservedNamespace
+
+  class IndexedFilter < ScopeBooleanFilter; end
+  filter IndexedFilter, arguments: { default: { with_versions: true, without_versions: true } }
 
   # Fields generated from the model
   field :name, as: :text, link_to_resource: true
   field :indexed, as: :boolean
   field :slug, as: :text, hide_on: :index
   field :id, as: :id, hide_on: :index
+  field :protected_days, as: :number, hide_on: :index
 
   tabs style: :pills do
     field :versions, as: :has_many

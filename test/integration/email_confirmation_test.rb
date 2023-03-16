@@ -26,6 +26,7 @@ class EmailConfirmationTest < SystemTest
     request_confirmation_mail @user.email
 
     link = last_email_link
+
     assert_not_nil link
     visit link
 
@@ -41,6 +42,7 @@ class EmailConfirmationTest < SystemTest
     click_link "Sign out"
 
     visit link
+
     assert page.has_content? "Sign in"
     assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
   end
@@ -57,6 +59,7 @@ class EmailConfirmationTest < SystemTest
     visit link
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
     assert_no_enqueued_jobs
   end
 
@@ -65,6 +68,7 @@ class EmailConfirmationTest < SystemTest
     request_confirmation_mail @user.email
 
     link = last_email_link
+
     assert_not_nil link
     visit link
 
@@ -80,6 +84,7 @@ class EmailConfirmationTest < SystemTest
     request_confirmation_mail @user.email
 
     link = last_email_link
+
     assert_not_nil link
     visit link
 
@@ -91,9 +96,27 @@ class EmailConfirmationTest < SystemTest
     click_on "Authenticate with security device"
 
     find(:css, ".header__popup-link").click
+
     assert page.has_content?("SIGN OUT")
 
     @authenticator.remove!
+  end
+
+  test "requesting confirmation mail with mfa enabled, but mfa session is expired" do
+    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+    request_confirmation_mail @user.email
+
+    link = last_email_link
+
+    assert_not_nil link
+    visit link
+
+    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    travel 16.minutes do
+      click_button "Authenticate"
+
+      assert page.has_content? "Your login page session has expired."
+    end
   end
 
   teardown do

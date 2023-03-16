@@ -24,6 +24,7 @@ class LogTicketTest < ActiveSupport::TestCase
     context "without any key" do
       should "pop the first inputed" do
         ticket = LogTicket.pop
+
         assert_equal "foo", ticket.key
       end
     end
@@ -31,6 +32,7 @@ class LogTicketTest < ActiveSupport::TestCase
     context "with a key" do
       should "pop the key" do
         ticket = LogTicket.pop(key: "bar")
+
         assert_equal "bar", ticket.key
       end
     end
@@ -40,17 +42,20 @@ class LogTicketTest < ActiveSupport::TestCase
         LogTicket.create!(directory: "test/2", key: "boo", status: "pending")
 
         ticket = LogTicket.pop(directory: "test/2")
+
         assert_equal "bar", ticket.key
       end
     end
 
     should "change the status" do
       ticket = LogTicket.pop
+
       assert_equal "processing", ticket.status
     end
 
     should "return nil after no more items are in the queue" do
       2.times { LogTicket.pop }
+
       assert_nil LogTicket.pop
     end
   end

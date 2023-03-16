@@ -1,7 +1,7 @@
 require "simplecov"
 SimpleCov.start "rails" do
   add_filter "lib/tasks"
-  add_filter "lib/lograge"
+  add_filter "lib/rails_development_log_formatter.rb"
 
   # Will be deleted after all the delayed jobs have run
   add_filter "app/jobs/*_mailer.rb"
@@ -29,6 +29,15 @@ require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/webauthn_helpers"
+require "webmock/minitest"
+
+WebMock.disable_net_connect!(
+  allow_localhost: true,
+  allow: [
+    "chromedriver.storage.googleapis.com",
+    "avohq.io"
+  ]
+)
 
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
@@ -51,6 +60,10 @@ class ActiveSupport::TestCase
   include EmailHelpers
   include PasswordHelpers
 
+  parallelize_setup do |_worker|
+    SemanticLogger.reopen
+  end
+
   setup do
     I18n.locale = :en
     Rails.cache.clear
@@ -63,6 +76,15 @@ class ActiveSupport::TestCase
       @octokit_stubs = Faraday::Adapter::Test::Stubs.new
       builder.adapter :test, @octokit_stubs
     end
+
+    @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
+    config = LaunchDarkly::Config.new(data_source: @launch_darkly, send_events: false)
+    Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)
+  end
+
+  teardown do
+    Rails.configuration.launch_darkly_client.close
+    GoodJob::Job.delete_all
   end
 
   def page
@@ -82,6 +104,7 @@ class ActiveSupport::TestCase
     attributes.each do |attribute|
       original = original_attributes[attribute]
       latest = reloaded_object.send(attribute)
+
       assert_not_equal original, latest,
         "Expected #{object.class} #{attribute} to change but still #{latest}"
     end

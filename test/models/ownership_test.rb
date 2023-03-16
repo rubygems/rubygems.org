@@ -63,11 +63,13 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "allow deletion of unconfirmed ownership" do
       @ownership_two.safe_destroy
+
       assert_equal 1, @rubygem.owners_including_unconfirmed.length
     end
 
     should "not allow deletion of only confirmed ownerships" do
       @ownership_two.safe_destroy
+
       refute @ownership_one.safe_destroy
       assert_equal 1, @rubygem.owners.length
       assert_equal @ownership_one.user, @rubygem.owners.last
@@ -83,22 +85,26 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "create unconfirmed ownership" do
       ownership = @rubygem.ownerships.create(user: @new_owner, authorizer: @authorizer)
+
       assert_nil ownership.confirmed_at
     end
 
     should "generate 20 char hex confirmation token" do
       ownership = @rubygem.ownerships.create(user: @new_owner, authorizer: @authorizer)
+
       assert_match(/[0-9a-f]{20}/, ownership.token)
     end
 
     should "not create without a user" do
       ownership = build(:ownership, user: nil)
+
       refute_predicate ownership, :valid?
       assert_contains ownership.errors[:user], "must exist"
     end
 
     should "not create without a rubygem" do
       ownership = build(:ownership, rubygem: nil)
+
       refute_predicate ownership, :valid?
       assert_contains ownership.errors[:rubygem], "must exist"
     end
@@ -111,12 +117,14 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "return false when email confirmation token has expired" do
       @ownership.update_attribute(:token_expires_at, 2.minutes.ago)
+
       refute_predicate @ownership, :valid_confirmation_token?
     end
 
     should "return true when email confirmation token has not expired" do
       two_minutes_in_future = 2.minutes.from_now
       @ownership.update_attribute(:token_expires_at, two_minutes_in_future)
+
       assert_predicate @ownership, :valid_confirmation_token?
     end
   end
@@ -130,6 +138,7 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "create confirmed ownership" do
       ownership = Ownership.last
+
       assert_nil ownership.token
       assert_predicate ownership, :confirmed?
     end
@@ -171,6 +180,7 @@ class OwnershipTest < ActiveSupport::TestCase
       should "update confirmed_at" do
         freeze_time do
           @ownership.confirm!
+
           assert_equal Time.current, @ownership.confirmed_at
         end
         assert_includes @rubygem.ownerships, @ownership
@@ -203,6 +213,7 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "return true if confirmed" do
       @ownership.confirm!
+
       assert_predicate @ownership, :confirmed?
     end
   end
@@ -220,6 +231,7 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "return true if confirmed" do
       @ownership.confirm!
+
       refute_predicate @ownership, :unconfirmed?
     end
   end

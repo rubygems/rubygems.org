@@ -16,6 +16,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     should "not update if download count is nil" do
       create(:gem_download, rubygem_id: 1, version_id: 0, count: nil)
       download = GemDownload.increment(1, rubygem_id: 1)
+
       assert_nil download.count
     end
 
@@ -67,6 +68,7 @@ class GemDownloadTest < ActiveSupport::TestCase
 
       should "write the proper values" do
         GemDownload.bulk_update(@data)
+
         3.times do |i|
           assert_equal @counts[i], GemDownload.count_for_version(@versions[i].id)
         end
@@ -82,6 +84,7 @@ class GemDownloadTest < ActiveSupport::TestCase
         Toxiproxy[:elasticsearch].down do
           GemDownload.bulk_update(@data)
           total_count = @counts.sum
+
           assert_equal total_count, GemDownload.total_count
         end
       end
@@ -114,6 +117,7 @@ class GemDownloadTest < ActiveSupport::TestCase
       should "set version_downloads of ES record with most_recent version downloads" do
         2.times.each do |i|
           most_recent_version = @gems[i].versions.most_recent
+
           assert_equal most_recent_version.downloads_count, es_version_downloads(@gems[i].id)
         end
       end
@@ -163,16 +167,19 @@ class GemDownloadTest < ActiveSupport::TestCase
 
   should "not count, wrong named versions" do
     GemDownload.bulk_update([["foonotexists", 100]])
+
     assert_equal 0, GemDownload.total_count
 
     version = create(:version)
     GemDownload.bulk_update([["foonotexists", 100], ["dddd", 50], [version.full_name, 2]])
+
     assert_equal 2, GemDownload.total_count
   end
 
   should "write global downloads count" do
     counts = Array.new(3) { [create(:version).full_name, 2] }
     GemDownload.bulk_update(counts)
+
     assert_equal 6, GemDownload.total_count
   end
 
@@ -194,6 +201,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     version = create(:version)
     counts = Array.new(3) { |n| [version.full_name, n + 1] }
     GemDownload.bulk_update(counts)
+
     assert_equal 6, GemDownload.count_for_version(version.id)
   end
 
@@ -216,6 +224,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     2.times { GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id) }
 
     gem_download_order = [@version_3, @version_2, @version_1, @version_4].map(&:gem_download)
+
     assert_equal gem_download_order, GemDownload.most_downloaded_gems
   end
 

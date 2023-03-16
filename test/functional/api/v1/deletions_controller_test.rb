@@ -48,6 +48,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
           end
           should respond_with :unauthorized
+
           should "return body that starts with MFA enabled message" do
             assert @response.body.start_with?("You have enabled multifactor authentication")
           end
@@ -168,6 +169,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
 
           should respond_with :forbidden
+
           should "#render_soft_deleted_api_key and display an error" do
             assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
           end
@@ -225,6 +227,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
 
           should respond_with :success
+
           should "not show error message" do
             refute_includes @response.body, "For protection of your account and your gems"
           end
@@ -238,6 +241,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
 
           should respond_with :success
+
           should "not show error message" do
             refute_includes @response.body, "For protection of your account and your gems"
           end
@@ -366,6 +370,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
 
         should respond_with :forbidden
+
         should "#render_soft_deleted_api_key and display an error" do
           assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
         end
@@ -466,6 +471,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           delete :create, params: { gem_name: other_rubygem.to_param, version: "0.1.0" }
         end
         should respond_with :forbidden
+
         should "not record the deletion" do
           assert_equal 0, @user.deletions.count
         end
@@ -477,6 +483,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
         end
         should respond_with :unprocessable_entity
+
         should "not re-record the deletion" do
           assert_equal 1, Deletion.where(user: @user,
                                          rubygem: @rubygem.name,
@@ -496,6 +503,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           delete :create, params: { gem_name: @rubygem.to_param, version: "0.1.0" }
         end
         should respond_with :not_found
+
         should "not respond with not found message" do
           assert_equal "This rubygem could not be found.", @response.body
         end
@@ -516,6 +524,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :forbidden
+
     should "return body that starts with denied access message" do
       assert @response.body.start_with?("The API key doesn't have access")
     end

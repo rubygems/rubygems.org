@@ -1,17 +1,11 @@
-require "net/http"
-
-class Net::HTTP::Purge < Net::HTTPRequest
-  METHOD = "PURGE".freeze
-  REQUEST_HAS_BODY = false
-  RESPONSE_HAS_BODY = true
-end
-
 class Fastly
   concerning :TraceTagging do
     class_methods do
       include TraceTagger
     end
   end
+
+  include SemanticLogger::Loggable
 
   # These are not kwargs because delayed_job doesn't correctly support kwargs in Fastly.delay.purge
   # See: https://github.com/collectiveidea/delayed_job/issues/1134
@@ -30,7 +24,7 @@ class Fastly
                                               timeout: 10,
                                               headers: headers)
         json = JSON.parse(response)
-        Rails.logger.debug { "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}" }
+        logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
       end
     end
   end
@@ -48,7 +42,7 @@ class Fastly
                                             timeout: 10,
                                             headers: headers)
       json = JSON.parse(response)
-      Rails.logger.debug { "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}" }
+      logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
       json
     end
   end

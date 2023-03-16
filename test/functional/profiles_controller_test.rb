@@ -7,6 +7,7 @@ class ProfilesControllerTest < ActionController::TestCase
   context "for a user that doesn't exist" do
     should "render not found page" do
       get :show, params: { id: "unknown" }
+
       assert_response :not_found
     end
   end
@@ -18,6 +19,7 @@ class ProfilesControllerTest < ActionController::TestCase
       setup { get :show, params: { id: @user.id } }
 
       should respond_with :success
+
       should "not render Email link by defaulr" do
         refute page.has_selector?("a[href='mailto:#{@user.email}']")
       end
@@ -67,6 +69,7 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "render user show page" do
         assert page.has_content? @user.handle
       end
@@ -76,6 +79,7 @@ class ProfilesControllerTest < ActionController::TestCase
       setup { get :edit }
 
       should respond_with :success
+
       should "render user edit page" do
         assert page.has_content? "Edit profile"
       end
@@ -127,6 +131,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
         should set_flash.to("This request was denied. We could not verify your password.")
         should redirect_to("the profile edit page") { edit_profile_path }
+
         should "not update handle" do
           assert_equal "johndoe", @user.handle
         end
@@ -182,12 +187,14 @@ class ProfilesControllerTest < ActionController::TestCase
 
           should "set unconfirmed email and confirmation token" do
             put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
+
             assert_equal @new_email, @user.unconfirmed_email
             assert @user.confirmation_token
           end
 
           should "not update the current email" do
             put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
+
             assert_equal @current_email, @user.email
           end
 
@@ -273,6 +280,7 @@ class ProfilesControllerTest < ActionController::TestCase
             setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
             should "set mfa_redirect_uri" do
               assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
             end
@@ -299,6 +307,7 @@ class ProfilesControllerTest < ActionController::TestCase
             setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the settings page") { edit_settings_path }
+
             should "set mfa_redirect_uri" do
               assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
             end

@@ -7,6 +7,7 @@ class StatsTest < ApplicationSystemTestCase
 
   test "downloads animation bar" do
     visit stats_path
+
     assert page.find(:css, ".stats__graph__gem__meter")
     assert page.has_content?(@rubygem.downloads)
   end

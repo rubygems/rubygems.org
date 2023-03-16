@@ -20,6 +20,7 @@ gem "honeybadger"
 gem "http_accept_language"
 gem "jquery-rails"
 gem "kaminari"
+gem "launchdarkly-server-sdk"
 gem "mail"
 gem "octokit"
 gem "omniauth-github"
@@ -34,7 +35,7 @@ gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
 gem "shoryuken", "~> 4.0", require: false
-gem "statsd-instrument", "~> 2.3.0"
+gem "statsd-instrument", "~> 3.5"
 gem "validates_formatting_of"
 gem "opensearch-dsl", "~> 0.2.0"
 gem "opensearch-ruby", "~> 1.0.0"
@@ -56,7 +57,8 @@ gem "chartkick"
 gem "groupdate"
 
 # Logging
-gem "lograge"
+gem "amazing_print"
+gem "rails_semantic_logger"
 
 group :assets do
   gem "sassc-rails"
@@ -71,10 +73,11 @@ group :development, :test do
   gem "factory_bot_rails"
 
   gem "brakeman", require: false
-  gem "rubocop", "~> 1.23", require: false
-  gem "rubocop-rails", "~> 2.16", require: false
-  gem "rubocop-performance", "~> 1.12", require: false
-  gem "rubocop-minitest", "~> 0.16", require: false
+  gem "rubocop", "~> 1.48", require: false
+  gem "rubocop-rails", "~> 2.18", require: false
+  gem "rubocop-performance", "~> 1.16", require: false
+  gem "rubocop-minitest", "~> 0.29", require: false
+  gem "rubocop-capybara", "~> 2.17", require: false
 end
 
 group :development do
@@ -93,6 +96,7 @@ group :test do
   gem "shoulda"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem "webmock"
   gem "simplecov", require: false
   gem "simplecov-cobertura", require: false
 end

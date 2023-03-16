@@ -48,6 +48,10 @@ class Rubygem < ApplicationRecord
     where(indexed: true)
   }
 
+  scope :without_versions, lambda {
+    where(indexed: false)
+  }
+
   scope :with_one_version, lambda {
     select("rubygems.*")
       .joins(:versions)
@@ -355,6 +359,10 @@ class Rubygem < ApplicationRecord
     else
       public_versions.last.number
     end
+  end
+
+  def release_reserved_namespace!
+    update_attribute(:updated_at, 101.days.ago)
   end
 
   private

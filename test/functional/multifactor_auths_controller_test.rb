@@ -29,6 +29,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         should respond_with :redirect
         should redirect_to("the settings page") { edit_settings_path }
+
         should "keep mfa enabled" do
           assert_predicate @user.reload, :mfa_enabled?
         end
@@ -43,6 +44,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
             should respond_with :redirect
             should redirect_to("the settings page") { edit_settings_path }
+
             should "disable mfa" do
               refute_predicate @user.reload, :mfa_enabled?
             end
@@ -55,6 +57,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
             should respond_with :redirect
             should redirect_to("the settings page") { edit_settings_path }
+
             should "disable mfa" do
               refute_predicate @user.reload, :mfa_enabled?
             end
@@ -69,6 +72,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             should respond_with :redirect
             should redirect_to("the settings page") { edit_settings_path }
             should set_flash.to("Your OTP code is incorrect.")
+
             should "keep mfa enabled" do
               assert_predicate @user.reload, :mfa_enabled?
             end
@@ -84,6 +88,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
           expected = "Updating multi-factor authentication to \"UI Only\" is no longer supported. Please use \"UI and gem signin\" or \"UI and API\"."
+
           should "set flash" do
             assert_equal(expected, flash[:error])
           end
@@ -100,6 +105,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
+
           should "update make mfa level to mfa_ui_and_api now" do
             assert_predicate @user.reload, :mfa_ui_and_api?
           end
@@ -112,6 +118,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
+
           should "update make mfa level to mfa_ui_and_gem_signin now" do
             assert_predicate @user.reload, :mfa_ui_and_gem_signin?
           end
@@ -142,6 +149,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
               assert page.has_content?(code)
             end
           end
+
           should "enable mfa" do
             assert_predicate @user.reload, :mfa_enabled?
           end
@@ -155,6 +163,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
+
           should "set error flash message" do
             refute_empty flash[:error]
           end
@@ -171,6 +180,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         should respond_with :redirect
         should redirect_to("the settings page") { edit_settings_path }
+
         should "keep mfa disabled" do
           refute_predicate @user.reload, :mfa_enabled?
         end
@@ -205,6 +215,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @redirect_paths.each do |path|
             session[:mfa_redirect_uri] = path
             post :update, params: { otp: ROTP::TOTP.new(@seed).now, level: "ui_and_api" }
+
             assert_redirected_to path
             assert_nil session[:mfa_redirect_uri]
           end
@@ -214,6 +225,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @redirect_paths.each do |path|
             session[:mfa_redirect_uri] = path
             post :update, params: { otp: "12345", level: "ui_and_api" }
+
             assert_redirected_to edit_settings_path
             assert_equal path, session[:mfa_redirect_uri]
           end
@@ -223,8 +235,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @redirect_paths.each do |path|
             session[:mfa_redirect_uri] = path
             post :update, params: { otp: "12345", level: "ui_and_api" }
+
             assert_redirected_to edit_settings_path
             post :update, params: { otp: ROTP::TOTP.new(@seed).now, level: "ui_and_api" }
+
             assert_redirected_to path
             assert_nil session[:mfa_redirect_uri]
           end

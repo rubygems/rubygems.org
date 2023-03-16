@@ -16,6 +16,7 @@ class ProfileTest < SystemTest
     sign_in
 
     visit profile_path("nick1")
+
     assert page.has_content? "nick1"
 
     click_link "Edit Profile"
@@ -69,6 +70,7 @@ class ProfileTest < SystemTest
                                                      "for confirming your new email address."
 
     link = last_email_link
+
     assert_not_nil link
 
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
@@ -76,6 +78,7 @@ class ProfileTest < SystemTest
 
       assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
       visit edit_profile_path
+
       assert page.has_selector? "input[value='nick2@example.com']"
     end
   end
@@ -90,6 +93,7 @@ class ProfileTest < SystemTest
     click_button "Update"
 
     visit profile_path("nick1")
+
     refute page.has_content?("Email Me")
   end
 
@@ -135,6 +139,7 @@ class ProfileTest < SystemTest
     click_button "Confirm"
 
     Delayed::Worker.new.work_off
+
     assert_empty Delayed::Job.all
   end
 

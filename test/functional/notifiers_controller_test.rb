@@ -37,6 +37,7 @@ class NotifiersControllerTest < ActionController::TestCase
             setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
             should "set mfa_redirect_uri" do
               assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
             end
@@ -54,6 +55,7 @@ class NotifiersControllerTest < ActionController::TestCase
             setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the settings page") { edit_settings_path }
+
             should "set mfa_redirect_uri" do
               assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
             end

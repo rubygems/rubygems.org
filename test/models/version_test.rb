@@ -15,6 +15,7 @@ class VersionTest < ActiveSupport::TestCase
       fields = %w[number built_at summary description authors platform
                   ruby_version rubygems_version prerelease downloads_count licenses
                   requirements sha metadata created_at]
+
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
@@ -43,6 +44,7 @@ class VersionTest < ActiveSupport::TestCase
       fields = %w[number built-at summary description authors platform
                   ruby-version rubygems-version prerelease downloads-count licenses
                   requirements sha metadata created-at]
+
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
@@ -132,6 +134,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "order gems by created at and show only gems that have more than one version" do
       versions = Version.just_updated
+
       assert_equal 4, versions.size
       assert_equal [@first, @second, @third, @fourth], versions
     end
@@ -158,6 +161,7 @@ class VersionTest < ActiveSupport::TestCase
       @dependency = create(:rubygem)
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
       @version.dependencies << create(:dependency, version: @version, rubygem: @dependency)
+
       refute_empty Version.first.dependencies
     end
 
@@ -203,16 +207,19 @@ class VersionTest < ActiveSupport::TestCase
 
       should "return false if built_at is not set" do
         @version.update(built_at: nil)
+
         refute_predicate @version, :rely_on_built_at?
       end
 
       should "return false if created_at is not 2009-07-25" do
         @version.update(created_at: Date.parse("2020-01-01"))
+
         refute_predicate @version, :rely_on_built_at?
       end
 
       should "return false if built_at is higher than 2009-07-25" do
         @version.update(built_at: Date.parse("2020-01-01"))
+
         refute_predicate @version, :rely_on_built_at?
       end
     end
@@ -230,6 +237,7 @@ class VersionTest < ActiveSupport::TestCase
       should "return created_at if #rely_on_built_at? returns false" do
         created_at = Version::RUBYGEMS_IMPORT_DATE + 1.day
         @version.update(created_at: created_at)
+
         assert_equal created_at, @version.authored_at
       end
     end
@@ -237,12 +245,14 @@ class VersionTest < ActiveSupport::TestCase
     should "have a rubygems version" do
       @version.update(required_rubygems_version: @required_rubygems_version)
       new_version = Version.find(@version.id)
+
       assert_equal new_version.required_rubygems_version, @required_rubygems_version
     end
 
     should "limit the character length" do
       @version.required_rubygems_version = format(">=%s", "0" * 2 * 1024 * 1024 * 100)
       @version.validate
+
       assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:required_rubygems_version])
     end
   end
@@ -262,6 +272,7 @@ class VersionTest < ActiveSupport::TestCase
     should "not have a rubygems version" do
       @version.update(required_rubygems_version: nil)
       nil_version = Version.find(@version.id)
+
       assert_nil nil_version.required_rubygems_version
     end
   end
@@ -330,6 +341,7 @@ class VersionTest < ActiveSupport::TestCase
       @version.required_ruby_version = @required_ruby_version
       @version.save!
       new_version = Version.find(@version.id)
+
       assert_equal new_version.required_ruby_version, @required_ruby_version
     end
   end
@@ -344,6 +356,7 @@ class VersionTest < ActiveSupport::TestCase
       @version.required_ruby_version = nil
       @version.save!
       nil_version = Version.find(@version.id)
+
       assert_nil nil_version.required_ruby_version
     end
   end
@@ -353,29 +366,34 @@ class VersionTest < ActiveSupport::TestCase
 
     should "be invalid with trailing zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0.0")
+
       refute_predicate version, :valid?
       assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be invalid with fewer zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0")
+
       refute_predicate version, :valid?
       assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be invalid with leading zero in significant segments" do
       version = build(:version, rubygem: @rubygem, number: "01.0.0")
+
       refute_predicate version, :valid?
       assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be valid in a different platform" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "win32")
+
       assert_predicate version, :valid?
     end
 
     should "be valid with prerelease" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0.pre")
+
       assert_predicate version, :valid?
     end
   end
@@ -399,6 +417,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "be invalid with platform longer than maximum field length" do
       @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+
       refute_predicate @version, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:platform])
     end
@@ -406,11 +425,13 @@ class VersionTest < ActiveSupport::TestCase
     should "be invalid with number longer than maximum field length" do
       long_number_suffix = ".1" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       @version.number = "1#{long_number_suffix}"
+
       refute_predicate @version, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:number])
     end
     should "be invalid with licenses longer than maximum field length" do
       @version.licenses = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+
       refute_predicate @version, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:licenses])
     end
@@ -425,6 +446,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "save full name" do
       @version.save!
+
       assert_equal "#{@version.rubygem.name}-#{@version.number}", @version.full_name
       assert_equal @version.number, @version.slug
     end
@@ -562,34 +584,40 @@ class VersionTest < ActiveSupport::TestCase
 
     should "give title and platform for #to_title" do
       @version.platform = "zomg"
+
       assert_equal "#{@version.rubygem.name} (#{@version.number}-zomg)", @version.to_title
     end
 
     should "have description for info" do
       @version.description = @info
+
       assert_equal @info, @version.info
     end
 
     should "have summary for info if description does not exist" do
       @version.description = nil
       @version.summary = @info
+
       assert_equal @info, @version.info
     end
 
     should "have summary for info if description is blank" do
       @version.description = ""
       @version.summary = @info
+
       assert_equal @info, @version.info
     end
 
     should "have some text for info if neither summary or description exist" do
       @version.description = nil
       @version.summary = nil
+
       assert_equal "This rubygem does not have a description or summary.", @version.info
     end
 
     should "give 'N/A' for size when size not available" do
       @version.size = nil
+
       assert_equal "N/A", @version.size
     end
   end
@@ -663,6 +691,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "return prerelease gems from the prerelease named scope" do
       [@prerelease, @release].each(&:save!)
+
       assert_equal [@prerelease], Version.prerelease
       assert_equal [@release],    Version.release
     end
@@ -799,6 +828,7 @@ class VersionTest < ActiveSupport::TestCase
       actual = Version.subscribed_to_by(@user).map do |s|
         s.created_at.to_fs(:db)
       end
+
       assert_equal expected, actual
     end
   end
@@ -837,17 +867,20 @@ class VersionTest < ActiveSupport::TestCase
       should "be invalid with empty string as link" do
         @version.metadata = { "home" => "" }
         @version.validate
+
         assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be invalid with invalid link" do
         @version.metadata = { "home" => "http:/github.com/bestgemever" }
         @version.validate
+
         assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be valid with valid link" do
         @version.metadata = { "home" => "http://github.com/bestgemever" }
+
         assert @version.validate
         assert_empty(@version.errors.messages[:metadata])
       end
@@ -856,6 +889,7 @@ class VersionTest < ActiveSupport::TestCase
         large_value = "v" * 1025
         @version.metadata = { "key" => large_value }
         @version.validate
+
         assert_equal @version.errors.messages[:metadata], ["metadata value ['#{large_value}'] is too large (maximum is 1024 bytes)"]
       end
 
@@ -863,12 +897,14 @@ class VersionTest < ActiveSupport::TestCase
         large_key = "h" * 129
         @version.metadata = { large_key => "value" }
         @version.validate
+
         assert_equal @version.errors.messages[:metadata], ["metadata key ['#{large_key}'] is too large (maximum is 128 bytes)"]
       end
 
       should "be invalid with empty key" do
         @version.metadata = { "" => "value" }
         @version.validate
+
         assert_equal(["metadata key is empty"], @version.errors.messages[:metadata])
       end
     end
@@ -923,6 +959,7 @@ class VersionTest < ActiveSupport::TestCase
   should "validate authors the same twice" do
     g = Rubygem.new(name: "test-gem")
     v = Version.new(authors: %w[arthurnn dwradcliffe], number: 1, platform: "ruby", rubygem: g)
+
     assert_equal "arthurnn, dwradcliffe", v.authors
     assert_predicate v, :valid?
     assert_equal "arthurnn, dwradcliffe", v.authors
@@ -934,6 +971,7 @@ class VersionTest < ActiveSupport::TestCase
     Version.create(authors: %w[arthurnn dwradcliffe], number: "0.0.1", platform: "ruby", rubygem: g1)
     g2 = Rubygem.create(name: "test-gem")
     v2 = Version.new(authors: %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", rubygem: g2)
+
     refute_predicate v2, :valid?
     assert_equal [:full_name], v2.errors.attribute_names
   end
@@ -950,6 +988,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "should return nil on sha256_hex when sha not avaible" do
       @version.sha256 = nil
+
       assert_nil @version.sha256_hex
     end
   end
@@ -978,12 +1017,14 @@ class VersionTest < ActiveSupport::TestCase
 
     should "return true if signature is expired" do
       @version.cert_chain.last.not_after = 1.year.ago
+
       assert_predicate @version, :signature_expired?
     end
 
     should "return false if signature is not expired" do
       @version.cert_chain.last.not_after = 1.year.from_now
       @version.cert_chain.first.not_after = 1.year.from_now
+
       refute_predicate @version, :signature_expired?
     end
   end
@@ -998,18 +1039,21 @@ class VersionTest < ActiveSupport::TestCase
     should "return versions created in the given range" do
       @version.created_at = Time.zone.parse("2017-10-20")
       @version.save!
+
       assert_contains Version.created_between(@start_time, @end_time), @version
     end
 
     should "NOT return versions created before the range begins" do
       @version.created_at = Time.zone.parse("2017-10-09")
       @version.save!
+
       assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end
 
     should "NOT return versions after the range begins" do
       @version.created_at = Time.zone.parse("2017-11-11")
       @version.save!
+
       assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end
   end

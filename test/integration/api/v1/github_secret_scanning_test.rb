@@ -94,6 +94,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       should "returns success" do
         assert_response :success
         json = JSON.parse(@response.body)[0]
+
         assert_equal "false_positive", json["label"]
         assert_equal @tokens[0]["type"], json["token_type"]
         assert_equal @tokens[0]["token"], json["token_raw"]
@@ -119,6 +120,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
         assert_response :success
 
         json = JSON.parse(@response.body)
+
         assert_equal "true_positive", json.last["label"]
         assert_equal @tokens.last["token"], json.last["token_raw"]
 
@@ -128,6 +130,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       should "delivers an email" do
         refute_empty ActionMailer::Base.deliveries
         email = ActionMailer::Base.deliveries.last
+
         assert_equal [@api_key.user.email], email.to
         assert_equal ["no-reply@mailer.rubygems.org"], email.from
         assert_equal "One of your API keys was revoked on rubygems.org", email.subject

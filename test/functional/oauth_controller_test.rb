@@ -27,6 +27,7 @@ class OAuthControllerTest < ActionController::TestCase
 
       should "login into admin" do
         get :development_log_in_as, params: { admin_github_user_id: @admin_user.id }
+
         assert_response :redirect
         assert_redirected_to "/admin"
       end
@@ -35,6 +36,7 @@ class OAuthControllerTest < ActionController::TestCase
     context "with invalid ID" do
       should "not login into admin" do
         get :development_log_in_as, params: { admin_github_user_id: 0 }
+
         assert_response :not_found
       end
     end

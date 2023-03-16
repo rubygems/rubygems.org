@@ -43,3 +43,14 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 before_fork do
   sleep 1
 end
+
+on_worker_boot do
+  Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new(ENV["LAUNCH_DARKLY_SDK_KEY"].presence || "") if defined?(Rails)
+
+  # Re-open appenders after forking the process
+  SemanticLogger.reopen if defined?(SemanticLogger)
+end
+
+on_restart do
+  Rails.configuration.launch_darkly_client&.close
+end

@@ -10,6 +10,7 @@ class GemTypoExceptionTest < ActiveSupport::TestCase
 
     should "be invalid with an empty string" do
       exception = build(:gem_typo_exception, name: "")
+
       refute_predicate exception, :valid?
     end
 
@@ -17,6 +18,7 @@ class GemTypoExceptionTest < ActiveSupport::TestCase
       create(:rubygem, name: "some")
 
       exception = build(:gem_typo_exception, name: "some")
+
       refute_predicate exception, :valid?
     end
   end

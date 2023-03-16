@@ -82,6 +82,7 @@ class OwnershipCallsTest < SystemTest
     create(:ownership_call, rubygem: rubygem, user: @owner)
 
     visit rubygem_path(rubygem, as: user)
+
     within ".gem__aside > div.t-list__items" do
       assert_selector :css, "a[href='#{rubygem_adoptions_path(rubygem)}']"
     end
@@ -92,6 +93,7 @@ class OwnershipCallsTest < SystemTest
     create(:ownership_call, rubygem: rubygem, user: @owner)
 
     visit rubygem_path(rubygem, as: @owner)
+
     within ".gem__aside > div.t-list__items" do
       assert_selector :css, "a[href='#{rubygem_adoptions_path(rubygem)}']"
     end
@@ -108,6 +110,7 @@ class OwnershipCallsTest < SystemTest
     end
 
     Delayed::Worker.new.work_off
+
     assert_emails 3
   end
 

@@ -1,5 +1,6 @@
 module GitHubOAuthable
   extend ActiveSupport::Concern
+  include SemanticLogger::Loggable
 
   INFO_QUERY = <<~GRAPHQL.freeze
     query($organization_name:String!) {
@@ -91,7 +92,7 @@ module GitHubOAuthable
         { query: INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json
       )
       if (errors = graphql.errors.presence)
-        Rails.logger.warn("GitHub graphql errors: #{errors}")
+        logger.warn("GitHub graphql errors", errors:)
       end
       graphql.data.to_h.deep_symbolize_keys
     end

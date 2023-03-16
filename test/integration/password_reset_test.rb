@@ -32,10 +32,12 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
     expected_path = "/users/#{@user.id}/password/edit"
+
     assert_equal expected_path, page.current_path, "removes confirmation token from url"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
+
     assert_equal dashboard_path, page.current_path
 
     click_link "Sign out"
@@ -97,6 +99,20 @@ class PasswordResetTest < SystemTest
     assert page.has_content?("Sign out")
   end
 
+  test "resetting a password when mfa is enabled but mfa session is expired" do
+    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+    forgot_password_with @user.email
+
+    visit password_reset_link
+
+    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    travel 16.minutes do
+      click_button "Authenticate"
+
+      assert page.has_content? "Your login page session has expired."
+    end
+  end
+
   test "resetting password when webauthn is enabled" do
     create_webauthn_credential
 
@@ -116,6 +132,7 @@ class PasswordResetTest < SystemTest
     click_button "Save this password"
 
     find(:css, ".header__popup-link").click
+
     assert page.has_content?("SIGN OUT")
 
     @authenticator.remove!

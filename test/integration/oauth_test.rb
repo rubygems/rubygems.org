@@ -108,6 +108,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
     end
 
     delete "/admin/logout"
+
     assert_redirected_to root_path
     assert_empty cookies["rubygems_admin_oauth_github_user"]
   end
@@ -179,6 +180,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
       assert_not_nil cookies["rubygems_admin_oauth_github_user"]
       follow_redirect!
       follow_redirect!
+
       assert_response :success
 
       Admin::GitHubUser.admins.sole.tap do |user|
@@ -210,6 +212,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
       end
 
       do_login
+
       assert_nil cookies["rubygems_admin_oauth_github_user"]
       assert_response :forbidden
 
@@ -267,6 +270,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
         assert_not_nil cookies["rubygems_admin_oauth_github_user"]
         follow_redirect!
         follow_redirect!
+
         assert_response :success
 
         Admin::GitHubUser.sole.tap do |user|
@@ -294,6 +298,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
         end
 
         do_login
+
         assert_nil cookies["rubygems_admin_oauth_github_user"]
         assert_response :forbidden
 

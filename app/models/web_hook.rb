@@ -13,13 +13,12 @@ class WebHook < ApplicationRecord
   validates :url, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, presence: true
   validate :unique_hook, on: :create
 
-  default_scope { enabled }
-
   scope :global, -> { where(rubygem_id: nil) }
 
   scope :specific, -> { where.not(rubygem_id: nil) }
 
   scope :enabled, -> { where(disabled_at: nil) }
+  scope :disabled, -> { where.not(disabled_at: nil) }
 
   def fire(protocol, host_with_port, version, delayed: true)
     job = NotifyWebHookJob.new(webhook: self, protocol:, host_with_port:, version:)
@@ -120,6 +119,7 @@ class WebHook < ApplicationRecord
 
   def disable!(disabled_reason)
     transaction do
+      next if disabled_at.present?
       update!(disabled_reason:)
       touch(:disabled_at)
 

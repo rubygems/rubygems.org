@@ -21,7 +21,7 @@ class ElasticSearcher
   def api_search
     result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash, page: @page, per_page: Kaminari.config.default_per_page,
 load: false)
-    result.response["hits"]["hits"].map { |hit| hit["_source"] }
+    result.response["hits"]["hits"].pluck("_source")
   rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, OpenSearch::Transport::Transport::Error
     Rubygem.legacy_search(@query).page(@page)
   end

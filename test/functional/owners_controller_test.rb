@@ -56,12 +56,14 @@ class OwnersControllerTest < ActionController::TestCase
 
           should "show error message" do
             expected_alert = "User must exist"
+
             assert_equal expected_alert, flash[:alert]
           end
 
           should "not send confirmation email" do
             ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
+
             assert_emails 0
           end
         end
@@ -80,11 +82,13 @@ class OwnersControllerTest < ActionController::TestCase
           should "set success notice flash" do
             expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. " \
                               "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+
             assert_equal expected_notice, flash[:notice]
           end
           should "send confirmation email" do
             assert_enqueued_emails 1
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
             assert_emails 1
             assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
             assert_equal [@new_owner.email], last_email.to
@@ -96,6 +100,7 @@ class OwnersControllerTest < ActionController::TestCase
             should "not send confirmation email" do
               ActionMailer::Base.deliveries.clear
               Delayed::Worker.new.work_off
+
               assert_equal 0, Delayed::Job.where.not(last_error: nil).count
               assert_emails 0
             end
@@ -119,6 +124,7 @@ class OwnersControllerTest < ActionController::TestCase
 
             should "show error message" do
               expected_alert = "The gem has MFA requirement enabled, please setup MFA on your account."
+
               assert_equal expected_alert, flash[:alert]
             end
           end
@@ -134,6 +140,7 @@ class OwnersControllerTest < ActionController::TestCase
             should "set success notice flash" do
               expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. " \
                                 "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+
               assert_equal expected_notice, flash[:notice]
             end
           end
@@ -148,6 +155,7 @@ class OwnersControllerTest < ActionController::TestCase
         end
 
         should respond_with :forbidden
+
         should "not add other user as owner" do
           refute_includes @rubygem.owners_including_unconfirmed, @other_user
         end
@@ -170,6 +178,7 @@ class OwnersControllerTest < ActionController::TestCase
             delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
           end
           should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -190,6 +199,7 @@ class OwnersControllerTest < ActionController::TestCase
             delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
           end
           should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -209,6 +219,7 @@ class OwnersControllerTest < ActionController::TestCase
             delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
           end
           should respond_with :forbidden
+
           should "not remove the ownership record" do
             assert_includes @rubygem.owners_including_unconfirmed, @last_owner
           end
@@ -218,6 +229,7 @@ class OwnersControllerTest < ActionController::TestCase
           should "not send email notifications about owner removal" do
             ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
+
             assert_emails 0
           end
         end
@@ -240,6 +252,7 @@ class OwnersControllerTest < ActionController::TestCase
 
             should "show error message" do
               expected_alert = "The gem has MFA requirement enabled, please setup MFA on your account."
+
               assert_equal expected_alert, flash[:alert]
             end
           end
@@ -254,6 +267,7 @@ class OwnersControllerTest < ActionController::TestCase
 
             should "set success notice flash" do
               expected_notice = "#{@second_user.handle} was removed from the owners successfully"
+
               assert_equal expected_notice, flash[:notice]
             end
           end
@@ -270,6 +284,7 @@ class OwnersControllerTest < ActionController::TestCase
         end
 
         should respond_with :forbidden
+
         should "not remove user as owner" do
           assert_includes @rubygem.owners, @last_owner
         end
@@ -291,12 +306,15 @@ class OwnersControllerTest < ActionController::TestCase
         should redirect_to("rubygem show") { rubygem_path(@rubygem) }
         should "set success notice flash" do
           success_flash = "A confirmation mail has been re-sent to your email"
+
           assert_equal success_flash, flash[:notice]
         end
         should "resend confirmation email" do
           ActionMailer::Base.deliveries.clear
+
           assert_enqueued_emails 1
           perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
           assert_emails 1
           assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
           assert_equal [@new_owner.email], last_email.to
@@ -312,6 +330,7 @@ class OwnersControllerTest < ActionController::TestCase
         should "not resend confirmation email" do
           ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
+
           assert_emails 0
         end
       end
@@ -326,6 +345,7 @@ class OwnersControllerTest < ActionController::TestCase
         should "not resend confirmation email" do
           ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
+
           assert_emails 0
         end
       end
@@ -357,6 +377,7 @@ class OwnersControllerTest < ActionController::TestCase
 
       should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
+
       should "not add unconfirmed ownership record" do
         refute_includes @rubygem.owners_including_unconfirmed, @new_owner
       end
@@ -370,6 +391,7 @@ class OwnersControllerTest < ActionController::TestCase
       end
       should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
+
       should "remove the ownership record" do
         assert_includes @rubygem.owners_including_unconfirmed, @second_user
       end
@@ -409,10 +431,12 @@ class OwnersControllerTest < ActionController::TestCase
           Delayed::Worker.new.work_off
 
           owner_added_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
+
           assert_contains owner_added_email_subjects, "You were added as an owner to #{@rubygem.name} gem"
           assert_contains owner_added_email_subjects, "User #{@user.handle} was added as an owner to #{@rubygem.name} gem"
 
           owner_added_email_to = ActionMailer::Base.deliveries.map(&:to).flatten
+
           assert_same_elements @rubygem.owners.map(&:email), owner_added_email_to
         end
       end
@@ -432,6 +456,7 @@ class OwnersControllerTest < ActionController::TestCase
         should "not send email notification about owner added" do
           ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
+
           assert_emails 0
         end
       end

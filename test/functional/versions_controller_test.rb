@@ -55,6 +55,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "show not hosted notice" do
       assert page.has_content?("This gem is not currently hosted")
     end
@@ -81,6 +82,7 @@ class VersionsControllerTest < ActionController::TestCase
 
       assert_select ".gem__version__date", text: "- January 01, 2000*", count: 1 do |elements|
         version = elements.first
+
         assert_equal(tooltip_text, version["data-tooltip"])
       end
 
@@ -97,11 +99,13 @@ class VersionsControllerTest < ActionController::TestCase
     should "get paginated result" do
       # first page includes the only version
       get :index, params: { rubygem_id: @rubygem.name }
+
       assert_response :success
       assert page.has_content?("1.1.2")
 
       # second page does not include the only version
       get :index, params: { rubygem_id: @rubygem.name, page: 2 }
+
       assert_response :success
       refute page.has_content?("1.1.2")
     end
@@ -118,6 +122,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
     end
@@ -129,6 +134,7 @@ class VersionsControllerTest < ActionController::TestCase
         assert page.has_content?(version.number)
       end
     end
+
     should "render the checksum version" do
       assert page.has_content?(@latest_version.sha256_hex)
     end
@@ -143,6 +149,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "show yanked notice" do
       assert page.has_content?("This version has been yanked")
     end
@@ -150,6 +157,7 @@ class VersionsControllerTest < ActionController::TestCase
       assert page.has_content?("Versions")
       assert page.has_content?(@version.number)
       css = "small:contains('#{@version.authored_at.to_date.to_fs(:long)}')"
+
       assert page.has_css?(css)
     end
     should "renders owner gems overview link" do

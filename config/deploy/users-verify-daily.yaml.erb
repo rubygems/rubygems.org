@@ -13,6 +13,9 @@ spec:
         metadata:
           labels:
             name: users-verify-daily
+            tags.datadoghq.com/env: "<%= environment %>"
+            tags.datadoghq.com/service: rubygems.org
+            tags.datadoghq.com/version: <%= current_sha %>
         spec:
           restartPolicy: "OnFailure"
           containers:
