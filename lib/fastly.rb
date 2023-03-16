@@ -12,6 +12,8 @@ class Fastly
   def self.purge(options = {})
     return unless ENV["FASTLY_DOMAINS"].present? && ENV["FASTLY_API_KEY"].present?
 
+    connection = make_connection
+
     ENV["FASTLY_DOMAINS"].split(",").each do |domain|
       url = "https://#{domain}/#{options[:path]}"
       trace("gemcutter.fastly.purge", resource: url,
@@ -19,11 +21,9 @@ class Fastly
         headers = options[:soft] ? { "Fastly-Soft-Purge" => 1 } : {}
         headers["Fastly-Key"] = ENV["FASTLY_API_KEY"]
 
-        response = RestClient::Request.execute(method: :purge,
-                                              url: url,
-                                              timeout: 10,
-                                              headers: headers)
-        json = JSON.parse(response)
+        json = connection.get(url, headers) do |req|
+          req.http_method = :purge
+        end
         logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
       end
     end
@@ -37,13 +37,18 @@ class Fastly
       headers = { "Fastly-Key" => ENV["FASTLY_API_KEY"] }
       headers["Fastly-Soft-Purge"] = 1 if soft
       url = "https://api.fastly.com/service/#{service_id}/purge/#{key}"
-      response = RestClient::Request.execute(method: :post,
-                                            url: url,
-                                            timeout: 10,
-                                            headers: headers)
-      json = JSON.parse(response)
+      json = make_connection.post(url, nil, headers)
       logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
       json
+    end
+  end
+
+  def self.make_connection
+    Faraday.new(nil, request: { timeout: 10 }) do |f|
+      f.request :json
+      f.response :json
+      f.response :logger, logger, headers: false, errors: true
+      f.response :raise_error
     end
   end
 end

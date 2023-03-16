@@ -241,7 +241,6 @@ GEM
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
       llhttp-ffi (~> 0.4.0)
-    http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
@@ -316,9 +315,6 @@ GEM
     meta-tags (2.18.0)
       actionpack (>= 3.2.0, < 7.1)
     method_source (1.0.0)
-    mime-types (3.3.1)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.1009)
     mini_mime (1.1.2)
     mini_portile2 (2.8.1)
     minitest (5.18.0)
@@ -337,7 +333,6 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
-    netrc (0.11.0)
     nio4r (2.5.8)
     nokogiri (1.14.2)
       mini_portile2 (~> 2.8.0)
@@ -458,11 +453,6 @@ GEM
     rdoc (6.5.0)
       psych (>= 4.0.0)
     regexp_parser (2.6.0)
-    rest-client (2.1.0)
-      http-accept (>= 1.7.0, < 2.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 4.0)
-      netrc (~> 0.8)
     rexml (3.2.5)
     roadie (5.0.0)
       css_parser (~> 1.4)
@@ -636,6 +626,7 @@ DEPENDENCIES
   delayed_job_active_record
   dogstatsd-ruby
   factory_bot_rails
+  faraday (~> 1.10)
   faraday_middleware-aws-sigv4 (~> 0.3)
   good_job
   google-protobuf
@@ -675,7 +666,6 @@ DEPENDENCIES
   rails_semantic_logger
   rbtrace (~> 0.4.8)
   rdoc
-  rest-client
   roadie-rails
   rotp
   rqrcode

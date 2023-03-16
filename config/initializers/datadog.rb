@@ -48,7 +48,6 @@ Datadog.configure do |c|
   c.tracing.instrument :http, service_name: c.service
   c.tracing.instrument :pg
   c.tracing.instrument :rails
-  c.tracing.instrument :rest_client, split_by_domain: true, service_name: c.service
   c.tracing.instrument :shoryuken
 end
 
