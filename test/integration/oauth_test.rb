@@ -79,15 +79,13 @@ class OAuthTest < ActionDispatch::IntegrationTest
         }
       }
     }
-    @octokit_stubs.post("/graphql",
-      {
-        query: GitHubOAuthable::INFO_QUERY,
-        variables: { organization_name: "rubygems" }
-      }.to_json) do |_env|
-      [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: info_data
-      )]
-    end
+    stub_request(:post, "https://api.github.com/graphql")
+      .with(body: { query: GitHubOAuthable::INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json)
+      .to_return(
+        status: 200,
+        headers: { "Content-Type" => "application/json" },
+        body: JSON.generate(data: info_data)
+      )
 
     do_login
 
@@ -114,20 +112,20 @@ class OAuthTest < ActionDispatch::IntegrationTest
   end
 
   test "fails when user is not a member of the rubygems org" do
-    @octokit_stubs.post("/graphql", {
-      query: GitHubOAuthable::INFO_QUERY,
-      variables: { organization_name: "rubygems" }
-    }.to_json) do
-      [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: {
-          viewer: {
-            login: "jackson-keeling",
-            id: "95144751",
-            organization: nil
-          }
-        }
-      )]
-    end
+    info_data = {
+      viewer: {
+        login: "jackson-keeling",
+        id: "95144751",
+        organization: nil
+      }
+    }
+    stub_request(:post, "https://api.github.com/graphql")
+      .with(body: { query: GitHubOAuthable::INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json)
+      .to_return(
+        status: 200,
+        headers: { "Content-Type" => "application/json" },
+        body: JSON.generate(data: info_data)
+      )
 
     do_login
 
@@ -163,15 +161,13 @@ class OAuthTest < ActionDispatch::IntegrationTest
           }
         }
       }
-      @octokit_stubs.post("/graphql",
-        {
-          query: GitHubOAuthable::INFO_QUERY,
-          variables: { organization_name: "rubygems" }
-        }.to_json) do |_env|
-        [200, { "Content-Type" => "application/json" }, JSON.generate(
-          data: info_data
-        )]
-      end
+      stub_request(:post, "https://api.github.com/graphql")
+        .with(body: { query: GitHubOAuthable::INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json)
+        .to_return(
+          status: 200,
+          headers: { "Content-Type" => "application/json" },
+          body: JSON.generate(data: info_data)
+        )
       OmniAuth.config.mock_auth[:github].credentials.token += "_update"
 
       do_login
@@ -201,15 +197,13 @@ class OAuthTest < ActionDispatch::IntegrationTest
           organization: nil
         }
       }
-      @octokit_stubs.post("/graphql",
-        {
-          query: GitHubOAuthable::INFO_QUERY,
-          variables: { organization_name: "rubygems" }
-        }.to_json) do |_env|
-        [200, { "Content-Type" => "application/json" }, JSON.generate(
-          data: info_data
-        )]
-      end
+      stub_request(:post, "https://api.github.com/graphql")
+        .with(body: { query: GitHubOAuthable::INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json)
+        .to_return(
+          status: 200,
+          headers: { "Content-Type" => "application/json" },
+          body: JSON.generate(data: info_data)
+        )
 
       do_login
 
@@ -254,15 +248,13 @@ class OAuthTest < ActionDispatch::IntegrationTest
             }
           }
         }
-        @octokit_stubs.post("/graphql",
-          {
-            query: GitHubOAuthable::INFO_QUERY,
-            variables: { organization_name: "rubygems" }
-          }.to_json) do |_env|
-          [200, { "Content-Type" => "application/json" }, JSON.generate(
-            data: info_data
-          )]
-        end
+        stub_request(:post, "https://api.github.com/graphql")
+          .with(body: { query: GitHubOAuthable::INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json)
+          .to_return(
+            status: 200,
+            headers: { "Content-Type" => "application/json" },
+            body: JSON.generate(data: info_data)
+          )
 
         do_login
 
@@ -287,15 +279,13 @@ class OAuthTest < ActionDispatch::IntegrationTest
             organization: nil
           }
         }
-        @octokit_stubs.post("/graphql",
-          {
-            query: GitHubOAuthable::INFO_QUERY,
-            variables: { organization_name: "rubygems" }
-          }.to_json) do |_env|
-          [200, { "Content-Type" => "application/json" }, JSON.generate(
-            data: info_data
-          )]
-        end
+        stub_request(:post, "https://api.github.com/graphql")
+          .with(body: { query: GitHubOAuthable::INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json)
+          .to_return(
+            status: 200,
+            headers: { "Content-Type" => "application/json" },
+            body: JSON.generate(data: info_data)
+          )
 
         do_login
 

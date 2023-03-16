@@ -47,17 +47,12 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
 
     should "discard the job on a 422 with hook relay" do
       NotifyWebHookJob.any_instance.expects(:use_hook_relay?).twice.returns(true)
-      RestClient::Request.expects(:execute).with(has_entries(
-                                                   method: :post,
-                                                   url: "https://api.hookrelay.dev/hooks///webhook_id-#{@hook.id}",
-                                                   headers: has_entries(
-                                                     "Content-Type" => "application/json",
-                                                     "HR_TARGET_URL" => @hook.url,
-                                                     "HR_MAX_ATTEMPTS" => "3"
-                                                   )
-                                                 )).raises(
-                                                   RestClient::UnprocessableEntity.new(RestClient::Response.new({ error: "Invalid url" }.to_json))
-                                                 )
+      stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-#{@hook.id}")
+        .with(headers: {
+                "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @hook.url,
+                "HR_MAX_ATTEMPTS" => "3"
+              }).to_return(status: 422, body: { error: "Invalid url" }.to_json)
 
       perform_enqueued_jobs do
         @job.enqueue
@@ -69,15 +64,12 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
 
     should "finish the job on a 422 without hook relay" do
       NotifyWebHookJob.any_instance.expects(:use_hook_relay?).once.returns(false)
-      RestClient::Request.expects(:execute).with(has_entries(
-                                                   method: :post,
-                                                   url: @hook.url,
-                                                   headers: has_entries(
-                                                     "Content-Type" => "application/json",
-                                                     "HR_TARGET_URL" => @hook.url,
-                                                     "HR_MAX_ATTEMPTS" => "3"
-                                                   )
-                                                 )).raises RestClient::UnprocessableEntity.new
+      stub_request(:post, @hook.url)
+        .with(headers: {
+                "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @hook.url,
+                "HR_MAX_ATTEMPTS" => "3"
+              }).to_return(status: 422, body: "")
 
       perform_enqueued_jobs do
         @job.enqueue

@@ -83,7 +83,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for all gems" do
         setup do
-          RestClient::Request.stubs(:execute)
+          stub_request(:post, @url)
           post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN,
                                 url: @url }
         end
@@ -98,7 +98,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for all gems that fails" do
         setup do
-          RestClient::Request.stubs(:execute).raises(RestClient::Exception.new)
+          stub_request(:post, @url).to_timeout
           post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN,
                                 url: @url }
         end
@@ -132,7 +132,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for a specific gem" do
         setup do
-          RestClient::Request.stubs(:execute)
+          stub_request(:post, @url)
           post :fire, params: { gem_name: @rubygem.name,
                                 url: @url }
         end
@@ -145,7 +145,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for a specific gem that fails" do
         setup do
-          RestClient::Request.stubs(:execute).raises(RestClient::Exception.new)
+          stub_request(:post, @url).to_return(status: 404)
           post :fire, params: { gem_name: @rubygem.name,
                                 url: @url }
         end
