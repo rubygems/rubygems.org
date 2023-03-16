@@ -12,6 +12,7 @@ class PrivacyPassTokenizerTest < ActiveSupport::TestCase
   context ".issuer_public_key" do
     should "return a url encoded base64 string" do
       key = PrivacyPassTokenizer.issuer_public_key
+
       assert urlsafe_base64?(key)
     end
   end
@@ -19,11 +20,13 @@ class PrivacyPassTokenizerTest < ActiveSupport::TestCase
   context "#challenge_token" do
     should "return a url encoded base64 string" do
       token = @tokenizer.challenge_token
+
       assert urlsafe_base64?(token)
     end
 
     should "return a string of the correct length" do
       token = @tokenizer.challenge_token
+
       assert_equal(112, token.length)
     end
   end
