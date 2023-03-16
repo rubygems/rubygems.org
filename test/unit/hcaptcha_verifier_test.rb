@@ -97,11 +97,18 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
             has_entries(response: @client_response_token, remoteip: @ip),
             has_entries("Content-Type" => "application/x-www-form-urlencoded"))
           .returns({ success: false }.to_json)
+
         refute HcaptchaVerifier.call(@client_response_token, @ip)
       end
 
       should "not log an error" do
+        RestClient.expects(:post)
+          .with(anything,
+            has_entries(response: @client_response_token, remoteip: @ip),
+            has_entries("Content-Type" => "application/x-www-form-urlencoded"))
+          .returns({ success: false }.to_json)
         Rails.logger.stubs(:error).raises("Rails.logger.error was called!")
+
         assert_nothing_raised do
           HcaptchaVerifier.call(@client_response_token, @ip)
         end

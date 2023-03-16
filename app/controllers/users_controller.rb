@@ -11,7 +11,7 @@ class UsersController < Clearance::UsersController
   def create
     @user = user_from_params
     render template: "users/new" and return unless @user.valid?
-    if !session[:redeemed_privacy_pass] && HcaptchaVerifier.should_verify_sign_up?(request.remote_ip)
+    if !redeemed_privacy_pass_token? && HcaptchaVerifier.should_verify_sign_up?(request.remote_ip)
       setup_captcha_verification
       render "users/captcha"
     elsif @user.save
@@ -26,7 +26,7 @@ class UsersController < Clearance::UsersController
     verified = verified_captcha?
     if verified && @user.save
       handle_user_after_save
-      session.delete(:captcha_user)
+      delete_captcha_user_from_session
     else
       flash[:notice] = t("captcha.invalid") unless verified
       render template: "users/new"
@@ -37,13 +37,13 @@ class UsersController < Clearance::UsersController
 
   def handle_user_after_save
     Mailer.email_confirmation(@user).deliver_later
-    flash[:notice] = t(".email_sent")
-    session.delete(:redeemed_privacy_pass)
+    flash[:notice] = t("users.create.email_sent")
+    delete_privacy_pass_token_redemption
     redirect_back_or url_after_create
   end
 
   def setup_captcha_verification
-    session[:captcha_user] = user_params.to_h
+    create_catpcha_user(user_params: user_params)
   end
 
   def present_privacy_pass_challenge
@@ -54,7 +54,7 @@ class UsersController < Clearance::UsersController
 
   def user_params
     @user_params = params.permit(user: Array(User::PERMITTED_ATTRS)).fetch(:user, {})
-    @user_params = session[:captcha_user].symbolize_keys if @user_params.empty? && session[:captcha_user].is_a?(Hash)
+    @user_params = user_params_from_captcha_user if @user_params.empty? && captcha_user_params_present?
     @user_params
   end
 end
