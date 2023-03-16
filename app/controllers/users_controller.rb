@@ -2,7 +2,7 @@ class UsersController < Clearance::UsersController
   include CaptchaVerifiable
   include PrivacyPassSupportable
 
-  before_action :present_privacy_pass_challenge, unless: :redeemed_privacy_pass_token?, only: :new
+  before_action :present_privacy_pass_challenge, unless: :valid_privacy_pass_redemption?, only: :new
 
   def new
     @user = user_from_params
@@ -11,7 +11,7 @@ class UsersController < Clearance::UsersController
   def create
     @user = user_from_params
     render template: "users/new" and return unless @user.valid?
-    if !redeemed_privacy_pass_token? && HcaptchaVerifier.should_verify_sign_up?(request.remote_ip)
+    if !valid_privacy_pass_redemption? && HcaptchaVerifier.should_verify_sign_up?(request.remote_ip)
       setup_captcha_verification
       render "users/captcha"
     elsif @user.save
@@ -49,7 +49,8 @@ class UsersController < Clearance::UsersController
   def present_privacy_pass_challenge
     @user = user_from_params
     setup_privacy_pass_challenge
-    render "users/new", status: :unauthorized
+    status = privacy_pass_enabled? ? :unauthorized : :ok
+    render "users/new", status: status
   end
 
   def user_params

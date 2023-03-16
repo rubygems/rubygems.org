@@ -7,12 +7,12 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify authenticate]
   before_action :ensure_not_blocked, only: :create
-  before_action :present_privacy_pass_challenge, unless: :redeemed_privacy_pass_token?, only: :new
+  before_action :present_privacy_pass_challenge, unless: :valid_privacy_pass_redemption?, only: :new
   after_action :delete_mfa_expiry_session, only: %i[webauthn_create mfa_create]
 
   def create
     @user = find_user
-    if !redeemed_privacy_pass_token? && HcaptchaVerifier.should_verify_sign_in?(who)
+    if !valid_privacy_pass_redemption? && HcaptchaVerifier.should_verify_sign_in?(who)
       setup_captcha_verification
       render "sessions/captcha"
     elsif @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
@@ -200,7 +200,8 @@ class SessionsController < Clearance::SessionsController
 
   def present_privacy_pass_challenge
     setup_privacy_pass_challenge
-    render "sessions/new", status: :unauthorized
+    status = privacy_pass_enabled? ? :unauthorized : :ok
+    render "sessions/new", status: status
   end
 
   def login_conditions_met?
