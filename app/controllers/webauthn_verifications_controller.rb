@@ -1,19 +1,27 @@
 # This controller is for the user interface Webauthn challenge after a user follows a link generated
 # by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
-  before_action :set_verification, :set_user
+  before_action :set_verification, :set_user, except: %i[successful_verification failed_verification]
 
   def prompt
+    redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
     @webauthn_options = @user.webauthn_options_for_get
 
     session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge
+      "challenge" => @webauthn_options.challenge,
+      "port" => port
     }
   end
 
   def authenticate
+    port = session.dig(:webauthn_authentication, "port")
+    unless port
+      redirect_to root_path, alert: t(".no_port")
+      return
+    end
+
     webauthn_credential.verify(
       challenge,
       public_key: user_webauthn_credential.public_key,
@@ -25,9 +33,9 @@ class WebauthnVerificationsController < ApplicationController
     @verification.generate_otp
     @verification.expire_path_token
 
-    # TODO: render html with webauthn verification otp instead of json
-    render json: { message: "success" }
+    redirect_to(URI.parse("http://localhost:#{port}\?code=#{@verification.otp}").to_s, allow_other_host: true)
   rescue WebAuthn::Error => e
+    # TODO: render plain text for both endpoints
     render json: { message: e.message }, status: :unauthorized
   rescue ActionController::ParameterMissing
     render json: { message: "Credentials required" }, status: :unauthorized
@@ -41,6 +49,7 @@ class WebauthnVerificationsController < ApplicationController
     @verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
 
     render_not_found and return unless @verification
+    # TODO: Return a message if format is plain text
     redirect_to root_path, alert: t("webauthn_verifications.expired_or_already_used") if @verification.path_token_expired?
   end
 

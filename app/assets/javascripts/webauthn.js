@@ -103,6 +103,44 @@
   });
 
   $(function() {
+    var cliSessionForm = $(".js-webauthn-session-cli--form");
+    var cliSessionError = $(".js-webauthn-session-cli--error");
+    var csrfToken = $("[name='csrf-token']").attr("content");
+
+    cliSessionForm.submit(function(event) {
+      var form = handleEvent(event);
+      var options = JSON.parse(form.dataset.options);
+      options.challenge = base64urlToBuffer(options.challenge);
+      options.allowCredentials = credentialsToBuffer(options.allowCredentials);
+      navigator.credentials.get({
+        publicKey: options
+      }).then(function (credentials) {
+        return fetch(form.action, {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "X-CSRF-Token": csrfToken,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            credentials: credentialsToBase64(credentials)
+          })
+        });
+      }).then(function (response) {
+        response.text().then(function (text) {
+          if (text == "success") {
+            window.location.href = `${location.origin}/webauthn_verification/successful_verification`
+          } else {
+            window.location.href = `${location.origin}/webauthn_verification/failed_verification`
+          }
+        });
+      }).catch(function (_) {
+        window.location.href = `${location.origin}/webauthn_verification/failed_verification`
+      });
+    });
+  });
+
+  $(function() {
     var sessionForm = $(".js-webauthn-session--form");
     var sessionSubmit = $(".js-webauthn-session--submit");
     var sessionError = $(".js-webauthn-session--error");
