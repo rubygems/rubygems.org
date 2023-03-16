@@ -380,10 +380,10 @@ de:
       no_webauthn_devices:
     successful_verification:
       title:
-      body:
+      close_browser:
     failed_verification:
       title:
-      body:
+      close_browser:
   owners:
     confirm:
       confirmed_email:

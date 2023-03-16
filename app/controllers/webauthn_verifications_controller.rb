@@ -43,16 +43,6 @@ class WebauthnVerificationsController < ApplicationController
     session.delete(:webauthn_authentication)
   end
 
-  def successful_verification
-    @title = t(".title")
-    @body = t(".body")
-  end
-
-  def failed_verification
-    @title = t(".title")
-    @body = t(".body")
-  end
-
   private
 
   def set_verification
