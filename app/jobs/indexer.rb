@@ -1,7 +1,6 @@
 class Indexer < ApplicationJob
   extend StatsD::Instrument
   include TraceTagger
-  include SemanticLogger::Loggable
 
   queue_with_priority PRIORITIES.fetch(:push)
 

@@ -16,13 +16,13 @@ class NotifyWebHookJob < ApplicationJob
 
   attr_reader :webhook, :protocol, :host_with_port, :version, :rubygem
 
-  ERRORS = (HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
+  ERRORS = (HTTP_ERRORS + [Faraday::Error, SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
   retry_on(*ERRORS)
 
   # has to come after the retry on
-  discard_on(RestClient::UnprocessableEntity) do |j, e|
+  discard_on(Faraday::UnprocessableEntityError) do |j, e|
     raise unless j.use_hook_relay?
-    Rails.logger.info({ webhook_id: j.webhook.id, url: j.webhook.url, response: JSON.parse(e.response.body) }.to_json)
+    Rails.logger.info({ webhook_id: j.webhook.id, url: j.webhook.url, response: JSON.parse(e.response_body) }.to_json)
     j.webhook.increment! :failure_count
   end
 
@@ -60,7 +60,9 @@ class NotifyWebHookJob < ApplicationJob
   def post_hook_relay
     response = post(hook_relay_url)
     delivery_id = JSON.parse(response).fetch("id")
-    Rails.logger.info({ webhook_id: webhook.id, url: webhook.url, delivery_id:, full_name: version.full_name }.to_json)
+    Rails.logger.info do
+      { webhook_id: webhook.id, url: webhook.url, delivery_id:, full_name: version.full_name, message: "Sent webhook to HookRelay" }
+    end
     true
   end
 
@@ -73,24 +75,17 @@ class NotifyWebHookJob < ApplicationJob
   end
 
   def post(url)
-    timeout(TIMEOUT_SEC) do
-      RestClient::Request.execute method: :post,
-        url: url,
-        payload: payload,
-        timeout: TIMEOUT_SEC,
-        open_timeout: TIMEOUT_SEC,
-        headers: {
-          "Content-Type"    => "application/json",
-          "Authorization"   => authorization,
-          "HR_TARGET_URL"   => webhook.url,
-          "HR_MAX_ATTEMPTS" => "3"
-        }
-    end
-  end
-
-  private
-
-  def timeout(sec, &)
-    Timeout.timeout(sec, &)
+    Faraday.new(nil, request: { timeout: TIMEOUT_SEC }) do |f|
+      f.request :json
+      f.response :logger, logger, headers: false, errors: true
+      f.response :raise_error
+    end.post(
+      url, payload,
+      {
+        "Authorization"   => authorization,
+        "HR_TARGET_URL"   => webhook.url,
+        "HR_MAX_ATTEMPTS" => "3"
+      }
+    )
   end
 end
