@@ -490,7 +490,7 @@ GEM
       rubocop (>= 1.33.0, < 2.0)
     ruby-graphviz (1.2.5)
       rexml
-    ruby-magic (0.5.5)
+    ruby-magic (0.6.0)
       mini_portile2 (~> 2.8)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
