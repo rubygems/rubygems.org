@@ -11,28 +11,32 @@ class GoodJobStatsDJob < ApplicationJob
 
   def perform
     filter = Filter.new({})
-    state_counts = filter.states
     now = Time.now.utc
 
-    state_staleness = state_counts.each_key.index_with do |state|
-      staleness(
-        now,
-        filter.filtered_query(state:),
-        %w[executions_good_jobs.scheduled_at executions_good_jobs.created_at]
-      )
-    end
-
-    state_latest_execution = state_counts.each_key.index_with do |state|
-      staleness(
-        now,
-        filter.filtered_query(state:),
-        %w[executions_good_jobs.performed_at executions_good_jobs.finished_at executions_good_jobs.scheduled_at executions_good_jobs.created_at]
-      )
-    end
-
+    state_counts = filter.states
     gauge "count", state_counts
-    gauge "staleness", state_staleness
-    gauge "latest_execution", state_latest_execution
+
+    if ld_variation(key: "good_job.GoodJobStatsDJob.measure_staleness", default: true)
+      state_staleness = state_counts.each_key.index_with do |state|
+        staleness(
+          now,
+          filter.filtered_query(state:),
+          %w[executions_good_jobs.scheduled_at executions_good_jobs.created_at]
+        )
+      end
+      gauge "staleness", state_staleness
+    end
+
+    if ld_variation(key: "good_job.GoodJobStatsDJob.measure_latest_execution", default: true)
+      state_latest_execution = state_counts.each_key.index_with do |state|
+        staleness(
+          now,
+          filter.filtered_query(state:),
+          %w[executions_good_jobs.performed_at executions_good_jobs.finished_at executions_good_jobs.scheduled_at executions_good_jobs.created_at]
+        )
+      end
+      gauge "latest_execution", state_latest_execution
+    end
 
     nil
   end
