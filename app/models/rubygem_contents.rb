@@ -36,8 +36,8 @@ class RubygemContents
       entry.body,
       content_type: entry.content_type,
       content_length: entry.size,
-      checksum_sha256: entry.sha256,
-      checksum_algorithm: "SHA-256"
+      checksum_sha256: entry.base64_sha256,
+      checksum_algorithm: "SHA256"
     )
     entry.fingerprint
   end
