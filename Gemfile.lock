@@ -490,6 +490,8 @@ GEM
       rubocop (>= 1.33.0, < 2.0)
     ruby-graphviz (1.2.5)
       rexml
+    ruby-magic (0.5.5)
+      mini_portile2 (~> 2.8)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -674,6 +676,7 @@ DEPENDENCIES
   rubocop-minitest (~> 0.29)
   rubocop-performance (~> 1.16)
   rubocop-rails (~> 2.18)
+  ruby-magic
   sassc-rails
   searchkick
   selenium-webdriver

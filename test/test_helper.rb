@@ -45,6 +45,8 @@ Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
 Capybara.server = :puma
 
+GoodJob::Execution.delete_all
+
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
 Mocha.configure do |c|
@@ -82,7 +84,6 @@ class ActiveSupport::TestCase
 
   teardown do
     Rails.configuration.launch_darkly_client.close
-    GoodJob::Job.delete_all
   end
 
   def page

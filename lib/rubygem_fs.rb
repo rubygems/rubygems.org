@@ -10,11 +10,17 @@ module RubygemFs
       end
   end
 
+  def self.contents
+    @content ||= instance.in_bucket Gemcutter.config.s3_contents_bucket
+  end
+
   def self.mock!
+    @content = nil
     @fs = RubygemFs::Local.new(Dir.mktmpdir)
   end
 
   def self.s3!(host)
+    @content = nil
     @fs = RubygemFs::S3.new(access_key_id: "k",
                             secret_access_key: "s",
                             endpoint: host,
@@ -26,17 +32,36 @@ module RubygemFs
   end
 
   class Local
+    class UnsafePathError < RuntimeError; end
+
     attr_reader :base_dir
 
     def initialize(base_dir = nil)
       base_dir ||= Rails.root.join("server")
       @base_dir = Pathname.new(base_dir).expand_path
+      @base_dir.mkpath
+      @metadata = in_bucket("_metadata") unless @base_dir.to_s.end_with?("_metadata")
     end
 
-    def store(key, body, **)
-      path = path_for(key)
+    def bucket
+      base_dir.basename.to_s
+    end
+
+    def in_bucket(dir)
+      self.class.new(path_for(dir))
+    end
+
+    def store(key, body, **kwargs)
+      path = path_for key
+      @metadata&.store(key, JSON.generate(kwargs.merge(key: key))) if kwargs.present?
       path.dirname.mkpath
-      path.binwrite(body)
+      path.binwrite body
+    end
+
+    def head(key)
+      JSON.parse(@metadata&.get(key).to_s).symbolize_keys if path_for(key).exist?
+    rescue Errno::ENOENT, JSON::ParserError
+      { key: key, metadata: {} }
     end
 
     def get(key)
@@ -57,28 +82,24 @@ module RubygemFs
     end
 
     def remove(*keys)
-      keys.flatten.reject { |key| delete(key) }
+      @metadata&.remove(*keys)
+      keys.flatten.reject do |key|
+        path_for(key).ascend { |entry| descendant?(entry) ? entry.delete : break }
+        true
+      rescue Errno::ENOTEMPTY
+        true
+      rescue Errno::ENOENT
+        false
+      end
     end
 
     private
 
-    def delete(key)
-      path = path_for(key)
-      return false unless descendant?(path)
-      path.ascend do |entry|
-        break unless descendant?(entry)
-        entry.delete
-      end
-      true
-    rescue Errno::ENOTEMPTY
-      true
-    rescue Errno::ENOENT
-      false
-    end
-
-    def path_for(key)
+    def path_for(key, base = @base_dir)
       key = key.sub(%r{^/+}, "")
-      @base_dir.join(key).expand_path
+      path = base.join(key).expand_path
+      raise UnsafePathError, "Unsafe path: #{key} is outside of base: #{@base_dir}" unless descendant?(path)
+      path
     end
 
     def descendant?(path)
@@ -87,14 +108,20 @@ module RubygemFs
   end
 
   class S3
+    attr_reader :bucket
+
     def initialize(config = {})
-      @bucket = config.delete(:bucket)
+      @bucket = config.delete(:bucket) || Gemcutter.config["s3_bucket"]
       @config = {
         access_key_id: ENV["S3_KEY"],
         secret_access_key: ENV["S3_SECRET"],
         region: Gemcutter.config["s3_region"],
         endpoint: "https://#{Gemcutter.config['s3_endpoint']}"
       }.merge(config)
+    end
+
+    def in_bucket(bucket)
+      self.class.new(@config.merge(bucket: bucket))
     end
 
     def store(key, body, metadata: {}, **kwargs)
@@ -106,6 +133,12 @@ module RubygemFs
                     metadata: metadata,
                     cache_control: "max-age=31536000",
                     **allowed_args)
+    end
+
+    def head(key)
+      s3.head_object(key: key, bucket: bucket).to_h
+    rescue Aws::S3::Errors::NoSuchKey
+      nil
     end
 
     def get(key)
@@ -142,10 +175,6 @@ module RubygemFs
     rescue Aws::S3::Errors::NotFound => e
       version_id = e.context.http_response.headers["x-amz-version-id"]
       s3.delete_object(key: key, bucket: bucket, version_id: version_id)
-    end
-
-    def bucket
-      @bucket || Gemcutter.config["s3_bucket"]
     end
 
     private

@@ -1037,4 +1037,18 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#version_manifest" do
+    should "return a VersionManifest for the given version number" do
+      rubygem = build(:rubygem)
+
+      assert_equal VersionManifest.new(gem: rubygem.name, number: "0.1.0"), rubygem.version_manifest("0.1.0")
+    end
+
+    should "return a VersionManifest for the given version number and platform" do
+      rubygem = build(:rubygem)
+
+      assert_equal VersionManifest.new(gem: rubygem.name, number: "0.1.0", platform: "jruby"), rubygem.version_manifest("0.1.0", "jruby")
+    end
+  end
 end

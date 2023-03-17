@@ -6,9 +6,16 @@ class DeletionTest < ActiveSupport::TestCase
 
   setup do
     @user = create(:user)
-    Pusher.new(@user, gem_file).process
+    @gem_file = gem_file("test-0.0.0.gem")
+    Pusher.new(@user, @gem_file).process
+    @gem_file.rewind
     @version = Version.last
+    @spec_rz = RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
     import_and_refresh
+  end
+
+  teardown do
+    @gem_file.close
   end
 
   should "be indexed" do
@@ -60,6 +67,10 @@ class DeletionTest < ActiveSupport::TestCase
         assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
       end
 
+      should "delete the .gemspec.rz file" do
+        assert_nil RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"), "Gemspec.rz still exists!"
+      end
+
       should "send gem yanked email" do
         Delayed::Worker.new.work_off
 
@@ -73,6 +84,12 @@ class DeletionTest < ActiveSupport::TestCase
     should "call GemCachePurger" do
       GemCachePurger.expects(:call).with(@gem_name)
 
+      delete_gem
+    end
+  end
+
+  should "enqueue yank version contents job" do
+    assert_enqueued_jobs 1, only: YankVersionContentsJob do
       delete_gem
     end
   end
@@ -110,7 +127,14 @@ class DeletionTest < ActiveSupport::TestCase
     setup do
       @gem_name = @version.rubygem.name
       GemCachePurger.stubs(:call)
-      RubygemFs.instance.stubs(:restore).returns true
+      RubygemFs.instance.stubs(:restore).with do |file|
+        case file
+        when "gems/#{@version.full_name}.gem"
+          RubygemFs.instance.store(file, @gem_file.read)
+        when "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"
+          RubygemFs.instance.store(file, @spec_rz)
+        end
+      end.returns(true)
     end
 
     context "when gem is deleted and restored" do
@@ -143,7 +167,7 @@ class DeletionTest < ActiveSupport::TestCase
         Fastly.expects(:purge).with({ path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz", soft: false }).times(2)
 
         Delayed::Worker.new.work_off
-        perform_enqueued_jobs
+        perform_enqueued_jobs(only: FastlyPurgeJob)
       end
 
       should "remove deletion record" do
@@ -156,6 +180,13 @@ class DeletionTest < ActiveSupport::TestCase
 
       @deletion = delete_gem
       @deletion.restore!
+    end
+
+    should "enqueue store version contents job" do
+      @deletion = delete_gem
+      assert_enqueued_jobs 1, only: StoreVersionContentsJob do
+        @deletion.restore!
+      end
     end
   end
 

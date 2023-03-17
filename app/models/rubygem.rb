@@ -365,6 +365,14 @@ class Rubygem < ApplicationRecord
     update_attribute(:updated_at, 101.days.ago)
   end
 
+  def version_manifest(number, platform = nil)
+    VersionManifest.new(gem: name, number: number, platform: platform)
+  end
+
+  def file_content(fingerprint)
+    RubygemContents.new(gem: name).get(fingerprint)
+  end
+
   private
 
   # a gem namespace is not protected if it is
