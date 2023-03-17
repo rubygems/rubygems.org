@@ -18,7 +18,7 @@ class Fastly
       url = "https://#{domain}/#{options[:path]}"
       trace("gemcutter.fastly.purge", resource: url,
             tags: { "gemcutter.fastly.domain" => domain, "gemcutter.fastly.path" => options[:path], "gemcutter.fastly.soft" => options[:soft] }) do
-        headers = options[:soft] ? { "Fastly-Soft-Purge" => 1 } : {}
+        headers = options[:soft] ? { "Fastly-Soft-Purge" => "1" } : {}
         headers["Fastly-Key"] = ENV["FASTLY_API_KEY"]
 
         json = connection.get(url, nil, headers) do |req|
@@ -35,7 +35,7 @@ class Fastly
 
     trace("gemcutter.fastly.purge_key", resource: key, tags: { "gemcutter.fastly.service_id" => service_id, "gemcutter.fastly.soft" => soft }) do
       headers = { "Fastly-Key" => ENV["FASTLY_API_KEY"] }
-      headers["Fastly-Soft-Purge"] = 1 if soft
+      headers["Fastly-Soft-Purge"] = "1" if soft
       url = "https://api.fastly.com/service/#{service_id}/purge/#{key}"
       json = make_connection.post(url, nil, headers)
       logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
