@@ -28,8 +28,8 @@ module HcaptchaVerifier
       payload = {
         response: client_response,
         remoteip: remote_ip,
-        secret: ENV.fetch("HCAPTCHA_SECRET", "0x0000000000000000000000000000000000000000"),
-        sitekey: ENV.fetch("HCAPTCHA_SITE_KEY", "10000000-ffff-ffff-ffff-000000000001")
+        secret: Rails.application.secrets.hcaptcha_secret,
+        sitekey: Rails.application.secrets.hcaptcha_site_key
       }
 
       response = RestClient.post VERIFY_ENDPOINT,

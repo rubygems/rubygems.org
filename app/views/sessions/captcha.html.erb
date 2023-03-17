@@ -4,7 +4,7 @@
 <div class="mfa__container">
   <div class="mfa__option">
     <%= form_tag captcha_create_session_path, method: :post, class: "mfa-form" do %>
-      <div class="h-captcha" data-sitekey="<%= ENV.fetch("HCAPTCHA_SITE_KEY", "10000000-ffff-ffff-ffff-000000000001") %>"></div>
+      <div class="h-captcha" data-sitekey="<%= hcaptcha_site_key %>"></div>
       <div class="form_bottom">
         <%= submit_tag t('captcha.submit'), data: { disable_with: t('form_disable_with') }, class: 'form__submit' %>
       </div>
