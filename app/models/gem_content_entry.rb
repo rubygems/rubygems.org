@@ -115,6 +115,10 @@ class GemContentEntry
     }.compact
   end
 
+  def base64_sha256
+    sha256.presence && [[sha256].pack("H*")].pack("m0")
+  end
+
   def ==(other)
     other.is_a?(self.class) && other.metadata == metadata
   end

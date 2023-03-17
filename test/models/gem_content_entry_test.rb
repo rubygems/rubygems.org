@@ -270,6 +270,16 @@ class GemContentEntryTest < ActiveSupport::TestCase
     end
   end
 
+  context "#base64_sha256" do
+    should "return nil if there is no sha256" do
+      assert_nil symlink_entry.base64_sha256
+    end
+
+    should "return the base64 encoded sha256 of the body" do
+      assert_equal "si0R/eKArskQMInq4E+JYYlPTqHUHq+m4UqYXR2uBOk=", file_entry.base64_sha256
+    end
+  end
+
   context "#fingerprint" do
     should "return the content fingerprint" do
       assert_equal file_entry.sha256, file_entry.fingerprint

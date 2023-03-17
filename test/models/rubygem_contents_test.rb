@@ -46,7 +46,7 @@ class RubygemContentsTest < ActiveSupport::TestCase
       assert_equal @entry.body, @rubygem_contents.fs.get(key)
       assert_equal @entry.mime, head[:content_type]
       assert_equal @entry.size, head[:content_length]
-      assert_equal @entry.sha256, head[:checksum_sha256]
+      assert_equal @entry.base64_sha256, head[:checksum_sha256]
     end
   end
 
