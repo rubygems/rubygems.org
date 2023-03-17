@@ -21,7 +21,7 @@ class Fastly
         headers = options[:soft] ? { "Fastly-Soft-Purge" => 1 } : {}
         headers["Fastly-Key"] = ENV["FASTLY_API_KEY"]
 
-        json = connection.get(url, headers) do |req|
+        json = connection.get(url, nil, headers) do |req|
           req.http_method = :purge
         end
         logger.debug { { message: "Fastly purge", url:, status: json["status"], id: json["id"] } }
