@@ -93,7 +93,7 @@ class VersionManifest
   def store_spec(spec)
     ruby_spec = spec.to_ruby
     mime = Magic.buffer(ruby_spec, Magic::MIME)
-    fs.store spec_key, spec.to_ruby, content_type: mime
+    fs.store spec_key, ruby_spec, content_type: mime
   end
 
   def yank

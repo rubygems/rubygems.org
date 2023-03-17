@@ -20,6 +20,7 @@ RUN mkdir -p /app /app/config /app/log/
 
 # Set production environment
 ENV BUNDLE_APP_CONFIG=".bundle_app_config"
+ENV MAGIC="/usr/share/misc/magic.mgc"
 
 # Update rubygems
 ARG RUBYGEMS_VERSION
@@ -47,7 +48,6 @@ RUN \
 WORKDIR /app
 
 ENV RAILS_ENV="production"
-ENV MAGIC="/usr/share/misc/magic.mgc"
 
 # Install application gems
 COPY Gemfile* /app/
