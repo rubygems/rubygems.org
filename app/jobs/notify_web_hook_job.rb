@@ -59,7 +59,7 @@ class NotifyWebHookJob < ApplicationJob
 
   def post_hook_relay
     response = post(hook_relay_url)
-    delivery_id = JSON.parse(response).fetch("id")
+    delivery_id = JSON.parse(response.body).fetch("id")
     Rails.logger.info do
       { webhook_id: webhook.id, url: webhook.url, delivery_id:, full_name: version.full_name, message: "Sent webhook to HookRelay" }
     end
