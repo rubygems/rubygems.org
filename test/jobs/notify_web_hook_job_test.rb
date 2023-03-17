@@ -39,6 +39,47 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
     end
   end
 
+  context "with a successful request" do
+    setup do
+      @hook = create(:web_hook)
+      @job = NotifyWebHookJob.new(webhook: @hook, protocol: "http", host_with_port: "localhost:1234", version: create(:version))
+    end
+
+    should "succeed with hook relay" do
+      NotifyWebHookJob.any_instance.expects(:use_hook_relay?).once.returns(true)
+      stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-#{@hook.id}")
+        .with(headers: {
+                "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @hook.url,
+                "HR_MAX_ATTEMPTS" => "3"
+              }).to_return(status: 200, body: { id: 12_345 }.to_json)
+
+      perform_enqueued_jobs do
+        @job.enqueue
+      end
+
+      assert_performed_jobs 1, only: NotifyWebHookJob
+      assert_enqueued_jobs 0, only: NotifyWebHookJob
+    end
+
+    should "succeed without hook relay" do
+      NotifyWebHookJob.any_instance.expects(:use_hook_relay?).once.returns(false)
+      stub_request(:post, @hook.url)
+        .with(headers: {
+                "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @hook.url,
+                "HR_MAX_ATTEMPTS" => "3"
+              }).to_return(status: 200, body: "")
+
+      perform_enqueued_jobs do
+        @job.enqueue
+      end
+
+      assert_performed_jobs 1, only: NotifyWebHookJob
+      assert_enqueued_jobs 0, only: NotifyWebHookJob
+    end
+  end
+
   context "with an invalid URL" do
     setup do
       @hook = create(:web_hook)
