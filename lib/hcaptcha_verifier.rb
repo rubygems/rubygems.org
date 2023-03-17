@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 module HcaptchaVerifier
+  include SemanticLogger::Loggable
+
   class << self
     VERIFY_ENDPOINT = "https://hcaptcha.com/siteverify"
     SIGN_IN_CAPTCHA_THRESHOLD = 4
     SIGN_UP_CAPTCHA_THRESHOLD = 2
+    TIMEOUT_SEC = 5
 
     def should_verify_sign_in?(user_display_id)
       key = Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY
@@ -32,15 +35,7 @@ module HcaptchaVerifier
         sitekey: Rails.application.secrets.hcaptcha_site_key
       }
 
-      response = RestClient.post VERIFY_ENDPOINT,
-        payload,
-        :timeout        => 5,
-        :open_timeout   => 5,
-        "Content-Type"  => "application/x-www-form-urlencoded",
-        "Accept" => "application/json"
-
-      response_json = JSON.parse(response)
-
+      response_json = post(payload)
       Rails.logger.error("hCaptcha verification failed: #{response_json['error_codes'].join(';')}") if response_json["error_codes"]
 
       response_json["success"]
@@ -64,6 +59,17 @@ module HcaptchaVerifier
       prefix            = Rack::Attack.cache.prefix
       ["#{prefix}:#{time_counter}:#{key}:#{discriminator}",
        "#{prefix}:#{prev_time_counter}:#{key}:#{discriminator}"]
+    end
+
+    def post(payload)
+      response = Faraday.new(nil, request: { timeout: TIMEOUT_SEC }) do |f|
+        f.request :url_encoded
+        f.response :json
+        f.response :logger, logger, headers: false, errors: true
+        f.response :raise_error
+      end.post(VERIFY_ENDPOINT, payload)
+
+      response.body
     end
   end
 end
