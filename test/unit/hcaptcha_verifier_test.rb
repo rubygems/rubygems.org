@@ -81,14 +81,15 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
     context "when hcaptcha verifies the captcha response" do
       should "return true" do
         connection = mock
+        response = mock
 
         Faraday.expects(:new)
           .with(anything, anything)
           .returns(connection)
-
         connection.expects(:post).with(anything,
           has_entries(response: @client_response_token, remoteip: @ip))
-          .returns({ "success" => true })
+          .returns(response)
+        response.expects(:body).returns({ "success" => true })
 
         assert HcaptchaVerifier.call(@client_response_token, @ip)
       end
@@ -97,28 +98,31 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
     context "when hcaptcha cannot verify the captcha response due to bot activity" do
       should "return false" do
         connection = mock
+        response = mock
 
         Faraday.expects(:new)
           .with(anything, anything)
           .returns(connection)
-
         connection.expects(:post).with(anything,
           has_entries(response: @client_response_token, remoteip: @ip))
-          .returns({ "success" => false })
+          .returns(response)
+        response.expects(:body).returns({ "success" => false })
 
         refute HcaptchaVerifier.call(@client_response_token, @ip)
       end
 
       should "not log an error" do
         connection = mock
+        response = mock
 
         Faraday.expects(:new)
           .with(anything, anything)
           .returns(connection)
-
         connection.expects(:post).with(anything,
           has_entries(response: @client_response_token, remoteip: @ip))
-          .returns({ "success" => false })
+          .returns(response)
+        response.expects(:body).returns({ "success" => false })
+
         Rails.logger.stubs(:error).raises("Rails.logger.error was called!")
 
         assert_nothing_raised do
@@ -130,28 +134,31 @@ class HcaptchaVerifierTest < ActiveSupport::TestCase
     context "when hcaptcha cannot verify the captcha response due to API error" do
       should "return false" do
         connection = mock
+        response = mock
 
         Faraday.expects(:new)
           .with(anything, anything)
           .returns(connection)
-
         connection.expects(:post).with(anything,
           has_entries(response: @client_response_token, remoteip: @ip))
-          .returns({ "success" => false, "error_codes" => ["invalid-or-already-seen-response"] })
+          .returns(response)
+        response.expects(:body).returns({ "success" => false, "error_codes" => ["invalid-or-already-seen-response"] })
 
         refute HcaptchaVerifier.call(@client_response_token, @ip)
       end
 
       should "log an error" do
         connection = mock
+        response = mock
 
         Faraday.expects(:new)
           .with(anything, anything)
           .returns(connection)
-
         connection.expects(:post).with(anything,
           has_entries(response: @client_response_token, remoteip: @ip))
-          .returns({ "success" => false, "error_codes" => ["invalid-or-already-seen-response"] })
+          .returns(response)
+        response.expects(:body).returns({ "success" => false, "error_codes" => ["invalid-or-already-seen-response"] })
+
         Rails.logger.expects(:error).with("hCaptcha verification failed: invalid-or-already-seen-response")
 
         HcaptchaVerifier.call(@client_response_token, @ip)
