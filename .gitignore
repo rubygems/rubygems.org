@@ -23,3 +23,4 @@ public/assets
 latest_dump
 coverage
 REVISION
+/.env*
