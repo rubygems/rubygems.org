@@ -52,7 +52,7 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
                 "Content-Type" => "application/json",
                 "HR_TARGET_URL" => @hook.url,
                 "HR_MAX_ATTEMPTS" => "3"
-              }).to_return(status: 200, body: { id: 12345 }.to_json)
+              }).to_return(status: 200, body: { id: 12_345 }.to_json)
 
       perform_enqueued_jobs do
         @job.enqueue
