@@ -14,7 +14,7 @@ module PrivacyPassSupportable
 
   def valid_privacy_pass_redemption?
     return false unless privacy_pass_enabled?
-    return session[:redeemed_privacy_pass] unless session[:redeemed_privacy_pass].nil?
+    return session[:redeemed_privacy_pass] if session.key?(:redeemed_privacy_pass)
 
     success = PrivacyPassRedeemer.call(request.headers["Authorization"], session.id)
     session[:redeemed_privacy_pass] = success
