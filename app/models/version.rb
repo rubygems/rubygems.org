@@ -359,6 +359,12 @@ class Version < ApplicationRecord
     raw.unpack1("m0").unpack1("H*")
   end
 
+  def self.yank!(user:)
+    all.find_each do |version|
+      user.deletions.create!(version: version) unless version.yanked?
+    end
+  end
+
   def metadata_uri_set?
     Links::LINKS.any? { |_, long| metadata.key? long }
   end
