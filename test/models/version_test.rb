@@ -117,6 +117,21 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context ".yank!" do
+    setup do
+      @rubygem = create(:rubygem)
+      @another_rubygem = create(:rubygem)
+      @version_one = create(:version, rubygem: @rubygem)
+      @version_two = create(:version, rubygem: @rubygem)
+      @version_three = create(:version, rubygem: @rubygem)
+      @anoher_gem_version = create(version: rubygem: @another_rubygem)
+    end
+
+    describe "yank versions if not already yanked" do
+
+    end
+  end
+
   context "updated gems" do
     setup do
       @existing_gem = create(:rubygem)

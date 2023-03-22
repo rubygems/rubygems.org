@@ -173,6 +173,12 @@ class Version < ApplicationRecord
     where(created_at: start_time..end_time).order(:created_at)
   end
 
+  def self.yank!(user:)
+    all.find_each do |version|
+      user.deletions.create!(version: version) unless version.yanked?
+    end
+  end
+
   def platformed?
     platform != "ruby"
   end
@@ -357,12 +363,6 @@ class Version < ApplicationRecord
 
   def self._sha256_hex(raw)
     raw.unpack1("m0").unpack1("H*")
-  end
-
-  def self.yank!(user:)
-    all.find_each do |version|
-      user.deletions.create!(version: version) unless version.yanked?
-    end
   end
 
   def metadata_uri_set?
