@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: jobs
-        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
         args: ["rake", "jobs:work"]
         resources:
           <% if environment == 'production' %>
@@ -140,7 +140,7 @@ spec:
         securityContext:
           privileged: false
       - name: good-job
-        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
         args: ["good_job", "start"]
         resources:
           <% if environment == 'production' %>
