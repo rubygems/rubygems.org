@@ -1,4 +1,14 @@
 class BaseAction < Avo::BaseAction
+  field :comment, as: :textarea, required: true,
+    help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
+
+  def self.inherited(base)
+    super
+    base.items_holder = Avo::ItemsHolder.new
+    base.items_holder.items.replace items_holder.items.deep_dup
+    base.items_holder.invalid_fields.replace items_holder.invalid_fields.deep_dup
+  end
+
   class ActionHandler
     include ActiveSupport::Callbacks
     define_callbacks :handle, terminator: lambda { |target, result_lambda|
@@ -7,7 +17,12 @@ class BaseAction < Avo::BaseAction
     }
 
     def initialize( # rubocop:disable Metrics/ParameterLists
-      fields:, current_user:, arguments:, resource:, action:, models: nil
+      fields:,
+      current_user:,
+      arguments:,
+      resource:,
+      action:,
+      models: nil
     )
       @models = models
       @fields = fields

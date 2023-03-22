@@ -1,6 +1,4 @@
 class BlockUser < BaseAction
-  include CommentField
-
   self.name = "Block User"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show

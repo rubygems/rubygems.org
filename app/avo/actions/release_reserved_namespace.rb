@@ -1,6 +1,4 @@
 class ReleaseReservedNamespace < BaseAction
-  include CommentField
-
   self.name = "Release reserved namespace"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show

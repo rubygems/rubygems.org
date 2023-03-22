@@ -1,6 +1,4 @@
 class ResetApiKey < BaseAction
-  include CommentField
-
   self.name = "Reset Api Key"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
