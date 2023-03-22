@@ -1,4 +1,6 @@
 class ResetUser2fa < BaseAction
+  include CommentField
+
   self.name = "Reset User 2FA"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show

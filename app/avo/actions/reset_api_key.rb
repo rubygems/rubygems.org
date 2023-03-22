@@ -1,4 +1,6 @@
 class ResetApiKey < BaseAction
+  include CommentField
+
   self.name = "Reset Api Key"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
@@ -8,17 +10,18 @@ class ResetApiKey < BaseAction
   }
   self.confirm_button_label = "Reset Api Key"
 
-  field :mailer_template, as: :select,
-    options:
-    { "Public Gem": :public_gem_reset_api_key,
-      Honeycomb: :honeycomb_reset_api_key },
+  field :template, as: :select,
+    options: {
+      "Public Gem": :public_gem_reset_api_key,
+      Honeycomb: :honeycomb_reset_api_key
+    },
     help: "Select mailer template"
 
   class ActionHandler < ActionHandler
     def handle_model(user)
       user.reset_api_key!
 
-      Mailer.reset_api_key(user, fields["mailer_template"]).deliver
+      Mailer.reset_api_key(user, fields["template"]).deliver
     end
   end
 end

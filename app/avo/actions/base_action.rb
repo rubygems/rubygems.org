@@ -1,7 +1,4 @@
 class BaseAction < Avo::BaseAction
-  field :comment, as: :textarea, required: true,
-    help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
-
   class ActionHandler
     include ActiveSupport::Callbacks
     define_callbacks :handle, terminator: lambda { |target, result_lambda|

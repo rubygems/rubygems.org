@@ -1,4 +1,6 @@
 class DeleteWebhook < BaseAction
+  include CommentField
+
   self.name = "Delete Webhook"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
