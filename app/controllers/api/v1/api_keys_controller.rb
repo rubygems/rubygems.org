@@ -47,17 +47,34 @@ class Api::V1::ApiKeysController < Api::BaseController
   private
 
   def check_mfa(user)
-    if user&.mfa_gem_signin_authorized?(otp)
+    if should_render_unauthorized_response?(user)
+      render_correct_unauthorized_response
+    elsif user&.mfa_gem_signin_authorized?(otp)
       return render_mfa_setup_required_error if user.mfa_required_not_yet_enabled?
       return render_mfa_strong_level_required_error if user.mfa_required_weak_level_enabled?
 
       yield
-    elsif user&.mfa_enabled?
-      prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
-      render plain: prompt_text, status: :unauthorized
     else
       false
     end
+  end
+
+  def should_render_unauthorized_response?(user)
+    return false unless user
+    webauthn_enabled_no_otp_provided?(user) || mfa_enabled_no_otp_provided?(user)
+  end
+
+  def webauthn_enabled_no_otp_provided?(user)
+    user.webauthn_credentials.present? && otp.blank?
+  end
+
+  def mfa_enabled_no_otp_provided?(user)
+    !user.mfa_gem_signin_authorized?(otp) && user.mfa_enabled?
+  end
+
+  def render_correct_unauthorized_response
+    prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
+    render plain: prompt_text, status: :unauthorized
   end
 
   def save_and_respond(api_key, key)

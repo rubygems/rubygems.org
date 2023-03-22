@@ -312,6 +312,30 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           assert created_key.mfa
         end
       end
+
+      context "when a user has webauthn enabled and no totp code is provided" do
+        setup do
+          @user = create(:user)
+          @webauthn_credential = create(:webauthn_credential, user: @user)
+          authorize_with("#{@user.email}:#{@user.password}")
+          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+        end
+
+        should_deny_access_missing_otp
+      end
+
+      context "when a user has webauthn enabled and totp code is provided" do
+        setup do
+          @user = create(:user)
+          @webauthn_credential = create(:webauthn_credential, user: @user)
+          @verification = create(:webauthn_verification, user: @user)
+          authorize_with("#{@user.email}:#{@user.password}")
+          @request.env["HTTP_OTP"] = @verification.otp
+          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+        end
+
+        should_return_api_key_successfully
+      end
     end
 
     context "when user has enabled MFA for UI and API" do
