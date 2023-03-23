@@ -13,7 +13,7 @@ class DeleteWebhook < BaseAction
   class ActionHandler < ActionHandler
     def handle_model(webhook)
       webhook.destroy!
-      WebHooksMailer.delay.webhook_deleted(webhook.user_id, webhook.rubygem_id, webhook.url, webhook.failure_count)
+      WebHooksMailer.webhook_deleted(webhook.user_id, webhook.rubygem_id, webhook.url, webhook.failure_count).deliver_later
     end
   end
 end

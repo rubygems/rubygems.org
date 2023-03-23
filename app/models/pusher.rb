@@ -121,7 +121,7 @@ class Pusher
   def after_write
     @version_id = version.id
     version.rubygem.push_notifiable_owners.each do |notified_user|
-      Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
+      Mailer.gem_pushed(user.id, @version_id, notified_user.id).deliver_later
     end
     Indexer.perform_later
     ReindexRubygemJob.perform_later(rubygem:)

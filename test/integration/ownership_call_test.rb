@@ -109,7 +109,7 @@ class OwnershipCallsTest < SystemTest
       click_button "Close"
     end
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_emails 3
   end

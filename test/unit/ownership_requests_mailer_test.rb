@@ -1,12 +1,14 @@
 require "test_helper"
 
 class OwnershipRequestMailerTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   context "sending mail for ownership request" do
     setup do
       @ownership = create(:ownership)
       create(:ownership_request, rubygem: @ownership.rubygem, created_at: 1.hour.ago)
       Rake::Task["ownership_request_notification:send"].invoke
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
     end
 
     should "send mail to owners" do

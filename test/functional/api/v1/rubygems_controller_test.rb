@@ -325,7 +325,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal "Successfully registered gem: test (1.0.0)", @response.body
         end
         should "enqueue jobs" do
-          assert_difference "Delayed::Job.count", 1 do
+          assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
             assert_enqueued_jobs 5, only: FastlyPurgeJob do
               assert_enqueued_jobs 1, only: NotifyWebHookJob do
                 assert_enqueued_jobs 1, only: Indexer do
