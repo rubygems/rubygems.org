@@ -5,8 +5,9 @@ class UserResource < Avo::BaseResource
     scope.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
   }
 
-  action ResetUser2fa
   action BlockUser
+  action ResetUser2fa
+  action ResetApiKey
 
   field :id, as: :id
   # Fields generated from the model
