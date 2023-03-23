@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class Avo::UsersSystemTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   def sign_in_as(user)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
       provider: "github",
@@ -173,63 +175,65 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   end
 
   test "reset api key" do
-    admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    perform_enqueued_jobs do
+      admin_user = create(:admin_github_user, :is_admin)
+      sign_in_as admin_user
 
-    user = create(:user)
-    user_attributes = user.attributes.with_indifferent_access
+      user = create(:user)
+      user_attributes = user.attributes.with_indifferent_access
 
-    visit avo.resources_user_path(user)
+      visit avo.resources_user_path(user)
 
-    click_button "Actions"
-    click_on "Reset Api Key"
+      click_button "Actions"
+      click_on "Reset Api Key"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Reset Api Key"
+      end
+      page.assert_text "Must supply a sufficiently detailed comment"
+
+      fill_in "Comment", with: "A nice long comment"
+      select("Public Gem", from: "Template")
       click_button "Reset Api Key"
-    end
-    page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    select("Public Gem", from: "Template")
-    click_button "Reset Api Key"
+      page.assert_text "Action ran successfully!"
 
-    page.assert_text "Action ran successfully!"
+      user.reload
 
-    user.reload
+      audit = user.audits.sole
 
-    audit = user.audits.sole
-
-    page.assert_text audit.id
-    assert_equal "User", audit.auditable_type
-    assert_equal "Reset Api Key", audit.action
-    assert_equal(
-      {
-        "records" => {
-          "gid://gemcutter/User/#{user.id}" => {
-            "changes" => {
-              "api_key" => ["secret123", user.api_key],
-              "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json]
-            },
-            "unchanged" => user.attributes
-              .except(
-                "api_key",
-                "updated_at"
-              ).transform_values(&:as_json)
-          }
+      page.assert_text audit.id
+      assert_equal "User", audit.auditable_type
+      assert_equal "Reset Api Key", audit.action
+      assert_equal(
+        {
+          "records" => {
+            "gid://gemcutter/User/#{user.id}" => {
+              "changes" => {
+                "api_key" => ["secret123", user.api_key],
+                "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json]
+              },
+              "unchanged" => user.attributes
+                .except(
+                  "api_key",
+                  "updated_at"
+                ).transform_values(&:as_json)
+            }
+          },
+          "fields" => { "template" => "public_gem_reset_api_key" },
+          "arguments" => {},
+          "models" => ["gid://gemcutter/User/#{user.id}"]
         },
-        "fields" => { "template" => "public_gem_reset_api_key" },
-        "arguments" => {},
-        "models" => ["gid://gemcutter/User/#{user.id}"]
-      },
-      audit.audited_changes
-    )
-    assert_equal admin_user, audit.admin_github_user
-    assert_equal "A nice long comment", audit.comment
+        audit.audited_changes
+      )
+      assert_equal admin_user, audit.admin_github_user
+      assert_equal "A nice long comment", audit.comment
 
-    mailer = ActionMailer::Base.deliveries.find do |mail|
-      mail.to.include?(user.email)
+      mailer = ActionMailer::Base.deliveries.find do |mail|
+        mail.to.include?(user.email)
+      end
+
+      assert_equal("RubyGems.org API key was reset", mailer.subject)
     end
-
-    assert_equal("RubyGems.org API key was reset", mailer.subject)
   end
 end
