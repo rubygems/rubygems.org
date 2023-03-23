@@ -355,8 +355,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     context "user is not signed in" do
       should "not send confirmation mail" do
         Mailer.expects(:email_reset).times(0)
-        post :unconfirmed
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs do
+          post :unconfirmed
+        end
       end
 
       should "redirect to sign in page" do
@@ -443,8 +444,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           context "on POST to create" do
             setup do
               create(:user, email: "foo@bar.com")
-              post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-              Delayed::Worker.new.work_off
+              perform_enqueued_jobs do
+                post :create, params: { email_confirmation: { email: "foo@bar.com" } }
+              end
             end
 
             should respond_with :redirect
@@ -495,8 +497,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           context "on POST to create" do
             setup do
               create(:user, email: "foo@bar.com")
-              post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-              Delayed::Worker.new.work_off
+              perform_enqueued_jobs do
+                post :create, params: { email_confirmation: { email: "foo@bar.com" } }
+              end
             end
 
             should respond_with :redirect
@@ -543,8 +546,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           context "on POST to create" do
             setup do
               create(:user, email: "foo@bar.com")
-              post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-              Delayed::Worker.new.work_off
+              perform_enqueued_jobs do
+                post :create, params: { email_confirmation: { email: "foo@bar.com" } }
+              end
             end
 
             should respond_with :redirect

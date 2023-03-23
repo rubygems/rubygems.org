@@ -393,7 +393,6 @@ path: "/profile/api_keys/1" },
         context "on POST to create" do
           setup do
             post :create, params: { api_key: { name: "test", add_owner: true } }
-            Delayed::Worker.new.work_off
           end
 
           should redirect_to("the key index page") { profile_api_keys_path }

@@ -464,7 +464,6 @@ class PusherTest < ActiveSupport::TestCase
 
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 07, 04))
-        Delayed::Worker.new.work_off
         perform_enqueued_jobs only: ReindexRubygemJob
         response = Searchkick.client.get index: "rubygems-#{Rails.env}",
                                          id:    @rubygem.id
