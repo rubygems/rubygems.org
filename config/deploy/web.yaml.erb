@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: puma
-        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
         args: ["puma", "--environment", "<%= environment %>", "--config", "/app/config/puma.rb"]
         ports:
         - containerPort: 3000

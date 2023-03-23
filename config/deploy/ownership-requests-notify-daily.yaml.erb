@@ -20,7 +20,7 @@ spec:
           restartPolicy: "OnFailure"
           containers:
           - name: ownership-requests-notify-daily
-            image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+            image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
             args: ["rake", "ownership_request_notification:send"]
             resources:
               <% if environment == 'production' %>
