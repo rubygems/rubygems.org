@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "aws-sdk-s3"
 
 module RubygemFs
@@ -11,16 +13,16 @@ module RubygemFs
   end
 
   def self.contents
-    @content ||= instance.in_bucket Gemcutter.config.s3_contents_bucket
+    @contents ||= instance.in_bucket Gemcutter.config.s3_contents_bucket
   end
 
   def self.mock!
-    @content = nil
+    @contents = nil
     @fs = RubygemFs::Local.new(Dir.mktmpdir)
   end
 
   def self.s3!(host)
-    @content = nil
+    @contents = nil
     @fs = RubygemFs::S3.new(access_key_id: "k",
                             secret_access_key: "s",
                             endpoint: host,
@@ -32,7 +34,9 @@ module RubygemFs
   end
 
   class Local
-    class UnsafePathError < RuntimeError; end
+    class InvalidPathError < ArgumentError; end
+
+    METADATA_DIR = "_metadata"
 
     attr_reader :base_dir
 
@@ -40,7 +44,7 @@ module RubygemFs
       base_dir ||= Rails.root.join("server")
       @base_dir = Pathname.new(base_dir).expand_path
       @base_dir.mkpath
-      @metadata = in_bucket("_metadata") unless @base_dir.to_s.end_with?("_metadata")
+      @metadata = in_bucket(METADATA_DIR) unless @base_dir.to_s.end_with?(METADATA_DIR)
     end
 
     def bucket
@@ -59,32 +63,36 @@ module RubygemFs
     end
 
     def head(key)
-      JSON.parse(@metadata&.get(key).to_s).symbolize_keys if path_for(key).exist?
+      return unless @metadata && path_for(key).file?
+      JSON.parse(@metadata.get(key).to_s).symbolize_keys
     rescue Errno::ENOENT, JSON::ParserError
       { key: key, metadata: {} }
     end
 
     def get(key)
-      path_for(key).binread
-    rescue Errno::ENOENT
+      body = path_for(key).binread
+      fix_encoding(body, key)
+    rescue Errno::ENOENT, Errno::EISDIR
       nil
     end
 
-    def each_key(prefix: "", &)
-      return enum_for(__method__, prefix: prefix) unless block_given?
-      # it's easier to list everything and filter on strings because file systems don't act like S3
-      @base_dir.find do |entry|
-        path = entry.relative_path_from(@base_dir).to_s
-        next unless path.start_with?(prefix)
+    def each_key(prefix: nil, &)
+      return enum_for(__method__, prefix:) unless block_given?
+      base = dir_for(prefix)
+      return unless base.directory?
+      base.find do |entry|
         next if entry.directory?
+        path = key_for(entry)
+        next if path.start_with?(METADATA_DIR)
         yield path
       end
+      nil
     end
 
     def remove(*keys)
       @metadata&.remove(*keys)
       keys.flatten.reject do |key|
-        path_for(key).ascend { |entry| descendant?(entry) ? entry.delete : break }
+        path_for(key).ascend.take_while { |entry| descendant?(entry) }.each(&:delete)
         true
       rescue Errno::ENOTEMPTY
         true
@@ -96,14 +104,36 @@ module RubygemFs
     private
 
     def path_for(key, base = @base_dir)
-      key = key.sub(%r{^/+}, "")
+      key = key.to_s.sub(%r{^/+}, "")
       path = base.join(key).expand_path
-      raise UnsafePathError, "Unsafe path: #{key} is outside of base: #{@base_dir}" unless descendant?(path)
+      raise InvalidPathError, "key #{key.inspect} is outside of base #{base.inspect}" unless descendant?(path, base)
       path
     end
 
-    def descendant?(path)
-      path.to_s.start_with?(@base_dir.to_s) && path != @base_dir
+    def dir_for(prefix, base = @base_dir)
+      return base if prefix.blank?
+      raise InvalidPathError, "prefix #{prefix.inspect} must end in / to avoid ambiguous behavior" unless prefix.to_s.end_with?("/")
+      path_for(prefix, base)
+    end
+
+    def fix_encoding(body, key)
+      charset = charset_for(key) || Magic.buffer(body, Magic::MIME_ENCODING)
+      body.force_encoding(charset) if charset
+      body
+    end
+
+    def charset_for(key)
+      content_type = head(key)&.fetch(:content_type, nil)
+      Regexp.last_match(1) if content_type =~ /charset=(.+)$/
+    end
+
+    # always return key relative to bucket, same as S3
+    def key_for(path)
+      path.relative_path_from(@base_dir).to_s
+    end
+
+    def descendant?(path, base = @base_dir)
+      path.to_s.start_with?(base.to_s) && path != base
     end
   end
 
