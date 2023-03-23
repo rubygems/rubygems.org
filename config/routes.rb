@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   ################################################################################
   # Root
@@ -166,6 +169,8 @@ Rails.application.routes.draw do
         defaults: { format: :js }
       resources :versions, only: %i[show index] do
         get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
+        get '/contents', to: 'version_contents#index', as: :contents
+        get '/contents/*path', to: 'version_contents#show', as: :content, constraints: { path: /.*/ }
       end
       resources :reverse_dependencies, only: %i[index]
       resources :owners, only: %i[index destroy create], param: :handle do
@@ -270,3 +275,4 @@ Rails.application.routes.draw do
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end
+# rubocop:enable Metrics/BlockLength

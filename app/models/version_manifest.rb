@@ -19,6 +19,17 @@ class VersionManifest
     fs.each_key(prefix: path_root).map { |key| key.delete_prefix path_root }
   end
 
+  def ls(path = "")
+    # TODO: validation of path
+    base = Pathname.new(path_root)
+    base = base.join(path) if path.to_s.present?
+    dirs, files = fs.ls(base)
+    [
+      dirs.map { |key| key.delete_prefix base.to_s },
+      files.map { |key| key.delete_prefix base.to_s }
+    ]
+  end
+
   # @return [GemContentEntry]
   def entry(path)
     path = path.to_s

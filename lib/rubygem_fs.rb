@@ -89,6 +89,20 @@ module RubygemFs
       nil
     end
 
+    # root and path are passed separately to ensure that the path stays within the root
+    # without this we could only contain it within the entire rubygemfs file system
+    def ls(root, path = nil)
+      root_dir = dir_for(root)
+      base = dir_for(path, root_dir)
+      return [[], []] unless base.directory?
+      dirs, files = base.children.sort.partition(&:directory?)
+      dirs.delete(@metadata&.base_dir)
+      [
+        dirs.map { |dir| "#{key_for(dir)}/" },
+        files.map { |file| key_for(file) }
+      ]
+    end
+
     def remove(*keys)
       @metadata&.remove(*keys)
       keys.flatten.reject do |key|
@@ -177,9 +191,19 @@ module RubygemFs
       nil
     end
 
-    def each_key(prefix: nil, &)
-      return enum_for(__method__, prefix: prefix) unless block_given?
-      s3.list_objects_v2(bucket: bucket, prefix: prefix).each do |response|
+    # To list only the root level objects in the bucket, you send a GET request
+    # on the bucket with the slash (/) delimiter character. In response, Amazon
+    # S3 returns keys that do not contain the / delimiter character. All other
+    # keys contain the delimiter character are grouped and returned in a single
+    # common_prefixes element with the prefix value `dir/`, which is a substring
+    # from the beginning of these keys to the first occurrence of the delimiter.
+    #
+    # resp.common_prefixes #=> Array
+    # resp.common_prefixes[0].prefix #=> String
+    def each_key(prefix: nil, delimiter: nil, &)
+      return enum_for(__method__, prefix:, delimiter:) unless block_given?
+      s3.list_objects_v2(bucket: bucket, prefix:, delimiter:).each do |response|
+        response.common_prefixes.each { |object| yield object.prefix } if delimiter
         response.contents.each { |object| yield object.key }
       end
     end

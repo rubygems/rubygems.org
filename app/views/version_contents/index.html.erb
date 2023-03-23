@@ -1,0 +1,68 @@
+<% @title = @rubygem.name %>
+<% @subtitle = @latest_version&.slug %>
+
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+  <% if @rubygem.versions.any? && @latest_version.indexed %>
+    <link rel="canonical" href="<%= rubygem_version_url(@rubygem, @latest_version.slug) %>" />
+  <% else %>
+    <meta name="robots" content="noindex" />
+  <% end %>
+<% end %>
+
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <div class="gem__contents">
+      <h3>
+        <%= link_to "#{@latest_version.full_name}.gem", rubygem_version_contents_path(@rubygem, @latest_version.slug) %>
+        <span>/</span>
+        <% @contents.breadcrumbs do |name, path| %>
+          <%= link_to_unless_current name, rubygem_version_content_path(@rubygem.name, @latest_version.slug, path: path) %>
+          <span>/</span>
+        <% end %>
+      </h3>
+      <%# Sorry about the hard coded styles. %>
+      <table width="100%">
+        <tbody>
+          <% if @contents.parent? %>
+            <tr>
+              <td width="20px"><%= folder_icon %></span>
+              <td><%= link_to "..", rubygem_version_content_path(@rubygem, @latest_version.slug, path: @contents.parent_path) %></td>
+            </tr>
+          <% end %>
+          <% @contents.each_dir do |dir, path| %>
+            <tr>
+              <td width="20px"><%= folder_icon %></td>
+              <td><%= link_to dir, rubygem_version_content_path(@rubygem, @latest_version.slug, path: path) %></td>
+            </tr>
+          <% end %>
+          <% @contents.each_file do |file, path, last_modified_version, entry| %>
+            <tr>
+              <td width="20px"><%= file_icon %></span>
+              <td><%= link_to file, rubygem_version_content_path(@rubygem.name, @latest_version.slug, path: path) %></td>
+              <td>
+                <% if last_modified_version %>
+                  <%= link_to_unless_current last_modified_version.slug, rubygem_version_content_path(@rubygem.name, last_modified_version.number, path: @contents.path), title:  %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="gem__navigation">
+      <%# These go to not found if the target version doesn't have the same path %>
+      <% if @latest_version.previous.present? %>
+        <%= link_to "← Previous version", rubygem_version_content_path(@rubygem, @latest_version.previous.number, path: @contents.path), class: "gem__previous__version"  %>
+      <% end %>
+
+      <% if @latest_version.next.present? %>
+        <%= link_to "Next version →", rubygem_version_content_path(@rubygem, @latest_version.next.number, path: @contents.path), class: "gem__next__version" %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render "rubygems/aside" %>
+</div>

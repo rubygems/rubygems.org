@@ -158,6 +158,17 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_equal %w[bar baz], @fs.each_key(prefix: "ba").sort
         assert_equal "ba", prefix
       end
+
+      should "list keys with a delimiter" do
+        delimiter = nil
+        @s3.stub_responses(:list_objects_v2, lambda { |context|
+          delimiter = context.params[:delimiter]
+          { contents: [{ key: "bar" }, { key: "baz" }], common_prefixes: [{ prefix: "blah/" }, { prefix: "foo/" }], delimiter: delimiter }
+        })
+
+        assert_equal %w[blah/ foo/ bar baz], @fs.each_key(delimiter: "/").to_a
+        assert_equal "/", delimiter
+      end
     end
 
     context "#remove" do
@@ -348,6 +359,18 @@ class RubygemFsTest < ActiveSupport::TestCase
 
       should "raise InvalidPathError for prefix not ending in /" do
         assert_raises(RubygemFs::Local::InvalidPathError) { @fs.each_key(prefix: "bar").to_a }
+      end
+
+      should "list keys with a delimiter" do
+        assert_equal %w[bar/ .hidden barbeque baz foo], @fs.each_key(delimiter: "/").to_a
+      end
+
+      should "list keys with a prefix and delimiter" do
+        assert_equal %w[bar/baz/ bar/foo], @fs.each_key(prefix: "bar/", delimiter: "/").to_a
+      end
+
+      should "raise ArgumentError when prefix doesn't end in /" do
+        assert_raises(ArgumentError) { @fs.each_key(prefix: "bar", delimiter: "/").to_a }
       end
     end
 

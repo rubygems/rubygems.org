@@ -1,0 +1,64 @@
+<% @title = @rubygem.name %>
+<% @subtitle = @latest_version&.slug %>
+
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+  <% if @rubygem.versions.any? && @latest_version.indexed %>
+    <link rel="canonical" href="<%= rubygem_version_url(@rubygem, @latest_version.slug) %>" />
+  <% else %>
+    <meta name="robots" content="noindex" />
+  <% end %>
+<% end %>
+
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <div class="gem__contents">
+      <h3>
+        <%= link_to "#{@latest_version.full_name}.gem", rubygem_version_contents_path(@rubygem, @latest_version.slug) %>
+        <span>/</span>
+        <% @contents.breadcrumbs do |name, path| %>
+          <%= link_to_unless_current name, rubygem_version_content_path(@rubygem.name, @latest_version.slug, path: path) %>
+          <span>/</span>
+        <% end %>
+        <%= @contents.basename %>
+      </h3>
+
+      <div class="gem__navigation">
+        <%# These go to not found if the target version doesn't have the same path %>
+        <% if @latest_version.previous.present? %>
+          <%= link_to "← Previous version", rubygem_version_content_path(@rubygem, @latest_version.previous.number, path: @contents.path), class: "gem__previous__version"  %>
+        <% end %>
+
+        <% if @latest_version.next.present? %>
+          <%= link_to "Next version →", rubygem_version_content_path(@rubygem, @latest_version.next.number, path: @contents.path), class: "gem__next__version" %>
+        <% end %>
+      </div>
+
+      <% if @entry.body_persisted? %>
+        <div class="gem__code-wrap">
+          <div>
+            <%= @entry.lines %> lines
+            <span>|</span>
+            <%= number_to_human_size @entry.size %>
+            <span>|</span>
+            Since
+            <% last_modified_version = @contents.last_modified_version(@entry) %>
+            <%= link_to last_modified_version.slug, rubygem_version_content_path(@rubygem.name, last_modified_version.slug, path: @contents.path) %>
+          </div>
+          <pre><code><%= @entry.body %></code></pre>
+        </div>
+      <% elsif @entry.symlink? %>
+        <div class="gem__code-wrap">
+          Symlink to: <code><%= @entry.linkname %></code>
+        </div>
+      <% else %>
+        <div class="gem__code-wrap">
+          We do not store the contents of this file type.
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render "rubygems/aside" %>
+</div>
