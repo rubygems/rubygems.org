@@ -19,7 +19,7 @@ class ResetApiKey < BaseAction
     def handle_model(user)
       user.reset_api_key!
 
-      Mailer.reset_api_key(user, fields["template"]).deliver
+      Mailer.reset_api_key(user, fields["template"]).deliver_later
     end
   end
 end
