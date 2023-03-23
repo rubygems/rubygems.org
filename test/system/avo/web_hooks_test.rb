@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class Avo::WebHooksSystemTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   def sign_in_as(user)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
       provider: "github",
@@ -81,7 +83,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_equal I18n.t("mailer.web_hook_deleted.subject"), last_email.subject
   end

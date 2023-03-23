@@ -91,7 +91,7 @@ class OwnershipRequestsTest < SystemTest
     visit_rubygem_adoptions_path(rubygem, @owner)
 
     click_button "Close all"
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_emails 3
   end

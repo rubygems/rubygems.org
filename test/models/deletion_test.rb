@@ -72,7 +72,7 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "send gem yanked email" do
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
         email = ActionMailer::Base.deliveries.last
 
@@ -95,7 +95,7 @@ class DeletionTest < ActiveSupport::TestCase
   end
 
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference "Delayed::Job.count", 1 do
+    assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
       assert_enqueued_jobs 7, only: FastlyPurgeJob do
         assert_enqueued_jobs 1, only: Indexer do
           assert_enqueued_jobs 1, only: ReindexRubygemJob do
