@@ -1,5 +1,5 @@
 class MfaUsageStatsJob < ApplicationJob
-  queue_as :default
+  queue_as "stats"
 
   def perform
     non_mfa_users = User.where(mfa_level: :disabled).where.not(id: WebauthnCredential.select(:user_id)).count
