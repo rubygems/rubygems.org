@@ -536,6 +536,9 @@ es:
       sha_256_checksum: SHA 256 checksum
       signature_period:
       expired:
+    version_navigation:
+      previous_version:
+      next_version:
     index:
       downloads: Descargas
       title: Gemas
