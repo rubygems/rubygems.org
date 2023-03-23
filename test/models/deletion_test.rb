@@ -105,7 +105,6 @@ class DeletionTest < ActiveSupport::TestCase
       end
     end
 
-    Delayed::Worker.new.work_off
     perform_enqueued_jobs
 
     response = Searchkick.client.get index: "rubygems-#{Rails.env}",
@@ -166,7 +165,6 @@ class DeletionTest < ActiveSupport::TestCase
         Fastly.expects(:purge).with({ path: "gems/#{@version.full_name}.gem", soft: false }).times(2)
         Fastly.expects(:purge).with({ path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz", soft: false }).times(2)
 
-        Delayed::Worker.new.work_off
         perform_enqueued_jobs(only: FastlyPurgeJob)
       end
 

@@ -1,6 +1,8 @@
 require "test_helper"
 
 class ProfileTest < SystemTest
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
@@ -137,12 +139,12 @@ class ProfileTest < SystemTest
     sign_in
     visit delete_profile_path
 
+    2.times { perform_enqueued_jobs }
+
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    Delayed::Worker.new.work_off
-
-    assert_empty Delayed::Job.all
+    assert_no_enqueued_jobs
   end
 
   test "seeing ownership calls and requests" do

@@ -345,7 +345,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           rubygem = create(:rubygem, name: "test")
           create(:ownership, :unconfirmed, rubygem: rubygem, user: @user)
           create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
-          assert_difference "Delayed::Job.count", 0 do
+          assert_no_enqueued_jobs do
             post :create, body: gem_file("test-1.0.0.gem").read
           end
         end
@@ -418,7 +418,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_equal 1, @rubygem.ownerships.size
         assert_equal @other_user, @rubygem.ownerships.first.user
         assert_equal 1, @rubygem.versions.size
-        assert_equal 0, Delayed::Job.count
+        assert_no_enqueued_jobs
         assert_includes @response.body, "You do not have permission to push to this gem."
       end
     end
