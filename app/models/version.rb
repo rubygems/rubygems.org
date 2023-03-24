@@ -377,7 +377,7 @@ class Version < ApplicationRecord
   alias prerelease? prerelease
 
   def manifest
-    VersionManifest.new gem: rubygem.name, number: number, platform: platformed? ? platform : nil
+    rubygem.version_manifest(number, platformed? ? platform : nil)
   end
 
   private

@@ -135,6 +135,23 @@ class VersionsManifestTest < ActiveSupport::TestCase
     end
   end
 
+  context "#checksums_file" do
+    should "return empty checksums for missing version" do
+      assert_nil VersionManifest.new(gem: "nope", number: "0.1.0").checksums_file
+    end
+
+    should "return checksums for version" do
+      @manifest.store_entries(@files)
+
+      assert_equal <<~CHECKSUMS, @manifest.checksums_file
+        hex1-A  path1
+        hex2-A  path2
+        hex3-A  path3
+        hex3-A  path4
+      CHECKSUMS
+    end
+  end
+
   context "#store_package" do
     should "raise if the package is nil" do
       manifest = VersionManifest.new(gem: "test", number: "0.1.0")

@@ -6,10 +6,46 @@ class VersionManifest
   delegate :gem, :fs, to: :contents
 
   def initialize(gem:, number:, platform: nil)
-    @version = platform.present? ? [number, platform].join("-") : number.to_s
-    raise ArgumentError, "version number-platform must be a valid version name" unless @version.match?(Rubygem::NAME_PATTERN)
+    platform = nil if platform == "ruby"
+    @version = [number, platform.presence].compact.join("-")
+    raise ArgumentError, "version number-platform must be valid: #{@version.inspect}" unless @version.match?(Rubygem::NAME_PATTERN)
     @contents = RubygemContents.new(gem: gem)
   end
+
+  ##
+  # Access stored content
+
+  def paths
+    fs.each_key(prefix: path_root).map { |key| key.delete_prefix path_root }
+  end
+
+  # @return [GemContentEntry]
+  def entry(path)
+    path = path.to_s
+    return if path.blank?
+    response = fs.head path_key(path)
+    return if response.blank? || response[:metadata].blank?
+    GemContentEntry.from_metadata(response[:metadata]) { |entry| content(entry.fingerprint) }
+  end
+
+  def checksums_file
+    fs.get(checksums_key)
+  end
+
+  def checksums
+    ShasumFormat.parse checksums_file
+  end
+
+  def content(fingerprint)
+    contents.get fingerprint
+  end
+
+  def spec
+    fs.get spec_key
+  end
+
+  ##
+  # Store version content
 
   # @param [Gem::Package] package
   def store_package(package)
@@ -20,24 +56,6 @@ class VersionManifest
     end
     store_entries entries
     store_spec package.spec
-  end
-
-  def content(fingerprint)
-    contents.get fingerprint
-  end
-
-  # @return [GemContentEntry]
-  def entry(path)
-    return if path.blank?
-    response = fs.head path_key(path)
-    return if response.blank? || response[:metadata].blank?
-    GemContentEntry.from_metadata(response[:metadata]) { |entry| content(entry.fingerprint) }
-  end
-
-  # @param [GemContentEntry] entry
-  def store_entry(entry)
-    store_path entry
-    contents.store entry if entry.body_persisted?
   end
 
   # Writing version contents is done in one pass, collecting all the checksums
@@ -54,8 +72,10 @@ class VersionManifest
     store_checksums path_checksums
   end
 
-  def paths
-    fs.each_key(prefix: path_root).map { |key| key.delete_prefix path_root }
+  # @param [GemContentEntry] entry
+  def store_entry(entry)
+    store_path entry
+    contents.store entry if entry.body_persisted?
   end
 
   # @param [GemContentEntry] entry
@@ -68,25 +88,13 @@ class VersionManifest
     )
   end
 
-  def checksums_file
-    fs.get(checksums_key)
-  end
-
-  def checksums
-    checksums_file_parse checksums_file
-  end
-
   # @param [Hash<String, String>] checksums path => checksum
   def store_checksums(checksums)
     fs.store(
       checksums_key,
-      checksums_file_format(checksums),
+      ShasumFormat.generate(checksums),
       content_type: "text/plain"
     )
-  end
-
-  def spec
-    fs.get spec_key
   end
 
   # @param [Gem::Specification] spec
@@ -100,6 +108,19 @@ class VersionManifest
     content_keys = unique_checksums.map { |checksum| contents.key checksum }
     path_keys = fs.each_key(prefix: path_root).to_a
     fs.remove(spec_key, path_keys, content_keys, checksums_key)
+  end
+
+  def unique_checksums
+    candidates = checksums.values
+    candidates = contents.keys if candidates.blank?
+    return [] if candidates.empty?
+
+    # starting with all candidates, remove checksums found in other versions
+    fs.each_key(prefix: checksums_root).reduce(candidates) do |remaining, key|
+      next remaining if key == checksums_key
+      checksums = ShasumFormat.parse(fs.get(key)).values
+      remaining.difference checksums
+    end
   end
 
   def spec_key
@@ -120,29 +141,6 @@ class VersionManifest
 
   def checksums_key(format: :sha256)
     format RubygemContents::CHECKSUMS_KEY_FORMAT, gem: gem, version: version, format:
-  end
-
-  # Splits .sha256 file into a Hash of path => checksum
-  def checksums_file_parse(body)
-    body.to_s.chomp.split("\n").to_h { |line| line.split("  ").reverse }
-  end
-
-  # Format checksums into .sha256 file format: "checksum  path\n..."
-  def checksums_file_format(checksums)
-    checksums.reject { |path, checksum| path.blank? || checksum.blank? }.map { |path, checksum| "#{checksum}  #{path}" }.join("\n").concat("\n")
-  end
-
-  def unique_checksums
-    candidates = checksums.values
-    candidates = contents.keys if candidates.blank?
-    return [] if candidates.empty?
-
-    # starting with all candidates, remove checksums found in other versions
-    fs.each_key(prefix: checksums_root).reduce(candidates) do |remaining, key|
-      next remaining if key == checksums_key
-      checksums = checksums_file_parse(fs.get(key)).values
-      remaining.difference checksums
-    end
   end
 
   def ==(other)
