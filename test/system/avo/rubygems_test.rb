@@ -76,7 +76,6 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_equal "A nice long comment", audit.comment
   end
 
-
   test "Yank a rubygem" do
     Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
