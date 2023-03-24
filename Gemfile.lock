@@ -615,90 +615,90 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  amazing_print
-  autoprefixer-rails
-  avo
-  aws-sdk-s3
-  aws-sdk-sqs
-  bootsnap
-  brakeman
-  capybara (~> 3.35)
-  chartkick
-  clearance
+  amazing_print (~> 1.4)
+  autoprefixer-rails (~> 10.4)
+  avo (~> 2.28)
+  aws-sdk-s3 (~> 1.119)
+  aws-sdk-sqs (~> 1.53)
+  bootsnap (~> 1.16)
+  brakeman (~> 5.4)
+  capybara (~> 3.38)
+  chartkick (~> 5.0)
+  clearance (~> 2.6)
   compact_index (~> 0.14.0)
-  dalli
-  ddtrace
-  delayed_job
-  delayed_job_active_record
-  dogstatsd-ruby
-  dotenv-rails
-  factory_bot_rails
+  dalli (~> 3.2)
+  ddtrace (~> 1.10)
+  delayed_job (~> 4.1)
+  delayed_job_active_record (~> 4.1)
+  dogstatsd-ruby (~> 5.5)
+  dotenv-rails (~> 2.8)
+  factory_bot_rails (~> 6.2)
   faraday (~> 1.10)
-  faraday_middleware-aws-sigv4 (~> 0.3)
-  good_job
-  google-protobuf
-  gravtastic
-  groupdate
-  high_voltage
-  honeybadger
-  http_accept_language
-  jquery-rails
-  kaminari
-  launchdarkly-server-sdk
-  launchy
-  letter_opener
-  letter_opener_web
-  listen
-  m (~> 1.5)
-  mail
-  minitest
-  mocha
-  octokit
-  omniauth
-  omniauth-github
-  omniauth-rails_csrf_protection
+  faraday_middleware-aws-sigv4 (~> 0.6)
+  good_job (~> 3.14)
+  google-protobuf (~> 3.22)
+  gravtastic (~> 3.2)
+  groupdate (~> 6.2)
+  high_voltage (~> 3.1)
+  honeybadger (~> 5.2)
+  http_accept_language (~> 2.1)
+  jquery-rails (~> 4.5)
+  kaminari (~> 1.2)
+  launchdarkly-server-sdk (~> 7.0)
+  launchy (~> 2.5)
+  letter_opener (~> 1.8)
+  letter_opener_web (~> 2.0)
+  listen (~> 3.8)
+  m (~> 1.6)
+  mail (~> 2.8)
+  minitest (~> 5.18)
+  mocha (~> 2.0)
+  octokit (~> 6.1)
+  omniauth (~> 2.1)
+  omniauth-github (~> 2.0)
+  omniauth-rails_csrf_protection (~> 1.0)
   opensearch-dsl (~> 0.2.0)
-  opensearch-ruby (~> 1.0.0)
-  pg
-  pry-byebug
-  puma
-  pundit
-  rack
-  rack-attack
-  rack-test
-  rack-utf8_sanitizer
+  opensearch-ruby (~> 1.0)
+  pg (~> 1.4)
+  pry-byebug (~> 3.10)
+  puma (~> 6.1)
+  pundit (~> 2.3)
+  rack (~> 2.2)
+  rack-attack (~> 6.6)
+  rack-test (~> 2.1)
+  rack-utf8_sanitizer (~> 1.8)
   rails (~> 7.0.0)
-  rails-erd
-  rails-i18n
-  rails_semantic_logger
+  rails-erd (~> 1.7)
+  rails-i18n (~> 7.0)
+  rails_semantic_logger (~> 4.11)
   rbtrace (~> 0.4.8)
-  rdoc
-  roadie-rails
-  rotp
-  rqrcode
+  rdoc (~> 6.5)
+  roadie-rails (~> 3.0)
+  rotp (~> 6.2)
+  rqrcode (~> 2.1)
   rubocop (~> 1.48)
   rubocop-capybara (~> 2.17)
   rubocop-minitest (~> 0.29)
   rubocop-performance (~> 1.16)
   rubocop-rails (~> 2.18)
-  ruby-magic
-  sassc-rails
-  searchkick
-  selenium-webdriver
+  ruby-magic (~> 0.6)
+  sassc-rails (~> 2.1)
+  searchkick (~> 5.2)
+  selenium-webdriver (~> 4.8)
   shoryuken (~> 4.0)
-  shoulda
-  simplecov
-  simplecov-cobertura
-  sprockets-rails
+  shoulda (~> 4.0)
+  simplecov (~> 0.22)
+  simplecov-cobertura (~> 2.1)
+  sprockets-rails (~> 3.4)
   statsd-instrument (~> 3.5)
-  terser
-  toxiproxy (~> 2.0.0)
-  unpwn
-  validates_formatting_of
-  webauthn
-  webdrivers
-  webmock
-  xml-simple
+  terser (~> 1.1)
+  toxiproxy (~> 2.0)
+  unpwn (~> 1.0)
+  validates_formatting_of (~> 0.9)
+  webauthn (~> 3.0)
+  webdrivers (~> 5.2)
+  webmock (~> 3.18)
+  xml-simple (~> 1.1)
 
 BUNDLED WITH
    2.4.6
