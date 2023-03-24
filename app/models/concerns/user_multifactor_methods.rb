@@ -33,7 +33,7 @@ module UserMultifactorMethods
     end
 
     def mfa_gem_signin_authorized?(otp)
-      return true unless strong_mfa_level?
+      return true unless strong_mfa_level? || webauthn_credentials.present?
       api_otp_verified?(otp)
     end
 
@@ -86,6 +86,8 @@ module UserMultifactorMethods
     end
 
     def verify_digit_otp(seed, otp)
+      return false if seed.blank?
+
       totp = ROTP::TOTP.new(seed)
       return false unless totp.verify(otp, drift_behind: 30, drift_ahead: 30)
 
