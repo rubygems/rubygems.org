@@ -43,7 +43,6 @@ Datadog.configure do |c|
 
   c.tracing.instrument :aws
   c.tracing.instrument :dalli
-  c.tracing.instrument :delayed_job
   c.tracing.instrument :faraday, split_by_domain: true, service_name: c.service
   c.tracing.instrument :http, service_name: c.service
   c.tracing.instrument :pg
