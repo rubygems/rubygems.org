@@ -4,10 +4,10 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   include StatsD::Instrument::Assertions
 
   setup do
-    create(:user, mfa_level: 0) # non-mfa user
-    2.times { create(:user, mfa_level: 1) } # otp-only users
-    3.times { create(:webauthn_credential, user: create(:user, mfa_level: 0)) } # webauthn-only users
-    4.times { create(:webauthn_credential, user: create(:user, mfa_level: 1)) } # webauthn-and-otp users
+    create(:user, mfa_level: :disabled) # non-mfa user
+    2.times { create(:user, mfa_level: :ui_and_api) } # otp-only users
+    3.times { create(:webauthn_credential, user: create(:user, mfa_level: :disabled)) } # webauthn-only users
+    4.times { create(:webauthn_credential, user: create(:user, mfa_level: :ui_and_api)) } # webauthn-and-otp users
   end
 
   test "it sends the count of non-MFA users to statsd" do
