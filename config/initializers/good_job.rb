@@ -36,6 +36,4 @@ Rails.application.configure do
     GoodJob.logger = Rails.logger
     StatsD.backend = StatsD::Instrument::Backends::NullBackend.new
   end
-
-  PRIORITIES = { push: 1, download: 2, web_hook: 3, profile_deletion: 3, stats: 4 }.freeze
 end
