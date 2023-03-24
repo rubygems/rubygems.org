@@ -15,7 +15,6 @@ class ParallelPusherTest < ActiveSupport::TestCase
       @rubygem = Rubygem.find_by(name: "hola")
       @rubygem.versions.destroy_all
       @rubygem.destroy
-      Delayed::Job.delete_all
       GemDownload.delete_all
       RubygemFs.mock!
     end

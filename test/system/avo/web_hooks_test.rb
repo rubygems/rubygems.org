@@ -73,7 +73,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
               "last_failure" => nil
             }
           }
-        }.merge(audit.audited_changes["records"].select { |k, _| k =~ %r{gid://gemcutter/Delayed::Backend::ActiveRecord::Job/\d+} }),
+        },
         "fields" => {},
         "arguments" => {},
         "models" => ["gid://gemcutter/WebHook/#{web_hook.id}"]

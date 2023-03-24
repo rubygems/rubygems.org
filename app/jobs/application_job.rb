@@ -1,6 +1,14 @@
 class ApplicationJob < ActiveJob::Base
   include SemanticLogger::Loggable
 
+  PRIORITIES = ActiveSupport::OrderedOptions[{
+    push: 1,
+    download: 2,
+    web_hook: 3,
+    profile_deletion: 3,
+    stats: 4
+  }].freeze
+
   # Default to retrying errors a few times, so we don't get an alert for
   # spurious errors
   retry_on StandardError, wait: :exponentially_longer, attempts: 5
