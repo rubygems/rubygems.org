@@ -56,7 +56,7 @@ if [ "$rubygems_version_installed" != "$RUBYGEMS_VERSION" ]; then
 fi
 
 pusher_arn="arn:aws:iam::048268392960:role/rubygems-ecr-pusher"
-caller_arn="$(aws sts get-caller-identity --output text --query Arn)"
+caller_arn="$(aws sts get-caller-identity --output text --query Arn || true)"
 
 [[ "$caller_arn" == "$pusher_arn" ]] ||
   [[ "$caller_arn" == "arn:aws:sts::048268392960:assumed-role/rubygems-ecr-pusher/GitHubActions" ]] ||
@@ -65,7 +65,8 @@ caller_arn="$(aws sts get-caller-identity --output text --query Arn)"
       --role-arn "${pusher_arn}" \
       --role-session-name push-rubygems-docker-tag \
       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
-      --output text))
+      --output text)) ||
+  true
 
 if [[ -z "${AWS_SESSION_TOKEN}" ]]; then
   echo "Skipping push since no AWS session token was found"
