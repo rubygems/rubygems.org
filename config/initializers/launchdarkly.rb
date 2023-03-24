@@ -1,7 +1,11 @@
 Rails.application.configure do
-  LaunchDarkly::Config.singleton_class.prepend(Module.new do
-    def default_logger = SemanticLogger[LaunchDarkly]
-  end)
+  ld_config = LaunchDarkly::Config.new(
+    logger: SemanticLogger[LaunchDarkly],
+    offline: Rails.application.secrets.launch_darkly_sdk_key.blank?
+  )
 
-  config.launch_darkly_client = LaunchDarkly::LDClient.new(ENV["LAUNCH_DARKLY_SDK_KEY"].presence || "")
+  config.launch_darkly_client = LaunchDarkly::LDClient.new(
+    Rails.application.secrets.launch_darkly_sdk_key.to_s,
+    ld_config
+  )
 end
