@@ -318,15 +318,16 @@ class Version < ApplicationRecord
     end
   end
 
-  def to_bundler
+  def to_bundler(locked_version: false)
+    modifier = locked_version ? "" : "~> "
     if number[0] == "0" || prerelease?
-      %(gem '#{rubygem.name}', '~> #{number}')
+      %(gem '#{rubygem.name}', '#{modifier}#{number}')
     else
       release = feature_release
       if release == Gem::Version.new(number)
-        %(gem '#{rubygem.name}', '~> #{release}')
+        %(gem '#{rubygem.name}', '#{modifier}#{release}')
       else
-        %(gem '#{rubygem.name}', '~> #{release}', '>= #{number}')
+        %(gem '#{rubygem.name}', '#{modifier}#{release}', '>= #{number}')
       end
     end
   end
