@@ -75,14 +75,17 @@ class UserTest < ActiveSupport::TestCase
     context "full_name" do
       should "be less than 255 characters" do
         user = build(:user, full_name: "")
+
         assert_predicate user, :valid?
 
         user.full_name = "a" * 256
+
         refute_predicate user, :valid?
         assert_contains user.errors[:full_name], "is too long (maximum is 255 characters)"
 
         user.full_name = "Name Last name"
         user.valid?
+
         assert_nil user.errors[:handle].first
       end
     end
