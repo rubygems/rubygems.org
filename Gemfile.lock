@@ -164,11 +164,6 @@ GEM
       libddwaf (~> 1.6.2.0.0)
       msgpack
     debase-ruby_core_source (3.2.0)
-    delayed_job (4.1.11)
-      activesupport (>= 3.0, < 8.0)
-    delayed_job_active_record (4.1.7)
-      activerecord (>= 3.0, < 8.0)
-      delayed_job (>= 3.0, < 5)
     docile (1.4.0)
     dogstatsd-ruby (5.5.0)
     domain_name (0.5.20190701)
@@ -628,8 +623,6 @@ DEPENDENCIES
   compact_index (~> 0.14.0)
   dalli (~> 3.2)
   ddtrace (~> 1.10)
-  delayed_job (~> 4.1)
-  delayed_job_active_record (~> 4.1)
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 2.8)
   factory_bot_rails (~> 6.2)
@@ -701,4 +694,4 @@ DEPENDENCIES
   xml-simple (~> 1.1)
 
 BUNDLED WITH
-   2.4.6
+   2.4.9
