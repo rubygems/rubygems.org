@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_24_175634) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_06_210044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -365,6 +365,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_24_175634) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.integer "rubygem_id"
+    t.text "disabled_reason"
+    t.datetime "disabled_at", precision: nil
+    t.datetime "last_success", precision: nil
+    t.datetime "last_failure", precision: nil
+    t.integer "successes_since_last_failure", default: 0
+    t.integer "failures_since_last_success", default: 0
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 

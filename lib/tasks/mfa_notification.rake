@@ -27,7 +27,7 @@ namespace :mfa_notification do
 
     i = 0
     notify_users.find_each do |user|
-      Mailer.delay.mfa_notification(user.id) if mx_exists?(user.email)
+      Mailer.mfa_notification(user.id).deliver_later if mx_exists?(user.email)
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
     end

@@ -22,12 +22,14 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     context "with #{format.to_s.upcase}" do
       should "have a list of versions for the first gem" do
         get_show(@rubygem, format)
+
         assert_equal 3, yield(@response.body).size
       end
 
       should "be ordered by position with prereleases" do
         get_show(@rubygem, format)
         arr = yield(@response.body)
+
         assert_equal "4.0.0", arr.first["number"]
         assert_equal "2.0.0", arr.second["number"]
         assert_equal "1.0.0.pre", arr.third["number"]
@@ -36,6 +38,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       should "be ordered by position" do
         get_show(@rubygem2, format)
         arr = yield(@response.body)
+
         assert_equal "3.0.0", arr.first["number"]
         assert_equal "2.0.0", arr.second["number"]
         assert_equal "1.0.0", arr.third["number"]
@@ -43,6 +46,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
       should "have a list of versions for the second gem" do
         get_show(@rubygem2, format)
+
         assert_equal 3, yield(@response.body).size
       end
     end
@@ -72,35 +76,42 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return Last-Modified header" do
       get_show(@rubygem)
+
       assert_equal @response.headers["Last-Modified"], @rubygem.updated_at.httpdate
     end
 
     should "return surrogate key header" do
       get_show(@rubygem)
+
       assert_equal "gem/#{@rubygem.name}", @response.headers["Surrogate-Key"]
     end
 
     should "return 304 when If-Modified-Since header is satisfied" do
       get_show(@rubygem)
+
       assert_response :success
       set_cache_header
 
       get_show(@rubygem)
+
       assert_response :not_modified
     end
 
     should "return 200 when If-Modified-Since header is not satisfied" do
       get_show(@rubygem)
+
       assert_response :success
       set_cache_header
 
       @rubygem.update(updated_at: Time.zone.now + 1)
       get_show(@rubygem)
+
       assert_response :success
     end
 
     should "return 404 if all versions yanked" do
       get_show(@rubygem)
+
       assert_response :success
       set_cache_header
 
@@ -109,6 +120,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       end
 
       get_show(@rubygem)
+
       assert_response :not_found
     end
   end
@@ -146,6 +158,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       set_cache_header
 
       get_show(@rubygem)
+
       assert_response :not_modified
     end
   end
@@ -160,6 +173,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "give all releases" do
       get_show(@rubygem)
+
       assert_equal 12, JSON.load(@response.body).size
     end
   end
@@ -174,6 +188,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get_latest @rubygem
+
       assert_equal "3.0.0", JSON.load(@response.body)["version"]
     end
   end
@@ -188,6 +203,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, params: { id: @rubygem.name, format: "js", callback: "blah" }
+
       assert_match(/blah\(.*\)\Z/, @response.body)
     end
   end
@@ -202,6 +218,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, params: { id: "blah", format: "json" }
+
       assert_equal "unknown", JSON.load(@response.body)["version"]
     end
   end
@@ -214,6 +231,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, params: { id: @rubygem.name, format: "json" }
+
       assert_equal "unknown", JSON.load(@response.body)["version"]
     end
   end
@@ -227,6 +245,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return most recent version" do
       get :latest, params: { id: @rubygem.name, format: "json" }
+
       assert_equal "2.0.0", JSON.load(@response.body)["version"]
     end
   end
@@ -239,6 +258,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return license info" do
       get :show, params: { id: @rubygem.name, format: "json" }
+
       assert_equal "MIT", JSON.load(@response.body).first["licenses"]
     end
   end

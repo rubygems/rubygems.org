@@ -7,6 +7,7 @@ class ApplicationHelperTest < ActionView::TestCase
     end
     should "return with explicit title" do
       @title = "Sample"
+
       assert_equal "Sample | #{t :title} | #{t :subtitle}", page_title
     end
     should "return with explicit title for header only" do
@@ -20,6 +21,7 @@ class ApplicationHelperTest < ActionView::TestCase
                 'href="https://feeds.feedburner.com/gemcutter-latest" ' \
                 'title="RubyGems.org | Latest Gems">'
     atom_feed_link_result = atom_feed_link(t(:feed_latest), "https://feeds.feedburner.com/gemcutter-latest")
+
     assert_equal feed_link, atom_feed_link_result
   end
 
@@ -33,17 +35,28 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_predicate short_info(rubygem.versions.most_recent), :html_safe?
   end
 
+  should "use gem summary before gem description" do
+    desc = "this is an awesome gem that does so many wonderful things"
+    summary = "an awesome gem"
+    rubygem = create(:rubygem, name: "SomeGem")
+    create(:version, rubygem: rubygem, number: "3.0.0", platform: "ruby", description: desc, summary: summary)
+
+    assert_equal "an awesome gem", short_info(rubygem.versions.most_recent)
+  end
+
   context "rubygem" do
     setup do
       @rubygem = create(:rubygem)
       @rubygem.stubs(:downloads).returns(1_000_000)
     end
+
     should "downloads count with delimeter" do
       assert_equal("1,000,000", download_count(@rubygem))
     end
 
     should "stats graph meter" do
       most_downloaded_count = 8_000_000
+
       assert_in_delta(stats_graph_meter(@rubygem, most_downloaded_count), 12.5)
     end
   end

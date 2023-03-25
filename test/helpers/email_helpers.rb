@@ -1,11 +1,6 @@
 module EmailHelpers
   def last_email_link
-    Delayed::Worker.new.work_off
-    confirmation_link
-  end
-
-  def confirmation_link_from(job)
-    Delayed::Worker.new.run(job)
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
     confirmation_link
   end
 
@@ -18,6 +13,7 @@ module EmailHelpers
   end
 
   def confirmation_link
+    refute_empty ActionMailer::Base.deliveries
     body = last_email.parts[1].body.decoded.to_s
     link = %r{http://localhost/email_confirmations([^";]*)}.match(body)
     link[0]

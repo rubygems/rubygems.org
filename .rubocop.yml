@@ -4,12 +4,13 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-minitest
+  - rubocop-capybara
 
 AllCops:
   Exclude:
     - config/initializers/forbidden_yaml.rb
     - app/helpers/dynamic_errors_helper.rb
-    - !ruby/regexp /(vendor|bundle|bin|db|tmp)\/.*/
+    - !ruby/regexp /(vendor|bundle|bin|db|tmp|server)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
   TargetRubyVersion: 3.1
@@ -47,6 +48,9 @@ Rails/UnknownEnv:
 Rails/UniqueValidationWithoutIndex:
   Enabled: false
 
+Rails/ActionControllerTestCase:
+  Enabled: false # Causes every integration test to fail
+
 Layout/ArgumentAlignment:
   Enabled: false
 
@@ -57,13 +61,13 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
-    - test/**/*.rb
+    - test/**/*
     - config/routes.rb
 
 Metrics/ClassLength:
   Max: 350 # TODO: Lower to 100
   Exclude:
-    - test/**/*.rb
+    - test/**/*
 
 Metrics/CyclomaticComplexity:
   Max: 9 # TODO: Lower to 6
@@ -280,6 +284,5 @@ Minitest/MultipleAssertions:
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
   Exclude:
-    - lib/lograge/formatters/datadog.rb
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb

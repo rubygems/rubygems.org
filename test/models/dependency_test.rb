@@ -21,6 +21,7 @@ class DependencyTest < ActiveSupport::TestCase
     should "be invalid with requirements longer than maximum field length" do
       long_requirement_suffix = ".0" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       @dependency.gem_dependency = Gem::Dependency.new("holla", ["= 0#{long_requirement_suffix}"])
+
       refute_predicate @dependency, :valid?
       assert_equal ["is too long (maximum is 255 characters)"], @dependency.errors.messages[:requirements]
     end
@@ -29,6 +30,7 @@ class DependencyTest < ActiveSupport::TestCase
       long_unresolved_name = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       gem_dependency = Gem::Dependency.new(long_unresolved_name, ["= 0.0.0"])
       dependency = Dependency.create(gem_dependency: gem_dependency)
+
       refute_predicate dependency, :valid?
       assert_equal ["is too long (maximum is 255 characters)"], dependency.errors.messages[:unresolved_name]
     end
@@ -131,6 +133,7 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "create a Dependency but not a rubygem" do
         dependency = Dependency.create(gem_dependency: @gem_dependency, version: @version)
+
         refute_predicate dependency, :new_record?
         refute_predicate dependency.errors[:base], :present?
         assert_nil Rubygem.find_by(name: @rubygem_name)
@@ -144,6 +147,7 @@ class DependencyTest < ActiveSupport::TestCase
   context "without using Gem::Dependency" do
     should "be invalid" do
       dependency = Dependency.create(gem_dependency: ["ruby-ajp", ">= 0.2.0"])
+
       assert_predicate dependency, :new_record?
       assert_predicate dependency.errors[:rubygem], :present?
     end
@@ -156,6 +160,7 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "not create a Dependency" do
       dependency = Dependency.create(gem_dependency: @gem_dependency)
+
       assert_predicate dependency, :new_record?
       assert_predicate dependency.errors[:rubygem], :present?
       assert_nil Rubygem.find_by(name: "")

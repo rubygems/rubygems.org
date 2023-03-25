@@ -33,6 +33,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
     should "return a hash" do
       json = @rubygem.search_data
+
       assert_equal json.class, Hash
     end
 
@@ -90,8 +91,10 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
     should "find all gems with matching tokens" do
       _, response = ElasticSearcher.new("example").search
+
       assert_equal 3, response.size
       results = %w[example-gem example_1 example.rb]
+
       assert_equal results, response.map(&:name)
     end
   end
@@ -107,6 +110,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
     should "filter yanked gems from the result" do
       _, response = ElasticSearcher.new("example").search
+
       assert_equal 1, response.size
       assert_equal "example_2", response.first.name
     end
@@ -127,6 +131,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     should "look for keyword in name, summary and description and order them in same priority order" do
       _, response = ElasticSearcher.new("keyword").search
       names_order = %w[keyword example_gem3 example_gem2]
+
       assert_equal names_order, response.results.map(&:name)
     end
   end
@@ -143,6 +148,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     should "boost score of result by downloads count" do
       _, response = ElasticSearcher.new("gem").search
       names_order = %w[gem_30 gem_20 gem_10]
+
       assert_equal names_order, response.results.map(&:name)
     end
   end
@@ -183,12 +189,14 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     should "suggest names of possible gems" do
       _, response = ElasticSearcher.new("keywor").search
       suggestions = %w[keyword keywo keywordo]
+
       assert_equal suggestions, response.suggestions
     end
 
     should "return names of suggestion gems" do
       response = ElasticSearcher.new("keywor").suggestions
       suggestions = %w[keyword keywordo]
+
       assert_equal suggestions, %W[#{response[0]} #{response[1]}]
     end
   end
@@ -204,36 +212,42 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
     should "filter gems on downloads" do
       _, response = ElasticSearcher.new("downloads:>100").search
+
       assert_equal 1, response.size
       assert_equal "example", response.first.name
     end
 
     should "filter gems on name" do
       _, response = ElasticSearcher.new("name:web-rubygem").search
+
       assert_equal 1, response.size
       assert_equal "web-rubygem", response.first.name
     end
 
     should "filter gems on summary" do
       _, response = ElasticSearcher.new("summary:special word").search
+
       assert_equal 1, response.size
       assert_equal "example", response.first.name
     end
 
     should "filter gems on description" do
       _, response = ElasticSearcher.new("description:example").search
+
       assert_equal 1, response.size
       assert_equal "web-rubygem", response.first.name
     end
 
     should "change default operator" do
       _, response = ElasticSearcher.new("example OR web-rubygem").search
+
       assert_equal 2, response.size
       assert_equal %w[web-rubygem example], response.map(&:name)
     end
 
     should "support wildcards" do
       _, response = ElasticSearcher.new("name:web*").search
+
       assert_equal 1, response.size
       assert_equal "web-rubygem", response.first.name
     end
@@ -253,6 +267,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
     should "aggregate matched fields" do
       buckets = @response.response["aggregations"]["matched_field"]["buckets"]
+
       assert_equal 1, buckets["name"]["doc_count"]
       assert_equal 0, buckets["summary"]["doc_count"]
       assert_equal 1, buckets["description"]["doc_count"]
@@ -260,6 +275,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
     should "aggregate date range" do
       buckets = @response.response["aggregations"]["date_range"]["buckets"]
+
       assert_equal 2, buckets[0]["doc_count"]
       assert_equal 1, buckets[1]["doc_count"]
     end
@@ -300,6 +316,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
           Toxiproxy[:elasticsearch].down do
             error_msg, = ElasticSearcher.new("something").search
             expected_msg = "Advanced search is currently unavailable. Falling back to legacy search."
+
             assert_equal expected_msg, error_msg
           end
         end
@@ -318,6 +335,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       should "not affect results" do
         _, response1 = ElasticSearcher.new("async rails").search
         _, response2 = ElasticSearcher.new("rails async").search
+
         assert_equal response1.results.map(&:name), response2.results.map(&:name)
       end
     end
@@ -347,6 +365,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
       Toxiproxy[:elasticsearch].down do
         rubygem = create(:rubygem, name: "common-gem", number: "0.0.1", downloads: 10)
+
         assert rubygem.update(name: "renamed-gem")
       end
     end

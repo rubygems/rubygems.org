@@ -18,11 +18,7 @@ options = {}
 
 options[:url] = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 
-if Rails.env.development?
-  logger = ActiveSupport::Logger.new('log/elasticsearch.log')
-  logger.level = Logger::DEBUG
-  options[:tracer] = logger
-end
+options[:tracer] = SemanticLogger[OpenSearch::Client]
 
 Searchkick.client = OpenSearch::Client.new(**options.compact) do |f|
   if Rails.env.staging? || Rails.env.production?

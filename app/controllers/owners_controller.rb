@@ -18,7 +18,7 @@ class OwnersController < ApplicationController
   def resend_confirmation
     ownership = @rubygem.unconfirmed_ownerships.find_by!(user: current_user)
     if ownership.generate_confirmation_token && ownership.save
-      Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
+      OwnersMailer.ownership_confirmation(ownership).deliver_later
       flash[:notice] = t(".resent_notice")
     else
       flash[:alert] = t("try_again")
@@ -34,7 +34,7 @@ class OwnersController < ApplicationController
     owner = User.find_by_name(handle_params)
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
-      Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
+      OwnersMailer.ownership_confirmation(ownership).deliver_later
       redirect_to rubygem_owners_path(@rubygem), notice: t(".success_notice", handle: owner.name)
     else
       index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity
@@ -44,7 +44,7 @@ class OwnersController < ApplicationController
   def destroy
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
     if @ownership.safe_destroy
-      OwnersMailer.delay.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id)
+      OwnersMailer.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id).deliver_later
       redirect_to rubygem_owners_path(@ownership.rubygem), notice: t(".removed_notice", owner_name: @ownership.owner_name)
     else
       index_with_error t(".failed_notice"), :forbidden
@@ -68,10 +68,12 @@ class OwnersController < ApplicationController
 
   def notify_owner_added(ownership)
     ownership.rubygem.ownership_notifiable_owners.each do |notified_user|
-      OwnersMailer.delay.owner_added(notified_user.id,
+      OwnersMailer.owner_added(
+        notified_user.id,
         ownership.user_id,
         ownership.authorizer.id,
-        ownership.rubygem_id)
+        ownership.rubygem_id
+      ).deliver_later
     end
   end
 

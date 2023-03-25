@@ -21,6 +21,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
           end
           should respond_with :forbidden
+
           should "not create ownership request" do
             assert_nil @rubygem.ownership_requests.find_by(user: @user)
           end
@@ -33,6 +34,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
             end
             should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+
             should "create ownership request" do
               assert_not_nil @rubygem.ownership_requests.find_by(user: @user)
             end
@@ -43,6 +45,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
             end
             should respond_with :forbidden
+
             should "not create ownership request" do
               assert_nil @rubygem.ownership_requests.find_by(user: @user)
             end
@@ -61,6 +64,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
           end
           should respond_with :forbidden
+
           should "not create ownership request" do
             assert_nil @rubygem.ownership_requests.find_by(user: @user)
           end
@@ -74,6 +78,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
             should "set success notice flash" do
               expected_notice = "Your ownership request was submitted."
+
               assert_equal expected_notice, flash[:notice]
             end
             should "create ownership request" do
@@ -87,6 +92,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
             should "set error alert flash" do
               expected_notice = "Note can't be blank"
+
               assert_equal expected_notice, flash[:alert]
             end
             should "not create ownership call" do
@@ -101,6 +107,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
             should "set error alert flash" do
               expected_notice = "User has already been taken"
+
               assert_equal expected_notice, flash[:alert]
             end
           end
@@ -120,17 +127,18 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         context "on close" do
           setup do
             @requester = create(:user)
-            request = create(:ownership_request, rubygem: @rubygem, user: @requester)
-            patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "close" }
+            ownership_request = create(:ownership_request, rubygem: @rubygem, user: @requester)
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              patch :update, params: { rubygem_id: @rubygem.name, id: ownership_request.id, status: "close" }
+            end
           end
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set success notice flash" do
             expected_notice = "Ownership request was closed."
+
             assert_equal expected_notice, flash[:notice]
           end
           should "send email notifications" do
-            ActionMailer::Base.deliveries.clear
-            Delayed::Worker.new.work_off
             assert_emails 1
             assert_equal "Your ownership request was closed.", last_email.subject
             assert_equal [@requester.email], last_email.to
@@ -140,28 +148,32 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         context "on approve" do
           setup do
             @requester = create(:user)
-            request = create(:ownership_request, rubygem: @rubygem, user: @requester)
-            patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "approve" }
+            ownership_request = create(:ownership_request, rubygem: @rubygem, user: @requester)
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              patch :update, params: { rubygem_id: @rubygem.name, id: ownership_request.id, status: "approve" }
+            end
           end
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set success notice flash" do
             expected_notice = "Ownership request was approved. #{@user.display_id} is added as an owner."
+
             assert_equal expected_notice, flash[:notice]
           end
           should "add ownership record" do
             ownership = Ownership.find_by(rubygem: @rubygem, user: @requester)
+
             refute_nil ownership
             assert_predicate ownership, :confirmed?
           end
           should "send email notification" do
-            ActionMailer::Base.deliveries.clear
-            Delayed::Worker.new.work_off
             assert_emails 3
             request_approved_subjects = ActionMailer::Base.deliveries.map(&:subject)
+
             assert_contains request_approved_subjects, "Your ownership request was approved."
             assert_contains request_approved_subjects, "User #{@requester.handle} was added as an owner to #{@rubygem.name} gem"
 
             owner_removed_email_to = ActionMailer::Base.deliveries.map(&:to).flatten.uniq
+
             assert_same_elements @rubygem.owners.pluck(:email), owner_removed_email_to
           end
         end
@@ -212,6 +224,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set success notice flash" do
             expected_notice = "All open ownership requests for #{@rubygem.name} were closed."
+
             assert_equal expected_notice, flash[:notice]
           end
           should "close all open requests" do
@@ -228,6 +241,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set success notice flash" do
             expected_notice = "Something went wrong. Please try again."
+
             assert_equal expected_notice, flash[:alert]
           end
         end
@@ -239,6 +253,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           patch :close_all, params: { rubygem_id: @rubygem.name }
         end
         should respond_with :forbidden
+
         should "not close all open requests" do
           assert_equal 3, @rubygem.ownership_requests.count
         end
@@ -263,6 +278,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_requests_path, session[:mfa_redirect_uri]
           end
@@ -272,6 +288,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { patch :close_all, params: { rubygem_id: @rubygem.name } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
           should "set mfa_redirect_uri" do
             assert_equal close_all_rubygem_ownership_requests_path, session[:mfa_redirect_uri]
           end
@@ -281,6 +298,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
           end
@@ -290,6 +308,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
           end
@@ -305,6 +324,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
 
           should redirect_to("the edit settings page") { edit_settings_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_requests_path, session[:mfa_redirect_uri]
           end
@@ -316,6 +336,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the edit settings page") { edit_settings_path }
+
           should "set mfa_redirect_uri" do
             assert_equal close_all_rubygem_ownership_requests_path, session[:mfa_redirect_uri]
           end
@@ -325,6 +346,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the edit settings page") { edit_settings_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
           end
@@ -334,6 +356,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the edit settings page") { edit_settings_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
           end

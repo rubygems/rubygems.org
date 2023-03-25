@@ -20,7 +20,7 @@ class Api::V1::OwnersController < Api::BaseController
     if owner
       ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user)
       if ownership.save
-        Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
+        OwnersMailer.ownership_confirmation(ownership).deliver_later
         render plain: response_with_mfa_warning("#{owner.display_handle} was added as an unconfirmed owner. " \
                                                 "Ownership access will be enabled after the user clicks on the " \
                                                 "confirmation mail sent to their email.")
@@ -39,7 +39,7 @@ class Api::V1::OwnersController < Api::BaseController
     if owner
       ownership = @rubygem.ownerships_including_unconfirmed.find_by(user_id: owner.id)
       if ownership.safe_destroy
-        OwnersMailer.delay.owner_removed(ownership.user_id, @api_key.user.id, ownership.rubygem_id)
+        OwnersMailer.owner_removed(ownership.user_id, @api_key.user.id, ownership.rubygem_id).deliver_later
         render plain: response_with_mfa_warning("Owner removed successfully.")
       else
         render plain: response_with_mfa_warning("Unable to remove owner."), status: :forbidden

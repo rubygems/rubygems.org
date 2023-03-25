@@ -20,7 +20,13 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
 
       h = KEYS_RESPONSE_BODY.dup
       h["public_keys"][0]["key"] = @public_key_pem
-      GitHubSecretScanning.stubs(:secret_scanning_keys).returns(JSON.dump(h))
+
+      stub_request(:get, GitHubSecretScanning::KEYS_URI)
+        .to_return(
+          status: 200,
+          headers: { "Content-Type" => "application/json" },
+          body: h.to_json
+        )
 
       @tokens = [
         { "token" => "some_token", "type" => "some_type", "url" => "some_url" }
@@ -94,6 +100,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       should "returns success" do
         assert_response :success
         json = JSON.parse(@response.body)[0]
+
         assert_equal "false_positive", json["label"]
         assert_equal @tokens[0]["type"], json["token_type"]
         assert_equal @tokens[0]["token"], json["token_raw"]
@@ -107,18 +114,19 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
         @tokens << { "token" => key, "type" => "rubygems", "url" => "some_url" }
         signature = sign_body(JSON.dump(@tokens))
 
-        post revoke_api_v1_api_key_path(@rubygem),
-          params: @tokens,
-          headers: { HEADER_KEYID => "test_key_id", HEADER_SIGNATURE => Base64.encode64(signature) },
-          as: :json
-
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          post revoke_api_v1_api_key_path(@rubygem),
+            params: @tokens,
+            headers: { HEADER_KEYID => "test_key_id", HEADER_SIGNATURE => Base64.encode64(signature) },
+            as: :json
+        end
       end
 
       should "returns success and remove the token" do
         assert_response :success
 
         json = JSON.parse(@response.body)
+
         assert_equal "true_positive", json.last["label"]
         assert_equal @tokens.last["token"], json.last["token_raw"]
 
@@ -128,6 +136,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       should "delivers an email" do
         refute_empty ActionMailer::Base.deliveries
         email = ActionMailer::Base.deliveries.last
+
         assert_equal [@api_key.user.email], email.to
         assert_equal ["no-reply@mailer.rubygems.org"], email.from
         assert_equal "One of your API keys was revoked on rubygems.org", email.subject

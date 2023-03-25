@@ -79,15 +79,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
         }
       }
     }
-    @octokit_stubs.post("/graphql",
-      {
-        query: GitHubOAuthable::INFO_QUERY,
-        variables: { organization_name: "rubygems" }
-      }.to_json) do |_env|
-      [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: info_data
-      )]
-    end
+    stub_github_info_request(info_data)
 
     do_login
 
@@ -108,25 +100,20 @@ class OAuthTest < ActionDispatch::IntegrationTest
     end
 
     delete "/admin/logout"
+
     assert_redirected_to root_path
     assert_empty cookies["rubygems_admin_oauth_github_user"]
   end
 
   test "fails when user is not a member of the rubygems org" do
-    @octokit_stubs.post("/graphql", {
-      query: GitHubOAuthable::INFO_QUERY,
-      variables: { organization_name: "rubygems" }
-    }.to_json) do
-      [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: {
-          viewer: {
-            login: "jackson-keeling",
-            id: "95144751",
-            organization: nil
-          }
-        }
-      )]
-    end
+    info_data = {
+      viewer: {
+        login: "jackson-keeling",
+        id: "95144751",
+        organization: nil
+      }
+    }
+    stub_github_info_request(info_data)
 
     do_login
 
@@ -162,15 +149,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
           }
         }
       }
-      @octokit_stubs.post("/graphql",
-        {
-          query: GitHubOAuthable::INFO_QUERY,
-          variables: { organization_name: "rubygems" }
-        }.to_json) do |_env|
-        [200, { "Content-Type" => "application/json" }, JSON.generate(
-          data: info_data
-        )]
-      end
+      stub_github_info_request(info_data)
       OmniAuth.config.mock_auth[:github].credentials.token += "_update"
 
       do_login
@@ -179,6 +158,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
       assert_not_nil cookies["rubygems_admin_oauth_github_user"]
       follow_redirect!
       follow_redirect!
+
       assert_response :success
 
       Admin::GitHubUser.admins.sole.tap do |user|
@@ -199,17 +179,10 @@ class OAuthTest < ActionDispatch::IntegrationTest
           organization: nil
         }
       }
-      @octokit_stubs.post("/graphql",
-        {
-          query: GitHubOAuthable::INFO_QUERY,
-          variables: { organization_name: "rubygems" }
-        }.to_json) do |_env|
-        [200, { "Content-Type" => "application/json" }, JSON.generate(
-          data: info_data
-        )]
-      end
+      stub_github_info_request(info_data)
 
       do_login
+
       assert_nil cookies["rubygems_admin_oauth_github_user"]
       assert_response :forbidden
 
@@ -251,15 +224,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
             }
           }
         }
-        @octokit_stubs.post("/graphql",
-          {
-            query: GitHubOAuthable::INFO_QUERY,
-            variables: { organization_name: "rubygems" }
-          }.to_json) do |_env|
-          [200, { "Content-Type" => "application/json" }, JSON.generate(
-            data: info_data
-          )]
-        end
+        stub_github_info_request(info_data)
 
         do_login
 
@@ -267,6 +232,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
         assert_not_nil cookies["rubygems_admin_oauth_github_user"]
         follow_redirect!
         follow_redirect!
+
         assert_response :success
 
         Admin::GitHubUser.sole.tap do |user|
@@ -283,17 +249,10 @@ class OAuthTest < ActionDispatch::IntegrationTest
             organization: nil
           }
         }
-        @octokit_stubs.post("/graphql",
-          {
-            query: GitHubOAuthable::INFO_QUERY,
-            variables: { organization_name: "rubygems" }
-          }.to_json) do |_env|
-          [200, { "Content-Type" => "application/json" }, JSON.generate(
-            data: info_data
-          )]
-        end
+        stub_github_info_request(info_data)
 
         do_login
+
         assert_nil cookies["rubygems_admin_oauth_github_user"]
         assert_response :forbidden
 

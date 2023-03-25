@@ -35,6 +35,7 @@ class GemDependentTest < ActiveSupport::TestCase
       }
 
       deps = GemDependent.new(["rack2"]).to_a
+
       result.each_pair do |k, v|
         assert_equal v, deps.first[k]
       end
@@ -53,6 +54,7 @@ class GemDependentTest < ActiveSupport::TestCase
         result = [["0.1.3", "ruby"], ["0.1.2", "ruby"], ["0.1.2", "jruby"], ["0.2.2", "ruby"]]
 
         deps = GemDependent.new(["rack"]).to_a
+
         deps.map { |x| [x[:number], x[:platform]] }.each do |dep|
           assert_includes result, dep
         end
@@ -76,6 +78,7 @@ class GemDependentTest < ActiveSupport::TestCase
         expected_deps = [["foo", ">= 0.0.0"], ["bar", ">= 0.0.0"]]
 
         dep = GemDependent.new(["devise"]).to_a.first
+
         assert_equal "devise", dep[:name]
         assert_equal "1.0.0", dep[:number]
 
@@ -101,6 +104,7 @@ class GemDependentTest < ActiveSupport::TestCase
         }
 
         deps = GemDependent.new(["nokogiri"]).to_a
+
         assert_equal [result], deps
       end
     end

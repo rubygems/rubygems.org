@@ -17,12 +17,14 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
     post api_v1_rubygem_owners_path(@rubygem),
       params: { email: @other_user.email },
       headers: { "HTTP_AUTHORIZATION" => @user_api_key }
+
     assert_response :success
 
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by(user: @other_user)
     get confirm_rubygem_owners_url(@rubygem, token: @ownership.token)
 
     get rubygem_path(@rubygem)
+
     assert page.has_selector?("a[alt='#{@user.handle}']")
     assert page.has_selector?("a[alt='#{@other_user.handle}']")
   end
@@ -34,6 +36,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
       headers: { "HTTP_AUTHORIZATION" => @user_api_key }
 
     get rubygem_path(@rubygem)
+
     assert page.has_selector?("a[alt='#{@user.handle}']")
     refute page.has_selector?("a[alt='#{@other_user.handle}']")
   end
@@ -46,6 +49,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
       headers: { "HTTP_AUTHORIZATION" => @user_api_key }
 
     get rubygem_path(@rubygem)
+
     refute page.has_selector?("a[alt='#{@user.handle}']")
     assert page.has_selector?("a[alt='#{@other_user.handle}']")
   end
@@ -54,11 +58,13 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
     post api_v1_rubygem_owners_path(@rubygem),
       params: { email: @other_user.email },
       headers: { "HTTP_AUTHORIZATION" => @other_user_api_key }
+
     assert_response :unauthorized
 
     delete api_v1_rubygem_owners_path(@rubygem),
       params: { email: @other_user.email },
       headers: { "HTTP_AUTHORIZATION" => @other_user_api_key }
+
     assert_response :unauthorized
   end
 end

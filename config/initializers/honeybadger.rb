@@ -3,4 +3,5 @@ Honeybadger.configure do |config|
   config.before_notify do |notice|
     notice.halt! if ActionDispatch::ExceptionWrapper.rescue_responses.key?(notice.error_class)
   end
+  config.logger = SemanticLogger[Honeybadger]
 end

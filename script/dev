@@ -4,5 +4,8 @@ export GITHUB_KEY="op://bq25xfqpafelzdxwqu3mdq6rza/zsq3oitss3rbo4njqpjfd5r5cm/GI
 export GITHUB_SECRET="op://bq25xfqpafelzdxwqu3mdq6rza/zsq3oitss3rbo4njqpjfd5r5cm/GITHUB_SECRET"
 export AVO_LICENSE_KEY="op://bq25xfqpafelzdxwqu3mdq6rza/netp2leghd7zqdxlkp5asy67d4/license key"
 export DATADOG_CSP_API_KEY="op://bq25xfqpafelzdxwqu3mdq6rza/eisktguwm3pcfkwm7avqamdnxq/credential"
+export HOOK_RELAY_ACCOUNT_ID="op://bq25xfqpafelzdxwqu3mdq6rza/s3fs2zznjssijxouugddmwnuma/username"
+export HOOK_RELAY_HOOK_ID="op://bq25xfqpafelzdxwqu3mdq6rza/s3fs2zznjssijxouugddmwnuma/credential"
+export LAUNCH_DARKLY_SDK_KEY="op://bq25xfqpafelzdxwqu3mdq6rza/3o73k6fcenzrbspwcm4g4j5z2a/credential"
 
 exec op run --account 5MS5DHTO5NH7BAHTSIGT5NOAIE -- "${@}"

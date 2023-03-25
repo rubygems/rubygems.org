@@ -6,13 +6,21 @@ class DeletionTest < ActiveSupport::TestCase
 
   setup do
     @user = create(:user)
-    Pusher.new(@user, gem_file).process
+    @gem_file = gem_file("test-0.0.0.gem")
+    Pusher.new(@user, @gem_file).process
+    @gem_file.rewind
     @version = Version.last
+    @spec_rz = RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
     import_and_refresh
+  end
+
+  teardown do
+    @gem_file.close
   end
 
   should "be indexed" do
     @version.indexed = false
+
     assert_predicate Deletion.new(version: @version, user: @user), :invalid?,
       "Deletion should only work on indexed gems"
   end
@@ -59,10 +67,15 @@ class DeletionTest < ActiveSupport::TestCase
         assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
       end
 
+      should "delete the .gemspec.rz file" do
+        assert_nil RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"), "Gemspec.rz still exists!"
+      end
+
       should "send gem yanked email" do
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
         email = ActionMailer::Base.deliveries.last
+
         assert_equal "Gem #{@version.to_title} yanked from RubyGems.org", email.subject
         assert_equal [@user.email], email.to
       end
@@ -75,25 +88,37 @@ class DeletionTest < ActiveSupport::TestCase
     end
   end
 
+  should "enqueue yank version contents job" do
+    assert_enqueued_jobs 1, only: YankVersionContentsJob do
+      delete_gem
+    end
+  end
+
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference "Delayed::Job.count", 3 do
-      assert_enqueued_jobs 6, only: FastlyPurgeJob do
-        delete_gem
+    assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
+      assert_enqueued_jobs 7, only: FastlyPurgeJob do
+        assert_enqueued_jobs 1, only: Indexer do
+          assert_enqueued_jobs 1, only: ReindexRubygemJob do
+            delete_gem
+          end
+        end
       end
     end
 
-    Delayed::Worker.new.work_off
     perform_enqueued_jobs
 
     response = Searchkick.client.get index: "rubygems-#{Rails.env}",
                                                     id: @version.rubygem_id
+
     assert response["_source"]["yanked"]
   end
 
   should "record version metadata" do
     deletion = Deletion.new(version: @version, user: @user)
+
     assert_nil deletion.rubygem
     deletion.valid?
+
     assert_equal deletion.rubygem, @version.rubygem.name
   end
 
@@ -101,7 +126,14 @@ class DeletionTest < ActiveSupport::TestCase
     setup do
       @gem_name = @version.rubygem.name
       GemCachePurger.stubs(:call)
-      RubygemFs.instance.stubs(:restore).returns true
+      RubygemFs.instance.stubs(:restore).with do |file|
+        case file
+        when "gems/#{@version.full_name}.gem"
+          RubygemFs.instance.store(file, @gem_file.read)
+        when "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"
+          RubygemFs.instance.store(file, @spec_rz)
+        end
+      end.returns(true)
     end
 
     context "when gem is deleted and restored" do
@@ -133,8 +165,7 @@ class DeletionTest < ActiveSupport::TestCase
         Fastly.expects(:purge).with({ path: "gems/#{@version.full_name}.gem", soft: false }).times(2)
         Fastly.expects(:purge).with({ path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz", soft: false }).times(2)
 
-        Delayed::Worker.new.work_off
-        perform_enqueued_jobs
+        perform_enqueued_jobs(only: FastlyPurgeJob)
       end
 
       should "remove deletion record" do
@@ -147,6 +178,13 @@ class DeletionTest < ActiveSupport::TestCase
 
       @deletion = delete_gem
       @deletion.restore!
+    end
+
+    should "enqueue store version contents job" do
+      @deletion = delete_gem
+      assert_enqueued_jobs 1, only: StoreVersionContentsJob do
+        @deletion.restore!
+      end
     end
   end
 

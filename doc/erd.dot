@@ -383,7 +383,13 @@ m_WebHook [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="disabled_at">disabled_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="disabled_reason">disabled_reason <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="failure_count">failure_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="failures_since_last_success">failures_since_last_success <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="last_failure">last_failure <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="last_success">last_success <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="successes_since_last_failure">successes_since_last_failure <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="url">url <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
 </table>
 >];
@@ -406,7 +412,6 @@ m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5
   m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_User -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
@@ -425,6 +430,7 @@ m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5
   m_Rubygem -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
   m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
   "m_GoodJob::BatchRecord" -> "m_GoodJob::Job" [arrowhead = "normal", arrowtail = "none", weight = "3"];

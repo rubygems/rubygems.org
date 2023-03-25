@@ -13,11 +13,14 @@ spec:
         metadata:
           labels:
             name: users-verify-daily
+            tags.datadoghq.com/env: "<%= environment %>"
+            tags.datadoghq.com/service: rubygems.org
+            tags.datadoghq.com/version: <%= current_sha %>
         spec:
           restartPolicy: "OnFailure"
           containers:
           - name: users-verify-daily
-            image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+            image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
             args: ["rake", "users:verify"]
             resources:
               <% if environment == 'production' %>

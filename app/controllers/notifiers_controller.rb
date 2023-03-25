@@ -16,7 +16,7 @@ class NotifiersController < ApplicationController
       current_user.ownerships.update_push_notifier(to_enable_push, to_disable_push)
       current_user.ownerships.update_owner_notifier(to_enable_owner, to_disable_owner)
       current_user.ownerships.update_ownership_request_notifier(to_enable_ownership_request, to_disable_ownership_request)
-      Mailer.delay.notifiers_changed(current_user.id)
+      Mailer.notifiers_changed(current_user.id).deliver_later
     end
 
     redirect_to notifier_path, notice: t(".update.success")

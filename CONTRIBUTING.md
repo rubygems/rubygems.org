@@ -114,7 +114,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 ### Installing ruby, gem dependencies, and setting up the database
 
-* Use Ruby 3.1.x
+* Use Ruby 3.2.x
   * See: [Ruby install instructions](https://www.ruby-lang.org/en/downloads/).
   * `.ruby-version` is present and can be used.
 * Use Rubygems 3.3.x
@@ -173,7 +173,7 @@ can try running:
 
 * A good way to get some test data is to import from a local gem directory.
 `gem env` will tell you where rubygems stores your gems. Run
-`bundle exec rake "gemcutter:import:process[#{INSTALLATION_DIRECTORY}/cache'"`
+`bundle exec rake "gemcutter:import:process[#{INSTALLATION_DIRECTORY}/cache]"`
 
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.

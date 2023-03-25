@@ -113,6 +113,7 @@ class PusherTest < ActiveSupport::TestCase
     should "not be able to pull spec from a bad path" do
       @cutter.stubs(:body).stubs(:stub!).stubs(:read)
       @cutter.pull_spec
+
       assert_nil @cutter.spec
       assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
       assert_equal 422, @cutter.code
@@ -140,6 +141,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@user, @gem)
       @cutter.stubs(:save).never
       @cutter.process
+
       assert_equal("legit", @cutter.rubygem.name)
       assert_equal("gem-0.0.1", @cutter.version.number)
       assert_match(/There was a problem saving your gem: Number is invalid/, @cutter.message)
@@ -163,6 +165,7 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("valid_signature_tampered-0.0.1.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
+
       assert_includes @cutter.message, %(missing signing certificate)
       assert_equal 422, @cutter.code
     end
@@ -171,6 +174,7 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("expired_signature-0.0.0.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
+
       assert_includes @cutter.message, %(not valid after 2021-07-08 08:21:01 UTC)
       assert_equal 422, @cutter.code
     end
@@ -189,6 +193,7 @@ class PusherTest < ActiveSupport::TestCase
 
         @cutter = Pusher.new(@user, File.open(gem_file))
         @cutter.process
+
         assert_equal 200, @cutter.code
       end
 
@@ -208,6 +213,7 @@ class PusherTest < ActiveSupport::TestCase
 
         @cutter = Pusher.new(@user, File.open(gem_file))
         @cutter.process
+
         assert_includes @cutter.message, %(CN=Root not valid after)
         assert_equal(422, @cutter.code)
       end
@@ -238,6 +244,7 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("aliases-0.0.0.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.pull_spec
+
       assert_not_nil @cutter.spec
       assert_not_nil @cutter.spec.dependencies.first.requirement
     end
@@ -246,6 +253,7 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("aliases-nodata-0.0.1.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.pull_spec
+
       assert_includes @cutter.message, %{package content (data.tar.gz) is missing}
     end
   end
@@ -306,6 +314,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "set sha256" do
       expected_sha = Digest::SHA2.base64digest(@cutter.body.string)
+
       assert_equal expected_sha, @cutter.version.sha256
     end
   end
@@ -337,6 +346,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:version).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
+
       refute @cutter.find
 
       assert_match(/Unable to change case/, @cutter.message)
@@ -344,6 +354,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "update the DB to reflect the case in the spec" do
       @rubygem = create(:rubygem)
+
       assert_not_equal @rubygem.name, @rubygem.name.upcase
 
       spec = mock
@@ -365,6 +376,7 @@ class PusherTest < ActiveSupport::TestCase
   context "checking if the rubygem can be pushed to" do
     should "be true if rubygem is new" do
       @cutter.stubs(:rubygem).returns Rubygem.new
+
       assert @cutter.authorize
     end
 
@@ -376,6 +388,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "be true if owned by the user" do
         create(:ownership, rubygem: @rubygem, user: @user)
+
         assert @cutter.authorize
       end
 
@@ -385,6 +398,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "be false if not owned by user and an indexed version exists" do
         create(:version, rubygem: @rubygem, number: "0.1.1")
+
         refute @cutter.authorize
         assert_equal "You do not have permission to push to this gem. Ask an owner to add you with: gem owner the_gem_name --add user@example.com",
           @cutter.message
@@ -393,6 +407,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "be true if not owned by user but no indexed versions exist" do
         create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
+
         assert @cutter.authorize
       end
 
@@ -422,7 +437,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.stubs(:version).returns @rubygem.versions[0]
       @cutter.stubs(:spec).returns(@spec)
       @rubygem.stubs(:update_attributes_from_gem_specification!)
-      Indexer.any_instance.stubs(:write_gem)
+      @cutter.stubs(:write_gem)
     end
 
     context "when cutter is saved" do
@@ -449,7 +464,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 07, 04))
-        Delayed::Worker.new.work_off
+        perform_enqueued_jobs only: ReindexRubygemJob
         response = Searchkick.client.get index: "rubygems-#{Rails.env}",
                                          id:    @rubygem.id
         expected_response = {
@@ -496,10 +511,21 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
-      assert_difference "Delayed::Job.count", 3 do
-        assert_enqueued_jobs 4, only: FastlyPurgeJob do
-          @cutter.save
+      assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
+        assert_enqueued_jobs 5, only: FastlyPurgeJob do
+          assert_enqueued_jobs 1, only: Indexer do
+            assert_enqueued_jobs 1, only: ReindexRubygemJob do
+              @cutter.save
+            end
+          end
         end
+      end
+    end
+
+    # TODO: Remove this test once this is always enabled
+    should "not enqueue job for storing version contents when ENV disables it" do
+      assert_enqueued_jobs 0, only: StoreVersionContentsJob do
+        @cutter.save
       end
     end
   end
@@ -514,21 +540,23 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem.stubs(:update_attributes_from_gem_specification!)
       @cutter.stubs(:version).returns @version
       GemCachePurger.stubs(:call)
-      Indexer.any_instance.stubs(:write_gem)
+      @cutter.stubs(:write_gem)
       @cutter.save
     end
 
     should "update rubygem index" do
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ReindexRubygemJob
       response = Searchkick.client.get index: "rubygems-#{Rails.env}",
                                        id:    @rubygem.id
+
       assert_equal "new summary", response["_source"]["summary"]
     end
 
     should "send gem pushed email" do
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
       email = ActionMailer::Base.deliveries.last
+
       assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
       assert_equal [@user.email], email.to
     end
@@ -547,6 +575,7 @@ class PusherTest < ActiveSupport::TestCase
     should "not create version" do
       rubygem = Rubygem.find_by(name: "test")
       expected_message = "There was a problem saving your gem. Please try again."
+
       assert_equal expected_message, @cutter.message
       assert_equal 0, rubygem.versions.count
     end
@@ -563,6 +592,7 @@ class PusherTest < ActiveSupport::TestCase
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
       cutter = Pusher.new(@user, @gem, "", @rubygem)
       cutter.stubs(:rubygem).returns @rubygem
+
       assert cutter.verify_gem_scope
     end
 
@@ -570,6 +600,7 @@ class PusherTest < ActiveSupport::TestCase
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
       cutter = Pusher.new(@user, @gem, "", create(:rubygem))
       cutter.stubs(:rubygem).returns @rubygem
+
       refute cutter.verify_gem_scope
     end
   end

@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class Avo::WebHooksSystemTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   def sign_in_as(user)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
       provider: "github",
@@ -13,15 +15,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
         name: user.login
       }
     )
-    @octokit_stubs.post("/graphql",
-      {
-        query: GitHubOAuthable::INFO_QUERY,
-        variables: { organization_name: "rubygems" }
-      }.to_json) do |_env|
-      [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: user.info_data
-      )]
-    end
+    stub_github_info_request(user.info_data)
 
     visit avo.root_path
     click_button "Log in with GitHub"
@@ -48,6 +42,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
     click_button "Delete Webhook"
+
     page.assert_text "Action ran successfully!"
     page.assert_text web_hook.to_global_id.uri.to_s
 
@@ -66,13 +61,19 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
               "url" => [web_hook.url, nil],
               "failure_count" => [0, nil],
               "created_at" => [web_hook.created_at.as_json, nil],
-              "updated_at" => [web_hook.updated_at.as_json, nil]
+              "updated_at" => [web_hook.updated_at.as_json, nil],
+              "successes_since_last_failure" => [0, nil],
+              "failures_since_last_success" => [0, nil]
             },
             "unchanged" => {
-              "rubygem_id" => nil
+              "rubygem_id" => nil,
+              "disabled_reason" => nil,
+              "disabled_at" => nil,
+              "last_success" => nil,
+              "last_failure" => nil
             }
           }
-        }.merge(audit.audited_changes["records"].select { |k, _| k =~ %r{gid://gemcutter/Delayed::Backend::ActiveRecord::Job/\d+} }),
+        },
         "fields" => {},
         "arguments" => {},
         "models" => ["gid://gemcutter/WebHook/#{web_hook.id}"]
@@ -82,7 +83,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_equal I18n.t("mailer.web_hook_deleted.subject"), last_email.subject
   end

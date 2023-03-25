@@ -20,6 +20,7 @@ RUN mkdir -p /app /app/config /app/log/
 
 # Set production environment
 ENV BUNDLE_APP_CONFIG=".bundle_app_config"
+ENV MAGIC="/usr/share/misc/magic.mgc"
 
 # Update rubygems
 ARG RUBYGEMS_VERSION
@@ -38,6 +39,8 @@ RUN \
   ca-certificates \
   build-base \
   bash \
+  libmagic \
+  zstd-libs \
   linux-headers \
   zlib-dev \
   tzdata 
@@ -45,7 +48,6 @@ RUN \
 WORKDIR /app
 
 ENV RAILS_ENV="production"
-
 
 # Install application gems
 COPY Gemfile* /app/
@@ -83,6 +85,8 @@ RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
   --mount=type=cache,id=dev-apk-lib,sharing=locked,target=/var/lib/apk \
   apk add \
   libpq \
+  libmagic \
+  zstd-libs \
   ca-certificates \
   bash \
   tzdata \
@@ -91,6 +95,7 @@ RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
 RUN mkdir -p /app
 WORKDIR /app
 
+RUN mkdir -p tmp/pids
 
 # Copy built application from previous stage
 COPY --link --from=build /app/ /app/

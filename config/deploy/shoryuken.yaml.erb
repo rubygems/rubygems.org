@@ -16,13 +16,16 @@ spec:
   template:
     metadata:
       annotations:
-        ad.datadoghq.com/unicorn.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+        ad.datadoghq.com/shoryuken.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
         name: shoryuken
+        tags.datadoghq.com/env: "<%= environment %>"
+        tags.datadoghq.com/service: rubygems.org
+        tags.datadoghq.com/version: <%= current_sha %>
     spec:
       containers:
       - name: shoryuken
-        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
         args: ["bin/shoryuken-worker"]
         resources:
           <% if environment == 'production' %>

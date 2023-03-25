@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "aws-sdk-s3"
 
 module RubygemFs
@@ -10,11 +12,17 @@ module RubygemFs
       end
   end
 
+  def self.contents
+    @contents ||= instance.in_bucket Gemcutter.config.s3_contents_bucket
+  end
+
   def self.mock!
+    @contents = nil
     @fs = RubygemFs::Local.new(Dir.mktmpdir)
   end
 
   def self.s3!(host)
+    @contents = nil
     @fs = RubygemFs::S3.new(access_key_id: "k",
                             secret_access_key: "s",
                             endpoint: host,
@@ -26,75 +34,124 @@ module RubygemFs
   end
 
   class Local
+    class InvalidPathError < ArgumentError; end
+
+    METADATA_DIR = "_metadata"
+
     attr_reader :base_dir
 
     def initialize(base_dir = nil)
       base_dir ||= Rails.root.join("server")
       @base_dir = Pathname.new(base_dir).expand_path
+      @base_dir.mkpath
+      @metadata = in_bucket(METADATA_DIR) unless @base_dir.to_s.end_with?(METADATA_DIR)
     end
 
-    def store(key, body, **)
-      path = path_for(key)
+    def bucket
+      base_dir.basename.to_s
+    end
+
+    def in_bucket(dir)
+      self.class.new(path_for(dir))
+    end
+
+    def store(key, body, **kwargs)
+      path = path_for key
+      @metadata&.store(key, JSON.generate(kwargs.merge(key: key))) if kwargs.present?
       path.dirname.mkpath
-      path.binwrite(body)
+      path.binwrite body
+    end
+
+    def head(key)
+      return unless @metadata && path_for(key).file?
+      JSON.parse(@metadata.get(key).to_s).symbolize_keys
+    rescue Errno::ENOENT, JSON::ParserError
+      { key: key, metadata: {} }
     end
 
     def get(key)
-      path_for(key).binread
-    rescue Errno::ENOENT
+      body = path_for(key).binread
+      fix_encoding(body, key)
+    rescue Errno::ENOENT, Errno::EISDIR
       nil
     end
 
-    def each_key(prefix: "", &)
-      return enum_for(__method__, prefix: prefix) unless block_given?
-      # it's easier to list everything and filter on strings because file systems don't act like S3
-      @base_dir.find do |entry|
-        path = entry.relative_path_from(@base_dir).to_s
-        next unless path.start_with?(prefix)
+    def each_key(prefix: nil, &)
+      return enum_for(__method__, prefix:) unless block_given?
+      base = dir_for(prefix)
+      return unless base.directory?
+      base.find do |entry|
         next if entry.directory?
+        path = key_for(entry)
+        next if path.start_with?(METADATA_DIR)
         yield path
       end
+      nil
     end
 
     def remove(*keys)
-      keys.flatten.reject { |key| delete(key) }
+      @metadata&.remove(*keys)
+      keys.flatten.reject do |key|
+        path_for(key).ascend.take_while { |entry| descendant?(entry) }.each(&:delete)
+        true
+      rescue Errno::ENOTEMPTY
+        true
+      rescue Errno::ENOENT
+        false
+      end
     end
 
     private
 
-    def delete(key)
-      path = path_for(key)
-      return false unless descendant?(path)
-      path.ascend do |entry|
-        break unless descendant?(entry)
-        entry.delete
-      end
-      true
-    rescue Errno::ENOTEMPTY
-      true
-    rescue Errno::ENOENT
-      false
+    def path_for(key, base = @base_dir)
+      key = key.to_s.sub(%r{^/+}, "")
+      path = base.join(key).expand_path
+      raise InvalidPathError, "key #{key.inspect} is outside of base #{base.inspect}" unless descendant?(path, base)
+      path
     end
 
-    def path_for(key)
-      key = key.sub(%r{^/+}, "")
-      @base_dir.join(key).expand_path
+    def dir_for(prefix, base = @base_dir)
+      return base if prefix.blank?
+      raise InvalidPathError, "prefix #{prefix.inspect} must end in / to avoid ambiguous behavior" unless prefix.to_s.end_with?("/")
+      path_for(prefix, base)
     end
 
-    def descendant?(path)
-      path.to_s.start_with?(@base_dir.to_s) && path != @base_dir
+    def fix_encoding(body, key)
+      charset = charset_for(key) || Magic.buffer(body, Magic::MIME_ENCODING)
+      body.force_encoding(charset) if charset
+      body
+    end
+
+    def charset_for(key)
+      content_type = head(key)&.fetch(:content_type, nil)
+      Regexp.last_match(1) if content_type =~ /charset=(.+)$/
+    end
+
+    # always return key relative to bucket, same as S3
+    def key_for(path)
+      path.relative_path_from(@base_dir).to_s
+    end
+
+    def descendant?(path, base = @base_dir)
+      path.to_s.start_with?(base.to_s) && path != base
     end
   end
 
   class S3
+    attr_reader :bucket
+
     def initialize(config = {})
-      @bucket = config.delete(:bucket)
+      @bucket = config.delete(:bucket) || Gemcutter.config["s3_bucket"]
       @config = {
         access_key_id: ENV["S3_KEY"],
         secret_access_key: ENV["S3_SECRET"],
         region: Gemcutter.config["s3_region"],
         endpoint: "https://#{Gemcutter.config['s3_endpoint']}"
       }.merge(config)
+    end
+
+    def in_bucket(bucket)
+      self.class.new(@config.merge(bucket: bucket))
     end
 
     def store(key, body, metadata: {}, **kwargs)
@@ -106,6 +163,12 @@ module RubygemFs
                     metadata: metadata,
                     cache_control: "max-age=31536000",
                     **allowed_args)
+    end
+
+    def head(key)
+      s3.head_object(key: key, bucket: bucket).to_h
+    rescue Aws::S3::Errors::NoSuchKey
+      nil
     end
 
     def get(key)
@@ -142,10 +205,6 @@ module RubygemFs
     rescue Aws::S3::Errors::NotFound => e
       version_id = e.context.http_response.headers["x-amz-version-id"]
       s3.delete_object(key: key, bucket: bucket, version_id: version_id)
-    end
-
-    def bucket
-      @bucket || Gemcutter.config["s3_bucket"]
     end
 
     private

@@ -9,22 +9,23 @@ Datadog.configure do |c|
 
   # Enabling datadog functionality
 
-  enabled = (Rails.env.production? || Rails.env.staging?) && ENV["DD_AGENT_HOST"].present?
+  enabled = (Rails.env.production? || Rails.env.staging?) && ENV["DD_AGENT_HOST"].present? && !defined?(Rails::Console)
   c.runtime_metrics.enabled = enabled
   c.profiling.enabled = enabled
   c.tracing.enabled = enabled
+  c.tracing.log_injection = enabled
 
   unless enabled
     # TODO: https://github.com/DataDog/dd-trace-rb/issues/2542
     # disable log tags loaded super early by ddtrace/auto_instrument
     # required in Gemfile, since they are polluting development log
-    original_tags = Array.wrap(Rails.application.config.log_tags).reject! { |tag| tag&.source_location&.include?('datadog') }
+    original_tags = Array.wrap(Rails.application.config.log_tags).reject { |tag| tag&.source_location&.first&.include?('datadog') }
     Rails.application.config.log_tags = original_tags
   end
 
   # Configuring the datadog library
 
-  c.logger.instance = Rails.logger
+  c.logger.instance = SemanticLogger[Datadog]
 
   if Rails.env.test? || Rails.env.development?
     c.tracing.transport_options = proc { |t|
@@ -42,12 +43,10 @@ Datadog.configure do |c|
 
   c.tracing.instrument :aws
   c.tracing.instrument :dalli
-  c.tracing.instrument :delayed_job
   c.tracing.instrument :faraday, split_by_domain: true, service_name: c.service
   c.tracing.instrument :http, service_name: c.service
   c.tracing.instrument :pg
   c.tracing.instrument :rails
-  c.tracing.instrument :rest_client, split_by_domain: true, service_name: c.service
   c.tracing.instrument :shoryuken
 end
 

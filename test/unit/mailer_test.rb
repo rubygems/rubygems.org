@@ -9,13 +9,15 @@ class MailerTest < ActionMailer::TestCase
       @user = create(:user)
       create(:rubygem, owners: [@user], downloads: MIN_DOWNLOADS_FOR_MFA_RECOMMENDATION_POLICY)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_recommendation"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_recommendation"].execute }
+      end
     end
 
     should "send mail to users" do
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [@user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "Please enable multi-factor authentication on your RubyGems account", email.subject
@@ -29,11 +31,13 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "disabled")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
+      end
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Enable multi-factor authentication on your RubyGems account by August 15", email.subject
@@ -45,11 +49,13 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "ui_only")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
+      end
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Upgrade the multi-factor authentication level on your RubyGems account by August 15", email.subject
@@ -61,8 +67,9 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "ui_and_api")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
+      end
 
       assert_empty ActionMailer::Base.deliveries
       assert_match "Sending 0 MFA reminder email", @io_output
@@ -72,8 +79,9 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user)
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY - 1)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
+      end
 
       assert_empty ActionMailer::Base.deliveries
       assert_match "Sending 0 MFA reminder email", @io_output
@@ -85,11 +93,13 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "disabled")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
+      end
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Enabling multi-factor authentication is required on your RubyGems account", email.subject
@@ -101,11 +111,13 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "ui_only")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
+      end
 
       refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
+
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Upgrading the multi-factor authentication level is required on your RubyGems account", email.subject
@@ -117,8 +129,9 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "ui_and_api")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
+      end
 
       assert_empty ActionMailer::Base.deliveries
       assert_match "Sending 0 MFA required for popular gems email", @io_output
@@ -128,8 +141,9 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user)
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY - 1)
 
-      @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
-      Delayed::Worker.new.work_off
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_enforcement_for_popular_gems"].execute }
+      end
 
       assert_empty ActionMailer::Base.deliveries
       assert_match "Sending 0 MFA required for popular gems email", @io_output

@@ -23,10 +23,10 @@ class FastlyLogProcessor
 
     counts = download_counts(log_ticket)
     StatsD.gauge("fastly_log_processor.processed_versions_count", counts.count)
-    Delayed::Worker.logger.info "Processed Fastly log counts: #{counts.inspect}"
+    Rails.logger.info "Processed Fastly log counts: #{counts.inspect}"
 
     processed_count = counts.sum { |_, v| v }
-    ActiveRecord::Base.connection.transaction do
+    GemDownload.for_all_gems.with_lock do
       GemDownload.bulk_update(counts)
       log_ticket.update(status: "processed", processed_count: processed_count)
     end
@@ -38,6 +38,9 @@ class FastlyLogProcessor
   statsd_count_success :perform, "fastly_log_processor.perform"
   statsd_measure :perform, "fastly_log_processor.job_performance"
 
+  PATH_PATTERN = %r{/gems/(?<path>.+)\.gem}
+  private_constant :PATH_PATTERN
+
   # Takes an enumerator of log lines and returns a hash of download counts
   # E.g.
   #   {
@@ -47,19 +50,20 @@ class FastlyLogProcessor
   def download_counts(log_ticket)
     file = log_ticket.body
     raise LogFileNotFoundError if file.nil?
-    enumerator = file.each_line
 
-    enumerator.each_with_object(Hash.new(0)) do |log_line, accum|
+    ok_status           = Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok]
+    not_modified_status = Rack::Utils::SYMBOL_TO_STATUS_CODE[:not_modified]
+
+    file.each_line.with_object(Hash.new(0)) do |log_line, accum|
       path, response_code = log_line.split[10, 2]
+      case response_code.to_i
       # Only count successful downloads
       # NB: we consider a 304 response a download attempt
-      ok_status           = Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok]
-      not_modified_status = Rack::Utils::SYMBOL_TO_STATUS_CODE[:not_modified]
-      if [ok_status, not_modified_status].include?(response_code.to_i) && (match = path.match %r{/gems/(?<path>.+)\.gem})
-        accum[match[:path]] += 1
+      when ok_status, not_modified_status
+        if (match = PATH_PATTERN.match(path))
+          accum[match[:path]] += 1
+        end
       end
-
-      accum
     end
   end
 end

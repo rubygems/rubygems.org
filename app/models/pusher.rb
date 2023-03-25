@@ -9,7 +9,6 @@ class Pusher
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
-    @indexer = Indexer.new
     @remote_ip = remote_ip
     @scoped_rubygem = scoped_rubygem
   end
@@ -46,7 +45,7 @@ class Pusher
     # Restructured so that if we fail to write the gem (ie, s3 is down)
     # can clean things up well.
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
-    @indexer.write_gem @body, @spec
+    write_gem @body, @spec
   rescue ArgumentError => e
     @version.destroy
     Rails.error.report(e, handled: true)
@@ -122,13 +121,20 @@ class Pusher
   def after_write
     @version_id = version.id
     version.rubygem.push_notifiable_owners.each do |notified_user|
-      Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
+      Mailer.gem_pushed(user.id, @version_id, notified_user.id).deliver_later
     end
-    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
-    rubygem.delay.reindex
+    Indexer.perform_later
+    ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
+    StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)
     RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?
     StatsD.increment "push.success"
+  end
+
+  def ld_variation(key:, default:)
+    Rails.configuration.launch_darkly_client.variation(
+      key, user.ld_context, default
+    )
   end
 
   def notify(message, code)
@@ -196,5 +202,24 @@ class Pusher
 
   def version_mfa_required?
     ActiveRecord::Type::Boolean.new.cast(spec.metadata["rubygems_mfa_required"])
+  end
+
+  def write_gem(body, spec)
+    original_name = spec.original_name
+
+    gem_path = "gems/#{original_name}.gem"
+    gem_contents = body.string
+
+    spec.abbreviate
+    spec.sanitize
+    spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
+    spec_contents = Gem.deflate(Marshal.dump(spec))
+
+    # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
+    RubygemFs.instance.store(gem_path, gem_contents)
+    RubygemFs.instance.store(spec_path, spec_contents)
+
+    Fastly.purge(path: gem_path)
+    Fastly.purge(path: spec_path)
   end
 end

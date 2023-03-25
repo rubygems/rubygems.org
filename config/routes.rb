@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     namespace :v2 do
       resources :rubygems, param: :name, only: [], constraints: { name: Patterns::ROUTE_PATTERN } do
         resources :versions, param: :number, only: :show, constraints: {
-          number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}(?=\.yaml\z)|#{Gem::Version::VERSION_PATTERN}/o
+          number: /#{Gem::Version::VERSION_PATTERN}(?=\.(json|yaml|sha256)\z)|#{Gem::Version::VERSION_PATTERN}/o
         }
       end
     end
@@ -98,6 +98,7 @@ Rails.application.routes.draw do
         collection do
           delete :remove
           post :fire
+          post :hook_relay_report, to: 'hook_relay#report', defaults: { format: :json }
         end
       end
 
@@ -263,4 +264,9 @@ Rails.application.routes.draw do
 
     get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN
   end
+
+  ################################################################################
+  # Development routes
+
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end

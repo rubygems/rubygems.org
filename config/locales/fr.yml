@@ -13,12 +13,12 @@ fr:
     la communauté Ruby au sens large. <a href="https://www.fastly.com/">Fastly</a>
     fournisseur de bande passante et du support CDN, <a href="https://www.rubycentral.org/">Ruby
     Central</a> qui couvre les frais d'infrastructure, et qui finance le développement
-    et l'administration des serveurs. <a href="%{sponsors_page}">Apprenez en plus sur nos
-    sponsors et comment ils travaillent entre eux.</a>
+    et l'administration des serveurs. <a href="%{sponsors_page}">Apprenez en plus
+    sur nos sponsors et comment ils travaillent entre eux.</a>
   footer_join_rt_html: Nous avons besoin de votre aide pour financer le travail des
     développeurs/développeuses qui font que RubyGems.org fonctionne de manière fluide
-    pour tout le monde. <a href="https://rubycentral.org/#/portal/signup">Join
-    Ruby Central today</a>.
+    pour tout le monde. <a href="https://rubycentral.org/#/portal/signup">Join Ruby
+    Central today</a>.
   form_disable_with: Veuillez patienter...
   invalid_page: Le numéro de page est hors de portée. Redirection vers la page par
     défaut.
@@ -269,6 +269,16 @@ fr:
       disable_notifications:
       owners_page:
     web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
+    web_hook_disabled:
       title:
       subject:
       subtitle:

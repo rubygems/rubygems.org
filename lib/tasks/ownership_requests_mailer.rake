@@ -8,7 +8,7 @@ namespace :ownership_request_notification do
       rubygem = Rubygem.find(rubygem_id)
 
       rubygem.ownership_request_notifiable_owners.each do |user|
-        OwnersMailer.delay.new_ownership_requests(rubygem_id, user.id)
+        OwnersMailer.new_ownership_requests(rubygem_id, user.id).deliver_later
       end
     end
   end

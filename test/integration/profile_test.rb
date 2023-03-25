@@ -1,6 +1,8 @@
 require "test_helper"
 
 class ProfileTest < SystemTest
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
@@ -16,6 +18,7 @@ class ProfileTest < SystemTest
     sign_in
 
     visit profile_path("nick1")
+
     assert page.has_content? "nick1"
 
     click_link "Edit Profile"
@@ -61,7 +64,9 @@ class ProfileTest < SystemTest
     fill_in "Email address", with: "nick2@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
 
-    click_button "Update"
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      click_button "Update"
+    end
 
     assert page.has_selector? "input[value='nick@example.com']"
     assert page.has_selector? "#flash_notice", text: "You will receive " \
@@ -69,6 +74,7 @@ class ProfileTest < SystemTest
                                                      "for confirming your new email address."
 
     link = last_email_link
+
     assert_not_nil link
 
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
@@ -76,6 +82,7 @@ class ProfileTest < SystemTest
 
       assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
       visit edit_profile_path
+
       assert page.has_selector? "input[value='nick2@example.com']"
     end
   end
@@ -90,6 +97,7 @@ class ProfileTest < SystemTest
     click_button "Update"
 
     visit profile_path("nick1")
+
     refute page.has_content?("Email Me")
   end
 
@@ -131,11 +139,12 @@ class ProfileTest < SystemTest
     sign_in
     visit delete_profile_path
 
+    2.times { perform_enqueued_jobs }
+
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    Delayed::Worker.new.work_off
-    assert_empty Delayed::Job.all
+    assert_no_enqueued_jobs
   end
 
   test "seeing ownership calls and requests" do

@@ -9,5 +9,6 @@ class GemCachePurger
     Rails.cache.delete("deps/v1/#{gem_name}")
     FastlyPurgeJob.perform_later(path: "versions", soft: true)
     FastlyPurgeJob.perform_later(path: "gem/#{gem_name}", soft: true)
+    FastlyPurgeJob.perform_later(key: "gem/#{gem_name}", soft: true)
   end
 end

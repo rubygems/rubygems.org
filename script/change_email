@@ -14,7 +14,7 @@ from_user.generate_confirmation_token
 
 if from_user.save
   puts "#{from_user.name}'s email is now: #{to_email}"
-  Delayed::Job.enqueue(EmailConfirmationMailer.new(from_user.id))
+  Mailer.email_confirmation(from_user).deliver_later
   puts "enqueued email confirmation mail."
 else
   puts "could not save user"

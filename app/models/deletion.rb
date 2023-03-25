@@ -8,6 +8,7 @@ class Deletion < ApplicationRecord
   before_validation :record_metadata
   after_create :remove_from_index, :set_yanked_info_checksum
   after_commit :remove_from_storage, on: :create
+  after_commit :remove_version_contents, on: :create
   after_commit :expire_cache
   after_commit :update_search_index
   after_commit :send_gem_yanked_mail
@@ -17,6 +18,7 @@ class Deletion < ApplicationRecord
   def restore!
     restore_to_index
     restore_to_storage
+    restore_version_contents
     destroy!
   end
 
@@ -43,12 +45,12 @@ class Deletion < ApplicationRecord
 
   def remove_from_index
     @version.update!(indexed: false, yanked_at: Time.now.utc)
-    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
+    Indexer.perform_later
   end
 
   def restore_to_index
     version.update!(indexed: true, yanked_at: nil, yanked_info_checksum: nil)
-    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
+    Indexer.perform_later
   end
 
   def remove_from_storage
@@ -63,13 +65,21 @@ class Deletion < ApplicationRecord
     RubygemFs.instance.restore("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
   end
 
+  def remove_version_contents
+    YankVersionContentsJob.perform_later(version:)
+  end
+
+  def restore_version_contents
+    StoreVersionContentsJob.perform_later(version:)
+  end
+
   def purge_fastly
     FastlyPurgeJob.perform_later(path: "gems/#{@version.full_name}.gem", soft: false)
     FastlyPurgeJob.perform_later(path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz", soft: false)
   end
 
   def update_search_index
-    @version.rubygem.delay.reindex
+    ReindexRubygemJob.perform_later(rubygem: @version.rubygem)
   end
 
   def set_yanked_info_checksum
@@ -79,7 +89,7 @@ class Deletion < ApplicationRecord
 
   def send_gem_yanked_mail
     version.rubygem.push_notifiable_owners.each do |notified_user|
-      Mailer.delay.gem_yanked(user.id, version.id, notified_user.id)
+      Mailer.gem_yanked(user.id, version.id, notified_user.id).deliver_later
     end
   end
 end

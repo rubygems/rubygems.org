@@ -62,7 +62,7 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def save_and_respond(api_key, key)
     if api_key.save
-      Mailer.delay.api_key_created(api_key.id)
+      Mailer.api_key_created(api_key.id).deliver_later
       respond_with key
     else
       respond_with api_key.errors.full_messages.to_sentence, status: :unprocessable_entity

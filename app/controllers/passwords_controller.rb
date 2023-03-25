@@ -1,10 +1,15 @@
 class PasswordsController < Clearance::PasswordsController
+  include MfaExpiryMethods
+
   before_action :validate_confirmation_token, only: %i[edit mfa_edit webauthn_edit]
+  after_action :delete_mfa_expiry_session, only: %i[mfa_edit webauthn_edit]
 
   def edit
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
       setup_mfa_authentication
       setup_webauthn_authentication
+
+      create_new_mfa_expiry
 
       render template: "multifactor_auths/mfa_prompt"
     else
@@ -30,6 +35,8 @@ class PasswordsController < Clearance::PasswordsController
   def mfa_edit
     if mfa_edit_conditions_met?
       render template: "passwords/edit"
+    elsif !session_active?
+      login_failure(t("multifactor_auths.session_expired"))
     else
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
@@ -40,6 +47,9 @@ class PasswordsController < Clearance::PasswordsController
 
     if params[:credentials].blank?
       login_failure(t("credentials_required"))
+      return
+    elsif !session_active?
+      login_failure(t("multifactor_auths.session_expired"))
       return
     end
 
@@ -77,8 +87,7 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def deliver_email(user)
-    mail = ::ClearanceMailer.change_password(user)
-    mail.deliver_later
+    ::ClearanceMailer.change_password(user).deliver_later
   end
 
   def setup_mfa_authentication
@@ -99,7 +108,7 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def mfa_edit_conditions_met?
-    @user.mfa_enabled? && @user.otp_verified?(params[:otp])
+    @user.mfa_enabled? && @user.otp_verified?(params[:otp]) && session_active?
   end
 
   def login_failure(message)

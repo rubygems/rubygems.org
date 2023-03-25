@@ -58,6 +58,7 @@ class AdoptionsControllerTest < ActionController::TestCase
             get :index, params: { rubygem_id: @rubygem.name }
           end
           should respond_with :success
+
           should "have button to create ownership call" do
             assert page.has_selector?("input[value='Create ownership call']")
           end
@@ -68,6 +69,7 @@ class AdoptionsControllerTest < ActionController::TestCase
             get :index, params: { rubygem_id: @rubygem.name }
           end
           should respond_with :success
+
           should "not show any ownership request" do
             assert page.has_content?("No ownership requests for #{@rubygem.name}")
           end
@@ -103,6 +105,7 @@ class AdoptionsControllerTest < ActionController::TestCase
             get :index, params: { rubygem_id: @rubygem.name }
           end
           should respond_with :success
+
           should "have button to create ownership request" do
             assert page.has_selector?("input[value='Create ownership request']")
           end
@@ -114,6 +117,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           get :index, params: { rubygem_id: @rubygem.name }
         end
         should respond_with :success
+
         should "not show any ownership request" do
           assert page.has_content?("There are no ownership calls for #{@rubygem.name}")
         end

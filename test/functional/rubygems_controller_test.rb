@@ -31,6 +31,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "render documentation link" do
         assert page.has_selector?("a#docs")
       end
@@ -164,6 +165,7 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
       css = "small:contains('#{@latest_version.authored_at.to_date.to_fs(:long)}')"
+
       assert page.has_css?(css)
       assert page.has_content?("Links")
     end
@@ -177,16 +179,19 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render plural licenses header for other than one license" do
       @latest_version.update(licenses: nil)
       get :show, params: { id: @rubygem.to_param }
+
       assert page.has_content?("Licenses")
 
       @latest_version.update(licenses: %w[MIT GPL-2])
       get :show, params: { id: @rubygem.to_param }
+
       assert page.has_content?("Licenses")
     end
 
     should "render singular license header for one line license" do
       @latest_version.update(licenses: ["MIT"])
       get :show, params: { id: @rubygem.to_param }
+
       assert page.has_content?("License")
       assert page.has_no_content?("Licenses")
     end
@@ -208,11 +213,13 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@versions[0].number)
       css = "small:contains('#{@versions[0].built_at.to_date.to_fs(:long)}')"
+
       assert page.has_css?(css)
 
       assert page.has_content?("Versions")
       assert page.has_content?(@versions[2].number)
       css = "small:contains('#{@versions[2].built_at.to_date.to_fs(:long)}')"
+
       assert page.has_css?(css)
     end
 
@@ -245,6 +252,7 @@ class RubygemsControllerTest < ActionController::TestCase
         create(:subscription, user: @user, rubygem: @rubygem)
         get :show, params: { id: @rubygem.to_param }
       end
+
       should "have unsubscribe link" do
         assert page.has_link? "Unsubscribe"
       end
@@ -274,6 +282,7 @@ class RubygemsControllerTest < ActionController::TestCase
       get :show, params: { id: @rubygem.to_param }
     end
     should respond_with :success
+
     should "render info about the gem" do
       assert page.has_content?("This gem is not currently hosted on RubyGems.org.")
     end
@@ -314,6 +323,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "show unresolved dependencies" do
       assert page.has_content?(@unresolved.name)
     end
@@ -351,6 +361,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "show runtime dependencies and development dependencies" do
       assert page.has_content?(@runtime.rubygem.name)
     end
@@ -370,6 +381,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "render reserved page" do
       assert page.has_content? "This namespace is reserved by rubygems.org."
     end
@@ -384,6 +396,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
       should "have an subscribe link that goes to the sign in page" do
         assert page.has_selector?("a[href='#{sign_in_path}']")
       end

@@ -13,8 +13,9 @@ es:
   footer_sponsors_html: RubyGems.org es posible gracias la colaboración de la fantástica
     comunidad de Ruby. <a href="https://www.fastly.com/">Fastly</a> provee ancho de
     banda y soporte de CDN <a href="https://www.rubycentral.org/">Ruby Central</a>
-    cubre los costos de infraestructura y financia el desarrollo y el trabajo en los servidores.
-    <a href="%{sponsors_page}">Aprende más sobre nuestros sponsors y cómo trabajan en conjunto</a>
+    cubre los costos de infraestructura y financia el desarrollo y el trabajo en los
+    servidores. <a href="%{sponsors_page}">Aprende más sobre nuestros sponsors y cómo
+    trabajan en conjunto</a>
   footer_join_rt_html: Necesitamos tu ayuda para financiar el tiempo de los desarrolladores
     que mantienen RubyGems.org funcionando correctamente para todo el mundo. <a href="https://rubycentral.org/#/portal/signup">Únete
     a Ruby Central hoy</a>.
@@ -266,6 +267,16 @@ es:
       disable_notifications:
       owners_page:
     web_hook_deleted:
+      title:
+      subject:
+      subtitle:
+      body_text:
+      body_html:
+      global_text:
+      global_html:
+      gem_text:
+      gem_html:
+    web_hook_disabled:
       title:
       subject:
       subtitle:

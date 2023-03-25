@@ -56,6 +56,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         params: { email_confirmation: { email: @user.email } },
         headers: { REMOTE_ADDR: @ip_address }
       follow_redirect!
+
       assert_response :success
     end
 
@@ -77,6 +78,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         get "/gems/#{@rubygem.name}/owners/resend_confirmation",
             headers: { REMOTE_ADDR: @ip_address }
         follow_redirect!
+
         assert_response :success
       end
     end
@@ -376,6 +378,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         post "/email_confirmations",
           params: { email_confirmation: { email: @user.email } },
           headers: { REMOTE_ADDR: @ip_address }
+
         assert_response :too_many_requests
       end
 
@@ -383,6 +386,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         exceed_email_limit_for("email_confirmations/email")
 
         post "/email_confirmations", params: { email_confirmation: { email: @user.email } }
+
         assert_response :too_many_requests
       end
     end
@@ -402,6 +406,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         exceed_email_limit_for("password/email")
 
         post "/passwords", params: { password: { email: @user.email } }
+
         assert_response :too_many_requests
       end
     end
