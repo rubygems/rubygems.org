@@ -4,6 +4,7 @@ class VersionContentsTest < SystemTest
   include ActiveJob::TestHelper
 
   setup do
+    RubygemFs.mock!
     @gem = gem_file("bin_and_img-0.1.0.gem")
     @user = create(:user)
     Pusher.new(@user, @gem).process
@@ -13,12 +14,12 @@ class VersionContentsTest < SystemTest
     @rubygem = @latest_version.rubygem
     StoreVersionContentsJob.perform_now(version: @latest_version)
 
-    @dirs = %w[exe/ img/ lib/]
-    @files = %w[.gitignore .rspec Gemfile LICENSE.txt README.md bin_and_img.gemspec]
   end
 
-  def contents_path(path)
-    rubygem_version_contents_path(@rubygem.name, @latest_version.slug, path:)
+  def contents_path(path = nil)
+    url = "/gems/#{@rubygem.name}/versions/#{@latest_version.slug}/contents"
+    url += "/#{path}" if path
+    url
   end
 
   context "routing to index" do
@@ -63,6 +64,20 @@ class VersionContentsTest < SystemTest
     end
   end
 
+  context "GET missing" do
+    should "render 404" do
+      visit "/gems/#{@rubygem.name}/versions/0.0.0/contents"
+
+      assert page.has_content?("Page not found"), "404 is not present"
+    end
+
+    should "render 404 on missing path" do
+      visit "/gems/#{@rubygem.name}/versions/0.0.0/contents/missing"
+
+      assert page.has_content?("Page not found"), "404 is not present"
+    end
+  end
+
   context "GET contents" do
     should "render contents of the gem version" do
       visit "/gems/#{@rubygem.name}/versions/#{@latest_version.slug}/contents"
@@ -70,13 +85,24 @@ class VersionContentsTest < SystemTest
       assert page.has_content?(@rubygem.name), "Rubygem name is not present"
       assert page.has_content?(@latest_version.number), "Version number is not present"
 
-      @dirs.each do |dir|
+      assert page.has_link?("#{@latest_version.full_name}.gem", href: contents_path), "rubygem link is not present"
+      %w[exe/ img/ lib/].each do |dir|
         assert page.has_link?(dir, href: contents_path(dir)), "Directory link #{dir.inspect} is not present"
       end
-
-      @files.each do |file|
-        assert page.has_link?(file, href: contents_path(dir)), "File link #{file.inspect} is not present"
+      %w[.gitignore .rspec Gemfile LICENSE.txt README.md bin_and_img.gemspec].each do |file|
+        assert page.has_link?(file, href: contents_path(file)), "File link #{file.inspect} is not present"
       end
+    end
+
+    should "render contents of a nested directory" do
+      visit "/gems/#{@rubygem.name}/versions/#{@latest_version.slug}/contents/lib/"
+
+      assert page.has_content?(@rubygem.name), "Rubygem name is not present"
+      assert page.has_content?(@latest_version.number), "Version number is not present"
+
+      assert page.has_link?("#{@latest_version.full_name}.gem", href: contents_path), "rubygem link is not present"
+      assert page.has_link?("ext/", href: contents_path("lib/ext/")), "Directory link ext/ is not present"
+      assert page.has_link?("bin_and_img.rb", href: contents_path("lib/bin_and_img.rb")), "File link bin_and_img.rb is not present"
     end
   end
 
@@ -87,6 +113,7 @@ class VersionContentsTest < SystemTest
       assert page.has_content?(@rubygem.name), "Rubygem name is not present"
       assert page.has_content?(@latest_version.number), "Version number is not present"
 
+      assert page.has_link?("#{@latest_version.full_name}.gem", href: contents_path), "rubygem link is not present"
       assert page.has_content?("Gem::Specification.new do |spec|"), "Gemspec content is not present"
     end
   end

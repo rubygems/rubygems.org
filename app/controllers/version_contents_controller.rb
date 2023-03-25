@@ -6,18 +6,16 @@ class VersionContentsController < ApplicationController
 
   def index
     @contents = ContentPresenter.new(@rubygem, @latest_version, "")
-    @dirs, @files = @latest_version.manifest.ls
-    @versions = @rubygem.public_versions
+    return render_not_found if @contents.blank?
   end
 
   def show
     @contents = ContentPresenter.new(@rubygem, @latest_version, params.require(:path))
+    return render_not_found if @contents.blank?
+
     @entry = @contents.entry
     return render :show if @entry
 
-    @dirs, @files = @latest_version.manifest.ls(@path)
-    return render_not_found if @dirs.blank? && @files.blank?
-    @versions = @rubygem.public_versions
     render :index
   end
 end

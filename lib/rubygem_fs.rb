@@ -2,18 +2,59 @@
 
 require "aws-sdk-s3"
 
+
 module RubygemFs
+  class Instrumenter
+    def initialize(rubygem_fs)
+      @rubygem_fs = rubygem_fs
+      @local = @rubygem_fs.is_a?(RubygemFs::Local)
+    end
+
+    # Don't instrument boring methods
+    delegate :in_bucket, :bucket, :base_dir, to: :@rubygem_fs
+
+    def get(key)
+      instrument(:get, key:) { @rubygem_fs.get(key) }
+    end
+
+    def head(key)
+      instrument(:head, key:) { @rubygem_fs.head(key) }
+    end
+
+    def store(key, body, **options)
+      instrument(:store, key:, options:) { @rubygem_fs.store(key, body, **options) }
+    end
+
+    def ls(root, path = nil)
+      instrument(:ls, root:, path:) { @rubygem_fs.ls(root, path) }
+    end
+
+    def each_key(**options, &)
+      instrument(:each_key, **options) { @rubygem_fs.each_key(**options) }
+    end
+
+    def remove(*keys, &)
+      instrument(:remove, keys:) { @rubygem_fs.remove(*keys) }
+    end
+
+    private
+
+    def instrument(method, **payload, &)
+      ActiveSupport::Notifications.instrument("rubygem_fs.#{method}", bucket: bucket, local: @local, **payload, &)
+    end
+  end
+
   def self.instance
     @fs ||=
       if Rails.env.development?
-        RubygemFs::Local.new
+        RubygemFs::Instrumenter.new(RubygemFs::Local.new)
       else
         RubygemFs::S3.new
       end
   end
 
   def self.contents
-    @contents ||= instance.in_bucket Gemcutter.config.s3_contents_bucket
+    @contents ||= Instrumenter.new instance.in_bucket(Gemcutter.config.s3_contents_bucket)
   end
 
   def self.mock!
@@ -106,7 +147,7 @@ module RubygemFs
     def remove(*keys)
       @metadata&.remove(*keys)
       keys.flatten.reject do |key|
-        path_for(key).ascend.take_while { |entry| descendant?(entry) }.each(&:delete)
+        path_for(key).ascend.take_while { |entry| descendant?(entry) && entry.delete }
         true
       rescue Errno::ENOTEMPTY
         true

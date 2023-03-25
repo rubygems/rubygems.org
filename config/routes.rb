@@ -170,7 +170,7 @@ Rails.application.routes.draw do
       resources :versions, only: %i[show index] do
         get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
         get '/contents', to: 'version_contents#index', as: :contents
-        get '/contents/*path', to: 'version_contents#show', as: :content, constraints: { path: /.*/ }
+        get '/contents/*path', to: 'version_contents#show', as: :content, constraints: { path: /.*/, format: /.*/ }
       end
       resources :reverse_dependencies, only: %i[index]
       resources :owners, only: %i[index destroy create], param: :handle do

@@ -31,10 +31,15 @@
               <td><%= link_to "..", rubygem_version_content_path(@rubygem, @latest_version.slug, path: @contents.parent_path) %></td>
             </tr>
           <% end %>
-          <% @contents.each_dir do |dir, path| %>
+          <% @contents.each_dir do |dir, path, last_modified_version| %>
             <tr>
               <td width="20px"><%= folder_icon %></td>
               <td><%= link_to dir, rubygem_version_content_path(@rubygem, @latest_version.slug, path: path) %></td>
+              <td>
+                <% if last_modified_version %>
+                  <%= link_to_unless_current last_modified_version.slug, rubygem_version_content_path(@rubygem.name, last_modified_version.number, path: @contents.path), title:  %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
           <% @contents.each_file do |file, path, last_modified_version, entry| %>
@@ -53,7 +58,7 @@
     </div>
 
     <div class="gem__navigation">
-      <%# These go to not found if the target version doesn't have the same path %>
+      <%# TODO: These go to not found if the target version doesn't have the same path %>
       <% if @latest_version.previous.present? %>
         <%= link_to "← Previous version", rubygem_version_content_path(@rubygem, @latest_version.previous.number, path: @contents.path), class: "gem__previous__version"  %>
       <% end %>

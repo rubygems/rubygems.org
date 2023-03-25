@@ -42,9 +42,11 @@
             <span>|</span>
             <%= number_to_human_size @entry.size %>
             <span>|</span>
-            Since
             <% last_modified_version = @contents.last_modified_version(@entry) %>
-            <%= link_to last_modified_version.slug, rubygem_version_content_path(@rubygem.name, last_modified_version.slug, path: @contents.path) %>
+            <% if last_modified_version %>
+              Since
+              <%= link_to last_modified_version.slug, rubygem_version_content_path(@rubygem.name, last_modified_version.slug, path: @contents.path) %>
+            <% end %>
           </div>
           <pre><code><%= @entry.body %></code></pre>
         </div>
@@ -54,7 +56,7 @@
         </div>
       <% else %>
         <div class="gem__code-wrap">
-          We do not store the contents of this file type.
+          Rubygems.org does not store the contents of this file type.
         </div>
       <% end %>
     </div>

@@ -23,7 +23,7 @@ class VersionManifest
     # TODO: validation of path
     base = Pathname.new(path_root)
     base = base.join(path) if path.to_s.present?
-    dirs, files = fs.ls(base)
+    dirs, files = fs.ls(base.to_s)
     [
       dirs.map { |key| key.delete_prefix base.to_s },
       files.map { |key| key.delete_prefix base.to_s }

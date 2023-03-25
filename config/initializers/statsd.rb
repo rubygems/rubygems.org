@@ -129,6 +129,10 @@ ActiveSupport::Notifications.subscribe(/performance/) do |name, _, _, _, payload
   statsd_measure_performance(name, payload)
 end
 
+ActiveSupport::Notifications.subscribe(/rubygem_fs/) do |event|
+  Rails.logger.info "#{event.name} #{event.payload.inspect}"
+end
+
 Rails.application.config.after_initialize do
   ActiveSupport.on_load(:active_job) { include JobTags }
 end
