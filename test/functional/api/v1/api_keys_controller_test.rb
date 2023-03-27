@@ -314,6 +314,55 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       end
     end
 
+    context "when a user provides an OTP code" do
+      setup do
+        @user = create(:user)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        authorize_with("#{@user.email}:#{@user.password}")
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+      end
+
+      should_return_api_key_successfully
+    end
+
+    context "when a user has webauthn enabled and no totp code is provided" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        authorize_with("#{@user.email}:#{@user.password}")
+        post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+      end
+
+      should_deny_access_missing_otp
+    end
+
+    context "when a user has webauthn enabled and totp code is provided" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        @verification = create(:webauthn_verification, user: @user)
+        authorize_with("#{@user.email}:#{@user.password}")
+        @request.env["HTTP_OTP"] = @verification.otp
+        post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+      end
+
+      should_return_api_key_successfully
+    end
+
+    context "when a user has webauthn enabled and totp code is provided but invalid" do
+      setup do
+        @user = create(:user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        @verification = create(:webauthn_verification, user: @user)
+        authorize_with("#{@user.email}:#{@user.password}")
+        @request.env["HTTP_OTP"] = "123456"
+        post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+      end
+
+      should_deny_access_incorrect_otp
+    end
+
     context "when user has enabled MFA for UI and API" do
       setup do
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)

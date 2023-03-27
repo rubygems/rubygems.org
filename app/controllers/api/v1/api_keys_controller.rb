@@ -52,7 +52,7 @@ class Api::V1::ApiKeysController < Api::BaseController
       return render_mfa_strong_level_required_error if user.mfa_required_weak_level_enabled?
 
       yield
-    elsif user&.mfa_enabled?
+    elsif user&.mfa_enabled? || user&.webauthn_credentials.present?
       prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
       render plain: prompt_text, status: :unauthorized
     else

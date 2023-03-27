@@ -124,6 +124,12 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
       end
 
+      should "return true when correct and if mfa is disabled" do
+        webauthn_verification = create(:webauthn_verification, user: @user)
+
+        assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
+      end
+
       should "return false when incorrect" do
         @user.enable_mfa!(@seed, :ui_and_gem_signin)
         create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx7U1i")
@@ -282,6 +288,11 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       end
 
       should "return false when incorrect" do
+        refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+      end
+
+      should "return false if the mfa_seed is blank" do
+        @user.update!(mfa_seed: nil)
         refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
     end
