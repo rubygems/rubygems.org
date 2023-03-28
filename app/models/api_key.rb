@@ -70,7 +70,7 @@ class ApiKey < ApplicationRecord
   end
 
   def rubygem_scope_definition
-    return if (APPLICABLE_GEM_API_SCOPES & enabled_scopes).any?
+    return if APPLICABLE_GEM_API_SCOPES.intersect?(enabled_scopes)
     errors.add :rubygem, "scope can only be set for push/yank rubygem, and add/remove owner scopes"
   end
 

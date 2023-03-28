@@ -5,3 +5,4 @@
 
 # Default Content-Type for api/v1/dependencies
 Mime::Type.register "application/octet-stream", :marshal
+Mime::Type.register "text/plain", :sha256

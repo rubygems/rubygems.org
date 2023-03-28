@@ -8,11 +8,13 @@ class Avo::AdminGitHubUsersTest < ActionDispatch::IntegrationTest
     admin_sign_in_as user
 
     get avo.resources_admin_github_users_path
+
     assert_response :success
     assert page.has_content? user.login
     assert page.has_content? user.github_id
 
     get avo.resources_admin_github_user_path(user)
+
     assert_response :success
     assert page.has_content? user.name
     assert page.has_content? user.github_id

@@ -15,6 +15,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
   should "have security device form" do
     sign_in
     visit edit_settings_path
+
     assert_text "Register a new security device"
     assert_text "SECURITY DEVICE"
     assert_text "You don't have any security devices"
@@ -27,6 +28,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     @primary = create(:webauthn_credential, :primary, user: @user)
     @backup = create(:webauthn_credential, :backup, user: @user)
     visit edit_settings_path
+
     assert_text "SECURITY DEVICE"
     assert_no_text "You don't have any security devices"
     assert_text "Register a new security device"
@@ -41,10 +43,12 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     sign_in
     @webauthn_credential = create(:webauthn_credential, user: @user)
     visit edit_settings_path
+
     assert_text "SECURITY DEVICE"
     assert_no_text "You don't have any security devices"
     assert_text @webauthn_credential.nickname
     click_on "Delete"
+
     assert_text "You don't have any security devices"
     assert_no_text @webauthn_credential.nickname
   end
@@ -52,6 +56,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
   should "be able to create security devices" do
     sign_in
     visit edit_settings_path
+
     assert_text "You don't have any security devices"
 
     options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new

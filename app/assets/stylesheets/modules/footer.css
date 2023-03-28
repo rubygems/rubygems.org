@@ -93,50 +93,46 @@
     opacity: 1; }
   .footer__sponsor:focus {
     outline: none; }
-  .footer__sponsor:nth-child(1) {
+  .footer__sponsor__ruby_central {
     background-position: 0 4px; }
   @media (max-width: 1039px) {
     .footer__sponsor {
       width: 100px; }
-    .footer__sponsor:nth-child(2) {
+    .footer__sponsor__dockyard {
       background-position: 0 -232px; }
-    .footer__sponsor:nth-child(3) {
+    .footer__sponsor__dnsimple {
       background-position: 0 -330px; }
-    .footer__sponsor:nth-child(4) {
-      background-position: 0 -417px; }
-    .footer__sponsor:nth-child(5) {
+    .footer__sponsor__datadog {
       background-position: 0 -695px; }
-    .footer__sponsor:nth-child(6) {
+    .footer__sponsor__runscope {
       background-position: 0 -526px; }
-    .footer__sponsor:nth-child(7) {
+    .footer__sponsor__fastly {
       background-position: 0 -606px; }
-    .footer__sponsor:nth-child(8) {
+    .footer__sponsor__honeybadger {
       background-position: 0 -804px; }
-    .footer__sponsor:nth-child(9) {
+    .footer__sponsor__domainr {
       background-position: 0 -892px; }
-    .footer__sponsor:nth-child(10) {
+    .footer__sponsor__whitesource {
       background-position: 0 -983px; }
     }
   @media (min-width: 1040px) {
     .footer__sponsor {
       width: 90px; }
-    .footer__sponsor:nth-child(2) {
+    .footer__sponsor__dockyard {
       background-position: 0 -204px; }
-    .footer__sponsor:nth-child(3) {
+    .footer__sponsor__dnsimple {
       background-position: 0 -291px; }
-    .footer__sponsor:nth-child(4) {
-      background-position: 0 -372px; }
-    .footer__sponsor:nth-child(5) {
+    .footer__sponsor__datadog {
       background-position: 0 -634px; }
-    .footer__sponsor:nth-child(6) {
+    .footer__sponsor__runscope {
       background-position: 0 -469px; }
-    .footer__sponsor:nth-child(7) {
+    .footer__sponsor__fastly {
       background-position: 0 -541px; }
-    .footer__sponsor:nth-child(8) {
+    .footer__sponsor__honeybadger {
       background-position: 0 -717px; }
-    .footer__sponsor:nth-child(9) {
+    .footer__sponsor__domainr {
       background-position: 0 -804px; }
-    .footer__sponsor:nth-child(10) {
+    .footer__sponsor__whitesource {
       background-position: 0 -885px; }
     }
   @media (max-width: 579px) {

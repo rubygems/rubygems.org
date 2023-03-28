@@ -86,6 +86,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   def redirect_test_mfa_disabled(path)
     sign_in
     visit path
+
     assert(page.has_content?("Enabling multi-factor auth"), "#{path} was not redirected to mfa setup page")
 
     totp = ROTP::TOTP.new(mfa_key)
@@ -97,6 +98,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     check "ack"
     click_button "Continue"
     yield if block_given?
+
     assert_equal path, current_path, "was not redirected back to original destination: #{path}"
   end
 
@@ -104,12 +106,14 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     sign_in
     @user.enable_mfa!(@seed, :ui_only)
     visit path
+
     assert page.has_content? "Edit settings"
 
     fill_in "otp", with: @totp.now
     change_auth_level "UI and gem signin"
 
     yield if block_given?
+
     assert_equal path, current_path, "was not redirected back to original destination: #{path}"
   end
 

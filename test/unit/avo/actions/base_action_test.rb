@@ -131,8 +131,7 @@ class BaseActionTest < ActiveSupport::TestCase
       "auditable_id" => user.id,
       "admin_github_user_id" => admin.id,
       "audited_changes" => {
-        "records" => {
-        },
+        "records" => {},
         "fields" => {},
         "arguments" => {},
         "models" => [user.to_global_id.uri.to_s]

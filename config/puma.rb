@@ -43,3 +43,7 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 before_fork do
   sleep 1
 end
+
+on_restart do
+  Rails.configuration.launch_darkly_client&.close
+end

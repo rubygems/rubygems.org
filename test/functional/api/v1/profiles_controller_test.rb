@@ -53,6 +53,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
+
         should "not return owner mfa information by default" do
           refute_mfa_info_included @user.mfa_level
         end
@@ -64,6 +65,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
+
         should "hide the user email by default" do
           refute response_body.key?("email")
         end
@@ -81,6 +83,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
+
         should "return owner mfa information" do
           assert_mfa_info_included @user.mfa_level
         end

@@ -5,6 +5,7 @@ require "test_helper"
 class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
   should "route new paths to new controller" do
     route = { controller: "api/v1/webauthn_verifications", action: "create" }
+
     assert_recognizes(route, { path: "/api/v1/webauthn_verification", method: :post })
   end
 
@@ -39,11 +40,13 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       else
         should "return a YAML or JSON document with path token" do
           response = YAML.safe_load(@response.body)
+
           assert_equal response["path"], "http://test.host/webauthn_verification/#{@token}"
         end
 
         should "return a YAML or JSON document with path expiry" do
           response = YAML.safe_load(@response.body)
+
           assert_equal "2023-01-01T00:02:00.000Z", response["expiry"]
         end
       end
@@ -91,6 +94,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unprocessable_entity
+
       should "tell the user they don't have a WebAuthn hardware token" do
         assert_match "You don't have any security devices", response.body
       end

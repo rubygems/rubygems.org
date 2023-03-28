@@ -6,7 +6,7 @@ module SearchesHelper
     return false if suggestions.blank?
     return false if suggestions["suggest_name"].blank?
     return false if suggestions["suggest_name"][0]["options"].empty?
-    suggestions.map { |_k, v| v.first["options"] }.flatten.map { |v| v["text"] }.uniq
+    suggestions.map { |_k, v| v.first["options"] }.flatten.pluck("text").uniq
   end
 
   def aggregation_match_count(aggregration, field)

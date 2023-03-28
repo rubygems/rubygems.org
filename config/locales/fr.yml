@@ -555,6 +555,9 @@ fr:
       sha_256_checksum: Total de contrôle SHA 256
       signature_period:
       expired:
+    version_navigation:
+      previous_version: "← Version précédente"
+      next_version: Version suivante →
     index:
       downloads: Téléchargements
       title: Gems

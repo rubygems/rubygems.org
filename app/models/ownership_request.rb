@@ -28,7 +28,7 @@ class OwnershipRequest < ApplicationRecord
     closed_ids = ids
     return false unless update_all(status: :closed) == closed_ids.size
     closed_ids.each do |id|
-      OwnersMailer.delay.ownership_request_closed(id)
+      OwnersMailer.ownership_request_closed(id).deliver_later
     end
     true
   end

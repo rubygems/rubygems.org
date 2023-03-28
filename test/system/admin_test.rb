@@ -5,9 +5,11 @@ class AdminTest < ApplicationSystemTestCase
     @admin_user = create(:admin_github_user, :is_admin)
 
     visit "/admin"
+
     assert_content("Log in with GitHub")
     assert_content(@admin_user.login)
     click_link @admin_user.login
+
     assert_content("Welcome to the RubyGems.org admin dashboard!")
   end
 end

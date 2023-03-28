@@ -10,7 +10,7 @@ class OwnershipRequestsController < ApplicationController
 
     @ownership_request = @rubygem.ownership_requests.new(ownership_call: @rubygem.ownership_call, user: current_user, note: params[:note])
     if @ownership_request.save
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t("ownership_requests.create.success_notice")
+      redirect_to rubygem_adoptions_path(@rubygem), notice: t(".success_notice")
     else
       redirect_to rubygem_adoptions_path(@rubygem), alert: @ownership_request.errors.full_messages.to_sentence
     end
@@ -19,10 +19,10 @@ class OwnershipRequestsController < ApplicationController
   def update
     if status_params == "close" && @ownership_request.close(current_user)
       notify_request_closed
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t("ownership_requests.update.closed_notice")
+      redirect_to rubygem_adoptions_path(@rubygem), notice: t(".closed_notice")
     elsif status_params == "approve" && @ownership_request.approve(current_user)
       notify_request_approved
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t("ownership_requests.update.approved_notice", name: current_user.display_id)
+      redirect_to rubygem_adoptions_path(@rubygem), notice: t(".approved_notice", name: current_user.display_id)
     else
       redirect_to rubygem_adoptions_path(@rubygem), alert: t("try_again")
     end
@@ -45,18 +45,20 @@ class OwnershipRequestsController < ApplicationController
   end
 
   def notify_request_closed
-    OwnersMailer.delay.ownership_request_closed(@ownership_request.id) unless @ownership_request.user == current_user
+    OwnersMailer.ownership_request_closed(@ownership_request.id).deliver_later unless @ownership_request.user == current_user
   end
 
   def notify_request_approved
     @rubygem.ownership_notifiable_owners.each do |notified_user|
-      OwnersMailer.delay.owner_added(notified_user.id,
+      OwnersMailer.owner_added(
+        notified_user.id,
         @ownership_request.user_id,
         current_user.id,
-        @ownership_request.rubygem_id)
+        @ownership_request.rubygem_id
+      ).deliver_later
     end
 
-    OwnersMailer.delay.ownership_request_approved(@ownership_request.id)
+    OwnersMailer.ownership_request_approved(@ownership_request.id).deliver_later
   end
 
   def status_params

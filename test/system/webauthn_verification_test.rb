@@ -80,6 +80,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   def assert_link_is_expired
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
+
     assert page.has_content?("The token in the link you used has either expired or been used already.")
   end
 

@@ -1,4 +1,6 @@
 class Rack::Attack
+  include SemanticLogger::Loggable
+
   REQUEST_LIMIT = 100
   EXP_BASE_REQUEST_LIMIT = 300
   PUSH_LIMIT = 400
@@ -264,7 +266,7 @@ class Rack::Attack
         }
       }
     }
-    Rails.logger.info event.to_json
+    logger.info 'Rack::Attack Throttling', event.to_json
   end
 
   self.throttled_response_retry_after_header = true

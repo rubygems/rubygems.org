@@ -13,15 +13,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
         name: user.login
       }
     )
-    @octokit_stubs.post("/graphql",
-      {
-        query: GitHubOAuthable::INFO_QUERY,
-        variables: { organization_name: "rubygems" }
-      }.to_json) do |_env|
-      [200, { "Content-Type" => "application/json" }, JSON.generate(
-        data: user.info_data
-      )]
-    end
+
+    stub_github_info_request(user.info_data)
 
     visit avo.root_path
     click_button "Log in with GitHub"
@@ -33,8 +26,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
 
-    rubygem = create(:rubygem)
+    rubygem = create(:rubygem, created_at: 40.days.ago)
     rubygem_attributes = rubygem.attributes.with_indifferent_access
+
+    refute_predicate rubygem, :pushable?
 
     visit avo.resources_rubygem_path(rubygem)
 
@@ -48,12 +43,14 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
     click_button "Release namespace"
+
     page.assert_text "Action ran successfully!"
     page.assert_text rubygem.to_global_id.uri.to_s
 
     rubygem.reload
 
     assert_equal 0, rubygem.protected_days
+    assert_predicate rubygem, :pushable?
 
     audit = rubygem.audits.sole
 

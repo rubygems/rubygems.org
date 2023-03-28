@@ -502,6 +502,9 @@ ja:
       sha_256_checksum: SHA 256チェックサム
       signature_period:
       expired:
+    version_navigation:
+      previous_version:
+      next_version:
     index:
       downloads: ダウンロード
       title: Gems

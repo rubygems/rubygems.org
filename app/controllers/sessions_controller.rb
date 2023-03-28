@@ -1,8 +1,11 @@
 class SessionsController < Clearance::SessionsController
+  include MfaExpiryMethods
+
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify authenticate]
   before_action :ensure_not_blocked, only: :create
+  after_action :delete_mfa_expiry_session, only: %i[webauthn_create mfa_create]
 
   def create
     @user = find_user
@@ -12,7 +15,7 @@ class SessionsController < Clearance::SessionsController
       setup_mfa_authentication
 
       session[:mfa_login_started_at] = Time.now.utc.to_s
-      session[:mfa_expires_at] = 15.minutes.from_now.to_s
+      create_new_mfa_expiry
 
       render "sessions/prompt"
     else
@@ -54,7 +57,6 @@ class SessionsController < Clearance::SessionsController
   ensure
     session.delete(:webauthn_authentication)
     session.delete(:mfa_login_started_at)
-    session.delete(:mfa_expires_at)
   end
 
   def mfa_create
@@ -72,7 +74,6 @@ class SessionsController < Clearance::SessionsController
     end
   ensure
     session.delete(:mfa_login_started_at)
-    session.delete(:mfa_expires_at)
   end
 
   def verify
@@ -169,11 +170,6 @@ class SessionsController < Clearance::SessionsController
   def setup_mfa_authentication
     return if @user.mfa_disabled?
     session[:mfa_user] = @user.id
-  end
-
-  def session_active?
-    return false if session[:mfa_expires_at].nil?
-    session[:mfa_expires_at] > Time.current
   end
 
   def login_conditions_met?

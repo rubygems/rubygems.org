@@ -15,7 +15,6 @@ class ParallelPusherTest < ActiveSupport::TestCase
       @rubygem = Rubygem.find_by(name: "hola")
       @rubygem.versions.destroy_all
       @rubygem.destroy
-      Delayed::Job.delete_all
       GemDownload.delete_all
       RubygemFs.mock!
     end
@@ -41,6 +40,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
       latch.wait
       expected_sha = Digest::SHA2.base64digest(@fs.get("gems/hola-0.0.0.gem"))
+
       assert_equal expected_sha, Version.last.sha256
     end
   end

@@ -1,6 +1,7 @@
 require "test_helper"
 
 class OwnerTest < SystemTest
+  include ActiveJob::TestHelper
   include RubygemsHelper
 
   setup do
@@ -10,15 +11,19 @@ class OwnerTest < SystemTest
     @ownership = create(:ownership, user: @user, rubygem: @rubygem)
 
     sign_in_as(@user)
-    ActionMailer::Base.deliveries.clear
   end
 
   test "adding owner via UI with email" do
     visit_ownerships_page
 
     fill_in "Email / Handle", with: @other_user.email
-    click_button "Add Owner"
+
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      click_button "Add Owner"
+    end
+
     owners_table = page.find(:css, ".owners__table")
+
     within_element owners_table do
       assert_selector(:css, "a[href='#{profile_path(@other_user.display_id)}']")
     end
@@ -27,7 +32,8 @@ class OwnerTest < SystemTest
     assert_cell(@other_user, "Added By", @user.handle)
     assert_cell(@other_user, "Confirmed At", "")
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
     assert_emails 1
     assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
@@ -36,12 +42,16 @@ class OwnerTest < SystemTest
     visit_ownerships_page
 
     fill_in "Email / Handle", with: @other_user.handle
-    click_button "Add Owner"
+
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      click_button "Add Owner"
+    end
 
     assert_cell(@other_user, "Confirmed", "Pending")
     assert_cell(@other_user, "Added By", @user.handle)
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
     assert_emails 1
     assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
@@ -65,6 +75,7 @@ class OwnerTest < SystemTest
         assert_selector "img[src='/images/x.svg']"
       end
     end
+
     assert_cell(@user, "Confirmed At", @ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z"))
   end
 
@@ -74,13 +85,14 @@ class OwnerTest < SystemTest
     visit_ownerships_page
 
     within_element owner_row(@other_user) do
-      click_button "Remove"
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        click_button "Remove"
+      end
     end
 
     refute page.has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
 
-    ActionMailer::Base.deliveries.clear
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_emails 1
     assert_contains last_email.subject, "You were removed as an owner from #{@rubygem.name} gem"
@@ -97,7 +109,8 @@ class OwnerTest < SystemTest
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
     assert page.has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
 
-    Delayed::Worker.new.work_off
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
     assert_no_emails
   end
 
@@ -106,6 +119,7 @@ class OwnerTest < SystemTest
     travel 15.minutes
     visit rubygem_path(@rubygem)
     click_link "Ownership"
+
     assert page.has_field? "Password"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
@@ -114,37 +128,45 @@ class OwnerTest < SystemTest
   test "incorrect password on verify shows error" do
     visit rubygem_path(@rubygem)
     click_link "Ownership"
+
     assert page.has_css? "#verify_password_password"
     fill_in "Password", with: "wrong password"
     click_button "Confirm"
+
     assert page.has_selector? "#flash_alert", text: "This request was denied. We could not verify your password."
   end
 
   test "incorrect password error does not persist after correct password" do
     visit rubygem_path(@rubygem)
     click_link "Ownership"
+
     assert page.has_css? "#verify_password_password"
     fill_in "Password", with: "wrong password"
     click_button "Confirm"
+
     assert page.has_selector? "#flash_alert", text: "This request was denied. We could not verify your password."
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
+
     assert page.has_no_selector? "#flash_alert"
   end
 
   test "clicking on confirmation link confirms the account" do
     @unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: @rubygem)
     confirmation_link = confirm_rubygem_owners_url(@rubygem, token: @unconfirmed_ownership.token)
-    visit confirmation_link
+
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      visit confirmation_link
+    end
 
     assert_equal page.current_path, rubygem_path(@rubygem)
     assert page.has_selector? "#flash_notice", text: "You were added as an owner to #{@rubygem.name} gem"
 
-    Delayed::Worker.new.work_off
     assert_emails 2
 
     owner_added_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
+
     assert_contains owner_added_email_subjects, "You were added as an owner to #{@rubygem.name} gem"
     assert_contains owner_added_email_subjects, "User #{@unconfirmed_ownership.user.handle} was added as an owner to #{@rubygem.name} gem"
   end
@@ -160,27 +182,31 @@ class OwnerTest < SystemTest
 
   test "shows ownership link when is owner" do
     visit rubygem_path(@rubygem)
+
     assert page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
   end
 
   test "hides ownership link when not owner" do
-    page.find("a[href='/sign_out']").click
+    page.click_link(nil, href: "/sign_out")
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem)
+
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
   end
 
   test "hides ownership link when not signed in" do
-    page.find("a[href='/sign_out']").click
+    page.click_link(nil, href: "/sign_out")
     visit rubygem_path(@rubygem)
+
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
   end
 
   test "shows resend confirmation link when unconfirmed" do
-    page.find("a[href='/sign_out']").click
+    page.click_link(nil, href: "/sign_out")
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem)
+
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
     assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owners_path(@rubygem)}']")
   end

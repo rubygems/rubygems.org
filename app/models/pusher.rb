@@ -121,13 +121,20 @@ class Pusher
   def after_write
     @version_id = version.id
     version.rubygem.push_notifiable_owners.each do |notified_user|
-      Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
+      Mailer.gem_pushed(user.id, @version_id, notified_user.id).deliver_later
     end
     Indexer.perform_later
-    rubygem.delay.reindex
+    ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
+    StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)
     RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?
     StatsD.increment "push.success"
+  end
+
+  def ld_variation(key:, default:)
+    Rails.configuration.launch_darkly_client.variation(
+      key, user.ld_context, default
+    )
   end
 
   def notify(message, code)

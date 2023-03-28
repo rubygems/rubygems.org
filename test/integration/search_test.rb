@@ -32,6 +32,7 @@ class SearchTest < SystemTest
     assert page.has_content? "Yanked (1)"
 
     click_link "Yanked (1)"
+
     assert page.has_content? "LDAP"
     assert page.has_selector? "a[href='#{rubygem_path('LDAP')}']"
   end
@@ -64,6 +65,7 @@ class SearchTest < SystemTest
     import_and_refresh
 
     visit "/search?query=ruby&original_script_name=javascript:alert(1)//&script_name=javascript:alert(1)//"
+
     assert page.has_content? "ruby-ruby"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
     Kaminari.configure { |c| c.default_per_page = 30 }
@@ -81,9 +83,11 @@ class SearchTest < SystemTest
       import_and_refresh
 
       visit "/search?query=ruby"
+
       assert page.has_content? "Displaying gem 1 - 1 of 3 in total"
 
       click_link "Last"
+
       assert page.has_content? "Displaying gem 2 - 2 of 3 in total"
 
       Gemcutter::SEARCH_MAX_PAGES = orignal_val

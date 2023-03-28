@@ -18,6 +18,7 @@ class WebHook < ApplicationRecord
   scope :specific, -> { where.not(rubygem_id: nil) }
 
   scope :enabled, -> { where(disabled_at: nil) }
+  scope :disabled, -> { where.not(disabled_at: nil) }
 
   def fire(protocol, host_with_port, version, delayed: true)
     job = NotifyWebHookJob.new(webhook: self, protocol:, host_with_port:, version:)

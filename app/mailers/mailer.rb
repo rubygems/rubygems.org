@@ -25,12 +25,17 @@ class Mailer < ApplicationMailer
 
   def email_confirmation(user)
     @user = user
-    mail to: @user.email,
-         subject: I18n.t("mailer.confirmation_subject",
-         default: "Please confirm your email address with RubyGems.org") do |format|
-           format.html
-           format.text
-         end
+
+    if @user.confirmation_token
+      mail to: @user.email,
+           subject: I18n.t("mailer.confirmation_subject",
+           default: "Please confirm your email address with RubyGems.org") do |format|
+             format.html
+             format.text
+           end
+    else
+      Rails.logger.info("[mailer:email_confirmation] confirmation token not found. skipping sending mail for #{@user.handle}")
+    end
   end
 
   def deletion_complete(email)

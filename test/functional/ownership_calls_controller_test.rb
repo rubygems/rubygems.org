@@ -24,6 +24,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set success notice flash" do
             expected_notice = "Created ownership call for #{@rubygem.name}."
+
             assert_equal expected_notice, flash[:notice]
           end
           should "create a call" do
@@ -38,6 +39,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set alert flash" do
             expected_alert = "Note can't be blank"
+
             assert_equal expected_alert, flash[:alert]
           end
           should "not create a call" do
@@ -53,6 +55,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set alert flash" do
             expected_alert = "Rubygem can have only one open ownership call"
+
             assert_equal expected_alert, flash[:alert]
           end
           should "not create a call" do
@@ -68,6 +71,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
         end
         should respond_with :forbidden
+
         should "not create a call" do
           assert_nil @rubygem.ownership_calls.find_by(user: @user)
         end
@@ -88,6 +92,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           should redirect_to("rubygems show") { rubygem_path(@rubygem) }
           should "set success notice flash" do
             expected_notice = "The ownership call for #{@rubygem.name} was closed."
+
             assert_equal expected_notice, flash[:notice]
           end
           should "update status to close" do
@@ -115,6 +120,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           patch :close, params: { rubygem_id: @rubygem.name }
         end
         should respond_with :forbidden
+
         should "not update status to close" do
           assert_not_empty @rubygem.ownership_calls
         end
@@ -137,6 +143,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             get :index, params: { rubygem_id: @rubygem.name }
           end
           should respond_with :success
+
           should "not redirect to mfa" do
             assert page.has_content? "Maintainers wanted"
           end
@@ -147,6 +154,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             patch :close, params: { rubygem_id: @rubygem.name }
           end
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
           should "set mfa_redirect_uri" do
             assert_equal close_rubygem_ownership_calls_path, session[:mfa_redirect_uri]
           end
@@ -157,6 +165,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
           end
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_calls_path, session[:mfa_redirect_uri]
           end
@@ -173,6 +182,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             get :index, params: { rubygem_id: @rubygem.name }
           end
           should respond_with :success
+
           should "not redirect to mfa" do
             assert page.has_content? "Maintainers wanted"
           end
@@ -183,6 +193,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             patch :close, params: { rubygem_id: @rubygem.name }
           end
           should redirect_to("edit settings page") { edit_settings_path }
+
           should "set mfa_redirect_uri" do
             assert_equal close_rubygem_ownership_calls_path, session[:mfa_redirect_uri]
           end
@@ -193,6 +204,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
           end
           should redirect_to("edit settings page") { edit_settings_path }
+
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_calls_path, session[:mfa_redirect_uri]
           end
@@ -209,6 +221,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             get :index, params: { rubygem_id: @rubygem.name }
           end
           should respond_with :success
+
           should "not redirect to mfa" do
             assert page.has_content? "Maintainers wanted"
           end
@@ -238,6 +251,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, number: "1.0.0")
         post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
       end
+
       should "redirect to sign in" do
         assert_redirected_to sign_in_path
       end
@@ -252,6 +266,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         create(:ownership_call, rubygem: @rubygem)
         patch :close, params: { rubygem_id: @rubygem.name }
       end
+
       should "redirect to sign in" do
         assert_redirected_to sign_in_path
       end
@@ -272,6 +287,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
       should respond_with :success
       should "not include closed calls" do
         ownership_call = create(:ownership_call, :closed)
+
         refute page.has_content? ownership_call.rubygem_name
       end
       should "order calls by created date" do
@@ -282,11 +298,13 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           assert_match(/#{expected_gem_name}/, actual_order[i])
         end
       end
+
       should "display entries and total in page info" do
         assert_select "header > p.gems__meter", text: /Displaying all 3 ownership calls/
       end
       should "display correct number of entries" do
         entries = assert_select("a.gems__gem__name")
+
         assert_equal 3, entries.size
       end
     end

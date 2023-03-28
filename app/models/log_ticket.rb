@@ -1,10 +1,9 @@
 class LogTicket < ApplicationRecord
   enum backend: { s3: 0, local: 1 }
-
-  scope(:pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") })
+  enum status: %i[pending processing failed processed].index_with(&:to_s)
 
   def self.pop(key: nil, directory: nil)
-    scope = pending
+    scope = pending.limit(1).lock(true).select("id").order("id ASC")
     scope = scope.where(key: key) if key
     scope = scope.where(directory: directory) if directory
     sql = scope.to_sql

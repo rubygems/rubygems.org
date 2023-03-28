@@ -2,6 +2,9 @@ class OwnershipResource < Avo::BaseResource
   self.title = :cache_key
   self.includes = []
 
+  class ConfirmedFilter < ScopeBooleanFilter; end
+  filter ConfirmedFilter, arguments: { default: { confirmed: true, unconfirmed: true } }
+
   field :id, as: :id, link_to_resource: true
 
   field :user, as: :belongs_to

@@ -20,26 +20,31 @@ class UserTest < ActiveSupport::TestCase
 
       should "be between 2 and 40 characters" do
         user = build(:user, handle: "a")
+
         refute_predicate user, :valid?
         assert_contains user.errors[:handle], "is too short (minimum is 2 characters)"
 
         user.handle = "a" * 41
+
         refute_predicate user, :valid?
         assert_contains user.errors[:handle], "is too long (maximum is 40 characters)"
 
         user.handle = "abcdef"
         user.valid?
+
         assert_nil user.errors[:handle].first
       end
 
       should "be invalid when an empty string" do
         user = build(:user, handle: "")
+
         refute_predicate user, :valid?
       end
 
       should "be invalid with duplicate handle on create" do
         create(:user, handle: "test")
         user = build(:user, handle: "Test")
+
         refute_predicate user, :valid?
       end
 
@@ -59,9 +64,11 @@ class UserTest < ActiveSupport::TestCase
 
       should "show user id if no handle set" do
         user = build(:user, handle: nil, id: 13)
+
         assert_equal "#13", user.display_handle
 
         user.handle = "bills"
+
         assert_equal "bills", user.display_handle
       end
     end
@@ -69,17 +76,20 @@ class UserTest < ActiveSupport::TestCase
     context "email" do
       should "be less than 255 characters" do
         user = build(:user, email: format("%s@example.com", "a" * 255))
+
         refute_predicate user, :valid?
         assert_contains user.errors[:email], "is too long (maximum is 255 characters)"
       end
 
       should "be valid when it matches URI mail email regex" do
         user = build(:user, email: "mail@example.com")
+
         assert_predicate user, :valid?
       end
 
       should "be invalid when it doesn't match URI mail email regex" do
         user = build(:user, email: "random[a..z]mdhlwqui@163.com")
+
         refute_predicate user, :valid?
         assert_contains user.errors[:email], "is invalid"
       end
@@ -91,6 +101,7 @@ class UserTest < ActiveSupport::TestCase
           Gemcutter::Application.config.stubs(:toxic_domains_filepath).returns(f.path)
 
           user = build(:user, email: "mail@thing.com")
+
           refute_predicate user, :valid?
           assert_contains user.errors[:email], "domain 'thing.com' has been blocked for spamming. Please use a valid personal email."
         end
@@ -103,6 +114,7 @@ class UserTest < ActiveSupport::TestCase
           Gemcutter::Application.config.stubs(:toxic_domains_filepath).returns(f.path)
 
           user = build(:user, email: "${10000263+9999729}")
+
           refute_predicate user, :valid?
           assert_contains user.errors[:email], "is not a valid email"
         end
@@ -115,6 +127,7 @@ class UserTest < ActiveSupport::TestCase
           Gemcutter::Application.config.stubs(:toxic_domains_filepath).returns(f.path)
 
           user = build(:user, email: "")
+
           refute_predicate user, :valid?
           assert_contains user.errors[:email], "is not a valid email"
         end
@@ -124,6 +137,7 @@ class UserTest < ActiveSupport::TestCase
     context "unconfirmed_email" do
       should "be invalid when it doesn't match URI mail email regex" do
         user = build(:user, unconfirmed_email: ">\"<script>alert(document.cookie)</script>@gmail.com")
+
         refute_predicate user, :valid?
         assert_contains user.errors[:unconfirmed_email], "is invalid"
       end
@@ -142,25 +156,30 @@ class UserTest < ActiveSupport::TestCase
     context "password" do
       should "be between 10 and 200 characters" do
         user = build(:user, password: "%5a&12ed/")
+
         refute_predicate user, :valid?
         assert_contains user.errors[:password], "is too short (minimum is 10 characters)"
 
         user.password = "#{'a8b5d2d451' * 20}a"
+
         refute_predicate user, :valid?
         assert_contains user.errors[:password], "is too long (maximum is 200 characters)"
 
         user.password = "633!cdf7b3426c9%f6dd1a0b62d4ce44c4f544e%"
         user.valid?
+
         assert_nil user.errors[:password].first
       end
 
       should "be invalid when an empty string" do
         user = build(:user, password: "")
+
         refute_predicate user, :valid?
       end
 
       should "be invalid when it's found in a data breach" do
         user = build(:user, password: "1234567890")
+
         refute_predicate user, :valid?
         assert_contains user.errors[:password], "has previously appeared in a data breach and should not be used"
       end
@@ -195,11 +214,13 @@ class UserTest < ActiveSupport::TestCase
     should "have handle on JSON" do
       json = JSON.parse(@user.to_json)
       hash = { "id" => @user.id, "handle" => @user.handle }
+
       assert_equal hash, json
     end
 
     should "have handle on XML" do
       xml = Nokogiri.parse(@user.to_xml)
+
       assert_equal "user", xml.root.name
       assert_equal %w[id handle], xml.root.children.select(&:element?).map(&:name)
     end
@@ -207,6 +228,7 @@ class UserTest < ActiveSupport::TestCase
     should "have handle on YAML" do
       yaml = YAML.safe_load(@user.to_yaml)
       hash = { "id" => @user.id, "handle" => @user.handle }
+
       assert_equal hash, yaml
     end
 
@@ -221,6 +243,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "give email if handle is not set for name" do
       @user.handle = nil
+
       assert_nil @user.handle
       assert_equal @user.email, @user.name
     end
@@ -228,6 +251,7 @@ class UserTest < ActiveSupport::TestCase
     should "give handle if handle is set for name" do
       @user.handle = "qrush"
       @user.save
+
       assert_equal @user.handle, @user.name
     end
 
@@ -238,6 +262,7 @@ class UserTest < ActiveSupport::TestCase
     should "only return rubygems" do
       my_rubygem = create(:rubygem)
       create(:ownership, user: @user, rubygem: my_rubygem)
+
       assert_equal [my_rubygem], @user.rubygems
     end
 
@@ -267,6 +292,7 @@ class UserTest < ActiveSupport::TestCase
       rubygem_hook = create(:web_hook, user: @user, rubygem: rubygem)
       global_hook  = create(:global_web_hook, user: @user)
       all_hooks = @user.all_hooks
+
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal global_hook, all_hooks["all gems"].first
     end
@@ -274,6 +300,7 @@ class UserTest < ActiveSupport::TestCase
     should "have all gems for hooks" do
       global_hook = create(:global_web_hook, user: @user)
       all_hooks = @user.all_hooks
+
       assert_equal global_hook, all_hooks["all gems"].first
       assert_equal 1, all_hooks.keys.size
     end
@@ -282,6 +309,7 @@ class UserTest < ActiveSupport::TestCase
       rubygem = create(:rubygem)
       rubygem_hook = create(:web_hook, user: @user, rubygem: rubygem)
       all_hooks = @user.all_hooks
+
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal 1, all_hooks.keys.size
     end
@@ -289,12 +317,14 @@ class UserTest < ActiveSupport::TestCase
     context "#valid_confirmation_token?" do
       should "return false when email confirmation token has expired" do
         @user.update_attribute(:token_expires_at, 2.minutes.ago)
+
         refute_predicate @user, :valid_confirmation_token?
       end
 
       should "reutrn true when email confirmation token has not expired" do
         two_minutes_in_future = 2.minutes.from_now
         @user.update_attribute(:token_expires_at, two_minutes_in_future)
+
         assert_predicate @user, :valid_confirmation_token?
       end
     end
@@ -311,6 +341,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "be able to use a recovery code only once" do
           code = @user.mfa_recovery_codes.first
+
           assert @user.ui_otp_verified?(code)
           refute @user.ui_otp_verified?(code)
         end
@@ -326,11 +357,13 @@ class UserTest < ActiveSupport::TestCase
 
         should "return true for otp in last interval" do
           last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+
           assert @user.ui_otp_verified?(last_otp)
         end
 
         should "return true for otp in next interval" do
           next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+
           assert @user.ui_otp_verified?(next_otp)
         end
 
@@ -350,6 +383,7 @@ class UserTest < ActiveSupport::TestCase
 
           should "reset api key" do
             @user.block!
+
             assert_nil @user.api_key
             assert_empty @user.api_keys
           end
@@ -376,6 +410,7 @@ class UserTest < ActiveSupport::TestCase
       setup do
         @rubygem = create(:rubygem)
         create(:ownership, user: @user, rubygem: @rubygem)
+
         assert_equal [@rubygem], @user.rubygems
       end
 
@@ -555,16 +590,19 @@ class UserTest < ActiveSupport::TestCase
 
     should "not include gem if all versions have been yanked" do
       @rubygems.first.versions.first.update! indexed: false
+
       assert_equal 2, @user.rubygems_downloaded.count
     end
 
     should "total their number of pushed rubygems except yanked gems" do
       @rubygems.first.versions.first.update! indexed: false
+
       assert_equal(2, @user.total_rubygems_count)
     end
 
     should "not include gems with more than one owner" do
       create(:ownership, rubygem: @rubygems.first)
+
       assert_equal 2, @user.only_owner_gems.count
     end
   end
@@ -599,6 +637,7 @@ class UserTest < ActiveSupport::TestCase
       end
       should "mark rubygem unowned" do
         @user.destroy
+
         assert_predicate @rubygem, :unowned?
       end
     end
@@ -615,6 +654,7 @@ class UserTest < ActiveSupport::TestCase
       end
       should "not mark rubygem unowned" do
         @user.destroy
+
         refute_predicate @rubygem, :unowned?
       end
     end
@@ -632,6 +672,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "set expiry of remember_token to two weeks from now" do
       expected_expiry = Gemcutter::REMEMBER_FOR.from_now
+
       assert_in_delta expected_expiry, @user.remember_token_expires_at, 1.second
     end
   end
@@ -645,11 +686,13 @@ class UserTest < ActiveSupport::TestCase
 
     should "return false when remember_token has expired" do
       @user.update_attribute(:remember_token_expires_at, 1.second.ago)
+
       refute_predicate @user, :remember_me?
     end
 
     should "return true when remember_token has not expired" do
       @user.update_attribute(:remember_token_expires_at, 1.second.from_now)
+
       assert_predicate @user, :remember_me?
     end
   end

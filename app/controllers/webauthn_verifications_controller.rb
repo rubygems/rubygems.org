@@ -33,7 +33,7 @@ class WebauthnVerificationsController < ApplicationController
     @verification.generate_otp
     @verification.expire_path_token
 
-    redirect_to(URI.parse("http://localhost:#{port}\?code=#{@verification.otp}").to_s, allow_other_host: true)
+    redirect_to(URI.parse("http://localhost:#{port}?code=#{@verification.otp}").to_s, allow_other_host: true)
   rescue WebAuthn::Error => e
     # TODO: render plain text for both endpoints
     render json: { message: e.message }, status: :unauthorized

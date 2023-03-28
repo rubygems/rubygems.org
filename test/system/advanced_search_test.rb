@@ -26,6 +26,7 @@ class AdvancedSearchTest < ApplicationSystemTestCase
     ["#name", "#summary", "#description", "#downloads", "#updated"].each do |el|
       visit advanced_search_path
       find(el).send_keys(:return)
+
       assert_current_path(search_path, ignore_query: true)
     end
   end

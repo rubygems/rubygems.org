@@ -16,6 +16,9 @@ class RubygemResource < Avo::BaseResource
 
   action ReleaseReservedNamespace
 
+  class IndexedFilter < ScopeBooleanFilter; end
+  filter IndexedFilter, arguments: { default: { with_versions: true, without_versions: true } }
+
   # Fields generated from the model
   field :name, as: :text, link_to_resource: true
   field :indexed, as: :boolean

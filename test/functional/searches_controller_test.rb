@@ -7,6 +7,7 @@ class SearchesControllerTest < ActionController::TestCase
     setup { get :show }
 
     should respond_with :success
+
     should "see no results" do
       refute page.has_content?("Results")
     end
@@ -16,12 +17,14 @@ class SearchesControllerTest < ActionController::TestCase
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       import_and_refresh
+
       assert_nil @sinatra.versions.most_recent
       assert_predicate @sinatra.reload.versions.count, :zero?
       get :show, params: { query: "sinatra" }
     end
 
     should respond_with :success
+
     should "see no results" do
       refute page.has_content?("Results")
     end
@@ -89,6 +92,7 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "see no results" do
       refute page.has_content?("Results")
     end
@@ -135,6 +139,7 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+
     should "see sinatra_redux on the page in the results" do
       page.assert_selector("a[href='#{rubygem_path(@sinatra_redux)}']")
     end
@@ -154,6 +159,7 @@ class SearchesControllerTest < ActionController::TestCase
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
         get :show, params: { query: "sinatra" }
+
         assert_response :success
         assert page.has_content?("Advanced search is currently unavailable. Falling back to legacy search.")
         assert page.has_content?("Displaying")

@@ -19,10 +19,13 @@ spec:
         ad.datadoghq.com/puma.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
         name: web
+        tags.datadoghq.com/env: "<%= environment %>"
+        tags.datadoghq.com/service: rubygems.org
+        tags.datadoghq.com/version: <%= current_sha %>
     spec:
       containers:
       - name: puma
-        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
         args: ["puma", "--environment", "<%= environment %>", "--config", "/app/config/puma.rb"]
         ports:
         - containerPort: 3000
@@ -183,6 +186,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: hook_relay_hook_id
+          - name: LAUNCH_DARKLY_SDK_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: launch_darkly_sdk_key
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
