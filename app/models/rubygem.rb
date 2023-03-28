@@ -325,7 +325,12 @@ class Rubygem < ApplicationRecord
   # returns days left before the reserved namespace will be released
   # 100 + 1 days are added so that last_protected_day / 1.day = 1
   def protected_days
-    (updated_at + 101.days - Time.zone.now).to_i / 1.day
+    days = (updated_at - 101.days.ago).to_i / 1.day
+    days.positive? ? days : 0
+  end
+
+  def release_reserved_namespace!
+    update_attribute(:updated_at, 101.days.ago)
   end
 
   def reverse_dependencies
@@ -359,10 +364,6 @@ class Rubygem < ApplicationRecord
     else
       public_versions.last.number
     end
-  end
-
-  def release_reserved_namespace!
-    update_attribute(:updated_at, 101.days.ago)
   end
 
   def version_manifest(number, platform = nil)
