@@ -26,8 +26,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
 
-    rubygem = create(:rubygem)
+    rubygem = create(:rubygem, created_at: 40.days.ago)
     rubygem_attributes = rubygem.attributes.with_indifferent_access
+
+    refute_predicate rubygem, :pushable?
 
     visit avo.resources_rubygem_path(rubygem)
 
@@ -48,6 +50,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     rubygem.reload
 
     assert_equal 0, rubygem.protected_days
+    assert_predicate rubygem, :pushable?
 
     audit = rubygem.audits.sole
 
