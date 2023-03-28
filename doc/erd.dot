@@ -61,22 +61,6 @@ m_Audit [label = <<table border="0" align="center" cellspacing="0.5" cellpadding
   <tr><td align="left" width="130" port="comment">comment <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
-"m_Delayed::Backend::ActiveRecord::Job" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
-  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Delayed::Backend::ActiveRecord::Job</font></td></tr>
-</table>
-|
-<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="attempts">attempts <font face="Arial Italic" color="grey60">integer</font></td></tr>
-  <tr><td align="left" width="130" port="failed_at">failed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
-  <tr><td align="left" width="130" port="handler">handler <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="last_error">last_error <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="locked_at">locked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
-  <tr><td align="left" width="130" port="locked_by">locked_by <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
-  <tr><td align="left" width="130" port="queue">queue <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="run_at">run_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
-</table>
->];
 m_Deletion [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Deletion</font></td></tr>
 </table>
