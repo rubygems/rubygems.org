@@ -76,6 +76,19 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "when authenticating with an api key" do
+      setup do
+        @api_key = create(:api_key, key: "12345", push_rubygem: true)
+        @user = @api_key.user
+        create(:webauthn_credential, user: @user)
+        @request.env["HTTP_AUTHORIZATION"] = "12345"
+        post :create
+        @token = @user.webauthn_verification.path_token
+      end
+
+      should respond_with :success
+    end
+
     context "user has enabled webauthn" do
       should_respond_to_format :yaml
       should_respond_to_format :json
