@@ -386,7 +386,7 @@ GEM
     psych (5.0.0)
       stringio
     public_suffix (5.0.1)
-    puma (6.1.1)
+    puma (6.2.0)
       nio4r (~> 2.0)
     pundit (2.3.0)
       activesupport (>= 3.0.0)
