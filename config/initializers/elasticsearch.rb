@@ -21,7 +21,7 @@ options[:url] = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 options[:tracer] = SemanticLogger[OpenSearch::Client]
 
 Searchkick.client = OpenSearch::Client.new(**options.compact) do |f|
-  if Rails.env.staging? || Rails.env.production?
+  unless Rails.env.development? || Rails.env.test?
     f.request :aws_sigv4,
       service: 'es',
       region: ENV['AWS_REGION'],
