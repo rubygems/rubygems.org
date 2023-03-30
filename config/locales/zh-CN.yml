@@ -403,7 +403,6 @@ zh-CN:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
-      webauthn_warning:
       otp_code:
       api_access:
         confirm_reset: 确定要重置吗？此动作执行后将无法撤销
