@@ -21,6 +21,13 @@ test:
   pool: 5
   timeout: 5000
 
+webauthn-review:
+  <<: *default
+  database: rubygems_webauthn_review
+  min_messages: error
+  pool: 30
+  reconnect: true
+
 staging:
   <<: *default
   database: rubygems_staging

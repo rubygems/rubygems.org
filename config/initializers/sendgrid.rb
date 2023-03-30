@@ -1,4 +1,4 @@
-if Rails.env.production? || Rails.env.staging?
+unless Rails.env.development? || Rails.env.test?
   ActionMailer::Base.smtp_settings = {
     address:              'smtp.sendgrid.net',
     port:                 587,
