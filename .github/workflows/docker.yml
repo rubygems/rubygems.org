@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - webauthn-cli
 permissions:
   contents: read
   id-token: write
