@@ -415,7 +415,6 @@ en:
       webauthn_credentials: Security device
       no_webauthn_credentials: You don't have any security devices
       webauthn_credential_note: A security device can be can be any device that complies with the FIDO2 standard such as security and biometric keys.
-      webauthn_warning: Once enabled, devices can only be used for UI login currently. It is not a replacement for OTP based multi-factor authentication until support with the command line is completed.
       otp_code: OTP code or recovery code
       api_access:
         confirm_reset: Are you sure? This cannot be undone.

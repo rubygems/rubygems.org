@@ -403,7 +403,6 @@ ja:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
-      webauthn_warning:
       otp_code:
       api_access:
         confirm_reset: この操作は取り消せませんが、本当によろしいですか?
