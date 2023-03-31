@@ -52,8 +52,12 @@ class ApplicationController < ActionController::Base
     fastly_expires_in fastly_expiry
   end
 
-  def fastly_expires_in(seconds)
-    response.headers["Surrogate-Control"] = "max-age=#{seconds}"
+  def fastly_expires_in(seconds, stale_while_revalidate: seconds / 2, stale_if_error: seconds / 2)
+    response.headers["Surrogate-Control"] = {
+      "max-age" => seconds,
+      "stale-while-revalidate" => stale_while_revalidate,
+      "stale-if-error" => stale_if_error
+    }.compact.map { |k, v| "#{k}=#{v}" }.join(", ")
   end
 
   def set_surrogate_key(*surrogate_keys)
