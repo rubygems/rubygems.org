@@ -24,6 +24,15 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert_link_is_expired
   end
 
+  test "when verifying webauthn and not using safari" do
+    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
+    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+
+    refute_match "It looks like you are using Safari. Due to limitations within Safari,
+       you will be unable to authenticate using this browser. Please use a different browser.",
+      page.html
+  end
+
   test "when client closes connection during verification" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
     WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
