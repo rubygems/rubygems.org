@@ -366,6 +366,7 @@ zh-TW:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
+      safari_note:
     successful_verification:
       title:
       close_browser:
