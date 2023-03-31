@@ -101,8 +101,7 @@ class StoreVersionContentsJobTest < ActiveJob::TestCase
 
       checksums = {}
       each_file_in_gem do |pathname, relative_path|
-        next if pathname.symlink?
-        checksums[relative_path] = Digest::SHA256.hexdigest(pathname.binread)
+        checksums[relative_path] = Digest::SHA256.hexdigest(pathname.symlink? ? pathname.readlink.to_s : pathname.binread)
       end
 
       assert_predicate checksums, :any?, "gem source should have some checksums"
@@ -133,7 +132,7 @@ class StoreVersionContentsJobTest < ActiveJob::TestCase
       each_file_in_gem do |pathname, relative_path|
         entry = @version.manifest.entry(relative_path)
         if pathname.symlink?
-          assert_nil entry.sha256, "sha256 should be nil for symlink #{relative_path}"
+          assert_equal Digest::SHA256.hexdigest(pathname.readlink.to_s), entry.sha256, "sha256 should match for #{relative_path}"
         else
           assert_equal Digest::SHA256.hexdigest(pathname.binread), entry.sha256, "sha256 should match for #{relative_path}"
         end
