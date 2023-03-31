@@ -420,7 +420,6 @@ nl:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
-      webauthn_warning:
       otp_code:
       api_access:
         confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
