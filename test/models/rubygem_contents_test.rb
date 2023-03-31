@@ -3,7 +3,7 @@ require "test_helper"
 class RubygemContentsTest < ActiveSupport::TestCase
   def create_entry(body, mime: "text/plain", sha256: nil)
     sha256 ||= Digest::SHA256.hexdigest(body) if body
-    GemContentEntry.new(path: "file", size: body.bytesize, body: body, mime: mime, sha256: sha256)
+    RubygemContents::Entry.new(path: "file", size: body.bytesize, body: body, mime: mime, sha256: sha256)
   end
 
   setup do
