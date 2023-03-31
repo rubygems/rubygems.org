@@ -19,13 +19,13 @@ class VersionManifest
     fs.each_key(prefix: path_root).map { |key| key.delete_prefix path_root }
   end
 
-  # @return [GemContentEntry]
+  # @return [RubygemContents::Entry]
   def entry(path)
     path = path.to_s
     return if path.blank?
     response = fs.head path_key(path)
     return if response.blank? || response[:metadata].blank?
-    GemContentEntry.from_metadata(response[:metadata]) { |entry| content(entry.fingerprint) }
+    RubygemContents::Entry.from_metadata(response[:metadata]) { |entry| content(entry.fingerprint) }
   end
 
   def checksums_file
@@ -51,7 +51,7 @@ class VersionManifest
   def store_package(package)
     entries = GemPackageEnumerator.new(package).filter_map do |tar_entry|
       Rails.error.handle(context: { gem: package.spec.full_name, entry: tar_entry.full_name }) do
-        GemContentEntry.from_tar_entry(tar_entry)
+        RubygemContents::Entry.from_tar_entry(tar_entry)
       end
     end
     store_entries entries
@@ -62,7 +62,7 @@ class VersionManifest
   # and paths and writing them to the .sha256 checksums file at the end.
   # All files in the gem  must be enumerated so no checksums are missing
   # from the .sha256 file stored at the end.
-  # @param [Enumerable<GemContentEntry>] entries
+  # @param [Enumerable<RubygemContents::Entry>] entries
   def store_entries(entries)
     path_checksums = {}
     entries.each do |entry|
@@ -72,13 +72,13 @@ class VersionManifest
     store_checksums path_checksums
   end
 
-  # @param [GemContentEntry] entry
+  # @param [RubygemContents::Entry] entry
   def store_entry(entry)
     store_path entry
     contents.store entry if entry.body_persisted?
   end
 
-  # @param [GemContentEntry] entry
+  # @param [RubygemContents::Entry] entry
   def store_path(entry)
     fs.store(
       path_key(entry.path),

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GemContentEntry
+class RubygemContents::Entry
   class InvalidMetadata < RuntimeError; end
 
   SIZE_LIMIT = 500.megabyte
