@@ -113,6 +113,7 @@
       return fetch(form.action, {
         method: "POST",
         credentials: "same-origin",
+        redirect: "follow",
         headers: {
           "X-CSRF-Token": csrfToken,
           "Content-Type": "application/json"
