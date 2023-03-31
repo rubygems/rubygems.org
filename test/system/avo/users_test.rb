@@ -235,14 +235,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
       assert_equal("RubyGems.org API key was reset", mailer.subject)
     end
+  end
 
   test "Yank rubygems" do
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
+    security_user = create(:user, email: "security@rubygems.org")
 
-    user = create(:user)
+    ownership = create(:ownership)
+    user = ownership.user
+    rubygem = ownership.rubygem
+    version = create(:version, rubygem: rubygem)
+
     user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
-    user_attributes = user.attributes.with_indifferent_access
+    version_attributes = version.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
 
@@ -260,46 +266,52 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
 
-    page.assert_no_text user.encrypted_password
-    page.assert_no_text user_attributes[:encrypted_password]
-    page.assert_no_text user_attributes[:mfa_seed]
-    page.assert_no_text user_attributes[:mfa_recovery_codes].first
-
-    user.reload
+    rubygem.reload
+    version.reload
 
     audit = user.audits.sole
+    deletion = security_user.deletions.first
 
     page.assert_text audit.id
     assert_equal "User", audit.auditable_type
-    assert_equal "Block User", audit.action
+    assert_equal "Yank all Rubygems", audit.action
+
+    rubygem_audit = audit.audited_changes["records"].select do |k, _|
+      k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
+    end
+    rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
+
     assert_equal(
       {
         "records" => {
-          "gid://gemcutter/User/#{user.id}" => {
+          "gid://gemcutter/Deletion/#{deletion.id}" => {
+            "changes" => {},
+              "unchanged" => deletion.attributes.transform_values(&:as_json)
+          },
+          "gid://gemcutter/Version/#{version.id}" => {
             "changes" => {
-              "email" => [user_attributes[:email], user.email],
-              "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "confirmation_token" => [user_attributes[:confirmation_token], nil],
-              "mfa_level" => %w[ui_and_api disabled],
-              "mfa_seed" => [user_attributes[:mfa_seed], ""],
-              "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
-              "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
-              "api_key" => ["secret123", nil],
-              "remember_token" => [user_attributes[:remember_token], nil],
-              "blocked_email" => [nil, user_attributes[:email]]
+              "indexed" => [true, false],
+              "yanked_at" => [nil, version.yanked_at.as_json],
+              "updated_at" => [version_attributes[:updated_at].as_json, version.updated_at.as_json],
+              "yanked_info_checksum" => [nil, version.yanked_info_checksum]
             },
-            "unchanged" => user.attributes
+            "unchanged" => version.attributes.merge("latest" => true)
               .except(
-                "api_key",
-                "blocked_email",
-                "confirmation_token",
-                "email",
-                "encrypted_password",
-                "mfa_level",
-                "mfa_recovery_codes",
-                "mfa_seed",
-                "remember_token",
-                "updated_at"
+                "indexed",
+                "updated_at",
+                "yanked_at",
+                "yanked_info_checksum"
+              ).transform_values(&:as_json)
+          },
+          "gid://gemcutter/Rubygem/#{rubygem.id}" => {
+            "changes" => {
+              "updated_at" => rubygem_updated_at_changes,
+              "indexed" => [true, false]
+            },
+            "unchanged" => rubygem.attributes
+              .except(
+                "updated_at",
+                "indexed"
               ).transform_values(&:as_json)
           }
         },
@@ -309,6 +321,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       },
       audit.audited_changes
     )
+
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
   end
