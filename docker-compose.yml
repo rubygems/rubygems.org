@@ -21,3 +21,5 @@ services:
   toxiproxy:
     image: shopify/toxiproxy:2.1.4
     network_mode: "host"
+    ports:
+      - "8474:8474"

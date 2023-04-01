@@ -40,6 +40,8 @@ jobs:
           plugins.security.disabled: "true"
       toxiproxy:
         image: shopify/toxiproxy:2.1.4
+        ports:
+          - "8474:8474"
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
       - uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1 # v1.144.2
