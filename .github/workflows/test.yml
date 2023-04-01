@@ -6,7 +6,6 @@ on:
       - master
 permissions:
   contents: read
-
 jobs:
   rails:
     strategy:
@@ -14,43 +13,58 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: '3.4.9'
+            version: "3.4.9"
           - name: latest
             version: latest
-        ruby_version: ['3.2.1']
+        ruby_version: ["3.2.1"]
     name: Rails tests (RubyGems ${{ matrix.rubygems.name }})
     runs-on: ubuntu-22.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
+    services:
+      db:
+        image: postgres:11.13
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+      cache:
+        image: memcached:1.4.24
+        ports:
+          - "11211:11211"
+      search:
+        image: opensearchproject/opensearch:1.3.7
+        ports:
+          - "9200:9200"
+        env:
+          http.host: 0.0.0.0
+          transport.host: 127.0.0.1
+          plugins.security.disabled: "true"
+      toxiproxy:
+        image: shopify/toxiproxy:2.1.4
     steps:
-    - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
-    - name: Install and start services
-      run: |
-        docker-compose up -d
-    - name: Wait for ES to boot
-      run: |
-        timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
-    - uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1 # v1.144.2
-      with:
-        ruby-version: ${{ matrix.ruby_version }}
-        bundler-cache: true
-    - name: set rubygems version
-      run: |
-        if [ "$RUBYGEMS_VERSION" != "latest" ]; then
-          gem update --system $RUBYGEMS_VERSION;
-        else
-          gem update --system
-        fi
-        gem --version
-        bundle --version
-    - name: Prepare environment
-      run: |
-        cp config/database.yml.sample config/database.yml
-        bundle exec rake db:setup
-    - name: Tests
-      run: bin/rails test:all
-    - name: Upload coverage to Codecov
-      if: matrix.rubygems.name == 'locked' && (success() || failure())
-      uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
+      - uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1 # v1.144.2
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+          bundler-cache: true
+      - name: set rubygems version
+        run: |
+          if [ "$RUBYGEMS_VERSION" != "latest" ]; then
+            gem update --system $RUBYGEMS_VERSION;
+          else
+            gem update --system
+          fi
+          gem --version
+          bundle --version
+      - name: Prepare environment
+        run: |
+          cp config/database.yml.sample config/database.yml
+          bundle exec rake db:setup
+      - name: Tests
+        run: bin/rails test:all
+      - name: Upload coverage to Codecov
+        if: matrix.rubygems.name == 'locked' && (success() || failure())
+        uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1

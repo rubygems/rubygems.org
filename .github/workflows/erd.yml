@@ -13,18 +13,35 @@ on:
       - "db/schema.rb"
       - "doc/erd.svg"
       - "doc/erd.dot"
-permissions:  # added using https://github.com/step-security/secure-workflows
+permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
-
 jobs:
   erd:
     name: Verify ERD up-to-date
     runs-on: ubuntu-22.04
+    services:
+      db:
+        image: postgres:11.13
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+      cache:
+        image: memcached:1.4.24
+        ports:
+          - "11211:11211"
+      search:
+        image: opensearchproject/opensearch:1.3.7
+        ports:
+          - "9200:9200"
+        env:
+          http.host: 0.0.0.0
+          transport.host: 127.0.0.1
+          plugins.security.disabled: "true"
+      toxiproxy:
+        image: shopify/toxiproxy:2.1.4
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
-      - name: Install and start database service
-        run: |
-          docker-compose up -d db
       - uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1 # v1.144.2
         with:
           bundler-cache: true

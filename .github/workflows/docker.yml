@@ -7,7 +7,6 @@ on:
 permissions:
   contents: read
   id-token: write
-
 jobs:
   build:
     name: Docker build (and optional push)
@@ -15,6 +14,27 @@ jobs:
     env:
       RUBYGEMS_VERSION: 3.4.9
       RUBY_VERSION: 3.2.1
+    services:
+      db:
+        image: postgres:11.13
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+      cache:
+        image: memcached:1.4.24
+        ports:
+          - "11211:11211"
+      search:
+        image: opensearchproject/opensearch:1.3.7
+        ports:
+          - "9200:9200"
+        env:
+          http.host: 0.0.0.0
+          transport.host: 127.0.0.1
+          plugins.security.disabled: "true"
+      toxiproxy:
+        image: shopify/toxiproxy:2.1.4
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
       - name: Set up Docker Buildx
@@ -27,8 +47,6 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-rubygems-org
-      - name: Install and start services (needed for image test)
-        run: docker-compose up -d
       - name: Configure AWS credentials from Production account
         uses: aws-actions/configure-aws-credentials@v2
         if: github.secret_source != 'None'
