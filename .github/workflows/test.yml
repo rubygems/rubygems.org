@@ -48,7 +48,7 @@ jobs:
     - name: Prepare environment
       run: |
         cp config/database.yml.sample config/database.yml
-        bundle exec rake db:setup
+        bundle exec rake db:create db:migrate
     - name: Tests
       run: bin/rails test:all
     - name: Upload coverage to Codecov
