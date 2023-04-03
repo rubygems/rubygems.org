@@ -43,6 +43,7 @@ RUN \
   zstd-libs \
   linux-headers \
   zlib-dev \
+  git \
   tzdata 
 
 WORKDIR /app
