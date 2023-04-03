@@ -402,7 +402,7 @@ fr:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
-      safari_note:
+      safari_note_html:
     successful_verification:
       title:
       close_browser:
