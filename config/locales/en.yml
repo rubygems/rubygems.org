@@ -502,6 +502,9 @@ en:
       sha_256_checksum: SHA 256 checksum
       signature_period: Signature validity period
       expired: expired
+    version_navigation:
+      previous_version: ← Previous version
+      next_version: Next version →
     index:
       downloads: Downloads
       title: Gems

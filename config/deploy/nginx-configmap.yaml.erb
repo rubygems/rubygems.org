@@ -165,7 +165,9 @@ data:
         '"ssl_cipher": "$ssl_cipher"'
       '},'
       '"network": {'
-        '"client": {"ip": "$remote_addr"} '
+        '"client": {"ip": "$remote_addr"}, '
+        '"bytes_written": $bytes_sent, '
+        '"body_bytes_written": $body_bytes_sent'
       '}'
     '}';
     access_log  /dev/stdout json;

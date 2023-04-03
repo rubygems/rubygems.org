@@ -56,7 +56,7 @@ class SqsWorkerTest < ActiveSupport::TestCase
       StatsD.expects(:increment).with("fastly_log_processor.s3_entry_fetched")
       StatsD.expects(:increment).with("fastly_log_processor.enqueued")
       StatsD.expects(:increment).with("rails.enqueue.active_job.success", 1,
-        has_entry(tags: has_entries(queue: "default", priority: PRIORITIES[:stats], job_class: FastlyLogProcessorJob.name)))
+        has_entry(tags: has_entries(queue: "default", priority: 4, job_class: FastlyLogProcessorJob.name)))
       assert_enqueued_jobs 1, only: FastlyLogProcessorJob do
         @sqs_worker.perform(nil, @body)
       end
@@ -76,7 +76,7 @@ class SqsWorkerTest < ActiveSupport::TestCase
       StatsD.expects(:increment).with("fastly_log_processor.enqueued").twice
       StatsD.expects(:increment).with("fastly_log_processor.duplicated")
       StatsD.expects(:increment).with("rails.enqueue.active_job.success", 1,
-        has_entry(tags: has_entries(queue: "default", priority: PRIORITIES[:stats], job_class: FastlyLogProcessorJob.name)))
+        has_entry(tags: has_entries(queue: "default", priority: 4, job_class: FastlyLogProcessorJob.name)))
       assert_enqueued_jobs 1, only: FastlyLogProcessorJob do
         @sqs_worker.perform(nil, @body)
       end

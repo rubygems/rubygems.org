@@ -79,7 +79,7 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.4.13.0)
       execjs (~> 2)
-    avo (2.28.0)
+    avo (2.29.1)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -164,11 +164,6 @@ GEM
       libddwaf (~> 1.6.2.0.0)
       msgpack
     debase-ruby_core_source (3.2.0)
-    delayed_job (4.1.11)
-      activesupport (>= 3.0, < 8.0)
-    delayed_job_active_record (4.1.7)
-      activerecord (>= 3.0, < 8.0)
-      delayed_job (>= 3.0, < 5)
     docile (1.4.0)
     dogstatsd-ruby (5.5.0)
     domain_name (0.5.20190701)
@@ -254,7 +249,7 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
-    inline_svg (1.8.0)
+    inline_svg (1.9.0)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     jmespath (1.6.2)
@@ -391,7 +386,7 @@ GEM
     psych (5.0.0)
       stringio
     public_suffix (5.0.1)
-    puma (6.1.1)
+    puma (6.2.1)
       nio4r (~> 2.0)
     pundit (2.3.0)
       activesupport (>= 3.0.0)
@@ -434,10 +429,10 @@ GEM
     rails-i18n (7.0.6)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
-    rails_semantic_logger (4.11.0)
+    rails_semantic_logger (4.12.0)
       rack
       railties (>= 5.1)
-      semantic_logger (~> 4.9)
+      semantic_logger (~> 4.13)
     railties (7.0.4.3)
       actionpack (= 7.0.4.3)
       activesupport (= 7.0.4.3)
@@ -515,12 +510,12 @@ GEM
     searchkick (5.2.1)
       activemodel (>= 5.2)
       hashie
-    selenium-webdriver (4.8.1)
+    selenium-webdriver (4.8.6)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic (1.6.1)
-    semantic_logger (4.12.0)
+    semantic_logger (4.13.0)
       concurrent-ruby (~> 1.0)
     shoryuken (4.0.3)
       aws-sdk-core (>= 2)
@@ -628,8 +623,6 @@ DEPENDENCIES
   compact_index (~> 0.14.0)
   dalli (~> 3.2)
   ddtrace (~> 1.10)
-  delayed_job (~> 4.1)
-  delayed_job_active_record (~> 4.1)
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 2.8)
   factory_bot_rails (~> 6.2)
@@ -701,4 +694,4 @@ DEPENDENCIES
   xml-simple (~> 1.1)
 
 BUNDLED WITH
-   2.4.6
+   2.4.9

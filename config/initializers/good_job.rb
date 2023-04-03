@@ -13,6 +13,12 @@ Rails.application.configure do
       class: "GoodJobStatsDJob",
       set: { priority: 10 },
       description: "Sending GoodJob metrics to statsd every 15s"
+    },
+    mfa_usage_stats: {
+      cron: "every hour",
+      class: "MfaUsageStatsJob",
+      set: { priority: 10 },
+      description: "Sending MFA usage metrics to statsd every hour"
     }
   }
 

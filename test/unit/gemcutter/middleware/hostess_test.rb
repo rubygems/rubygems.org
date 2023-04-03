@@ -10,7 +10,7 @@ class Gemcutter::Middleware::HostessTest < ActiveSupport::TestCase
   end
 
   def app
-    Gemcutter::Middleware::Hostess.new(-> { [200, {}, ""] })
+    Gemcutter::Middleware::Hostess.new(->(_) { [202, {}, "passthrough"] })
   end
 
   def touch(path)
@@ -39,6 +39,13 @@ class Gemcutter::Middleware::HostessTest < ActiveSupport::TestCase
 
       assert_equal 200, last_response.status
     end
+  end
+
+  should "not capture paths that are not the gem download path" do
+    get "/gems/rails/versions/3.0.0/contents/rails.gemspec"
+
+    assert_equal 202, last_response.status
+    assert_equal "passthrough", last_response.body
   end
 
   context "with gem" do

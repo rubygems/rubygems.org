@@ -503,6 +503,9 @@ de:
       sha_256_checksum: SHA 256-Prüfsumme
       signature_period:
       expired:
+    version_navigation:
+      previous_version:
+      next_version:
     index:
       downloads: Downloads
       title: Gems

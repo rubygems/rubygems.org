@@ -824,11 +824,26 @@ class RubygemTest < ActiveSupport::TestCase
   context "#protected_days" do
     setup do
       @rubygem = create(:rubygem)
-      @rubygem.update_attribute(:updated_at, 99.days.ago)
     end
 
-    should "return number of days left till the gem namespace is protected" do
+    should "return 100 days left of gem namespace protection after 0 days" do
+      assert_equal 100, @rubygem.protected_days
+    end
+
+    should "return 1 day left of gem namespace protection after 99 days" do
+      @rubygem.update_attribute(:updated_at, 99.days.ago)
+
       assert_equal 1, @rubygem.protected_days
+    end
+
+    should "return 0 days left of gem namespace protection after protected time has passed" do
+      @rubygem.update_attribute(:updated_at, 101.days.ago)
+
+      assert_equal 0, @rubygem.protected_days
+
+      @rubygem.update_attribute(:updated_at, 103.days.ago)
+
+      assert_equal 0, @rubygem.protected_days
     end
   end
 
@@ -839,7 +854,9 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "update set `updated_at` to 101 days ago" do
-      assert_equal (Time.zone.today - 101.days), @rubygem.updated_at.to_date
+      freeze_time
+
+      assert_in_delta 101.days.ago, @rubygem.updated_at, 5.seconds
     end
   end
 
