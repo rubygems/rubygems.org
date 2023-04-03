@@ -1,13 +1,37 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Dangerous Eval",
+      "warning_code": 13,
+      "fingerprint": "8c3ecf6e4ea1f5fdd60b0cf1ea5250b776da54c6083b88fa6b06ace80b667bac",
+      "check_name": "Evaluation",
+      "message": "User input in eval",
+      "file": "app/models/download.rb",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_eval/",
+      "code": "::Download.class_eval(\"class #{class_name_for(:suffix => suffix, :time_period => time_period)} < Download\\n  attribute :downloads, :integer\\n\\n  def readonly?\\n    true\\n  end\\n\\n  def self.table_name = #{\"#{Download.table_name}_#{time_period.inspect.parameterize(:separator => \"_\")}#{\"_#{suffix}\" if suffix}\".dump}\\n\\n  def self.suffix = #{(suffix.dump or :nil)}\\n\\n  def self.time_period = #{time_period.inspect.parameterize(:separator => \"_\").dump}\\nend\\n\", \"app/models/download.rb\", 24)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Download",
+        "method": null
+      },
+      "user_input": "Download.table_name",
+      "confidence": "High",
+      "cwe_id": [
+        913,
+        95
+      ],
+      "note": "Dyanmically creating a matrix of subclasses"
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
       "fingerprint": "952a7d74123607aba495fea6b6bdb2009eebc024151ef3297547e9f2a690d0b8",
       "check_name": "PermitAttributes",
       "message": "Potentially dangerous key allowed for mass assignment",
       "file": "app/controllers/api/v1/hook_relay_controller.rb",
-      "line": 23,
+      "line": 19,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.permit(:attempts, :account_id, :hook_id, :id, :max_attempts, :status, :stream, :failure_reason, :completed_at, :created_at, :request => ([:target_url]))",
       "render_path": null,
@@ -24,6 +48,6 @@
       "note": "account_id is used to validate that the request indeed comes from hook relay"
     }
   ],
-  "updated": "2023-03-01 02:46:07 -0800",
+  "updated": "2023-04-02 21:48:50 -0700",
   "brakeman_version": "5.4.1"
 }
