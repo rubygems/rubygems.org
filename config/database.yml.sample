@@ -17,11 +17,11 @@ development:
     password: devpassword
     pool: 5
     timeout: 5000
+    port: 5434
   downloads:
     <<: *timescale
     database: rubygems_tsdb_development
     host: localhost
-    port: 5434
     pool: 5
     timeout: 5000
 
@@ -39,7 +39,6 @@ test:
     database: rubygems_tsdb_test
     host: localhost
     min_messages: warning
-    port: 5434
     pool: 5
     timeout: 5000
 
