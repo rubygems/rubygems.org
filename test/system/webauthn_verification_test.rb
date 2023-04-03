@@ -28,8 +28,22 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
     WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
-    refute_match "It looks like you are using Safari. Due to limitations within Safari,
-       you will be unable to authenticate using this browser. Please use a different browser.",
+    refute_match "It looks like you are using Safari. Due to limitations within Safari, " \
+                 "you will be unable to authenticate using this browser. Please use a different browser. " \
+                 'Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">' \
+                 "WebAuthn MFA CLI guide</a> for more information on this limitation.",
+      page.html
+  end
+
+  test "when verifying webauthn and using safari" do
+    Capybara.current_driver = :fake_safari
+    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
+    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+
+    assert_match "It looks like you are using Safari. Due to limitations within Safari, " \
+                 "you will be unable to authenticate using this browser. Please use a different browser. " \
+                 'Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">' \
+                 "WebAuthn MFA CLI guide</a> for more information on this limitation.",
       page.html
   end
 
