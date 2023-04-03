@@ -2,8 +2,8 @@ class YankRubygemsForUser < BaseAction
   self.name = "Yank all Rubygems"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") &&
-    view == :show &&
-    resource.model.rubygems.present?
+      view == :show &&
+      resource.model.rubygems.present?
   }
 
   self.message = lambda {
@@ -14,9 +14,7 @@ class YankRubygemsForUser < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(user)
-      user.rubygems.find_each do |rubygem|
-        rubygem.yank_versions!
-      end
+      user.rubygems.find_each(&:yank_versions!)
     end
   end
 end
