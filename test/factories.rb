@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :download do
-    rubygem_id { 1 }
-    version_id { 1 }
+    rubygem
+    version
     downloads { 1 }
-    log_ticket_id { 1 }
+    log_ticket
     occurred_at { "2023-03-08 13:11:25" }
   end
 

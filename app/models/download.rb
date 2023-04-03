@@ -1,6 +1,10 @@
 class Download < DownloadRecord
+  def query = { rubygem_id:, version_id:, log_ticket_id:, occurred_at: occurred_at.iso8601 }
+  def id = query.values.join("_")
+
   belongs_to :rubygem, validate: false, optional: true
   belongs_to :version, validate: false, optional: true
+  belongs_to :log_ticket, validate: false, optional: true
 
   validates :occurred_at, presence: true
   validates :downloads, presence: true
@@ -10,7 +14,7 @@ class Download < DownloadRecord
 
   def self.class_name_for(suffix:, time_period:)
     raise ArgumentError if suffix && !time_period
-    "#{time_period.iso8601}#{"_#{suffix}" if suffix}".classify
+    [time_period.iso8601, suffix].compact.join("_").classify
   end
 
   [15.minutes, 1.day, 1.month, 1.year].each do |time_period|
