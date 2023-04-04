@@ -44,7 +44,7 @@ RUN \
   linux-headers \
   zlib-dev \
   git \
-  tzdata 
+  tzdata
 
 WORKDIR /app
 
@@ -80,7 +80,7 @@ RUN bundle config set --local without 'development test assets' && \
 
 
 # Final stage for app image
-FROM base
+FROM base as app
 
 RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
   --mount=type=cache,id=dev-apk-lib,sharing=locked,target=/var/lib/apk \
