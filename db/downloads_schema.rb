@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "timescaledb"
   enable_extension "timescaledb_toolkit"
@@ -29,7 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
 
   create_hypertable "downloads", "occurred_at", chunk_time_interval: "7 days"
 
-  create_continuous_aggregate "downloads_15_minutes", <<-SQL, force: false
+  create_continuous_aggregate "downloads_15_minutes", <<-SQL
     SELECT time_bucket('PT15M'::interval, downloads.occurred_at) AS occurred_at,
       downloads.rubygem_id,
       downloads.version_id,
@@ -40,18 +39,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
 
   add_continuous_aggregate_policy "downloads_15_minutes", "1 week", "1 hour", "1 hour"
 
-  create_continuous_aggregate "downloads_15_minutes_all_versions", <<-SQL, force: false
-    SELECT time_bucket('PT15M'::interval, downloads_15_minutes.occurred_at) AS occurred_at,
-      downloads_15_minutes.rubygem_id,
-      sum(downloads_15_minutes.downloads) AS downloads
-     FROM downloads_15_minutes
-    GROUP BY (time_bucket('PT15M'::interval, downloads_15_minutes.occurred_at)), downloads_15_minutes.rubygem_id
-    ORDER BY (time_bucket('PT15M'::interval, downloads_15_minutes.occurred_at));
-  SQL
-
-  add_continuous_aggregate_policy "downloads_15_minutes_all_versions", "1 week", "1 hour", "1 hour"
-
-  create_continuous_aggregate "downloads_1_day", <<-SQL, force: false
+  create_continuous_aggregate "downloads_1_day", <<-SQL
     SELECT time_bucket('P1D'::interval, downloads_15_minutes.occurred_at) AS occurred_at,
       downloads_15_minutes.rubygem_id,
       downloads_15_minutes.version_id,
@@ -62,7 +50,61 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
 
   add_continuous_aggregate_policy "downloads_1_day", "2 years", "1 day", "12 hours"
 
-  create_continuous_aggregate "downloads_15_minutes_all_gems", <<-SQL, force: false
+  create_continuous_aggregate "downloads_1_month", <<-SQL
+    SELECT time_bucket('P1M'::interval, downloads_1_day.occurred_at) AS occurred_at,
+      downloads_1_day.rubygem_id,
+      downloads_1_day.version_id,
+      sum(downloads_1_day.downloads) AS downloads
+     FROM downloads_1_day
+    GROUP BY (time_bucket('P1M'::interval, downloads_1_day.occurred_at)), downloads_1_day.rubygem_id, downloads_1_day.version_id;
+  SQL
+
+  add_continuous_aggregate_policy "downloads_1_month", nil, "1 month", "1 day"
+
+  create_continuous_aggregate "downloads_1_year", <<-SQL
+    SELECT time_bucket('P1Y'::interval, downloads_1_month.occurred_at) AS occurred_at,
+      downloads_1_month.rubygem_id,
+      downloads_1_month.version_id,
+      sum(downloads_1_month.downloads) AS downloads
+     FROM downloads_1_month
+    GROUP BY (time_bucket('P1Y'::interval, downloads_1_month.occurred_at)), downloads_1_month.rubygem_id, downloads_1_month.version_id;
+  SQL
+
+  add_continuous_aggregate_policy "downloads_1_year", nil, "1 year", "1 month"
+
+  create_continuous_aggregate "downloads_1_year_all_versions", <<-SQL
+    SELECT time_bucket('P1Y'::interval, downloads_1_year.occurred_at) AS occurred_at,
+      downloads_1_year.rubygem_id,
+      sum(downloads_1_year.downloads) AS downloads
+     FROM downloads_1_year
+    GROUP BY (time_bucket('P1Y'::interval, downloads_1_year.occurred_at)), downloads_1_year.rubygem_id
+    ORDER BY (time_bucket('P1Y'::interval, downloads_1_year.occurred_at));
+  SQL
+
+  add_continuous_aggregate_policy "downloads_1_year_all_versions", nil, "1 year", "1 month"
+
+  create_continuous_aggregate "downloads_1_year_all_gems", <<-SQL
+    SELECT time_bucket('P1Y'::interval, downloads_1_year_all_versions.occurred_at) AS occurred_at,
+      sum(downloads_1_year_all_versions.downloads) AS downloads
+     FROM downloads_1_year_all_versions
+    GROUP BY (time_bucket('P1Y'::interval, downloads_1_year_all_versions.occurred_at))
+    ORDER BY (time_bucket('P1Y'::interval, downloads_1_year_all_versions.occurred_at));
+  SQL
+
+  add_continuous_aggregate_policy "downloads_1_year_all_gems", nil, "1 year", "1 month"
+
+  create_continuous_aggregate "downloads_15_minutes_all_versions", <<-SQL
+    SELECT time_bucket('PT15M'::interval, downloads_15_minutes.occurred_at) AS occurred_at,
+      downloads_15_minutes.rubygem_id,
+      sum(downloads_15_minutes.downloads) AS downloads
+     FROM downloads_15_minutes
+    GROUP BY (time_bucket('PT15M'::interval, downloads_15_minutes.occurred_at)), downloads_15_minutes.rubygem_id
+    ORDER BY (time_bucket('PT15M'::interval, downloads_15_minutes.occurred_at));
+  SQL
+
+  add_continuous_aggregate_policy "downloads_15_minutes_all_versions", "1 week", "1 hour", "1 hour"
+
+  create_continuous_aggregate "downloads_15_minutes_all_gems", <<-SQL
     SELECT time_bucket('PT15M'::interval, downloads_15_minutes_all_versions.occurred_at) AS occurred_at,
       sum(downloads_15_minutes_all_versions.downloads) AS downloads
      FROM downloads_15_minutes_all_versions
@@ -72,7 +114,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
 
   add_continuous_aggregate_policy "downloads_15_minutes_all_gems", "1 week", "1 hour", "1 hour"
 
-  create_continuous_aggregate "downloads_1_day_all_versions", <<-SQL, force: false
+  create_continuous_aggregate "downloads_1_day_all_versions", <<-SQL
     SELECT time_bucket('P1D'::interval, downloads_1_day.occurred_at) AS occurred_at,
       downloads_1_day.rubygem_id,
       sum(downloads_1_day.downloads) AS downloads
@@ -83,18 +125,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
 
   add_continuous_aggregate_policy "downloads_1_day_all_versions", "2 years", "1 day", "12 hours"
 
-  create_continuous_aggregate "downloads_1_month", <<-SQL, force: false
-    SELECT time_bucket('P1M'::interval, downloads_1_day.occurred_at) AS occurred_at,
-      downloads_1_day.rubygem_id,
-      downloads_1_day.version_id,
-      sum(downloads_1_day.downloads) AS downloads
-     FROM downloads_1_day
-    GROUP BY (time_bucket('P1M'::interval, downloads_1_day.occurred_at)), downloads_1_day.rubygem_id, downloads_1_day.version_id;
-  SQL
-
-  add_continuous_aggregate_policy "downloads_1_month", "20 years", "1 month", "1 day"
-
-  create_continuous_aggregate "downloads_1_day_all_gems", <<-SQL, force: false
+  create_continuous_aggregate "downloads_1_day_all_gems", <<-SQL
     SELECT time_bucket('P1D'::interval, downloads_1_day_all_versions.occurred_at) AS occurred_at,
       sum(downloads_1_day_all_versions.downloads) AS downloads
      FROM downloads_1_day_all_versions
@@ -104,7 +135,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
 
   add_continuous_aggregate_policy "downloads_1_day_all_gems", "2 years", "1 day", "12 hours"
 
-  create_continuous_aggregate "downloads_1_month_all_versions", <<-SQL, force: false
+  create_continuous_aggregate "downloads_1_month_all_versions", <<-SQL
     SELECT time_bucket('P1M'::interval, downloads_1_month.occurred_at) AS occurred_at,
       downloads_1_month.rubygem_id,
       sum(downloads_1_month.downloads) AS downloads
@@ -113,20 +144,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
     ORDER BY (time_bucket('P1M'::interval, downloads_1_month.occurred_at));
   SQL
 
-  add_continuous_aggregate_policy "downloads_1_month_all_versions", "20 years", "1 month", "1 day"
+  add_continuous_aggregate_policy "downloads_1_month_all_versions", nil, "1 month", "1 day"
 
-  create_continuous_aggregate "downloads_1_year", <<-SQL, force: false
-    SELECT time_bucket('P1Y'::interval, downloads_1_month.occurred_at) AS occurred_at,
-      downloads_1_month.rubygem_id,
-      downloads_1_month.version_id,
-      sum(downloads_1_month.downloads) AS downloads
-     FROM downloads_1_month
-    GROUP BY (time_bucket('P1Y'::interval, downloads_1_month.occurred_at)), downloads_1_month.rubygem_id, downloads_1_month.version_id;
-  SQL
-
-  add_continuous_aggregate_policy "downloads_1_year", "20 years", "1 year", "1 month"
-
-  create_continuous_aggregate "downloads_1_month_all_gems", <<-SQL, force: false
+  create_continuous_aggregate "downloads_1_month_all_gems", <<-SQL
     SELECT time_bucket('P1M'::interval, downloads_1_month_all_versions.occurred_at) AS occurred_at,
       sum(downloads_1_month_all_versions.downloads) AS downloads
      FROM downloads_1_month_all_versions
@@ -134,27 +154,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_224729) do
     ORDER BY (time_bucket('P1M'::interval, downloads_1_month_all_versions.occurred_at));
   SQL
 
-  add_continuous_aggregate_policy "downloads_1_month_all_gems", "20 years", "1 month", "1 day"
-
-  create_continuous_aggregate "downloads_1_year_all_versions", <<-SQL, force: false
-    SELECT time_bucket('P1Y'::interval, downloads_1_year.occurred_at) AS occurred_at,
-      downloads_1_year.rubygem_id,
-      sum(downloads_1_year.downloads) AS downloads
-     FROM downloads_1_year
-    GROUP BY (time_bucket('P1Y'::interval, downloads_1_year.occurred_at)), downloads_1_year.rubygem_id
-    ORDER BY (time_bucket('P1Y'::interval, downloads_1_year.occurred_at));
-  SQL
-
-  add_continuous_aggregate_policy "downloads_1_year_all_versions", "20 years", "1 year", "1 month"
-
-  create_continuous_aggregate "downloads_1_year_all_gems", <<-SQL, force: false
-    SELECT time_bucket('P1Y'::interval, downloads_1_year_all_versions.occurred_at) AS occurred_at,
-      sum(downloads_1_year_all_versions.downloads) AS downloads
-     FROM downloads_1_year_all_versions
-    GROUP BY (time_bucket('P1Y'::interval, downloads_1_year_all_versions.occurred_at))
-    ORDER BY (time_bucket('P1Y'::interval, downloads_1_year_all_versions.occurred_at));
-  SQL
-
-  add_continuous_aggregate_policy "downloads_1_year_all_gems", "20 years", "1 year", "1 month"
+  add_continuous_aggregate_policy "downloads_1_month_all_gems", nil, "1 month", "1 day"
 
 end
