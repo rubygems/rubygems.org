@@ -98,8 +98,8 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
 </table>
 >];
-"m_GoodJob::ActiveJobJob" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
-  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::ActiveJobJob</font></td></tr>
+"m_GoodJob::BaseExecution" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::BaseExecution</font></td></tr>
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
@@ -428,6 +428,6 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
   "m_GoodJob::BatchRecord" -> "m_GoodJob::Job" [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  "m_GoodJob::BatchRecord" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  "m_GoodJob::Job" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  "m_GoodJob::BatchRecord" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_GoodJob::Job" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
 }
