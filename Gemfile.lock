@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/segiddins/timescaledb-rails
-  revision: 758fdee08d2a2d5353efd8393e859c409e452a6a
+  revision: 14432ded5954a9cf46dc3c40faa62857dfef63db
   branch: segiddins/support-for-timescale-in-other-database
   specs:
     timescaledb-rails (0.1.5)
@@ -340,7 +340,7 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
-    nio4r (2.5.8)
+    nio4r (2.5.9)
     nokogiri (1.14.2)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
