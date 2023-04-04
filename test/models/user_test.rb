@@ -341,6 +341,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "be able to use a recovery code only once" do
           code = @user.mfa_recovery_codes.first
+
           assert @user.ui_otp_verified?(code)
           refute @user.ui_otp_verified?(code)
         end
@@ -356,11 +357,13 @@ class UserTest < ActiveSupport::TestCase
 
         should "return true for otp in last interval" do
           last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+
           assert @user.ui_otp_verified?(last_otp)
         end
 
         should "return true for otp in next interval" do
           next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+
           assert @user.ui_otp_verified?(next_otp)
         end
 

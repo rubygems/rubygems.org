@@ -24,6 +24,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
       should respond_with :redirect
       should redirect_to("the homepage") { root_url }
+
       should "say the token is consumed or expired" do
         assert_equal "The token in the link you used has either expired or been used already.", flash[:alert]
       end
@@ -67,6 +68,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         end
 
         should redirect_to("the homepage") { root_url }
+
         should "display error that no port was given" do
           assert_equal "No port provided. Please try again.", flash[:alert]
         end
@@ -79,6 +81,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
         should respond_with :redirect
         should redirect_to("the homepage") { root_url }
+
         should "display error that user has no webauthn devices enabled" do
           assert_equal "You don't have any security devices enabled", flash[:alert]
         end
@@ -114,7 +117,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         @verification.reload
       end
 
-      should redirect_to("localhost with provided port and verification code") { "http://localhost:#{@port}\?code=#{@verification.otp}" }
+      should redirect_to("localhost with provided port and verification code") { "http://localhost:#{@port}?code=#{@verification.otp}" }
 
       should "set OTP with expiry" do
         assert_equal 16, @user.webauthn_verification.otp.length
@@ -123,6 +126,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
       should "expire the path token by setting its expiry to 1 second prior" do
         verification = WebauthnVerification.find_by!(path_token: @token)
+
         assert_equal Time.utc(2023, 1, 1, 0, 0, 2), verification.path_token_expires_at
       end
     end
@@ -142,12 +146,14 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "return error message" do
         assert_equal "Credentials required", JSON.parse(response.body)["message"]
       end
 
       should "not expire the path token" do
         verification = WebauthnVerification.find_by!(path_token: @token)
+
         assert_equal Time.utc(2023, 1, 1, 0, 2, 0), verification.path_token_expires_at
       end
 
@@ -172,6 +178,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
       should "return error message" do
         assert_equal "WebAuthn::ChallengeVerificationError", JSON.parse(response.body)["message"]
       end
@@ -214,6 +221,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
       should respond_with :redirect
       should redirect_to("the homepage") { root_url }
+
       should "say the token is consumed or expired" do
         assert_equal "The token in the link you used has either expired or been used already.", flash[:alert]
       end
@@ -235,6 +243,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should redirect_to("the homepage") { root_url }
+
       should "display error that no port was given" do
         assert_equal "No port provided. Please try again.", flash[:alert]
       end

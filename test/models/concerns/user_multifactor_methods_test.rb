@@ -98,16 +98,19 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     context "with totp" do
       should "return true when correct and if mfa is ui_and_api" do
         @user.enable_mfa!(@seed, :ui_and_api)
+
         assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
       end
 
       should "return true when correct and if mfa is ui_and_gem_signin" do
         @user.enable_mfa!(@seed, :ui_and_gem_signin)
+
         assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
       end
 
       should "return false when incorrect" do
         @user.enable_mfa!(@seed, :ui_and_gem_signin)
+
         refute @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
     end
@@ -283,11 +286,13 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       should "return true when correct in last interval" do
         last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+
         assert @user.ui_otp_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
         next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+
         assert @user.ui_otp_verified?(next_otp)
       end
 
@@ -297,6 +302,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       should "return false if the mfa_seed is blank" do
         @user.update!(mfa_seed: nil)
+
         refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
     end
@@ -304,6 +310,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     context "with webauthn otp" do
       should "return false" do
         webauthn_verification = create(:webauthn_verification, user: @user)
+
         refute @user.ui_otp_verified?(webauthn_verification.otp)
       end
     end
@@ -328,11 +335,13 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       should "return true when correct in last interval" do
         last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+
         assert @user.api_otp_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
         next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+
         assert @user.api_otp_verified?(next_otp)
       end
 
@@ -344,6 +353,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     context "with webauthn otp" do
       should "return true when correct" do
         webauthn_verification = create(:webauthn_verification, user: @user)
+
         assert @user.api_otp_verified?(webauthn_verification.otp)
       end
 
@@ -356,6 +366,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       should "return false when expired" do
         webauthn_verification = create(:webauthn_verification, user: @user, otp_expires_at: 2.minutes.ago)
+
         refute @user.api_otp_verified?(webauthn_verification.otp)
       end
 

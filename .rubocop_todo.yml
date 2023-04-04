@@ -31,7 +31,7 @@ Lint/UselessMethodDefinition:
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
 Metrics/BlockLength:
-  Max: 53
+  Max: 64
 
 # Offense count: 1
 # Configuration parameters: IgnoredMethods.

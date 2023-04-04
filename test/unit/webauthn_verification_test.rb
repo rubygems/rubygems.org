@@ -21,6 +21,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
     should "set the path_token_expires_at to 1 second ago" do
       travel_to Time.utc(2023, 1, 1, 0, 1, 0) do
         @verification.expire_path_token
+
         assert_equal Time.utc(2023, 1, 1, 0, 0, 59), @verification.path_token_expires_at
       end
     end
@@ -89,6 +90,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
 
       should "update otp expiry to 1 second in the past" do
         @verification.verify_otp(@verification.otp)
+
         assert_equal @current_time - 1.second, @verification.otp_expires_at
       end
     end
@@ -105,6 +107,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
 
       should "not update expiry" do
         @verification.verify_otp("Yxf57d1wEUSWyXrrLMRv")
+
         assert_equal @expires_at, @verification.otp_expires_at
       end
     end
@@ -121,6 +124,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
 
       should "not update expiry" do
         @verification.verify_otp(@verification.otp)
+
         assert_equal @expires_at, @verification.otp_expires_at
       end
     end
@@ -137,6 +141,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
 
         should "not update expiry" do
           @verification.verify_otp(nil)
+
           assert_nil @verification.otp_expires_at
         end
       end
@@ -148,6 +153,7 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
 
         should "not update expiry" do
           @verification.verify_otp("Yxf57d1wEUSWyXrrLMRv")
+
           assert_nil @verification.otp_expires_at
         end
       end
