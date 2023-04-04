@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/segiddins/timescaledb-rails
-  revision: 14432ded5954a9cf46dc3c40faa62857dfef63db
+  revision: 7982ddc421e2f00ee5e49eb44fa064452c071d7e
   branch: segiddins/support-for-timescale-in-other-database
   specs:
     timescaledb-rails (0.1.5)
