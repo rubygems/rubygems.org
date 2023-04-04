@@ -8,6 +8,7 @@ timescale: &timescale
   encoding: utf8
   username: postgres
   migrations_paths: db/downloads_migrate
+  port: 5434
 
 development:
   primary:
@@ -17,7 +18,6 @@ development:
     password: devpassword
     pool: 5
     timeout: 5000
-    port: 5434
   downloads:
     <<: *timescale
     database: rubygems_tsdb_development
