@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: <%= environment %>
@@ -15,6 +15,8 @@ spec:
   tls:
   - hosts:
     - <%= environment %>-origin.rubygems.org
-  backend:
-    serviceName: web
-    servicePort: 80
+  defaultBackend:
+    service:
+      name: web
+      port:
+        number: 80
