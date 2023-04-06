@@ -16,23 +16,23 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   context "requests is lower than limit" do
     should "allow sign in" do
       stay_under_limit_for("clearance/ip")
+      stay_under_login_limit_for(Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY)
 
       post "/session",
         params: { session: { who: @user.email, password: @user.password } },
         headers: { REMOTE_ADDR: @ip_address }
-      follow_redirect!
 
       assert_response :success
     end
 
     should "allow sign up" do
       stay_under_limit_for("clearance/ip")
+      stay_under_sign_up_limit_for(Rack::Attack::SIGN_UP_THROTTLE_PER_IP_KEY)
 
       user = build(:user)
       post "/users",
         params: { user: { email: user.email, password: user.password } },
         headers: { REMOTE_ADDR: @ip_address }
-      follow_redirect!
 
       assert_response :success
     end
@@ -250,18 +250,30 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   end
 
   context "requests is higher than limit" do
-    should "throttle sign in" do
-      exceed_limit_for("clearance/ip")
+    context "sign in" do
+      should "throttle sign in based on ip" do
+        exceed_limit_for("clearance/ip")
 
-      post "/session",
-        params: { session: { who: @user.email, password: @user.password } },
-        headers: { REMOTE_ADDR: @ip_address }
+        post "/session",
+          params: { session: { who: @user.email, password: @user.password } },
+          headers: { REMOTE_ADDR: @ip_address }
 
-      assert_response :too_many_requests
+        assert_response :too_many_requests
+      end
+
+      should "throttle sign in based on email" do
+        exceed_login_limit_for(Rack::Attack::LOGIN_THROTTLE_PER_USER_KEY)
+
+        post "/session",
+          params: { session: { who: @user.email, password: @user.password } },
+          headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
     end
 
     should "throttle sign up" do
-      exceed_limit_for("clearance/ip")
+      exceed_sign_up_limit_for(Rack::Attack::SIGN_UP_THROTTLE_PER_IP_KEY)
 
       user = build(:user)
       post "/users",

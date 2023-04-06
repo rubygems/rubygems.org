@@ -10,11 +10,13 @@ Rails.application.config.content_security_policy do |policy|
   policy.img_src     :self, "https://secure.gaug.es", "https://gravatar.com", "https://www.gravatar.com", "https://secure.gravatar.com",
     "https://*.fastly-insights.com", "https://avatars.githubusercontent.com"
   policy.object_src  :none
-  policy.script_src  :self, "https://secure.gaug.es", "https://www.fastly-insights.com"
-  policy.style_src   :self, "https://fonts.googleapis.com"
-  policy.connect_src :self, "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://fastly-insights.com", "https://api.github.com"
+  policy.script_src  :self, "https://secure.gaug.es", "https://www.fastly-insights.com", "https://hcaptcha.com", "https://*.hcaptcha.com"
+  policy.style_src   :self, "https://fonts.googleapis.com", "https://hcaptcha.com", "https://*.hcaptcha.com"
+  policy.connect_src :self, "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://fastly-insights.com",
+    "https://api.github.com", "https://hcaptcha.com", "https://*.hcaptcha.com"
   policy.form_action :self, "https://github.com/login/oauth/authorize"
   policy.frame_ancestors :self
+  policy.frame_src :self, "https://hcaptcha.com", "https://*.hcaptcha.com"
 
   # Specify URI for violation reports
   policy.report_uri lambda {

@@ -1,23 +1,22 @@
 class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
+  include CaptchaVerifiable
+  include PrivacyPassSupportable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify authenticate]
   before_action :ensure_not_blocked, only: :create
+  before_action :present_privacy_pass_challenge, unless: :valid_privacy_pass_redemption?, only: :new
   after_action :delete_mfa_expiry_session, only: %i[webauthn_create mfa_create]
 
   def create
     @user = find_user
-
-    if @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
-      setup_webauthn_authentication
-      setup_mfa_authentication
-
-      session[:mfa_login_started_at] = Time.now.utc.to_s
-      create_new_mfa_expiry
-
-      render "sessions/prompt"
+    if @user && !valid_privacy_pass_redemption? && HcaptchaVerifier.should_verify_sign_in?(who)
+      setup_captcha_verification
+      render "sessions/captcha"
+    elsif @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
+      webauthn_and_mfa_new
     else
       do_login
     end
@@ -76,6 +75,18 @@ class SessionsController < Clearance::SessionsController
     session.delete(:mfa_login_started_at)
   end
 
+  def captcha_create
+    if verified_captcha?
+      @user = user_from_captcha_user
+      delete_captcha_user_from_session
+      should_mfa = @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
+
+      should_mfa ? webauthn_and_mfa_new : do_login
+    else
+      login_failure(t("captcha.invalid"))
+    end
+  end
+
   def verify
   end
 
@@ -100,10 +111,21 @@ class SessionsController < Clearance::SessionsController
     params.require(:verify_password).permit(:password)
   end
 
+  def webauthn_and_mfa_new
+    setup_webauthn_authentication
+    setup_mfa_authentication
+
+    session[:mfa_login_started_at] = Time.now.utc.to_s
+    create_new_mfa_expiry
+
+    render "sessions/prompt"
+  end
+
   def do_login
     sign_in(@user) do |status|
       if status.success?
         StatsD.increment "login.success"
+        delete_privacy_pass_token_redemption
         redirect_back_or(url_after_create)
       else
         login_failure(status.failure_message)
@@ -170,6 +192,16 @@ class SessionsController < Clearance::SessionsController
   def setup_mfa_authentication
     return if @user.mfa_disabled?
     session[:mfa_user] = @user.id
+  end
+
+  def setup_captcha_verification
+    create_catpcha_user(id: @user.id)
+  end
+
+  def present_privacy_pass_challenge
+    setup_privacy_pass_challenge
+    status = privacy_pass_enabled? ? :unauthorized : :ok
+    render "sessions/new", status: status
   end
 
   def login_conditions_met?
