@@ -104,3 +104,8 @@ group :test do
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
 end
+
+gem "openid_connect", "~> 1.4"
+
+gem "dry-validation", "~> 1.10"
+gem "dry-struct", "~> 1.6"

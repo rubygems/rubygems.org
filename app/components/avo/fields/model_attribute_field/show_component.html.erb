@@ -1,0 +1,38 @@
+<% if @field.value %>
+ <%= render Avo::Views::ResourceShowComponent.new(
+    resource: @field.use_resource.hydrate(model: @field.value.tap { _1.singleton_class.define_method(:id) { 0 }}, view: :show),
+    reflection: @reflection,
+    actions: @actions,
+    parent_model: @parent_model,
+    parent_resource: @parent_resource,
+  ) %>
+<% else %>
+  <%= render Avo::PanelComponent.new(name: @field.name) do |c| %>
+    <% c.tools do %>
+      <% if !@field.is_readonly? && !@field.is_disabled? && can_attach? %>
+        <%= a_link attach_path,
+          icon: 'heroicons/outline/link',
+          color: :primary,
+          'data-turbo-frame': 'attach_modal' do %>
+          <%= t('avo.attach_item', item: @field.name.downcase) %>
+        <% end %>
+      <% end %>
+      <% if !@field.is_readonly? && !@field.is_disabled? && can_see_the_create_button? %>
+        <%= a_link create_path,
+          icon: 'heroicons/outline/plus',
+          'data-target': 'create',
+          'data-turbo-frame': '_top',
+          style: :primary,
+          color: :primary do %>
+          <%= t('avo.create_new_item', item: @field.name.downcase ) %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% c.body do %>
+      <div class="py-8 flex justify-center items-center">
+        <%= empty_state by_association: params[:related_name].present? %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

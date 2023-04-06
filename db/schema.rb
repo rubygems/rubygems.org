@@ -235,6 +235,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.index ["task_name", "status", "created_at"], name: "index_maintenance_tasks_runs", order: { created_at: :desc }
   end
 
+  create_table "oidc_api_key_roles", force: :cascade do |t|
+    t.bigint "oidc_provider_id", null: false
+    t.bigint "user_id", null: false
+    t.jsonb "api_key_permissions", null: false
+    t.string "name", null: false
+    t.jsonb "access_policy", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["oidc_provider_id"], name: "index_oidc_api_key_roles_on_oidc_provider_id"
+    t.index ["user_id"], name: "index_oidc_api_key_roles_on_user_id"
+  end
+
+  create_table "oidc_providers", force: :cascade do |t|
+    t.text "issuer"
+    t.jsonb "configuration"
+    t.jsonb "jwks"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issuer"], name: "index_oidc_providers_on_issuer", unique: true
+  end
+
   create_table "ownership_calls", force: :cascade do |t|
     t.bigint "rubygem_id"
     t.bigint "user_id"
@@ -427,6 +448,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
   end
 
   add_foreign_key "api_keys", "users"
+  add_foreign_key "oidc_api_key_roles", "oidc_providers"
+  add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "webauthn_verifications", "users"

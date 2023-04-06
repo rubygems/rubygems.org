@@ -1,0 +1,13 @@
+<%= field_wrapper **field_wrapper_args do %>
+  <% resource = @field.use_resource.hydrate(model: @field.value.tap { _1.singleton_class.define_method(:id) { 0 }}, view: view) %>
+  <% resource.get_items.find do |item|
+      item.is_main_panel?
+    end.items.each do |field| %>
+                    <%= render field
+                  .hydrate(resource: resource, model: resource.model, user: @resource.user, view:)
+                  .component_for_view(view)
+                  .new(field: field, resource: resource, index: index, form: form, compact: true)
+                %>
+
+  <% end%>
+<% end %>
