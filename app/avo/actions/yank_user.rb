@@ -11,14 +11,8 @@ class YankUser < BaseAction
   class ActionHandler < ActionHandler
     def handle_model(user)
       rubygems = user.rubygems
-      security_user = User.find_by!(email: "security@rubygems.org")
 
-      rubygems.find_each do |rubygem|
-        rubygem.versions.each do |version|
-          security_user.deletions.create!(version: version) unless version.yanked?
-        end
-      end
-
+      rubygems.find_each(&:yank_versions!)
       user.block!
     end
   end
