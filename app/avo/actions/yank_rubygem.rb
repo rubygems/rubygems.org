@@ -23,12 +23,9 @@ class YankRubygem < BaseAction
   class ActionHandler < ActionHandler
     def handle_model(rubygem)
       version_id = fields["version"]
-      security_user = User.find_by!(email: "security@rubygems.org")
-      versions_to_yank = version_id == OPTION_ALL ? rubygem.versions : rubygem.versions.where(id: version_id)
+      version_id_to_yank = version_id if version_id != OPTION_ALL
 
-      versions_to_yank.each do |version|
-        security_user.deletions.create!(version: version) unless version.yanked?
-      end
+      rubygem.yank_versions!(version_id: version_id_to_yank)
     end
   end
 end

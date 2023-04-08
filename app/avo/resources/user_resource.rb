@@ -8,6 +8,7 @@ class UserResource < Avo::BaseResource
   action BlockUser
   action ResetUser2fa
   action ResetApiKey
+  action YankRubygemsForUser
 
   field :id, as: :id
   # Fields generated from the model
