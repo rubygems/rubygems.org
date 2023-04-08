@@ -32,5 +32,5 @@ class AuditResource < Avo::BaseResource
     field :id, as: :id
   end
 
-  field :audited_changes, as: :audited_changes
+  field :audited_changes, as: :audited_changes, except_on: :index
 end

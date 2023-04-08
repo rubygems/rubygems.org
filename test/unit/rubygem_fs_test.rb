@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class RubygemFsTest < ActiveSupport::TestCase
@@ -213,7 +215,7 @@ class RubygemFsTest < ActiveSupport::TestCase
 
     context "#in_bucket" do
       should "return a new instance with the bucket set" do
-        foo_fs = @fs.in_bucket("dir")
+        foo_fs = @fs.in_bucket "dir"
 
         refute_equal @fs, foo_fs
         assert_equal "dir", foo_fs.bucket
@@ -222,7 +224,7 @@ class RubygemFsTest < ActiveSupport::TestCase
 
     context "#bucket" do
       should "return the basename of the base_dir to imitate S3" do
-        fs = @fs.in_bucket("dir")
+        fs = @fs.in_bucket "dir"
 
         assert_equal "dir", fs.bucket
       end
@@ -233,21 +235,49 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_nil @fs.get "missing"
       end
 
+      should "return nil when the file requested is a directory" do
+        @fs.store "dir/foo", "123"
+
+        assert_nil @fs.get "dir"
+      end
+
       should "get the file" do
         @fs.store "foo", "123"
 
         assert_equal "123", @fs.get("foo")
       end
+
+      should "get a binary file lacking metadata" do
+        gem_data = gem_file.read
+        @fs.store "gems/test.gem", gem_data
+
+        assert_equal gem_data, @fs.get("gems/test.gem")
+        assert_equal Encoding::BINARY, @fs.get("gems/test.gem").encoding
+      end
+
+      should "should discover encoding using Magic when the file has incomplete content type without charset" do
+        body = "emoji 😁"
+        @fs.store "file", body, content_type: "text/plain"
+
+        assert_equal body, @fs.get("file")
+        assert_equal Encoding::UTF_8, @fs.get("file").encoding
+      end
     end
 
     context "#head" do
       should "return nil when file doesnt exist" do
-        assert_nil @fs.head("missing")
+        assert_nil @fs.head "missing"
+      end
+
+      should "return nil when the file requested is a directory" do
+        @fs.store "dir/foo", "123"
+
+        assert_nil @fs.head "dir"
       end
 
       should "return blank metadata for a file stored without any metadata" do
         @fs.store "nometadata", "123"
-        response = @fs.head("nometadata")
+        response = @fs.head "nometadata"
 
         assert_equal "nometadata", response[:key]
         assert_empty response[:metadata]
@@ -255,7 +285,7 @@ class RubygemFsTest < ActiveSupport::TestCase
 
       should "return metadata for a file stored with metadata" do
         @fs.store "foo", "123", metadata: { "foo" => "bar" }
-        response = @fs.head("foo")
+        response = @fs.head "foo"
 
         assert_equal "foo", response[:key]
         assert_equal "bar", response[:metadata]["foo"]
@@ -298,7 +328,7 @@ class RubygemFsTest < ActiveSupport::TestCase
         @fs.store "bar/baz/foo", ""
         @fs.store "barbeque", ""
         @fs.store "baz", ""
-        @fs.store ".hidden", ""
+        @fs.store ".hidden", "", metadata: { "foo" => "bar" } # ensure _metadata is not returned
       end
 
       should "yield all keys when a block is given" do
@@ -314,11 +344,10 @@ class RubygemFsTest < ActiveSupport::TestCase
 
       should "list all keys with prefix" do
         assert_equal %w[bar/baz/foo bar/foo], @fs.each_key(prefix: "bar/").sort
-        assert_equal %w[bar/baz/foo bar/foo barbeque], @fs.each_key(prefix: "bar").sort
       end
 
-      should "list all keys with partial prefix like S3 (unlike normal file systems)" do
-        assert_equal %w[bar/baz/foo bar/foo barbeque baz], @fs.each_key(prefix: "ba").sort
+      should "raise InvalidPathError for prefix not ending in /" do
+        assert_raises(RubygemFs::Local::InvalidPathError) { @fs.each_key(prefix: "bar").to_a }
       end
     end
 
@@ -336,10 +365,10 @@ class RubygemFsTest < ActiveSupport::TestCase
       end
 
       should "not remove anything that causes problems on the filesystem" do
-        assert_raise(RubygemFs::Local::UnsafePathError, "blank key") { @fs.remove("") }
-        assert_raise(RubygemFs::Local::UnsafePathError, "pwd") { @fs.remove(".") }
-        assert_raise(RubygemFs::Local::UnsafePathError, "parent dir") { @fs.remove("..") }
-        assert_raise(RubygemFs::Local::UnsafePathError, "root") { @fs.remove("/") }
+        assert_raise(RubygemFs::Local::InvalidPathError, "blank key") { @fs.remove("") }
+        assert_raise(RubygemFs::Local::InvalidPathError, "root") { @fs.remove("/") }
+        assert_raise(RubygemFs::Local::InvalidPathError, "pwd") { @fs.remove(".") }
+        assert_raise(RubygemFs::Local::InvalidPathError, "parent dir") { @fs.remove("..") }
       end
 
       should "remove empty base folders when removing nested key" do

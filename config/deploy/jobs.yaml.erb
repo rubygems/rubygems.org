@@ -16,7 +16,6 @@ spec:
   template:
     metadata:
       annotations:
-        ad.datadoghq.com/jobs.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
         ad.datadoghq.com/good-job.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
         name: jobs
@@ -25,120 +24,6 @@ spec:
         tags.datadoghq.com/version: <%= current_sha %>
     spec:
       containers:
-      - name: jobs
-        image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
-        args: ["rake", "jobs:work"]
-        resources:
-          <% if environment == 'production' %>
-          requests:
-            cpu: 500m
-            memory: 1.4Gi
-          limits:
-            cpu: 1000m
-            memory: 1.6Gi
-          <% else %>
-          requests:
-            cpu: 200m
-            memory: 250Mi
-          limits:
-            cpu: 500m
-            memory: 1.2Gi
-          <% end %>
-        env:
-          - name: RAILS_ENV
-            value: "<%= environment %>"
-          - name: ENV
-            value: "<%= environment %>"
-          - name: DD_AGENT_HOST
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: status.hostIP
-          - name: STATSD_IMPLEMENTATION
-            value: "datadog"
-          - name: STATSD_HOST
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: status.hostIP
-          - name: STATSD_ADDR
-            value: $(STATSD_HOST):8125
-          - name: SECRET_KEY_BASE
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: secret_key_base
-          - name: AWS_REGION
-            value: "us-west-2"
-          - name: FASTLY_LOG_PROCESSOR_ENABLED
-            value: "true"
-          - name: S3_KEY
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: aws_access_key_id
-          - name: S3_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: aws_secret_access_key
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: aws_access_key_id
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: aws_secret_access_key
-          - name: HONEYBADGER_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: honeybadger_api_key
-          - name: FASTLY_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: fastly_api_key
-          - name: FASTLY_SERVICE_ID
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: fastly_service_id
-          - name: FASTLY_DOMAINS
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: fastly_domains
-          - name: ELASTICSEARCH_URL
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: elasticsearch_url
-          - name: MEMCACHED_ENDPOINT
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: memcached_endpoint
-          - name: SENDGRID_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: sendgrid_username
-          - name: SENDGRID_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: sendgrid_password
-          - name: DATABASE_URL
-            valueFrom:
-              secretKeyRef:
-                name: <%= environment %>
-                key: database_url
-        securityContext:
-          privileged: false
       - name: good-job
         image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
         args: ["good_job", "start"]

@@ -318,8 +318,11 @@ class Version < ApplicationRecord
     end
   end
 
-  def to_bundler
-    if number[0] == "0" || prerelease?
+  def to_bundler(locked_version: false)
+    if prerelease?
+      modifier = locked_version ? "" : "~> "
+      %(gem '#{rubygem.name}', '#{modifier}#{number}')
+    elsif number[0] == "0"
       %(gem '#{rubygem.name}', '~> #{number}')
     else
       release = feature_release

@@ -10,6 +10,7 @@ class BaseAction < Avo::BaseAction
   end
 
   class ActionHandler
+    include Auditable
     include ActiveSupport::Callbacks
     define_callbacks :handle, terminator: lambda { |target, result_lambda|
       result_lambda.call
@@ -35,7 +36,7 @@ class BaseAction < Avo::BaseAction
 
     attr_reader :models, :fields, :current_user, :arguments, :resource
 
-    delegate :error, :avo, :keep_modal_open, :redirect_to, :inform,
+    delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name,
       to: :@action
 
     set_callback :handle, :before do
@@ -55,6 +56,7 @@ class BaseAction < Avo::BaseAction
       run_callbacks :handle do
         handle
       end
+    ensure
       keep_modal_open if errored?
     end
 
@@ -62,53 +64,20 @@ class BaseAction < Avo::BaseAction
       @action.response[:messages].any? { _1[:type] == :error }
     end
 
-    def merge_changes!(changes, changes_to_save)
-      changes.merge!(changes_to_save) do |_key, (old, _), (_, new)|
-        [old, new]
-      end
-    end
-
-    def in_audited_transaction(&)
-      User.transaction do
-        changed_records = {}
-        ActiveSupport::Notifications.subscribed(proc do |_name, _started, _finished, _unique_id, data|
-          records = data[:connection].transaction_manager.current_transaction.records || []
-          records.uniq(&:__id__).each do |record|
-            merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
-          end
-        end, "sql.active_record", &)
-
-        audited_changed_records = changed_records.to_h do |record, changes|
-          key = record.to_global_id.uri
-          changes = merge_changes!(changes, record.attributes.compact.transform_values { [_1, nil] }) if record.destroyed?
-
-          [key, { changes:, unchanged: record.attributes.except(*changes.keys) }]
-        end
-
-        audit = Audit.create!(
-          admin_github_user: current_user,
-          auditable: @current_model,
-          action: @action.action_name,
-          comment: fields[:comment],
-          audited_changes: {
-            records: audited_changed_records,
-            fields: fields.except(:comment),
-            arguments: arguments,
-            models: models.map { _1.to_global_id.uri }
-          }
-        )
-        redirect_to avo.resources_audit_path(audit)
-      end
-    end
-
     def handle
       models.each do |model|
-        @current_model = model
-        in_audited_transaction do
+        _, audit = in_audited_transaction(
+          auditable: model,
+          admin_github_user: current_user,
+          action: action_name,
+          fields:,
+          arguments:,
+          models:
+        ) do
           handle_model(model)
         end
+        redirect_to avo.resources_audit_path(audit)
       end
-      @current_model = nil
     end
   end
 
