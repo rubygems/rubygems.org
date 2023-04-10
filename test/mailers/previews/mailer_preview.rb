@@ -158,4 +158,9 @@ class MailerPreview < ActionMailer::Preview
 
     WebHooksMailer.webhook_disabled(web_hook)
   end
+
+  def webauthn_credential_created
+    webauthn_credential = WebauthnCredential.last
+    Mailer.webauthn_credential_created(webauthn_credential.id)
+  end
 end

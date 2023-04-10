@@ -1,6 +1,8 @@
 require "test_helper"
 
 class WebauthnCredentialsControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   context "#create" do
     context "when logged out" do
       setup do
@@ -85,17 +87,20 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         challenge = JSON.parse(response.body)["challenge"]
         origin = "http://localhost:3000"
         client = WebAuthn::FakeClient.new(origin, encoding: false)
-        post(
-          :callback,
-          params: {
-            credentials: WebauthnHelpers.create_result(
-              client: client,
-              challenge: challenge
-            ),
-            webauthn_credential: { nickname: @nickname }
-          },
-          format: :json
-        )
+
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          post(
+            :callback,
+            params: {
+              credentials: WebauthnHelpers.create_result(
+                client: client,
+                challenge: challenge
+              ),
+              webauthn_credential: { nickname: @nickname }
+            },
+            format: :json
+          )
+        end
       end
 
       should redirect_to :edit_settings
@@ -103,6 +108,15 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       should "create the webauthn credential" do
         assert_equal @nickname, @user.webauthn_credentials.last.nickname
         assert_equal 1, @user.webauthn_credentials.count
+      end
+
+      should "deliver webauthn credential added email" do
+        assert_equal 1, ActionMailer::Base.deliveries.size
+        email = ActionMailer::Base.deliveries.last
+
+        assert_equal [@user.email], email.to
+        assert_equal ["no-reply@mailer.rubygems.org"], email.from
+        assert_equal "New security device added on RubyGems.org", email.subject
       end
     end
 

@@ -97,6 +97,13 @@ class Mailer < ApplicationMailer
       subject: mfa_required_popular_gems_subject(@user.mfa_level)
   end
 
+  def webauthn_credential_created(webauthn_credential_id)
+    @webauthn_credential = WebauthnCredential.find(webauthn_credential_id)
+
+    mail to: @webauthn_credential.user.email,
+      subject: I18n.t("mailer.webauthn_credential_created.subject")
+  end
+
   def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
     @version        = Version.find(version_id)
     notified_user   = User.find(notified_user_id)

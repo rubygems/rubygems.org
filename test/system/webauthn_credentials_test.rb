@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class WebauthnCredentialsTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user)
   end
@@ -63,11 +65,19 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     authenticator = page.driver.browser.add_virtual_authenticator(options)
     WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
 
-    @credential_nickname = "new cred"
-    fill_in "Nickname", with: @credential_nickname
-    click_on "Register device"
+    perform_enqueued_jobs do
+      @credential_nickname = "new cred"
+      fill_in "Nickname", with: @credential_nickname
+      click_on "Register device"
 
-    assert page.has_content? @credential_nickname
+      assert page.has_content? @credential_nickname
+    end
+
+    webauthn_credential_creation_email = ActionMailer::Base.deliveries.find do |email|
+      email.to.include?(@user.email)
+    end
+
+    assert_equal "New security device added on RubyGems.org", webauthn_credential_creation_email.subject
     assert_equal edit_settings_path, current_path
 
     # Cleanup test data

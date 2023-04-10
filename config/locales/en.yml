@@ -221,6 +221,10 @@ en:
       subject: RubyGems.org API key was reset
       title: API KEY RESET
       subtitle: Hi %{handle}
+    webauthn_credential_created:
+      subject: New security device added on RubyGems.org
+      title: SECURITY DEVICE ADDED
+      subtitle: Hi %{handle}!
     email_reset_update:
       subject: You have requested email address update on RubyGems.org
       title: EMAIL UPDATE REQUESTED
