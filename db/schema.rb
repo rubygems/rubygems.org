@@ -406,6 +406,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.bigint "pusher_id"
     t.text "cert_chain"
     t.string "canonical_number"
+    t.bigint "pusher_api_key_id"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_on_canonical_number_and_rubygem_id_and_platform", unique: true
@@ -416,6 +417,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.index ["number"], name: "index_versions_on_number"
     t.index ["position", "rubygem_id"], name: "index_versions_on_position_and_rubygem_id"
     t.index ["prerelease"], name: "index_versions_on_prerelease"
+    t.index ["pusher_api_key_id"], name: "index_versions_on_pusher_api_key_id"
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
     t.index ["rubygem_id"], name: "index_versions_on_rubygem_id"
@@ -467,6 +469,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_id_tokens", "oidc_providers"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "webauthn_verifications", "users"
 end

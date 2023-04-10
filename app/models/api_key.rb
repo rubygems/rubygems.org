@@ -3,9 +3,12 @@ class ApiKey < ApplicationRecord
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner].freeze
 
   belongs_to :user
+
   has_one :api_key_rubygem_scope, dependent: :destroy
   has_one :ownership, through: :api_key_rubygem_scope
-  has_one :oidc_id_token, class_name: "OIDC::IdToken"
+  has_one :oidc_id_token, class_name: "OIDC::IdToken", dependent: :restrict_with_error
+  has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :restrict_with_error
+
   validates :user, :name, :hashed_key, presence: true
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
   validate :scope_presence
@@ -16,8 +19,14 @@ class ApiKey < ApplicationRecord
 
   delegate :rubygem_id, :rubygem, to: :ownership, allow_nil: true
 
-  scope :unexpired, -> { where(arel_table[:expires_at].gteq(Time.now.utc)) }
-  scope :expired, -> { where(arel_table[:expires_at].lt(Time.now.utc)) }
+  scope :unexpired, -> { where(arel_table[:expires_at].eq(nil).or(arel_table[:expires_at].gt(Time.now.utc))) }
+  scope :expired, -> { where(arel_table[:expires_at].lteq(Time.now.utc)) }
+
+  def self.expire_all!
+    transaction do
+      find_each.all?(&:expire!)
+    end
+  end
 
   def enabled_scopes
     API_SCOPES.filter_map { |scope| scope if send(scope) }
@@ -67,7 +76,11 @@ class ApiKey < ApplicationRecord
   end
 
   def expired?
-    expires_at && expires_at < Time.now.utc
+    expires_at && expires_at <= Time.now.utc
+  end
+
+  def expire!
+    touch(:expires_at)
   end
 
   private
@@ -94,6 +107,7 @@ class ApiKey < ApplicationRecord
   end
 
   def not_expired?
-    errors.add :base, "An expired API key (#{expires_at}) cannot be used. Please create a new one." if expired?
+    return if changed == %w[expires_at]
+    errors.add :base, "An expired API key cannot be used. Please create a new one." if expired?
   end
 end

@@ -258,21 +258,22 @@ class ApiKeysControllerTest < ActionController::TestCase
 
           should redirect_to("the index api key page") { profile_api_keys_path }
 
-          should "delete api key of user" do
-            assert_empty @user.api_keys
+          should "expire api key of user" do
+            assert_empty @user.api_keys.unexpired
+            refute_empty @user.api_keys
           end
         end
 
         context "with unsuccessful destroy" do
           setup do
-            ApiKey.any_instance.stubs(:destroy).returns(false)
+            ApiKey.any_instance.stubs(:expire!).returns(false)
             delete :destroy, params: { id: @api_key.id }
           end
 
           should redirect_to("the index api key page") { profile_api_keys_path }
 
-          should "not delete api key of user" do
-            refute_empty @user.api_keys
+          should "not expire api key of user" do
+            refute_empty @user.api_keys.unexpired
           end
         end
       end
@@ -285,8 +286,8 @@ class ApiKeysControllerTest < ActionController::TestCase
 
         should respond_with :not_found
 
-        should "not delete the api key" do
-          assert ApiKey.find(@api_key.id)
+        should "not expire the api key" do
+          refute_predicate ApiKey.find(@api_key.id), :expired?
         end
       end
     end
@@ -301,8 +302,8 @@ class ApiKeysControllerTest < ActionController::TestCase
 
       should redirect_to("the index api key page") { profile_api_keys_path }
 
-      should "delete all api key of user" do
-        assert_empty @user.api_keys
+      should "expire all api key of user" do
+        @user.api_keys.each { assert_predicate _1, :expired? }
       end
     end
 

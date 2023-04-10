@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :oidc_provider, class: "OIDC::Provider" do
-    issuer { "https://token.actions.githubusercontent.com" }
+    sequence(:issuer) { |n| "https://#{n}.token.actions.githubusercontent.com" }
     configuration do
       {
-        issuer: "https://token.actions.githubusercontent.com",
-        jwks_uri: "https://token.actions.githubusercontent.com/.well-known/jwks",
+        issuer: issuer,
+        jwks_uri: "#{issuer}/.well-known/jwks",
         subject_types_supported: %w[
           public
           pairwise

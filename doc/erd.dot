@@ -292,7 +292,7 @@ m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpad
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="configuration">configuration <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
-  <tr><td align="left" width="130" port="issuer">issuer <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="issuer">issuer <font face="Arial Italic" color="grey60">text U</font></td></tr>
   <tr><td align="left" width="130" port="jwks">jwks <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
 </table>
 >];
@@ -503,6 +503,7 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_User -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "6"];
   m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_ApiKey -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::Provider" -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::Provider" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::ApiKeyRole" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];

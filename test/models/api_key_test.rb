@@ -201,7 +201,9 @@ class ApiKeyTest < ActiveSupport::TestCase
   end
 
   should "be invalid if expired" do
-    api_key = create(:api_key, expires_at: 10.minutes.ago)
+    api_key = create(:api_key, expires_at: 10.minutes.from_now)
+
+    travel 20.minutes
 
     refute_predicate api_key, :valid?
     assert_contains api_key.errors[:base], "An expired API key cannot be used. Please create a new one."

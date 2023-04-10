@@ -12,7 +12,7 @@ class OIDC::IdToken < ApplicationRecord
   end
 
   def jti_uniqueness
-    return unless self.class.where(provider_id:).where("(jwt->>'claims')::jsonb->>'jti' = ?", jti).where.not(id: self).exists?
+    return unless self.class.where(oidc_provider_id:).where("(jwt->>'claims')::jsonb->>'jti' = ?", jti).where.not(id: self).exists?
     errors.add("jwt.claims.jti", "must be unique")
   end
 end

@@ -5,7 +5,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
   context "on POST to assume_role" do
     setup do
-      @role = create(:oidc_api_key_role)
+      @role = create(:oidc_api_key_role, provider: build(:oidc_provider, issuer: "https://token.actions.githubusercontent.com"))
       @user = @role.user
 
       travel_to Time.zone.at(1_680_020_830) # after the JWT iat, before the exp
