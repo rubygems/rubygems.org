@@ -18,8 +18,8 @@ class NestedValidator < ActiveRecord::Validations::AssociatedValidator
       before = ActiveRecord::Type::Json.new.deserialize record.send(:"#{attribute}_before_type_cast")
       errors = ActiveModel::Errors.new(before)
       value.class::Contract.new.call(before).errors.each do |error|
-        attribute = error.path.map { |e| e.is_a?(Symbol) ? ".#{e}" : "[#{e}]" }.join.delete_prefix(".")
-        errors.add(attribute, error.text)
+        attr = error.path.map { |e| e.is_a?(Symbol) ? ".#{e}" : "[#{e}]" }.join.delete_prefix(".")
+        errors.add(attr, error.text)
       end
       errors.each do |e|
         record.errors.import(e, attribute: "#{attribute}.#{e.attribute}")

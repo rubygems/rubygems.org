@@ -91,7 +91,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
                          "rubygems_api_key" => resp["rubygems_api_key"],
               "name" => "GitHub Pusher-79685b65-945d-450a-a3d8-a36bcf72c23d",
               "scopes" => ["push_rubygem"],
-              "gem" => nil
+              "expires_at" => 30.minutes.from_now
                        }, resp)
           hashed_key = @user.api_keys.sole.hashed_key
 
@@ -135,19 +135,12 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
                        "rubygems_api_key" => resp["rubygems_api_key"],
             "name" => "GitHub Pusher-79685b65-945d-450a-a3d8-a36bcf72c23d",
             "scopes" => ["push_rubygem"],
-            "gem" => nil
+            "expires_at" => 30.minutes.from_now
                      }, resp)
         hashed_key = @user.api_keys.sole.hashed_key
 
         assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
       end
     end
-  end
-
-  private
-
-  def sign_body(body)
-    private_key = OpenSSL::PKey::EC.new(@private_key_pem)
-    private_key.sign(OpenSSL::Digest.new("SHA256"), body)
   end
 end

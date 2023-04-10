@@ -19,7 +19,13 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
       **@api_key_role.api_key_permissions.create_params(@api_key_role.user)
     )
     Mailer.api_key_created(api_key.id).deliver_later
-    render json: { rubygems_api_key: key, name: api_key.name, scopes: api_key.enabled_scopes, gem: api_key.rubygem }, status: :created
+    render json: { 
+      rubygems_api_key: key, 
+      name: api_key.name, 
+      scopes: api_key.enabled_scopes, 
+      gem: api_key.rubygem,
+      expires_at: api_key.expires_at
+    }.compact, status: :created
   end
 
   private

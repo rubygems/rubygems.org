@@ -2,6 +2,7 @@ class OIDC::ApiKeyPermissions < Dry::Struct
   def create_params(user)
     params = scopes.map(&:to_sym).index_with(true)
     params[:ownership] = gems&.sole&.then { user.ownerships.find_by!(rubygem: { name: _1 }) }
+    params[:expires_at] = DateTime.now.utc + Schema.types[:valid_for][valid_for || Dry::Types::Undefined]
     params
   end
 
@@ -24,7 +25,7 @@ class OIDC::ApiKeyPermissions < Dry::Struct
     required(:scopes).filled(
       Dry.Types.Array(Dry.Types()::String.enum(*ApiKey::API_SCOPES.map(&:to_s)))
     )
-    optional(:valid_for).value(duration.default(30.minutes.freeze), lteq?: 1.day, gteq?: 5.minutes)
+    optional(:valid_for).filled(duration.default(30.minutes.freeze), lteq?: 1.day, gteq?: 5.minutes)
     optional(:gems).maybe(
       Dry.Types.Array(
         Dry.Types::String.constrained(format: Rubygem::NAME_PATTERN)

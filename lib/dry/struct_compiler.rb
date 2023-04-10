@@ -21,13 +21,13 @@ class Dry::StructCompiler
   def visit(node, opts = {})
     meth, rest = node
     if debug
-      Rails.logger.debug { "#{'  ' * opts[:level]}| " }
-      Rails.logger.debug({ meth:, rest:, opts: }, multiline: false)
+      print "#{'  ' * opts[:level]}| "
+      ap({ meth:, rest:, opts: }, multiline: false)
     end
     public_send(:"visit_#{meth}", rest, opts.merge(level: opts[:level] + 1)).tap do
       if debug
-        Rails.logger.debug { "#{'  ' * opts[:level]}-> " }
-        Rails.logger.debug(_1, multiline: false)
+        print "#{'  ' * opts[:level]}-> "
+        ap(_1, multiline: false)
       end
     end
   end

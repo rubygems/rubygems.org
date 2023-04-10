@@ -11,8 +11,12 @@ class ApiKey < ApplicationRecord
   validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validate :rubygem_scope_definition, if: :ownership
   validate :not_soft_deleted?
+  validate :not_expired?
 
   delegate :rubygem_id, :rubygem, to: :ownership, allow_nil: true
+
+  scope :unexpired, -> { where(arel_table[:expires_at].gteq Time.now.utc) }
+  scope :expired, -> { where(arel_table[:expires_at].lt Time.now.utc) }
 
   def enabled_scopes
     API_SCOPES.filter_map { |scope| scope if send(scope) }
@@ -61,6 +65,10 @@ class ApiKey < ApplicationRecord
     soft_deleted? && soft_deleted_rubygem_name.present?
   end
 
+  def expired?
+    expires_at && expires_at < Time.now.utc
+  end
+
   private
 
   def exclusive_show_dashboard_scope
@@ -82,5 +90,9 @@ class ApiKey < ApplicationRecord
 
   def not_soft_deleted?
     errors.add :base, "An invalid API key cannot be used. Please delete it and create a new one." if soft_deleted?
+  end
+
+  def not_expired?
+    errors.add :base, "An expired API key (#{expires_at}) cannot be used. Please create a new one." if expired?
   end
 end

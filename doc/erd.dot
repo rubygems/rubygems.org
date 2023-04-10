@@ -33,6 +33,7 @@ m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpaddin
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="access_webhooks">access_webhooks <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="add_owner">add_owner <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="expires_at">expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="hashed_key">hashed_key <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="index_rubygems">index_rubygems <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="last_accessed_at">last_accessed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
