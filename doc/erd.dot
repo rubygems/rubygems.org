@@ -278,6 +278,14 @@ m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpad
   <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
 </table>
 >];
+"m_OIDC::IdToken" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">OIDC::IdToken</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="jwt">jwt <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
+</table>
+>];
 "m_OIDC::Provider" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">OIDC::Provider</font></td></tr>
 </table>
@@ -496,6 +504,10 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   "m_OIDC::Provider" -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::Provider" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::ApiKeyRole" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_ApiKey -> "m_OIDC::IdToken" [arrowhead = "none", arrowtail = "none", weight = "2"];
+  "m_OIDC::IdToken" -> m_User [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
   m_Rubygem -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
   m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];

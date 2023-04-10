@@ -5,6 +5,7 @@ class ApiKey < ApplicationRecord
   belongs_to :user
   has_one :api_key_rubygem_scope, dependent: :destroy
   has_one :ownership, through: :api_key_rubygem_scope
+  has_one :oidc_id_token, class_name: "OIDC::IdToken"
   validates :user, :name, :hashed_key, presence: true
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
   validate :scope_presence
@@ -15,8 +16,8 @@ class ApiKey < ApplicationRecord
 
   delegate :rubygem_id, :rubygem, to: :ownership, allow_nil: true
 
-  scope :unexpired, -> { where(arel_table[:expires_at].gteq Time.now.utc) }
-  scope :expired, -> { where(arel_table[:expires_at].lt Time.now.utc) }
+  scope :unexpired, -> { where(arel_table[:expires_at].gteq(Time.now.utc)) }
+  scope :expired, -> { where(arel_table[:expires_at].lt(Time.now.utc)) }
 
   def enabled_scopes
     API_SCOPES.filter_map { |scope| scope if send(scope) }

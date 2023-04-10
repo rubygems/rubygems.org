@@ -11,18 +11,35 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
 
   rescue_from JSON::JWS::VerificationFailed, UnverifiedJWT, OIDC::AccessPolicy::AccessError, with: :render_not_found
 
+  rescue_from ActiveRecord::RecordInvalid do |err|
+    render json: {
+      errors: err.record.errors
+    }, status: :unprocessable_entity
+  end
+
   def assume_role
-    key = generate_unique_rubygems_key
-    api_key = @api_key_role.user.api_keys.create!(
-      hashed_key: hashed_key(key),
-      name: "#{@api_key_role.name}-#{@jwt[:jti]}",
-      **@api_key_role.api_key_permissions.create_params(@api_key_role.user)
-    )
-    Mailer.api_key_created(api_key.id).deliver_later
-    render json: { 
-      rubygems_api_key: key, 
-      name: api_key.name, 
-      scopes: api_key.enabled_scopes, 
+    key = nil
+    api_key = nil
+    ApiKey.transaction do
+      key = generate_unique_rubygems_key
+      api_key = @api_key_role.user.api_keys.create!(
+        hashed_key: hashed_key(key),
+        name: "#{@api_key_role.name}-#{@jwt[:jti]}",
+        **@api_key_role.api_key_permissions.create_params(@api_key_role.user)
+      )
+      OIDC::IdToken.create!(
+        api_key:,
+        jwt: { claims: @jwt, header: @jwt.header },
+        api_key_role: @api_key_role,
+        provider: @api_key_role.provider
+      )
+      Mailer.api_key_created(api_key.id).deliver_later
+    end
+
+    render json: {
+      rubygems_api_key: key,
+      name: api_key.name,
+      scopes: api_key.enabled_scopes,
       gem: api_key.rubygem,
       expires_at: api_key.expires_at
     }.compact, status: :created
