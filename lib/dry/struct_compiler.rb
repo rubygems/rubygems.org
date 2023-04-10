@@ -2,9 +2,10 @@ class Dry::StructCompiler
   attr_reader :struct, :debug
 
   # @api private
-  def initialize(struct, debug: false)
+  def initialize(struct, debug: false, print_struct_dsl: true)
     @struct = struct
     @debug = debug
+    @print_struct_dsl = print_struct_dsl
   end
 
   def self.add_attributes(struct:, schema:)
@@ -20,13 +21,13 @@ class Dry::StructCompiler
   def visit(node, opts = {})
     meth, rest = node
     if debug
-      (Rails.logger.debug { "#{'  ' * opts[:level]}| " }
-       Rails.logger.debug({ meth:, rest:, opts: }, multiline: false))
+      Rails.logger.debug { "#{'  ' * opts[:level]}| " }
+      Rails.logger.debug({ meth:, rest:, opts: }, multiline: false)
     end
     public_send(:"visit_#{meth}", rest, opts.merge(level: opts[:level] + 1)).tap do
       if debug
-        (Rails.logger.debug { "#{'  ' * opts[:level]}-> " }
-         Rails.logger.debug(_1, multiline: false))
+        Rails.logger.debug { "#{'  ' * opts[:level]}-> " }
+        Rails.logger.debug(_1, multiline: false)
       end
     end
   end
@@ -57,9 +58,7 @@ class Dry::StructCompiler
   end
 
   def visit_implication(node, opts)
-    node.reduce(nil) do |acc, el|
-      visit(el, **opts, implication: acc, required: false)
-    end
+    node.map { visit(_1, **opts, required: false) }.last
   end
 
   def visit_predicate(node, opts = {})
@@ -129,8 +128,8 @@ class Dry::StructCompiler
     nil
   end
 
-  def remove_undefined(a)
-    a.reject { _1 == Dry::Types::Undefined }
+  def remove_undefined(elem)
+    elem.reject { _1 == Dry::Types::Undefined }
   end
 
   def visit_num(node, _opts)
@@ -139,5 +138,10 @@ class Dry::StructCompiler
 
   def visit_regex(node, _opts)
     node
+  end
+
+  def visit_or(node, opts)
+    # TODO: handle overlaps
+    node[0, 1].map { visit(_1, opts) }.reduce(&:|)
   end
 end

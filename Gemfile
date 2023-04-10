@@ -109,3 +109,4 @@ gem "openid_connect", "~> 1.4"
 
 gem "dry-validation", "~> 1.10"
 gem "dry-struct", "~> 1.6"
+gem "dry-schema", path: "~/Development/github.com/dry-rb/dry-schema"

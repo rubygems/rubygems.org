@@ -1,3 +1,15 @@
+PATH
+  remote: ../../dry-rb/dry-schema
+  specs:
+    dry-schema (1.13.1)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 1.0, >= 1.0.1)
+      dry-core (~> 1.0, < 2)
+      dry-initializer (~> 3.0)
+      dry-logic (>= 1.4, < 2)
+      dry-types (>= 1.7, < 2)
+      zeitwerk (~> 2.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -186,14 +198,6 @@ GEM
     dry-logic (1.5.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0, < 2)
-      zeitwerk (~> 2.6)
-    dry-schema (1.13.2)
-      concurrent-ruby (~> 1.0)
-      dry-configurable (~> 1.0, >= 1.0.1)
-      dry-core (~> 1.0, < 2)
-      dry-initializer (~> 3.0)
-      dry-logic (>= 1.4, < 2)
-      dry-types (>= 1.7, < 2)
       zeitwerk (~> 2.6)
     dry-struct (1.6.0)
       dry-core (~> 1.0, < 2)
@@ -713,6 +717,7 @@ DEPENDENCIES
   ddtrace (~> 1.10)
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 2.8)
+  dry-schema!
   dry-struct (~> 1.6)
   dry-validation (~> 1.10)
   factory_bot_rails (~> 6.2)
