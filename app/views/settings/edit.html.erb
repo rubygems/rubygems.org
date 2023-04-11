@@ -30,7 +30,7 @@
 
   <h2><%= t(".webauthn_credentials") %></h2>
 
-  <p><%= t(".webauthn_credential_note")%> <b><%= t(".webauthn_warning")%></b></p>
+  <p><%= t(".webauthn_credential_note")%></p>
 
   <% if @user.webauthn_credentials.none? %>
     <p><i><%= t(".no_webauthn_credentials") %></i></p>

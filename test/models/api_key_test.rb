@@ -157,6 +157,49 @@ class ApiKeyTest < ActiveSupport::TestCase
     assert_contains api_key.errors[:base], "An invalid API key cannot be used. Please delete it and create a new one."
   end
 
+  context "#mfa_authorized?" do
+    setup do
+      @api_key = create(:api_key)
+    end
+
+    should "return true if mfa not enabled for api key" do
+      @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+
+      assert @api_key.mfa_authorized?(nil)
+    end
+
+    context "with totp" do
+      should "return true when correct and mfa enabled" do
+        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+
+        assert @api_key.mfa_authorized?(ROTP::TOTP.new(@api_key.user.mfa_seed).now)
+      end
+
+      should "return false when incorrect and mfa enabled" do
+        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+
+        refute @api_key.mfa_authorized?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+      end
+    end
+
+    context "with webauthn otp" do
+      should "return true when correct and mfa enabled" do
+        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        webauthn_verification = create(:webauthn_verification, user: @api_key.user)
+
+        assert @api_key.mfa_authorized?(webauthn_verification.otp)
+      end
+
+      should "return false when incorrect and mfa enabled" do
+        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        create(:webauthn_verification, user: @api_key.user, otp: "jiEm2mm2sJtRqAVx7U1i")
+        incorrect_otp = "Yxf57d1wEUSWyXrrLMRv"
+
+        refute @api_key.mfa_authorized?(incorrect_otp)
+      end
+    end
+  end
+
   context "#mfa_enabled?" do
     setup do
       @api_key = create(:api_key, index_rubygems: true)

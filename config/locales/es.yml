@@ -392,6 +392,21 @@ es:
       owner_heading:
       owner_request_heading:
       push_heading:
+  webauthn_verifications:
+    expired_or_already_used:
+    no_port:
+    prompt:
+      title:
+      authenticating_as:
+      authenticate:
+      no_webauthn_devices:
+      safari_note_html:
+    successful_verification:
+      title:
+      close_browser:
+    failed_verification:
+      title:
+      close_browser:
   owners:
     confirm:
       confirmed_email:
@@ -424,7 +439,6 @@ es:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
-      webauthn_warning:
       otp_code:
       api_access:
         confirm_reset: "¿Seguro? Este cambio no puede deshacerse."
