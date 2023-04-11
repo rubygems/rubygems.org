@@ -4,7 +4,7 @@ class YankUser < BaseAction
     current_user.team_member?("rubygems-org") && view == :show
   }
   self.message = lambda {
-    "Are you sure you would like to yank user #{record.handle} #{record.email}?"
+    "Are you sure you would like to yank user #{record.handle} #{record.email}? It will block user and yank all associated rubygems"
   }
   self.confirm_button_label = "Yank User"
 
