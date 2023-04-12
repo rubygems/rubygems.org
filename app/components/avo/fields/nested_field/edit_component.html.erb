@@ -1,0 +1,8 @@
+<%= field_wrapper **field_wrapper_args, stacked: true, class: "nested-form-wrapper", data: {} do %>
+  <% @object, object = field.model, @object %>
+  <% Rails.logger.warn(model: field.model) if field.id == :"api_key_permissions" %>
+    <% @field.get_fields.each do |f| %>
+      <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f, form:, view:) %>
+    <% end %>
+  <% @object = object %>
+<% end %>

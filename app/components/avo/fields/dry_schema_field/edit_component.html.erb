@@ -1,0 +1,8 @@
+<%= field_wrapper **field_wrapper_args do %>
+  <% @form.fields_for @field.id, class: classes(), disabled: disabled? do |nested_fields| %>
+    <%= @field.schema %>
+    <% @field.nested_fields.each do |name, field| %>
+      <%= render field.component_for_view(view).new(field:, form: nested_fields) %>
+    <% end %>
+  <% end %>
+<% end %>

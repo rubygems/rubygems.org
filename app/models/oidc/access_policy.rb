@@ -1,4 +1,8 @@
+# class OIDC::AccessPolicy < Dry::Struct; end
+# return
+
 class OIDC::AccessPolicy < Dry::Struct
+  include ActiveModel::AttributeAssignment
   transform_keys(&:to_sym)
 
   string_boolean_operators = Dry.Types::String.enum("string_equals", "string_regexp_match")
@@ -70,7 +74,7 @@ class OIDC::AccessPolicy < Dry::Struct
     required(:statements).filled.array(:hash) do
       required(:effect).value(Dry.Types::String.enum("allow"))
       required(:principal).hash do
-        required(:oidc).value(Dry.Types::String.constrained(format: URI::DEFAULT_PARSER.make_regexp))
+        required(:oidc).value(Dry.Types::String.constrained(format: // || URI::DEFAULT_PARSER.make_regexp))
       end
       required(:conditions).array(Condition)
     end

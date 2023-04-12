@@ -49,4 +49,8 @@ class OIDC::ApiKeyPermissions < Dry::Struct
   Dry::StructCompiler.add_attributes(struct: self, schema: Schema)
 
   schema schema.lax
+
+  include ActiveModel::AttributeAssignment
+
+  include ActiveModel::Validations
 end

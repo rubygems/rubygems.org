@@ -2,10 +2,9 @@ class Dry::StructCompiler
   attr_reader :struct, :debug
 
   # @api private
-  def initialize(struct, debug: false, print_struct_dsl: true)
+  def initialize(struct, debug: false)
     @struct = struct
     @debug = debug
-    @print_struct_dsl = print_struct_dsl
   end
 
   def self.add_attributes(struct:, schema:)
@@ -34,7 +33,7 @@ class Dry::StructCompiler
 
   # @api private
   def visit_set(node, opts = {})
-    if opts[:pred] && opts[:holder]
+    if (opts[:pred] && opts[:holder]) || opts[:each]
       opts[:holder][opts[:key]][:blk] = lambda {
         c = Dry::StructCompiler.new(self)
         node.map { c.visit(_1, **opts.slice(:level)) }
@@ -48,17 +47,41 @@ class Dry::StructCompiler
     node.reduce(nil) do |acc, elem|
       nelem = visit(elem, **opts, pred: acc)
       if acc && nelem
-        acc & nelem
+        case [acc, nelem]
+        in [*, Dry::Types::Undefined]
+          nelem
+        in [Dry::Types::Undefined, *]
+          acc
+        in Dry::Types::Type, Dry::Types::Constrained
+          nelem
+        in [Dry::Types::Type, *]
+          acc & nelem
+        else
+          Dry::Schema::TypesMerger.new.(Dry::Logic::Operations::And, acc, nelem)
+        end
       elsif nelem
         nelem
       else
         acc
       end
     end
+  rescue
+    ap(node:, opts:)
+    raise
   end
 
   def visit_implication(node, opts)
-    node.map { visit(_1, **opts, required: false) }.last
+    v = remove_undefined(node.map { visit(_1, **opts, required: false) })
+    if v.first.nil?
+      v.last
+    elsif v.last.nil?
+      v.first
+    elsif node.first == [:not, [:predicate, [:nil?, [[:input, Dry::Types::Undefined]]]]]
+      # maybe
+      v.last
+    else
+      Dry::Schema::TypesMerger.new.(Dry::Logic::Operations::Implication, *v)
+    end
   end
 
   def visit_predicate(node, opts = {})
@@ -74,9 +97,11 @@ class Dry::StructCompiler
         when :array?
           ::Array
         when *Dry::Types::PredicateInferrer::TYPE_TO_PREDICATE.values
-          Dry::Types::PredicateInferrer::TYPE_TO_PREDICATE.key(name)
+          return Dry::Types[Dry::Types::PredicateInferrer::TYPE_TO_PREDICATE.key(name).name.downcase.delete_suffix("class")]
+        when :lteq?, :gteq?
+          opts[:pred]
         when :filled?
-          return
+          return opts[:pred]&.constrained(filled: true)
         when :included_in?
           return opts[:pred].enum(*remove_undefined(rest.map { visit(_1, opts) }.flatten(1)))
         when :type?
@@ -85,7 +110,7 @@ class Dry::StructCompiler
           return opts[:pred].constrained(name.to_s.chomp("?").to_sym => remove_undefined(rest.map { visit(_1, opts) }).sole) if opts[:pred]
           raise "Unknown predicate #{name}"
         end
-      Dry::Types[type.name.downcase.delete_suffix("class")]
+      Dry::Types::Nominal[type].new(type)
     end
   end
 
@@ -102,7 +127,7 @@ class Dry::StructCompiler
   end
 
   def visit_not(node, opts)
-    Dry::Logic::Operations::Negation.new visit(node, opts).rule
+    Dry::Logic::Operations::Negation.new visit(node, opts)
   end
 
   def visit_key(node, opts = {})
@@ -113,19 +138,21 @@ class Dry::StructCompiler
     holder = opts.fetch(:holder, {}).merge(name => {})
     type = visit(rest, opts.merge(key: name, holder:))
     blk = holder[name][:blk]
-    type = Dry::Types::Undefined if blk && !type.primitive.equal?(::Array)
+    type = Dry::Types::Undefined if blk && !array?(type)
 
     method = req ? :attribute : :attribute?
     @struct.public_send(method, name, type, &blk)
-    nil
+    type
   end
 
   def visit_each(node, opts)
+    # ap(each: node)
     opts[:holder][opts[:key]][:blk] = lambda {
       c = Dry::StructCompiler.new(self)
       c.visit(node, **opts.slice(:level))
     }
     nil
+    # visit(node, opts.merge(each: true))
   end
 
   def remove_undefined(elem)
@@ -143,5 +170,20 @@ class Dry::StructCompiler
   def visit_or(node, opts)
     # TODO: handle overlaps
     node[0, 1].map { visit(_1, opts) }.reduce(&:|)
+  end
+
+  def array?(type)
+    return type.primitive == ::Array if type.respond_to?(:primitive)
+
+    case type
+    when Dry::Types::Intersection
+      a = [type.left, type.right].map { array?(_1) }.uniq
+      raise "#{type} has multiple values for array? #{a}" if a.size > 1
+      a.sole
+    when NilClass
+      false
+    else
+      raise "Unhandled type #{type} (#{type.class})"
+    end
   end
 end
