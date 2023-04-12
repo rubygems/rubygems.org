@@ -2,7 +2,7 @@ class Dry::StructCompiler
   attr_reader :struct, :debug
 
   # @api private
-  def initialize(struct, debug: true)
+  def initialize(struct, debug: false)
     @struct = struct
     @debug = debug
   end
