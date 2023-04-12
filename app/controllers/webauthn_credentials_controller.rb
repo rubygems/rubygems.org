@@ -13,7 +13,6 @@ class WebauthnCredentialsController < ApplicationController
     webauthn_credential = build_webauthn_credential
 
     if webauthn_credential.save
-      Mailer.webauthn_credential_created(webauthn_credential.id).deliver_later
       redirect_to edit_settings_path
     else
       message = webauthn_credential.errors.full_messages.to_sentence
@@ -28,7 +27,6 @@ class WebauthnCredentialsController < ApplicationController
   def destroy
     webauthn_credential = current_user.webauthn_credentials.find(params[:id])
     if webauthn_credential.destroy
-      Mailer.webauthn_credential_removed(current_user.id, webauthn_credential.nickname, Time.now.utc).deliver_later
       flash[:notice] = t(".webauthn_credential.confirm_delete")
     else
       flash[:error] = webauthn_credential.errors.full_messages.to_sentence
