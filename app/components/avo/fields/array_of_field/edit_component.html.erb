@@ -1,11 +1,24 @@
-<%= field_wrapper **field_wrapper_args, stacked: true, class: "nested-form-wrapper", data: {} do %>
+<%= field_wrapper **field_wrapper_args, stacked: true, data: {} do %>
   <%= content_tag :div, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do %>
     <template data-nested-form-target="template">
-      <%= render field.template_member.component_for_view(view).new(field: field.template_member, form:, view:) %>
+      <div class="nested-form-wrapper" data-new-record="true">
+        <%= a_link 'javascript:void(0);', icon: 'trash', color: :red, style: :text, data: {action: "click->nested-form#remove"} do %>
+          Remove <%= @field.name.singularize %>
+        <% end %>
+        <%= render field.template_member.component_for_view(view).new(field: field.template_member, form:, view:) %>
+      </div>
     </template>
 
-    <% @field.values.each do |v| %>
-      <%= render @field.member.hydrate(view:, model: v, resource:).component_for_view(view).new(field: @field.member, form:, view:) %>
+    <% field.members.each do |f| %>
+      <div class="nested-form-wrapper" data-new-record="true">
+        <%= a_link 'javascript:void(0);', icon: 'trash', color: :red, style: :text, data: {action: "click->nested-form#remove"} do %>
+          Remove <%= @field.name.singularize %>
+        <% end %>
+        <%= render f.component_for_view(view).new(field: f, form:, view:) %>
+        <% if field.model && field.model.errors.include?(f.id) %>
+          <div class="text-red-600 mt-2 text-sm"><%= field.model.errors.messages_for(f.id).to_sentence %></div>
+        <% end %>
+      </div>
     <% end %>
 
     <div data-nested-form-target="target"></div>

@@ -85,7 +85,6 @@ class OIDC::AccessPolicy < Dry::Struct
   end
 
   Dry::StructCompiler.add_attributes(struct: self, schema: Schema)
-  transform_keys(&:to_sym)
   schema schema.lax
 
   include ActiveModel::Validations
@@ -104,6 +103,16 @@ class OIDC::AccessPolicy < Dry::Struct
       conditions.all? { _1.match?(jwt) }
     end
 
+    schema schema.lax
+    transform_keys(&:to_sym)
+    include ActiveModel::Validations
+
+    class Principal
+      schema schema.lax
+      transform_keys(&:to_sym)
+      include ActiveModel::Validations
+    end
+
     class Condition
       def match?(jwt)
         claim_value = jwt[claim]
@@ -114,6 +123,10 @@ class OIDC::AccessPolicy < Dry::Struct
           raise "Unknown operator #{operator.inspect}"
         end
       end
+
+      schema schema.lax
+      transform_keys(&:to_sym)
+      include ActiveModel::Validations
     end
   end
 

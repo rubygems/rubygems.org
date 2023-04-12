@@ -13,7 +13,11 @@ class OIDC::ApiKeyPermissions < Dry::Struct
     duration = Dry.Types().Nominal(ActiveSupport::Duration).constructor do |value|
       case value
       when String
-        ActiveSupport::Duration.parse(value)
+        if /\A\d+\z/.match?(value)
+          ActiveSupport::Duration.build(value.to_i)
+        else
+          ActiveSupport::Duration.parse(value)
+        end
       when Integer
         ActiveSupport::Duration.build(value)
       when ActiveSupport::Duration
@@ -31,7 +35,7 @@ class OIDC::ApiKeyPermissions < Dry::Struct
         Dry.Types::String.constrained(format: Rubygem::NAME_PATTERN)
       )
         .constrained(filled: true)
-      # .constrained(max_size: 1)
+      .constrained(max_size: 1)
     )
   end
 

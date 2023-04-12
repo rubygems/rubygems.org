@@ -1,8 +1,20 @@
 <%= field_wrapper **field_wrapper_args, stacked: true, class: "nested-form-wrapper", data: {} do %>
-  <% @object, object = field.model, @object %>
-  <% Rails.logger.warn(model: field.model) if field.id == :"api_key_permissions" %>
-    <% @field.get_fields.each do |f| %>
+  <% form.fields_for field.id, field.value do |form| %>
+    <% field.get_fields.each do |f| %>
       <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f, form:, view:) %>
+      <% if field.value && field.value.errors.include?(f.id) %>
+        <div class="text-red-600 mt-2 text-sm"><%= field.value.errors.messages_for(f.id).to_sentence %></div>
+      <% end %>
     <% end %>
-  <% @object = object %>
+  <% end %>
+  <% if field.value && field.value.errors.any? %>
+      <div class="text-red-600 mt-2 text-sm">
+      <% field.value.errors.messages.each do |attr, messages| %>
+        <p><%== attr %></p>
+        <% messages.each do |m|%>
+          <p><%= m %></p>
+          <% end %>
+      <% end %>
+      </div>
+    <% end %>
 <% end %>

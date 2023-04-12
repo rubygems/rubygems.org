@@ -1,5 +1,4 @@
 class OIDCApiKeyRoleResource < Avo::BaseResource
-  self.extra_params = [{access_policy: {}, api_key_permissions: {}}]
   self.title = :id
   self.includes = []
   self.model_class = ::OIDC::ApiKeyRole
@@ -15,8 +14,8 @@ class OIDCApiKeyRoleResource < Avo::BaseResource
     coercer: ->(v) { OIDC::ApiKeyPermissions.new OIDC::ApiKeyPermissions::Contract.new.call(v).to_h } do
 
     field :valid_for, as: :text
-    field :scopes, as: :tags, suggestions: ApiKey::API_SCOPES
-    field :gems, as: :tags
+    field :scopes, as: :tags, suggestions: ApiKey::API_SCOPES.map { {label: _1, value: _1} }
+    field :gems, as: :tags, suggestions: -> { Rubygem.limit(10).pluck(:name).map { {value: _1, label: _1} } }
   end
   field :name, as: :text
   field :access_policy, as: :nested,
@@ -27,7 +26,7 @@ class OIDCApiKeyRoleResource < Avo::BaseResource
         field :oidc, as: :text
       end
       field :conditions, as: :array_of, field: :nested do
-        field :operator, as: :select, options: %w[string_equals].index_with(&:titleize)
+        field :operator, as: :select, options: %w[string_equals].index_by(&:titleize)
         field :claim, as: :text
         field :value, as: :text
       end

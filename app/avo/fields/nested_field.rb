@@ -6,6 +6,7 @@ class NestedField < Avo::Fields::BaseField
   def initialize(name, coercer: nil, **args, &block)
     @coercer = coercer
     @items_holder = Avo::ItemsHolder.new
+    hide_on [:index]
     super(name, **args, &nil)
     instance_exec(&block) if block
   end
@@ -15,18 +16,34 @@ class NestedField < Avo::Fields::BaseField
   end
 
   def field(name, **kwargs, &block)
-    @items_holder.field("#{id}[#{name}]", name: name.to_s.humanize(keep_id_suffix: true), **kwargs, &block)
+    @items_holder.field(name, **kwargs, &block)
   end
 
   def fill_field(model, key, value, params)
-    value = @coercer.call(value.to_h.compact_blank) if @coercer
+    # Rails.logger.warn(key:, value:, vc: value.class)
+    value = value.to_h.to_h do |k, v|
+      [k, get_field(k).fill_field(Holder.new("#{id}.#{k}"), :item, v, params).item]
+    end
+    value = @coercer.call(value) if @coercer
     super(model, key, value, params).tap do
-      get_fields.each do |field|
-        attr_name = field.id[/\[([^\]]+)\]/, 1]
-        v = value.send(attr_name)
-        field.hydrate(model: v)
-      end
-      Rails.logger.warn(key:, value:, params:, attrs: get_fields.to_h { [_1.id, _1.model] })
+      # Rails.logger.warn(model:, key:, value:, vc: value.class)
+    end
+  end
+
+  def to_permitted_param
+    { super => fields.map(&:to_permitted_param) }
+  end
+
+  class Holder
+    attr_accessor :item
+
+    def initialize(id)
+      @id = id
+    end
+
+    def item=(item)
+      # Rails.logger.info("item=", item: item, ic: item.class, id: @id)
+      @item = item
     end
   end
 end
