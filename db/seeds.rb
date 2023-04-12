@@ -24,18 +24,6 @@ requester = User.create_with(
   email_confirmed: true
 ).find_or_create_by!(email: "gem-requester@example.com")
 
-user_with_yubikey = User.create_with(
-  handle: "gem-user-with-yubikey",
-  password: password,
-  email_confirmed: true
-).find_or_create_by!(email: "gem-user-with-yubikey@example.com")
-
-user_with_yubikey.webauthn_credentials.create_with(
-  external_id: "external-id",
-  public_key: "public-key",
-  sign_count: 1
-).find_or_create_by!(nickname: "Fake Yubikey")
-
 rubygem0 = Rubygem.find_or_create_by!(
   name: "rubygem0"
 ) do |rubygem|
