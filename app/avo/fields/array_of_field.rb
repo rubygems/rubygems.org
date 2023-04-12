@@ -2,9 +2,9 @@ class ArrayOfField < Avo::Fields::BaseField
   def initialize(name, field:, field_options: {}, **args, &block)
     super(name, **args, &nil)
 
-    @make_field = ->(id:, index: nil, value: nil) do
+    @make_field = lambda do |id:, index: nil, value: nil|
       items_holder = Avo::ItemsHolder.new
-      items_holder.field(id, name: index&.to_s || self.name, as: field, required: -> { false }, value:,  **field_options, &block)
+      items_holder.field(id, name: index&.to_s || self.name, as: field, required: -> { false }, value:, **field_options, &block)
       items_holder.items.sole.hydrate(view:, resource:)
     end
   end

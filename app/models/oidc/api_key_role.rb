@@ -2,8 +2,6 @@ class OIDC::ApiKeyRole < ApplicationRecord
   belongs_to :provider, class_name: "OIDC::Provider", foreign_key: "oidc_provider_id", inverse_of: :api_key_roles
   belongs_to :user
 
-  validates :user, :provider, presence: true
-
   has_many :id_tokens, class_name: "OIDC::IdToken", inverse_of: :api_key_role, foreign_key: :oidc_api_key_role_id, dependent: :nullify
 
   Dry::Schema.load_extensions(:hints)

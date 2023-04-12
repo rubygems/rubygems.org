@@ -16,8 +16,8 @@ class DrySchemaField < Avo::Fields::BaseField
     end
 
     def call(schema)
-       visit(schema.try(:to_ast), {})
-       @fields.compact_blank.keep_if { |_, v| v.is_a? Avo::Fields::BaseField}
+      visit(schema.try(:to_ast), {})
+      @fields.compact_blank.keep_if { |_, v| v.is_a? Avo::Fields::BaseField }
     end
 
     def visit(node, opts)
@@ -37,7 +37,7 @@ class DrySchemaField < Avo::Fields::BaseField
     end
 
     alias visit_lax visit
-    
+
     def visit_constructor(node, opts)
       nominal, fn = node
       visit(nominal, opts)
@@ -54,9 +54,9 @@ class DrySchemaField < Avo::Fields::BaseField
       member, meta = node
       member = visit(member, opts)
 
-      # todo: create an array field
+      # TODO: create an array field
       # member
-      ap(member:)
+      Rails.logger.debug(member:)
       nil
     end
 
@@ -98,9 +98,8 @@ class DrySchemaField < Avo::Fields::BaseField
     def visit_predicate(node, opts)
       name, rest = node
       return if name == :key?
-      
 
-      return case name
+      case name
       when :key?, :filled?, :lteq?, :gteq?, :format?
         nil
       when :type?
@@ -115,7 +114,7 @@ class DrySchemaField < Avo::Fields::BaseField
       else
         raise "Unhandled: #{node}"
       end.then do |type|
-        ap(opts:, type:, node:, ) if opts.values_at(:and, :implied_by).any?
+        Rails.logger.debug(opts:, type:, node:) if opts.values_at(:and, :implied_by).any?
         return opts[:and] if type.nil?
         case opts[:and]
         when ->(a) { a.respond_to?(:primitive) }
@@ -157,11 +156,11 @@ class DrySchemaField < Avo::Fields::BaseField
       end
     end
 
-    def visit_list(node, opts)
+    def visit_list(node, _opts)
       node
     end
 
-    def visit_input(node, opts)
+    def visit_input(node, _opts)
       node
     end
 
@@ -174,7 +173,7 @@ class DrySchemaField < Avo::Fields::BaseField
       end
     end
 
-    def visit_not(node, opts)
+    def visit_not(_node, _opts)
       nil
     end
 
@@ -183,7 +182,6 @@ class DrySchemaField < Avo::Fields::BaseField
     end
 
     def visit_or(node, opts)
-      
     end
   end
 end

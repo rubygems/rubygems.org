@@ -3,20 +3,20 @@ class NestedField < Avo::Fields::BaseField
 
   include Avo::Concerns::HasFields
 
-  def initialize(name, coercer: nil, **args, &block)
+  def initialize(name, coercer: nil, stacked: true, **args, &block)
     @coercer = coercer
     @items_holder = Avo::ItemsHolder.new
     hide_on [:index]
-    super(name, **args, &nil)
+    super(name, stacked:, **args, &nil)
     instance_exec(&block) if block
   end
 
-  def fields(**kwargs)
+  def fields(**_kwargs)
     @items_holder.items.grep Avo::Fields::BaseField
   end
 
-  def field(name, **kwargs, &block)
-    @items_holder.field(name, **kwargs, &block)
+  def field(name, **kwargs, &)
+    @items_holder.field(name, **kwargs, &)
   end
 
   def fill_field(model, key, value, params)
@@ -41,9 +41,6 @@ class NestedField < Avo::Fields::BaseField
       @id = id
     end
 
-    def item=(item)
-      # Rails.logger.info("item=", item: item, ic: item.class, id: @id)
-      @item = item
-    end
+    attr_writer :item
   end
 end

@@ -1,4 +1,4 @@
-<%= field_wrapper **field_wrapper_args, stacked: true, class: "nested-form-wrapper", data: {} do %>
+<%= field_wrapper **field_wrapper_args, class: "nested-form-wrapper", data: {} do %>
   <% form.fields_for field.id, field.value do |form| %>
     <% field.get_fields.each do |f| %>
       <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f, form:, view:) %>
