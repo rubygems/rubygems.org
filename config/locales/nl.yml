@@ -223,6 +223,10 @@ nl:
       subject:
       title:
       subtitle:
+    webauthn_credential_removed:
+      subject:
+      title:
+      subtitle:
     email_reset_update:
       subject:
       title:

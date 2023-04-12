@@ -225,6 +225,10 @@ en:
       subject: New security device added on RubyGems.org
       title: SECURITY DEVICE ADDED
       subtitle: Hi %{handle}!
+    webauthn_credential_removed:
+      subject: Security device removed on RubyGems.org
+      title: SECURITY DEVICE REMOVED
+      subtitle: Hi %{handle}!
     email_reset_update:
       subject: You have requested email address update on RubyGems.org
       title: EMAIL UPDATE REQUESTED

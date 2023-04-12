@@ -104,6 +104,15 @@ class Mailer < ApplicationMailer
       subject: I18n.t("mailer.webauthn_credential_created.subject")
   end
 
+  def webauthn_credential_removed(user_id, nickname, deleted_at)
+    @user = User.find(user_id)
+    @nickname = nickname
+    @deleted_at = deleted_at
+
+    mail to: @user.email,
+      subject: I18n.t("mailer.webauthn_credential_removed.subject")
+  end
+
   def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
     @version        = Version.find(version_id)
     notified_user   = User.find(notified_user_id)

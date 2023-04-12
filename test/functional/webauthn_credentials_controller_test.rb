@@ -178,7 +178,10 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       @user = create(:user)
       @credential = create(:webauthn_credential, user: @user)
       sign_in_as @user
-      delete :destroy, params: { id: @credential.id }
+
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        delete :destroy, params: { id: @credential.id }
+      end
     end
 
     should "destroy the webauthn credential" do
@@ -197,6 +200,15 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       delete :destroy, params: { id: @credential.id }
 
       refute_nil flash[:error]
+    end
+
+    should "deliver webauthn credential removed email" do
+      assert_equal 1, ActionMailer::Base.deliveries.size
+      email = ActionMailer::Base.deliveries.last
+
+      assert_equal [@user.email], email.to
+      assert_equal ["no-reply@mailer.rubygems.org"], email.from
+      assert_equal "Security device removed on RubyGems.org", email.subject
     end
 
     should redirect_to :edit_settings

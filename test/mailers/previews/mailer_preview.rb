@@ -178,4 +178,11 @@ class MailerPreview < ActionMailer::Preview
 
     Mailer.webauthn_credential_created(webauthn_credential.id)
   end
+
+  def webauthn_credential_removed
+    user_id = User.last.id
+    webauthn_credential_nickname = "Fake Yubikey"
+
+    Mailer.webauthn_credential_removed(user_id, webauthn_credential_nickname, Time.now.utc)
+  end
 end
