@@ -662,6 +662,7 @@ zh-CN:
       confirm_delete:
       delete_failed:
       delete:
+      confirm:
       saved:
     form:
       new_device:
