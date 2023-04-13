@@ -1,5 +1,5 @@
 class ChangeEmail < BaseAction
-  field :email, as: :text, required: true
+  field :from_email, name: "Email", as: :text, required: true
 
   self.name = "Change Email"
   self.visible = lambda {
@@ -9,8 +9,12 @@ class ChangeEmail < BaseAction
   self.confirm_button_label = "Change Email"
 
   class ActionHandler < ActionHandler
+    set_callback :handle, :before do
+      error "Must enter Email" unless fields[:from_email].presence
+    end
+
     def handle_model(user)
-      user.email = fields["email"]
+      user.email = fields["from_email"]
       user.email_confirmed = false
       user.generate_confirmation_token
 
