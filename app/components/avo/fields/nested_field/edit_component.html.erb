@@ -7,14 +7,15 @@
       <% end %>
     <% end %>
   <% end %>
-  <% if field.value && field.value.errors.any? %>
-      <div class="text-red-600 mt-2 text-sm">
-      <% field.value.errors.messages.each do |attr, messages| %>
-        <p><%== attr %></p>
+  <% if field.value && field.value.errors.include?(:base) %>
+    <div class="text-red-600 mt-2 text-sm">
+    <% field.value.errors.messages_for(:base).each do |attr, messages| %>
+      <ul>
         <% messages.each do |m|%>
-          <p><%= m %></p>
-          <% end %>
-      <% end %>
-      </div>
+          <li><%= m %></li>
+        <% end %>
+      <ul>
     <% end %>
+    </div>
+  <% end %>
 <% end %>

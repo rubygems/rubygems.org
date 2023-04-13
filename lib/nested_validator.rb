@@ -17,7 +17,7 @@ class NestedValidator < ActiveRecord::Validations::AssociatedValidator
     if @with_contract
       before = ActiveRecord::Type::Json.new.deserialize record.send(:"#{attribute}_before_type_cast")
       Rails.logger.warn(before:, as_json: before.as_json)
-      value.class::Contract.new.call(before.as_json.deep_symbolize_keys).errors(full: true).each do |error|
+      value.class::Contract.new.call(before.as_json&.deep_symbolize_keys).errors(full: true).each do |error|
         attr = error.path.map { |e| e.is_a?(Symbol) ? ".#{e}" : "[#{e}]" }.join.delete_prefix(".")
         if error.respond_to?(:text)
           value.errors.add(attr, error.text)
