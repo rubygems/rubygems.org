@@ -24,9 +24,7 @@ class Api::V1::DependenciesController < Api::BaseController
   def index
     deps = GemDependent.new(gem_names).to_a
 
-    cache_expiry_headers(expiry: 30, fastly_expiry: 60)
-    set_surrogate_key("dependencyapi", gem_names.map { |name| "gem/#{name}" })
-
+    cacheable!
     respond_to do |format|
       format.json { render json: deps }
       format.marshal { render plain: Marshal.dump(deps) }
@@ -35,9 +33,16 @@ class Api::V1::DependenciesController < Api::BaseController
 
   private
 
+  def cacheable!
+    cache_expiry_headers(expiry: 30, fastly_expiry: 60)
+    set_surrogate_key("dependencyapi", gem_names.map { |name| "gem/#{name}" })
+  end
+
   def check_brownout
     current_time = Time.current.utc
     return if brownout_ranges.none? { |r| r.cover?(current_time) }
+
+    cacheable!
 
     respond_to do |format|
       error = "The dependency API is going away. See https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html for more information"
@@ -47,7 +52,10 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def check_gem_count
-    return render plain: "" if gem_names.empty?
+    if gem_names.empty?
+      cacheable!
+      return render plain: ""
+    end
     return if gem_names.size <= Gemcutter::GEM_REQUEST_LIMIT
 
     case request.format.symbol
