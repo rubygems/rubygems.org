@@ -702,6 +702,7 @@ pt-BR:
       confirm_delete:
       delete_failed:
       delete:
+      confirm:
       saved:
     form:
       new_device:

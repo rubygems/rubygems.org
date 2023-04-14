@@ -50,7 +50,12 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       assert_text "SECURITY DEVICE"
       assert_no_text "You don't have any security devices"
       assert_text @webauthn_credential.nickname
+
       click_on "Delete"
+      page.accept_alert
+
+      assert_text "You don't have any security devices"
+      assert_no_text @webauthn_credential.nickname
     end
 
     webauthn_credential_removed_email = ActionMailer::Base.deliveries.find do |email|
@@ -58,8 +63,30 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     end
 
     assert_equal "Security device removed on RubyGems.org", webauthn_credential_removed_email.subject
-    assert_text "You don't have any security devices"
-    assert_no_text @webauthn_credential.nickname
+  end
+
+  should "not delete device if confirmation alert is dismissed" do
+    sign_in
+    @webauthn_credential = create(:webauthn_credential, user: @user)
+    visit edit_settings_path
+
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      assert_text "SECURITY DEVICE"
+      assert_no_text "You don't have any security devices"
+      assert_text @webauthn_credential.nickname
+
+      click_on "Delete"
+      page.dismiss_confirm
+
+      assert_no_text "You don't have any security devices"
+      assert_text @webauthn_credential.nickname
+    end
+
+    webauthn_credential_removed_email = ActionMailer::Base.deliveries.find do |email|
+      email.to.include?(@user.email)
+    end
+
+    assert_nil webauthn_credential_removed_email
   end
 
   should "be able to create security devices" do
