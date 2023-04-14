@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-    - uses: ruby/setup-ruby@904f3fef85a9c80a3750cbe7d5159268fd5caa9f # v1.145.0
+    - uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
       with:
         bundler-cache: true
     - name: Rubocop
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-    - uses: ruby/setup-ruby@904f3fef85a9c80a3750cbe7d5159268fd5caa9f # v1.145.0
+    - uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
       with:
         bundler-cache: true
     - name: Brakeman
