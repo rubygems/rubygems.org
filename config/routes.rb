@@ -188,8 +188,6 @@ Rails.application.routes.draw do
       get 'successful_verification'
       get 'failed_verification'
       get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
-      # TODO: add plain text as a valid format
-      post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate, constraints: { format: /json/ }
     end
 
     ################################################################################
@@ -230,6 +228,12 @@ Rails.application.routes.draw do
   scope constraints: { format: :json }, defaults: { format: :json } do
     resources :webauthn_credentials, only: :create do
       post :callback, on: :collection
+    end
+  end
+
+  scope constraints: { format: :text }, defaults: { format: :text } do
+    resource :webauthn_verification, only: [] do
+      post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate
     end
   end
 
