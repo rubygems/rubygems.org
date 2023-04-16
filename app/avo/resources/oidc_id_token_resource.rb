@@ -12,7 +12,7 @@ class OIDCIdTokenResource < Avo::BaseResource
   field :provider, as: :belongs_to
   field :api_key, as: :has_one
 
-  heading 'JWT'
+  heading "JWT"
   field :claims, as: :key_value, stacked: true do
     model.jwt.fetch("claims")
   end

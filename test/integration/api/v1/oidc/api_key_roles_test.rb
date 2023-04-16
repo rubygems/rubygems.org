@@ -140,7 +140,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
       context "with permissions scoped to a gem" do
         should "return API key" do
-          gem_name = create(:rubygem, owners: [@role.user], number: '1.0.0').name
+          gem_name = create(:rubygem, owners: [@role.user], number: "1.0.0").name
           @role.api_key_permissions.gems = [gem_name]
           @role.save!
 
