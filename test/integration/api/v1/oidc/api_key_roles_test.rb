@@ -3,6 +3,72 @@ require "test_helper"
 class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
   make_my_diffs_pretty!
 
+  context "on GET to index" do
+    setup do
+      @role = create(:oidc_api_key_role)
+      @user = @role.user
+      @user_api_key = "12323"
+      @api_key = create(:api_key, user: @user, key: @user_api_key)
+    end
+
+    should "return the user's roles" do
+      get api_v1_oidc_api_key_roles_path,
+              params: {},
+              headers: { "HTTP_AUTHORIZATION" => @user_api_key }
+
+      assert_response :success
+      assert_equal [
+        {
+          "id" => @role.id,
+          "oidc_provider_id" => @role.oidc_provider_id,
+          "user_id" => @user.id,
+          "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
+          "name" => "GitHub Pusher",
+          "access_policy" =>  { "statements" => [
+            { "effect" => "allow",
+              "principal" => { "oidc" => @role.provider.issuer },
+              "conditions" => [] }
+          ] },
+          "created_at" => @role.created_at.as_json,
+          "updated_at" => @role.updated_at.as_json
+        }
+      ], response.parsed_body
+    end
+  end
+
+  context "on GET to show" do
+    setup do
+      @role = create(:oidc_api_key_role)
+      @user = @role.user
+      @user_api_key = "12323"
+      @api_key = create(:api_key, user: @user, key: @user_api_key)
+    end
+
+    should "return the user's roles" do
+      get api_v1_oidc_api_key_role_path(@role.id),
+              params: {},
+              headers: { "HTTP_AUTHORIZATION" => @user_api_key }
+
+      assert_response :success
+      assert_equal(
+        {
+          "id" => @role.id,
+          "oidc_provider_id" => @role.oidc_provider_id,
+          "user_id" => @user.id,
+          "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
+          "name" => "GitHub Pusher",
+          "access_policy" =>  { "statements" => [
+            { "effect" => "allow",
+              "principal" => { "oidc" => @role.provider.issuer },
+              "conditions" => [] }
+          ] },
+          "created_at" => @role.created_at.as_json,
+          "updated_at" => @role.updated_at.as_json
+        }, response.parsed_body
+      )
+    end
+  end
+
   def jwt(claims = @claims, key: @pkey)
     JSON::JWT.new(claims).sign(key.to_jwk)
   end

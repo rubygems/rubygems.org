@@ -40,6 +40,8 @@ class User < ApplicationRecord
 
   has_many :audits, as: :auditable, dependent: :nullify
 
+  has_many :oidc_api_key_roles, dependent: :nullify, class_name: "OIDC::ApiKeyRole", inverse_of: :user
+
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 

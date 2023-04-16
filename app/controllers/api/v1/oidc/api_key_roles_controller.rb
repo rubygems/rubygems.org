@@ -1,10 +1,14 @@
 class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   include ApiKeyable
 
-  before_action :set_api_key_role
-  before_action :decode_jwt
-  before_action :verify_jwt
-  before_action :verify_access
+  before_action :authenticate_with_api_key, except: :assume_role
+
+  with_options only: :assume_role do
+    before_action :set_api_key_role
+    before_action :decode_jwt
+    before_action :verify_jwt
+    before_action :verify_access
+  end
 
   class UnverifiedJWT < StandardError
   end
@@ -20,6 +24,14 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
     render json: {
       errors: err.record.errors
     }, status: :unprocessable_entity
+  end
+
+  def index
+    render json: @api_key.user.oidc_api_key_roles
+  end
+
+  def show
+    render json: @api_key.user.oidc_api_key_roles.find(params.require(:id))
   end
 
   def assume_role
