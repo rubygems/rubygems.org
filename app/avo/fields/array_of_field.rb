@@ -19,7 +19,7 @@ class ArrayOfField < Avo::Fields::BaseField
   end
 
   def template_member
-    @make_field[id: "#{self.id}[NEW_RECORD]"]
+    @make_field[id: "#{id}[NEW_RECORD]"] 
   end
 
   def fill_field(model, key, value, params)

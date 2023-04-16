@@ -1,5 +1,4 @@
-class OIDC::ApiKeyPermissions< OIDC::BaseModel
-
+class OIDC::ApiKeyPermissions < OIDC::BaseModel
   def create_params(user)
     params = scopes.map(&:to_sym).index_with(true)
     params[:ownership] = gems&.sole&.then { user.ownerships.find_by!(rubygem: { name: _1 }) }
@@ -8,7 +7,7 @@ class OIDC::ApiKeyPermissions< OIDC::BaseModel
   end
 
   attribute :scopes, ArrayOf.new(:string)
-  attribute :valid_for, Types::Duration.new, default: 30.minutes.freeze
+  attribute :valid_for, Types::Duration.new, default: -> { 30.minutes.freeze }
   attribute :gems, ArrayOf.new(:string)
 
   validates :scopes, presence: true
@@ -26,7 +25,7 @@ class OIDC::ApiKeyPermissions< OIDC::BaseModel
   end
 
   def scopes_must_be_unique
-    errors.add(:'scopes', "show_dashboard is exclusive") if scopes.include?("show_dashboard") && scopes.size > 1
-    errors.add(:'scopes', "must be unique") if scopes.dup.uniq!
+    errors.add(:scopes, "show_dashboard is exclusive") if scopes.include?("show_dashboard") && scopes.size > 1
+    errors.add(:scopes, "must be unique") if scopes.dup.uniq!
   end
 end

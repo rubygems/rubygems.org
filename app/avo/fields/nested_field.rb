@@ -23,7 +23,7 @@ class NestedField < Avo::Fields::BaseField
     value = value.to_h.to_h do |k, v|
       [k, get_field(k).fill_field(Holder.new("#{id}.#{k}"), :item, v, params).item]
     end
-    
+
     if @constructor.respond_to?(:call)
       value = @constructor.call(value)
     elsif @constructor

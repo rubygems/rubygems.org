@@ -1,23 +1,18 @@
-
 class OIDC::AccessPolicy < OIDC::BaseModel
   class Statement < OIDC::BaseModel
-  
     def match_jwt?(jwt)
       return unless principal.oidc == jwt[:iss]
 
       conditions.all? { _1.match?(jwt) }
     end
 
-
     class Principal < OIDC::BaseModel
-    
       attribute :oidc, :string
 
       validates :oidc, presence: true
     end
 
-    class Condition< OIDC::BaseModel
-    
+    class Condition < OIDC::BaseModel
       def match?(jwt)
         claim_value = jwt[claim]
         case operator
@@ -58,7 +53,7 @@ class OIDC::AccessPolicy < OIDC::BaseModel
 
     attribute :effect, :string
     attribute :principal, JsonDeserializable.new(Principal)
-    attribute :conditions, ArrayOf.new(JsonDeserializable.new Condition)
+    attribute :conditions, ArrayOf.new(JsonDeserializable.new(Condition))
 
     validates :effect, presence: true, inclusion: { in: EFFECTS }
 
@@ -67,7 +62,7 @@ class OIDC::AccessPolicy < OIDC::BaseModel
     validates :conditions, nested: true
   end
 
-  attribute :statements, ArrayOf.new(JsonDeserializable.new Statement)
+  attribute :statements, ArrayOf.new(JsonDeserializable.new(Statement))
 
   validates :statements, presence: true, nested: true
 
