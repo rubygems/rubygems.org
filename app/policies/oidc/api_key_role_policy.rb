@@ -12,4 +12,5 @@ class OIDC::ApiKeyRolePolicy < ApplicationPolicy
   def act_on? = rubygems_org_admin?
 
   has_association :provider
+  has_association :id_tokens
 end

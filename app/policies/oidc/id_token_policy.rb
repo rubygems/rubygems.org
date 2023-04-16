@@ -10,4 +10,5 @@ class OIDC::IdTokenPolicy < ApplicationPolicy
 
   has_association :provider
   has_association :api_key_role
+  has_association :api_key
 end
