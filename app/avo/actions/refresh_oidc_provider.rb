@@ -21,7 +21,7 @@ class RefreshOIDCProvider < BaseAction
       resp = connection.get("/.well-known/openid-configuration")
 
       provider.configuration = resp.body
-      provider.jwks = connection.get(provider.configuration["jwks_uri"]).body
+      provider.jwks = connection.get(provider.configuration.jwks_uri).body
 
       provider.save!
     end
