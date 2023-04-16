@@ -10,6 +10,7 @@ class ApiKeyResource < Avo::BaseResource
   field :last_accessed_at, as: :date_time
   field :soft_deleted_at, as: :date_time
   field :soft_deleted_rubygem_name, as: :text
+  field :expires_at, as: :date_time
 
   field :enabled_scopes, as: :tags
 

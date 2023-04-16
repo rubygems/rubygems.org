@@ -138,6 +138,37 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
         end
       end
 
+      context "with permissions scoped to a gem" do
+        should "return API key" do
+          gem_name = create(:rubygem, owners: [@role.user], number: '1.0.0').name
+          @role.api_key_permissions.gems = [gem_name]
+          @role.save!
+
+          post assume_role_api_v1_oidc_api_key_role_path(@role),
+              params: {
+                jwt: jwt.to_s
+              },
+              headers: {}
+
+          assert_response :created
+
+          resp = response.parsed_body
+
+          assert_match(/^rubygems_/, resp["rubygems_api_key"])
+          assert_equal({
+                         "rubygems_api_key" => resp["rubygems_api_key"],
+              "name" => "GitHub Pusher-79685b65-945d-450a-a3d8-a36bcf72c23d",
+              "scopes" => ["push_rubygem"],
+              "expires_at" => 30.minutes.from_now,
+              "gem" => Rubygem.find_by!(name: gem_name).as_json
+                       }, resp)
+          hashed_key = @user.api_keys.sole.hashed_key
+
+          assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
+          assert_equal gem_name, @user.api_keys.sole.ownership.rubygem.name
+        end
+      end
+
       context "with mismatched conditions" do
         should "return not found" do
           @role.access_policy.statements.first.conditions << OIDC::AccessPolicy::Statement::Condition.new(

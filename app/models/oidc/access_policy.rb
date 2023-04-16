@@ -70,7 +70,8 @@ class OIDC::AccessPolicy < OIDC::BaseModel
   end
 
   def verify_access!(jwt)
-    effect = statements.select { _1.match_jwt?(jwt) }.last&.effect || "deny"
+    matching_statements = statements.select { _1.match_jwt?(jwt) }
+    effect = matching_statements.last&.effect || "deny"
 
     case effect
     when "allow"

@@ -8,8 +8,16 @@ class OIDCIdTokenResource < Avo::BaseResource
 
   field :id, as: :id
   # Fields generated from the model
-  field :oidc_api_key_role, as: :belongs_to
-  field :jwt, as: :text
-  field :oidc_provider, as: :belongs_to
+  field :api_key_role, as: :belongs_to
+  field :provider, as: :belongs_to
+  field :api_key, as: :has_one
+
+  heading 'JWT'
+  field :claims, as: :key_value, stacked: true do
+    model.jwt.fetch("claims")
+  end
+  field :header, as: :key_value, stacked: true do
+    model.jwt.fetch("header")
+  end
   # add fields here
 end

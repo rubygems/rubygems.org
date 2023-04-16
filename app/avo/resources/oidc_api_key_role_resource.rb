@@ -29,5 +29,7 @@ class OIDCApiKeyRoleResource < Avo::BaseResource
       end
     end
   end
+
+  field :id_tokens, as: :has_many
   # add fields here
 end
