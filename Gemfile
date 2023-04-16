@@ -25,6 +25,7 @@ gem "octokit", "~> 6.1"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth", "~> 2.1"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "openid_connect", "~> 1.4"
 gem "pg", "~> 1.4"
 gem "puma", "~> 6.1"
 gem "rack", "~> 2.2"
@@ -104,9 +105,3 @@ group :test do
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
 end
-
-gem "openid_connect", "~> 1.4"
-
-gem "dry-validation", "~> 1.10"
-gem "dry-struct", "~> 1.6"
-gem "dry-schema", path: "~/Development/github.com/dry-rb/dry-schema"

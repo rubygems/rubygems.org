@@ -3,8 +3,8 @@ class NestedField < Avo::Fields::BaseField
 
   include Avo::Concerns::HasFields
 
-  def initialize(name, coercer: nil, stacked: true, **args, &block)
-    @coercer = coercer
+  def initialize(name, constructor: nil, stacked: true, **args, &block)
+    @constructor = constructor
     @items_holder = Avo::ItemsHolder.new
     hide_on [:index]
     super(name, stacked:, **args, &nil)
@@ -20,14 +20,17 @@ class NestedField < Avo::Fields::BaseField
   end
 
   def fill_field(model, key, value, params)
-    # Rails.logger.warn(key:, value:, vc: value.class)
     value = value.to_h.to_h do |k, v|
       [k, get_field(k).fill_field(Holder.new("#{id}.#{k}"), :item, v, params).item]
     end
-    value = @coercer.call(value) if @coercer
-    super(model, key, value, params).tap do
-      # Rails.logger.warn(model:, key:, value:, vc: value.class)
+    
+    if @constructor.respond_to?(:call)
+      value = @constructor.call(value)
+    elsif @constructor
+      value = @constructor.new(value)
     end
+
+    super(model, key, value, params)
   end
 
   def to_permitted_param

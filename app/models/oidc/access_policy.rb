@@ -1,119 +1,23 @@
-# class OIDC::AccessPolicy < Dry::Struct; end
-# return
 
-class OIDC::AccessPolicy < Dry::Struct
-  include ActiveModel::AttributeAssignment
-  transform_keys(&:to_sym)
-
-  string_boolean_operators = Dry.Types::String.enum("string_equals", "string_regexp_match")
-  numeric_boolean_operators = Dry.Types::String.enum("number_equals")
-  unary_operators = Dry.Types::String.enum("is_null")
-  Condition = Dry.Types::Hash.schema(
-    operator: string_boolean_operators,
-    claim: Dry.Types::String,
-    value: Dry.Types::String
-  ) | Dry.Types::Hash.schema(
-    operator: numeric_boolean_operators,
-    claim: Dry.Types::String,
-    value: Dry.Types::Integer
-  ) | Dry.Types::Hash.schema(
-    operator: unary_operators,
-    claim: Dry.Types::String
-  )
-
-  Schema = Dry::Schema.define do
-    config.validate_keys = true
-
-    #       statement {
-    #         effect = "Allow"
-    #
-    #         principals {
-    #           type        = "*"
-    #           identifiers = ["*"]
-    #         }
-    #
-    #         actions = [
-    #           "ecr:GetDownloadUrlForLayer",
-    #           "ecr:BatchGetImage",
-    #           "ecr:BatchCheckLayerAvailability",
-    #           "ecr:ListImages",
-    #           "ecr:DescribeRepositories",
-    #         ]
-    #       }
-    #
-    #   assume_role_policy = jsonencode({
-    #     Version = "2012-10-17"
-    #     Statement = [
-    #       {
-    #         Effect = "Allow"
-    #         Action = "sts:AssumeRoleWithWebIdentity"
-    #         Principal = {
-    #           Federated = aws_iam_openid_connect_provider.github-actions.arn
-    #         }
-    #         Condition = {
-    #           StringEquals = {
-    #             "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com"
-    #           }
-    #           StringLike = {
-    #             "token.actions.githubusercontent.com:sub" : "repo:rubygems/rubygems.org:*"
-    #           }
-    #         }
-    #       },
-    #       {
-    #         Effect = "Allow"
-    #         Action = "sts:AssumeRole"
-    #         Principal = {
-    #           AWS = [
-    #             for user in data.aws_iam_group.admins.users : user.arn
-    #           ]
-    #         }
-    #       }
-    #     ]
-    #   })
-    #
-    required(:statements).filled.array(:hash) do
-      required(:effect).value(Dry.Types::String.enum("allow"))
-      required(:principal).hash do
-        required(:oidc).value(Dry.Types::String.constrained(format: // || URI::DEFAULT_PARSER.make_regexp))
-      end
-      required(:conditions).array(Condition)
-    end
-  end
-
-  class Contract < Dry::Validation::Contract
-    json(Schema)
-  end
-
-  Dry::StructCompiler.add_attributes(struct: self, schema: Schema)
-  schema schema.lax
-
-  include ActiveModel::Validations
-
-  validate do
-    Contract.new.call(as_json).errors.each do |error|
-      attribute = error.path.map { |e| e.is_a?(Symbol) ? ".#{e}" : "[#{e}]" }.join.delete_prefix(".")
-      errors.add(attribute, error.text)
-    end
-  end
-
-  class Statement
+class OIDC::AccessPolicy < OIDC::BaseModel
+  class Statement < OIDC::BaseModel
+  
     def match_jwt?(jwt)
       return unless principal.oidc == jwt[:iss]
 
       conditions.all? { _1.match?(jwt) }
     end
 
-    schema schema.lax
-    transform_keys(&:to_sym)
-    include ActiveModel::Validations
 
-    class Principal
-      schema schema.lax
-      transform_keys(&:to_sym)
-      include ActiveModel::Validations
+    class Principal < OIDC::BaseModel
+    
+      attribute :oidc, :string
+
+      validates :oidc, presence: true
     end
 
-    class Condition
+    class Condition< OIDC::BaseModel
+    
       def match?(jwt)
         claim_value = jwt[claim]
         case operator
@@ -124,11 +28,48 @@ class OIDC::AccessPolicy < Dry::Struct
         end
       end
 
-      schema schema.lax
-      transform_keys(&:to_sym)
-      include ActiveModel::Validations
+      attribute :operator, :string
+      attribute :claim, :string
+      attribute :value
+
+      STRING_BOOLEAN_OPERATORS = %w[string_equals].freeze
+
+      validates :operator, presence: true
+      validates :claim, presence: true
+      validate :value_expected_type?
+
+      def value_type
+        case operator
+        when *STRING_BOOLEAN_OPERATORS
+          String
+        when nil
+          nil
+        else
+          raise "Unknown operator #{operator.inspect}"
+        end
+      end
+
+      def value_expected_type?
+        errors.add(:value, "must be #{value_type}") unless value_type === value
+      end
     end
+
+    EFFECTS = %w[allow deny].freeze
+
+    attribute :effect, :string
+    attribute :principal, JsonDeserializable.new(Principal)
+    attribute :conditions, ArrayOf.new(JsonDeserializable.new Condition)
+
+    validates :effect, presence: true, inclusion: { in: EFFECTS }
+
+    validates :principal, presence: true, nested: true
+
+    validates :conditions, nested: true
   end
+
+  attribute :statements, ArrayOf.new(JsonDeserializable.new Statement)
+
+  validates :statements, presence: true, nested: true
 
   class AccessError < StandardError
   end

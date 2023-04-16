@@ -4,9 +4,6 @@ class OIDC::ApiKeyRole < ApplicationRecord
 
   has_many :id_tokens, class_name: "OIDC::IdToken", inverse_of: :api_key_role, foreign_key: :oidc_api_key_role_id, dependent: :nullify
 
-  Dry::Schema.load_extensions(:hints)
-  Dry::Schema.load_extensions(:struct)
-
   attribute :api_key_permissions, JsonDeserializable.new(OIDC::ApiKeyPermissions)
   validates :api_key_permissions, presence: true, nested: true
   validate :gems_belong_to_user
@@ -26,10 +23,10 @@ class OIDC::ApiKeyRole < ApplicationRecord
     known_claims = provider.configuration.claims_supported
     access_policy.statements&.each_with_index do |s, si|
       s.conditions&.each_with_index do |c, ci|
-        unless known_claims.include?(c[:claim])
+        unless known_claims.include?(c.claim)
           errors.add("access_policy.statements[#{si}].conditions[#{ci}].claim",
                      "unknown claim for the provider")
-          access_policy.errors.add("statements[#{si}].conditions[#{ci}].claim",
+          c.errors.add(:claim,
                      "unknown claim for the provider")
         end
       end

@@ -1,60 +1,32 @@
-class OIDC::ApiKeyPermissions < Dry::Struct
+class OIDC::ApiKeyPermissions< OIDC::BaseModel
+
   def create_params(user)
     params = scopes.map(&:to_sym).index_with(true)
     params[:ownership] = gems&.sole&.then { user.ownerships.find_by!(rubygem: { name: _1 }) }
-    params[:expires_at] = DateTime.now.utc + Schema.types[:valid_for][valid_for || Dry::Types::Undefined]
+    params[:expires_at] = DateTime.now.utc + valid_for
     params
   end
 
-  transform_keys(&:to_sym)
+  attribute :scopes, ArrayOf.new(:string)
+  attribute :valid_for, Types::Duration.new, default: 30.minutes.freeze
+  attribute :gems, ArrayOf.new(:string)
 
-  Schema = Dry::Schema.define do
-    config.validate_keys = true
-    duration = Dry.Types().Nominal(ActiveSupport::Duration).constructor do |value|
-      case value
-      when String
-        if /\A\d+\z/.match?(value)
-          ActiveSupport::Duration.build(value.to_i)
-        else
-          ActiveSupport::Duration.parse(value)
-        end
-      when Integer
-        ActiveSupport::Duration.build(value)
-      when ActiveSupport::Duration
-        value
-      else
-        raise TypeError, "#{value.inspect} cannot be coerced to a duration"
-      end
-    end
-    required(:scopes).filled(
-      Dry.Types.Array(Dry.Types()::String.enum(*ApiKey::API_SCOPES.map(&:to_s)))
-    )
-    optional(:valid_for).filled(duration.default(30.minutes.freeze), lteq?: 1.day, gteq?: 5.minutes)
-    optional(:gems).maybe(
-      Dry.Types.Array(
-        Dry.Types::String.constrained(format: Rubygem::NAME_PATTERN)
-      )
-        .constrained(filled: true)
-      .constrained(max_size: 1)
-    )
-  end
+  validates :scopes, presence: true
+  validate :known_scopes?
+  validate :scopes_must_be_unique
 
-  class Contract < Dry::Validation::Contract
-    json(Schema) do
-      config.validate_keys = true
-    end
+  validates :valid_for, presence: true, inclusion: { in: (5.minutes)..(1.day) }
 
-    rule(:scopes) do
-      key.failure("show_dashboard is exclusive") if value.include?("show_dashboard") && value.size > 1
-      key.failure("must be unique") if value.dup.uniq!
+  validates :gems, length: { maximum: 1 }
+
+  def known_scopes?
+    scopes.each_with_index do |scope, idx|
+      errors.add("scopes[#{idx}]", "unknown scope: #{scope}") unless ApiKey::API_SCOPES.include?(scope.to_sym)
     end
   end
 
-  Dry::StructCompiler.add_attributes(struct: self, schema: Schema)
-
-  schema schema.lax
-
-  include ActiveModel::AttributeAssignment
-
-  include ActiveModel::Validations
+  def scopes_must_be_unique
+    errors.add(:'scopes', "show_dashboard is exclusive") if scopes.include?("show_dashboard") && scopes.size > 1
+    errors.add(:'scopes', "must be unique") if scopes.dup.uniq!
+  end
 end

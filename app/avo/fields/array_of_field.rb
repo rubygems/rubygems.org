@@ -19,14 +19,13 @@ class ArrayOfField < Avo::Fields::BaseField
   end
 
   def template_member
-    @make_field[id: "NEW_RECORD"]
+    @make_field[id: "#{self.id}[NEW_RECORD]"]
   end
 
   def fill_field(model, key, value, params)
     value = value.each_value.map do |v|
       template_member.fill_field(NestedField::Holder.new(id), :item, v, params).item
     end
-    # Rails.logger.warn("filling", id: id, value: value, vc: value.class)
     super(model, key, value, params)
   end
 

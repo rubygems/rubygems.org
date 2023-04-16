@@ -69,11 +69,11 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
       context "with matching conditions" do
         should "return API key" do
-          @role.access_policy.statements.first.conditions << {
+          @role.access_policy.statements.first.conditions << OIDC::AccessPolicy::Statement::Condition.new(
             operator: "string_equals",
             claim: "sub",
             value: "repo:segiddins/oidc-test:ref:refs/heads/main"
-          }
+          )
           @role.save!
 
           post assume_role_api_v1_oidc_api_key_role_path(@role),
@@ -101,11 +101,11 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
       context "with mismatched conditions" do
         should "return not found" do
-          @role.access_policy.statements.first.conditions << {
+          @role.access_policy.statements.first.conditions << OIDC::AccessPolicy::Statement::Condition.new(
             operator: "string_equals",
             claim: "sub",
             value: "repo:other/oidc-test:ref:refs/heads/main"
-          }
+          )
           @role.save!
 
           post assume_role_api_v1_oidc_api_key_role_path(@role),
