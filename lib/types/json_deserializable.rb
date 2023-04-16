@@ -1,4 +1,4 @@
-class JsonDeserializable < ActiveRecord::Type::Json
+class Types::JsonDeserializable < ActiveRecord::Type::Json
   def initialize(klass)
     @klass = klass
     super()

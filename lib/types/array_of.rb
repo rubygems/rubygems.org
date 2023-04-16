@@ -1,4 +1,4 @@
-class ArrayOf < ActiveModel::Type::Value
+class Types::ArrayOf < ActiveModel::Type::Value
   def initialize(klass)
     @klass = klass
     super()

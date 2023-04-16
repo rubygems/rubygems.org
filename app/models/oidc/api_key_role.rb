@@ -4,7 +4,7 @@ class OIDC::ApiKeyRole < ApplicationRecord
 
   has_many :id_tokens, class_name: "OIDC::IdToken", inverse_of: :api_key_role, foreign_key: :oidc_api_key_role_id, dependent: :nullify
 
-  attribute :api_key_permissions, JsonDeserializable.new(OIDC::ApiKeyPermissions)
+  attribute :api_key_permissions, Types::JsonDeserializable.new(OIDC::ApiKeyPermissions)
   validates :api_key_permissions, presence: true, nested: true
   validate :gems_belong_to_user
 
@@ -14,7 +14,7 @@ class OIDC::ApiKeyRole < ApplicationRecord
     end
   end
 
-  attribute :access_policy, JsonDeserializable.new(OIDC::AccessPolicy)
+  attribute :access_policy, Types::JsonDeserializable.new(OIDC::AccessPolicy)
   validates :access_policy, presence: true, nested: true
   validate :all_condition_claims_are_known
 

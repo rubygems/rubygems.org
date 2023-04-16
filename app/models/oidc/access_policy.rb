@@ -52,8 +52,8 @@ class OIDC::AccessPolicy < OIDC::BaseModel
     EFFECTS = %w[allow deny].freeze
 
     attribute :effect, :string
-    attribute :principal, JsonDeserializable.new(Principal)
-    attribute :conditions, ArrayOf.new(JsonDeserializable.new(Condition))
+    attribute :principal, Types::JsonDeserializable.new(Principal)
+    attribute :conditions, Types::ArrayOf.new(Types::JsonDeserializable.new(Condition))
 
     validates :effect, presence: true, inclusion: { in: EFFECTS }
 
@@ -62,7 +62,7 @@ class OIDC::AccessPolicy < OIDC::BaseModel
     validates :conditions, nested: true
   end
 
-  attribute :statements, ArrayOf.new(JsonDeserializable.new(Statement))
+  attribute :statements, Types::ArrayOf.new(Types::JsonDeserializable.new(Statement))
 
   validates :statements, presence: true, nested: true
 
