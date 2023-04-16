@@ -9,7 +9,7 @@ class Types::Duration < ActiveModel::Type::Value
       ActiveSupport::Duration.parse(value)
     when Integer
       ActiveSupport::Duration.build(value)
-    else 
+    else
       raise ArgumentError, "Cannot cast #{value.inspect} to a Duration"
     end
   rescue ActiveSupport::Duration::ISO8601Parser::ParsingError

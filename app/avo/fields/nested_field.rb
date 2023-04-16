@@ -1,6 +1,4 @@
 class NestedField < Avo::Fields::BaseField
-  attr_reader :fields
-
   include Avo::Concerns::HasFields
 
   def initialize(name, constructor: nil, stacked: true, **args, &block)
@@ -43,7 +41,5 @@ class NestedField < Avo::Fields::BaseField
     def initialize(id)
       @id = id
     end
-
-    attr_writer :item
   end
 end

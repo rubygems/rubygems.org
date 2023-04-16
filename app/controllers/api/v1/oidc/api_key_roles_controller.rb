@@ -9,7 +9,12 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   class UnverifiedJWT < StandardError
   end
 
-  rescue_from JSON::JWS::VerificationFailed, UnverifiedJWT, OIDC::AccessPolicy::AccessError, with: :render_not_found
+  rescue_from(
+    UnverifiedJWT,
+    JSON::JWT::VerificationFailed, JSON::JWK::Set::KidNotFound,
+    OIDC::AccessPolicy::AccessError,
+    with: :render_not_found
+  )
 
   rescue_from ActiveRecord::RecordInvalid do |err|
     render json: {
@@ -54,7 +59,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   def decode_jwt
     @jwt = JSON::JWT.decode_compact_serialized(params.require(:jwt), @api_key_role.provider.jwks)
   rescue JSON::ParserError
-    render_not_found
+    raise UnverifiedJWT, "Invalid JSON"
   end
 
   def verify_jwt

@@ -45,7 +45,7 @@ class OIDC::AccessPolicy < OIDC::BaseModel
       end
 
       def value_expected_type?
-        errors.add(:value, "must be #{value_type}") unless value_type === value
+        errors.add(:value, "must be #{value_type}") unless value.is_a?(value_type)
       end
     end
 

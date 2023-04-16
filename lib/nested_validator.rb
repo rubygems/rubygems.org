@@ -9,7 +9,7 @@ class NestedValidator < ActiveModel::EachValidator
         end
       end
     else
-      if Array(value).reject { _1.valid? }.any?
+      if Array(value).reject(&:valid?).any?
         value.errors.each do |e|
           record.errors.import(e, attribute: "#{attribute}.#{e.attribute}")
         end
