@@ -14,7 +14,7 @@ FactoryBot.define do
           { effect: "allow",
             principal: { oidc: provider.issuer },
             conditions: [
-              { operator: "string_equals", claim: "sub", value: "the_sub" }
+              { operator: "string_equals", claim: "sub", value: "repo:segiddins/oidc-test:ref:refs/heads/main" }
             ] }
         ]
       }

@@ -41,10 +41,8 @@ class OIDC::AccessPolicy < OIDC::BaseModel
         case operator
         when *STRING_BOOLEAN_OPERATORS
           String
-        when nil
-          NilClass
         else
-          raise "Unknown operator #{operator.inspect}"
+          NilClass
         end
       end
 
@@ -82,7 +80,7 @@ class OIDC::AccessPolicy < OIDC::BaseModel
       # great, nothing to do. verified
       nil
     when "deny"
-      raise AccessError, "explicit denial"
+      raise AccessError, "explicit denial from #{matching_statements.last.as_json}"
     else
       raise "Unhandled effect #{effect}"
     end

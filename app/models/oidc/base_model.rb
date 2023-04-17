@@ -5,6 +5,7 @@ class OIDC::BaseModel
 
   include SemanticLogger::Loggable
 
+  # Taken from ActiveRecord::Base
   concerning "Inspectable" do
     included do
       # Returns the contents of the record as a nicely formatted string.

@@ -27,7 +27,11 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           "access_policy" =>  { "statements" => [
             { "effect" => "allow",
               "principal" => { "oidc" => @role.provider.issuer },
-              "conditions" => [] }
+              "conditions" => [{
+                "operator" => "string_equals",
+                "claim" => "sub",
+                "value" => "repo:segiddins/oidc-test:ref:refs/heads/main"
+              }] }
           ] },
           "created_at" => @role.created_at.as_json,
           "updated_at" => @role.updated_at.as_json
@@ -60,7 +64,11 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           "access_policy" =>  { "statements" => [
             { "effect" => "allow",
               "principal" => { "oidc" => @role.provider.issuer },
-              "conditions" => [] }
+              "conditions" => [{
+                "operator" => "string_equals",
+                "claim" => "sub",
+                "value" => "repo:segiddins/oidc-test:ref:refs/heads/main"
+              }] }
           ] },
           "created_at" => @role.created_at.as_json,
           "updated_at" => @role.updated_at.as_json
