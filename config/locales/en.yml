@@ -65,6 +65,13 @@ en:
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
     models:
       user: User
+  activemodel:
+    errors:
+      models:
+        oidc/api_key_permissions:
+          attributes:
+            valid_for:
+              inclusion: "%{value} seconds must be between 5 minutes (300 seconds) and 1 day (86,400 seconds)"
   api_keys:
     create:
       success: "Created new API key"

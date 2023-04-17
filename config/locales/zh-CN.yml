@@ -5,13 +5,11 @@ zh-CN:
   failure_when_forbidden: 请再次确认 URL 或尝试重新提交
   feed_latest: RubyGems.org | 最新的 Gem
   feed_subscribed: RubyGems.org | 订阅的 Gem
-  footer_about_html:
-    RubyGems.org 是 Ruby 社区的 Gem 托管服务。
+  footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。
     立即 <a href="%{publish_docs}">发布您的 Gem</a> 并 <a href="%{install_docs}">安装它们</a>。
     使用 <a href="%{api_docs}">API</a> 来查找更多 <a href="%{gem_list}">可用的 Gem</a>。
     <a href="%{contributing_docs}">快来成为一名贡献者吧！</a> 由您自己改善我们的网站。
-  footer_sponsors_html:
-    RubyGems.org 是通过与更大的Ruby社区的合作得以实现的。
+  footer_sponsors_html: RubyGems.org 是通过与更大的Ruby社区的合作得以实现的。
     <a href="https://www.fastly.com/">Fastly</a> 提供带宽和 CDN 支持，
     <a href="https://www.rubycentral.org/">Ruby Central</a> 涵盖基础设施成本，并且
     资助正在进行的开发和运营工作。
@@ -66,6 +64,13 @@ zh-CN:
         blocked: "域名 '%{domain}' 因发送垃圾邮件已被禁用。请使用另外有效的个人邮箱。"
     models:
       user: 用户
+  activemodel:
+    errors:
+      models:
+        oidc/api_key_permissions:
+          attributes:
+            valid_for:
+              inclusion:
   api_keys:
     create:
       success: "新的 API 密钥已创建"
@@ -204,7 +209,7 @@ zh-CN:
       subject: 您的账户已经从 RubyGems.org 中删除
       body_html: 您从 RubyGems.org 中删除账户的请求已经被处理。您随时可以使用我们的 %{sign_up} 页面注册新的账号。
     deletion_failed:
-      title:  删除失败
+      title: 删除失败
       subtitle: 抱歉！
       subject: 您在 RubyGems.org 上关于删除账户的请求失败了
       body_html: 您已请求在 RubyGems.org 中删除账户。很遗憾，我们无法处理您的请求。请稍后重试。如果问题依然存在，请 %{contact} 我们。
@@ -212,7 +217,7 @@ zh-CN:
       subject: 您改变了您在 RubyGems.org 上的邮件通知设置
       title: 邮件通知
       subtitle: 你好啊，%{handle}！
-      'on': "开启"
+      "on": "开启"
       off_html: <b>关闭</b
     gem_pushed:
       subject: Gem %{gem} 已被推送至 RubyGems.org
@@ -382,10 +387,9 @@ zh-CN:
     update:
       success: 您已成功更新邮件通知设置。
     show:
-      info:
-        为了帮助检测未经授权的 Gem 或所有权变更，当您拥有的 Gem 的每一个新版本被推送、撤回时，或添加了新业主时，我们每次都会向您发送一封邮件。通过接收和阅读这些电子邮件，您帮助大家一起保护了 Ruby 的生态系统。
-      'on': "开启"
-      'off': "关闭"
+      info: 为了帮助检测未经授权的 Gem 或所有权变更，当您拥有的 Gem 的每一个新版本被推送、撤回时，或添加了新业主时，我们每次都会向您发送一封邮件。通过接收和阅读这些电子邮件，您帮助大家一起保护了 Ruby 的生态系统。
+      "on": "开启"
+      "off": "关闭"
       recommended: 推荐
       title: 邮件通知
       update: 更新

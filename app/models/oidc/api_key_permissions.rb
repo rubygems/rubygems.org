@@ -14,17 +14,19 @@ class OIDC::ApiKeyPermissions < OIDC::BaseModel
   validate :known_scopes?
   validate :scopes_must_be_unique
 
-  validates :valid_for, presence: true, inclusion: { in: (5.minutes)..(1.day), message: "%{value} must be between 5 minutes and 1 day" }
+  validates :valid_for, presence: true, inclusion: { in: (5.minutes)..(1.day) }
 
   validates :gems, length: { maximum: 1 }
 
   def known_scopes?
-    scopes.each_with_index do |scope, idx|
+    scopes&.each_with_index do |scope, idx|
       errors.add("scopes[#{idx}]", "unknown scope: #{scope}") unless ApiKey::API_SCOPES.include?(scope.to_sym)
     end
   end
 
   def scopes_must_be_unique
+    return unless scopes.present?
+
     errors.add(:scopes, "show_dashboard is exclusive") if scopes.include?("show_dashboard") && scopes.size > 1
     errors.add(:scopes, "must be unique") if scopes.dup.uniq!
   end
