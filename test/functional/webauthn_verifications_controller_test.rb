@@ -148,7 +148,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should respond_with :unauthorized
 
       should "return error message" do
-        assert_equal "Credentials required", JSON.parse(response.body)["message"]
+        assert_equal "Credentials required", response.body
       end
 
       should "not expire the path token" do
@@ -180,7 +180,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should respond_with :unauthorized
 
       should "return error message" do
-        assert_equal "WebAuthn::ChallengeVerificationError", JSON.parse(response.body)["message"]
+        assert_equal "WebAuthn::ChallengeVerificationError", response.body
       end
 
       should "not generate OTP" do
@@ -204,6 +204,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should respond_with :not_found
+
+      should "say not found" do
+        assert_equal "Not Found", response.body
+      end
     end
 
     context "when the webauthn token has expired" do
@@ -219,11 +223,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         authenticate_request(time: Time.utc(2023, 1, 1, 0, 3, 0))
       end
 
-      should respond_with :redirect
-      should redirect_to("the homepage") { root_url }
+      should respond_with :unauthorized
 
       should "say the token is consumed or expired" do
-        assert_equal "The token in the link you used has either expired or been used already.", flash[:alert]
+        assert_equal "The token in the link you used has either expired or been used already.", response.body
       end
     end
 
@@ -288,7 +291,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
             ),
           webauthn_token: token
         },
-        format: :json
+        format: :text
       )
     end
   end

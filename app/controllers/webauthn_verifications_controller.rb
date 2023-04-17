@@ -35,12 +35,16 @@ class WebauthnVerificationsController < ApplicationController
 
     redirect_to(URI.parse("http://localhost:#{port}?code=#{@verification.otp}").to_s, allow_other_host: true)
   rescue WebAuthn::Error => e
-    # TODO: render plain text for both endpoints
-    render json: { message: e.message }, status: :unauthorized
+    render plain: e.message, status: :unauthorized
   rescue ActionController::ParameterMissing
-    render json: { message: "Credentials required" }, status: :unauthorized
+    render plain: t("credentials_required"), status: :unauthorized
   ensure
     session.delete(:webauthn_authentication)
+  end
+
+  def failed_verification
+    @message = params.permit(:error).fetch(:error, "")
+    logger.info("WebAuthn Verification failed", error: @message)
   end
 
   private
@@ -49,8 +53,7 @@ class WebauthnVerificationsController < ApplicationController
     @verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
 
     render_not_found and return unless @verification
-    # TODO: Return a message if format is plain text
-    redirect_to root_path, alert: t("webauthn_verifications.expired_or_already_used") if @verification.path_token_expired?
+    render_expired if @verification.path_token_expired?
   end
 
   def set_user
@@ -82,5 +85,12 @@ class WebauthnVerificationsController < ApplicationController
 
   def webauthn_token_param
     params.permit(:webauthn_token).require(:webauthn_token)
+  end
+
+  def render_expired
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: t("webauthn_verifications.expired_or_already_used") }
+      format.text { render plain: t("webauthn_verifications.expired_or_already_used"), status: :unauthorized }
+    end
   end
 end

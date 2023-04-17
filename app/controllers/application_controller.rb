@@ -111,7 +111,7 @@ class ApplicationController < ActionController::Base
       format.html { render file: Rails.public_path.join("404.html"), status: :not_found, layout: false }
       format.json { render json: { error: t(:not_found) }, status: :not_found }
       format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
-      format.any(:all) { render text: t(:not_found), status: :not_found }
+      format.any(:all) { render plain: t(:not_found), status: :not_found }
     end
   end
 
