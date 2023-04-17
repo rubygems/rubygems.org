@@ -18,6 +18,8 @@ class OIDC::AccessPolicy < OIDC::BaseModel
         case operator
         when "string_equals"
           value == claim_value
+        when "string_matches"
+          Regexp.new(value).match?(claim_value)
         else
           raise "Unknown operator #{operator.inspect}"
         end
@@ -27,9 +29,11 @@ class OIDC::AccessPolicy < OIDC::BaseModel
       attribute :claim, :string
       attribute :value
 
-      STRING_BOOLEAN_OPERATORS = %w[string_equals].freeze
+      STRING_BOOLEAN_OPERATORS = %w[string_equals string_matches].freeze
 
-      validates :operator, presence: true
+      OPERATORS = STRING_BOOLEAN_OPERATORS
+
+      validates :operator, presence: true, inclusion: { in: OPERATORS }
       validates :claim, presence: true
       validate :value_expected_type?
 
@@ -38,7 +42,7 @@ class OIDC::AccessPolicy < OIDC::BaseModel
         when *STRING_BOOLEAN_OPERATORS
           String
         when nil
-          nil
+          NilClass
         else
           raise "Unknown operator #{operator.inspect}"
         end
