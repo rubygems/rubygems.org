@@ -23,7 +23,7 @@ class OIDCApiKeyRoleResource < Avo::BaseResource
         field :oidc, as: :text
       end
       field :conditions, as: :array_of, field: :nested, field_options: { stacked: false } do
-        field :operator, as: :select, options: %w[string_equals].index_by(&:titleize)
+        field :operator, as: :select, options: OIDC::AccessPolicy::Statement::Condition::OPERATORS.index_by(&:titleize)
         field :claim, as: :text
         field :value, as: :text
       end
