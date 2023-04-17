@@ -76,7 +76,6 @@ class OIDC::AccessPolicy < OIDC::BaseModel
   def verify_access!(jwt)
     matching_statements = statements.select { _1.match_jwt?(jwt) }
     raise AccessError, "denying due to no matching statements" if matching_statements.empty?
-    
 
     case (effect = matching_statements.last.effect)
     when "allow"
