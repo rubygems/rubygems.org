@@ -23,6 +23,10 @@
   margin: 20px 0 60px;
   font-size: 1.25rem; }
 
+.status p {
+  margin-bottom: 1rem;
+}
+
 .status.error {
   color: #D06079; }
 

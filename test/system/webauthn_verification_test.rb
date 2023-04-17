@@ -59,6 +59,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
+    assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
   end
@@ -75,6 +76,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert redirect_to("http://localhost:#{wrong_port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
+    assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
   end
@@ -90,8 +92,25 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     click_on "Authenticate"
 
     assert redirect_to(failed_verification_webauthn_verification_path)
+    assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
+  end
+
+  test "when webauthn verification is expired during verification" do
+    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
+    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+
+    travel 3.minutes do
+      assert_match "Authenticate with Security Device", page.html
+      assert_match "Authenticating as #{@user.handle}", page.html
+
+      click_on "Authenticate"
+
+      assert redirect_to(failed_verification_webauthn_verification_path)
+      assert page.has_content?("The token in the link you used has either expired or been used already.")
+      assert page.has_content?("Please close this browser and try again.")
+    end
   end
 
   def teardown

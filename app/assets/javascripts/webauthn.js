@@ -130,17 +130,23 @@
     var cliSessionError = $(".js-webauthn-session-cli--error");
     var csrfToken = $("[name='csrf-token']").attr("content");
 
+    function failed_verification_url(message) {
+      var url =  new URL(`${location.origin}/webauthn_verification/failed_verification`);
+      url.searchParams.append("error", message);
+      return url.href;
+    };
+
     cliSessionForm.submit(function(event) {
       getCredentials(event, csrfToken).then(function (response) {
         response.text().then(function (text) {
           if (text == "success") {
-            window.location.href = `${location.origin}/webauthn_verification/successful_verification`
+            window.location.href = `${location.origin}/webauthn_verification/successful_verification`;
           } else {
-            window.location.href = `${location.origin}/webauthn_verification/failed_verification`
+            window.location.href = failed_verification_url(text);
           }
         });
-      }).catch(function (_) {
-        window.location.href = `${location.origin}/webauthn_verification/failed_verification`
+      }).catch(function (error) {
+        window.location.href = failed_verification_url(error.message);
       });
     });
   });

@@ -42,6 +42,11 @@ class WebauthnVerificationsController < ApplicationController
     session.delete(:webauthn_authentication)
   end
 
+  def failed_verification
+    @message = params.permit(:error).fetch(:error, "")
+    logger.info("WebAuthn Verification failed", error: @message)
+  end
+
   private
 
   def set_verification
