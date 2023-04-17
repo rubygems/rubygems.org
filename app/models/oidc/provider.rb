@@ -2,7 +2,7 @@ class OIDC::Provider < ApplicationRecord
   validate :issuer_match, if: :configuration
   before_validation -> { configuration&.expected_issuer = issuer }
 
-  validates :configuration, nested: { with_contract: false }
+  validates :configuration, nested: true
   validates :issuer, uniqueness: { ignore_case: true }
 
   has_many :api_key_roles, class_name: "OIDC::ApiKeyRole", inverse_of: :provider, foreign_key: :oidc_provider_id, dependent: :nullify
@@ -11,6 +11,10 @@ class OIDC::Provider < ApplicationRecord
   class Configuration < ::OpenIDConnect::Discovery::Provider::Config::Response
     attr_optional required_attributes.delete(:authorization_endpoint)
 
+    def initialize(hash)
+      super(hash.deep_symbolize_keys)
+    end
+
     def valid?
       super
       errors.delete(:authorization_endpoint, :blank)
@@ -18,17 +22,9 @@ class OIDC::Provider < ApplicationRecord
     end
   end
 
-  attribute :configuration, (Class.new(ActiveRecord::Type::Json) do
-    def deserialize(value)
-      super&.then { Configuration.new(_1.deep_symbolize_keys) }
-    end
-  end).new
+  attribute :configuration, Types::JsonDeserializable.new(Configuration)
 
-  attribute :jwks, (Class.new(ActiveRecord::Type::Json) do
-    def deserialize(value)
-      JSON::JWK::Set.new(super)
-    end
-  end).new
+  attribute :jwks, Types::JsonDeserializable.new(JSON::JWK::Set)
 
   private
 
