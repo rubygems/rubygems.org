@@ -4,11 +4,11 @@ class OIDC::IdToken < ApplicationRecord
   belongs_to :api_key, inverse_of: :oidc_id_token
   has_one :user, through: :api_key_role
 
-  # TODO: validate provider / jti is unique
+  validates :jwt, presence: true
   validate :jti_uniqueness
 
   def jti
-    jwt.dig("claims", "jti")
+    jwt&.dig("claims", "jti")
   end
 
   def jti_uniqueness

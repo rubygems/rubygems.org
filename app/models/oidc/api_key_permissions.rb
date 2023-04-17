@@ -25,7 +25,7 @@ class OIDC::ApiKeyPermissions < OIDC::BaseModel
   end
 
   def scopes_must_be_unique
-    return unless scopes.present?
+    return if scopes.blank?
 
     errors.add(:scopes, "show_dashboard is exclusive") if scopes.include?("show_dashboard") && scopes.size > 1
     errors.add(:scopes, "must be unique") if scopes.dup.uniq!
