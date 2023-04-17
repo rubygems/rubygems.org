@@ -6,7 +6,11 @@ class Types::Duration < ActiveModel::Type::Value
     when ActiveSupport::Duration
       value
     when String
-      ActiveSupport::Duration.parse(value)
+      if /\A\d+\z/.match?(value)
+        ActiveSupport::Duration.build(value.to_i)
+      else
+        ActiveSupport::Duration.parse(value)
+      end
     when Integer
       ActiveSupport::Duration.build(value)
     else

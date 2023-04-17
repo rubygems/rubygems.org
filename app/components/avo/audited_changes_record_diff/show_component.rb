@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
-  def initialize(gid:, changes:, unchanged:, user:)
+  def initialize(gid:, changes:, unchanged:, view:, user:)
     super
     @gid = gid
     @changes = changes
     @unchanged = unchanged
     @user = user
+    @view = view
 
     global_id = GlobalID.parse(gid)
     model = begin
@@ -14,18 +15,18 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
     rescue ActiveRecord::RecordNotFound
       global_id.model_class.new(id: global_id.model_id)
     end
-    return unless (@resource = Avo::App.get_resource_by_model_name(global_id.model_class.name))
-    @resource.hydrate(model:, user:)
+    return unless (@resource = Avo::App.get_resource_by_model_name(global_id.model_class))
+    @resource.hydrate(model:, user:, view:)
 
-    @old_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:first)))
-    @new_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:last)))
+    @old_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:first)), view:)
+    @new_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:last)), view:)
   end
 
   def render?
     @resource.present?
   end
 
-  attr_reader :gid, :changes, :unchanged, :user, :resource, :old_resource, :new_resource
+  attr_reader :gid, :changes, :unchanged, :user, :resource, :old_resource, :new_resource, :view
 
   def sorted_fields
     @resource.fields
@@ -58,8 +59,8 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
   end
 
   def component_for_field(field, resource)
-    field = field.hydrate(model: resource.model)
-    field.component_for_view(:show).new(field:, resource:)
+    field = field.hydrate(model: resource.model, view:)
+    field.component_for_view(view).new(field:, resource:)
   end
 
   def authorized?

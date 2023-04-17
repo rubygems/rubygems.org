@@ -28,6 +28,7 @@ class VersionResource < Avo::BaseResource
   field :yanked_at, as: :date_time, sortable: true
 
   field :pusher, as: :belongs_to, class: "User"
+  field :pusher_api_key, as: :belongs_to, class: "ApiKey"
 
   tabs do
     tab "Metadata", description: "Metadata that comes from the gemspec" do

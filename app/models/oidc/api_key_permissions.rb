@@ -14,7 +14,7 @@ class OIDC::ApiKeyPermissions < OIDC::BaseModel
   validate :known_scopes?
   validate :scopes_must_be_unique
 
-  validates :valid_for, presence: true, inclusion: { in: (5.minutes)..(1.day) }
+  validates :valid_for, presence: true, inclusion: { in: (5.minutes)..(1.day), message: "%{value} must be between 5 minutes and 1 day" }
 
   validates :gems, length: { maximum: 1 }
 

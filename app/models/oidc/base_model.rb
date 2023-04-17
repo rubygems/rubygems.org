@@ -54,4 +54,15 @@ class OIDC::BaseModel
       end
     end
   end
+
+  concerning "Equality" do
+    included do
+      def ==(other)
+        self.class == other.class &&
+          ((attributes.keys | other.attributes.keys).all? do |k|
+            self[k] == other[k]
+          end)
+      end
+    end
+  end
 end
