@@ -26,8 +26,7 @@ class EmailConfirmationsController < ApplicationController
   def update
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
       setup_mfa_authentication
-      setup_webauthn_authentication
-      @form_webauthn_url = webauthn_update_email_confirmations_url(token: @user.confirmation_token)
+      setup_webauthn_authentication(form_url: webauthn_update_email_confirmations_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry
 

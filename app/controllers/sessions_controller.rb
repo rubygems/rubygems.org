@@ -12,7 +12,7 @@ class SessionsController < Clearance::SessionsController
     @user = find_user
 
     if @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
-      setup_webauthn_authentication(session_options: { "user" => @user.id })
+      setup_webauthn_authentication(form_url: webauthn_create_session_path, session_options: { "user" => @user.id })
       setup_mfa_authentication
 
       session[:mfa_login_started_at] = Time.now.utc.to_s

@@ -8,8 +8,7 @@ class PasswordsController < Clearance::PasswordsController
   def edit
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
       setup_mfa_authentication
-      setup_webauthn_authentication
-      @form_webauthn_url = webauthn_edit_user_password_url(@user, token: @user.confirmation_token)
+      setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry
 
