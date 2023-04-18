@@ -10,12 +10,8 @@ class ArrayOfField < Avo::Fields::BaseField
   end
 
   def value(...)
-    case (value = super(...))
-    when Hash
-      value.values
-    else
-      Array.wrap(value)
-    end
+    value = super(...)
+    Array.wrap(value)
   end
 
   def template_member
