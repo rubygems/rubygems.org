@@ -45,6 +45,11 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def webauthn_edit
+    unless session_active?
+      login_failure(t("multifactor_auths.session_expired"))
+      return
+    end
+
     return login_failure(@webauthn_error) unless webauthn_credential_verified?
 
     render template: "passwords/edit"

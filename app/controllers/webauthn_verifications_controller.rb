@@ -19,24 +19,12 @@ class WebauthnVerificationsController < ApplicationController
       return
     end
 
-    webauthn_credential.verify(
-      challenge,
-      public_key: user_webauthn_credential.public_key,
-      sign_count: user_webauthn_credential.sign_count
-    )
-
-    user_webauthn_credential.update!(sign_count: webauthn_credential.sign_count)
+    return render plain: @webauthn_error, status: :unauthorized unless webauthn_credential_verified?
 
     @verification.generate_otp
     @verification.expire_path_token
 
     redirect_to(URI.parse("http://localhost:#{port}?code=#{@verification.otp}").to_s, allow_other_host: true)
-  rescue WebAuthn::Error => e
-    render plain: e.message, status: :unauthorized
-  rescue ActionController::ParameterMissing
-    render plain: t("credentials_required"), status: :unauthorized
-  ensure
-    session.delete(:webauthn_authentication)
   end
 
   def failed_verification

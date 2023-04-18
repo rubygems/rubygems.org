@@ -17,9 +17,6 @@ module WebauthnVerifiable
     if params[:credentials].blank?
       @webauthn_error = t("credentials_required")
       return false
-    elsif !session_active?
-      @webauthn_error = t("multifactor_auths.session_expired")
-      return false
     end
 
     @credential = WebAuthn::Credential.from_get(params[:credentials])

@@ -26,6 +26,11 @@ class SessionsController < Clearance::SessionsController
 
   def webauthn_create
     @user = User.find(session.dig(:webauthn_authentication, "user"))
+
+    unless session_active?
+      webauthn_verification_failure(t("multifactor_auths.session_expired"))
+      return
+    end
     return webauthn_verification_failure(@webauthn_error) unless webauthn_credential_verified?
 
     record_mfa_login_duration(mfa_type: "webauthn")

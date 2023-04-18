@@ -48,6 +48,11 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def webauthn_update
+    unless session_active?
+      login_failure(t("multifactor_auths.session_expired"))
+      return
+    end
+
     return login_failure(@webauthn_error) unless webauthn_credential_verified?
 
     confirm_email
