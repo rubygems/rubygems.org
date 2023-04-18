@@ -10,7 +10,7 @@ class OIDCProviderResource < Avo::BaseResource
 
   # Fields generated from the model
   field :issuer, as: :text, link_to_resource: true
-  field :configuration, as: :nested, model_class: OIDC::Provider::Configuration do
+  field :configuration, as: :nested do
     OIDC::Provider::Configuration.then { (_1.required_attributes + _1.optional_attributes) - fields.map(&:id) }.each do |k|
       field k, as: (k.to_s.end_with?("s_supported") ? :tags : :text), visible: ->(_) { view == :edit || value.send(k).present? }
     end

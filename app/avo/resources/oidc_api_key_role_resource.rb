@@ -10,13 +10,13 @@ class OIDCApiKeyRoleResource < Avo::BaseResource
   # Fields generated from the model
   field :provider, as: :belongs_to
   field :user, as: :belongs_to
-  field :api_key_permissions, as: :nested, model_class: OIDC::ApiKeyPermissions do
+  field :api_key_permissions, as: :nested do
     field :valid_for, as: :text, format_using: :iso8601
     field :scopes, as: :tags, suggestions: ApiKey::API_SCOPES.map { { label: _1, value: _1 } }
     field :gems, as: :tags, suggestions: -> { Rubygem.limit(10).pluck(:name).map { { value: _1, label: _1 } } }
   end
   field :name, as: :text
-  field :access_policy, as: :nested, model_class: OIDC::AccessPolicy.new do
+  field :access_policy, as: :nested do
     field :statements, as: :array_of, field: :nested do
       field :effect, as: :select, options: { "Allow" => "allow" }, default: "Allow"
       field :principal, as: :nested, field_options: { stacked: false } do

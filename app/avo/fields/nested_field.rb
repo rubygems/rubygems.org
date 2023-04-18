@@ -1,8 +1,7 @@
 class NestedField < Avo::Fields::BaseField
   include Avo::Concerns::HasFields
 
-  def initialize(name, constructor: nil, stacked: true, **args, &block)
-    @constructor = constructor
+  def initialize(name, stacked: true, **args, &block)
     @items_holder = Avo::ItemsHolder.new
     hide_on [:index]
     super(name, stacked:, **args, &nil)
@@ -19,13 +18,7 @@ class NestedField < Avo::Fields::BaseField
 
   def fill_field(model, key, value, params)
     value = value.to_h.to_h do |k, v|
-      [k, get_field(k).fill_field(Holder.new("#{id}.#{k}"), :item, v, params).item]
-    end
-
-    if @constructor.respond_to?(:call)
-      value = @constructor.call(value)
-    elsif @constructor
-      value = @constructor.new(value)
+      [k, get_field(k).fill_field(Holder.new, :item, v, params).item]
     end
 
     super(model, key, value, params)
@@ -37,9 +30,5 @@ class NestedField < Avo::Fields::BaseField
 
   class Holder
     attr_accessor :item
-
-    def initialize(id)
-      @id = id
-    end
   end
 end
