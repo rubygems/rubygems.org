@@ -1,18 +1,15 @@
 # This controller is for the user interface Webauthn challenge after a user follows a link generated
 # by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
+  include WebauthnVerifiable
+
   before_action :set_verification, :set_user, except: %i[successful_verification failed_verification]
 
   def prompt
     redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
-    @webauthn_options = @user.webauthn_options_for_get
-
-    session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge,
-      "port" => port
-    }
+    setup_webauthn_authentication(session_options: { "port" => port })
   end
 
   def authenticate

@@ -1,15 +1,14 @@
 module WebauthnVerifiable
   extend ActiveSupport::Concern
 
-  def setup_webauthn_authentication
+  def setup_webauthn_authentication(session_options: {})
     return if @user.webauthn_credentials.none?
 
     @webauthn_options = @user.webauthn_options_for_get
 
     session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge,
-      "user" => @user.id
-    }
+      "challenge" => @webauthn_options.challenge
+    }.merge(session_options)
   end
 
   def webauthn_credential_verified?
