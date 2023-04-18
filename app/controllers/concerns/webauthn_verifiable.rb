@@ -13,31 +13,44 @@ module WebauthnVerifiable
   end
 
   def webauthn_credential_verified?
-    @challenge = session.dig(:webauthn_authentication, "challenge")
-
-    if params[:credentials].blank?
-      @webauthn_error = t("credentials_required")
-      return false
-    end
-
-    @credential = WebAuthn::Credential.from_get(params[:credentials])
-
-    @webauthn_credential = @user.webauthn_credentials.find_by(
-      external_id: @credential.id
-    )
+    @credential = WebAuthn::Credential.from_get(credential_params)
 
     @credential.verify(
-      @challenge,
-      public_key: @webauthn_credential.public_key,
-      sign_count: @webauthn_credential.sign_count
+      challenge,
+      public_key: user_webauthn_credential.public_key,
+      sign_count: user_webauthn_credential.sign_count
     )
-    @webauthn_credential.update!(sign_count: @credential.sign_count)
+    user_webauthn_credential.update!(sign_count: @credential.sign_count)
 
     true
   rescue WebAuthn::Error => e
     @webauthn_error = e.message
     false
+  rescue ActionController::ParameterMissing
+    @webauthn_error = t("credentials_required")
+    false
   ensure
     session.delete(:webauthn_authentication)
+  end
+
+  private
+
+  def user_webauthn_credential
+    @user_webauthn_credential ||= @user.webauthn_credentials.find_by(
+      external_id: @credential.id
+    )
+  end
+
+  def challenge
+    session.dig(:webauthn_authentication, "challenge")
+  end
+
+  def credential_params
+    params.require(:credentials).permit(
+      :id,
+      :type,
+      :rawId,
+      response: %i[authenticatorData attestationObject clientDataJSON signature]
+    )
   end
 end
