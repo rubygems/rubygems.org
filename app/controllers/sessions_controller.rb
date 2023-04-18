@@ -1,5 +1,6 @@
 class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
+  include WebauthnVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
@@ -154,17 +155,6 @@ class SessionsController < Clearance::SessionsController
 
     flash.now.alert = t(".account_blocked")
     render template: "sessions/new", status: :unauthorized
-  end
-
-  def setup_webauthn_authentication
-    return if @user.webauthn_credentials.none?
-
-    @webauthn_options = @user.webauthn_options_for_get
-
-    session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge,
-      "user" => @user.id
-    }
   end
 
   def setup_mfa_authentication
