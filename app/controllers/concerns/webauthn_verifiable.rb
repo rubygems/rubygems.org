@@ -37,5 +37,10 @@ module WebauthnVerifiable
     @webauthn_credential.update!(sign_count: @credential.sign_count)
 
     true
+  rescue WebAuthn::Error => e
+    @webauthn_error = e.message
+    false
+  ensure
+    session.delete(:webauthn_authentication)
   end
 end

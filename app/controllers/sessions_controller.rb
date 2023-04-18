@@ -31,10 +31,7 @@ class SessionsController < Clearance::SessionsController
     record_mfa_login_duration(mfa_type: "webauthn")
 
     do_login
-  rescue WebAuthn::Error => e
-    webauthn_verification_failure(e.message)
   ensure
-    session.delete(:webauthn_authentication)
     session.delete(:mfa_login_started_at)
   end
 
