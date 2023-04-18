@@ -54,14 +54,14 @@ FactoryBot.define do
     end
     jwks do
       {
-        keys: keys: [
+        keys: [
           pkey&.to_jwk
         ].compact
       }
     end
-  end
 
-  transient do
-    pkey { OpenSSL::PKey::RSA.generate(2048) }
+    transient do
+      pkey { OpenSSL::PKey::RSA.generate(2048) }
+    end
   end
 end

@@ -491,6 +491,7 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::Provider" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_User -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_WebHook -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
@@ -501,7 +502,10 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_Version -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "6"];
+  m_Rubygem -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
   m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::Provider" -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "2"];
@@ -509,12 +513,9 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   "m_OIDC::ApiKeyRole" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_ApiKey -> "m_OIDC::IdToken" [arrowhead = "none", arrowtail = "none", weight = "2"];
   "m_OIDC::IdToken" -> m_User [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
-  m_Rubygem -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
-  m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
-  m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
-  m_User -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_User -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
   "m_GoodJob::Execution" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_GoodJob::Job" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
