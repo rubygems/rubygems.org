@@ -45,29 +45,6 @@ class WebauthnVerificationsController < ApplicationController
     @user = @verification.user
   end
 
-  def webauthn_credential
-    @webauthn_credential ||= WebAuthn::Credential.from_get(credential_params)
-  end
-
-  def user_webauthn_credential
-    @user_webauthn_credential ||= @user.webauthn_credentials.find_by(
-      external_id: webauthn_credential.id
-    )
-  end
-
-  def challenge
-    session.dig(:webauthn_authentication, "challenge")
-  end
-
-  def credential_params
-    @credential_params ||= params.require(:credentials).permit(
-      :id,
-      :type,
-      :rawId,
-      response: %i[authenticatorData attestationObject clientDataJSON signature]
-    )
-  end
-
   def webauthn_token_param
     params.permit(:webauthn_token).require(:webauthn_token)
   end
