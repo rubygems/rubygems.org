@@ -12,16 +12,15 @@ module WebauthnVerifiable
     }
   end
 
-  def verify_webauthn_credential
-    @user = User.find(session.dig(:webauthn_authentication, "user"))
+  def webauthn_credential_verified?
     @challenge = session.dig(:webauthn_authentication, "challenge")
 
     if params[:credentials].blank?
-      webauthn_verification_failure(t("credentials_required"))
-      return
+      @webauthn_error = t("credentials_required")
+      return false
     elsif !session_active?
-      webauthn_verification_failure(t("multifactor_auths.session_expired"))
-      return
+      @webauthn_error = t("multifactor_auths.session_expired")
+      return false
     end
 
     @credential = WebAuthn::Credential.from_get(params[:credentials])
@@ -35,7 +34,8 @@ module WebauthnVerifiable
       public_key: @webauthn_credential.public_key,
       sign_count: @webauthn_credential.sign_count
     )
-
     @webauthn_credential.update!(sign_count: @credential.sign_count)
+
+    true
   end
 end
