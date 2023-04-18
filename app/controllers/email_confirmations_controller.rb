@@ -1,6 +1,7 @@
 class EmailConfirmationsController < ApplicationController
   include EmailResettable
   include MfaExpiryMethods
+  include WebauthnVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
@@ -26,6 +27,7 @@ class EmailConfirmationsController < ApplicationController
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
       setup_mfa_authentication
       setup_webauthn_authentication
+      @form_webauthn_url = webauthn_update_email_confirmations_url(token: @user.confirmation_token)
 
       create_new_mfa_expiry
 
@@ -46,33 +48,9 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def webauthn_update
-    @challenge = session.dig(:webauthn_authentication, "challenge")
-
-    if params[:credentials].blank?
-      login_failure(t("credentials_required"))
-      return
-    elsif !session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-      return
-    end
-
-    @credential = WebAuthn::Credential.from_get(params[:credentials])
-
-    @webauthn_credential = @user.webauthn_credentials.find_by(
-      external_id: @credential.id
-    )
-
-    @credential.verify(
-      @challenge,
-      public_key: @webauthn_credential.public_key,
-      sign_count: @webauthn_credential.sign_count
-    )
-
-    @webauthn_credential.update!(sign_count: @credential.sign_count)
+    return login_failure(@webauthn_error) unless webauthn_credential_verified?
 
     confirm_email
-  rescue WebAuthn::Error => e
-    login_failure(e.message)
   end
 
   # used to resend confirmation mail for unconfirmed_email validation
@@ -121,18 +99,6 @@ class EmailConfirmationsController < ApplicationController
   def setup_mfa_authentication
     return if @user.mfa_disabled?
     @form_mfa_url = mfa_update_email_confirmations_url(token: @user.confirmation_token)
-  end
-
-  def setup_webauthn_authentication
-    return if @user.webauthn_credentials.none?
-
-    @form_webauthn_url = webauthn_update_email_confirmations_url(token: @user.confirmation_token)
-
-    @webauthn_options = @user.webauthn_options_for_get
-
-    session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge
-    }
   end
 
   def login_failure(message)
