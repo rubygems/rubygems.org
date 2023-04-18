@@ -42,6 +42,7 @@ class ApiKey < ApplicationRecord
 
   def mfa_authorized?(otp)
     return true unless mfa_enabled?
+    return true if oidc_id_token.present?
     user.api_mfa_verified?(otp)
   end
 

@@ -250,6 +250,30 @@ class ApiKeyTest < ActiveSupport::TestCase
         refute @api_key.mfa_authorized?(incorrect_otp)
       end
     end
+
+    context "with oidc id token" do
+      setup do
+        create(:oidc_id_token, api_key: @api_key)
+      end
+
+      should "return true if mfa not enabled for api key" do
+        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+
+        assert @api_key.mfa_authorized?(nil)
+      end
+
+      should "return true if mfa enabled for api" do
+        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+
+        assert @api_key.mfa_authorized?(nil)
+      end
+
+      should "return true if mfa enabled for api key" do
+        @api_key.update!(mfa: true)
+
+        assert @api_key.mfa_authorized?(nil)
+      end
+    end
   end
 
   context "#mfa_enabled?" do
