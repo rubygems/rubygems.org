@@ -1,11 +1,11 @@
 require "test_helper"
 
-class WebauthnVerifiableTestController < ApplicationController
+class TestWebauthnAuthenticationController < ApplicationController
   include WebauthnVerifiable
 
   def prompt
     @user = User.find(params[:user_id])
-    setup_webauthn_authentication(form_url: webauthn_verifiable_test_authenticate_path)
+    setup_webauthn_authentication(form_url: test_webauthn_authenticate_path)
 
     render json: { webauthn_options: @webauthn_options.to_json, webauthn_verification_url: @webauthn_verification_url }
   end
@@ -13,7 +13,7 @@ class WebauthnVerifiableTestController < ApplicationController
   def prompt_with_session_options
     @user = User.find(params[:user_id])
     setup_webauthn_authentication(
-      form_url: webauthn_verifiable_test_authenticate_path,
+      form_url: test_webauthn_authenticate_path,
       session_options: { "foo" => "bar", "baz" => "qux" }
     )
 
@@ -30,15 +30,15 @@ end
 
 class WebauthnVerifiableTest < ActionController::TestCase
   setup do
-    @controller = WebauthnVerifiableTestController.new
+    @controller = TestWebauthnAuthenticationController.new
     @user = create(:user)
     @webauthn_credential = create(:webauthn_credential, user: @user)
 
     Rails.application.routes.draw do
-      scope controller: "webauthn_verifiable_test" do
+      scope controller: "test_webauthn_authentication" do
         get :prompt
         get :prompt_with_session_options
-        post :authenticate, as: :webauthn_verifiable_test_authenticate
+        post :authenticate, as: :test_webauthn_authenticate
       end
     end
   end
@@ -50,7 +50,7 @@ class WebauthnVerifiableTest < ActionController::TestCase
     end
 
     should "set webauthn_verification_url" do
-      assert_equal webauthn_verifiable_test_authenticate_path, @json_response["webauthn_verification_url"]
+      assert_equal test_webauthn_authenticate_path, @json_response["webauthn_verification_url"]
     end
 
     should "set webauthn_options" do
