@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - oidc-api-tokens
 permissions:
   contents: read
   id-token: write
