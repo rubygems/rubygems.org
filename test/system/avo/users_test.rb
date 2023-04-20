@@ -449,7 +449,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     assert_equal "A nice long comment", audit.comment
   end
 
-  test "chnage user email" do
+  test "change user email" do
     perform_enqueued_jobs do
       admin_user = create(:admin_github_user, :is_admin)
       sign_in_as admin_user
@@ -501,7 +501,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 ).transform_values(&:as_json)
             }
           },
-          "fields" => { "email" => "gem-maintainer-001@example.com" },
+          "fields" => { "from_email" => "gem-maintainer-001@example.com" },
           "arguments" => {},
           "models" => ["gid://gemcutter/User/#{user.id}"]
         },
