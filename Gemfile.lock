@@ -230,7 +230,7 @@ GEM
       webrick (>= 1.3)
     google-protobuf (3.22.3)
     gravtastic (3.2.6)
-    groupdate (6.2.0)
+    groupdate (6.2.1)
       activesupport (>= 5.2)
     hashdiff (1.0.1)
     hashie (5.0.0)
