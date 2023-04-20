@@ -68,4 +68,8 @@ module ApplicationHelper
     return sanitize(msg) if name.end_with? "html"
     msg
   end
+
+  def browser
+    Browser.new(request.user_agent)
+  end
 end

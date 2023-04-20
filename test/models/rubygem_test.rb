@@ -1068,4 +1068,38 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal VersionManifest.new(gem: rubygem.name, number: "0.1.0", platform: "jruby"), rubygem.version_manifest("0.1.0", "jruby")
     end
   end
+
+  context "#yank_versions!" do
+    setup do
+      @rubygem = create(:rubygem)
+      @another_rubygem = create(:rubygem)
+      @version_one = create(:version, rubygem: @rubygem)
+      @version_two = create(:version, rubygem: @rubygem)
+      @version_three = create(:version, rubygem: @rubygem)
+      @anoher_gem_version = create(:version, rubygem: @another_rubygem)
+      create(:user, email: "security@rubygems.org")
+    end
+
+    should "yank all versions if no version_id passed" do
+      @rubygem.yank_versions!
+      @version_one.reload
+      @version_two.reload
+      @version_three.reload
+
+      assert_predicate @version_one, :yanked?
+      assert_predicate @version_two, :yanked?
+      assert_predicate @version_three, :yanked?
+    end
+
+    should "yank a version" do
+      @rubygem.yank_versions!(version_id: @version_one.id)
+      @version_one.reload
+      @version_two.reload
+      @version_three.reload
+
+      assert_predicate @version_one, :yanked?
+      refute_predicate @version_two, :yanked?
+      refute_predicate @version_three, :yanked?
+    end
+  end
 end

@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class WebauthnCredentialsTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user)
   end
@@ -44,13 +46,47 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     @webauthn_credential = create(:webauthn_credential, user: @user)
     visit edit_settings_path
 
-    assert_text "SECURITY DEVICE"
-    assert_no_text "You don't have any security devices"
-    assert_text @webauthn_credential.nickname
-    click_on "Delete"
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      assert_text "SECURITY DEVICE"
+      assert_no_text "You don't have any security devices"
+      assert_text @webauthn_credential.nickname
 
-    assert_text "You don't have any security devices"
-    assert_no_text @webauthn_credential.nickname
+      click_on "Delete"
+      page.accept_alert
+
+      assert_text "You don't have any security devices"
+      assert_no_text @webauthn_credential.nickname
+    end
+
+    webauthn_credential_removed_email = ActionMailer::Base.deliveries.find do |email|
+      email.to.include?(@user.email)
+    end
+
+    assert_equal "Security device removed on RubyGems.org", webauthn_credential_removed_email.subject
+  end
+
+  should "not delete device if confirmation alert is dismissed" do
+    sign_in
+    @webauthn_credential = create(:webauthn_credential, user: @user)
+    visit edit_settings_path
+
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      assert_text "SECURITY DEVICE"
+      assert_no_text "You don't have any security devices"
+      assert_text @webauthn_credential.nickname
+
+      click_on "Delete"
+      page.dismiss_confirm
+
+      assert_no_text "You don't have any security devices"
+      assert_text @webauthn_credential.nickname
+    end
+
+    webauthn_credential_removed_email = ActionMailer::Base.deliveries.find do |email|
+      email.to.include?(@user.email)
+    end
+
+    assert_nil webauthn_credential_removed_email
   end
 
   should "be able to create security devices" do
@@ -63,11 +99,19 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     authenticator = page.driver.browser.add_virtual_authenticator(options)
     WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
 
-    @credential_nickname = "new cred"
-    fill_in "Nickname", with: @credential_nickname
-    click_on "Register device"
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      @credential_nickname = "new cred"
+      fill_in "Nickname", with: @credential_nickname
+      click_on "Register device"
 
-    assert page.has_content? @credential_nickname
+      assert page.has_content? @credential_nickname
+    end
+
+    webauthn_credential_creation_email = ActionMailer::Base.deliveries.find do |email|
+      email.to.include?(@user.email)
+    end
+
+    assert_equal "New security device added on RubyGems.org", webauthn_credential_creation_email.subject
     assert_equal edit_settings_path, current_path
 
     # Cleanup test data

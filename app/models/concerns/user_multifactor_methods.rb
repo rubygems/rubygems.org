@@ -33,8 +33,8 @@ module UserMultifactorMethods
     end
 
     def mfa_gem_signin_authorized?(otp)
-      return true unless strong_mfa_level?
-      otp_verified?(otp)
+      return true unless strong_mfa_level? || webauthn_credentials.present?
+      api_otp_verified?(otp)
     end
 
     def mfa_recommended_not_yet_enabled?
@@ -53,13 +53,18 @@ module UserMultifactorMethods
       mfa_required? && mfa_ui_only?
     end
 
-    def otp_verified?(otp)
+    def ui_otp_verified?(otp)
       otp = otp.to_s
       return true if verify_digit_otp(mfa_seed, otp)
-
       return false unless mfa_recovery_codes.include? otp
       mfa_recovery_codes.delete(otp)
       save!(validate: false)
+    end
+
+    def api_otp_verified?(otp)
+      return true if verify_webauthn_otp(otp)
+      return true if ui_otp_verified?(otp)
+      false
     end
 
     private
@@ -81,10 +86,16 @@ module UserMultifactorMethods
     end
 
     def verify_digit_otp(seed, otp)
+      return false if seed.blank?
+
       totp = ROTP::TOTP.new(seed)
       return false unless totp.verify(otp, drift_behind: 30, drift_ahead: 30)
 
       save!(validate: false)
+    end
+
+    def verify_webauthn_otp(otp)
+      webauthn_verification&.verify_otp(otp)
     end
   end
 

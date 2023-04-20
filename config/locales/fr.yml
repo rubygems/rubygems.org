@@ -234,6 +234,14 @@ fr:
       subject:
       title:
       subtitle:
+    webauthn_credential_created:
+      subject:
+      title:
+      subtitle:
+    webauthn_credential_removed:
+      subject:
+      title:
+      subtitle:
     email_reset_update:
       subject:
       title:
@@ -394,6 +402,21 @@ fr:
       owner_heading:
       owner_request_heading:
       push_heading:
+  webauthn_verifications:
+    expired_or_already_used:
+    no_port:
+    prompt:
+      title:
+      authenticating_as:
+      authenticate:
+      no_webauthn_devices:
+      safari_note_html:
+    successful_verification:
+      title:
+      close_browser:
+    failed_verification:
+      title:
+      close_browser:
   owners:
     confirm:
       confirmed_email:
@@ -426,7 +449,6 @@ fr:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
-      webauthn_warning:
       otp_code:
       api_access:
         confirm_reset: Êtes-vous sûr ? Cette action ne peut être annulée.
@@ -705,6 +727,7 @@ fr:
       confirm_delete:
       delete_failed:
       delete:
+      confirm:
       saved:
     form:
       new_device:

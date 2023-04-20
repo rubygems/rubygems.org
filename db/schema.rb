@@ -371,7 +371,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_24_190734) do
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
   end
 
+  create_table "webauthn_verifications", force: :cascade do |t|
+    t.string "path_token", limit: 128
+    t.datetime "path_token_expires_at"
+    t.string "otp"
+    t.datetime "otp_expires_at"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
+  end
+
   add_foreign_key "api_keys", "users"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "webauthn_credentials", "users"
+  add_foreign_key "webauthn_verifications", "users"
 end

@@ -26,6 +26,9 @@
 .l-text-red-600 {
   color: #e53e3e; }
 
+.l-text-red-600 a {
+  text-decoration: underline; }
+
 .l-wrap--b {
   margin-right: auto;
   margin-left: auto;

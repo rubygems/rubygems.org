@@ -221,6 +221,14 @@ en:
       subject: RubyGems.org API key was reset
       title: API KEY RESET
       subtitle: Hi %{handle}
+    webauthn_credential_created:
+      subject: New security device added on RubyGems.org
+      title: SECURITY DEVICE ADDED
+      subtitle: Hi %{handle}!
+    webauthn_credential_removed:
+      subject: Security device removed on RubyGems.org
+      title: SECURITY DEVICE REMOVED
+      subtitle: Hi %{handle}!
     email_reset_update:
       subject: You have requested email address update on RubyGems.org
       title: EMAIL UPDATE REQUESTED
@@ -369,6 +377,21 @@ en:
       owner_heading: Ownership Notifications
       owner_request_heading: Ownership Request Notifications
       push_heading: Push Notifications
+  webauthn_verifications:
+    expired_or_already_used: The token in the link you used has either expired or been used already.
+    no_port: No port provided. Please try again.
+    prompt:
+      title: Authenticate with Security Device
+      authenticating_as: Authenticating as
+      authenticate: Authenticate
+      no_webauthn_devices: You don't have any security devices enabled
+      safari_note_html: It looks like you are using Safari. Due to limitations within Safari, you will be unable to authenticate using this browser. Please use a different browser. Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">WebAuthn MFA CLI guide</a> for more information on this limitation.
+    successful_verification:
+      title: Success!
+      close_browser: Please close this browser.
+    failed_verification:
+      title: Error - Verification Failed
+      close_browser: Please close this browser and try again.
   owners:
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem
@@ -401,7 +424,6 @@ en:
       webauthn_credentials: Security device
       no_webauthn_credentials: You don't have any security devices
       webauthn_credential_note: A security device can be can be any device that complies with the FIDO2 standard such as security and biometric keys.
-      webauthn_warning: Once enabled, devices can only be used for UI login currently. It is not a replacement for OTP based multi-factor authentication until support with the command line is completed.
       otp_code: OTP code or recovery code
       api_access:
         confirm_reset: Are you sure? This cannot be undone.
@@ -652,6 +674,7 @@ en:
       confirm_delete: "Credential deleted"
       delete_failed: "Could not delete credential"
       delete: Delete
+      confirm: Are you sure you want to delete this credential?
       saved: Security device succesfully created
     form:
       new_device: Register a new security device
