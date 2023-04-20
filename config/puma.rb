@@ -14,7 +14,7 @@ threads min_threads_count, max_threads_count
 require "concurrent"
 
 rails_env = ENV.fetch("RAILS_ENV") { "development" }
-production_like = %w[development test].exclude?(rails_env)
+production_like = !%w[development test].include?(rails_env) # rubocop:disable Rails/NegateInclude,Style/InverseMethods
 
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
