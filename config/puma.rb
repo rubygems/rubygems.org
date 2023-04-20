@@ -14,7 +14,7 @@ threads min_threads_count, max_threads_count
 require "concurrent"
 
 rails_env = ENV.fetch("RAILS_ENV") { "development" }
-production_like = %w[production staging].include?(rails_env)
+production_like = %w[development test].exclude?(rails_env)
 
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
