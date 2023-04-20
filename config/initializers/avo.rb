@@ -30,7 +30,8 @@ Avo.configure do |config|
     new: 'avo_new?',
     update: 'avo_update?',
     create: 'avo_create?',
-    destroy: 'avo_destroy?'
+    destroy: 'avo_destroy?',
+    search: 'avo_search?'
   }
   config.raise_error_on_missing_policy = true
   config.authorization_client = :pundit
