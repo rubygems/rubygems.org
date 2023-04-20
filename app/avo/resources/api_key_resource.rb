@@ -29,4 +29,5 @@ class ApiKeyResource < Avo::BaseResource
 
   field :api_key_rubygem_scope, as: :has_one
   field :ownership, as: :has_one
+  field :oidc_id_token, as: :has_one
 end

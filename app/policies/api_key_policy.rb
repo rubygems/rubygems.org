@@ -11,4 +11,5 @@ class ApiKeyPolicy < ApplicationPolicy
 
   has_association :api_key_rubygem_scope
   has_association :ownership
+  has_association :oidc_id_token
 end
