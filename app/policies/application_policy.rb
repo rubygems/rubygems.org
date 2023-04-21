@@ -38,6 +38,10 @@ class ApplicationPolicy
     false
   end
 
+  def avo_search?
+    avo_index?
+  end
+
   def self.has_association(assocation) # rubocop:disable Naming/PredicateName
     %w[create attach detach destroy edit].each do |action|
       define_method(:"#{action}_#{assocation}?") { false }
