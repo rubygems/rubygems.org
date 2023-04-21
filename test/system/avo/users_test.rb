@@ -448,4 +448,73 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
   end
+
+  test "change user email" do
+    perform_enqueued_jobs do
+      admin_user = create(:admin_github_user, :is_admin)
+      sign_in_as admin_user
+
+      user = create(:user)
+      user_attributes = user.attributes.with_indifferent_access
+
+      visit avo.resources_user_path(user)
+
+      click_button "Actions"
+      click_on "Change User Email"
+
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Change User Email"
+      end
+      page.assert_text "Must supply a sufficiently detailed comment"
+
+      fill_in "Comment", with: "A nice long comment"
+      fill_in "Email", with: "gem-maintainer-001@example.com"
+      click_button "Change User Email"
+
+      page.assert_text "Action ran successfully!"
+
+      user.reload
+
+      audit = user.audits.sole
+
+      page.assert_text audit.id
+      assert_equal "User", audit.auditable_type
+      assert_equal "Change User Email", audit.action
+      assert_equal(
+        {
+          "records" => {
+            "gid://gemcutter/User/#{user.id}" => {
+              "changes" => {
+                "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
+                "email" => [user_attributes[:email], user.email],
+                "email_confirmed" => [true, false],
+                "confirmation_token" => [user_attributes[:confirmation_token], user.confirmation_token],
+                "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json]
+              },
+              "unchanged" => user.attributes
+                .except(
+                  "email",
+                  "token_expires_at",
+                  "email_confirmed",
+                  "confirmation_token",
+                  "updated_at"
+                ).transform_values(&:as_json)
+            }
+          },
+          "fields" => { "from_email" => "gem-maintainer-001@example.com" },
+          "arguments" => {},
+          "models" => ["gid://gemcutter/User/#{user.id}"]
+        },
+        audit.audited_changes
+      )
+      assert_equal admin_user, audit.admin_github_user
+      assert_equal "A nice long comment", audit.comment
+
+      mailer = ActionMailer::Base.deliveries.find do |mail|
+        mail.to.include?(user.email)
+      end
+
+      assert_equal("Please confirm your email address with RubyGems.org", mailer.subject)
+    end
+  end
 end
