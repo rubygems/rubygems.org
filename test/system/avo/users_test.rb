@@ -460,16 +460,16 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       visit avo.resources_user_path(user)
 
       click_button "Actions"
-      click_on "Change Email"
+      click_on "Change User Email"
 
       assert_no_changes "User.find(#{user.id}).attributes" do
-        click_button "Change Email"
+        click_button "Change User Email"
       end
       page.assert_text "Must supply a sufficiently detailed comment"
 
       fill_in "Comment", with: "A nice long comment"
       fill_in "Email", with: "gem-maintainer-001@example.com"
-      click_button "Change Email"
+      click_button "Change User Email"
 
       page.assert_text "Action ran successfully!"
 
@@ -479,7 +479,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
       page.assert_text audit.id
       assert_equal "User", audit.auditable_type
-      assert_equal "Change Email", audit.action
+      assert_equal "Change User Email", audit.action
       assert_equal(
         {
           "records" => {

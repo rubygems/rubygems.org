@@ -6,7 +6,7 @@ class UserResource < Avo::BaseResource
   }
 
   action BlockUser
-  action ChangeEmail
+  action ChangeUserEmail
   action ResetApiKey
   action ResetUser2fa
   action YankRubygemsForUser
