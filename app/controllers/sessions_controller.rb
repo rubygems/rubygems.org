@@ -1,5 +1,6 @@
 class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
+  include WebauthnVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
@@ -11,7 +12,7 @@ class SessionsController < Clearance::SessionsController
     @user = find_user
 
     if @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
-      setup_webauthn_authentication
+      setup_webauthn_authentication(form_url: webauthn_create_session_path, session_options: { "user" => @user.id })
       setup_mfa_authentication
 
       session[:mfa_login_started_at] = Time.now.utc.to_s
@@ -25,37 +26,17 @@ class SessionsController < Clearance::SessionsController
 
   def webauthn_create
     @user = User.find(session.dig(:webauthn_authentication, "user"))
-    @challenge = session.dig(:webauthn_authentication, "challenge")
 
-    if params[:credentials].blank?
-      webauthn_verification_failure(t("credentials_required"))
-      return
-    elsif !session_active?
+    unless session_active?
       webauthn_verification_failure(t("multifactor_auths.session_expired"))
       return
     end
-
-    @credential = WebAuthn::Credential.from_get(params[:credentials])
-
-    @webauthn_credential = @user.webauthn_credentials.find_by(
-      external_id: @credential.id
-    )
-
-    @credential.verify(
-      @challenge,
-      public_key: @webauthn_credential.public_key,
-      sign_count: @webauthn_credential.sign_count
-    )
-
-    @webauthn_credential.update!(sign_count: @credential.sign_count)
+    return webauthn_verification_failure(@webauthn_error) unless webauthn_credential_verified?
 
     record_mfa_login_duration(mfa_type: "webauthn")
 
     do_login
-  rescue WebAuthn::Error => e
-    webauthn_verification_failure(e.message)
   ensure
-    session.delete(:webauthn_authentication)
     session.delete(:mfa_login_started_at)
   end
 
@@ -154,17 +135,6 @@ class SessionsController < Clearance::SessionsController
 
     flash.now.alert = t(".account_blocked")
     render template: "sessions/new", status: :unauthorized
-  end
-
-  def setup_webauthn_authentication
-    return if @user.webauthn_credentials.none?
-
-    @webauthn_options = @user.webauthn_options_for_get
-
-    session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge,
-      "user" => @user.id
-    }
   end
 
   def setup_mfa_authentication

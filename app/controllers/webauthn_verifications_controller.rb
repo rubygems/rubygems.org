@@ -1,18 +1,15 @@
 # This controller is for the user interface Webauthn challenge after a user follows a link generated
 # by the APIv1 WebauthnVerificationsController (controllers/api/v1/webauthn_verifications_controller).
 class WebauthnVerificationsController < ApplicationController
+  include WebauthnVerifiable
+
   before_action :set_verification, :set_user, except: %i[successful_verification failed_verification]
 
   def prompt
     redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
-    @webauthn_options = @user.webauthn_options_for_get
-
-    session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge,
-      "port" => port
-    }
+    setup_webauthn_authentication(form_url: authenticate_webauthn_verification_path, session_options: { "port" => port })
   end
 
   def authenticate
@@ -22,24 +19,12 @@ class WebauthnVerificationsController < ApplicationController
       return
     end
 
-    webauthn_credential.verify(
-      challenge,
-      public_key: user_webauthn_credential.public_key,
-      sign_count: user_webauthn_credential.sign_count
-    )
-
-    user_webauthn_credential.update!(sign_count: webauthn_credential.sign_count)
+    return render plain: @webauthn_error, status: :unauthorized unless webauthn_credential_verified?
 
     @verification.generate_otp
     @verification.expire_path_token
 
     redirect_to(URI.parse("http://localhost:#{port}?code=#{@verification.otp}").to_s, allow_other_host: true)
-  rescue WebAuthn::Error => e
-    render plain: e.message, status: :unauthorized
-  rescue ActionController::ParameterMissing
-    render plain: t("credentials_required"), status: :unauthorized
-  ensure
-    session.delete(:webauthn_authentication)
   end
 
   def failed_verification
@@ -58,29 +43,6 @@ class WebauthnVerificationsController < ApplicationController
 
   def set_user
     @user = @verification.user
-  end
-
-  def webauthn_credential
-    @webauthn_credential ||= WebAuthn::Credential.from_get(credential_params)
-  end
-
-  def user_webauthn_credential
-    @user_webauthn_credential ||= @user.webauthn_credentials.find_by(
-      external_id: webauthn_credential.id
-    )
-  end
-
-  def challenge
-    session.dig(:webauthn_authentication, "challenge")
-  end
-
-  def credential_params
-    @credential_params ||= params.require(:credentials).permit(
-      :id,
-      :type,
-      :rawId,
-      response: %i[authenticatorData attestationObject clientDataJSON signature]
-    )
   end
 
   def webauthn_token_param
