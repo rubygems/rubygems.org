@@ -521,7 +521,6 @@ pt-BR:
       change_avatar: Mudar foto de perfil
       email_awaiting_confirmation:
       enter_password:
-      hide_email: Não mostrar meu email
       optional_full_name:
       optional_twitter_username:
       title: Editar Perfil
@@ -543,6 +542,7 @@ pt-BR:
     update:
       confirmation_mail_sent:
       updated:
+    public_email: Mostrar meu email
     request_denied:
     show:
       title: Perfil de %{username}

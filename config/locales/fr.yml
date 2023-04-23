@@ -530,7 +530,6 @@ fr:
       email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email
         %{unconfirmed_email}
       enter_password: Veuillez entrer le mot de passe de votre compte
-      hide_email: Ne pas afficher l'email dans le profil public
       optional_full_name:
       optional_twitter_username: Nom d'utilisateur Twitter optionnel. Sera affiché
         publiquement
@@ -564,6 +563,7 @@ fr:
       confirmation_mail_sent: Vous allez recevoir un email dans quelques minutes.
         Il contient les instructions pour confirmer votre nouvelle adresse email.
       updated: Votre profil a été mis à jour.
+    public_email: Afficher l'email dans le profil public
     request_denied: Cette demande a été refusée. Nous n'avons pas pu vérifier votre
       mot de passe.
     show:

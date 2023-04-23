@@ -528,7 +528,6 @@ es:
       email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo
         %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
-      hide_email: Ocultar correo electrónico en perfil público
       optional_full_name: Opcional. Será mostrado en tu perfil público
       optional_twitter_username: Usuario de Twitter opcional. Será mostrado en tu
         perfil público
@@ -558,6 +557,7 @@ es:
       confirmation_mail_sent: Recibirás un correo electrónico en los próximos minutos.
         Contiene instrucciones para confirmar tu nueva dirección de correo.
       updated: Tu perfil se a actualizado.
+    public_email: Mostrar correo electrónico en perfil público
     request_denied: La solicitud fue denegada. No pudimos verificar tu contraseña.
     show:
       title: Perfil de %{username}

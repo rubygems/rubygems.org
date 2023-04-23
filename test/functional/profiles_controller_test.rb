@@ -27,7 +27,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
     context "on GET to show when hide email" do
       setup do
-        @user.update(hide_email: true)
+        @user.update(public_email: false)
         get :show, params: { id: @user.id }
       end
 
@@ -120,11 +120,11 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating show email" do
         setup do
           @handle = "john_m_doe"
-          @hide_email = true
+          @public_email = true
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
           put :update,
-            params: { user: { handle: @handle, hide_email: @hide_email, password: @user.password } }
+            params: { user: { handle: @handle, public_email: @public_email, password: @user.password } }
         end
 
         should respond_with :redirect
@@ -132,7 +132,7 @@ class ProfilesControllerTest < ActionController::TestCase
         should set_flash.to("Your profile was updated.")
 
         should "update email toggle" do
-          assert_equal @hide_email, User.last.hide_email
+          assert_equal @public_email, User.last.public_email
         end
       end
 

@@ -509,7 +509,6 @@ ja:
       change_avatar: アバターを変更
       email_awaiting_confirmation: 新しいEメールアドレス%{unconfirmed_email}を確認してください。
       enter_password: アカウントのパスワードを入力してください。
-      hide_email: Eメールアドレスを公開しない
       optional_full_name: 省略可能です。公開されます。
       optional_twitter_username: Twitterのユーザー名。省略可能です。公開されます。
       title: プロフィールを編集
@@ -531,6 +530,7 @@ ja:
     update:
       confirmation_mail_sent: 数分でEメールが届きます。メールには新しいEメールアドレスを確認する手順が含まれています。
       updated: プロフィールが更新されました。
+    public_email: メールアドレスを投稿する
     request_denied: このリクエストは拒否されました。パスワードを検証できませんでした。
     show:
       title: "%{username} のプロフィール"

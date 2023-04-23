@@ -273,8 +273,8 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.handle, @user.name
     end
 
-    should "setup a field to toggle showing email with default true" do
-      assert @user.hide_email
+    should "setup a field to toggle showing email with default falsš" do
+      refute_predicate @user, :public_email?
     end
 
     should "only return rubygems" do

@@ -20,3 +20,7 @@
   <%= form.label :password, t('activerecord.attributes.user.password'), :class => 'form__label' %>
   <%= form.password_field :password, autocomplete: "new-password", class: 'form__input' %>
 </div>
+<div class="profile-checkbox form__checkbox">
+  <%= form.check_box :public_email, :class => 'form__checkbox__input' %>
+  <%= form.label :public_email, t('profiles.public_email'), :class => 'form__checkbox__label' %>
+</div>
