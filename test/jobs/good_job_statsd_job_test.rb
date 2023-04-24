@@ -131,9 +131,6 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
              tags: { "state" => "succeeded", "queue" => "default", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
       metric(name: "good_job.staleness", type: :g,
-             tags: { "state" => "queued", "queue" => "default", "priority" => "-2",
-                     "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
-      metric(name: "good_job.staleness", type: :g,
              tags: { "state" => "succeeded", "queue" => "default", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
 

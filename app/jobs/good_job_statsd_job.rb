@@ -21,7 +21,7 @@ class GoodJobStatsDJob < ApplicationJob
         staleness(
           now,
           filter.filtered_query(state:),
-          %w[executions_good_jobs.scheduled_at executions_good_jobs.created_at]
+          %w[good_job_executions.scheduled_at good_job_executions.created_at]
         )
       end
       gauge "staleness", state_staleness
@@ -32,7 +32,7 @@ class GoodJobStatsDJob < ApplicationJob
         staleness(
           now,
           filter.filtered_query(state:),
-          %w[executions_good_jobs.performed_at executions_good_jobs.finished_at executions_good_jobs.scheduled_at executions_good_jobs.created_at]
+          %w[good_job_executions.performed_at good_job_executions.finished_at good_job_executions.scheduled_at good_job_executions.created_at]
         )
       end
       gauge "latest_execution", state_latest_execution
@@ -42,7 +42,7 @@ class GoodJobStatsDJob < ApplicationJob
   end
 
   def staleness(now, filtered_query, columns)
-    filtered_query.joins(:executions).then do |rel|
+    filtered_query.joins(:discrete_executions).then do |rel|
       rel.pluck(
         *rel.group_values,
         Arel::Nodes::Max.new(
