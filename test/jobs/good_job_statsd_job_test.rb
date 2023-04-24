@@ -131,6 +131,9 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
              tags: { "state" => "succeeded", "queue" => "default", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
       metric(name: "good_job.staleness", type: :g,
+             tags: { "state" => "queued", "queue" => "default", "priority" => "-2",
+                     "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
+      metric(name: "good_job.staleness", type: :g,
              tags: { "state" => "succeeded", "queue" => "default", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
 
@@ -153,5 +156,22 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
     ] do
       GoodJobStatsDJob.perform_now
     end
+  end
+
+  # covering unexpected GoodJob states enum change
+  class BrokenFilter
+    def states
+      { "invalid_state" => [] }
+    end
+  end
+
+  test "invalid state" do
+    GoodJobStatsDJob::Filter.stubs(:new).returns(BrokenFilter.new)
+
+    error = assert_raises(StandardError) do
+      GoodJobStatsDJob.new.perform
+    end
+
+    assert_equal("unknown GoodJob state 'invalid_state'", error.message)
   end
 end
