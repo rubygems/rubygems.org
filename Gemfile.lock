@@ -575,7 +575,7 @@ GEM
     validates_formatting_of (0.9.0)
       activemodel
     version_gem (1.1.1)
-    view_component (3.0.0)
+    view_component (2.82.0)
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -690,6 +690,7 @@ DEPENDENCIES
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
   validates_formatting_of (~> 0.9)
+  view_component (~> 2.0)
   webauthn (~> 3.0)
   webdrivers (~> 5.2)
   webmock (~> 3.18)
