@@ -377,7 +377,7 @@ GEM
     parallel (1.22.1)
     parser (3.2.1.1)
       ast (~> 2.4.1)
-    pg (1.5.0)
+    pg (1.5.1)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
