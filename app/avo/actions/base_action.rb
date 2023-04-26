@@ -54,7 +54,7 @@ class BaseAction < Avo::BaseAction
         block.call
       rescue StandardError => e
         Rails.error.report(e, handled: true)
-        error "#{e.message.truncate(300)}\n#{e.backtrace.first}"
+        error e.message.truncate(300)
       end
     }
 
