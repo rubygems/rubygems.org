@@ -4,7 +4,6 @@ class AddOwner < BaseAction
     current_user.team_member?("rubygems-org") && view == :show
   }
 
-  # https://rubygems_org.test/admin/avo_api/users/search?q=user1&global=false&via_association=belongs_to&via_association_id=owners&via_reflection_class=Rubygem&via_reflection_id=11&via_parent_resource_id=&via_parent_resource_class=&via_relation=
   field :owner, as: :select_record, searchable: true, name: "New owner", use_resource: UserResource
 
   self.message = lambda {
