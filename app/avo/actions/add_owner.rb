@@ -15,6 +15,7 @@ class AddOwner < BaseAction
 
   class ActionHandler < ActionHandler
     set_callback :handle, :before do
+      @owner = fields[:owner]
       error "Must specify a valid user to add as owner" if @owner.blank?
     end
 
@@ -22,9 +23,9 @@ class AddOwner < BaseAction
       error "Cannot add #{@owner.name} as an owner since they are unconfirmed" if @owner.unconfirmed?
     end
 
-    set_callback :handle_model, :before do
-      @rubygem = current_model
-      @owner = fields[:owner]
+    def do_handle_model(rubygem)
+      @rubygem = rubygem
+      super
     end
 
     set_callback :handle_model, :before do
@@ -33,7 +34,7 @@ class AddOwner < BaseAction
 
     def handle_model(rubygem)
       authorizer = User.find_by_email!("security@rubygems.org")
-      rubygem.ownerships.create(user: @owner, authorizer: authorizer, confirmed_at: Time.current)
+      rubygem.ownerships.create!(user: @owner, authorizer: authorizer, confirmed_at: Time.current)
       succeed "Added #{@owner.name} to #{@rubygem.name}"
     end
   end

@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class Avo::RubygemsSystemTest < ApplicationSystemTestCase
+  make_my_diffs_pretty!
+
   def sign_in_as(user)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
       provider: "github",
@@ -219,6 +221,80 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
             k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
           end
         )
+      },
+      audit.audited_changes
+    )
+    assert_equal admin_user, audit.admin_github_user
+    assert_equal "A nice long comment", audit.comment
+  end
+
+  test "add owner" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    security_user = create(:user, email: "security@rubygems.org")
+    rubygem = create(:rubygem)
+    create(:version, rubygem: rubygem)
+
+    new_owner = create(:user)
+
+    visit avo.resources_rubygem_path(rubygem)
+
+    click_button "Actions"
+    click_on "Add owner"
+
+    assert_no_changes "Rubygem.find(#{rubygem.id}).then { [_1.attributes, _1.ownerships.map(&:attributes)]}" do
+      click_button "Add owner"
+    end
+    page.assert_text "Must supply a sufficiently detailed comment"
+
+    fill_in "Comment", with: "A nice long comment"
+    find_field("New owner").click
+    send_keys new_owner.email
+    find("li", text: new_owner.handle).click
+
+    click_button "Add owner"
+
+    page.assert_text "Added #{new_owner.handle} to #{rubygem.name}"
+    page.assert_text rubygem.to_global_id.uri.to_s
+
+    rubygem.reload
+
+    ownership = rubygem.ownerships.where(user: new_owner).sole
+    assert_predicate ownership, :confirmed?
+    assert_equal security_user, ownership.authorizer
+
+    audit = rubygem.audits.sole
+
+    page.assert_text audit.id
+    assert_equal "Rubygem", audit.auditable_type
+    assert_equal "Add owner", audit.action
+
+    assert_equal(
+      {
+        "fields" => { "owner" => { "id" => new_owner.id, "handle" => new_owner.handle } },
+        "arguments" => {},
+        "models" => ["gid://gemcutter/Rubygem/#{rubygem.id}"],
+        "records" =>
+          {
+            ownership.to_gid.to_s => {
+              "changes" => {
+                "id" => [nil, ownership.id],
+                "rubygem_id" => [nil, rubygem.id],
+                "user_id" => [nil, new_owner.id],
+                "token" => [nil, ownership.token],
+                "created_at" => [nil, ownership.created_at.as_json],
+                "updated_at" => [nil, ownership.updated_at.as_json],
+                "push_notifier" => [nil, true],
+                "confirmed_at" => [nil, ownership.confirmed_at.as_json],
+                "token_expires_at" => [nil, ownership.token_expires_at.as_json],
+                "owner_notifier" => [nil, true],
+                "authorizer_id" => [nil, security_user.id],
+                "ownership_request_notifier" => [nil, true],
+              },
+              "unchanged" => {}
+            }
+          }
       },
       audit.audited_changes
     )

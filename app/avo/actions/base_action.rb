@@ -40,7 +40,7 @@ class BaseAction < Avo::BaseAction
       @action = action
     end
 
-    attr_reader :models, :fields, :current_user, :arguments, :resource, :current_model
+    attr_reader :models, :fields, :current_user, :arguments, :resource
 
     delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name, :succeed,
       to: :@action
@@ -54,7 +54,7 @@ class BaseAction < Avo::BaseAction
         block.call
       rescue StandardError => e
         Rails.error.report(e, handled: true)
-        error e.message.truncate(300)
+        error "#{e.message.truncate(300)}\n#{e.backtrace.first}"
       end
     }
 
@@ -64,6 +64,12 @@ class BaseAction < Avo::BaseAction
       end
     ensure
       keep_modal_open if errored?
+    end
+
+    def do_handle_model(model)
+      run_callbacks :handle_model do
+        handle_model(model)
+      end
     end
 
     def errored?
@@ -80,9 +86,7 @@ class BaseAction < Avo::BaseAction
           arguments:,
           models:
         ) do
-          run_callbacks :handle_model do
-            handle_model(model)
-        end
+          do_handle_model(model)
         end
         redirect_to avo.resources_audit_path(audit)
       end
