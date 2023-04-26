@@ -29,6 +29,7 @@ class Api::CompactIndexController < Api::BaseController
 
   def render_range(response_body)
     headers["ETag"] = '"' << Digest::MD5.hexdigest(response_body) << '"'
+    headers["Digest"] = "sha-256=#{Digest::SHA256.hexdigest(response_body)}"
     headers["Accept-Ranges"] = "bytes"
 
     ranges = Rack::Utils.byte_ranges(request.env, response_body.bytesize)

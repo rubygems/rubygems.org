@@ -6,6 +6,10 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     '"' << Digest::MD5.hexdigest(body) << '"'
   end
 
+  def digest(body)
+    "sha-256=#{Digest::SHA256.hexdigest(body)}"
+  end
+
   setup do
     @rubygem2 = create(:rubygem, name: "gemB")
     @version = create(:version, rubygem: @rubygem2, number: "1.0.0", info_checksum: "qw2dwe")
@@ -61,6 +65,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     assert_equal expected_body, @response.body
     assert_equal etag(expected_body), @response.headers["ETag"]
+    assert_equal digest(expected_body), @response.headers["Digest"]
     assert_equal %w[gemA gemA1 gemA2 gemB], Rails.cache.read("names")
   end
 
@@ -71,6 +76,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     full_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
 
     assert_equal etag(full_body), @response.headers["ETag"]
+    assert_equal digest(full_body), @response.headers["Digest"]
     assert_equal "gemA2\ngemB\n", @response.body
   end
 
@@ -86,6 +92,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_match file_contents, @response.body
     assert_match(/#{gem_b_match}#{gem_a_match}/, @response.body)
     assert_equal etag(@response.body), @response.headers["ETag"]
+    assert_equal digest(@response.body), @response.headers["Digest"]
   end
 
   test "/versions partial response" do
@@ -98,6 +105,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response 206
     assert_equal partial_body, @response.body
     assert_equal etag(full_response_body), @response.headers["ETag"]
+    assert_equal digest(full_response_body), @response.headers["Digest"]
   end
 
   test "/versions updates on gem yank" do
@@ -116,6 +124,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get versions_path, env: { range: "bytes=206-" }
 
     assert_equal etag(full_response_body), @response.headers["ETag"]
+    assert_equal digest(full_response_body), @response.headers["Digest"]
     assert_equal expected, @response.body
   end
 
@@ -140,6 +149,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal expected, @response.body
     assert_equal etag(expected), @response.headers["ETag"]
+    assert_equal digest(expected), @response.headers["Digest"]
     assert_equal expected, CompactIndex.info(Rails.cache.read("info/gemA"))
   end
 
@@ -178,6 +188,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal(expected, @response.body)
     assert_equal etag(expected), @response.headers["ETag"]
+    assert_equal digest(expected), @response.headers["Digest"]
   end
 
   test "/info with nonexistent gem" do
@@ -212,5 +223,6 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal(expected, @response.body)
     assert_equal etag(expected), @response.headers["ETag"]
+    assert_equal digest(expected), @response.headers["Digest"]
   end
 end
