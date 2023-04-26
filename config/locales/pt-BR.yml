@@ -478,6 +478,7 @@ pt-BR:
       email_awaiting_confirmation:
       enter_password:
       hide_email: Não mostrar meu email
+      optional_full_name:
       optional_twitter_username:
       title: Editar Perfil
       delete:

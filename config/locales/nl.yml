@@ -467,6 +467,7 @@ nl:
       email_awaiting_confirmation:
       enter_password:
       hide_email:
+      optional_full_name:
       optional_twitter_username:
       title: Wijzig profiel
       delete:

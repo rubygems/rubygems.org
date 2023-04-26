@@ -51,6 +51,9 @@
 
   <div class="text_field">
     <%= form.label :full_name, :class => 'form__label' %>
+    <p class='form__field__instructions'>
+      <%= t('.optional_full_name') %>
+    </p>
     <%= form.text_field :full_name, :class => 'form__input' %>
   </div>
 

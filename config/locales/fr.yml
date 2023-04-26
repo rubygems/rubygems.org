@@ -488,6 +488,7 @@ fr:
         %{unconfirmed_email}
       enter_password: Veuillez entrer le mot de passe de votre compte
       hide_email: Ne pas afficher l'email dans le profil public
+      optional_full_name:
       optional_twitter_username: Nom d'utilisateur Twitter optionnel. Sera affiché
         publiquement
       title: Modification de profil

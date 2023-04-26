@@ -486,8 +486,8 @@ es:
         %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
       hide_email: Ocultar correo electrónico en perfil público
-      optional_twitter_username: Usuario de Twitter opcional. Será mostrado en tu
-        perfil público
+      optional_full_name: Opcional. Será mostrado en tu perfil público
+      optional_twitter_username: Usuario de Twitter opcional. Será mostrado en tu perfil público
       title: Editar perfil
       delete:
         delete: Eliminar

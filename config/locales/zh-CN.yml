@@ -449,6 +449,7 @@ zh-CN:
       email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
       enter_password: 输入密码
       hide_email: 在公开的个人资料里面隐藏我的 Email
+      optional_full_name:
       optional_twitter_username: Twitter 账号（可选）
       title: 修改个人资料
       delete:
