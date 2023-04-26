@@ -1,5 +1,6 @@
 class PasswordsController < Clearance::PasswordsController
   include MfaExpiryMethods
+  include WebauthnVerifiable
 
   before_action :validate_confirmation_token, only: %i[edit mfa_edit webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[mfa_edit webauthn_edit]
@@ -7,7 +8,7 @@ class PasswordsController < Clearance::PasswordsController
   def edit
     if @user.mfa_enabled? || @user.webauthn_credentials.any?
       setup_mfa_authentication
-      setup_webauthn_authentication
+      setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry
 
@@ -43,32 +44,14 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def webauthn_edit
-    @challenge = session.dig(:webauthn_authentication, "challenge")
-
-    if params[:credentials].blank?
-      login_failure(t("credentials_required"))
-      return
-    elsif !session_active?
+    unless session_active?
       login_failure(t("multifactor_auths.session_expired"))
       return
     end
 
-    @credential = WebAuthn::Credential.from_get(params[:credentials])
+    return login_failure(@webauthn_error) unless webauthn_credential_verified?
 
-    @webauthn_credential = @user.webauthn_credentials.find_by(
-      external_id: @credential.id
-    )
-
-    @credential.verify(
-      @challenge,
-      public_key: @webauthn_credential.public_key,
-      sign_count: @webauthn_credential.sign_count
-    )
-
-    @webauthn_credential.update!(sign_count: @credential.sign_count)
     render template: "passwords/edit"
-  rescue WebAuthn::Error => e
-    login_failure(e.message)
   end
 
   private
@@ -95,20 +78,8 @@ class PasswordsController < Clearance::PasswordsController
     @form_mfa_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
   end
 
-  def setup_webauthn_authentication
-    return if @user.webauthn_credentials.none?
-
-    @form_webauthn_url = webauthn_edit_user_password_url(@user, token: @user.confirmation_token)
-
-    @webauthn_options = @user.webauthn_options_for_get
-
-    session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge
-    }
-  end
-
   def mfa_edit_conditions_met?
-    @user.mfa_enabled? && @user.otp_verified?(params[:otp]) && session_active?
+    @user.mfa_enabled? && @user.ui_otp_verified?(params[:otp]) && session_active?
   end
 
   def login_failure(message)

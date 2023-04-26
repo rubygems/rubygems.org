@@ -824,11 +824,26 @@ class RubygemTest < ActiveSupport::TestCase
   context "#protected_days" do
     setup do
       @rubygem = create(:rubygem)
-      @rubygem.update_attribute(:updated_at, 99.days.ago)
     end
 
-    should "return number of days left till the gem namespace is protected" do
+    should "return 100 days left of gem namespace protection after 0 days" do
+      assert_equal 100, @rubygem.protected_days
+    end
+
+    should "return 1 day left of gem namespace protection after 99 days" do
+      @rubygem.update_attribute(:updated_at, 99.days.ago)
+
       assert_equal 1, @rubygem.protected_days
+    end
+
+    should "return 0 days left of gem namespace protection after protected time has passed" do
+      @rubygem.update_attribute(:updated_at, 101.days.ago)
+
+      assert_equal 0, @rubygem.protected_days
+
+      @rubygem.update_attribute(:updated_at, 103.days.ago)
+
+      assert_equal 0, @rubygem.protected_days
     end
   end
 
@@ -839,7 +854,9 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "update set `updated_at` to 101 days ago" do
-      assert_equal (Time.zone.today - 101.days), @rubygem.updated_at.to_date
+      freeze_time
+
+      assert_in_delta 101.days.ago, @rubygem.updated_at, 5.seconds
     end
   end
 
@@ -1049,6 +1066,40 @@ class RubygemTest < ActiveSupport::TestCase
       rubygem = build(:rubygem)
 
       assert_equal VersionManifest.new(gem: rubygem.name, number: "0.1.0", platform: "jruby"), rubygem.version_manifest("0.1.0", "jruby")
+    end
+  end
+
+  context "#yank_versions!" do
+    setup do
+      @rubygem = create(:rubygem)
+      @another_rubygem = create(:rubygem)
+      @version_one = create(:version, rubygem: @rubygem)
+      @version_two = create(:version, rubygem: @rubygem)
+      @version_three = create(:version, rubygem: @rubygem)
+      @anoher_gem_version = create(:version, rubygem: @another_rubygem)
+      create(:user, email: "security@rubygems.org")
+    end
+
+    should "yank all versions if no version_id passed" do
+      @rubygem.yank_versions!
+      @version_one.reload
+      @version_two.reload
+      @version_three.reload
+
+      assert_predicate @version_one, :yanked?
+      assert_predicate @version_two, :yanked?
+      assert_predicate @version_three, :yanked?
+    end
+
+    should "yank a version" do
+      @rubygem.yank_versions!(version_id: @version_one.id)
+      @version_one.reload
+      @version_two.reload
+      @version_three.reload
+
+      assert_predicate @version_one, :yanked?
+      refute_predicate @version_two, :yanked?
+      refute_predicate @version_three, :yanked?
     end
   end
 end

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class GemContentEntryTest < ActiveSupport::TestCase
+class RubygemContentsEntryTest < ActiveSupport::TestCase
   setup do
     @binary_io = gem_file
   end
@@ -14,7 +14,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
   end
 
   def create_entry(path: "lib/foo.rb", size: nil, file_mode: 0o644, linkname: "", body: "body")
-    GemContentEntry.from_tar_entry(
+    RubygemContents::Entry.from_tar_entry(
       stub(
         full_name: path,
         header: stub(mode: file_mode, linkname: linkname),
@@ -26,7 +26,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
   end
 
   def create_persisted_entry(metadata, &)
-    GemContentEntry.from_metadata(metadata.stringify_keys, &)
+    RubygemContents::Entry.from_metadata(metadata.stringify_keys, &)
   end
 
   def file_entry
@@ -47,11 +47,11 @@ class GemContentEntryTest < ActiveSupport::TestCase
     tar_entry = stub(
       full_name: "lib/large.rb",
       header: stub(mode: 0o644, linkname: ""),
-      size: GemContentEntry::SIZE_LIMIT + 1,
+      size: RubygemContents::Entry::SIZE_LIMIT + 1,
       symlink?: false
     )
     tar_entry.stubs(:read).with(4096).returns("a" * 4096)
-    GemContentEntry.from_tar_entry(tar_entry)
+    RubygemContents::Entry.from_tar_entry(tar_entry)
   end
 
   def binary_entry
@@ -99,7 +99,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
       tar_entry.expects(:size).at_least_once.returns(file_entry.size)
       tar_entry.expects(:symlink?).returns(false)
       tar_entry.expects(:read).returns(file_entry.body)
-      entry = GemContentEntry.from_tar_entry(tar_entry)
+      entry = RubygemContents::Entry.from_tar_entry(tar_entry)
 
       assert_equal file_entry, entry
       assert_predicate entry, :file?
@@ -112,7 +112,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
       tar_entry.expects(:size).at_least_once.returns(0)
       tar_entry.expects(:symlink?).returns(false)
       tar_entry.expects(:read).returns("")
-      entry = GemContentEntry.from_tar_entry(tar_entry)
+      entry = RubygemContents::Entry.from_tar_entry(tar_entry)
 
       assert_equal empty_entry, entry
       assert_predicate entry, :file?
@@ -122,10 +122,9 @@ class GemContentEntryTest < ActiveSupport::TestCase
       tar_entry = mock("tar_entry")
       tar_entry.expects(:full_name).returns(large_entry.path)
       tar_entry.expects(:header).returns(mock(mode: 0o644))
-      tar_entry.expects(:size).at_least_once.returns(GemContentEntry::SIZE_LIMIT + 1)
-      tar_entry.expects(:symlink?).returns(false)
+      tar_entry.expects(:size).at_least_once.returns(RubygemContents::Entry::SIZE_LIMIT + 1)
       tar_entry.expects(:read).with(4096).returns("a" * 4096)
-      entry = GemContentEntry.from_tar_entry(tar_entry)
+      entry = RubygemContents::Entry.from_tar_entry(tar_entry)
 
       assert_equal large_entry, entry
       refute_predicate entry, :body_persisted?
@@ -140,7 +139,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
       tar_entry.expects(:header).at_least_once.returns(mock(mode: 0o20644, linkname: symlink_entry.linkname))
       tar_entry.expects(:size).at_least_once.returns(0)
       tar_entry.expects(:symlink?).returns(true)
-      entry = GemContentEntry.from_tar_entry(tar_entry)
+      entry = RubygemContents::Entry.from_tar_entry(tar_entry)
 
       assert_equal symlink_entry, entry
       assert_predicate entry, :symlink?
@@ -149,13 +148,13 @@ class GemContentEntryTest < ActiveSupport::TestCase
 
   context ".from_metadata" do
     should "raise InvalidMetadata if the metadata lacks required keys" do
-      assert_raises(GemContentEntry::InvalidMetadata) { GemContentEntry.from_metadata({}) }
-      assert_raises(GemContentEntry::InvalidMetadata) { GemContentEntry.from_metadata("path" => "lib/foo.rb") }
-      assert_raises(GemContentEntry::InvalidMetadata) { GemContentEntry.from_metadata("size" => "0") }
+      assert_raises(RubygemContents::Entry::InvalidMetadata) { RubygemContents::Entry.from_metadata({}) }
+      assert_raises(RubygemContents::Entry::InvalidMetadata) { RubygemContents::Entry.from_metadata("path" => "lib/foo.rb") }
+      assert_raises(RubygemContents::Entry::InvalidMetadata) { RubygemContents::Entry.from_metadata("size" => "0") }
     end
 
     should "return a file entry" do
-      entry = GemContentEntry.from_metadata(file_entry.metadata) { file_entry.body }
+      entry = RubygemContents::Entry.from_metadata(file_entry.metadata) { file_entry.body }
 
       assert_equal file_entry, entry
       assert_predicate entry, :file?
@@ -163,7 +162,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
     end
 
     should "return an empty entry" do
-      entry = GemContentEntry.from_metadata(empty_entry.metadata) { "" }
+      entry = RubygemContents::Entry.from_metadata(empty_entry.metadata) { "" }
 
       assert_equal empty_entry, entry
       assert_predicate entry, :file?
@@ -171,23 +170,25 @@ class GemContentEntryTest < ActiveSupport::TestCase
     end
 
     should "return a binary entry" do
-      entry = GemContentEntry.from_metadata(binary_entry.metadata) { raise "binary not stored" }
+      entry = RubygemContents::Entry.from_metadata(binary_entry.metadata) { raise "binary not stored" }
 
       assert_equal binary_entry, entry
       assert_predicate entry, :file?
       refute_predicate entry, :text?
+      refute_predicate entry, :body_persisted?
       assert_nil entry.body
     end
 
     should "return a symlink entry" do
-      entry = GemContentEntry.from_metadata(symlink_entry.metadata)
+      entry = RubygemContents::Entry.from_metadata(symlink_entry.metadata) { symlink_entry.body }
 
       assert_equal symlink_entry, entry
       assert_predicate entry, :symlink?
+      assert_equal symlink_entry.linkname, entry.body
     end
 
     should "return a large entry" do
-      entry = GemContentEntry.from_metadata(large_entry.metadata) { raise "large not stored" }
+      entry = RubygemContents::Entry.from_metadata(large_entry.metadata) { raise "large not stored" }
 
       assert_equal large_entry, entry
       assert_predicate entry, :file?
@@ -196,8 +197,8 @@ class GemContentEntryTest < ActiveSupport::TestCase
   end
 
   context "#body" do
-    should "return nil for symlink" do
-      assert_nil symlink_entry.body
+    should "return linkname for symlink" do
+      assert_equal "target.rb", symlink_entry.body
     end
 
     should "return nil for large file" do
@@ -242,8 +243,8 @@ class GemContentEntryTest < ActiveSupport::TestCase
       assert_equal Digest::SHA256.hexdigest(""), empty_entry.sha256
     end
 
-    should "return nil for a symlink" do
-      assert_nil symlink_entry.sha256
+    should "return sha256 of the linkname for a symlink" do
+      assert_equal Digest::SHA256.hexdigest(symlink_entry.linkname), symlink_entry.sha256
     end
 
     should "return nil for a large entry" do
@@ -252,11 +253,14 @@ class GemContentEntryTest < ActiveSupport::TestCase
 
     should "return the sha256 for a persisted entry" do
       assert_equal Digest::SHA256.hexdigest(file_entry.body), persisted_file_entry.sha256
+    end
+
+    should "return the sha256 of the body for a persisted binary file" do
       assert_equal Digest::SHA256.hexdigest(binary_data), persisted_binary_entry.sha256
     end
 
-    should "return nil for a persisted symlink entry" do
-      assert_nil persisted_symlink_entry.sha256
+    should "return sha256 of the linkname for a persisted symlink" do
+      assert_equal Digest::SHA256.hexdigest(symlink_entry.linkname), persisted_symlink_entry.sha256
     end
 
     should "return nil for a persisted large entry" do
@@ -264,7 +268,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
     end
 
     should "return value from initialization no matter what the body is" do
-      entry = GemContentEntry.new(path: "badsha", sha256: "badsha", body: "foo", size: 3)
+      entry = RubygemContents::Entry.new(path: "badsha", sha256: "badsha", body: "foo", size: 3)
 
       assert_equal "badsha", entry.sha256
     end
@@ -272,7 +276,7 @@ class GemContentEntryTest < ActiveSupport::TestCase
 
   context "#base64_sha256" do
     should "return nil if there is no sha256" do
-      assert_nil symlink_entry.base64_sha256
+      assert_nil large_entry.base64_sha256
     end
 
     should "return the base64 encoded sha256 of the body" do
@@ -301,6 +305,10 @@ class GemContentEntryTest < ActiveSupport::TestCase
       assert_equal "text/plain; charset=utf-8", file_entry.mime
     end
 
+    should "return the text/plain for symlinks" do
+      assert_equal "text/plain; charset=us-ascii", symlink_entry.mime
+    end
+
     should "return the mime type of a binary file" do
       assert_equal "application/x-tar; charset=binary", binary_entry.mime
     end
@@ -321,12 +329,12 @@ class GemContentEntryTest < ActiveSupport::TestCase
       assert_predicate json_entry, :text?
     end
 
-    should "return false for binary files" do
-      refute_predicate binary_entry, :text?
+    should "return true for symlinks" do
+      assert_predicate symlink_entry, :text?
     end
 
-    should "return false for symlinks" do
-      refute_predicate symlink_entry, :text?
+    should "return false for binary files" do
+      refute_predicate binary_entry, :text?
     end
   end
 
@@ -441,14 +449,28 @@ class GemContentEntryTest < ActiveSupport::TestCase
 
     should "return a Hash of the symlink entry's metadata" do
       expected = {
-        "body_persisted" => "false",
+        "body_persisted" => "true",
         "file_mode" => symlink_entry.file_mode,
         "linkname" => symlink_entry.linkname,
+        "sha256" => symlink_entry.sha256,
+        "mime" => symlink_entry.mime,
         "path" => symlink_entry.path,
         "size" => symlink_entry.size.to_s
       }
 
       assert_equal expected, symlink_entry.metadata
+    end
+
+    should "return a Hash of a large entry's metadata" do
+      expected = {
+        "body_persisted" => "false",
+        "file_mode" => large_entry.file_mode,
+        "mime" => large_entry.mime,
+        "path" => large_entry.path,
+        "size" => large_entry.size.to_s
+      }
+
+      assert_equal expected, large_entry.metadata
     end
   end
 
@@ -463,9 +485,9 @@ class GemContentEntryTest < ActiveSupport::TestCase
       refute_predicate persisted_binary_entry, :body_persisted?
     end
 
-    should "return false if the entry is a symlink" do
-      refute_predicate symlink_entry, :body_persisted?
-      refute_predicate persisted_symlink_entry, :body_persisted?
+    should "return true if the entry is a symlink" do
+      assert_predicate symlink_entry, :body_persisted?
+      assert_predicate persisted_symlink_entry, :body_persisted?
     end
 
     should "return false if the entry is too large" do

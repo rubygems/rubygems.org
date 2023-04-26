@@ -1,0 +1,19 @@
+<% @title = t(".title")%>
+
+<% if @user.webauthn_credentials.any? %>
+  <div class="t-body">
+    <% if browser.safari? %>
+      <p class="l-text-red-600" ><%= t(".safari_note_html") %></p>
+    <% end %>
+    <h2><%= t(".authenticating_as") %> <%= @user.name %></h2>
+    <p><%= t("settings.edit.webauthn_credential_note") %></p>
+  </div>
+
+  <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session-cli--form", data: { options: @webauthn_options.to_json } do %>
+    <div class="form_bottom">
+      <p hidden class="l-text-red-600 js-webauthn-session-cli--error"></p>
+
+      <%= submit_tag t(".authenticate"), class: 'js-webauthn-session-cli--submit form__submit form__submit--no-hover', disabled: browser.safari? %>
+    </div>
+  <% end %>
+<% end %>

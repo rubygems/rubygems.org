@@ -61,11 +61,14 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
-    - test/**/*
+    - test/**/*.rb
+    - lib/tasks/**/*.rake
+    - lib/github_oauthable.rb
+    - app/models/concerns/**/*.rb
     - config/routes.rb
 
 Metrics/ClassLength:
-  Max: 350 # TODO: Lower to 100
+  Max: 356 # TODO: Lower to 100
   Exclude:
     - test/**/*
 

@@ -1,4 +1,6 @@
-class GemContentEntry
+# frozen_string_literal: true
+
+class RubygemContents::Entry
   class InvalidMetadata < RuntimeError; end
 
   SIZE_LIMIT = 500.megabyte
@@ -12,22 +14,23 @@ class GemContentEntry
         file_mode: entry.header.mode.to_fs(8)
       }
 
-      if entry.symlink?
-        new(linkname: entry.header.linkname, **attrs)
-      elsif entry.size > SIZE_LIMIT
+      if entry.size > SIZE_LIMIT
         head = entry.read(4096)
         mime = Magic.buffer(head, Magic::MIME)
-        new(mime: mime, **attrs)
-      else
-        # read immediately because we're parsing a tar.gz and it shares a single IO across all entries.
-        body = entry.read || ""
-        new(
-          body: body,
-          mime: Magic.buffer(body, Magic::MIME),
-          sha256: Digest::SHA256.hexdigest(body),
-          **attrs
-        )
+        return new(mime: mime, **attrs)
       end
+
+      # Using the linkname as the body, like git, makes it easier to show and diff symlinks. Thanks git!
+      body = attrs[:linkname] = entry.header.linkname if entry.symlink?
+      # read immediately because we're parsing a tar.gz and it shares a single IO across all entries.
+      body ||= entry.read || ""
+
+      new(
+        body: body,
+        mime: Magic.buffer(body, Magic::MIME),
+        sha256: Digest::SHA256.hexdigest(body),
+        **attrs
+      )
     end
 
     def from_metadata(metadata, &)
@@ -57,8 +60,8 @@ class GemContentEntry
       @reader = reader if @body_persisted
     else
       @body_persisted = sha256.present? && !large? && text?
-      @body = attrs[:body] if @body_persisted && text?
-      @lines = @body&.lines&.count
+      @body = attrs[:body] if @body_persisted
+      @lines = @body&.lines&.count unless symlink?
     end
   end
 

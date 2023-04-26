@@ -2,7 +2,7 @@ require "test_helper"
 
 class VersionsManifestTest < ActiveSupport::TestCase
   def create_entry(path, sha256, body: rand.to_s, mime: "text/plain")
-    GemContentEntry.new(path: path, sha256: sha256, body: body, mime: mime, size: body.size)
+    RubygemContents::Entry.new(path: path, sha256: sha256, body: body, mime: mime, size: body.size)
   end
 
   setup do

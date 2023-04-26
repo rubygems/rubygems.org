@@ -8,7 +8,7 @@
         <p><%= t(".webauthn_credential_note") %></p>
       </div>
 
-      <%= form_tag webauthn_create_session_path, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
+      <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
         <div class="form_bottom">
           <p hidden class="l-text-red-600 js-webauthn-session--error"></p>
 

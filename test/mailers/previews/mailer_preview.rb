@@ -158,4 +158,31 @@ class MailerPreview < ActionMailer::Preview
 
     WebHooksMailer.webhook_disabled(web_hook)
   end
+
+  def webauthn_credential_created
+    webauthn_credential = WebauthnCredential.last
+
+    unless webauthn_credential
+      user_with_yubikey = User.create_with(
+        handle: "gem-user-with-yubikey",
+        password: "super-secret-password",
+        email_confirmed: true
+      ).find_or_create_by!(email: "gem-user-with-yubikey@example.com")
+
+      webauthn_credential = user_with_yubikey.webauthn_credentials.create_with(
+        external_id: "external-id",
+        public_key: "public-key",
+        sign_count: 1
+      ).find_or_create_by!(nickname: "Fake Yubikey")
+    end
+
+    Mailer.webauthn_credential_created(webauthn_credential.id)
+  end
+
+  def webauthn_credential_removed
+    user_id = User.last.id
+    webauthn_credential_nickname = "Fake Yubikey"
+
+    Mailer.webauthn_credential_removed(user_id, webauthn_credential_nickname, Time.now.utc)
+  end
 end

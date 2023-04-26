@@ -30,7 +30,8 @@ Avo.configure do |config|
     new: 'avo_new?',
     update: 'avo_update?',
     create: 'avo_create?',
-    destroy: 'avo_destroy?'
+    destroy: 'avo_destroy?',
+    search: 'avo_search?'
   }
   config.raise_error_on_missing_policy = true
   config.authorization_client = :pundit
@@ -116,6 +117,8 @@ end
 
 Rails.configuration.to_prepare do
   Avo::ApplicationController.include GitHubOAuthable
+  Avo::BaseController.prepend AvoAuditable
+  Avo::BaseResource.include Concerns::AvoAuditableResource
 
   Avo::ApplicationController.content_security_policy do |policy|
     policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline

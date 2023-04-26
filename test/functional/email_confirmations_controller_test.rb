@@ -374,25 +374,42 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         sign_in_as(@user)
       end
 
-      should "regenerate confirmation token" do
-        post :unconfirmed
-
-        assert_not_equal "something", @user.reload.confirmation_token
-      end
-
-      should "send confirmation mail" do
-        assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+      context "on successful token generation" do
+        should "regenerate confirmation token" do
           post :unconfirmed
+
+          assert_not_equal "something", @user.reload.confirmation_token
+        end
+
+        should "send confirmation mail" do
+          assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+            post :unconfirmed
+          end
+        end
+
+        should "set success flash and redirect to edit path" do
+          post :unconfirmed
+
+          assert_redirected_to edit_profile_path
+          expected_notice = "You will receive an email within the next few minutes. It contains instructions for confirming your new email address."
+
+          assert_equal expected_notice, flash[:notice]
         end
       end
 
-      should "set success flash and redirect to edit path" do
-        post :unconfirmed
+      context "on failed confirmation token save" do
+        setup do
+          post :unconfirmed
+          @user.stubs(:save).returns(false)
+        end
 
-        assert_redirected_to edit_profile_path
-        expected_notice = "You will receive an email within the next few minutes. It contains instructions for confirming your new email address."
+        should redirect_to("the edit settings page") { edit_profile_path }
 
-        assert_equal expected_notice, flash[:notice]
+        should "set error flash" do
+          post :unconfirmed
+
+          assert_equal "Something went wrong. Please try again.", flash[:notice]
+        end
       end
 
       context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_06_210044) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_24_190734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -68,20 +68,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_210044) do
     t.datetime "updated_at", null: false
     t.index ["admin_github_user_id"], name: "index_audits_on_admin_github_user_id"
     t.index ["auditable_type", "auditable_id"], name: "index_audits_on_auditable"
-  end
-
-  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
-    t.integer "priority", default: 0
-    t.integer "attempts", default: 0
-    t.text "handler"
-    t.text "last_error"
-    t.datetime "run_at", precision: nil
-    t.datetime "locked_at", precision: nil
-    t.datetime "failed_at", precision: nil
-    t.string "locked_by"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.string "queue"
   end
 
   create_table "deletions", id: :serial, force: :cascade do |t|
@@ -386,7 +372,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_210044) do
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
   end
 
+  create_table "webauthn_verifications", force: :cascade do |t|
+    t.string "path_token", limit: 128
+    t.datetime "path_token_expires_at"
+    t.string "otp"
+    t.datetime "otp_expires_at"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
+  end
+
   add_foreign_key "api_keys", "users"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "webauthn_credentials", "users"
+  add_foreign_key "webauthn_verifications", "users"
 end

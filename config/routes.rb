@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         end
       end
       resource :multifactor_auth, only: :show
+      resource :webauthn_verification, only: :create
       resources :profiles, only: :show
       get "profile/me", to: "profiles#me"
       resources :downloads, only: :index do
@@ -183,6 +184,11 @@ Rails.application.routes.draw do
 
     resources :ownership_calls, only: :index
     resources :webauthn_credentials, only: :destroy
+    resource :webauthn_verification, only: [] do
+      get 'successful_verification'
+      get 'failed_verification'
+      get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
+    end
 
     ################################################################################
     # Clearance Overrides and Additions
@@ -222,6 +228,12 @@ Rails.application.routes.draw do
   scope constraints: { format: :json }, defaults: { format: :json } do
     resources :webauthn_credentials, only: :create do
       post :callback, on: :collection
+    end
+  end
+
+  scope constraints: { format: :text }, defaults: { format: :text } do
+    resource :webauthn_verification, only: [] do
+      post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate
     end
   end
 

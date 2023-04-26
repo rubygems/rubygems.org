@@ -20,7 +20,7 @@ class GemPackageEnumeratorTest < ActiveSupport::TestCase
       order = []
       entries = @enum.map do |entry|
         order << entry.full_name
-        GemContentEntry.from_tar_entry(entry)
+        RubygemContents::Entry.from_tar_entry(entry)
       end
       entries.each do |entry|
         order << entry.path
@@ -40,7 +40,7 @@ class GemPackageEnumeratorTest < ActiveSupport::TestCase
     end
 
     entries = @enum.map do |entry|
-      GemContentEntry.from_tar_entry(entry)
+      RubygemContents::Entry.from_tar_entry(entry)
     end
 
     entries.each do |entry|
