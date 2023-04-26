@@ -261,6 +261,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     rubygem.reload
 
     ownership = rubygem.ownerships.where(user: new_owner).sole
+
     assert_predicate ownership, :confirmed?
     assert_equal security_user, ownership.authorizer
 
@@ -290,7 +291,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
                 "token_expires_at" => [nil, ownership.token_expires_at.as_json],
                 "owner_notifier" => [nil, true],
                 "authorizer_id" => [nil, security_user.id],
-                "ownership_request_notifier" => [nil, true],
+                "ownership_request_notifier" => [nil, true]
               },
               "unchanged" => {}
             }
