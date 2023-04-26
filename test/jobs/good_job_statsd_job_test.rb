@@ -157,4 +157,21 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
       GoodJobStatsDJob.perform_now
     end
   end
+
+  # covering unexpected GoodJob states enum change
+  class BrokenFilter
+    def states
+      { "invalid_state" => [] }
+    end
+  end
+
+  test "invalid state" do
+    GoodJobStatsDJob::Filter.stubs(:new).returns(BrokenFilter.new)
+
+    error = assert_raises(StandardError) do
+      GoodJobStatsDJob.new.perform
+    end
+
+    assert_equal("unknown GoodJob state 'invalid_state'", error.message)
+  end
 end
