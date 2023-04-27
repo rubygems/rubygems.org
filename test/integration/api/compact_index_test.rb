@@ -7,7 +7,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   def digest(body)
-    "sha-256=#{Digest::SHA256.hexdigest(body)}"
+    "sha-256=#{Base64.encode64(Digest::SHA256.digest(body)).strip}"
   end
 
   setup do
