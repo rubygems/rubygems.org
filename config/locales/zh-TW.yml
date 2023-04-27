@@ -47,6 +47,7 @@ zh-TW:
       user:
         avatar: 頭像
         email: Email
+        full_name: 全名
         handle: 帳號
         password: 密碼
     errors:
@@ -449,6 +450,7 @@ zh-TW:
       email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
       enter_password: 輸入密碼
       hide_email: 在公開的個人頁面中隱藏 email
+      optional_full_name:
       optional_twitter_username: Twitter 帳號（可選）
       title: 編輯個人檔案
       delete:
@@ -470,6 +472,8 @@ zh-TW:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      title: 简介 %{username}
   rubygems:
     aside:
       downloads_for_this_version: 這個版本

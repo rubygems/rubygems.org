@@ -58,6 +58,7 @@ fr:
       user:
         avatar: Avatar
         email: Adresse e-mail
+        full_name: Nom complet
         handle: Pseudonyme
         password: Mot de passe
     errors:
@@ -487,6 +488,7 @@ fr:
         %{unconfirmed_email}
       enter_password: Veuillez entrer le mot de passe de votre compte
       hide_email: Ne pas afficher l'email dans le profil public
+      optional_full_name:
       optional_twitter_username: Nom d'utilisateur Twitter optionnel. Sera affiché
         publiquement
       title: Modification de profil
@@ -521,6 +523,8 @@ fr:
       updated: Votre profil a été mis à jour.
     request_denied: Cette demande a été refusée. Nous n'avons pas pu vérifier votre
       mot de passe.
+    show:
+      title: Profil de %{username}
   rubygems:
     aside:
       downloads_for_this_version: Pour cette version

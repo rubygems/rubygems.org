@@ -57,6 +57,7 @@ pt-BR:
       user:
         avatar: Avatar
         email: Email
+        full_name: Nome completo
         handle: Usuário
         password: Senha
     errors:
@@ -477,6 +478,7 @@ pt-BR:
       email_awaiting_confirmation:
       enter_password:
       hide_email: Não mostrar meu email
+      optional_full_name:
       optional_twitter_username:
       title: Editar Perfil
       delete:
@@ -498,6 +500,8 @@ pt-BR:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      title: Perfil de %{username}
   rubygems:
     aside:
       downloads_for_this_version: Desta versão

@@ -56,6 +56,7 @@ en:
       user:
         avatar: Avatar
         email: Email address
+        full_name: Full name
         handle: Username
         password: Password
     errors:
@@ -461,6 +462,7 @@ en:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
       hide_email: Hide email in public profile
+      optional_full_name: Optional. Will be displayed publicly
       optional_twitter_username: Optional Twitter username. Will be displayed publicly
       title: Edit profile
       delete:
@@ -482,6 +484,8 @@ en:
       confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
       updated: Your profile was updated.
     request_denied: This request was denied. We could not verify your password.
+    show:
+      title: Profile of %{username}
   rubygems:
     aside:
       downloads_for_this_version: For this version

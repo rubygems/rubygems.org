@@ -51,6 +51,7 @@ ja:
       user:
         avatar: アバター
         email: Emailアドレス
+        full_name: フルネーム
         handle: ユーザー名
         password: パスワード
     errors:
@@ -447,6 +448,7 @@ ja:
       email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
       enter_password: パスワードを入力してください。
       hide_email: メールアドレスを公開しない
+      optional_full_name:
       optional_twitter_username: Twitterのユーザー名(任意,公開)
       title: プロフィールを編集する
       delete:
@@ -468,6 +470,8 @@ ja:
       confirmation_mail_sent: 新しいメールアドレスを確認する手順を記載したメールを送信しました。
       updated: あなたのプロフィールはアップデートされました。
     request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
+    show:
+      title: のプロファイル %{username}
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ

@@ -50,6 +50,7 @@ nl:
       user:
         avatar: Avatar
         email: E-mailadres
+        full_name: Voor-en achternaam
         handle: Gebruikersnaam
         password: Wachtwoord
     errors:
@@ -466,6 +467,7 @@ nl:
       email_awaiting_confirmation:
       enter_password:
       hide_email:
+      optional_full_name:
       optional_twitter_username:
       title: Wijzig profiel
       delete:
@@ -487,6 +489,8 @@ nl:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      title: Profiel van %{username}
   rubygems:
     aside:
       downloads_for_this_version: Voor deze versie

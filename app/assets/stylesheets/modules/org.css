@@ -150,6 +150,11 @@
     .profile__header__name {
       padding-top: 16px; } }
 
+.profile__header__username {
+  overflow-x: auto; }
+@media (min-width: 780px) {
+  .profile__header__username {
+    padding-top: 4px; } }
 
 @media (max-width: 779px) {
   .profile__header__avatar {
@@ -160,7 +165,8 @@
     height: 150px;
     width: 150px;
     float: left;
-    border-radius: 50%; } }
+    border-radius: 50%;
+    padding-bottom: 12px; } }
 
 .profile__header__attribute {
   padding-top: 10px;

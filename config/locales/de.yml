@@ -47,6 +47,7 @@ de:
       user:
         avatar: Avatar
         email: E-Mail-Adresse
+        full_name: Vollständiger Name
         handle: Benutzername
         password: Passwort
     errors:
@@ -462,6 +463,7 @@ de:
       email_awaiting_confirmation:
       enter_password:
       hide_email: Verberge E-Mails in öffentlichem Profil
+      optional_full_name:
       optional_twitter_username:
       title: Bearbeite Profil
       delete:
@@ -483,6 +485,8 @@ de:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      title: Profil von %{username}
   rubygems:
     aside:
       downloads_for_this_version: Für diese Version

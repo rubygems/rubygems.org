@@ -10,6 +10,11 @@ class ApplicationHelperTest < ActionView::TestCase
 
       assert_equal "Sample | #{t :title} | #{t :subtitle}", page_title
     end
+    should "return with explicit title for header only" do
+      @title_for_header_only = "Profile of john"
+
+      assert_equal "Profile of john | #{t :title} | #{t :subtitle}", page_title
+    end
   end
 
   should "return gemcutter atom feed link" do
