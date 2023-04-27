@@ -280,3 +280,14 @@ spec:
           secret:
             secretName: nginx-basic-auth
         <% end %>
+      lifecycle:
+        # https://blog.gruntwork.io/delaying-shutdown-to-wait-for-pod-deletion-propagation-445f779a8304
+        preStop:
+          exec:
+            command: [
+              "sh", "-c",
+              # Introduce a delay to the shutdown sequence to wait for the
+              # pod eviction event to propagate. Then, gracefully shutdown
+              # nginx.
+              "sleep 26 && /usr/sbin/nginx -s quit",
+            ]
