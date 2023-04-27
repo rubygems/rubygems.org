@@ -11,8 +11,14 @@ class BaseAction < Avo::BaseAction
 
   class ActionHandler
     include Auditable
+    include SemanticLogger::Loggable
+
     include ActiveSupport::Callbacks
     define_callbacks :handle, terminator: lambda { |target, result_lambda|
+      result_lambda.call
+      target.errored?
+    }
+    define_callbacks :handle_model, terminator: lambda { |target, result_lambda|
       result_lambda.call
       target.errored?
     }
@@ -36,7 +42,7 @@ class BaseAction < Avo::BaseAction
 
     attr_reader :models, :fields, :current_user, :arguments, :resource
 
-    delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name,
+    delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name, :succeed,
       to: :@action
 
     set_callback :handle, :before do
@@ -60,6 +66,12 @@ class BaseAction < Avo::BaseAction
       keep_modal_open if errored?
     end
 
+    def do_handle_model(model)
+      run_callbacks :handle_model do
+        handle_model(model)
+      end
+    end
+
     def errored?
       @action.response[:messages].any? { _1[:type] == :error }
     end
@@ -74,7 +86,7 @@ class BaseAction < Avo::BaseAction
           arguments:,
           models:
         ) do
-          handle_model(model)
+          do_handle_model(model)
         end
         redirect_to avo.resources_audit_path(audit)
       end

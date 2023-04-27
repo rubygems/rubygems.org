@@ -110,7 +110,10 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="executions_count">executions_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="is_discrete">is_discrete <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="job_class">job_class <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="performed_at">performed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
@@ -136,6 +139,19 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="serialized_properties">serialized_properties <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
 </table>
 >];
+"m_GoodJob::DiscreteExecution" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::DiscreteExecution</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="job_class">job_class <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="scheduled_at">scheduled_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="serialized_params">serialized_params <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
 "m_GoodJob::Execution" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GoodJob::Execution</font></td></tr>
 </table>
@@ -146,7 +162,10 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="executions_count">executions_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="is_discrete">is_discrete <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="job_class">job_class <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="performed_at">performed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
@@ -164,8 +183,11 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="executions_count">executions_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="id">id <font face="Arial Italic" color="grey60">uuid ∗</font></td></tr>
+  <tr><td align="left" width="130" port="is_discrete">is_discrete <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="job_class">job_class <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="performed_at">performed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
@@ -429,6 +451,8 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  "m_GoodJob::Execution" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_GoodJob::Job" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_GoodJob::BatchRecord" -> "m_GoodJob::Job" [arrowhead = "normal", arrowtail = "none", weight = "3"];
   "m_GoodJob::BatchRecord" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_GoodJob::Job" -> "m_GoodJob::Execution" [arrowhead = "normal", arrowtail = "none", weight = "2"];

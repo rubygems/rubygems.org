@@ -52,6 +52,7 @@ gem "browser", "~> 5.3", ">= 5.3.1"
 
 # Admin dashboard
 gem "avo", "~> 2.28"
+gem "view_component", "~> 2.0"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
 gem "groupdate", "~> 6.2"

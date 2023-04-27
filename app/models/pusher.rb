@@ -2,6 +2,7 @@ require "digest/sha2"
 
 class Pusher
   include TraceTagger
+  include SemanticLogger::Loggable
 
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
@@ -45,7 +46,9 @@ class Pusher
     # Restructured so that if we fail to write the gem (ie, s3 is down)
     # can clean things up well.
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
-    write_gem @body, @spec
+    trace("gemcutter.pusher.write_gem") do
+      write_gem @body, @spec
+    end
   rescue ArgumentError => e
     @version.destroy
     Rails.error.report(e, handled: true)
@@ -104,6 +107,7 @@ class Pusher
                                      cert_chain: spec.cert_chain
 
     set_tags "gemcutter.rubygem.version" => @version.number, "gemcutter.rubygem.platform" => @version.platform
+    log_pushing
 
     true
   end
@@ -221,5 +225,22 @@ class Pusher
 
     Fastly.purge(path: gem_path)
     Fastly.purge(path: spec_path)
+  end
+
+  def log_pushing
+    logger.info do
+      # this is needed because the version can be invalid!
+      version =
+        begin
+          @version.as_json
+        rescue StandardError
+          {
+            number: @version.number,
+            platform: @version.platform
+          }
+        end
+
+      { message: "Pushing gem", version:, pusher: user.as_json }
+    end
   end
 end
