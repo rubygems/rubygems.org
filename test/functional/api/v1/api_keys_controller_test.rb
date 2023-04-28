@@ -277,7 +277,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
-      context "oh successful save" do
+      context "on successful save" do
         setup do
           perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
             post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
@@ -318,10 +318,64 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           post :create, params: { name: "mfa", index_rubygems: "true", mfa: "true" }, format: "text"
         end
 
+        should_return_api_key_successfully
+
         should "have MFA" do
           created_key = @user.api_keys.find_by(name: "mfa")
 
           assert created_key.mfa
+        end
+      end
+
+      context "with rubygem_name param set" do
+        context "with a valid rubygem" do
+          setup do
+            @ownership = create(:ownership, user: @user)
+          end
+
+          context "with applicable scoped enabled" do
+            setup do
+              post :create,
+                params: { name: "gem-scoped-key", push_rubygem: "true", rubygem_name: @ownership.rubygem.name },
+                format: "text"
+            end
+
+            should_return_api_key_successfully
+
+            should "have a rubygem associated" do
+              created_key = @user.api_keys.find_by(name: "gem-scoped-key")
+
+              assert_equal @ownership.rubygem, created_key.rubygem
+            end
+          end
+
+          context "with applicable scoped disabled" do
+            setup do
+              post :create,
+                params: { name: "gem-scoped-key", index_rubygems: "true", rubygem_name: @ownership.rubygem.name },
+                format: "text"
+            end
+
+            should respond_with :unprocessable_entity
+
+            should "respond with an error" do
+              assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", response.body
+            end
+          end
+        end
+
+        context "with an rubygem name that the user is not an owner of" do
+          setup do
+            post :create,
+              params: { name: "gem-scoped-key", index_rubygems: "true", rubygem_name: "invalid-gem-name" },
+              format: "text"
+          end
+
+          should respond_with :unprocessable_entity
+
+          should "respond with an error" do
+            assert_equal "Rubygem could not be found", response.body
+          end
         end
       end
     end
