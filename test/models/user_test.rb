@@ -833,4 +833,14 @@ class UserTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context ".normalize_email" do
+    should "return the normalized email" do
+      assert_equal "user@example.com", User.normalize_email(:"UsEr@ example . COM")
+    end
+
+    should "return an empty string on invalid inputs" do
+      assert_equal "", User.normalize_email("\u9999".force_encoding("ascii"))
+    end
+  end
 end
