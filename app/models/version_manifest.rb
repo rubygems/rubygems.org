@@ -30,6 +30,17 @@ class VersionManifest
     RubygemContents::Entry.from_metadata(response[:metadata]) { |entry| content(entry.fingerprint) }
   end
 
+  def tree(treepath)
+    # transform_keys squashes all dirs into a single key => arbitrary checksum
+    # In the future we may give the tree its own checksum so we can diff/last modified easily
+    trees, blobs = checksums
+      .select { |path, _| path.start_with?(treepath) }
+      .transform_keys { |path| path.delete_prefix(treepath)[%r{^[^/]+/?}] }
+      .partition { |key, _| key.end_with?("/") }
+      .map(&:to_h)
+    RubygemContents::Tree.new(trees, blobs)
+  end
+
   def checksums_file
     fs.get(checksums_key)
   end

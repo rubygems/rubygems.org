@@ -1,0 +1,9 @@
+<%= link_to "#{@latest_version.full_name}.gem", rubygem_version_contents_path(@rubygem, @latest_version.slug) %>
+<span>/</span>
+<% unless @path.blank? %>
+  <% path = @entry ? @entry.dirname : @path %>
+  <% Pathname.new(path).descend.map do |part| -%>
+    <%= link_to_unless_current part.basename.to_s, rubygem_version_content_path(@rubygem.name, @latest_version.slug, path: part.to_s) %>
+    <span>/</span>
+  <% end %>
+<% end %>

@@ -1,0 +1,60 @@
+<% @title = @rubygem.name %>
+<% @title_url = rubygem_path(@rubygem) %>
+<% @subtitle = link_to @latest_version&.slug, rubygem_version_contents_path(@rubygem, @latest_version.slug) %>
+
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+  <% if @rubygem.versions.any? && @latest_version.indexed %>
+    <link rel="canonical" href="<%= rubygem_version_url(@rubygem, @latest_version.slug) %>" />
+  <% else %>
+    <meta name="robots" content="noindex" />
+  <% end %>
+<% end %>
+
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <div class="gem__contents">
+      <h3>
+        <%= render "breadcrumbs" %>
+      </h3>
+
+      <div class="gem__navigation">
+        <%# TODO: These go to not found if the target version doesn't have the same path %>
+        <% if @latest_version.previous.present? %>
+          <%= link_to t('.previous_version'), rubygem_version_content_path(@rubygem, @latest_version.previous.number, path: @path), class: "gem__previous__version"  %>
+        <% end %>
+
+        <% if @latest_version.next.present? %>
+          <%= link_to t('.next_version'), rubygem_version_content_path(@rubygem, @latest_version.next.number, path: @path), class: "gem__next__version" %>
+        <% end %>
+      </div>
+
+      <%# Sorry about the hard coded styles.%>
+      <table width="100%">
+        <tbody>
+          <% unless @path.blank? %>
+            <tr>
+              <td width="20px"><%= folder_icon %></span>
+              <td><%= link_to "..", rubygem_version_contents_parent_path(@path) %></td>
+            </tr>
+          <% end %>
+          <% @tree.each_tree do |name| %>
+            <tr>
+              <td width="20px"><%= folder_icon %></td>
+              <td><%= link_to name, rubygem_version_contents_child_path(@path, name) %></td>
+            </tr>
+          <% end %>
+          <% @tree.each_blob do |name| %>
+            <tr>
+              <td width="20px"><%= file_icon %></span>
+              <td><%= link_to name, rubygem_version_contents_child_path(@path, name) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <%= render "rubygems/aside" %>
+</div>

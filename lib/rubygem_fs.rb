@@ -98,7 +98,7 @@ module RubygemFs
     def remove(*keys)
       @metadata&.remove(*keys)
       keys.flatten.reject do |key|
-        path_for(key).ascend.take_while { |entry| descendant?(entry) }.each(&:delete)
+        path_for(key).ascend.take_while { |entry| descendant?(entry) && entry.delete }
         true
       rescue Errno::ENOTEMPTY
         true

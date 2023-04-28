@@ -99,6 +99,14 @@ class RubygemContents::Entry
     return true if MIME_TEXTUAL_SUBTYPES.include?(sub_type)
   end
 
+  def basename
+    File.basename(path)
+  end
+
+  def dirname
+    File.dirname(path)
+  end
+
   def body
     @body = @reader.call(self) if @reader
     @reader = nil
