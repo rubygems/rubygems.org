@@ -56,6 +56,20 @@ class LinksTest < ActiveSupport::TestCase
     assert links.homepage_uri
   end
 
+  should "not produce duplicates when indexed" do
+    metadata = { "homepage_uri" => "https://example.code", "code_uri" => "https://example.code" }
+    version = build(:version, indexed: true, metadata: metadata)
+    rubygem = build(:rubygem, linkset: build(:linkset), versions: [version])
+    links = rubygem.links(version)
+
+    enumerated = []
+    links.each do |short, value|
+      enumerated << [short, value]
+    end
+
+    assert_equal([["home", "https://example.code"], ["download", "/downloads/.gem"]], enumerated)
+  end
+
   context "metadata includes unknown uri key" do
     setup do
       metadata = {
