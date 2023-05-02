@@ -240,7 +240,7 @@ class Pusher
           }
         end
 
-      { message: "Pushing gem", version:, pusher: user.as_json }
+      { message: "Pushing gem", version:, rubygem: @version.rubygem.name, pusher: user.as_json }
     end
   end
 end
