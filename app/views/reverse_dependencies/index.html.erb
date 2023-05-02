@@ -8,15 +8,17 @@
 <% end %>
 
 <div class="l-overflow">
-  <div class="l-colspan--l colspan--l--has-border">
-    <header class="push push--bottom-s">
-      <%= render "search", rubygem: @rubygem %>
-    </header>
+  <% if @reverse_dependencies.present? %>
+    <div class="l-colspan--l colspan--l--has-border">
+      <header class="push push--bottom-s">
+        <%= render "search", rubygem: @rubygem %>
+      </header>
 
-    <div class="reverse__dependencies">
-      <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
+      <div class="reverse__dependencies">
+        <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
+      </div>
+      <%= plain_paginate @reverse_dependencies %>
     </div>
-    <%= plain_paginate @reverse_dependencies %>
-  </div>
+  <% end %>
   <%= render 'rubygems/aside' %>
 </div>
