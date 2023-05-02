@@ -40,6 +40,7 @@ class Api::V1::DependenciesController < Api::BaseController
 
   def check_brownout
     current_time = Time.current.utc
+    return if Patterns::JAVA_HTTP_USER_AGENT.match?(request.user_agent)
     return if brownout_ranges.none? { |r| r.cover?(current_time) }
 
     cacheable!
