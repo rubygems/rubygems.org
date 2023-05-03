@@ -107,6 +107,13 @@ class User < ApplicationRecord
     where(ownerships: { ownership_request_notifier: true })
   end
 
+  def self.normalize_email(email)
+    super
+  rescue ArgumentError => e
+    Rails.error.report(e, handled: true)
+    ""
+  end
+
   def name
     handle || email
   end

@@ -14,10 +14,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: '3.4.9'
+            version: '3.4.12'
           - name: latest
             version: latest
-        ruby_version: ['3.2.1']
+        ruby_version: ['3.2.2']
     name: Rails tests (RubyGems ${{ matrix.rubygems.name }})
     runs-on: ubuntu-22.04
     env:
@@ -32,7 +32,7 @@ jobs:
     - name: Wait for ES to boot
       run: |
         timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
-    - uses: ruby/setup-ruby@6cecb48364174b0952995175c55f9bf5527e6682 # v1.147.0
+    - uses: ruby/setup-ruby@d2b39ad0b52eca07d23f3aa14fdf2a3fcc1f411c # v1.148.0
       with:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: true
