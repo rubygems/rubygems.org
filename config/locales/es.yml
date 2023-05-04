@@ -609,6 +609,7 @@ es:
     index:
       title: Dependencias inversas para %{name}
       subtitle:
+      no_reverse_dependencies:
     search:
       search_reverse_dependencies_html: Buscar dependencias inversas Gems&hellip;
   searches:

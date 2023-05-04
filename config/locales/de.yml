@@ -565,6 +565,7 @@ de:
     index:
       title:
       subtitle:
+      no_reverse_dependencies:
     search:
       search_reverse_dependencies_html:
   searches:
