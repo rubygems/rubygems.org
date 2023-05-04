@@ -65,7 +65,7 @@ module Gemcutter
 
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
-  EMAIL_TOKEN_EXPRIES_AFTER = 3.hours
+  EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
   HOST = config["host"]
   NEWS_DAYS_LIMIT = 7.days
   NEWS_MAX_PAGES = 10

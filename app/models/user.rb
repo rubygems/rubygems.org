@@ -190,7 +190,7 @@ class User < ApplicationRecord
   def generate_confirmation_token(reset_unconfirmed_email: true)
     self.unconfirmed_email = nil if reset_unconfirmed_email
     self.confirmation_token = Clearance::Token.new
-    self.token_expires_at = Time.zone.now + Gemcutter::EMAIL_TOKEN_EXPRIES_AFTER
+    self.token_expires_at = Time.zone.now + Gemcutter::EMAIL_TOKEN_EXPIRES_AFTER
   end
 
   def _generate_confirmation_token_no_reset_unconfirmed_email
