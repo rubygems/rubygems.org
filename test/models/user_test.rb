@@ -843,4 +843,19 @@ class UserTest < ActiveSupport::TestCase
       assert_equal "", User.normalize_email("\u9999".force_encoding("ascii"))
     end
   end
+
+  context ".pushed_versions" do
+    setup do
+      @user = create(:user)
+      @version = create(:version, pusher: @user)
+    end
+    should "return version objects for each version the user has pushed" do
+      assert_includes @user.pushed_versions, @version
+    end
+
+    should "not delete pusher_id from Version when deleted" do
+      @user.destroy!
+      assert_equal @user.id, @version.reload.pusher_id
+    end
+  end
 end
