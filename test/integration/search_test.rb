@@ -95,7 +95,7 @@ class SearchTest < SystemTest
     end
   end
 
-  test 'searching for reverse dependencies' do
+  test "searching for reverse dependencies" do
     dependency = create(:rubygem)
     create(:version, rubygem: dependency)
 
@@ -104,12 +104,14 @@ class SearchTest < SystemTest
     create(:dependency, :runtime, version: version_one, rubygem: dependency)
 
     visit "/gems/#{dependency.name}/reverse_dependencies"
+
     assert page.has_content? "Search reverse dependencies Gems…"
-    within '.reverse__dependencies' do
+    within ".reverse__dependencies" do
       assert page.has_content? gem.name
     end
 
     visit "/gems/#{gem.name}/reverse_dependencies"
+
     refute page.has_content? "Search reverse dependencies Gems…"
   end
 end
