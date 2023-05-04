@@ -12,12 +12,13 @@ class VersionTest < ActiveSupport::TestCase
     should "only have relevant API fields" do
       json = @version.as_json
 
-      fields = %w[number built_at summary description authors platform
+      fields = %w[number built_at summary description authors pusher_id platform
                   ruby_version rubygems_version prerelease downloads_count licenses
                   requirements sha metadata created_at]
 
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
+      assert_equal @version.pusher_id.to_s, json["pusher_id"]
       assert_equal @version.built_at, json["built_at"]
       assert_equal @version.created_at, json["created_at"]
       assert_equal @version.description, json["description"]
@@ -41,13 +42,14 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      fields = %w[number built-at summary description authors platform
+      fields = %w[number built-at summary description authors pusher-id platform
                   ruby-version rubygems-version prerelease downloads-count licenses
                   requirements sha metadata created-at]
 
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
+      assert_equal @version.pusher_id.to_s, xml.at_css("pusher-id").content
       assert_equal @version.built_at.iso8601, xml.at_css("built-at").content
       assert_equal @version.description, xml.at_css("description").content
       assert_equal @version.downloads_count, xml.at_css("downloads-count").content.to_i
