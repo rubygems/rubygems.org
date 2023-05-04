@@ -113,5 +113,6 @@ class SearchTest < SystemTest
     visit "/gems/#{gem.name}/reverse_dependencies"
 
     refute page.has_content? "Search reverse dependencies Gems…"
+    assert page.has_content? "This gem has no reverse dependencies"
   end
 end
