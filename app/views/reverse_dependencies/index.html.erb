@@ -17,6 +17,10 @@
       </div>
       <%= plain_paginate @reverse_dependencies %>
     </div>
+  <% else %>
+    <div class="gem__desc">
+      <p><%= t(".no_reverse_dependencies") %></p>
+    </div>
   <% end %>
   <%= render 'rubygems/aside' %>
 </div>
