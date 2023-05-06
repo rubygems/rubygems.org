@@ -9,7 +9,7 @@ class Api::CompactIndexController < Api::BaseController
 
   def versions
     set_surrogate_key "versions"
-    cache_expiry_headers(fastly_expiry: 30)
+    cache_expiry_headers
     versions_path = Rails.application.config.rubygems["versions_file_location"]
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
