@@ -128,6 +128,7 @@ class Pusher
       Mailer.gem_pushed(user.id, @version_id, notified_user.id).deliver_later
     end
     Indexer.perform_later
+    UploadVersionsFileJob.perform_later
     ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
     StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)
@@ -159,6 +160,7 @@ class Pusher
   end
 
   def set_info_checksum
+    # TODO: may as well just upload this straight to S3...
     checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
   end
