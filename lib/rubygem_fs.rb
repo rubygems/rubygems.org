@@ -16,13 +16,19 @@ module RubygemFs
     @contents ||= instance.in_bucket Gemcutter.config.s3_contents_bucket
   end
 
+  def self.compact_index
+    @compact_index ||= instance.in_bucket Gemcutter.config.s3_compact_index_bucket
+  end
+
   def self.mock!
     @contents = nil
+    @compact_index = nil
     @fs = RubygemFs::Local.new(Dir.mktmpdir)
   end
 
   def self.s3!(host)
     @contents = nil
+    @compact_index = nil
     @fs = RubygemFs::S3.new(access_key_id: "k",
                             secret_access_key: "s",
                             endpoint: host,
@@ -155,7 +161,7 @@ module RubygemFs
     end
 
     def store(key, body, metadata: {}, **kwargs)
-      allowed_args = kwargs.slice(:content_type, :checksum_sha256, :content_encoding)
+      allowed_args = kwargs.slice(:content_type, :checksum_sha256, :content_encoding, :cache_control, :content_md5)
       s3.put_object(key: key,
                     body: body,
                     bucket: bucket,
