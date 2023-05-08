@@ -20,7 +20,11 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
 
     assert_equal(
       {
-        metadata: { "surrogate-key" => "versions s3-compact-index s3-versions" },
+        metadata: {
+          "surrogate-key" => "versions s3-compact-index s3-versions",
+          "sha256" => Digest::SHA256.base64digest(content),
+          "md5" => Digest::MD5.base64digest(content)
+        },
         cache_control: "max-age=60, public",
         content_type: "text/plain; charset=utf-8",
         checksum_sha256: Digest::SHA256.base64digest(content),
