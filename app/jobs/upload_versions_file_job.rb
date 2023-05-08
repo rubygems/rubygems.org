@@ -23,17 +23,21 @@ class UploadVersionsFileJob < ApplicationJob
     extra_gems = GemInfo.compact_index_versions(from_date)
     response_body = CompactIndex.versions(versions_file, extra_gems)
 
-    md5 = Digest::MD5.new.update(response_body)
+    content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
 
     response = RubygemFs.compact_index.store(
       "versions", response_body,
       public_acl: false, # the compact-index bucket does not have ACLs enabled
-      metadata: { "surrogate-key" => "versions s3-compact-index s3-versions" },
+      metadata: {
+        "surrogate-key" => "versions s3-compact-index s3-versions",
+        "sha256" => checksum_sha256,
+        "md5" => content_md5
+      },
       cache_control: "max-age=60, public",
       content_type: "text/plain; charset=utf-8",
       checksum_sha256:,
-      content_md5: md5.base64digest
+      content_md5:
     )
 
     logger.info(message: "Uploading versions file succeeded", response:)
