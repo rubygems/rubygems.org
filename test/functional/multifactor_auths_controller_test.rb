@@ -1,6 +1,8 @@
 require "test_helper"
 
 class MultifactorAuthsControllerTest < ActionController::TestCase
+  include ActionMailer::TestHelper
+
   context "when logged in" do
     setup do
       @user = create(:user)
@@ -32,6 +34,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         should "keep mfa enabled" do
           assert_predicate @user.reload, :mfa_enabled?
+          assert_emails 0
         end
       end
 
@@ -39,7 +42,9 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         context "on disabling mfa" do
           context "when otp code is correct" do
             setup do
-              put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "disabled" }
+              perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+                put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "disabled" }
+              end
             end
 
             should respond_with :redirect
@@ -47,12 +52,20 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
             should "disable mfa" do
               refute_predicate @user.reload, :mfa_enabled?
+            end
+
+            should "send mfa disabled email" do
+              assert_emails 1
+              assert_equal "Multi-factor authentication disabled on RubyGems.org", last_email.subject
+              assert_equal [@user.email], last_email.to
             end
           end
 
           context "when otp is recovery code" do
             setup do
-              put :update, params: { otp: @user.mfa_recovery_codes.first, level: "disabled" }
+              perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+                put :update, params: { otp: @user.mfa_recovery_codes.first, level: "disabled" }
+              end
             end
 
             should respond_with :redirect
@@ -60,6 +73,12 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
             should "disable mfa" do
               refute_predicate @user.reload, :mfa_enabled?
+            end
+
+            should "send mfa disabled email" do
+              assert_emails 1
+              assert_equal "Multi-factor authentication disabled on RubyGems.org", last_email.subject
+              assert_equal [@user.email], last_email.to
             end
           end
 
@@ -75,6 +94,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
             should "keep mfa enabled" do
               assert_predicate @user.reload, :mfa_enabled?
+            end
+
+            should "not send mfa disabled email" do
+              assert_emails 0
             end
           end
         end
@@ -139,8 +162,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context "when qr-code is not expired" do
           setup do
-            @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
-            post :create, params: { otp: ROTP::TOTP.new(@seed).now }
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
+              post :create, params: { otp: ROTP::TOTP.new(@seed).now }
+            end
           end
 
           should respond_with :success
@@ -152,6 +177,12 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should "enable mfa" do
             assert_predicate @user.reload, :mfa_enabled?
+          end
+
+          should "send mfa enabled email" do
+            assert_emails 1
+            assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
+            assert_equal [@user.email], last_email.to
           end
         end
 
@@ -169,6 +200,9 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
           should "keep mfa disabled" do
             refute_predicate @user.reload, :mfa_enabled?
+          end
+          should "not send mfa enabled email" do
+            assert_emails 0
           end
         end
       end
