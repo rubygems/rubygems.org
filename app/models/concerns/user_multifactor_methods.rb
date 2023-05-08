@@ -13,6 +13,7 @@ module UserMultifactorMethods
       self.mfa_seed = ""
       self.mfa_recovery_codes = []
       save!(validate: false)
+      Mailer.mfa_disabled(id, Time.now.utc).deliver_later
     end
 
     def verify_and_enable_mfa!(seed, level, otp, expiry)
