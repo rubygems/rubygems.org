@@ -28,6 +28,7 @@ class UploadVersionsFileJob < ApplicationJob
 
     response = RubygemFs.compact_index.store(
       "versions", response_body,
+      public_acl: false, # the compact-index bucket does not have ACLs enabled
       metadata: { "surrogate-key" => "versions s3-compact-index s3-versions" },
       cache_control: "max-age=60, public",
       content_type: "text/plain; charset=utf-8",

@@ -61,7 +61,7 @@ module RubygemFs
       self.class.new(path_for(dir))
     end
 
-    def store(key, body, **kwargs)
+    def store(key, body, public_acl: true, **kwargs) # rubocop:disable Lint/UnusedMethodArgument
       path = path_for key
       @metadata&.store(key, JSON.generate(kwargs.merge(key: key))) if kwargs.present?
       path.dirname.mkpath
@@ -160,12 +160,12 @@ module RubygemFs
       self.class.new(@config.merge(bucket: bucket))
     end
 
-    def store(key, body, metadata: {}, **kwargs)
+    def store(key, body, public_acl: true, metadata: {}, **kwargs)
       allowed_args = kwargs.slice(:content_type, :checksum_sha256, :content_encoding, :cache_control, :content_md5)
       s3.put_object(key: key,
                     body: body,
                     bucket: bucket,
-                    acl: "public-read",
+                    acl: public_acl ? "public-read" : nil,
                     metadata: metadata,
                     cache_control: "max-age=31536000",
                     **allowed_args)
