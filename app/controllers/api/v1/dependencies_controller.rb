@@ -18,8 +18,8 @@ class Api::V1::DependenciesController < Api::BaseController
     [Time.utc(2023, 5, 3), 1.day],
     [Time.utc(2023, 5, 5), 1.day]
   ].map { |start, duration| start..(start + duration) } <<
-    # May 10 from 00:00 UTC onward
-    (Time.utc(2023, 5, 10)...)
+    # May 24 from 00:00 UTC onward
+    (Time.utc(2023, 5, 24)...)
 
   def index
     deps = GemDependent.new(gem_names).to_a
