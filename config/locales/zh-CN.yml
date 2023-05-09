@@ -1,6 +1,6 @@
 ---
 zh-CN:
-  credentials_required:
+  credentials_required: 需要凭证
   edit: 编辑
   failure_when_forbidden: 请确认 URL 或再次提交
   feed_latest: RubyGems.org | 最新 Gems
@@ -8,29 +8,36 @@ zh-CN:
   footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供
     API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
   footer_sponsors_html:
+    RubyGems.org 是通过与更大的Ruby社区的合作才得以实现的。
+    <a href="https://www.fastly.com/">Fastly</a> 提供带宽和CDN支持，
+    <a href="https://www.rubycentral.org/">Ruby Central</a>涵盖基础设施成本，并且
+    资助正在进行的开发和运营工作。
+    <a href="%{sponsors_page}">了解更多关于我们的赞助商以及他们是如何合作的</a>。
   footer_join_rt_html:
+    我们需要您的帮助，通过资助开发人员，保持 RubyGems.org 对每个人顺利运行。
+    <a href="https://rubycentral.org/#/portal/signup">今天就加入Ruby Central吧！</a>
   form_disable_with: 请稍后...
-  invalid_page:
+  invalid_page: 页码已超出范围，重定向到默认页面。
   locale_name: 简体中文
   none: 无
   not_found: 未找到
-  api_key_forbidden:
+  api_key_forbidden: API Key 没有访问权限
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
-  please_sign_in:
-  otp_incorrect: 你的 OTP 码 不正确。请检查后再试一次。
+  please_sign_in: 请先登录
+  otp_incorrect: 你的 OTP 码不正确。请检查后再试一次。
   otp_missing: 你已启用多重要素验证，但是没有输入 OTP 码。请输入后再试一次。
   sign_in: 登录
   sign_up: 注册
-  dependency_list:
+  dependency_list: 显示所有依赖项
   multifactor_authentication: 多重验证
-  subtitle: Ruby 社区 Gem 托管
+  subtitle: 您的社区Gem托管中心
   this_rubygem_could_not_be_found: 未找到这个 RubyGem
   time_ago: "%{duration} 前"
   title: RubyGems.org
   update: 更新
   try_again: 请重试
   advanced_search: 高级搜索
-  authenticate:
+  authenticate: 验证身份
   activerecord:
     attributes:
       linkset:
@@ -40,7 +47,7 @@ zh-CN:
         docs: 文档 URL
         mail: 邮件列表 URL
         wiki: Wiki URL
-        funding:
+        funding: 募集资金 URL
       session:
         password: 密码
         who: Email / 账号
@@ -52,10 +59,10 @@ zh-CN:
         password: 密码
     errors:
       messages:
-        unpwn:
-        blocked:
+        unpwn: 以前曾出现过数据泄露，不应该再使用
+        blocked: "域名'%{domain}'已被阻止发送垃圾邮件。请使用有效的个人邮箱。"
     models:
-      user:
+      user: 用户
   api_keys:
     create:
       success:
@@ -117,20 +124,19 @@ zh-CN:
       migrating_link_text: 迁移
       mine: 我的 Gems
       my_subscriptions: 我的订阅
-      no_owned_html: 你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 教程，或看看 %{migrating_link}
-        教程。
+      no_owned_html: 你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 指南，或看看 %{migrating_link}。
       no_subscriptions_html: 你目前没有订阅任何 Gem，访问 %{gem_link} 可以订阅一个！
       title: 控制台
   dependencies:
     show:
-      click_to_expand:
+      click_to_expand: 单击箭头图标展开。
   email_confirmations:
     create:
-      promise_resend:
+      promise_resend: 如果您的帐户存在，我们将通过邮件发送确认链接来激活您的帐户。
     new:
       submit: 重新发送
       title: 重新发送确认邮件
-      will_email_notice: 我们将会通过 Email 发送确认激活账号的链接给你。
+      will_email_notice: 我们将会通过 Email 发送确认激活账号的链接给您。
     update:
       confirmed_email: 邮箱地址验证成功。
   home:
@@ -150,7 +156,7 @@ zh-CN:
         designed_by: 设计
         discussion_forum: 讨论
         gems_served_by: 服务
-        guides: 教程
+        guides: 指南
         help: 帮助
         hosted_by: 托管
         monitored_by: 监控
@@ -164,30 +170,30 @@ zh-CN:
         tested_by: 测试
         tracking_by: 追踪
         uptime: 服务状况
-        verified_by:
-        secured_by:
-        looking_for_maintainers:
+        verified_by: 验证
+        secured_by: 安全保护
+        looking_for_maintainers: 招募维护者
       header:
         dashboard: 控制台
-        settings:
-        edit_profile:
+        settings: 设置
+        edit_profile: 编辑个人信息
         search_gem_html: 搜索 Gems&hellip;
         sign_in: 登录
         sign_out: 退出
         sign_up: 注册
   mailer:
-    confirm_your_email:
-    confirmation_subject:
-    link_expiration_explanation_html:
+    confirm_your_email: 请在发送到您的邮件中，点击链接，确认您的邮箱地址
+    confirmation_subject: 请确认您的邮箱地址
+    link_expiration_explanation_html: 请记住，此链接仅在3小时内有效。您可以使用 <a href='https://rubygems.org/email_confirmations/new'>重新发送确认邮件</a> 页面来请求获得一个新链接
     email_confirmation:
-      title:
-      subtitle:
-      confirmation_link:
-      welcome_message:
+      title: 邮件确认
+      subtitle: 即将完成！
+      confirmation_link: 确认邮件地址
+      welcome_message: 欢迎来到 RubyGems.org！请访问下面的链接来验证您的电子邮件。
     email_reset:
-      title:
-      subtitle:
-      visit_link_instructions:
+      title: 邮件重置
+      subtitle: Hi %{handle}!
+      visit_link_instructions: 您在 RubyGems.org 上更改了您的邮件地址，请访问以下链接重新激活您的帐户。
     deletion_complete:
       title:
       subtitle:
@@ -296,9 +302,9 @@ zh-CN:
         RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。
       support_html: 虽然 Gemcutter 不是由一个具体的公司来运作，但也有很多的帮助让我们走出了这么远。目前的设计、插画、以及网站的前端开发都是由
         %{dockyard} 提供支持。%{github} 帮助我们轻松的协助和共享代码。本站最初部署在 %{heroku}，其一流的服务，有助于证明 Gemcutter
-        是可以依赖、可行的解决方案。Our infrastructure is currently hosted on %{aws}.
-      technical_html: 关于本站的一些技术方案：100% Ruby。主站基于 %{rails}。Gems 文件放在 %{s3}, served
-        by %{fastly}, 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于
+        是可以依赖、可行的解决方案。当前，我们的基础设施托管于 %{aws}.
+      technical_html: 关于本站的一些技术方案：100% Ruby。主站基于 %{rails}。Gems 文件放在 %{s3}, 由
+        %{fastly} 提供服务, 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于
         %{license} 协议。
       title: 关于
       purpose:
@@ -307,17 +313,17 @@ zh-CN:
         header: 欢迎来到 %{site}, 这是 Ruby 社区的 Gem 托管服务。此项目有三个目的：
         transparent_pages: 构建更透明以及便于浏览的项目页面
     data:
-      title:
+      title: RubyGems.org 数据转储
     download:
-      title:
+      title: 下载 RubyGems
     faq:
-      title:
+      title: FAQ
     migrate:
-      title:
+      title: 迁移 Gems
     security:
-      title:
+      title: 安全
     sponsors:
-      title:
+      title: 赞助商
   passwords:
     edit:
       submit: 更新密码
@@ -354,11 +360,11 @@ zh-CN:
       qrcode_expired: 二维码和密钥已过期。请再重新注册装置。
       success: 你已成功启用多重要素验证。
     recovery:
-      copied:
+      copied: "[ 已复制 ]"
       continue: 继续
-      title: 复原码
-      copy:
-      saved:
+      title: 恢复码
+      copy: "[ 复制 ]"
+      saved: 我声明我已经保存了我的恢复码。
       note_html:
       already_generated:
     destroy:
@@ -422,7 +428,7 @@ zh-CN:
     mfa_required:
   settings:
     edit:
-      title:
+      title: 编辑设置
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
@@ -459,14 +465,14 @@ zh-CN:
     adoptions:
       no_ownership_calls:
       no_ownership_requests:
-      title:
+      title: 领养
       subtitle_html:
     edit:
-      change_avatar:
+      change_avatar: 修改头像
       email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
       enter_password: 输入密码
-      hide_email: 在公开的个人资料里面隐藏我的 Email
-      optional_full_name:
+      hide_email: 在公开的个人资料里面隐藏我的邮件
+      optional_full_name: 可选。将在公共显示
       optional_twitter_username: Twitter 账号（可选）
       title: 修改个人资料
       delete:
@@ -499,7 +505,7 @@ zh-CN:
       released_with_mfa:
       links:
         badge: 徽章
-        bugs: Bug 追踪
+        bugs: Bug
         changelog: 更新日志
         code: 源代码
         docs: 文档
@@ -509,15 +515,15 @@ zh-CN:
         mail: 邮件列表
         report_abuse: 举报投诉
         reverse_dependencies: 反向依赖
-        review_changes:
+        review_changes: 审阅变动
         rss: RSS
         subscribe: 订阅
         unsubscribe: 取消订阅
         wiki: Wiki
-        resend_ownership_confirmation:
-        ownership:
+        resend_ownership_confirmation: 重新发送确认链接
+        ownership: 所有权
     reserved:
-      reserved_namespace:
+      reserved_namespace: 该命名空间由 rubygems.org 保留。
     dependencies:
       header: "%{title} 依赖关系"
     gem_members:
@@ -526,9 +532,9 @@ zh-CN:
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
       owners_header: 所有者
-      pushed_by:
+      pushed_by: 推送
       using_mfa_info:
-      yanked_by:
+      yanked_by: 废弃
       sha_256_checksum: SHA 256 checksum
       signature_period:
       expired:
@@ -570,14 +576,14 @@ zh-CN:
       description: 描述
       downloads: 下载数
       updated: 更新时间
-      yanked:
+      yanked: 废弃
     show:
       subtitle: "%{query}"
-      month_update:
-      week_update:
-      filter:
-      yanked:
-      suggestion:
+      month_update: 上个月更新 (%{count})
+      week_update: 上周更新 (%{count})
+      filter: "过滤:"
+      yanked: 废弃 (%{count})
+      suggestion: 您是想
   sessions:
     new:
       forgot_password: 忘记了密码？
@@ -634,7 +640,7 @@ zh-CN:
         zero: 暂时没有 %{model}
   adoptions:
     index:
-      title:
+      title: 领养
       subtitle_owner_html:
       subtitle_user_html:
       ownership_calls:
