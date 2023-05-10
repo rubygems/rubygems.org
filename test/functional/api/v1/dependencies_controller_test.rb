@@ -223,6 +223,17 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       travel_to Time.utc(2023, 3, 29, 0, 5)
     end
 
+    context "with Java user agent" do
+      setup do
+        request.user_agent = "Java/1.2.3"
+        get :index, params: { gems: "" }, format: "json"
+      end
+
+      should "return 200" do
+        assert_response :success
+      end
+    end
+
     context "with empty gems param --> JSON" do
       setup do
         get :index, params: { gems: "" }, format: "json"
