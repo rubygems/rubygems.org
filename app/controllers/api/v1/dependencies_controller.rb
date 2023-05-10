@@ -1,6 +1,7 @@
 class Api::V1::DependenciesController < Api::BaseController
   before_action :check_brownout
   before_action :check_gem_count
+  after_action :vary_on_allowed_header
 
   mattr_reader :brownout_ranges, default: [
     # March 22 at 00:00 UTC (4pm PT / 7pm ET) for 5 minutes
@@ -45,11 +46,6 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def check_brownout
-    # Unfortunately Rails itself overwrites the Vary header anytime the request includes an Accept header,
-    # as seen in https://github.com/rails/rails/pull/36213/files. We'll have to update the Vary header in Fastly
-    # instead of being able to set it here.
-    # self.headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
-
     return if Patterns::JAVA_HTTP_USER_AGENT.match?(request.user_agent)
 
     current_time = Time.current.utc
@@ -62,6 +58,10 @@ class Api::V1::DependenciesController < Api::BaseController
       format.marshal { render plain: error, status: :not_found }
       format.json { render json: { error: error, code: 404 }, status: :not_found }
     end
+  end
+
+  def vary_on_allowed_header
+    self.headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
   end
 
   def check_gem_count
