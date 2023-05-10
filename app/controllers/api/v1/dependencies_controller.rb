@@ -1,7 +1,6 @@
 class Api::V1::DependenciesController < Api::BaseController
   before_action :check_brownout
   before_action :check_gem_count
-  after_action :vary_on_allowed_header
 
   mattr_reader :brownout_ranges, default: [
     # March 22 at 00:00 UTC (4pm PT / 7pm ET) for 5 minutes
@@ -60,7 +59,8 @@ class Api::V1::DependenciesController < Api::BaseController
     end
   end
 
-  def vary_on_allowed_header
+  def _set_vary_header
+    super
     self.headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
   end
 

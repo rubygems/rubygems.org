@@ -261,7 +261,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         }
 
         assert_equal result, JSON.load(response.body)
-        assert_equal "x-dependency-api-allowed", @response.headers["Vary"]
+        assert_equal "Accept, x-dependency-api-allowed", @response.headers["Vary"]
       end
     end
 
