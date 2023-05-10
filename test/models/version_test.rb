@@ -18,7 +18,7 @@ class VersionTest < ActiveSupport::TestCase
 
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
-      assert_equal @version.pusher_id.to_s, json["pusher_id"]
+      assert_equal @version.pusher_id, json["pusher_id"]
       assert_equal @version.built_at, json["built_at"]
       assert_equal @version.created_at, json["created_at"]
       assert_equal @version.description, json["description"]
