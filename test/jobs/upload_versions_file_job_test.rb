@@ -21,6 +21,7 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
     assert_equal(
       {
         metadata: {
+          "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
           "surrogate-key" => "versions s3-compact-index s3-versions",
           "sha256" => Digest::SHA256.base64digest(content),
           "md5" => Digest::MD5.base64digest(content)
