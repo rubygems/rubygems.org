@@ -16,7 +16,13 @@ class Api::V1::DependenciesController < Api::BaseController
     [Time.utc(2023, 4, 24), 1.day],
     [Time.utc(2023, 5, 1), 1.day],
     [Time.utc(2023, 5, 3), 1.day],
-    [Time.utc(2023, 5, 5), 1.day]
+    [Time.utc(2023, 5, 5), 1.day],
+    # May 12, 15, 17, 19, 22 for the entire day UTC
+    [Time.utc(2023, 5, 12), 1.day],
+    [Time.utc(2023, 5, 15), 1.day],
+    [Time.utc(2023, 5, 17), 1.day],
+    [Time.utc(2023, 5, 19), 1.day],
+    [Time.utc(2023, 5, 22), 1.day]
   ].map { |start, duration| start..(start + duration) } <<
     # May 24 from 00:00 UTC onward
     (Time.utc(2023, 5, 24)...)
@@ -39,6 +45,11 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def check_brownout
+    # Unfortunately Rails itself overwrites the Vary header anytime the request includes an Accept header,
+    # as seen in https://github.com/rails/rails/pull/36213/files. We'll have to update the Vary header in Fastly
+    # instead of being able to set it here.
+    # self.headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
+
     return if Patterns::JAVA_HTTP_USER_AGENT.match?(request.user_agent)
 
     current_time = Time.current.utc
