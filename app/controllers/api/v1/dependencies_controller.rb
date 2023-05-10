@@ -45,6 +45,7 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def check_brownout
+    return if request.headers["x-dependency-api-allowed"]
     return if Patterns::JAVA_HTTP_USER_AGENT.match?(request.user_agent)
 
     current_time = Time.current.utc
@@ -61,7 +62,7 @@ class Api::V1::DependenciesController < Api::BaseController
 
   def _set_vary_header
     super
-    self.headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
+    headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
   end
 
   def check_gem_count

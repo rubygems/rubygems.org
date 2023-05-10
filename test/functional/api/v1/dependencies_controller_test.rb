@@ -227,6 +227,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       should "return 200" do
         request.user_agent = "Java/1.2.3"
         get :index, params: { gems: "" }, format: "json"
+
         assert_response :success
         assert_equal "x-dependency-api-allowed", @response.headers["Vary"]
       end
@@ -235,6 +236,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     context "with empty gems param --> JSON" do
       should "return 404" do
         get :index, params: { gems: "" }, format: "json"
+
         assert_response :not_found
         result = {
           "error" => "The dependency API is going away. See " \
@@ -252,6 +254,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       should "return 404" do
         request.headers["Accept"] = "application/json"
         get :index, params: { gems: "testgem" }
+
         assert_response :not_found
         result = {
           "error" => "The dependency API is going away. See " \
@@ -268,6 +271,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     context "with gems --> Marshal" do
       should "return 404" do
         get :index, params: { gems: "testgem" }, format: "marshal"
+
         assert_response :not_found
         assert_equal "The dependency API is going away. See " \
                      "https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html " \
