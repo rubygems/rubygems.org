@@ -30,6 +30,7 @@ class UploadVersionsFileJob < ApplicationJob
       "versions", response_body,
       public_acl: false, # the compact-index bucket does not have ACLs enabled
       metadata: {
+        "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
         "surrogate-key" => "versions s3-compact-index s3-versions",
         "sha256" => checksum_sha256,
         "md5" => content_md5
