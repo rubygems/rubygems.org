@@ -1,6 +1,8 @@
 require "test_helper"
 
 class UserMultifactorMethodsTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   setup do
     @user = create(:user)
   end
@@ -17,18 +19,37 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       refute_predicate @user, :mfa_enabled?
     end
+
+    should "send mfa enabled email" do
+      assert_emails 1 do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+      end
+
+      assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
+      assert_equal [@user.email], last_email.to
+    end
   end
 
   context "#disable_mfa!" do
     setup do
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-      @user.disable_mfa!
+
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        @user.disable_mfa!
+      end
     end
 
     should "disable mfa" do
       assert_predicate @user, :mfa_disabled?
       assert_empty @user.mfa_seed
       assert_empty @user.mfa_recovery_codes
+    end
+
+    should "send mfa disabled email" do
+      assert_emails 1
+
+      assert_equal "Multi-factor authentication disabled on RubyGems.org", last_email.subject
+      assert_equal [@user.email], last_email.to
     end
   end
 
