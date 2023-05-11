@@ -8,21 +8,21 @@ zh-CN:
   footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供
     API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
   footer_sponsors_html:
-    RubyGems.org 是通过与更大的Ruby社区的合作才得以实现的。
-    <a href="https://www.fastly.com/">Fastly</a> 提供带宽和CDN支持，
-    <a href="https://www.rubycentral.org/">Ruby Central</a>涵盖基础设施成本，并且
+    RubyGems.org 是通过与更大的Ruby社区的合作得以实现的。
+    <a href="https://www.fastly.com/">Fastly</a> 提供带宽和 CDN 支持，
+    <a href="https://www.rubycentral.org/">Ruby Central</a> 涵盖基础设施成本，并且
     资助正在进行的开发和运营工作。
     <a href="%{sponsors_page}">了解更多关于我们的赞助商以及他们是如何合作的</a>。
   footer_join_rt_html:
-    我们需要您的帮助，通过资助开发人员，保持 RubyGems.org 对每个人顺利运行。
-    <a href="https://rubycentral.org/#/portal/signup">今天就加入Ruby Central吧！</a>
+    我们需要您的帮助 —— 通过资助开发人员，来保持 RubyGems.org 的稳定运行，为每个人顺利地服务。
+    <a href="https://rubycentral.org/#/portal/signup">今天就加入 Ruby Central 吧！</a>
   form_disable_with: 请稍后...
-  invalid_page: 页码已超出范围，重定向到默认页面。
+  invalid_page: 页码超出范围，已重定向到默认页面。
   locale_name: 简体中文
   none: 无
   not_found: 未找到
   api_key_forbidden: API Key 没有访问权限
-  please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
+  please_sign_up: 拒绝访问。请在 https://rubygems.org 上注册一个账号。
   please_sign_in: 请先登录
   otp_incorrect: 你的 OTP 码不正确。请检查后再试一次。
   otp_missing: 你已启用多重要素验证，但是没有输入 OTP 码。请输入后再试一次。
@@ -30,12 +30,12 @@ zh-CN:
   sign_up: 注册
   dependency_list: 显示所有依赖项
   multifactor_authentication: 多重验证
-  subtitle: 您的社区Gem托管中心
+  subtitle: 您的社区 Gem 托管中心
   this_rubygem_could_not_be_found: 未找到这个 RubyGem
   time_ago: "%{duration} 前"
   title: RubyGems.org
   update: 更新
-  try_again: 请重试
+  try_again: 出了点儿问题。请重试。
   advanced_search: 高级搜索
   authenticate: 验证身份
   activerecord:
@@ -59,7 +59,7 @@ zh-CN:
         password: 密码
     errors:
       messages:
-        unpwn: 以前曾出现过数据泄露，不应该再使用
+        unpwn: 曾出现过数据泄露，不应该再使用
         blocked: "域名'%{domain}'已被阻止发送垃圾邮件。请使用有效的个人邮箱。"
     models:
       user: 用户
@@ -124,8 +124,8 @@ zh-CN:
       migrating_link_text: 迁移
       mine: 我的 Gems
       my_subscriptions: 我的订阅
-      no_owned_html: 你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 指南，或看看 %{migrating_link}。
-      no_subscriptions_html: 你目前没有订阅任何 Gem，访问 %{gem_link} 可以订阅一个！
+      no_owned_html: 你没有发布过任何 Gem 。可以看看 %{creating_link} 指南，或从 RubyForge %{migrating_link} 个 Gem 。
+      no_subscriptions_html: 你没有订阅任何 Gem，访问 %{gem_link} 订阅一个！
       title: 控制台
   dependencies:
     show:
@@ -177,23 +177,23 @@ zh-CN:
         dashboard: 控制台
         settings: 设置
         edit_profile: 编辑个人信息
-        search_gem_html: 搜索 Gems&hellip;
+        search_gem_html: 搜索 Gems &hellip;&hellip;
         sign_in: 登录
         sign_out: 退出
         sign_up: 注册
   mailer:
-    confirm_your_email: 请在发送到您的邮件中，点击链接，确认您的邮箱地址
+    confirm_your_email: 请在发送到您的邮件中点击链接，确认您的邮箱地址。
     confirmation_subject: 请确认您的邮箱地址
-    link_expiration_explanation_html: 请记住，此链接仅在3小时内有效。您可以使用 <a href='https://rubygems.org/email_confirmations/new'>重新发送确认邮件</a> 页面来请求获得一个新链接
+    link_expiration_explanation_html: 请记住，此链接仅在 3 小时内有效。您可以用<a href='https://rubygems.org/email_confirmations/new'>重新发送确认邮件</a>页面来请求获得一个新链接。
     email_confirmation:
-      title: 邮件确认
+      title: 邮箱确认
       subtitle: 即将完成！
-      confirmation_link: 确认邮件地址
-      welcome_message: 欢迎来到 RubyGems.org！请访问下面的链接来验证您的电子邮件。
+      confirmation_link: 确认邮箱地址
+      welcome_message: 欢迎来到 RubyGems.org ！请访问下面的链接来验证您的邮箱。
     email_reset:
-      title: 邮件重置
+      title: 邮箱重置
       subtitle: Hi %{handle}!
-      visit_link_instructions: 您在 RubyGems.org 上更改了您的邮件地址，请访问以下链接重新激活您的帐户。
+      visit_link_instructions: 您在 RubyGems.org 上更改了您的邮箱地址，请访问以下链接重新激活您的帐户。
     deletion_complete:
       title:
       subtitle:
@@ -298,14 +298,9 @@ zh-CN:
       title: 热门新发布 Gems
   pages:
     about:
-      founding_html: 此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从
-        RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。
-      support_html: 虽然 Gemcutter 不是由一个具体的公司来运作，但也有很多的帮助让我们走出了这么远。目前的设计、插画、以及网站的前端开发都是由
-        %{dockyard} 提供支持。%{github} 帮助我们轻松的协助和共享代码。本站最初部署在 %{heroku}，其一流的服务，有助于证明 Gemcutter
-        是可以依赖、可行的解决方案。当前，我们的基础设施托管于 %{aws}.
-      technical_html: 关于本站的一些技术方案：100% Ruby。主站基于 %{rails}。Gems 文件放在 %{s3}, 由
-        %{fastly} 提供服务, 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于
-        %{license} 协议。
+      founding_html: 此项目由 %{founder} 创立于2009年4月，之后有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中的核心作用。
+      support_html: 虽然 RubyGems.org 不是由一个具体的公司来运作，但也有很多帮助让我们走了这么远。网站目前的设计、插画、和前端开发都是由 %{dockyard} 创建。%{github} 也帮助我们轻松地协作和共享代码。本站最初部署于 %{heroku}，其一流的服务助证了 RubyGems 是整个社区可以依赖的可行方案。当前，我们的基础设施托管于 %{aws}.
+      technical_html: 关于本站的一些技术方案：100% Ruby。主站是一个 %{rails} 应用。Gem 托管于 %{s3}, 由 %{fastly} 提供服务, 从发布一个新 Gem 到做好安装准备之间的耗时通常只有几秒。更多信息可以在 GitHub 上阅读基于 %{license} 协议的 %{source_code}。
       title: 关于
       purpose:
         better_api: 提供更好的 API 来为 Gems 服务
@@ -317,7 +312,7 @@ zh-CN:
     download:
       title: 下载 RubyGems
     faq:
-      title: FAQ
+      title: 常问问题
     migrate:
       title: 迁移 Gems
     security:
@@ -471,8 +466,8 @@ zh-CN:
       change_avatar: 修改头像
       email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
       enter_password: 输入密码
-      hide_email: 在公开的个人资料里面隐藏我的邮件
-      optional_full_name: 可选。将在公共显示
+      hide_email: 在公开的个人资料里面隐藏我的邮箱
+      optional_full_name: 可填。将公开显示
       optional_twitter_username: Twitter 账号（可选）
       title: 修改个人资料
       delete:
@@ -505,7 +500,7 @@ zh-CN:
       released_with_mfa:
       links:
         badge: 徽章
-        bugs: Bug
+        bugs: Bug 追踪
         changelog: 更新日志
         code: 源代码
         docs: 文档
