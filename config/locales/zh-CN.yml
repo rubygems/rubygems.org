@@ -3,8 +3,8 @@ zh-CN:
   credentials_required: 需要凭证
   edit: 编辑
   failure_when_forbidden: 请确认 URL 或再次提交
-  feed_latest: RubyGems.org | 最新 Gems
-  feed_subscribed: RubyGems.org | 订阅 Gems
+  feed_latest: RubyGems.org | 最新 Gem
+  feed_subscribed: RubyGems.org | 订阅 Gem
   footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供
     API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
   footer_sponsors_html:
@@ -122,7 +122,7 @@ zh-CN:
       latest: 最近更新
       latest_title: 最近更新 RSS 订阅
       migrating_link_text: 迁移
-      mine: 我的 Gems
+      mine: 我的 Gem
       my_subscriptions: 我的订阅
       no_owned_html: 你没有发布过任何 Gem 。可以看看 %{creating_link} 指南，或从 RubyForge %{migrating_link} 个 Gem 。
       no_subscriptions_html: 你没有订阅任何 Gem，访问 %{gem_link} 订阅一个！
@@ -177,7 +177,7 @@ zh-CN:
         dashboard: 控制台
         settings: 设置
         edit_profile: 编辑个人信息
-        search_gem_html: 搜索 Gems &hellip;&hellip;
+        search_gem_html: 搜索 Gem &hellip;&hellip;
         sign_in: 登录
         sign_out: 退出
         sign_up: 注册
@@ -291,11 +291,11 @@ zh-CN:
       gem_html:
   news:
     show:
-      title: 全部新发布 Gems
+      title: 全部新发布 Gem
       all_gems: 全部
       popular_gems: 热门
     popular:
-      title: 热门新发布 Gems
+      title: 热门新发布 Gem
   pages:
     about:
       founding_html: 此项目由 %{founder} 创立于2009年4月，之后有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中的核心作用。
@@ -303,7 +303,7 @@ zh-CN:
       technical_html: 关于本站的一些技术方案：100% Ruby。主站是一个 %{rails} 应用。Gem 托管于 %{s3}, 由 %{fastly} 提供服务, 从发布一个新 Gem 到做好安装准备之间的耗时通常只有几秒。更多信息可以在 GitHub 上阅读基于 %{license} 协议的 %{source_code}。
       title: 关于
       purpose:
-        better_api: 提供更好的 API 来为 Gems 服务
+        better_api: 提供更好的 API 来为 Gem 服务
         enable_community: 可以让社区来改善本站
         header: 欢迎来到 %{site}, 这是 Ruby 社区的 Gem 托管服务。此项目有三个目的：
         transparent_pages: 构建更透明以及便于浏览的项目页面
@@ -314,7 +314,7 @@ zh-CN:
     faq:
       title: 常问问题
     migrate:
-      title: 迁移 Gems
+      title: 迁移 Gem
     security:
       title: 安全
     sponsors:
@@ -538,7 +538,7 @@ zh-CN:
       next_version:
     index:
       downloads: 下载
-      title: Gems
+      title: Gem
     show:
       bundler_header: Gemfile
       copied: 已复制
@@ -602,7 +602,7 @@ zh-CN:
       title:
       all_time_most_downloaded: 历史下载次数排行
       total_downloads: 下载总次数
-      total_gems: Gems 总数
+      total_gems: Gem 总数
       total_users: 用户总数
   users:
     create:
