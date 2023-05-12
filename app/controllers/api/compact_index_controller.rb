@@ -9,7 +9,7 @@ class Api::CompactIndexController < Api::BaseController
 
   def versions
     set_surrogate_key "versions"
-    cache_expiry_headers(fastly_expiry: 30)
+    cache_expiry_headers
     versions_path = Rails.application.config.rubygems["versions_file_location"]
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
@@ -29,7 +29,7 @@ class Api::CompactIndexController < Api::BaseController
 
   def render_range(response_body)
     headers["ETag"] = '"' << Digest::MD5.hexdigest(response_body) << '"'
-    headers["Digest"] = "sha-256=#{Base64.encode64(Digest::SHA256.digest(response_body)).strip}"
+    headers["Digest"] = "sha-256=#{Digest::SHA256.base64digest(response_body)}"
     headers["Accept-Ranges"] = "bytes"
 
     ranges = Rack::Utils.byte_ranges(request.env, response_body.bytesize)

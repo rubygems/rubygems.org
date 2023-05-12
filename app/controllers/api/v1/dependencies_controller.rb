@@ -16,10 +16,16 @@ class Api::V1::DependenciesController < Api::BaseController
     [Time.utc(2023, 4, 24), 1.day],
     [Time.utc(2023, 5, 1), 1.day],
     [Time.utc(2023, 5, 3), 1.day],
-    [Time.utc(2023, 5, 5), 1.day]
+    [Time.utc(2023, 5, 5), 1.day],
+    # May 12, 15, 17, 19, 22 for the entire day UTC
+    [Time.utc(2023, 5, 12), 1.day],
+    [Time.utc(2023, 5, 15), 1.day],
+    [Time.utc(2023, 5, 17), 1.day],
+    [Time.utc(2023, 5, 19), 1.day],
+    [Time.utc(2023, 5, 22), 1.day]
   ].map { |start, duration| start..(start + duration) } <<
-    # May 10 from 00:00 UTC onward
-    (Time.utc(2023, 5, 10)...)
+    # May 24 from 00:00 UTC onward
+    (Time.utc(2023, 5, 24)...)
 
   def index
     deps = GemDependent.new(gem_names).to_a
@@ -39,6 +45,9 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def check_brownout
+    return if request.headers["x-dependency-api-allowed"]
+    return if Patterns::JAVA_HTTP_USER_AGENT.match?(request.user_agent)
+
     current_time = Time.current.utc
     return if brownout_ranges.none? { |r| r.cover?(current_time) }
 
@@ -49,6 +58,11 @@ class Api::V1::DependenciesController < Api::BaseController
       format.marshal { render plain: error, status: :not_found }
       format.json { render json: { error: error, code: 404 }, status: :not_found }
     end
+  end
+
+  def _set_vary_header
+    super
+    headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
   end
 
   def check_gem_count

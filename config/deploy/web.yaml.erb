@@ -8,8 +8,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 100%
-      maxUnavailable: 0%
+      maxSurge: 25%
+      maxUnavailable: 25%
   selector:
     matchLabels:
       name: web
@@ -211,10 +211,6 @@ spec:
       - name: nginx
         image: nginx:1.19.7
         imagePullPolicy: IfNotPresent
-        lifecycle:
-          preStop:
-            exec:
-              command: ["sleep", "20"]
         ports:
         - containerPort: 8080
           name: http-nginx
@@ -269,7 +265,7 @@ spec:
                 # Introduce a delay to the shutdown sequence to wait for the
                 # pod eviction event to propagate. Then, gracefully shutdown
                 # nginx.
-                "sleep 26 && /usr/sbin/nginx -s quit",
+                "sleep 20 && /usr/sbin/nginx -s quit",
               ]
       volumes:
         - name: nginxconfig

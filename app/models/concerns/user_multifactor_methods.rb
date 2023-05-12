@@ -13,6 +13,7 @@ module UserMultifactorMethods
       self.mfa_seed = ""
       self.mfa_recovery_codes = []
       save!(validate: false)
+      Mailer.mfa_disabled(id, Time.now.utc).deliver_later
     end
 
     def verify_and_enable_mfa!(seed, level, otp, expiry)
@@ -30,6 +31,7 @@ module UserMultifactorMethods
       self.mfa_seed = seed
       self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
       save!(validate: false)
+      Mailer.mfa_enabled(id, Time.now.utc).deliver_later
     end
 
     def mfa_gem_signin_authorized?(otp)

@@ -113,6 +113,22 @@ class Mailer < ApplicationMailer
       subject: I18n.t("mailer.webauthn_credential_removed.subject")
   end
 
+  def mfa_enabled(user_id, enabled_at)
+    @user = User.find(user_id)
+    @enabled_at = enabled_at
+
+    mail to: @user.email,
+      subject: I18n.t("mailer.mfa_enabled.subject")
+  end
+
+  def mfa_disabled(user_id, disabled_at)
+    @user = User.find(user_id)
+    @disabled_at = disabled_at
+
+    mail to: @user.email,
+      subject: I18n.t("mailer.mfa_disabled.subject")
+  end
+
   def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
     @version        = Version.find(version_id)
     notified_user   = User.find(notified_user_id)
