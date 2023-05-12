@@ -39,6 +39,7 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
   config.action_mailer.default_url_options = { host: Gemcutter::HOST,
+                                               port: "31337",
                                                protocol: Gemcutter::PROTOCOL }
 
   # Print deprecation notices to the stderr.

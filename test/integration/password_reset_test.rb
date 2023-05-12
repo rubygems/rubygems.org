@@ -5,7 +5,7 @@ class PasswordResetTest < SystemTest
 
   def password_reset_link
     body = ActionMailer::Base.deliveries.last.parts[1].body.decoded.to_s
-    link = %r{http://localhost/users([^";]*)}.match(body)
+    link = %r{http://localhost(?::\d+)?/users([^";]*)}.match(body)
     link[0]
   end
 
