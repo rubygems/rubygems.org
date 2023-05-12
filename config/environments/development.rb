@@ -43,6 +43,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   config.action_mailer.default_url_options = { host: Gemcutter::HOST,
+                                               port: ENV.fetch("PORT", "3000"),
                                                protocol: Gemcutter::PROTOCOL }
 
   # Print deprecation notices to the Rails logger.
