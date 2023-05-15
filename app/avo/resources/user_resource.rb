@@ -11,6 +11,7 @@ class UserResource < Avo::BaseResource
   action ResetUser2fa
   action YankRubygemsForUser
   action YankUser
+  action MergeUser
 
   field :id, as: :id
   # Fields generated from the model

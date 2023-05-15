@@ -517,4 +517,113 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       assert_equal("Please confirm your email address with RubyGems.org", mailer.subject)
     end
   end
+
+  test "merge user" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    user1 = create(:user)
+    user1.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user1_attributes = user1.attributes.with_indifferent_access
+
+    rubygem1 = create(:rubygem)
+    create(:ownership, user: user1, rubygem: rubygem1)
+
+    user2 = create(:user)
+    rubygem2 = create(:rubygem)
+    user2_attributes = user2.attributes.with_indifferent_access
+    ownership2 = create(:ownership, user: user2, rubygem: rubygem2)
+    ownership2_attributes = ownership2.attributes.with_indifferent_access
+
+    visit avo.resources_user_path(user1)
+
+    click_button "Actions"
+    click_on "Merge User"
+
+    assert_no_changes "User.find(#{user1.id}).attributes" do
+      click_button "Merge User"
+    end
+    page.assert_text "Must supply a sufficiently detailed comment"
+
+    fill_in "Comment", with: "A nice long comment"
+    find_field("User to be merged").click
+    send_keys user2.email
+    find("li", text: user2.handle).click
+    click_button "Merge User"
+
+    page.assert_text "Action ran successfully!"
+    page.assert_text user1.to_global_id.uri.to_s
+
+    user1.reload
+    rubygem1.reload
+    rubygem2.reload
+
+    assert_equal [rubygem1, rubygem2], user1.rubygems
+
+    audit = user1.audits.sole
+
+    page.assert_text audit.id
+    assert_equal "User", audit.auditable_type
+    assert_equal "Merge User", audit.action
+
+    ownership2_audit = audit.audited_changes["records"].select do |k, _|
+      k =~ %r{gid://gemcutter/Ownership/#{ownership2.id}}
+    end
+    ownership2_updated_at_changes = ownership2_audit["gid://gemcutter/Ownership/#{ownership2.id}"]["changes"]["updated_at"]
+
+    assert_equal(
+      {
+        "records" => {
+          "gid://gemcutter/Ownership/#{ownership2.id}" => {
+            "changes" => { "user_id" => [user2_attributes[:id], user1.id], "updated_at" => ownership2_updated_at_changes },
+              "unchanged" => ownership2_attributes.except("user_id", "updated_at").transform_values(&:as_json)
+
+          },
+          "gid://gemcutter/User/#{user2_attributes[:id]}" => {
+            "changes" => {
+              "id" => [user2_attributes[:id], nil],
+              "email" => [user2_attributes[:email], nil],
+              "encrypted_password" => [user2_attributes[:encrypted_password], nil],
+              "token_expires_at" => [user2_attributes[:token_expires_at].as_json, nil],
+              "email_confirmed" => [true, nil],
+              "api_key" => [user2_attributes[:api_key], nil],
+              "confirmation_token" => [user2_attributes[:confirmation_token], nil],
+              "remember_token" => [user2_attributes[:remember_token], nil],
+              "created_at" => [user2_attributes[:created_at].as_json, nil],
+              "updated_at" => [user2_attributes[:updated_at].as_json, nil],
+              "handle" => [user2_attributes[:handle], nil],
+              "hide_email" => [user2_attributes[:hide_email], nil],
+              "mfa_level"=>[user2_attributes[:mfa_level], nil],
+              "mfa_recovery_codes" => [[], nil],
+              "mail_fails" => [0, nil],
+              "webauthn_id" => [user2_attributes[:webauthn_id], nil]},
+            "unchanged" => {
+              "salt" => nil,
+              "token" => nil,
+              "email_reset" => nil,
+              "twitter_username" => nil,
+              "unconfirmed_email" => nil,
+              "remember_token_expires_at" => nil,
+              "mfa_seed" => nil,
+              "blocked_email" => nil,
+              "full_name" => nil
+            }
+          },
+          "gid://gemcutter/User/#{user1.id}" => {
+            "changes" => {},
+              "unchanged" => user1.attributes.merge("created_at" => user1_attributes[:created_at].as_json,
+                                                    "updated_at" => user1_attributes[:updated_at].as_json,
+                                                    "token_expires_at" => user1_attributes[:token_expires_at].as_json)
+          }
+        },
+        "fields" => {"mergeable_user" => {"id" => user2_attributes[:id], "handle" => "handle2"}},
+        "arguments" => {},
+        "models" => ["gid://gemcutter/User/#{user1.id}"]
+      },
+      audit.audited_changes
+    )
+
+    assert_equal admin_user, audit.admin_github_user
+    assert_equal "A nice long comment", audit.comment
+  end
 end
