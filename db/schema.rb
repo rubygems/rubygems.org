@@ -286,7 +286,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_24_190734) do
     t.string "twitter_username"
     t.string "unconfirmed_email"
     t.datetime "remember_token_expires_at", precision: nil
-    t.string "mfa_seed"
+    t.string "otp_seed"
     t.integer "mfa_level", default: 0
     t.string "mfa_recovery_codes", default: [], array: true
     t.integer "mail_fails", default: 0
