@@ -45,7 +45,7 @@ class SessionsControllerTest < ActionController::TestCase
       context "when OTP is correct" do
         setup do
           @controller.session[:mfa_user] = @user.id
-          post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          post :mfa_create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
         end
 
         should respond_with :redirect
@@ -81,7 +81,7 @@ class SessionsControllerTest < ActionController::TestCase
       context "when OTP is incorrect" do
         setup do
           @controller.session[:mfa_user] = @user.id
-          wrong_otp = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+          wrong_otp = (ROTP::TOTP.new(@user.otp_seed).now.to_i.succ % 1_000_000).to_s
           post :mfa_create, params: { otp: wrong_otp }
         end
 
@@ -113,7 +113,7 @@ class SessionsControllerTest < ActionController::TestCase
           StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
 
           travel_to @end_time do
-            post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            post :mfa_create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
           end
         end
 
@@ -137,7 +137,7 @@ class SessionsControllerTest < ActionController::TestCase
         @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
         travel 30.minutes
 
-        post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+        post :mfa_create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
       end
 
       should set_flash.now[:notice]
@@ -164,7 +164,7 @@ class SessionsControllerTest < ActionController::TestCase
       setup do
         @controller.session[:mfa_user] = @user.id
         travel 30.minutes do
-          post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          post :mfa_create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
         end
       end
 
@@ -227,7 +227,7 @@ class SessionsControllerTest < ActionController::TestCase
           context "on `ui_only` level" do
             setup do
               @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
             end
 
             should respond_with :redirect
@@ -245,7 +245,7 @@ class SessionsControllerTest < ActionController::TestCase
           context "on `ui_and_gem_signin` level" do
             setup do
               @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
-              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
             end
 
             should respond_with :redirect
@@ -255,7 +255,7 @@ class SessionsControllerTest < ActionController::TestCase
           context "on `ui_and_api` level" do
             setup do
               @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
-              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
             end
 
             should respond_with :redirect

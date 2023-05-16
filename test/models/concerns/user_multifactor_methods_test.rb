@@ -27,7 +27,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "disable mfa" do
       assert_predicate @user, :mfa_disabled?
-      assert_empty @user.mfa_seed
+      assert_empty @user.otp_seed
       assert_empty @user.mfa_recovery_codes
     end
   end
@@ -84,7 +84,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
 
     should "enable mfa" do
-      assert_equal @seed, @user.mfa_seed
+      assert_equal @seed, @user.otp_seed
       assert_predicate @user, :mfa_ui_and_api?
       assert_equal 10, @user.mfa_recovery_codes.length
     end
@@ -281,17 +281,17 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.otp_seed).now)
       end
 
       should "return true when correct in last interval" do
-        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        last_otp = ROTP::TOTP.new(@user.otp_seed).at(Time.current - 30)
 
         assert @user.ui_otp_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
-        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        next_otp = ROTP::TOTP.new(@user.otp_seed).at(Time.current + 30)
 
         assert @user.ui_otp_verified?(next_otp)
       end
@@ -300,8 +300,8 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
 
-      should "return false if the mfa_seed is blank" do
-        @user.update!(mfa_seed: nil)
+      should "return false if the otp_seed is blank" do
+        @user.update!(otp_seed: nil)
 
         refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
@@ -330,17 +330,17 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.api_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.api_otp_verified?(ROTP::TOTP.new(@user.otp_seed).now)
       end
 
       should "return true when correct in last interval" do
-        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        last_otp = ROTP::TOTP.new(@user.otp_seed).at(Time.current - 30)
 
         assert @user.api_otp_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
-        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        next_otp = ROTP::TOTP.new(@user.otp_seed).at(Time.current + 30)
 
         assert @user.api_otp_verified?(next_otp)
       end

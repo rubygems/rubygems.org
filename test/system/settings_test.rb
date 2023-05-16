@@ -69,7 +69,7 @@ class SettingsTest < ApplicationSystemTestCase
     enable_mfa
     visit edit_settings_path
 
-    page.fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    page.fill_in "otp", with: ROTP::TOTP.new(@user.otp_seed).now
     change_auth_level "Disabled"
 
     assert page.has_content? "You have not yet enabled OTP based multi-factor authentication."
@@ -173,7 +173,7 @@ class SettingsTest < ApplicationSystemTestCase
     enable_mfa
     visit edit_settings_path
 
-    page.fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    page.fill_in "otp", with: ROTP::TOTP.new(@user.otp_seed).now
     change_auth_level "Disabled"
 
     refute page.has_selector?("#level > option:nth-child(4)")

@@ -48,7 +48,7 @@ FactoryBot.define do
     email_confirmed { true }
 
     trait :mfa_enabled do
-      mfa_seed { "123abc" }
+      otp_seed { "123abc" }
       mfa_level { User.mfa_levels["ui_and_api"] }
       mfa_recovery_codes { %w[aaa bbb ccc] }
     end

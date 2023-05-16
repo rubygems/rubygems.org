@@ -36,7 +36,7 @@ class UserResource < Avo::BaseResource
   tabs style: :pills do
     tab "Auth" do
       field :encrypted_password, as: :password, visible: ->(_) { false }
-      field :mfa_seed, as: :text, visible: ->(_) { false }
+      field :otp_seed, as: :text, visible: ->(_) { false }
       field :mfa_level, as: :select, enum: ::User.mfa_levels
       field :mfa_recovery_codes, as: :text, visible: ->(_) { false }
       field :webauthn_id, as: :text, visible: ->(_) { false }

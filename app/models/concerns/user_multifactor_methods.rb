@@ -10,7 +10,7 @@ module UserMultifactorMethods
 
     def disable_mfa!
       mfa_disabled!
-      self.mfa_seed = ""
+      self.otp_seed = ""
       self.mfa_recovery_codes = []
       save!(validate: false)
     end
@@ -27,7 +27,7 @@ module UserMultifactorMethods
 
     def enable_mfa!(seed, level)
       self.mfa_level = level
-      self.mfa_seed = seed
+      self.otp_seed = seed
       self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
       save!(validate: false)
     end
@@ -55,7 +55,7 @@ module UserMultifactorMethods
 
     def ui_otp_verified?(otp)
       otp = otp.to_s
-      return true if verify_digit_otp(mfa_seed, otp)
+      return true if verify_digit_otp(otp_seed, otp)
       return false unless mfa_recovery_codes.include? otp
       mfa_recovery_codes.delete(otp)
       save!(validate: false)

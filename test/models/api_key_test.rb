@@ -172,7 +172,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       should "return true when correct and mfa enabled" do
         @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
 
-        assert @api_key.mfa_authorized?(ROTP::TOTP.new(@api_key.user.mfa_seed).now)
+        assert @api_key.mfa_authorized?(ROTP::TOTP.new(@api_key.user.otp_seed).now)
       end
 
       should "return false when incorrect and mfa enabled" do

@@ -347,7 +347,7 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "be able to verify correct OTP" do
-          assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+          assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.otp_seed).now)
         end
 
         should "return true for mfa status check" do
@@ -356,13 +356,13 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "return true for otp in last interval" do
-          last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+          last_otp = ROTP::TOTP.new(@user.otp_seed).at(Time.current - 30)
 
           assert @user.ui_otp_verified?(last_otp)
         end
 
         should "return true for otp in next interval" do
-          next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+          next_otp = ROTP::TOTP.new(@user.otp_seed).at(Time.current + 30)
 
           assert @user.ui_otp_verified?(next_otp)
         end
@@ -371,7 +371,7 @@ class UserTest < ActiveSupport::TestCase
           setup { create(:api_key, user: @user) }
 
           should "reset email and mfa" do
-            assert_changed(@user, :email, :password, :api_key, :mfa_seed, :remember_token) do
+            assert_changed(@user, :email, :password, :api_key, :otp_seed, :remember_token) do
               @user.block!
             end
 
@@ -810,7 +810,7 @@ class UserTest < ActiveSupport::TestCase
     setup { @user = create(:user, handle: "MikeJudge") }
 
     should "not raise ActiveRecord::RecordInvalid for email address already taken" do
-      assert_changed(@user, :email, :password, :api_key, :mfa_seed, :remember_token) do
+      assert_changed(@user, :email, :password, :api_key, :otp_seed, :remember_token) do
         @user.block!
       end
     end

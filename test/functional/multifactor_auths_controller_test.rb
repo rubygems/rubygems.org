@@ -24,7 +24,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
       context "on POST to create mfa" do
         setup do
-          post :create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          post :create, params: { otp: ROTP::TOTP.new(@user.otp_seed).now }
         end
 
         should respond_with :redirect
@@ -39,7 +39,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         context "on disabling mfa" do
           context "when otp code is correct" do
             setup do
-              put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "disabled" }
+              put :update, params: { otp: ROTP::TOTP.new(@user.otp_seed).now, level: "disabled" }
             end
 
             should respond_with :redirect
@@ -65,7 +65,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           context "when otp code is incorrect" do
             setup do
-              wrong_otp = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+              wrong_otp = (ROTP::TOTP.new(@user.otp_seed).now.to_i.succ % 1_000_000).to_s
               put :update, params: { otp: wrong_otp, level: "disabled" }
             end
 
@@ -82,7 +82,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         context "on updating to ui_only, flash banner is set and mfa level is unchanged" do
           setup do
             @user.mfa_ui_and_api!
-            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "ui_only" }
+            put :update, params: { otp: ROTP::TOTP.new(@user.otp_seed).now, level: "ui_only" }
           end
 
           should respond_with :redirect
@@ -100,7 +100,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context "on updating to ui_and_api" do
           setup do
-            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "ui_and_api" }
+            put :update, params: { otp: ROTP::TOTP.new(@user.otp_seed).now, level: "ui_and_api" }
           end
 
           should respond_with :redirect
@@ -113,7 +113,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context "on updating to ui_and_gem_signin" do
           setup do
-            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "ui_and_gem_signin" }
+            put :update, params: { otp: ROTP::TOTP.new(@user.otp_seed).now, level: "ui_and_gem_signin" }
           end
 
           should respond_with :redirect
@@ -134,12 +134,12 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "on POST to create mfa" do
         setup do
           @seed = ROTP::Base32.random_base32
-          @controller.session[:mfa_seed] = @seed
+          @controller.session[:otp_seed] = @seed
         end
 
         context "when qr-code is not expired" do
           setup do
-            @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
+            @controller.session[:otp_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
 
@@ -157,7 +157,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context "when qr-code is expired" do
           setup do
-            @controller.session[:mfa_seed_expire] = 1.minute.ago
+            @controller.session[:otp_seed_expire] = 1.minute.ago
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
 

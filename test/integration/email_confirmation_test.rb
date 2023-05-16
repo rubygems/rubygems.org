@@ -72,7 +72,7 @@ class EmailConfirmationTest < SystemTest
     assert_not_nil link
     visit link
 
-    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    fill_in "otp", with: ROTP::TOTP.new(@user.otp_seed).now
     click_button "Authenticate"
 
     assert page.has_content? "Sign out"
@@ -111,7 +111,7 @@ class EmailConfirmationTest < SystemTest
     assert_not_nil link
     visit link
 
-    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    fill_in "otp", with: ROTP::TOTP.new(@user.otp_seed).now
     travel 16.minutes do
       click_button "Authenticate"
 

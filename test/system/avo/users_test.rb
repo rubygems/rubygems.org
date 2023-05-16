@@ -50,14 +50,14 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
-    page.assert_no_text user_attributes[:mfa_seed]
+    page.assert_no_text user_attributes[:otp_seed]
     page.assert_no_text user_attributes[:mfa_recovery_codes].first
 
     user.reload
 
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
-    assert_empty user.mfa_seed
+    assert_empty user.otp_seed
     assert_empty user.mfa_recovery_codes
 
     audit = user.audits.sole
@@ -72,12 +72,12 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "changes" => {
               "mfa_level" => %w[ui_and_api disabled],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "mfa_seed" => [user_attributes[:mfa_seed], ""],
+              "otp_seed" => [user_attributes[:otp_seed], ""],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password]
             },
             "unchanged" => user.attributes
-              .except("mfa_level", "updated_at", "mfa_seed", "mfa_recovery_codes", "encrypted_password")
+              .except("mfa_level", "updated_at", "otp_seed", "mfa_recovery_codes", "encrypted_password")
               .transform_values(&:as_json)
           }
         },
@@ -118,14 +118,14 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
-    page.assert_no_text user_attributes[:mfa_seed]
+    page.assert_no_text user_attributes[:otp_seed]
     page.assert_no_text user_attributes[:mfa_recovery_codes].first
 
     user.reload
 
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
-    assert_empty user.mfa_seed
+    assert_empty user.otp_seed
     assert_empty user.mfa_recovery_codes
 
     audit = user.audits.sole
@@ -142,7 +142,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "mfa_seed" => [user_attributes[:mfa_seed], ""],
+              "otp_seed" => [user_attributes[:otp_seed], ""],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
@@ -158,7 +158,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_recovery_codes",
-                "mfa_seed",
+                "otp_seed",
                 "remember_token",
                 "updated_at"
               ).transform_values(&:as_json)
@@ -358,7 +358,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
-    page.assert_no_text user_attributes[:mfa_seed]
+    page.assert_no_text user_attributes[:otp_seed]
     page.assert_no_text user_attributes[:mfa_recovery_codes].first
 
     user.reload
@@ -416,7 +416,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "mfa_seed" => [user_attributes[:mfa_seed], ""],
+              "otp_seed" => [user_attributes[:otp_seed], ""],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
@@ -432,7 +432,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_recovery_codes",
-                "mfa_seed",
+                "otp_seed",
                 "remember_token",
                 "updated_at"
               ).transform_values(&:as_json)
