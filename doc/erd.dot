@@ -291,7 +291,7 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="mail_fails">mail_fails <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="mfa_level">mfa_level <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="otp_seed">otp_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
@@ -319,7 +319,7 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="mail_fails">mail_fails <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="mfa_level">mfa_level <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="otp_seed">otp_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
