@@ -547,7 +547,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    statsd-instrument (3.5.8)
+    statsd-instrument (3.5.9)
     stringio (3.0.2)
     terser (1.1.15)
       execjs (>= 0.3.0, < 3)
