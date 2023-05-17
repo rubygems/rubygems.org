@@ -461,7 +461,7 @@ GEM
       railties (>= 5.1, < 7.1)
       roadie (~> 5.0)
     rotp (6.2.2)
-    rqrcode (2.1.2)
+    rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
     rqrcode_core (1.2.0)
