@@ -188,6 +188,7 @@ Rails.application.routes.draw do
       get 'successful_verification'
       get 'failed_verification'
       get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
+      post 'confirm/:webauthn_token', to: 'webauthn_verifications#manual_authenticate', as: 'manual_authenticate'
     end
 
     ################################################################################

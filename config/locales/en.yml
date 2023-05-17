@@ -398,6 +398,9 @@ en:
     successful_verification:
       title: Success!
       close_browser: Please close this browser.
+    successful_verification_manual:
+      title: Authenticate with Security Device
+      complete_verification: Complete command line security device verification.
     failed_verification:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.

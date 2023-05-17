@@ -9,7 +9,13 @@ class WebauthnVerificationsController < ApplicationController
     redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
-    setup_webauthn_authentication(form_url: authenticate_webauthn_verification_path, session_options: { "port" => port })
+    authenticate_url = if browser.safari?
+      manual_authenticate_webauthn_verification_path
+    else
+      authenticate_webauthn_verification_path
+    end
+
+    setup_webauthn_authentication(form_url: authenticate_url, session_options: { "port" => port })
   end
 
   def authenticate
@@ -25,6 +31,22 @@ class WebauthnVerificationsController < ApplicationController
     @verification.expire_path_token
 
     redirect_to(URI.parse("http://localhost:#{port}?code=#{@verification.otp}").to_s, allow_other_host: true)
+  end
+
+  def manual_authenticate
+    port = session.dig(:webauthn_authentication, "port")
+    unless port
+      redirect_to root_path, alert: t(".no_port")
+      return
+    end
+
+    return redirect_to failed_verification_webauthn_verification_path(error: @webauthn_error) unless webauthn_credential_verified?
+
+    @verification.generate_otp
+    @verification.expire_path_token
+
+    @url = "http://localhost:#{port}?code=#{@verification.otp}"
+    render :successful_verification_manual
   end
 
   def failed_verification

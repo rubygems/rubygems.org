@@ -125,16 +125,15 @@
     })
   };
 
+  function failed_verification_url(message) {
+    var url =  new URL(`${location.origin}/webauthn_verification/failed_verification`);
+    url.searchParams.append("error", message);
+    return url.href;
+  };
+
   $(function() {
     var cliSessionForm = $(".js-webauthn-session-cli--form");
-    var cliSessionError = $(".js-webauthn-session-cli--error");
     var csrfToken = $("[name='csrf-token']").attr("content");
-
-    function failed_verification_url(message) {
-      var url =  new URL(`${location.origin}/webauthn_verification/failed_verification`);
-      url.searchParams.append("error", message);
-      return url.href;
-    };
 
     cliSessionForm.submit(function(event) {
       getCredentials(event, csrfToken).then(function (response) {
@@ -145,6 +144,44 @@
             window.location.href = failed_verification_url(text);
           }
         });
+      }).catch(function (error) {
+        window.location.href = failed_verification_url(error.message);
+      });
+    });
+  });
+
+  $(function() {
+    var cliSessionForm = $(".js-webauthn-session-cli-manual--form");
+    var csrfToken = $("[name='csrf-token']").attr("content");
+
+    cliSessionForm.submit(function(event) {
+      getCredentials(event, csrfToken).then(function (response) {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          response.text().then(function (html) {
+            document.body.innerHTML = html;
+
+            var completeVerificationButton = $(".complete-verification")
+            console.log(completeVerificationButton);
+            completeVerificationButton.click(function() {
+              var url = completeVerificationButton.data('url');
+              fetch(url, {
+                method: "GET",
+              }).then(function (response) {
+                response.text().then(function (text) {
+                  if (text == "success") {
+                    window.location.href = `${location.origin}/webauthn_verification/successful_verification`;
+                  } else {
+                    window.location.href = failed_verification_url(text);
+                  }
+                });
+              })
+            });
+          }).catch(function (error) {
+            window.location.href = failed_verification_url(error.message);
+          });
+        }
       }).catch(function (error) {
         window.location.href = failed_verification_url(error.message);
       });
