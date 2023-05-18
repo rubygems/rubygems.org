@@ -222,7 +222,7 @@ class User < ApplicationRecord
     transaction do
       update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{display_handle.downcase}@rubygems.org")
       confirm_email!
-      disable_mfa!
+      disable_otp!
       update_attribute(:password, SecureRandom.alphanumeric)
       update!(
         remember_token: nil,
