@@ -17,6 +17,7 @@ class User < ApplicationRecord
   ].freeze
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
+  before_save :set_otp_seed
   before_create :_generate_confirmation_token_no_reset_unconfirmed_email
   before_destroy :yank_gems
 
@@ -244,6 +245,10 @@ class User < ApplicationRecord
       name: handle,
       email: email
     )
+  end
+
+  def set_otp_seed
+    self.otp_seed = mfa_seed
   end
 
   private
