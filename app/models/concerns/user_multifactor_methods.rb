@@ -14,7 +14,7 @@ module UserMultifactorMethods
 
   def mfa_gem_signin_authorized?(otp)
     return true unless strong_mfa_level? || webauthn_credentials.present?
-    api_otp_verified?(otp)
+    api_mfa_verified?(otp)
   end
 
   def mfa_recommended_not_yet_enabled?
@@ -41,7 +41,7 @@ module UserMultifactorMethods
     save!(validate: false)
   end
 
-  def api_otp_verified?(otp)
+  def api_mfa_verified?(otp)
     return true if verify_webauthn_otp(otp)
     return true if ui_mfa_verified?(otp)
     false

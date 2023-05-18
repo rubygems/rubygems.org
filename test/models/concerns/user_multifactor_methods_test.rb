@@ -263,30 +263,30 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
   end
 
-  context "#api_otp_verified?" do
+  context "#api_mfa_verified?" do
     setup do
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.api_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.api_mfa_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
       end
 
       should "return true when correct in last interval" do
         last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
 
-        assert @user.api_otp_verified?(last_otp)
+        assert @user.api_mfa_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
         next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
 
-        assert @user.api_otp_verified?(next_otp)
+        assert @user.api_mfa_verified?(next_otp)
       end
 
       should "return false if otp is incorrect" do
-        refute @user.api_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+        refute @user.api_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
     end
 
@@ -294,20 +294,20 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       should "return true when correct" do
         webauthn_verification = create(:webauthn_verification, user: @user)
 
-        assert @user.api_otp_verified?(webauthn_verification.otp)
+        assert @user.api_mfa_verified?(webauthn_verification.otp)
       end
 
       should "return false when incorrect" do
         create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx")
         incorrect_otp = "Yxf57d1wEUSWyXrr"
 
-        refute @user.api_otp_verified?(incorrect_otp)
+        refute @user.api_mfa_verified?(incorrect_otp)
       end
 
       should "return false when expired" do
         webauthn_verification = create(:webauthn_verification, user: @user, otp_expires_at: 2.minutes.ago)
 
-        refute @user.api_otp_verified?(webauthn_verification.otp)
+        refute @user.api_mfa_verified?(webauthn_verification.otp)
       end
 
       context "when webauthn otp has not been generated" do
@@ -316,11 +316,11 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         end
 
         should "return false for an otp" do
-          refute @user.api_otp_verified?("Yxf57d1wEUSWyXrr")
+          refute @user.api_mfa_verified?("Yxf57d1wEUSWyXrr")
         end
 
         should "return false if otp is nil" do
-          refute @user.api_otp_verified?(nil)
+          refute @user.api_mfa_verified?(nil)
         end
       end
     end
@@ -328,7 +328,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     should "return true if recovery code is correct" do
       recovery_code = @user.mfa_recovery_codes.first
 
-      assert @user.api_otp_verified?(recovery_code)
+      assert @user.api_mfa_verified?(recovery_code)
       refute_includes @user.mfa_recovery_codes, recovery_code
     end
   end
