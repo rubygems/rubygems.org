@@ -360,12 +360,12 @@ class UserTest < ActiveSupport::TestCase
         should "be able to use a recovery code only once" do
           code = @user.mfa_recovery_codes.first
 
-          assert @user.ui_otp_verified?(code)
-          refute @user.ui_otp_verified?(code)
+          assert @user.ui_mfa_verified?(code)
+          refute @user.ui_mfa_verified?(code)
         end
 
         should "be able to verify correct OTP" do
-          assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+          assert @user.ui_mfa_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
         end
 
         should "return true for mfa status check" do
@@ -376,13 +376,13 @@ class UserTest < ActiveSupport::TestCase
         should "return true for otp in last interval" do
           last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
 
-          assert @user.ui_otp_verified?(last_otp)
+          assert @user.ui_mfa_verified?(last_otp)
         end
 
         should "return true for otp in next interval" do
           next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
 
-          assert @user.ui_otp_verified?(next_otp)
+          assert @user.ui_mfa_verified?(next_otp)
         end
 
         context "blocking user with api key" do
@@ -414,7 +414,7 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "return false for verifying OTP" do
-          refute @user.ui_otp_verified?("")
+          refute @user.ui_mfa_verified?("")
         end
 
         should "return false for mfa status check" do
