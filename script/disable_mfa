@@ -15,7 +15,7 @@ require_relative "../config/environment"
 begin
   user = User.find_by_name(name)
   puts "Found user: #{user.handle} #{user.email}"
-  user.disable_mfa!
+  user.disable_totp!
   user.password = SecureRandom.hex(20).encode("UTF-8")
   user.save!
   puts "Done."

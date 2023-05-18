@@ -410,7 +410,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when disabled" do
         setup do
-          @user.disable_mfa!
+          @user.disable_totp!
         end
 
         should "return false for verifying OTP" do

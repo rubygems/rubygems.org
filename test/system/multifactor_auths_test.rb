@@ -14,7 +14,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   end
 
   teardown do
-    @user.disable_mfa!
+    @user.disable_totp!
   end
 
   test "user with mfa disabled gets redirected back to adoptions after setting up mfa" do

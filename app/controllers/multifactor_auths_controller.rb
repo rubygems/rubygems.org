@@ -76,7 +76,7 @@ class MultifactorAuthsController < ApplicationController
     case level_param
     when "disabled"
       flash[:success] = t("multifactor_auths.destroy.success")
-      current_user.disable_mfa!
+      current_user.disable_totp!
     when "ui_only"
       flash[:error] = t("multifactor_auths.ui_only_warning")
     else
