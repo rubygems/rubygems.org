@@ -317,7 +317,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
 
       context "user has mfa set to weak level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
         end
 
         context "POST to create" do
@@ -365,7 +365,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
 
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         end
         context "POST to create" do
           setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }

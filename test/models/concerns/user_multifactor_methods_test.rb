@@ -9,7 +9,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
   context "#mfa_enabled" do
     should "return true if multifactor auth is not disabled" do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       assert_predicate @user, :mfa_enabled?
     end
@@ -22,7 +22,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "send mfa enabled email" do
       assert_emails 1 do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
       end
 
       assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
@@ -37,19 +37,19 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with totp" do
       should "return true when correct and if mfa is ui_and_api" do
-        @user.enable_mfa!(@seed, :ui_and_api)
+        @user.enable_totp!(@seed, :ui_and_api)
 
         assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
       end
 
       should "return true when correct and if mfa is ui_and_gem_signin" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
 
         assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
       end
 
       should "return false when incorrect" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
 
         refute @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
@@ -57,14 +57,14 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with webauthn otp" do
       should "return true when correct and if mfa is ui_and_api" do
-        @user.enable_mfa!(@seed, :ui_and_api)
+        @user.enable_totp!(@seed, :ui_and_api)
         webauthn_verification = create(:webauthn_verification, user: @user)
 
         assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
       end
 
       should "return true when correct and if mfa is ui_and_gem_signin" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
         webauthn_verification = create(:webauthn_verification, user: @user)
 
         assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
@@ -77,7 +77,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       end
 
       should "return false when incorrect" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
         create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx7U1i")
         incorrect_otp = "Yxf57d1wEUSWyXrrLMRv"
 
@@ -90,7 +90,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
 
     should "return true if mfa is ui_only" do
-      @user.enable_mfa!(@seed, :ui_only)
+      @user.enable_totp!(@seed, :ui_only)
 
       assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
     end
@@ -113,7 +113,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "return false if instance owns a gem that exceeds recommended threshold and has mfa enabled" do
       create(:ownership, user: @user, rubygem: @popular_rubygem)
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       refute_predicate @user, :mfa_recommended_not_yet_enabled?
     end
@@ -132,7 +132,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
         rubygem_id: @popular_rubygem.id
       )
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     end
 
     should "return true if instance owns a gem that exceeds recommended threshold and has mfa ui_only" do
@@ -172,7 +172,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "return false if instance owns a gem that exceeds required threshold and has mfa enabled" do
       create(:ownership, user: @user, rubygem: @popular_rubygem)
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       refute_predicate @user, :mfa_required_not_yet_enabled?
     end
@@ -191,7 +191,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         Rubygem::MFA_REQUIRED_THRESHOLD + 1,
         rubygem_id: @popular_rubygem.id
       )
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     end
 
     should "return true if instance owns a gem that exceeds required threshold and has mfa ui_only" do
@@ -216,7 +216,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
   context "#ui_otp_verified?" do
     setup do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     context "with totp" do
@@ -265,7 +265,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
   context "#api_otp_verified?" do
     setup do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     context "with totp" do

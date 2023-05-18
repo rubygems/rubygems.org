@@ -104,7 +104,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
   def redirect_test_mfa_weak_level(path)
     sign_in
-    @user.enable_mfa!(@seed, :ui_only)
+    @user.enable_totp!(@seed, :ui_only)
     visit path
 
     assert page.has_content? "Edit settings"

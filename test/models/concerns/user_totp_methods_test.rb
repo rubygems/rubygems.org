@@ -9,7 +9,7 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
 
   context "#disable_totp!" do
     setup do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
         @user.disable_totp!
@@ -74,11 +74,11 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
     end
   end
 
-  context "#enable_mfa!" do
+  context "#enable_totp!" do
     setup do
       @seed = ROTP::Base32.random_base32
       @level = :ui_and_api
-      @user.enable_mfa!(@seed, @level)
+      @user.enable_totp!(@seed, @level)
     end
 
     should "enable mfa" do
