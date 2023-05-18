@@ -12,7 +12,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
     context "when mfa enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
       end
 
       context "on GET to new mfa" do
@@ -242,7 +242,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "user has mfa set to weak level" do
         setup do
           @seed = ROTP::Base32.random_base32
-          @user.enable_mfa!(@seed, :ui_only)
+          @user.enable_otp!(@seed, :ui_only)
         end
 
         should "redirect user back to mfa_redirect_uri after successful mfa setup" do

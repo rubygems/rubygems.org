@@ -4,7 +4,7 @@ class SessionsControllerTest < ActionController::TestCase
   context "when user has mfa enabled" do
     setup do
       @user = User.new(email_confirmed: true, handle: "test")
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
     end
 
     context "on POST to create" do
@@ -226,7 +226,7 @@ class SessionsControllerTest < ActionController::TestCase
 
           context "on `ui_only` level" do
             setup do
-              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+              @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
               post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
             end
 
@@ -244,7 +244,7 @@ class SessionsControllerTest < ActionController::TestCase
 
           context "on `ui_and_gem_signin` level" do
             setup do
-              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+              @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
               post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
             end
 
@@ -254,7 +254,7 @@ class SessionsControllerTest < ActionController::TestCase
 
           context "on `ui_and_api` level" do
             setup do
-              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
               post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
             end
 
@@ -651,7 +651,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "user has mfa set to weak level" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
       end
 
       context "on GET to verify" do
@@ -677,7 +677,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "user has MFA set to strong level, expect normal behaviour" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
       end
 
       context "on GET to verify" do

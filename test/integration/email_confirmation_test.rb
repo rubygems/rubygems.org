@@ -64,7 +64,7 @@ class EmailConfirmationTest < SystemTest
   end
 
   test "requesting confirmation mail with mfa enabled" do
-    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
     request_confirmation_mail @user.email
 
     link = last_email_link
@@ -103,7 +103,7 @@ class EmailConfirmationTest < SystemTest
   end
 
   test "requesting confirmation mail with mfa enabled, but mfa session is expired" do
-    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+    @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
     request_confirmation_mail @user.email
 
     link = last_email_link

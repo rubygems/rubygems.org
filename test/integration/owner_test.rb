@@ -57,7 +57,7 @@ class OwnerTest < SystemTest
   end
 
   test "owners data is correctly represented" do
-    @other_user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    @other_user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
 
     visit_ownerships_page

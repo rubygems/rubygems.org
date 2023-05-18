@@ -14,7 +14,7 @@ class SettingsTest < ApplicationSystemTestCase
 
   def enable_mfa
     key = ROTP::Base32.random_base32
-    @user.enable_mfa!(key, :ui_only)
+    @user.enable_otp!(key, :ui_only)
   end
 
   def change_auth_level(type)

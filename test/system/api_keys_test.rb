@@ -105,7 +105,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "creating new api key with MFA UI enabled" do
-    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
 
     visit_profile_api_keys_path
 
@@ -119,7 +119,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "creating new api key with MFA UI and API enabled" do
-    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
 
     visit_profile_api_keys_path
 
@@ -216,7 +216,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update api key with MFA UI enabled" do
-    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
 
     api_key = create(:api_key, user: @user)
 
@@ -233,7 +233,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update api key with MFA UI and API enabled" do
-    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
 
     api_key = create(:api_key, user: @user)
 

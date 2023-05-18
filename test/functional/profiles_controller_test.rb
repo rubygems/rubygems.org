@@ -290,7 +290,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       context "user has mfa set to weak level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
         end
 
         context "on GET to show" do
@@ -317,7 +317,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
         end
 
         context "on GET to show" do

@@ -129,7 +129,7 @@ class OwnersControllerTest < ActionController::TestCase
 
           context "owner has enabled mfa" do
             setup do
-              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
               post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
             end
 
@@ -254,7 +254,7 @@ class OwnersControllerTest < ActionController::TestCase
 
           context "owner has enabled mfa" do
             setup do
-              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
               delete :destroy, params: { handle: @second_user.display_id, rubygem_id: @rubygem.name }
             end
 
