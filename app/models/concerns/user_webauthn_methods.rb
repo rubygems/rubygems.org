@@ -35,4 +35,10 @@ module UserWebauthnMethods
       user_id: id
     )
   end
+
+  private
+
+  def verify_webauthn_otp(otp)
+    webauthn_verification&.verify_otp(otp)
+  end
 end
