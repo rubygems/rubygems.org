@@ -1,7 +1,7 @@
 module UserOtpMethods
   extend ActiveSupport::Concern
 
-  def disable_mfa!
+  def disable_otp!
     mfa_disabled!
     self.mfa_seed = ""
     self.mfa_recovery_codes = []
