@@ -30,14 +30,14 @@ class UserOtpMethodsTest < ActiveSupport::TestCase
     end
   end
 
-  context "#verify_and_enable_mfa!" do
+  context "#verify_and_enable_otp!" do
     setup do
       @seed = ROTP::Base32.random_base32
       @expiry = 30.minutes.from_now
     end
 
     should "enable mfa" do
-      @user.verify_and_enable_mfa!(
+      @user.verify_and_enable_otp!(
         @seed,
         :ui_and_api,
         ROTP::TOTP.new(@seed).now,
@@ -48,7 +48,7 @@ class UserOtpMethodsTest < ActiveSupport::TestCase
     end
 
     should "add error if qr code expired" do
-      @user.verify_and_enable_mfa!(
+      @user.verify_and_enable_otp!(
         @seed,
         :ui_and_api,
         ROTP::TOTP.new(@seed).now,
@@ -62,7 +62,7 @@ class UserOtpMethodsTest < ActiveSupport::TestCase
     end
 
     should "add error if otp code is incorrect" do
-      @user.verify_and_enable_mfa!(
+      @user.verify_and_enable_otp!(
         @seed,
         :ui_and_api,
         ROTP::TOTP.new(ROTP::Base32.random_base32).now,
