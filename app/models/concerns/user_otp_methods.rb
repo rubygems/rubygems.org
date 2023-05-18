@@ -9,7 +9,7 @@ module UserOtpMethods
     Mailer.mfa_disabled(id, Time.now.utc).deliver_later
   end
 
-  def verify_and_enable_mfa!(seed, level, otp, expiry)
+  def verify_and_enable_otp!(seed, level, otp, expiry)
     if expiry < Time.now.utc
       errors.add(:base, I18n.t("multifactor_auths.create.qrcode_expired"))
     elsif verify_digit_otp(seed, otp)
