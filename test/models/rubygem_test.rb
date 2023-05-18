@@ -992,7 +992,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be satisfied if owner has enabled mfa" do
-        @owner.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @owner.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
 
         assert @rubygem.mfa_requirement_satisfied_for?(@owner)
       end

@@ -130,7 +130,7 @@ class DashboardsControllerTest < ActionController::TestCase
 
       context "user has mfa set to weak level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
           get :show
         end
 
@@ -143,7 +143,7 @@ class DashboardsControllerTest < ActionController::TestCase
 
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
           get :show
         end
 

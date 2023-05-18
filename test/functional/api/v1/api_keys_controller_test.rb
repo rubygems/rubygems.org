@@ -224,7 +224,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "when user has enabled MFA for UI and API" do
       setup do
         @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -234,7 +234,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "when user has enabled MFA for UI and gem signin" do
       setup do
         @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -383,7 +383,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "when a user provides an OTP code" do
       setup do
         @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
         @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
         post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
@@ -431,7 +431,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "when user has enabled MFA for UI and API" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -440,7 +440,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "when user has enabled MFA for UI and gem signin" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -473,7 +473,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       context "by user on `ui_only` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
           post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
         end
 
@@ -492,7 +492,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_gem_signin` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
         end
 
@@ -505,7 +505,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_api` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
           post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
         end
 
@@ -579,7 +579,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "when user has enabled MFA for UI and API" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -588,7 +588,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "when user has enabled MFA for UI and gem signin" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 

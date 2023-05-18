@@ -158,7 +158,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       context "ui requests" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
           stay_under_exponential_limit("clearance/ip")
         end
 
@@ -194,7 +194,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       context "api requests" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_otp!(ROTP::Base32.random_base32, :ui_and_api)
           stay_under_exponential_limit("api/ip")
 
           create(:api_key, key: "12334", add_owner: true, yank_rubygem: true, remove_owner: true, user: @user)
@@ -432,7 +432,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "exponential backoff" do
       setup do
         @mfa_max_period = { 1 => 300, 2 => 90_000 }
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        @user.enable_otp!(ROTP::Base32.random_base32, :ui_only)
         @api_key = "12345"
         create(:api_key, key: @api_key, user: @user)
       end
