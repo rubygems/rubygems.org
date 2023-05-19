@@ -3,6 +3,7 @@ module UserMultifactorMethods
 
   included do
     include UserTotpMethods
+    include UserWebauthnMethods
 
     enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2, ui_and_gem_signin: 3 }, _prefix: :mfa
 
@@ -61,10 +62,6 @@ module UserMultifactorMethods
       return false if strong_mfa_level?
 
       rubygems.mfa_required.any?
-    end
-
-    def verify_webauthn_otp(otp)
-      webauthn_verification&.verify_otp(otp)
     end
   end
 

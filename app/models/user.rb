@@ -1,6 +1,5 @@
 class User < ApplicationRecord
   include UserMultifactorMethods
-  include UserWebauthnMethods
   include Clearance::User
   include Gravtastic
   is_gravtastic default: "retro"
