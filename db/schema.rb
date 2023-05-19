@@ -309,7 +309,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_182503) do
     t.string "blocked_email"
     t.string "webauthn_id"
     t.string "full_name"
-    t.string "otp_seed"
+    t.string "totp_seed"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
