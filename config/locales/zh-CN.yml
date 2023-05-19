@@ -127,7 +127,7 @@ zh-CN:
       migrating_link_text: 迁移
       mine: 我的 Gem
       my_subscriptions: 订阅
-      no_owned_html: 您还没有发布过任何 Gem。可以看看 %{creating_link} 指南，或从 RubyForge %{migrating_link} 迁移一个 Gem。
+      no_owned_html: 您还没有发布过任何 Gem。可以看看 %{creating_link} 指南，或从 RubyForge %{migrating_link} 一个 Gem。
       no_subscriptions_html: 您没有订阅任何 Gem，访问 %{gem_link} 订阅一个！
       title: 仪表盘
   dependencies:
