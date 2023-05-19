@@ -845,10 +845,10 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context "when mfa_seed is set" do
-    should "set otp_seed to the same value" do
+    should "set totp_seed to the same value" do
       user = create(:user, mfa_seed: ROTP::Base32.random_base32)
 
-      assert_equal user.mfa_seed, user.otp_seed
+      assert_equal user.mfa_seed, user.totp_seed
     end
   end
 end

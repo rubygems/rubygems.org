@@ -74,11 +74,11 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "mfa_seed" => [user_attributes[:mfa_seed], ""],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
-              "otp_seed" => [user_attributes[:otp_seed], ""],
+              "totp_seed" => [user_attributes[:totp_seed], ""],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password]
             },
             "unchanged" => user.attributes
-              .except("mfa_level", "updated_at", "mfa_seed", "mfa_recovery_codes", "otp_seed", "encrypted_password")
+              .except("mfa_level", "updated_at", "mfa_seed", "mfa_recovery_codes", "totp_seed", "encrypted_password")
               .transform_values(&:as_json)
           }
         },
@@ -143,7 +143,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "otp_seed" => [user_attributes[:otp_seed], ""],
+              "totp_seed" => [user_attributes[:totp_seed], ""],
               "mfa_seed" => [user_attributes[:mfa_seed], ""],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
@@ -160,7 +160,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_recovery_codes",
-                "otp_seed",
+                "totp_seed",
                 "mfa_seed",
                 "remember_token",
                 "updated_at"
@@ -419,7 +419,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "otp_seed" => [user_attributes[:otp_seed], ""],
+              "totp_seed" => [user_attributes[:totp_seed], ""],
               "mfa_seed" => [user_attributes[:mfa_seed], ""],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
@@ -436,7 +436,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_recovery_codes",
-                "otp_seed",
+                "totp_seed",
                 "mfa_seed",
                 "remember_token",
                 "updated_at"

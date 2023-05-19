@@ -546,18 +546,18 @@
 <text text-anchor="start" x="2328" y="-853" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="2234" y="-840" font-family="Arial" font-size="10.00">mfa_seed </text>
 <text text-anchor="start" x="2280" y="-840" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2234" y="-827" font-family="Arial" font-size="10.00">otp_seed </text>
-<text text-anchor="start" x="2277" y="-827" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2234" y="-814" font-family="Arial" font-size="10.00">remember_token </text>
-<text text-anchor="start" x="2310" y="-814" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="2234" y="-801" font-family="Arial" font-size="10.00">remember_token_expires_at </text>
-<text text-anchor="start" x="2361" y="-801" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="2234" y="-788" font-family="Arial" font-size="10.00">salt </text>
-<text text-anchor="start" x="2253" y="-788" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="2234" y="-775" font-family="Arial" font-size="10.00">token </text>
-<text text-anchor="start" x="2262" y="-775" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="2234" y="-762" font-family="Arial" font-size="10.00">token_expires_at </text>
-<text text-anchor="start" x="2312" y="-762" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="2234" y="-827" font-family="Arial" font-size="10.00">remember_token </text>
+<text text-anchor="start" x="2310" y="-827" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="2234" y="-814" font-family="Arial" font-size="10.00">remember_token_expires_at </text>
+<text text-anchor="start" x="2361" y="-814" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="2234" y="-801" font-family="Arial" font-size="10.00">salt </text>
+<text text-anchor="start" x="2253" y="-801" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="2234" y="-788" font-family="Arial" font-size="10.00">token </text>
+<text text-anchor="start" x="2262" y="-788" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="2234" y="-775" font-family="Arial" font-size="10.00">token_expires_at </text>
+<text text-anchor="start" x="2312" y="-775" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="2234" y="-762" font-family="Arial" font-size="10.00">totp_seed </text>
+<text text-anchor="start" x="2280" y="-762" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="2234" y="-749" font-family="Arial" font-size="10.00">twitter_username </text>
 <text text-anchor="start" x="2313" y="-749" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="2234" y="-736" font-family="Arial" font-size="10.00">unconfirmed_email </text>
@@ -801,18 +801,18 @@
 <text text-anchor="start" x="5713" y="-853" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="5619" y="-840" font-family="Arial" font-size="10.00">mfa_seed </text>
 <text text-anchor="start" x="5665" y="-840" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="5619" y="-827" font-family="Arial" font-size="10.00">otp_seed </text>
-<text text-anchor="start" x="5662" y="-827" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="5619" y="-814" font-family="Arial" font-size="10.00">remember_token </text>
-<text text-anchor="start" x="5695" y="-814" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="5619" y="-801" font-family="Arial" font-size="10.00">remember_token_expires_at </text>
-<text text-anchor="start" x="5746" y="-801" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="5619" y="-788" font-family="Arial" font-size="10.00">salt </text>
-<text text-anchor="start" x="5638" y="-788" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="5619" y="-775" font-family="Arial" font-size="10.00">token </text>
-<text text-anchor="start" x="5647" y="-775" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
-<text text-anchor="start" x="5619" y="-762" font-family="Arial" font-size="10.00">token_expires_at </text>
-<text text-anchor="start" x="5697" y="-762" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="5619" y="-827" font-family="Arial" font-size="10.00">remember_token </text>
+<text text-anchor="start" x="5695" y="-827" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="5619" y="-814" font-family="Arial" font-size="10.00">remember_token_expires_at </text>
+<text text-anchor="start" x="5746" y="-814" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="5619" y="-801" font-family="Arial" font-size="10.00">salt </text>
+<text text-anchor="start" x="5638" y="-801" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="5619" y="-788" font-family="Arial" font-size="10.00">token </text>
+<text text-anchor="start" x="5647" y="-788" font-family="Arial Italic" font-size="10.00" fill="#999999">string (128)</text>
+<text text-anchor="start" x="5619" y="-775" font-family="Arial" font-size="10.00">token_expires_at </text>
+<text text-anchor="start" x="5697" y="-775" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="5619" y="-762" font-family="Arial" font-size="10.00">totp_seed </text>
+<text text-anchor="start" x="5665" y="-762" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="5619" y="-749" font-family="Arial" font-size="10.00">twitter_username </text>
 <text text-anchor="start" x="5698" y="-749" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="5619" y="-736" font-family="Arial" font-size="10.00">unconfirmed_email </text>
