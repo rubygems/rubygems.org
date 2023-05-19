@@ -28,7 +28,7 @@ class ApiKey < ApplicationRecord
 
   def mfa_authorized?(otp)
     return true unless mfa_enabled?
-    user.api_otp_verified?(otp)
+    user.api_mfa_verified?(otp)
   end
 
   def mfa_enabled?
