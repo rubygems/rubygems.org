@@ -14,7 +14,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def create
-    current_user.verify_and_enable_mfa!(@seed, :ui_and_api, otp_param, @expire)
+    current_user.verify_and_enable_totp!(@seed, :ui_and_api, otp_param, @expire)
     if current_user.errors.any?
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_settings_url
@@ -76,7 +76,7 @@ class MultifactorAuthsController < ApplicationController
     case level_param
     when "disabled"
       flash[:success] = t("multifactor_auths.destroy.success")
-      current_user.disable_mfa!
+      current_user.disable_totp!
     when "ui_only"
       flash[:error] = t("multifactor_auths.ui_only_warning")
     else

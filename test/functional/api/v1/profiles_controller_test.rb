@@ -112,7 +112,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
           context "when mfa is enabled" do
             context "on `ui_only` level" do
               setup do
-                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+                @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
                 get :me, format: format
               end
 
@@ -128,7 +128,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
             context "on `ui_and_gem_signin` level" do
               setup do
-                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+                @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
                 get :me, format: format
               end
 
@@ -142,7 +142,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
             context "on `ui_and_api` level" do
               setup do
-                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+                @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
                 get :me, format: format
               end
 

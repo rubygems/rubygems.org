@@ -216,7 +216,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "When mfa for UI and API is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
       end
 
       context "On post to create for new gem without OTP" do
@@ -254,7 +254,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "When mfa for UI and gem signin is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
       end
 
       context "Api key has mfa enabled" do
@@ -476,7 +476,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "new gem with correct OTP" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
         post :create, body: gem_file("mfa-required-1.0.0.gem").read
       end
@@ -505,7 +505,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user with mfa" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           post :create, body: gem_file("mfa-required-1.0.0.gem").read
         end
@@ -539,7 +539,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user with mfa" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           post :create, body: gem_file("test-1.0.0.gem").read
         end
@@ -581,7 +581,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user on `ui_only` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           post :create, body: gem_file("test-1.0.0.gem").read
         end
 
@@ -601,7 +601,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_gem_signin` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           post :create, body: gem_file("test-1.0.0.gem").read
         end
 
@@ -614,7 +614,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_api` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           post :create, body: gem_file("test-1.0.0.gem").read
         end
@@ -651,7 +651,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user on `ui_only` mfa level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           post :create, body: gem_file("test-1.0.0.gem").read
         end
 
@@ -670,7 +670,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_gem_signin` mfa level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           post :create, body: gem_file("test-1.0.0.gem").read
         end
@@ -685,7 +685,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_api` mfa level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           post :create, body: gem_file("test-1.0.0.gem").read
         end

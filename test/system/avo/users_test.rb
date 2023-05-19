@@ -29,7 +29,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     sign_in_as admin_user
 
     user = create(:user)
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     user_attributes = user.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
@@ -97,7 +97,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     sign_in_as admin_user
 
     user = create(:user)
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     user_attributes = user.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
@@ -247,7 +247,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     rubygem = ownership.rubygem
     version = create(:version, rubygem: rubygem)
 
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     version_attributes = version.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
@@ -332,7 +332,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     security_user = create(:user, email: "security@rubygems.org")
 
     user = create(:user)
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     user_attributes = user.attributes.with_indifferent_access
 
     rubygem = create(:rubygem)

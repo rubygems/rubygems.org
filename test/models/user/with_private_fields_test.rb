@@ -25,7 +25,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
       context "when mfa is enabled" do
         context "on `ui_only` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           end
 
           should "include warning in user json" do
@@ -40,7 +40,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
 
         context "on `ui_and_gem_signin` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           end
 
           should "not include warning in user json" do
@@ -53,7 +53,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
 
         context "on `ui_and_api` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           end
 
           should "not include warning in user json" do

@@ -113,7 +113,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       context "when mfa for UI and API is enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         end
 
         context "array of emails" do
@@ -174,7 +174,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       context "when mfa for UI only is enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
         end
 
         context "api key has mfa enabled" do
@@ -253,7 +253,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "api user has enabled mfa" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           end
 
@@ -376,7 +376,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_only` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           end
 
           should "block adding the owner" do
@@ -397,7 +397,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_gem_signin` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           end
 
           should "not show error message" do
@@ -411,7 +411,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_api` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           end
 
@@ -449,7 +449,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_only` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           end
 
           should "include change mfa level warning" do
@@ -470,7 +470,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_gem_signin` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           end
 
           should "not include MFA warnings" do
@@ -485,7 +485,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_api` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           end
 
@@ -542,7 +542,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       context "when mfa for UI and API is enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         end
 
         context "removing gem owner without OTP" do
@@ -639,7 +639,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "api user has enabled mfa" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           end
 
@@ -742,7 +742,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_only` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           end
 
           should "block adding the owner" do
@@ -763,7 +763,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_gem_signin` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           end
 
           should "not show error message" do
@@ -777,7 +777,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_api` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           end
 
@@ -815,7 +815,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_only` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           end
 
           should "include change mfa level warning" do
@@ -836,7 +836,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_gem_signin` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           end
 
           should "not include mfa warnings" do
@@ -851,7 +851,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "by user on `ui_and_api` level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           end
 
