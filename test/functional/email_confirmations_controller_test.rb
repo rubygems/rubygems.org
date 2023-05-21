@@ -105,7 +105,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     context "user has mfa enabled" do
       setup do
         @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
       end
 
       context "when OTP is correct" do
@@ -473,7 +473,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
         context "user has mfa set to weak level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           end
 
           context "on GET to update" do
@@ -526,7 +526,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
         context "user has MFA set to strong level, expect normal behaviour" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           end
 
           context "on GET to update" do

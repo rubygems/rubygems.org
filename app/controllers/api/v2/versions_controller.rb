@@ -3,6 +3,8 @@ class Api::V2::VersionsController < Api::BaseController
 
   def show
     return unless stale?(@rubygem)
+    cache_expiry_headers
+    set_surrogate_key "gem/#{@rubygem.name}"
 
     version = @rubygem.public_version_payload(version_params[:number], version_params[:platform])
     if version

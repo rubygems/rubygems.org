@@ -223,16 +223,21 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       travel_to Time.utc(2023, 3, 29, 0, 5)
     end
 
-    context "with empty gems param --> JSON" do
-      setup do
+    context "with Java user agent" do
+      should "return 200" do
+        request.user_agent = "Java/1.2.3"
         get :index, params: { gems: "" }, format: "json"
-      end
 
+        assert_response :success
+        assert_equal "x-dependency-api-allowed", @response.headers["Vary"]
+      end
+    end
+
+    context "with empty gems param --> JSON" do
       should "return 404" do
-        assert_response :not_found
-      end
+        get :index, params: { gems: "" }, format: "json"
 
-      should "return body" do
+        assert_response :not_found
         result = {
           "error" => "The dependency API is going away. See " \
                      "https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html " \
@@ -241,19 +246,33 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         }
 
         assert_equal result, JSON.load(response.body)
+        assert_equal "x-dependency-api-allowed", @response.headers["Vary"]
+      end
+    end
+
+    context "with gems param and Accept --> JSON" do
+      should "return 404" do
+        request.headers["Accept"] = "application/json"
+        get :index, params: { gems: "testgem" }
+
+        assert_response :not_found
+        result = {
+          "error" => "The dependency API is going away. See " \
+                     "https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html " \
+                     "for more information",
+          "code" => 404
+        }
+
+        assert_equal result, JSON.load(response.body)
+        assert_equal "Accept, x-dependency-api-allowed", @response.headers["Vary"]
       end
     end
 
     context "with gems --> Marshal" do
-      setup do
+      should "return 404" do
         get :index, params: { gems: "testgem" }, format: "marshal"
-      end
 
-      should "return 200" do
         assert_response :not_found
-      end
-
-      should "return error body" do
         assert_equal "The dependency API is going away. See " \
                      "https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html " \
                      "for more information",

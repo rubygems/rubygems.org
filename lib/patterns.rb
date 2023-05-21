@@ -1,6 +1,7 @@
 module Patterns
   extend ActiveSupport::Concern
 
+  JAVA_HTTP_USER_AGENT  = /^java/i
   SPECIAL_CHARACTERS    = ".-_".freeze
   ALLOWED_CHARACTERS    = "[A-Za-z0-9#{Regexp.escape(SPECIAL_CHARACTERS)}]+".freeze
   ROUTE_PATTERN         = /#{ALLOWED_CHARACTERS}/

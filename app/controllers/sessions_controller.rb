@@ -143,7 +143,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def login_conditions_met?
-    @user&.mfa_enabled? && @user&.ui_otp_verified?(params[:otp]) && session_active?
+    @user&.mfa_enabled? && @user&.ui_mfa_verified?(params[:otp]) && session_active?
   end
 
   def record_mfa_login_duration(mfa_type:)

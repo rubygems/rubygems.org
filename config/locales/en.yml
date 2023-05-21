@@ -230,6 +230,14 @@ en:
       subject: Security device removed on RubyGems.org
       title: SECURITY DEVICE REMOVED
       subtitle: Hi %{handle}!
+    mfa_enabled:
+      subject: Multi-factor authentication enabled on RubyGems.org
+      title: MFA ENABLED
+      subtitle: Hi %{handle}!
+    mfa_disabled:
+      subject: Multi-factor authentication disabled on RubyGems.org
+      title: MFA DISABLED
+      subtitle: Hi %{handle}!
     email_reset_update:
       subject: You have requested email address update on RubyGems.org
       title: EMAIL UPDATE REQUESTED

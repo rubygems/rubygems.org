@@ -225,6 +225,14 @@ ja:
       subject:
       title:
       subtitle:
+    mfa_enabled:
+      subject:
+      title:
+      subtitle:
+    mfa_disabled:
+      subject:
+      title:
+      subtitle:
     email_reset_update:
       subject:
       title:

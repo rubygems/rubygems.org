@@ -75,7 +75,7 @@ class PasswordsControllerTest < ActionController::TestCase
     end
 
     context "with mfa enabled" do
-      setup { @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only) }
+      setup { @user.enable_totp!(ROTP::Base32.random_base32, :ui_only) }
 
       context "when OTP is correct" do
         setup do

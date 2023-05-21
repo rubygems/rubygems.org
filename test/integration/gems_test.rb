@@ -102,7 +102,7 @@ class GemsSystemTest < SystemTest
   end
 
   test "shows owners without mfa when logged in as owner" do
-    @user.enable_mfa!("some-seed", "ui_and_api")
+    @user.enable_totp!("some-seed", "ui_and_api")
     user_without_mfa = create(:user, mfa_level: "disabled")
 
     create(:ownership, rubygem: @rubygem, user: @user)
@@ -115,7 +115,7 @@ class GemsSystemTest < SystemTest
   end
 
   test "show mfa enabled when logged in as owner but everyone has mfa enabled" do
-    @user.enable_mfa!("some-seed", "ui_and_api")
+    @user.enable_totp!("some-seed", "ui_and_api")
     user_with_mfa = create(:user, mfa_level: "ui_only")
 
     create(:ownership, rubygem: @rubygem, user: @user)
@@ -128,7 +128,7 @@ class GemsSystemTest < SystemTest
   end
 
   test "does not show owners without mfa when not logged in as owner" do
-    @user.enable_mfa!("some-seed", "ui_and_api")
+    @user.enable_totp!("some-seed", "ui_and_api")
     user_without_mfa = create(:user, mfa_level: "disabled")
 
     create(:ownership, rubygem: @rubygem, user: @user)
