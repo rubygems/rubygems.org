@@ -12,19 +12,50 @@ jobs:
     name: Rubocop
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-    - uses: ruby/setup-ruby@7d546f4868fb108ed378764d873683f920672ae2 # v1.149.0
-      with:
-        bundler-cache: true
-    - name: Rubocop
-      run: bundle exec rubocop
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: ruby/setup-ruby@7d546f4868fb108ed378764d873683f920672ae2 # v1.149.0
+        with:
+          bundler-cache: true
+      - name: Rubocop
+        run: bundle exec rubocop
   brakeman:
     name: Brakeman
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-    - uses: ruby/setup-ruby@7d546f4868fb108ed378764d873683f920672ae2 # v1.149.0
-      with:
-        bundler-cache: true
-    - name: Brakeman
-      run: bundle exec brakeman
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: ruby/setup-ruby@7d546f4868fb108ed378764d873683f920672ae2 # v1.149.0
+        with:
+          bundler-cache: true
+      - name: Brakeman
+        run: bundle exec brakeman
+  kubeconform:
+    name: Kubeconform
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        kubernetes_version: ["1.22.0"]
+        environment:
+          - staging
+          - production
+    steps:
+      - name: login to Github Packages
+        run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: ruby/setup-ruby@d2b39ad0b52eca07d23f3aa14fdf2a3fcc1f411c # v1.148.0
+        with:
+          bundler-cache: true
+      - name: krane render
+        run: |
+          gem exec --silent krane render -f config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT --current-sha=$REVISION > config/deploy/$ENVIRONMENT.rendered.yaml
+        env:
+          ENVIRONMENT: "${{ matrix.environment }}"
+          REVISION: "${{ github.sha }}"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "${{ matrix.environment }}.rendered.yaml"
+          path: "config/deploy/${{ matrix.environment }}.rendered.yaml"
+      - name: kubeconform
+        uses: docker://ghcr.io/yannh/kubeconform:v0.6.1
+        with:
+          entrypoint: "/kubeconform"
+          args: "-strict -summary -output json --kubernetes-version ${{ matrix.kubernetes_version }} config/deploy/${{ matrix.environment }}.rendered.yaml"
