@@ -595,6 +595,7 @@ ja:
       total_downloads: 累計ダウンロード数
       total_gems: Gem総数
       total_users: ユーザー総数
+      ranking:
   users:
     create:
       email_sent: 確認メールがあなたのメールアドレスに送信されました。

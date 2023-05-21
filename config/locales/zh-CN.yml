@@ -592,6 +592,7 @@ zh-CN:
       total_downloads: 下载总次数
       total_gems: Gems 总数
       total_users: 用户总数
+      ranking:
   users:
     create:
       email_sent: 确认邮件已发送到您的电子邮件地址。
