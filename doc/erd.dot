@@ -320,6 +320,7 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="totp_seed">totp_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
@@ -349,6 +350,7 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
   <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="totp_seed">totp_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
