@@ -71,7 +71,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
-    amazing_print (1.4.0)
+    amazing_print (1.5.0)
     android_key_attestation (0.3.0)
     argon2 (2.1.1)
       ffi (~> 1.14)
