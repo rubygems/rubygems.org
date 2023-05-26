@@ -4,7 +4,7 @@ class SignInTest < SystemTest
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
     @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                  mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
+                  mfa_level: :ui_only, totp_seed: "thisisonetotpseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
   end
 
@@ -74,7 +74,7 @@ class SignInTest < SystemTest
     assert page.has_content? "Multi-factor authentication"
 
     within(".mfa-form") do
-      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
+      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
       click_button "Verify code"
     end
 
@@ -91,7 +91,7 @@ class SignInTest < SystemTest
 
     travel 30.minutes do
       within(".mfa-form") do
-        fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
+        fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
         click_button "Verify code"
       end
 
@@ -261,7 +261,7 @@ class SignInTest < SystemTest
     assert page.has_content? "Multi-factor authentication"
 
     within(".mfa-form") do
-      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
+      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
       click_button "Verify code"
     end
 

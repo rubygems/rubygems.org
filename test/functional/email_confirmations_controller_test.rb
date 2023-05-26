@@ -111,7 +111,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       context "when OTP is correct" do
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should redirect_to("the homepage") { root_url }
@@ -141,7 +141,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
           travel 16.minutes do
-            post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
         end
 

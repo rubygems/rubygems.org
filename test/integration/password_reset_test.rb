@@ -90,7 +90,7 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
-    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -105,7 +105,7 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
-    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     travel 16.minutes do
       click_button "Authenticate"
 

@@ -32,9 +32,9 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "on POST to create mfa" do
         setup do
           @seed = ROTP::Base32.random_base32
-          @controller.session[:mfa_seed] = @seed
-          @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
-          post :create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          @controller.session[:totp_seed] = @seed
+          @controller.session[:totp_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
+          post :create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should respond_with :redirect
@@ -84,7 +84,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           context "when redirect url is not set" do
             setup do
               put :update, params: { level: "ui_and_api" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the settings page") { edit_settings_path }
@@ -103,7 +103,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             setup do
               @controller.session["mfa_redirect_uri"] = profile_api_keys_path
               put :update, params: { level: "ui_and_api" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the api keys index") { profile_api_keys_path }
@@ -114,7 +114,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           context "when redirect url is not set" do
             setup do
               put :update, params: { level: "ui_and_gem_signin" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the settings page") { edit_settings_path }
@@ -133,7 +133,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             setup do
               @controller.session["mfa_redirect_uri"] = profile_api_keys_path
               put :update, params: { level: "ui_and_api" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the api keys index") { profile_api_keys_path }
@@ -166,7 +166,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         context "when mfa level is invalid" do
           setup do
             put :update, params: { level: "disabled" }
-            post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
 
           should "set flash error" do
@@ -181,7 +181,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             get :update, params: { level: "ui_and_api" }
 
             travel 16.minutes do
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
           end
 
@@ -233,7 +233,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             @controller.session["mfa_redirect_uri"] = edit_settings_path
 
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-              delete :destroy, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+              delete :destroy, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
           end
 
@@ -302,8 +302,8 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "on POST to create totp mfa" do
         setup do
           @seed = ROTP::Base32.random_base32
-          @controller.session[:mfa_seed] = @seed
-          @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
+          @controller.session[:totp_seed] = @seed
+          @controller.session[:totp_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
           @recovery_codes = @user.mfa_recovery_codes
           perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
@@ -620,13 +620,13 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "on POST to create totp mfa" do
         setup do
           @seed = ROTP::Base32.random_base32
-          @controller.session[:mfa_seed] = @seed
+          @controller.session[:totp_seed] = @seed
         end
 
         context "when qr-code is not expired" do
           setup do
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-              @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
+              @controller.session[:totp_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
               post :create, params: { otp: ROTP::TOTP.new(@seed).now }
             end
           end
@@ -650,7 +650,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context "when qr-code is expired" do
           setup do
-            @controller.session[:mfa_seed_expire] = 1.minute.ago
+            @controller.session[:totp_seed_expire] = 1.minute.ago
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
 
@@ -763,7 +763,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         setup do
           @controller.session["mfa_redirect_uri"] = profile_api_keys_path
           put :update, params: { level: "ui_and_api" }
-          post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should redirect_to("the api keys index") { profile_api_keys_path }
