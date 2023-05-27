@@ -28,6 +28,16 @@ staging:
   s3_compact_index_bucket: compact-index.oregon.staging.s3.rubygems.org
   versions_file_location: "./config/versions.list"
 
+dev:
+  protocol: https
+  host: dev.rubygems.org
+  s3_bucket: oregon.dev.s3.rubygems.org
+  s3_region: us-west-2
+  s3_endpoint: s3-us-west-2.amazonaws.com
+  s3_contents_bucket: contents.oregon.dev.s3.rubygems.org
+  s3_compact_index_bucket: compact-index.oregon.dev.s3.rubygems.org
+  versions_file_location: "./config/versions.list"
+
 production:
   protocol: https
   host: rubygems.org
