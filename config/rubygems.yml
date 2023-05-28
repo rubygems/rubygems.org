@@ -38,12 +38,3 @@ production:
   s3_compact_index_bucket: compact-index.oregon.production.s3.rubygems.org
   versions_file_location: "./config/versions.list"
   separate_admin_host: rubygems.team
-
-webauthn-review:
-  protocol: https
-  host: webauthn-review.rubygems.org
-  s3_bucket: oregon.webauthn-review.s3.rubygems.org
-  s3_region: us-west-2
-  s3_endpoint: s3-us-west-2.amazonaws.com
-  s3_contents_bucket: contents.oregon.webauthn-review.s3.rubygems.org
-  versions_file_location: "./config/versions.list"
