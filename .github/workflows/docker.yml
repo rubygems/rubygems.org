@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - safari-manual-webauthn
 permissions:
   contents: read
   id-token: write
