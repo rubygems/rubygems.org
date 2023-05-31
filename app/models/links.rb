@@ -31,9 +31,15 @@ class Links
 
   delegate :keys, to: :links
 
+  def unique_links
+    links.uniq do |_short, long|
+      send(long)
+    end
+  end
+
   def each
     return enum_for(:each) unless block_given?
-    links.each do |short, long|
+    unique_links.each do |short, long|
       value = send(long)
       yield short, value if value
     end
