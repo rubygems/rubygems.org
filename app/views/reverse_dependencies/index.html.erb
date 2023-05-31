@@ -1,22 +1,26 @@
 <% content_for :title do %>
-  <div class="l-wrap--b">
-    <h1 class="t-display page__heading page__heading--small">
-      <%= t('.title', name: @rubygem.name) %>
-      <i class="page__subheading page__subheading--block"><%= t(".subtitle", name: @rubygem.name) %></i>
-    </h1>
-  </div>
+  <h1 class="t-display page__heading page__heading--small">
+    <%= t('.title', name: @rubygem.name) %>
+    <i class="page__subheading page__subheading--block"><%= t(".subtitle", name: @rubygem.name) %></i>
+  </h1>
 <% end %>
 
 <div class="l-overflow">
-  <div class="l-colspan--l colspan--l--has-border">
-    <header class="gems__header push">
-      <%= render "search", rubygem: @rubygem %>
-    </header>
+  <% if @reverse_dependencies.present? %>
+    <div class="l-colspan--l colspan--l--has-border">
+      <header class="push push--bottom-s">
+        <%= render "search", rubygem: @rubygem %>
+      </header>
 
-    <div class="reverse__dependencies">
-      <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
+      <div class="reverse__dependencies">
+        <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
+      </div>
+      <%= plain_paginate @reverse_dependencies %>
     </div>
-    <%= plain_paginate @reverse_dependencies %>
-  </div>
+  <% else %>
+    <div class="gem__desc">
+      <p><%= t(".no_reverse_dependencies") %></p>
+    </div>
+  <% end %>
   <%= render 'rubygems/aside' %>
 </div>

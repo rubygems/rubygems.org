@@ -554,6 +554,7 @@ ja:
     index:
       title: "%{name}の被依存性"
       subtitle:
+      no_reverse_dependencies:
     search:
       search_reverse_dependencies_html: 被依存性の中から検索…
   searches:

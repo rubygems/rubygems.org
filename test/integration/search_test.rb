@@ -94,4 +94,25 @@ class SearchTest < SystemTest
       Kaminari.configure { |c| c.default_per_page = 30 }
     end
   end
+
+  test "searching for reverse dependencies" do
+    dependency = create(:rubygem)
+    create(:version, rubygem: dependency)
+
+    gem = create(:rubygem)
+    version_one = create(:version, rubygem: gem)
+    create(:dependency, :runtime, version: version_one, rubygem: dependency)
+
+    visit "/gems/#{dependency.name}/reverse_dependencies"
+
+    assert page.has_content? "Search reverse dependencies Gems…"
+    within ".reverse__dependencies" do
+      assert page.has_content? gem.name
+    end
+
+    visit "/gems/#{gem.name}/reverse_dependencies"
+
+    refute page.has_content? "Search reverse dependencies Gems…"
+    assert page.has_content? "This gem has no reverse dependencies"
+  end
 end
