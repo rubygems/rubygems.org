@@ -76,9 +76,9 @@ m_Dependency [label = <<table border="0" align="center" cellspacing="0.5" cellpa
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
-  <tr><td align="left" width="130" port="scope">scope <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="unresolved_name">unresolved_name <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">string (255) ∗</font></td></tr>
+  <tr><td align="left" width="130" port="scope">scope <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="unresolved_name">unresolved_name <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
 </table>
 >];
 m_GemDownload [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -218,12 +218,12 @@ m_Linkset [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="bugs">bugs <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="code">code <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="docs">docs <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="home">home <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="mail">mail <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="wiki">wiki <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="bugs">bugs <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="code">code <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="docs">docs <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="home">home <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="mail">mail <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="wiki">wiki <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
 </table>
 >];
 m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -275,8 +275,8 @@ m_Rubygem [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="indexed">indexed <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
-  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
-  <tr><td align="left" width="130" port="slug">slug <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string (255) ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="slug">slug <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
 </table>
 >];
 m_SendgridEvent [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -366,20 +366,20 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="canonical_number">canonical_number <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="cert_chain">cert_chain <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="description">description <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="full_name">full_name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="full_name">full_name <font face="Arial Italic" color="grey60">string (255) ∗ U</font></td></tr>
   <tr><td align="left" width="130" port="indexed">indexed <font face="Arial Italic" color="grey60">boolean</font></td></tr>
   <tr><td align="left" width="130" port="info_checksum">info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="latest">latest <font face="Arial Italic" color="grey60">boolean</font></td></tr>
-  <tr><td align="left" width="130" port="licenses">licenses <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="licenses">licenses <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="metadata">metadata <font face="Arial Italic" color="grey60">hstore ∗</font></td></tr>
-  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string</font></td></tr>
-  <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="position">position <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="prerelease">prerelease <font face="Arial Italic" color="grey60">boolean</font></td></tr>
-  <tr><td align="left" width="130" port="required_ruby_version">required_ruby_version <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="required_ruby_version">required_ruby_version <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="required_rubygems_version">required_rubygems_version <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">text</font></td></tr>
-  <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
   <tr><td align="left" width="130" port="size">size <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="summary">summary <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
