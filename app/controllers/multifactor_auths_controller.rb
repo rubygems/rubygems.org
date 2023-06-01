@@ -1,4 +1,6 @@
 class MultifactorAuthsController < ApplicationController
+  include MfaExpiryMethods
+
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :update
@@ -27,14 +29,15 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def update
-    if current_user.ui_mfa_verified?(otp_param)
-      handle_new_level_param
-      redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
-      session.delete("mfa_redirect_uri")
-    else
-      flash[:error] = t("multifactor_auths.incorrect_otp")
-      redirect_to edit_settings_path
-    end
+    session[:level] = level_param
+    @user = current_user
+
+    setup_mfa_authentication
+    setup_webauthn_authentication
+
+    create_new_mfa_expiry
+
+    render template: "multifactor_auths/mfa_prompt"
   end
 
   private
@@ -69,6 +72,23 @@ class MultifactorAuthsController < ApplicationController
     %i[mfa_seed mfa_seed_expire].each do |key|
       session.delete(key)
     end
+  end
+
+  def setup_mfa_authentication
+    return if current_user.totp_disabled?
+    @form_mfa_url = nil # TODO
+  end
+
+  def setup_webauthn_authentication
+    return if current_user.webauthn_disabled?
+
+    @webauthn_verification_url = nil # TODO
+
+    @webauthn_options = current_user.webauthn_options_for_get
+
+    session[:webauthn_authentication] = {
+      "challenge" => @webauthn_options.challenge
+    }
   end
 
   # rubocop:disable Rails/ActionControllerFlashBeforeRender

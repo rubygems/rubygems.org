@@ -17,7 +17,7 @@
       </div>
   <% end %>
 
-  <% if @user.mfa_enabled? %>
+  <% if @user.totp_enabled? %>
     <%= form_tag @form_mfa_url, method: :post do %>
       <div class="text_field">
         <%= label_tag :otp, t("multifactor_auths.otp_code"), class: "form__label" %>
