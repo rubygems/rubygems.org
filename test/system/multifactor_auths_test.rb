@@ -109,8 +109,10 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
     assert page.has_content? "Edit settings"
 
-    fill_in "otp", with: @totp.now
     change_auth_level "UI and gem signin"
+    fill_in "otp", with: @totp.now
+
+    click_button "Authenticate"
 
     yield if block_given?
 

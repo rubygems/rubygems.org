@@ -145,10 +145,16 @@ class ActiveSupport::TestCase
     fill_in "Nickname", with: credential_nickname
     click_on "Register device"
 
+    click_on "[ copy ]"
+    check "ack"
+    click_on "Continue"
+
     find("div", text: credential_nickname, match: :first)
 
     find(:css, ".header__popup-link").click
     click_on "Sign out"
+
+    @authenticator
   end
 end
 
