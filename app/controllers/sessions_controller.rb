@@ -138,7 +138,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def setup_mfa_authentication
-    return if @user.mfa_disabled?
+    return if @user.totp_disabled?
     session[:mfa_user] = @user.id
   end
 

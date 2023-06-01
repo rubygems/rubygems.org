@@ -101,7 +101,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def setup_mfa_authentication
-    return if @user.mfa_disabled?
+    return if @user.totp_disabled?
     @form_mfa_url = mfa_update_email_confirmations_url(token: @user.confirmation_token)
   end
 
