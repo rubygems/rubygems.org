@@ -443,8 +443,10 @@ zh-TW:
         otp:
         disabled_html:
         go_settings: 註冊新裝置
-        enabled_html:
+        level_html:
+        enabled:
         update: 更新
+        disable:
         level:
           title: 多重驗證等級
           disabled: 停用

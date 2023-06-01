@@ -479,8 +479,10 @@ fr:
         otp:
         disabled_html:
         go_settings: Enregistrer un nouvel appareil
-        enabled_html:
+        level_html:
+        enabled:
         update:
+        disable:
         level:
           title:
           disabled:

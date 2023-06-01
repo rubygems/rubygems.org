@@ -442,8 +442,10 @@ zh-CN:
         otp:
         disabled_html:
         go_settings: 注册新装置
-        enabled_html:
+        level_html:
+        enabled:
         update: 更新
+        disable:
         level:
           title: 多重验证等级
           disabled: 停用

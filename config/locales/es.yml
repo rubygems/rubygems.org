@@ -477,8 +477,10 @@ es:
         otp:
         disabled_html:
         go_settings: Registrar un nuevo dispositivo
-        enabled_html:
+        level_html:
+        enabled:
         update: Actualizar
+        disable:
         level:
           title: Nivel de Autenticación de Múltiples Factores
           disabled: Desactivada

@@ -471,8 +471,10 @@ pt-BR:
         otp:
         disabled_html:
         go_settings:
-        enabled_html:
+        level_html:
+        enabled:
         update:
+        disable:
         level:
           title:
           disabled:
