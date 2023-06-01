@@ -11,10 +11,10 @@ module UserTotpMethods
 
   def disable_totp!
     self.mfa_seed = ""
-    self.mfa_recovery_codes = []
 
     if webauthn_disabled?
       self.mfa_level = "disabled"
+      self.mfa_recovery_codes = []
     end
 
     save!(validate: false)
