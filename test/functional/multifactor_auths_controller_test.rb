@@ -189,6 +189,30 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
         end
       end
+
+      context "on POST to webauthn_update" do
+        setup do
+          put :update, params: { level: "ui_and_api" }
+          post :webauthn_update
+        end
+
+        should redirect_to("the settings page") { edit_settings_path }
+
+        should "set flash error" do
+          assert_equal "You don't have any security devices enabled. " \
+                       "You have to associate a device to your account first.", flash[:error]
+        end
+
+        should "not update mfa level" do
+          assert_predicate @user.reload, :mfa_ui_only?
+        end
+
+        should "clear session variables" do
+          assert_nil @controller.session[:mfa_expires_at]
+          assert_nil @controller.session[:level]
+          assert_nil @controller.session[:mfa_redirect_uri]
+        end
+      end
     end
 
     context "when a webauthn device is enabled" do
@@ -244,6 +268,232 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should "clear session variables" do
           assert_nil @controller.session[:mfa_expires_at]
           assert_nil @controller.session[:level]
+        end
+      end
+
+      context "on POST to webauthn_update" do
+        setup do
+          @origin = "http://localhost:3000"
+          @rp_id = URI.parse(@origin).host
+          @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+          WebauthnHelpers.create_credential(
+            webauthn_credential: @webauthn_credential,
+            client: @client
+          )
+        end
+
+        context "when updating to ui and api" do
+          setup do
+            put :update, params: { level: "ui_and_api" }
+            @challenge = session[:webauthn_authentication]["challenge"]
+          end
+
+          context "redirect url is not set" do
+            setup do
+              post(
+                :webauthn_update,
+                params: {
+                  credentials:
+                    WebauthnHelpers.get_result(
+                      client: @client,
+                      challenge: @challenge
+                    )
+                }
+              )
+            end
+
+            should redirect_to("the settings page") { edit_settings_path }
+
+            should "update mfa level" do
+              assert_predicate @user.reload, :mfa_ui_and_api?
+            end
+
+            should "clear session variables" do
+              assert_nil @controller.session[:mfa_expires_at]
+              assert_nil @controller.session[:level]
+              assert_nil @controller.session[:webauthn_authentication]
+            end
+          end
+
+          context "when redirect url is set" do
+            setup do
+              @controller.session["mfa_redirect_uri"] = profile_api_keys_path
+              post(
+                :webauthn_update,
+                params: {
+                  credentials:
+                    WebauthnHelpers.get_result(
+                      client: @client,
+                      challenge: @challenge
+                    )
+                }
+              )
+            end
+
+            should redirect_to("the api keys index") { profile_api_keys_path }
+          end
+        end
+
+        context "when updating to ui and gem signin" do
+          setup do
+            put :update, params: { level: "ui_and_gem_signin" }
+            @challenge = session[:webauthn_authentication]["challenge"]
+          end
+
+          context "redirect url is not set" do
+            setup do
+              post(
+                :webauthn_update,
+                params: {
+                  credentials:
+                    WebauthnHelpers.get_result(
+                      client: @client,
+                      challenge: @challenge
+                    )
+                }
+              )
+            end
+
+            should redirect_to("the settings page") { edit_settings_path }
+
+            should "update mfa level" do
+              assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+            end
+
+            should "clear session variables" do
+              assert_nil @controller.session[:mfa_expires_at]
+              assert_nil @controller.session[:level]
+              assert_nil @controller.session[:webauthn_authentication]
+            end
+          end
+
+          context "when redirect url is set" do
+            setup do
+              @controller.session["mfa_redirect_uri"] = profile_api_keys_path
+              post(
+                :webauthn_update,
+                params: {
+                  credentials:
+                    WebauthnHelpers.get_result(
+                      client: @client,
+                      challenge: @challenge
+                    )
+                }
+              )
+            end
+
+            should redirect_to("the api keys index") { profile_api_keys_path }
+          end
+        end
+
+        context "when not providing credentials" do
+          setup do
+            put :update, params: { level: "ui_and_api" }
+            post :webauthn_update
+          end
+
+          should redirect_to("the settings page") { edit_settings_path }
+
+          should "set flash error" do
+            assert_equal "Credentials required", flash[:error]
+          end
+        end
+
+        context "when providing wrong credential" do
+          setup do
+            put :update, params: { level: "ui_and_api" }
+            @wrong_challenge = SecureRandom.hex
+            post(
+              :webauthn_update,
+              params: {
+                credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: @wrong_challenge
+                )
+              }
+            )
+          end
+
+          should redirect_to("the settings page") { edit_settings_path }
+
+          should "set flash notice" do
+            assert_equal "WebAuthn::ChallengeVerificationError", flash[:error]
+          end
+
+          should "clear session variables" do
+            assert_nil @controller.session[:mfa_expires_at]
+            assert_nil @controller.session[:level]
+            assert_nil @controller.session[:webauthn_authentication]
+          end
+        end
+
+        context "when webauthn session is expired" do
+          setup do
+            put :update, params: { level: "ui_and_api" }
+            @challenge = session[:webauthn_authentication]["challenge"]
+            travel 16.minutes do
+              post(
+                :webauthn_update,
+                params: {
+                  credentials:
+                  WebauthnHelpers.get_result(
+                    client: @client,
+                    challenge: @challenge
+                  )
+                }
+              )
+            end
+          end
+
+          should redirect_to("the settings page") { edit_settings_path }
+
+          should "set flash error" do
+            assert_equal "Your login page session has expired.", flash[:error]
+          end
+
+          should "clear session variables" do
+            assert_nil @controller.session[:mfa_expires_at]
+            assert_nil @controller.session[:level]
+            assert_nil @controller.session[:webauthn_authentication]
+          end
+        end
+
+        context "to update to invalid level" do
+          setup do
+            put :update, params: { level: "disabled" }
+            @challenge = session[:webauthn_authentication]["challenge"]
+          end
+
+          should "not update level" do
+            assert_no_changes -> { @user.reload.mfa_level } do
+              post(
+                :webauthn_update,
+                params: {
+                  credentials:
+                    WebauthnHelpers.get_result(
+                      client: @client,
+                      challenge: @challenge
+                    )
+                }
+              )
+            end
+          end
+
+          should "display flash error" do
+            post(
+              :webauthn_update,
+              params: {
+                credentials:
+                  WebauthnHelpers.get_result(
+                    client: @client,
+                    challenge: @challenge
+                  )
+              }
+            )
+
+            assert_equal "Invalid MFA level.", flash[:error]
+          end
         end
       end
     end
@@ -336,12 +586,26 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           assert_equal "You don't have an authenticator app enabled. You have to enable it first.", flash[:error]
         end
       end
+
+      context "on POST to webauthn_update" do
+        setup do
+          @controller.create_new_mfa_expiry
+          post :webauthn_update
+        end
+
+        should redirect_to("the settings page") { edit_settings_path }
+
+        should "set flash error" do
+          assert_equal "You don't have any security devices enabled. " \
+                       "You have to associate a device to your account first.", flash[:error]
+        end
+      end
     end
 
     context "when totp and webauthn are enabled" do
       setup do
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
-        create(:webauthn_credential, user: @user)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
       end
 
       context "on PUT to update mfa level" do
@@ -363,6 +627,41 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @controller.session["mfa_redirect_uri"] = profile_api_keys_path
           put :update, params: { level: "ui_and_api" }
           post :mfa_update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+        end
+
+        should redirect_to("the api keys index") { profile_api_keys_path }
+
+        should "update mfa level" do
+          assert_predicate @user.reload, :mfa_ui_and_api?
+        end
+
+        should "clear session variables" do
+          assert_nil @controller.session[:mfa_expires_at]
+          assert_nil @controller.session[:level]
+        end
+      end
+
+      context "on POST to webauthn_update" do
+        setup do
+          origin = "http://localhost:3000"
+          @rp_id = URI.parse(origin).host
+          @client = WebAuthn::FakeClient.new(origin, encoding: false)
+          WebauthnHelpers.create_credential(
+            webauthn_credential: @webauthn_credential,
+            client: @client
+          )
+          @controller.session["mfa_redirect_uri"] = profile_api_keys_path
+          put :update, params: { level: "ui_and_api" }
+          post(
+            :webauthn_update,
+            params: {
+              credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: session[:webauthn_authentication]["challenge"]
+                )
+            }
+          )
         end
 
         should redirect_to("the api keys index") { profile_api_keys_path }
@@ -402,38 +701,42 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @user.enable_totp!(@seed, :ui_only)
         end
 
-        # should "redirect user back to mfa_redirect_uri after successful mfa setup" do
-        #   @redirect_paths.each do |path|
-        #     session[:mfa_redirect_uri] = path
-        #     post :update, params: { otp: ROTP::TOTP.new(@seed).now, level: "ui_and_api" }
+        should "redirect user back to mfa_redirect_uri after successful mfa setup" do
+          @redirect_paths.each do |path|
+            session[:mfa_redirect_uri] = path
+            put :update, params: { level: "ui_and_api" }
+            put :mfa_update, params: { otp: ROTP::TOTP.new(@seed).now }
 
-        #     assert_redirected_to path
-        #     assert_nil session[:mfa_redirect_uri]
-        #   end
-        # end
+            assert_redirected_to path
+            assert_nil session[:mfa_redirect_uri]
+          end
+        end
 
-        # should "not redirect user back to mfa_redirect_uri after failed mfa setup, but mfa_redirect_uri unchanged" do
-        #   @redirect_paths.each do |path|
-        #     session[:mfa_redirect_uri] = path
-        #     post :update, params: { otp: "12345", level: "ui_and_api" }
+        should "not redirect user back to mfa_redirect_uri after failed mfa setup, but mfa_redirect_uri unchanged" do
+          @redirect_paths.each do |path|
+            session[:mfa_redirect_uri] = path
+            put :update, params: { level: "ui_and_api" }
+            put :mfa_update, params: { otp: "12345" }
 
-        #     assert_redirected_to edit_settings_path
-        #     assert_equal path, session[:mfa_redirect_uri]
-        #   end
-        # end
+            assert_redirected_to edit_settings_path
+            assert_equal path, session[:mfa_redirect_uri]
+          end
+        end
 
-        # should "redirect user back to mfa_redirect_uri after a failed setup + successful setup" do
-        #   @redirect_paths.each do |path|
-        #     session[:mfa_redirect_uri] = path
-        #     post :update, params: { otp: "12345", level: "ui_and_api" }
+        should "redirect user back to mfa_redirect_uri after a failed setup + successful setup" do
+          @redirect_paths.each do |path|
+            session[:mfa_redirect_uri] = path
+            put :update, params: { level: "ui_and_api" }
+            put :mfa_update, params: { otp: "12345" }
 
-        #     assert_redirected_to edit_settings_path
-        #     post :update, params: { otp: ROTP::TOTP.new(@seed).now, level: "ui_and_api" }
+            assert_redirected_to edit_settings_path
+            put :update, params: { level: "ui_and_api" }
+            put :mfa_update, params: { otp: ROTP::TOTP.new(@seed).now }
 
-        #     assert_redirected_to path
-        #     assert_nil session[:mfa_redirect_uri]
-        #   end
-        # end
+            assert_redirected_to path
+            assert_nil session[:mfa_redirect_uri]
+          end
+        end
       end
     end
   end

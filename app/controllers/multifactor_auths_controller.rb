@@ -1,13 +1,14 @@
 class MultifactorAuthsController < ApplicationController
   include MfaExpiryMethods
+  include WebauthnVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :update
   before_action :require_totp_enabled, only: %i[mfa_update]
   before_action :seed_and_expire, only: :create
-  before_action :verify_session_expiration, only: %i[mfa_update]
-  after_action :delete_mfa_level_update_session_variables, only: %i[mfa_update]
+  before_action :verify_session_expiration, only: %i[mfa_update webauthn_update]
+  after_action :delete_mfa_level_update_session_variables, only: %i[mfa_update webauthn_update]
   helper_method :issuer
 
   def new
@@ -48,6 +49,20 @@ class MultifactorAuthsController < ApplicationController
       update_level_and_redirect
     else
       redirect_to edit_settings_path, flash: { error: t("multifactor_auths.incorrect_otp") }
+    end
+  end
+
+  def webauthn_update
+    @user = current_user
+    unless @user.webauthn_enabled?
+      redirect_to edit_settings_path, flash: { error: t("multifactor_auths.require_webauthn_enabled") }
+      return
+    end
+
+    if webauthn_credential_verified?
+      update_level_and_redirect
+    else
+      redirect_to edit_settings_path, flash: { error: @webauthn_error }
     end
   end
 
@@ -101,7 +116,7 @@ class MultifactorAuthsController < ApplicationController
   def setup_webauthn_authentication
     return if current_user.webauthn_disabled?
 
-    @webauthn_verification_url = nil # TODO
+    @webauthn_verification_url = webauthn_update_multifactor_auth_url(token: current_user.confirmation_token)
 
     @webauthn_options = current_user.webauthn_options_for_get
 
