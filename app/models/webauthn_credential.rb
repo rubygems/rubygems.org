@@ -25,4 +25,9 @@ class WebauthnCredential < ApplicationRecord
     return unless user.count_webauthn_credentials == 1 && user.totp_disabled?
     user.update!(mfa_level: "ui_and_api")
   end
+
+  def set_user_mfa_level_destroy
+    return unless user.webauthn_credentials.empty? && user.totp_disabled?
+    user.update!(mfa_level: "disabled")
+  end
 end

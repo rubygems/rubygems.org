@@ -49,4 +49,40 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "after destroy" do
+    setup do
+      @webauthn_credential = create(:webauthn_credential, user: @user)
+    end
+
+    context "when user destroys a webauthn credential and totp is disabled" do
+      should "disable mfa" do
+        assert_changes -> { @user.reload.mfa_level }, from: "ui_and_api", to: "disabled" do
+          @webauthn_credential.destroy!
+        end
+      end
+    end
+
+    context "when user has totp is enabled and destroys a webauthn credential" do
+      setup do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+        @webauthn_credential.destroy!
+      end
+
+      should "not change user mfa level" do
+        assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+    end
+
+    context "when user has two webauthn credentials and totp is disabled" do
+      setup do
+        @webauthn_credential2 = create(:webauthn_credential, user: @user)
+        @webauthn_credential.destroy!
+      end
+
+      should "not change user mfa level" do
+        assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+    end
+  end
 end

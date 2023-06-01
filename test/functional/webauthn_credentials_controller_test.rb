@@ -274,5 +274,75 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
     end
 
     should redirect_to :edit_settings
+
+    context "when the user has no other webauthn credentials" do
+      setup do
+        @user = create(:user)
+        @credential = create(:webauthn_credential, user: @user)
+        sign_in_as @user
+
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          delete :destroy, params: { id: @credential.id }
+        end
+      end
+
+      should "set the users mfa_level to disabled" do
+        assert_equal "disabled", @user.reload.mfa_level
+      end
+    end
+
+    context "when the user has other webauthn credentials but no otp" do
+      setup do
+        @user = create(:user)
+        @credential1 = create(:webauthn_credential, user: @user)
+        @credential2 = create(:webauthn_credential, user: @user)
+        sign_in_as @user
+
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          delete :destroy, params: { id: @credential1.id }
+        end
+      end
+
+      should "not change the users mfa_level" do
+        assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+    end
+
+    context "when the user has one webauthn credential and totp" do
+      setup do
+        @user = create(:user)
+        @seed = ROTP::Base32.random_base32
+        @user.enable_totp!(@seed, :ui_and_api)
+        @credential = create(:webauthn_credential, user: @user)
+        sign_in_as @user
+
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          delete :destroy, params: { id: @credential.id }
+        end
+      end
+
+      should "not change the users mfa_level" do
+        assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+    end
+
+    context "when the user has other webauthn credentials and an otp" do
+      setup do
+        @user = create(:user)
+        @seed = ROTP::Base32.random_base32
+        @user.enable_totp!(@seed, :ui_and_api)
+        @credential1 = create(:webauthn_credential, user: @user)
+        @credential2 = create(:webauthn_credential, user: @user)
+        sign_in_as @user
+
+        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+          delete :destroy, params: { id: @credential1.id }
+        end
+      end
+
+      should "not change the users mfa_level" do
+        assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+    end
   end
 end

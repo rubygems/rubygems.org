@@ -56,6 +56,16 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
       assert_equal "Multi-factor authentication disabled on RubyGems.org", last_email.subject
       assert_equal [@user.email], last_email.to
     end
+
+    should "set mfa_level to disabled if webauthn is also disabled" do
+      assert_equal "disabled", @user.mfa_level
+    end
+
+    should "maintain the mfa_level if webauthn is enabled" do
+      @credential = create(:webauthn_credential, user: @user)
+
+      assert_equal "ui_and_api", @user.mfa_level
+    end
   end
 
   context "#verify_and_enable_totp!" do

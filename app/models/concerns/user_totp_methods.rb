@@ -10,9 +10,13 @@ module UserTotpMethods
   end
 
   def disable_totp!
-    mfa_disabled!
     self.mfa_seed = ""
     self.mfa_recovery_codes = []
+
+    if webauthn_disabled?
+      self.mfa_level = "disabled"
+    end
+
     save!(validate: false)
     Mailer.mfa_disabled(id, Time.now.utc).deliver_later
   end
