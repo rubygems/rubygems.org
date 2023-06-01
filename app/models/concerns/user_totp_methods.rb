@@ -1,6 +1,14 @@
 module UserTotpMethods
   extend ActiveSupport::Concern
 
+  def totp_enabled?
+    mfa_seed.present?
+  end
+
+  def totp_disabled?
+    mfa_seed.blank?
+  end
+
   def disable_totp!
     mfa_disabled!
     self.mfa_seed = ""

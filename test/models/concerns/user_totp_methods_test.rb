@@ -7,6 +7,34 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
+  context "#totp_enabled?" do
+    should "return true if totp is enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+
+      assert_predicate @user, :totp_enabled?
+    end
+
+    should "return false if totp is disabled" do
+      @user.disable_totp!
+
+      refute_predicate @user, :totp_enabled?
+    end
+  end
+
+  context "#totp_disabled?" do
+    should "return true if totp is disabled" do
+      @user.disable_totp!
+
+      assert_predicate @user, :totp_disabled?
+    end
+
+    should "return false if totp is enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+
+      refute_predicate @user, :totp_disabled?
+    end
+  end
+
   context "#disable_totp!" do
     setup do
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
