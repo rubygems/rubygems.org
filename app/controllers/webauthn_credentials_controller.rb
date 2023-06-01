@@ -28,6 +28,7 @@ class WebauthnCredentialsController < ApplicationController
   def destroy
     webauthn_credential = current_user.webauthn_credentials.find(params[:id])
     if webauthn_credential.destroy
+      set_recovery_codes_destroy
       flash[:notice] = t(".webauthn_credential.confirm_delete")
     else
       flash[:error] = webauthn_credential.errors.full_messages.to_sentence
@@ -65,5 +66,12 @@ class WebauthnCredentialsController < ApplicationController
     else
       render json: { redirect_url: edit_settings_url }
     end
+  end
+
+  def set_recovery_codes_destroy
+    return unless current_user.count_webauthn_credentials == 1 && current_user.totp_disabled?
+
+    current_user.mfa_recovery_codes = []
+    current_user.save!(validate: false)
   end
 end

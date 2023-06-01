@@ -280,7 +280,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
     should redirect_to :edit_settings
 
-    context "when the user has no other webauthn credentials" do
+    context "when the user has no other webauthn credentials and no otp" do
       setup do
         @user = create(:user)
         @credential = create(:webauthn_credential, user: @user)
@@ -294,6 +294,10 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       should "set the users mfa_level to disabled" do
         assert_equal "disabled", @user.reload.mfa_level
       end
+
+      should "remove recovery codes" do
+        assert_empty @user.reload.mfa_recovery_codes
+      end
     end
 
     context "when the user has other webauthn credentials but no otp" do
@@ -303,6 +307,8 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @credential2 = create(:webauthn_credential, user: @user)
         sign_in_as @user
 
+        @user_recovery_codes = @user.mfa_recovery_codes
+
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
           delete :destroy, params: { id: @credential1.id }
         end
@@ -310,6 +316,10 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
       should "not change the users mfa_level" do
         assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+
+      should "not change the users recovery codes" do
+        assert_equal @user_recovery_codes, @user.reload.mfa_recovery_codes
       end
     end
 
@@ -321,6 +331,8 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @credential = create(:webauthn_credential, user: @user)
         sign_in_as @user
 
+        @user_recovery_codes = @user.mfa_recovery_codes
+
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
           delete :destroy, params: { id: @credential.id }
         end
@@ -328,6 +340,10 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
       should "not change the users mfa_level" do
         assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+
+      should "not change the users recovery codes" do
+        assert_equal @user_recovery_codes, @user.reload.mfa_recovery_codes
       end
     end
 
@@ -340,6 +356,8 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @credential2 = create(:webauthn_credential, user: @user)
         sign_in_as @user
 
+        @user_recovery_codes = @user.mfa_recovery_codes
+
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
           delete :destroy, params: { id: @credential1.id }
         end
@@ -347,6 +365,10 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
       should "not change the users mfa_level" do
         assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+
+      should "not change the users recovery codes" do
+        assert_equal @user_recovery_codes, @user.reload.mfa_recovery_codes
       end
     end
   end
