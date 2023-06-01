@@ -340,7 +340,7 @@ en:
     incorrect_otp: Your OTP code is incorrect.
     session_expired: Your login page session has expired.
     otp_code: OTP code
-    require_mfa_disabled: Your multi-factor authentication has been enabled. To reconfigure multi-factor authentication, you'll have to disable it first.
+    require_totp_disabled: Your OTP based multi-factor authentication has already been enabled. To reconfigure your OTP based authentication, you'll have to remove it first.
     require_mfa_enabled: Your multi-factor authentication has not been enabled. You have to enable it first.
     require_totp_enabled: You don't have an authenticator app enabled. You have to enable it first.
     require_webauthn_enabled: You don't have any security devices enabled. You have to associate a device to your account first.

@@ -3,7 +3,7 @@ class MultifactorAuthsController < ApplicationController
   include WebauthnVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?
-  before_action :require_mfa_disabled, only: %i[new create]
+  before_action :require_totp_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :update
   before_action :require_totp_enabled, only: %i[mfa_update]
   before_action :seed_and_expire, only: :create
@@ -80,9 +80,9 @@ class MultifactorAuthsController < ApplicationController
     request.host || "rubygems.org"
   end
 
-  def require_mfa_disabled
-    return unless current_user.mfa_enabled?
-    flash[:error] = t("multifactor_auths.require_mfa_disabled")
+  def require_totp_disabled
+    return if current_user.totp_disabled?
+    flash[:error] = t("multifactor_auths.require_totp_disabled")
     redirect_to edit_settings_path
   end
 

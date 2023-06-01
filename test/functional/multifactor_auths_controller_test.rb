@@ -15,17 +15,25 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
       end
 
-      context "on GET to new mfa" do
+      context "on GET to new totp" do
         setup do
           get :new
         end
 
         should respond_with :redirect
         should redirect_to("the settings page") { edit_settings_path }
+
+        should "say TOTP is already enabled" do
+          assert_equal "Your OTP based multi-factor authentication has already been enabled. " \
+                       "To reconfigure your OTP based authentication, you'll have to remove it first.", flash[:error]
+        end
       end
 
       context "on POST to create mfa" do
         setup do
+          @seed = ROTP::Base32.random_base32
+          @controller.session[:mfa_seed] = @seed
+          @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
           post :create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
@@ -35,6 +43,11 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should "keep mfa enabled" do
           assert_predicate @user.reload, :mfa_enabled?
           assert_emails 0
+        end
+
+        should "say TOTP is already enabled" do
+          assert_equal "Your OTP based multi-factor authentication has already been enabled. " \
+                       "To reconfigure your OTP based authentication, you'll have to remove it first.", flash[:error]
         end
       end
 
@@ -219,6 +232,30 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       setup do
         @webauthn_credential = create(:webauthn_credential, user: @user)
         @user.update!(mfa_level: :ui_only)
+      end
+
+      context "on POST to create totp mfa" do
+        setup do
+          @seed = ROTP::Base32.random_base32
+          @controller.session[:mfa_seed] = @seed
+          @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
+
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+            post :create, params: { otp: ROTP::TOTP.new(@seed).now }
+          end
+        end
+
+        should respond_with :success
+
+        should "keep mfa enabled" do
+          assert_predicate @user.reload, :mfa_enabled?
+        end
+
+        should "send totp enabled email" do
+          assert_emails 1
+          assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
+          assert_equal [@user.email], last_email.to
+        end
       end
 
       context "on PUT to update mfa level" do
