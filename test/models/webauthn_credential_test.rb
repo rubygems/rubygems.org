@@ -10,4 +10,43 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
   should validate_presence_of(:nickname)
   should validate_presence_of(:sign_count)
   should validate_numericality_of(:sign_count).is_greater_than_or_equal_to(0)
+
+  setup do
+    @user = create(:user)
+  end
+
+  context "after create" do
+    context "when user creates a webauthn credential and totp is disabled" do
+      setup do
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+      end
+
+      should "set user mfa level to ui_and_api" do
+        assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+    end
+
+    context "when user has totp is enabled and creates a webauthn credential" do
+      setup do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+      end
+
+      should "not change user mfa level" do
+        assert_equal "ui_and_gem_signin", @user.reload.mfa_level
+      end
+    end
+
+    context "when user has two webauthn credentials and totp is disabled" do
+      setup do
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        @user.update!(mfa_level: "ui_and_gem_signin")
+        @webauthn_credential2 = create(:webauthn_credential, user: @user)
+      end
+
+      should "not change user mfa level" do
+        assert_equal "ui_and_gem_signin", @user.reload.mfa_level
+      end
+    end
+  end
 end

@@ -304,7 +304,6 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @seed = ROTP::Base32.random_base32
           @controller.session[:mfa_seed] = @seed
           @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
-
           perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
@@ -313,7 +312,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should respond_with :success
 
         should "keep mfa enabled" do
-          assert_predicate @user.reload, :mfa_enabled?
+          assert_predicate @user.reload, :mfa_ui_only?
         end
 
         should "send totp enabled email" do

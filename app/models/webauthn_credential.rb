@@ -7,7 +7,9 @@ class WebauthnCredential < ApplicationRecord
   validates :sign_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   after_create :send_creation_email
+  after_create :set_user_mfa_level_create
   after_destroy :send_deletion_email
+  after_destroy :set_user_mfa_level_destroy
 
   private
 
@@ -17,5 +19,10 @@ class WebauthnCredential < ApplicationRecord
 
   def send_deletion_email
     Mailer.webauthn_credential_removed(user_id, nickname, Time.now.utc).deliver_later
+  end
+
+  def set_user_mfa_level_create
+    return unless user.count_webauthn_credentials == 1 && user.totp_disabled?
+    user.update!(mfa_level: "ui_and_api")
   end
 end

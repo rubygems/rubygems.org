@@ -105,14 +105,44 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
   context "#enable_totp!" do
     setup do
       @seed = ROTP::Base32.random_base32
-      @level = :ui_and_api
-      @user.enable_totp!(@seed, @level)
     end
 
-    should "enable mfa" do
-      assert_equal @seed, @user.mfa_seed
-      assert_predicate @user, :mfa_ui_and_api?
-      assert_equal 10, @user.mfa_recovery_codes.length
+    context "if webauthn is disabled" do
+      should "enable mfa" do
+        assert_changes "@user.mfa_level", from: "disabled", to: "ui_and_api" do
+          @user.enable_totp!(@seed, "ui_and_api")
+        end
+      end
+
+      should "set mfa seed" do
+        assert_changes "@user.mfa_seed", from: nil, to: @seed do
+          @user.enable_totp!(@seed, "ui_and_api")
+        end
+      end
+
+      should "generate recovery codes" do
+        assert_changes "@user.mfa_recovery_codes.length", 10 do
+          @user.enable_totp!(@seed, "ui_and_api")
+        end
+      end
+    end
+
+    context "if webauthn is enabled" do
+      setup do
+        create(:webauthn_credential, user: @user)
+      end
+
+      should "not reset mfa level and recovery codes" do
+        assert_no_changes ["@user.mfa_level", "@user.mfa_recovery_codes"] do
+          @user.enable_totp!(@seed, "ui_and_gem_signin")
+        end
+      end
+
+      should "set mfa seed" do
+        @user.enable_totp!(@seed, "ui_and_gem_signin")
+
+        assert_equal @seed, @user.mfa_seed
+      end
     end
   end
 end
