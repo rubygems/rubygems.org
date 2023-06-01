@@ -360,8 +360,7 @@ es:
     incorrect_otp: Tu código OTP no es correcto.
     session_expired:
     otp_code: código OTP
-    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para
-      reconfigurarla, primero tendrás que desactivarla.
+    require_totp_disabled:
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
     require_totp_enabled:
@@ -393,6 +392,7 @@ es:
       copy:
       saved:
       note_html:
+      already_generated:
     destroy:
       success: Has desactivado exitosamente la autenticación de múltiples factores.
     update:
@@ -726,6 +726,8 @@ es:
     create_req:
     signin_to_create_html:
   webauthn_credentials:
+    callback:
+      success:
     recovery:
       continue:
       title:

@@ -818,6 +818,34 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to recovery" do
+      context "when show_recovery_codes is true" do
+        setup do
+          @controller.session[:show_recovery_codes] = true
+          get :recovery
+        end
+
+        should respond_with :success
+
+        should "clear show_recovery_codes" do
+          assert_nil @controller.session[:show_recovery_codes]
+        end
+      end
+
+      context "when show_recovery_codes is not set" do
+        setup do
+          get :recovery
+        end
+
+        should respond_with :redirect
+        should redirect_to("the settings page") { edit_settings_path }
+
+        should "set error flash message" do
+          assert_equal "You should have already saved your recovery codes.", flash[:error]
+        end
+      end
+    end
+
     context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
       setup do
         @rubygem = create(:rubygem)

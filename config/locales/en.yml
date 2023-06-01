@@ -368,6 +368,7 @@ en:
       copy: "[ copy ]"
       saved: I acknowledge that I have saved my recovery codes.
       note_html: "Please <strong class='recovery__bold'>copy and save</strong> these recovery codes. You can use these codes to login and reset your MFA if your lose your authentication device. Each code can be used once."
+      already_generated: You should have already saved your recovery codes.
     destroy:
       success: You have successfully disabled multi-factor authentication.
     update:
@@ -679,6 +680,8 @@ en:
     create_req: Create ownership request
     signin_to_create_html: Please <a href="https://rubygems.org/sign_in">sign in</a> to create an ownership request.
   webauthn_credentials:
+    callback:
+      success: You have successfully registered a security device.
     recovery:
       continue: Continue
       title: You have successfully added a security device

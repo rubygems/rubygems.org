@@ -331,7 +331,7 @@ zh-CN:
     incorrect_otp: 你的 OTP 码 不正确。
     session_expired:
     otp_code: OTP 码
-    require_mfa_disabled:
+    require_totp_disabled:
     require_mfa_enabled: 你的多重要素验证已停用，请先启用。
     require_totp_enabled:
     require_webauthn_enabled:
@@ -359,6 +359,7 @@ zh-CN:
       copy:
       saved:
       note_html:
+      already_generated:
     destroy:
       success: 你已成功停用多重要素验证。
     update:
@@ -667,6 +668,8 @@ zh-CN:
     create_req:
     signin_to_create_html:
   webauthn_credentials:
+    callback:
+      success:
     recovery:
       continue:
       title:

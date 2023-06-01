@@ -78,17 +78,78 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       should redirect_to :sign_in
     end
 
-    context "when correctly verifying a challenge" do
+    context "when logged in" do
       setup do
         @user = create(:user)
         sign_in_as @user
         post :create
-        @nickname = SecureRandom.hex
-        challenge = JSON.parse(response.body)["challenge"]
-        origin = "http://localhost:3000"
-        client = WebAuthn::FakeClient.new(origin, encoding: false)
+      end
 
-        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      context "when correctly verifying a challenge" do
+        setup do
+          @nickname = SecureRandom.hex
+          challenge = JSON.parse(response.body)["challenge"]
+          origin = "http://localhost:3000"
+          client = WebAuthn::FakeClient.new(origin, encoding: false)
+
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+            post(
+              :callback,
+              params: {
+                credentials: WebauthnHelpers.create_result(
+                  client: client,
+                  challenge: challenge
+                ),
+                webauthn_credential: { nickname: @nickname }
+              },
+              format: :json
+            )
+          end
+        end
+
+        should "set redirect url to recovery codes page" do
+          json = JSON.parse(response.body)
+
+          assert_equal recovery_multifactor_auth_url, json["redirect_url"]
+        end
+
+        should "display a flash message" do
+          assert_equal "You have successfully registered a security device.", flash[:notice]
+        end
+
+        should "create the webauthn credential" do
+          assert_equal @nickname, @user.webauthn_credentials.last.nickname
+          assert_equal 1, @user.webauthn_credentials.count
+        end
+
+        should "set the users mfa_level to 'ui_and_api'" do
+          assert_equal "ui_and_api", @user.reload.mfa_level
+        end
+
+        should "generate recovery codes" do
+          assert_equal 10, @user.reload.mfa_recovery_codes.count
+        end
+
+        should "set session show_recovery_codes to true" do
+          assert session[:show_recovery_codes]
+        end
+
+        should "deliver webauthn credential added email" do
+          assert_equal 1, ActionMailer::Base.deliveries.size
+          email = ActionMailer::Base.deliveries.last
+
+          assert_equal [@user.email], email.to
+          assert_equal ["no-reply@mailer.rubygems.org"], email.from
+          assert_equal "New security device added on RubyGems.org", email.subject
+        end
+      end
+
+      context "when nickname is not present" do
+        setup do
+          @nickname = ""
+          challenge = JSON.parse(response.body)["challenge"]
+          origin = "http://localhost:3000"
+          client = WebAuthn::FakeClient.new(origin, encoding: false)
           post(
             :callback,
             params: {
@@ -101,88 +162,16 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
             format: :json
           )
         end
+
+        should respond_with :unprocessable_entity
       end
 
-      should redirect_to :edit_settings
-
-      should "create the webauthn credential" do
-        assert_equal @nickname, @user.webauthn_credentials.last.nickname
-        assert_equal 1, @user.webauthn_credentials.count
-      end
-
-      should "deliver webauthn credential added email" do
-        assert_equal 1, ActionMailer::Base.deliveries.size
-        email = ActionMailer::Base.deliveries.last
-
-        assert_equal [@user.email], email.to
-        assert_equal ["no-reply@mailer.rubygems.org"], email.from
-        assert_equal "New security device added on RubyGems.org", email.subject
-      end
-    end
-
-    context "when nickname is not present" do
-      setup do
-        @user = create(:user)
-        sign_in_as @user
-        post :create
-        @nickname = ""
-        challenge = JSON.parse(response.body)["challenge"]
-        origin = "http://localhost:3000"
-        client = WebAuthn::FakeClient.new(origin, encoding: false)
-        post(
-          :callback,
-          params: {
-            credentials: WebauthnHelpers.create_result(
-              client: client,
-              challenge: challenge
-            ),
-            webauthn_credential: { nickname: @nickname }
-          },
-          format: :json
-        )
-      end
-
-      should respond_with :unprocessable_entity
-    end
-
-    context "when challenge is incorrect" do
-      setup do
-        @user = create(:user)
-        sign_in_as @user
-        post :create
-        @nickname = SecureRandom.hex
-        challenge = SecureRandom.hex
-        origin = "http://localhost:3000"
-        client = WebAuthn::FakeClient.new(origin, encoding: false)
-        post(
-          :callback,
-          params: {
-            credentials: WebauthnHelpers.create_result(
-              client: client,
-              challenge: challenge
-            ),
-            webauthn_credential: { nickname: @nickname }
-          },
-          format: :json
-        )
-      end
-
-      setup { subject }
-
-      should respond_with :unprocessable_entity
-    end
-
-    context "when otp is not yet registered" do
-      setup do
-        @user = create(:user)
-        sign_in_as @user
-        post :create
-        @nickname = SecureRandom.hex
-        challenge = JSON.parse(response.body)["challenge"]
-        origin = "http://localhost:3000"
-        client = WebAuthn::FakeClient.new(origin, encoding: false)
-
-        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      context "when challenge is incorrect" do
+        setup do
+          @nickname = SecureRandom.hex
+          challenge = SecureRandom.hex
+          origin = "http://localhost:3000"
+          client = WebAuthn::FakeClient.new(origin, encoding: false)
           post(
             :callback,
             params: {
@@ -195,42 +184,58 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
             format: :json
           )
         end
+
+        setup { subject }
+
+        should respond_with :unprocessable_entity
       end
 
-      should "set the users mfa_level to 'ui_and_api'" do
-        assert_equal "ui_and_api", @user.reload.mfa_level
-      end
-    end
+      context "when totp is already registered on the user" do
+        setup do
+          @seed = ROTP::Base32.random_base32
+          @user.enable_totp!(@seed, :ui_and_gem_signin)
 
-    context "when otp is already registered on the user" do
-      setup do
-        @user = create(:user)
-        @seed = ROTP::Base32.random_base32
-        @user.enable_totp!(@seed, :ui_and_gem_signin)
-        sign_in_as @user
-        post :create
-        @nickname = SecureRandom.hex
-        challenge = JSON.parse(response.body)["challenge"]
-        origin = "http://localhost:3000"
-        client = WebAuthn::FakeClient.new(origin, encoding: false)
+          @nickname = SecureRandom.hex
+          @challenge = JSON.parse(response.body)["challenge"]
+          origin = "http://localhost:3000"
+          @client = WebAuthn::FakeClient.new(origin, encoding: false)
+        end
 
-        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        should "not change the users mfa_level or recovery codes" do
+          assert_no_changes -> { @user.reload.mfa_level }, -> { @user.reload.mfa_recovery_codes.count } do
+            post(
+              :callback,
+              params: {
+                credentials: WebauthnHelpers.create_result(
+                  client: @client,
+                  challenge: @challenge
+                ),
+                webauthn_credential: { nickname: @nickname }
+              },
+              format: :json
+            )
+          end
+
+          assert_nil @controller.session[:show_recovery_codes]
+        end
+
+        should "set redirect url to edit settings page" do
           post(
             :callback,
             params: {
               credentials: WebauthnHelpers.create_result(
-                client: client,
-                challenge: challenge
+                client: @client,
+                challenge: @challenge
               ),
               webauthn_credential: { nickname: @nickname }
             },
             format: :json
           )
-        end
-      end
 
-      should "not change the users mfa_level" do
-        assert_equal "ui_and_gem_signin", @user.reload.mfa_level
+          json = JSON.parse(response.body)
+
+          assert_equal edit_settings_url, json["redirect_url"]
+        end
       end
     end
   end

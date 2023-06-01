@@ -359,7 +359,7 @@ pt-BR:
     incorrect_otp:
     session_expired:
     otp_code:
-    require_mfa_disabled:
+    require_totp_disabled:
     require_mfa_enabled:
     require_totp_enabled:
     require_webauthn_enabled:
@@ -387,6 +387,7 @@ pt-BR:
       copy:
       saved:
       note_html:
+      already_generated:
     destroy:
       success:
     update:
@@ -707,6 +708,8 @@ pt-BR:
     create_req:
     signin_to_create_html:
   webauthn_credentials:
+    callback:
+      success:
     recovery:
       continue:
       title:

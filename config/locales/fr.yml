@@ -362,8 +362,7 @@ fr:
     incorrect_otp: Votre clé OTP est incorrecte.
     session_expired:
     otp_code: clé OTP
-    require_mfa_disabled: Votre authentification multi-facteur a été activée. Si vous
-      voulez la reconfigurer, vous devez d'abord la désactiver.
+    require_totp_disabled:
     require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
       Vous devez d'abord l'activer.
     require_totp_enabled:
@@ -396,6 +395,7 @@ fr:
       copy:
       saved:
       note_html:
+      already_generated:
     destroy:
       success: Vous avez désactivé l'authentification multifacteur.
     update:
@@ -732,6 +732,8 @@ fr:
     create_req:
     signin_to_create_html:
   webauthn_credentials:
+    callback:
+      success:
     recovery:
       continue:
       title:

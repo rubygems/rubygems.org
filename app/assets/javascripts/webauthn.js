@@ -10,18 +10,6 @@
     error.text(message);
   };
 
-  var handleJsonResponse = function(submit, responseError, response) {
-    if (response.redirected) {
-      window.location.href = response.url;
-    } else {
-      response.json().then(function (json) {
-        setError(submit, responseError, json.message);
-      }).catch(function (error) {
-        setError(submit, responseError, error);
-      });
-    }
-  };
-
   var handleHtmlResponse = function(submit, responseError, response) {
     if (response.redirected) {
       window.location.href = response.url;
@@ -95,7 +83,15 @@
           })
         });
       }).then(function (response) {
-        handleJsonResponse(credentialSubmit, credentialError, response);
+        response.json().then(function (json) {
+          if (json.redirect_url) {
+            window.location.href = json.redirect_url;
+          } else {
+            setError(credentialSubmit, credentialError, json.message);
+          }
+        }).catch(function (error) {
+          setError(credentialSubmit, credentialError, error);
+        });
       }).catch(function (error) {
         setError(credentialSubmit, credentialError, error);
       });

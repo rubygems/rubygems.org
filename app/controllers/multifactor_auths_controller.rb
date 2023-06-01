@@ -78,6 +78,18 @@ class MultifactorAuthsController < ApplicationController
     end
   end
 
+  def recovery
+    if session[:show_recovery_codes].nil?
+      redirect_to edit_settings_path
+      flash[:error] = t(".already_generated")
+      return
+    end
+    @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
+    session.delete("mfa_redirect_uri")
+  ensure
+    session.delete(:show_recovery_codes)
+  end
+
   private
 
   def otp_param
