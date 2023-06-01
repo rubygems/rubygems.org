@@ -304,16 +304,13 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @seed = ROTP::Base32.random_base32
           @controller.session[:mfa_seed] = @seed
           @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
+          @recovery_codes = @user.mfa_recovery_codes
           perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
         end
 
-        should respond_with :success
-
-        should "keep mfa enabled" do
-          assert_predicate @user.reload, :mfa_ui_only?
-        end
+        should redirect_to("the edit settings page") { edit_settings_path }
 
         should "send totp enabled email" do
           assert_emails 1
@@ -634,12 +631,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             end
           end
 
-          should respond_with :success
-          should "show recovery codes" do
-            @user.reload.mfa_recovery_codes.each do |code|
-              assert page.has_content?(code)
-            end
-          end
+          should redirect_to("the recovery page") { recovery_multifactor_auth_path }
 
           should "enable mfa" do
             assert_predicate @user.reload, :mfa_enabled?

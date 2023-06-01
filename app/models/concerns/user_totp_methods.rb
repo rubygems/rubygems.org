@@ -36,9 +36,9 @@ module UserTotpMethods
 
     if webauthn_disabled?
       self.mfa_level = level
+      self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
     end
 
-    self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
     save!(validate: false)
     Mailer.mfa_enabled(id, Time.now.utc).deliver_later
   end

@@ -27,8 +27,14 @@ class MultifactorAuthsController < ApplicationController
     else
       flash.now[:success] = t(".success")
       @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
-      session.delete("mfa_redirect_uri")
-      render :recovery
+
+      if current_user.webauthn_disabled?
+        session[:show_recovery_codes] = true
+        redirect_to recovery_multifactor_auth_path
+      else
+        redirect_to @continue_path
+        session.delete("mfa_redirect_uri")
+      end
     end
   end
 
