@@ -333,6 +333,7 @@ ja:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
+    require_totp_enabled:
     setup_required_html:
     setup_recommended:
     strong_mfa_level_required_html:
@@ -360,6 +361,7 @@ ja:
     destroy:
       success:
     update:
+      invalid_level:
       success:
   notifiers:
     update:

@@ -4,7 +4,10 @@ class MultifactorAuthsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :update
+  before_action :require_totp_enabled, only: %i[mfa_update]
   before_action :seed_and_expire, only: :create
+  before_action :verify_session_expiration, only: %i[mfa_update]
+  after_action :delete_mfa_level_update_session_variables, only: %i[mfa_update]
   helper_method :issuer
 
   def new
@@ -40,6 +43,14 @@ class MultifactorAuthsController < ApplicationController
     render template: "multifactor_auths/mfa_prompt"
   end
 
+  def mfa_update
+    if current_user.ui_mfa_verified?(params[:otp])
+      update_level_and_redirect
+    else
+      redirect_to edit_settings_path, flash: { error: t("multifactor_auths.incorrect_otp") }
+    end
+  end
+
   private
 
   def otp_param
@@ -66,6 +77,14 @@ class MultifactorAuthsController < ApplicationController
     redirect_to edit_settings_path
   end
 
+  def require_totp_enabled
+    return if current_user.totp_enabled?
+
+    flash[:error] = t("multifactor_auths.require_totp_enabled")
+    delete_mfa_level_update_session_variables
+    redirect_to edit_settings_path
+  end
+
   def seed_and_expire
     @seed = session[:mfa_seed]
     @expire = Time.at(session[:mfa_seed_expire] || 0).utc
@@ -76,7 +95,7 @@ class MultifactorAuthsController < ApplicationController
 
   def setup_mfa_authentication
     return if current_user.totp_disabled?
-    @form_mfa_url = nil # TODO
+    @form_mfa_url = mfa_update_multifactor_auth_url(token: current_user.confirmation_token)
   end
 
   def setup_webauthn_authentication
@@ -91,18 +110,34 @@ class MultifactorAuthsController < ApplicationController
     }
   end
 
+  def update_level_and_redirect
+    handle_new_level_param
+    redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
+    session.delete(:mfa_redirect_uri)
+  end
+
   # rubocop:disable Rails/ActionControllerFlashBeforeRender
   def handle_new_level_param
-    case level_param
-    when "disabled"
-      flash[:success] = t("multifactor_auths.destroy.success")
-      current_user.disable_totp!
-    when "ui_only"
-      flash[:error] = t("multifactor_auths.ui_only_warning")
+    case session[:level]
+    when "ui_and_api", "ui_and_gem_signin"
+      flash[:success] = t("multifactor_auths.update.success")
+      current_user.update!(mfa_level: session[:level])
     else
-      flash[:error] = t(".success")
-      current_user.update!(mfa_level: level_param)
+      flash[:error] = t("multifactor_auths.update.invalid_level")
     end
   end
   # rubocop:enable Rails/ActionControllerFlashBeforeRender
+
+  def verify_session_expiration
+    return if session_active?
+
+    delete_mfa_level_update_session_variables
+    redirect_to edit_settings_path, flash: { error: t("multifactor_auths.session_expired") }
+  end
+
+  def delete_mfa_level_update_session_variables
+    session.delete(:level)
+    session.delete(:webauthn_authentication)
+    delete_mfa_expiry_session
+  end
 end

@@ -334,6 +334,7 @@ zh-TW:
     otp_code: OTP 碼
     require_mfa_disabled:
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
+    require_totp_enabled:
     setup_required_html:
     setup_recommended:
     strong_mfa_level_required_html:
@@ -361,6 +362,7 @@ zh-TW:
     destroy:
       success: 你已成功停用多重要素驗證。
     update:
+      invalid_level:
       success: 你已成功修改多重驗證等級。
   notifiers:
     update:
