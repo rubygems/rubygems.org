@@ -226,6 +226,71 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           assert_nil @controller.session[:mfa_redirect_uri]
         end
       end
+
+      context "on DELETE to destroy" do
+        context "with correct OTP" do
+          setup do
+            @controller.session["mfa_redirect_uri"] = edit_settings_path
+
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              delete :destroy, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            end
+          end
+
+          should respond_with :redirect
+          should redirect_to("the settings page") { edit_settings_path }
+
+          should "disable mfa and clear recovery codes" do
+            assert_predicate @user.reload, :totp_disabled?
+            assert_empty @user.mfa_recovery_codes
+          end
+
+          should "send mfa disabled email" do
+            assert_emails 1
+
+            assert_equal "Multi-factor authentication disabled on RubyGems.org", last_email.subject
+            assert_equal [@user.email], last_email.to
+          end
+
+          should "flash success" do
+            assert_equal "You have successfully disabled multi-factor authentication.", flash[:success]
+          end
+
+          should "delete mfa_redirect_uri from session" do
+            assert_nil session[:mfa_redirect_uri]
+          end
+        end
+
+        context "with incorrect OTP" do
+          setup do
+            @controller.session["mfa_redirect_uri"] = edit_settings_path
+
+            perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+              delete :destroy, params: { otp: "123456" }
+            end
+          end
+
+          should respond_with :redirect
+          should redirect_to("the settings page") { edit_settings_path }
+
+          should "keep mfa and recovery codes enabled" do
+            assert_predicate @user.reload, :totp_enabled?
+            assert_not_empty @user.mfa_recovery_codes
+          end
+
+          should "flash error" do
+            assert_equal "Your OTP code is incorrect.", flash[:error]
+          end
+
+          should "not send mfa disabled email" do
+            assert_emails 0
+          end
+
+          should "not clear mfa_redirect_uri from session" do
+            assert_not_nil session[:mfa_redirect_uri]
+          end
+        end
+      end
     end
 
     context "when a webauthn device is enabled" do
@@ -533,6 +598,26 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
         end
       end
+
+      context "on DELETE to destroy" do
+        should "redirect to settings page" do
+          delete :destroy
+
+          assert_redirected_to edit_settings_path
+        end
+
+        should "not change mfa level and recovery codes" do
+          assert_no_changes -> { @user.reload.mfa_level }, -> { @user.reload.mfa_recovery_codes } do
+            delete :destroy
+          end
+        end
+
+        should "display flash error" do
+          delete :destroy
+
+          assert_equal "You don't have an authenticator app enabled. You have to enable it first.", flash[:error]
+        end
+      end
     end
 
     context "when there are no mfa devices" do
@@ -635,6 +720,26 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should "set flash error" do
           assert_equal "You don't have any security devices enabled. " \
                        "You have to associate a device to your account first.", flash[:error]
+        end
+      end
+
+      context "on DELETE to destroy" do
+        should "redirect to settings page" do
+          delete :destroy
+
+          assert_redirected_to edit_settings_path
+        end
+
+        should "not change mfa level and recovery codes" do
+          assert_no_changes -> { @user.reload.mfa_level }, -> { @user.reload.mfa_recovery_codes } do
+            delete :destroy
+          end
+        end
+
+        should "display flash error" do
+          delete :destroy
+
+          assert_equal "You don't have an authenticator app enabled. You have to enable it first.", flash[:error]
         end
       end
     end

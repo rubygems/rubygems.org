@@ -5,7 +5,7 @@ class MultifactorAuthsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_totp_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :update
-  before_action :require_totp_enabled, only: %i[mfa_update]
+  before_action :require_totp_enabled, only: %i[mfa_update destroy]
   before_action :seed_and_expire, only: :create
   before_action :verify_session_expiration, only: %i[mfa_update webauthn_update]
   after_action :delete_mfa_level_update_session_variables, only: %i[mfa_update webauthn_update]
@@ -63,6 +63,18 @@ class MultifactorAuthsController < ApplicationController
       update_level_and_redirect
     else
       redirect_to edit_settings_path, flash: { error: @webauthn_error }
+    end
+  end
+
+  def destroy
+    if current_user.ui_mfa_verified?(otp_param)
+      flash[:success] = t(".success")
+      current_user.disable_totp!
+      redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
+      session.delete("mfa_redirect_uri")
+    else
+      flash[:error] = t("multifactor_auths.incorrect_otp")
+      redirect_to edit_settings_path
     end
   end
 
