@@ -17,7 +17,7 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   end
 
   test "it sends the count of OTP-only users to statsd" do
-    assert_statsd_gauge("mfa_usage_stats.otp_only_users", 2) do
+    assert_statsd_gauge("mfa_usage_stats.totp_only_users", 2) do
       MfaUsageStatsJob.perform_now
     end
   end
@@ -29,7 +29,7 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   end
 
   test "it sends the count of WebAuthn-and-OTP users to statsd" do
-    assert_statsd_gauge("mfa_usage_stats.webauthn_and_otp_users", 4) do
+    assert_statsd_gauge("mfa_usage_stats.webauthn_and_totp_users", 4) do
       MfaUsageStatsJob.perform_now
     end
   end
