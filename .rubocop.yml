@@ -66,6 +66,7 @@ Metrics/BlockLength:
     - lib/github_oauthable.rb
     - app/models/concerns/**/*.rb
     - config/routes.rb
+    - config/environments/development.rb
 
 Metrics/ClassLength:
   Max: 356 # TODO: Lower to 100

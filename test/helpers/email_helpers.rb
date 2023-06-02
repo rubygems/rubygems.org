@@ -15,7 +15,7 @@ module EmailHelpers
   def confirmation_link
     refute_empty ActionMailer::Base.deliveries
     body = last_email.parts[1].body.decoded.to_s
-    link = %r{http://localhost/email_confirmations([^";]*)}.match(body)
+    link = %r{http://localhost(?::\d+)?/email_confirmations([^";]*)}.match(body)
     link[0]
   end
 end
