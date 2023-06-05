@@ -17,6 +17,14 @@ module UserMultifactorMethods
     !mfa_disabled?
   end
 
+  def mfa_device_count_one?
+    (totp_disabled? && webauthn_credentials.count == 1) || (totp_enabled? && webauthn_disabled?)
+  end
+
+  def no_mfa_devices?
+    totp_disabled? && webauthn_disabled?
+  end
+
   def mfa_gem_signin_authorized?(otp)
     return true unless strong_mfa_level? || webauthn_credentials.present?
     api_mfa_verified?(otp)

@@ -38,6 +38,63 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
   end
 
+  context "#mfa_device_count_one?" do
+    should "return true if user has one webauthn credential and no totp" do
+      create(:webauthn_credential, user: @user)
+
+      assert_predicate @user, :mfa_device_count_one?
+    end
+
+    should "return true if user has totp enabled and no webauthn credential" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+
+      assert_predicate @user, :mfa_device_count_one?
+    end
+
+    should "return false if user has totp enabled and one webauthn credential" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :mfa_device_count_one?
+    end
+
+    should "return false if user has no totp and no webauthn credential" do
+      refute_predicate @user, :mfa_device_count_one?
+    end
+
+    should "return false if user has two webauthn credentials" do
+      create(:webauthn_credential, user: @user)
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :mfa_device_count_one?
+    end
+  end
+
+  context "#no_mfa_devices?" do
+    should "return true if user has no totp and no webauthn credential" do
+      assert_predicate @user, :no_mfa_devices?
+    end
+
+    should "return false if user has one webauthn credential" do
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :no_mfa_devices?
+    end
+
+    should "return false if user has totp enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+
+      refute_predicate @user, :no_mfa_devices?
+    end
+
+    should "return false if user has totp and webauthn enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :no_mfa_devices?
+    end
+  end
+
   context "#mfa_gem_signin_authorized?" do
     setup do
       @seed = ROTP::Base32.random_base32

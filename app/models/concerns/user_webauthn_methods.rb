@@ -29,10 +29,6 @@ module UserWebauthnMethods
     webauthn_credentials.none?
   end
 
-  def count_webauthn_credentials
-    webauthn_credentials.count
-  end
-
   def webauthn_options_for_get
     WebAuthn::Credential.options_for_get(
       allow: webauthn_credentials.pluck(:external_id),

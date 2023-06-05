@@ -12,7 +12,7 @@ module UserTotpMethods
   def disable_totp!
     self.mfa_seed = ""
 
-    if webauthn_disabled?
+    if no_mfa_devices?
       self.mfa_level = "disabled"
       self.mfa_recovery_codes = []
     end
@@ -34,7 +34,7 @@ module UserTotpMethods
   def enable_totp!(seed, level)
     self.mfa_seed = seed
 
-    if webauthn_disabled?
+    if mfa_device_count_one?
       self.mfa_level = level
       self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
     end

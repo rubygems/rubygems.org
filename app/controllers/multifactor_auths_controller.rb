@@ -28,7 +28,7 @@ class MultifactorAuthsController < ApplicationController
       flash.now[:success] = t(".success")
       @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
 
-      if current_user.webauthn_disabled?
+      if current_user.mfa_device_count_one?
         session[:show_recovery_codes] = true
         redirect_to recovery_multifactor_auth_path
       else

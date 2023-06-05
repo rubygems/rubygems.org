@@ -56,7 +56,7 @@ class WebauthnCredentialsController < ApplicationController
   end
 
   def render_callback_redirect
-    if current_user.totp_disabled? && current_user.count_webauthn_credentials == 1
+    if current_user.mfa_device_count_one?
       session[:show_recovery_codes] = true
       render json: { redirect_url: recovery_multifactor_auth_url }
     else
