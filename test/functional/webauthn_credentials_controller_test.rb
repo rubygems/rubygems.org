@@ -241,45 +241,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
   end
 
   context "#destroy" do
-    setup do
-      @user = create(:user)
-      @credential = create(:webauthn_credential, user: @user)
-      sign_in_as @user
-
-      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-        delete :destroy, params: { id: @credential.id }
-      end
-    end
-
-    should "destroy the webauthn credential" do
-      assert_equal 0, @user.webauthn_credentials.count
-    end
-
-    should "set success notice flash" do
-      assert_equal "Credential deleted", flash[:notice]
-    end
-
-    should "set failure notice flash if destroy fails" do
-      @user.stubs(:webauthn_credentials).returns @credential
-      WebauthnCredential.any_instance.stubs(:find).returns @credential
-      @credential.stubs(:destroy).returns false
-
-      delete :destroy, params: { id: @credential.id }
-
-      refute_nil flash[:error]
-    end
-
-    should "deliver webauthn credential removed email" do
-      assert_equal 1, ActionMailer::Base.deliveries.size
-      email = ActionMailer::Base.deliveries.last
-
-      assert_equal [@user.email], email.to
-      assert_equal ["no-reply@mailer.rubygems.org"], email.from
-      assert_equal "Security device removed on RubyGems.org", email.subject
-    end
-
-    should redirect_to :edit_settings
-
     context "when the user has no other webauthn credentials and no otp" do
       setup do
         @user = create(:user)
@@ -298,6 +259,35 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       should "remove recovery codes" do
         assert_empty @user.reload.mfa_recovery_codes
       end
+
+      should "destroy the webauthn credential" do
+        assert_equal 0, @user.webauthn_credentials.count
+      end
+
+      should "set success notice flash" do
+        assert_equal "Credential deleted", flash[:notice]
+      end
+
+      should "set failure notice flash if destroy fails" do
+        @user.stubs(:webauthn_credentials).returns @credential
+        WebauthnCredential.any_instance.stubs(:find).returns @credential
+        @credential.stubs(:destroy).returns false
+
+        delete :destroy, params: { id: @credential.id }
+
+        refute_nil flash[:error]
+      end
+
+      should "deliver webauthn credential removed email" do
+        assert_equal 1, ActionMailer::Base.deliveries.size
+        email = ActionMailer::Base.deliveries.last
+
+        assert_equal [@user.email], email.to
+        assert_equal ["no-reply@mailer.rubygems.org"], email.from
+        assert_equal "Security device removed on RubyGems.org", email.subject
+      end
+
+      should redirect_to :edit_settings
     end
 
     context "when the user has other webauthn credentials but no otp" do

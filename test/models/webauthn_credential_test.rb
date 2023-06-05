@@ -24,16 +24,25 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
       should "set user mfa level to ui_and_api" do
         assert_equal "ui_and_api", @user.reload.mfa_level
       end
+
+      should "set user mfa recovery codes" do
+        assert_equal 10, @user.reload.mfa_recovery_codes.count
+      end
     end
 
     context "when user has totp is enabled and creates a webauthn credential" do
       setup do
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @codes = @user.mfa_recovery_codes
         @webauthn_credential = create(:webauthn_credential, user: @user)
       end
 
       should "not change user mfa level" do
         assert_equal "ui_and_gem_signin", @user.reload.mfa_level
+      end
+
+      should "not change user mfa recovery codes" do
+        assert_equal @codes, @user.reload.mfa_recovery_codes
       end
     end
 
@@ -41,11 +50,16 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
       setup do
         @webauthn_credential = create(:webauthn_credential, user: @user)
         @user.update!(mfa_level: "ui_and_gem_signin")
+        @codes = @user.mfa_recovery_codes
         @webauthn_credential2 = create(:webauthn_credential, user: @user)
       end
 
       should "not change user mfa level" do
         assert_equal "ui_and_gem_signin", @user.reload.mfa_level
+      end
+
+      should "not change user mfa recovery codes" do
+        assert_equal @codes, @user.reload.mfa_recovery_codes
       end
     end
   end
@@ -61,6 +75,12 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
           @webauthn_credential.destroy!
         end
       end
+
+      should "clear mfa recovery codes" do
+        assert_changes -> { @user.reload.mfa_recovery_codes.count }, from: 10, to: 0 do
+          @webauthn_credential.destroy!
+        end
+      end
     end
 
     context "when user has totp is enabled and destroys a webauthn credential" do
@@ -72,6 +92,10 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
       should "not change user mfa level" do
         assert_equal "ui_and_api", @user.reload.mfa_level
       end
+
+      should "not change user mfa recovery codes" do
+        assert_equal 10, @user.reload.mfa_recovery_codes.count
+      end
     end
 
     context "when user has two webauthn credentials and totp is disabled" do
@@ -82,6 +106,10 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
 
       should "not change user mfa level" do
         assert_equal "ui_and_api", @user.reload.mfa_level
+      end
+
+      should "not change user mfa recovery codes" do
+        assert_equal 10, @user.reload.mfa_recovery_codes.count
       end
     end
   end
