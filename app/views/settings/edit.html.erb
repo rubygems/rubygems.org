@@ -2,7 +2,7 @@
 
 <div class="t-body">
   <h2 class="page__subheading"><%= t ".mfa.multifactor_auth" %></h2>
-  <% if @user.totp_enabled? || @user.webauthn_enabled?%>
+  <% if @user.mfa_enabled? %>
     <h2><%= t(".mfa.level.title")%></h2>
     <p><%= t(".mfa.level_html") %></p>
 

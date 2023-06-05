@@ -9,6 +9,11 @@ module UserMultifactorMethods
   end
 
   def mfa_enabled?
+    if webauthn_credentials.present? && mfa_disabled?
+      self.mfa_level = :ui_and_gem_signin
+      save!(validate: false)
+    end
+
     !mfa_disabled?
   end
 
