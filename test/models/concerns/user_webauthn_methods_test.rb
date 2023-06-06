@@ -11,6 +11,30 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
     end
   end
 
+  context "#webauthn_enabled?" do
+    should "return true if webauthn is enabled" do
+      create(:webauthn_credential, user: @user)
+
+      assert_predicate @user, :webauthn_enabled?
+    end
+
+    should "return false if webauthn is disabled" do
+      refute_predicate @user, :webauthn_enabled?
+    end
+  end
+
+  context "#webauthn_disabled?" do
+    should "return true if webauthn is disabled" do
+      assert_predicate @user, :webauthn_disabled?
+    end
+
+    should "return false if webauthn is enabled" do
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :webauthn_disabled?
+    end
+  end
+
   context "#webauthn_options_for_create" do
     should "returns options with id, and name" do
       user_create_options = @user.webauthn_options_for_create.user

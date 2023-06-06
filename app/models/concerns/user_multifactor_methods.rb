@@ -9,7 +9,20 @@ module UserMultifactorMethods
   end
 
   def mfa_enabled?
+    if webauthn_credentials.present? && mfa_disabled?
+      self.mfa_level = :ui_and_gem_signin
+      save!(validate: false)
+    end
+
     !mfa_disabled?
+  end
+
+  def mfa_device_count_one?
+    (totp_disabled? && webauthn_credentials.count == 1) || (totp_enabled? && webauthn_disabled?)
+  end
+
+  def no_mfa_devices?
+    totp_disabled? && webauthn_disabled?
   end
 
   def mfa_gem_signin_authorized?(otp)

@@ -13,7 +13,8 @@ class WebauthnCredentialsController < ApplicationController
     webauthn_credential = build_webauthn_credential
 
     if webauthn_credential.save
-      redirect_to edit_settings_path
+      flash[:notice] = t(".success")
+      render_callback_redirect
     else
       message = webauthn_credential.errors.full_messages.to_sentence
       render json: { message: message }, status: :unprocessable_entity
@@ -52,5 +53,14 @@ class WebauthnCredentialsController < ApplicationController
         sign_count: credential.sign_count
       )
     )
+  end
+
+  def render_callback_redirect
+    if current_user.mfa_device_count_one?
+      session[:show_recovery_codes] = true
+      render json: { redirect_url: recovery_multifactor_auth_url }
+    else
+      render json: { redirect_url: edit_settings_url }
+    end
   end
 end

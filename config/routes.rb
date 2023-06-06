@@ -137,7 +137,11 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
-    resource :multifactor_auth, only: %i[new create update]
+    resource :multifactor_auth, only: %i[new create update destroy] do
+      get 'recovery'
+      post 'mfa_update', to: 'multifactor_auths#mfa_update', as: :mfa_update
+      post 'webauthn_update', to: 'multifactor_auths#webauthn_update', as: :webauthn_update
+    end
     resource :settings, only: :edit
     resource :profile, only: %i[edit update] do
       get :adoptions

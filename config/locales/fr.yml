@@ -362,15 +362,15 @@ fr:
     incorrect_otp: Votre clé OTP est incorrecte.
     session_expired:
     otp_code: clé OTP
-    require_mfa_disabled: Votre authentification multi-facteur a été activée. Si vous
-      voulez la reconfigurer, vous devez d'abord la désactiver.
+    require_totp_disabled:
     require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
       Vous devez d'abord l'activer.
+    require_totp_enabled:
+    require_webauthn_enabled:
     setup_required_html:
     setup_recommended:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
-    ui_only_warning:
     new:
       title: Activer l'authentification multifacteur
       scan_prompt: Veuillez scanner le QR code avec votre app d'authentification.
@@ -394,9 +394,11 @@ fr:
       copy:
       saved:
       note_html:
+      already_generated:
     destroy:
       success: Vous avez désactivé l'authentification multifacteur.
     update:
+      invalid_level:
       success:
   notifiers:
     update:
@@ -476,8 +478,10 @@ fr:
         otp:
         disabled_html:
         go_settings: Enregistrer un nouvel appareil
-        enabled_html:
+        level_html:
+        enabled:
         update:
+        disable:
         level:
           title:
           disabled:
@@ -729,6 +733,8 @@ fr:
     create_req:
     signin_to_create_html:
   webauthn_credentials:
+    callback:
+      success:
     recovery:
       continue:
       title:

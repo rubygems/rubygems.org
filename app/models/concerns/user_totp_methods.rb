@@ -1,10 +1,22 @@
 module UserTotpMethods
   extend ActiveSupport::Concern
 
+  def totp_enabled?
+    mfa_seed.present?
+  end
+
+  def totp_disabled?
+    mfa_seed.blank?
+  end
+
   def disable_totp!
-    mfa_disabled!
     self.mfa_seed = ""
-    self.mfa_recovery_codes = []
+
+    if no_mfa_devices?
+      self.mfa_level = "disabled"
+      self.mfa_recovery_codes = []
+    end
+
     save!(validate: false)
     Mailer.mfa_disabled(id, Time.now.utc).deliver_later
   end
@@ -20,9 +32,13 @@ module UserTotpMethods
   end
 
   def enable_totp!(seed, level)
-    self.mfa_level = level
     self.mfa_seed = seed
-    self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
+
+    if mfa_device_count_one?
+      self.mfa_level = level
+      self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
+    end
+
     save!(validate: false)
     Mailer.mfa_enabled(id, Time.now.utc).deliver_later
   end

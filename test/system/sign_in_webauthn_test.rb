@@ -7,7 +7,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
                   mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
 
-    @authenticator = create_webauthn_authenticator
+    @authenticator = create_webauthn_credential
   end
 
   teardown do
@@ -49,28 +49,5 @@ class SignInWebauthnTest < ApplicationSystemTestCase
       assert page.has_content? "Your login page session has expired."
       assert page.has_content? "Multi-factor authentication"
     end
-  end
-
-  def create_webauthn_authenticator
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-    visit edit_settings_path
-
-    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
-    authenticator = page.driver.browser.add_virtual_authenticator(options)
-    WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
-
-    credential_nickname = "new cred"
-    fill_in "Nickname", with: credential_nickname
-    click_on "Register device"
-
-    find("div", text: credential_nickname, match: :first)
-
-    find(:css, ".header__popup-link").click
-    click_on "Sign out"
-
-    authenticator
   end
 end

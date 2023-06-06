@@ -331,13 +331,14 @@ zh-CN:
     incorrect_otp: 你的 OTP 码 不正确。
     session_expired:
     otp_code: OTP 码
-    require_mfa_disabled:
+    require_totp_disabled:
     require_mfa_enabled: 你的多重要素验证已停用，请先启用。
+    require_totp_enabled:
+    require_webauthn_enabled:
     setup_required_html:
     setup_recommended:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
-    ui_only_warning:
     new:
       title: 启用多重要素验证
       scan_prompt: 请用你的验证装置扫描 QR-code。如果你没办法扫描，手动输入下面的资料。
@@ -357,9 +358,11 @@ zh-CN:
       copy:
       saved:
       note_html:
+      already_generated:
     destroy:
       success: 你已成功停用多重要素验证。
     update:
+      invalid_level:
       success: 你已成功修改多重验证等级。
   notifiers:
     update:
@@ -438,8 +441,10 @@ zh-CN:
         otp:
         disabled_html:
         go_settings: 注册新装置
-        enabled_html:
+        level_html:
+        enabled:
         update: 更新
+        disable:
         level:
           title: 多重验证等级
           disabled: 停用
@@ -664,6 +669,8 @@ zh-CN:
     create_req:
     signin_to_create_html:
   webauthn_credentials:
+    callback:
+      success:
     recovery:
       continue:
       title:
