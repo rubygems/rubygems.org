@@ -360,7 +360,6 @@ es:
     incorrect_otp: Tu código OTP no es correcto.
     session_expired:
     otp_code: código OTP
-    recovery_code:
     require_totp_disabled:
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
@@ -648,6 +647,7 @@ es:
       sign_in_with_webauthn_credential:
       otp_code:
       otp_or_recovery:
+      recovery_code:
       security_device:
       verify_code:
   stats:
