@@ -23,6 +23,9 @@
 .form__label__icon-container .form__label__text {
   padding-left: 33px;}
 
+.form__label--hidden {
+  display: none; }
+    
 .form__input__addon-container {
   position: relative; }
 

@@ -332,6 +332,7 @@ zh-TW:
     incorrect_otp: 你的 OTP 碼 不正確。
     session_expired:
     otp_code: OTP 碼
+    recovery_code:
     require_totp_disabled:
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
     require_totp_enabled:

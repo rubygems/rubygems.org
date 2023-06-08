@@ -331,6 +331,7 @@ ja:
     incorrect_otp:
     session_expired:
     otp_code:
+    recovery_code:
     require_totp_disabled:
     require_mfa_enabled:
     require_totp_enabled:
