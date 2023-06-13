@@ -85,11 +85,27 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should "not display recovery code prompt" do
-        assert page.has_button?("Authenticate")
+        refute page.has_content?("Recovery Code")
       end
     end
 
     context "when user has webauthn credentials and recovery codes" do
+      setup do
+        create(:webauthn_credential, user: @user)
+        @user.save!
+        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
+      end
+
+      should respond_with :success
+
+      should "display webauthn prompt" do
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "display recovery code prompt" do
+        assert page.has_button?("Authenticate")
+      end
     end
   end
 
