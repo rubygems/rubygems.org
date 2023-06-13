@@ -2,6 +2,7 @@
 
 class ApplicationPolicy
   include AdminUser
+  include SemanticLogger::Loggable
 
   attr_reader :user, :record
 
@@ -40,6 +41,10 @@ class ApplicationPolicy
 
   def avo_search?
     avo_index?
+  end
+
+  def act_on?
+    false
   end
 
   def self.has_association(assocation) # rubocop:disable Naming/PredicateName

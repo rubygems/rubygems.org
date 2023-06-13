@@ -6,6 +6,7 @@ class UserResource < Avo::BaseResource
   }
 
   action BlockUser
+  action CreateUser
   action ChangeUserEmail
   action ResetApiKey
   action ResetUser2fa

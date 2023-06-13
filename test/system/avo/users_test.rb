@@ -522,4 +522,55 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       assert_equal("Please confirm your email address with RubyGems.org", mailer.subject)
     end
   end
+
+  test "create user" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    visit avo.resources_users_path
+
+    click_button "Actions"
+    click_on "Create User"
+
+    assert_no_changes "User.count" do
+      click_button "Create User"
+    end
+    page.assert_text "Must supply a sufficiently detailed comment"
+
+    fill_in "Comment", with: "A nice long comment"
+    fill_in "Email", with: "gem-user-001@example.com"
+    click_button "Create User"
+
+    page.assert_text "Action ran successfully!"
+    perform_enqueued_jobs
+
+    user = User.sole
+    audit = user.audits.sole
+
+    page.assert_text audit.id
+    assert_equal "User", audit.auditable_type
+    assert_equal "Create User", audit.action
+    assert_equal(
+      {
+        "records" => {
+          "gid://gemcutter/User/#{user.id}" => {
+            "changes" =>   user.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          }
+        },
+        "fields" => { "email" => "gem-user-001@example.com" },
+        "arguments" => {},
+        "models" => nil
+      },
+      audit.audited_changes
+    )
+    assert_equal admin_user, audit.admin_github_user
+    assert_equal "A nice long comment", audit.comment
+
+    mailers = ActionMailer::Base.deliveries.select do |mail|
+      mail.to.include?(user.email)
+    end
+
+    assert_equal(["Change your password"], mailers.map(&:subject))
+  end
 end
