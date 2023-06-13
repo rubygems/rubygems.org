@@ -7,7 +7,7 @@ class PasswordsController < Clearance::PasswordsController
 
   def edit
     if @user.mfa_enabled?
-      setup_mfa_authentication
+      @form_mfa_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
       setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry
@@ -71,10 +71,6 @@ class PasswordsController < Clearance::PasswordsController
 
   def deliver_email(user)
     ::ClearanceMailer.change_password(user).deliver_later
-  end
-
-  def setup_mfa_authentication
-    @form_mfa_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
   end
 
   def mfa_edit_conditions_met?

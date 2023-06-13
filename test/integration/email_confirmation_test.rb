@@ -100,7 +100,7 @@ class EmailConfirmationTest < SystemTest
     assert page.has_content?("SIGN OUT")
   end
 
-  test "reqeuesting confirmation mail with webauthn enabled using recovery codes" do
+  test "requesting confirmation mail with webauthn enabled using recovery codes" do
     create_webauthn_credential
 
     request_confirmation_mail @user.email
@@ -139,7 +139,7 @@ class EmailConfirmationTest < SystemTest
   end
 
   teardown do
-    @authenticator.remove! if @authenticator
+    @authenticator&.remove!
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end

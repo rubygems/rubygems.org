@@ -330,6 +330,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           assert page.has_content?("Security Device")
         end
 
+        should "render recovery code prompt" do
+          assert page.has_content?("Recovery code")
+        end
+
         should "not update mfa level" do
           assert_predicate @user.reload, :mfa_ui_only?
         end

@@ -192,7 +192,7 @@ class PasswordResetTest < SystemTest
   end
 
   teardown do
-    @authenticator.remove! if @authenticator
+    @authenticator&.remove!
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end

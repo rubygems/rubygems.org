@@ -87,9 +87,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
     end
 
-    context "user has mfa enabled" do
+    context "user has totp enabled" do
       setup do
-        @user.mfa_ui_only!
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         get :update, params: { token: @user.confirmation_token }
       end
 
@@ -97,6 +97,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should "display otp form" do
         assert page.has_content?("Multi-factor authentication")
+        assert page.has_content?("OTP or recovery code")
       end
     end
 
@@ -135,6 +136,24 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should "display recovery code prompt" do
         assert page.has_content?("Recovery code")
+      end
+    end
+
+    context "when user has webauthn and totp" do
+      setup do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+        create(:webauthn_credential, user: @user)
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should respond_with :success
+
+      should "display webauthn prompt" do
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "display otp prompt" do
+        assert page.has_content?("OTP or recovery code")
       end
     end
   end
