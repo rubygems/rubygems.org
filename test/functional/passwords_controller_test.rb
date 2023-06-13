@@ -53,9 +53,9 @@ class PasswordsControllerTest < ActionController::TestCase
       end
     end
 
-    context "with mfa enabled" do
+    context "with totp enabled" do
       setup do
-        @user.mfa_ui_only!
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
         get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
         @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
       end
@@ -63,8 +63,33 @@ class PasswordsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "display otp form" do
-        page.assert_text("Multi-factor authentication")
+        assert page.has_content?("Multi-factor authentication")
+        assert page.has_content?("OTP code")
+        assert page.has_button?("Authenticate")
       end
+    end
+
+    context "when user has webauthn credentials but no recovery codes" do
+      setup do
+        create(:webauthn_credential, user: @user)
+        @user.mfa_recovery_codes = []
+        @user.save!
+        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
+      end
+
+      should respond_with :success
+
+      should "display webauthn prompt" do
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "not display recovery code prompt" do
+        assert page.has_button?("Authenticate")
+      end
+    end
+
+    context "when user has webauthn credentials and recovery codes" do
     end
   end
 

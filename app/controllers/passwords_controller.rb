@@ -74,7 +74,6 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def setup_mfa_authentication
-    return if @user.totp_disabled?
     @form_mfa_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
   end
 

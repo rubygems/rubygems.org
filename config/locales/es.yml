@@ -360,6 +360,8 @@ es:
     incorrect_otp: Tu código OTP no es correcto.
     session_expired:
     otp_code: código OTP
+    otp_or_recovery:
+    recovery_code:
     require_totp_disabled:
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
