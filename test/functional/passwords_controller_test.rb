@@ -85,7 +85,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should "not display recovery code prompt" do
-        refute page.has_content?("Recovery Code")
+        refute page.has_content?("Recovery code")
       end
     end
 
@@ -104,7 +104,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should "display recovery code prompt" do
-        assert page.has_button?("Authenticate")
+        assert page.has_content?("Recovery code")
       end
     end
   end

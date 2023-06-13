@@ -99,6 +99,44 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         assert page.has_content?("Multi-factor authentication")
       end
     end
+
+    context "user has webauthn enabled but no recovery codes" do
+      setup do
+        create(:webauthn_credential, user: @user)
+        @user.mfa_recovery_codes = []
+        @user.save!
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should respond_with :success
+
+      should "display webauthn form" do
+        assert page.has_content?("Multi-factor authentication")
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "not display recovery code prompt" do
+        refute page.has_content?("Recovery code")
+      end
+    end
+
+    context "user has webauthn enabled and recovery codes" do
+      setup do
+        create(:webauthn_credential, user: @user)
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should respond_with :success
+
+      should "display webauthn form" do
+        assert page.has_content?("Multi-factor authentication")
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "display recovery code prompt" do
+        assert page.has_content?("Recovery code")
+      end
+    end
   end
 
   context "on POST to mfa_update" do
