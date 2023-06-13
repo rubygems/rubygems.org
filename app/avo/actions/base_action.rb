@@ -22,6 +22,10 @@ class BaseAction < Avo::BaseAction
       result_lambda.call
       target.errored?
     }
+    define_callbacks :handle_standalone, terminator: lambda { |target, result_lambda|
+      result_lambda.call
+      target.errored?
+    }
 
     def initialize( # rubocop:disable Metrics/ParameterLists
       fields:,
@@ -76,7 +80,24 @@ class BaseAction < Avo::BaseAction
       @action.response[:messages].any? { _1[:type] == :error }
     end
 
+    def do_handle_standalone
+      _, audit = in_audited_transaction(
+        auditable: :return,
+        admin_github_user: current_user,
+        action: action_name,
+        fields:,
+        arguments:,
+        models:
+      ) do
+        run_callbacks :handle_standalone do
+          handle_standalone
+        end
+      end
+      redirect_to avo.resources_audit_path(audit)
+    end
+
     def handle
+      return do_handle_standalone if models.nil?
       models.each do |model|
         _, audit = in_audited_transaction(
           auditable: model,

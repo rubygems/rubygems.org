@@ -22,6 +22,7 @@ module Auditable
             merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
           end
         end, "sql.active_record", &)
+        auditable = value if auditable == :return
 
         audited_changed_records = changed_records.to_h do |record, changes|
           key = record.to_global_id.uri
@@ -40,7 +41,7 @@ module Auditable
             records: audited_changed_records,
             fields: fields.except(:comment),
             arguments: arguments,
-            models: models.map { _1.to_global_id.uri }
+            models: models&.map { _1.to_global_id.uri }
           }
         )
 
