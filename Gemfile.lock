@@ -157,7 +157,7 @@ GEM
     crass (1.0.6)
     css_parser (1.11.0)
       addressable
-    dalli (3.2.4)
+    dalli (3.2.5)
     date (3.3.3)
     ddtrace (1.12.1)
       debase-ruby_core_source (= 3.2.1)
