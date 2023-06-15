@@ -253,7 +253,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
 
           should "flash success" do
-            assert_equal "You have successfully disabled multi-factor authentication.", flash[:success]
+            assert_equal "You have successfully disabled OTP based multi-factor authentication.", flash[:success]
           end
 
           should "delete mfa_redirect_uri from session" do

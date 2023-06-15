@@ -359,7 +359,7 @@ en:
       time_based: "Time based: Yes"
     create:
       qrcode_expired: The QR-code and key is expired. Please try registering a new device again.
-      success: You have successfully enabled multi-factor authentication.
+      success: You have successfully enabled OTP based multi-factor authentication.
     recovery:
       copied: "[ copied ]"
       continue: Continue
@@ -369,7 +369,7 @@ en:
       note_html: "Please <strong class='recovery__bold'>copy and save</strong> these recovery codes. You can use these codes to login and reset your MFA if your lose your authentication device. Each code can be used once."
       already_generated: You should have already saved your recovery codes.
     destroy:
-      success: You have successfully disabled multi-factor authentication.
+      success: You have successfully disabled OTP based multi-factor authentication.
     update:
       invalid_level: Invalid MFA level.
       success: You have successfully updated your multi-factor authentication level.
