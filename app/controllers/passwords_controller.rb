@@ -6,7 +6,7 @@ class PasswordsController < Clearance::PasswordsController
   after_action :delete_mfa_expiry_session, only: %i[mfa_edit webauthn_edit]
 
   def edit
-    if @user.mfa_enabled? || @user.webauthn_credentials.any?
+    if @user.mfa_enabled?
       setup_mfa_authentication
       setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
 

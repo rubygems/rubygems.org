@@ -11,7 +11,7 @@ class SessionsController < Clearance::SessionsController
   def create
     @user = find_user
 
-    if @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
+    if @user&.mfa_enabled?
       setup_webauthn_authentication(form_url: webauthn_create_session_path, session_options: { "user" => @user.id })
       setup_mfa_authentication
 

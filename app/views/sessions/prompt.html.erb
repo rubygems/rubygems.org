@@ -1,7 +1,7 @@
 <% @title = t('multifactor_authentication') %>
 
 <div class="mfa__container">
-  <% if @user.webauthn_credentials.any? %>
+  <% if @user.webauthn_enabled? %>
     <div class="mfa__option">
       <h2 class="page__subheading--block"> <%= t(".security_device") %></h2>
       <div class="t-body">
