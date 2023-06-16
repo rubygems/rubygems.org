@@ -6,6 +6,8 @@ module UserMultifactorMethods
     include UserWebauthnMethods
 
     enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2, ui_and_gem_signin: 3 }, _prefix: :mfa
+
+    validate :mfa_level_for_enabled_devices
   end
 
   def mfa_enabled?
@@ -71,6 +73,12 @@ module UserMultifactorMethods
     return false if strong_mfa_level?
 
     rubygems.mfa_required.any?
+  end
+
+  def mfa_level_for_enabled_devices
+    return if (mfa_disabled? && no_mfa_devices?) || (mfa_enabled? && !no_mfa_devices?)
+
+    errors.add(:mfa_level, :invalid)
   end
 
   class_methods do

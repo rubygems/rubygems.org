@@ -7,6 +7,98 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
+  context "validations" do
+    context "mfa_level_for_enabled_devices" do
+      context "when mfa_level is disabled" do
+        should "be valid if there no mfa devices" do
+          assert_predicate @user, :valid?
+        end
+
+        should "be invalid if totp is enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.mfa_level = :disabled
+
+          refute_predicate @user, :valid?
+        end
+
+        should "be invalid if webauthn is enabled" do
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :disabled
+
+          refute_predicate @user, :valid?
+        end
+
+        should "be invalid if both totp and webauthn are enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :disabled
+
+          refute_predicate @user, :valid?
+        end
+      end
+
+      context "when mfa_level is ui_and_gem_signin" do
+        should "be invalid if there no mfa devices" do
+          @user.mfa_level = :ui_and_gem_signin
+
+          refute_predicate @user, :valid?
+        end
+
+        should "be valid if totp is enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.mfa_level = :ui_and_gem_signin
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if webauthn is enabled" do
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_gem_signin
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if both totp and webauthn are enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_gem_signin
+
+          assert_predicate @user, :valid?
+        end
+      end
+
+      context "when mfa_level is ui_and_api" do
+        should "be invalid if there no mfa devices" do
+          @user.mfa_level = :ui_and_api
+
+          refute_predicate @user, :valid?
+        end
+
+        should "be valid if totp is enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.mfa_level = :ui_and_api
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if webauthn is enabled" do
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_api
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if both totp and webauthn are enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_api
+
+          assert_predicate @user, :valid?
+        end
+      end
+    end
+  end
+
   context "#mfa_enabled" do
     should "return true if multifactor auth is not disabled" do
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
@@ -298,7 +390,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       end
 
       should "return false if the mfa_seed is blank" do
-        @user.update!(mfa_seed: nil)
+        @user.disable_totp!
 
         refute @user.ui_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
@@ -392,7 +484,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
   context ".without_mfa" do
     setup do
-      create(:user, mfa_level: :ui_and_api)
+      create(:user).enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     should "return instances without mfa" do
