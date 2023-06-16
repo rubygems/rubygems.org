@@ -4,7 +4,7 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
   before_action :authenticate_with_credentials
 
   def create
-    if @user.webauthn_credentials.present?
+    if @user.webauthn_enabled?
       verification = @user.refresh_webauthn_verification
       webauthn_path = webauthn_verification_url(verification.path_token)
       respond_to do |format|

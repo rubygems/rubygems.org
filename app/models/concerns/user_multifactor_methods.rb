@@ -9,7 +9,7 @@ module UserMultifactorMethods
   end
 
   def mfa_enabled?
-    if webauthn_credentials.present? && mfa_disabled?
+    if webauthn_enabled? && mfa_disabled?
       self.mfa_level = :ui_and_gem_signin
       save!(validate: false)
     end
@@ -26,7 +26,7 @@ module UserMultifactorMethods
   end
 
   def mfa_gem_signin_authorized?(otp)
-    return true unless strong_mfa_level? || webauthn_credentials.present?
+    return true unless strong_mfa_level? || webauthn_enabled?
     api_mfa_verified?(otp)
   end
 
