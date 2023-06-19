@@ -113,4 +113,118 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "on GET to status" do
+    setup do
+      @user = create(:user)
+      create(:webauthn_credential, user: @user)
+      create(:webauthn_verification, user: @user)
+    end
+
+    context "with valid credentials" do
+      setup do
+        authorize_with("#{@user.email}:#{@user.password}")
+        get :status, params: { webauthn_token: @user.webauthn_verification.path_token, format: :json }
+      end
+
+      should respond_with :success
+
+      should "return otp" do
+        json_response = JSON.parse(@response.body)
+
+        assert_equal @user.webauthn_verification.otp, json_response["code"]
+        assert_equal "success", json_response["status"]
+      end
+    end
+
+    context "with no credentials" do
+      setup do
+        get :status, params: { webauthn_token: @user.webauthn_verification.path_token, format: :json }
+      end
+
+      should "deny access" do
+        assert_response 401
+        assert_match "HTTP Basic: Access denied.", @response.body
+      end
+    end
+
+    context "with invalid credentials" do
+      setup do
+        authorize_with("bad\0:creds")
+        get :status, params: { webauthn_token: @user.webauthn_verification.path_token, format: :json }
+      end
+
+      should "deny access" do
+        assert_response 401
+        assert_match "HTTP Basic: Access denied.", @response.body
+      end
+    end
+
+    context "when authenticating with an api key" do
+      setup do
+        create(:api_key, key: "12345", push_rubygem: true, user: @user)
+        @request.env["HTTP_AUTHORIZATION"] = "12345"
+        get :status, params: { webauthn_token: @user.webauthn_verification.path_token, format: :json }
+      end
+
+      should respond_with :success
+
+      should "return otp" do
+        json_response = JSON.parse(@response.body)
+
+        assert_equal @user.webauthn_verification.otp, json_response["code"]
+        assert_equal "success", json_response["status"]
+      end
+    end
+
+    context "when webauthn otp is expired" do
+      setup do
+        @user.webauthn_verification.update!(otp_expires_at: 1.second.ago)
+        authorize_with("#{@user.email}:#{@user.password}")
+        get :status, params: { webauthn_token: @user.webauthn_verification.path_token, format: :json }
+      end
+
+      should respond_with :success
+
+      should "return expired" do
+        json_response = JSON.parse(@response.body)
+
+        assert_equal "expired", json_response["status"]
+        assert_equal "The token in the link you used has either expired or been used already.", json_response["message"]
+      end
+    end
+
+    context "with invalid webauthn token" do
+      setup do
+        authorize_with("#{@user.email}:#{@user.password}")
+        get :status, params: { webauthn_token: "11111", format: :json }
+      end
+
+      should respond_with :success
+
+      should "return not found" do
+        json_response = JSON.parse(@response.body)
+
+        assert_equal "not_found", json_response["status"]
+        assert_equal "Not Found", json_response["message"]
+      end
+    end
+
+    context "when otp has not been generated yet" do
+      setup do
+        authorize_with("#{@user.email}:#{@user.password}")
+        @user.webauthn_verification.update_column(:otp, nil)
+        get :status, params: { webauthn_token: @user.webauthn_verification.path_token, format: :json }
+      end
+
+      should respond_with :success
+
+      should "return pending" do
+        json_response = JSON.parse(@response.body)
+
+        assert_equal "pending", json_response["status"]
+        assert_equal "Security device authentication is still pending.", json_response["message"]
+      end
+    end
+  end
 end

@@ -410,6 +410,7 @@ pt-BR:
   webauthn_verifications:
     expired_or_already_used:
     no_port:
+    pending:
     prompt:
       title:
       authenticating_as:
