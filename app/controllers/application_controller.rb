@@ -162,4 +162,8 @@ class ApplicationController < ActionController::Base
       user_email: current_user.email
     )
   end
+
+  def browser
+    Browser.new(request.user_agent)
+  end
 end
