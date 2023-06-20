@@ -24,6 +24,7 @@ class WebauthnVerificationsController < ApplicationController
     @verification.generate_otp
     @verification.expire_path_token
 
+    return render plain: "success" if browser.safari?
     redirect_to(URI.parse("http://localhost:#{port}?code=#{@verification.otp}").to_s, allow_other_host: true)
   end
 

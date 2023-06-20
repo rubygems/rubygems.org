@@ -24,7 +24,7 @@ Rails.application.routes.draw do
       end
       resource :multifactor_auth, only: :show
       resource :webauthn_verification, only: :create do
-        get ':webauthn_token/status', action: :status, constraints: { format: :json }
+        get ':webauthn_token/status', action: :status, as: :status, constraints: { format: :json }
       end
       resources :profiles, only: :show
       get "profile/me", to: "profiles#me"

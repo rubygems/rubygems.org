@@ -4,7 +4,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   setup do
     @user = create(:user)
     create_webauthn_credential
-    @verification = create(:webauthn_verification, user: @user)
+    @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
     @port = 5678
     @mock_client = MockClientServer.new(@port)
   end
@@ -22,6 +22,25 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert redirect_to(successful_verification_webauthn_verification_path)
     assert page.has_content?("Success!")
     assert_link_is_expired
+  end
+
+  test "when verifying webauthn credential on safari" do
+    assert_poll_status("pending")
+    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
+    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+
+    assert_match "Authenticate with Security Device", page.html
+    assert_match "Authenticating as #{@user.handle}", page.html
+
+    click_on "Authenticate"
+
+    Browser::Chrome.any_instance.stubs(:safari?).returns true
+
+    assert page.has_content?("Success!")
+    assert_current_path(successful_verification_webauthn_verification_path)
+
+    assert_link_is_expired
+    assert_poll_status("success")
   end
 
   test "when client closes connection during verification" do
@@ -101,6 +120,18 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert page.has_content?("The token in the link you used has either expired or been used already.")
+  end
+
+  def assert_poll_status(status)
+    @api_key ||= create(:api_key, key: "12345", push_rubygem: true, user: @user)
+
+    Capybara.current_driver = :rack_test
+    page.driver.header "AUTHORIZATION", "12345"
+
+    visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
+
+    assert_equal status, JSON.parse(page.text)["status"]
+    fullscreen_headless_chrome_driver
   end
 
   class MockClientServer
