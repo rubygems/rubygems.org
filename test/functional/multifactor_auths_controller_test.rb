@@ -642,6 +642,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
             assert_equal [@user.email], last_email.to
           end
+
+          should "flash success" do
+            assert_equal "You have successfully enabled OTP based multi-factor authentication.", flash[:success]
+          end
         end
 
         context "when qr-code is expired" do

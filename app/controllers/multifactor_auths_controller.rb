@@ -25,7 +25,7 @@ class MultifactorAuthsController < ApplicationController
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_settings_url
     else
-      flash.now[:success] = t(".success")
+      flash[:success] = t(".success")
       @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
 
       if current_user.mfa_device_count_one?
