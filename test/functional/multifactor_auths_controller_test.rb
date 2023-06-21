@@ -253,7 +253,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
 
           should "flash success" do
-            assert_equal "You have successfully disabled multi-factor authentication.", flash[:success]
+            assert_equal "You have successfully disabled OTP based multi-factor authentication.", flash[:success]
           end
 
           should "delete mfa_redirect_uri from session" do
@@ -641,6 +641,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             assert_emails 1
             assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
             assert_equal [@user.email], last_email.to
+          end
+
+          should "flash success" do
+            assert_equal "You have successfully enabled OTP based multi-factor authentication.", flash[:success]
           end
         end
 
