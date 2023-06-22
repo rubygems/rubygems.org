@@ -351,25 +351,39 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to mfa_update" do
+      context "on POST to mfa_update with correct recovery codes" do
         setup do
           put :update, params: { level: "ui_and_api" }
-          post :mfa_update
+          post :mfa_update, params: { otp: @user.mfa_recovery_codes.first }
         end
 
         should redirect_to("the settings page") { edit_settings_path }
 
-        should "set flash error" do
-          assert_equal "You don't have an authenticator app enabled. You have to enable it first.", flash[:error]
-        end
-
-        should "not update mfa level" do
-          assert_predicate @user.reload, :mfa_ui_only?
+        should "update mfa level" do
+          assert_predicate @user.reload, :mfa_ui_and_api?
         end
 
         should "clear session variables" do
           assert_nil @controller.session[:mfa_expires_at]
           assert_nil @controller.session[:level]
+          assert_nil @controller.session[:webauthn_authentication]
+        end
+      end
+
+      context "on POST to mfa_update with incorrect recovery codes" do
+        setup do
+          put :update, params: { level: "ui_and_api" }
+          post :mfa_update, params: { otp: "blah" }
+        end
+
+        should redirect_to("the settings page") { edit_settings_path }
+
+        should "not update mfa level" do
+          assert_predicate @user.reload, :mfa_ui_only?
+        end
+
+        should "set flash error" do
+          assert_equal "Your OTP code is incorrect.", flash[:error]
         end
       end
 
@@ -704,7 +718,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
 
         should "say MFA is not enabled" do
-          assert_equal "You don't have an authenticator app enabled. You have to enable it first.", flash[:error]
+          assert_equal "Your multi-factor authentication has not been enabled. You have to enable it first.", flash[:error]
         end
       end
 
@@ -717,8 +731,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should redirect_to("the settings page") { edit_settings_path }
 
         should "set flash error" do
-          assert_equal "You don't have any security devices enabled. " \
-                       "You have to associate a device to your account first.", flash[:error]
+          assert_equal "Your multi-factor authentication has not been enabled. You have to enable it first.", flash[:error]
         end
       end
 
