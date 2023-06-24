@@ -302,4 +302,58 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
   end
+
+  test "reserve namespace" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    security_user = create(:user, email: "security@rubygems.org")
+
+    visit avo.resources_rubygems_path
+
+    click_button "Actions"
+    click_on "Reserve Namespace"
+
+    assert_no_changes "Rubygem.count" do
+      click_button "Reserve Namespace"
+    end
+    page.assert_text "Must supply a sufficiently detailed comment"
+
+    fill_in "Comment", with: "A nice long comment"
+    fill_in "Name", with: ""
+
+    assert_no_changes "Rubygem.count" do
+      click_button "Reserve Namespace"
+    end
+    page.assert_text "invalid value for attribute name: \"\" must include at least one letter"
+
+    assert_difference "Rubygem.count", 1 do
+      fill_in "Name", with: "foo"
+      click_button "Reserve Namespace"
+
+      page.assert_text "Namespace reserved: Successfully registered gem: foo (0.0.0.reserved)"
+    end
+    foo = Rubygem.find_by!(name: "foo")
+
+    assert_equal [security_user], foo.owners
+
+    visit avo.resources_rubygems_path
+    click_button "Actions"
+    click_on "Reserve Namespace"
+
+    fill_in "Comment", with: "A nice long comment"
+    fill_in "Name", with: "foo"
+    assert_no_changes "Rubygem.count" do
+      click_button "Reserve Namespace"
+    end
+    page.assert_text "This gem has indexed versions. To reserve the namespace, first yank all indexed versions."
+
+    foo.yank_versions!
+
+    assert_no_changes "Rubygem.count" do
+      fill_in "Version", with: "0.0.0.reserved.2"
+      click_button "Reserve Namespace"
+    end
+    page.assert_text "Namespace reserved: Successfully registered gem: foo (0.0.0.reserved.2)"
+  end
 end
