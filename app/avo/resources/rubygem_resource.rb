@@ -17,6 +17,7 @@ class RubygemResource < Avo::BaseResource
   action ReleaseReservedNamespace
   action AddOwner
   action YankRubygem
+  action ReserveNamespace
 
   class IndexedFilter < ScopeBooleanFilter; end
   filter IndexedFilter, arguments: { default: { with_versions: true, without_versions: true } }
