@@ -33,8 +33,13 @@
             <%= label_tag :otp, t('multifactor_auths.otp_or_recovery'), class: 'form__label' %>
             <%= text_field_tag :otp, '', class: 'form__input', autofocus: true, autocomplete: :off %>
           <% elsif @user.webauthn_only_with_recovery? %>
-            <%= label_tag :otp, t('multifactor_auths.recovery_code'), class: 'form__label' %>
-            <%= text_field_tag :otp, '', class: 'form__input', autofocus: true, autocomplete: :off %>
+            <%= text_field_tag :otp,
+              '',
+              class: 'form__input',
+              autofocus: true,
+              autocomplete: :off,
+              aria: { label: t("multifactor_auths.recovery_code") }
+            %>
           <% end %>
         </div>
         <div class="form_bottom">

@@ -353,7 +353,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "have recovery code form if user has recovery codes" do
         assert page.has_content?("Multi-factor authentication")
-        assert page.has_field?("Recovery code")
+        assert page.has_content?("Recovery code")
         assert page.has_button?("Verify code")
       end
 
@@ -390,7 +390,7 @@ class SessionsControllerTest < ActionController::TestCase
       should "not have mfa forms and have webauthn credentials form" do
         assert page.has_content?("Multi-factor authentication")
         assert_not page.has_field?("OTP code")
-        assert_not page.has_field?("Recovery code")
+        assert_not page.has_content?("Recovery code")
         assert page.has_button?("Authenticate with security device")
       end
     end
