@@ -12,18 +12,11 @@
   outline: none;
   transition-duration: 0.25s;
   transition-property: border-color, background-color; }
-@-moz-document url-prefix() {
-  .home__join, .form__submit {
-    padding-top: 12px;
-    padding-bottom: 8px; } }
 
 .home__join:before {
   position: absolute;
   right: 18px;
   line-height: 22px; }
-@-moz-document url-prefix() {
-  .home__join:before {
-    line-height: 16px; } }
 .home__join:focus:before, .home__join:hover:before {
   animation: arrow .75s infinite; }
 @-ms-keyframes arrow {
