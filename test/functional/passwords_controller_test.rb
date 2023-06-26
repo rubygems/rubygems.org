@@ -36,7 +36,7 @@ class PasswordsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "display edit form" do
-        assert page.has_content?("Reset password")
+        page.assert_text("Reset password")
       end
     end
 
@@ -63,7 +63,7 @@ class PasswordsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "display otp form" do
-        assert page.has_content?("Multi-factor authentication")
+        page.assert_text("Multi-factor authentication")
       end
     end
   end
@@ -86,7 +86,7 @@ class PasswordsControllerTest < ActionController::TestCase
         should respond_with :success
 
         should "display edit form" do
-          assert page.has_content?("Reset password")
+          page.assert_text("Reset password")
         end
         should "clear mfa_expires_at" do
           assert_nil @controller.session[:mfa_expires_at]
@@ -122,7 +122,7 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should "render sign in page" do
-          assert page.has_content? "Sign in"
+          page.assert_text "Sign in"
         end
 
         should "not sign in the user" do
@@ -166,7 +166,7 @@ class PasswordsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "display edit form" do
-        assert page.has_content?("Reset password")
+        page.assert_text("Reset password")
       end
 
       should "clear mfa_expires_at" do
@@ -248,7 +248,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should "render sign in page" do
-        assert page.has_content? "Sign in"
+        page.assert_text "Sign in"
       end
 
       should "not sign in the user" do
