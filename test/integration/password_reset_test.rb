@@ -134,8 +134,29 @@ class PasswordResetTest < SystemTest
     find(:css, ".header__popup-link").click
 
     assert page.has_content?("SIGN OUT")
+  end
 
-    @authenticator.remove!
+  test "resetting password when webauthn is enabled using recovery codes" do
+    create_webauthn_credential
+
+    forgot_password_with @user.email
+
+    visit password_reset_link
+
+    assert page.has_content? "Multi-factor authentication"
+    assert page.has_content? "Security Device"
+    assert page.has_content? "Recovery code"
+    assert_not_nil page.find(".js-webauthn-session--form")[:action]
+
+    fill_in "otp", with: @user.mfa_recovery_codes.first
+    click_button "Authenticate"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    find(:css, ".header__popup-link").click
+
+    assert page.has_content?("SIGN OUT")
   end
 
   test "resetting password with pending email change" do
@@ -171,6 +192,7 @@ class PasswordResetTest < SystemTest
   end
 
   teardown do
+    @authenticator&.remove!
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end

@@ -359,6 +359,8 @@ pt-BR:
     incorrect_otp:
     session_expired:
     otp_code:
+    otp_or_recovery:
+    recovery_code:
     require_totp_disabled:
     require_mfa_enabled:
     require_totp_enabled:
@@ -630,6 +632,7 @@ pt-BR:
       sign_in_with_webauthn_credential:
       otp_code:
       otp_or_recovery:
+      recovery_code:
       security_device:
       verify_code:
   stats:

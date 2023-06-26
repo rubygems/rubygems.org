@@ -35,6 +35,31 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
     end
   end
 
+  context "#webauthn_only_with_recovery?" do
+    should "return true if webauthn is enabled, totp is disabled, and recovery codes are present" do
+      create(:webauthn_credential, user: @user)
+
+      assert_predicate @user, :webauthn_only_with_recovery?
+    end
+
+    should "return false if webauthn is disabled" do
+      refute_predicate @user, :webauthn_only_with_recovery?
+    end
+
+    should "return false if totp is enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, "ui_and_api")
+
+      refute_predicate @user, :webauthn_only_with_recovery?
+    end
+
+    should "return false if recovery codes are not present" do
+      create(:webauthn_credential, user: @user)
+      @user.mfa_recovery_codes = []
+
+      refute_predicate @user, :webauthn_only_with_recovery?
+    end
+  end
+
   context "#webauthn_options_for_create" do
     should "returns options with id, and name" do
       user_create_options = @user.webauthn_options_for_create.user

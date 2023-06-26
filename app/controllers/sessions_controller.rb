@@ -13,7 +13,7 @@ class SessionsController < Clearance::SessionsController
 
     if @user&.mfa_enabled?
       setup_webauthn_authentication(form_url: webauthn_create_session_path, session_options: { "user" => @user.id })
-      setup_mfa_authentication
+      session[:mfa_user] = @user.id
 
       session[:mfa_login_started_at] = Time.now.utc.to_s
       create_new_mfa_expiry
@@ -135,11 +135,6 @@ class SessionsController < Clearance::SessionsController
 
     flash.now.alert = t(".account_blocked")
     render template: "sessions/new", status: :unauthorized
-  end
-
-  def setup_mfa_authentication
-    return if @user.totp_disabled?
-    session[:mfa_user] = @user.id
   end
 
   def login_conditions_met?

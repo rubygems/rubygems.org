@@ -362,6 +362,8 @@ fr:
     incorrect_otp: Votre clé OTP est incorrecte.
     session_expired:
     otp_code: clé OTP
+    otp_or_recovery:
+    recovery_code:
     require_totp_disabled:
     require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
       Vous devez d'abord l'activer.
@@ -653,6 +655,7 @@ fr:
       sign_in_with_webauthn_credential:
       otp_code:
       otp_or_recovery:
+      recovery_code:
       security_device:
       verify_code:
   stats:

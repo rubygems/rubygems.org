@@ -98,8 +98,27 @@ class EmailConfirmationTest < SystemTest
     find(:css, ".header__popup-link").click
 
     assert page.has_content?("SIGN OUT")
+  end
 
-    @authenticator.remove!
+  test "requesting confirmation mail with webauthn enabled using recovery codes" do
+    create_webauthn_credential
+
+    request_confirmation_mail @user.email
+
+    link = last_email_link
+
+    assert_not_nil link
+    visit link
+
+    assert page.has_content? "Multi-factor authentication"
+    assert page.has_content? "Security Device"
+
+    fill_in "otp", with: @user.mfa_recovery_codes.first
+    click_button "Authenticate"
+
+    find(:css, ".header__popup-link").click
+
+    assert page.has_content?("SIGN OUT")
   end
 
   test "requesting confirmation mail with mfa enabled, but mfa session is expired" do
@@ -120,6 +139,7 @@ class EmailConfirmationTest < SystemTest
   end
 
   teardown do
+    @authenticator&.remove!
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end

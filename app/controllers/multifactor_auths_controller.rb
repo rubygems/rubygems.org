@@ -4,8 +4,8 @@ class MultifactorAuthsController < ApplicationController
 
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_totp_disabled, only: %i[new create]
-  before_action :require_mfa_enabled, only: :update
-  before_action :require_totp_enabled, only: %i[mfa_update destroy]
+  before_action :require_mfa_enabled, only: %i[update mfa_update]
+  before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
   before_action :verify_session_expiration, only: %i[mfa_update webauthn_update]
   after_action :delete_mfa_level_update_session_variables, only: %i[mfa_update webauthn_update]
@@ -42,7 +42,7 @@ class MultifactorAuthsController < ApplicationController
     session[:level] = level_param
     @user = current_user
 
-    setup_mfa_authentication
+    @form_mfa_url = mfa_update_multifactor_auth_url(token: current_user.confirmation_token)
     setup_webauthn_authentication
 
     create_new_mfa_expiry
@@ -136,11 +136,6 @@ class MultifactorAuthsController < ApplicationController
     %i[mfa_seed mfa_seed_expire].each do |key|
       session.delete(key)
     end
-  end
-
-  def setup_mfa_authentication
-    return if current_user.totp_disabled?
-    @form_mfa_url = mfa_update_multifactor_auth_url(token: current_user.confirmation_token)
   end
 
   def setup_webauthn_authentication

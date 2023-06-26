@@ -155,6 +155,7 @@ class ActiveSupport::TestCase
     find(:css, ".header__popup-link").click
     click_on "Sign out"
 
+    @user.reload
     @authenticator
   end
 end

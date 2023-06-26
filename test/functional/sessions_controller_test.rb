@@ -347,14 +347,50 @@ class SessionsControllerTest < ActionController::TestCase
         assert_not_nil session[:webauthn_authentication]["challenge"]
       end
 
-      should "not set mfa_user" do
-        assert_nil session[:mfa_user]
+      should "set mfa_user" do
+        assert_equal @user.id, session[:mfa_user]
+      end
+
+      should "have recovery code form if user has recovery codes" do
+        assert page.has_content?("Multi-factor authentication")
+        assert page.has_content?("Recovery code")
+        assert page.has_button?("Verify code")
       end
 
       should "not have mfa forms and have webauthn credentials form" do
         assert page.has_content?("Multi-factor authentication")
         assert_not page.has_field?("OTP code")
-        assert_not page.has_field?("Recovery code")
+        assert page.has_button?("Authenticate with security device")
+      end
+    end
+
+    context "when user has webauthn credentials but no recovery code" do
+      setup do
+        @user = create(:user)
+        create(:webauthn_credential, user: @user)
+        @user.mfa_recovery_codes = []
+        @user.save!
+        post(
+          :create,
+          params: { session: { who: @user.handle, password: @user.password } }
+        )
+      end
+
+      should respond_with :ok
+
+      should "set webauthn authentication" do
+        assert_equal @user.id, session[:webauthn_authentication]["user"]
+        assert_not_nil session[:webauthn_authentication]["challenge"]
+      end
+
+      should "set mfa_user" do
+        assert_equal @user.id, session[:mfa_user]
+      end
+
+      should "not have mfa forms and have webauthn credentials form" do
+        assert page.has_content?("Multi-factor authentication")
+        assert_not page.has_field?("OTP code")
+        assert_not page.has_content?("Recovery code")
         assert page.has_button?("Authenticate with security device")
       end
     end

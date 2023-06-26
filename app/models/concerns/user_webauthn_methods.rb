@@ -29,6 +29,10 @@ module UserWebauthnMethods
     webauthn_credentials.none?
   end
 
+  def webauthn_only_with_recovery?
+    webauthn_enabled? && totp_disabled? && mfa_recovery_codes.present?
+  end
+
   def webauthn_options_for_get
     WebAuthn::Credential.options_for_get(
       allow: webauthn_credentials.pluck(:external_id),

@@ -50,4 +50,20 @@ class SignInWebauthnTest < ApplicationSystemTestCase
       assert page.has_content? "Multi-factor authentication"
     end
   end
+
+  test "sign in with webauthn using recovery codes" do
+    visit sign_in_path
+
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+
+    assert page.has_content? "Multi-factor authentication"
+    assert page.has_content? "Security Device"
+
+    fill_in "otp", with: @user.mfa_recovery_codes.first
+    click_button "Verify code"
+
+    assert page.has_content? "Dashboard"
+  end
 end
