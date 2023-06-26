@@ -2,7 +2,7 @@
   <%= form_tag rubygem_ownership_requests_path(@rubygem), method: :post, class: "ownership_request_form", id: "new_ownership_request" do %>
     <div class="text_field push--top-s">
       <%= label_tag :note, t("ownership_requests.note_for_owners"), class: "form__label" %>
-      <span class="gem__users__mfa-text"><%= t("ownership_calls.markup_supported_html") %></span>
+      <%= t("ownership_calls.markup_supported_html") %>
       <%= text_area_tag :note, nil, placeholder: "Please share why are you requesting ownership of #{@rubygem.name}", class: "form__input form__textarea", required: true %>
     </div>
     <div class="submit_field">

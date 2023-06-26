@@ -2,7 +2,7 @@
   <%= form_tag rubygem_ownership_calls_path, method: :post, class: "ownership_call_form", id: "new_ownership_call" do %>
     <div class="text_field">
       <%= label_tag :note, t("ownership_calls.note_for_applicants"),  class: "form__label" %>
-      <span class="gem__users__mfa-text"><%= t("ownership_calls.markup_supported_html") %></span>
+      <%= t("ownership_calls.markup_supported_html") %>
       <%= text_area_tag :note, nil, placeholder: t("ownership_calls.share_requirements"), class: "form__input form__textarea", required: true %>
     </div>
     <div class="submit_field">
