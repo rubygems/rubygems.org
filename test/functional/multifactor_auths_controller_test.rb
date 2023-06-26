@@ -322,28 +322,44 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "on PUT to update mfa level" do
         setup do
           freeze_time
-          put :update, params: { level: "ui_and_api" }
         end
 
-        should "render webauthn prompt" do
-          refute page.has_content?("OTP code")
-          assert page.has_content?("Security Device")
+        context "when user has recovery codes" do
+          setup do
+            put :update, params: { level: "ui_and_api" }
+          end
+
+          should "render webauthn prompt" do
+            refute page.has_content?("OTP code")
+            assert page.has_content?("Security Device")
+          end
+
+          should "render recovery code prompt" do
+            assert page.has_content?("Recovery code")
+          end
+
+          should "not update mfa level" do
+            assert_predicate @user.reload, :mfa_ui_only?
+          end
+
+          should "set mfa level in session" do
+            assert_equal "ui_and_api", @controller.session[:level]
+          end
+
+          should "set expiry in session" do
+            assert_equal 15.minutes.from_now.to_s, session[:mfa_expires_at]
+          end
         end
 
-        should "render recovery code prompt" do
-          assert page.has_content?("Recovery code")
-        end
+        context "when user does not have recovery codes" do
+          setup do
+            @user.update!(mfa_recovery_codes: [])
+            put :update, params: { level: "ui_and_api" }
+          end
 
-        should "not update mfa level" do
-          assert_predicate @user.reload, :mfa_ui_only?
-        end
-
-        should "set mfa level in session" do
-          assert_equal "ui_and_api", @controller.session[:level]
-        end
-
-        should "set expiry in session" do
-          assert_equal 15.minutes.from_now.to_s, session[:mfa_expires_at]
+          should "not render recovery code prompt" do
+            refute page.has_content?("Recovery code")
+          end
         end
 
         teardown do
