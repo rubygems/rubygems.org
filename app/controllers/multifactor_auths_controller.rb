@@ -4,7 +4,7 @@ class MultifactorAuthsController < ApplicationController
 
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_totp_disabled, only: %i[new create]
-  before_action :require_mfa_enabled, only: %i[update mfa_update webauthn_update]
+  before_action :require_mfa_enabled, only: %i[update mfa_update]
   before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
   before_action :verify_session_expiration, only: %i[mfa_update webauthn_update]

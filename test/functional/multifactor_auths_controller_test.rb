@@ -731,7 +731,8 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should redirect_to("the settings page") { edit_settings_path }
 
         should "set flash error" do
-          assert_equal "Your multi-factor authentication has not been enabled. You have to enable it first.", flash[:error]
+          assert_equal "You don't have any security devices enabled. " \
+                       "You have to associate a device to your account first.", flash[:error]
         end
       end
 
