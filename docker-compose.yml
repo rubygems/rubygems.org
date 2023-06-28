@@ -19,5 +19,5 @@ services:
     ports:
       - "9200:9200"
   toxiproxy:
-    image: shopify/toxiproxy:2.1.4
+    image: ghcr.io/shopify/toxiproxy:2.5.0
     network_mode: "host"
