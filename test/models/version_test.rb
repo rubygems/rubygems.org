@@ -1036,11 +1036,13 @@ class VersionTest < ActiveSupport::TestCase
       @end_time = Time.zone.parse("2017-11-10")
     end
 
-    should "return versions created in the given range" do
-      @version.created_at = Time.zone.parse("2017-10-20")
+    should "return versions created in the given range ordered by date and id" do
+      created_at = Time.zone.parse("2017-10-20")
+      other_version = create(:version, created_at: created_at)
+      @version.created_at = created_at
       @version.save!
 
-      assert_contains Version.created_between(@start_time, @end_time), @version
+      assert_equal [other_version.id, @version.id], Version.created_between(@start_time, @end_time).map(&:id)
     end
 
     should "NOT return versions created before the range begins" do
