@@ -169,8 +169,9 @@ class Version < ApplicationRecord
     find_by(full_name: full_name)&.rubygem&.name
   end
 
+  # id is added to ORDER to return stable results for gems pushed at the same time
   def self.created_between(start_time, end_time)
-    where(created_at: start_time..end_time).order(:created_at)
+    where(created_at: start_time..end_time).order(:created_at, :id)
   end
 
   def platformed?
