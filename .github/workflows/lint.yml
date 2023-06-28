@@ -50,12 +50,12 @@ jobs:
         env:
           ENVIRONMENT: "${{ matrix.environment }}"
           REVISION: "${{ github.sha }}"
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: "${{ matrix.environment }}.rendered.yaml"
           path: "config/deploy/${{ matrix.environment }}.rendered.yaml"
       - name: kubeconform
-        uses: docker://ghcr.io/yannh/kubeconform:v0.6.1
+        uses: docker://ghcr.io/yannh/kubeconform:v0.6.2
         with:
           entrypoint: "/kubeconform"
           args: "-strict -summary -output json --kubernetes-version ${{ matrix.kubernetes_version }} config/deploy/${{ matrix.environment }}.rendered.yaml"
