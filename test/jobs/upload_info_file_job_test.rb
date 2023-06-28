@@ -36,4 +36,10 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
 
     assert_enqueued_with(job: FastlyPurgeJob, args: [{ key: "s3-info/#{version.rubygem.name}", soft: true }])
   end
+
+  test "#good_job_concurrency_key" do
+    job = UploadInfoFileJob.new(rubygem_name: "foo")
+
+    assert_equal "UploadInfoFileJob:foo", job.good_job_concurrency_key
+  end
 end

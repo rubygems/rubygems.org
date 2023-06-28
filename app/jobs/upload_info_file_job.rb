@@ -10,7 +10,7 @@ class UploadInfoFileJob < ApplicationJob
     # it makes no sense to enqueue more than one at a time
     enqueue_limit: good_job_concurrency_enqueue_limit(default: 1),
     perform_limit: good_job_concurrency_perform_limit(default: 1),
-    key: -> { "#{name}/#{rubygem_name_arg}" }
+    key: -> { "#{self.class.name}:#{rubygem_name_arg}" }
   )
 
   def perform(rubygem_name:)
