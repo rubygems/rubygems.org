@@ -232,13 +232,13 @@ zh-CN:
       title: 安全设备移除
       subtitle: 你好啊，%{handle}！
     totp_enabled:
-      subject:
-      title:
-      subtitle:
+      subject: 认证 App 已在 RubyGems.org 上启用
+      title: 认证 App 已启用
+      subtitle: 你好啊，%{handle}！
     totp_disabled:
-      subject:
-      title:
-      subtitle:
+      subject: 认证 App 已在 RubyGems.org 上禁用
+      title: 认证 App 已禁用
+      subtitle: 你好啊，%{handle}！
     email_reset_update:
       subject: 您已请求在 RubyGems.org 上进行邮箱地址变更
       title: 邮箱更新请求已发送
@@ -341,12 +341,12 @@ zh-CN:
     incorrect_otp: 您的 OTP 码 不正确。
     session_expired: 您的登录页面会话已过期。
     otp_code: OTP 码
-    otp_or_recovery:
-    recovery_code:
+    otp_or_recovery: OTP 码或恢复码
+    recovery_code: 恢复码
     require_totp_disabled: 您的多因素验证已启用。要重新配置多因素验证，您必须首先停用它。
     require_mfa_enabled: 您的多因素验证已停用，请先启用。
-    require_totp_enabled:
-    require_webauthn_enabled:
+    require_totp_enabled: 您还没有启用一个身份验证器应用。您必须先启用它。
+    require_webauthn_enabled: 您还没有启用任何安全设备。您必须首先关联一个设备到您的账户。
     setup_required_html: 为了保护您的帐户和您的 Gem，您需要设置多因素验证。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">博客文章</a>了解详情。
     setup_recommended: 为了保护您的帐户和您的 Gem，我们鼓励您设置多因素验证。在将来，您的帐户将被要求启用多因素验证。
     strong_mfa_level_required_html: 为了保护您的帐户和您的 Gem，您需要将您的多因素验证级别更改为 "UI and gem signin" 或 "UI and API"。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html"">博客文章</a>了解详情。
@@ -370,12 +370,12 @@ zh-CN:
       copy: "[ 复制 ]"
       saved: 我声明我已经保存了我的恢复码。
       note_html: "请 <strong class='recovery__bold'>复制并保存</strong> 这些恢复码。如果您丢失了身份验证设备，您可以使用这些恢复码登录并重置您的多因素验证配置。每个恢复码只能使用一次。"
-      already_generated:
+      already_generated: 您应该已经保存了您的恢复码。
     destroy:
       success: 您已成功停用多因素验证。
     update:
-      invalid_level:
-      success: 您已成功修改多因素验证等级。
+      invalid_level: 无效的 MFA 级别。
+      success: 您已成功修改多因素验证级别。
   notifiers:
     update:
       success: 您已成功更新邮件通知设置。
@@ -453,8 +453,8 @@ zh-CN:
         otp: 身份认证应用
         disabled_html: 您尚未启用基于 OTP 的多因素身份验证。请参考<a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems 多因素验证指南</a> 来了解更多关于多因素验证级别的信息。
         go_settings: 注册新设备
-        level_html:
-        enabled_note:
+        level_html: 您已启用多因素身份验证。请点击 “更新” 来改变您的 MFA 级别。请参考 <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems 多重身份验证指南 来了解更多 MFA 级别的信息。
+        enabled_note: 您已启用多因素身份验证。请输入您从身份验证器上获得的 OTP 码，或使用您已生效的恢复码来禁用。
         update: 更新
         disable:
         enabled:
@@ -570,7 +570,7 @@ zh-CN:
     index:
       title: "%{name} 的反向依赖"
       subtitle: "以下 Gem 的最新版本需要 %{name}"
-      no_reverse_dependencies:
+      no_reverse_dependencies: 这个 Gem 没有反向依赖。
     search:
       search_reverse_dependencies_html: "搜索反向依赖 Gem&hellip;"
   searches:
@@ -603,7 +603,7 @@ zh-CN:
       sign_in_with_webauthn_credential: 通过安全设备认证人身
       otp_code: 一次性密码
       otp_or_recovery: OTP 或 恢复码
-      recovery_code:
+      recovery_code: 恢复码
       security_device: 安全设备
       verify_code: 验证码
   stats:
@@ -684,7 +684,7 @@ zh-CN:
     signin_to_create_html: 请 <a href="https://rubygems.org/sign_in">登录</a> 来新建一个所有权申请。
   webauthn_credentials:
     callback:
-      success:
+      success: 您已成功注册一个安全设备。
     recovery:
       continue: 继续
       title: 您已成功添加一个安全设备
