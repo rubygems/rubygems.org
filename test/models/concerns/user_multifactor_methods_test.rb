@@ -8,14 +8,27 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
   end
 
   context "#mfa_enabled" do
-    should "return true if multifactor auth is not disabled" do
+    should "return true if multifactor auth is not disabled using TOTP" do
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       assert_predicate @user, :mfa_enabled?
     end
 
-    should "return true if multifactor auth is disabled" do
+    should "return false if multifactor auth is disabled using TOTP" do
       @user.disable_totp!
+
+      refute_predicate @user, :mfa_enabled?
+    end
+
+    should "return true if multifactor auth is not disabled using WebAuthn" do
+      create(:webauthn_credential, user: @user)
+
+      assert_predicate @user, :mfa_enabled?
+    end
+
+    should "return true if multifactor auth is disabled using WebAuthn" do
+      create(:webauthn_credential, user: @user)
+      @user.webauthn_credentials.first.destroy
 
       refute_predicate @user, :mfa_enabled?
     end
@@ -27,14 +40,6 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
       assert_equal [@user.email], last_email.to
-    end
-
-    should "update mfa level and return true with mfa disabled webauthn only users" do
-      @credential = create(:webauthn_credential, user: @user)
-      @user.update!(mfa_level: :disabled)
-
-      assert_predicate @user, :mfa_enabled?
-      assert_predicate @user, :mfa_ui_and_gem_signin?
     end
   end
 
