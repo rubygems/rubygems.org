@@ -1,6 +1,8 @@
 class Api::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  around_action :rswag
+
   private
 
   def name_params
@@ -116,5 +118,39 @@ class Api::BaseController < ApplicationController
 
   def render_soft_deleted_api_key
     render plain: "An invalid API key cannot be used. Please delete it and create a new one.", status: :forbidden
+  end
+
+  def rswag
+    f = Rails.root.join("app", "controllers", "api", "v1", "api.yaml")
+    schema = OpenAPIParser.load(f, { strict_reference_validation: true, strict_response_validation: true })
+    path = request.path
+    path = path.delete_suffix(".#{request.format.to_sym}")
+    path = path.sub("/api/v1", "")
+
+    ro = schema.request_operation(request.method.downcase.to_sym, path)
+    raise "No operation found for #{request.method} #{path}" unless ro
+
+    ro.validate_request_body(request.content_mime_type.to_s, request.request_parameters)
+    ro.validate_path_params
+
+    yield.tap do
+      ro.validate_response_body(
+        OpenAPIParser::RequestOperation::ValidatableResponseBody.new(response.status, deserialized_response_body, response.headers)
+      )
+    end
+  end
+
+  def deserialized_response_body
+    case Mime::Type.lookup response.content_type.sub(/^([^,;]*).*/, '\1').strip.downcase
+    when Mime::Type.lookup_by_extension(:json)
+      JSON.parse(response.body)
+    when Mime::Type.lookup_by_extension(:yaml)
+      YAML.safe_load(response.body)
+    when Mime::Type.lookup("text/plain")
+      response.body
+    else
+      raise "Unknown content type #{response.content_type} (#{response.content_type.sub(/^([^,;]*).*/, '\1')}) in response body: " +
+        response.body
+    end
   end
 end

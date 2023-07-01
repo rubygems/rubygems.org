@@ -284,5 +284,9 @@ Rails.application.routes.draw do
   ################################################################################
   # Development routes
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+    get '/api/v1/schema' => 'api/v1/schema#show'
+    mount Rswag::Ui::Engine => '/api-docs'
+  end
 end

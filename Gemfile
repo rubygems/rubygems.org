@@ -10,7 +10,7 @@ gem "clearance", "~> 2.6"
 gem "dalli", "~> 3.2"
 gem "ddtrace", "~> 1.10", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby", "~> 5.5"
-gem "google-protobuf", "~> 3.22"
+gem "google-protobuf", "~> 3.23"
 gem "faraday", "~> 1.10"
 gem "good_job", "~> 3.14"
 gem "gravtastic", "~> 3.2"
@@ -73,6 +73,7 @@ group :development, :test do
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.2"
   gem "dotenv-rails", "~> 2.8"
+  gem "openapi_parser", "~> 1.0"
 
   gem "brakeman", "~> 5.4", require: false
   gem "rubocop", "~> 1.48", require: false
@@ -87,6 +88,7 @@ group :development do
   gem "listen", "~> 3.8"
   gem "letter_opener", "~> 1.8"
   gem "letter_opener_web", "~> 2.0"
+  gem "rswag-ui", "~> 2.9"
 end
 
 group :test do
