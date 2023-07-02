@@ -36,7 +36,7 @@ class RubygemsController < ApplicationController
   private
 
   def reserved?
-    (Patterns::GEM_NAME_RESERVED_LIST.include? params[:id].downcase)
+    GemNameReservation.reserved?(params[:id])
   end
 
   def set_reserved_gem

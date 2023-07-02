@@ -377,7 +377,8 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a reserved gem" do
     setup do
-      get :show, params: { id: Patterns::GEM_NAME_RESERVED_LIST.sample }
+      reservation = create(:gem_name_reservation)
+      get :show, params: { id: reservation.name }
     end
 
     should respond_with :success
