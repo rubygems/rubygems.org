@@ -94,7 +94,7 @@ m_GemNameReservation [label = <<table border="0" align="center" cellspacing="0.5
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
 </table>
 >];
 m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">

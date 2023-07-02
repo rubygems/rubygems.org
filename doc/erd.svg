@@ -160,7 +160,7 @@
 <text text-anchor="start" x="2512" y="-865.2" font-family="Arial Bold" font-size="11.00">GemNameReservation</text>
 <polyline fill="none" stroke="black" points="2645,-850 2645,-886"/>
 <text text-anchor="start" x="2652" y="-866" font-family="Arial" font-size="10.00">name </text>
-<text text-anchor="start" x="2680" y="-866" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="2680" y="-866" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
 </g>
 <!-- m_GemTypoException -->
 <g id="node9" class="node">

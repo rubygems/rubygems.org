@@ -14,11 +14,11 @@ class GemNameReservationPolicy < ApplicationPolicy
   end
 
   def avo_create?
-    true
+    rubygems_org_admin?
   end
 
   def avo_destroy?
-    true
+    rubygems_org_admin?
   end
 
   def avo_search?

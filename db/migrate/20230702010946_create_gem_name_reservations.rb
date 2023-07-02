@@ -56,10 +56,12 @@ class CreateGemNameReservations < ActiveRecord::Migration[7.0]
 
   def change
     create_table :gem_name_reservations do |t|
-      t.string :name
+      t.string :name, null: false
 
       t.timestamps
     end
+
+    add_index :gem_name_reservations, :name, unique: true
 
     reversible do |change|
       change.up do
