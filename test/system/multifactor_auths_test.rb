@@ -87,8 +87,9 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     sign_in
     visit path
 
-    assert(page.has_content?("Enabling multi-factor auth"), "#{path} was not redirected to mfa setup page")
+    assert(page.has_content?("you are required to set up multi-factor authentication"))
 
+    click_button "Register a new device"
     totp = ROTP::TOTP.new(otp_key)
     fill_in "otp", with: totp.now
     click_button "Enable"

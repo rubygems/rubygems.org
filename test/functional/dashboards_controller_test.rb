@@ -121,7 +121,7 @@ class DashboardsControllerTest < ActionController::TestCase
 
       context "user has mfa disabled" do
         setup { get :show }
-        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        should redirect_to("the edit settings page") { edit_settings_path }
 
         should "set mfa_redirect_uri" do
           assert_equal dashboard_path, session[:mfa_redirect_uri]

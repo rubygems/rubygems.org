@@ -667,7 +667,7 @@ class SessionsControllerTest < ActionController::TestCase
       context "on GET to verify" do
         setup { get :verify, params: { user_id: @user.id } }
 
-        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        should redirect_to("the edit settings page") { edit_settings_path }
 
         should "set mfa_redirect_uri" do
           assert_equal verify_session_path, session[:mfa_redirect_uri]
@@ -677,7 +677,7 @@ class SessionsControllerTest < ActionController::TestCase
       context "on POST to authenticate" do
         setup { post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } } }
 
-        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        should redirect_to("the edit settings page") { edit_settings_path }
 
         should "set mfa_redirect_uri" do
           assert_equal authenticate_session_path, session[:mfa_redirect_uri]
