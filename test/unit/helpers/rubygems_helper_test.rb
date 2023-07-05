@@ -125,8 +125,9 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create links to gem owners without mfa" do
-      with_mfa = create(:user, mfa_level: "ui_and_api")
-      without_mfa = create_list(:user, 2, mfa_level: "disabled")
+      with_mfa = create(:user)
+      with_mfa.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      without_mfa = create_list(:user, 2)
       rubygem = create(:rubygem, owners: [*without_mfa, with_mfa])
 
       expected_links = without_mfa.sort_by(&:id).map do |u|

@@ -46,7 +46,9 @@ class MailerTest < ActionMailer::TestCase
     end
 
     should "send mail to users with with more than 180M+ downloads and have weak MFA" do
-      user = create(:user, mfa_level: "ui_only")
+      user = create(:user)
+      user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
       perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -64,7 +66,8 @@ class MailerTest < ActionMailer::TestCase
     end
 
     should "not send mail to users with with more than 180M+ downloads and have strong MFA" do
-      user = create(:user, mfa_level: "ui_and_api")
+      user = create(:user)
+      user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
       perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -108,7 +111,8 @@ class MailerTest < ActionMailer::TestCase
     end
 
     should "send mail to users with more than 180M+ downloads and have weak MFA enabled" do
-      user = create(:user, mfa_level: "ui_only")
+      user = create(:user)
+      user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
       perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -126,7 +130,8 @@ class MailerTest < ActionMailer::TestCase
     end
 
     should "not send mail to users with more than 180M+ downloads and have strong MFA enabled" do
-      user = create(:user, mfa_level: "ui_and_api")
+      user = create(:user)
+      user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
       perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do

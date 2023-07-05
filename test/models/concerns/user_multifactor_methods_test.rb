@@ -12,6 +12,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       context "when mfa_level is disabled" do
         should "be valid if there no mfa devices" do
           assert_predicate @user, :valid?
+          assert_predicate @user, :no_mfa_devices?
         end
 
         should "be invalid if totp is enabled" do
@@ -41,6 +42,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         should "be invalid if there no mfa devices" do
           @user.mfa_level = :ui_and_gem_signin
 
+          assert_predicate @user, :no_mfa_devices?
           refute_predicate @user, :valid?
         end
 
@@ -71,6 +73,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         should "be invalid if there no mfa devices" do
           @user.mfa_level = :ui_and_api
 
+          assert_predicate @user, :no_mfa_devices?
           refute_predicate @user, :valid?
         end
 

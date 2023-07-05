@@ -579,8 +579,8 @@ class UserTest < ActiveSupport::TestCase
 
   context ".without_mfa" do
     setup do
-      create(:user, handle: "has_mfa", mfa_level: "ui_and_api")
-      create(:user, handle: "no_mfa", mfa_level: "disabled")
+      create(:user, handle: "has_mfa").enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:user, handle: "no_mfa")
     end
 
     should "return only users without mfa" do
