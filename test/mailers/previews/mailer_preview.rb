@@ -186,15 +186,15 @@ class MailerPreview < ActionMailer::Preview
     Mailer.webauthn_credential_removed(user_id, webauthn_credential_nickname, Time.now.utc)
   end
 
-  def mfa_enabled
+  def totp_enabled
     user_id = User.last.id
 
-    Mailer.mfa_enabled(user_id, Time.now.utc)
+    Mailer.totp_enabled(user_id, Time.now.utc)
   end
 
-  def mfa_disabled
+  def totp_disabled
     user_id = User.last.id
 
-    Mailer.mfa_disabled(user_id, Time.now.utc)
+    Mailer.totp_disabled(user_id, Time.now.utc)
   end
 end

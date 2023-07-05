@@ -18,7 +18,7 @@ module UserTotpMethods
     end
 
     save!(validate: false)
-    Mailer.mfa_disabled(id, Time.now.utc).deliver_later
+    Mailer.totp_disabled(id, Time.now.utc).deliver_later
   end
 
   def verify_and_enable_totp!(seed, level, otp, expiry)
@@ -40,7 +40,7 @@ module UserTotpMethods
     end
 
     save!(validate: false)
-    Mailer.mfa_enabled(id, Time.now.utc).deliver_later
+    Mailer.totp_enabled(id, Time.now.utc).deliver_later
   end
 
   private

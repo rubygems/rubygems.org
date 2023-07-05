@@ -40,12 +40,12 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     end
 
-    should "send mfa disabled email" do
+    should "send totp disabled email" do
       perform_disable_totp_job
 
       assert_emails 1
 
-      assert_equal "Multi-factor authentication disabled on RubyGems.org", last_email.subject
+      assert_equal "Authentication app disabled on RubyGems.org", last_email.subject
       assert_equal [@user.email], last_email.to
     end
 

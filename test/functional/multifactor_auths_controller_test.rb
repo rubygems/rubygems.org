@@ -248,7 +248,8 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           should "send mfa disabled email" do
             assert_emails 1
 
-            assert_equal "Multi-factor authentication disabled on RubyGems.org", last_email.subject
+            assert_equal "Authentication app disabled on RubyGems.org",
+                         last_email.subject
             assert_equal [@user.email], last_email.to
           end
 
@@ -314,7 +315,8 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         should "send totp enabled email" do
           assert_emails 1
-          assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
+          assert_equal "Authentication app enabled on RubyGems.org",
+                       last_email.subject
           assert_equal [@user.email], last_email.to
         end
       end
@@ -671,9 +673,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             assert_predicate @user.reload, :mfa_enabled?
           end
 
-          should "send mfa enabled email" do
+          should "send totp enabled email" do
             assert_emails 1
-            assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
+            assert_equal "Authentication app enabled on RubyGems.org",
+                         last_email.subject
             assert_equal [@user.email], last_email.to
           end
 
