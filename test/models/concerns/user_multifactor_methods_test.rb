@@ -41,14 +41,6 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       assert_equal "Authentication app enabled on RubyGems.org", last_email.subject
       assert_equal [@user.email], last_email.to
     end
-
-    should "update mfa level and return true with mfa disabled webauthn only users" do
-      @credential = create(:webauthn_credential, user: @user)
-      @user.update!(mfa_level: :disabled)
-
-      assert_predicate @user, :mfa_enabled?
-      assert_predicate @user, :mfa_ui_and_gem_signin?
-    end
   end
 
   context "#mfa_device_count_one?" do

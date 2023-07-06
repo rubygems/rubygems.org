@@ -662,7 +662,7 @@ en:
     details: Details
     apply: Apply
     close: Close
-    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/Markup.html#class-RDoc::Markup-label-RDoc+Markup+Reference">Rdoc markup supported</a>
+    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">Rdoc markup supported</a>
     create_call: Create ownership call
   ownership_requests:
     create:

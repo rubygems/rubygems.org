@@ -12,7 +12,7 @@ fi
 
 # make repository lower-case, since it is used in docker image tag
 # and must be lowercase
-GITHUB_REPOSITORY=$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')
+GITHUB_REPOSITORY=$(echo "${GITHUB_REPOSITORY:-rubygems/rubygems.org}" | tr '[:upper:]' '[:lower:]')
 
 DOCKER_TAG="048268392960.dkr.ecr.us-west-2.amazonaws.com/$GITHUB_REPOSITORY:$GITHUB_SHA"
 
