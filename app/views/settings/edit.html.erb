@@ -12,8 +12,9 @@
       <%= submit_tag t(".mfa.update"), class: "form__submit" %>
     <% end %>
   <% end %>
+
+  <h2><%= t(".mfa.otp")%></h2>
   <% if @user.totp_enabled? %>
-    <h2><%= t(".mfa.level.title")%></h2>
     <p><%= t(".mfa.enabled") %></p>
     <%= form_tag multifactor_auth_path, method: :delete, id: "mfa-delete" do %>
       <div class="text_field">
@@ -24,8 +25,6 @@
     <% end %>
   <% else %>
     <div class="t-body">
-      <h2><%= t(".mfa.otp")%></h2>
-
       <p>
       <%= t(".mfa.disabled_html") %>
       <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
