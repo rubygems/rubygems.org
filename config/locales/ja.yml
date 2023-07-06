@@ -225,11 +225,11 @@ ja:
       subject:
       title:
       subtitle:
-    mfa_enabled:
+    totp_enabled:
       subject:
       title:
       subtitle:
-    mfa_disabled:
+    totp_disabled:
       subject:
       title:
       subtitle:

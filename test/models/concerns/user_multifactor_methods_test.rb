@@ -8,13 +8,13 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
   end
 
   context "#mfa_enabled" do
-    should "return true if multifactor auth is not disabled using TOTP" do
+    should "return true if multifactor auth is not disabled using totp" do
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       assert_predicate @user, :mfa_enabled?
     end
 
-    should "return false if multifactor auth is disabled using TOTP" do
+    should "return false if multifactor auth is disabled using totp" do
       @user.disable_totp!
 
       refute_predicate @user, :mfa_enabled?
@@ -33,12 +33,12 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       refute_predicate @user, :mfa_enabled?
     end
 
-    should "send mfa enabled email" do
+    should "send totp enabled email" do
       assert_emails 1 do
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
       end
 
-      assert_equal "Multi-factor authentication enabled on RubyGems.org", last_email.subject
+      assert_equal "Authentication app enabled on RubyGems.org", last_email.subject
       assert_equal [@user.email], last_email.to
     end
   end
