@@ -99,7 +99,7 @@ RUN <<BASH
   bundle config set --local without 'development test assets'
   bundle clean --force
   rm -r /app/tmp/cache/bootsnap/
-  # Precompile bootsnap code for faster boot times, but do it after weve
+  # Precompile bootsnap code for faster boot times, but do it after we've
   # removed the assets group for minimal precompilation size
   bundle exec bootsnap precompile --gemfile app/ lib/
 BASH
