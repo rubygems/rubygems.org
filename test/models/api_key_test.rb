@@ -257,13 +257,13 @@ class ApiKeyTest < ActiveSupport::TestCase
       end
 
       should "return true if mfa not enabled for api key" do
-        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @api_key.user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
 
         assert @api_key.mfa_authorized?(nil)
       end
 
       should "return true if mfa enabled for api" do
-        @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @api_key.user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
 
         assert @api_key.mfa_authorized?(nil)
       end
