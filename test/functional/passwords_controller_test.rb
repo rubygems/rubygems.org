@@ -123,7 +123,7 @@ class PasswordsControllerTest < ActionController::TestCase
     end
   end
 
-  context "on POST to mfa_edit" do
+  context "on POST to otp_edit" do
     setup do
       @user = create(:user)
       @user.forgot_password!
@@ -135,7 +135,7 @@ class PasswordsControllerTest < ActionController::TestCase
       context "when OTP is correct" do
         setup do
           get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+          post :otp_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should respond_with :success
@@ -151,7 +151,7 @@ class PasswordsControllerTest < ActionController::TestCase
       context "when OTP is incorrect" do
         setup do
           get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: "eatthis" }
+          post :otp_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: "eatthis" }
         end
 
         should respond_with :unauthorized
@@ -165,7 +165,7 @@ class PasswordsControllerTest < ActionController::TestCase
         setup do
           get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
           travel 16.minutes do
-            post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+            post :otp_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
         end
 

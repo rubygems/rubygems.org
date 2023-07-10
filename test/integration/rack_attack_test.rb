@@ -176,7 +176,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           @user.forgot_password!
           get "/users/#{@user.id}/password/edit",
             params: { token: @user.confirmation_token, user_id: @user.id }
-          post "/users/#{@user.id}/password/mfa_edit",
+          post "/users/#{@user.id}/password/otp_edit",
             params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now },
             headers: { REMOTE_ADDR: @ip_address }
 
@@ -547,7 +547,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "throttle mfa forgot password at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
-            post "/users/#{@user.id}/password/mfa_edit", headers: { REMOTE_ADDR: @ip_address }
+            post "/users/#{@user.id}/password/otp_edit", headers: { REMOTE_ADDR: @ip_address }
 
             assert_throttle_at(level)
           end
@@ -558,7 +558,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             @user.forgot_password!
             exceed_exponential_user_limit_for("clearance/user/#{level}", @user.confirmation_token, level)
 
-            post "/users/#{@user.id}/password/mfa_edit",
+            post "/users/#{@user.id}/password/otp_edit",
               params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
 
             assert_throttle_at(level)

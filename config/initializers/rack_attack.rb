@@ -39,7 +39,7 @@ class Rack::Attack
   ]
 
   mfa_create_action        = { controller: "sessions", action: "mfa_create" }
-  mfa_password_edit_action = { controller: "passwords", action: "mfa_edit" }
+  mfa_password_edit_action = { controller: "passwords", action: "otp_edit" }
 
   protected_ui_mfa_actions = [
     mfa_create_action,
@@ -117,7 +117,7 @@ class Rack::Attack
         # mfa_create doesn't have remember_token set. use session[:mfa_user]
         if protected_route?([mfa_create_action], req.path, req.request_method)
           action_dispatch_req.session.fetch("mfa_user", "").presence
-        # password#mfa_edit has unique confirmation token
+        # password#otp_edit has unique confirmation token
         elsif protected_route?([mfa_password_edit_action], req.path, req.request_method)
           req.params.fetch("token", "").presence
         else
