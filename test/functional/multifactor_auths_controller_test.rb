@@ -79,12 +79,12 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to mfa_update" do
+      context "on POST to otp_update" do
         context "when updating to ui_and_api" do
           context "when redirect url is not set" do
             setup do
               put :update, params: { level: "ui_and_api" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+              post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the settings page") { edit_settings_path }
@@ -103,7 +103,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             setup do
               @controller.session["mfa_redirect_uri"] = profile_api_keys_path
               put :update, params: { level: "ui_and_api" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+              post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the api keys index") { profile_api_keys_path }
@@ -114,7 +114,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           context "when redirect url is not set" do
             setup do
               put :update, params: { level: "ui_and_gem_signin" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+              post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the settings page") { edit_settings_path }
@@ -133,7 +133,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             setup do
               @controller.session["mfa_redirect_uri"] = profile_api_keys_path
               put :update, params: { level: "ui_and_api" }
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+              post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
 
             should redirect_to("the api keys index") { profile_api_keys_path }
@@ -143,7 +143,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         context "when otp is incorrect" do
           setup do
             put :update, params: { level: "ui_and_api" }
-            post :mfa_update, params: { otp: "123456" }
+            post :otp_update, params: { otp: "123456" }
           end
 
           should redirect_to("the settings page") { edit_settings_path }
@@ -166,7 +166,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         context "when mfa level is invalid" do
           setup do
             put :update, params: { level: "disabled" }
-            post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+            post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
 
           should "set flash error" do
@@ -181,7 +181,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             get :update, params: { level: "ui_and_api" }
 
             travel 16.minutes do
-              post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+              post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
             end
           end
 
@@ -369,10 +369,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to mfa_update with correct recovery codes" do
+      context "on POST to otp_update with correct recovery codes" do
         setup do
           put :update, params: { level: "ui_and_api" }
-          post :mfa_update, params: { otp: @user.mfa_recovery_codes.first }
+          post :otp_update, params: { otp: @user.mfa_recovery_codes.first }
         end
 
         should redirect_to("the settings page") { edit_settings_path }
@@ -388,10 +388,10 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to mfa_update with incorrect recovery codes" do
+      context "on POST to otp_update with incorrect recovery codes" do
         setup do
           put :update, params: { level: "ui_and_api" }
-          post :mfa_update, params: { otp: "blah" }
+          post :otp_update, params: { otp: "blah" }
         end
 
         should redirect_to("the settings page") { edit_settings_path }
@@ -724,9 +724,9 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to mfa_update" do
+      context "on POST to otp_update" do
         setup do
-          post :mfa_update
+          post :otp_update
         end
 
         should respond_with :redirect
@@ -796,11 +796,11 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to mfa_update" do
+      context "on POST to otp_update" do
         setup do
           @controller.session["mfa_redirect_uri"] = profile_api_keys_path
           put :update, params: { level: "ui_and_api" }
-          post :mfa_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+          post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should redirect_to("the api keys index") { profile_api_keys_path }
@@ -907,7 +907,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @redirect_paths.each do |path|
             session[:mfa_redirect_uri] = path
             put :update, params: { level: "ui_and_api" }
-            put :mfa_update, params: { otp: ROTP::TOTP.new(@seed).now }
+            put :otp_update, params: { otp: ROTP::TOTP.new(@seed).now }
 
             assert_redirected_to path
             assert_nil session[:mfa_redirect_uri]
@@ -918,7 +918,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @redirect_paths.each do |path|
             session[:mfa_redirect_uri] = path
             put :update, params: { level: "ui_and_api" }
-            put :mfa_update, params: { otp: "12345" }
+            put :otp_update, params: { otp: "12345" }
 
             assert_redirected_to edit_settings_path
             assert_equal path, session[:mfa_redirect_uri]
@@ -929,11 +929,11 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           @redirect_paths.each do |path|
             session[:mfa_redirect_uri] = path
             put :update, params: { level: "ui_and_api" }
-            put :mfa_update, params: { otp: "12345" }
+            put :otp_update, params: { otp: "12345" }
 
             assert_redirected_to edit_settings_path
             put :update, params: { level: "ui_and_api" }
-            put :mfa_update, params: { otp: ROTP::TOTP.new(@seed).now }
+            put :otp_update, params: { otp: ROTP::TOTP.new(@seed).now }
 
             assert_redirected_to path
             assert_nil session[:mfa_redirect_uri]

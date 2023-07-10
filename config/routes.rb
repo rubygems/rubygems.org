@@ -139,7 +139,7 @@ Rails.application.routes.draw do
     resources :profiles, only: :show
     resource :multifactor_auth, only: %i[new create update destroy] do
       get 'recovery'
-      post 'mfa_update', to: 'multifactor_auths#mfa_update', as: :mfa_update
+      post 'otp_update', to: 'multifactor_auths#otp_update', as: :otp_update
       post 'webauthn_update', to: 'multifactor_auths#webauthn_update', as: :webauthn_update
     end
     resource :settings, only: :edit
@@ -199,7 +199,7 @@ Rails.application.routes.draw do
 
     resource :email_confirmations, only: %i[new create] do
       get 'confirm', to: 'email_confirmations#update', as: :update
-      post 'mfa_update', to: 'email_confirmations#mfa_update', as: :mfa_update
+      post 'otp_update', to: 'email_confirmations#otp_update', as: :otp_update
       post 'webauthn_update', to: 'email_confirmations#webauthn_update', as: :webauthn_update
       patch 'unconfirmed'
     end
