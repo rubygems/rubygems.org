@@ -41,6 +41,7 @@ class UserResource < Avo::BaseResource
       field :mfa_seed, as: :text, visible: ->(_) { false } # legacy field
       field :mfa_level, as: :select, enum: ::User.mfa_levels
       field :mfa_recovery_codes, as: :text, visible: ->(_) { false }
+      field :hashed_mfa_recovery_codes, as: :text, visible: ->(_) { false }
       field :webauthn_id, as: :text, visible: ->(_) { false }
       field :webauthn_credentials, as: :has_many, visible: ->(_) { false }
       field :remember_token_expires_at, as: :date_time

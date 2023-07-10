@@ -72,19 +72,18 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
       perform_disable_totp_job
 
       assert_empty @user.mfa_recovery_codes
+      assert_empty @user.hashed_mfa_recovery_codes
     end
 
     context "when webauthn is enabled" do
       setup do
         @credential = create(:webauthn_credential, user: @user)
-
-        @user_recovery_codes = @user.mfa_recovery_codes
       end
 
       should "not delete recovery codes" do
-        perform_disable_totp_job
-
-        assert_equal @user_recovery_codes, @user.mfa_recovery_codes
+        assert_no_changes ["@user.mfa_recovery_codes", "@user.hashed_mfa_recovery_codes"] do
+          perform_disable_totp_job
+        end
       end
     end
   end
@@ -156,6 +155,12 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
           @user.enable_totp!(@seed, "ui_and_api")
         end
       end
+
+      should "generate hashed recovery codes" do
+        assert_changes "@user.hashed_mfa_recovery_codes.length", 10 do
+          @user.enable_totp!(@seed, "ui_and_api")
+        end
+      end
     end
 
     context "if webauthn is enabled" do
@@ -164,7 +169,7 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
       end
 
       should "not reset mfa level and recovery codes" do
-        assert_no_changes ["@user.mfa_level", "@user.mfa_recovery_codes"] do
+        assert_no_changes ["@user.mfa_level", "@user.mfa_recovery_codes", "@user.hashed_mfa_recovery_codes"] do
           @user.enable_totp!(@seed, "ui_and_gem_signin")
         end
       end

@@ -50,8 +50,19 @@ module UserMultifactorMethods
   def ui_mfa_verified?(otp)
     otp = otp.to_s
     return true if verify_totp(totp_seed, otp)
-    return false unless mfa_recovery_codes.include? otp
-    mfa_recovery_codes.delete(otp)
+
+    # Check if the given OTP is a actually a recovery code
+    if hashed_mfa_recovery_codes.present?
+      return false unless (hashed_code = hashed_mfa_recovery_codes.find { |code| BCrypt::Password.new(code) == otp })
+      hashed_mfa_recovery_codes.delete(hashed_code)
+      # Also delete the plaintext code for now, to prevent the case where a user uses all their codes
+      # and then the backfill stops being idempotent
+      mfa_recovery_codes.delete(otp)
+    else
+      # Not yet migrated to hashed recovery codes, so check the plaintext codes
+      return false unless mfa_recovery_codes.delete(otp)
+    end
+
     save!(validate: false)
   end
 

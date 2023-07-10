@@ -369,6 +369,7 @@ class SessionsControllerTest < ActionController::TestCase
         @user = create(:user)
         create(:webauthn_credential, user: @user)
         @user.mfa_recovery_codes = []
+        @user.hashed_mfa_recovery_codes = []
         @user.save!
         post(
           :create,
