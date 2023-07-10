@@ -207,7 +207,7 @@ Rails.application.routes.draw do
     resources :passwords, only: %i[new create]
 
     resource :session, only: %i[create destroy] do
-      post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+      post 'otp_create', to: 'sessions#otp_create', as: :otp_create
       post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate

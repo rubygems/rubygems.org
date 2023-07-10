@@ -165,7 +165,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "allow for mfa sign in" do
           post "/session", params: { session: { who: @user.handle, password: @user.password } } # sets session[:mfa_user]
 
-          post "/session/mfa_create",
+          post "/session/otp_create",
             params: { otp: ROTP::TOTP.new(@user.totp_seed).now },
             headers: { REMOTE_ADDR: @ip_address }
 
@@ -441,7 +441,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "throttle for mfa sign in at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
-            post "/session/mfa_create", headers: { REMOTE_ADDR: @ip_address }
+            post "/session/otp_create", headers: { REMOTE_ADDR: @ip_address }
 
             assert_throttle_at(level)
           end
@@ -452,7 +452,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             # sign page sets mfa_user in session
             post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
             exceed_exponential_user_limit_for("clearance/user/#{level}", @user.id, level)
-            post "/session/mfa_create"
+            post "/session/otp_create"
 
             assert_throttle_at(level)
           end
@@ -699,7 +699,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   def sign_in_as(user)
     post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
-    post "/session/mfa_create", params: { otp: ROTP::TOTP.new(@user.totp_seed).now } if user.mfa_enabled?
+    post "/session/otp_create", params: { otp: ROTP::TOTP.new(@user.totp_seed).now } if user.mfa_enabled?
   end
 
   def set_owners_session(_rubygem, user)
