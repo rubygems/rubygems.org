@@ -56,7 +56,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "ON DELETE to create for existing gem version with incorrect OTP" do
           setup do
-            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.totp_seed).now.to_i.succ % 1_000_000).to_s
             delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
           end
           should respond_with :unauthorized
@@ -64,7 +64,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "ON DELETE to create for existing gem version with correct OTP" do
           setup do
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
             delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
           end
           should respond_with :success
@@ -111,7 +111,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         context "when user has mfa enabled" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
             delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
           end
           should respond_with :success
@@ -236,7 +236,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         context "by user on `ui_and_api` level" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
             delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
           end
 
@@ -332,7 +332,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
           should "not include mfa warnings" do
             @gems.each do |_, gem|
-              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]
@@ -350,7 +350,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
           should "not include mfa warnings" do
             @gems.each do |_, gem|
-              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]

@@ -139,8 +139,8 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
         end
       end
 
-      should "set mfa seed" do
-        assert_changes "@user.mfa_seed", from: nil, to: @seed do
+      should "set totp seed" do
+        assert_changes "@user.totp_seed", from: nil, to: @seed do
           @user.enable_totp!(@seed, "ui_and_api")
         end
       end
@@ -163,10 +163,10 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
         end
       end
 
-      should "set mfa seed" do
+      should "set totp seed" do
         @user.enable_totp!(@seed, "ui_and_gem_signin")
 
-        assert_equal @seed, @user.mfa_seed
+        assert_equal @seed, @user.totp_seed
       end
     end
   end

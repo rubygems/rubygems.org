@@ -119,7 +119,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "array of emails" do
           setup do
             @third_user = create(:user)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
             post :create, params: { rubygem_id: @rubygem.to_param, email: [@second_user.email, @third_user.email] }, format: :json
           end
 
@@ -147,7 +147,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "adding other user as gem owner with incorrect OTP" do
           setup do
-            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.totp_seed).now.to_i.succ % 1_000_000).to_s
             post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
           end
 
@@ -160,7 +160,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "adding other user as gem owner with correct OTP" do
           setup do
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
             post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
           end
 
@@ -254,7 +254,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "api user has enabled mfa" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
           end
 
           should "add other user as gem owner" do
@@ -412,7 +412,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user on `ui_and_api` level" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
           end
 
           should "not show error message" do
@@ -486,7 +486,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user on `ui_and_api` level" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
           end
 
           should "not include mfa warnings" do
@@ -562,7 +562,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "removing gem owner with incorrect OTP" do
           setup do
-            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.totp_seed).now.to_i.succ % 1_000_000).to_s
             delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
           end
 
@@ -575,7 +575,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "removing gem owner with correct OTP" do
           setup do
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
             delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
           end
 
@@ -640,12 +640,12 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "api user has enabled mfa" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
           end
 
           context "on delete to remove gem owner with correct OTP" do
             setup do
-              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
               delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
             end
 
@@ -778,7 +778,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user on `ui_and_api` level" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
           end
 
           should "not show error message" do
@@ -852,7 +852,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user on `ui_and_api` level" do
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
           end
 
           should "not include mfa warnings" do

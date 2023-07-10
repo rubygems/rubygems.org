@@ -5,9 +5,9 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
 
   setup do
     create(:user, mfa_level: :disabled) # non-mfa user
-    2.times { create(:user, mfa_seed: ROTP::Base32.random_base32) } # otp-only users
+    2.times { create(:user, totp_seed: ROTP::Base32.random_base32) } # otp-only users
     3.times { create(:webauthn_credential, user: create(:user)) } # webauthn-only users
-    4.times { create(:webauthn_credential, user: create(:user, mfa_seed: ROTP::Base32.random_base32)) } # webauthn-and-otp users
+    4.times { create(:webauthn_credential, user: create(:user, totp_seed: ROTP::Base32.random_base32)) } # webauthn-and-otp users
   end
 
   test "it sends the count of non-MFA users to statsd" do
@@ -17,7 +17,7 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   end
 
   test "it sends the count of OTP-only users to statsd" do
-    assert_statsd_gauge("mfa_usage_stats.otp_only_users", 2) do
+    assert_statsd_gauge("mfa_usage_stats.totp_only_users", 2) do
       MfaUsageStatsJob.perform_now
     end
   end
@@ -29,7 +29,7 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   end
 
   test "it sends the count of WebAuthn-and-OTP users to statsd" do
-    assert_statsd_gauge("mfa_usage_stats.webauthn_and_otp_users", 4) do
+    assert_statsd_gauge("mfa_usage_stats.webauthn_and_totp_users", 4) do
       MfaUsageStatsJob.perform_now
     end
   end

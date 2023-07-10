@@ -2,15 +2,15 @@ module UserTotpMethods
   extend ActiveSupport::Concern
 
   def totp_enabled?
-    mfa_seed.present?
+    totp_seed.present?
   end
 
   def totp_disabled?
-    mfa_seed.blank?
+    totp_seed.blank?
   end
 
   def disable_totp!
-    self.mfa_seed = ""
+    self.totp_seed = ""
 
     if no_mfa_devices?
       self.mfa_level = "disabled"
@@ -32,7 +32,7 @@ module UserTotpMethods
   end
 
   def enable_totp!(seed, level)
-    self.mfa_seed = seed
+    self.totp_seed = seed
 
     if mfa_device_count_one?
       self.mfa_level = level

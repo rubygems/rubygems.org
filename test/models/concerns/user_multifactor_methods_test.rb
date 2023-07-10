@@ -291,17 +291,17 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.ui_mfa_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.ui_mfa_verified?(ROTP::TOTP.new(@user.totp_seed).now)
       end
 
       should "return true when correct in last interval" do
-        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        last_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current - 30)
 
         assert @user.ui_mfa_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
-        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        next_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current + 30)
 
         assert @user.ui_mfa_verified?(next_otp)
       end
@@ -310,8 +310,8 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         refute @user.ui_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
 
-      should "return false if the mfa_seed is blank" do
-        @user.update!(mfa_seed: nil)
+      should "return false if the totp_seed is blank" do
+        @user.update!(totp_seed: nil)
 
         refute @user.ui_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
@@ -340,17 +340,17 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.api_mfa_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.api_mfa_verified?(ROTP::TOTP.new(@user.totp_seed).now)
       end
 
       should "return true when correct in last interval" do
-        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        last_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current - 30)
 
         assert @user.api_mfa_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
-        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        next_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current + 30)
 
         assert @user.api_mfa_verified?(next_otp)
       end

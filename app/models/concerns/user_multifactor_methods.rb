@@ -43,7 +43,7 @@ module UserMultifactorMethods
 
   def ui_mfa_verified?(otp)
     otp = otp.to_s
-    return true if verify_totp(mfa_seed, otp)
+    return true if verify_totp(totp_seed, otp)
     return false unless mfa_recovery_codes.include? otp
     mfa_recovery_codes.delete(otp)
     save!(validate: false)
