@@ -29,7 +29,7 @@
         <p><%= t("multifactor_auths.recovery_code_html") %></p>
       </div>
 
-      <%= form_tag mfa_create_session_path, method: :post, class: "mfa-form" do %>
+      <%= form_tag otp_create_session_path, method: :post, class: "mfa-form" do %>
         <div class="text_field">
         <% if @user.totp_enabled? %>
           <%= label_tag :otp, t('.otp_or_recovery'), class: 'form__label' %>

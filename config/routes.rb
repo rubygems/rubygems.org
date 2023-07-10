@@ -139,7 +139,7 @@ Rails.application.routes.draw do
     resources :profiles, only: :show
     resource :multifactor_auth, only: %i[new create update destroy] do
       get 'recovery'
-      post 'mfa_update', to: 'multifactor_auths#mfa_update', as: :mfa_update
+      post 'otp_update', to: 'multifactor_auths#otp_update', as: :otp_update
       post 'webauthn_update', to: 'multifactor_auths#webauthn_update', as: :webauthn_update
     end
     resource :settings, only: :edit
@@ -199,7 +199,7 @@ Rails.application.routes.draw do
 
     resource :email_confirmations, only: %i[new create] do
       get 'confirm', to: 'email_confirmations#update', as: :update
-      post 'mfa_update', to: 'email_confirmations#mfa_update', as: :mfa_update
+      post 'otp_update', to: 'email_confirmations#otp_update', as: :otp_update
       post 'webauthn_update', to: 'email_confirmations#webauthn_update', as: :webauthn_update
       patch 'unconfirmed'
     end
@@ -207,7 +207,7 @@ Rails.application.routes.draw do
     resources :passwords, only: %i[new create]
 
     resource :session, only: %i[create destroy] do
-      post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+      post 'otp_create', to: 'sessions#otp_create', as: :otp_create
       post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
@@ -215,7 +215,7 @@ Rails.application.routes.draw do
 
     resources :users, only: %i[new create] do
       resource :password, only: %i[create edit update] do
-        post 'mfa_edit', to: 'passwords#mfa_edit', as: :mfa_edit
+        post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
         post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
       end
     end

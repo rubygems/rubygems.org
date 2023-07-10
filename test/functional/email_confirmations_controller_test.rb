@@ -158,7 +158,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "on POST to mfa_update" do
+  context "on POST to otp_update" do
     context "user has mfa enabled" do
       setup do
         @user = create(:user)
@@ -168,7 +168,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       context "when OTP is correct" do
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+          post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should redirect_to("the homepage") { root_url }
@@ -184,7 +184,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       context "when OTP is incorrect" do
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+          post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
         end
 
         should respond_with :unauthorized
@@ -198,7 +198,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
           travel 16.minutes do
-            post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+            post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
         end
 
@@ -490,9 +490,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
           end
 
-          context "on POST to mfa_update" do
+          context "on POST to otp_update" do
             setup do
-              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
             end
 
             should respond_with :unauthorized
@@ -543,9 +543,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
           end
 
-          context "on POST to mfa_update" do
+          context "on POST to otp_update" do
             setup do
-              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
             end
 
             should respond_with :unauthorized
@@ -596,9 +596,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
           end
 
-          context "on POST to mfa_update" do
+          context "on POST to otp_update" do
             setup do
-              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
             end
 
             should respond_with :unauthorized

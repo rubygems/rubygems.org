@@ -2,12 +2,12 @@ class PasswordsController < Clearance::PasswordsController
   include MfaExpiryMethods
   include WebauthnVerifiable
 
-  before_action :validate_confirmation_token, only: %i[edit mfa_edit webauthn_edit]
-  after_action :delete_mfa_expiry_session, only: %i[mfa_edit webauthn_edit]
+  before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
+  after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
   def edit
     if @user.mfa_enabled?
-      @form_mfa_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
+      @form_mfa_url = otp_edit_user_password_url(@user, token: @user.confirmation_token)
       setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry
@@ -33,8 +33,8 @@ class PasswordsController < Clearance::PasswordsController
     end
   end
 
-  def mfa_edit
-    if mfa_edit_conditions_met?
+  def otp_edit
+    if otp_edit_conditions_met?
       render template: "passwords/edit"
     elsif !session_active?
       login_failure(t("multifactor_auths.session_expired"))
@@ -73,7 +73,7 @@ class PasswordsController < Clearance::PasswordsController
     ::ClearanceMailer.change_password(user).deliver_later
   end
 
-  def mfa_edit_conditions_met?
+  def otp_edit_conditions_met?
     @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && session_active?
   end
 

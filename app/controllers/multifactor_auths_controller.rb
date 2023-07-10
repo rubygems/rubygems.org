@@ -4,11 +4,11 @@ class MultifactorAuthsController < ApplicationController
 
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_totp_disabled, only: %i[new create]
-  before_action :require_mfa_enabled, only: %i[update mfa_update]
+  before_action :require_mfa_enabled, only: %i[update otp_update]
   before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
-  before_action :verify_session_expiration, only: %i[mfa_update webauthn_update]
-  after_action :delete_mfa_level_update_session_variables, only: %i[mfa_update webauthn_update]
+  before_action :verify_session_expiration, only: %i[otp_update webauthn_update]
+  after_action :delete_mfa_level_update_session_variables, only: %i[otp_update webauthn_update]
   helper_method :issuer
 
   def new
@@ -42,7 +42,7 @@ class MultifactorAuthsController < ApplicationController
     session[:level] = level_param
     @user = current_user
 
-    @form_mfa_url = mfa_update_multifactor_auth_url(token: current_user.confirmation_token)
+    @form_mfa_url = otp_update_multifactor_auth_url(token: current_user.confirmation_token)
     setup_webauthn_authentication
 
     create_new_mfa_expiry
@@ -50,7 +50,7 @@ class MultifactorAuthsController < ApplicationController
     render template: "multifactor_auths/mfa_prompt"
   end
 
-  def mfa_update
+  def otp_update
     if current_user.ui_mfa_verified?(params[:otp])
       update_level_and_redirect
     else

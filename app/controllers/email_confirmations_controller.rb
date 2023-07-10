@@ -6,8 +6,8 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
-  before_action :validate_confirmation_token, only: %i[update mfa_update webauthn_update]
-  after_action :delete_mfa_expiry_session, only: %i[mfa_update webauthn_update]
+  before_action :validate_confirmation_token, only: %i[update otp_update webauthn_update]
+  after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
 
   def new
   end
@@ -25,7 +25,7 @@ class EmailConfirmationsController < ApplicationController
 
   def update
     if @user.mfa_enabled?
-      @form_mfa_url = mfa_update_email_confirmations_url(token: @user.confirmation_token)
+      @form_mfa_url = otp_update_email_confirmations_url(token: @user.confirmation_token)
       setup_webauthn_authentication(form_url: webauthn_update_email_confirmations_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry
@@ -36,8 +36,8 @@ class EmailConfirmationsController < ApplicationController
     end
   end
 
-  def mfa_update
-    if mfa_update_conditions_met?
+  def otp_update
+    if otp_update_conditions_met?
       confirm_email
     elsif !session_active?
       login_failure(t("multifactor_auths.session_expired"))
@@ -96,7 +96,7 @@ class EmailConfirmationsController < ApplicationController
     params.permit(:token).require(:token)
   end
 
-  def mfa_update_conditions_met?
+  def otp_update_conditions_met?
     @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && session_active?
   end
 
