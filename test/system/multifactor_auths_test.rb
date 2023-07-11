@@ -88,6 +88,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     visit path
 
     assert(page.has_content?("you are required to set up multi-factor authentication"))
+    assert_current_path(edit_settings_path)
 
     click_button "Register a new device"
     totp = ROTP::TOTP.new(otp_key)
