@@ -7,7 +7,7 @@ class PasswordsController < Clearance::PasswordsController
 
   def edit
     if @user.mfa_enabled?
-      @form_mfa_url = otp_edit_user_password_url(@user, token: @user.confirmation_token)
+      @otp_verification_url = otp_edit_user_password_url(@user, token: @user.confirmation_token)
       setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry

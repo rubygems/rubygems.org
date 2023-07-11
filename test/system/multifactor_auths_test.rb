@@ -89,7 +89,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
     assert(page.has_content?("Enabling multi-factor auth"), "#{path} was not redirected to mfa setup page")
 
-    totp = ROTP::TOTP.new(mfa_key)
+    totp = ROTP::TOTP.new(otp_key)
     fill_in "otp", with: totp.now
     click_button "Enable"
 
@@ -126,9 +126,9 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     click_button "Sign in"
   end
 
-  def mfa_key
+  def otp_key
     key_regex = /( (\w{4})){8}/
-    page.find_by_id("mfa-key").text.match(key_regex)[0].delete("\s")
+    page.find_by_id("otp-key").text.match(key_regex)[0].delete("\s")
   end
 
   def verify_password

@@ -242,6 +242,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should "disable mfa and clear recovery codes" do
             assert_predicate @user.reload, :totp_disabled?
+            assert_predicate @user.reload, :mfa_disabled?
             assert_empty @user.mfa_recovery_codes
           end
 
