@@ -4,10 +4,15 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   include StatsD::Instrument::Assertions
 
   setup do
-    create(:user, mfa_level: :disabled) # non-mfa user
-    2.times { create(:user, totp_seed: ROTP::Base32.random_base32) } # otp-only users
+    create(:user) # non-mfa user
+    2.times { create(:user).enable_totp!(ROTP::Base32.random_base32, :ui_and_api) } # otp-only users
     3.times { create(:webauthn_credential, user: create(:user)) } # webauthn-only users
-    4.times { create(:webauthn_credential, user: create(:user, totp_seed: ROTP::Base32.random_base32)) } # webauthn-and-otp users
+    # webauthn-and-otp users
+    4.times do
+      user = create(:user)
+      user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:webauthn_credential, user: user)
+    end
   end
 
   test "it sends the count of non-MFA users to statsd" do
