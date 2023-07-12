@@ -27,7 +27,7 @@
       <div class="t-body">
         <p><%= t("multifactor_auths.recovery_code_html") %></p>
       </div>
-      <%= form_tag @form_mfa_url, method: :post do %>
+      <%= form_tag @otp_verification_url, method: :post do %>
         <div class="text_field">
           <% if @user.totp_enabled? %>
             <%= label_tag :otp, t('multifactor_auths.otp_or_recovery'), class: 'form__label' %>

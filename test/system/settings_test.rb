@@ -12,7 +12,7 @@ class SettingsTest < ApplicationSystemTestCase
     click_button "Sign in"
   end
 
-  def enable_mfa
+  def enable_otp
     key = ROTP::Base32.random_base32
     @user.enable_totp!(key, :ui_only)
   end
@@ -22,9 +22,9 @@ class SettingsTest < ApplicationSystemTestCase
     find("#mfa-edit input[type=submit]").click
   end
 
-  def mfa_key
+  def otp_key
     key_regex = /( (\w{4})){8}/
-    page.find_by_id("mfa-key").text.match(key_regex)[0].delete("\s")
+    page.find_by_id("otp-key").text.match(key_regex)[0].delete("\s")
   end
 
   test "enabling multi-factor authentication with valid otp" do
@@ -34,7 +34,7 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert page.has_content? "Enabling multi-factor auth"
 
-    totp = ROTP::TOTP.new(mfa_key)
+    totp = ROTP::TOTP.new(otp_key)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
@@ -66,7 +66,7 @@ class SettingsTest < ApplicationSystemTestCase
 
   test "disabling multi-factor authentication with valid otp" do
     sign_in
-    enable_mfa
+    enable_otp
     visit edit_settings_path
 
     page.fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
@@ -80,7 +80,7 @@ class SettingsTest < ApplicationSystemTestCase
 
   test "disabling multi-factor authentication with invalid otp" do
     sign_in
-    enable_mfa
+    enable_otp
     visit edit_settings_path
 
     key = ROTP::Base32.random_base32
@@ -95,7 +95,7 @@ class SettingsTest < ApplicationSystemTestCase
     visit edit_settings_path
     click_button "Register a new device"
 
-    totp = ROTP::TOTP.new(mfa_key)
+    totp = ROTP::TOTP.new(otp_key)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
@@ -117,7 +117,7 @@ class SettingsTest < ApplicationSystemTestCase
     visit edit_settings_path
     click_button "Register a new device"
 
-    totp = ROTP::TOTP.new(mfa_key)
+    totp = ROTP::TOTP.new(otp_key)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
     check "ack"
@@ -140,7 +140,7 @@ class SettingsTest < ApplicationSystemTestCase
     visit edit_settings_path
     click_button "Register a new device"
 
-    totp = ROTP::TOTP.new(mfa_key)
+    totp = ROTP::TOTP.new(otp_key)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
@@ -161,7 +161,7 @@ class SettingsTest < ApplicationSystemTestCase
 
   test "shows 'ui only' if user's level is ui_only" do
     sign_in
-    enable_mfa
+    enable_otp
     visit edit_settings_path
 
     assert page.has_selector?("#level > option:nth-child(3)")
@@ -170,7 +170,7 @@ class SettingsTest < ApplicationSystemTestCase
 
   test "does not shows 'ui only' if user's level is not ui_only" do
     sign_in
-    enable_mfa
+    enable_otp
     visit edit_settings_path
 
     page.fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now

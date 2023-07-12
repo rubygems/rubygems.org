@@ -42,7 +42,7 @@ class MultifactorAuthsController < ApplicationController
     session[:level] = level_param
     @user = current_user
 
-    @form_mfa_url = otp_update_multifactor_auth_url(token: current_user.confirmation_token)
+    @otp_verification_url = otp_update_multifactor_auth_url(token: current_user.confirmation_token)
     setup_webauthn_authentication
 
     create_new_mfa_expiry

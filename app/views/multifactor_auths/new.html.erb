@@ -7,9 +7,9 @@
   <div>
     <p><%= t('.scan_prompt') %></p>
     <p>
-      <span id="mfa-account"><%= t('.account', account: "#{issuer}:#{current_user.email}") %></span><br>
-      <span id="mfa-key"><%= t('.key', key: @seed.chars.each_slice(4).map(&:join).join(' ')) %></span><br>
-      <span id="mfa-type"><%= t('.time_based') %></span>
+      <span><%= t('.account', account: "#{issuer}:#{current_user.email}") %></span><br>
+      <span id="otp-key"><%= t('.key', key: @seed.chars.each_slice(4).map(&:join).join(' ')) %></span><br>
+      <span><%= t('.time_based') %></span>
     </p>
   </div>
 </div>
