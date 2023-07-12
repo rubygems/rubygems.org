@@ -9,6 +9,11 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     render_template(:new)
+
+    should "render the new user form" do
+      page.assert_text "Sign up"
+      page.assert_selector "input[type=password][autocomplete=new-password]"
+    end
   end
 
   context "on POST to create" do

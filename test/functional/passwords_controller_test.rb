@@ -37,6 +37,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should "display edit form" do
         page.assert_text("Reset password")
+        page.assert_selector("input[type=password][autocomplete=new-password]")
       end
     end
 

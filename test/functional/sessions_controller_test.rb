@@ -445,6 +445,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     should "render sign-in form" do
       page.assert_text("Sign in")
+      page.assert_selector("input[type=password][autocomplete=current-password]")
     end
   end
 
@@ -464,6 +465,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "render password verification form" do
         assert page.has_css? "#verify_password_password"
+        assert page.has_css? "input[type=password][autocomplete=current-password]"
       end
     end
 

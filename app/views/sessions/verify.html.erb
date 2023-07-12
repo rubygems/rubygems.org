@@ -7,7 +7,7 @@
 <%= form_for :verify_password, url: authenticate_session_path, method: :post do |form| %>
   <div class="password_field">
     <%= form.label :password, t("activerecord.attributes.session.password"), class: "form__label" %>
-    <%= form.password_field :password, class: "form__input" %>
+    <%= form.password_field :password, autocomplete: "current-password", class: "form__input" %>
   </div>
   <div class="form_bottom">
     <%= form.submit t(".confirm"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>

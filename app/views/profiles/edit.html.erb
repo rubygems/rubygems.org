@@ -62,7 +62,7 @@
     <p class='form__field__instructions'>
       <%= t('.enter_password') %>
     </p>
-    <%= form.password_field :password, :class => 'form__input' %>
+    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input' %>
   </div>
 
 
