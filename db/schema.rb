@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_08_003340) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_023753) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -303,7 +303,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_08_003340) do
     t.string "unconfirmed_email"
     t.datetime "remember_token_expires_at", precision: nil
     t.integer "mfa_level", default: 0
-    t.string "mfa_recovery_codes", default: [], array: true
     t.integer "mail_fails", default: 0
     t.string "blocked_email"
     t.string "webauthn_id"
