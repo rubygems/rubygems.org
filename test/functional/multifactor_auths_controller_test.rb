@@ -853,19 +853,6 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
     end
 
     context "on GET to recovery" do
-      context "when show_recovery_codes is true" do
-        setup do
-          @controller.session[:show_recovery_codes] = true
-          get :recovery
-        end
-
-        should respond_with :success
-
-        should "clear show_recovery_codes" do
-          assert_nil @controller.session[:show_recovery_codes]
-        end
-      end
-
       context "when show_recovery_codes is array" do
         setup do
           @controller.session[:show_recovery_codes] = %w[aaa bbb]

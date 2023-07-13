@@ -90,9 +90,6 @@ class MultifactorAuthsController < ApplicationController
       redirect_to edit_settings_path
       flash[:error] = t(".already_generated")
       return
-    elsif @mfa_recovery_codes == true
-      # redirected in between deploys
-      @mfa_recovery_codes = current_user.mfa_recovery_codes
     end
     @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
     session.delete("mfa_redirect_uri")
