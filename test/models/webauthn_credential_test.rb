@@ -27,7 +27,7 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
 
       should "set user mfa recovery codes" do
         assert_equal 10, @user.reload.mfa_recovery_codes.count
-        assert_equal 10, @user.reload.hashed_mfa_recovery_codes.count
+        assert_equal 10, @user.reload.mfa_hashed_recovery_codes.count
       end
     end
 
@@ -44,7 +44,7 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
 
       should "not change user mfa recovery codes" do
         assert_equal @codes, @user.reload.mfa_recovery_codes
-        @codes.zip(@user.reload.hashed_mfa_recovery_codes).each do |code, hashed_code|
+        @codes.zip(@user.reload.mfa_hashed_recovery_codes).each do |code, hashed_code|
           assert_equal BCrypt::Password.new(hashed_code), code
         end
       end
@@ -64,7 +64,7 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
 
       should "not change user mfa recovery codes" do
         assert_equal @codes, @user.reload.mfa_recovery_codes
-        @codes.zip(@user.reload.hashed_mfa_recovery_codes).each do |code, hashed_code|
+        @codes.zip(@user.reload.mfa_hashed_recovery_codes).each do |code, hashed_code|
           assert_equal BCrypt::Password.new(hashed_code), code
         end
       end
@@ -85,7 +85,7 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
 
       should "clear mfa recovery codes" do
         assert_changes -> { @user.reload.mfa_recovery_codes.count }, from: 10, to: 0 do
-          assert_changes -> { @user.reload.hashed_mfa_recovery_codes.count }, from: 10, to: 0 do
+          assert_changes -> { @user.reload.mfa_hashed_recovery_codes.count }, from: 10, to: 0 do
             @webauthn_credential.destroy!
           end
         end
@@ -104,7 +104,7 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
 
       should "not change user mfa recovery codes" do
         assert_equal 10, @user.reload.mfa_recovery_codes.count
-        assert_equal 10, @user.reload.hashed_mfa_recovery_codes.count
+        assert_equal 10, @user.reload.mfa_hashed_recovery_codes.count
       end
     end
 
@@ -120,7 +120,7 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
 
       should "not change user mfa recovery codes" do
         assert_equal 10, @user.reload.mfa_recovery_codes.count
-        assert_equal 10, @user.reload.hashed_mfa_recovery_codes.count
+        assert_equal 10, @user.reload.mfa_hashed_recovery_codes.count
       end
     end
   end

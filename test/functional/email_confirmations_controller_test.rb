@@ -105,7 +105,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       setup do
         create(:webauthn_credential, user: @user)
         @user.mfa_recovery_codes = []
-        @user.hashed_mfa_recovery_codes = []
+        @user.mfa_hashed_recovery_codes = []
         @user.save!
         get :update, params: { token: @user.confirmation_token }
       end

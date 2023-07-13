@@ -6,8 +6,8 @@ namespace :one_time do
 
   desc "Hash mfa recovery codes"
   task hash_recovery_codes: :environment do
-    User.where(hashed_mfa_recovery_codes: nil).where.not(mfa_recovery_codes: nil).find_each do |user|
-      user.hashed_mfa_recovery_codes = user.mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
+    User.where(mfa_hashed_recovery_codes: nil).where.not(mfa_recovery_codes: nil).find_each do |user|
+      user.mfa_hashed_recovery_codes = user.mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
       user.save!(validate: false)
     end
   end

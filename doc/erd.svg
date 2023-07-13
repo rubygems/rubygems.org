@@ -536,12 +536,12 @@
 <text text-anchor="start" x="2277.37" y="-975.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="2232.37" y="-961.7" font-family="Arial" font-size="10.00">handle </text>
 <text text-anchor="start" x="2263.87" y="-961.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string U</text>
-<text text-anchor="start" x="2232.37" y="-947.7" font-family="Arial" font-size="10.00">hashed_mfa_recovery_codes </text>
-<text text-anchor="start" x="2362.87" y="-947.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="2232.37" y="-933.7" font-family="Arial" font-size="10.00">hide_email </text>
-<text text-anchor="start" x="2281.87" y="-933.7" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
-<text text-anchor="start" x="2232.37" y="-919.7" font-family="Arial" font-size="10.00">mail_fails </text>
-<text text-anchor="start" x="2276.62" y="-919.7" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="2232.37" y="-947.7" font-family="Arial" font-size="10.00">hide_email </text>
+<text text-anchor="start" x="2281.87" y="-947.7" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="2232.37" y="-933.7" font-family="Arial" font-size="10.00">mail_fails </text>
+<text text-anchor="start" x="2276.62" y="-933.7" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="2232.37" y="-919.7" font-family="Arial" font-size="10.00">mfa_hashed_recovery_codes </text>
+<text text-anchor="start" x="2362.87" y="-919.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="2232.37" y="-905.7" font-family="Arial" font-size="10.00">mfa_level </text>
 <text text-anchor="start" x="2277.37" y="-905.7" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
 <text text-anchor="start" x="2232.37" y="-891.7" font-family="Arial" font-size="10.00">mfa_recovery_codes </text>
@@ -791,12 +791,12 @@
 <text text-anchor="start" x="5656.37" y="-975.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="5611.37" y="-961.7" font-family="Arial" font-size="10.00">handle </text>
 <text text-anchor="start" x="5642.87" y="-961.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string U</text>
-<text text-anchor="start" x="5611.37" y="-947.7" font-family="Arial" font-size="10.00">hashed_mfa_recovery_codes </text>
-<text text-anchor="start" x="5741.87" y="-947.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="5611.37" y="-933.7" font-family="Arial" font-size="10.00">hide_email </text>
-<text text-anchor="start" x="5660.87" y="-933.7" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
-<text text-anchor="start" x="5611.37" y="-919.7" font-family="Arial" font-size="10.00">mail_fails </text>
-<text text-anchor="start" x="5655.62" y="-919.7" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="5611.37" y="-947.7" font-family="Arial" font-size="10.00">hide_email </text>
+<text text-anchor="start" x="5660.87" y="-947.7" font-family="Arial Italic" font-size="10.00" fill="#999999">boolean</text>
+<text text-anchor="start" x="5611.37" y="-933.7" font-family="Arial" font-size="10.00">mail_fails </text>
+<text text-anchor="start" x="5655.62" y="-933.7" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
+<text text-anchor="start" x="5611.37" y="-919.7" font-family="Arial" font-size="10.00">mfa_hashed_recovery_codes </text>
+<text text-anchor="start" x="5741.87" y="-919.7" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 <text text-anchor="start" x="5611.37" y="-905.7" font-family="Arial" font-size="10.00">mfa_level </text>
 <text text-anchor="start" x="5656.37" y="-905.7" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
 <text text-anchor="start" x="5611.37" y="-891.7" font-family="Arial" font-size="10.00">mfa_recovery_codes </text>

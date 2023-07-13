@@ -72,7 +72,7 @@ class PasswordsControllerTest < ActionController::TestCase
       setup do
         create(:webauthn_credential, user: @user)
         @user.mfa_recovery_codes = []
-        @user.hashed_mfa_recovery_codes = []
+        @user.mfa_hashed_recovery_codes = []
         @user.save!
         get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
       end
