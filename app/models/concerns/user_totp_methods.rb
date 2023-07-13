@@ -10,7 +10,7 @@ module UserTotpMethods
   end
 
   def disable_totp!
-    self.totp_seed = ""
+    self.totp_seed = nil
 
     if no_mfa_devices?
       self.mfa_level = "disabled"
