@@ -57,7 +57,7 @@ class WebauthnCredentialsController < ApplicationController
 
   def render_callback_redirect
     if current_user.mfa_device_count_one?
-      session[:show_recovery_codes] = true
+      session[:show_recovery_codes] = current_user.new_mfa_recovery_codes
       render json: { redirect_url: recovery_multifactor_auth_url }
     else
       render json: { redirect_url: edit_settings_url }

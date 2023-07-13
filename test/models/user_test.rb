@@ -358,10 +358,18 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "be able to use a recovery code only once" do
-          code = @user.mfa_recovery_codes.first
+          code = @user.new_mfa_recovery_codes.first
 
           assert @user.ui_mfa_verified?(code)
           refute @user.ui_mfa_verified?(code)
+        end
+
+        should "be able to use mfa recovery codes out of order" do
+          @user.new_mfa_recovery_codes.reverse_each do |code|
+            assert @user.ui_mfa_verified?(code)
+          end
+
+          assert_empty @user.reload.mfa_hashed_recovery_codes
         end
 
         should "be able to verify correct OTP" do
@@ -395,7 +403,6 @@ class UserTest < ActiveSupport::TestCase
 
             assert @user.email.start_with?("security+locked-")
             assert @user.email.end_with?("@rubygems.org")
-            assert_empty @user.mfa_recovery_codes
             assert_empty @user.mfa_hashed_recovery_codes
             assert_predicate @user, :mfa_disabled?
           end

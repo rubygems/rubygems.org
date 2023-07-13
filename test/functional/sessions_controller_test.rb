@@ -63,7 +63,7 @@ class SessionsControllerTest < ActionController::TestCase
       context "when OTP is recovery code" do
         setup do
           @controller.session[:mfa_user] = @user.id
-          post :otp_create, params: { otp: @user.mfa_recovery_codes.first }
+          post :otp_create, params: { otp: @user.new_mfa_recovery_codes.first }
         end
 
         should respond_with :redirect
@@ -121,7 +121,7 @@ class SessionsControllerTest < ActionController::TestCase
           StatsD.expects(:distribution).with("login.mfa.otp.duration", @duration)
 
           travel_to @end_time do
-            post :otp_create, params: { otp: @user.mfa_recovery_codes.first }
+            post :otp_create, params: { otp: @user.new_mfa_recovery_codes.first }
           end
         end
       end
@@ -368,7 +368,7 @@ class SessionsControllerTest < ActionController::TestCase
       setup do
         @user = create(:user)
         create(:webauthn_credential, user: @user)
-        @user.mfa_recovery_codes = []
+        @user.new_mfa_recovery_codes = nil
         @user.mfa_hashed_recovery_codes = []
         @user.save!
         post(

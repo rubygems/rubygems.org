@@ -4,7 +4,7 @@
   <p><%= t ".note_html" %></p>
 
   <ul id="recovery-code-list">
-    <% current_user.mfa_recovery_codes.each do |code| %>
+    <% @mfa_recovery_codes.each do |code| %>
       <li class="recovery-code-list__item"><%= code %></li>
     <% end %>
   </ul>

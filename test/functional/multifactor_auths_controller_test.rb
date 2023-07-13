@@ -243,7 +243,6 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           should "disable mfa and clear recovery codes" do
             assert_predicate @user.reload, :totp_disabled?
             assert_predicate @user.reload, :mfa_disabled?
-            assert_empty @user.mfa_recovery_codes
             assert_empty @user.mfa_hashed_recovery_codes
           end
 
@@ -278,7 +277,6 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should "keep mfa and recovery codes enabled" do
             assert_predicate @user.reload, :totp_enabled?
-            assert_not_empty @user.mfa_recovery_codes
             assert_not_empty @user.mfa_hashed_recovery_codes
           end
 
@@ -357,7 +355,8 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context "when user does not have recovery codes" do
           setup do
-            @user.update!(mfa_recovery_codes: [], mfa_hashed_recovery_codes: [])
+            @user.update!(mfa_hashed_recovery_codes: [])
+            @user.new_mfa_recovery_codes = nil
             put :update, params: { level: "ui_and_api" }
           end
 
@@ -374,7 +373,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "on POST to otp_update with correct recovery codes" do
         setup do
           put :update, params: { level: "ui_and_api" }
-          post :otp_update, params: { otp: @user.mfa_recovery_codes.first }
+          post :otp_update, params: { otp: @user.new_mfa_recovery_codes.first }
         end
 
         should redirect_to("the settings page") { edit_settings_path }
@@ -641,7 +640,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
 
         should "not change mfa level and recovery codes" do
-          assert_no_changes -> { [@user.reload.mfa_level, @user.reload.mfa_recovery_codes, @user.reload.mfa_hashed_recovery_codes] } do
+          assert_no_changes -> { [@user.reload.mfa_level, @user.reload.mfa_hashed_recovery_codes] } do
             delete :destroy
           end
         end
@@ -765,7 +764,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
 
         should "not change mfa level and recovery codes" do
-          assert_no_changes -> { [@user.reload.mfa_level, @user.reload.mfa_recovery_codes, @user.reload.mfa_hashed_recovery_codes] } do
+          assert_no_changes -> { [@user.reload.mfa_level, @user.reload.mfa_hashed_recovery_codes] } do
             delete :destroy
           end
         end
@@ -857,6 +856,19 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       context "when show_recovery_codes is true" do
         setup do
           @controller.session[:show_recovery_codes] = true
+          get :recovery
+        end
+
+        should respond_with :success
+
+        should "clear show_recovery_codes" do
+          assert_nil @controller.session[:show_recovery_codes]
+        end
+      end
+
+      context "when show_recovery_codes is array" do
+        setup do
+          @controller.session[:show_recovery_codes] = %w[aaa bbb]
           get :recovery
         end
 

@@ -127,7 +127,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         end
 
         should "generate recovery codes" do
-          assert_equal 10, @user.reload.mfa_recovery_codes.count
           assert_equal 10, @user.reload.mfa_hashed_recovery_codes.count
         end
 
@@ -203,7 +202,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         end
 
         should "not change the users mfa_level or recovery codes" do
-          assert_no_changes -> { [@user.reload.mfa_level, @user.reload.mfa_recovery_codes.count, @user.reload.mfa_hashed_recovery_codes.count] } do
+          assert_no_changes -> { [@user.reload.mfa_level, @user.reload.mfa_hashed_recovery_codes.count] } do
             post(
               :callback,
               params: {
@@ -258,7 +257,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       end
 
       should "remove recovery codes" do
-        assert_empty @user.reload.mfa_recovery_codes
         assert_empty @user.reload.mfa_hashed_recovery_codes
       end
 
@@ -299,7 +297,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @credential2 = create(:webauthn_credential, user: @user)
         sign_in_as @user
 
-        @user_recovery_codes = @user.mfa_recovery_codes
         @user_hashed_recovery_codes = @user.mfa_hashed_recovery_codes
 
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -312,7 +309,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       end
 
       should "not change the users recovery codes" do
-        assert_equal @user_recovery_codes, @user.reload.mfa_recovery_codes
         assert_equal @user_hashed_recovery_codes, @user.reload.mfa_hashed_recovery_codes
       end
     end
@@ -325,7 +321,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @credential = create(:webauthn_credential, user: @user)
         sign_in_as @user
 
-        @user_recovery_codes = @user.mfa_recovery_codes
         @user_hashed_recovery_codes = @user.mfa_hashed_recovery_codes
 
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -338,7 +333,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       end
 
       should "not change the users recovery codes" do
-        assert_equal @user_recovery_codes, @user.reload.mfa_recovery_codes
         assert_equal @user_hashed_recovery_codes, @user.reload.mfa_hashed_recovery_codes
       end
     end
@@ -352,7 +346,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @credential2 = create(:webauthn_credential, user: @user)
         sign_in_as @user
 
-        @user_recovery_codes = @user.mfa_recovery_codes
         @user_hashed_recovery_codes = @user.mfa_hashed_recovery_codes
 
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -365,7 +358,6 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       end
 
       should "not change the users recovery codes" do
-        assert_equal @user_recovery_codes, @user.reload.mfa_recovery_codes
         assert_equal @user_hashed_recovery_codes, @user.reload.mfa_hashed_recovery_codes
       end
     end

@@ -51,7 +51,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
     page.assert_no_text user_attributes[:totp_seed]
-    page.assert_no_text user_attributes[:mfa_recovery_codes].first
     page.assert_no_text user_attributes[:mfa_hashed_recovery_codes].first
 
     user.reload
@@ -59,7 +58,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
     assert_nil user.totp_seed
-    assert_empty user.mfa_recovery_codes
     assert_empty user.mfa_hashed_recovery_codes
 
     audit = user.audits.sole
@@ -75,12 +73,11 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "mfa_level" => %w[ui_and_api disabled],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "totp_seed" => [user_attributes[:totp_seed], nil],
-              "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password]
             },
             "unchanged" => user.attributes
-              .except("mfa_level", "updated_at", "totp_seed", "mfa_recovery_codes", "mfa_hashed_recovery_codes", "encrypted_password")
+              .except("mfa_level", "updated_at", "totp_seed", "mfa_hashed_recovery_codes", "encrypted_password")
               .transform_values(&:as_json)
           }
         },
@@ -122,7 +119,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
     page.assert_no_text user_attributes[:totp_seed]
-    page.assert_no_text user_attributes[:mfa_recovery_codes].first
     page.assert_no_text user_attributes[:mfa_hashed_recovery_codes].first
 
     user.reload
@@ -130,7 +126,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
     assert_nil user.totp_seed
-    assert_empty user.mfa_recovery_codes
     assert_empty user.mfa_hashed_recovery_codes
 
     audit = user.audits.sole
@@ -148,7 +143,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
               "totp_seed" => [user_attributes[:totp_seed], nil],
-              "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
@@ -163,7 +157,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "email",
                 "encrypted_password",
                 "mfa_level",
-                "mfa_recovery_codes",
                 "mfa_hashed_recovery_codes",
                 "totp_seed",
                 "remember_token",
@@ -366,7 +359,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
     page.assert_no_text user_attributes[:totp_seed]
-    page.assert_no_text user_attributes[:mfa_recovery_codes].first
     page.assert_no_text user_attributes[:mfa_hashed_recovery_codes].first
 
     user.reload
@@ -425,7 +417,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
               "totp_seed" => [user_attributes[:totp_seed], nil],
-              "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
@@ -440,7 +431,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "email",
                 "encrypted_password",
                 "mfa_level",
-                "mfa_recovery_codes",
                 "mfa_hashed_recovery_codes",
                 "totp_seed",
                 "remember_token",

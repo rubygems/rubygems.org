@@ -3,9 +3,10 @@ require "application_system_test_case"
 class SignInWebauthnTest < ApplicationSystemTestCase
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
+    @mfa_recovery_codes = %w[0123456789ab ba9876543210]
     @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                   mfa_level: :ui_only, totp_seed: "thisisonetotpseed",
-                  mfa_recovery_codes: %w[0123456789ab ba9876543210])
+                  mfa_recovery_codes: @mfa_recovery_codes)
 
     @authenticator = create_webauthn_credential
   end
@@ -61,7 +62,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     assert page.has_content? "Multi-factor authentication"
     assert page.has_content? "Security Device"
 
-    fill_in "otp", with: @user.mfa_recovery_codes.first
+    fill_in "otp", with: @mfa_recovery_codes.first
     click_button "Verify code"
 
     assert page.has_content? "Dashboard"
