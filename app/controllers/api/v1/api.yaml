@@ -1,0 +1,686 @@
+openapi: 3.0.0
+x-stoplight:
+  id: ke9efxx0sv0in
+info:
+  title: RubyGems.org API
+  version: 1.0.0
+  contact:
+    email: support@rubygems.org
+servers:
+  - url: "https://rubygems.org/api/v1"
+    description: Production
+  - url: "https://staging.rubygems.org/api/v1"
+    description: Staging
+tags:
+  - name: dependencies
+  - name: gems
+  - name: web_hooks
+paths:
+  /gems:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Rubygem"
+            text/yaml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Rubygem"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+      tags:
+        - gems
+    post:
+      operationId: pushGem
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+        description: The .gem file to push
+      responses:
+        "200":
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Successfully registered gem: rubygem1 (1.1.0.pre.2)"
+        4XX:
+          $ref: "#/components/responses/Error"
+  "/gems/{name}":
+    parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/GemName"
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            text/yaml:
+              schema:
+                $ref: "#/components/schemas/Rubygem"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rubygem"
+              example:
+                name: rubygem1
+                downloads: 0
+                version: 1.1.0.pre.2
+                version_created_at: "2023-06-24T01:22:24.352Z"
+                version_downloads: 0
+                platform: ruby
+                authors: null
+                info: This rubygem does not have a description or summary.
+                licenses: null
+                metadata: {}
+                yanked: false
+                sha: null
+                project_uri: "http://localhost/gems/rubygem1"
+                gem_uri: "http://localhost/gems/rubygem1-1.1.0.pre.2.gem"
+                homepage_uri: null
+                wiki_uri: null
+                documentation_uri: "https://www.rubydoc.info/gems/rubygem1/1.1.0.pre.2"
+                mailing_list_uri: null
+                source_code_uri: null
+                bug_tracker_uri: null
+                changelog_uri: null
+                funding_uri: null
+                dependencies:
+                  development: []
+                  runtime:
+                    - name: rubygem0
+                      requirements: ~> 1.0.0
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/Error"
+      tags:
+        - gems
+    options:
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+  "/gems/{name}/reverse_dependencies":
+    get:
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/GemName"
+      responses:
+        "200":
+          description: OK
+          content:
+            text/yaml:
+              schema:
+                $ref: "#/components/schemas/ReverseDependencies"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReverseDependencies"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/Error"
+      tags:
+        - gems
+        - dependencies
+  /web_hooks:
+    post:
+      operationId: createWebHook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+        description: The webhook to create
+      responses:
+        "201":
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+        4XX:
+          $ref: "#/components/responses/Error"
+      tags:
+        - web_hooks
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  all gems:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WebHook"
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/WebHook"
+            text/yaml:
+              schema:
+                type: object
+                properties:
+                  all gems:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WebHook"
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/WebHook"
+        4XX:
+          $ref: "#/components/responses/Error"
+      tags:
+        - web_hooks
+    delete:
+      operationId: deleteWebHook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        description: The webhook to delete
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+        4XX:
+          $ref: "#/components/responses/Error"
+      tags:
+        - web_hooks
+  /web_hooks/fire:
+    post:
+      operationId: fireWebHook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - url
+              properties:
+                gem_name:
+                  $ref: "#/components/schemas/GemName"
+                  nullable: true
+                url:
+                  type: string
+                  format: uri
+          text/yaml:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                gem_name:
+                  oneOf:
+                    - $ref: "#/components/schemas/GemName"
+                    - type: string
+                      enum:
+                        - "*"
+                  nullable: true
+                url:
+                  type: string
+                  format: uri
+          "*/*":
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                gem_name:
+                  oneOf:
+                    - $ref: "#/components/schemas/GemName"
+                    - type: string
+                      enum:
+                        - "*"
+                  nullable: true
+                url:
+                  type: string
+                  format: uri
+        description: The webhook to fire
+      responses:
+        "200":
+          description: Fired
+          content:
+            text/plain:
+              schema:
+                type: string
+        4XX:
+          $ref: "#/components/responses/Error"
+      tags:
+        - web_hooks
+  /web_hooks/remove:
+    delete:
+      responses:
+        "200":
+          description: Deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+        4XX:
+          $ref: "#/components/responses/Error"
+      tags:
+        - web_hooks
+  "/versions/{gem_name}":
+    parameters:
+      - schema:
+          $ref: "#/components/schemas/GemName"
+        name: gem_name
+        in: path
+        required: true
+    get:
+      tags:
+        - versions
+      responses:
+        "200":
+          description: OK
+          content:
+            text/yaml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Version"
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Version"
+        "4XX":
+          $ref: "#/components/responses/Error"
+        "304":
+          $ref: "#/components/responses/NotModified"
+      operationId: getGemVersions
+  /versions/{gem_name}/latest:
+    parameters:
+      - schema:
+          $ref: "#/components/schemas/GemName"
+        name: gem_name
+        in: path
+        required: true
+    get:
+      tags:
+        - versions
+      responses:
+        "200":
+          description: OK
+          content:
+            text/yaml:
+              schema:
+                type: object
+                properties:
+                  version:
+                    oneOf:
+                      - $ref: "#/components/schemas/VersionString"
+                      - type: string
+                        enum:
+                          - "unknown"
+                additionalProperties: false
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    oneOf:
+                      - type: string
+                        enum:
+                          - "unknown"
+                      - $ref: "#/components/schemas/VersionString"
+                additionalProperties: false
+            text/javascript:
+              schema:
+                type: string
+        "4XX":
+          $ref: "#/components/responses/Error"
+        "304":
+          $ref: "#/components/responses/NotModified"
+      operationId: getLatestGemVersion
+  /versions/{gem_name}/reverse_dependencies:
+    parameters:
+      - schema:
+          $ref: "#/components/schemas/GemName"
+        name: gem_name
+        in: path
+        required: true
+    get:
+      tags:
+        - versions
+      responses:
+        "200":
+          description: OK
+          content:
+            text/yaml:
+              schema:
+                type: array
+                items:
+                  type: string
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "4XX":
+          $ref: "#/components/responses/Error"
+        "304":
+          $ref: "#/components/responses/NotModified"
+      operationId: getReverseDependencies
+  /api_key:
+    get:
+      tags:
+        - api_key
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+            application/x-yaml:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+            text/plain:
+              schema:
+                type: string
+        "4XX":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      operationId: getApiKey
+    post:
+      tags:
+        - api_key
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+        "4XX":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      operationId: signIn
+    put:
+      tags:
+        - api_key
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+        "4XX":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      operationId: updateApiKey
+components:
+  schemas:
+    GemName:
+      type: string
+      pattern: '\A[A-Za-z0-9\.\-_]+\z'
+    VersionString:
+      type: string
+      pattern: '\A([0-9]+(?>\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)?\z'
+      x-stoplight:
+        id: 1037iwcuunjvw
+    Rubygem:
+      type: object
+      x-stoplight:
+        id: kfk9i6uptmzzr
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/GemName"
+        downloads:
+          type: integer
+        version:
+          $ref: "#/components/schemas/VersionString"
+        version_created_at:
+          type: string
+          format: date-time
+        version_downloads:
+          type: integer
+        platform:
+          type: string
+        authors:
+          type: string
+          nullable: true
+        info:
+          type: string
+        licenses:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          nullable: true
+        yanked:
+          type: boolean
+        sha:
+          type: string
+          nullable: true
+        project_uri:
+          type: string
+          format: uri
+        gem_uri:
+          type: string
+          format: uri
+        homepage_uri:
+          type: string
+          format: uri
+          nullable: true
+        wiki_uri:
+          type: string
+          format: uri
+          nullable: true
+        documentation_uri:
+          type: string
+          format: uri
+          nullable: true
+        mailing_list_uri:
+          type: string
+          format: uri
+          nullable: true
+        source_code_uri:
+          type: string
+          format: uri
+          nullable: true
+        bug_tracker_uri:
+          type: string
+          format: uri
+          nullable: true
+        changelog_uri:
+          type: string
+          format: uri
+          nullable: true
+        funding_uri:
+          type: string
+          format: uri
+          nullable: true
+        dependencies:
+          type: object
+          additionalProperties: false
+          properties:
+            development:
+              type: array
+              items:
+                $ref: "#/components/schemas/Dependency"
+            runtime:
+              type: array
+              items:
+                $ref: "#/components/schemas/Dependency"
+    ReverseDependencies:
+      type: array
+      items:
+        type: string
+      x-stoplight:
+        id: drr3o1k6z2j54
+    Dependency:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/GemName"
+        requirements:
+          type: string
+          nullable: true
+    WebHook:
+      type: object
+      additionalProperties: false
+      required:
+        - url
+        - failure_count
+      properties:
+        url:
+          type: string
+          format: uri
+        failure_count:
+          type: integer
+    Version:
+      type: object
+      additionalProperties: false
+      properties:
+        authors:
+          type: string
+          nullable: true
+        built_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+        downloads_count:
+          type: integer
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: string
+            maxLength: 1024
+        number:
+          $ref: "#/components/schemas/VersionString"
+        summary:
+          type: string
+          nullable: true
+        platform:
+          type: string
+          nullable: true
+        rubygems_version:
+          type: string
+          nullable: true
+        ruby_version:
+          type: string
+          nullable: true
+        prerelease:
+          type: boolean
+        licenses:
+          type: string
+          nullable: true
+        requirements:
+          type: string
+          # additionalProperties: false
+          # properties:
+          #   development:
+          #     type: array
+          #     items:
+          #       $ref: "#/components/schemas/Dependency"
+          #   runtime:
+          #     type: array
+          #     items:
+          #       $ref: "#/components/schemas/Dependency"
+        sha:
+          type: string
+          nullable: true
+    ApiKey:
+      type: object
+      additionalProperties: false
+      required:
+        - rubygems_api_key
+        - status
+      properties:
+        rubygems_api_key:
+          type: string
+        status:
+          type: string
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: Forbidden
+    Unauthorized:
+      description: Forbidden
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Access Denied. Please sign up for an account at https://rubygems.org"
+        application/json:
+          schema:
+            type: string
+        "":
+          schema:
+            type: string
+    NotModified:
+      description: Not Modified
+      content:
+        "":
+          schema:
+            type: string
+            example: Not Modified
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              status:
+                type: integer
+                example: 404
+              error:
+                type: string
+                example: Not Found
+        text/plain:
+          schema:
+            type: string
+            example: This gem could not be found
+  securitySchemes:
+    API Key:
+      name: Authorization
+      type: apiKey
+      in: header
+      description: ""
