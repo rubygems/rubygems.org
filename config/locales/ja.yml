@@ -486,7 +486,7 @@ ja:
       updated: あなたのプロフィールはアップデートされました。
     request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
     show:
-      title: のプロファイル %{username}
+      title: "%{username} のプロフィール"
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
