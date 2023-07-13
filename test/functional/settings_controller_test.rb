@@ -27,10 +27,9 @@ class SettingsControllerTest < ActionController::TestCase
 
       context "user has mfa disabled" do
         setup { get :edit }
-        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
-
-        should "set mfa_redirect_uri" do
-          assert_equal edit_settings_path, session[:mfa_redirect_uri]
+        should "flash a warning message" do
+          assert_response :success
+          assert page.has_content? "For protection of your account and your gems, you are required to set up multi-factor authentication."
         end
       end
 

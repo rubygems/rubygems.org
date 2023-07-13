@@ -4,8 +4,14 @@ module ApplicationMultifactorMethods
   included do
     def redirect_to_new_mfa
       message = t("multifactor_auths.setup_required_html")
+
+      if request.path_info == edit_settings_path
+        flash.now[:notice_html] = message
+        return
+      end
+
       session["mfa_redirect_uri"] = request.path_info
-      redirect_to new_multifactor_auth_path, notice_html: message
+      redirect_to edit_settings_path, notice_html: message
     end
 
     def mfa_required_not_yet_enabled?
