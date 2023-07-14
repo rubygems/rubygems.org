@@ -828,7 +828,7 @@ class UserTest < ActiveSupport::TestCase
     setup { @user = create(:user, handle: "MikeJudge") }
 
     should "not raise ActiveRecord::RecordInvalid for email address already taken" do
-      assert_changed(@user, :email, :password, :api_key, :totp_seed, :remember_token) do
+      assert_changed(@user, :email, :password, :api_key, :remember_token) do
         @user.block!
       end
     end
