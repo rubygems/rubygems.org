@@ -82,8 +82,10 @@ data:
         # respond with a 405.
         # (Puma responds with a 501 to unknown methods, which leads to us getting paged
         # for what are essentially bad requests, not server errors)
-        limit_except GET HEAD POST PUT DELETE OPTIONS PATCH {
-          deny all;
+        # Can't use limit_except here because it doesn't work in server context,
+        # only location context, and we want this to apply to all locations.
+        if ($request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS|PATCH)$ {
+          return 405;
         }
 
         location /api/v1/dependencies {
