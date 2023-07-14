@@ -40,6 +40,12 @@ class UserTotpMethodsTest < ActiveSupport::TestCase
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     end
 
+    should "set totp_seed to nil" do
+      perform_disable_totp_job
+
+      assert_nil @user.totp_seed
+    end
+
     should "send totp disabled email" do
       perform_disable_totp_job
 

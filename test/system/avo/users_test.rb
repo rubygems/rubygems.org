@@ -57,7 +57,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
-    assert_empty user.totp_seed
+    assert_nil user.totp_seed
     assert_empty user.mfa_recovery_codes
 
     audit = user.audits.sole
@@ -72,7 +72,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "changes" => {
               "mfa_level" => %w[ui_and_api disabled],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "totp_seed" => [user_attributes[:totp_seed], ""],
+              "totp_seed" => [user_attributes[:totp_seed], nil],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password]
             },
@@ -125,7 +125,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
-    assert_empty user.totp_seed
+    assert_nil user.totp_seed
     assert_empty user.mfa_recovery_codes
 
     audit = user.audits.sole
@@ -142,7 +142,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "totp_seed" => [user_attributes[:totp_seed], ""],
+              "totp_seed" => [user_attributes[:totp_seed], nil],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
@@ -416,7 +416,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "totp_seed" => [user_attributes[:totp_seed], ""],
+              "totp_seed" => [user_attributes[:totp_seed], nil],
               "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
