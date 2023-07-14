@@ -84,7 +84,7 @@ data:
         # for what are essentially bad requests, not server errors)
         # Can't use limit_except here because it doesn't work in server context,
         # only location context, and we want this to apply to all locations.
-        if ($request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS|PATCH)$ {
+        if ( $request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS|PATCH)$ ) {
           return 405;
         }
 
