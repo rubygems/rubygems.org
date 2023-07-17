@@ -15,6 +15,20 @@
     <% end %>
   <% end %>
 
+  <h2 id="security-device"><%= t(".webauthn_credentials") %></h2>
+
+  <p><%= t(".webauthn_credential_note")%></p>
+
+  <% if @user.webauthn_credentials.none? %>
+    <p><i><%= t(".no_webauthn_credentials") %></i></p>
+  <% else %>
+    <div class="l-mb-8">
+      <%= render @user.webauthn_credentials %>
+    </div>
+  <% end %>
+
+  <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
+
   <% if @user.totp_enabled? %>
     <div class="mfa__header-wrapper">
       <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.otp") %></h2>
@@ -38,26 +52,6 @@
       <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
     </p>
   <% end %>
-
-  <div class="mfa__header-wrapper">
-    <h2 class="mfa__header mfa__header--compact"><%= t(".webauthn_credentials") %></h2>
-    <% if @user.webauthn_enabled? %>
-      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
-    <% else %>
-      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
-    <% end %>
-  </div>
-  <p><%= t(".webauthn_credential_note")%></p>
-
-  <% if @user.webauthn_credentials.none? %>
-    <p><i><%= t(".no_webauthn_credentials") %></i></p>
-  <% else %>
-    <div class="l-mb-8">
-      <%= render @user.webauthn_credentials %>
-    </div>
-  <% end %>
-
-  <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
 </div>
 
 <div class="t-body">

@@ -265,3 +265,20 @@
     float: right; }
   .about__assets__download:focus:before, .about__assets__download:hover:before {
     animation: arrow .75s infinite; }
+
+/* Banner */
+
+#banner {
+  background-color: #141c22;
+  text-align: center;
+  padding: 12px 0;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+}
+
+#banner a {
+  color: #e9573f;
+  text-decoration: underline;
+  font-weight: bold;
+}
