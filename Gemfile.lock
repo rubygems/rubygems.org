@@ -79,7 +79,7 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.4.13.0)
       execjs (~> 2)
-    avo (2.35.0)
+    avo (2.36.3)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -334,7 +334,7 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.15.2)
+    nokogiri (1.15.3)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -386,7 +386,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.0.0)
       stringio
-    public_suffix (5.0.1)
+    public_suffix (5.0.3)
     puma (6.3.0)
       nio4r (~> 2.0)
     pundit (2.3.0)
