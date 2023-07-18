@@ -383,6 +383,10 @@ class Rubygem < ApplicationRecord
     end
   end
 
+  def ld_context
+    LaunchDarkly::LDContext.with_key(name, "rubygem")
+  end
+
   private
 
   # a gem namespace is not protected if it is

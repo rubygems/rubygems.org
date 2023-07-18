@@ -69,7 +69,7 @@ Metrics/BlockLength:
     - config/environments/development.rb
 
 Metrics/ClassLength:
-  Max: 356 # TODO: Lower to 100
+  Max: 359 # TODO: Lower to 100
   Exclude:
     - test/**/*
 

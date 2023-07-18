@@ -66,6 +66,7 @@
 
   <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
   <div class="t-list__items">
+    <code><%= @versioned_links.each.to_a.to_json %></code>
     <%- @versioned_links.each do |name, link| %>
       <%= link_to_page name, link %>
     <%- end %>
