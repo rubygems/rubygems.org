@@ -10,6 +10,8 @@ class GemNameReservationTest < ActiveSupport::TestCase
 
     should_not allow_value(nil).for(:name)
     should_not allow_value("").for(:name)
+    should_not allow_value("Abc").for(:name)
+    should allow_value("abc").for(:name)
     should validate_uniqueness_of(:name).case_insensitive
   end
 
