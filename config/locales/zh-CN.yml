@@ -148,6 +148,7 @@ zh-CN:
       find_blurb: 查找、安装以及发布 Gem
       learn:
         install_rubygems: 安装 RubyGems
+      mfa_banner_html:
   layouts:
     application:
       footer:

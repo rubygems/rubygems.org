@@ -145,6 +145,7 @@ nl:
       find_blurb: Vind je gems makkelijker en publiceer ze sneller.
       learn:
         install_rubygems: Installeer RubyGems
+      mfa_banner_html:
   layouts:
     application:
       footer:

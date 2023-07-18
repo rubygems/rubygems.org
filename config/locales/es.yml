@@ -153,6 +153,7 @@ es:
       find_blurb: Encuentra, instala, y publica RubyGems.
       learn:
         install_rubygems: Instala RubyGems
+      mfa_banner_html:
   layouts:
     application:
       footer:
