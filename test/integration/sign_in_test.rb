@@ -15,6 +15,7 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Sign out"
+    assert page.has_content? "We now support security devices!"
   end
 
   test "signing in with uppercase email" do
@@ -79,6 +80,7 @@ class SignInTest < SystemTest
     end
 
     assert page.has_content? "Sign out"
+    assert page.has_content? "We now support security devices!"
   end
 
   test "signing in with current valid otp when mfa enabled but 30 minutes has passed" do

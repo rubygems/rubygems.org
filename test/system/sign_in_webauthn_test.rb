@@ -30,6 +30,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     click_on "Authenticate with security device"
 
     assert page.has_content? "Dashboard"
+    refute page.has_content? "We now support security devices!"
   end
 
   test "sign in with webauthn but it expired" do

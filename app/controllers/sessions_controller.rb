@@ -80,6 +80,7 @@ class SessionsController < Clearance::SessionsController
     sign_in(@user) do |status|
       if status.success?
         StatsD.increment "login.success"
+        flash[:notice_html] = t("home.index.mfa_banner_html")
         redirect_back_or(url_after_create)
       else
         login_failure(status.failure_message)
