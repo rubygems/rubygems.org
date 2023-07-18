@@ -119,5 +119,17 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
 
       refute_equal token_before, @user.webauthn_verification.path_token
     end
+
+    should "reset the otp each time the method is called" do
+      @webauthn_verification.generate_otp
+
+      assert_not_nil @user.webauthn_verification.otp
+      assert_not_nil @user.webauthn_verification.otp_expires_at
+
+      @user.refresh_webauthn_verification
+
+      assert_nil @user.webauthn_verification.otp
+      assert_nil @user.webauthn_verification.otp_expires_at
+    end
   end
 end

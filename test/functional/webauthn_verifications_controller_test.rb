@@ -131,6 +131,25 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "when verifying the challenge with safari" do
+      setup do
+        @challenge = session[:webauthn_authentication]["challenge"]
+        @origin = "http://localhost:3000"
+        @rp_id = URI.parse(@origin).host
+        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        Browser::Unknown.any_instance.stubs(:safari?).returns true
+        authenticate_request
+      end
+
+      should "render success" do
+        assert_equal "success", response.body
+      end
+    end
+
     context "when not providing credentials" do
       setup do
         travel_to Time.utc(2023, 1, 1, 0, 0, 3) do

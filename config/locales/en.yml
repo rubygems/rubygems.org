@@ -394,12 +394,12 @@ en:
   webauthn_verifications:
     expired_or_already_used: The token in the link you used has either expired or been used already.
     no_port: No port provided. Please try again.
+    pending: Security device authentication is still pending.
     prompt:
       title: Authenticate with Security Device
       authenticating_as: Authenticating as
       authenticate: Authenticate
       no_webauthn_devices: You don't have any security devices enabled
-      safari_note_html: It looks like you are using Safari. Due to limitations within Safari, you will be unable to authenticate using this browser. Please use a different browser. Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">WebAuthn MFA CLI guide</a> for more information on this limitation.
     successful_verification:
       title: Success!
       close_browser: Please close this browser.

@@ -17,6 +17,19 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
     end
   end
 
+  def status
+    verification = @user.webauthn_verification
+    if verification.path_token != params[:webauthn_token]
+      render json: { status: :not_found, message: t(:not_found) }
+    elsif verification.otp_expired?
+      render json: { status: :expired, message: t("webauthn_verifications.expired_or_already_used") }
+    elsif verification.otp.nil?
+      render json: { status: :pending, message: t("webauthn_verifications.pending") }
+    else
+      render json: { status: :success, code: verification.otp }
+    end
+  end
+
   private
 
   def authenticate_with_credentials

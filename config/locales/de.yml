@@ -395,12 +395,12 @@ de:
   webauthn_verifications:
     expired_or_already_used:
     no_port:
+    pending:
     prompt:
       title:
       authenticating_as:
       authenticate:
       no_webauthn_devices:
-      safari_note_html:
     successful_verification:
       title:
       close_browser:

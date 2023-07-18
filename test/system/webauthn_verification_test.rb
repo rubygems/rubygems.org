@@ -4,7 +4,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   setup do
     @user = create(:user)
     create_webauthn_credential
-    @verification = create(:webauthn_verification, user: @user)
+    @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
     @port = 5678
     @mock_client = MockClientServer.new(@port)
   end
@@ -24,27 +24,23 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert_link_is_expired
   end
 
-  test "when verifying webauthn and not using safari" do
+  test "when verifying webauthn credential on safari" do
+    assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
     WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
-    refute_match "It looks like you are using Safari. Due to limitations within Safari, " \
-                 "you will be unable to authenticate using this browser. Please use a different browser. " \
-                 'Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">' \
-                 "WebAuthn MFA CLI guide</a> for more information on this limitation.",
-      page.html
-  end
+    assert_match "Authenticate with Security Device", page.html
+    assert_match "Authenticating as #{@user.handle}", page.html
 
-  test "when verifying webauthn and using safari" do
-    Capybara.current_driver = :fake_safari
-    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+    click_on "Authenticate"
 
-    assert_match "It looks like you are using Safari. Due to limitations within Safari, " \
-                 "you will be unable to authenticate using this browser. Please use a different browser. " \
-                 'Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">' \
-                 "WebAuthn MFA CLI guide</a> for more information on this limitation.",
-      page.html
+    Browser::Chrome.any_instance.stubs(:safari?).returns true
+
+    assert page.has_content?("Success!")
+    assert_current_path(successful_verification_webauthn_verification_path)
+
+    assert_link_is_expired
+    assert_poll_status("success")
   end
 
   test "when client closes connection during verification" do
@@ -124,6 +120,18 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert page.has_content?("The token in the link you used has either expired or been used already.")
+  end
+
+  def assert_poll_status(status)
+    @api_key ||= create(:api_key, key: "12345", push_rubygem: true, user: @user)
+
+    Capybara.current_driver = :rack_test
+    page.driver.header "AUTHORIZATION", "12345"
+
+    visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
+
+    assert_equal status, JSON.parse(page.text)["status"]
+    fullscreen_headless_chrome_driver
   end
 
   class MockClientServer
