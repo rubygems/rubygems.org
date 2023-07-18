@@ -444,9 +444,11 @@ zh-CN:
         disabled_html:
         go_settings: 注册新装置
         level_html:
-        enabled:
+        enabled_note:
         update: 更新
         disable:
+        enabled:
+        disabled:
         level:
           title: 多重验证等级
           disabled: 停用

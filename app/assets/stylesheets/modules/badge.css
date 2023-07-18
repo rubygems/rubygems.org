@@ -1,0 +1,20 @@
+.badge {
+  display: inline;
+  background-color: #e1e1e1;
+  color: black;
+  border: 1px solid #c0c0c0;
+  border-radius: 5px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.badge--success {
+  background-color: #c4f2c7;
+  border-color: #9ecea1;
+}
+
+.badge--warning {
+  background-color: #fff6d2;
+  border-color: #dcd3b1;
+}

@@ -3,7 +3,9 @@
 <div class="t-body">
   <h2 class="page__subheading"><%= t ".mfa.multifactor_auth" %></h2>
   <% if @user.mfa_enabled? %>
-    <h2><%= t(".mfa.level.title")%></h2>
+    <div class="mfa__header-wrapper">
+      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.level.title")%></h2>
+    </div>
     <p><%= t(".mfa.level_html") %></p>
 
     <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit" do %>
@@ -13,9 +15,12 @@
     <% end %>
   <% end %>
 
-  <h2><%= t(".mfa.otp")%></h2>
   <% if @user.totp_enabled? %>
-    <p><%= t(".mfa.enabled") %></p>
+    <div class="mfa__header-wrapper">
+      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.otp") %></h2>
+      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
+    </div>
+    <p><%= t(".mfa.enabled_note") %></p>
     <%= form_tag multifactor_auth_path, method: :delete, id: "mfa-delete" do %>
       <div class="text_field">
         <%= label_tag :otp, t(".otp_code"), class: "form__label" %>
@@ -24,16 +29,24 @@
       <%= submit_tag t(".mfa.disable"), class: "form__submit" %>
     <% end %>
   <% else %>
-    <div class="t-body">
-      <p>
+    <div class="mfa__header-wrapper">
+      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.otp") %></h2>
+      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
+    </div>
+    <p>
       <%= t(".mfa.disabled_html") %>
       <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
-      </p>
-    </div>
+    </p>
   <% end %>
 
-  <h2><%= t(".webauthn_credentials") %></h2>
-
+  <div class="mfa__header-wrapper">
+    <h2 class="mfa__header mfa__header--compact"><%= t(".webauthn_credentials") %></h2>
+    <% if @user.webauthn_enabled? %>
+      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
+    <% else %>
+      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
+    <% end %>
+  </div>
   <p><%= t(".webauthn_credential_note")%></p>
 
   <% if @user.webauthn_credentials.none? %>

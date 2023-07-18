@@ -445,9 +445,11 @@ zh-TW:
         disabled_html:
         go_settings: 註冊新裝置
         level_html:
-        enabled:
+        enabled_note:
         update: 更新
         disable:
+        enabled:
+        disabled:
         level:
           title: 多重驗證等級
           disabled: 停用
