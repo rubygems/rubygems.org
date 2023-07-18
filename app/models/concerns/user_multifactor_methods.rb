@@ -53,8 +53,7 @@ module UserMultifactorMethods
     otp = otp.to_s
     return true if verify_totp(totp_seed, otp)
 
-    return false unless (hashed_code = mfa_hashed_recovery_codes.find { |code| BCrypt::Password.new(code) == otp })
-    mfa_hashed_recovery_codes.delete(hashed_code)
+    return false unless verify_mfa_recovery_code(otp)
 
     save!(validate: false)
   end
@@ -63,6 +62,14 @@ module UserMultifactorMethods
     return true if verify_webauthn_otp(otp)
     return true if ui_mfa_verified?(otp)
     false
+  end
+
+  def mfa_method_added(default_level)
+    return unless mfa_device_count_one?
+
+    self.mfa_level = default_level
+    self.new_mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
+    self.mfa_hashed_recovery_codes = new_mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
   end
 
   private
@@ -91,6 +98,12 @@ module UserMultifactorMethods
 
   def correct_mfa_level_set_conditions
     (mfa_disabled? && no_mfa_devices?) || (mfa_enabled? && mfa_devices_present?)
+  end
+
+  def verify_mfa_recovery_code(otp)
+    hashed_code = mfa_hashed_recovery_codes.find { |code| BCrypt::Password.new(code) == otp }
+    return unless hashed_code
+    mfa_hashed_recovery_codes.delete(hashed_code)
   end
 
   class_methods do
