@@ -15,6 +15,7 @@ module UserTotpMethods
     if no_mfa_devices?
       self.mfa_level = "disabled"
       self.mfa_recovery_codes = []
+      self.mfa_hashed_recovery_codes = []
     end
 
     save!(validate: false)
@@ -37,6 +38,7 @@ module UserTotpMethods
     if mfa_device_count_one?
       self.mfa_level = level
       self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
+      self.mfa_hashed_recovery_codes = mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
     end
 
     save!(validate: false)

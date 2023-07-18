@@ -396,6 +396,7 @@ class UserTest < ActiveSupport::TestCase
             assert @user.email.start_with?("security+locked-")
             assert @user.email.end_with?("@rubygems.org")
             assert_empty @user.mfa_recovery_codes
+            assert_empty @user.mfa_hashed_recovery_codes
             assert_predicate @user, :mfa_disabled?
           end
 

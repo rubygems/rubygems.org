@@ -9,7 +9,8 @@ FactoryBot.define do
     trait :mfa_enabled do
       totp_seed { "123abc" }
       mfa_level { User.mfa_levels["ui_and_api"] }
-      mfa_recovery_codes { %w[aaa bbb ccc] }
+      mfa_recovery_codes { %w[aaa bbb ccc] } # TODO: make transient once the column is dropped
+      mfa_hashed_recovery_codes { mfa_recovery_codes.map { |code| BCrypt::Password.create(code) } }
     end
 
     trait :disabled do

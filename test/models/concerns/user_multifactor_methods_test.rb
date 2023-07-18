@@ -425,6 +425,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       assert @user.ui_mfa_verified?(recovery_code)
       refute_includes @user.mfa_recovery_codes, recovery_code
+      refute_includes @user.mfa_hashed_recovery_codes, BCrypt::Password.create(recovery_code)
     end
   end
 
@@ -495,6 +496,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       assert @user.api_mfa_verified?(recovery_code)
       refute_includes @user.mfa_recovery_codes, recovery_code
+      refute_includes @user.mfa_hashed_recovery_codes, BCrypt::Password.create(recovery_code)
     end
   end
 
