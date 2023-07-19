@@ -3,6 +3,8 @@ require "test_helper"
 class OIDC::AccessPolicyTest < ActiveSupport::TestCase
   make_my_diffs_pretty!
 
+  should validate_presence_of :statements
+
   setup do
     @role = build(:oidc_api_key_role)
   end
