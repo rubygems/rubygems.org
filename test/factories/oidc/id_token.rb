@@ -7,10 +7,15 @@ FactoryBot.define do
       {
         claims: {
           claim1: "value1",
-          claim2: "value2"
+          claim2: "value2",
+          jti:
         },
         header: {}
       }
+    end
+
+    transient do
+      sequence(:jti) { |n| SecureRandom.uuid }
     end
   end
 end
