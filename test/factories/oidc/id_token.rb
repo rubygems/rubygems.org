@@ -15,7 +15,7 @@ FactoryBot.define do
     end
 
     transient do
-      sequence(:jti) { |n| SecureRandom.uuid }
+      sequence(:jti) { |_n| SecureRandom.uuid }
     end
   end
 end
