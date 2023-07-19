@@ -106,7 +106,7 @@
 <text text-anchor="start" x="3804.58" y="-294.93" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb ∗</text>
 </g>
 <!-- m_ApiKey&#45;&gt;m_OIDC::IdToken -->
-<g id="edge33" class="edge">
+<g id="edge34" class="edge">
 <title>m_ApiKey&#45;&gt;m_OIDC::IdToken</title>
 <path fill="none" stroke="black" d="M3525.54,-504.19C3611.75,-434.84 3716.59,-350.5 3760.67,-315.04"/>
 </g>
@@ -130,7 +130,7 @@
 <text text-anchor="start" x="2014.58" y="-571.75" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
 </g>
 <!-- m_ApiKey&#45;&gt;m_Ownership -->
-<g id="edge36" class="edge">
+<g id="edge37" class="edge">
 <title>m_ApiKey&#45;&gt;m_Ownership</title>
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M3261.4,-716.61C3244.9,-725.63 3227.7,-733.39 3210.29,-738.85 3159.4,-754.82 2302.57,-749.4 2250.29,-738.85 2173.3,-723.32 2091.56,-687.83 2032.02,-658.07"/>
 </g>
@@ -354,7 +354,7 @@
 <text text-anchor="start" x="4950.58" y="-196.55" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb</text>
 </g>
 <!-- m_GoodJob::BatchRecord&#45;&gt;m_GoodJob::Execution -->
-<g id="edge42" class="edge">
+<g id="edge43" class="edge">
 <title>m_GoodJob::BatchRecord&#45;&gt;m_GoodJob::Execution</title>
 <path fill="none" stroke="black" d="M4971.69,-842.36C4940.86,-808.54 4908.61,-765.92 4890.79,-720.85 4852.24,-623.34 4847.62,-503.38 4851.11,-416.17"/>
 <polygon fill="black" stroke="black" points="4854.29,-416.37 4851.54,-407.24 4848,-416.09 4854.29,-416.37"/>
@@ -397,7 +397,7 @@
 <text text-anchor="start" x="5138.58" y="-509.5" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb</text>
 </g>
 <!-- m_GoodJob::BatchRecord&#45;&gt;m_GoodJob::Job -->
-<g id="edge41" class="edge">
+<g id="edge42" class="edge">
 <title>m_GoodJob::BatchRecord&#45;&gt;m_GoodJob::Job</title>
 <path fill="none" stroke="black" d="M5049.79,-842.42C5049.79,-808.69 5049.79,-767.82 5049.79,-729.89"/>
 <polygon fill="black" stroke="black" points="5052.94,-730.32 5049.79,-721.32 5046.64,-730.32 5052.94,-730.32"/>
@@ -422,19 +422,19 @@
 <text text-anchor="start" x="5053.33" y="-9.6" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb</text>
 </g>
 <!-- m_GoodJob::Execution&#45;&gt;m_GoodJob::DiscreteExecution -->
-<g id="edge39" class="edge">
+<g id="edge40" class="edge">
 <title>m_GoodJob::Execution&#45;&gt;m_GoodJob::DiscreteExecution</title>
 <path fill="none" stroke="black" d="M4902.88,-187.66C4914.01,-158.31 4925.58,-127.77 4935.06,-102.78"/>
 <polygon fill="black" stroke="black" points="4938.34,-104.01 4938.58,-94.48 4932.45,-101.78 4938.34,-104.01"/>
 </g>
 <!-- m_GoodJob::Job&#45;&gt;m_GoodJob::DiscreteExecution -->
-<g id="edge40" class="edge">
+<g id="edge41" class="edge">
 <title>m_GoodJob::Job&#45;&gt;m_GoodJob::DiscreteExecution</title>
 <path fill="none" stroke="black" d="M5061.34,-500.82C5067.81,-401.08 5066.91,-250.87 5020.79,-130.2 5017.01,-120.32 5011.59,-110.69 5005.48,-101.7"/>
 <polygon fill="black" stroke="black" points="5007.5,-100.12 4999.69,-94.65 5002.38,-103.79 5007.5,-100.12"/>
 </g>
 <!-- m_GoodJob::Job&#45;&gt;m_GoodJob::Execution -->
-<g id="edge43" class="edge">
+<g id="edge44" class="edge">
 <title>m_GoodJob::Job&#45;&gt;m_GoodJob::Execution</title>
 <path fill="none" stroke="black" d="M4984.04,-500.49C4967.31,-472.8 4949.28,-442.93 4932.33,-414.87"/>
 <polygon fill="black" stroke="black" points="4934.69,-413.69 4927.35,-407.61 4929.3,-416.94 4934.69,-413.69"/>
@@ -533,21 +533,23 @@
 <!-- m_OIDC::ApiKeyRole -->
 <g id="node20" class="node">
 <title>m_OIDC::ApiKeyRole</title>
-<path fill="none" stroke="black" d="M3649.71,-583.65C3649.71,-583.65 3913.87,-583.65 3913.87,-583.65 3919.87,-583.65 3925.87,-589.65 3925.87,-595.65 3925.87,-595.65 3925.87,-625.1 3925.87,-625.1 3925.87,-631.1 3919.87,-637.1 3913.87,-637.1 3913.87,-637.1 3649.71,-637.1 3649.71,-637.1 3643.71,-637.1 3637.71,-631.1 3637.71,-625.1 3637.71,-625.1 3637.71,-595.65 3637.71,-595.65 3637.71,-589.65 3643.71,-583.65 3649.71,-583.65"/>
+<path fill="none" stroke="black" d="M3649.71,-576.27C3649.71,-576.27 3913.87,-576.27 3913.87,-576.27 3919.87,-576.27 3925.87,-582.27 3925.87,-588.27 3925.87,-588.27 3925.87,-632.48 3925.87,-632.48 3925.87,-638.48 3919.87,-644.48 3913.87,-644.48 3913.87,-644.48 3649.71,-644.48 3649.71,-644.48 3643.71,-644.48 3637.71,-638.48 3637.71,-632.48 3637.71,-632.48 3637.71,-588.27 3637.71,-588.27 3637.71,-582.27 3643.71,-576.27 3649.71,-576.27"/>
 <text text-anchor="start" x="3659" y="-606.67" font-family="Arial Bold" font-size="11.00">OIDC::ApiKeyRole</text>
-<polyline fill="none" stroke="black" points="3781.79,-583.65 3781.79,-637.1"/>
-<text text-anchor="start" x="3788.83" y="-623" font-family="Arial" font-size="10.00">access_policy </text>
-<text text-anchor="start" x="3854.08" y="-623" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb ∗</text>
-<text text-anchor="start" x="3788.83" y="-608.25" font-family="Arial" font-size="10.00">api_key_permissions </text>
-<text text-anchor="start" x="3883.33" y="-608.25" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb ∗</text>
-<text text-anchor="start" x="3788.83" y="-593.5" font-family="Arial" font-size="10.00">name </text>
-<text text-anchor="start" x="3815.83" y="-593.5" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<polyline fill="none" stroke="black" points="3781.79,-576.27 3781.79,-644.48"/>
+<text text-anchor="start" x="3788.83" y="-630.38" font-family="Arial" font-size="10.00">access_policy </text>
+<text text-anchor="start" x="3854.08" y="-630.38" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb ∗</text>
+<text text-anchor="start" x="3788.83" y="-615.62" font-family="Arial" font-size="10.00">api_key_permissions </text>
+<text text-anchor="start" x="3883.33" y="-615.62" font-family="Arial Italic" font-size="10.00" fill="#999999">jsonb ∗</text>
+<text text-anchor="start" x="3788.83" y="-600.88" font-family="Arial" font-size="10.00">name </text>
+<text text-anchor="start" x="3815.83" y="-600.88" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="3788.83" y="-586.12" font-family="Arial" font-size="10.00">token </text>
+<text text-anchor="start" x="3815.83" y="-586.12" font-family="Arial Italic" font-size="10.00" fill="#999999">string (32) ∗ U</text>
 </g>
 <!-- m_OIDC::ApiKeyRole&#45;&gt;m_OIDC::IdToken -->
-<g id="edge32" class="edge">
+<g id="edge33" class="edge">
 <title>m_OIDC::ApiKeyRole&#45;&gt;m_OIDC::IdToken</title>
-<path fill="none" stroke="black" d="M3781.79,-583.9C3781.79,-525.81 3781.79,-384.03 3781.79,-324.77"/>
-<polygon fill="black" stroke="black" points="3784.94,-325.02 3781.79,-316.02 3778.64,-325.02 3784.94,-325.02"/>
+<path fill="none" stroke="black" d="M3781.79,-576.35C3781.79,-514.31 3781.79,-381.49 3781.79,-324.7"/>
+<polygon fill="black" stroke="black" points="3784.94,-324.7 3781.79,-315.7 3778.64,-324.7 3784.94,-324.7"/>
 </g>
 <!-- m_User -->
 <g id="node29" class="node">
@@ -601,7 +603,7 @@
 <text text-anchor="start" x="1992.83" y="-766.45" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_OIDC::IdToken&#45;&gt;m_User -->
-<g id="edge34" class="edge">
+<g id="edge35" class="edge">
 <title>m_OIDC::IdToken&#45;&gt;m_User</title>
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M3694.07,-315.02C3517.4,-348.59 3105.77,-423.69 2756.79,-463.9 2699.14,-470.54 2281.98,-464.77 2235.79,-499.9 2152.9,-562.94 2215.26,-634.01 2157.79,-720.85 2142.85,-743.42 2124.74,-765.14 2105.46,-785.36"/>
 </g>
@@ -627,11 +629,11 @@
 <!-- m_OIDC::Provider&#45;&gt;m_OIDC::ApiKeyRole -->
 <g id="edge30" class="edge">
 <title>m_OIDC::Provider&#45;&gt;m_OIDC::ApiKeyRole</title>
-<path fill="none" stroke="black" d="M3781.79,-891.31C3781.79,-837.6 3781.79,-708.93 3781.79,-646.52"/>
-<polygon fill="black" stroke="black" points="3784.94,-646.74 3781.79,-637.74 3778.64,-646.74 3784.94,-646.74"/>
+<path fill="none" stroke="black" d="M3781.79,-891.31C3781.79,-839.63 3781.79,-718.56 3781.79,-653.88"/>
+<polygon fill="black" stroke="black" points="3784.94,-654 3781.79,-645 3778.64,-654 3784.94,-654"/>
 </g>
 <!-- m_OIDC::Provider&#45;&gt;m_OIDC::IdToken -->
-<g id="edge31" class="edge">
+<g id="edge32" class="edge">
 <title>m_OIDC::Provider&#45;&gt;m_OIDC::IdToken</title>
 <path fill="none" stroke="black" d="M3811.77,-891.14C3850.26,-857.45 3915.15,-792.83 3940.79,-720.85 3973.74,-628.34 3972.94,-592.69 3940.79,-499.9 3914.63,-424.42 3847.28,-355.78 3809.15,-321.33"/>
 <polygon fill="black" stroke="black" points="3811.75,-319.54 3802.94,-315.91 3807.56,-324.25 3811.75,-319.54"/>
@@ -791,7 +793,7 @@
 <text text-anchor="start" x="6671.83" y="-878.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
 </g>
 <!-- m_User&#45;&gt;m_ApiKey -->
-<g id="edge35" class="edge">
+<g id="edge36" class="edge">
 <title>m_User&#45;&gt;m_ApiKey</title>
 <path fill="none" stroke="black" d="M2105.6,-912.64C2353.61,-903.23 2840.96,-866.02 3224.79,-720.85 3226.86,-720.07 3228.92,-719.26 3230.99,-718.42"/>
 <polygon fill="black" stroke="black" points="3231.99,-721 3239.06,-714.6 3229.54,-715.19 3231.99,-721"/>
@@ -809,10 +811,10 @@
 <polygon fill="black" stroke="black" points="2350.74,-644.29 2356.43,-636.64 2347.21,-639.07 2350.74,-644.29"/>
 </g>
 <!-- m_User&#45;&gt;m_OIDC::ApiKeyRole -->
-<g id="edge37" class="edge">
+<g id="edge38" class="edge">
 <title>m_User&#45;&gt;m_OIDC::ApiKeyRole</title>
-<path fill="none" stroke="black" d="M2105.48,-914.65C2400.84,-908.75 3047.2,-877.26 3564.79,-720.85 3625.82,-702.41 3690.4,-667.6 3733.08,-642.17"/>
-<polygon fill="black" stroke="black" points="3734.49,-644.39 3740.58,-637.06 3731.24,-639 3734.49,-644.39"/>
+<path fill="none" stroke="black" d="M2105.48,-914.65C2400.84,-908.75 3047.2,-877.26 3564.79,-720.85 3620.34,-704.06 3678.83,-673.72 3721.07,-649.23"/>
+<polygon fill="black" stroke="black" points="3722.39,-651.52 3728.56,-644.26 3719.2,-646.08 3722.39,-651.52"/>
 </g>
 <!-- m_User&#45;&gt;m_Ownership -->
 <g id="edge23" class="edge">
@@ -845,7 +847,7 @@
 <polygon fill="black" stroke="black" points="1111.87,-331.78 1102.35,-332.24 1110.08,-337.82 1111.87,-331.78"/>
 </g>
 <!-- m_User&#45;&gt;m_WebHook -->
-<g id="edge38" class="edge">
+<g id="edge39" class="edge">
 <title>m_User&#45;&gt;m_WebHook</title>
 <path fill="none" stroke="black" d="M1783.99,-867.2C1674.33,-831.89 1527.03,-780.03 1402.79,-720.85 1375.56,-707.88 1347.18,-691.97 1321.19,-676.34"/>
 <polygon fill="black" stroke="black" points="1323.16,-673.25 1313.83,-671.27 1319.9,-678.63 1323.16,-673.25"/>

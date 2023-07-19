@@ -276,6 +276,7 @@ m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpad
   <tr><td align="left" width="130" port="access_policy">access_policy <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
   <tr><td align="left" width="130" port="api_key_permissions">api_key_permissions <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
   <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (32) ∗ U</font></td></tr>
 </table>
 >];
 "m_OIDC::IdToken" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -509,6 +510,7 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::Provider" -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::Provider" -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "1", constraint = "false"];
   "m_OIDC::Provider" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::ApiKeyRole" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_ApiKey -> "m_OIDC::IdToken" [arrowhead = "none", arrowtail = "none", weight = "2"];

@@ -244,7 +244,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.jsonb "access_policy", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "token", limit: 32, null: false
     t.index ["oidc_provider_id"], name: "index_oidc_api_key_roles_on_oidc_provider_id"
+    t.index ["token"], name: "index_oidc_api_key_roles_on_token", unique: true
     t.index ["user_id"], name: "index_oidc_api_key_roles_on_user_id"
   end
 

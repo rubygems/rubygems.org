@@ -31,7 +31,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   end
 
   def show
-    render json: @api_key.user.oidc_api_key_roles.find(params.require(:id))
+    render json: @api_key.user.oidc_api_key_roles.find_by!(token: params.require(:token))
   end
 
   def assume_role
@@ -65,7 +65,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   private
 
   def set_api_key_role
-    @api_key_role = OIDC::ApiKeyRole.find(params.require(:id))
+    @api_key_role = OIDC::ApiKeyRole.find_by!(token: params.require(:token))
   end
 
   def decode_jwt

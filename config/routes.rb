@@ -108,7 +108,7 @@ Rails.application.routes.draw do
       resources :timeframe_versions, only: :index
 
       namespace :oidc do
-        resources :api_key_roles, only: %i[index show], format: 'json', defaults: { format: :json } do
+        resources :api_key_roles, only: %i[index show], param: :token, format: 'json', defaults: { format: :json } do
           member do
             post :assume_role
           end

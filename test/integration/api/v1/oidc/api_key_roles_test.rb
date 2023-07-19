@@ -20,6 +20,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       assert_equal [
         {
           "id" => @role.id,
+          "token" => @role.token,
           "oidc_provider_id" => @role.oidc_provider_id,
           "user_id" => @user.id,
           "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
@@ -49,7 +50,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
     end
 
     should "return the user's roles" do
-      get api_v1_oidc_api_key_role_path(@role.id),
+      get api_v1_oidc_api_key_role_path(@role.token),
               params: {},
               headers: { "HTTP_AUTHORIZATION" => @user_api_key }
 
@@ -57,6 +58,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       assert_equal(
         {
           "id" => @role.id,
+          "token" => @role.token,
           "oidc_provider_id" => @role.oidc_provider_id,
           "user_id" => @user.id,
           "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
@@ -189,7 +191,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           )
           @role.save!
 
-          post assume_role_api_v1_oidc_api_key_role_path(@role),
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token),
               params: {
                 jwt: jwt.to_s
               },
@@ -218,7 +220,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           @role.api_key_permissions.gems = [gem_name]
           @role.save!
 
-          post assume_role_api_v1_oidc_api_key_role_path(@role),
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token),
               params: {
                 jwt: jwt.to_s
               },
@@ -252,7 +254,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           )
           @role.save!
 
-          post assume_role_api_v1_oidc_api_key_role_path(@role),
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token),
               params: {
                 jwt: jwt.to_s
               },
@@ -264,7 +266,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       end
 
       should "return an API token" do
-        post assume_role_api_v1_oidc_api_key_role_path(@role),
+        post assume_role_api_v1_oidc_api_key_role_path(@role.token),
             params: {
               jwt: jwt.to_s
             },
@@ -301,7 +303,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
                      oidc_id_token.jwt
         )
 
-        post assume_role_api_v1_oidc_api_key_role_path(@role),
+        post assume_role_api_v1_oidc_api_key_role_path(@role.token),
             params: {
               jwt: jwt.to_s
             },
