@@ -158,6 +158,9 @@ Admin::GitHubUser.create_with(
 }
 ).find_or_create_by!(github_id: "FAKE-not_an_admin")
 
+OIDC::Provider
+  .find_or_create_by!(issuer: "https://token.actions.githubusercontent.com")
+
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:
     - email: #{author.email}, password: #{password} -> gem author owning few example gems
