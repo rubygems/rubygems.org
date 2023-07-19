@@ -3,6 +3,12 @@ require "test_helper"
 class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
   make_my_diffs_pretty!
 
+  should belong_to :provider
+  should belong_to :user
+  should have_many :id_tokens
+  should validate_presence_of :api_key_permissions
+  should validate_presence_of :access_policy
+
   setup do
     @role = build(:oidc_api_key_role)
   end

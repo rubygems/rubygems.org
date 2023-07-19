@@ -9,7 +9,7 @@ class OIDC::ApiKeyRole < ApplicationRecord
   validate :gems_belong_to_user
 
   def gems_belong_to_user
-    Array.wrap(api_key_permissions.gems).each_with_index do |name, idx|
+    Array.wrap(api_key_permissions&.gems).each_with_index do |name, idx|
       errors.add("api_key_permissions.gems[#{idx}]", "(#{name}) does not belong to user #{user.display_handle}") if user.rubygems.where(name:).empty?
     end
   end
