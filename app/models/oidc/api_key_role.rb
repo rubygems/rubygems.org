@@ -34,8 +34,9 @@ class OIDC::ApiKeyRole < ApplicationRecord
   end
 
   # https://www.crockford.com/base32.html
-  CROCKFORD_BASE_32_ALPHABET = ('0'..'9').to_a + ('a'..'z').to_a - %w[0 i l u]
-  validates :token, presence: true, uniqueness: true, length: { minimum: 32, maximum: 32 }, format: { with: /\Arg_oidc_akr_[#{CROCKFORD_BASE_32_ALPHABET}]+\z/ }
+  CROCKFORD_BASE_32_ALPHABET = ("0".."9").to_a + ("a".."z").to_a - %w[0 i l u]
+  validates :token, presence: true, uniqueness: true, length: { minimum: 32, maximum: 32 },
+    format: { with: /\Arg_oidc_akr_[#{CROCKFORD_BASE_32_ALPHABET}]+\z/o }
 
   before_validation :generate_random_token, if: :new_record?
   def generate_random_token
