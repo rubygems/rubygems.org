@@ -437,7 +437,7 @@ en:
       title: Edit settings
       webauthn_credentials: Security device
       no_webauthn_credentials: You don't have any security devices
-      webauthn_credential_note: A security device can be can be any device that complies with the FIDO2 standard such as security and biometric keys.
+      webauthn_credential_note: A security device can be any device that complies with the FIDO2 standard such as security and biometric keys.
       otp_code: OTP code or recovery code
       api_access:
         confirm_reset: Are you sure? This cannot be undone.
@@ -455,10 +455,12 @@ en:
         disabled_html: You have not yet enabled OTP based multi-factor authentication. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
         go_settings: Register a new device
         level_html: You have enabled multi-factor authentication. Please click 'Update' to change your MFA level. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
-        enabled: You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active
+        enabled_note: You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active
           recovery codes to disable it.
         update: Update
         disable: Disable
+        enabled: Enabled
+        disabled: Disabled
         level:
           title: MFA Level
           disabled: Disabled

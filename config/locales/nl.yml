@@ -462,9 +462,11 @@ nl:
         disabled_html:
         go_settings:
         level_html:
-        enabled:
+        enabled_note:
         update:
         disable:
+        enabled:
+        disabled:
         level:
           title:
           disabled:

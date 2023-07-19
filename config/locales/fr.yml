@@ -481,9 +481,11 @@ fr:
         disabled_html:
         go_settings: Enregistrer un nouvel appareil
         level_html:
-        enabled:
+        enabled_note:
         update:
         disable:
+        enabled:
+        disabled:
         level:
           title:
           disabled:

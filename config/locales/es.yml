@@ -479,9 +479,11 @@ es:
         disabled_html:
         go_settings: Registrar un nuevo dispositivo
         level_html:
-        enabled:
+        enabled_note:
         update: Actualizar
         disable:
+        enabled:
+        disabled:
         level:
           title: Nivel de Autenticación de Múltiples Factores
           disabled: Desactivada
