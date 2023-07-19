@@ -113,6 +113,10 @@ Rails.application.routes.draw do
             post :assume_role
           end
         end
+
+        resources :providers, only: %i[index show], format: 'json', defaults: { format: :json }
+
+        resources :id_tokens, only: %i[index show], format: 'json', defaults: { format: :json }
       end
     end
   end

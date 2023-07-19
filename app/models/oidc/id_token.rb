@@ -7,6 +7,26 @@ class OIDC::IdToken < ApplicationRecord
   validates :jwt, presence: true
   validate :jti_uniqueness
 
+  def payload
+    {
+      provider_id: oidc_provider_id,
+      api_key_role_token: api_key_role.token,
+      jwt: jwt.slice("claims", "header")
+    }
+  end
+
+  def as_json(*)
+    payload.as_json(*)
+  end
+
+  def to_xml(options = {})
+    payload.to_xml(options.merge(root: "oidc:id_token"))
+  end
+
+  def to_yaml(*)
+    payload.to_yaml(*)
+  end
+
   def jti
     jwt&.dig("claims", "jti")
   end
