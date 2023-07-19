@@ -29,7 +29,7 @@ class MultifactorAuthsController < ApplicationController
       @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
 
       if current_user.mfa_device_count_one?
-        session[:show_recovery_codes] = true
+        session[:show_recovery_codes] = current_user.new_mfa_recovery_codes
         redirect_to recovery_multifactor_auth_path
       else
         redirect_to @continue_path
@@ -85,10 +85,14 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def recovery
-    if session[:show_recovery_codes].nil?
+    @mfa_recovery_codes = session[:show_recovery_codes]
+    if @mfa_recovery_codes.nil?
       redirect_to edit_settings_path
       flash[:error] = t(".already_generated")
       return
+    elsif @mfa_recovery_codes == true
+      # redirected in between deploys
+      @mfa_recovery_codes = current_user.mfa_recovery_codes
     end
     @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
     session.delete("mfa_redirect_uri")

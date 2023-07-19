@@ -54,7 +54,7 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
 
     should "return false if recovery codes are not present" do
       create(:webauthn_credential, user: @user)
-      @user.mfa_recovery_codes = []
+      @user.new_mfa_recovery_codes = nil
       @user.mfa_hashed_recovery_codes = []
 
       refute_predicate @user, :webauthn_only_with_recovery?

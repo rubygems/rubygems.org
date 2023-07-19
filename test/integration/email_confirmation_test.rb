@@ -113,7 +113,7 @@ class EmailConfirmationTest < SystemTest
     assert page.has_content? "Multi-factor authentication"
     assert page.has_content? "Security Device"
 
-    fill_in "otp", with: @user.mfa_recovery_codes.first
+    fill_in "otp", with: @mfa_recovery_codes.first
     click_button "Authenticate"
 
     find(:css, ".header__popup-link").click

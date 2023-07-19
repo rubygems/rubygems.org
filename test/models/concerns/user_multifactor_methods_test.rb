@@ -421,11 +421,10 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
 
     should "return true if recovery code is correct" do
-      recovery_code = @user.mfa_recovery_codes.first
+      recovery_code = @user.new_mfa_recovery_codes.first
 
       assert @user.ui_mfa_verified?(recovery_code)
-      refute_includes @user.mfa_recovery_codes, recovery_code
-      refute_includes @user.mfa_hashed_recovery_codes, BCrypt::Password.create(recovery_code)
+      refute(@user.mfa_hashed_recovery_codes.any? { |code| BCrypt::Password.new(code) == recovery_code })
     end
   end
 
@@ -492,11 +491,10 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
 
     should "return true if recovery code is correct" do
-      recovery_code = @user.mfa_recovery_codes.first
+      recovery_code = @user.new_mfa_recovery_codes.first
 
       assert @user.api_mfa_verified?(recovery_code)
-      refute_includes @user.mfa_recovery_codes, recovery_code
-      refute_includes @user.mfa_hashed_recovery_codes, BCrypt::Password.create(recovery_code)
+      refute(@user.mfa_hashed_recovery_codes.any? { |code| BCrypt::Password.new(code) == recovery_code })
     end
   end
 

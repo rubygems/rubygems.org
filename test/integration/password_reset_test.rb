@@ -148,7 +148,7 @@ class PasswordResetTest < SystemTest
     assert page.has_content? "Recovery code"
     assert_not_nil page.find(".js-webauthn-session--form")[:action]
 
-    fill_in "otp", with: @user.mfa_recovery_codes.first
+    fill_in "otp", with: @mfa_recovery_codes.first
     click_button "Authenticate"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD

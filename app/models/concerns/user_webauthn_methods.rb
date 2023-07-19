@@ -30,7 +30,7 @@ module UserWebauthnMethods
   end
 
   def webauthn_only_with_recovery?
-    webauthn_enabled? && totp_disabled? && (mfa_recovery_codes.present? || mfa_hashed_recovery_codes.present?)
+    webauthn_enabled? && totp_disabled? && mfa_hashed_recovery_codes.present?
   end
 
   def webauthn_options_for_get

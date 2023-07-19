@@ -14,7 +14,6 @@ module UserTotpMethods
 
     if no_mfa_devices?
       self.mfa_level = "disabled"
-      self.mfa_recovery_codes = []
       self.mfa_hashed_recovery_codes = []
     end
 
@@ -35,11 +34,7 @@ module UserTotpMethods
   def enable_totp!(seed, level)
     self.totp_seed = seed
 
-    if mfa_device_count_one?
-      self.mfa_level = level
-      self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
-      self.mfa_hashed_recovery_codes = mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
-    end
+    mfa_method_added(level)
 
     save!(validate: false)
     Mailer.totp_enabled(id, Time.now.utc).deliver_later

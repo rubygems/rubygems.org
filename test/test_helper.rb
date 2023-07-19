@@ -147,6 +147,7 @@ class ActiveSupport::TestCase
     click_on "Register device"
 
     click_on "[ copy ]"
+    @mfa_recovery_codes = find_all(:css, ".recovery-code-list__item").map(&:text)
     check "ack"
     click_on "Continue"
 

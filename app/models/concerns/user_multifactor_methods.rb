@@ -5,6 +5,8 @@ module UserMultifactorMethods
     include UserTotpMethods
     include UserWebauthnMethods
 
+    attr_accessor :new_mfa_recovery_codes
+
     enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2, ui_and_gem_signin: 3 }, _prefix: :mfa
 
     validate :mfa_level_for_enabled_devices
@@ -51,17 +53,7 @@ module UserMultifactorMethods
     otp = otp.to_s
     return true if verify_totp(totp_seed, otp)
 
-    # Check if the given OTP is a actually a recovery code
-    if mfa_hashed_recovery_codes.present?
-      return false unless (hashed_code = mfa_hashed_recovery_codes.find { |code| BCrypt::Password.new(code) == otp })
-      mfa_hashed_recovery_codes.delete(hashed_code)
-      # Also delete the plaintext code for now, to prevent the case where a user uses all their codes
-      # and then the backfill stops being idempotent
-      mfa_recovery_codes.delete(otp)
-    else
-      # Not yet migrated to hashed recovery codes, so check the plaintext codes
-      return false unless mfa_recovery_codes.delete(otp)
-    end
+    return false unless verify_mfa_recovery_code(otp)
 
     save!(validate: false)
   end
@@ -70,6 +62,14 @@ module UserMultifactorMethods
     return true if verify_webauthn_otp(otp)
     return true if ui_mfa_verified?(otp)
     false
+  end
+
+  def mfa_method_added(default_level)
+    return unless mfa_device_count_one?
+
+    self.mfa_level = default_level
+    self.new_mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
+    self.mfa_hashed_recovery_codes = new_mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
   end
 
   private
@@ -98,6 +98,12 @@ module UserMultifactorMethods
 
   def correct_mfa_level_set_conditions
     (mfa_disabled? && no_mfa_devices?) || (mfa_enabled? && mfa_devices_present?)
+  end
+
+  def verify_mfa_recovery_code(otp)
+    hashed_code = mfa_hashed_recovery_codes.find { |code| BCrypt::Password.new(code) == otp }
+    return unless hashed_code
+    mfa_hashed_recovery_codes.delete(hashed_code)
   end
 
   class_methods do
