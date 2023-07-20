@@ -1,5 +1,5 @@
 class OIDCApiKeyRoleResource < Avo::BaseResource
-  self.title = :id
+  self.title = :token
   self.includes = []
   self.model_class = ::OIDC::ApiKeyRole
   # self.search_query = -> do
