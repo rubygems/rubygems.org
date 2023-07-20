@@ -2,6 +2,9 @@ class ApiKeyResource < Avo::BaseResource
   self.title = :name
   self.includes = []
 
+  class ExpiredFilter < ScopeBooleanFilter; end
+  filter ExpiredFilter, arguments: { default: { expired: false, unexpired: true } }
+
   field :id, as: :id, hide_on: :index
 
   field :name, as: :text, link_to_resource: true
