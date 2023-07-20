@@ -438,6 +438,16 @@ class SessionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to new" do
+    setup do
+      get :new
+    end
+
+    should "render sign-in form" do
+      page.assert_text("Sign in")
+    end
+  end
+
   context "on GET to verify" do
     setup do
       rubygem = create(:rubygem)
