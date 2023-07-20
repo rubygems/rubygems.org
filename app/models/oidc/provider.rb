@@ -6,7 +6,7 @@ class OIDC::Provider < ApplicationRecord
   validates :issuer, uniqueness: { ignore_case: true }
 
   has_many :api_key_roles, class_name: "OIDC::ApiKeyRole", inverse_of: :provider, foreign_key: :oidc_provider_id, dependent: :restrict_with_exception
-  has_many :users, through: :api_key_roles
+  has_many :users, through: :api_key_roles, inverse_of: :oidc_providers
   has_many :id_tokens, class_name: "OIDC::IdToken", inverse_of: :provider, foreign_key: :oidc_provider_id, dependent: :restrict_with_exception
 
   has_many :audits, as: :auditable, dependent: :nullify
