@@ -142,7 +142,6 @@ ja:
       find_blurb:
       learn:
         install_rubygems: RubyGemsをインストール
-      mfa_banner_html:
   layouts:
     application:
       footer:
@@ -179,6 +178,7 @@ ja:
         sign_in: ログイン
         sign_out: ログアウト
         sign_up: 新規登録
+      mfa_banner_html:
   mailer:
     confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
     confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください

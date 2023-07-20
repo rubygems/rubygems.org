@@ -23,6 +23,9 @@
   </head>
 
   <body class="<%= 'body--index' if request.path_info == '/' %>">
+    <%if request.path == '/'%>
+      <div class="banner"><%=t('.mfa_banner_html')%></div>
+    <% end %>
     <header class="header <%= 'header--interior' if request.path_info != '/' %>">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap') do %>

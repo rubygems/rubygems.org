@@ -148,7 +148,6 @@ zh-CN:
       find_blurb: 查找、安装以及发布 Gem
       learn:
         install_rubygems: 安装 RubyGems
-      mfa_banner_html:
   layouts:
     application:
       footer:
@@ -185,6 +184,7 @@ zh-CN:
         sign_in: 登录
         sign_out: 退出
         sign_up: 注册
+      mfa_banner_html:
   mailer:
     confirm_your_email: 请在发送到您的邮件中点击链接，确认您的邮箱地址。
     confirmation_subject: 请确认您的邮箱地址

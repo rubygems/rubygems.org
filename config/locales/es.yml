@@ -153,7 +153,6 @@ es:
       find_blurb: Encuentra, instala, y publica RubyGems.
       learn:
         install_rubygems: Instala RubyGems
-      mfa_banner_html:
   layouts:
     application:
       footer:
@@ -190,6 +189,7 @@ es:
         sign_in: Ingresar
         sign_out: Salir
         sign_up: Registrarte
+      mfa_banner_html:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con RubyGems.org
