@@ -15,16 +15,16 @@ class OIDC::IdToken < ApplicationRecord
     }
   end
 
-  def as_json(*)
-    payload.as_json(*)
+  def as_json(*args)
+    payload.as_json(*args)
   end
 
   def to_xml(options = {})
     payload.to_xml(options.merge(root: "oidc:id_token"))
   end
 
-  def to_yaml(*)
-    payload.to_yaml(*)
+  def to_yaml(*args)
+    payload.to_yaml(*args)
   end
 
   def jti
