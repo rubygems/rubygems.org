@@ -75,6 +75,19 @@ class ProfilesControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to delete" do
+      setup do
+        get :delete
+      end
+
+      should respond_with :success
+
+      should "render user delete page" do
+        page.assert_text "Delete profile"
+        page.assert_selector "input[type=password][autocomplete=current-password]"
+      end
+    end
+
     context "on GET to edit" do
       setup { get :edit }
 
@@ -82,6 +95,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should "render user edit page" do
         assert page.has_content? "Edit profile"
+        assert page.has_css? "input[type=password][autocomplete=current-password]"
       end
     end
 

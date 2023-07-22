@@ -439,6 +439,17 @@ class SessionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to new" do
+    setup do
+      get :new
+    end
+
+    should "render sign-in form" do
+      page.assert_text("Sign in")
+      page.assert_selector("input[type=password][autocomplete=current-password]")
+    end
+  end
+
   context "on GET to verify" do
     setup do
       rubygem = create(:rubygem)
@@ -455,6 +466,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "render password verification form" do
         assert page.has_css? "#verify_password_password"
+        assert page.has_css? "input[type=password][autocomplete=current-password]"
       end
     end
 

@@ -31,7 +31,7 @@
   <%= form_for current_user, url: destroy_profile_path, method: :delete do |form| %>
     <div class="password_field">
       <%= form.label :password, "Password", class: 'form__label' %>
-      <%= form.password_field :password, placeholder: 'password', class: 'form__input' %>
+      <%= form.password_field :password, placeholder: 'password', autocomplete: 'current-password', class: 'form__input' %>
     </div>
     <%= form.submit t('.confirm'), data: { confirm: "This action can't be UNDONE! Are you sure?" }, class: 'form__submit' %>
   <% end %>
