@@ -8,7 +8,7 @@ class UsersControllerTest < ActionController::TestCase
       get :new
     end
 
-    render_template(:new)
+    should render_template(:new)
 
     should "render the new user form" do
       page.assert_text "Sign up"

@@ -23,10 +23,13 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
         rubygem: @rubygem_two)
     end
 
-    should "render template" do
-      get :index, params: { rubygem_id: @rubygem_one.to_param }
-      respond_with :success
-      render_template :index
+    context "render template" do
+      setup do
+        get :index, params: { rubygem_id: @rubygem_one.to_param }
+      end
+
+      should respond_with :success
+      should render_template :index
     end
 
     should "show reverse dependencies" do

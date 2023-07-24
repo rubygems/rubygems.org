@@ -417,6 +417,10 @@ GEM
       activesupport (= 7.0.6)
       bundler (>= 1.15.0)
       railties (= 7.0.6)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      actionview (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.1.1)
       activesupport (>= 5.0.0)
       minitest
@@ -666,6 +670,7 @@ DEPENDENCIES
   rack-test (~> 2.1)
   rack-utf8_sanitizer (~> 1.8)
   rails (~> 7.0.0)
+  rails-controller-testing (~> 1.0)
   rails-erd (~> 1.7)
   rails-i18n (~> 7.0)
   rails_semantic_logger (~> 4.11)
