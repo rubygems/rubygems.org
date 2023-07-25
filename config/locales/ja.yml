@@ -178,7 +178,6 @@ ja:
         sign_in: ログイン
         sign_out: ログアウト
         sign_up: 新規登録
-      mfa_banner_html:
   mailer:
     confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
     confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください
@@ -342,6 +341,7 @@ ja:
     setup_recommended:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    setup_webauthn_html:
     new:
       title:
       scan_prompt:

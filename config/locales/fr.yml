@@ -189,7 +189,6 @@ fr:
         sign_in: Connexion
         sign_out: Déconnexion
         sign_up: Inscription
-      mfa_banner_html:
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
@@ -374,6 +373,7 @@ fr:
     setup_recommended:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    setup_webauthn_html:
     new:
       title: Activer l'authentification multifacteur
       scan_prompt: Veuillez scanner le QR code avec votre app d'authentification.

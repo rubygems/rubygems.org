@@ -12,6 +12,10 @@ class HomeControllerTest < ActionController::TestCase
     should "display counts" do
       assert page.has_content?("11,000,000")
     end
+
+    should "display mfa banner" do
+      assert page.has_content? "We now support security devices!"
+    end
   end
 
   should "on GET to index with non html accept header" do
