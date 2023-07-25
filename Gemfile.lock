@@ -79,7 +79,7 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.4.13.0)
       execjs (~> 2)
-    avo (2.35.0)
+    avo (2.37.1)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -316,7 +316,7 @@ GEM
       actionpack (>= 3.2.0, < 7.1)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.2)
+    mini_portile2 (2.8.4)
     minitest (5.18.1)
     mocha (2.0.4)
       ruby2_keywords (>= 0.0.5)
@@ -386,7 +386,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.0.0)
       stringio
-    public_suffix (5.0.1)
+    public_suffix (5.0.3)
     puma (6.3.0)
       nio4r (~> 2.0)
     pundit (2.3.1)
@@ -611,7 +611,7 @@ GEM
       rexml
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.8)
+    zeitwerk (2.6.9)
 
 PLATFORMS
   ruby
