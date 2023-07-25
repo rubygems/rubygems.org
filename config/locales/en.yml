@@ -183,7 +183,7 @@ en:
         sign_in: Sign in
         sign_out: Sign out
         sign_up: Sign up
-      mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
+      mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. <a href="#link-to-blog-post">Learn more</a>!
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with RubyGems.org
