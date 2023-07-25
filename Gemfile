@@ -99,7 +99,6 @@ group :test do
   gem "mocha", "~> 2.0", require: false
   gem "shoulda", "~> 4.0"
   gem "selenium-webdriver", "~> 4.8"
-  gem "webdrivers", "~> 5.2"
   gem "webmock", "~> 3.18"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
