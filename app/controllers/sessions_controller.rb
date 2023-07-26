@@ -12,7 +12,7 @@ class SessionsController < Clearance::SessionsController
     @user = find_user
 
     if @user&.mfa_enabled?
-      setup_webauthn_authentication(form_url: webauthn_create_session_path, session_options: { "user" => @user.id })
+      setup_webauthn_authentication(form_url: webauthn_create_session_path)
       session[:mfa_user] = @user.id
 
       session[:mfa_login_started_at] = Time.now.utc.to_s
@@ -25,7 +25,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_create
-    @user = User.find(session.dig(:webauthn_authentication, "user"))
+    @user = User.find(session[:mfa_user])
 
     unless session_active?
       webauthn_verification_failure(t("multifactor_auths.session_expired"))
