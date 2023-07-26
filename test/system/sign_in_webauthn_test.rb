@@ -48,7 +48,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
       click_on "Authenticate with security device"
 
       assert page.has_content? "Your login page session has expired."
-      assert page.has_content? "Multi-factor authentication"
+      assert page.has_content? "Sign in"
     end
   end
 

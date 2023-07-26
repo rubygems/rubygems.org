@@ -555,6 +555,15 @@ class SessionsControllerTest < ActionController::TestCase
           verify_challenge
         end
       end
+
+      should "clear session" do
+        verify_challenge
+
+        assert_nil @controller.session[:mfa_expires_at]
+        assert_nil @controller.session[:mfa_login_started_at]
+        assert_nil @controller.session[:mfa_user]
+        assert_nil @controller.session[:webauthn_authentication]
+      end
     end
 
     context "when not providing credentials" do
@@ -569,6 +578,17 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "set flash notice" do
         assert_equal "Credentials required", flash[:notice]
+      end
+
+      should "render sign in page" do
+        assert_template "sessions/new"
+      end
+
+      should "clear session" do
+        assert_nil @controller.session[:mfa_expires_at]
+        assert_nil @controller.session[:mfa_login_started_at]
+        assert_nil @controller.session[:mfa_user]
+        assert_nil @controller.session[:webauthn_authentication]
       end
     end
 
@@ -593,6 +613,17 @@ class SessionsControllerTest < ActionController::TestCase
       should "set flash notice" do
         assert_equal "WebAuthn::ChallengeVerificationError", flash[:notice]
       end
+
+      should "render sign in page" do
+        assert_template "sessions/new"
+      end
+
+      should "clear session" do
+        assert_nil @controller.session[:mfa_expires_at]
+        assert_nil @controller.session[:mfa_login_started_at]
+        assert_nil @controller.session[:mfa_user]
+        assert_nil @controller.session[:webauthn_authentication]
+      end
     end
 
     context "when providing credentials but the session expired" do
@@ -613,8 +644,11 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :unauthorized
 
-      should "clear mfa_expires_at" do
+      should "clear session" do
         assert_nil @controller.session[:mfa_expires_at]
+        assert_nil @controller.session[:mfa_login_started_at]
+        assert_nil @controller.session[:mfa_user]
+        assert_nil @controller.session[:webauthn_authentication]
       end
 
       should "not sign in the user" do
@@ -623,6 +657,10 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "set flash notice" do
         assert_equal "Your login page session has expired.", flash[:notice]
+      end
+
+      should "render sign in page" do
+        assert_template "sessions/new"
       end
     end
   end
