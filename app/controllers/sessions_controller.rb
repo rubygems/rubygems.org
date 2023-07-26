@@ -6,7 +6,7 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify authenticate]
   before_action :ensure_not_blocked, only: :create
-  after_action :delete_mfa_expiry_session, only: %i[webauthn_create otp_create]
+  after_action :delete_mfa_session, only: %i[webauthn_create otp_create]
 
   def create
     @user = find_user
@@ -28,21 +28,18 @@ class SessionsController < Clearance::SessionsController
     @user = User.find(session[:mfa_user])
 
     unless session_active?
-      webauthn_verification_failure(t("multifactor_auths.session_expired"))
+      login_failure(t("multifactor_auths.session_expired"))
       return
     end
-    return webauthn_verification_failure(@webauthn_error) unless webauthn_credential_verified?
+    return login_failure(@webauthn_error) unless webauthn_credential_verified?
 
     record_mfa_login_duration(mfa_type: "webauthn")
 
     do_login
-  ensure
-    session.delete(:mfa_login_started_at)
   end
 
   def otp_create
     @user = User.find(session[:mfa_user])
-    session.delete(:mfa_user)
 
     if login_conditions_met?
       record_mfa_login_duration(mfa_type: "otp")
@@ -53,8 +50,6 @@ class SessionsController < Clearance::SessionsController
     else
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
-  ensure
-    session.delete(:mfa_login_started_at)
   end
 
   def verify
@@ -98,11 +93,6 @@ class SessionsController < Clearance::SessionsController
     render "sessions/new", status: :unauthorized
   end
 
-  def webauthn_verification_failure(message = nil)
-    flash.now.notice = message
-    render "sessions/prompt", status: :unauthorized
-  end
-
   def session_params
     params.require(:session)
   end
@@ -139,6 +129,13 @@ class SessionsController < Clearance::SessionsController
 
   def login_conditions_met?
     @user&.mfa_enabled? && @user&.ui_mfa_verified?(params[:otp]) && session_active?
+  end
+
+  def delete_mfa_session
+    delete_mfa_expiry_session
+    session.delete(:webauthn_authentication)
+    session.delete(:mfa_login_started_at)
+    session.delete(:mfa_user)
   end
 
   def record_mfa_login_duration(mfa_type:)
