@@ -518,14 +518,14 @@ class SessionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "#webauthn_create" do
-    context "when providing correct credentials" do
-      setup do
-        @user = create(:user)
-        @webauthn_credential = create(:webauthn_credential, user: @user)
-        login_to_session_with_webauthn
-      end
+  context "on POST to webauthn_create" do
+    setup do
+      @user = create(:user)
+      @webauthn_credential = create(:webauthn_credential, user: @user)
+      login_to_session_with_webauthn
+    end
 
+    context "when providing correct credentials" do
       context "redirect to dashboard" do
         setup do
           verify_challenge
@@ -559,12 +559,6 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when not providing credentials" do
       setup do
-        @user = create(:user)
-        @webauthn_credential = create(:webauthn_credential, user: @user)
-        post(
-          :create,
-          params: { session: { who: @user.handle, password: @user.password } }
-        )
         post(
           :webauthn_create,
           format: :html
@@ -580,20 +574,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when providing wrong credentials" do
       setup do
-        @user = create(:user)
-        @webauthn_credential = create(:webauthn_credential, user: @user)
-        post(
-          :create,
-          params: { session: { who: @user.handle, password: @user.password } }
-        )
         @wrong_challenge = SecureRandom.hex
-        @origin = "http://localhost:3000"
-        @rp_id = URI.parse(@origin).host
-        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
         post(
           :webauthn_create,
           params: {
@@ -616,20 +597,6 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when providing credentials but the session expired" do
       setup do
-        @user = create(:user)
-        @webauthn_credential = create(:webauthn_credential, user: @user)
-        post(
-          :create,
-          params: { session: { who: @user.handle, password: @user.password } }
-        )
-        @challenge = session[:webauthn_authentication]["challenge"]
-        @origin = "http://localhost:3000"
-        @rp_id = URI.parse(@origin).host
-        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
         travel 30.minutes
         post(
           :webauthn_create,
