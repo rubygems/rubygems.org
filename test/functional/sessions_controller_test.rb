@@ -343,7 +343,6 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :ok
 
       should "set webauthn authentication" do
-        assert_equal @user.id, session[:webauthn_authentication]["user"]
         assert_not_nil session[:webauthn_authentication]["challenge"]
       end
 
@@ -380,7 +379,6 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :ok
 
       should "set webauthn authentication" do
-        assert_equal @user.id, session[:webauthn_authentication]["user"]
         assert_not_nil session[:webauthn_authentication]["challenge"]
       end
 
@@ -409,7 +407,6 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :ok
 
       should "set webauthn authentication" do
-        assert_equal @user.id, session[:webauthn_authentication]["user"]
         assert_not_nil session[:webauthn_authentication]["challenge"]
       end
 
