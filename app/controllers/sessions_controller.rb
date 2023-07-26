@@ -80,7 +80,7 @@ class SessionsController < Clearance::SessionsController
     sign_in(@user) do |status|
       if status.success?
         StatsD.increment "login.success"
-        flash[:notice_html] = t("multifactor_auths.setup_webauthn_html")
+        set_login_flash
         redirect_back_or(url_after_create)
       else
         login_failure(status.failure_message)
@@ -108,12 +108,20 @@ class SessionsController < Clearance::SessionsController
     session_params[:who].is_a?(String) && session_params.fetch(:who)
   end
 
-  def url_after_create
+  def set_login_flash
     if current_user.mfa_recommended_not_yet_enabled?
       flash[:notice] = t("multifactor_auths.setup_recommended")
-      new_multifactor_auth_path
     elsif current_user.mfa_recommended_weak_level_enabled?
       flash[:notice] = t("multifactor_auths.strong_mfa_level_recommended")
+    elsif !current_user.webauthn_enabled?
+      flash[:notice_html] = t("multifactor_auths.setup_webauthn_html")
+    end
+  end
+
+  def url_after_create
+    if current_user.mfa_recommended_not_yet_enabled?
+      new_multifactor_auth_path
+    elsif current_user.mfa_recommended_weak_level_enabled?
       edit_settings_path
     else
       dashboard_path
