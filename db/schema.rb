@@ -102,6 +102,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_13_023753) do
     t.index ["version_id", "rubygem_id", "count"], name: "index_gem_downloads_on_version_id_and_rubygem_id_and_count"
   end
 
+  create_table "gem_name_reservations", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_gem_name_reservations_on_name", unique: true
+  end
+
   create_table "gem_typo_exceptions", force: :cascade do |t|
     t.string "name"
     t.text "info"

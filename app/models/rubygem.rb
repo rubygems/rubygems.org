@@ -408,7 +408,7 @@ class Rubygem < ApplicationRecord
   end
 
   def reserved_names_exclusion
-    return unless GEM_NAME_RESERVED_LIST.include? name.downcase
+    return unless GemNameReservation.reserved?(name)
     errors.add :name, "'#{name}' is a reserved gem name."
   end
 

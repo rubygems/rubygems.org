@@ -425,6 +425,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with reserved gem name" do
       setup do
+        create(:gem_name_reservation, name: "rubygems")
         post :create, body: gem_file("rubygems-0.1.0.gem").read
       end
       should respond_with 403

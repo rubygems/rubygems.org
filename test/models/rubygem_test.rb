@@ -23,10 +23,16 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("perftools.rb").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
-    should_not allow_value("Ruby").for(:name)
     should_not allow_value(".omghi").for(:name)
     should_not allow_value("-omghi").for(:name)
     should_not allow_value("_omghi").for(:name)
+
+    context "with reserved Ruby gem" do
+      setup do
+        create(:gem_name_reservation, name: "ruby")
+      end
+      should_not allow_value("Ruby").for(:name)
+    end
 
     context "that has an invalid name already persisted" do
       setup do
