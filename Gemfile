@@ -52,7 +52,7 @@ gem "browser", "~> 5.3", ">= 5.3.1"
 gem "bcrypt", "~> 3.1", ">= 3.1.18"
 
 # Admin dashboard
-gem "avo", "~> 2.28"
+gem "avo", "~> 2.28", "< 2.36" # 2.36+ requires to fix test failures
 gem "view_component", "~> 2.0"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
