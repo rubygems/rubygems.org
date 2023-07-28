@@ -43,7 +43,7 @@ class MultifactorAuthsController < ApplicationController
     @user = current_user
 
     @otp_verification_url = otp_update_multifactor_auth_url(token: current_user.confirmation_token)
-    setup_webauthn_authentication
+    setup_webauthn_authentication(form_url: webauthn_update_multifactor_auth_url(token: current_user.confirmation_token))
 
     create_new_mfa_expiry
 
@@ -137,18 +137,6 @@ class MultifactorAuthsController < ApplicationController
     %i[totp_seed totp_seed_expire].each do |key|
       session.delete(key)
     end
-  end
-
-  def setup_webauthn_authentication
-    return if current_user.webauthn_disabled?
-
-    @webauthn_verification_url = webauthn_update_multifactor_auth_url(token: current_user.confirmation_token)
-
-    @webauthn_options = current_user.webauthn_options_for_get
-
-    session[:webauthn_authentication] = {
-      "challenge" => @webauthn_options.challenge
-    }
   end
 
   def update_level_and_redirect
