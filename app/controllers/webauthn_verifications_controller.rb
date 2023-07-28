@@ -3,7 +3,9 @@
 class WebauthnVerificationsController < ApplicationController
   include WebauthnVerifiable
 
+  before_action :set_verification_status_session, only: :authenticate
   before_action :set_verification, :set_user, except: %i[successful_verification failed_verification]
+  before_action :check_show_verification_status, only: %i[successful_verification failed_verification]
 
   def prompt
     redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
@@ -14,6 +16,7 @@ class WebauthnVerificationsController < ApplicationController
 
   def authenticate
     port = session.dig(:webauthn_authentication, "port")
+
     unless port
       redirect_to root_path, alert: t(".no_port")
       return
@@ -35,6 +38,10 @@ class WebauthnVerificationsController < ApplicationController
 
   private
 
+  def set_verification_status_session
+    session[:show_webauthn_status] = true
+  end
+
   def set_verification
     @verification = WebauthnVerification.find_by(path_token: webauthn_token_param)
 
@@ -44,6 +51,10 @@ class WebauthnVerificationsController < ApplicationController
 
   def set_user
     @user = @verification.user
+  end
+
+  def check_show_verification_status
+    render_not_found unless session.delete(:show_webauthn_status)
   end
 
   def webauthn_token_param

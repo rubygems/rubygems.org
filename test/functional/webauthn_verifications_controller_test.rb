@@ -129,6 +129,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
         assert_equal Time.utc(2023, 1, 1, 0, 0, 2), verification.path_token_expires_at
       end
+
+      should "set show_webauthn_status in session" do
+        assert @controller.session[:show_webauthn_status]
+      end
     end
 
     context "when verifying the challenge with safari" do
@@ -147,6 +151,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
       should "render success" do
         assert_equal "success", response.body
+      end
+
+      should "set show_webauthn_status in session" do
+        assert @controller.session[:show_webauthn_status]
       end
     end
 
@@ -180,6 +188,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         assert_nil @verification.otp
         assert_nil @verification.otp_expires_at
       end
+
+      should "set show_webauthn_status in session" do
+        assert @controller.session[:show_webauthn_status]
+      end
     end
 
     context "when providing wrong credentials" do
@@ -206,6 +218,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         assert_nil @verification.otp
         assert_nil @verification.otp_expires_at
       end
+
+      should "set show_webauthn_status in session" do
+        assert @controller.session[:show_webauthn_status]
+      end
     end
 
     context "when given an invalid webauthn token" do
@@ -227,6 +243,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should "say not found" do
         assert_equal "Not Found", response.body
       end
+
+      should "set show_webauthn_status in session" do
+        assert @controller.session[:show_webauthn_status]
+      end
     end
 
     context "when the webauthn token has expired" do
@@ -246,6 +266,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
       should "say the token is consumed or expired" do
         assert_equal "The token in the link you used has either expired or been used already.", response.body
+      end
+
+      should "set show_webauthn_status in session" do
+        assert @controller.session[:show_webauthn_status]
       end
     end
 
@@ -269,30 +293,78 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should "display error that no port was given" do
         assert_equal "No port provided. Please try again.", flash[:alert]
       end
+
+      should "set show_webauthn_status in session" do
+        assert @controller.session[:show_webauthn_status]
+      end
     end
   end
 
   context "#successful_verification" do
-    setup do
-      get :successful_verification
+    context "when proceeding authentication request" do
+      setup do
+        post(
+          :authenticate,
+          params: {
+            webauthn_token: create(:webauthn_verification).path_token
+          },
+          format: :text
+        )
+        get :successful_verification
+      end
+
+      should respond_with :success
+
+      should "set the title and body" do
+        assert_includes response.body, "Success!"
+        assert_includes response.body, "Please close this browser."
+      end
+
+      should "clear show_webauthn_status" do
+        refute @controller.session[:show_webauthn_status]
+      end
     end
 
-    should respond_with :success
-    should "set the title and body" do
-      assert_includes response.body, "Success!"
-      assert_includes response.body, "Please close this browser."
+    context "when not proceeding authentication request" do
+      setup do
+        get :successful_verification
+      end
+
+      should respond_with :not_found
     end
   end
 
   context "#failed_verification" do
-    setup do
-      get :failed_verification
+    context "when proceeding authentication request" do
+      setup do
+        post(
+          :authenticate,
+          params: {
+            webauthn_token: create(:webauthn_verification).path_token
+          },
+          format: :text
+        )
+        get :failed_verification
+      end
+
+      should respond_with :success
+
+      should "set the title and body" do
+        assert_includes response.body, "Error - Verification Failed"
+        assert_includes response.body, "Please close this browser and try again."
+      end
+
+      should "clear show_webauthn_status" do
+        refute @controller.session[:show_webauthn_status]
+      end
     end
 
-    should respond_with :success
-    should "set the title and body" do
-      assert_includes response.body, "Error - Verification Failed"
-      assert_includes response.body, "Please close this browser and try again."
+    context "when not proceeding authentication request" do
+      setup do
+        get :failed_verification
+      end
+
+      should respond_with :not_found
     end
   end
 

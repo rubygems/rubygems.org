@@ -22,6 +22,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert redirect_to(successful_verification_webauthn_verification_path)
     assert page.has_content?("Success!")
     assert_link_is_expired
+    assert_successful_verification_not_found
   end
 
   test "when verifying webauthn credential on safari" do
@@ -41,6 +42,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert_link_is_expired
     assert_poll_status("success")
+    assert_successful_verification_not_found
   end
 
   test "when client closes connection during verification" do
@@ -58,6 +60,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
+    assert_failed_verification_not_found
   end
 
   test "when port given does not match the client port" do
@@ -75,6 +78,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
+    assert_failed_verification_not_found
   end
 
   test "when there is a client error" do
@@ -91,6 +95,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
+    assert_failed_verification_not_found
   end
 
   test "when webauthn verification is expired during verification" do
@@ -106,6 +111,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
       assert redirect_to(failed_verification_webauthn_verification_path)
       assert page.has_content?("The token in the link you used has either expired or been used already.")
       assert page.has_content?("Please close this browser and try again.")
+      assert_failed_verification_not_found
     end
   end
 
@@ -132,6 +138,18 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert_equal status, JSON.parse(page.text)["status"]
     fullscreen_headless_chrome_driver
+  end
+
+  def assert_successful_verification_not_found
+    visit successful_verification_webauthn_verification_path
+
+    assert page.has_content?("Page not found.")
+  end
+
+  def assert_failed_verification_not_found
+    visit failed_verification_webauthn_verification_path
+
+    assert page.has_content?("Page not found.")
   end
 
   class MockClientServer
