@@ -47,7 +47,7 @@ class MultifactorAuthsController < ApplicationController
 
     create_new_mfa_expiry
 
-    render template: "multifactor_auths/mfa_prompt"
+    render template: "multifactor_auths/prompt"
   end
 
   def otp_update

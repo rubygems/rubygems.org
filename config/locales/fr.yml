@@ -366,12 +366,8 @@ fr:
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
   multifactor_auths:
-    recovery_code_html:
     incorrect_otp: Votre clé OTP est incorrecte.
     session_expired:
-    otp_code: clé OTP
-    otp_or_recovery:
-    recovery_code:
     require_totp_disabled:
     require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
       Vous devez d'abord l'activer.
@@ -411,6 +407,15 @@ fr:
     update:
       invalid_level:
       success:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      recovery_code:
+      recovery_code_html:
+      security_device:
+      verify_code:
   notifiers:
     update:
       success:
@@ -661,14 +666,6 @@ fr:
       notice:
     create:
       account_blocked:
-    prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      security_device:
-      verify_code:
   stats:
     index:
       title:

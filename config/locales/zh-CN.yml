@@ -343,12 +343,8 @@ zh-CN:
       title: 修改您的密码
       will_email_notice: 我们将会向您发送一封包含修改密码链接的邮件。
   multifactor_auths:
-    recovery_code_html: '如果您无法访问用于多因素验证的设备或安全设备，您可以使用一个有效的 <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa"，class="t-link">恢复码</a>。'
-    incorrect_otp: 您的 OTP 码 不正确。
+    incorrect_otp: 你的 OTP 码 不正确。
     session_expired: 您的登录页面会话已过期。
-    otp_code: OTP 码
-    otp_or_recovery: OTP 码或恢复码
-    recovery_code: 恢复码
     require_totp_disabled: 您的多因素验证已启用。要重新配置多因素验证，您必须首先停用它。
     require_mfa_enabled: 您的多因素验证已停用，请先启用。
     require_totp_enabled: 您还没有启用一个身份验证器应用。您必须先启用它。
@@ -383,6 +379,15 @@ zh-CN:
     update:
       invalid_level: 无效的 MFA 级别。
       success: 您已成功修改多因素验证级别。
+    prompt:
+      webauthn_credential_note: 使用如 Touch Id, YubiKey 等安全设备来认证身份。
+      sign_in_with_webauthn_credential: 通过安全设备认证人身
+      otp_code: 一次性密码
+      otp_or_recovery: OTP 或 恢复码
+      recovery_code: 恢复码
+      recovery_code_html: '如果您无法访问用于多因素验证的设备或安全设备，您可以使用一个有效的 <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa"，class="t-link">恢复码</a>。'
+      security_device: 安全设备
+      verify_code: 验证码
   notifiers:
     update:
       success: 您已成功更新邮件通知设置。
@@ -604,14 +609,6 @@ zh-CN:
       notice: 请确认密码后继续
     create:
       account_blocked: 您的账户已被 RubyGems 团队拉黑。请发送邮件至 support@rubygems.org 以恢复您的帐户。
-    prompt:
-      webauthn_credential_note: 使用如 Touch Id, YubiKey 等安全设备来认证身份。
-      sign_in_with_webauthn_credential: 通过安全设备认证人身
-      otp_code: 一次性密码
-      otp_or_recovery: OTP 或 恢复码
-      recovery_code: 恢复码
-      security_device: 安全设备
-      verify_code: 验证码
   stats:
     index:
       title: 统计数据

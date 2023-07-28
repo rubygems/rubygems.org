@@ -352,12 +352,8 @@ nl:
       title: Wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
   multifactor_auths:
-    recovery_code_html:
     incorrect_otp:
     session_expired:
-    otp_code:
-    otp_or_recovery:
-    recovery_code:
     require_totp_disabled:
     require_mfa_enabled:
     require_totp_enabled:
@@ -392,6 +388,15 @@ nl:
     update:
       invalid_level:
       success:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      recovery_code:
+      recovery_code_html:
+      security_device:
+      verify_code:
   notifiers:
     update:
       success:
@@ -615,14 +620,6 @@ nl:
       notice:
     create:
       account_blocked:
-    prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      security_device:
-      verify_code:
   stats:
     index:
       title:

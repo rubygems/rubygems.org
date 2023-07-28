@@ -12,7 +12,7 @@ class PasswordsController < Clearance::PasswordsController
 
       create_new_mfa_expiry
 
-      render template: "multifactor_auths/mfa_prompt"
+      render template: "multifactor_auths/prompt"
     else
       render template: "passwords/edit"
     end
@@ -79,6 +79,6 @@ class PasswordsController < Clearance::PasswordsController
 
   def login_failure(message)
     flash.now.alert = message
-    render template: "multifactor_auths/mfa_prompt", status: :unauthorized
+    render template: "multifactor_auths/prompt", status: :unauthorized
   end
 end

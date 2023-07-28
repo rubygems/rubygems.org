@@ -30,7 +30,7 @@ class EmailConfirmationsController < ApplicationController
 
       create_new_mfa_expiry
 
-      render template: "multifactor_auths/mfa_prompt"
+      render template: "multifactor_auths/prompt"
     else
       confirm_email
     end
@@ -102,6 +102,6 @@ class EmailConfirmationsController < ApplicationController
 
   def login_failure(message)
     flash.now.alert = message
-    render template: "multifactor_auths/mfa_prompt", status: :unauthorized
+    render template: "multifactor_auths/prompt", status: :unauthorized
   end
 end

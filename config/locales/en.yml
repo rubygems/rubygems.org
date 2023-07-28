@@ -344,12 +344,8 @@ en:
       title: Change your password
       will_email_notice: We will email you a link to change your password.
   multifactor_auths:
-    recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
     incorrect_otp: Your OTP code is incorrect.
     session_expired: Your login page session has expired.
-    otp_code: OTP code
-    otp_or_recovery: OTP or recovery code
-    recovery_code: Recovery code
     require_totp_disabled: Your OTP based multi-factor authentication has already been enabled. To reconfigure your OTP based authentication, you'll have to remove it first.
     require_mfa_enabled: Your multi-factor authentication has not been enabled. You have to enable it first.
     require_totp_enabled: You don't have an authenticator app enabled. You have to enable it first.
@@ -384,6 +380,15 @@ en:
     update:
       invalid_level: Invalid MFA level.
       success: You have successfully updated your multi-factor authentication level.
+    prompt:
+      webauthn_credential_note: Authenticate with a security device such as Touch Id, YubiKey, etc.
+      sign_in_with_webauthn_credential: Authenticate with security device
+      otp_code: OTP code
+      otp_or_recovery: OTP or recovery code
+      recovery_code: Recovery code
+      recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
+      security_device: Security Device
+      verify_code: Verify code
   notifiers:
     update:
       success: You have successfully updated your email notification settings.
@@ -609,14 +614,6 @@ en:
       notice: Please confirm your password to continue.
     create:
       account_blocked: Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account.
-    prompt:
-      webauthn_credential_note: Authenticate with a security device such as Touch Id, YubiKey, etc.
-      sign_in_with_webauthn_credential: Authenticate with security device
-      otp_code: One Time Passcode
-      otp_or_recovery: OTP or recovery code
-      recovery_code: Recovery code
-      security_device: Security Device
-      verify_code: Verify code
   stats:
     index:
       title: Stats
