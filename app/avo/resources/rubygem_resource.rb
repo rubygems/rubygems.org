@@ -18,6 +18,8 @@ class RubygemResource < Avo::BaseResource
   action AddOwner
   action YankRubygem
   action ReserveNamespace
+  action UploadInfoFile
+  action UploadVersionsFile
 
   class IndexedFilter < ScopeBooleanFilter; end
   filter IndexedFilter, arguments: { default: { with_versions: true, without_versions: true } }

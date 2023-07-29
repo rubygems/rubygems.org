@@ -5,4 +5,5 @@ class Audit < ApplicationRecord
   serialize :audited_changes, JSON
 
   validates :action, presence: true
+  validates :auditable, presence: false
 end
