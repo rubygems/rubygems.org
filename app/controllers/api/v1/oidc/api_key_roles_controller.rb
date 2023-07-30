@@ -76,7 +76,6 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
 
   def verify_jwt
     raise UnverifiedJWT, "Issuer mismatch" unless @api_key_role.provider.issuer == @jwt["iss"]
-    # TODO: test this
     raise UnverifiedJWT, "Invalid time" unless (@jwt["nbf"]..@jwt["exp"]).cover?(Time.now.to_i)
   end
 

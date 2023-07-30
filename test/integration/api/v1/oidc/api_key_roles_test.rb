@@ -166,6 +166,54 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
         end
       end
 
+      context "with a nbf after the current time" do
+        should "respond not found" do
+          @claims["exp"] = Time.now.to_i + 360
+          @claims["nbf"] = Time.now.to_i + 60
+
+          post assume_role_api_v1_oidc_api_key_role_path(@role),
+              params: {
+                jwt: jwt.to_s
+              },
+              headers: {}
+
+          assert_response :not_found
+          assert_empty @user.api_keys
+        end
+      end
+
+      context "with a exp before the current time" do
+        should "respond not found" do
+          @claims["exp"] = Time.now.to_i - 60
+          @claims["nbf"] = Time.now.to_i - 360
+
+          post assume_role_api_v1_oidc_api_key_role_path(@role),
+              params: {
+                jwt: jwt.to_s
+              },
+              headers: {}
+
+          assert_response :not_found
+          assert_empty @user.api_keys
+        end
+      end
+
+      context "with exp before nbf" do
+        should "respond not found" do
+          @claims["exp"] = Time.now.to_i - 60
+          @claims["nbf"] = Time.now.to_i + 360
+
+          post assume_role_api_v1_oidc_api_key_role_path(@role),
+              params: {
+                jwt: jwt.to_s
+              },
+              headers: {}
+
+          assert_response :not_found
+          assert_empty @user.api_keys
+        end
+      end
+
       context "with a jwt with the wrong issuer" do
         should "respond not found" do
           @role.provider.configuration.issuer = "https://example.com"
