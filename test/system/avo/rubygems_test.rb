@@ -3,6 +3,8 @@ require "application_system_test_case"
 class Avo::RubygemsSystemTest < ApplicationSystemTestCase
   make_my_diffs_pretty!
 
+  include ActiveJob::TestHelper
+
   def sign_in_as(user)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
       provider: "github",
@@ -355,5 +357,46 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
       click_button "Reserve Namespace"
     end
     page.assert_text "Namespace reserved: Successfully registered gem: foo (0.0.0.reserved.2)"
+  end
+
+  test "upload versions file" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    visit avo.resources_rubygems_path
+
+    _ = create(:version)
+
+    click_button "Actions"
+    click_on "Upload Versions File"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 1, only: UploadVersionsFileJob do
+      click_button "Upload"
+
+      page.assert_text "Upload job scheduled"
+    end
+
+    assert_not_nil Audit.last
+  end
+
+  test "upload info file" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    version = create(:version)
+    visit avo.resources_rubygem_path(version.rubygem)
+
+    click_button "Actions"
+    click_on "Upload Info File"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 1, only: UploadInfoFileJob do
+      click_button "Upload"
+
+      page.assert_text "Upload job scheduled"
+    end
+
+    assert_not_nil Audit.last
   end
 end
