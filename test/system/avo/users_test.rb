@@ -285,8 +285,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => {},
-              "unchanged" => deletion.attributes.transform_values(&:as_json)
+            "changes" => deletion.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
           },
           "gid://gemcutter/Version/#{version.id}" => {
             "changes" => {
@@ -381,8 +381,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => {},
-              "unchanged" => deletion.attributes.transform_values(&:as_json)
+            "changes" => deletion.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
           },
           "gid://gemcutter/Version/#{version.id}" => {
             "changes" => {

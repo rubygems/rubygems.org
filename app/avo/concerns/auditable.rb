@@ -16,10 +16,14 @@ module Auditable
       User.transaction do
         changed_records = {}
         value = ActiveSupport::Notifications.subscribed(proc do |_name, _started, _finished, _unique_id, data|
+          # need to rehash because ActiveRecord::Core#hash changes when a record is saved
+          # for the first time
+          changed_records.rehash
+
           records = data[:connection].transaction_manager.current_transaction.records || []
           records.uniq(&:__id__).each do |record|
             merge_changes!((changed_records[record] ||= {}), record.attributes.transform_values { [nil, _1] }) if record.new_record?
-            merge_changes!((changed_records[record] ||= {}), record.changes_to_save) unless record.changes_to_save.empty?
+            merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
           end
         end, "sql.active_record", &)
 
