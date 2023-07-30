@@ -246,6 +246,27 @@ m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpad
   <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
+"m_MaintenanceTasks::Run" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">MaintenanceTasks::Run</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="arguments">arguments <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="backtrace">backtrace <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="cursor">cursor <font face="Arial Italic" color="grey60">integer (8)</font></td></tr>
+  <tr><td align="left" width="130" port="ended_at">ended_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="error_class">error_class <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="error_message">error_message <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="job_id">job_id <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="lock_version">lock_version <font face="Arial Italic" color="grey60">integer ∗</font></td></tr>
+  <tr><td align="left" width="130" port="started_at">started_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
+  <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="task_name">task_name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="tick_count">tick_count <font face="Arial Italic" color="grey60">integer (8) ∗</font></td></tr>
+  <tr><td align="left" width="130" port="tick_total">tick_total <font face="Arial Italic" color="grey60">integer (8)</font></td></tr>
+  <tr><td align="left" width="130" port="time_running">time_running <font face="Arial Italic" color="grey60">float ∗</font></td></tr>
+</table>
+>];
 m_Ownership [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Ownership</font></td></tr>
 </table>

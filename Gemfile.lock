@@ -254,6 +254,8 @@ GEM
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     jmespath (1.6.2)
+    job-iteration (1.3.6)
+      activejob (>= 5.2)
     jquery-rails (4.6.0)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -310,6 +312,12 @@ GEM
       net-imap
       net-pop
       net-smtp
+    maintenance_tasks (2.1.1)
+      actionpack (>= 6.0)
+      activejob (>= 6.0)
+      activerecord (>= 6.0)
+      job-iteration (~> 1.3.6)
+      railties (>= 6.0)
     marcel (1.0.2)
     matrix (0.4.2)
     meta-tags (2.18.0)
@@ -649,6 +657,7 @@ DEPENDENCIES
   listen (~> 3.8)
   m (~> 1.6)
   mail (~> 2.8)
+  maintenance_tasks (~> 2.1)
   minitest (~> 5.18)
   mocha (~> 2.0)
   octokit (~> 6.1)

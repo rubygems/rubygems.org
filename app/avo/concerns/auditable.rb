@@ -19,10 +19,16 @@ module Auditable
           records = data[:connection].transaction_manager.current_transaction.records || []
           records.uniq(&:__id__).each do |record|
             merge_changes!((changed_records[record] ||= {}), record.attributes.transform_values { [nil, _1] }) if record.new_record?
-            merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
+            merge_changes!((changed_records[record] ||= {}), record.changes_to_save) unless record.changes_to_save.empty?
           end
         end, "sql.active_record", &)
-        auditable = value if auditable == :return
+
+        case auditable
+        when :return
+          auditable = value
+        when Proc
+          auditable = auditable.call(changed_records:)
+        end
 
         audited_changed_records = changed_records.to_h do |record, changes|
           key = record.to_global_id.uri
