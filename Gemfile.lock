@@ -159,9 +159,9 @@ GEM
       addressable
     dalli (3.2.5)
     date (3.3.3)
-    ddtrace (1.12.1)
+    ddtrace (1.13.0)
       debase-ruby_core_source (= 3.2.1)
-      libdatadog (~> 2.0.0.1.0)
+      libdatadog (~> 3.0.0.1.0)
       libddwaf (~> 1.9.0.0.0)
       msgpack
     debase-ruby_core_source (3.2.1)
@@ -290,7 +290,7 @@ GEM
       letter_opener (~> 1.7)
       railties (>= 5.2)
       rexml
-    libdatadog (2.0.0.1.0)
+    libdatadog (3.0.0.1.0)
     libddwaf (1.9.0.0.1)
       ffi (~> 1.0)
     listen (3.8.0)
@@ -320,7 +320,7 @@ GEM
     minitest (5.19.0)
     mocha (2.1.0)
       ruby2_keywords (>= 0.0.5)
-    msgpack (1.7.1)
+    msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.3.0)
