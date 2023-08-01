@@ -45,6 +45,7 @@ Datadog.configure do |c|
   c.tracing.instrument :dalli
   c.tracing.instrument :faraday, split_by_domain: true, service_name: c.service
   c.tracing.instrument :http, split_by_domain: true, service_name: c.service
+  c.tracing.instrument :opensearch, service_name: c.service
   c.tracing.instrument :pg
   c.tracing.instrument :rails, request_queuing: true
   c.tracing.instrument :shoryuken
