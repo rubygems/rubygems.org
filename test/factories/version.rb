@@ -25,5 +25,12 @@ FactoryBot.define do
     trait :mfa_required do
       metadata { { "rubygems_mfa_required" => "true" } }
     end
+
+    after(:create) do |version|
+      if version.info_checksum.blank?
+        checksum = GemInfo.new(version.rubygem.name).info_checksum
+        version.update_attribute :info_checksum, checksum
+      end
+    end
   end
 end

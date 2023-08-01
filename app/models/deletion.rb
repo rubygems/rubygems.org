@@ -45,12 +45,18 @@ class Deletion < ApplicationRecord
 
   def remove_from_index
     @version.update!(indexed: false, yanked_at: Time.now.utc)
-    Indexer.perform_later
+    reindex
   end
 
   def restore_to_index
     version.update!(indexed: true, yanked_at: nil, yanked_info_checksum: nil)
+    reindex
+  end
+
+  def reindex
     Indexer.perform_later
+    UploadInfoFileJob.perform_later(rubygem_name: rubygem_name)
+    UploadVersionsFileJob.perform_later
   end
 
   def remove_from_storage

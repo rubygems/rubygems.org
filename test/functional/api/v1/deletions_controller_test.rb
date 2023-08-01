@@ -394,6 +394,11 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         should "have enqueued a webhook" do
           assert_enqueued_jobs 1, only: NotifyWebHookJob
         end
+        should "have enqueued reindexing job" do
+          assert_enqueued_jobs 1, only: Indexer
+          assert_enqueued_jobs 1, only: UploadVersionsFileJob
+          assert_enqueued_with job: UploadInfoFileJob, args: [{ rubygem_name: @rubygem.name }]
+        end
       end
 
       context "and a version 0.1.1" do

@@ -186,6 +186,17 @@ class DeletionTest < ActiveSupport::TestCase
         @deletion.restore!
       end
     end
+
+    should "enqueue indexing jobs" do
+      @deletion = delete_gem
+      assert_enqueued_jobs 1, only: Indexer do
+        assert_enqueued_jobs 1, only: UploadVersionsFileJob do
+          assert_enqueued_with job: UploadInfoFileJob, args: [{ rubygem_name: @gem_name }] do
+            @deletion.restore!
+          end
+        end
+      end
+    end
   end
 
   private
