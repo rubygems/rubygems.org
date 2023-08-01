@@ -107,6 +107,9 @@ module RubygemFs
       end
     end
 
+    def restore(_)
+    end
+
     private
 
     def path_for(key, base = @base_dir)
