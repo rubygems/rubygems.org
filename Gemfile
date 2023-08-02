@@ -50,6 +50,7 @@ gem "unpwn", "~> 1.0"
 gem "webauthn", "~> 3.0"
 gem "browser", "~> 5.3", ">= 5.3.1"
 gem "bcrypt", "~> 3.1", ">= 3.1.18"
+gem "maintenance_tasks", "~> 2.1"
 
 # Admin dashboard
 gem "avo", "~> 2.28", "< 2.36" # 2.36+ requires to fix test failures

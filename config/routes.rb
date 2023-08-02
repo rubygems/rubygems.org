@@ -270,6 +270,7 @@ Rails.application.routes.draw do
     constraints(Constraints::Admin) do
       namespace :admin, constraints: Constraints::Admin::RubygemsOrgAdmin do
         mount GoodJob::Engine, at: 'good_job'
+        mount MaintenanceTasks::Engine, at: "maintenance_tasks"
       end
 
       mount Avo::Engine, at: Avo.configuration.root_path
