@@ -125,9 +125,6 @@ RUN echo "${REVISION}" > REVISION
 # Stop bootsnap from writing to the filesystem, we precompiled it in the build stage
 ENV BOOTSNAP_READONLY=true
 
-# Needed since we install the gem and then move it to a new location
-ENV MAGIC="$(find /app/vendor/ruby/*/gems/ruby-magic-*/ -name magic.mgc | head -n1)"
-
 EXPOSE 3000
 
 # Ensures ruby commands are run with bundler
