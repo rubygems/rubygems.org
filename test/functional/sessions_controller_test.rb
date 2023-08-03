@@ -181,22 +181,35 @@ class SessionsControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when login and password are correct" do
       setup do
-        user = User.new(email_confirmed: true)
-        User.expects(:authenticate).with("login", "pass").returns user
-        post :create, params: { session: { who: "login", password: "pass" } }
+        @user = User.new(email_confirmed: true)
         @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
       end
 
-      should respond_with :redirect
-      should redirect_to("the dashboard") { dashboard_path }
+      context "when mfa is not recommended" do
+        setup do
+          User.expects(:authenticate).with("login", "pass").returns @user
+          post :create, params: { session: { who: "login", password: "pass" } }
+        end
 
-      should "sign in the user" do
-        assert_predicate @controller.request.env[:clearance], :signed_in?
+        should respond_with :redirect
+        should redirect_to("the dashboard") { dashboard_path }
+
+        should "sign in the user" do
+          assert_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "set security device notice" do
+          expected_notice = "🎉 We now support security devices! Improve your account security by " \
+                            "<a href=\"/settings/edit#security-device\">setting up</a> a new device. " \
+                            "<a href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">Learn more</a>!"
+
+          assert_equal expected_notice, flash[:notice_html]
+          assert_nil flash[:notice]
+        end
       end
 
       context "when mfa is recommended" do
         setup do
-          @user = User.new(email_confirmed: true, handle: "test")
           @user.stubs(:mfa_recommended?).returns true
         end
 
@@ -214,6 +227,7 @@ class SessionsControllerTest < ActionController::TestCase
                               "Your account will be required to have MFA enabled in the future."
 
             assert_equal expected_notice, flash[:notice]
+            assert_nil flash[:notice_html]
           end
         end
 
@@ -239,6 +253,7 @@ class SessionsControllerTest < ActionController::TestCase
                                 "on one of these levels in the future."
 
               assert_equal expected_notice, flash[:notice]
+              assert_nil flash[:notice_html]
             end
           end
 
@@ -360,6 +375,10 @@ class SessionsControllerTest < ActionController::TestCase
         assert page.has_content?("Multi-factor authentication")
         assert_not page.has_field?("OTP code")
         assert page.has_button?("Authenticate with security device")
+      end
+
+      should "not set security device notice" do
+        assert_nil flash[:notice_html]
       end
     end
 

@@ -189,6 +189,7 @@ es:
         sign_in: Ingresar
         sign_out: Salir
         sign_up: Registrarte
+      mfa_banner_html:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con RubyGems.org
@@ -371,6 +372,7 @@ es:
     setup_recommended:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    setup_webauthn_html:
     new:
       title: Activando autenticación de múltiples factores
       scan_prompt: Por favor escanea el código QR con tu aplicación de Autenticación.

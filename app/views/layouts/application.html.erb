@@ -23,6 +23,11 @@
   </head>
 
   <body class="<%= 'body--index' if request.path_info == '/' %>">
+    <% if content_for?(:banner) %>
+      <div class="banner">
+        <%= yield :banner %>
+      </div>
+    <% end %>
     <header class="header <%= 'header--interior' if request.path_info != '/' %>">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap') do %>
@@ -90,7 +95,7 @@
     <% flash.each do |name, msg| %>
       <div id="flash-border" class="flash">
         <div class="flash-wrap">
-          <div id="flash_<%= name %>" class="l-wrap--b"><span><b><%= flash_message(name, msg) %></b></span></div>
+          <div id="flash_<%= name %>" class="l-wrap--b"><span><%= flash_message(name, msg) %></span></div>
         </div>
       </div>
     <% end %>

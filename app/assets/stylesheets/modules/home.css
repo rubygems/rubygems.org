@@ -152,3 +152,24 @@
     font-size: 16px; }
   .home__link:focus {
     outline: none; }
+
+/* Banner */
+
+.banner {
+  background-color: #141c22;
+  text-align: center;
+  padding: 15px;
+  color: white;
+}
+
+@media (max-width: 899px) {
+  .banner {
+    font-size: 12px;
+  }
+}
+
+.banner a {
+  color: #e9573f;
+  text-decoration: underline;
+  font-weight: bold;
+}
