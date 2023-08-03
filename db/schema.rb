@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_30_185651) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -223,7 +223,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_30_185651) do
     t.bigint "tick_count", default: 0, null: false
     t.bigint "tick_total"
     t.string "job_id"
-    t.bigint "cursor"
+    t.string "cursor"
     t.string "status", default: "enqueued", null: false
     t.string "error_class"
     t.string "error_message"
