@@ -201,7 +201,7 @@ class SessionsControllerTest < ActionController::TestCase
         should "set security device notice" do
           expected_notice = "🎉 We now support security devices! Improve your account security by " \
                             "<a href=\"/settings/edit#security-device\">setting up</a> a new device. " \
-                            "<a href=\"#link-to-blog-post\">Learn more</a>!"
+                            "<a href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">Learn more</a>!"
 
           assert_equal expected_notice, flash[:notice_html]
           assert_nil flash[:notice]
