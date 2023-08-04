@@ -511,7 +511,7 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_ApiKey -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::Provider" -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::Provider" -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "1", constraint = "false"];
-  "m_OIDC::Provider" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::Provider" -> "m_OIDC::IdToken" [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "2", constraint = "false"];
   "m_OIDC::ApiKeyRole" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_ApiKey -> "m_OIDC::IdToken" [arrowhead = "none", arrowtail = "none", weight = "2"];
   "m_OIDC::IdToken" -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "3", constraint = "false"];

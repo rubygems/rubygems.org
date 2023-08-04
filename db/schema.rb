@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_04_215243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -253,13 +253,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
   create_table "oidc_id_tokens", force: :cascade do |t|
     t.bigint "oidc_api_key_role_id", null: false
     t.jsonb "jwt", null: false
-    t.bigint "oidc_provider_id", null: false
     t.bigint "api_key_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["api_key_id"], name: "index_oidc_id_tokens_on_api_key_id"
     t.index ["oidc_api_key_role_id"], name: "index_oidc_id_tokens_on_oidc_api_key_role_id"
-    t.index ["oidc_provider_id"], name: "index_oidc_id_tokens_on_oidc_provider_id"
   end
 
   create_table "oidc_providers", force: :cascade do |t|
@@ -469,7 +467,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
-  add_foreign_key "oidc_id_tokens", "oidc_providers"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "webauthn_credentials", "users"

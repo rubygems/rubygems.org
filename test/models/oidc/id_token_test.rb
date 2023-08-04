@@ -2,8 +2,8 @@ require "test_helper"
 
 class OIDC::IdTokenTest < ActiveSupport::TestCase
   should belong_to :api_key_role
-  should belong_to :provider
   should belong_to :api_key
+  should have_one(:provider)
   should have_one(:user)
 
   should validate_presence_of :jwt

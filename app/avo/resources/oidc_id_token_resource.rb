@@ -9,7 +9,7 @@ class OIDCIdTokenResource < Avo::BaseResource
   field :id, as: :id
   # Fields generated from the model
   field :api_key_role, as: :belongs_to
-  field :provider, as: :belongs_to
+  field :provider, as: :has_one
   field :api_key, as: :has_one
 
   heading "JWT"
