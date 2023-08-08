@@ -15,7 +15,14 @@
     <% end %>
   <% end %>
 
-  <h2 id="security-device"><%= t(".webauthn_credentials") %></h2>
+  <div class="mfa__header-wrapper">
+    <h2 class="mfa__header mfa__header--compact"><%= t(".webauthn_credentials") %></h2>
+    <% if @user.webauthn_enabled? %>
+      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
+    <% else %>
+      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
+    <% end %>
+  </div>
 
   <p><%= t(".webauthn_credential_note")%></p>
 
