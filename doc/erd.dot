@@ -518,6 +518,7 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
   m_User -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  "m_OIDC::ApiKeyRole" -> m_ApiKey [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "1", constraint = "false"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
   "m_GoodJob::Execution" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_GoodJob::Job" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
