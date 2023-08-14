@@ -34,6 +34,14 @@ class OIDC::IdToken < ApplicationRecord
     jwt&.dig("claims", "jti")
   end
 
+  def claims
+    jwt&.dig("claims")
+  end
+
+  def header
+    jwt&.dig("header")
+  end
+
   def jti_uniqueness
     relation = self.class.where("(jwt->>'claims')::jsonb->>'jti' = ?", jti)
     relation = relation.provider_id(api_key_role.oidc_provider_id) if api_key_role

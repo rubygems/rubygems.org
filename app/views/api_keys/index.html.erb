@@ -107,4 +107,7 @@
   </table>
 
   <p><%= button_to t(".new_key"), new_profile_api_key_path, method: "get", class: "form__submit" %></p>
+  <% if current_user.oidc_api_key_roles.any? %>
+    <p><%= button_to t("oidc.api_key_roles.index.api_key_roles"), profile_oidc_api_key_roles_path, method: "get", class: "form__submit" %></p>
+  <% end %>
 </div>

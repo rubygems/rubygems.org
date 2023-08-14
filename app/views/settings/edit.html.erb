@@ -62,6 +62,12 @@
   <h2><%= link_to t('api_keys.index.api_keys'), profile_api_keys_path %></h2>
 </div>
 
+<% if @user.oidc_api_key_roles.any? %>
+  <div class="t-body">
+    <h2><%= link_to t('oidc.api_key_roles.index.api_key_roles'), profile_oidc_api_key_roles_path %></h2>
+  </div>
+<% end %>
+
 <% if @user.ownerships.any? %>
   <div class="t-body">
     <h2><%= link_to t("notifiers.show.title"), notifier_path %></h2>

@@ -158,8 +158,78 @@ Admin::GitHubUser.create_with(
 }
 ).find_or_create_by!(github_id: "FAKE-not_an_admin")
 
-OIDC::Provider
-  .find_or_create_by!(issuer: "https://token.actions.githubusercontent.com")
+github_oidc_provider = OIDC::Provider
+  .create_with(
+    configuration: {
+      issuer: "https://token.actions.githubusercontent.com",
+      jwks_uri: "https://token.actions.githubusercontent.com/.well-known/jwks",
+      response_types_supported: ["id_token"],
+      subject_types_supported: ["public"],
+      id_token_signing_alg_values_supported: ["RS256"],
+      claims_supported: ["repo"]
+    }
+  ).find_or_create_by!(issuer: "https://token.actions.githubusercontent.com")
+
+author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
+  api_key_permissions: {
+    gems: ["rubygem0"],
+    scopes: ["push_rubygem"],
+    valid_for: "PT20M"
+  },
+  access_policy: {
+    statements: [
+      effect: "allow",
+      principal: {
+        oidc: "https://token.actions.githubusercontent.com"
+      },
+      conditions: [{
+        operator: "string_equals",
+        claim: "repo",
+        value: "rubygems/rubygem0"
+      }],
+    ]
+  }
+).find_or_create_by!(
+  name: "push-rubygem-1",
+  provider: github_oidc_provider
+)
+
+author_oidc_api_key_role.user.api_keys.create_with(
+  hashed_key: "expiredhashedkey",
+  ownership: rubygem0.ownerships.find_by!(user: author),
+  push_rubygem: true,
+).find_or_create_by!(
+  name: "push-rubygem-1-expired",
+).tap do |api_key|
+  OIDC::IdToken.find_or_create_by!(
+    api_key:, 
+    jwt: { claims: {jti: "expired"}, header: {}},
+    api_key_role: author_oidc_api_key_role
+  )
+  api_key.touch(:expires_at, time: "2020-01-01T00:00:00Z")
+end
+
+author_oidc_api_key_role.user.api_keys.create_with(
+  hashed_key: "unexpiredhashedkey",
+  ownership: rubygem0.ownerships.find_by!(user: author),
+  push_rubygem: true,
+  expires_at: "2120-01-01T00:00:00Z"
+).find_or_create_by!(
+  name: "push-rubygem-1-unexpired",
+).tap do |api_key|
+  OIDC::IdToken.find_or_create_by!(
+    api_key:, 
+    jwt: { claims: {jti: "unexpired"}, header: {}},
+    api_key_role: author_oidc_api_key_role
+  )
+end
+
+author.api_keys.find_or_create_by!(
+  user: author,
+  hashed_key: "unexpiredmanualhashedkey",
+  name: "Manual",
+  push_rubygem: true,
+)
 
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:

@@ -18,6 +18,11 @@
           Scope: <strong><%= @api_key.enabled_scopes.join(", ") %></strong>
           <br>
           Created at: <strong><%= @api_key.created_at.to_formatted_s(:rfc822) %></strong>
+          <% if @api_key.oidc_id_token.present? %>
+            <br>
+            <%= ApiKey.human_attribute_name(:oidc_api_key_role) %>: <strong><%= link_to(@api_key.oidc_api_key_role.name, profile_oidc_api_key_role_path(@api_key.oidc_api_key_role.token), target: :_blank) %></strong>
+          <% end %>
+          <br>
         </p>
         <br/>
         <% if @api_key.name == "legacy-key" %>

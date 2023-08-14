@@ -53,6 +53,8 @@ nl:
         full_name: Voor-en achternaam
         handle: Gebruikersnaam
         password: Wachtwoord
+      api_key:
+        oidc_api_key_role:
     errors:
       messages:
         unpwn:
@@ -719,3 +721,9 @@ nl:
       new_device:
       nickname:
       submit:
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles:
+      show:
+        api_key_role_name:

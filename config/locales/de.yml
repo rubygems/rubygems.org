@@ -50,6 +50,8 @@ de:
         full_name: Vollständiger Name
         handle: Benutzername
         password: Passwort
+      api_key:
+        oidc_api_key_role:
     errors:
       messages:
         unpwn:
@@ -716,3 +718,9 @@ de:
       new_device:
       nickname:
       submit:
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles:
+      show:
+        api_key_role_name:

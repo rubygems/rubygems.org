@@ -59,6 +59,8 @@ en:
         full_name: Full name
         handle: Username
         password: Password
+      api_key:
+        oidc_api_key_role: OIDC API Key Role
     errors:
       messages:
         unpwn: has previously appeared in a data breach and should not be used
@@ -464,7 +466,8 @@ en:
         disabled_html: You have not yet enabled OTP based multi-factor authentication. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
         go_settings: Register a new device
         level_html: You have enabled multi-factor authentication. Please click 'Update' to change your MFA level. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
-        enabled_note: You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active
+        enabled_note:
+          You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active
           recovery codes to disable it.
         update: Update
         disable: Disable
@@ -713,3 +716,9 @@ en:
       new_device: Register a new security device
       nickname: Nickname
       submit: Register device
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles: OIDC API Key Roles
+      show:
+        api_key_role_name: "API Key Role %{name}"

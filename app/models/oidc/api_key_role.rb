@@ -2,7 +2,9 @@ class OIDC::ApiKeyRole < ApplicationRecord
   belongs_to :provider, class_name: "OIDC::Provider", foreign_key: "oidc_provider_id", inverse_of: :api_key_roles
   belongs_to :user, inverse_of: :oidc_api_key_roles
 
-  has_many :id_tokens, class_name: "OIDC::IdToken", inverse_of: :api_key_role, foreign_key: :oidc_api_key_role_id, dependent: :nullify
+  has_many :id_tokens, -> { order(created_at: :desc) },
+    class_name: "OIDC::IdToken", inverse_of: :api_key_role, foreign_key: :oidc_api_key_role_id, dependent: :nullify
+  has_many :api_keys, through: :id_tokens, inverse_of: :oidc_api_key_role
 
   attribute :api_key_permissions, Types::JsonDeserializable.new(OIDC::ApiKeyPermissions)
   validates :api_key_permissions, presence: true, nested: true
@@ -23,7 +25,7 @@ class OIDC::ApiKeyRole < ApplicationRecord
     known_claims = provider.configuration.claims_supported
     access_policy.statements&.each_with_index do |s, si|
       s.conditions&.each_with_index do |c, ci|
-        unless known_claims.include?(c.claim)
+        unless known_claims&.include?(c.claim)
           errors.add("access_policy.statements[#{si}].conditions[#{ci}].claim",
                      "unknown claim for the provider")
           c.errors.add(:claim,

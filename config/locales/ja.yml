@@ -54,6 +54,8 @@ ja:
         full_name: フルネーム
         handle: ユーザー名
         password: パスワード
+      api_key:
+        oidc_api_key_role:
     errors:
       messages:
         unpwn:
@@ -704,3 +706,9 @@ ja:
       new_device:
       nickname:
       submit:
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles:
+      show:
+        api_key_role_name:
