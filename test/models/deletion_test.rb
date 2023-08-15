@@ -96,7 +96,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   should "enque job for updating ES index, spec index and purging cdn" do
     assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
-      assert_enqueued_jobs 7, only: FastlyPurgeJob do
+      assert_enqueued_jobs 8, only: FastlyPurgeJob do
         assert_enqueued_jobs 1, only: Indexer do
           assert_enqueued_jobs 1, only: ReindexRubygemJob do
             delete_gem

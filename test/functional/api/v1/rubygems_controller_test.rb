@@ -326,7 +326,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
         should "enqueue jobs" do
           assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
-            assert_enqueued_jobs 5, only: FastlyPurgeJob do
+            assert_enqueued_jobs 6, only: FastlyPurgeJob do
               assert_enqueued_jobs 1, only: NotifyWebHookJob do
                 assert_enqueued_jobs 1, only: Indexer do
                   assert_enqueued_jobs 1, only: ReindexRubygemJob do

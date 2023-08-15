@@ -16,6 +16,9 @@ class Api::V1::ActivitiesController < Api::BaseController
       version.rubygem.payload(version)
     end
 
+    set_surrogate_key "api/v1/activities"
+    cache_expiry_headers
+
     respond_to do |format|
       format.json { render json: rubygems }
       format.yaml { render yaml: rubygems }
