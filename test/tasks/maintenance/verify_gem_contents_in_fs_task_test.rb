@@ -85,4 +85,18 @@ class Maintenance::VerifyGemContentsInFsTaskTest < ActiveSupport::TestCase
       assert_equal 1, task(gem_name_pattern: "^.$").collection.count
     end
   end
+
+  context "#valid?" do
+    should "return true when no patterns given" do
+      assert_predicate task, :valid?
+    end
+
+    should "return true when patterns are valid" do
+      assert_predicate task(gem_name_pattern: "^.+$", full_name_pattern: "-\\d"), :valid?
+    end
+
+    should "return false when patterns are not valid" do
+      refute_predicate task(gem_name_pattern: "(", full_name_pattern: "["), :valid?
+    end
+  end
 end
