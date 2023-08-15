@@ -222,9 +222,11 @@ class Pusher
     spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
     spec_contents = Gem.deflate(Marshal.dump(spec))
 
+    spec_contents_checksum = Digest::SHA2.base64digest(spec_contents)
+
     # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
-    RubygemFs.instance.store(gem_path, gem_contents)
-    RubygemFs.instance.store(spec_path, spec_contents)
+    RubygemFs.instance.store(gem_path, gem_contents, checksum_sha256: version.sha256)
+    RubygemFs.instance.store(spec_path, spec_contents, checksum_sha256: spec_contents_checksum)
 
     Fastly.purge(path: gem_path)
     Fastly.purge(path: spec_path)
