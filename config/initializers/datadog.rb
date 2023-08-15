@@ -14,6 +14,7 @@ Datadog.configure do |c|
   c.profiling.enabled = enabled
   c.tracing.enabled = enabled
   c.tracing.log_injection = enabled
+  c.telemetry.enabled = enabled
 
   unless enabled
     # TODO: https://github.com/DataDog/dd-trace-rb/issues/2542
@@ -21,19 +22,17 @@ Datadog.configure do |c|
     # required in Gemfile, since they are polluting development log
     original_tags = Array.wrap(Rails.application.config.log_tags).reject { |tag| tag&.source_location&.first&.include?('datadog') }
     Rails.application.config.log_tags = original_tags
-  end
 
-  # Configuring the datadog library
-
-  c.logger.instance = SemanticLogger[Datadog]
-
-  if Rails.env.test? || Rails.env.development?
     c.tracing.transport_options = proc { |t|
       # Set transport to no-op mode. Does not retain traces.
       t.adapter :test
     }
     c.diagnostics.startup_logs.enabled = false
   end
+
+  # Configuring the datadog library
+
+  c.logger.instance = SemanticLogger[Datadog]
 
   # Configuring tracing
 
