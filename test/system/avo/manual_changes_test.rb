@@ -80,6 +80,8 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     find('div[data-field-id="auditable"]').click_on log_ticket.to_param
 
+    page.assert_title(/^#{log_ticket.to_param}/)
+
     click_on "Edit"
 
     fill_in "Key", with: "Other Key"
@@ -127,6 +129,8 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     assert_equal "Another comment", audit.comment
 
     find('div[data-field-id="auditable"]').click_on log_ticket.to_param
+
+    page.assert_title(/^#{log_ticket.to_param}/)
 
     accept_alert("Are you sure?") do
       click_on "Delete"
