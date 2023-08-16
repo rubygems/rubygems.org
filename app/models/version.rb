@@ -186,6 +186,8 @@ class Version < ApplicationRecord
     created_at
   end
 
+  # Originally used to prevent showing misidentified dates for gems predating RubyGems,
+  # this method also covers cases where a Gem::Specification date is obviously invalid due to build-time considerations.
   def rely_on_built_at?
     return false if created_at.to_date != RUBYGEMS_IMPORT_DATE
 
