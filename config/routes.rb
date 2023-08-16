@@ -167,10 +167,6 @@ Rails.application.routes.draw do
       resources :api_keys do
         delete :reset, on: :collection
       end
-
-      namespace :oidc do
-        resources :api_key_roles, param: :token, only: %i[index show]
-      end
     end
     resources :stats, only: :index
     get "/news" => 'news#show', as: 'legacy_news_path'

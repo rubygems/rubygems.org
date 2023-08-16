@@ -50,8 +50,6 @@ zh-TW:
         full_name: 全名
         handle: 帳號
         password: 密碼
-      api_key:
-        oidc_api_key_role:
     errors:
       messages:
         unpwn:
@@ -705,9 +703,3 @@ zh-TW:
       new_device:
       nickname:
       submit:
-  oidc:
-    api_key_roles:
-      index:
-        api_key_roles:
-      show:
-        api_key_role_name:

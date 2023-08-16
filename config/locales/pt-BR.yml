@@ -60,8 +60,6 @@ pt-BR:
         full_name: Nome completo
         handle: Usuário
         password: Senha
-      api_key:
-        oidc_api_key_role:
     errors:
       messages:
         unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
@@ -744,9 +742,3 @@ pt-BR:
       new_device:
       nickname:
       submit:
-  oidc:
-    api_key_roles:
-      index:
-        api_key_roles:
-      show:
-        api_key_role_name:

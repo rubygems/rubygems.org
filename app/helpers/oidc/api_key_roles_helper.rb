@@ -1,2 +1,0 @@
-module OIDC::ApiKeyRolesHelper
-end
