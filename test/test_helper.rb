@@ -45,7 +45,10 @@ WebMock.disable_net_connect!(
 )
 WebMock.globally_stub_request do |request|
   avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
-  { status: 200, body: "", headers: {} } if avo_request_pattern.matches?(request)
+  if avo_request_pattern.matches?(request)
+    { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
+      headers: { "Content-Type" => "application/json" } }
+  end
 end
 
 Capybara.default_max_wait_time = 2
