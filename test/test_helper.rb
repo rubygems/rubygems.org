@@ -40,10 +40,16 @@ require "webmock/minitest"
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    "chromedriver.storage.googleapis.com",
-    "avohq.io"
+    "chromedriver.storage.googleapis.com"
   ]
 )
+WebMock.globally_stub_request do |request|
+  avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
+  if avo_request_pattern.matches?(request)
+    { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
+      headers: { "Content-Type" => "application/json" } }
+  end
+end
 
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
