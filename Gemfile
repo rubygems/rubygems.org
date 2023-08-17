@@ -103,4 +103,5 @@ group :test do
   gem "webmock", "~> 3.18"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
+  gem "aggregate_assertions", "~> 0.2.0"
 end

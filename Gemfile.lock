@@ -71,6 +71,8 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
+    aggregate_assertions (0.2.0)
+      minitest (~> 5.0)
     amazing_print (1.5.0)
     android_key_attestation (0.3.0)
     argon2 (2.1.1)
@@ -621,6 +623,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.4)
   autoprefixer-rails (~> 10.4)
   avo (~> 2.28, < 2.36)
