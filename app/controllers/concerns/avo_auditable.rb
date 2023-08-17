@@ -8,7 +8,6 @@ module AvoAuditable
   def perform_action_and_record_errors(&)
     super do
       action = params.fetch(:action)
-      logger.error(permitted_params:)
       fields = action == "destroy" ? {} : cast_nullable(model_params)
 
       @model.errors.add :comment, "must supply a sufficiently detailed comment" if fields[:comment]&.then { _1.length < 10 }

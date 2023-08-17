@@ -21,9 +21,9 @@ test:
   pool: 5
   timeout: 5000
 
-webauthn-review:
+oidc-api-token:
   <<: *default
-  database: rubygems_webauthn_review
+  database: rubygems_oidc_api_token
   min_messages: error
   pool: 30
   reconnect: true

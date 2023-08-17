@@ -7,7 +7,7 @@ class ApiKeysController < ApplicationController
 
   def index
     @api_key  = session.delete(:api_key)
-    @api_keys = current_user.api_keys
+    @api_keys = current_user.api_keys.unexpired
     redirect_to new_profile_api_key_path if @api_keys.empty?
   end
 
@@ -65,7 +65,7 @@ class ApiKeysController < ApplicationController
   def destroy
     api_key = current_user.api_keys.find(params.require(:id))
 
-    if api_key.destroy
+    if api_key.expire!
       flash[:notice] = t(".success", name: api_key.name)
     else
       flash[:error] = api_key.errors.full_messages.to_sentence
@@ -74,7 +74,7 @@ class ApiKeysController < ApplicationController
   end
 
   def reset
-    if current_user.api_keys.destroy_all
+    if current_user.api_keys.expire_all!
       flash[:notice] = t(".success")
     else
       flash[:error] = t("try_again")

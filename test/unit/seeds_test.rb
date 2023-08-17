@@ -4,8 +4,8 @@ class SeedsTest < ActiveSupport::TestCase
   make_my_diffs_pretty!
 
   def all_records
-    ApplicationRecord.descendants.reject(&:abstract_class?).map do |record_class|
-      [record_class.name, record_class.all.map(&:attributes)]
+    ApplicationRecord.descendants.reject(&:abstract_class?).sort_by(&:name).to_h do |record_class|
+      [record_class.name, record_class.all.order(:id).map(&:attributes).as_json]
     end
   end
 
@@ -16,7 +16,7 @@ class SeedsTest < ActiveSupport::TestCase
   test "can load seeds idempotently" do
     load_seed
 
-    assert_no_changes -> { all_records } do
+    assert_no_changes "all_records" do
       load_seed
     end
   end

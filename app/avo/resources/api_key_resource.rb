@@ -2,6 +2,9 @@ class ApiKeyResource < Avo::BaseResource
   self.title = :name
   self.includes = []
 
+  class ExpiredFilter < ScopeBooleanFilter; end
+  filter ExpiredFilter, arguments: { default: { expired: false, unexpired: true } }
+
   field :id, as: :id, hide_on: :index
 
   field :name, as: :text, link_to_resource: true
@@ -10,6 +13,7 @@ class ApiKeyResource < Avo::BaseResource
   field :last_accessed_at, as: :date_time
   field :soft_deleted_at, as: :date_time
   field :soft_deleted_rubygem_name, as: :text
+  field :expires_at, as: :date_time
 
   field :enabled_scopes, as: :tags
 
@@ -28,4 +32,5 @@ class ApiKeyResource < Avo::BaseResource
 
   field :api_key_rubygem_scope, as: :has_one
   field :ownership, as: :has_one
+  field :oidc_id_token, as: :has_one
 end

@@ -66,6 +66,13 @@ pt-BR:
         blocked:
     models:
       user: Usuário
+  activemodel:
+    errors:
+      models:
+        oidc/api_key_permissions:
+          attributes:
+            valid_for:
+              inclusion:
   api_keys:
     create:
       success:

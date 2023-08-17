@@ -4,10 +4,20 @@ class Pusher
   include TraceTagger
   include SemanticLogger::Loggable
 
-  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
+  attr_reader :api_key, :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(user, body, remote_ip = "", scoped_rubygem = nil)
-    @user = user
+  def initialize(api_key, body, remote_ip = "", scoped_rubygem = nil)
+    # this is ugly, but easier than updating all the unit tests, for now
+    case api_key
+    when ApiKey
+      @api_key = api_key
+      @user = api_key.user
+      raise ArgumentError if scoped_rubygem
+      scoped_rubygem = api_key.rubygem
+    else
+      @user = api_key
+    end
+
     @body = StringIO.new(body.read)
     @size = @body.size
     @remote_ip = remote_ip
@@ -112,6 +122,7 @@ class Pusher
                                      size: size,
                                      sha256: sha256,
                                      pusher: user,
+                                     pusher_api_key: api_key,
                                      cert_chain: spec.cert_chain
 
     set_tags "gemcutter.rubygem.version" => @version.number, "gemcutter.rubygem.platform" => @version.platform

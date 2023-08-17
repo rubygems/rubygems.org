@@ -33,6 +33,7 @@ m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpaddin
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="access_webhooks">access_webhooks <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="add_owner">add_owner <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="expires_at">expires_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="hashed_key">hashed_key <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="index_rubygems">index_rubygems <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
   <tr><td align="left" width="130" port="last_accessed_at">last_accessed_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
@@ -267,6 +268,35 @@ m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpad
   <tr><td align="left" width="130" port="time_running">time_running <font face="Arial Italic" color="grey60">float ∗</font></td></tr>
 </table>
 >];
+"m_OIDC::ApiKeyRole" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">OIDC::ApiKeyRole</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="access_policy">access_policy <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
+  <tr><td align="left" width="130" port="api_key_permissions">api_key_permissions <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
+  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (32) ∗ U</font></td></tr>
+</table>
+>];
+"m_OIDC::IdToken" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">OIDC::IdToken</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="jwt">jwt <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
+</table>
+>];
+"m_OIDC::Provider" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">OIDC::Provider</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="configuration">configuration <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+  <tr><td align="left" width="130" port="issuer">issuer <font face="Arial Italic" color="grey60">text U</font></td></tr>
+  <tr><td align="left" width="130" port="jwks">jwks <font face="Arial Italic" color="grey60">jsonb</font></td></tr>
+</table>
+>];
 m_Ownership [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
   <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Ownership</font></td></tr>
 </table>
@@ -460,10 +490,9 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_User -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
-  m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
   m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::Provider" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_User -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_WebHook -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
@@ -479,6 +508,17 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_ApiKey -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::Provider" -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  "m_OIDC::Provider" -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "1", constraint = "false"];
+  "m_OIDC::Provider" -> "m_OIDC::IdToken" [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "2", constraint = "false"];
+  "m_OIDC::ApiKeyRole" -> "m_OIDC::IdToken" [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_ApiKey -> "m_OIDC::IdToken" [arrowhead = "none", arrowtail = "none", weight = "2"];
+  "m_OIDC::IdToken" -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "3", constraint = "false"];
+  m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
+  m_User -> "m_OIDC::ApiKeyRole" [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  "m_OIDC::ApiKeyRole" -> m_ApiKey [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "1", constraint = "false"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
   "m_GoodJob::Execution" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_GoodJob::Job" -> "m_GoodJob::DiscreteExecution" [arrowhead = "normal", arrowtail = "none", weight = "2"];

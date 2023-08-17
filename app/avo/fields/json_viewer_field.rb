@@ -1,12 +1,9 @@
-class JsonViewerField < Avo::Fields::BaseField
+class JsonViewerField < Avo::Fields::CodeField
   def initialize(name, **args, &)
-    super(name, **args, &)
-    @theme = args[:theme].present? ? args[:theme].to_s : "default"
-    @height = args[:height].present? ? args[:height].to_s : "auto"
-    @tab_size = args[:tab_size].presence || 2
-    @indent_with_tabs = args[:indent_with_tabs].presence || false
-    @line_wrapping = args[:line_wrapping].presence || true
+    super(name, **args, language: :javascript, line_wrapping: true, &)
   end
 
-  attr_reader :height, :theme, :tab_size, :indent_with_tabs, :line_wrapping
+  def value(...)
+    super&.then { JSON.pretty_generate(_1.as_json) }
+  end
 end

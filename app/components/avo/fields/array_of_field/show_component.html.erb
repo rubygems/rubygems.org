@@ -1,0 +1,7 @@
+<%= field_wrapper **field_wrapper_args, stacked: true, data: {} do %>
+  <div class="divide-y">
+    <% field.members.each do |f| %>
+      <%= render f.component_for_view(view).new(field: f) %>
+    <% end %>
+  </div>
+<% end %>

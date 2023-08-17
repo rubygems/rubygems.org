@@ -8,7 +8,7 @@ class StoreVersionContentsJobTest < ActiveJob::TestCase
 
     @gem = gem_file("bin_and_img-0.1.0.gem")
     @user = create(:user)
-    Pusher.new(@user, @gem).process
+    Pusher.new(create(:api_key, user: @user), @gem).process
     @gem.rewind
     @gem_package = Gem::Package.new(@gem)
     @version = Version.last

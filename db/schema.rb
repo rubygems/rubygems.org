@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_04_215243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -53,6 +53,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.boolean "mfa", default: false, null: false
     t.datetime "soft_deleted_at"
     t.string "soft_deleted_rubygem_name"
+    t.datetime "expires_at", precision: nil
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
@@ -235,6 +236,39 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.index ["task_name", "status", "created_at"], name: "index_maintenance_tasks_runs", order: { created_at: :desc }
   end
 
+  create_table "oidc_api_key_roles", force: :cascade do |t|
+    t.bigint "oidc_provider_id", null: false
+    t.bigint "user_id", null: false
+    t.jsonb "api_key_permissions", null: false
+    t.string "name", null: false
+    t.jsonb "access_policy", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "token", limit: 32, null: false
+    t.index ["oidc_provider_id"], name: "index_oidc_api_key_roles_on_oidc_provider_id"
+    t.index ["token"], name: "index_oidc_api_key_roles_on_token", unique: true
+    t.index ["user_id"], name: "index_oidc_api_key_roles_on_user_id"
+  end
+
+  create_table "oidc_id_tokens", force: :cascade do |t|
+    t.bigint "oidc_api_key_role_id", null: false
+    t.jsonb "jwt", null: false
+    t.bigint "api_key_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id"], name: "index_oidc_id_tokens_on_api_key_id"
+    t.index ["oidc_api_key_role_id"], name: "index_oidc_id_tokens_on_oidc_api_key_role_id"
+  end
+
+  create_table "oidc_providers", force: :cascade do |t|
+    t.text "issuer"
+    t.jsonb "configuration"
+    t.jsonb "jwks"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issuer"], name: "index_oidc_providers_on_issuer", unique: true
+  end
+
   create_table "ownership_calls", force: :cascade do |t|
     t.bigint "rubygem_id"
     t.bigint "user_id"
@@ -372,6 +406,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.bigint "pusher_id"
     t.text "cert_chain"
     t.string "canonical_number"
+    t.bigint "pusher_api_key_id"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_on_canonical_number_and_rubygem_id_and_platform", unique: true
@@ -382,6 +417,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
     t.index ["number"], name: "index_versions_on_number"
     t.index ["position", "rubygem_id"], name: "index_versions_on_position_and_rubygem_id"
     t.index ["prerelease"], name: "index_versions_on_prerelease"
+    t.index ["pusher_api_key_id"], name: "index_versions_on_pusher_api_key_id"
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
     t.index ["rubygem_id"], name: "index_versions_on_rubygem_id"
@@ -427,7 +463,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_182938) do
   end
 
   add_foreign_key "api_keys", "users"
+  add_foreign_key "oidc_api_key_roles", "oidc_providers"
+  add_foreign_key "oidc_api_key_roles", "users"
+  add_foreign_key "oidc_id_tokens", "api_keys"
+  add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "webauthn_verifications", "users"
 end

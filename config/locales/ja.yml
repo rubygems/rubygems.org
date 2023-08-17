@@ -60,6 +60,13 @@ ja:
         blocked:
     models:
       user:
+  activemodel:
+    errors:
+      models:
+        oidc/api_key_permissions:
+          attributes:
+            valid_for:
+              inclusion:
   api_keys:
     create:
       success:

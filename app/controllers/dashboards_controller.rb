@@ -23,7 +23,7 @@ class DashboardsController < ApplicationController
   def authenticate_with_api_key
     params_key = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
     hashed_key = Digest::SHA256.hexdigest(params_key)
-    @api_key   = ApiKey.find_by_hashed_key(hashed_key)
+    @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
   end
 
   def api_or_logged_in_user

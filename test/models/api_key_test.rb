@@ -200,6 +200,15 @@ class ApiKeyTest < ActiveSupport::TestCase
     assert_contains api_key.errors[:base], "An invalid API key cannot be used. Please delete it and create a new one."
   end
 
+  should "be invalid if expired" do
+    api_key = create(:api_key, expires_at: 10.minutes.from_now)
+
+    travel 20.minutes
+
+    refute_predicate api_key, :valid?
+    assert_contains api_key.errors[:base], "An expired API key cannot be used. Please create a new one."
+  end
+
   context "#mfa_authorized?" do
     setup do
       @api_key = create(:api_key)
@@ -239,6 +248,30 @@ class ApiKeyTest < ActiveSupport::TestCase
         incorrect_otp = "Yxf57d1wEUSWyXrrLMRv"
 
         refute @api_key.mfa_authorized?(incorrect_otp)
+      end
+    end
+
+    context "with oidc id token" do
+      setup do
+        create(:oidc_id_token, api_key: @api_key)
+      end
+
+      should "return true if mfa not enabled for api key" do
+        @api_key.user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+
+        assert @api_key.mfa_authorized?(nil)
+      end
+
+      should "return true if mfa enabled for api" do
+        @api_key.user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+
+        assert @api_key.mfa_authorized?(nil)
+      end
+
+      should "return true if mfa enabled for api key" do
+        @api_key.update!(mfa: true)
+
+        assert @api_key.mfa_authorized?(nil)
       end
     end
   end

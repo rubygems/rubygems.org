@@ -419,8 +419,9 @@ class PasswordsControllerTest < ActionController::TestCase
       should "change password" do
         refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
-      should "delete new api key" do
-        assert_empty @user.reload.api_keys
+      should "expire new api key" do
+        assert_empty @user.reload.api_keys.unexpired
+        refute_empty @user.reload.api_keys.expired
       end
     end
   end
