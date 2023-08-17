@@ -46,10 +46,17 @@ class Pusher
   end
 
   def validate
-    signature_missing = "There was a problem saving your gem: \nYou have added cert_chain in gemspec but signature was empty"
+    unless validate_signature_exists?
+      return notify("There was a problem saving your gem: \nYou have added cert_chain in gemspec but signature was empty", 403)
+    end
 
-    return notify(signature_missing, 403) unless validate_signature_exists?
-    (rubygem.valid? && version.valid?) || notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+    return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless rubygem.valid? && version.valid?
+
+    unless version.full_name == spec.original_name && Patterns::NAME_PATTERN.match?(spec.platform.to_s)
+      return notify("There was a problem saving your gem: the uploaded spec has malformed platform attributes", 409)
+    end
+
+    true
   end
 
   def save
@@ -77,6 +84,7 @@ class Pusher
     package = Gem::Package.new(body, gem_security_policy)
     @spec = package.spec
     @files = package.files
+    validate_spec
   rescue StandardError => e
     notify <<~MSG, 422
       RubyGems.org cannot process this gem.
@@ -223,7 +231,8 @@ class Pusher
   end
 
   def write_gem(body, spec)
-    original_name = spec.original_name
+    # we validate that the version full_name == spec.original_name
+    original_name = @version.full_name
 
     gem_path = "gems/#{original_name}.gem"
     gem_contents = body.string
@@ -233,9 +242,11 @@ class Pusher
     spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
     spec_contents = Gem.deflate(Marshal.dump(spec))
 
+    spec_contents_checksum = Digest::SHA2.base64digest(spec_contents)
+
     # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
-    RubygemFs.instance.store(gem_path, gem_contents)
-    RubygemFs.instance.store(spec_path, spec_contents)
+    RubygemFs.instance.store(gem_path, gem_contents, checksum_sha256: version.sha256)
+    RubygemFs.instance.store(spec_path, spec_contents, checksum_sha256: spec_contents_checksum)
 
     Fastly.purge(path: gem_path)
     Fastly.purge(path: spec_path)
@@ -256,5 +267,25 @@ class Pusher
 
       { message: "Pushing gem", version:, rubygem: @version.rubygem.name, pusher: user.as_json }
     end
+  end
+
+  def validate_spec
+    @spec.send(:invalidate_memoized_attributes)
+
+    spec = @spec.dup
+
+    cert_chain = spec.cert_chain
+
+    spec.abbreviate
+    spec.sanitize
+
+    # make sure we validate the cert chain, which gets snipped in abbreviate
+    spec.cert_chain = cert_chain
+
+    # Silence warnings from the verification
+    stream = StringIO.new
+    policy = SpecificationPolicy.new(spec)
+    policy.ui = Gem::StreamUI.new(stream, stream, stream, false)
+    policy.validate(false)
   end
 end

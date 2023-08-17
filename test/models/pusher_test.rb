@@ -137,6 +137,8 @@ class PusherTest < ActiveSupport::TestCase
     should "not be able to save a gem if it is not valid" do
       legit_gem = create(:rubygem, name: "legit-gem")
       create(:version, rubygem: legit_gem, number: "0.0.1")
+      # this isn't the kind of invalid that we're testing with this gem
+      Gem::Specification.any_instance.stubs(:authors).returns(["user@example.com"])
       @gem = gem_file("legit-gem-0.0.1.gem.fake")
       @cutter = Pusher.new(@user, @gem)
       @cutter.stubs(:save).never
@@ -512,7 +514,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
       assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
-        assert_enqueued_jobs 5, only: FastlyPurgeJob do
+        assert_enqueued_jobs 6, only: FastlyPurgeJob do
           assert_enqueued_jobs 1, only: Indexer do
             assert_enqueued_jobs 1, only: ReindexRubygemJob do
               @cutter.save

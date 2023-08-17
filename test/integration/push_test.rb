@@ -39,6 +39,19 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
+    refute_nil RubygemFs.instance.get("gems/sandworm-2.0.0.gem")
+    refute_nil RubygemFs.instance.get("quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz")
+    assert_equal({ checksum_sha256: rubygem.versions.find_by!(full_name: "sandworm-2.0.0").sha256, key: "gems/sandworm-2.0.0.gem" },
+                 RubygemFs.instance.head("gems/sandworm-2.0.0.gem"))
+
+    spec = Gem::Package.new("sandworm-2.0.0.gem").spec
+    spec.abbreviate
+    spec.sanitize
+    spec_checksum = Digest::SHA256.base64digest Gem.deflate Marshal.dump spec
+
+    assert_equal({ checksum_sha256: spec_checksum, key: "quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz" },
+                 RubygemFs.instance.head("quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz"))
+
     get rubygem_path("sandworm")
 
     assert_response :success
@@ -55,6 +68,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
     push_gem "sandworm-1.0.0.gem"
 
+    assert_response :success
+
     get rubygem_path("sandworm")
 
     assert_response :success
@@ -69,6 +84,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
     push_gem "sandworm-1.0.0.gem"
 
+    assert_response :success
+
     get rubygem_path("sandworm")
 
     assert_response :success
@@ -78,6 +95,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "pushing a signed gem" do
     push_gem gem_file("valid_signature-0.0.0.gem")
+
+    assert_response :success
 
     get rubygem_path("valid_signature")
 
@@ -104,11 +123,13 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "push errors don't save files" do
-    build_gem "sandworm", "1.0.0" do |spec|
-      spec.instance_variable_set :@authors, "string"
-    end
+    build_gem "sandworm", "1.0.0"
 
     assert_nil Rubygem.find_by(name: "sandworm")
+
+    # Error on empty authors now happens in a different place,
+    # but test what would happen if marshal dumping failed
+    Gem::Specification.any_instance.stubs(:_dump).raises(NoMethodError)
     push_gem "sandworm-1.0.0.gem"
 
     assert_response :internal_server_error
@@ -259,6 +280,130 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_equal "2023-03-01T09:51:31+00:00".to_datetime, hook.last_failure
   end
 
+  context "with specially crafted gemspecs" do
+    should "not allow overwriting gem with -\\d in name" do
+      create(:version, number: "2.0", rubygem: create(:rubygem, name: "book-2"))
+
+      build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+        --- !ruby/hash-with-ivars:Gem::Specification
+        ivars:
+          '@name': book
+          '@version': '2-2.0'
+          '@platform': 'not_ruby'
+          '@original_platform': 'not-ruby'
+          '@new_platform': ruby
+          '@summary': 'malicious'
+          '@authors': [test@example.com]
+      YAML
+
+      push_gem "malicious.gem"
+
+      aggregate_assertions "should fail to push" do
+        assert_response :conflict
+
+        assert_nil Rubygem.find_by(name: "book")
+        assert_nil RubygemFs.instance.get("gems/book-2-2.0.gem")
+        assert_nil RubygemFs.instance.get("quick/Marshal.4.8/book-2-2.0.gemspec.rz")
+      end
+    end
+
+    should "not allow overwriting platform gem" do
+      create(:version, number: "2.0", platform: "universal-darwin-19", rubygem: create(:rubygem, name: "book"))
+
+      build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+        --- !ruby/hash-with-ivars:Gem::Specification
+        ivars:
+          '@name': book-2.0-universal-darwin
+          '@version': '19'
+          '@platform': 'not_ruby'
+          '@original_platform': 'not-ruby'
+          '@new_platform': ruby
+          '@summary': 'malicious'
+          '@authors': [test@example.com]
+      YAML
+
+      push_gem "malicious.gem"
+
+      aggregate_assertions "should fail to push" do
+        assert_response :conflict
+
+        assert_nil Rubygem.find_by(name: "book-2.0-universal-darwin")
+        assert_nil RubygemFs.instance.get("gems/book-2.0-universal-darwin-19.gem")
+        assert_nil RubygemFs.instance.get("quick/Marshal.4.8/book-2.0-universal-darwin-19.gemspec.rz")
+      end
+    end
+
+    context "does not allow pushing a gem where the file name does not match the version full_name" do
+      should "fail when original platform is a ruby Gem::Platform" do
+        build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+          --- !ruby/object:Gem::Specification
+          specification_version: 100
+          name: book
+          version: '1'
+          platform: !ruby/object:Gem::Platform
+            os: ruby
+          summary: 'malicious'
+          authors: [test@example.com]
+        YAML
+        push_gem "malicious.gem"
+
+        aggregate_assertions "should fail to push" do
+          assert_response :conflict
+
+          assert_nil Rubygem.find_by(name: "book")
+          assert_nil RubygemFs.instance.get("gems/book-1-ruby.gem")
+          assert_nil RubygemFs.instance.get("quick/Marshal.4.8/book-1-ruby.gemspec.rz")
+        end
+      end
+
+      should "fail when original platform is an array that resolves to a platform of ruby" do
+        build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+          --- !ruby/object:Gem::Specification
+          specification_version: 100
+          name: book
+          version: '1'
+          platform: [ruby]
+          summary: 'malicious'
+          authors: [test@example.com]
+        YAML
+        push_gem "malicious.gem"
+
+        assert_response :forbidden
+      end
+    end
+
+    should "fail fast when spec.name is not a string" do
+      build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+        --- !ruby/object:Gem::Specification
+        name: !ruby/object:Gem::Version
+          version: []
+        version: '1'
+        summary: 'malicious'
+        authors: [test@example.com]
+      YAML
+      push_gem "malicious.gem"
+
+      assert_response :unprocessable_entity
+    end
+
+    should "fail when spec.platform is invalid" do
+      build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+        --- !ruby/hash-with-ivars:Gem::Specification
+        ivars:
+          '@name': book
+          '@version': '1'
+          '@new_platform': !ruby/object:Gem::Platform
+            os: "../../../../../etc/passwd"
+          '@original_platform': ruby
+          '@summary': 'malicious'
+          '@authors': [test@example.com]
+      YAML
+      push_gem "malicious.gem"
+
+      assert_response :conflict
+    end
+  end
+
   def push_gem(path)
     post api_v1_rubygems_path,
       env: { "RAW_POST_DATA" => File.read(path) },
@@ -270,4 +415,6 @@ class PushTest < ActionDispatch::IntegrationTest
     RubygemFs.mock!
     Dir.chdir(Rails.root)
   end
+
+  make_my_diffs_pretty!
 end
