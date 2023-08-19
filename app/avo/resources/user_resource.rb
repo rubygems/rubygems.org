@@ -63,6 +63,7 @@ class UserResource < Avo::BaseResource
     field :ownership_calls, as: :has_many
     field :ownership_requests, as: :has_many
     field :pushed_versions, as: :has_many
+    field :oidc_api_key_roles, as: :has_many
 
     field :audits, as: :has_many
   end

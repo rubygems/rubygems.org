@@ -35,7 +35,9 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
     click_on "Create new oidc api key role"
 
     select provider.issuer, from: "oidc_api_key_role_oidc_provider_id"
-    select user.display_handle, from: "oidc_api_key_role_user_id"
+    find_field(id: "oidc_api_key_role_user_id").click
+    send_keys user.display_handle
+    find("li", text: user.display_handle).click
     fill_in "Name", with: "Role"
     fill_in "Valid for", with: "PT15M"
     fill_in "Comment", with: "A nice long comment"
@@ -46,7 +48,7 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
     page.assert_text "Access policy can't be blank"
 
     assert_field "oidc_api_key_role_oidc_provider_id", with: provider.id
-    assert_field "oidc_api_key_role_user_id", with: user.id
+    assert_field "oidc_api_key_role_user_id", with: user.display_handle
     assert_field "Name", with: "Role"
     assert_field "Valid for", with: "900"
 
