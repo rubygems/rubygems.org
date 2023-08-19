@@ -31,4 +31,5 @@ class UserPolicy < ApplicationPolicy
   has_association :ownership_requests
   has_association :pushed_versions
   has_association :audits
+  has_association :oidc_api_key_roles
 end
