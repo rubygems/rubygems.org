@@ -632,21 +632,6 @@ zh-CN:
       imported_gem_version_notice: "此版本的 Gem 已在 %{import_date} 导入到 RubyGems.org 中。显示的日期由作者在 gemspec 中指定。"
     version:
       yanked: 已撤回
-  will_paginate:
-    next_label: 下一页
-    page_gap: "…"
-    previous_label: 上一页
-    page_entries_info:
-      multi_page: 显示所有 %{count} 中的 %{model} 从%{from} 到 %{to}
-      multi_page_html: 显示所有 <b>%{count}</b> 中的 %{model} 从<b>%{from}&nbsp;到&nbsp;%{to}</b>
-      single_page:
-        one: 显示 1 %{model}
-        other: 显示所有 %{count} %{model}
-        zero: 没有 %{model} 被找到
-      single_page_html:
-        one: 显示 <b>1</b> %{model}
-        other: 显示 <b>所有 %{count}</b> %{model}
-        zero: 没有 %{model} 被找到
   adoptions:
     index:
       title: 领养

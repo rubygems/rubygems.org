@@ -626,22 +626,6 @@ zh-TW:
       imported_gem_version_notice:
     version:
       yanked: 已被移除
-  will_paginate:
-    next_label: 下一頁
-    page_gap: "…"
-    previous_label: 上一頁
-    page_entries_info:
-      multi_page: 顯示所有 %{count} %{model}中的%{from}-%{to} 條
-      multi_page_html: 顯示所有 <b>%{count}</b> %{model}中的<b>%{from}&nbsp;-&nbsp;%{to}</b>
-        條
-      single_page:
-        one: 顯示 1 %{model}
-        other: 顯示所有 %{count} %{model}
-        zero: 找不到 %{model}
-      single_page_html:
-        one: 顯示 <b>1</b> %{model}
-        other: 顯示 <b>所有 %{count}</b> %{model}
-        zero: 找不到 %{model}
   adoptions:
     index:
       title:

@@ -689,22 +689,6 @@ fr:
       imported_gem_version_notice:
     version:
       yanked: retiré
-  will_paginate:
-    next_label: Suivant
-    page_gap: "…"
-    previous_label: Précédent
-    page_entries_info:
-      multi_page: "%{model} de %{from} à %{to} parmi %{count} au total"
-      multi_page_html: "%{model} de <b>%{from}</b> à <b>%{to}</b> parmi <b>%{count}</b>
-        au total"
-      single_page:
-        one: 1 %{model} affiché
-        other: Les %{count} %{model} affichés
-        zero: Aucun %{model} trouvé
-      single_page_html:
-        one: "<b>1</b> %{model} affiché"
-        other: Les <b>%{count}</b> %{model} affichés
-        zero: Aucun %{model} trouvé
   adoptions:
     index:
       title:

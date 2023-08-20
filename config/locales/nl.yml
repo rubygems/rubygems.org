@@ -643,21 +643,6 @@ nl:
       imported_gem_version_notice:
     version:
       yanked: verwijderd
-  will_paginate:
-    next_label: Volgende
-    page_gap: "…"
-    previous_label: Vorige
-    page_entries_info:
-      multi_page:
-      multi_page_html:
-      single_page:
-        one:
-        other:
-        zero:
-      single_page_html:
-        one:
-        other:
-        zero:
   adoptions:
     index:
       title:
