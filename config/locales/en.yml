@@ -634,21 +634,6 @@ en:
       imported_gem_version_notice: "This gem version was imported to RubyGems.org on %{import_date}. The date displayed was specified by the author in the gemspec."
     version:
       yanked: yanked
-  will_paginate:
-    next_label: Next
-    page_gap: "…"
-    previous_label: Previous
-    page_entries_info:
-      multi_page: Displaying %{model} %{from} - %{to} of %{count} in total
-      multi_page_html: Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total
-      single_page:
-        one: Displaying 1 %{model}
-        other: Displaying all %{count} %{model}
-        zero: No %{model} found
-      single_page_html:
-        one: Displaying <b>1</b> %{model}
-        other: Displaying <b>all&nbsp;%{count}</b> %{model}
-        zero: No %{model} found
   adoptions:
     index:
       title: Adoptions

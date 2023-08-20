@@ -680,22 +680,6 @@ es:
       imported_gem_version_notice:
     version:
       yanked: borrada
-  will_paginate:
-    next_label: Siguiente
-    page_gap: "…"
-    previous_label: Previa
-    page_entries_info:
-      multi_page: Mostrando %{model} %{from} - %{to} sobre un total de %{count}
-      multi_page_html: Mostrando %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> de un total
-        de <b>%{count}</b>
-      single_page:
-        one: Mostrando 1 %{model}
-        other: Mostrando todos los %{count} %{model}
-        zero: No se encontró ningún %{model}
-      single_page_html:
-        one: Mostrando <b>1</b> %{model}
-        other: Mostrando <b>todos los&nbsp;%{count}</b> %{model}
-        zero: No se encontró ningún %{model}
   adoptions:
     index:
       title:

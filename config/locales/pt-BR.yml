@@ -663,21 +663,6 @@ pt-BR:
       imported_gem_version_notice:
     version:
       yanked: removida
-  will_paginate:
-    next_label:
-    page_gap: "…"
-    previous_label:
-    page_entries_info:
-      multi_page:
-      multi_page_html:
-      single_page:
-        one:
-        other:
-        zero:
-      single_page_html:
-        one:
-        other:
-        zero:
   adoptions:
     index:
       title:
