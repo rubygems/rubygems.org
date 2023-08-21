@@ -348,12 +348,8 @@ de:
       title: Ändere dein Passwort
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
   multifactor_auths:
-    recovery_code_html:
     incorrect_otp:
     session_expired:
-    otp_code:
-    otp_or_recovery:
-    recovery_code:
     require_totp_disabled:
     require_mfa_enabled:
     require_totp_enabled:
@@ -388,6 +384,15 @@ de:
     update:
       invalid_level:
       success:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      recovery_code:
+      recovery_code_html:
+      security_device:
+      verify_code:
   notifiers:
     update:
       success:
@@ -611,14 +616,6 @@ de:
       notice:
     create:
       account_blocked:
-    prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      security_device:
-      verify_code:
   stats:
     index:
       title:

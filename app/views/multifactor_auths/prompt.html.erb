@@ -3,15 +3,15 @@
 <div class="mfa__container">
   <% if @user.webauthn_enabled?%>
     <div class="mfa__option">
-        <h2 class="page__subheading--block"> <%= t("sessions.prompt.security_device") %></h2>
+        <h2 class="page__subheading--block"> <%= t(".security_device") %></h2>
         <div class="t-body">
-          <p><%= t("sessions.prompt.webauthn_credential_note") %></p>
+          <p><%= t(".webauthn_credential_note") %></p>
         </div>
         <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
           <div class="form_bottom">
             <p hidden class="l-text-red-600 js-webauthn-session--error"></p>
 
-            <%= submit_tag t('sessions.prompt.sign_in_with_webauthn_credential'), class: 'js-webauthn-session--submit form__submit form__submit--no-hover' %>
+            <%= submit_tag t(".sign_in_with_webauthn_credential"), class: 'js-webauthn-session--submit form__submit form__submit--no-hover' %>
           </div>
         <% end %>
       </div>
@@ -20,17 +20,17 @@
   <% if @user.totp_enabled? || @user.webauthn_only_with_recovery? %>
     <div class="mfa__option">
       <% if @user.totp_enabled? %>
-        <h2 class="page__subheading--block"> <%= t("multifactor_auths.otp_code") %></h2>
+        <h2 class="page__subheading--block"> <%= t(".otp_code") %></h2>
       <% elsif @user.webauthn_only_with_recovery? %>
-        <h2 class="page__subheading--block"> <%= t("multifactor_auths.recovery_code") %></h2>
+        <h2 class="page__subheading--block"> <%= t(".recovery_code") %></h2>
       <% end %>
       <div class="t-body">
-        <p><%= t("multifactor_auths.recovery_code_html") %></p>
+        <p><%= t(".recovery_code_html") %></p>
       </div>
       <%= form_tag @otp_verification_url, method: :post do %>
         <div class="text_field">
           <% if @user.totp_enabled? %>
-            <%= label_tag :otp, t('multifactor_auths.otp_or_recovery'), class: 'form__label' %>
+            <%= label_tag :otp, t(".otp_or_recovery"), class: 'form__label' %>
             <%= text_field_tag :otp, '', class: 'form__input', autofocus: true, autocomplete: :off %>
           <% elsif @user.webauthn_only_with_recovery? %>
             <%= text_field_tag :otp,
@@ -38,7 +38,7 @@
               class: 'form__input',
               autofocus: true,
               autocomplete: :off,
-              aria: { label: t("multifactor_auths.recovery_code") }
+              aria: { label: t(".recovery_code") }
             %>
           <% end %>
         </div>

@@ -364,12 +364,8 @@ es:
       will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo
         electrónico.
   multifactor_auths:
-    recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.
     session_expired:
-    otp_code: código OTP
-    otp_or_recovery:
-    recovery_code:
     require_totp_disabled:
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
@@ -408,6 +404,15 @@ es:
     update:
       invalid_level:
       success: Has actualizado exitosamente la autenticación de múltiples factores.
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      recovery_code:
+      recovery_code_html:
+      security_device:
+      verify_code:
   notifiers:
     update:
       success: Has actualizado exitosamente la configuración de tus notificaciones
@@ -655,14 +660,6 @@ es:
       notice:
     create:
       account_blocked:
-    prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      security_device:
-      verify_code:
   stats:
     index:
       title:

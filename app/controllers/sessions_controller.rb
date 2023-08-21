@@ -12,13 +12,14 @@ class SessionsController < Clearance::SessionsController
     @user = find_user
 
     if @user&.mfa_enabled?
+      @otp_verification_url = otp_create_session_path
       setup_webauthn_authentication(form_url: webauthn_create_session_path)
       session[:mfa_user] = @user.id
 
       session[:mfa_login_started_at] = Time.now.utc.to_s
       create_new_mfa_expiry
 
-      render "sessions/prompt"
+      render "multifactor_auths/prompt"
     else
       do_login
     end

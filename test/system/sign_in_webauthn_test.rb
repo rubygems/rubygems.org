@@ -64,7 +64,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     assert page.has_content? "Security Device"
 
     fill_in "otp", with: @mfa_recovery_codes.first
-    click_button "Verify code"
+    click_button "Authenticate"
 
     assert page.has_content? "Dashboard"
   end
