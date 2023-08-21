@@ -23,6 +23,7 @@
   </head>
 
   <body class="<%= 'body--index' if request.path_info == '/' %>">
+    <!-- Top banner -->
     <% if content_for?(:banner) %>
       <div class="banner">
         <%= yield :banner %>
