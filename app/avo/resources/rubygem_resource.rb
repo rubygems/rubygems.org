@@ -10,7 +10,7 @@ class RubygemResource < Avo::BaseResource
     if id.is_a?(Array)
       model_class.where(id: id)
     else
-      model_class.find_by!(name: id)
+      model_class.find_by!(id: id)
     end
   }
 

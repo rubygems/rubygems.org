@@ -18,7 +18,7 @@
         <ol>
           <% @latest_updates.each do |version| %>
             <li>
-              <a href="<%= rubygem_path(version.rubygem) %>" class="dashboard__gem">
+              <a href="<%= rubygem_path(version.rubygem.slug) %>" class="dashboard__gem">
                 <div class="dashboard__gem__info">
                   <strong class="dashboard__gem__name"><%= version.to_title %></strong>
                   <i class="dashboard__gem__version"><%= t 'time_ago', :duration => time_ago_in_words(version.authored_at) %></i>
@@ -46,7 +46,7 @@
         <ul>
           <% @my_gems.each do |rubygem| %>
             <li>
-              <%= link_to rubygem.name, rubygem, :title => short_info(rubygem.versions.most_recent), :class => 't-link' %>
+              <%= link_to rubygem.name, rubygem_path(rubygem.slug), :title => short_info(rubygem.versions.most_recent), :class => 't-link' %>
             </li>
           <% end %>
         </ul>
@@ -57,7 +57,7 @@
         <ul>
           <% current_user.subscribed_gems.each do |gem| %>
             <li>
-              <%= link_to gem, gem, :title => short_info(gem.versions.most_recent), :class => 't-link' %>
+              <%= link_to gem, rubygem_path(gem.slug), :title => short_info(gem.versions.most_recent), :class => 't-link' %>
             </li>
           <% end %>
         </ul>

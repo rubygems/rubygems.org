@@ -5,7 +5,7 @@
   <% end %>
 
   <% if @adoption %>
-    <%= link_to "adoption", rubygem_adoptions_path(@rubygem), class: "adoption__tag" %>
+    <%= link_to "adoption", rubygem_adoptions_path(@rubygem.slug), class: "adoption__tag" %>
   <% end %>
 
   <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">

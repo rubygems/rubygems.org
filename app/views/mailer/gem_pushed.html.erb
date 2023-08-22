@@ -13,7 +13,7 @@
           A gem you have push access to has recently released a new version.
         </p>
         <p>
-          Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem, @version.slug), target: "_blank" %></strong>
+          Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem.slug, @version.slug), target: "_blank" %></strong>
           <br/>
           Pushed by user:
           <strong>

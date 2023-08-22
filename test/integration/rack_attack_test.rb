@@ -204,7 +204,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "allow gem yank by ip" do
           delete "/api/v1/gems/yank",
-            params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
+            params: { gem_name: @rubygem.slug, version: @rubygem.latest_version.number },
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
@@ -214,7 +214,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           second_user = create(:user)
 
           post "/api/v1/gems/#{@rubygem.name}/owners",
-            params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+            params: { rubygem_id: @rubygem.slug, email: second_user.email },
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
@@ -224,8 +224,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           second_user = create(:user)
           create(:ownership, user: second_user, rubygem: @rubygem)
 
-          delete "/api/v1/gems/#{@rubygem.name}/owners",
-            params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          delete "/api/v1/gems/#{@rubygem.slug}/owners",
+            params: { rubygem_id: @rubygem.slug, email: second_user.email },
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
@@ -239,7 +239,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         @rubygem = create(:rubygem, name: "test", downloads: 2_000)
         create(:version, rubygem: @rubygem, created_at: 2.years.ago)
         stay_under_ownership_request_limit_for("ownership_requests/email")
-        post "/gems/#{@rubygem.name}/ownership_requests", params: { rubygem_id: @rubygem.name, note: "small note" }
+        post "/gems/#{@rubygem.slug}/ownership_requests", params: { rubygem_id: @rubygem.name, note: "small note" }
       end
 
       should "allow creating new requests" do

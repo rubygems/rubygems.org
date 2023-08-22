@@ -405,7 +405,7 @@ class RubygemTest < ActiveSupport::TestCase
     should "return name as slug with only allowed characters" do
       @rubygem.name = "rails?!"
 
-      assert_equal "rails", @rubygem.to_param
+      assert_equal "rails", @rubygem.slug
     end
 
     should "return a bunch of json" do

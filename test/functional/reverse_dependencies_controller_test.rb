@@ -25,7 +25,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
 
     context "render template" do
       setup do
-        get :index, params: { rubygem_id: @rubygem_one.to_param }
+        get :index, params: { rubygem_id: @rubygem_one.slug }
       end
 
       should respond_with :success
@@ -33,7 +33,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
     end
 
     should "show reverse dependencies" do
-      get :index, params: { rubygem_id: @rubygem_one.to_param }
+      get :index, params: { rubygem_id: @rubygem_one.slug }
 
       assert page.has_content?(@rubygem_two.name)
       refute page.has_content?(@rubygem_three.name)
@@ -42,7 +42,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
     should "search reverse dependencies" do
       get :index,
         params: {
-          rubygem_id: @rubygem_two.to_param,
+          rubygem_id: @rubygem_two.slug,
           rdeps_query: @rubygem_three.name
         }
 
@@ -53,7 +53,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
     should "search only current reverse dependencies" do
       get :index,
         params: {
-          rubygem_id: @rubygem_two.to_param,
+          rubygem_id: @rubygem_two.slug,
           rdeps_query: @rubygem_one.name
         }
 

@@ -17,7 +17,7 @@ class Avo::RubygemsTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert page.has_content? rubygem.name
 
-    get avo.resources_rubygem_path(rubygem)
+    get avo.resources_rubygem_path(rubygem.id)
 
     assert_response :success
     assert page.has_content? rubygem.name

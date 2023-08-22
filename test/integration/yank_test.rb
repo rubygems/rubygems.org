@@ -50,7 +50,7 @@ class YankTest < SystemTest
   test "yanked gem entirely then someone else pushes a new version" do
     create(:version, rubygem: @rubygem, number: "0.0.0")
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_content? "sandworm"
     assert page.has_content? "0.0.0"
@@ -58,7 +58,7 @@ class YankTest < SystemTest
     page.driver.browser.header("Authorization", @user_api_key)
     page.driver.delete yank_api_v1_rubygems_path(gem_name: @rubygem.name, version: "0.0.0")
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_content? "sandworm"
     assert page.has_content? "This gem is not currently hosted on RubyGems.org"
@@ -71,7 +71,7 @@ class YankTest < SystemTest
     page.driver.post api_v1_rubygems_path, File.read("sandworm-1.0.0.gem"),
       "CONTENT_TYPE" => "application/octet-stream"
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_content? "sandworm"
     assert page.has_content? "1.0.0"

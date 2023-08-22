@@ -73,7 +73,7 @@ class OwnersControllerTest < ActionController::TestCase
             post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
           end
 
-          should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+          should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
           should "add unconfirmed ownership record" do
             assert_includes @rubygem.owners_including_unconfirmed, @new_owner
             assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
@@ -133,7 +133,7 @@ class OwnersControllerTest < ActionController::TestCase
               post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
             end
 
-            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
 
             should "set success notice flash" do
               expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. " \
@@ -177,7 +177,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
             end
           end
-          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should redirect_to("ownership index") { rubygem_owners_path(@rubygem.slug) }
 
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
@@ -197,7 +197,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
             end
           end
-          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should redirect_to("ownership index") { rubygem_owners_path(@rubygem.slug) }
 
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
@@ -258,7 +258,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { handle: @second_user.display_id, rubygem_id: @rubygem.name }
             end
 
-            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
 
             should "set success notice flash" do
               expected_notice = "#{@second_user.handle} was removed from the owners successfully"
@@ -300,7 +300,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
         end
 
-        should redirect_to("rubygem show") { rubygem_path(@rubygem) }
+        should redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
         should "set success notice flash" do
           success_flash = "A confirmation mail has been re-sent to your email"
 
@@ -412,7 +412,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should "confirm ownership" do
           assert_predicate @ownership, :confirmed?
-          assert redirect_to("rubygem show") { rubygem_path(@rubygem) }
+          assert redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
           assert_equal "You were added as an owner to #{@rubygem.name} gem", flash[:notice]
         end
 

@@ -34,11 +34,11 @@ module RubygemsHelper
   def subscribe_link(rubygem)
     if signed_in?
       if rubygem.subscribers.find_by_id(current_user.id)
-        link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem),
+        link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
           class: [:toggler, "gem__link", "t-list__item"], id: "unsubscribe",
           method: :delete
       else
-        link_to t(".links.subscribe"), rubygem_subscription_path(rubygem),
+        link_to t(".links.subscribe"), rubygem_subscription_path(rubygem.slug),
           class: %w[toggler gem__link t-list__item], id: "subscribe",
           method: :post
       end
@@ -52,7 +52,7 @@ module RubygemsHelper
     return unless signed_in?
     style = "t-item--hidden" unless rubygem.subscribers.find_by_id(current_user.id)
 
-    link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem),
+    link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
       class: [:toggler, "gem__link", "t-list__item", style], id: "unsubscribe",
       method: :delete, remote: true
   end
@@ -67,12 +67,12 @@ module RubygemsHelper
   end
 
   def atom_link(rubygem)
-    link_to t(".links.rss"), rubygem_versions_path(rubygem, format: "atom"),
+    link_to t(".links.rss"), rubygem_versions_path(rubygem.slug, format: "atom"),
       class: "gem__link t-list__item", id: :rss
   end
 
   def reverse_dependencies_link(rubygem)
-    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem)
+    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem.slug)
   end
 
   def badge_link(rubygem)
@@ -88,17 +88,17 @@ module RubygemsHelper
   end
 
   def ownership_link(rubygem)
-    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem), class: "gem__link t-list__item"
+    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
   def resend_owner_confirmation_link(rubygem)
     link_to I18n.t("rubygems.aside.links.resend_ownership_confirmation"),
-            resend_confirmation_rubygem_owners_path(rubygem), class: "gem__link t-list__item"
+      resend_confirmation_rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
   def rubygem_adoptions_link(rubygem)
     link_to "Adoption",
-      rubygem_adoptions_path(rubygem), class: "gem__link t-list__item"
+      rubygem_adoptions_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)
