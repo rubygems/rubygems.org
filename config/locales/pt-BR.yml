@@ -64,6 +64,13 @@ pt-BR:
       messages:
         unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
         blocked:
+      models:
+        version:
+          attributes:
+            gem_full_name:
+              taken:
+            full_name:
+              taken:
     models:
       user: Usuário
   activemodel:

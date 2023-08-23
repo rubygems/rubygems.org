@@ -1,4 +1,4 @@
-class Rubygem < ApplicationRecord
+class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Patterns
   include RubygemSearchable
 
@@ -317,7 +317,8 @@ class Rubygem < ApplicationRecord
 
   def find_or_initialize_version_from_spec(spec)
     version = versions.find_or_initialize_by(number: spec.version.to_s,
-                                             platform: spec.original_platform.to_s)
+                                             platform: spec.original_platform.to_s,
+                                             gem_platform: spec.platform.to_s)
     version.rubygem = self
     version
   end

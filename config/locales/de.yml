@@ -54,6 +54,13 @@ de:
       messages:
         unpwn:
         blocked:
+      models:
+        version:
+          attributes:
+            gem_full_name:
+              taken:
+            full_name:
+              taken:
     models:
       user:
   activemodel:

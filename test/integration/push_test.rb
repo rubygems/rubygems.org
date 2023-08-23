@@ -299,7 +299,7 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       aggregate_assertions "should fail to push" do
-        assert_response :conflict
+        assert_response :forbidden
 
         assert_nil Rubygem.find_by(name: "book")
         assert_nil RubygemFs.instance.get("gems/book-2-2.0.gem")
@@ -325,7 +325,7 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       aggregate_assertions "should fail to push" do
-        assert_response :conflict
+        assert_response :forbidden
 
         assert_nil Rubygem.find_by(name: "book-2.0-universal-darwin")
         assert_nil RubygemFs.instance.get("gems/book-2.0-universal-darwin-19.gem")
@@ -400,7 +400,7 @@ class PushTest < ActionDispatch::IntegrationTest
       YAML
       push_gem "malicious.gem"
 
-      assert_response :conflict
+      assert_response :forbidden
     end
   end
 

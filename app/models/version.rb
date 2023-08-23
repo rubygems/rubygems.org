@@ -1,6 +1,6 @@
 require "digest/sha2"
 
-class Version < ApplicationRecord
+class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
 
   belongs_to :rubygem, touch: true
@@ -11,6 +11,7 @@ class Version < ApplicationRecord
 
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
+  before_validation :gem_full_nameify!
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
@@ -23,7 +24,9 @@ class Version < ApplicationRecord
 
   validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/o }
   validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
+  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }, on: :create
   validates :full_name, presence: true, uniqueness: { case_sensitive: false }
+  validates :gem_full_name, presence: true, uniqueness: { case_sensitive: false, allow_nil: true }, on: :create
   validates :rubygem, presence: true
   validates :required_rubygems_version, :licenses, :required_ruby_version, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
   validates :description, :summary, :authors, :requirements, :cert_chain,
@@ -32,6 +35,8 @@ class Version < ApplicationRecord
 
   validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create
+  validate :gem_platform_and_number_are_unique, on: :create
+  validate :original_platform_resolves_to_gem_platform, on: %i[create platform_changed? gem_platform_changed?]
   validate :authors_format, on: :create
   validate :metadata_links_format
   validate :metadata_attribute_length
@@ -398,6 +403,18 @@ class Version < ApplicationRecord
     errors.add(:base, "A version already exists with this number or platform.")
   end
 
+  def gem_platform_and_number_are_unique
+    platforms = Version.where(rubygem_id: rubygem_id, number: number, gem_platform: gem_platform).pluck(:platform)
+    return if platforms.empty?
+    errors.add(:base, "A version already exists with this number and resolved platform #{platforms}")
+  end
+
+  def original_platform_resolves_to_gem_platform
+    resolved = Gem::Platform.new(platform).to_s
+    return if gem_platform == resolved
+    errors.add(:base, "The original platform #{platform} does not resolve the platform #{gem_platform} (instead it is #{resolved})")
+  end
+
   def authors_format
     authors = authors_before_type_cast
     return unless authors
@@ -410,6 +427,13 @@ class Version < ApplicationRecord
     return if rubygem.nil?
     self.full_name = "#{rubygem.name}-#{number}"
     full_name << "-#{platform}" if platformed?
+  end
+
+  def gem_full_nameify!
+    return if gem_platform.blank?
+    return if rubygem.nil?
+    self.gem_full_name = "#{rubygem.name}-#{number}"
+    gem_full_name << "-#{gem_platform}" unless gem_platform == "ruby"
   end
 
   def set_canonical_number

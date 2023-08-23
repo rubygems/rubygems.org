@@ -294,6 +294,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:name).returns "some name"
       spec.expects(:version).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
+      spec.expects(:platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:size).returns 5
@@ -328,6 +329,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:name).returns @rubygem.name
       spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:platform).returns "ruby"
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
@@ -363,6 +365,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:name).returns @rubygem.name.upcase
       spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:platform).returns "ruby"
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec

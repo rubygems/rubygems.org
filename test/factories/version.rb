@@ -8,6 +8,7 @@ FactoryBot.define do
     number
     canonical_number { Gem::Version.new(number).canonical_segments.join(".") }
     platform { "ruby" }
+    gem_platform { Gem::Platform.new(platform).to_s }
     required_rubygems_version { ">= 2.6.3" }
     required_ruby_version { ">= 2.0.0" }
     licenses { "MIT" }

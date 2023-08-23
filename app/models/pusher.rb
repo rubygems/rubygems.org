@@ -52,7 +52,7 @@ class Pusher
 
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless rubygem.valid? && version.valid?
 
-    unless version.full_name == spec.original_name && Patterns::NAME_PATTERN.match?(spec.platform.to_s)
+    unless version.full_name == spec.original_name && version.gem_full_name == spec.full_name
       return notify("There was a problem saving your gem: the uploaded spec has malformed platform attributes", 409)
     end
 
@@ -119,6 +119,7 @@ class Pusher
 
     @version = @rubygem.versions.new number: spec.version.to_s,
                                      platform: spec.original_platform.to_s,
+                                     gem_platform: spec.platform.to_s,
                                      size: size,
                                      sha256: sha256,
                                      pusher: user,
