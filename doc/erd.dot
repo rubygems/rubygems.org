@@ -424,6 +424,8 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="cert_chain">cert_chain <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="description">description <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="full_name">full_name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="gem_full_name">gem_full_name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="gem_platform">gem_platform <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="indexed">indexed <font face="Arial Italic" color="grey60">boolean</font></td></tr>
   <tr><td align="left" width="130" port="info_checksum">info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="latest">latest <font face="Arial Italic" color="grey60">boolean</font></td></tr>

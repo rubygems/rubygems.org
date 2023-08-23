@@ -394,7 +394,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On POST to create with an underscore or dash variant of an existing gem" do
       setup do
         existing = create(:rubygem, name: "t_es-t", downloads: 3002)
-        existing.versions.create(number: "1.0.0", platform: "ruby")
+        create(:version, rubygem: existing, number: "1.0.0", platform: "ruby")
         post :create, body: gem_file("test-1.0.0.gem").read
       end
 

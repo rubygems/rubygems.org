@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_04_215243) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_060929) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -407,6 +407,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_04_215243) do
     t.text "cert_chain"
     t.string "canonical_number"
     t.bigint "pusher_api_key_id"
+    t.string "gem_platform"
+    t.string "gem_full_name"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_on_canonical_number_and_rubygem_id_and_platform", unique: true

@@ -93,6 +93,45 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("> 1")
   end
 
+  test "pushing a gem with a new platform for the same version" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:ownership, rubygem: rubygem, user: @user)
+    create(:version, number: "1.0.0", platform: "ruby", rubygem: rubygem)
+    create(:version, number: "1.0.0", platform: "java", rubygem: rubygem)
+
+    build_gem "sandworm", "1.0.0" do |gemspec|
+      gemspec.platform = "universal-darwin-19"
+    end
+
+    push_gem "sandworm-1.0.0-universal-darwin-19.gem"
+
+    assert_response :success
+
+    version = rubygem.versions.find_by!(number: "1.0.0", platform: "universal-darwin-19")
+
+    assert_equal "universal-darwin-19", version.platform
+    assert_equal "sandworm-1.0.0-universal-darwin-19", version.full_name
+    assert_equal "sandworm-1.0.0-universal-darwin-19", version.gem_full_name
+  end
+
+  test "pushing a gem with a new original platform for the same version and platform" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:ownership, rubygem: rubygem, user: @user)
+    create(:version, number: "1.0.0", platform: "universal-darwin-19", rubygem: rubygem)
+
+    build_gem "sandworm", "1.0.0" do |gemspec|
+      gemspec.platform = "universal-darwin19"
+    end
+
+    push_gem "sandworm-1.0.0-universal-darwin-19.gem"
+
+    assert_response :forbidden
+    assert_equal "There was a problem saving your gem: " \
+                 "Gem full name sandworm-1.0.0-universal-darwin-19 already exists" \
+                 ", A version already exists with this number and resolved platform [\"universal-darwin-19\"]",
+                 response.body
+  end
+
   test "pushing a signed gem" do
     push_gem gem_file("valid_signature-0.0.0.gem")
 
@@ -299,7 +338,7 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       aggregate_assertions "should fail to push" do
-        assert_response :conflict
+        assert_response :forbidden
 
         assert_nil Rubygem.find_by(name: "book")
         assert_nil RubygemFs.instance.get("gems/book-2-2.0.gem")
@@ -325,7 +364,7 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       aggregate_assertions "should fail to push" do
-        assert_response :conflict
+        assert_response :forbidden
 
         assert_nil Rubygem.find_by(name: "book-2.0-universal-darwin")
         assert_nil RubygemFs.instance.get("gems/book-2.0-universal-darwin-19.gem")
@@ -400,7 +439,7 @@ class PushTest < ActionDispatch::IntegrationTest
       YAML
       push_gem "malicious.gem"
 
-      assert_response :conflict
+      assert_response :forbidden
     end
   end
 

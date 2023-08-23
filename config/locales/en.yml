@@ -63,6 +63,13 @@ en:
       messages:
         unpwn: has previously appeared in a data breach and should not be used
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
+      models:
+        version:
+          attributes:
+            gem_full_name:
+              taken: "%{value} already exists"
+            full_name:
+              taken: "%{value} already exists"
     models:
       user: User
   activemodel:
@@ -469,7 +476,8 @@ en:
         disabled_html: You have not yet enabled OTP based multi-factor authentication. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
         go_settings: Register a new device
         level_html: You have enabled multi-factor authentication. Please click 'Update' to change your MFA level. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
-        enabled_note: You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active
+        enabled_note:
+          You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active
           recovery codes to disable it.
         update: Update
         disable: Disable

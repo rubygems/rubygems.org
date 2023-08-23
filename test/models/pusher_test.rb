@@ -294,6 +294,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:name).returns "some name"
       spec.expects(:version).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
+      spec.expects(:platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:size).returns 5
@@ -308,6 +309,14 @@ class PusherTest < ActiveSupport::TestCase
 
     should "set version" do
       assert_equal "1.3.3.7", @cutter.version.number
+    end
+
+    should "set platform" do
+      assert_equal "ruby", @cutter.version.platform
+    end
+
+    should "set gem_platform" do
+      assert_equal "ruby", @cutter.version.gem_platform
     end
 
     should "set gem version size" do
@@ -328,6 +337,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:name).returns @rubygem.name
       spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:platform).returns "ruby"
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
@@ -363,6 +373,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:name).returns @rubygem.name.upcase
       spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:platform).returns "ruby"
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
@@ -372,6 +383,28 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem.reload
 
       assert_equal @rubygem.name.upcase, @rubygem.name
+    end
+
+    should "find existing gem with matching version and different platform" do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: "0.1.1")
+      create(:version, rubygem: @rubygem, number: "0.1.1", platform: "java")
+
+      spec = mock
+      spec.stubs(:name).returns @rubygem.name
+      spec.stubs(:version).returns Gem::Version.new("0.1.1")
+      spec.stubs(:original_platform).returns "universal-darwin-6000"
+      spec.stubs(:platform).returns Gem::Platform.new("universal-darwin-6000")
+      spec.stubs(:cert_chain).returns nil
+      @cutter.stubs(:spec).returns spec
+
+      @cutter.find
+
+      assert_equal @rubygem, @cutter.rubygem
+      assert_not_nil @cutter.version
+
+      assert_equal "universal-darwin-6000", @cutter.version.platform
+      assert_equal "universal-darwin-6000", @cutter.version.gem_platform
     end
   end
 
