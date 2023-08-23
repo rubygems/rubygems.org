@@ -24,12 +24,12 @@ class Api::V1::SearchesController < Api::BaseController
     render plain: "bad request", status: :bad_request unless query_params.is_a?(String)
   end
 
-  def search_not_available_error
-    render plain: "search not available, please try again later", status: :service_unavailable
+  def search_not_available_error(error)
+    render plain: error.message, status: :service_unavailable
   end
 
-  def invalid_query_error
-    render plain: "invalid query", status: :bad_request
+  def invalid_query_error(error)
+    render plain: error.message, status: :bad_request
   end
 
   def query_params

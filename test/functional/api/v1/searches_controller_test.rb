@@ -59,7 +59,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
           get :show, params: { query: "other" }, format: :json
 
           assert_response :service_unavailable
-          assert_equal "search not available, please try again later", @response.body
+          assert_equal "Search is currently unavailable. Please try again later.", @response.body
         end
       end
     end
@@ -69,7 +69,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         get :show, params: { query: "AND other" }, format: :json
 
         assert_response :bad_request
-        assert_equal "invalid query", @response.body
+        assert_equal "Failed to parse search term: 'AND other'.", @response.body
       end
     end
   end
