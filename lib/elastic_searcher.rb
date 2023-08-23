@@ -1,4 +1,16 @@
 class ElasticSearcher
+  CONNECTION_ERRORS = [
+    Faraday::ConnectionFailed,
+    Faraday::TimeoutError,
+    Searchkick::Error,
+    OpenSearch::Transport::Transport::Error,
+    Errno::ECONNRESET,
+    HTTPClient::KeepAliveDisconnected
+  ].freeze
+
+  SearchNotAvailableError = Class.new(StandardError)
+  InvalidQueryError = Class.new(StandardError)
+
   def initialize(query, page: 1)
     @query  = query
     @page   = page
@@ -13,24 +25,25 @@ class ElasticSearcher
     )
     result.response # ES query is triggered here to allow fallback. avoids lazy loading done in the view
     [nil, result]
-  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, OpenSearch::Transport::Transport::Error => e
-    result = Rubygem.legacy_search(@query).page(@page)
-    [error_msg(e), result]
+  rescue StandardError => e
+    [error_msg(e), nil]
   end
 
   def api_search
     result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash, page: @page, per_page: Kaminari.config.default_per_page,
 load: false)
     result.response["hits"]["hits"].pluck("_source")
-  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, OpenSearch::Transport::Transport::Error
-    Rubygem.legacy_search(@query).page(@page)
+  rescue Searchkick::InvalidQueryError
+    raise InvalidQueryError
+  rescue *CONNECTION_ERRORS
+    raise SearchNotAvailableError
   end
 
   def suggestions
     result = Rubygem.searchkick_search(body: suggestions_definition.to_hash, page: @page, per_page: Kaminari.config.default_per_page, load: false)
     result = result.response["suggest"]["completion_suggestion"][0]["options"]
     result.map { |gem| gem["_source"]["name"] }
-  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Searchkick::Error, OpenSearch::Transport::Transport::Error
+  rescue *CONNECTION_ERRORS
     Array(nil)
   end
 
@@ -104,10 +117,10 @@ load: false)
 
   def error_msg(error)
     if error.is_a? Searchkick::InvalidQueryError
-      "Failed to parse: '#{@query}'. Falling back to legacy search."
+      "Failed to parse search term: '#{@query}'."
     else
       Rails.error.report(error, handled: true)
-      "Advanced search is currently unavailable. Falling back to legacy search."
+      "Search is currently unavailable. Please try again later."
     end
   end
 

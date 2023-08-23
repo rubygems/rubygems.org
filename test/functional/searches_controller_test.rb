@@ -155,14 +155,13 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra)
       create(:version, rubygem: @sinatra_redux)
     end
-    should "fallback to legacy search" do
+    should "error with friendly error message" do
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
         get :show, params: { query: "sinatra" }
 
         assert_response :success
-        assert page.has_content?("Advanced search is currently unavailable. Falling back to legacy search.")
-        assert page.has_content?("Displaying")
+        assert page.has_content?("Search is currently unavailable. Please try again later.")
       end
     end
   end
