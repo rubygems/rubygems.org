@@ -311,6 +311,14 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "1.3.3.7", @cutter.version.number
     end
 
+    should "set platform" do
+      assert_equal "ruby", @cutter.version.platform
+    end
+
+    should "set gem_platform" do
+      assert_equal "ruby", @cutter.version.gem_platform
+    end
+
     should "set gem version size" do
       assert_equal 5, @cutter.version.size
     end
@@ -375,6 +383,28 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem.reload
 
       assert_equal @rubygem.name.upcase, @rubygem.name
+    end
+
+    should "find existing gem with matching version and different platform" do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: "0.1.1")
+      create(:version, rubygem: @rubygem, number: "0.1.1", platform: "java")
+
+      spec = mock
+      spec.stubs(:name).returns @rubygem.name
+      spec.stubs(:version).returns Gem::Version.new("0.1.1")
+      spec.stubs(:original_platform).returns "universal-darwin-6000"
+      spec.stubs(:platform).returns Gem::Platform.new("universal-darwin-6000")
+      spec.stubs(:cert_chain).returns nil
+      @cutter.stubs(:spec).returns spec
+
+      @cutter.find
+
+      assert_equal @rubygem, @cutter.rubygem
+      assert_not_nil @cutter.version
+
+      assert_equal "universal-darwin-6000", @cutter.version.platform
+      assert_equal "universal-darwin-6000", @cutter.version.gem_platform
     end
   end
 
