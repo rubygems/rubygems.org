@@ -191,6 +191,37 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_equal ["missing"], @fs.remove(%w[foo missing])
       end
     end
+
+    context "#restore" do
+      should "restore a file that does not exist" do
+        @s3.stub_responses(:head_object, {
+                             status_code: 404,
+                             body: "",
+                             headers: {
+                               "x-amz-version-id" => "abcde"
+                             }
+                           })
+        @s3.stub_responses(:delete_object, ->(r) { r.params.slice(:version_id) if r.params[:version_id] == "abcde" })
+
+        assert_equal({ version_id: "abcde" }, @fs.restore("foo").to_h)
+      end
+
+      should "call delete when there is no version for a file that does not exist" do
+        @s3.stub_responses(:head_object, {
+                             status_code: 404,
+                             body: "",
+                             headers: {}
+                           })
+
+        assert_equal({ delete_marker: false, version_id: "ObjectVersionId", request_charged: "RequestCharged" }, @fs.restore("foo").to_h)
+      end
+
+      should "do nothing when the file exists" do
+        @s3.stub_responses(:head_object, ->(_) { {} })
+
+        assert_empty(@fs.restore("foo").metadata)
+      end
+    end
   end
 
   context "local filesystem" do
