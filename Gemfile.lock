@@ -163,7 +163,7 @@ GEM
       addressable
     dalli (3.2.5)
     date (3.3.3)
-    ddtrace (1.13.1)
+    ddtrace (1.14.0)
       debase-ruby_core_source (= 3.2.1)
       libdatadog (~> 3.0.0.1.0)
       libddwaf (~> 1.9.0.0.0)
