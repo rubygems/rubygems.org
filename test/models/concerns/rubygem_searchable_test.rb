@@ -290,33 +290,25 @@ class RubygemSearchableTest < ActiveSupport::TestCase
           @ill_formated_query = "updated:[2016-08-10 TO }"
         end
 
-        should "fallback to legacy search" do
-          Rubygem.expects(:legacy_search).with(@ill_formated_query).returns(Rubygem.all)
-
-          ElasticSearcher.new(@ill_formated_query).search
-        end
-
         should "give correct error message" do
-          expected_msg = "Failed to parse: '#{@ill_formated_query}'. Falling back to legacy search."
+          expected_msg = "Failed to parse search term: '#{@ill_formated_query}'."
 
-          @error_msg, = ElasticSearcher.new(@ill_formated_query).search
+          @error_msg, result = ElasticSearcher.new(@ill_formated_query).search
 
+          assert_nil result
           assert_equal expected_msg, @error_msg
         end
       end
 
       context "OpenSearch::Transport::Transport::Errors" do
-        setup do
-          Rubygem.expects(:legacy_search).with("something").returns(Rubygem.all)
-        end
-
-        should "fallback to legacy search and give correct error message" do
+        should "fails with friendly error message" do
           requires_toxiproxy
 
           Toxiproxy[:elasticsearch].down do
-            error_msg, = ElasticSearcher.new("something").search
-            expected_msg = "Advanced search is currently unavailable. Falling back to legacy search."
+            error_msg, result = ElasticSearcher.new("something").search
+            expected_msg = "Search is currently unavailable. Please try again later."
 
+            assert_nil result
             assert_equal expected_msg, error_msg
           end
         end

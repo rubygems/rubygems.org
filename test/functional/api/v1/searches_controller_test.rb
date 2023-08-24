@@ -53,14 +53,23 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     context "with elasticsearch down" do
-      should "fallback to legacy search" do
+      should "returns friendly error message" do
         requires_toxiproxy
         Toxiproxy[:elasticsearch].down do
           get :show, params: { query: "other" }, format: :json
 
-          assert_response :success
-          assert_equal "other", JSON.parse(@response.body).first["name"]
+          assert_response :service_unavailable
+          assert_equal "Search is currently unavailable. Please try again later.", @response.body
         end
+      end
+    end
+
+    context "invalid query" do
+      should "returns friendly error message" do
+        get :show, params: { query: "AND other" }, format: :json
+
+        assert_response :bad_request
+        assert_equal "Failed to parse search term: 'AND other'.", @response.body
       end
     end
   end
