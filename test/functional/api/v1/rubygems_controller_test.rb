@@ -43,16 +43,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should_respond_to_show(&)
     end
-
-    context "with #{format.to_s.upcase} for a gem that doesn't match the slug" do
-      setup do
-        @rubygem = create(:rubygem, name: "ZenTest", slug: "zentest")
-        create(:version, rubygem: @rubygem)
-        get :show, params: { id: "ZenTest" }, format: format
-      end
-
-      should_respond_to_show(&)
-    end
   end
 
   context "When logged in" do
@@ -139,7 +129,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "CORS" do
     setup do
-      rubygem = create(:rubygem, name: "ZenTest", slug: "zentest")
+      rubygem = create(:rubygem, name: "ZenTest")
       create(:version, rubygem: rubygem)
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_060929) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_24_182001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -315,7 +315,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_060929) do
     t.string "name"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
-    t.string "slug"
     t.boolean "indexed", default: false, null: false
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
