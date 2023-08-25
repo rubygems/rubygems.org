@@ -235,6 +235,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_25_183453) do
     t.datetime "updated_at", null: false
     t.text "arguments"
     t.integer "lock_version", default: 0, null: false
+    t.text "metadata"
     t.index ["task_name", "status", "created_at"], name: "index_maintenance_tasks_runs", order: { created_at: :desc }
   end
 

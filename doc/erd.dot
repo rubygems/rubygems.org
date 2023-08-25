@@ -264,6 +264,7 @@ m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpad
   <tr><td align="left" width="130" port="error_message">error_message <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="job_id">job_id <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="lock_version">lock_version <font face="Arial Italic" color="grey60">integer ∗</font></td></tr>
+  <tr><td align="left" width="130" port="metadata">metadata <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="started_at">started_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="task_name">task_name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
