@@ -505,37 +505,39 @@
 <!-- m_MaintenanceTasks::Run -->
 <g id="node19" class="node">
 <title>m_MaintenanceTasks::Run</title>
-<path fill="none" stroke="black" d="M5419.76,-868.98C5419.76,-868.98 5683.92,-868.98 5683.92,-868.98 5689.92,-868.98 5695.92,-874.98 5695.92,-880.98 5695.92,-880.98 5695.92,-1065.92 5695.92,-1065.92 5695.92,-1071.92 5689.92,-1077.92 5683.92,-1077.92 5683.92,-1077.92 5419.76,-1077.92 5419.76,-1077.92 5413.76,-1077.92 5407.76,-1071.92 5407.76,-1065.92 5407.76,-1065.92 5407.76,-880.98 5407.76,-880.98 5407.76,-874.98 5413.76,-868.98 5419.76,-868.98"/>
+<path fill="none" stroke="black" d="M5419.76,-861.98C5419.76,-861.98 5683.92,-861.98 5683.92,-861.98 5689.92,-861.98 5695.92,-867.98 5695.92,-873.98 5695.92,-873.98 5695.92,-1072.92 5695.92,-1072.92 5695.92,-1078.92 5689.92,-1084.92 5683.92,-1084.92 5683.92,-1084.92 5419.76,-1084.92 5419.76,-1084.92 5413.76,-1084.92 5407.76,-1078.92 5407.76,-1072.92 5407.76,-1072.92 5407.76,-873.98 5407.76,-873.98 5407.76,-867.98 5413.76,-861.98 5419.76,-861.98"/>
 <text text-anchor="start" x="5415.18" y="-969.75" font-family="Arial Bold" font-size="11.00">MaintenanceTasks::Run</text>
-<polyline fill="none" stroke="black" points="5551.84,-868.98 5551.84,-1077.92"/>
-<text text-anchor="start" x="5558.88" y="-1063.83" font-family="Arial" font-size="10.00">arguments </text>
-<text text-anchor="start" x="5607.63" y="-1063.83" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="5558.88" y="-1049.83" font-family="Arial" font-size="10.00">backtrace </text>
-<text text-anchor="start" x="5604.63" y="-1049.83" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
-<text text-anchor="start" x="5558.88" y="-1035.83" font-family="Arial" font-size="10.00">cursor </text>
-<text text-anchor="start" x="5588.88" y="-1035.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="5558.88" y="-1021.83" font-family="Arial" font-size="10.00">ended_at </text>
-<text text-anchor="start" x="5601.63" y="-1021.83" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="5558.88" y="-1007.83" font-family="Arial" font-size="10.00">error_class </text>
-<text text-anchor="start" x="5609.88" y="-1007.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="5558.88" y="-993.83" font-family="Arial" font-size="10.00">error_message </text>
-<text text-anchor="start" x="5626.38" y="-993.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="5558.88" y="-979.83" font-family="Arial" font-size="10.00">job_id </text>
-<text text-anchor="start" x="5587.38" y="-979.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="5558.88" y="-965.83" font-family="Arial" font-size="10.00">lock_version </text>
-<text text-anchor="start" x="5616.63" y="-965.83" font-family="Arial Italic" font-size="10.00" fill="#999999">integer ∗</text>
-<text text-anchor="start" x="5558.88" y="-951.08" font-family="Arial" font-size="10.00">started_at </text>
-<text text-anchor="start" x="5605.38" y="-951.08" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
-<text text-anchor="start" x="5558.88" y="-937.08" font-family="Arial" font-size="10.00">status </text>
-<text text-anchor="start" x="5588.88" y="-937.08" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="5558.88" y="-922.33" font-family="Arial" font-size="10.00">task_name </text>
-<text text-anchor="start" x="5609.88" y="-922.33" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
-<text text-anchor="start" x="5558.88" y="-907.58" font-family="Arial" font-size="10.00">tick_count </text>
-<text text-anchor="start" x="5606.88" y="-907.58" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8) ∗</text>
-<text text-anchor="start" x="5558.88" y="-892.83" font-family="Arial" font-size="10.00">tick_total </text>
-<text text-anchor="start" x="5601.63" y="-892.83" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8)</text>
-<text text-anchor="start" x="5558.88" y="-878.83" font-family="Arial" font-size="10.00">time_running </text>
-<text text-anchor="start" x="5617.38" y="-878.83" font-family="Arial Italic" font-size="10.00" fill="#999999">float ∗</text>
+<polyline fill="none" stroke="black" points="5551.84,-861.98 5551.84,-1084.92"/>
+<text text-anchor="start" x="5558.88" y="-1070.83" font-family="Arial" font-size="10.00">arguments </text>
+<text text-anchor="start" x="5607.63" y="-1070.83" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="5558.88" y="-1056.83" font-family="Arial" font-size="10.00">backtrace </text>
+<text text-anchor="start" x="5604.63" y="-1056.83" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="5558.88" y="-1042.83" font-family="Arial" font-size="10.00">cursor </text>
+<text text-anchor="start" x="5588.88" y="-1042.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="5558.88" y="-1028.83" font-family="Arial" font-size="10.00">ended_at </text>
+<text text-anchor="start" x="5601.63" y="-1028.83" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="5558.88" y="-1014.83" font-family="Arial" font-size="10.00">error_class </text>
+<text text-anchor="start" x="5609.88" y="-1014.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="5558.88" y="-1000.83" font-family="Arial" font-size="10.00">error_message </text>
+<text text-anchor="start" x="5626.38" y="-1000.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="5558.88" y="-986.83" font-family="Arial" font-size="10.00">job_id </text>
+<text text-anchor="start" x="5587.38" y="-986.83" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="5558.88" y="-972.83" font-family="Arial" font-size="10.00">lock_version </text>
+<text text-anchor="start" x="5616.63" y="-972.83" font-family="Arial Italic" font-size="10.00" fill="#999999">integer ∗</text>
+<text text-anchor="start" x="5558.88" y="-958.08" font-family="Arial" font-size="10.00">metadata </text>
+<text text-anchor="start" x="5602.38" y="-958.08" font-family="Arial Italic" font-size="10.00" fill="#999999">text</text>
+<text text-anchor="start" x="5558.88" y="-944.08" font-family="Arial" font-size="10.00">started_at </text>
+<text text-anchor="start" x="5605.38" y="-944.08" font-family="Arial Italic" font-size="10.00" fill="#999999">datetime</text>
+<text text-anchor="start" x="5558.88" y="-930.08" font-family="Arial" font-size="10.00">status </text>
+<text text-anchor="start" x="5588.88" y="-930.08" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="5558.88" y="-915.33" font-family="Arial" font-size="10.00">task_name </text>
+<text text-anchor="start" x="5609.88" y="-915.33" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗</text>
+<text text-anchor="start" x="5558.88" y="-900.58" font-family="Arial" font-size="10.00">tick_count </text>
+<text text-anchor="start" x="5606.88" y="-900.58" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8) ∗</text>
+<text text-anchor="start" x="5558.88" y="-885.83" font-family="Arial" font-size="10.00">tick_total </text>
+<text text-anchor="start" x="5601.63" y="-885.83" font-family="Arial Italic" font-size="10.00" fill="#999999">integer (8)</text>
+<text text-anchor="start" x="5558.88" y="-871.83" font-family="Arial" font-size="10.00">time_running </text>
+<text text-anchor="start" x="5617.38" y="-871.83" font-family="Arial Italic" font-size="10.00" fill="#999999">float ∗</text>
 </g>
 <!-- m_OIDC::ApiKeyRole -->
 <g id="node20" class="node">
