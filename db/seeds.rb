@@ -231,6 +231,20 @@ author.api_keys.find_or_create_by!(
   push_rubygem: true,
 )
 
+SendgridEvent.create_with(
+  event_type: "delivered",
+  email: author.email,
+  occurred_at: Time.zone.now,
+  payload: {
+    ip: "192.168.1.1",
+    tls: 1,
+    email: author.email,
+    event: "delivered",
+    sg_event_id: "sg_event_id_1",
+  },
+  status: :processed
+).find_or_create_by!(sendgrid_id: "sendgrid_id_1")
+
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:
     - email: #{author.email}, password: #{password} -> gem author owning few example gems
