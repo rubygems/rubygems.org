@@ -73,7 +73,16 @@ class User < ApplicationRecord
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
-    user if user&.authenticated?(password)
+    if password.present? && user && user.authenticated?(password)
+      UnpwnValidator.new(attributes: [:password]).validate_each(user, :password, password)
+      if user.errors[:password].present?
+        raise "Signing in with a pwned password: #{user.errors.messages_for(:password)}"
+      end
+      user
+    else
+      prevent_timing_attack
+      nil
+    end
   rescue BCrypt::Errors::InvalidHash
     nil
   end

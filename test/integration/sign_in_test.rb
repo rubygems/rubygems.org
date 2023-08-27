@@ -37,6 +37,17 @@ class SignInTest < SystemTest
     assert page.has_content? "Bad email or password"
   end
 
+  test "signing in with pwned password" do
+    Unpwn.any_instance.expects(:acceptable?).returns(false)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    page.assert_text "Change password"
+  end
+
   test "signing in with wrong email" do
     visit sign_in_path
     fill_in "Email or Username", with: "someone@example.com"
