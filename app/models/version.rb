@@ -40,6 +40,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validate :authors_format, on: :create
   validate :metadata_links_format
   validate :metadata_attribute_length
+  validate :no_dashes_in_version_number, on: :create
 
   class AuthorType < ActiveModel::Type::String
     def cast_value(value)
@@ -468,5 +469,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def unique_canonical_number
     version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform)
     errors.add(:canonical_number, "has already been taken. Existing version: #{version.number}") unless version.nil?
+  end
+
+  def no_dashes_in_version_number
+    return unless number&.include?("-")
+    errors.add(:number, "cannot contain a dash (it will be uninstallable)")
   end
 end
