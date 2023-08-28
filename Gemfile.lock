@@ -69,7 +69,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.4)
+    addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
     aes_key_wrap (1.1.0)
     aggregate_assertions (0.2.0)
@@ -414,7 +414,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.0.0)
       stringio
-    public_suffix (5.0.1)
+    public_suffix (5.0.3)
     puma (6.3.1)
       nio4r (~> 2.0)
     pundit (2.3.1)
@@ -643,7 +643,7 @@ GEM
     webfinger (1.2.0)
       activesupport
       httpclient (>= 2.4)
-    webmock (3.18.1)
+    webmock (3.19.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
