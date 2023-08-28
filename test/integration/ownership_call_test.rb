@@ -24,7 +24,7 @@ class OwnershipCallsTest < SystemTest
     rubygem = create(:rubygem, owners: [@owner], downloads: 2_000)
     create(:version, rubygem: rubygem, created_at: 2.years.ago)
     user = create(:user)
-    visit rubygem_adoptions_path(rubygem, as: user)
+    visit rubygem_adoptions_path(rubygem.slug, as: user)
 
     assert page.has_content? "There are no ownership calls for #{rubygem.name}"
   end
@@ -44,7 +44,7 @@ class OwnershipCallsTest < SystemTest
     rubygem = create(:rubygem, owners: [@owner], number: "1.0.0", downloads: 2_000)
     create(:ownership_call, rubygem: rubygem, user: @owner, note: "note _italics_ *bold*.")
     user = create(:user)
-    visit rubygem_adoptions_path(rubygem, as: user)
+    visit rubygem_adoptions_path(rubygem.slug, as: user)
 
     assert page.has_link? @owner.handle, href: profile_path(@owner)
     within "div.ownership__details" do
@@ -57,7 +57,7 @@ class OwnershipCallsTest < SystemTest
     rubygem = create(:rubygem, owners: [@owner], downloads: 2_000)
     create(:version, rubygem: rubygem, created_at: 2.years.ago)
     user = create(:user)
-    visit rubygem_path(rubygem, as: user)
+    visit rubygem_path(rubygem.slug, as: user)
 
     within ".gem__aside > div.t-list__items" do
       click_link "Adoption"
@@ -71,9 +71,9 @@ class OwnershipCallsTest < SystemTest
   test "hide adoptions link if popular gem" do
     rubygem = create(:rubygem, owners: [@owner], number: "1.0.0", downloads: 20_000)
     user = create(:user)
-    visit rubygem_path(rubygem, as: user)
+    visit rubygem_path(rubygem.slug, as: user)
 
-    refute page.has_selector? "a[href='#{rubygem_adoptions_path(rubygem)}']"
+    refute page.has_selector? "a[href='#{rubygem_adoptions_path(rubygem.slug)}']"
   end
 
   test "show adoptions link if less popular gem" do
@@ -81,10 +81,10 @@ class OwnershipCallsTest < SystemTest
     rubygem = create(:rubygem, owners: [@owner], number: "1.0.0")
     create(:ownership_call, rubygem: rubygem, user: @owner)
 
-    visit rubygem_path(rubygem, as: user)
+    visit rubygem_path(rubygem.slug, as: user)
 
     within ".gem__aside > div.t-list__items" do
-      assert_selector :css, "a[href='#{rubygem_adoptions_path(rubygem)}']"
+      assert_selector :css, "a[href='#{rubygem_adoptions_path(rubygem.slug)}']"
     end
   end
 
@@ -92,10 +92,10 @@ class OwnershipCallsTest < SystemTest
     rubygem = create(:rubygem, owners: [@owner], number: "1.0.0", downloads: 20_000)
     create(:ownership_call, rubygem: rubygem, user: @owner)
 
-    visit rubygem_path(rubygem, as: @owner)
+    visit rubygem_path(rubygem.slug, as: @owner)
 
     within ".gem__aside > div.t-list__items" do
-      assert_selector :css, "a[href='#{rubygem_adoptions_path(rubygem)}']"
+      assert_selector :css, "a[href='#{rubygem_adoptions_path(rubygem.slug)}']"
     end
   end
 

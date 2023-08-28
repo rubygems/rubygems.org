@@ -21,7 +21,7 @@ class AdoptionsController < ApplicationController
 
   def redirect_to_verify
     return if password_session_active?
-    session[:redirect_uri] = rubygem_adoptions_path(@rubygem)
+    session[:redirect_uri] = rubygem_adoptions_path(@rubygem.slug)
     redirect_to verify_session_path
   end
 end

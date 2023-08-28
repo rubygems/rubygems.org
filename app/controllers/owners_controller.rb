@@ -9,7 +9,7 @@ class OwnersController < ApplicationController
 
     if ownership.valid_confirmation_token? && ownership.confirm!
       notify_owner_added(ownership)
-      redirect_to rubygem_path(ownership.rubygem), notice: t(".confirmed_email", gem: ownership.rubygem.name)
+      redirect_to rubygem_path(ownership.rubygem.slug), notice: t(".confirmed_email", gem: ownership.rubygem.name)
     else
       redirect_to root_path, alert: t(".token_expired")
     end
@@ -23,7 +23,7 @@ class OwnersController < ApplicationController
     else
       flash[:alert] = t("try_again")
     end
-    redirect_to rubygem_path(ownership.rubygem)
+    redirect_to rubygem_path(ownership.rubygem.slug)
   end
 
   def index
@@ -35,7 +35,7 @@ class OwnersController < ApplicationController
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
-      redirect_to rubygem_owners_path(@rubygem), notice: t(".success_notice", handle: owner.name)
+      redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
     else
       index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity
     end
@@ -45,7 +45,7 @@ class OwnersController < ApplicationController
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
     if @ownership.safe_destroy
       OwnersMailer.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id).deliver_later
-      redirect_to rubygem_owners_path(@ownership.rubygem), notice: t(".removed_notice", owner_name: @ownership.owner_name)
+      redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".removed_notice", owner_name: @ownership.owner_name)
     else
       index_with_error t(".failed_notice"), :forbidden
     end
@@ -54,7 +54,7 @@ class OwnersController < ApplicationController
   private
 
   def redirect_to_verify
-    session[:redirect_uri] = rubygem_owners_url(@rubygem)
+    session[:redirect_uri] = rubygem_owners_url(@rubygem.slug)
     redirect_to verify_session_path
   end
 

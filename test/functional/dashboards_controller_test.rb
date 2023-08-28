@@ -53,9 +53,9 @@ class DashboardsControllerTest < ActionController::TestCase
       should "render links" do
         @gems.each do |g|
           assert page.has_content?(g.name)
-          selector = "a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']"
+          selector = "a[href='#{rubygem_path(g.slug)}'][title='#{g.versions.most_recent.info}']"
 
-          assert page.has_selector?(selector)
+          page.assert_selector(selector)
         end
       end
     end
@@ -83,8 +83,8 @@ class DashboardsControllerTest < ActionController::TestCase
       should "render posts with platform-specific titles and links of all subscribed versions" do
         @subscribed_versions.each do |v|
           assert_select "entry > title", count: 1, text: v.to_title
-          assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", count: 1
-          assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem, v.slug)
+          assert_select "entry > link[href='#{rubygem_version_url(v.rubygem.slug, v.slug)}']", count: 1
+          assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem.slug, v.slug)
         end
       end
 

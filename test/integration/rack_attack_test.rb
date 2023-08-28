@@ -204,7 +204,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "allow gem yank by ip" do
           delete "/api/v1/gems/yank",
-            params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
+            params: { gem_name: @rubygem.slug, version: @rubygem.latest_version.number },
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
@@ -214,7 +214,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           second_user = create(:user)
 
           post "/api/v1/gems/#{@rubygem.name}/owners",
-            params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+            params: { rubygem_id: @rubygem.slug, email: second_user.email },
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
@@ -225,7 +225,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           create(:ownership, user: second_user, rubygem: @rubygem)
 
           delete "/api/v1/gems/#{@rubygem.name}/owners",
-            params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+            params: { rubygem_id: @rubygem.slug, email: second_user.email },
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success

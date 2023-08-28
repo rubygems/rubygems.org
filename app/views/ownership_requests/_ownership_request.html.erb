@@ -10,7 +10,7 @@
       </p>
     <% elsif show_gem %>
       <div class="gems__gem__info">
-        <a href="<%= rubygem_path(ownership_request.rubygem) %>" class="gems__gem__name">
+        <a href="<%= rubygem_path(ownership_request.rubygem.slug) %>" class="gems__gem__name">
           <%= ownership_request.rubygem_name %>
         </a>
         <p class="gems__gem__desc t-text">

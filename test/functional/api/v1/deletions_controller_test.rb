@@ -45,7 +45,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "ON DELETE to create for existing gem version without OTP" do
           setup do
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
           should respond_with :unauthorized
 
@@ -57,7 +57,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         context "ON DELETE to create for existing gem version with incorrect OTP" do
           setup do
             @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.totp_seed).now.to_i.succ % 1_000_000).to_s
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
           should respond_with :unauthorized
         end
@@ -65,7 +65,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         context "ON DELETE to create for existing gem version with correct OTP" do
           setup do
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
           should respond_with :success
           should "keep the gem, deindex, keep owner" do
@@ -89,14 +89,14 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           setup do
             @api_key.mfa = true
             @api_key.save!
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
           should respond_with :unauthorized
         end
 
         context "api key does not have mfa enabled" do
           setup do
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
           should respond_with :success
         end
@@ -112,7 +112,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           setup do
             @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
           should respond_with :success
           should "keep the gem, deindex, keep owner" do
@@ -128,7 +128,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "when user has not mfa enabled" do
           setup do
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
           should respond_with :forbidden
         end
@@ -142,7 +142,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "to the same gem to be deleted" do
           setup do
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
 
           should respond_with :success
@@ -153,7 +153,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "another_gem"))
             @api_key.update(ownership: ownership)
 
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
 
           should respond_with :forbidden
@@ -165,7 +165,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             @api_key.update(ownership: ownership)
             ownership.destroy!
 
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
           end
 
           should respond_with :forbidden
@@ -277,9 +277,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           Deletion.create!(user: @user, version: v2)
 
           @gems = {
-            success: { name: @rubygem.to_param, version: @v1.number, deletion_status: :success },
-            already_deleted: { name: @rubygem.to_param, version: v2.number, deletion_status: :unprocessable_entity },
-            not_owned_gem: { name: another_gem.to_param, version: @v1.number, deletion_status: :forbidden },
+            success: { name: @rubygem.slug, version: @v1.number, deletion_status: :success },
+            already_deleted: { name: @rubygem.slug, version: v2.number, deletion_status: :unprocessable_entity },
+            not_owned_gem: { name: another_gem.slug, version: @v1.number, deletion_status: :forbidden },
             without_version: { name: create(:rubygem).name, deletion_status: :not_found }
           }
         end
@@ -366,7 +366,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         setup do
           @api_key.soft_delete!
 
-          delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
         end
 
         should respond_with :forbidden
@@ -379,7 +379,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
       context "ON DELETE to create for existing gem version" do
         setup do
           create(:global_web_hook, user: @user, url: "http://example.org")
-          delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
         end
         should respond_with :success
         should "keep the gem, deindex, keep owner" do
@@ -408,7 +408,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "ON DELETE to create for version 0.1.1" do
           setup do
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v2.number }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v2.number }
           end
           should respond_with :success
           should "keep the gem, deindex it, and keep the owners" do
@@ -431,7 +431,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "ON DELETE to create for version 0.1.1 and x86-darwin-10" do
           setup do
-            delete :create, params: { gem_name: @rubygem.to_param, version: @v2.number, platform: @v2.platform }
+            delete :create, params: { gem_name: @rubygem.slug, version: @v2.number, platform: @v2.platform }
           end
           should respond_with :success
           should "keep the gem, deindex it, and keep the owners" do
@@ -455,7 +455,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
       context "ON DELETE to create for existing gem with invalid version" do
         setup do
-          delete :create, params: { gem_name: @rubygem.to_param, version: "0.2.0" }
+          delete :create, params: { gem_name: @rubygem.slug, version: "0.2.0" }
         end
         should respond_with :not_found
         should "not modify any versions" do
@@ -473,7 +473,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           other_rubygem = create(:rubygem, name: "SomeOtherGem")
           create(:version, rubygem: other_rubygem, number: "0.1.0", platform: "ruby")
           create(:ownership, user: other_user, rubygem: other_rubygem)
-          delete :create, params: { gem_name: other_rubygem.to_param, version: "0.1.0" }
+          delete :create, params: { gem_name: other_rubygem.slug, version: "0.1.0" }
         end
         should respond_with :forbidden
 
@@ -485,7 +485,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
       context "ON DELETE to create for an already deleted gem" do
         setup do
           Deletion.create!(user: @user, version: @v1)
-          delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
         end
         should respond_with :unprocessable_entity
 
@@ -505,7 +505,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
       context "ON DELETE to create for non existent version" do
         setup do
-          delete :create, params: { gem_name: @rubygem.to_param, version: "0.1.0" }
+          delete :create, params: { gem_name: @rubygem.slug, version: "0.1.0" }
         end
         should respond_with :not_found
 
@@ -525,7 +525,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
       @request.env["HTTP_AUTHORIZATION"] = "12342"
 
       rubygem = create(:rubygem, number: "1.0.0", owners: [api_key.user])
-      delete :create, params: { gem_name: rubygem.to_param, version: "1.0.0" }
+      delete :create, params: { gem_name: rubygem.slug, version: "1.0.0" }
     end
 
     should respond_with :forbidden

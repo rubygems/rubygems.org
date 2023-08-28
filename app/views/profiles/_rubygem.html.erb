@@ -1,7 +1,7 @@
 <li class="<%= "small" unless graph %>">
   <div class="gems__gem">
     <span class="gems__gem__info">
-      <a href="<%= rubygem_path(rubygem) %>" class="gems__gem__name">
+      <a href="<%= rubygem_path(rubygem.slug) %>" class="gems__gem__name">
         <%= rubygem.name %>
         <span class="gems__gem__version"><%= rubygem.versions.most_recent %></span>
       </a>

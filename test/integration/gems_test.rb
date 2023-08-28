@@ -7,7 +7,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "gem page with a non valid HTTP_ACCEPT header" do
-    get rubygem_path(@rubygem), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
+    get rubygem_path(@rubygem.slug), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
 
     assert page.has_content? "1.0.0"
   end
@@ -22,7 +22,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "versions with atom format" do
     create(:version, rubygem: @rubygem)
-    get rubygem_versions_path(@rubygem, format: :atom)
+    get rubygem_versions_path(@rubygem.slug, format: :atom)
 
     assert_equal "application/atom+xml", response.media_type
     assert page.has_content? "sandworm"
@@ -30,7 +30,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "canonical url for gem points to most recent version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_path(@rubygem)
+    get rubygem_path(@rubygem.slug)
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.1.1"])
 
     assert page.has_css?(css, visible: false)
@@ -38,7 +38,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "canonical url for an old version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_version_path(@rubygem, "1.0.0")
+    get rubygem_version_path(@rubygem.slug, "1.0.0")
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"])
 
     assert page.has_css?(css, visible: false)
@@ -59,17 +59,17 @@ class GemsSystemTest < SystemTest
   end
 
   test "version navigation" do
-    visit rubygem_version_path(@rubygem, "1.0.0")
+    visit rubygem_version_path(@rubygem.slug, "1.0.0")
     click_link "Next version →"
 
-    assert_equal page.current_path, rubygem_version_path(@rubygem, "1.1.1")
+    assert_equal page.current_path, rubygem_version_path(@rubygem.slug, "1.1.1")
     click_link "← Previous version"
 
-    assert_equal page.current_path, rubygem_version_path(@rubygem, "1.0.0")
+    assert_equal page.current_path, rubygem_version_path(@rubygem.slug, "1.0.0")
   end
 
   test "subscribe to a gem" do
-    visit rubygem_path(@rubygem, as: @user.id)
+    visit rubygem_path(@rubygem.slug, as: @user.id)
 
     assert page.has_css?("a#subscribe")
 
@@ -82,7 +82,7 @@ class GemsSystemTest < SystemTest
   test "unsubscribe to a gem" do
     create(:subscription, rubygem: @rubygem, user: @user)
 
-    visit rubygem_path(@rubygem, as: @user.id)
+    visit rubygem_path(@rubygem.slug, as: @user.id)
 
     assert page.has_css?("a#unsubscribe")
 
@@ -95,7 +95,7 @@ class GemsSystemTest < SystemTest
   test "shows enable MFA instructions when logged in as owner with MFA disabled" do
     create(:ownership, rubygem: @rubygem, user: @user)
 
-    visit rubygem_path(@rubygem, as: @user.id)
+    visit rubygem_path(@rubygem.slug, as: @user.id)
 
     assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
     assert page.has_content? "Please consider enabling multi-factor"
@@ -108,7 +108,7 @@ class GemsSystemTest < SystemTest
     create(:ownership, rubygem: @rubygem, user: @user)
     create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
-    visit rubygem_path(@rubygem, as: @user.id)
+    visit rubygem_path(@rubygem.slug, as: @user.id)
 
     assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
     assert page.has_selector?(".gem__users__mfa-text.mfa-warn")
@@ -122,7 +122,7 @@ class GemsSystemTest < SystemTest
     create(:ownership, rubygem: @rubygem, user: @user)
     create(:ownership, rubygem: @rubygem, user: user_with_mfa)
 
-    visit rubygem_path(@rubygem, as: @user.id)
+    visit rubygem_path(@rubygem.slug, as: @user.id)
 
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-warn")
     assert page.has_selector?(".gem__users__mfa-text.mfa-info")
@@ -135,7 +135,7 @@ class GemsSystemTest < SystemTest
     create(:ownership, rubygem: @rubygem, user: @user)
     create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_no_selector?(".gem__users__mfa-disabled .gem__users a")
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-warn")
@@ -146,7 +146,7 @@ class GemsSystemTest < SystemTest
     github_link = "http://github.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "source_code_uri" => github_link })
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_selector?(".github-btn")
   end
@@ -155,7 +155,7 @@ class GemsSystemTest < SystemTest
     github_link = "http://github.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => github_link })
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_selector?(".github-btn")
   end
@@ -164,7 +164,7 @@ class GemsSystemTest < SystemTest
     notgithub_link = "http://notgithub.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => notgithub_link })
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_no_selector?(".github-btn")
   end
@@ -173,7 +173,7 @@ class GemsSystemTest < SystemTest
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
     create(:version, :mfa_required, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem, "0.1.1")
+    visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
     assert page.has_content? "New versions require MFA"
     assert page.has_content? "Version published with MFA"
@@ -183,7 +183,7 @@ class GemsSystemTest < SystemTest
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
     create(:version, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem, "0.1.1")
+    visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
     assert page.has_content? "New versions require MFA"
     refute page.has_content? "Version published with MFA"
@@ -193,7 +193,7 @@ class GemsSystemTest < SystemTest
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
     create(:version, :mfa_required, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem, "0.1.1")
+    visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
     refute page.has_content? "New versions require MFA"
     assert page.has_content? "Version published with MFA"
@@ -203,7 +203,7 @@ class GemsSystemTest < SystemTest
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
     create(:version, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem, "0.1.1")
+    visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
     refute page.has_content? "New versions require MFA"
     refute page.has_content? "Version published with MFA"
@@ -212,7 +212,7 @@ class GemsSystemTest < SystemTest
   test "shows both mfa headers if MFA enabled for latest version and viewing latest version" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     assert page.has_content? "New versions require MFA"
     assert page.has_content? "Version published with MFA"
@@ -221,7 +221,7 @@ class GemsSystemTest < SystemTest
   test "shows neither mfa header if MFA disabled for latest version and viewing latest version" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
 
-    visit rubygem_path(@rubygem)
+    visit rubygem_path(@rubygem.slug)
 
     refute page.has_content? "New versions require MFA"
     refute page.has_content? "Version published with MFA"
