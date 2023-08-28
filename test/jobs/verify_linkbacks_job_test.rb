@@ -52,19 +52,47 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
     @linkset = @rubygem.linkset
     @linkset.update!(@links)
 
-    RestClient.stubs(:get).with { |url, **| url == @links[:home] }.returns(stub(body: LINKBACK_HTML))
-    RestClient.stubs(:get).with { |url, **| url == @links[:code] }.returns(stub(body: GITHUB_HTML))
-    RestClient.stubs(:get).with { |url, **| url == @links[:wiki] }.returns(stub(body: NO_LINKBACK_HTML))
-    RestClient.stubs(:get).with { |url, **| url == @links[:bugs] }.raises(Net::HTTPBadResponse)
+    stub_request(:get, @links[:home])
+      .with(
+        headers: {
+          "Accept" => "text/html",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "User-Agent" => "RubyGems.org Linkback Verification/0da8eee1b574a2f96778514dc566031e9a7a99a0"
+        }
+      )
+      .to_return(status: 200, body: LINKBACK_HTML, headers: {})
+
+    stub_request(:get, @links[:code])
+      .with(
+        headers: {
+          "Accept" => "text/html",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "User-Agent" => "RubyGems.org Linkback Verification/0da8eee1b574a2f96778514dc566031e9a7a99a0"
+        }
+      )
+      .to_return(status: 200, body: GITHUB_HTML, headers: {})
+
+    stub_request(:get, @links[:wiki])
+      .with(
+        headers: {
+          "Accept" => "text/html",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "User-Agent" => "RubyGems.org Linkback Verification/0da8eee1b574a2f96778514dc566031e9a7a99a0"
+        }
+      )
+      .to_return(status: 200, body: NO_LINKBACK_HTML, headers: {})
+
+    stub_request(:get, @links[:bugs])
+      .to_return(status: 404, body: "", headers: {})
   end
 
-  def perform(rubygem_id = @rubygem.id)
-    VerifyLinkbacksJob.perform_now(rubygem_id)
+  def perform(linkset: @rubygem.linkset)
+    VerifyLinkbacksJob.perform_now(linkset:)
   end
 
-  def perform_retries(rubygem_id = @rubygem.id)
+  def perform_retries(linkset: @rubygem.linkset)
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = true
-    perform(rubygem_id)
+    perform(linkset:)
   ensure
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
   end
@@ -77,9 +105,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
 
       should "not run" do
         assert_no_changes "@linkset" do
-          assert_raise(ActiveRecord::RecordNotFound) do
-            perform_retries(@rubygem.id)
-          end
+          perform_retries(linkset: @rubygem.linkset)
         end
       end
     end
@@ -107,7 +133,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
       end
 
       should "enqueue a job to verify linkbacks" do
-        assert_enqueued_with(job: VerifyLinkbacksJob, args: [@linkset.rubygem_id]) do
+        assert_enqueued_with(job: VerifyLinkbacksJob, args: [{ linkset: @linkset }]) do
           @linkset.save!
         end
       end

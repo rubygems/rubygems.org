@@ -9,9 +9,15 @@ class Linkset < ApplicationRecord
       allow_nil: true,
       allow_blank: true,
       message: "does not appear to be a valid URL"
+
+    define_method :"reset_#{url}_verified_at" do
+      self["#{url}_verified_at"] = nil
+    end
+
+    before_save :"reset_#{url}_verified_at", if: :"#{url}_changed?"
   end
 
-  after_commit :verify_linkbacks
+  after_commit :verify_linkbacks, on: %i[create update]
 
   def empty?
     LINKS.map { |link| attributes[link] }.all?(&:blank?)
@@ -26,6 +32,6 @@ class Linkset < ApplicationRecord
   end
 
   def verify_linkbacks
-    VerifyLinkbacksJob.perform_later(rubygem.id)
+    VerifyLinkbacksJob.perform_later(linkset: self)
   end
 end

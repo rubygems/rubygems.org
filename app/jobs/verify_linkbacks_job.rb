@@ -5,9 +5,13 @@ class VerifyLinkbacksJob < ApplicationJob
 
   retry_on ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid, wait: :exponentially_longer, attempts: 3
 
-  def perform(rubygem_id)
-    rubygem = Rubygem.with_versions.find(rubygem_id)
-    linkset = rubygem.linkset
+  ERRORS = (HTTP_ERRORS + [Faraday::Error, SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
+
+  TIMEOUT_SEC = 5
+
+  def perform(linkset:)
+    rubygem = linkset.rubygem
+    return unless rubygem.indexed?
 
     Linkset::LINKS.map do |link|
       url = linkset[link.to_s]
@@ -18,19 +22,29 @@ class VerifyLinkbacksJob < ApplicationJob
     linkset.save!
   end
 
+  private
+
   def valid_link?(url, gem_name)
-    Timeout.timeout(5) do
-      response = RestClient.get(
-        url,
-        timeout: 5,
-        open_timeout: 5,
-        accept: :html
-      )
-      doc = Nokogiri::HTML(response.body)
-      selector = ["github.com"].include?(URI(url).host) ? "[role='link']" : "[rel='rubygem']"
-      doc.css(selector).css("[href*='rubygems.org/gem/#{gem_name}']").present?
-    end
-  rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError])
+    response = get(url)
+    doc = Nokogiri::HTML(response.body)
+    selector = ["github.com"].include?(URI(url).host) ? "[role='link']" : "[rel='rubygem']"
+    doc.css(selector).css("[href*='rubygems.org/gem/#{gem_name}']").present?
+  rescue *ERRORS => e
+    logger.info "Linkback verification failed for #{url} with error: #{e.message}", error: e, url: url, gem_name: gem_name
     false
+  end
+
+  def get(url)
+    Faraday.new(nil, request: { timeout: TIMEOUT_SEC }) do |f|
+      f.response :logger, logger, headers: false, errors: true
+      f.response :raise_error
+    end.get(
+      url,
+      {},
+      {
+        "User-Agent" => "RubyGems.org Linkback Verification/#{AppRevision.version}",
+        "Accept" => "text/html"
+      }
+    )
   end
 end
