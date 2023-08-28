@@ -469,21 +469,33 @@
 <!-- m_Linkset -->
 <g id="node17" class="node">
 <title>m_Linkset</title>
-<path fill="none" stroke="black" d="M98.76,-613.52C98.76,-613.52 362.92,-613.52 362.92,-613.52 368.92,-613.52 374.92,-619.52 374.92,-625.52 374.92,-625.52 374.92,-694.73 374.92,-694.73 374.92,-700.73 368.92,-706.73 362.92,-706.73 362.92,-706.73 98.76,-706.73 98.76,-706.73 92.76,-706.73 86.76,-700.73 86.76,-694.73 86.76,-694.73 86.76,-625.52 86.76,-625.52 86.76,-619.52 92.76,-613.52 98.76,-613.52"/>
+<path fill="none" stroke="black" d="M98.76,-571.52C98.76,-571.52 362.92,-571.52 362.92,-571.52 368.92,-571.52 374.92,-577.52 374.92,-583.52 374.92,-583.52 374.92,-736.73 374.92,-736.73 374.92,-742.73 368.92,-748.73 362.92,-748.73 362.92,-748.73 98.76,-748.73 98.76,-748.73 92.76,-748.73 86.76,-742.73 86.76,-736.73 86.76,-736.73 86.76,-583.52 86.76,-583.52 86.76,-577.52 92.76,-571.52 98.76,-571.52"/>
 <text text-anchor="start" x="137.68" y="-656.42" font-family="Arial Bold" font-size="11.00">Linkset</text>
-<polyline fill="none" stroke="black" points="230.84,-613.52 230.84,-706.73"/>
-<text text-anchor="start" x="237.88" y="-692.62" font-family="Arial" font-size="10.00">bugs </text>
-<text text-anchor="start" x="261.88" y="-692.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="237.88" y="-678.62" font-family="Arial" font-size="10.00">code </text>
+<polyline fill="none" stroke="black" points="230.84,-571.52 230.84,-748.73"/>
+<text text-anchor="start" x="237.88" y="-734.62" font-family="Arial" font-size="10.00">bugs </text>
+<text text-anchor="start" x="261.88" y="-734.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="237.88" y="-720.62" font-family="Arial" font-size="10.00">bugs_verified_at </text>
+<text text-anchor="start" x="312.13" y="-720.62" font-family="Arial Italic" font-size="10.00" fill="#999999">date</text>
+<text text-anchor="start" x="237.88" y="-706.62" font-family="Arial" font-size="10.00">code </text>
+<text text-anchor="start" x="261.88" y="-706.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="237.88" y="-692.62" font-family="Arial" font-size="10.00">code_verified_at </text>
+<text text-anchor="start" x="312.13" y="-692.62" font-family="Arial Italic" font-size="10.00" fill="#999999">date</text>
+<text text-anchor="start" x="237.88" y="-678.62" font-family="Arial" font-size="10.00">docs </text>
 <text text-anchor="start" x="261.88" y="-678.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="237.88" y="-664.62" font-family="Arial" font-size="10.00">docs </text>
-<text text-anchor="start" x="261.88" y="-664.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="237.88" y="-664.62" font-family="Arial" font-size="10.00">docs_verified_at </text>
+<text text-anchor="start" x="312.13" y="-664.62" font-family="Arial Italic" font-size="10.00" fill="#999999">date</text>
 <text text-anchor="start" x="237.88" y="-650.62" font-family="Arial" font-size="10.00">home </text>
 <text text-anchor="start" x="264.88" y="-650.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="237.88" y="-636.62" font-family="Arial" font-size="10.00">mail </text>
-<text text-anchor="start" x="258.88" y="-636.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
-<text text-anchor="start" x="237.88" y="-622.62" font-family="Arial" font-size="10.00">wiki </text>
-<text text-anchor="start" x="258.13" y="-622.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="237.88" y="-636.62" font-family="Arial" font-size="10.00">home_verified_at </text>
+<text text-anchor="start" x="315.13" y="-636.62" font-family="Arial Italic" font-size="10.00" fill="#999999">date</text>
+<text text-anchor="start" x="237.88" y="-622.62" font-family="Arial" font-size="10.00">mail </text>
+<text text-anchor="start" x="258.88" y="-622.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="237.88" y="-608.62" font-family="Arial" font-size="10.00">mail_verified_at </text>
+<text text-anchor="start" x="309.13" y="-608.62" font-family="Arial Italic" font-size="10.00" fill="#999999">date</text>
+<text text-anchor="start" x="237.88" y="-594.62" font-family="Arial" font-size="10.00">wiki </text>
+<text text-anchor="start" x="258.13" y="-594.62" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<text text-anchor="start" x="237.88" y="-580.62" font-family="Arial" font-size="10.00">wiki_verified_at </text>
+<text text-anchor="start" x="308.38" y="-580.62" font-family="Arial Italic" font-size="10.00" fill="#999999">date</text>
 </g>
 <!-- m_LogTicket -->
 <g id="node18" class="node">
@@ -725,7 +737,7 @@
 <!-- m_Rubygem&#45;&gt;m_Linkset -->
 <g id="edge27" class="edge">
 <title>m_Rubygem&#45;&gt;m_Linkset</title>
-<path fill="none" stroke="black" d="M1456.38,-954.2C1386.88,-919.46 1226.96,-844.53 1082.84,-813.6 933.59,-781.56 541.16,-827.37 396.84,-777.6 353.24,-762.56 310.8,-732.41 279.74,-706.56"/>
+<path fill="none" stroke="black" d="M1456.38,-954.2C1386.88,-919.46 1226.96,-844.53 1082.84,-813.6 933.59,-781.56 541.16,-827.37 396.84,-777.6 376.54,-770.6 356.49,-760.32 337.72,-748.72"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Ownership -->
 <g id="edge22" class="edge">

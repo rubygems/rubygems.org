@@ -57,7 +57,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
         headers: {
           "Accept" => "text/html",
               "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-              "User-Agent" => "RubyGems.org Linkback Verification/0da8eee1b574a2f96778514dc566031e9a7a99a0"
+              "User-Agent" => "RubyGems.org Linkback Verification/#{AppRevision.version}"
         }
       )
       .to_return(status: 200, body: LINKBACK_HTML, headers: {})
@@ -67,7 +67,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
         headers: {
           "Accept" => "text/html",
               "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-              "User-Agent" => "RubyGems.org Linkback Verification/0da8eee1b574a2f96778514dc566031e9a7a99a0"
+              "User-Agent" => "RubyGems.org Linkback Verification/#{AppRevision.version}"
         }
       )
       .to_return(status: 200, body: GITHUB_HTML, headers: {})
@@ -77,7 +77,7 @@ class VerifyLinkbacksJobTest < ActiveJob::TestCase
         headers: {
           "Accept" => "text/html",
               "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-              "User-Agent" => "RubyGems.org Linkback Verification/0da8eee1b574a2f96778514dc566031e9a7a99a0"
+              "User-Agent" => "RubyGems.org Linkback Verification/#{AppRevision.version}"
         }
       )
       .to_return(status: 200, body: NO_LINKBACK_HTML, headers: {})
