@@ -17,6 +17,10 @@ class VersionPolicy < ApplicationPolicy
     rubygems_org_admin?
   end
 
+  def act_on?
+    rubygems_org_admin?
+  end
+
   has_association :dependencies
   has_association :gem_download
 end
