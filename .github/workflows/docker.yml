@@ -31,14 +31,14 @@ jobs:
       - name: Install and start services (needed for image test)
         run: docker-compose up -d
       - name: Configure AWS credentials from Production account
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@04b98b3f9e85f563fb061be8751a0352327246b0 # v3.0.1
         if: github.secret_source != 'None'
         with:
           role-to-assume: arn:aws:iam::048268392960:role/rubygems-ecr-pusher
           aws-region: us-west-2
       - name: Login to Amazon ECR
         if: github.secret_source != 'None'
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@2fc7aceee09e9e4a7105c0d060c656fad0b4f63d # v1.7.0
       - name: build, test and optionally push docker image
         run: ./script/build_docker.sh
       # Temp fix
