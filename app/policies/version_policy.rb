@@ -19,4 +19,5 @@ class VersionPolicy < ApplicationPolicy
 
   has_association :dependencies
   has_association :gem_download
+  has_association :deletion
 end

@@ -12,9 +12,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
     teardown do
       @user.destroy
-      @rubygem = Rubygem.find_by(name: "hola")
-      @rubygem.versions.destroy_all
-      @rubygem.destroy
+      Rubygem.find_by(name: "hola").destroy!
       GemDownload.delete_all
       RubygemFs.mock!
     end
