@@ -14,8 +14,8 @@ class RubygemResource < Avo::BaseResource
     end
   }
 
-  action AddOwner
   action ReleaseReservedNamespace
+  action AddOwner
   action YankRubygem
   action ReserveNamespace
   action UploadInfoFile
