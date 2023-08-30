@@ -4,7 +4,14 @@
 <% content_for :head do %>
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
   <% if @rubygem.versions.any? && @latest_version.indexed %>
+    <!-- canonical url -->
     <link rel="canonical" href="<%= rubygem_version_url(@rubygem, @latest_version.slug) %>" />
+    <!-- alternative language versions url -->
+    <% I18n.available_locales.each do |locale| %>
+      <link rel="alternate" hreflang="<%= locale %>" href="<%= rubygem_version_url(@rubygem, @latest_version.slug, { locale: locale }) %>" />
+    <% end %>
+    <!-- unmatched alternative language fallback -->
+    <link rel="alternate" hreflang="x-default" href="<%= rubygem_version_url(@rubygem, @latest_version.slug) %>" />
   <% else %>
     <meta name="robots" content="noindex" />
   <% end %>
