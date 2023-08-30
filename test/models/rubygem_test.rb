@@ -201,6 +201,59 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    context "#find_public_version" do
+      setup do
+        @version = FactoryBot.create(:version,
+          rubygem: @rubygem,
+          number: "1.0.0",
+          platform: "ruby",
+          licenses: "MIT",
+          info_checksum: "1234567890")
+        @jruby_version = FactoryBot.create(:version,
+          rubygem: @rubygem,
+          number: "1.0.0",
+          platform: "jruby",
+          licenses: "MIT",
+          info_checksum: "1234567890")
+      end
+
+      should "return the most recently created version without platform" do
+        assert_equal @jruby_version, @rubygem.find_public_version(@version.number)
+      end
+
+      should "return the ruby version with ruby platform" do
+        assert_equal @version, @rubygem.find_public_version(@version.number, "ruby")
+      end
+
+      should "return the jruby version with jruby platform" do
+        assert_equal @jruby_version, @rubygem.find_public_version(@version.number, "jruby")
+      end
+
+      should "return ruby if the jruby version is yanked" do
+        @jruby_version.update!(indexed: false)
+
+        assert_equal @version, @rubygem.find_public_version(@version.number)
+      end
+
+      should "return nil if all versions are yanked" do
+        @rubygem.versions.update_all(indexed: false)
+
+        assert_nil @rubygem.find_public_version(@version.number)
+      end
+
+      should "return nil if platform is not found" do
+        assert_nil @rubygem.find_public_version(@version.number, "fake")
+      end
+
+      should "return nil if number is not found" do
+        assert_nil @rubygem.find_public_version("42.42.42")
+      end
+
+      should "return nil if number is nil" do
+        assert_nil @rubygem.find_public_version(nil)
+      end
+    end
+
     should "update references in dependencies when destroyed" do
       @rubygem.save!
       dependency = create(:dependency, rubygem: @rubygem)
