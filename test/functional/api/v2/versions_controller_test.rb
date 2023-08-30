@@ -221,7 +221,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
           homepage_uri wiki_uri documentation_uri mailing_list_uri
           source_code_uri bug_tracker_uri changelog_uri funding_uri dependencies
           built_at created_at description downloads_count number summary
-          rubygems_version ruby_version prerelease requirements
+          rubygems_version ruby_version prerelease requirements spec_sha
         ],
         @response.keys
       )
