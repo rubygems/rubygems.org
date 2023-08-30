@@ -250,6 +250,11 @@ class User < ApplicationRecord
     )
   end
 
+  def hide_email=(value)
+    self[:hide_email] = value
+    self.public_email = !value
+  end
+
   private
 
   def update_email
