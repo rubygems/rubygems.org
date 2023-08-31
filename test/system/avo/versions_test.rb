@@ -69,10 +69,10 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
     assert_equal "Restore version", audit.action
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
-    version_audit = audit.audited_changes["records"].select do |k, _|
-      k =~ %r{gid://gemcutter/Rubygem/#{version.id}}
+    rubygem_audit = audit.audited_changes["records"].select do |k, _|
+      k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
     end
-    rubygem_updated_at_changes = version_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
+    rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
 
     assert_equal(
       {
@@ -119,7 +119,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
         },
         "fields" => {},
         "arguments" => {},
-        "models" => ["gid://gemcutter/Version/#{rubygem.id}"]
+        "models" => ["gid://gemcutter/Version/#{version.id}"]
       },
       audit.audited_changes
     )
