@@ -119,6 +119,7 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="error_event">error_event <font face="Arial Italic" color="grey60">integer (2)</font></td></tr>
   <tr><td align="left" width="130" port="executions_count">executions_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="is_discrete">is_discrete <font face="Arial Italic" color="grey60">boolean</font></td></tr>
@@ -154,6 +155,7 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
   <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="error_event">error_event <font face="Arial Italic" color="grey60">integer (2)</font></td></tr>
   <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="job_class">job_class <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="queue_name">queue_name <font face="Arial Italic" color="grey60">text</font></td></tr>
@@ -171,6 +173,7 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="error_event">error_event <font face="Arial Italic" color="grey60">integer (2)</font></td></tr>
   <tr><td align="left" width="130" port="executions_count">executions_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="is_discrete">is_discrete <font face="Arial Italic" color="grey60">boolean</font></td></tr>
@@ -192,6 +195,7 @@ m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" 
   <tr><td align="left" width="130" port="cron_at">cron_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="cron_key">cron_key <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="error">error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="error_event">error_event <font face="Arial Italic" color="grey60">integer (2)</font></td></tr>
   <tr><td align="left" width="130" port="executions_count">executions_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="finished_at">finished_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="id">id <font face="Arial Italic" color="grey60">uuid ∗</font></td></tr>
@@ -260,6 +264,7 @@ m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpad
   <tr><td align="left" width="130" port="error_message">error_message <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="job_id">job_id <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="lock_version">lock_version <font face="Arial Italic" color="grey60">integer ∗</font></td></tr>
+  <tr><td align="left" width="130" port="metadata">metadata <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="started_at">started_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="task_name">task_name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>

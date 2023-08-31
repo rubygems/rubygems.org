@@ -12,7 +12,7 @@ gem "ddtrace", "~> 1.10", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby", "~> 5.5"
 gem "google-protobuf", "~> 3.22"
 gem "faraday", "~> 1.10"
-gem "good_job", "~> 3.14", "< 3.16" # 3.16 needs to db migrate for `error_event`
+gem "good_job", "~> 3.17"
 gem "gravtastic", "~> 3.2"
 gem "high_voltage", "~> 3.1"
 gem "honeybadger", "~> 5.2"
@@ -66,7 +66,7 @@ gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.11"
 
 group :assets do
-  gem "sassc-rails", "~> 2.1"
+  gem "dartsass-sprockets", "~> 3.0"
   gem "terser", "~> 1.1"
   gem "autoprefixer-rails", "~> 10.4"
 end

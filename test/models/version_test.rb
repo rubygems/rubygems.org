@@ -409,6 +409,7 @@ class VersionTest < ActiveSupport::TestCase
     should_not allow_value("1.2.3-\"[javalol]\"").for(:number)
     should_not allow_value("0.8.45::Gem::PLATFORM::FAILBOAT").for(:number)
     should_not allow_value("1.2.3\n<bad>").for(:number)
+    should_not allow_value("1.2.3-bad").for(:number)
 
     should allow_value("ruby").for(:platform)
     should allow_value("mswin32").for(:platform)
@@ -973,7 +974,7 @@ class VersionTest < ActiveSupport::TestCase
     v2 = Version.new(authors: %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", gem_platform: "ruby", rubygem: g2)
 
     refute_predicate v2, :valid?
-    assert_equal %i[full_name gem_full_name], v2.errors.attribute_names
+    assert_equal %i[full_name gem_full_name number], v2.errors.attribute_names
   end
 
   context "checksums" do

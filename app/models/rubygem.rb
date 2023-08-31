@@ -130,13 +130,18 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     versions.uniq.sort_by(&:position)
   end
 
+  # NB: this intentionally does not default the platform to ruby.
+  # Without platform, finds the most recent version by (position, created_at) ignoring platform.
+  def find_public_version(number, platform = nil)
+    if platform
+      public_versions.find_by(number:, platform:)
+    else
+      public_versions.find_by(number:)
+    end
+  end
+
   def public_version_payload(number, platform = nil)
-    version =
-      if platform
-        public_versions.find_by(number: number, platform: platform)
-      else
-        public_versions.find_by(number: number)
-      end
+    version = find_public_version(number, platform)
     payload(version).merge!(version.as_json) if version
   end
 

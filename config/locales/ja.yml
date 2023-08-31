@@ -1,40 +1,40 @@
 ---
 ja:
-  credentials_required:
+  credentials_required: 認証情報が必要です
   edit: 編集
-  failure_when_forbidden: URLを確認するか、再試行してください。
-  feed_latest: RubyGems.org | 最新のGemの一覧
-  feed_subscribed: RubyGems.org | 購読したGemの一覧
-  footer_about_html: RubyGems.orgはRubyコミュニティのGemのホスティングサービスです。 すぐに<a href="%{publish_docs}">Gemを公開</a>し<a
-    href="%{install_docs}">インストール</a>できます。 <a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なGem</a>を発見できます。
-    あなた自身が<a href="%{contributing_docs}">コントリビューターとなって</a>サイトをよりよくしてください。
-  footer_sponsors_html: RubyGems.orgは広範囲のRubyコミュニティとのパートナーシップを通じて作られました。 <a href="https://www.fastly.com/">Fastly</a>がCDNとネットワーク帯域の費用をサポートしています。
-    <a href="https://www.rubycentral.org/">Ruby Central</a>がインフラや開発や運用の費用を捻出しています。
-    <a href="%{sponsors_page}">スポンサーと彼らがどのように機能しているか確認する</a>。
-  footer_join_rt_html: RubyGems.orgをすべての人がスムーズに使えるよう続けていくために、開発者の時間を賄うためのあなたの援助が必要です。
-    <a href="https://rubycentral.org/#/portal/signup">Ruby Centralに参加する</a>。
-  form_disable_with: お待ちください...
-  invalid_page:
+  failure_when_forbidden: URLを見返すか、再度送信してみてください。
+  feed_latest: RubyGems.org | 最新のgemの一覧
+  feed_subscribed: RubyGems.org | 購読したgemの一覧
+  footer_about_html: RubyGems.orgはRubyコミュニティのgemのホスティングサービスです。すぐに<a href="%{publish_docs}">gemを公開</a>して<a
+    href="%{install_docs}">インストール</a>できます。<a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なgem</a>の詳細を調べられます。ご自身が<a
+    href="%{contributing_docs}">貢献者となり</a>サイトをより良くしてください。
+  footer_sponsors_html: RubyGems.orgは広範囲のRubyコミュニティとの連携を通じて成立しました。<a href="https://www.fastly.com/">Fastly</a>はネットワーク帯域とCDNのサポートを提供しています。<a
+    href="https://www.rubycentral.org/">Ruby Central</a>はインフラの費用を捻出し、開発や運用の資金を募っています。<a
+    href="%{sponsors_page}">出資者と出資の仕組みについてご確認ください</a>。
+  footer_join_rt_html: 全ての人にとって円滑にRubyGems.orgを稼動させ続けていく上で、開発者の時間を賄うためのご支援が必要です。<a
+    href="https://rubycentral.org/#/portal/signup">今日からでもRuby Centralにご参加ください</a>。
+  form_disable_with: お待ちください……
+  invalid_page: ページ番号が範囲外です。既定のページにリダイレクトしました
   locale_name: 日本語
   none: なし
-  not_found:
-  api_key_forbidden:
+  not_found: 見つかりませんでした
+  api_key_forbidden: APIキーにアクセス権がありません
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
-  please_sign_in:
-  otp_incorrect:
-  otp_missing:
-  sign_in: ログイン
+  please_sign_in: サインインしてお進みください。
+  otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
+  otp_missing: 多要素認証が有効化済みですがOTPのコードが与えられませんでした。入力の上再試行してください。
+  sign_in: サインイン
   sign_up: 新規登録
-  dependency_list:
-  multifactor_authentication:
-  subtitle: コミュニティのGemホスティングサービス
-  this_rubygem_could_not_be_found: お探しのGemは見つかりませんでした。
+  dependency_list: 全ての推移的な依存関係を表示
+  multifactor_authentication: 多要素認証
+  subtitle: コミュニティのgemホスティングサービス
+  this_rubygem_could_not_be_found: お探しのrubygemは見つかりませんでした。
   time_ago: "%{duration}前"
   title: RubyGems.org
   update: 更新
   try_again: エラーが発生しました。再試行してください。
   advanced_search: 高度な検索
-  authenticate:
+  authenticate: 認証
   activerecord:
     attributes:
       linkset:
@@ -44,116 +44,116 @@ ja:
         docs: ドキュメントのURL
         mail: メーリングリストのURL
         wiki: WikiのURL
-        funding:
+        funding: 寄付のURL
       session:
         password: パスワード
-        who: Emailまたはユーザー名
+        who: Eメールまたはユーザー名
       user:
         avatar: アバター
-        email: Emailアドレス
+        email: Eメールアドレス
         full_name: フルネーム
         handle: ユーザー名
         password: パスワード
     errors:
       messages:
-        unpwn:
-        blocked:
+        unpwn: 過去にデータ侵害を受けたためお使いになれません
+        blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
       models:
         version:
           attributes:
             gem_full_name:
-              taken:
+              taken: "%{value}は既に存在します"
             full_name:
-              taken:
+              taken: "%{value}は既に存在します"
     models:
-      user:
+      user: ユーザー
   activemodel:
     errors:
       models:
         oidc/api_key_permissions:
           attributes:
             valid_for:
-              inclusion:
+              inclusion: "%{value}秒は5分（300秒）から1日（86,400秒）までの間でなければなりません"
   api_keys:
     create:
-      success:
-      invalid_gem:
+      success: 新しいAPIキーを作成しました
+      invalid_gem: 選択されたgemはこのキーのスコープにありません
     destroy:
-      success:
+      success: APIキーが正常に削除されました：%{name}
     index:
-      api_keys:
-      name:
-      scopes:
-      gem:
-      age:
-      last_access:
-      action:
-      delete:
-      confirm:
-      confirm_all:
-      new_key:
-      index_rubygems:
-      push_rubygem:
-      yank_rubygem:
-      add_owner:
-      remove_owner:
-      access_webhooks:
-      show_dashboard:
-      reset:
-      save_key:
-      mfa:
+      api_keys: APIキー
+      name: 名前
+      scopes: スコープ
+      gem: gem
+      age: 経過時間
+      last_access: 直近のアクセス
+      action: 操作
+      delete: 削除
+      confirm: APIキーが失効します。よろしいですか。
+      confirm_all: 全てのAPIキーが失効します。よろしいですか。
+      new_key: 新しいAPIキー
+      index_rubygems: rubygemを一覧にする
+      push_rubygem: rubygemをプッシュする
+      yank_rubygem: rubygemをヤンクする
+      add_owner: 所有者を追加する
+      remove_owner: 所有者を削除する
+      access_webhooks: webhookにアクセスする
+      show_dashboard: ダッシュボードを表示
+      reset: リセット
+      save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
+      mfa: MFA
     new:
-      new_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
+      new_api_key: 新しいAPIキー
+      multifactor_auth: 多要素認証
+      enable_mfa: MFAを有効にする
+      rubygem_scope: gemのスコープ
+      rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
     reset:
-      success:
+      success: 全てのAPIキーを削除しました
     update:
-      success:
-      invalid_gem:
+      success: APIキーが正常に更新されました
+      invalid_gem: 選択されたgemはこのキーのスコープにありません
     edit:
-      edit_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
-      invalid_key:
-    all_gems:
-    gem_ownership_removed:
+      edit_api_key: APIキーを編集する
+      multifactor_auth: 多要素認証
+      enable_mfa: MFAを有効にする
+      rubygem_scope: gemのスコープ
+      rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
+      invalid_key: 正しくないAPIキーは編集できません。削除して新規作成してください。
+    all_gems: 全てのgem
+    gem_ownership_removed: このキーのスコープにあった%{rubygem_name}の所有権が削除されました。
   clearance_mailer:
     change_password:
-      title:
-      subtitle:
+      title: パスワードを変更する
+      subtitle: こんにちは、%{handle}！
   dashboards:
     show:
       creating_link_text: 作成
-      gem_link_text: Gemページ
+      gem_link_text: gemのページ
       latest: 最近の更新
       latest_title: 最近の更新のRSSフィード
-      migrating_link_text: 統合
-      mine: あなたのGem
+      migrating_link_text: 移行
+      mine: 自分のgem
       my_subscriptions: 購読
-      no_owned_html: あなたはまだGemを公開していません。よろしければGemの%{creating_link}またはRubyForgeからの%{migrating_link}ガイドをご覧ください。
-      no_subscriptions_html: あなたはまだGemを購読していません。%{gem_link}から購読を行なってみてください。
-      title:
+      no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}またはRubyForgeからの%{migrating_link}ガイドをご覧ください。
+      no_subscriptions_html: まだgemを購読していません。%{gem_link}から何か購読してみてください。
+      title: ダッシュボード
   dependencies:
     show:
-      click_to_expand:
+      click_to_expand: 矢印アイコンをクリックして展開
   email_confirmations:
     create:
-      promise_resend: メールアドレスが登録されている場合には、アカウント有効化のための確認メールを送信しました。
+      promise_resend: メールアドレスが登録されている場合は、アカウント有効化のための確認リンクをEメールで送ります。
     new:
-      submit: 再送
+      submit: 確認を再送
       title: 確認メールを再送する
-      will_email_notice: アカウントを有効化するためのリンクを記載した確認メールを送信します。
+      will_email_notice: アカウントを有効化するための確認リンクをメールで送ります。
     update:
-      confirmed_email: あなたのメールアドレスの確認が完了しました。
+      confirmed_email: メールアドレスが確認されました。
   home:
     index:
       downloads_counting_html: ダウンロード数
-      find_blurb:
+      find_blurb: RubyGemを発見、インストール、公開しよう。
       learn:
         install_rubygems: RubyGemsをインストール
   layouts:
@@ -162,361 +162,379 @@ ja:
         about: 概要
         api: API
         blog: ブログ
-        contribute: 寄与
+        contribute: 貢献
         data: データ
-        designed_by:
+        designed_by: 設計
         discussion_forum: 議論
-        gems_served_by:
+        gems_served_by: gemの提供
         guides: ガイド
         help: ヘルプ
-        hosted_by:
-        monitored_by:
-        optimized_by:
-        resolved_with:
+        hosted_by: ホスト
+        monitored_by: 監視
+        optimized_by: 最適化
+        resolved_with: DNS
         security: セキュリティ
-        source_code: ソースコード
+        source_code: コード
         statistics: 統計
-        status: ステータス
-        supported_by:
-        tested_by:
-        tracking_by:
-        uptime: 可用性
-        verified_by:
-        secured_by:
-        looking_for_maintainers:
+        status: 状態
+        supported_by: 協賛
+        tested_by: テスト
+        tracking_by: 追跡
+        uptime: 稼働時間
+        verified_by: 検証
+        secured_by: セキュリティ
+        looking_for_maintainers: 保守者の募集
       header:
         dashboard: ダッシュボード
-        settings:
-        edit_profile:
-        search_gem_html: 検索…
-        sign_in: ログイン
-        sign_out: ログアウト
+        settings: 設定
+        edit_profile: プロフィールを編集
+        search_gem_html: gemを検索...
+        sign_in: サインイン
+        sign_out: サインアウト
         sign_up: 新規登録
-      mfa_banner_html:
+      mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
+        to blog post)！"
   mailer:
-    confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
-    confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください
-    link_expiration_explanation_html:
+    confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
+    confirmation_subject: RubyGems.orgに登録されたメールアドレスを確認してください
+    link_expiration_explanation_html: このリンクは3時間のみ有効ですのでご留意ください。更新されたリンクの申請には<a href='https://rubygems.org/email_confirmations/new'>確認メールの再送</a>ページが使えます。
     email_confirmation:
-      title:
-      subtitle:
+      title: Eメールの確認
+      subtitle: あともう少しです！
       confirmation_link: メールアドレスを確認する
-      welcome_message: RubyGems.orgにようこそ! 以下のリンクをクリックしてあなたのメールアドレスを確認してください
+      welcome_message: RubyGems.orgにようこそ! 以下のリンクからEメールを確認してください。
     email_reset:
-      title:
-      subtitle:
-      visit_link_instructions: RubyGems.orgでのあなたのメールアドレスが変更されました。以下のURLからメールアドレスを確認してください。
+      title: Eメールのリセット
+      subtitle: こんにちは、%{handle}！
+      visit_link_instructions: RubyGems.orgでのEメールアドレスが変更されました。アカウントを再度有効にするには以下のURLに進んでください。
     deletion_complete:
-      title:
-      subtitle:
-      subject: あなたのアカウントはrubygems.orgから削除されました
-      body_html: あなたのアカウント削除申請が処理されました。いつでも%{sign_up}ページから再登録をすることができます。
+      title: 削除完了
+      subtitle: さようなら！
+      subject: アカウントがrubygems.orgから削除されました
+      body_html: rubygems.orgのアカウント削除申請が処理されました。%{sign_up}ページからいつでも再登録できます。
     deletion_failed:
-      title:
-      subtitle:
-      subject: あなたのアカウントはrubygems.orgから削除されませんでした
-      body_html: あなたのrubygems.orgにおけるアカウント削除申請は処理されませんでした。申し訳ありませんが、現在アカウントを削除することができません。しばらく待ってから再度お試しいただくか、問題が継続するようならば%{contact}をお願いいたします。
+      title: 削除失敗
+      subtitle: すみません！
+      subject: rubygems.orgのアカウントの削除申請が失敗しました
+      body_html: rubygems.orgにおけるアカウント削除申請がありました。恐れ入りますが申請を処理できませんでした。しばらく待ってから再度お試しいただくか、問題が継続するようならば%{contact}をお願いいたします。
     notifiers_changed:
-      subject:
-      title:
-      subtitle:
-      'on':
-      off_html:
+      subject: RubyGems.orgのEメール通知設定を変更しました
+      title: Eメール通知
+      subtitle: こんにちは、%{handle}
+      'on': 'ON'
+      off_html: "<b>切</b>"
     gem_pushed:
-      subject:
-      title:
+      subject: gem %{gem} がRubyGems.orgにプッシュされました
+      title: gemがプッシュされました
     gem_yanked:
-      subject:
-      title:
+      subject: gem %{gem} がRubyGems.orgでヤンクされました
+      title: gemがヤンクされました
     reset_api_key:
-      subject:
-      title:
-      subtitle:
+      subject: RubyGems.orgのAPIキーがリセットされました
+      title: APIキーがリセットされました
+      subtitle: こんにちは、%{handle}
     webauthn_credential_created:
-      subject:
-      title:
-      subtitle:
+      subject: RubyGems.orgに新しいセキュリティ機器が追加されました
+      title: セキュリティ機器が追加されました
+      subtitle: こんにちは、%{handle}！
     webauthn_credential_removed:
-      subject:
-      title:
-      subtitle:
+      subject: RubyGems.orgからセキュリティ機器が削除されました
+      title: セキュリティ機器が削除されました
+      subtitle: こんにちは、%{handle}！
     totp_enabled:
-      subject:
-      title:
-      subtitle:
+      subject: RubyGems.orgで認証アプリが有効になりました
+      title: 認証アプリが有効になりました
+      subtitle: こんにちは、%{handle}！
     totp_disabled:
-      subject:
-      title:
-      subtitle:
+      subject: RubyGems.orgで認証アプリが無効になりました
+      title: 認証アプリが無効になりました
+      subtitle: こんにちは、%{handle}！
     email_reset_update:
-      subject:
-      title:
+      subject: RubyGems.orgにEメールアドレスの更新を申請しました
+      title: Eメールの更新を申請しました
     ownership_confirmation:
-      subject:
-      title:
-      subtitle:
-      body_text:
-      body_html:
-      link_expiration_explanation_html:
+      subject: RubyGems.org上で%{gem} gemの所有権を確定してください
+      title: 所有権の確定
+      subtitle: こんにちは、%{handle}！
+      body_text: "%{authorizer}により%{gem} gemの所有者として追加されました。所有権を確定するには以下のリンクに進んでください。"
+      body_html: <strong>%{authorizer}</strong>により<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gemの所有者として追加されました。所有権を確定するには以下のリンクをクリックしてください。
+      link_expiration_explanation_html: なおこちらのリンクが有効なのはあと%{expiry_hours}です。サインインした後に<strong><a
+        href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gemページから確認メールを再送できます。
     owner_added:
-      subject_self:
-      subject_others:
-      title:
-      subtitle:
-      body_self_html:
-      body_others_html:
+      subject_self: "%{gem} gemの所有者として追加されました"
+      subject_others: ユーザー%{owner_handle}が%{gem} gemの所有者として追加されました
+      title: 所有者が追加されました
+      subtitle: こんにちは、%{user_handle}！
+      body_self_html: <b>あなた</b>はRubyGems.orgの<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gemの所有者として追加されました。
+      body_others_html: <b>%{owner_handle}</b>は<b>%{authorizer}</b>により<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gemの所有者として追加されました。この通知を受け取ったのは、%{gem}の所有者の1人だからです。
     owner_removed:
-      subject:
-      title:
-      subtitle:
-      body_html:
+      subject: "%{gem} gemの所有者から削除されました"
+      title: 所有者が削除されました
+      subtitle: こんにちは、%{user_handle}！
+      body_html: <b>あなた</b>は<b>%{remover}</b>によってRubyGems.org上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gemの所有者から削除されました。
     ownerhip_request_closed:
-      title:
-      subtitle:
-      body_html:
+      title: 所有権の申請
+      subtitle: こんにちは、%{handle}！
+      body_html: "<strong>%{gem}</strong>の所有権を申請いただきありがとうございます。心苦しいのですが所有権の申請はgemの所有者により却下されました。"
     ownerhip_request_approved:
-      body_html:
+      body_html: おめでとうございます！<strong>%{gem}</strong>の所有権の申請が許諾されました。gemの所有者として追加されました。
     new_opwnership_requests:
-      body_html:
-      button:
-      disable_notifications:
-      owners_page:
+      body_html: "<strong>%{gem}</strong>には<em>%{count}</em>件の新しい所有権の申請があります。全ての申請を見るには以下のボタンをクリックしてください。"
+      button: 所有権の申請
+      disable_notifications: これらのメッセージの受け取りを停止するには、こちらを更新してください：
+      owners_page: 所有権
     web_hook_deleted:
-      title:
-      subject:
-      subtitle:
-      body_text:
-      body_html:
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
+      title: webhookが削除されました
+      subject: RubyGems.orgのwebhookが削除されました
+      subtitle: こんにちは、%{handle}！
+      body_text: "%{url}にPOSTするwebhookが%{failures}回の失敗の後に削除されました。"
+      body_html: <a href="%{url}"><code>%{url}</code></a>に<code>POST</code>するwebhookが%{failures}回の失敗の後に削除されました。
+      global_text: このwebhookは以前何らかのgemがプッシュされたときに呼ばれました。
+      global_html: このwebhookは以前<em>何らかの</em>gemがプッシュされたときに呼ばれました。
+      gem_text: このwebhookは以前%{gem}がプッシュされたときに呼ばれました。
+      gem_html: このwebhookは以前<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>がプッシュされたときに呼ばれました。
     web_hook_disabled:
-      title:
-      subject:
-      subtitle:
-      body_text:
-      body_html:
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
+      title: webhookが無効になりました
+      subject: RubyGems.orgのwebhookが削除されました
+      subtitle: こんにちは、%{handle}！
+      body_text: |
+        %{url}にPOSTするwebhookが%{disabled_reason}のため無効になりました。
+        最後に成功したのは%{last_success}で、それから%{failures_since_last_success}回失敗しました。
+        `%{delete_command}`を走らせてこのwebhookを削除されると良いでしょう。
+      body_html: |
+        <p><a href="%{url}"><code>%{url}</code></a>へ<code>POST</code>するwebhookが%{disabled_reason}のため無効になりました。</p>
+        <p>最後に成功したのは<code>%{last_success}</code>で、それから%{failures_since_last_success}回失敗しました。</p>
+        <p><code>%{delete_command}</code>を走らせてこのwebhookを削除されると良いでしょう。</p>
+      global_text: このwebhookは以前何らかのgemがプッシュされたときに呼ばれました。
+      global_html: このwebhookは以前<em>何らかの</em>gemがプッシュされたときに呼ばれました。
+      gem_text: このwebhookは以前%{gem}がプッシュされたときに呼ばれました。
+      gem_html: このwebhookは以前<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>がプッシュされたときに呼ばれました。
   news:
     show:
-      title: 新しくリリースされたGem
-      all_gems: 全体
-      popular_gems: 人気
+      title: 新しいリリース - 全てのgem
+      all_gems: 全てのgem
+      popular_gems: 人気のgem
     popular:
-      title: 新しくリリースされた人気のGem
+      title: 新しいリリース - 人気のgem
   pages:
     about:
       founding_html: 2009年4月に%{founder}の手によって発足したプロジェクトは、現在%{contributors}の貢献を得て%{downloads}に到るまで成長を遂げました。RubyGems
         1.3.6 リリースからは、サイト名称をGemcutterから%{title}に変更し、Rubyコミュニティの中におけるサイトの役割を明確化しました。
-      support_html: Rubygems.orgは特定の企業によって運営されていないにも関わらず、私たちに多大な利益をもたらしています。現行のサイトのデザイン、イラストレーション、そしてフロントエンド開発は%{dockyard}により為されました。%{github}は私たちがコードを共有し協力するために必要不可欠なツールです。当初のサービスが稼働していた%{heroku}のサービスは、プロジェクトをコミュニティ全体が信頼できる持続性のあるものとしました。現在のサービスは%{aws}によりホストされています。
-      technical_html: このサイトの一つの特徴、それは100% Rubyで構成されているということです。主要部分は%{rails}アプリケーションで、Gemは%{s3}上にホストされ%{fastly}によりサーブされており、
-        新しく公開したGemがインストール可能になるまでほんの数秒しか要しません。詳細はGitHub上の%{license}の%{source_code}をご確認ください。
+      support_html: Rubygems.orgは特定の企業によって運営されているわけではありませんが、これまで沢山の企業により助けられてきました。現行のサイトのデザイン、イラストレーション、そして本サイトのフロントエンド開発は%{dockyard}により為されました。%{github}も私たちがコードを共有し協力し合う上で助けになっており、掛け替えのないものです。当初のサービスが稼働していた%{heroku}の素晴しいサービスは、RubyGemsがコミュニティ全体から信頼される持続性のあるものであることを示しました。現在のインフラは%{aws}でホストされています。
+      technical_html: このサイトの技術的な側面に目を向けるなら、100% Rubyでできています。サイトの主要な部分は%{rails}アプリケーションです。gemは%{s3}上にホストされ、%{fastly}によりサーブされており、新しく公開したgemがインストール可能になるまで通常はほんの数秒です。詳細は%{source_code}。GitHub上で%{license}となっています。
       title: 概要
       purpose:
-        better_api: Gemを取り扱うより良いAPIを提供すること
+        better_api: gemを取り扱う、より良いAPIを提供すること
         enable_community: コミュニティがサイトを改善できるようにすること
-        header: 'ようこそRubyコミュニティのGemホスティングサービス %{site}へ。このプロジェクトの目的は以下の3点です:'
+        header: ようこそRubyコミュニティのgemホスティングサービス %{site}へ。このプロジェクトの目的は以下の3点です：
         transparent_pages: 透過的でアクセスしやすいプロジェクトページを作成すること
     data:
-      title:
+      title: RubyGems.orgのデータのダンプ
     download:
-      title:
+      title: RubyGemsをダウンロード
     faq:
-      title:
+      title: FAQ
     migrate:
-      title:
+      title: gemを移行する
     security:
-      title:
+      title: セキュリティ
     sponsors:
-      title:
+      title: 出資者
   passwords:
     edit:
       submit: このパスワードを保存する
-      title: パスワードをリセットする
+      title: パスワードをリセット
     new:
-      submit: パスワードをリセットする
+      submit: パスワードをリセット
       title: パスワードを変更する
-      will_email_notice: パスワード変更のためのメールが送信されます。
+      will_email_notice: パスワード変更のためのリンクをEメールで送ります。
   multifactor_auths:
-    incorrect_otp:
-    session_expired:
-    require_totp_disabled:
-    require_mfa_enabled:
-    require_totp_enabled:
-    require_webauthn_enabled:
-    setup_required_html:
-    setup_recommended:
-    strong_mfa_level_required_html:
-    strong_mfa_level_recommended:
-    setup_webauthn_html:
+    incorrect_otp: OTPのコードが正しくありません。
+    session_expired: ログインページのセッションが期限切れになりました。
+    require_totp_disabled: OTPベースの多要素認証が既に有効になっています。OTPベースの認証を再構成するには最初に削除しなければなりません。
+    require_mfa_enabled: 多要素認証が有効になっていません。最初に有効にしなくてはなりません。
+    require_totp_enabled: 有効になっている認証器がありません。最初に有効にしなければなりません。
+    require_webauthn_enabled: 有効になっているセキュリティ機器がありません。最初に機器をアカウントに紐付けなければなりません。
+    setup_required_html: アカウントとgemの保護のため、多要素認証の設定が必要です。詳細は<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">ブログ記事</a>をお読みください。
+    setup_recommended: アカウントとgemの保護のため、多要素認証を設定することを推奨します。今後アカウントにはMFAの有効化が必須になります。
+    strong_mfa_level_required_html: アカウントとgemの保護のため、MFAの水準の「UIとgemのサインイン」または「UIとAPI」への変更が必要です。詳細については<a
+      href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">ブログ記事</a>をお読みください。
+    strong_mfa_level_recommended: アカウントとgemの保護のため、MFAの水準を「UIとgemのサインイン」または「UIとAPI」に変更することをお勧めします。将来のアカウントはこれらの水準のどちらか1つにMFAが有効になっていることが必須になります。
+    setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
+      href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">詳細はこちら</a>！"
     new:
-      title:
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
-      time_based:
+      title: 多要素認証を有効にする
+      scan_prompt: 認証アプリでQRコードを読み取ってください。コードを読み取れないようであれば手作業でアプリに以下の情報を追加してください。
+      otp_prompt: 認証アプリ上の数値のコードを入力して続けてください。
+      confirm: 復旧コードを安全に保持しました。
+      enable: 有効
+      account: アカウント：%{account}
+      key: キー：%{key}
+      time_based: 時間ベース：はい
     create:
-      qrcode_expired:
-      success:
+      qrcode_expired: QRコードとキーが期限切れです。新しい機器を再度登録してみてください。
+      success: OTPベースの多要素認証が正常に有効になりました。
     recovery:
-      copied:
-      continue:
-      title:
-      copy:
-      saved:
-      note_html:
-      already_generated:
+      copied: "[ コピーしました ]"
+      continue: 続ける
+      title: 復旧コード
+      copy: "[ コピーする ]"
+      saved: 復旧コードを保存したことを確認しました。
+      note_html: これらの復旧コードを<strong class='recovery__bold'>コピー及び保存</strong>してください。認証機器を紛失した場合にこれらのコードを使ってログインしMFAをリセットできます。各コードは1回使えます。
+      already_generated: 既に復旧コードを保存したはずです。
     destroy:
-      success:
+      success: OTPベースの多要素認証の有効化に失敗しました。
     update:
-      invalid_level:
-      success:
+      invalid_level: 不正なMFAの水準です。
+      success: 多要素認証の水準が正常に更新されました。
     prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      recovery_code_html:
-      security_device:
-      verify_code:
+      webauthn_credential_note: Touch Id、YubiKeyなどのセキュリティ機器で認証してください。
+      sign_in_with_webauthn_credential: セキュリティ機器で認証
+      otp_code: OTPのコード
+      otp_or_recovery: OTPまたは復旧コード
+      recovery_code: 復旧コード
+      recovery_code_html: 多要素認証機器やセキュリティ機器へのアクセスを失った場合は、正しい<a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa",
+        class="t-link">復旧コード</a>を使えます。
+      security_device: セキュリティ機器
+      verify_code: コードを検証
   notifiers:
     update:
-      success:
+      success: Eメール通知設定が正常に更新されました。
     show:
-      info:
-      'on':
-      'off':
-      recommended:
-      title:
-      update:
-      owner_heading:
-      owner_request_heading:
-      push_heading:
+      info: |-
+        不正なgemや所有権の変更の検出を助けるため、所有するgemに関して新しいバージョンがプッシュ、ヤンク、または新しい所有者が追加されるたびに、電子メールが送信されます。
+        これらのメールを受信して​​読むことで、Rubyのエコシステムの保護に役立ちます。
+      'on': 'On'
+      'off': 'Off'
+      recommended: 推奨
+      title: Eメール通知
+      update: 更新
+      owner_heading: 所有権の通知
+      owner_request_heading: 所有権の申請の通知
+      push_heading: プッシュ通知
   webauthn_verifications:
-    expired_or_already_used:
-    no_port:
-    pending:
+    expired_or_already_used: 使用されたリンク中のトークンは期限切れか既に使われています。
+    no_port: ポートが与えられていません。再試行してください。
+    pending: セキュリティ機器の認証が保留中です。
     prompt:
-      title:
-      authenticating_as:
-      authenticate:
-      no_webauthn_devices:
+      title: セキュリティ機器で認証
+      authenticating_as: 認証対象
+      authenticate: 認証
+      no_webauthn_devices: 有効なセキュリティ機器がありません
     successful_verification:
-      title:
-      close_browser:
+      title: 成功しました！
+      close_browser: このブラウザを閉じてください。
     failed_verification:
-      title:
-      close_browser:
+      title: エラー - 検証が失敗しました
+      close_browser: このブラウザを閉じて再試行してください。
   owners:
     confirm:
-      confirmed_email:
-      token_expired:
+      confirmed_email: "%{gem} gemの所有者として追加されました"
+      token_expired: 確認トークンが期限切れです。gemのページからトークンを再送してみてください。
     index:
-      add_owner:
-      name:
-      mfa:
-      status:
-      confirmed_at:
-      added_by:
-      action:
-      email_field:
-      submit_button:
-      info:
-      confirmed:
-      pending:
-      confirm_remove:
+      add_owner: 所有者を追加
+      name: 所有者
+      mfa: MFAの状態
+      status: 状態
+      confirmed_at: 確定日時
+      added_by: 追加者
+      action: 操作
+      email_field: Eメール / ハンドル名
+      submit_button: 所有者を追加
+      info: 所有者を追加または削除する
+      confirmed: 確定
+      pending: 保留
+      confirm_remove: このユーザーを所有者から削除されたいとのことでよろしいですか。
     resend_confirmation:
-      resent_notice:
+      resent_notice: 確定メールがEメールに再送されました。
     create:
-      success_notice:
+      success_notice: "%{handle}が未確定の所有者として追加されました。当該ユーザーがEメールに送られた確定メールでクリックした後に所有権アクセスが有効になります。"
     destroy:
-      removed_notice:
-      failed_notice:
-    mfa_required:
+      removed_notice: "%{owner_name}は所有者から正常に削除されました"
+      failed_notice: gemの唯一の所有者は削除できません。
+    mfa_required: gemでMFAの要件が有効化されているため、アカウントにMFAを設定してください。
   settings:
     edit:
-      title:
-      webauthn_credentials:
-      no_webauthn_credentials:
-      webauthn_credential_note:
-      otp_code:
+      title: 設定を編集
+      webauthn_credentials: セキュリティ機器
+      no_webauthn_credentials: セキュリティ機器がありません
+      webauthn_credential_note: セキュリティ機器とは、セキュリティキーや生体認証キーといった、FIDO2規格に準じた任意の機器です。
+      otp_code: OTPコードまたは復旧コード
       api_access:
-        confirm_reset: この操作は取り消せませんが、本当によろしいですか?
-        credentials_html: 'もしコマンドラインから%{gem_commands_link}を使いたい場合、%{gem_credentials_file}ファイルが必要になります。このファイルは以下のコマンドで再生成することができます:'
-        key_is_html: あなたのAPIキーは%{key}です。
-        link_text: Gemコマンド
+        confirm_reset: よろしいですか。この操作は取り消せません。
+        credentials_html: もしコマンドラインから%{gem_commands_link}を使いたい場合、%{gem_credentials_file}ファイルが必要になります。このファイルは以下のコマンドで再生成できます：
+        key_is_html: APIキーは%{key}です。
+        link_text: gemコマンド
         reset: APIキーをリセットする
-        reset_all:
+        reset_all: 全てのスコープにあるAPIキーを削除
         title: APIアクセス
       reset_password:
-        title: パスワードのリセット
+        title: パスワードをリセット
       mfa:
-        multifactor_auth:
-        otp:
-        disabled_html:
-        go_settings:
-        level_html:
-        enabled_note:
-        update:
-        disable:
-        enabled:
-        disabled:
+        multifactor_auth: 多要素認証
+        otp: 認証アプリ
+        disabled_html: OTPベースの多要素認証を有効にしていません。MFAの水準に関する詳細情報については<a target="_blank"
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。
+        go_settings: 新しい機器を登録
+        level_html: 多要素認証が有効になっています。「更新」をクリックしてMFAの水準を変更してください。MFAの水準についての詳細情報は<a
+          target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。
+        enabled_note: 多要素認証が有効化済みです。認証器上のOTPか有効な復旧コードの1つを入力して無効にしてください。
+        update: 更新
+        disable: 無効
+        enabled: 有効
+        disabled: 無効
         level:
-          title:
-          disabled:
-          ui_only:
-          ui_and_api:
-          ui_and_gem_signin:
+          title: MFAの水準
+          disabled: 無効
+          ui_only: UIのみ
+          ui_and_api: UIとAPI（推奨）
+          ui_and_gem_signin: UIとgemのサインイン
   profiles:
     adoptions:
-      no_ownership_calls:
-      no_ownership_requests:
-      title:
-      subtitle_html:
+      no_ownership_calls: 所有者の募集を作成しているgemがありません。
+      no_ownership_requests: 所有権の申請をしていません。
+      title: 引き継ぎ
+      subtitle_html: 新しい貢献者を募るか所有権を申請してください<a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>
     edit:
-      change_avatar:
-      email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
-      enter_password: パスワードを入力してください。
-      hide_email: メールアドレスを公開しない
-      optional_full_name:
-      optional_twitter_username: Twitterのユーザー名(任意,公開)
-      title: プロフィールを編集する
+      change_avatar: アバターを変更
+      email_awaiting_confirmation: 新しいEメールアドレス%{unconfirmed_email}を確認してください。
+      enter_password: アカウントのパスワードを入力してください。
+      hide_email: Eメールアドレスを公開しない
+      optional_full_name: 省略可能です。公開されます。
+      optional_twitter_username: Twitterのユーザー名。省略可能です。公開されます。
+      title: プロフィールを編集
       delete:
-        delete: アカウント削除
-        delete_profile: 削除
-        warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
+        delete: 削除
+        delete_profile: プロフィールを削除
+        warning: プロフィールの削除は不可逆的な操作です。サポートに連絡しても取り消せません。ご注意ください。
     delete:
-      title: アカウント削除
-      confirm: 確認
-      instructions: お別れをしなければならないことが残念です...。パスワードを入力して操作を確定してください。
-      list_only_owner_html: これらのGemはyanked状態になります。もしアカウントの削除前に別のオーナーを追加したい場合は、%{command_link}コマンドを用いてください。
-      list_multi_owner: あなたはこれらのGemへのアクセス権を喪失しますが、他のオーナーがアクセス権を継続します。
-      warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
+      title: プロフィールを削除
+      confirm: 確定
+      instructions: お別れをしなければならないことが残念です...。以下のフィールドにパスワードを入力して確定してください。
+      list_only_owner_html: プロフィールを削除した場合、これらのgemはヤンクされた状態になります。もしプロフィールの削除前に別の所有者を追加したい場合は、%{command_link}コマンドが使えます。
+      list_multi_owner: これらのgemへのアクセス権を喪失しますが、gemの他の所有者はアクセス権を持ち続けます。
+      warning: プロフィールの削除は不可逆的な操作です。サポートに連絡しても取り消せません。ご注意ください。
     rubygem:
-      owners_header: オーナー
+      owners_header: 所有者
     destroy:
-      request_queued: あなたのアカウント削除処理は追って実行されます。削除処理の完了次第、確認のメールを送信します。
+      request_queued: アカウント削除処理は追って実行されます。申請が処理されたら確認のメールを送信します。
     update:
-      confirmation_mail_sent: 新しいメールアドレスを確認する手順を記載したメールを送信しました。
-      updated: あなたのプロフィールはアップデートされました。
-    request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
+      confirmation_mail_sent: 数分でEメールが届きます。メールには新しいEメールアドレスを確認する手順が含まれています。
+      updated: プロフィールが更新されました。
+    request_denied: このリクエストは拒否されました。パスワードを検証できませんでした。
     show:
       title: "%{username} のプロフィール"
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
-      required_ruby_version: 必要Rubyバージョン
-      required_rubygems_version: 必要RubyGemsバージョン
-      requires_mfa:
-      released_with_mfa:
+      required_ruby_version: 必要なRubyのバージョン
+      required_rubygems_version: 必要なRubyGemsのバージョン
+      requires_mfa: 新しいバージョンはMFAを必要とします
+      released_with_mfa: MFAで投稿されたバージョン
       links:
         badge: バッジ
         bugs: バグトラッカー
@@ -528,36 +546,37 @@ ja:
         home: ホームページ
         mail: メーリングリスト
         report_abuse: 悪用報告
-        reverse_dependencies: 被依存性
-        review_changes: 差分
+        reverse_dependencies: 被依存関係
+        review_changes: 差分をレビュー
         rss: RSS
         subscribe: 購読
         unsubscribe: 購読を解除
         wiki: Wiki
-        resend_ownership_confirmation:
-        ownership:
+        resend_ownership_confirmation: 確認を再送
+        ownership: 所有者
     reserved:
-      reserved_namespace: この名前はRubygems.orgにより保持されています。
+      reserved_namespace: この名前空間はrubygems.orgにより予約されています。
     dependencies:
-      header: "%{title}依存性"
+      header: "%{title}依存関係"
     gem_members:
       authors_header: 作者
-      self_no_mfa_warning_html:
-      not_using_mfa_warning_show:
-      not_using_mfa_warning_hide:
-      owners_header: オーナー
-      pushed_by:
-      using_mfa_info:
-      yanked_by:
+      self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証 (MFA)
+        の有効化</a>をご検討ください。
+      not_using_mfa_warning_show: 多要素認証 (MFA) を使っていない所有者がいます。完全な一覧を見るにはクリックしてください。
+      not_using_mfa_warning_hide: "* 以下の所有者は多要素認証 (MFA) を使っていません。クリックして隠します。"
+      owners_header: 所有者
+      pushed_by: プッシュ者
+      using_mfa_info: "* 全ての所有者が多要素認証 (MFA) を使っています。"
+      yanked_by: ヤンク者
       sha_256_checksum: SHA 256チェックサム
-      signature_period:
-      expired:
+      signature_period: シグネチャの有効期限
+      expired: 期限切れ
     version_navigation:
-      previous_version:
-      next_version:
+      previous_version: "←前のバージョン"
+      next_version: 次のバージョン→
     index:
-      downloads: ダウンロード
-      title: Gems
+      downloads: ダウンロード数
+      title: gem
     show:
       bundler_header: Gemfile
       copied: コピー完了!
@@ -568,25 +587,25 @@ ja:
         other: ライセンス
       no_licenses: N/A
       requirements_header: 必須要件
-      show_all_versions: 全てのバージョンを表示 (全%{count}項目)
+      show_all_versions: 全てのバージョンを表示（全%{count}件）
       versions_header: バージョン履歴
-      yanked_notice: このバージョンはyanked状態としてマークされており、直接のダウンロードや依存性として利用できなくなっています。
+      yanked_notice: このバージョンはヤンクされ、直接のダウンロードや依存関係になっている可能性がある他のgemは利用できません。
     show_yanked:
-      not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
+      not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。このgemのヤンクされたバージョンはまだ存在する可能性があります。
       reserved_namespace_html:
-        one: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を1日間だけ確保しています。期間終了後、誰でもgem
-          pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem
-          pushを用いて公開することができます。
-        other: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を%{count}日間確保しています。期間終了後、誰でもgem
-          pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem
-          pushを用いて公開することができます。
+        one: このgemは以前存在していましたが、所有者が削除しました。RubyGems.orgチームはこの名前を1日間だけ予約しています。期間終了後、誰でもgem
+          pushによりこの名前を要求できます。<br/>もしあなたが以前の所有者ならば、gem ownerコマンドを用いて所有者を変更できる他、新しいバージョンをgem
+          pushを用いて公開できます。
+        other: このgemは以前存在していましたが、所有者が削除しました。RubyGems.orgチームはこの名前を%{count}日間予約しています。期間終了後、誰でもgem
+          pushによりこの名前を要求できます。<br/>もしあなたがこのgemの以前の所有者ならば、gem ownerコマンドを用いて所有者を変更できる他、新しいバージョンをgem
+          pushを用いて公開できます。
   reverse_dependencies:
     index:
-      title: "%{name}の被依存性"
-      subtitle:
-      no_reverse_dependencies:
+      title: "%{name}の被依存関係"
+      subtitle: 以下のgemの最新版は%{name}を必要としています
+      no_reverse_dependencies: このgemは被依存関係がありません。
     search:
-      search_reverse_dependencies_html: 被依存性の中から検索…
+      search_reverse_dependencies_html: 被依存関係のgemから検索...
   searches:
     advanced:
       name: 名前
@@ -594,102 +613,103 @@ ja:
       description: 説明
       downloads: ダウンロード数
       updated: 更新日
-      yanked:
+      yanked: ヤンク済み
     show:
       subtitle: "%{query}の検索結果"
-      month_update:
-      week_update:
-      filter:
-      yanked:
-      suggestion:
+      month_update: 先月更新（%{count}件）
+      week_update: 先週更新（%{count}件）
+      filter: 絞り込み：
+      yanked: ヤンク済み（%{count}件）
+      suggestion: もしかして
   sessions:
     new:
-      forgot_password: パスワードをお忘れですか?
-      resend_confirmation: 確認メールが見当たりませんか?
+      forgot_password: パスワードをお忘れですか？
+      resend_confirmation: 確認メールを受け取っていませんか？
     verify:
-      title:
-      confirm:
-      notice:
+      title: パスワードを確認
+      confirm: 確定
+      notice: パスワードを確認してお進みください。
     create:
-      account_blocked:
+      account_blocked: アカウントがrubygemsチームにより差し止められました。アカウントを復旧するにはsupport@rubygems.orgにEメールを送ってください。
   stats:
     index:
-      title:
+      title: 統計
       all_time_most_downloaded: 累計最多ダウンロード数
       total_downloads: 累計ダウンロード数
-      total_gems: Gem総数
+      total_gems: gem総数
       total_users: ユーザー総数
   users:
     create:
-      email_sent: 確認メールがあなたのメールアドレスに送信されました。
+      email_sent: 確認メールがEメールアドレスに送信されました。
     new:
-      have_account: すでにアカウントをお持ちですか?
+      have_account: 既にアカウントをお持ちですか？
   versions:
     index:
-      not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
+      not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。
       title: "%{name}の全バージョン履歴"
-      versions_since: "%{since}からの%{count}項目"
-      imported_gem_version_notice:
+      versions_since: "%{since}からの%{count}件"
+      imported_gem_version_notice: このgemのバージョンは%{import_date}にRubyGems.orgにインポートされました。表示されている日付は作者によってgemspec中で指定されました。
     version:
-      yanked: yanked
+      yanked: ヤンク済み
   adoptions:
     index:
-      title:
-      subtitle_owner_html:
-      subtitle_user_html:
-      ownership_calls:
-      no_ownership_calls:
+      title: 引き継ぎ
+      subtitle_owner_html: '%{gem} に新しく参加する保守者を呼び掛ける <a class="adoption__blog__link"
+        href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>'
+      subtitle_user_html: '%{gem}の所有権を申請する <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>'
+      ownership_calls: 保守者の募集
+      no_ownership_calls: "%{gem}の所有権の募集はありません。gemの所有者は新しい保守者を探していません。"
   ownership_calls:
     update:
-      success_notice:
+      success_notice: "%{gem}の所有権の募集は修了しました。"
     create:
-      success_notice:
+      success_notice: "%{gem}への所有権の募集を作成します。"
     index:
-      title:
-      subtitle_html:
-    share_requirements:
-    note_for_applicants:
-    created_by:
-    details:
-    apply:
-    close:
-    markup_supported_html:
-    create_call:
+      title: 保守者の募集
+      subtitle_html: RubyGemsは新しく参加する保守者を求めています<a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>
+    share_requirements: 手を借りたい領域を共有してください
+    note_for_applicants: 応募者への補足：
+    created_by: 作成者
+    details: 詳細
+    apply: 申請
+    close: 却下
+    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">Rdocのマークアップに対応しています</a>
+    create_call: 所有者の募集を作成
   ownership_requests:
     create:
-      success_notice:
+      success_notice: 所有権の申請が提出されました。
     update:
-      approved_notice:
-      closed_notice:
+      approved_notice: 所有権の申請が承認されました。%{name}は所有者として追加されました。
+      closed_notice: 所有権の申請が却下されました。
     close:
-      success_notice:
-    ownership_requests:
-    note_for_owners:
-    your_ownership_requests:
-    close_all:
-    approve:
-    gems_published:
-    created_at:
-    no_ownership_requests:
-    create_req:
-    signin_to_create_html:
+      success_notice: "%{gem}への全ての未完了の所有権の申請は却下されました。"
+    ownership_requests: 所有権の申請
+    note_for_owners: 所有者への補足：
+    your_ownership_requests: 所有権の申請
+    close_all: 全て却下
+    approve: 承認
+    gems_published: gemが公開されました
+    created_at: 作成日
+    no_ownership_requests: プロジェクトへの参加申請はこちらに表示されます。まだ%{gem}への所有権の申請はありません。
+    create_req: 所有権の申請を作成
+    signin_to_create_html: 所有権の申請を作成するには<a href="https://rubygems.org/sign_in">サインイン</a>してください。
   webauthn_credentials:
     callback:
-      success:
+      success: セキュリティ機器が正常に登録されました。
     recovery:
-      continue:
-      title:
-      notice_html:
-      copied:
-      copy:
-      saved:
+      continue: 続ける
+      title: セキュリティ機器を正常に追加しました。
+      notice_html: これらの復旧コードを<strong class="recovery__bold">コピー&amp;ペースト</strong>してください。セキュリティ機器を紛失した場合にこれらのコードを使ってログインできます。各コードは1度使えます。
+      copied: "[ コピーしました ]"
+      copy: "[ コピーする ]"
+      saved: 復旧コードを保存したことを確認しました。
     webauthn_credential:
-      confirm_delete:
-      delete_failed:
-      delete:
-      confirm:
-      saved:
+      confirm_delete: 認証情報が削除されました
+      delete_failed: 認証情報を削除できませんでした
+      delete: 削除
+      confirm: この認証情報を削除してよろしいですか。
+      saved: セキュリティ機器が正常に作成されました
     form:
-      new_device:
-      nickname:
-      submit:
+      new_device: 新しいセキュリティ機器を登録
+      nickname: ニックネーム
+      submit: 機器を登録
