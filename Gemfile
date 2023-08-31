@@ -66,7 +66,6 @@ gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.11"
 
 group :assets do
-  gem "sassc-rails", "~> 2.1"
   gem "terser", "~> 1.1"
   gem "autoprefixer-rails", "~> 10.4"
 end

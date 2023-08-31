@@ -16,17 +16,18 @@
  *              - Add font from body to .github-btn
  *              - Remove `position: relative` from .gh-count (see https://github.com/rubygems/rubygems.org/issues/3117)
  */
-
 .github-btn {
   font: 700 11px/14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   height: 20px;
   overflow: hidden;
 }
+
 .gh-btn,
 .gh-count,
 .gh-ico {
   float: left;
 }
+
 .gh-btn,
 .gh-count {
   padding: 2px 5px 2px 4px;
@@ -36,6 +37,7 @@
   cursor: pointer;
   border-radius: 3px;
 }
+
 .gh-btn {
   background-color: #eee;
   /* stylelint-disable-next-line function-no-unknown */
@@ -44,6 +46,7 @@
   background-repeat: no-repeat;
   border: 1px solid #d5d5d5;
 }
+
 .gh-btn:hover,
 .gh-btn:focus {
   text-decoration: none;
@@ -53,30 +56,36 @@
   background-image: linear-gradient(to bottom, #eee 0, #ddd 100%);
   border-color: #ccc;
 }
+
 .gh-btn:active {
   background-color: #dcdcdc;
   background-image: none;
   border-color: #b5b5b5;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
+
 .gh-ico {
   width: 14px;
   height: 14px;
   margin-right: 4px;
-  background: image-url('github_icon.png');
+  background: image-url("github_icon.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
+
 .gh-count {
-  display: none; /* hidden to start */
+  display: none;
+  /* hidden to start */
   margin-left: 4px;
   background-color: #fafafa;
   border: 1px solid #d4d4d4;
 }
+
 .gh-count:hover,
 .gh-count:focus {
   color: #0366d6;
 }
+
 .gh-count::before,
 .gh-count::after {
   position: absolute;
@@ -87,6 +96,7 @@
   border-color: transparent;
   border-style: solid;
 }
+
 .gh-count::before {
   top: 50%;
   left: -3px;
@@ -94,6 +104,7 @@
   border-width: 4px 4px 4px 0;
   border-right-color: #fafafa;
 }
+
 .gh-count::after {
   top: 50%;
   left: -4px;
@@ -102,9 +113,11 @@
   border-width: 5px 5px 5px 0;
   border-right-color: #d4d4d4;
 }
+
 .github-btn-large {
   height: 30px;
 }
+
 .github-btn-large .gh-btn,
 .github-btn-large .gh-count {
   padding: 3px 10px 3px 8px;
@@ -112,18 +125,22 @@
   line-height: 22px;
   border-radius: 4px;
 }
+
 .github-btn-large .gh-ico {
   width: 20px;
   height: 20px;
 }
+
 .github-btn-large .gh-count {
   margin-left: 6px;
 }
+
 .github-btn-large .gh-count::before {
   left: -5px;
   margin-top: -6px;
   border-width: 6px 6px 6px 0;
 }
+
 .github-btn-large .gh-count::after {
   left: -6px;
   margin-top: -7px;
