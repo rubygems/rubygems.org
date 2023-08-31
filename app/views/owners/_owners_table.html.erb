@@ -45,7 +45,7 @@
       </td>
       <td class="owners__cell" data-title="Action">
         <%= button_to "Remove",
-          rubygem_owner_path(@rubygem, ownership.user.display_id),
+          rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>

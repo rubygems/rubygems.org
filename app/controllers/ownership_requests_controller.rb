@@ -10,21 +10,21 @@ class OwnershipRequestsController < ApplicationController
 
     @ownership_request = @rubygem.ownership_requests.new(ownership_call: @rubygem.ownership_call, user: current_user, note: params[:note])
     if @ownership_request.save
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t(".success_notice")
+      redirect_to rubygem_adoptions_path(@rubygem.slug), notice: t(".success_notice")
     else
-      redirect_to rubygem_adoptions_path(@rubygem), alert: @ownership_request.errors.full_messages.to_sentence
+      redirect_to rubygem_adoptions_path(@rubygem.slug), alert: @ownership_request.errors.full_messages.to_sentence
     end
   end
 
   def update
     if status_params == "close" && @ownership_request.close(current_user)
       notify_request_closed
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t(".closed_notice")
+      redirect_to rubygem_adoptions_path(@rubygem.slug), notice: t(".closed_notice")
     elsif status_params == "approve" && @ownership_request.approve(current_user)
       notify_request_approved
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t(".approved_notice", name: current_user.display_id)
+      redirect_to rubygem_adoptions_path(@rubygem.slug), notice: t(".approved_notice", name: current_user.display_id)
     else
-      redirect_to rubygem_adoptions_path(@rubygem), alert: t("try_again")
+      redirect_to rubygem_adoptions_path(@rubygem.slug), alert: t("try_again")
     end
   end
 
@@ -32,9 +32,9 @@ class OwnershipRequestsController < ApplicationController
     render_forbidden && return unless owner?
 
     if @rubygem.ownership_requests.close_all
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t("ownership_requests.close.success_notice", gem: @rubygem.name)
+      redirect_to rubygem_adoptions_path(@rubygem.slug), notice: t("ownership_requests.close.success_notice", gem: @rubygem.name)
     else
-      redirect_to rubygem_adoptions_path(@rubygem), alert: t("try_again")
+      redirect_to rubygem_adoptions_path(@rubygem.slug), alert: t("try_again")
     end
   end
 

@@ -19,7 +19,7 @@ class TransitiveDependenciesTest < ApplicationSystemTestCase
       create(:dependency, requirements: ">=0", scope: :runtime, version: ver2, rubygem: version_four.rubygem)
     end
 
-    visit rubygem_version_dependencies_path(rubygem_id: rubygem_one.name, version_id: version_one.number)
+    visit rubygem_version_dependencies_path(rubygem_id: rubygem_one.slug, version_id: version_one.number)
 
     assert page.has_content?(rubygem_one.name)
     assert page.has_content?(version_one.number)
@@ -42,7 +42,7 @@ class TransitiveDependenciesTest < ApplicationSystemTestCase
     dep_dep_version = create(:version, platform: "jruby")
     create(:dependency, requirements: ">=0", scope: :runtime, rubygem: dep_dep_version.rubygem, version: dep_version)
 
-    visit rubygem_path(version.rubygem)
+    visit rubygem_path(version.rubygem.slug)
     click_on "Show all transitive dependencies"
 
     assert page.has_content?(dep_version.rubygem.name)

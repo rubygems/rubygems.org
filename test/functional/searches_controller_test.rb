@@ -45,11 +45,11 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
     should "see sinatra on the page in the results" do
       assert page.has_content?(@sinatra.name)
-      assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")
+      assert page.has_selector?("a[href='#{rubygem_path(@sinatra.slug)}']")
     end
     should "not see brando on the page in the results" do
       refute page.has_content?(@brando.name)
-      refute page.has_selector?("a[href='#{rubygem_path(@brando)}']")
+      refute page.has_selector?("a[href='#{rubygem_path(@brando.slug)}']")
     end
     should "display 'gems' in pagination summary" do
       assert page.has_content?("all 2 gems")
@@ -71,11 +71,11 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
     should "see sinatra on the page in the results" do
       page.assert_text(@sinatra.name)
-      page.assert_selector("a[href='#{rubygem_path(@sinatra)}']")
+      page.assert_selector("a[href='#{rubygem_path(@sinatra.slug)}']")
     end
     should "not see brando on the page in the results" do
       page.assert_no_text(@brando.name)
-      page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
+      page.assert_no_selector("a[href='#{rubygem_path(@brando.slug)}']")
     end
     should "display pagination summary" do
       page.assert_text("all 2 gems")
@@ -117,11 +117,11 @@ class SearchesControllerTest < ActionController::TestCase
       assert page.has_selector?("a[href='#{search_path(query: @sinatra.name)}']")
     end
     should "not see sinatra on the page in the results" do
-      page.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
+      page.assert_no_selector("a[href='#{rubygem_path(@sinatra.slug)}']")
     end
     should "not see brando on the page in the results" do
       page.assert_no_text(@brando.name)
-      page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
+      page.assert_no_selector("a[href='#{rubygem_path(@brando.slug)}']")
     end
     should "not see filters" do
       page.assert_no_text("Filter")
@@ -141,10 +141,10 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "see sinatra_redux on the page in the results" do
-      page.assert_selector("a[href='#{rubygem_path(@sinatra_redux)}']")
+      page.assert_selector("a[href='#{rubygem_path(@sinatra_redux.slug)}']")
     end
     should "not see sinatra on the page in the results" do
-      page.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
+      page.assert_no_selector("a[href='#{rubygem_path(@sinatra.slug)}']")
     end
   end
 

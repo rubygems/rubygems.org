@@ -237,7 +237,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     payload.to_xml(options.merge(root: "rubygem"))
   end
 
-  def to_param
+  def slug
     name.remove(/[^#{Patterns::ALLOWED_CHARACTERS}]/o)
   end
 

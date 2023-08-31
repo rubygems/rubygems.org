@@ -5,15 +5,6 @@ class RubygemResource < Avo::BaseResource
     scope.where("name LIKE ?", "%#{params[:q]}%")
   }
 
-  self.find_record_method = lambda { |model_class:, id:, params:| # rubocop:disable Lint/UnusedBlockArgument
-    # In case of perfoming action `id` becomes an array of `ids`
-    if id.is_a?(Array)
-      model_class.where(id: id)
-    else
-      model_class.find_by!(name: id)
-    end
-  }
-
   action ReleaseReservedNamespace
   action AddOwner
   action YankRubygem

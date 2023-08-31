@@ -28,7 +28,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem)
-        get :show, params: { id: @rubygem.to_param }, format: format
+        get :show, params: { id: @rubygem.slug }, format: format
       end
 
       should_respond_to_show(&)
@@ -38,7 +38,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem, name: "foo.rb")
         create(:version, rubygem: @rubygem)
-        get :show, params: { id: @rubygem.to_param }, format: format
+        get :show, params: { id: @rubygem.slug }, format: format
       end
 
       should_respond_to_show(&)
@@ -66,7 +66,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem)
 
         assert_predicate @rubygem.versions.count, :zero?
-        get :show, params: { id: @rubygem.to_param }, format: "json"
+        get :show, params: { id: @rubygem.slug }, format: "json"
       end
 
       should respond_with :not_found
@@ -95,7 +95,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem, number: "1.0.0", indexed: false)
-        get :show, params: { id: @rubygem.to_param }, format: "json"
+        get :show, params: { id: @rubygem.slug }, format: "json"
       end
 
       should respond_with :not_found
@@ -116,7 +116,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @missing_dependency.rubygem.update_column(:name, "missing")
         @missing_dependency.update_column(:rubygem_id, nil)
 
-        get :show, params: { id: @rubygem.to_param }, format: "json"
+        get :show, params: { id: @rubygem.slug }, format: "json"
       end
 
       should respond_with :success
@@ -823,7 +823,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     should "return names of reverse dependencies" do
-      get :reverse_dependencies, params: { id: @dependency.to_param }, format: "json"
+      get :reverse_dependencies, params: { id: @dependency.slug }, format: "json"
+
+      assert_response :success
       gems = JSON.load(@response.body)
 
       assert_equal 3, gems.size
@@ -836,9 +838,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=development" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-            params: { id: @dependency.to_param,
+            params: { id: @dependency.slug,
                       only: "development",
                       format: "json" }
+
+        assert_response :success
 
         gems = JSON.load(@response.body)
 
@@ -851,9 +855,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=runtime" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-            params: { id: @dependency.to_param,
+            params: { id: @dependency.slug,
                       only: "runtime",
                       format: "json" }
+
+        assert_response :success
 
         gems = JSON.load(@response.body)
 

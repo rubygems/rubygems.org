@@ -10,7 +10,7 @@
   <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
 
   <% if @yanked_gem.present? %>
-    <%= link_to rubygem_path(@yanked_gem.name), :class => 'gems__gem' do %>
+    <%= link_to rubygem_path(@yanked_gem.slug), :class => 'gems__gem' do %>
       <span class="gems__gem__info">
         <h2 class="gems__gem__name">
           <%= @yanked_gem.name %>

@@ -7,7 +7,7 @@ class VersionInformationTest < ActionDispatch::IntegrationTest
   end
 
   def request_endpoint(rubygem, version, format = "json")
-    get api_v2_rubygem_version_path(rubygem.name, version, format: format)
+    get api_v2_rubygem_version_path(rubygem.slug, version, format: format)
   end
 
   test "return gem version" do
@@ -52,7 +52,7 @@ class VersionInformationTest < ActionDispatch::IntegrationTest
     request_endpoint(@rubygem, "2.0.0")
 
     assert_response :success
-    get api_v2_rubygem_version_path(@rubygem.name, "2.0.0", format: "json"), headers: {
+    get api_v2_rubygem_version_path(@rubygem.slug, "2.0.0", format: "json"), headers: {
       "HTTP_IF_MODIFIED_SINCE" => @response.headers["Last-Modified"],
       "HTTP_IF_NONE_MATCH" => @response.etag
     }

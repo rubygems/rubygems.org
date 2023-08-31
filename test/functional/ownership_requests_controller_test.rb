@@ -33,7 +33,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               create(:ownership_call, rubygem: @rubygem)
               post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
             end
-            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
 
             should "create ownership request" do
               assert_not_nil @rubygem.ownership_requests.find_by(user: @user)
@@ -75,7 +75,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             setup do
               post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
             end
-            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
             should "set success notice flash" do
               expected_notice = "Your ownership request was submitted."
 
@@ -89,7 +89,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             setup do
               post :create, params: { rubygem_id: @rubygem.name }
             end
-            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
             should "set error alert flash" do
               expected_notice = "Note can't be blank"
 
@@ -104,7 +104,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               create(:ownership_request, rubygem: @rubygem, user: @user, note: "other note")
               post :create, params: { rubygem_id: @rubygem.name, note: "new note" }
             end
-            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+            should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
             should "set error alert flash" do
               expected_notice = "User has already been taken"
 
@@ -132,7 +132,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               patch :update, params: { rubygem_id: @rubygem.name, id: ownership_request.id, status: "close" }
             end
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
           should "set success notice flash" do
             expected_notice = "Ownership request was closed."
 
@@ -153,7 +153,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               patch :update, params: { rubygem_id: @rubygem.name, id: ownership_request.id, status: "approve" }
             end
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
           should "set success notice flash" do
             expected_notice = "Ownership request was approved. #{@user.display_id} is added as an owner."
 
@@ -185,7 +185,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "random" }
           end
 
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
 
           should "set try again flash" do
             assert_equal "Something went wrong. Please try again.", flash[:alert]
@@ -198,7 +198,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           request = create(:ownership_request, rubygem: @rubygem)
           patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "close" }
         end
-        should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+        should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
 
         should "set try again flash" do
           assert_equal "Something went wrong. Please try again.", flash[:alert]
@@ -221,7 +221,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup do
             patch :close_all, params: { rubygem_id: @rubygem.name }
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
           should "set success notice flash" do
             expected_notice = "All open ownership requests for #{@rubygem.name} were closed."
 
@@ -238,7 +238,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             patch :close_all, params: { rubygem_id: @rubygem.name }
           end
 
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
           should "set success notice flash" do
             expected_notice = "Something went wrong. Please try again."
 
@@ -370,7 +370,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         context "POST to create" do
           setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
 
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
         end
 
         context "PATCH to close_all" do
@@ -382,7 +382,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             patch :close_all, params: { rubygem_id: @rubygem.name }
           end
 
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
         end
 
         context "PATCH to update" do
@@ -392,7 +392,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" }
           end
 
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
         end
 
         context "PUT to update" do
@@ -402,7 +402,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" }
           end
 
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
         end
       end
     end

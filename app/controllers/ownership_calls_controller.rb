@@ -15,18 +15,18 @@ class OwnershipCallsController < ApplicationController
   def create
     @ownership_call = @rubygem.ownership_calls.new(user: current_user, note: params[:note])
     if @ownership_call.save
-      redirect_to rubygem_adoptions_path(@rubygem), notice: t(".success_notice", gem: @rubygem.name)
+      redirect_to rubygem_adoptions_path(@rubygem.slug), notice: t(".success_notice", gem: @rubygem.name)
     else
-      redirect_to rubygem_adoptions_path(@rubygem), alert: @ownership_call.errors.full_messages.to_sentence
+      redirect_to rubygem_adoptions_path(@rubygem.slug), alert: @ownership_call.errors.full_messages.to_sentence
     end
   end
 
   def close
     @ownership_call = @rubygem.ownership_call
     if @ownership_call&.close
-      redirect_to rubygem_path(@rubygem), notice: t("ownership_calls.update.success_notice", gem: @rubygem.name)
+      redirect_to rubygem_path(@rubygem.slug), notice: t("ownership_calls.update.success_notice", gem: @rubygem.name)
     else
-      redirect_to rubygem_adoptions_path(@rubygem), alert: t("try_again")
+      redirect_to rubygem_adoptions_path(@rubygem.slug), alert: t("try_again")
     end
   end
 end
