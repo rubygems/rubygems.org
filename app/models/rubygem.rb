@@ -115,9 +115,9 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def all_errors(version = nil)
-    [self, linkset, version].compact.map do |ar|
+    [self, linkset, version].compact.flat_map do |ar|
       ar.errors.full_messages
-    end.flatten.join(", ")
+    end.join(", ")
   end
 
   def public_versions(limit = nil)
