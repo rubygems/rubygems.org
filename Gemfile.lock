@@ -598,7 +598,7 @@ GEM
       activesupport (>= 3)
       attr_required (>= 0.0.5)
       httpclient (>= 2.4)
-    terser (1.1.17)
+    terser (1.1.18)
       execjs (>= 0.3.0, < 3)
     thor (1.2.2)
     tilt (2.2.0)
