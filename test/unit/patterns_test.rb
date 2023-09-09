@@ -20,13 +20,13 @@ class PatternsTest < ActiveSupport::TestCase
   end
 
   test "URL_VALIDATION_REGEXP is linear" do
-    pending "regexp is not linear"
+    skip "regexp is not linear"
 
     assert Regexp.linear_time?(Patterns::URL_VALIDATION_REGEXP)
   end
 
   test "VERSION_PATTERN is linear" do
-    pending "regexp is not linear"
+    skip "regexp is not linear"
 
     assert Regexp.linear_time?(Patterns::VERSION_PATTERN)
   end
