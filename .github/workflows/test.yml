@@ -8,6 +8,17 @@ permissions:
   contents: read
 
 jobs:
+  # This is umbrella job for all tests needed to pass to make it simpler
+  # to maintain GitHub Actions status required checks since job names and
+  # amount change over the time and it is easier to maintian having just
+  # this umbrella check set as required.
+  status_check:
+    name: All required tests passing check
+    needs: [rails]
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo "All required tests passed!"
+
   rails:
     strategy:
       fail-fast: false
@@ -27,6 +38,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
+      # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
