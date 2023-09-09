@@ -18,7 +18,12 @@ jobs:
           - name: latest
             version: latest
         ruby_version: ["3.2.2"]
-    name: Rails tests (RubyGems ${{ matrix.rubygems.name }})
+        tests:
+          - name: general
+            command: test
+          - name: system
+            command: test:system
+    name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }})
     runs-on: ubuntu-22.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
@@ -32,9 +37,9 @@ jobs:
           ruby-version: ${{ matrix.ruby_version }}
           rubygems-version: ${{ matrix.rubygems.version }}
 
-      - name: Tests
+      - name: Tests ${{ matrix.tests.name }}
         id: test-all
-        run: bin/rails test:all
+        run: bin/rails ${{ matrix.tests.command }}
 
       - name: Save capybara screenshots
         if: steps.test-all.outcome == 'failure'
