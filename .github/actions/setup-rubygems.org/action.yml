@@ -1,0 +1,40 @@
+name: 'Setup rubygems.org'
+description: 'Setup steps for rubygems.org'
+inputs:
+  ruby-version:
+    description: 'Ruby version to use'
+    required: true
+  rubygems-version:
+    description: 'RubyGems version to use'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install and start services
+      shell: bash
+      run: |
+        docker-compose up -d
+    - name: Wait for ES to boot
+      shell: bash
+      run: |
+        timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
+    - uses: ruby/setup-ruby@250fcd6a742febb1123a77a841497ccaa8b9e939 # v1.149.0
+      with:
+        ruby-version: ${{ inputs.ruby-version }}
+        bundler-cache: true
+    - name: set rubygems version
+      shell: bash
+      run: |
+        if [ "${{ inputs.rubygems-version }}" != "latest" ]; then
+          gem update --system ${{ inputs.rubygems-version }};
+        else
+          gem update --system
+        fi
+        gem --version
+        bundle --version
+    - name: Prepare environment
+      shell: bash
+      run: |
+        cp config/database.yml.sample config/database.yml
+        bundle exec rake db:setup
+
