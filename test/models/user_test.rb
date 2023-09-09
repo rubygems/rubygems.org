@@ -394,7 +394,12 @@ class UserTest < ActiveSupport::TestCase
         end
 
         context "blocking user with api key" do
-          setup { create(:api_key, user: @user) }
+          setup do
+            api_key = create(:api_key, user: @user)
+            # simulate gem pushed using api key to ensure
+            # user with pushed gems can be blocked
+            create(:version, pusher: @user, pusher_api_key: api_key)
+          end
 
           should "reset email and mfa" do
             assert_changed(@user, :email, :password, :api_key, :totp_seed, :remember_token) do
@@ -411,7 +416,10 @@ class UserTest < ActiveSupport::TestCase
             @user.block!
 
             assert_nil @user.api_key
-            assert_empty @user.api_keys
+            assert_predicate @user.api_keys, :any?
+            @user.api_keys.each do |api_key|
+              assert_predicate api_key, :expired?
+            end
           end
         end
       end
