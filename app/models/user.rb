@@ -233,7 +233,7 @@ class User < ApplicationRecord
         api_key: nil,
         blocked_email: original_email
       )
-      api_keys.delete_all
+      api_keys.expire_all!
     end
   end
 
