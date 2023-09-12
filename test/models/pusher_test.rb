@@ -218,7 +218,7 @@ class PusherTest < ActiveSupport::TestCase
 
       @cutter.process
 
-      assert_match(/Dependency unresolved name is invalid/, @cutter.message)
+      assert_match(/Dependency unresolved name can only include letters, numbers, dashes, and underscores/, @cutter.message)
       assert_equal 403, @cutter.code
     end
 
