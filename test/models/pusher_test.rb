@@ -164,11 +164,9 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "not be able to save a gem if the required_ruby_version is not valid" do
-      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
-        s.name = "bad-required-ruby-version"
-        s.version = "1.0.0"
-        s.instance_variable_set(:@required_ruby_version, Gem::Requirement.new).instance_variable_set(:@requirements,
-[[">=", "test"]])
+      @cutter.stubs(:spec).returns(new_gemspec("bad-required-ruby-version", "1.0.0", "Summary", "ruby") do |s|
+        s.instance_variable_set(:@required_ruby_version, Gem::Requirement.new)
+          .instance_variable_set(:@requirements, [[">=", "test"]])
       end)
       @cutter.stubs(:validate_signature_exists?).returns(true)
 
@@ -179,11 +177,9 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "not be able to save a gem if the required_rubygems_version is not valid" do
-      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
-        s.name = "bad-required-rubygems-version"
-        s.version = "1.0.0"
-        s.instance_variable_set(:@required_rubygems_version, Gem::Requirement.new).instance_variable_set(:@requirements,
-        [[">=", "test"]])
+      @cutter.stubs(:spec).returns(new_gemspec("bad-required-rubygems-version", "1.0.0", "Summary", "ruby") do |s|
+        s.instance_variable_set(:@required_rubygems_version, Gem::Requirement.new)
+          .instance_variable_set(:@requirements, [[">=", "test"]])
       end)
       @cutter.stubs(:validate_signature_exists?).returns(true)
 
@@ -194,11 +190,10 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "not be able to save a gem if the dependency requirement is not valid" do
-      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
-        s.name = "bad-dependency-requirement"
-        s.version = "1.0.0"
+      @cutter.stubs(:spec).returns(new_gemspec("bad-dependency-requirement", "1.0.0", "Summary", "ruby") do |s|
         s.add_runtime_dependency "foo"
-        s.dependencies.first.requirement.instance_variable_set(:@requirements, [["!!!", "0"]])
+        s.dependencies.first.requirement
+          .instance_variable_set(:@requirements, [["!!!", "0"]])
       end)
       @cutter.stubs(:validate_signature_exists?).returns(true)
 
@@ -209,9 +204,7 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "not be able to save a gem if the dependency name is not valid" do
-      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
-        s.name = "bad-dependency-name"
-        s.version = "1.0.0"
+      @cutter.stubs(:spec).returns(new_gemspec("bad-dependency-name", "1.0.0", "Summary", "ruby") do |s|
         s.add_runtime_dependency "\nother"
       end)
       @cutter.stubs(:validate_signature_exists?).returns(true)
@@ -220,6 +213,18 @@ class PusherTest < ActiveSupport::TestCase
 
       assert_match(/Dependency unresolved name can only include letters, numbers, dashes, and underscores/, @cutter.message)
       assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the metadata has incorrect values" do
+      @cutter.stubs(:spec).returns(new_gemspec("bad-metadata", "1.0.0", "Summary", "ruby") do |s|
+        s.metadata["foo"] = []
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      refute @cutter.process
+
+      assert_match(/metadata\['foo'\] value must be a String/, @cutter.message)
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to save a gem if it is signed and has been tampered with" do

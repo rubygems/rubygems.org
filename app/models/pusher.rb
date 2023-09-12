@@ -273,9 +273,9 @@ class Pusher
   end
 
   def validate_spec
-    @spec.send(:invalidate_memoized_attributes)
+    spec.send(:invalidate_memoized_attributes)
 
-    spec = @spec.dup
+    spec = self.spec.dup
 
     cert_chain = spec.cert_chain
 
