@@ -6,8 +6,8 @@ class Dependency < ApplicationRecord
     :use_existing_rubygem,
     :parse_gem_dependency
 
-  validates :requirements, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, presence: true
-  validates :unresolved_name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
+  validates :requirements, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, presence: true, gem_requirements: true
+  validates :unresolved_name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: Patterns::NAME_PATTERN, allow_blank: true
   validates :scope, inclusion: { in: %w[development runtime] }
 
   attr_accessor :gem_dependency

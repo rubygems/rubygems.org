@@ -28,7 +28,9 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :full_name, presence: true, uniqueness: { case_sensitive: false }
   validates :gem_full_name, presence: true, uniqueness: { case_sensitive: false, allow_nil: true }, on: :create
   validates :rubygem, presence: true
-  validates :required_rubygems_version, :licenses, :required_ruby_version, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
+  validates :licenses, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
+  validates :required_rubygems_version, :required_ruby_version, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true,
+    gem_requirements: true
   validates :description, :summary, :authors, :requirements, :cert_chain,
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true

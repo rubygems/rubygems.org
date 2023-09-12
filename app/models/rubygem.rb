@@ -266,11 +266,13 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def update_dependencies!(version, spec)
     spec.dependencies.each do |dependency|
       version.dependencies.create!(gem_dependency: dependency)
+    rescue ActiveRecord::RecordInvalid => e
+      # ActiveRecord can't chain a nested error here, so we have to add and reraise
+      e.record.errors.errors.each do |error|
+        errors.import(error, attribute: "dependency.#{error.attribute}")
+      end
+      raise
     end
-  rescue ActiveRecord::RecordInvalid => e
-    # ActiveRecord can't chain a nested error here, so we have to add and reraise
-    errors[:base] << e.message
-    raise e
   end
 
   def update_linkset!(spec)

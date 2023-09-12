@@ -163,6 +163,65 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal 422, @cutter.code
     end
 
+    should "not be able to save a gem if the required_ruby_version is not valid" do
+      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
+        s.name = "bad-required-ruby-version"
+        s.version = "1.0.0"
+        s.instance_variable_set(:@required_ruby_version, Gem::Requirement.new).instance_variable_set(:@requirements,
+[[">=", "test"]])
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/Required ruby version must be list of valid requirements/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the required_rubygems_version is not valid" do
+      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
+        s.name = "bad-required-rubygems-version"
+        s.version = "1.0.0"
+        s.instance_variable_set(:@required_rubygems_version, Gem::Requirement.new).instance_variable_set(:@requirements,
+        [[">=", "test"]])
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/Required rubygems version must be list of valid requirements/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the dependency requirement is not valid" do
+      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
+        s.name = "bad-dependency-requirement"
+        s.version = "1.0.0"
+        s.add_runtime_dependency "foo"
+        s.dependencies.first.requirement.instance_variable_set(:@requirements, [["!!!", "0"]])
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/requirements must be list of valid requirements/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the dependency name is not valid" do
+      @cutter.stubs(:spec).returns(Gem::Specification.new do |s|
+        s.name = "bad-dependency-name"
+        s.version = "1.0.0"
+        s.add_runtime_dependency "\nother"
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/Dependency unresolved name is invalid/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
     should "not be able to save a gem if it is signed and has been tampered with" do
       @gem = gem_file("valid_signature_tampered-0.0.1.gem")
       @cutter = Pusher.new(@user, @gem)
