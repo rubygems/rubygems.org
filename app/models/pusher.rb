@@ -164,6 +164,8 @@ class Pusher
   end
 
   def notify(message, code)
+    logger.info { { message:, code:, user: user.id, api_key: api_key&.id, rubygem: rubygem&.name, version: version&.full_name } }
+
     @message = message
     @code    = code
     false
