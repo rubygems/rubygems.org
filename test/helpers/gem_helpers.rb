@@ -3,8 +3,8 @@ module GemHelpers
     Gem::Package.new(File.join("test", "gems", "#{name}.gem")).spec
   end
 
-  def gem_file(name = "test-0.0.0.gem")
-    Rails.root.join("test", "gems", name.to_s).open("rb")
+  def gem_file(name = "test-0.0.0.gem", &)
+    Rails.root.join("test", "gems", name.to_s).open("rb", &)
   end
 
   def build_gemspec(gemspec)

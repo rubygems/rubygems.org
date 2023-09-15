@@ -26,6 +26,7 @@ class StoreVersionContentsJobTest < ActiveJob::TestCase
   end
 
   teardown do
+    @gem&.close
     RubygemFs.mock!
   end
 

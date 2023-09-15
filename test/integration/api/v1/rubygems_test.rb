@@ -12,7 +12,7 @@ class Api::V1::RubygemsTest < ActionDispatch::IntegrationTest
     RackAttackReset.expects(:gem_push_backoff).with(ip_address, @user.display_id).once
 
     post "/api/v1/gems",
-          params: gem_file("test-1.0.0.gem").read,
+          params: gem_file("test-1.0.0.gem", &:read),
           headers: { REMOTE_ADDR: ip_address, HTTP_AUTHORIZATION: @key, CONTENT_TYPE: "application/octet-stream" }
 
     assert_response :success
@@ -22,7 +22,7 @@ class Api::V1::RubygemsTest < ActionDispatch::IntegrationTest
     RackAttackReset.expects(:gem_push_backoff).never
 
     post "/api/v1/gems",
-          params: gem_file("test-1.0.0.gem").read,
+          params: gem_file("test-1.0.0.gem", &:read),
           headers: { REMOTE_ADDR: "", HTTP_AUTHORIZATION: @key, CONTENT_TYPE: "application/octet-stream" }
 
     assert_response :success

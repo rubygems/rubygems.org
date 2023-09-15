@@ -20,20 +20,20 @@ class ParallelPusherTest < ActiveSupport::TestCase
     end
 
     should "not lead to sha mismatch between gem file and db" do
-      @gem1 = gem_file("hola-0.0.0.gem")
-      @gem2 = gem_file("hola/hola-0.0.0.gem")
-      @cutter1 = Pusher.new(@user, @gem1)
-      @cutter2 = Pusher.new(@user, @gem2)
       latch = Concurrent::CountDownLatch.new(2)
 
       Thread.new do
-        @cutter1.process
+        gem_file("hola-0.0.0.gem") do |gem1|
+          Pusher.new(@user, gem1).process
+        end
         ActiveRecord::Base.connection.close
         latch.count_down
       end
 
       Thread.new do
-        @cutter2.process
+        gem_file("hola/hola-0.0.0.gem") do |gem2|
+          Pusher.new(@user, gem2).process
+        end
         ActiveRecord::Base.connection.close
         latch.count_down
       end

@@ -9,6 +9,10 @@ class PusherTest < ActiveSupport::TestCase
     @cutter = Pusher.new(@user, @gem)
   end
 
+  teardown do
+    @gem&.close
+  end
+
   context "creating a new gemcutter" do
     should "have some state" do
       assert_respond_to @cutter, :user
@@ -679,7 +683,9 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal 0, rubygem.versions.count
     end
 
-    teardown { RubygemFs.mock! }
+    teardown do
+      RubygemFs.mock!
+    end
   end
 
   context "has a scoped gem" do
@@ -719,6 +725,8 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "CN=snakeoil/DC=example/DC=invalid", @cutter.version.cert_chain.first.subject.to_utf8
     end
 
-    teardown { RubygemFs.mock! }
+    teardown do
+      RubygemFs.mock!
+    end
   end
 end
