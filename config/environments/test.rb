@@ -65,7 +65,7 @@ Rails.application.configure do
 
   BCrypt::Engine.cost = BCrypt::Engine::MIN_COST
 
-  if ENV["CI"]
+  if ENV["CI"] && !ENV["RAILS_ENABLE_TEST_LOG"]
     config.logger = Logger.new(nil)
     config.log_level = :fatal
   end
