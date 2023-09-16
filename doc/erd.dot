@@ -67,7 +67,6 @@ m_Deletion [label = <<table border="0" align="center" cellspacing="0.5" cellpadd
 </table>
 |
 <table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
-  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
   <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="rubygem">rubygem <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
 </table>
@@ -437,7 +436,6 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="latest">latest <font face="Arial Italic" color="grey60">boolean</font></td></tr>
   <tr><td align="left" width="130" port="licenses">licenses <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="metadata">metadata <font face="Arial Italic" color="grey60">hstore ∗</font></td></tr>
-  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="position">position <font face="Arial Italic" color="grey60">integer</font></td></tr>
   <tr><td align="left" width="130" port="prerelease">prerelease <font face="Arial Italic" color="grey60">boolean</font></td></tr>
@@ -497,7 +495,6 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_User -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
   "m_OIDC::Provider" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
@@ -505,6 +502,8 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   m_User -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_WebHook -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   "m_Admin::GitHubUser" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_Version -> m_Deletion [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_Version -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];

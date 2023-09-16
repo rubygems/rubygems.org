@@ -516,7 +516,6 @@ zh-CN:
       change_avatar: 修改头像
       email_awaiting_confirmation: 请确认您新的邮箱地址 %{unconfirmed_email}
       enter_password: 请输入您账户的密码
-      hide_email: 在公开的个人资料里面隐藏我的邮箱
       optional_full_name: 可填。将公开显示
       optional_twitter_username: 可选 Twitter 用户名。这将会被公开显示
       title: 修改个人资料
@@ -539,6 +538,7 @@ zh-CN:
     update:
       confirmation_mail_sent: 几分钟后您会收到一封邮件，它包含了确认您新邮箱地址的操作说明。
       updated: 您的个人资料已更新
+    public_email: 在公开的个人资料里面展示我的 Email
     request_denied: 请求被驳回，您的密码无法被我们验证通过。
     show:
       title: "%{username} 的个人资料"

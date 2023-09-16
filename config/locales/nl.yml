@@ -510,7 +510,6 @@ nl:
       change_avatar:
       email_awaiting_confirmation:
       enter_password:
-      hide_email:
       optional_full_name:
       optional_twitter_username:
       title: Wijzig profiel
@@ -532,6 +531,7 @@ nl:
     update:
       confirmation_mail_sent:
       updated:
+    public_email:
     request_denied:
     show:
       title: Profiel van %{username}

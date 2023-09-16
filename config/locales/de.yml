@@ -506,7 +506,6 @@ de:
       change_avatar:
       email_awaiting_confirmation:
       enter_password:
-      hide_email: Verberge E-Mails in öffentlichem Profil
       optional_full_name:
       optional_twitter_username:
       title: Bearbeite Profil
@@ -528,6 +527,7 @@ de:
     update:
       confirmation_mail_sent:
       updated:
+    public_email: Anzeige E-Mails in öffentlichem Profil
     request_denied:
     show:
       title: Profil von %{username}

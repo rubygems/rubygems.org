@@ -14,6 +14,11 @@ class ProfileTest < SystemTest
     click_button "Sign in"
   end
 
+  def sign_out
+    page.driver.browser.clear_cookies # rack-test specific
+    visit "/"
+  end
+
   test "changing handle" do
     sign_in
 
@@ -87,18 +92,24 @@ class ProfileTest < SystemTest
     end
   end
 
-  test "disabling email on profile" do
+  test "enabling email on profile" do
+    # email is hidden at public profile by default
+    visit profile_path("nick1")
+
+    refute page.has_content?("Email Me")
+
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    check "Hide email in public profile"
+    check "Show email in public profile"
     click_button "Update"
+    sign_out
 
     visit profile_path("nick1")
 
-    refute page.has_content?("Email Me")
+    assert page.has_content?("Email Me")
   end
 
   test "adding Twitter username" do

@@ -53,7 +53,7 @@ class ProfilesController < ApplicationController
   private
 
   def params_user
-    params.require(:user).permit(:handle, :twitter_username, :unconfirmed_email, :hide_email, :full_name).tap do |hash|
+    params.require(:user).permit(:handle, :twitter_username, :unconfirmed_email, :public_email, :full_name).tap do |hash|
       hash.delete(:unconfirmed_email) if hash[:unconfirmed_email] == current_user.email
     end
   end
