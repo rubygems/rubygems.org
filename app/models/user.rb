@@ -1,6 +1,4 @@
 class User < ApplicationRecord
-  self.ignored_columns += [:hide_email]
-
   include UserMultifactorMethods
   include Clearance::User
   include Gravtastic
