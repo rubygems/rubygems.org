@@ -62,5 +62,6 @@ class VersionResource < Avo::BaseResource
 
     field :dependencies, as: :has_many
     field :gem_download, as: :has_one, name: "Downloads"
+    field :deletion, as: :has_one
   end
 end
