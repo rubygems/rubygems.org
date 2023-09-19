@@ -7,6 +7,9 @@ class PusherTest < ActiveSupport::TestCase
     @user = create(:user, email: "user@example.com")
     @gem = gem_file
     @cutter = Pusher.new(@user, @gem)
+
+    # Ensure we test #log_pushing
+    @cutter.logger.level = :info
   end
 
   teardown do
@@ -29,6 +32,11 @@ class PusherTest < ActiveSupport::TestCase
 
     should "initialize size from the gem" do
       assert_equal @gem.size, @cutter.size
+    end
+
+    should "#inspect" do
+      assert_equal "<Pusher @rubygem=nil @user=#{@user.inspect} @message=nil @code=nil>",
+                   @cutter.inspect
     end
 
     context "processing incoming gems" do
