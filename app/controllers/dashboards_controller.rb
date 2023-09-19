@@ -21,9 +21,12 @@ class DashboardsController < ApplicationController
   private
 
   def authenticate_with_api_key
-    params_key = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
+    params_key = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "") || ""
     hashed_key = Digest::SHA256.hexdigest(params_key)
-    @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
+    return unless (@api_key = ApiKey.unexpired.find_by_hashed_key(hashed_key))
+
+    set_tags "gemcutter.user.id" => @api_key.user_id, "gemcutter.user.api_key_id" => @api_key.id
+    render plain: "An invalid API key cannot be used. Please delete it and create a new one.", status: :forbidden if @api_key.soft_deleted?
   end
 
   def api_or_logged_in_user
