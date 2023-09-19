@@ -52,7 +52,7 @@ jobs:
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
-        run: bin/rails ${{ matrix.tests.command }} -gp
+        run: bin/rails ${{ matrix.tests.command }} -g
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
