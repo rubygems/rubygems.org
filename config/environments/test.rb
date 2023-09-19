@@ -69,5 +69,4 @@ Rails.application.configure do
     config.logger = Logger.new(nil)
     config.log_level = :fatal
   end
-  config.logger = Logger.new($stderr)
 end

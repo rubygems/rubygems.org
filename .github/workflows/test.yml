@@ -40,7 +40,7 @@ jobs:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
-      RAILS_ENABLE_TEST_LOG: true
+      MINITEST_REPORTER: SpecReporter
     steps:
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
 
@@ -52,7 +52,7 @@ jobs:
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
-        run: bin/rails ${{ matrix.tests.command }}
+        run: bin/rails ${{ matrix.tests.command }} -gp
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
