@@ -1,4 +1,4 @@
-class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
+class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
@@ -20,11 +20,11 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :audits, as: :auditable, inverse_of: :auditable
 
-  validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
     presence: true,
     uniqueness: { case_sensitive: false },
+    name_format: true,
     if: :needs_name_validation?
   validate :reserved_names_exclusion
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
@@ -266,11 +266,13 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def update_dependencies!(version, spec)
     spec.dependencies.each do |dependency|
       version.dependencies.create!(gem_dependency: dependency)
+    rescue ActiveRecord::RecordInvalid => e
+      # ActiveRecord can't chain a nested error here, so we have to add and reraise
+      e.record.errors.errors.each do |error|
+        errors.import(error, attribute: "dependency.#{error.attribute}")
+      end
+      raise
     end
-  rescue ActiveRecord::RecordInvalid => e
-    # ActiveRecord can't chain a nested error here, so we have to add and reraise
-    errors[:base] << e.message
-    raise e
   end
 
   def update_linkset!(spec)
@@ -395,18 +397,6 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # updated(yanked) in more than 100 days or it is created in last 30 days
   def not_protected?
     updated_at < 100.days.ago || created_at > 30.days.ago
-  end
-
-  def ensure_name_format
-    if name.class != String
-      errors.add :name, "must be a String"
-    elsif !/[a-zA-Z]+/.match?(name)
-      errors.add :name, "must include at least one letter"
-    elsif !NAME_PATTERN.match?(name)
-      errors.add :name, "can only include letters, numbers, dashes, and underscores"
-    elsif /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/o.match?(name)
-      errors.add :name, "can not begin with a period, dash, or underscore"
-    end
   end
 
   def needs_name_validation?

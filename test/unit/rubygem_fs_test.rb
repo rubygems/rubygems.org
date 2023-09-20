@@ -279,7 +279,7 @@ class RubygemFsTest < ActiveSupport::TestCase
       end
 
       should "get a binary file lacking metadata" do
-        gem_data = gem_file.read
+        gem_data = gem_file(&:read)
         @fs.store "gems/test.gem", gem_data
 
         assert_equal gem_data, @fs.get("gems/test.gem")

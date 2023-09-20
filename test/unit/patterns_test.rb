@@ -30,4 +30,18 @@ class PatternsTest < ActiveSupport::TestCase
 
     assert Regexp.linear_time?(Patterns::VERSION_PATTERN)
   end
+
+  test "REQUIREMENT_PATTERN is linear" do
+    skip "regexp is not linear"
+
+    assert Regexp.linear_time?(Patterns::REQUIREMENT_PATTERN)
+  end
+
+  test "LETTER_REGEXP is linear" do
+    assert Regexp.linear_time?(Patterns::LETTER_REGEXP)
+  end
+
+  test "SPECIAL_CHAR_PREFIX_REGEXP is linear" do
+    assert Regexp.linear_time?(Patterns::SPECIAL_CHAR_PREFIX_REGEXP)
+  end
 end

@@ -5,6 +5,8 @@ Rails.autoloaders.main.ignore(Rails.root.join("lib/tasks"))
 # expected file lib/shoryuken/sqs_worker.rb to define constant Shoryuken::SqsWorker
 Rails.autoloaders.main.ignore(Rails.root.join("lib/shoryuken"))
 
+Rails.autoloaders.main.ignore(Rails.root.join("lib/cops"))
+
 Rails.autoloaders.once.inflector.inflect(
   "http" => "HTTP",
   "oidc" => "OIDC"

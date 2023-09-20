@@ -64,4 +64,9 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   BCrypt::Engine.cost = BCrypt::Engine::MIN_COST
+
+  if ENV["CI"] && !ENV["RAILS_ENABLE_TEST_LOG"]
+    config.logger = Logger.new(nil)
+    config.log_level = :fatal
+  end
 end

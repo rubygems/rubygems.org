@@ -204,7 +204,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   context "On GET to index --> with gems --> Marshal" do
     setup do
       exceed_request_limit = Gemcutter::GEM_REQUEST_LIMIT + 1
-      gems = Array.new(exceed_request_limit) { create(:rubygem) }.join(",")
+      gems = Array.new(exceed_request_limit) { |idx| "rubygem_#{idx}" }.join(",")
       get :index, params: { gems: gems }, format: "marshal"
     end
 

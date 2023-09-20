@@ -6,7 +6,7 @@ class YankVersionContentsJobTest < ActiveJob::TestCase
     RubygemFs.mock!
 
     @user = create(:user)
-    Pusher.new(@user, gem_file("bin_and_img-0.1.0.gem")).process
+    gem_file("bin_and_img-0.1.0.gem") { |gem| Pusher.new(@user, gem).process }
     @version = Version.last
     StoreVersionContentsJob.perform_now(version: @version)
     @rubygem = @version.rubygem

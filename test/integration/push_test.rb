@@ -133,7 +133,7 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "pushing a signed gem" do
-    push_gem gem_file("valid_signature-0.0.0.gem")
+    push_gem gem_file("valid_signature-0.0.0.gem", &:path)
 
     assert_response :success
 
