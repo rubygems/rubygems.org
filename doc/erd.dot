@@ -444,6 +444,7 @@ m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="size">size <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="spec_sha256">spec_sha256 <font face="Arial Italic" color="grey60">string (44)</font></td></tr>
   <tr><td align="left" width="130" port="summary">summary <font face="Arial Italic" color="grey60">text</font></td></tr>
   <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime</font></td></tr>
   <tr><td align="left" width="130" port="yanked_info_checksum">yanked_info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
