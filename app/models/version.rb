@@ -310,7 +310,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       "prerelease"                 => prerelease,
       "licenses"                   => licenses,
       "requirements"               => requirements,
-      "sha"                        => sha256_hex
+      "sha"                        => sha256_hex,
+      "spec_sha"                   => spec_sha256_hex
     }
   end
 
@@ -372,6 +373,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def sha256_hex
     Version._sha256_hex(sha256) if sha256
+  end
+
+  def spec_sha256_hex
+    Version._sha256_hex(spec_sha256) if spec_sha256
   end
 
   def self._sha256_hex(raw)

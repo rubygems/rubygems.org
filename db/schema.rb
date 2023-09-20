@@ -412,6 +412,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_194257) do
     t.bigint "pusher_api_key_id"
     t.string "gem_platform"
     t.string "gem_full_name"
+    t.string "spec_sha256", limit: 44
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_on_canonical_number_and_rubygem_id_and_platform", unique: true

@@ -373,6 +373,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
       @cutter.stubs(:size).returns 5
       @cutter.stubs(:body).returns StringIO.new("dummy body")
 
@@ -417,6 +418,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
       @cutter.find
 
       assert_equal @rubygem, @cutter.rubygem
@@ -453,6 +455,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
       @cutter.find
 
       @cutter.rubygem.save
@@ -473,6 +476,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns Gem::Platform.new("universal-darwin-6000")
       spec.stubs(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
 
       @cutter.find
 
