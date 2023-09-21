@@ -12,18 +12,7 @@ class RefreshOIDCProvider < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(provider)
-      connection = Faraday.new(provider.issuer, request: { timeout: 2 }) do |f|
-        f.request :json
-        f.response :logger, logger, headers: false, errors: true, bodies: true
-        f.response :raise_error
-        f.response :json
-      end
-      resp = connection.get("/.well-known/openid-configuration")
-
-      provider.configuration = resp.body
-      provider.jwks = connection.get(provider.configuration.jwks_uri).body
-
-      provider.save!
+      RefreshOIDCProviderJob.perform_now(provider:)
     end
   end
 end
