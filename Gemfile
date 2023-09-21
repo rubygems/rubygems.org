@@ -72,7 +72,6 @@ group :assets do
 end
 
 group :development, :test do
-  gem "m", "~> 1.6", require: false
   gem "pry-byebug", "~> 3.10"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.2"
