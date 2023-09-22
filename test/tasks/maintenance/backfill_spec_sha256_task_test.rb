@@ -33,7 +33,9 @@ class Maintenance::BackfillSpecSha256TaskTest < ActiveSupport::TestCase
 
     should "error if spec is missing" do
       v = create(:version, rubygem: @rubygem, number: "1", platform: "ruby", spec_sha256: nil)
-      assert_raise { Maintenance::BackfillSpecSha256Task.process(v) }
+      e = assert_raise { Maintenance::BackfillSpecSha256Task.process(v) }
+
+      assert_equal "quick/Marshal.4.8/rubygem-1.gemspec.rz is missing", e.message
     end
 
     should "not update the spec sha256 if it is already set" do
@@ -50,7 +52,9 @@ class Maintenance::BackfillSpecSha256TaskTest < ActiveSupport::TestCase
 
       v = create(:version, rubygem: @rubygem, number: "1", platform: "ruby", spec_sha256: "Ry6N90Xp7Or9qGoWziaaTotD1K7vOAonnRAAPjXCzic=")
       assert_no_changes "v.reload.spec_sha256" do
-        assert_raise { Maintenance::BackfillSpecSha256Task.process(v) }
+        e = assert_raise(RuntimeError) { Maintenance::BackfillSpecSha256Task.process(v) }
+
+        assert_includes e.message, "Version rubygem-1 has incorrect spec_sha256"
       end
     end
   end
