@@ -14,7 +14,7 @@ zh-TW:
     <a href="https://www.rubycentral.org/">Ruby Central</a> 支付設備費用，並為進行中的開發和營運工作提供資金。
     <a href="%{sponsors_page}">進一步了解我們的贊助商和它們是如何合作的</a>。
   footer_join_rt_html:
-    我們需要您的資助來幫助開發者有更多開發時間，讓 RubyGems.org 能夠持續穩定地運行下去。
+    我們需要您的幫助來資助開發者為保證 RubyGems.org 能夠順利運行所耗費的時間。
     <a href="https://rubycentral.org/#/portal/signup">立刻加入 Ruby Central</a>。
   form_disable_with: 請稍候...
   invalid_page: 頁碼超出範圍。已重新導向至預設頁面。
@@ -58,12 +58,12 @@ zh-TW:
         handle: 帳號
         password: 密碼
       api_key:
-        oidc_api_key_role:
+        oidc_api_key_role: OIDC API 金鑰角色
       oidc/id_token:
-        jti:
-        api_key_role:
+        jti: JWT ID
+        api_key_role: API 金鑰角色
       oidc/api_key_role:
-        api_key_permissions:
+        api_key_permissions: API 金鑰權限
     errors:
       messages:
         unpwn: 曾出現在資料外洩事件中，不應再使用
@@ -72,8 +72,8 @@ zh-TW:
         ownership:
           attributes:
             user_id:
-              already_confirmed:
-              already_invited:
+              already_confirmed: "已是此 Gem 的擁有者"
+              already_invited: "已獲邀加入此 Gem"
         version:
           attributes:
             gem_full_name:
@@ -81,12 +81,12 @@ zh-TW:
             full_name:
               taken: "%{value} 已存在"
     models:
-      user:
+      user: 使用者
   activemodel:
     attributes:
       oidc/provider/configuration:
-        jwks_uri:
-        id_token_signing_alg_values_supported:
+        jwks_uri: JWKS URI
+        id_token_signing_alg_values_supported: IP 權杖簽署演算法
     errors:
       models:
         oidc/api_key_permissions:
@@ -100,7 +100,7 @@ zh-TW:
       success: "已建立新 API 金鑰"
       invalid_gem:
     destroy:
-      success:
+      success: "已刪除 API 金鑰：%{name}"
     index:
       api_keys: API 金鑰
       name: 名稱
@@ -121,7 +121,7 @@ zh-TW:
       access_webhooks: 存取 Webhooks
       show_dashboard: 顯示儀表板
       reset: 重設
-      save_key:
+      save_key: "請注意，我們無法再次顯示您的 API 金鑰。新 API 金鑰："
       mfa: MFA
     new:
       new_api_key: 新 API 金鑰
@@ -216,8 +216,8 @@ zh-TW:
         sign_up: 註冊
       mfa_banner_html: 🎉 我們現在支援安全裝置了！<a href="/settings/edit#security-device">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！
   mailer:
-    confirm_your_email:
-    confirmation_subject:
+    confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
+    confirmation_subject: "%{host} 電子郵件地址確認"
     link_expiration_explanation_html: 請注意，此連結將在 3 小時後過期。您可以前往<a href='https://rubygems.org/email_confirmations/new'>確認信</a>頁面要求傳送新連結。
     email_confirmation:
       title: 電子郵件地址確認
@@ -227,17 +227,17 @@ zh-TW:
     email_reset:
       title: 電子郵件地址重設
       subtitle: 嗨 %{handle}！
-      visit_link_instructions:
+      visit_link_instructions: 您已變更您在 %{host} 的電子郵件地址。請點擊下列網址來重新啟用您的帳號。
     deletion_complete:
       title: 刪除完成
       subtitle: 掰掰！
       subject: 您在 rubygems.org 上的帳號已被刪除
-      body_html:
+      body_html: 您在 %{host} 的帳號刪除請求已處理完畢。您隨時可以透過 %{sign_up} 頁面建立新帳號。
     deletion_failed:
       title: 刪除失敗
       subtitle: 抱歉！
       subject: 您在 rubygems.org 上的帳號刪除請求失敗
-      body_html: 您曾在 rubygems.org 上送出帳號刪除的請求。很遺憾，我們無法處理您的請求，請稍後再試。若無法解決，請 %{contact} 我們。
+      body_html: 您曾在 rubygems.org 送出帳號刪除的請求。很遺憾，我們無法處理您的請求，請稍後再試。若無法解決，請 %{contact} 我們。
     notifiers_changed:
       subject: 您已更改 RubyGems.org 的電子郵件通知設定
       title: 電子郵件通知
@@ -255,30 +255,30 @@ zh-TW:
       title: API 金鑰重設
       subtitle: 嗨 %{handle}
     webauthn_credential_created:
-      subject:
+      subject: %{host} 上的安全裝置已新增
       title: 已新增安全裝置
       subtitle: 嗨 %{handle}！
     webauthn_credential_removed:
-      subject:
+      subject: %{host} 上的安全裝置已移除
       title: 安全裝置已移除
       subtitle: 嗨 %{handle}！
     totp_enabled:
-      subject:
+      subject: %{host} 上的驗證器應用程式已啟用
       title: 已啟用驗證器應用程式
       subtitle: 嗨 %{handle}！
     totp_disabled:
-      subject:
+      subject: %{host} 上的驗證器應用程式已停用
       title: 已停用驗證器應用程式
       subtitle: 嗨 %{handle}！
     email_reset_update:
-      subject:
-      title:
+      subject: 您已在 %{host} 請求電子郵件地址更新
+      title: 已請求電子郵件地址更新
     ownership_confirmation:
       subject: 請確認 RubyGems.org 上 %{gem} Gem 的所有權
       title: 所有權確認
       subtitle: 嗨 %{handle}！
-      body_text: "%{authorizer} 把您加入了 %{gem} Gem 的擁有者名單。請點擊下方連結來確認您的所有權。"
-      body_html:
+      body_text: %{authorizer} 把您加入了 %{gem} Gem 的擁有者名單。請點擊下方連結來確認您的所有權。
+      body_html: <strong>%{authorizer}</strong> 把您加入了 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> Gem 的擁有者名單。請點擊下方連結來確認您的所有權。
       link_expiration_explanation_html:
     owner_added:
       subject_self: 您加入了 %{gem} Gem 的擁有者名單
@@ -309,10 +309,10 @@ zh-TW:
       subtitle: 嗨 %{handle}！
       body_text: 您傳送 POST 請求至 %{url} 的 Webhook 在 %{failures} 次失敗後遭到刪除。
       body_html: 您傳送 <code>POST</code> 請求至 <a href="%{url}"><code>%{url}</code></a> 的 Webhook 在 %{failures} 次失敗後遭到刪除。
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
+      global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
+      global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
+      gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
+      gem_html: 之前這個 Webhook 會在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 被推送的時候被呼叫。
     web_hook_disabled:
       title: Webhook 遭停用
       subject: 您在 RubyGems.org 上的 Webhook 遭到停用
@@ -322,10 +322,10 @@ zh-TW:
         該 Webhook 最後成功於 %{last_success}，之後便失敗了 %{failures_since_last_success} 次。
         您可以執行 `%{delete_command}` 命令來刪除此 Webhook。
       body_html:
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
+      global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
+      global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
+      gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
+      gem_html: 之前這個 Webhook 會在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 被推送的時候被呼叫。
   news:
     show:
       title: 最新發佈
@@ -427,7 +427,7 @@ zh-TW:
       success: 您已成功更新您的電子郵件通知設定。
     show:
       info:
-        為協助偵測未經授權的 Gem 或所有權變更，當您擁有的 Gem 推送新版本、遭移除、或新增擁有者時，我們將傳送電子郵件給您。在接收和閱讀這些郵件的同時，您也在保護 Ruby 的生態圈。
+        為協助偵測未經授權的 Gem 或所有權變更，我們將在您擁有的 Gem 推送新版本、遭移除，或新增擁有者時傳送電子郵件給您。在接收和閱讀這些郵件的同時，您也在保護 Ruby 的生態圈。
       'on': "開"
       'off': "關"
       recommended: 建議
