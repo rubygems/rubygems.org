@@ -6,7 +6,7 @@ class Maintenance::BackfillGemPlatformToVersionsTask < MaintenanceTasks::Task
   FULL_NAME_ATTRIBUTES = %i[full_name gem_full_name].freeze
 
   def collection
-    Version.where(gem_platform: nil)
+    Version.includes(:rubygem).where(gem_platform: nil)
   end
 
   def process(version)
