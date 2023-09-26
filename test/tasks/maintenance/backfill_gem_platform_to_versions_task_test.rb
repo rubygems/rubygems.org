@@ -61,14 +61,14 @@ class Maintenance::BackfillGemPlatformToVersionsTaskTest < ActiveSupport::TestCa
       rubygem2 = create(:rubygem)
       rubygem2.update_attribute(:name, "RubyGem")
 
-      v1 = build(:version, rubygem: rubygem1, number: "1", platform: "ruby", gem_platform: nil).tap do |v|
+      save = lambda do |v|
         v.validate
+        v.gem_platform = v.gem_full_name = nil
         v.save!(validate: false)
       end
-      v2 = build(:version, rubygem: rubygem2, number: "1", platform: "ruby", gem_platform: nil).tap do |v|
-        v.validate
-        v.save!(validate: false)
-      end
+
+      v1 = build(:version, rubygem: rubygem1, number: "1", platform: "ruby").tap(&save)
+      v2 = build(:version, rubygem: rubygem2, number: "1", platform: "ruby").tap(&save)
 
       logger = SemanticLogger::Test::CaptureLogEvents.new
       Maintenance::BackfillGemPlatformToVersionsTask.stubs(:logger).returns(logger)
@@ -88,14 +88,9 @@ class Maintenance::BackfillGemPlatformToVersionsTaskTest < ActiveSupport::TestCa
       assert_semantic_logger_event(
         logger.events[0],
         level:            :warn,
-        message_includes: "Version rubygem-1 failed validation setting gem_platform to \"ruby\""
+        message_includes: "Version RubyGem-1 failed validation setting gem_platform to \"ruby\" but was saved without validation"
       )
-      assert_semantic_logger_event(
-        logger.events[1],
-        level:            :warn,
-        message_includes: "Version RubyGem-1 failed validation setting gem_platform to \"ruby\""
-      )
-      assert_equal 2, logger.events.size
+      assert_equal 1, logger.events.size
     end
   end
 end
