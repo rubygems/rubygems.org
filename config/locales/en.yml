@@ -59,6 +59,13 @@ en:
         full_name: Full name
         handle: Username
         password: Password
+      api_key:
+        oidc_api_key_role: OIDC API Key Role
+      oidc/id_token:
+        jti: JWT ID
+        api_key_role: API Key Role
+      oidc/api_key_role:
+        api_key_permissions: API Key Permissions
     errors:
       messages:
         unpwn: has previously appeared in a data breach and should not be used
@@ -78,12 +85,18 @@ en:
     models:
       user: User
   activemodel:
+    attributes:
+      oidc/provider/configuration:
+        jwks_uri: JWKS URI
+        id_token_signing_alg_values_supported: ID Token signing algorithms supported
     errors:
       models:
         oidc/api_key_permissions:
           attributes:
             valid_for:
               inclusion: "%{value} seconds must be between 5 minutes (300 seconds) and 1 day (86,400 seconds)"
+            gems:
+              too_long: "may include at most 1 gem"
   api_keys:
     create:
       success: "Created new API key"
@@ -562,6 +575,10 @@ en:
         wiki: Wiki
         resend_ownership_confirmation: Resend confirmation
         ownership: Ownership
+        oidc:
+          api_key_role:
+            name: "OIDC: %{name}"
+            new: "OIDC: Create"
     reserved:
       reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
@@ -715,3 +732,67 @@ en:
       new_device: Register a new security device
       nickname: Nickname
       submit: Register device
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles: OIDC API Key Roles
+        new_role: Create API Key Role
+      show:
+        api_key_role_name: "API Key Role %{name}"
+        automate_gh_actions_publishing: "Automate Gem Publishing with GitHub Actions"
+        view_provider: "View provider %{issuer}"
+        edit_role: "Edit API Key Role"
+        delete_role: "Delete API Key Role"
+        confirm_delete: "Are you sure you want to delete this role?"
+        deleted_at_html: "This role was deleted %{time_html} ago and can no longer be used."
+      edit:
+        edit_role: "Edit API Key Role"
+      git_hub_actions_workflow:
+        title: "OIDC Gem Push GitHub Actions Workflow"
+        configured_for_html: "This OIDC API Key Role is configured to allow pushing %{link_html} from GitHub Actions."
+        to_automate_html: "To automate releasing %{link_html} when a new tag is pushed, add the following workflow to your repository."
+        not_github: "This OIDC API Key Role is not configured for GitHub Actions."
+        not_push: "This OIDC API Key Role is not configured to allow pushing gems."
+        copy_to_clipboard: Copy to clipboard
+        copied: Copied!
+        a_gem: a gem
+        instructions_html: |
+          To release, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">bump the gem version</a> and push a new tag (using <code>rake release:source_control_push</code>) to GitHub. The workflow will automatically build the gem and push it to RubyGems.org.
+      new:
+        title: "New OIDC API Key Role"
+      update:
+        success: "OIDC API Key Role updated"
+      create:
+        success: "OIDC API Key Role created"
+      destroy:
+        success: "OIDC API Key Role deleted"
+      form:
+        add_condition: Add condition
+        remove_condition: Remove condition
+        add_statement: Add statement
+        remove_statement: Remove statement
+      deleted: "The role has been deleted."
+    providers:
+      index:
+        title: "OIDC Providers"
+        description_html: "These are the OIDC providers that have been configured for RubyGems.org.<br>Please reach out to support if you need another OIDC Provider added."
+      show:
+        title: "OIDC Provider"
+    id_tokens:
+      index:
+        title: "OIDC ID Tokens"
+      show:
+        title: "OIDC ID Token"
+  duration:
+    minutes:
+      other: "%{count} minutes"
+      one: "1 minute"
+    hours:
+      other: "%{count} hours"
+      one: "1 hour"
+    days:
+      other: "%{count} days"
+      one: "1 day"
+    seconds:
+      other: "%{count} seconds"
+      one: "1 second"

@@ -207,6 +207,21 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
+  context "oidc_api_key_role_links" do
+    should "return joined links" do
+      user = create(:user)
+      rubygem = create(:rubygem, name: "my_gem", owners: [user])
+      role = create(:oidc_api_key_role, name: "Push my_gem", api_key_permissions: { gems: ["my_gem"], scopes: ["push_rubygem"] }, user: user)
+      stubs(:current_user).returns(user)
+
+      role_link = link_to "OIDC: #{role.name}", profile_oidc_api_key_role_path(role.token), class: "gem__link t-list__item"
+      create_link = link_to "OIDC: Create", new_profile_oidc_api_key_role_path(rubygem: rubygem.name, scopes: ["push_rubygem"]),
+        class: "gem__link t-list__item"
+
+      assert_equal safe_join([role_link, create_link]), oidc_api_key_role_links(rubygem)
+    end
+  end
+
   context "change_diff_link" do
     context "with yanked version" do
       setup do

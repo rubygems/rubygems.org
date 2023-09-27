@@ -53,6 +53,7 @@ gem "browser", "~> 5.3", ">= 5.3.1"
 gem "bcrypt", "~> 3.1", ">= 3.1.18"
 gem "maintenance_tasks", "~> 2.1"
 gem "strong_migrations", "~> 1.6"
+gem "phlex-rails", "~> 1.0"
 
 # Admin dashboard
 gem "avo", "~> 2.42"

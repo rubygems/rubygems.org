@@ -125,6 +125,9 @@ a.t-list__item {
   font-style: normal;
   content: "→"; }
 
+.t-underline {
+  text-decoration: underline; }
+
 .t-body p, .t-body ol li, .t-body ul li {
   font-weight: 300;
   font-size: 18px;
@@ -175,6 +178,8 @@ a.t-list__item {
     overflow-x: scroll;
     line-height: 1.33;
     word-break: normal; }
+    .t-body pre code.multiline {
+      word-spacing: inherit; }
 .t-body code {
   font-weight: bold;
   font-family: "courier", monospace;

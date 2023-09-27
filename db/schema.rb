@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_26_202658) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_18_235829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -248,6 +248,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_26_202658) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "token", limit: 32, null: false
+    t.datetime "deleted_at"
     t.index ["oidc_provider_id"], name: "index_oidc_api_key_roles_on_oidc_provider_id"
     t.index ["token"], name: "index_oidc_api_key_roles_on_token", unique: true
     t.index ["user_id"], name: "index_oidc_api_key_roles_on_user_id"

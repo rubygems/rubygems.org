@@ -41,14 +41,21 @@
 .form__input__addon-left .form__input {
   padding-left: 45px; }
 
-.form__input, .form__textarea, .form__select, .form__group {
+.form__nested_fields, .form__input, .form__textarea, .form__select, .form__group {
   margin-bottom: 30px; }
+
+.form__nested_fields, .form__input, .form__textarea {
+  display: block;
+  width: 100%;
+}
+
+.form__nested_fields {
+  margin: 12px 0 12px 32px;
+  width: calc(100% - 32px); }
 
 .form__input, .form__textarea {
   -webkit-appearance: none;
   padding: 12px 16px;
-  display: block;
-  width: 100%;
   font-weight: 300;
   font-size: 18px;
   border: 1px solid #f2f3f4;
@@ -218,4 +225,26 @@
 
 .form__checkbox__item .field_with_errors {
   display: contents;
+}
+
+.form__flex_group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.form__flex_group > .form__submit {
+  margin: initial;
+  width: initial;
+  align-self: center;
+}
+
+.form__scope_checkbox_grid_group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);
+  grid-gap: 20px;
 }

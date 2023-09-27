@@ -91,6 +91,25 @@ module RubygemsHelper
     link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
+  def oidc_api_key_role_links(rubygem)
+    roles = current_user.oidc_api_key_roles.for_rubygem(rubygem)
+
+    links = roles.map do |role|
+      link_to(
+        t("rubygems.aside.links.oidc.api_key_role.name", name: role.name),
+        profile_oidc_api_key_role_path(role.token),
+        class: "gem__link t-list__item"
+      )
+    end
+    links << link_to(
+      t("rubygems.aside.links.oidc.api_key_role.new"),
+      new_profile_oidc_api_key_role_path(rubygem: rubygem.name, scopes: ["push_rubygem"]),
+      class: "gem__link t-list__item"
+    )
+
+    safe_join(links)
+  end
+
   def resend_owner_confirmation_link(rubygem)
     link_to I18n.t("rubygems.aside.links.resend_ownership_confirmation"),
             resend_confirmation_rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"

@@ -47,6 +47,11 @@ Rails/UniqueValidationWithoutIndex:
 Rails/ActionControllerTestCase:
   Enabled: false # Causes every integration test to fail
 
+Rails/Output:
+  Exclude:
+    - app/views/**/*_view.rb
+    - app/views/**/*_component.rb
+
 Layout/ArgumentAlignment:
   Enabled: false
 

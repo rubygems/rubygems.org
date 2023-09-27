@@ -1,0 +1,24 @@
+<div class="form__nested_fields"  id="<%= f.field_id :wrapper %>">
+  <div class="form__flex_group">
+    <div class="form_group">
+      <%= f.label :claim, class: "form__label" %>
+      <%= f.text_field :claim, list: f.field_id(:claims_supported), class: "form__input", autocomplete: :off %>
+      <%= content_tag(:datalist, id: f.field_id(:claims_supported)) do %>
+        <% if claims_supported = @api_key_role&.provider&.configuration&.claims_supported.presence %>
+          <%= options_from_collection_for_select(claims_supported, :to_s, :to_s) %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="form_group">
+      <%= f.label :operator, class: "form__label" %>
+      <p/>
+      <%= f.collection_select :operator, f.object.class::OPERATORS, :to_s, :titleize, class: "form__input form__select" %>
+    </div>
+    <div class="form_group">
+      <%= f.label :value, class: "form__label" %>
+      <p/>
+      <%= f.text_field :value, class: "form__input", autocomplete: :off %>
+    </div>
+    <%= f.button t("oidc.api_key_roles.form.remove_condition"), class: "form__submit form__remove_nested_button" %>
+  </div>
+</div>
