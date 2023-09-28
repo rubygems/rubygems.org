@@ -16,8 +16,9 @@ jobs:
     name: All required tests passing check
     needs: [rails]
     runs-on: ubuntu-22.04
+    if: always()
     steps:
-      - run: echo "All required tests passed!"
+      - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
 
   rails:
     strategy:
