@@ -14,6 +14,8 @@ class Maintenance::BackfillSpecSha256TaskTest < ActiveSupport::TestCase
   end
 
   context "#process" do
+    include SemanticLogger::Test::Minitest
+
     setup do
       @rubygem = create(:rubygem, name: "rubygem")
     end
@@ -31,11 +33,21 @@ class Maintenance::BackfillSpecSha256TaskTest < ActiveSupport::TestCase
       assert_equal "Ry6N90Xp7Or9qGoWziaaTotD1K7vOAonnRAAPjXCzic=", v.reload.spec_sha256
     end
 
-    should "error if spec is missing" do
+    should "log if spec is missing" do
       v = create(:version, rubygem: @rubygem, number: "1", platform: "ruby", spec_sha256: nil)
-      e = assert_raise { Maintenance::BackfillSpecSha256Task.process(v) }
+      logger = SemanticLogger::Test::CaptureLogEvents.new
+      Maintenance::BackfillSpecSha256Task.stubs(:logger).returns(logger)
 
-      assert_equal "quick/Marshal.4.8/rubygem-1.gemspec.rz is missing", e.message
+      assert_no_changes "v.reload.spec_sha256" do
+        Maintenance::BackfillSpecSha256Task.process(v)
+      end
+
+      assert_semantic_logger_event(
+        logger.events[1],
+        level:            :error,
+        message_includes: "Could not find quick/Marshal.4.8/rubygem-1.gemspec.rz"
+      )
+      assert_equal 2, logger.events.size
     end
 
     should "not update the spec sha256 if it is already set" do

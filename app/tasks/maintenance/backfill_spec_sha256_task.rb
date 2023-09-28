@@ -14,7 +14,10 @@ class Maintenance::BackfillSpecSha256Task < MaintenanceTasks::Task
       spec_path = "quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
       spec_contents = RubygemFs.instance.get(spec_path)
 
-      raise "#{spec_path} is missing" if spec_contents.nil?
+      if spec_contents.nil?
+        logger.error "Could not find #{spec_path}"
+        return
+      end
 
       spec_sha256 = Digest::SHA2.base64digest(spec_contents)
 
