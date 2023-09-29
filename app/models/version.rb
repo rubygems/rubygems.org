@@ -47,7 +47,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validate :gem_platform_and_number_are_unique, on: :create
   validate :original_platform_resolves_to_gem_platform, on: %i[create platform_changed? gem_platform_changed?]
   validate :authors_format, on: :create
-  validate :metadata_links_format
+  validate :metadata_links_format, if: -> { validation_context == :create || metadata_changed? }
   validate :metadata_attribute_length
   validate :no_dashes_in_version_number, on: :create
 
@@ -463,8 +463,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def metadata_links_format
     Linkset::LINKS.each do |link|
-      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL") if
-        metadata[link] && metadata[link] !~ Patterns::URL_VALIDATION_REGEXP
+      url = metadata[link]
+      next unless url
+      next if Patterns::URL_VALIDATION_REGEXP.match?(url)
+      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL")
     end
   end
 
