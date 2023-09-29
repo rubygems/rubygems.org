@@ -4,7 +4,7 @@
   <header class="profile__header">
     <div class="profile__header__name-wrap">
       <div id="avatar-frame">
-        <%= gravatar(300, 'profile_gravatar', @user, class: 'profile__header__avatar') %>
+        <%= avatar(300, 'profile_gravatar', @user, class: 'profile__header__avatar') %>
       </div>
 
       <% if @user.full_name.present? %>

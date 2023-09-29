@@ -512,6 +512,7 @@ ja:
       subtitle_html: 新しい貢献者を募るか所有権を申請してください<a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>
     edit:
       change_avatar: アバターを変更
+      disabled_avatar_html:
       email_awaiting_confirmation: 新しいEメールアドレス%{unconfirmed_email}を確認してください。
       enter_password: アカウントのパスワードを入力してください。
       optional_full_name: 省略可能です。公開されます。
