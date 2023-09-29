@@ -514,6 +514,7 @@ zh-CN:
       subtitle_html: 寻求新的维护者或申请所有权 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(了解更多)</a>
     edit:
       change_avatar: 修改头像
+      disabled_avatar_html:
       email_awaiting_confirmation: 请确认您新的邮箱地址 %{unconfirmed_email}
       enter_password: 请输入您账户的密码
       optional_full_name: 可填。将公开显示

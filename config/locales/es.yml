@@ -525,6 +525,7 @@ es:
       subtitle_html:
     edit:
       change_avatar:
+      disabled_avatar_html:
       email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo
         %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
