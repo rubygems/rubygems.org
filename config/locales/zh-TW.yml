@@ -14,7 +14,7 @@ zh-TW:
     <a href="https://www.rubycentral.org/">Ruby Central</a> 支付設備費用，並為進行中的開發和營運工作提供資金。
     <a href="%{sponsors_page}">進一步了解我們的贊助商和它們是如何合作的</a>。
   footer_join_rt_html:
-    我們需要您的幫助來資助開發者為保證 RubyGems.org 能夠順利運行所耗費的時間。
+    我們需要您的資助來幫助開發者有更多開發時間，讓 RubyGems.org 能夠持續穩定地運行下去。
     <a href="https://rubycentral.org/#/portal/signup">立刻加入 Ruby Central</a>。
   form_disable_with: 請稍候...
   invalid_page: 頁碼超出範圍。已重新導向至預設頁面。
