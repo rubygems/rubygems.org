@@ -120,7 +120,7 @@ zh-TW:
       edit_api_key: "編輯 API 金鑰"
       multifactor_auth: 多重要素驗證
       enable_mfa: 啟用 MFA
-      rubygem_scop
+      rubygem_scope:
       rubygem_scope_info:
       invalid_key: 無法編輯無效的 API 金鑰。請刪除此金鑰並重新建立。
     all_gems: 所有 Gems
