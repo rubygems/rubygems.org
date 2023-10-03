@@ -66,13 +66,12 @@ gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.11"
 
 group :assets do
-  gem "sassc-rails", "~> 2.1"
+  gem "dartsass-sprockets", "~> 3.0"
   gem "terser", "~> 1.1"
   gem "autoprefixer-rails", "~> 10.4"
 end
 
 group :development, :test do
-  gem "m", "~> 1.6", require: false
   gem "pry-byebug", "~> 3.10"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.2"
@@ -91,6 +90,8 @@ group :development do
   gem "listen", "~> 3.8"
   gem "letter_opener", "~> 1.8"
   gem "letter_opener_web", "~> 2.0"
+  gem "derailed_benchmarks", "~> 2.1"
+  gem "memory_profiler", "~> 1.0"
 end
 
 group :test do
@@ -106,4 +107,7 @@ group :test do
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
   gem "aggregate_assertions", "~> 0.2.0"
+  gem "minitest-gcstats", "~> 1.3"
+  gem "minitest-profile", "~> 0.0.2"
+  gem "minitest-reporters", "~> 1.6"
 end

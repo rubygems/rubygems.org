@@ -25,7 +25,7 @@
       <%= link_to @ownership_call.user_display_handle, profile_path(@ownership_call.user), class: "t-text t-link" %>
     </p>
     <% if @ownership_call.rubygem.owned_by?(current_user) %>
-      <%= button_to t("ownership_calls.close"), close_rubygem_ownership_calls_path(@ownership_call.rubygem), method: :patch, class: "form__submit form__submit--medium" %>
+      <%= button_to t("ownership_calls.close"), close_rubygem_ownership_calls_path(@ownership_call.rubygem.slug), method: :patch, class: "form__submit form__submit--medium" %>
     <% end %>
   </div>
 

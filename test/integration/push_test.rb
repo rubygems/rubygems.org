@@ -133,7 +133,7 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "pushing a signed gem" do
-    push_gem gem_file("valid_signature-0.0.0.gem")
+    push_gem gem_file("valid_signature-0.0.0.gem", &:path)
 
     assert_response :success
 
@@ -171,12 +171,10 @@ class PushTest < ActionDispatch::IntegrationTest
     Gem::Specification.any_instance.stubs(:_dump).raises(NoMethodError)
     push_gem "sandworm-1.0.0.gem"
 
-    assert_response :internal_server_error
-    assert_match(/problem saving your gem. Please try again./, response.body)
+    assert_response :unprocessable_entity
+    assert_match(/Please try rebuilding it and installing it locally to make sure it's valid./, response.body)
 
-    rubygem = Rubygem.find_by(name: "sandworm")
-    # assert_nil rubygem
-    assert_empty rubygem.versions
+    assert_nil Rubygem.find_by(name: "sandworm")
     assert_nil Version.find_by(full_name: "sandworm-1.0.0")
     assert_nil RubygemFs.instance.get("gems/sandworm-1.0.0.gem")
     assert_nil RubygemFs.instance.get("quick/Marshal.4.8/sandworm-1.0.0.gemspec.rz")

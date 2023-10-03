@@ -14,7 +14,7 @@ class VersionTest < ActiveSupport::TestCase
 
       fields = %w[number built_at summary description authors platform
                   ruby_version rubygems_version prerelease downloads_count licenses
-                  requirements sha metadata created_at]
+                  requirements sha spec_sha metadata created_at]
 
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
@@ -43,7 +43,7 @@ class VersionTest < ActiveSupport::TestCase
       xml = Nokogiri.parse(@version.to_xml)
       fields = %w[number built-at summary description authors platform
                   ruby-version rubygems-version prerelease downloads-count licenses
-                  requirements sha metadata created-at]
+                  requirements sha spec-sha metadata created-at]
 
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
@@ -250,10 +250,11 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "limit the character length" do
-      @version.required_rubygems_version = format(">=%s", "0" * 2 * 1024 * 1024 * 100)
+      @version.required_rubygems_version = format(">=%s", "0" * 1024)
       @version.validate
 
-      assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:required_rubygems_version])
+      assert_equal(["is too long (maximum is 255 characters)", "must be list of valid requirements"],
+                   @version.errors.messages[:required_rubygems_version])
     end
   end
 

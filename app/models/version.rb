@@ -9,6 +9,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_one :gem_download, inverse_of: :version, dependent: :destroy
   belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true
+  has_one :deletion, ->(v) { where(rubygem: v.rubygem.name, platform: v.platform) },
+    dependent: :delete, inverse_of: :version, required: false,
+    primary_key: :number,
+    foreign_key: :number
 
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
@@ -23,13 +27,18 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   serialize :requirements
   serialize :cert_chain, CertificateChainSerializer
 
-  validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/o }
+  validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::VERSION_PATTERN }
   validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
-  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }, on: :create
-  validates :full_name, presence: true, uniqueness: { case_sensitive: false }
-  validates :gem_full_name, presence: true, uniqueness: { case_sensitive: false, allow_nil: true }, on: :create
+  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN },
+            if: -> { validation_context == :create || gem_platform_changed? }
+  validates :full_name, presence: true, uniqueness: { case_sensitive: false },
+            if: -> { validation_context == :create || full_name_changed? }
+  validates :gem_full_name, presence: true, uniqueness: { case_sensitive: false },
+            if: -> { validation_context == :create || gem_full_name_changed? }
   validates :rubygem, presence: true
-  validates :required_rubygems_version, :licenses, :required_ruby_version, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
+  validates :licenses, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
+  validates :required_rubygems_version, :required_ruby_version, length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
+    gem_requirements: true, allow_blank: true
   validates :description, :summary, :authors, :requirements, :cert_chain,
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
@@ -39,7 +48,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validate :gem_platform_and_number_are_unique, on: :create
   validate :original_platform_resolves_to_gem_platform, on: %i[create platform_changed? gem_platform_changed?]
   validate :authors_format, on: :create
-  validate :metadata_links_format
+  validate :metadata_links_format, if: -> { validation_context == :create || metadata_changed? }
   validate :metadata_attribute_length
   validate :no_dashes_in_version_number, on: :create
 
@@ -305,7 +314,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       "prerelease"                 => prerelease,
       "licenses"                   => licenses,
       "requirements"               => requirements,
-      "sha"                        => sha256_hex
+      "sha"                        => sha256_hex,
+      "spec_sha"                   => spec_sha256_hex
     }
   end
 
@@ -367,6 +377,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def sha256_hex
     Version._sha256_hex(sha256) if sha256
+  end
+
+  def spec_sha256_hex
+    Version._sha256_hex(spec_sha256) if spec_sha256
   end
 
   def self._sha256_hex(raw)
@@ -450,8 +464,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def metadata_links_format
     Linkset::LINKS.each do |link|
-      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL") if
-        metadata[link] && metadata[link] !~ Patterns::URL_VALIDATION_REGEXP
+      url = metadata[link]
+      next unless url
+      next if Patterns::URL_VALIDATION_REGEXP.match?(url)
+      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL")
     end
   end
 

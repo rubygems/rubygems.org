@@ -327,6 +327,12 @@ zh-CN:
       title: 新的发布 — 热门 Gem
   pages:
     about:
+      contributors_amount:
+      downloads_amount:
+      checkout_code:
+      mit_licensed:
+      logo_header:
+      logo_details:
       founding_html: 此项目由 %{founder} 创立于 2009 年 4 月，之后有超过 %{contributors} 贡献者以及 %{downloads}。自从
         RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中的核心作用。
       support_html: 虽然 RubyGems.org 不是由一个具体的公司来运作，但也有很多帮助让我们走了这么远。网站目前的设计、插画、和前端开发都是由
@@ -510,7 +516,6 @@ zh-CN:
       change_avatar: 修改头像
       email_awaiting_confirmation: 请确认您新的邮箱地址 %{unconfirmed_email}
       enter_password: 请输入您账户的密码
-      hide_email: 在公开的个人资料里面隐藏我的邮箱
       optional_full_name: 可填。将公开显示
       optional_twitter_username: 可选 Twitter 用户名。这将会被公开显示
       title: 修改个人资料
@@ -533,6 +538,7 @@ zh-CN:
     update:
       confirmation_mail_sent: 几分钟后您会收到一封邮件，它包含了确认您新邮箱地址的操作说明。
       updated: 您的个人资料已更新
+    public_email: 在公开的个人资料里面展示我的 Email
     request_denied: 请求被驳回，您的密码无法被我们验证通过。
     show:
       title: "%{username} 的个人资料"

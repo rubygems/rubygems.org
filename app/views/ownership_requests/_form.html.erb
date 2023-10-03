@@ -1,5 +1,5 @@
 <div class="t-body">
-  <%= form_tag rubygem_ownership_requests_path(@rubygem), method: :post, class: "ownership_request_form", id: "new_ownership_request" do %>
+  <%= form_tag rubygem_ownership_requests_path(@rubygem.slug), method: :post, class: "ownership_request_form", id: "new_ownership_request" do %>
     <div class="text_field push--top-s">
       <%= label_tag :note, t("ownership_requests.note_for_owners"), class: "form__label" %>
       <%= t("ownership_calls.markup_supported_html") %>

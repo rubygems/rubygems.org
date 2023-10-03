@@ -7,6 +7,13 @@ class PusherTest < ActiveSupport::TestCase
     @user = create(:user, email: "user@example.com")
     @gem = gem_file
     @cutter = Pusher.new(@user, @gem)
+
+    # Ensure we test #log_pushing
+    @cutter.logger.level = :info
+  end
+
+  teardown do
+    @gem&.close
   end
 
   context "creating a new gemcutter" do
@@ -25,6 +32,11 @@ class PusherTest < ActiveSupport::TestCase
 
     should "initialize size from the gem" do
       assert_equal @gem.size, @cutter.size
+    end
+
+    should "#inspect" do
+      assert_equal "<Pusher @rubygem=nil @user=#{@user.inspect} @message=nil @code=nil>",
+                   @cutter.inspect
     end
 
     context "processing incoming gems" do
@@ -163,6 +175,70 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal 422, @cutter.code
     end
 
+    should "not be able to save a gem if the required_ruby_version is not valid" do
+      @cutter.stubs(:spec).returns(new_gemspec("bad-required-ruby-version", "1.0.0", "Summary", "ruby") do |s|
+        s.instance_variable_set(:@required_ruby_version, Gem::Requirement.new)
+          .instance_variable_set(:@requirements, [[">=", "test"]])
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/Required ruby version must be list of valid requirements/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the required_rubygems_version is not valid" do
+      @cutter.stubs(:spec).returns(new_gemspec("bad-required-rubygems-version", "1.0.0", "Summary", "ruby") do |s|
+        s.instance_variable_set(:@required_rubygems_version, Gem::Requirement.new)
+          .instance_variable_set(:@requirements, [[">=", "test"]])
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/Required rubygems version must be list of valid requirements/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the dependency requirement is not valid" do
+      @cutter.stubs(:spec).returns(new_gemspec("bad-dependency-requirement", "1.0.0", "Summary", "ruby") do |s|
+        s.add_runtime_dependency "foo"
+        s.dependencies.first.requirement
+          .instance_variable_set(:@requirements, [["!!!", "0"]])
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/requirements must be list of valid requirements/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the dependency name is not valid" do
+      @cutter.stubs(:spec).returns(new_gemspec("bad-dependency-name", "1.0.0", "Summary", "ruby") do |s|
+        s.add_runtime_dependency "\nother"
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      @cutter.process
+
+      assert_match(/Dependency unresolved name can only include letters, numbers, dashes, and underscores/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the metadata has incorrect values" do
+      @cutter.stubs(:spec).returns(new_gemspec("bad-metadata", "1.0.0", "Summary", "ruby") do |s|
+        s.metadata["foo"] = []
+      end)
+      @cutter.stubs(:validate_signature_exists?).returns(true)
+
+      refute @cutter.process
+
+      assert_match(/metadata\['foo'\] value must be a String/, @cutter.message)
+      assert_equal 422, @cutter.code
+    end
+
     should "not be able to save a gem if it is signed and has been tampered with" do
       @gem = gem_file("valid_signature_tampered-0.0.1.gem")
       @cutter = Pusher.new(@user, @gem)
@@ -297,6 +373,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
       @cutter.stubs(:size).returns 5
       @cutter.stubs(:body).returns StringIO.new("dummy body")
 
@@ -341,6 +418,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
       @cutter.find
 
       assert_equal @rubygem, @cutter.rubygem
@@ -377,6 +455,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
       @cutter.find
 
       @cutter.rubygem.save
@@ -397,6 +476,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns Gem::Platform.new("universal-darwin-6000")
       spec.stubs(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
 
       @cutter.find
 
@@ -615,7 +695,9 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal 0, rubygem.versions.count
     end
 
-    teardown { RubygemFs.mock! }
+    teardown do
+      RubygemFs.mock!
+    end
   end
 
   context "has a scoped gem" do
@@ -655,6 +737,8 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "CN=snakeoil/DC=example/DC=invalid", @cutter.version.cert_chain.first.subject.to_utf8
     end
 
-    teardown { RubygemFs.mock! }
+    teardown do
+      RubygemFs.mock!
+    end
   end
 end

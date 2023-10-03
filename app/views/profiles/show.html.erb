@@ -63,7 +63,7 @@
           %>
         </div>
       <% else %>
-        <% unless @user.hide_email %>
+        <% if @user.public_email? %>
           <p id="profile-email">
             <%=
               mail_to(

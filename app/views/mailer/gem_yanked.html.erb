@@ -13,11 +13,11 @@
           A version of a gem you are an owner of was recently yanked from RubyGems.org.
         </p>
         <p>
-          Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem, @version.slug), target: "_blank" %></strong>
+          Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem.slug, @version.slug), target: "_blank" %></strong>
           <br/>
           Yanked by user:
           <strong>
-            <%= link_to @yanked_by_user.handle, profile_url(@yanked_by_user.display_id), target: "_blank" %> <%= mail_to(@yanked_by_user.email) unless @yanked_by_user.hide_email? %>
+            <%= link_to @yanked_by_user.handle, profile_url(@yanked_by_user.display_id), target: "_blank" %> <%= mail_to(@yanked_by_user.email) if @yanked_by_user.public_email? %>
           </strong>
           <br/>
           Yanked at: <strong><%= @version.yanked_at.to_formatted_s(:rfc822) %></strong>

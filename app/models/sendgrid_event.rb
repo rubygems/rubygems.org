@@ -2,6 +2,7 @@
 
 class SendgridEvent < ApplicationRecord
   enum :status, %i[pending processed].index_with(&:to_s)
+  enum :event_type, %i[delivered dropped bounce].index_with(&:to_s)
 
   # To make allowances for occasional inbox down time, this counts a maximum of one fail per day,
   # e.g.:

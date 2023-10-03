@@ -14,7 +14,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
     context "with #{format.to_s.upcase}" do
       should "have a list of versions for the first gem" do
         get_show(@rubygem, "2.0.0", format)
-        @response.body
+        yield @response.body
 
         assert_response :success
       end
@@ -38,12 +38,6 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       expected = { controller: "api/v2/versions", action: "show", rubygem_name: "foo", number: "1.0.0", format: "yaml" }
 
       assert_recognizes expected, "/api/v2/rubygems/foo/versions/1.0.0.yaml"
-    end
-
-    should "route to show with .sha256" do
-      expected = { controller: "api/v2/versions", action: "show", rubygem_name: "foo", number: "1.0.0", format: "sha256" }
-
-      assert_recognizes expected, "/api/v2/rubygems/foo/versions/1.0.0.sha256"
     end
 
     should "not be confused by prerelease versions" do
@@ -78,40 +72,6 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
 
     should_respond_to(:yaml) do |body|
       YAML.safe_load(body)
-    end
-
-    context "with .sha256 format" do
-      setup do
-        @checksums = { "file" => "hash", "file2" => "hash2" }
-        manifest = VersionManifest.new(gem: @rubygem.name, number: "2.0.0")
-        manifest.store_checksums(@checksums)
-      end
-
-      should "return not found when the hashed files are not available" do
-        get_show(@rubygem, "1.0.0.pre", :sha256)
-
-        assert_response :not_found
-      end
-
-      should "return not found when the gem is not indexed" do
-        get_show(@rubygem, "3.0.0", :sha256)
-
-        assert_response :not_found
-      end
-
-      should "have a list of versions for the first gem" do
-        get_show(@rubygem, "2.0.0", :sha256)
-
-        assert_response :success
-        assert_equal ShasumFormat.generate(@checksums), @response.body
-      end
-
-      should "not be confused by ruby platform" do
-        get :show, params: { rubygem_name: @rubygem.name, number: "2.0.0", platform: "ruby", format: :sha256 }
-
-        assert_response :success
-        assert_equal ShasumFormat.generate(@checksums), @response.body
-      end
     end
 
     should "return Last-Modified header" do
@@ -170,6 +130,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
         response = JSON.load(@response.body)
 
         assert_equal "jruby", response["platform"]
+        assert_equal "2.0.0", response["version"]
       end
 
       should "return platform version with platform param" do
@@ -179,6 +140,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
         response = JSON.load(@response.body)
 
         assert_equal "ruby", response["platform"]
+        assert_equal "2.0.0", response["version"]
       end
     end
   end
@@ -251,5 +213,18 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
     should("have dependencies") { assert @response["dependencies"] }
     should("have development dependencies") { assert @response["dependencies"]["development"] }
     should("have runtime dependencies") { assert @response["dependencies"]["runtime"] }
+    should "have expected keys" do
+      assert_equal(
+        %w[
+          name downloads version version_created_at version_downloads platform
+          authors info licenses metadata yanked sha project_uri gem_uri
+          homepage_uri wiki_uri documentation_uri mailing_list_uri
+          source_code_uri bug_tracker_uri changelog_uri funding_uri dependencies
+          built_at created_at description downloads_count number summary
+          rubygems_version ruby_version prerelease requirements spec_sha
+        ],
+        @response.keys
+      )
+    end
   end
 end

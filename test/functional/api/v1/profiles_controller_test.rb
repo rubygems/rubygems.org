@@ -170,9 +170,9 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
       end
 
-      context "on GET to show when hide email is disabled" do
+      context "on GET to show when email is public" do
         setup do
-          @user.update(hide_email: false)
+          @user.update(public_email: true)
           get :show, params: { id: @user.handle }, format: format
         end
 

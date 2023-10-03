@@ -4,7 +4,7 @@ class Pusher
   include TraceTagger
   include SemanticLogger::Loggable
 
-  attr_reader :api_key, :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
+  attr_reader :api_key, :user, :spec, :spec_contents, :message, :code, :rubygem, :body, :version, :version_id, :size
 
   def initialize(api_key, body, remote_ip = "", scoped_rubygem = nil)
     # this is ugly, but easier than updating all the unit tests, for now
@@ -64,7 +64,7 @@ class Pusher
     # can clean things up well.
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
     trace("gemcutter.pusher.write_gem") do
-      write_gem @body, @spec
+      write_gem @body, @spec_contents
     end
   rescue ArgumentError => e
     @version.destroy
@@ -84,7 +84,7 @@ class Pusher
     package = Gem::Package.new(body, gem_security_policy)
     @spec = package.spec
     @files = package.files
-    validate_spec
+    validate_spec && serialize_spec
   rescue StandardError => e
     notify <<~MSG, 422
       RubyGems.org cannot process this gem.
@@ -116,12 +116,14 @@ class Pusher
     @rubygem.name = name
 
     sha256 = Digest::SHA2.base64digest(body.string)
+    spec_sha256 = Digest::SHA2.base64digest(spec_contents)
 
     @version = @rubygem.versions.new number: spec.version.to_s,
                                      platform: spec.original_platform.to_s,
                                      gem_platform: spec.platform.to_s,
                                      size: size,
                                      sha256: sha256,
+                                     spec_sha256: spec_sha256,
                                      pusher: user,
                                      pusher_api_key: api_key,
                                      cert_chain: spec.cert_chain
@@ -164,6 +166,8 @@ class Pusher
   end
 
   def notify(message, code)
+    logger.info { { message:, code:, user: user.id, api_key: api_key&.id, rubygem: rubygem&.name, version: version&.full_name } }
+
     @message = message
     @code    = code
     false
@@ -231,23 +235,18 @@ class Pusher
     ActiveRecord::Type::Boolean.new.cast(spec.metadata["rubygems_mfa_required"])
   end
 
-  def write_gem(body, spec)
+  def write_gem(body, spec_contents)
     # we validate that the version full_name == spec.original_name
     original_name = @version.full_name
 
     gem_path = "gems/#{original_name}.gem"
     gem_contents = body.string
 
-    spec.abbreviate
-    spec.sanitize
     spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
-    spec_contents = Gem.deflate(Marshal.dump(spec))
-
-    spec_contents_checksum = Digest::SHA2.base64digest(spec_contents)
 
     # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
     RubygemFs.instance.store(gem_path, gem_contents, checksum_sha256: version.sha256)
-    RubygemFs.instance.store(spec_path, spec_contents, checksum_sha256: spec_contents_checksum)
+    RubygemFs.instance.store(spec_path, spec_contents, checksum_sha256: version.spec_sha256)
 
     Fastly.purge(path: gem_path)
     Fastly.purge(path: spec_path)
@@ -271,9 +270,9 @@ class Pusher
   end
 
   def validate_spec
-    @spec.send(:invalidate_memoized_attributes)
+    spec.send(:invalidate_memoized_attributes)
 
-    spec = @spec.dup
+    spec = self.spec.dup
 
     cert_chain = spec.cert_chain
 
@@ -288,5 +287,13 @@ class Pusher
     policy = SpecificationPolicy.new(spec)
     policy.ui = Gem::StreamUI.new(stream, stream, stream, false)
     policy.validate(false)
+  end
+
+  def serialize_spec
+    spec = self.spec.dup
+    spec.abbreviate
+    spec.sanitize
+    @spec_contents = Gem.deflate(Marshal.dump(spec))
+    true
   end
 end

@@ -321,6 +321,12 @@ en:
       title: New Releases — Popular Gems
   pages:
     about:
+      contributors_amount: "%{count} Rubyists"
+      downloads_amount: "millions of gem downloads"
+      checkout_code: "please check out the code"
+      mit_licensed: "MIT licensed"
+      logo_header: Looking for our logo?
+      logo_details: Just select the download button and you'll get three .PNGs and an .SVG of the RubyGems logo all for yourself.
       founding_html: The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community.
       support_html: Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on. Our infrastructure is currently hosted on %{aws}.
       technical_html: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3}, served by %{fastly}, and the time between publishing a new gem and having it ready for installation is usually just a few seconds. For more info, %{source_code}, which is %{license} over at GitHub."
@@ -499,7 +505,6 @@ en:
       change_avatar: Change Avatar
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
-      hide_email: Hide email in public profile
       optional_full_name: Optional. Will be displayed publicly
       optional_twitter_username: Optional Twitter username. Will be displayed publicly
       title: Edit profile
@@ -521,6 +526,7 @@ en:
     update:
       confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
       updated: Your profile was updated.
+    public_email: Show email in public profile
     request_denied: This request was denied. We could not verify your password.
     show:
       title: Profile of %{username}

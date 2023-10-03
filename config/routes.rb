@@ -12,7 +12,12 @@ Rails.application.routes.draw do
       resources :rubygems, param: :name, only: [], constraints: { name: Patterns::ROUTE_PATTERN } do
         resources :versions, param: :number, only: :show, constraints: {
           number: /#{Gem::Version::VERSION_PATTERN}(?=\.(json|yaml|sha256)\z)|#{Gem::Version::VERSION_PATTERN}/o
-        }
+        } do
+          resources :contents, only: :index, constraints: {
+            version_number: /#{Gem::Version::VERSION_PATTERN}/o,
+            format: /json|yaml|sha256/
+          }
+        end
       end
     end
 

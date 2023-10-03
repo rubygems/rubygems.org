@@ -8,6 +8,9 @@ class SendgridEventResource < Avo::BaseResource
   class StatusFilter < ScopeBooleanFilter; end
   filter StatusFilter, arguments: { default: SendgridEvent.statuses.transform_values { true } }
 
+  class EventTypeFilter < ScopeBooleanFilter; end
+  filter EventTypeFilter, arguments: { default: SendgridEvent.event_types.transform_values { true } }
+
   filter EmailFilter
 
   field :id, as: :id, hide_on: :index

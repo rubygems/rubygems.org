@@ -1,9 +1,16 @@
 class Deletion < ApplicationRecord
   belongs_to :user
 
+  belongs_to :version, ->(d) { joins(:rubygem).where(platform: d.platform, rubygem: { name: d.rubygem }) },
+    class_name: "Version",
+    foreign_key: :number,
+    primary_key: :number,
+    inverse_of: :deletion
+
   validates :user, :rubygem, :number, presence: true
   validates :version, presence: true
-  validate :version_is_indexed
+  validate :version_is_indexed, on: :create
+  validate :metadata_matches_version
 
   before_validation :record_metadata
   after_create :remove_from_index, :set_yanked_info_checksum
@@ -11,9 +18,7 @@ class Deletion < ApplicationRecord
   after_commit :remove_version_contents, on: :create
   after_commit :expire_cache
   after_commit :update_search_index
-  after_commit :send_gem_yanked_mail
-
-  attr_accessor :version
+  after_commit :send_gem_yanked_mail, on: :create
 
   def restore!
     restore_to_index
@@ -25,17 +30,23 @@ class Deletion < ApplicationRecord
   private
 
   def version_is_indexed
-    errors.add(:base, "#{rubygem_name} #{version} has already been deleted") unless @version.indexed?
+    errors.add(:base, "#{rubygem_name} #{version} has already been deleted") unless version.indexed?
+  end
+
+  def metadata_matches_version
+    errors.add(:rubygem, "does not match version rubygem name") unless rubygem == version.rubygem.name
+    errors.add(:number, "does not match version number") unless number == version.number
+    errors.add(:platform, "does not match version platform") unless platform == version.platform
   end
 
   def rubygem_name
-    @version.rubygem.name
+    version.rubygem.name
   end
 
   def record_metadata
     self.rubygem = rubygem_name
-    self.number = @version.number
-    self.platform = @version.platform
+    self.number = version.number
+    self.platform = version.platform
   end
 
   def expire_cache
@@ -44,7 +55,7 @@ class Deletion < ApplicationRecord
   end
 
   def remove_from_index
-    @version.update!(indexed: false, yanked_at: Time.now.utc)
+    version.update!(indexed: false, yanked_at: Time.now.utc)
     reindex
   end
 
@@ -61,14 +72,14 @@ class Deletion < ApplicationRecord
 
   def remove_from_storage
     RubygemFs.instance.remove(
-      "gems/#{@version.full_name}.gem",
-      "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"
+      "gems/#{version.full_name}.gem",
+      "quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
     )
   end
 
   def restore_to_storage
-    RubygemFs.instance.restore("gems/#{@version.full_name}.gem")
-    RubygemFs.instance.restore("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    RubygemFs.instance.restore("gems/#{version.full_name}.gem")
+    RubygemFs.instance.restore("quick/Marshal.4.8/#{version.full_name}.gemspec.rz")
   end
 
   def remove_version_contents
@@ -80,12 +91,12 @@ class Deletion < ApplicationRecord
   end
 
   def purge_fastly
-    FastlyPurgeJob.perform_later(path: "gems/#{@version.full_name}.gem", soft: false)
-    FastlyPurgeJob.perform_later(path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz", soft: false)
+    FastlyPurgeJob.perform_later(path: "gems/#{version.full_name}.gem", soft: false)
+    FastlyPurgeJob.perform_later(path: "quick/Marshal.4.8/#{version.full_name}.gemspec.rz", soft: false)
   end
 
   def update_search_index
-    ReindexRubygemJob.perform_later(rubygem: @version.rubygem)
+    ReindexRubygemJob.perform_later(rubygem: version.rubygem)
   end
 
   def set_yanked_info_checksum

@@ -313,6 +313,12 @@ nl:
       title:
   pages:
     about:
+      contributors_amount:
+      downloads_amount:
+      checkout_code:
+      mit_licensed:
+      logo_header:
+      logo_details:
       founding_html: Het project is gestart in april 2009 door %{founder} en is sindsdien
         uitgegroeid tot een dienst met bijdragen van meer dan %{contributors} en %{downloads}.
         Sinds de RubyGems 1.3.6 release, is de site hernoemd van Gemcutter naar %{title} om
@@ -504,7 +510,6 @@ nl:
       change_avatar:
       email_awaiting_confirmation:
       enter_password:
-      hide_email:
       optional_full_name:
       optional_twitter_username:
       title: Wijzig profiel
@@ -526,6 +531,7 @@ nl:
     update:
       confirmation_mail_sent:
       updated:
+    public_email:
     request_denied:
     show:
       title: Profiel van %{username}

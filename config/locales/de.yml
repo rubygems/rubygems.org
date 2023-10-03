@@ -308,6 +308,12 @@ de:
       title:
   pages:
     about:
+      contributors_amount:
+      downloads_amount:
+      checkout_code:
+      mit_licensed:
+      logo_header:
+      logo_details:
       founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und
         hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems
         1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale
@@ -500,7 +506,6 @@ de:
       change_avatar:
       email_awaiting_confirmation:
       enter_password:
-      hide_email: Verberge E-Mails in öffentlichem Profil
       optional_full_name:
       optional_twitter_username:
       title: Bearbeite Profil
@@ -522,6 +527,7 @@ de:
     update:
       confirmation_mail_sent:
       updated:
+    public_email: Anzeige E-Mails in öffentlichem Profil
     request_denied:
     show:
       title: Profil von %{username}
