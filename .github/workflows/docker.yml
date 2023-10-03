@@ -38,7 +38,7 @@ jobs:
           aws-region: us-west-2
       - name: Login to Amazon ECR
         if: github.secret_source != 'None'
-        uses: aws-actions/amazon-ecr-login@2fc7aceee09e9e4a7105c0d060c656fad0b4f63d # v1.7.0
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
       - name: build, test and optionally push docker image
         run: ./script/build_docker.sh
       # Temp fix
