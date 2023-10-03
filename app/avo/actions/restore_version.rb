@@ -3,7 +3,7 @@ class RestoreVersion < BaseAction
   self.visible = lambda {
     current_user.team_member?("rubygems-org") &&
       view == :show &&
-      resource.model.indexed == false
+      resource.model.yanked?
   }
   self.message = lambda {
     "Are you sure you would like to restore #{record.slug} with "
@@ -12,9 +12,7 @@ class RestoreVersion < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(version)
-      rubygem = version.rubygem
-      Deletion.where(rubygem: rubygem.name, number: version.number, platform: version.platform).each do |deletion|
-        deletion.version = rubygem.find_version!(number: deletion.number, platform: deletion.platform)
+      Deletion.where(version: version).find_each do |deletion|
         deletion.restore!
       end
     end

@@ -24,7 +24,7 @@ requester = User.create_with(
   email_confirmed: true
 ).find_or_create_by!(email: "gem-requester@example.com")
 
-User.create_with(
+security_user = User.create_with(
   email_confirmed: true,
   password:
 ).find_or_create_by!(email: "security@rubygems.org")
@@ -76,11 +76,12 @@ Version.create_with(
   pusher: maintainer,
   dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))]
 ).find_or_create_by!(rubygem: rubygem1, number: "1.1.0.pre.2", platform: "ruby", gem_platform: "ruby")
-Version.create_with(
-  indexed: false,
+
+yanked_version = Version.create_with(
   pusher: author,
-  yanked_at: Time.utc(2020, 3, 3)
 ).find_or_create_by!(rubygem: rubygem_requestable, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
+
+security_user.deletions.create!(version: yanked_version)
 
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
