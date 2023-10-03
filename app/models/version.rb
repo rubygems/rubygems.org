@@ -5,6 +5,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
+  has_many :audits, as: :auditable, inverse_of: :auditable, dependent: :nullify
   has_one :gem_download, inverse_of: :version, dependent: :destroy
   belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true

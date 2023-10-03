@@ -5,6 +5,8 @@ class VersionResource < Avo::BaseResource
     scope.where("full_name LIKE ?", "#{params[:q]}%")
   }
 
+  action RestoreVersion
+
   class IndexedFilter < ScopeBooleanFilter; end
   filter IndexedFilter, arguments: { default: { indexed: true, yanked: true } }
 
