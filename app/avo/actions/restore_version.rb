@@ -12,9 +12,7 @@ class RestoreVersion < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(version)
-      Deletion.where(version: version).find_each do |deletion|
-        deletion.restore!
-      end
+      Deletion.where(version: version).find_each(&:restore!)
     end
   end
 end
