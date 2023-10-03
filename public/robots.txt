@@ -4,3 +4,4 @@ Disallow: /gems?letter=*
 Disallow: /search?*
 Disallow: /names
 Disallow: /news
+Disallow: /gems/*/versions/*
