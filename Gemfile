@@ -69,6 +69,7 @@ group :assets do
   gem "dartsass-sprockets", "~> 3.0"
   gem "terser", "~> 1.1"
   gem "autoprefixer-rails", "~> 10.4"
+  gem "tailwindcss-rails", "~> 2.0"
 end
 
 group :development, :test do
