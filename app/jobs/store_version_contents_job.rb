@@ -27,8 +27,8 @@ class StoreVersionContentsJob < ApplicationJob
     raise VersionNotIndexed, "Version #{version&.full_name.inspect} is not indexed" unless version&.indexed?
     logger.info "Storing gem contents for #{version.full_name}"
 
-    gem = RubygemFs.instance.get("gems/#{version.full_name}.gem")
-    raise GemNotFound, "Gem file not found: #{version.full_name}.gem" unless gem
+    gem = RubygemFs.instance.get("gems/#{version.gem_file_name}")
+    raise GemNotFound, "Gem file not found: #{version.gem_file_name}" unless gem
 
     package = Gem::Package.new(StringIO.new(gem))
     version.manifest.store_package package
