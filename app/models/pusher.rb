@@ -149,6 +149,7 @@ class Pusher
     RackAttackReset.gem_push_backoff(@request.remote_ip, owner.to_gid) if @request&.remote_ip.present?
     AfterVersionWriteJob.new(version:).perform(version:)
     StatsD.increment "push.success"
+    Rstuf::AddJob.perform_later(version:)
   end
 
   def notify(message, code)
