@@ -56,7 +56,7 @@ class Links
 
   # technically this is a path
   def download_uri
-    "/downloads/#{version.full_name}.gem" if version.indexed
+    "/downloads/#{version.gem_file_name}" if version.indexed
   end
 
   # excluded from metadata_uri_set? check

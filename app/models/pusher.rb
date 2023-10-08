@@ -235,14 +235,12 @@ class Pusher
     ActiveRecord::Type::Boolean.new.cast(spec.metadata["rubygems_mfa_required"])
   end
 
+  # we validate that the version full_name == spec.original_name
   def write_gem(body, spec_contents)
-    # we validate that the version full_name == spec.original_name
-    original_name = @version.full_name
-
-    gem_path = "gems/#{original_name}.gem"
+    gem_path = "gems/#{@version.gem_file_name}"
     gem_contents = body.string
 
-    spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
+    spec_path = "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"
 
     # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
     RubygemFs.instance.store(gem_path, gem_contents, checksum_sha256: version.sha256)

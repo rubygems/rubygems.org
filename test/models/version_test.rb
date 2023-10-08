@@ -453,6 +453,12 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.slug
     end
 
+    should "compose gem_file_name" do
+      @version.full_name = "abc-1.1.1"
+
+      assert_equal "abc-1.1.1.gem", @version.gem_file_name
+    end
+
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
         @version.rubygem.find_version!(number: "some stupid version 399", platform: @version.platform)

@@ -72,13 +72,13 @@ class Deletion < ApplicationRecord
 
   def remove_from_storage
     RubygemFs.instance.remove(
-      "gems/#{version.full_name}.gem",
+      "gems/#{version.gem_file_name}",
       "quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
     )
   end
 
   def restore_to_storage
-    RubygemFs.instance.restore("gems/#{version.full_name}.gem")
+    RubygemFs.instance.restore("gems/#{version.gem_file_name}")
     RubygemFs.instance.restore("quick/Marshal.4.8/#{version.full_name}.gemspec.rz")
   end
 
@@ -91,7 +91,7 @@ class Deletion < ApplicationRecord
   end
 
   def purge_fastly
-    FastlyPurgeJob.perform_later(path: "gems/#{version.full_name}.gem", soft: false)
+    FastlyPurgeJob.perform_later(path: "gems/#{version.gem_file_name}", soft: false)
     FastlyPurgeJob.perform_later(path: "quick/Marshal.4.8/#{version.full_name}.gemspec.rz", soft: false)
   end
 
