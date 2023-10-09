@@ -59,6 +59,11 @@ ja:
         unpwn: 過去にデータ侵害を受けたためお使いになれません
         blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed:
+              already_invited:
         version:
           attributes:
             gem_full_name:

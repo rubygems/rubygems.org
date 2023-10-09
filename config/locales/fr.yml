@@ -66,6 +66,11 @@ fr:
         unpwn:
         blocked:
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed:
+              already_invited:
         version:
           attributes:
             gem_full_name:

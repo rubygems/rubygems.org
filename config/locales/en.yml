@@ -64,6 +64,11 @@ en:
         unpwn: has previously appeared in a data breach and should not be used
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed: "is already an owner of this gem"
+              already_invited: "is already invited to this gem"
         version:
           attributes:
             gem_full_name:

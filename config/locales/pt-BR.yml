@@ -65,6 +65,11 @@ pt-BR:
         unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
         blocked:
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed:
+              already_invited:
         version:
           attributes:
             gem_full_name:
