@@ -172,14 +172,17 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    datadog-ci (0.2.0)
+      msgpack
     date (3.3.3)
-    ddtrace (1.14.0)
-      debase-ruby_core_source (= 3.2.1)
-      libdatadog (~> 3.0.0.1.0)
-      libddwaf (~> 1.9.0.0.0)
+    ddtrace (1.15.0)
+      datadog-ci (~> 0.2.0)
+      debase-ruby_core_source (= 3.2.2)
+      libdatadog (~> 5.0.0.1.0)
+      libddwaf (~> 1.14.0.0.0)
       msgpack
     dead_end (4.0.0)
-    debase-ruby_core_source (3.2.1)
+    debase-ruby_core_source (3.2.2)
     derailed_benchmarks (2.1.2)
       benchmark-ips (~> 2)
       dead_end
@@ -238,7 +241,7 @@ GEM
     faraday_middleware-aws-sigv4 (0.6.1)
       aws-sigv4 (~> 1.0)
       faraday (>= 1.8, < 2)
-    ffi (1.15.5)
+    ffi (1.16.3)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -328,8 +331,8 @@ GEM
       letter_opener (~> 1.7)
       railties (>= 5.2)
       rexml
-    libdatadog (3.0.0.1.0)
-    libddwaf (1.9.0.0.1)
+    libdatadog (5.0.0.1.0)
+    libddwaf (1.14.0.0.0)
       ffi (~> 1.0)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
