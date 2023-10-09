@@ -4,7 +4,7 @@ class Ownership < ApplicationRecord
   belongs_to :authorizer, class_name: "User"
   has_many :api_key_rubygem_scopes, dependent: :destroy
 
-  validates :user_id, uniqueness: { scope: :rubygem_id }
+  validate :validate_unique_user
 
   delegate :name, to: :user, prefix: :owner
   delegate :name, to: :authorizer, prefix: true, allow_nil: true
@@ -71,5 +71,18 @@ class Ownership < ApplicationRecord
 
   def safe_destroy
     destroy if unconfirmed? || rubygem.owners.many?
+  end
+
+  def validate_unique_user
+    return unless rubygem && user
+    ownerships = persisted? ? Ownership.where.not(id: id) : Ownership
+    other = ownerships.find_by(rubygem:, user:)
+    return unless other
+
+    if other.confirmed?
+      errors.add :user_id, I18n.t("activerecord.errors.models.ownership.attributes.user_id.already_confirmed")
+    else
+      errors.add :user_id, I18n.t("activerecord.errors.models.ownership.attributes.user_id.already_invited")
+    end
   end
 end
