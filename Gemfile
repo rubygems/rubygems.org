@@ -74,18 +74,12 @@ gem "csv", "~> 3.3" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 
 # Assets
-gem "sprockets-rails", "~> 3.4"
+gem "propshaft", "~> 0.8.0"
 gem "importmap-rails", "~> 2.0"
 gem "stimulus-rails", "~> 1.3" # this adds stimulus-loading.js so it must be available at runtime
 
 group :assets, :development do
   gem "tailwindcss-rails", "~> 2.3"
-end
-
-group :assets do
-  gem "dartsass-sprockets", "~> 3.1"
-  gem "terser", "~> 1.2"
-  gem "autoprefixer-rails", "~> 10.4"
 end
 
 group :development, :test do
