@@ -1,3 +1,11 @@
+import $ from "jquery";
+ import {
+   create,
+   parseCreationOptionsFromJSON,
+   get,
+   parseRequestOptionsFromJSON,
+ } from "@github/webauthn-json/browser-ponyfill";
+
 (function() {
   const handleEvent = function(event) {
     event.preventDefault();
@@ -38,32 +46,6 @@
     };
   };
 
-  const credentialsToBuffer = function(credentials) {
-    return credentials.map(function(credential) {
-      return {
-        id: base64urlToBuffer(credential.id),
-        type: credential.type
-      };
-    });
-  };
-
-  const parseCreationOptionsFromJSON = function(json) {
-    return { 
-      ...json,
-      challenge: base64urlToBuffer(json.challenge),
-      user: { ...json.user, id: base64urlToBuffer(json.user.id) },
-      excludeCredentials: credentialsToBuffer(json.excludeCredentials),
-    };
-  };
-
-  const parseRequestOptionsFromJSON = function(json) {
-    return {
-      ...json,
-      challenge: base64urlToBuffer(json.challenge),
-      allowCredentials: credentialsToBuffer(json.allowCredentials),
-    };
-  };
-
   $(function() {
     const credentialForm = $(".js-new-webauthn-credential--form");
     const credentialError = $(".js-new-webauthn-credential--error");
@@ -81,7 +63,7 @@
       }).then(function (response) {
         return response.json();
       }).then(function (json) {
-        return navigator.credentials.create({
+        return create({
           publicKey: parseCreationOptionsFromJSON(json)
         });
       }).then(function (credentials) {
@@ -116,7 +98,7 @@
   const getCredentials = async function(event, csrfToken) {
     const form = handleEvent(event);
     const options = JSON.parse(form.dataset.options);
-    const credentials = await navigator.credentials.get({
+    const credentials = await get({
       publicKey: parseRequestOptionsFromJSON(options)
     });
     return await fetch(form.action, {

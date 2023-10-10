@@ -1,9 +1,13 @@
-$(function() {
-  var enableGemScopeCheckboxes = $("#push_rubygem, #yank_rubygem, #add_owner, #remove_owner");
+import $ from "jquery";
+
+$(function () {
+  var enableGemScopeCheckboxes = $(
+    "#push_rubygem, #yank_rubygem, #add_owner, #remove_owner"
+  );
   var hiddenRubygemId = "hidden_api_key_rubygem_id";
   toggleGemSelector();
 
-  enableGemScopeCheckboxes.click(function() {
+  enableGemScopeCheckboxes.click(function () {
     toggleGemSelector();
   });
 
@@ -22,12 +26,14 @@ $(function() {
   }
 
   function addHiddenRubygemField() {
-    $("<input>").attr({
-      type: "hidden",
-      id: hiddenRubygemId,
-      name: "api_key[rubygem_id]",
-      value: ""
-    }).appendTo(".t-body form .api_key_rubygem_id_form");
+    $("<input>")
+      .attr({
+        type: "hidden",
+        id: hiddenRubygemId,
+        name: "api_key[rubygem_id]",
+        value: "",
+      })
+      .appendTo(".t-body form .api_key_rubygem_id_form");
   }
 
   function removeHiddenRubygemField() {

@@ -17,12 +17,7 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   def wait_for_ajax
-    Timeout.timeout(Capybara.default_max_wait_time) do
-      loop do
-        active = page.evaluate_script("jQuery.active")
-        break if active.zero?
-      end
-    end
+    find(".suggest-list", wait: true)
   end
 
   test "search field" do

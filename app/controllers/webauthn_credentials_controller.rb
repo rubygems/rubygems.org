@@ -20,6 +20,7 @@ class WebauthnCredentialsController < ApplicationController
       render json: { message: message }, status: :unprocessable_entity
     end
   rescue WebAuthn::Error => e
+    Rails.error.report(e, handled: true)
     render json: { message: e.message }, status: :unprocessable_entity
   ensure
     session.delete("webauthn_registration")

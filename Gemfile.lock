@@ -285,6 +285,10 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    importmap-rails (1.2.3)
+      actionpack (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      railties (>= 6.0.0)
     inline_svg (1.9.0)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
@@ -295,10 +299,6 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.4.1)
       activejob (>= 5.2)
-    jquery-rails (4.6.0)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
     json (2.7.1)
     json-jwt (1.16.5)
       activesupport (>= 4.2)
@@ -462,6 +462,11 @@ GEM
     pp (0.5.0)
       prettyprint
     prettyprint (0.2.0)
+    propshaft (0.7.0)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
+      railties (>= 7.0.0)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -762,7 +767,7 @@ DEPENDENCIES
   high_voltage (~> 3.1)
   honeybadger (~> 5.4)
   http_accept_language (~> 2.1)
-  jquery-rails (~> 4.5)
+  importmap-rails (~> 1.2)
   kaminari (~> 1.2)
   launchdarkly-server-sdk (~> 8.1)
   launchy (~> 2.5)
@@ -786,6 +791,7 @@ DEPENDENCIES
   pg (~> 1.4)
   phlex-rails (~> 1.1)
   pp (= 0.5.0)
+  propshaft (~> 0.7.0)
   pry-byebug (~> 3.10)
   puma (~> 6.4)
   pundit (~> 2.3)
@@ -817,7 +823,6 @@ DEPENDENCIES
   shoulda-matchers (~> 6.1)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
-  sprockets-rails (~> 3.4)
   statsd-instrument (~> 3.5)
   strong_migrations (~> 1.7)
   tailwindcss-rails (~> 2.3)
@@ -937,12 +942,12 @@ CHECKSUMS
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
   httparty (0.21.0) sha256=00ef7bf9a71f30a3bff88edeb5b16a34bea883ab67c246b3f0db2d6794fe1214
   i18n (1.14.1) sha256=9d03698903547c060928e70a9bc8b6b87fda674453cda918fc7ab80235ae4a61
+  importmap-rails (1.2.3) sha256=31f1d82efe03436f3d863626846d0cdfb64e143f2e63690913279e37354312d9
   inline_svg (1.9.0) sha256=f44c5e3d2e401fd619ad3047b7c8cee384517d855edb1d1fb1a248d3cae535d6
   io-console (0.7.2) sha256=f0dccff252f877a4f60d04a4dc6b442b185ebffb4b320ab69212a92b48a7a221
   irb (1.11.1) sha256=0700d626c92f7d47d12e73932ddb0c11b73c1f00608f5eae78dbc44968690842
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.4.1) sha256=7243c40e4decc3d49529867e9c504afaea332976c967ffdebed9ff863c6424af
-  jquery-rails (4.6.0) sha256=3c4e6bf47274340b44d836b8aa1b5472c6d451e2739af5ec094421f39025a7e2
   json (2.7.1) sha256=187ea312fb58420ff0c40f40af1862651d4295c8675267c6a1c353f1a0ac3265
   json-jwt (1.16.5) sha256=c899d6d9c6892e1ed8e423ac153837d4ca4f7069777342f0e3a3398482f309fb
   jwt (2.7.1) sha256=07357cd2f180739b2f8184eda969e252d850ac996ed0a23f616e8ff0a90ae19b
@@ -1006,6 +1011,7 @@ CHECKSUMS
   phlex-rails (1.1.1) sha256=b0e82d0ba541eca55ca39051de8be2817a7ed400f8a630e21b261239c8f812d0
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
+  propshaft (0.7.0) sha256=89789931e1e0b70ae380ad2550f8649b0665b5357fb366565a89f8a6dcc645a7
   pry (0.14.1) sha256=99b6df0665875dd5a39d85e0150aa5a12e2bb4fef401b6c4f64d32ee502f8454
   pry-byebug (3.10.1) sha256=c8f975c32255bfdb29e151f5532130be64ff3d0042dc858d0907e849125581f8
   psych (5.1.2) sha256=337322f58fc2bf24827d2b9bd5ab595f6a72971867d151bb39980060ea40a368

@@ -13,16 +13,14 @@
     <link rel="fluid-icon" href="/fluid-icon.png"/>
     <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-
-    <%= stylesheet_link_tag("application") %>
-    <%= stylesheet_link_tag("tailwind", "data-turbo-track": "reload") %>
+    <%= stylesheet_link_tag("application", "preload_links_header" => true) %>
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link href='https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
     <%= yield :head %>
+    <%= javascript_importmap_tags %>
   </head>
-
   <body class="<%= 'body--index' if request.path_info == '/' %>">
     <!-- Top banner -->
     <% if content_for?(:banner) %>
@@ -39,7 +37,6 @@
         <a class="header__club-sandwich" href="#">
           <span class="t-hidden">Navigation menu</span>
         </a>
-
         <div class="header__nav-links-wrap">
           <%= form_tag search_path, class: search_form_class, method: :get do %>
             <%= search_field_tag :query, params[:query], placeholder: t(".header.search_gem_html"), class: "header__search", autocomplete: "off" %>
@@ -49,7 +46,6 @@
             <% end %>
             <%= submit_tag "⌕", id: "search_submit", name: nil, class: "header__search__icon" %>
           <% end %>
-
           <nav class="header__nav-links">
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
@@ -57,18 +53,14 @@
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
             <% end %>
-
             <%= link_to "Releases", news_url, class: "header__nav-link #{active?(news_path)}" %>
             <%= link_to t('.footer.blog'), "https://blog.rubygems.org", class: "header__nav-link" %>
-
             <%- if request.path_info == '/gems' %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link is-active" %>
             <%- else %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link" %>
             <%- end %>
-
             <%= link_to t('.footer.guides'), "https://guides.rubygems.org", class: "header__nav-link" %>
-
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
                 <span><%= current_user.name %></span>
@@ -93,7 +85,6 @@
         </div>
       </div>
     </header>
-
     <% flash.each do |name, msg| %>
       <div id="flash-border" class="flash">
         <div class="flash-wrap">
@@ -101,20 +92,17 @@
         </div>
       </div>
     <% end %>
-
     <% if content_for?(:fold) %>
       <div class="fold">
         <%= yield :fold %>
       </div>
     <% end %>
-
     <main class="<%= 'main--interior' if request.path_info != '/' %>">
       <% if request.path_info != '/' %>
         <div class="l-wrap--b">
           <% if @title %>
             <h1 class="t-display page__heading">
               <%= content_for_title @title, @title_url %>
-
               <% if @subtitle %>
                 <i class="page__subheading"><%= @subtitle.html_safe %></i>
               <% end %>
@@ -127,7 +115,6 @@
         <%= yield %>
       <% end %>
     </main>
-
     <footer class="footer">
       <div class="l-wrap--footer">
         <div class="l-overflow">
@@ -216,8 +203,6 @@
         <% end %>
       </div>
     </footer>
-
-    <%= javascript_include_tag "application" %>
     <%= yield :javascript %>
     <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>
   </body>

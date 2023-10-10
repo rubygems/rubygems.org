@@ -1,14 +1,17 @@
-$(function() {
+import $ from "jquery";
+import { handleClick } from "handle-click";
+
+$(function () {
   // cache jQuery lookups into variables
   // so we don't have to traverse the DOM every time
-  var sandwichIcon     = $('.header__club-sandwich');
-  var header           = $('.header');
-  var main             = $('main');
-  var footer           = $('.footer');
-  var signUpLink       = $('.header__nav-link.js-sign-up-trigger');
-  var navExpandedClass = 'mobile-nav-is-expanded';
-  var headerSearch     = $('.header__search');
-  var headerLogo       = $('.header__logo-wrap');
+  var sandwichIcon = $(".header__club-sandwich");
+  var header = $(".header");
+  var main = $("main");
+  var footer = $(".footer");
+  var signUpLink = $(".header__nav-link.js-sign-up-trigger");
+  var navExpandedClass = "mobile-nav-is-expanded";
+  var headerSearch = $(".header__search");
+  var headerLogo = $(".header__logo-wrap");
 
   // variable to support mobile nav tab behaviour
   // * skipSandwichIcon is for skipping sandwich icon
@@ -16,7 +19,7 @@ $(function() {
   // * tabDirection is for hiding and showing navbar
   //   when you tab in and out
   var skipSandwichIcon = true;
-  var tabDirection     = true;
+  var tabDirection = true;
 
   function removeNavExpandedClass() {
     header.removeClass(navExpandedClass);
@@ -42,20 +45,20 @@ $(function() {
     }
   }
 
-  sandwichIcon.click(function(e){
-    var nav = {expandedClass: navExpandedClass, popUp: header}
+  sandwichIcon.click(function (e) {
+    var nav = { expandedClass: navExpandedClass, popUp: header };
     handleClick(e, nav, removeNavExpandedClass, addNavExpandedClass);
   });
 
-  sandwichIcon.on('focusin', handleFocusIn);
+  sandwichIcon.on("focusin", handleFocusIn);
 
-  signUpLink.on('focusin', function() {
+  signUpLink.on("focusin", function () {
     if (!tabDirection) {
       addNavExpandedClass();
     }
   });
 
-  signUpLink.on('focusout', function() {
+  signUpLink.on("focusout", function () {
     if (tabDirection) {
       tabDirection = false;
       removeNavExpandedClass();

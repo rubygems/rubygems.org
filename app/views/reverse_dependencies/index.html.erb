@@ -4,14 +4,15 @@
     <i class="page__subheading page__subheading--block"><%= t(".subtitle", name: @rubygem.name) %></i>
   </h1>
 <% end %>
-
+<% content_for :javascript do %>
+  <%= javascript_import_module_tag "github-buttons" %>
+<% end %>
 <div class="l-overflow">
   <% if @reverse_dependencies.present? %>
     <div class="l-colspan--l colspan--l--has-border">
       <header class="push push--bottom-s">
         <%= render "search", rubygem: @rubygem %>
       </header>
-
       <div class="reverse__dependencies">
         <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
       </div>
