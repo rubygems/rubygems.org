@@ -1,13 +1,6 @@
 source "https://rubygems.org"
 
-# Former default gems
-gem "bigdecimal", "~> 3.1" # activesupport-7.0.8
-gem "mutex_m", "~> 0.2.0" # activesupport-7.0.8
-gem "net-smtp", "~> 0.4.0" # mail-2.8.1
-gem "csv", "~> 3.2" # zeitwerk-2.6.12
-gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
-
-gem "rails", "~> 7.0.0"
+gem "rails", "~> 7.1.0"
 gem "rails-i18n", "~> 7.0"
 
 gem "aws-sdk-s3", "~> 1.142"
@@ -74,6 +67,10 @@ gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.14"
 gem "pp", "0.5.0"
 
+# Former default gems
+gem "csv", "~> 3.2" # zeitwerk-2.6.12
+gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
+
 group :assets, :development do
   gem "tailwindcss-rails", "~> 2.3"
 end
@@ -122,6 +119,5 @@ group :test do
   gem "simplecov-cobertura", "~> 2.1", require: false
   gem "aggregate_assertions", "~> 0.2.0"
   gem "minitest-gcstats", "~> 1.3"
-  gem "minitest-profile", "~> 0.0.2"
   gem "minitest-reporters", "~> 1.6"
 end

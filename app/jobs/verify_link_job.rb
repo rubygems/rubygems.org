@@ -1,7 +1,7 @@
 class VerifyLinkJob < ApplicationJob
   queue_as :default
 
-  retry_on ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid, wait: :exponentially_longer, attempts: 3
+  retry_on ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid, wait: :polynomially_longer, attempts: 3
 
   ERRORS = (HTTP_ERRORS + [Faraday::Error, SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
 
