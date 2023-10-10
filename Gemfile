@@ -65,11 +65,14 @@ gem "groupdate", "~> 6.2"
 gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.11"
 
+group :assets, :development do
+  gem "tailwindcss-rails", "~> 2.0"
+end
+
 group :assets do
   gem "dartsass-sprockets", "~> 3.0"
   gem "terser", "~> 1.1"
   gem "autoprefixer-rails", "~> 10.4"
-  gem "tailwindcss-rails", "~> 2.0"
 end
 
 group :development, :test do
