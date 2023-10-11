@@ -57,7 +57,7 @@
         <ul>
           <% current_user.subscribed_gems.each do |gem| %>
             <li>
-              <%= link_to gem, gem.slug, :title => short_info(gem.versions.most_recent), :class => 't-link' %>
+              <%= link_to gem, rubygem_path(gem.slug), :title => short_info(gem.versions.most_recent), :class => 't-link' %>
             </li>
           <% end %>
         </ul>
