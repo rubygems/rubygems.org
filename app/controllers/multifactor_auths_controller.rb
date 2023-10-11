@@ -113,7 +113,7 @@ class MultifactorAuthsController < ApplicationController
 
   def require_totp_disabled
     return if current_user.totp_disabled?
-    flash[:error] = t("multifactor_auths.require_totp_disabled")
+    flash[:error] = t("multifactor_auths.require_totp_disabled", host: Gemcutter::HOST_DISPLAY)
     redirect_to edit_settings_path
   end
 

@@ -21,7 +21,7 @@
           For complete information about the issue, please  <%= link_to("read our blog post", "https://blog.rubygems.org") %>.
         </p>
         <p>
-          You can find your new API key on <%= link_to("your RubyGems.org profile page", "https://rubygems.org/profile/edit") %>. You will also need to run <strong>gem signin</strong> again before you can push new gems.
+          You can find your new API key on <%= link_to("your RubyGems.org profile page", edit_profile_url(host: Gemcutter::HOST)) %>. You will also need to run <strong>gem signin</strong> again before you can push new gems.
         </p>
       </div>
 

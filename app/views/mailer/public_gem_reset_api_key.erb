@@ -14,7 +14,7 @@
           Please check the gems you own to ensure that they were not modified without your permission while your API key was public.
         </p>
         <p>
-          You can find your new API key on <%= link_to("your RubyGems.org profile page", "https://rubygems.org/profile/edit") %>. You will also need to run <strong>gem signin</strong> again before you can push new gems.
+          You can find your new API key on <%= link_to("your RubyGems.org profile page", edit_profile_url(host: Gemcutter::HOST)) %>. You will also need to run <strong>gem signin</strong> again before you can push new gems.
         </p>
       </div>
 
