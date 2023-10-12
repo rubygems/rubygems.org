@@ -8,7 +8,7 @@ class ApiKey < ApplicationRecord
   has_one :ownership, through: :api_key_rubygem_scope
   has_one :oidc_id_token, class_name: "OIDC::IdToken", dependent: :restrict_with_error
   has_one :oidc_api_key_role, through: :oidc_id_token, inverse_of: :api_key
-  has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :restrict_with_error
+  has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
 
   validates :user, :name, :hashed_key, presence: true
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?

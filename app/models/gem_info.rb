@@ -107,7 +107,8 @@ class GemInfo
         end
       end
 
-      CompactIndex::GemVersion.new(r[0], r[1], Version._sha256_hex(r[2]), r[3], deps, r[4], r[5])
+      name, platform, checksum, info_checksum, ruby_version, rubygems_version, = r
+      CompactIndex::GemVersion.new(name, platform, Version._sha256_hex(checksum), info_checksum, deps, ruby_version, rubygems_version)
     end
   end
 
