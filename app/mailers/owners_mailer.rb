@@ -14,7 +14,7 @@ class OwnersMailer < ApplicationMailer
     @user = @ownership.user
     @rubygem = @ownership.rubygem
     mail to: @user.email,
-      subject: t("mailer.ownership_confirmation.subject", gem: @rubygem.name) do |format|
+      subject: t("mailer.ownership_confirmation.subject", gem: @rubygem.name, host: Gemcutter::HOST_DISPLAY) do |format|
         format.html
         format.text
       end
