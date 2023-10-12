@@ -259,7 +259,7 @@ zh-TW:
       subject: 請確認 RubyGems.org 上 %{gem} Gem 的所有權
       title: 所有權確認
       subtitle: 嗨 %{handle}！
-      body_text: %{authorizer} 把您加入了 %{gem} Gem 的擁有者名單。請點擊下方連結來確認您的所有權。
+      body_text: "%{authorizer} 把您加入了 %{gem} Gem 的擁有者名單。請點擊下方連結來確認您的所有權。"
       body_html:
       link_expiration_explanation_html:
     owner_added:
