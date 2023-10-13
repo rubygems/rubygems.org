@@ -10,6 +10,6 @@ class GemTypoExceptionResource < Avo::BaseResource
   field :name, as: :text, link_to_resource: true
   field :info, as: :textarea
   # add fields here
-  field :created_at, as: :date_time, sortable: true
-  field :updated_at, as: :date_time, sortable: true
+  field :created_at, as: :date_time, sortable: true, readonly: true, only_on: %i[index show]
+  field :updated_at, as: :date_time, sortable: true, readonly: true, only_on: %i[index show]
 end
