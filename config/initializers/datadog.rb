@@ -15,6 +15,7 @@ Datadog.configure do |c|
   c.tracing.enabled = enabled
   c.tracing.log_injection = enabled
   c.telemetry.enabled = enabled
+  c.remote.enabled = enabled
 
   unless enabled
     # TODO: https://github.com/DataDog/dd-trace-rb/issues/2542
