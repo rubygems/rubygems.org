@@ -7,7 +7,7 @@ class BaseAction < Avo::BaseAction
   def self.inherited(base)
     super
     base.items_holder = Avo::ItemsHolder.new
-    base.items_holder.items.replace items_holder.items.deep_dup
+    base.items_holder.instance_variable_get(:@items).replace items_holder.instance_variable_get(:@items).deep_dup
     base.items_holder.invalid_fields.replace items_holder.invalid_fields.deep_dup
   end
 
