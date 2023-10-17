@@ -52,7 +52,7 @@ class CreateGemNameReservations < ActiveRecord::Migration[7.0]
     sprockets_rails
     rail-ties
     rail_ties
-  ]
+  ].freeze
 
   def change
     create_table :gem_name_reservations do |t|
@@ -65,7 +65,7 @@ class CreateGemNameReservations < ActiveRecord::Migration[7.0]
 
     reversible do |change|
       change.up do
-        GemNameReservation.insert_all(ORIGINAL_GEM_NAME_RESERVED_LIST.map{|name| {name: name}})
+        GemNameReservation.insert_all(ORIGINAL_GEM_NAME_RESERVED_LIST.map { |name| { name: name } })
       end
     end
   end

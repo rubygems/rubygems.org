@@ -5,6 +5,6 @@ class AddRubygemsNameIndex < ActiveRecord::Migration[4.2]
   end
 
   def down
-    remove_index :rubygems, :name => :rubygems_name_upcase
+    remove_index :rubygems, name: :rubygems_name_upcase
   end
 end

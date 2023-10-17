@@ -1,6 +1,6 @@
 class AddTrackingToWebHooks < ActiveRecord::Migration[7.0]
   def change
-    add_column :web_hooks, :disabled_reason, :text, null: true
+    add_column :web_hooks, :disabled_reason, :text, null: true  # rubocop:disable Rails/BulkChangeTable
     add_column :web_hooks, :disabled_at, :timestamp, null: true
     add_column :web_hooks, :last_success, :timestamp, null: true
     add_column :web_hooks, :last_failure, :timestamp, null: true
