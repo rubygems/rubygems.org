@@ -499,7 +499,7 @@ es:
       title: Editar configuración
       webauthn_credentials: Dispositivo de seguridad
       no_webauthn_credentials: No tienes dispositivos de seguridad
-      webauthn_credential_note: Un dispositivo de seguridad puede ser cualquier dispositivoque cumpla el estándar FIDO2 como las llaves biométrica y de seguridad.
+      webauthn_credential_note: Un dispositivo de seguridad puede ser cualquier dispositivo que cumpla el estándar FIDO2 como las llaves biométrica y de seguridad.
       otp_code: Código OTP o código de recuperación
       api_access:
         confirm_reset: "¿Seguro? Este cambio no puede deshacerse."
