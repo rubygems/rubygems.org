@@ -389,7 +389,7 @@ es:
   multifactor_auths:
     incorrect_otp: Tu código OTP no es correcto.
     session_expired: Ha expirado tu sesión en la página de acceso.
-    require_totp_disabled: La autenticación de múltiples factores basada en OTP ya está activa. Para reconfigurarla debés primero eliminarla.
+    require_totp_disabled: La autenticación de múltiples factores basada en OTP ya está activa. Para reconfigurarla debes primero eliminarla.
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores. Primero tienes que activarla.
     require_totp_enabled: No tienes aplicación de autenticación activa. Has de activarla primero.
     require_webauthn_enabled: No tienes ningún dispositivo de seguridad activado. Primero debes asociar un dispositivo a tu cuenta.
