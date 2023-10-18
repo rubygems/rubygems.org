@@ -154,7 +154,7 @@ es:
       title: Dashboard
   dependencies:
     show:
-      click_to_expand: Pincha en el icono de flecha para expandir
+      click_to_expand: Haz clic en el icono de flecha para expandir
   email_confirmations:
     create:
       promise_resend: Te enviaremos un correo con el enlace de confirmación para activar
