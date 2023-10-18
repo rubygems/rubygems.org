@@ -489,7 +489,7 @@ es:
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
-      success_notice: "Se ha añadido a %{handle} como propietario sin confirmar. Su acceso como propietario se activara cuando haga click en el mensaje de confirmación que se le ha enviado a su correo"
+      success_notice: "Se ha añadido a %{handle} como propietario sin confirmar. Su acceso como propietario se activará cuando haga click en el mensaje de confirmación que se le ha enviado a su correo"
     destroy:
       removed_notice: "%{owner_name} eliminado con éxito de la lista de propietarios"
       failed_notice: No se puede eliminar al único propietario de una gema
