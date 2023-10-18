@@ -439,7 +439,7 @@ es:
       verify_code: Verificar código
   notifiers:
     update:
-      success: Has actualizado exitosamente la configuración de tus notificaciones por email.
+      success: Has actualizado exitosamente la configuración de tus notificaciones por correo.
     show:
       info:
         Para ayudar a detectar cambios no autorizados en gemas o en propietarios, te enviamos un correo electrónico
