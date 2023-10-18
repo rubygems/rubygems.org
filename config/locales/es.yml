@@ -421,7 +421,7 @@ es:
       title: Códigos de recuperación
       copy: "[ copiar ]"
       saved: Declaro haber guardado mis códigos de recuperación.
-      note_html: "Por favor <strong class='recovery__bold'>copia y guarda</strong> estos códigos de recuperación. Puedes usar estos códigos para accedes y restablecer tu autenticación de múltiples factores si pierdes tu dispositivo. Cada código se puede usar una sola vez."
+      note_html: "Por favor <strong class='recovery__bold'>copia y guarda</strong> estos códigos de recuperación. Puedes usar estos códigos para acceder y restablecer tu autenticación de múltiples factores si pierdes tu dispositivo. Cada código se puede usar una sola vez."
       already_generated: Ya deberías haber guardado tus códigos de recuperación.
     destroy:
       success: Has desactivado exitosamente la autenticación de múltiples factores.
