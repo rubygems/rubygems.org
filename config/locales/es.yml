@@ -271,7 +271,7 @@ es:
       subtitle: "¡Hola %{handle}!"
     email_reset_update:
       subject: Has solicitado actualizar la dirección de correo en %{host}
-      title: SOLICITUD DE ACTUALIZACIÓN DE EMAIL
+      title: SOLICITUD DE ACTUALIZACIÓN DE CORREO
     ownership_confirmation:
       subject: Por favor confirma la propiedad de la gema %{gem} en %{host}
       title: CONFIMACIÓN DE PROPIEDAD
