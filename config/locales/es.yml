@@ -101,7 +101,7 @@ es:
       last_access: Último accesso
       action: Acción
       delete: Borrar
-      confirm: Se va a invalidar la clave de API. ¿Quieres confirmar?
+      confirm: Se va a invalidar la clave de API. ¿Estás seguro?
       confirm_all: Todas las claves de API serán invalidadas. ¿Quieres confirmar?
       new_key: Nueva clave de API
       index_rubygems: Índice de rubygems
