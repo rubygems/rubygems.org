@@ -102,7 +102,7 @@ es:
       action: Acción
       delete: Borrar
       confirm: Se va a invalidar la clave de API. ¿Estás seguro?
-      confirm_all: Todas las claves de API serán invalidadas. ¿Quieres confirmar?
+      confirm_all: Todas las claves de API serán invalidadas. ¿Estás seguro?
       new_key: Nueva clave de API
       index_rubygems: Índice de rubygems
       push_rubygem: Añadir a rubygems
