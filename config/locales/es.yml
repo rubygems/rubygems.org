@@ -251,7 +251,7 @@ es:
       title: GEMA ELIMINADA
     reset_api_key:
       subject: "Clave de API de %{host} restablecida"
-      title: CLAVE DE API RESTABLACIDA
+      title: CLAVE DE API RESTABLECIDA
       subtitle: "¡Hola %{handle}!"
     webauthn_credential_created:
       subject: Añadido nuevo dispositivo de seguridad en %{host}
