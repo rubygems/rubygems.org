@@ -480,7 +480,7 @@ es:
       confirmed_at: CONFIRMADO
       added_by: AÑADIDO POR
       action: ACCIÓN
-      email_field: Email / Usuario
+      email_field: Correo / Usuario
       submit_button: Añadir a propietarios
       info: añadir o eliminar propietarios
       confirmed: Confirmado
