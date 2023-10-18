@@ -278,7 +278,7 @@ es:
       subtitle: "¡Hola %{handle}!"
       body_text: Has sido añadido/a como propietario/a de la gema %{gem} por %{authorizer}. Por favor visita el enlace siguiente para confirmarlo.
       body_html: Has sido añadido/a como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> por <strong>%{authorizer}</strong>. Por favor visita el enlace siguiente para confirmarlo.
-      link_expiration_explanation_html: Ten en cuenta que este enlace es válido solo durante %{expiry_hours}. Puedes reenviar el email de confirmación desde la página de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> una vez autenticado.
+      link_expiration_explanation_html: Ten en cuenta que este enlace es válido solo durante %{expiry_hours}. Puedes reenviar el correo de confirmación desde la página de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> una vez autenticado.
     owner_added:
       subject_self: Has sido añadido/a como propietario/a de la gema %{gem}
       subject_others: El usuario %{owner_handle} ha sido añadido/a como propietario/a de la gema %{gem}
