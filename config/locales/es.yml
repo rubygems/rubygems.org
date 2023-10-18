@@ -24,7 +24,7 @@ es:
   locale_name: Español
   none: Ninguno
   not_found: No encontrado
-  api_key_forbidden: La clave API no tiene permitido el acceso
+  api_key_forbidden: La clave API no tiene acceso
   please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
