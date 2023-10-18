@@ -282,7 +282,7 @@ es:
     owner_added:
       subject_self: Has sido añadido/a como propietario/a de la gema %{gem}
       subject_others: El usuario %{owner_handle} ha sido añadido/a como propietario/a de la gema %{gem}
-      title: AÑADIDO PROPIETARIO
+      title: PROPIETARIO AÑADIDO
       subtitle: "¡Hola %{handle}!"
       body_self_html: <b>Has</b> sido añadido/a como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> en %{host}.
       body_others_html: El usuario <b>%{owner_handle}</b> ha sido añadido/a como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> por <b>%{authorizer}</b>. Recibes esta notificación por ser propietario de %{gem}.
