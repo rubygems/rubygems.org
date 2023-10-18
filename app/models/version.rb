@@ -408,6 +408,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     rubygem.version_manifest(number, platformed? ? platform : nil)
   end
 
+  def gem_file_name
+    "#{full_name}.gem"
+  end
+
   private
 
   def update_prerelease

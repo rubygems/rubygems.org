@@ -859,4 +859,14 @@ class UserTest < ActiveSupport::TestCase
       assert_equal "", User.normalize_email("\u9999".force_encoding("ascii"))
     end
   end
+
+  context "#gravatar_url" do
+    should "return gravatar if email is publicly visible" do
+      assert_includes User.new(public_email: true, email: "text@example.com").gravatar_url, "gravatar.com"
+    end
+
+    should "return nil if email is publicly hidden" do
+      assert_nil User.new(public_email: false, email: "text@example.com").gravatar_url
+    end
+  end
 end

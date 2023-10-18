@@ -75,4 +75,51 @@ class ApplicationHelperTest < ActionView::TestCase
       assert_instance_of String, flash_message(:notice, @message)
     end
   end
+
+  context "avatar" do
+    setup do
+      @user = build(:user, email: "email@example.com")
+    end
+
+    should "raise when invalid theme is requested" do
+      assert_raises(StandardError) { avatar(160, "id", @user, theme: :unknown) }
+    end
+
+    context "with publicly available email" do
+      setup do
+        @user.public_email = true
+      end
+
+      should "return gravatar" do
+        url = avatar(160, "id", @user)
+        expected_uri = "https://secure.gravatar.com/avatar/5658ffccee7f0ebfda2b226238b1eb6e.png?d=retro&amp;r=PG&amp;s=160"
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"#{expected_uri}\" />", url
+      end
+    end
+
+    context "with publicly hidden email" do
+      setup do
+        @user.public_email = false
+      end
+
+      should "return light themed default avatar" do
+        url = avatar(160, "id", @user, theme: :light)
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/images/avatar.svg\" />", url
+      end
+
+      should "return light themed default avatar by default" do
+        url = avatar(160, "id", @user)
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/images/avatar.svg\" />", url
+      end
+
+      should "return dark themed default avatar" do
+        url = avatar(160, "id", @user, theme: :dark)
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/images/avatar_inverted.svg\" />", url
+      end
+    end
+  end
 end

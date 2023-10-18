@@ -524,6 +524,7 @@ pt-BR:
       subtitle_html:
     edit:
       change_avatar: Mudar foto de perfil
+      disabled_avatar_html:
       email_awaiting_confirmation:
       enter_password:
       optional_full_name:

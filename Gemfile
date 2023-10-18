@@ -55,7 +55,7 @@ gem "maintenance_tasks", "~> 2.1"
 gem "strong_migrations", "~> 1.6"
 
 # Admin dashboard
-gem "avo", "~> 2.28", "< 2.36" # 2.36+ requires to fix test failures
+gem "avo", "~> 2.42"
 gem "view_component", "~> 2.0"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"

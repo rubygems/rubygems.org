@@ -9,7 +9,7 @@ class NestedField < Avo::Fields::BaseField
   end
 
   def fields(**_kwargs)
-    @items_holder.items.grep Avo::Fields::BaseField
+    @items_holder.instance_variable_get(:@items).grep Avo::Fields::BaseField
   end
 
   def field(name, **kwargs, &)

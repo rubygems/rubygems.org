@@ -538,6 +538,7 @@ es:
       subtitle_html: Pide nuevos mantenedores o solicita propietarios <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
     edit:
       change_avatar: Cambiar avatar
+      disabled_avatar_html: Se usa un avatar por defecto debido a la configuración de privacidad del email. Para usar un <a href='https://gravatar.com'>Gravatar</a> personalizado activa la opción 'Mostrar correo electrónico en perfil público'. Ten en cuenta que esto hará público tu correo."
       email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
       optional_full_name: Opcional. Será mostrado en tu perfil público
