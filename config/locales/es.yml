@@ -212,7 +212,7 @@ es:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
-    link_expiration_explanation_html: Por favor ten en cuenta que este enlace es válido solo durante 3 horas. Puedes solicitar un enlace actualizado usando la página de <a href='https://rubygems.org/email_confirmations/new'>reenvio del email de confirmación</a>.
+    link_expiration_explanation_html: Por favor ten en cuenta que este enlace es válido solo durante 3 horas. Puedes solicitar un enlace actualizado usando la página de <a href='https://rubygems.org/email_confirmations/new'>reenvío del correo de confirmación</a>.
     email_confirmation:
       title: CONFIRMACIÓN DE EMAIL
       subtitle: "¡Último paso!"
