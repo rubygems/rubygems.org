@@ -24,3 +24,4 @@ latest_dump
 coverage
 REVISION
 /.env*
+/doc/erd.*
