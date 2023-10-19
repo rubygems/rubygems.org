@@ -1,5 +1,4 @@
 class Mailer < ApplicationMailer
-  include Roadie::Rails::Automatic
   include MailerHelper
 
   default from: Clearance.configuration.mailer_sender

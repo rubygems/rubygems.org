@@ -1,6 +1,4 @@
 class WebHooksMailer < ApplicationMailer
-  include Roadie::Rails::Automatic
-
   default from: Clearance.configuration.mailer_sender
 
   default_url_options[:host] = Gemcutter::HOST

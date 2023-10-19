@@ -1,6 +1,4 @@
 class OwnersMailer < ApplicationMailer
-  include Roadie::Rails::Automatic
-
   include OwnersHelper
   helper :owners
 
