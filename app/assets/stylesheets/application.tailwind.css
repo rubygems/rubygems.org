@@ -1,0 +1,3 @@
+/* @tailwind base; */ /* base disabled because the resets break the current site */ 
+@tailwind components;
+@tailwind utilities;

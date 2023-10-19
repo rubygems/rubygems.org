@@ -25,3 +25,6 @@ coverage
 REVISION
 /.env*
 /doc/erd.*
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
