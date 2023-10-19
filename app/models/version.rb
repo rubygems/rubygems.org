@@ -5,6 +5,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
+  has_many :audits, as: :auditable, inverse_of: :auditable, dependent: :nullify
   has_one :gem_download, inverse_of: :version, dependent: :destroy
   belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true
@@ -28,9 +29,12 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::VERSION_PATTERN }
   validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
-  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }, on: :create
-  validates :full_name, presence: true, uniqueness: { case_sensitive: false }
-  validates :gem_full_name, presence: true, uniqueness: { case_sensitive: false, allow_nil: true }, on: :create
+  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN },
+            if: -> { validation_context == :create || gem_platform_changed? }
+  validates :full_name, presence: true, uniqueness: { case_sensitive: false },
+            if: -> { validation_context == :create || full_name_changed? }
+  validates :gem_full_name, presence: true, uniqueness: { case_sensitive: false },
+            if: -> { validation_context == :create || gem_full_name_changed? }
   validates :rubygem, presence: true
   validates :licenses, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
   validates :required_rubygems_version, :required_ruby_version, length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
@@ -44,7 +48,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validate :gem_platform_and_number_are_unique, on: :create
   validate :original_platform_resolves_to_gem_platform, on: %i[create platform_changed? gem_platform_changed?]
   validate :authors_format, on: :create
-  validate :metadata_links_format
+  validate :metadata_links_format, if: -> { validation_context == :create || metadata_changed? }
   validate :metadata_attribute_length
   validate :no_dashes_in_version_number, on: :create
 
@@ -404,6 +408,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     rubygem.version_manifest(number, platformed? ? platform : nil)
   end
 
+  def gem_file_name
+    "#{full_name}.gem"
+  end
+
   private
 
   def update_prerelease
@@ -460,8 +468,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def metadata_links_format
     Linkset::LINKS.each do |link|
-      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL") if
-        metadata[link] && metadata[link] !~ Patterns::URL_VALIDATION_REGEXP
+      url = metadata[link]
+      next unless url
+      next if Patterns::URL_VALIDATION_REGEXP.match?(url)
+      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL")
     end
   end
 

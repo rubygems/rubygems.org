@@ -27,8 +27,9 @@ module ApplicationHelper
     end
   end
 
-  def gravatar(size, id = "gravatar", user = current_user, **options)
-    image_tag user.gravatar_url(size: size, secure: true).html_safe,
+  def avatar(size, id = "gravatar", user = current_user, theme: :light, **options)
+    url = user.gravatar_url(size: size, secure: true) || default_avatar(theme: theme)
+    image_tag url,
       id: id,
       width: size,
       height: size,
@@ -69,5 +70,15 @@ module ApplicationHelper
   def flash_message(name, msg)
     return sanitize(msg) if name.end_with? "html"
     msg
+  end
+
+  private
+
+  def default_avatar(theme:)
+    case theme
+    when :light then "/images/avatar.svg"
+    when :dark then "/images/avatar_inverted.svg"
+    else raise "invalid default avatar theme, only light and dark are suported"
+    end
   end
 end

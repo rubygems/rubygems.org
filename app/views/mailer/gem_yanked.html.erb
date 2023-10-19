@@ -10,7 +10,7 @@
 
       <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
         <p>
-          A version of a gem you are an owner of was recently yanked from RubyGems.org.
+          A version of a gem you are an owner of was recently yanked from <%= Gemcutter::HOST_DISPLAY %>.
         </p>
         <p>
           Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem.slug, @version.slug), target: "_blank" %></strong>

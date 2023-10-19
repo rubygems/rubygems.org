@@ -6,8 +6,12 @@
   <div class="avatar_field">
     <%= form.label :avatar, :class => 'form__label'  %>
     <div class="l-overflow">
-      <%= gravatar(160) %>
-      <%= link_to t('.change_avatar'), 'https://www.gravatar.com', :class => 't-text t-link' %>
+      <%= avatar(160) %>
+      <% if @user.public_email? %>
+        <%= link_to t('.change_avatar'), 'https://www.gravatar.com', :class => 't-text t-link' %>
+      <% else %>
+        <%= content_tag 'i', t('.disabled_avatar_html'), :class => 't-text' %>
+      <% end %>
     </div>
   </div>
 

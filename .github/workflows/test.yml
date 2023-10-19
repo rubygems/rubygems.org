@@ -16,8 +16,9 @@ jobs:
     name: All required tests passing check
     needs: [rails]
     runs-on: ubuntu-22.04
+    if: always()
     steps:
-      - run: echo "All required tests passed!"
+      - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
 
   rails:
     strategy:
@@ -25,7 +26,7 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.4.19"
+            version: "3.4.20"
           - name: latest
             version: latest
         ruby_version: ["3.2.2"]
@@ -41,7 +42,7 @@ jobs:
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org

@@ -65,6 +65,11 @@ pt-BR:
         unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
         blocked:
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed:
+              already_invited:
         version:
           attributes:
             gem_full_name:
@@ -519,6 +524,7 @@ pt-BR:
       subtitle_html:
     edit:
       change_avatar: Mudar foto de perfil
+      disabled_avatar_html:
       email_awaiting_confirmation:
       enter_password:
       optional_full_name:

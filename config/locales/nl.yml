@@ -58,6 +58,11 @@ nl:
         unpwn:
         blocked:
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed:
+              already_invited:
         version:
           attributes:
             gem_full_name:
@@ -508,6 +513,7 @@ nl:
       subtitle_html:
     edit:
       change_avatar:
+      disabled_avatar_html:
       email_awaiting_confirmation:
       enter_password:
       optional_full_name:

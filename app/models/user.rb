@@ -117,6 +117,10 @@ class User < ApplicationRecord
     ""
   end
 
+  def gravatar_url(*)
+    public_email ? super : nil
+  end
+
   def name
     handle || email
   end

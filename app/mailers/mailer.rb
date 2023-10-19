@@ -10,8 +10,8 @@ class Mailer < ApplicationMailer
   def email_reset(user)
     @user = user
     mail to: @user.unconfirmed_email,
-        subject: I18n.t("mailer.confirmation_subject",
-        default: "Please confirm your email address with RubyGems.org") do |format|
+        subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
+        default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
           format.html
           format.text
         end
@@ -28,8 +28,8 @@ class Mailer < ApplicationMailer
 
     if @user.confirmation_token
       mail to: @user.email,
-           subject: I18n.t("mailer.confirmation_subject",
-           default: "Please confirm your email address with RubyGems.org") do |format|
+           subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
+           default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
              format.html
              format.text
            end
@@ -63,7 +63,7 @@ class Mailer < ApplicationMailer
     @pushed_by_user = User.find(pushed_by_user_id)
 
     mail to: notified_user.email,
-      subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title,
+      subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title, host: Gemcutter::HOST_DISPLAY,
                       default: "Gem %{gem} pushed to RubyGems.org")
   end
 
@@ -101,7 +101,7 @@ class Mailer < ApplicationMailer
     @webauthn_credential = WebauthnCredential.find(webauthn_credential_id)
 
     mail to: @webauthn_credential.user.email,
-      subject: I18n.t("mailer.webauthn_credential_created.subject")
+      subject: I18n.t("mailer.webauthn_credential_created.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
   def webauthn_credential_removed(user_id, nickname, deleted_at)
@@ -110,7 +110,7 @@ class Mailer < ApplicationMailer
     @deleted_at = deleted_at
 
     mail to: @user.email,
-      subject: I18n.t("mailer.webauthn_credential_removed.subject")
+      subject: I18n.t("mailer.webauthn_credential_removed.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
   def totp_enabled(user_id, enabled_at)
@@ -118,7 +118,7 @@ class Mailer < ApplicationMailer
     @enabled_at = enabled_at
 
     mail to: @user.email,
-      subject: I18n.t("mailer.totp_enabled.subject")
+      subject: I18n.t("mailer.totp_enabled.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
   def totp_disabled(user_id, disabled_at)
@@ -126,7 +126,7 @@ class Mailer < ApplicationMailer
     @disabled_at = disabled_at
 
     mail to: @user.email,
-      subject: I18n.t("mailer.totp_disabled.subject")
+      subject: I18n.t("mailer.totp_disabled.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
   def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
@@ -135,13 +135,13 @@ class Mailer < ApplicationMailer
     @yanked_by_user = User.find(yanked_by_user_id)
 
     mail to: notified_user.email,
-         subject: I18n.t("mailer.gem_yanked.subject", gem: @version.to_title)
+         subject: I18n.t("mailer.gem_yanked.subject", gem: @version.to_title, host: Gemcutter::HOST_DISPLAY)
   end
 
   def reset_api_key(user, template_name)
     @user = user
     mail to: @user.email,
-         subject: I18n.t("mailer.reset_api_key.subject"),
+         subject: I18n.t("mailer.reset_api_key.subject", host: Gemcutter::HOST_DISPLAY),
          template_name: template_name
   end
 

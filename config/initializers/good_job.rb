@@ -40,6 +40,6 @@ Rails.application.configure do
 
     ActiveRecord::Base.logger = nil
     GoodJob.logger = Rails.logger
-    StatsD.backend = StatsD::Instrument::Backends::NullBackend.new
+    StatsD.singleton_client = StatsD::Instrument::Client.new
   end
 end

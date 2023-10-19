@@ -47,7 +47,7 @@ module RubygemSearchable
         metadata:          latest_version&.metadata,
         sha:               latest_version&.sha256_hex,
         project_uri:       "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{name}",
-        gem_uri:           "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{latest_version&.full_name}.gem",
+        gem_uri:           "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{latest_version&.gem_file_name}",
         homepage_uri:      versioned_links&.homepage_uri,
         wiki_uri:          versioned_links&.wiki_uri,
         documentation_uri: versioned_links&.documentation_uri,

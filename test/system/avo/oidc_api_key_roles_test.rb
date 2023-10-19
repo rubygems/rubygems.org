@@ -32,7 +32,7 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
     user = create(:user)
 
     visit avo.resources_oidc_api_key_roles_path
-    click_on "Create new oidc api key role"
+    click_on "Create new OIDC api key role"
 
     select provider.issuer, from: "oidc_api_key_role_oidc_provider_id"
     find_field(id: "oidc_api_key_role_user_id").click
@@ -50,7 +50,7 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
     assert_field "oidc_api_key_role_oidc_provider_id", with: provider.id
     assert_field "oidc_api_key_role_user_id", with: user.display_handle
     assert_field "Name", with: "Role"
-    assert_field "Valid for", with: "900"
+    assert_field "Valid for", with: "PT15M"
 
     find("div[data-field-id='scopes'] tags").click
     send_keys "push_rubygem", :enter

@@ -13,17 +13,6 @@ class OwnershipTest < ActiveSupport::TestCase
   should have_db_index %i[user_id rubygem_id]
   should have_many(:api_key_rubygem_scopes).dependent(:destroy)
 
-  context "with ownership" do
-    setup do
-      @ownership = create(:ownership)
-      create(:version, rubygem: @ownership.rubygem)
-    end
-
-    subject { @ownership }
-
-    should validate_uniqueness_of(:user_id).scoped_to(:rubygem_id)
-  end
-
   context "by_indexed_gem_name" do
     setup do
       @ownership = create(:ownership)
@@ -107,6 +96,31 @@ class OwnershipTest < ActiveSupport::TestCase
 
       refute_predicate ownership, :valid?
       assert_contains ownership.errors[:rubygem], "must exist"
+    end
+
+    should "not create with a duplicate unconfirmed user and rubygem" do
+      existing_ownership = create(:ownership, :unconfirmed)
+      ownership = build(:ownership, user: existing_ownership.user, rubygem: existing_ownership.rubygem)
+
+      refute_predicate ownership, :valid?
+      assert_contains ownership.errors[:user_id], "is already invited to this gem"
+    end
+
+    should "not create with a duplicate confirmed user and rubygem" do
+      existing_ownership = create(:ownership)
+      ownership = build(:ownership, user: existing_ownership.user, rubygem: existing_ownership.rubygem)
+
+      refute_predicate ownership, :valid?
+      assert_contains ownership.errors[:user_id], "is already an owner of this gem"
+    end
+
+    should "not update to a duplicate confirmed user and rubygem" do
+      existing_ownership = create(:ownership)
+      ownership = create(:ownership, :unconfirmed, rubygem: existing_ownership.rubygem)
+      ownership.user = existing_ownership.user
+
+      refute_predicate ownership, :valid?
+      assert_contains ownership.errors[:user_id], "is already an owner of this gem"
     end
   end
 

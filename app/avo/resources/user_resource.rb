@@ -28,7 +28,7 @@ class UserResource < Avo::BaseResource
   field :email_reset, as: :boolean
   field :handle, as: :text
   field :public_email, as: :boolean
-  field :twitter_username, as: :text, as_html: true, format_using: ->(value) { link_to value, "https://twitter.com/#{value}", target: :_blank, rel: :noopener if value.present? }
+  field :twitter_username, as: :text, as_html: true, format_using: -> { link_to value, "https://twitter.com/#{value}", target: :_blank, rel: :noopener if value.present? }
   field :unconfirmed_email, as: :text
 
   field :mail_fails, as: :number

@@ -64,6 +64,11 @@ en:
         unpwn: has previously appeared in a data breach and should not be used
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed: "is already an owner of this gem"
+              already_invited: "is already invited to this gem"
         version:
           attributes:
             gem_full_name:
@@ -200,64 +205,64 @@ en:
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
-    confirmation_subject: Please confirm your email address with RubyGems.org
+    confirmation_subject: Please confirm your email address with %{host}
     link_expiration_explanation_html: Please keep in mind that this link is valid for only 3 hours. You can request the updated link using <a href='https://rubygems.org/email_confirmations/new'>resend confirmation mail</a> page.
     email_confirmation:
       title: EMAIL CONFIRMATION
       subtitle: Almost done!
       confirmation_link: Confirm email address
-      welcome_message: Welcome to RubyGems.org! Visit the link below to verify your email.
+      welcome_message: Welcome to %{host}! Visit the link below to verify your email.
     email_reset:
       title: EMAIL RESET
       subtitle: Hi %{handle}!
-      visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
+      visit_link_instructions: You changed your email address on %{host}. Please visit the following url to re-activate your account.
     deletion_complete:
       title: DELETION COMPLETE
       subtitle: Bye!
-      subject: Your account has been deleted from rubygems.org
-      body_html: Your request for account deletion on rubygems.org has been processed. You can always create a new account using our %{sign_up} page.
+      subject: Your account has been deleted from %{host}
+      body_html: Your request for account deletion on %{host} has been processed. You can always create a new account using our %{sign_up} page.
     deletion_failed:
       title: DELETION FAILED
       subtitle: Sorry!
-      subject: Your account deletion request on rubygems.org has failed
-      body_html: You had request for account deletion on rubygems.org. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
+      subject: Your account deletion request on %{host} has failed
+      body_html: You had requested account deletion on %{host}. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
     notifiers_changed:
-      subject: You changed your RubyGems.org email notification settings
+      subject: You changed your %{host} email notification settings
       title: EMAIL NOTIFICATIONS
       subtitle: Hi %{handle}
       "on": "ON"
       off_html: <b>OFF</b>
     gem_pushed:
-      subject: Gem %{gem} pushed to RubyGems.org
+      subject: Gem %{gem} pushed to %{host}
       title: GEM PUSHED
     gem_yanked:
-      subject: Gem %{gem} yanked from RubyGems.org
+      subject: Gem %{gem} yanked from %{host}
       title: GEM YANKED
     reset_api_key:
-      subject: RubyGems.org API key was reset
+      subject: "%{host} API key was reset"
       title: API KEY RESET
       subtitle: Hi %{handle}
     webauthn_credential_created:
-      subject: New security device added on RubyGems.org
+      subject: New security device added on %{host}
       title: SECURITY DEVICE ADDED
       subtitle: Hi %{handle}!
     webauthn_credential_removed:
-      subject: Security device removed on RubyGems.org
+      subject: Security device removed on %{host}
       title: SECURITY DEVICE REMOVED
       subtitle: Hi %{handle}!
     totp_enabled:
-      subject: Authentication app enabled on RubyGems.org
+      subject: Authentication app enabled on %{host}
       title: AUTHENTICATION APP ENABLED
       subtitle: Hi %{handle}!
     totp_disabled:
-      subject: Authentication app disabled on RubyGems.org
+      subject: Authentication app disabled on %{host}
       title: AUTHENTICATION APP DISABLED
       subtitle: Hi %{handle}!
     email_reset_update:
-      subject: You have requested email address update on RubyGems.org
+      subject: You have requested email address update on %{host}
       title: EMAIL UPDATE REQUESTED
     ownership_confirmation:
-      subject: Please confirm the ownership of %{gem} gem on RubyGems.org
+      subject: Please confirm the ownership of %{gem} gem on %{host}
       title: OWNERSHIP CONFIRMATION
       subtitle: Hi %{handle}!
       body_text: You were added as an owner to %{gem} gem by %{authorizer}. Please visit link below to confirm your ownership.
@@ -268,13 +273,13 @@ en:
       subject_others: User %{owner_handle} was added as an owner to %{gem} gem
       title: OWNER ADDED
       subtitle: Hi %{user_handle}!
-      body_self_html: <b>You</b> were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org.
+      body_self_html: <b>You</b> were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host}.
       body_others_html: <b>%{owner_handle}</b> was added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving this notification because you are an owner of %{gem}.
     owner_removed:
       subject: You were removed as an owner from %{gem} gem
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
-      body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org by <b>%{remover}</b>.
+      body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host} by <b>%{remover}</b>.
     ownerhip_request_closed:
       title: OWNERSHIP REQUEST
       subtitle: Hi %{handle}!
@@ -288,7 +293,7 @@ en:
       owners_page: OWNERSHIPS
     web_hook_deleted:
       title: WEBHOOK DELETED
-      subject: Your RubyGems.org webhook was deleted
+      subject: Your %{host} webhook was deleted
       subtitle: Hi %{handle}!
       body_text: Your webhook that POSTed to %{url} has been deleted after %{failures} failures.
       body_html: Your webhook that <code>POST</code>ed to <a href="%{url}"><code>%{url}</code></a> has been deleted after %{failures} failures.
@@ -298,7 +303,7 @@ en:
       gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
     web_hook_disabled:
       title: WEBHOOK DISABLED
-      subject: Your RubyGems.org webhook was disabled
+      subject: Your %{host} webhook was disabled
       subtitle: Hi %{handle}!
       body_text: |
         Your webhook that POSTed to %{url} has been disabled due to %{disabled_reason}.
@@ -503,6 +508,7 @@ en:
       subtitle_html: Ask for new maintainers or request ownership <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
     edit:
       change_avatar: Change Avatar
+      disabled_avatar_html: "A default avatar is used due to private email settings. To enable a personalized <a href='https://gravatar.com'>Gravatar</a>, turn on 'Show email in public profile'. Notice this will expose your email to the public."
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
       optional_full_name: Optional. Will be displayed publicly

@@ -26,7 +26,7 @@ class Maintenance::VerifyGemContentsInFsTask < MaintenanceTasks::Task
 
   def process(version)
     logger.tagged(version_id: version.id, name: version.rubygem.name, number: version.number, platform: version.platform) do
-      gem_path = "gems/#{version.full_name}.gem"
+      gem_path = "gems/#{version.gem_file_name}"
       spec_path = "quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
 
       expected_checksum = version.sha256

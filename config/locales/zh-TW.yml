@@ -62,6 +62,11 @@ zh-TW:
         unpwn: 曾出現在資料外洩事件中，不應再使用
         blocked: "網域 '%{domain}' 因濫發垃圾郵件而遭封鎖。請使用有效的個人電子郵件地址。"
       models:
+        ownership:
+          attributes:
+            user_id:
+              already_confirmed:
+              already_invited:
         version:
           attributes:
             gem_full_name:
@@ -503,6 +508,7 @@ zh-TW:
     edit:
       change_avatar:
       email_awaiting_confirmation: 請確認您的新電子郵件地址 %{unconfirmed_email}
+      disabled_avatar_html:
       enter_password: 輸入密碼
       optional_full_name: 選填。將公開顯示
       optional_twitter_username: Twitter 帳號（選填）。將公開顯示

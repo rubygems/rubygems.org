@@ -501,6 +501,7 @@ m_WebauthnVerification [label = <<table border="0" align="center" cellspacing="0
   "m_OIDC::Provider" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_Rubygem -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_User -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_Version -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   m_WebHook -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "1"];
   "m_Admin::GitHubUser" -> m_Audit [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
