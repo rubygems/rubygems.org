@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/ruby/zlib.git
+  revision: dac893add59e0c48870e21c35494f02dfc7fda57
+  ref: refs/pull/61/head
+  specs:
+    zlib (3.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -790,6 +797,7 @@ DEPENDENCIES
   webauthn (~> 3.0)
   webmock (~> 3.18)
   xml-simple (~> 1.1)
+  zlib!
 
 BUNDLED WITH
    2.4.20

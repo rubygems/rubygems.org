@@ -44,7 +44,8 @@ RUN \
   build-base \
   linux-headers \
   zlib-dev \
-  tzdata
+  tzdata \
+  git
 
 WORKDIR /app
 
