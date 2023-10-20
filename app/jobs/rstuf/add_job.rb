@@ -14,7 +14,7 @@ module Rstuf
       }
 
       task_id = Rstuf::Client.post_artifacts([target])
-      Rstuf::CheckJob.set(wait: 10.seconds).perform_later(task_id)
+      Rstuf::CheckJob.set(wait: Rstuf.wait_for).perform_later(task_id)
     end
   end
 end
