@@ -628,7 +628,7 @@ GEM
       activesupport (>= 3)
       attr_required (>= 0.0.5)
       httpclient (>= 2.4)
-    tailwindcss-rails (2.0.30)
+    tailwindcss-rails (2.0.31)
       railties (>= 6.0.0)
     terser (1.1.18)
       execjs (>= 0.3.0, < 3)
