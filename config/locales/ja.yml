@@ -327,8 +327,8 @@ ja:
       title: 新しいリリース - 人気のgem
   pages:
     about:
-      contributors_amount:
-      downloads_amount:
+      contributors_amount: "%{count}人以上のRubyist"
+      downloads_amount: '何億回ものgemダウンロード'
       checkout_code:
       mit_licensed:
       logo_header:
