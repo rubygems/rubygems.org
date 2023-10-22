@@ -5,12 +5,12 @@ class LinkVerification < ApplicationRecord
   VALIDITY = 1.month
 
   def self.verified
-    where(last_verified_at: VALIDITY.ago..)
+    where(last_verified_at: VALIDITY.ago.beginning_of_day..)
   end
 
   def self.unverified
     never_verified
-      .or(last_verified_before(VALIDITY.ago))
+      .or(last_verified_before(VALIDITY.ago.beginning_of_day))
   end
 
   def self.never_verified
@@ -23,7 +23,7 @@ class LinkVerification < ApplicationRecord
 
   def self.pending_verification
     never_verified
-      .or(last_verified_before(3.weeks.ago))
+      .or(last_verified_before(3.weeks.ago.beginning_of_day))
       .where(failures_since_last_verification: 0)
       .https_uri
   end
@@ -54,7 +54,7 @@ class LinkVerification < ApplicationRecord
     return false unless https?
     return false unless failures_since_last_verification <= 0
 
-    unverified? || last_verified_at.before?(3.weeks.ago)
+    unverified? || last_verified_at.before?(3.weeks.ago.beginning_of_day)
   end
 
   def verify_later
