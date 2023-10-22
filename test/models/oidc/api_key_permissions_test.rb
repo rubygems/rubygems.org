@@ -24,6 +24,6 @@ class OIDC::ApiKeyPermissionsTest < ActiveSupport::TestCase
     permissions = OIDC::ApiKeyPermissions.new(gems: %w[a b])
     permissions.validate
 
-    assert_equal ["is too long (maximum is 1 character)"], permissions.errors.messages[:gems]
+    assert_equal ["may include at most 1 gem"], permissions.errors.messages[:gems]
   end
 end

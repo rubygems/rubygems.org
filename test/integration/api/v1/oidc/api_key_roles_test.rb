@@ -24,7 +24,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           "oidc_provider_id" => @role.oidc_provider_id,
           "user_id" => @user.id,
           "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
-          "name" => "GitHub Pusher",
+          "name" => @role.name,
           "access_policy" =>  { "statements" => [
             { "effect" => "allow",
               "principal" => { "oidc" => @role.provider.issuer },
@@ -35,7 +35,8 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
               }] }
           ] },
           "created_at" => @role.created_at.as_json,
-          "updated_at" => @role.updated_at.as_json
+          "updated_at" => @role.updated_at.as_json,
+          "deleted_at" => nil
         }
       ], response.parsed_body
     end
@@ -62,7 +63,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           "oidc_provider_id" => @role.oidc_provider_id,
           "user_id" => @user.id,
           "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
-          "name" => "GitHub Pusher",
+          "name" => @role.name,
           "access_policy" =>  { "statements" => [
             { "effect" => "allow",
               "principal" => { "oidc" => @role.provider.issuer },
@@ -73,7 +74,8 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
               }] }
           ] },
           "created_at" => @role.created_at.as_json,
-          "updated_at" => @role.updated_at.as_json
+          "updated_at" => @role.updated_at.as_json,
+          "deleted_at" => nil
         }, response.parsed_body
       )
     end
@@ -252,7 +254,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           assert_match(/^rubygems_/, resp["rubygems_api_key"])
           assert_equal({
                          "rubygems_api_key" => resp["rubygems_api_key"],
-              "name" => "GitHub Pusher-79685b65-945d-450a-a3d8-a36bcf72c23d",
+              "name" => "#{@role.name}-79685b65-945d-450a-a3d8-a36bcf72c23d",
               "scopes" => ["push_rubygem"],
               "expires_at" => 30.minutes.from_now
                        }, resp)
@@ -281,7 +283,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           assert_match(/^rubygems_/, resp["rubygems_api_key"])
           assert_equal({
                          "rubygems_api_key" => resp["rubygems_api_key"],
-              "name" => "GitHub Pusher-79685b65-945d-450a-a3d8-a36bcf72c23d",
+              "name" => "#{@role.name}-79685b65-945d-450a-a3d8-a36bcf72c23d",
               "scopes" => ["push_rubygem"],
               "expires_at" => 30.minutes.from_now,
               "gem" => Rubygem.find_by!(name: gem_name).as_json
@@ -313,6 +315,23 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
         end
       end
 
+      context "with a deleted role" do
+        setup do
+          @role.update!(deleted_at: Time.current)
+        end
+
+        should "respond not found" do
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+          params: {
+            jwt: jwt.to_s
+          },
+          headers: {}
+
+          assert_response :not_found
+          assert_empty @user.api_keys
+        end
+      end
+
       should "return an API token" do
         post assume_role_api_v1_oidc_api_key_role_path(@role.token),
             params: {
@@ -327,7 +346,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
         assert_match(/^rubygems_/, resp["rubygems_api_key"])
         assert_equal({
                        "rubygems_api_key" => resp["rubygems_api_key"],
-            "name" => "GitHub Pusher-79685b65-945d-450a-a3d8-a36bcf72c23d",
+            "name" => "#{@role.name}-79685b65-945d-450a-a3d8-a36bcf72c23d",
             "scopes" => ["push_rubygem"],
             "expires_at" => 30.minutes.from_now
                      }, resp)

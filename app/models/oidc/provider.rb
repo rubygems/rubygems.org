@@ -11,6 +11,16 @@ class OIDC::Provider < ApplicationRecord
 
   has_many :audits, as: :auditable, dependent: :nullify
 
+  GITHUB_ACTIONS_ISSUER = "https://token.actions.githubusercontent.com".freeze
+
+  def self.github_actions
+    find_by(issuer: GITHUB_ACTIONS_ISSUER)
+  end
+
+  def github_actions?
+    issuer == GITHUB_ACTIONS_ISSUER
+  end
+
   class Configuration < ::OpenIDConnect::Discovery::Provider::Config::Response
     attr_optional required_attributes.delete(:authorization_endpoint)
 

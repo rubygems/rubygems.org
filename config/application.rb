@@ -55,6 +55,10 @@ module Gemcutter
     config.toxic_domains_filepath = Rails.root.join("vendor", "toxic_domains_whole.txt")
 
     config.active_job.queue_adapter = :good_job
+
+    config.autoload_paths << "#{root}/app/views"
+    config.autoload_paths << "#{root}/app/views/layouts"
+    config.autoload_paths << "#{root}/app/views/components"
   end
 
   def self.config

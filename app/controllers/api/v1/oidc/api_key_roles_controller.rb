@@ -65,7 +65,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   private
 
   def set_api_key_role
-    @api_key_role = OIDC::ApiKeyRole.find_by!(token: params.require(:token))
+    @api_key_role = OIDC::ApiKeyRole.active.find_by!(token: params.require(:token))
   end
 
   def decode_jwt
