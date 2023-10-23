@@ -1,11 +1,11 @@
-name: 'Setup rubygems.org'
-description: 'Setup steps for rubygems.org'
+name: "Setup rubygems.org"
+description: "Setup steps for rubygems.org"
 inputs:
   ruby-version:
-    description: 'Ruby version to use'
+    description: "Ruby version to use"
     required: true
   rubygems-version:
-    description: 'RubyGems version to use'
+    description: "RubyGems version to use"
     required: true
 runs:
   using: "composite"
@@ -18,7 +18,7 @@ runs:
       shell: bash
       run: |
         timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
-    - uses: ruby/setup-ruby@250fcd6a742febb1123a77a841497ccaa8b9e939 # v1.149.0
+    - uses: ruby/setup-ruby@a05e47355e80e57b9a67566a813648fa67d92011 # v1.157.0
       with:
         ruby-version: ${{ inputs.ruby-version }}
         bundler-cache: true
@@ -37,4 +37,3 @@ runs:
       run: |
         cp config/database.yml.sample config/database.yml
         bundle exec rake db:setup assets:precompile
-
