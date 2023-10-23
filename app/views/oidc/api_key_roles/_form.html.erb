@@ -1,0 +1,63 @@
+<% url_attrs = @api_key_role.persisted? ? {url: profile_oidc_api_key_role_path(@api_key_role.token)} : {} %>
+<%= form_for [:profile, @api_key_role], **url_attrs do |f|%>
+  <%= error_messages_for @api_key_role %>
+  <%= f.label :name, class: "form__label" %>
+  <%= f.text_field :name, class: "form__input", autocomplete: :off %>
+  <div class="form__group">
+    <%= f.label :oidc_provider_id, class: "form__label" %>
+    <p/>
+    <%= f.collection_select :oidc_provider_id, OIDC::Provider.all, :id, :issuer, selected: :provider_id, class: "form__input form__select" %>
+  </div>
+  <div class="form__group">
+    <%= f.label :api_key_permissions, class: "form__label" %>
+    <%= f.fields_for :api_key_permissions, f.object.api_key_permissions do |f|%>
+      <div class="form__nested_fields"  id="<%= f.field_id :wrapper %>">
+        <div class="form__group">
+          <%= f.label :scopes, t("api_keys.index.scopes"), class: "form__label" %>
+          <div class="form__scope_checkbox_grid_group">
+            <%= f.collection_check_boxes :scopes, ApiKey::API_SCOPES, :to_s, :to_s, include_hidden: false do |b| %>
+              <div class = "form__checkbox__item">
+                <%=
+                    b.check_box(class: "form__checkbox__input") +
+                    b.label(class: "form__checkbox__label") do
+                      t("api_keys.index.#{b.value}")
+                    end
+                %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="form__group">
+          <%= f.label :valid_for, class: "form__label" %>
+          <%= f.text_field :valid_for, value: f.object.valid_for.iso8601, class: "form__input", list: f.field_id(:valid_for_suggestions), autocomplete: :off %>
+          <%= content_tag(:datalist, id: f.field_id(:valid_for_suggestions)) do %>
+            <%= options_from_collection_for_select([5.minutes, 15.minutes, 30.minutes, 1.hour, 6.hours, 1.day], :iso8601, :inspect) %>
+          <% end %>
+        </div>
+        <div class="form__group">
+          <%= f.label :gems, t("api_keys.new.rubygem_scope"), class: "form__label" %>
+          <p><%= t("api_keys.new.rubygem_scope_info") %></p>
+          <%= f.collection_select :gems, current_user.rubygems.by_name, :name, :name, { include_blank: t("api_keys.all_gems"), include_hidden: false }, selected: :name, class: "form__input form__select",  multiple: true %>
+        </div>
+      </div>
+    <% end%>
+  </div>
+  <div class="form__group">
+    <%= f.label :access_policy, class: "form__label" %>
+    <%= f.fields_for :access_policy, f.object.access_policy do |f|%>
+      <div class="form__nested_fields"  id="<%= f.field_id :wrapper %>">
+        <%= f.label :statements, class: "form__label" %>
+        <%= f.button t("oidc.api_key_roles.form.add_statement"), class: "form__submit form__add_nested_button" %>
+        <%= f.fields_for :statements, [OIDC::AccessPolicy::Statement.new(conditions: [OIDC::AccessPolicy::Statement::Condition.new])], child_index: 'NEW_OBJECT' do |f| %>
+          <template class="form__nested_fields">
+            <%= render(partial: "oidc/access_policy/statements/fields", locals: { f: }) %>
+          </template>
+        <% end %>
+        <%= f.fields_for :statements, f.object.statements do |f| %>
+          <%= render(partial: "oidc/access_policy/statements/fields", locals: { f: }) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%= f.submit class: "form__submit" %>
+<% end %>

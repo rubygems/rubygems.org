@@ -135,11 +135,11 @@
   color: white;
 }
 
-dl {
+dl.search-fields {
   margin: 6% 2%;
 }
 
-dt {
+dl.search-fields dt {
   float: left;
   padding: 11px 0px;
   color: #585858;
@@ -147,12 +147,12 @@ dt {
 
 
 @media (min-width: 520px) {
-  dd {
+  dl.search-fields dd {
     margin-left: 25%;
   }
 }
 
-dd input {
+dl.search-fields dd input {
   max-width: none !important;;
 }
 

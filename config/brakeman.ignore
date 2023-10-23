@@ -1,13 +1,93 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "076f564d79f0e732d93925ac722bf7276e121d6f96827c1e651540ca91fd1153",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/oidc/id_tokens_controller.rb",
+      "line": 17,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => OIDC::IdTokens::IndexView.new(:id_tokens => current_user.oidc_id_tokens.includes(:api_key, :api_key_role, :provider).page(params[:page].to_i).strict_loading), {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OIDC::IdTokensController",
+        "method": "index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "0961cc0a168ef86428d84889a7092c841454aadea80c0294f6703bac98307444",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/oidc/api_key_roles/show.html.erb",
+      "line": 20,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => current_user.oidc_api_key_roles.includes(:provider).find_by!(:token => params.require(:token)).access_policy, {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "OIDC::ApiKeyRolesController",
+          "method": "show",
+          "line": 27,
+          "file": "app/controllers/oidc/api_key_roles_controller.rb",
+          "rendered": {
+            "name": "oidc/api_key_roles/show",
+            "file": "app/views/oidc/api_key_roles/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "oidc/api_key_roles/show"
+      },
+      "user_input": "params.require(:token)",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "7395657e2ba2c741584d62f34f8528f5c909c8ba67fe3b7d653643ab1bb40079",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/oidc/api_key_roles_controller.rb",
+      "line": 32,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => OIDC::ApiKeyRoles::GitHubActionsWorkflowView.new(:api_key_role => current_user.oidc_api_key_roles.includes(:provider).find_by!(:token => params.require(:token))), {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OIDC::ApiKeyRolesController",
+        "method": "github_actions_workflow"
+      },
+      "user_input": "params.require(:token)",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
       "fingerprint": "952a7d74123607aba495fea6b6bdb2009eebc024151ef3297547e9f2a690d0b8",
       "check_name": "PermitAttributes",
       "message": "Potentially dangerous key allowed for mass assignment",
       "file": "app/controllers/api/v1/hook_relay_controller.rb",
-      "line": 23,
+      "line": 19,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.permit(:attempts, :account_id, :hook_id, :id, :max_attempts, :status, :stream, :failure_reason, :completed_at, :created_at, :request => ([:target_url]))",
       "render_path": null,
@@ -22,8 +102,88 @@
         915
       ],
       "note": "account_id is used to validate that the request indeed comes from hook relay"
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "ab59d54552d08258896fd31f8f4342971b02124008afe35a1507a5d1eef438b6",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/oidc/providers_controller.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => OIDC::Providers::IndexView.new(:providers => OIDC::Provider.all.strict_loading.page(params[:page].to_i)), {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OIDC::ProvidersController",
+        "method": "index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "f23085c93323ec923578bed895c153b25b5bc2e9b64687c05ce426da16e6c755",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/oidc/api_key_roles/show.html.erb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => current_user.oidc_api_key_roles.includes(:provider).find_by!(:token => params.require(:token)).api_key_permissions, {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "OIDC::ApiKeyRolesController",
+          "method": "show",
+          "line": 27,
+          "file": "app/controllers/oidc/api_key_roles_controller.rb",
+          "rendered": {
+            "name": "oidc/api_key_roles/show",
+            "file": "app/views/oidc/api_key_roles/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "oidc/api_key_roles/show"
+      },
+      "user_input": "params.require(:token)",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "fb6ebb2f4b1a58b85cf0e01691f09c395754282fdfe576750538fc3dc62c57b2",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/oidc/providers_controller.rb",
+      "line": 17,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => OIDC::Providers::ShowView.new(:provider => OIDC::Provider.find(params.require(:id))), {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OIDC::ProvidersController",
+        "method": "show"
+      },
+      "user_input": "params.require(:id)",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
     }
   ],
-  "updated": "2023-03-01 02:46:07 -0800",
-  "brakeman_version": "5.4.1"
+  "updated": "2023-10-17 10:36:55 -0700",
+  "brakeman_version": "6.0.1"
 }

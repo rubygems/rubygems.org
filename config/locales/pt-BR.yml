@@ -60,6 +60,13 @@ pt-BR:
         full_name: Nome completo
         handle: Usuário
         password: Senha
+      api_key:
+        oidc_api_key_role:
+      oidc/id_token:
+        jti:
+        api_key_role:
+      oidc/api_key_role:
+        api_key_permissions:
     errors:
       messages:
         unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
@@ -79,12 +86,18 @@ pt-BR:
     models:
       user: Usuário
   activemodel:
+    attributes:
+      oidc/provider/configuration:
+        jwks_uri:
+        id_token_signing_alg_values_supported:
     errors:
       models:
         oidc/api_key_permissions:
           attributes:
             valid_for:
               inclusion:
+            gems:
+              too_long:
   api_keys:
     create:
       success:
@@ -578,6 +591,10 @@ pt-BR:
         wiki: Wiki
         resend_ownership_confirmation:
         ownership:
+        oidc:
+          api_key_role:
+            name:
+            new:
     reserved:
       reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
@@ -743,3 +760,66 @@ pt-BR:
       new_device:
       nickname:
       submit:
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles:
+        new_role:
+      show:
+        api_key_role_name:
+        automate_gh_actions_publishing:
+        view_provider:
+        edit_role:
+        delete_role:
+        confirm_delete:
+        deleted_at_html:
+      edit:
+        edit_role:
+      git_hub_actions_workflow:
+        title:
+        configured_for_html:
+        to_automate_html:
+        not_github:
+        not_push:
+        copy_to_clipboard:
+        copied:
+        a_gem:
+        instructions_html:
+      new:
+        title:
+      update:
+        success:
+      create:
+        success:
+      destroy:
+        success:
+      form:
+        add_condition:
+        remove_condition:
+        add_statement:
+        remove_statement:
+      deleted:
+    providers:
+      index:
+        title:
+        description_html:
+      show:
+        title:
+    id_tokens:
+      index:
+        title:
+      show:
+        title:
+  duration:
+    minutes:
+      other:
+      one:
+    hours:
+      other:
+      one:
+    days:
+      other:
+      one:
+    seconds:
+      other:
+      one:

@@ -18,6 +18,14 @@ class OIDC::ApiKeyPermissions < OIDC::BaseModel
 
   validates :gems, length: { maximum: 1 }
 
+  def gems=(gems)
+    if gems == [""] # all gems, from form
+      super(nil)
+    else
+      super
+    end
+  end
+
   def known_scopes?
     scopes&.each_with_index do |scope, idx|
       errors.add("scopes[#{idx}]", "unknown scope: #{scope}") unless ApiKey::API_SCOPES.include?(scope.to_sym)

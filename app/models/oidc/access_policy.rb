@@ -61,12 +61,20 @@ class OIDC::AccessPolicy < OIDC::BaseModel
 
     validates :principal, presence: true, nested: true
 
-    validates :conditions, nested: true
+    validates :conditions, nested: true, presence: true
+
+    def conditions_attributes=(attributes)
+      self.conditions = attributes.map { Condition.new(_2) }
+    end
   end
 
   attribute :statements, Types::ArrayOf.new(Types::JsonDeserializable.new(Statement))
 
   validates :statements, presence: true, nested: true
+
+  def statements_attributes=(attributes)
+    self.statements = attributes.map { Statement.new(_2) }
+  end
 
   class AccessError < StandardError
   end
