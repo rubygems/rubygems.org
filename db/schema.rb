@@ -194,6 +194,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_18_235829) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "link_verifications", force: :cascade do |t|
+    t.string "linkable_type", null: false
+    t.bigint "linkable_id", null: false
+    t.string "uri", null: false
+    t.datetime "last_verified_at"
+    t.datetime "last_failure_at"
+    t.integer "failures_since_last_verification", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["linkable_id", "linkable_type", "uri"], name: "index_link_verifications_on_linkable_and_uri"
+    t.index ["linkable_type", "linkable_id"], name: "index_link_verifications_on_linkable"
+  end
+
   create_table "linksets", id: :serial, force: :cascade do |t|
     t.integer "rubygem_id"
     t.string "home"

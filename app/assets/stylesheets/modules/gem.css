@@ -210,11 +210,15 @@
     background-color: #141c22;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-  }
+    transform: rotate(45deg); }
 
 .gem__link:before {
   margin-right: 16px; }
+
+.gem__link__verified:after {
+  margin-left: 8px;
+  font-size: .75rem;
+  content: "✓"; }
 
 .gem__versions-wrap {
   margin-bottom: 70px;

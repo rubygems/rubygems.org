@@ -19,6 +19,7 @@ class Rubygem < ApplicationRecord
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :audits, as: :auditable, inverse_of: :auditable
+  has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
 
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
@@ -389,6 +390,10 @@ class Rubygem < ApplicationRecord
     versions_to_yank.find_each do |version|
       security_user.deletions.create!(version: version) unless version.yanked?
     end
+  end
+
+  def linkable_verification_uri
+    URI.join("https://rubygems.org/gem/", name)
   end
 
   private
