@@ -535,7 +535,7 @@ es:
       no_ownership_calls: No has creado llamadas a ser propietario para ninguna de tus gemas
       no_ownership_requests: No has creado ninguna petición para ser propietario
       title: Adopción
-      subtitle_html: Pide nuevos mantenedores o solicita propietarios <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
+      subtitle_html: Pide nuevos responsables de mantenimiento o solicita propietarios <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
     edit:
       change_avatar: Cambiar avatar
       disabled_avatar_html: Se usa un avatar por defecto debido a la configuración de privacidad del email. Para usar un <a href='https://gravatar.com'>Gravatar</a> personalizado activa la opción 'Mostrar correo electrónico en perfil público'. Ten en cuenta que esto hará público tu correo."
@@ -706,18 +706,18 @@ es:
   adoptions:
     index:
       title: Adopciones
-      subtitle_owner_html: Solicita nuevos mantenedores para %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
+      subtitle_owner_html: Solicita nuevos responsables de mantenimiento para %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
       subtitle_user_html: Solicita ser propietario de %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
       ownership_calls: Solicitud de propietarios
-      no_ownership_calls: No hay convocatorias de propietarios para %{gem}. Los dueños de la gema no están buscando nuevos mantenedores.
+      no_ownership_calls: No hay convocatorias de propietarios para %{gem}. Los dueños de la gema no están buscando nuevos responsables de mantenimiento.
   ownership_calls:
     update:
       success_notice: Convocatoria para propietarios de %{gem} cerrada.
     create:
       success_notice: Creada convocatoria para propietarios de %{gem}.
     index:
-      title: Se buscan mantenedores
-      subtitle_html: Gemas que buscan nuevos mantenedores <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
+      title: Se buscan responsables de mantenimiento
+      subtitle_html: Gemas que buscan nuevos responsables de mantenimiento <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
     share_requirements: Por favor especifica en que areas necesitas ayuda
     note_for_applicants: "Nota para candidatos:"
     created_by: Creado por
