@@ -98,7 +98,7 @@ es:
             valid_for:
               inclusion: "%{value} segundos debe estar entre 5 minutos (300 segundos) y 1 día (86.400 segundos)"
             gems:
-              too_long:
+              too_long: "como mucho puede incluir una gema"
   api_keys:
     create:
       success: "Nueva clave de API creada"
@@ -614,8 +614,8 @@ es:
         ownership: Propietarios
         oidc:
           api_key_role:
-            name:
-            new:
+            name: "OIDC: %{name}"
+            new: "OIDC: Crear"
     reserved:
       reserved_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
@@ -784,63 +784,64 @@ es:
   oidc:
     api_key_roles:
       index:
-        api_key_roles:
-        new_role:
+        api_key_roles: Roles de clave API OIDC
+        new_role: Crear rol de clave API
       show:
-        api_key_role_name:
-        automate_gh_actions_publishing:
-        view_provider:
-        edit_role:
-        delete_role:
-        confirm_delete:
-        deleted_at_html:
+        api_key_role_name: "Rol de clave API %{name}"
+        automate_gh_actions_publishing: "Automatizar publicación de gemas con GitHub Actions"
+        view_provider: "Ver proveedor %{issuer}"
+        edit_role: "Editar rol de clave API"
+        delete_role: "Borrar rol de clave API"
+        confirm_delete: "¿Seguro que quieres borrar este rol?"
+        deleted_at_html: "Este rol se borró hace %{time_html} y ya no puede usarse."
       edit:
-        edit_role:
+        edit_role: "Editar rol de clave API"
       git_hub_actions_workflow:
-        title:
-        configured_for_html:
-        to_automate_html:
-        not_github:
-        not_push:
-        copy_to_clipboard:
-        copied:
-        a_gem:
-        instructions_html:
+        title: "OIDC GitHub Actions Workflow para subir gema"
+        configured_for_html: "Este rol de clave API OIDC está configurado para permitir subir %{link_html} desde GitHub Actions."
+        to_automate_html: "Para automatizar lanzar %{link_html} cuando se suba una nueva etiqueta, añade el siguiente workflow a tu repositorio."
+        not_github: "Este rol de clave API OIDC no está configurado para usar GitHub Actions."
+        not_push: "Este rol de clave API OIDC no está configurado para permitir subir gemas."
+        copy_to_clipboard: Copiar al portapapeles
+        copied: ¡Copiado!
+        a_gem: una gema
+        instructions_html: |
+          Para lanzar una gema, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">crea la nueva versión</a> y genera una etiqueta nueva (usando <code>rake release:source_control_push</code>) a GitHub. El workflow empaquetará y subirá automáticamente la gema a RubyGems.org.
       new:
-        title:
+        title: "Nuevo rol de clave API OIDC"
       update:
-        success:
+        success: "Rol de clave API OIDC actualizado"
       create:
-        success:
+        success: "Rol de clave API OIDC creado"
       destroy:
-        success:
+        success: "Rol de clave API OIDC borrado"
       form:
-        add_condition:
-        remove_condition:
-        add_statement:
-        remove_statement:
-      deleted:
+        add_condition: "Añadir condición"
+        remove_condition: "Eliminar condición!"
+        add_statement: "Añadir declaración"
+        remove_statement: "Eliminar declaración"
+      deleted: "El rol se ha eliminado."
     providers:
       index:
-        title:
-        description_html:
+        title: "Proveedores de OIDC"
+        description_html: "Estos son los proveedores de OIDC que están configurados para RubyGems.org.<br> Por favor, contacta con soporte si necesitas añadir otro proveedor OIDC."
       show:
-        title:
+        title: "Proveedor de OIDC"
     id_tokens:
       index:
-        title:
+        title: "Tokens OIDC ID"
       show:
-        title:
+        title: "Token OIDC ID"
   duration:
     minutes:
-      other:
-      one:
+      other: "%{count} minutos"
+      one: "1 minuto"
     hours:
-      other:
-      one:
+      other: "%{count} horas"
+      one: "1 hora"
     days:
-      other:
-      one:
+      other: "%{count} días"
+      one: "1 día"
     seconds:
-      other:
-      one:
+      other: "%{count} segundos"
+      one: "1 segundo"
