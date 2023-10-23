@@ -138,6 +138,31 @@ class VersionsControllerTest < ActionController::TestCase
     should "render the checksum version" do
       assert page.has_content?(@latest_version.sha256_hex)
     end
+
+    should "render links" do
+      page.assert_selector :link, "Homepage", href: @rubygem.links.homepage_uri
+      page.assert_selector :link, "Download", href: "/downloads/#{@latest_version.full_name}.gem"
+    end
+
+    context "with a link that is feature-flagged off" do
+      setup do
+        @launch_darkly.update(
+          @launch_darkly.flag("links.show.download_uri")
+          .variation_for_key("rubygem", @rubygem.name, false)
+        )
+        @launch_darkly.update(
+          @launch_darkly.flag("links.show.homepage_uri")
+          .variation_for_key("rubygem", @rubygem.name, true)
+        )
+
+        get :show, params: { rubygem_id: @rubygem.name, id: @latest_version.number }
+      end
+
+      should "render only enabled links" do
+        page.assert_selector :link, "Homepage", href: @rubygem.links.homepage_uri
+        page.assert_no_selector :link, "Download", href: "/downloads/#{@latest_version.full_name}.gem"
+      end
+    end
   end
 
   context "On GET to show with *a* yanked version" do

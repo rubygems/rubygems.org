@@ -26,7 +26,13 @@ class Links
   end
 
   def links
-    version.indexed ? LINKS : NON_INDEXED_LINKS
+    links = version.indexed ? LINKS : NON_INDEXED_LINKS
+
+    links.select do |_, long|
+      Rails.configuration.launch_darkly_client.variation(
+        "links.show.#{long}", rubygem.ld_context, true
+      )
+    end.to_h
   end
 
   delegate :keys, to: :links
