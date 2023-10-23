@@ -7,10 +7,10 @@ class VerifyLinkJobTest < ActiveJob::TestCase
     <html>
       <head>
         <title>Site with valid linkbacks</title>
-        <link rel="rubygem" href="https://rubygems.org/gem/mygem">
+        <link rel="rubygem" href="https://rubygems.org/gems/mygem">
       </head>
       <body>
-        <a rel="rubygem" href="https://rubygems.org/gem/mygem/">
+        <a rel="rubygem" href="https://rubygems.org/gems/mygem/">
       </body>
     </html>
   HTML
@@ -19,10 +19,10 @@ class VerifyLinkJobTest < ActiveJob::TestCase
     <html>
       <head>
         <title>Site with invalid linkbacks</title>
-        <link rel="notarubygem" href="https://notrubygems.org/gem/mygem">
+        <link rel="notarubygem" href="https://notrubygems.org/gems/mygem">
       </head>
       <body>
-        <a rel="rubygem" href="https://rubygems.org/gem/notmygem/">notmygem</a>
+        <a rel="rubygem" href="https://rubygems.org/gems/notmygem/">notmygem</a>
       </body>
     </html>
   HTML
@@ -33,7 +33,7 @@ class VerifyLinkJobTest < ActiveJob::TestCase
         <title>mygem on Github: a gem among gems</title>
       </head>
       <body>
-        <a role="link" rel="noopener noreferrer nofollow" href="https://rubygems.org/gem/mygem">my github gem on rubygems.org</a>
+        <a role="link" rel="noopener noreferrer nofollow" href="https://rubygems.org/gems/mygem">my github gem on rubygems.org</a>
       </body>
     </html>
   HTML
@@ -44,7 +44,7 @@ class VerifyLinkJobTest < ActiveJob::TestCase
         <title>mygem on Github: a gem among gems</title>
       </head>
       <body>
-        <a rel="me" href="https://rubygems.org/gem/mygem">my github gem on rubygems.org</a>
+        <a rel="me" href="https://rubygems.org/gems/mygem">my github gem on rubygems.org</a>
       </body>
     </html>
   HTML

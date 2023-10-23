@@ -393,7 +393,7 @@ class Rubygem < ApplicationRecord
   end
 
   def linkable_verification_uri
-    URI.join("https://rubygems.org/gem/", name)
+    URI.join("https://rubygems.org/gems/", name)
   end
 
   private
