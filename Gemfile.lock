@@ -84,7 +84,7 @@ GEM
     attr_required (1.0.1)
     autoprefixer-rails (10.4.15.0)
       execjs (~> 2)
-    avo (2.42.2)
+    avo (2.43.0)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
