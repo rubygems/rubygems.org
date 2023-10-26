@@ -162,6 +162,57 @@ Admin::GitHubUser.create_with(
 }
 ).find_or_create_by!(github_id: "FAKE-not_an_admin")
 
+# https://agent.buildkite.com/.well-known/openid-configuration
+buildkite_oidc_provider = OIDC::Provider
+  .create_with(
+    configuration: {
+      issuer: OIDC::Provider::BUILDKITE_ISSUER,
+      jwks_uri: "#{OIDC::Provider::BUILDKITE_ISSUER}/.well-known/jwks",
+      subject_types_supported: %w[public pairwise],
+      response_types_supported: ["id_token"],
+      claims_supported: %w[sub aud exp iat iss nbf organization_id organization_slug pipeline_id pipeline_slug build_number
+                           build_branch build_tag build_commit step_key job_id agent_id],
+      id_token_signing_alg_values_supported: ["RS256"],
+      scopes_supported: ["openid"]
+    }
+  ).find_or_create_by!(issuer: OIDC::Provider::BUILDKITE_ISSUER)
+
+author_buildkite_oidc_api_key_role = author.oidc_api_key_roles.create_with(
+  api_key_permissions: {
+    gems: ["rubygem0"],
+    scopes: ["push_rubygem"],
+    valid_for: "PT20M"
+  },
+  access_policy: {
+    statements: [
+      effect: "allow",
+      principal: {
+        oidc: OIDC::Provider::BUILDKITE_ISSUER
+      },
+      conditions: [{
+        operator: "string_equals",
+        claim: "aud",
+        value: "https://rubygems.org"
+      },{
+        operator: "string_equals",
+        claim: "organization_slug",
+        value: "rubygem"
+      },{
+        operator: "string_equals",
+        claim: "pipeline_slug",
+        value: "rubygem0"
+      },{
+        operator: "string_equals",
+        claim: "build_branch",
+        value: "main"
+      }],
+    ]
+  }
+).find_or_create_by!(
+  name: "push-rubygem0-buildkite",
+  provider: buildkite_oidc_provider
+)
+
 github_oidc_provider = OIDC::Provider
   .create_with(
     configuration: {
