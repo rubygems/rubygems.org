@@ -6,7 +6,7 @@
   <div class="form__group">
     <%= f.label :oidc_provider_id, class: "form__label" %>
     <p/>
-    <%= f.collection_select :oidc_provider_id, OIDC::Provider.all, :id, :issuer, selected: :provider_id, class: "form__input form__select" %>
+    <%= f.collection_select :oidc_provider_id, OIDC::Provider.all, :id, :issuer, selected: @api_key_role.oidc_provider_id, class: "form__input form__select" %>
   </div>
   <div class="form__group">
     <%= f.label :api_key_permissions, class: "form__label" %>
