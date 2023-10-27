@@ -58,7 +58,7 @@
   <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
   <div class="t-list__items">
     <%- @versioned_links.each do |name, link| %>
-      <%= link_to_page name, link %>
+      <%= link_to_page name, link, verified: @versioned_links.verified?(link) %>
     <%- end %>
     <%= change_diff_link(@rubygem, @latest_version) %>
     <%= badge_link(@rubygem) %>

@@ -17,6 +17,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
+  before_save :create_link_verifications, if: :metadata_changed?
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
@@ -495,5 +496,13 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def no_dashes_in_version_number
     return unless number&.include?("-")
     errors.add(:number, "cannot contain a dash (it will be uninstallable)")
+  end
+
+  def create_link_verifications
+    Links::LINKS.each_value do |long|
+      uri = metadata[long]
+      next if uri.blank?
+      rubygem.link_verifications.find_or_create_by!(uri:).retry_if_needed
+    end
   end
 end

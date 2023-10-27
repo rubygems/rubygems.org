@@ -797,6 +797,44 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    context "from a Gem::Specification with metadata with links" do
+      include ActiveJob::TestHelper
+
+      setup do
+        @specification = new_gemspec("test", "1.0.0", "A summary", "ruby") do |s|
+          s.homepage = "https://example.com/test"
+          s.metadata = {
+            "funding_uri" => "https://example.com/",
+            "documentation_uri" => "https://example.com/docs",
+            "source_code_uri" => "::",
+            "bug_tracker_uri" => "",
+            "mailing_list_uri" => "http://example.com/mailing_list",
+            "wiki_uri" => "https://example.com/"
+          }
+        end
+
+        @rubygem       = Rubygem.new(name: @specification.name)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @version.sha256 = "dummy"
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+      end
+
+      should "create link verification records" do
+        assert_equal ["::", "http://example.com/mailing_list", "https://example.com/", "https://example.com/docs", "https://example.com/test"],
+                     @rubygem.link_verifications.pluck(:uri).sort
+      end
+
+      should "enqueue link verification jobs" do
+        assert_enqueued_with job: VerifyLinkJob,
+          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/docs").sole }]
+        assert_enqueued_with job: VerifyLinkJob,
+          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/test").sole }]
+        assert_enqueued_with job: VerifyLinkJob,
+          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/").sole }]
+        assert_enqueued_jobs 3, only: VerifyLinkJob
+      end
+    end
+
     context "from a Gem::Specification with dependencies on unknown gems" do
       setup do
         @specification = gem_specification_from_gem_fixture("with_dependencies-0.0.0")
