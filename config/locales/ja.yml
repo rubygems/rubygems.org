@@ -549,7 +549,7 @@ ja:
     update:
       confirmation_mail_sent: 数分でEメールが届きます。メールには新しいEメールアドレスを確認する手順が含まれています。
       updated: プロフィールが更新されました。
-    public_email: メールアドレスを投稿する
+    public_email: 公開プロフィールにメールアドレスを表示する
     request_denied: このリクエストは拒否されました。パスワードを検証できませんでした。
     show:
       title: "%{username} のプロフィール"
