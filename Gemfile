@@ -34,7 +34,7 @@ gem "rbtrace", "~> 0.4.8"
 gem "rdoc", "~> 6.5"
 gem "roadie-rails", "~> 3.0"
 gem "ruby-magic", "~> 0.6"
-gem "shoryuken", "~> 4.0", require: false
+gem "shoryuken", "~> 5.0", require: false
 gem "statsd-instrument", "~> 3.5"
 gem "validates_formatting_of", "~> 0.9"
 gem "opensearch-dsl", "~> 0.2.0"
