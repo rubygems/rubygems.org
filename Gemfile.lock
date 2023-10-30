@@ -271,7 +271,7 @@ GEM
     heapy (0.2.0)
       thor
     high_voltage (3.1.2)
-    honeybadger (5.2.1)
+    honeybadger (5.3.0)
     http (5.1.1)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
