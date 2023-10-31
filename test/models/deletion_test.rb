@@ -95,6 +95,22 @@ class DeletionTest < ActiveSupport::TestCase
     end
   end
 
+  context "when rstuf is enabled" do
+    setup do
+      setup_rstuf
+    end
+
+    should "enqueue rstuf removal" do
+      assert_enqueued_jobs 1, only: Rstuf::RemoveJob do
+        delete_gem
+      end
+    end
+
+    teardown do
+      teardown_rstuf
+    end
+  end
+
   should "enque job for updating ES index, spec index and purging cdn" do
     assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
       assert_enqueued_jobs 8, only: FastlyPurgeJob do
@@ -186,6 +202,23 @@ class DeletionTest < ActiveSupport::TestCase
       @deletion = delete_gem
       assert_enqueued_jobs 1, only: StoreVersionContentsJob do
         @deletion.restore!
+      end
+    end
+
+    context "with rstuf enabled" do
+      setup do
+        setup_rstuf
+      end
+
+      should "enqueue rstuf addition" do
+        @deletion = delete_gem
+        assert_enqueued_jobs 1, only: Rstuf::AddJob do
+          @deletion.restore!
+        end
+      end
+
+      teardown do
+        teardown_rstuf
       end
     end
 

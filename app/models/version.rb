@@ -373,10 +373,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     authors.split(",").flatten
   end
 
-  def gem_file_name
-    "#{full_name}.gem"
-  end
-
   def sha256_hex
     Version._sha256_hex(sha256) if sha256
   end

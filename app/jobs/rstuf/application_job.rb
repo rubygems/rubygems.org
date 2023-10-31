@@ -1,7 +1,5 @@
-module Rstuf
-  class ApplicationJob < ::ApplicationJob
-    before_enqueue do
-      throw :abort unless Rstuf.enabled?
-    end
+class Rstuf::ApplicationJob < ApplicationJob
+  before_enqueue do
+    throw :abort unless Rstuf.enabled?
   end
 end
