@@ -1,5 +1,5 @@
 <%= render Avo::PanelComponent.new(title: title_link, classes: %w[w-full]) do |c| %>
-  <% c.body do %>
+  <% c.with_body do %>
     <% next unless authorized? %>
 
     <div class="divide-y divide-dashed">

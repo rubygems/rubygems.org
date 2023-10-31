@@ -57,6 +57,13 @@ zh-TW:
         full_name: 全名
         handle: 帳號
         password: 密碼
+      api_key:
+        oidc_api_key_role:
+      oidc/id_token:
+        jti:
+        api_key_role:
+      oidc/api_key_role:
+        api_key_permissions:
     errors:
       messages:
         unpwn: 曾出現在資料外洩事件中，不應再使用
@@ -76,12 +83,18 @@ zh-TW:
     models:
       user:
   activemodel:
+    attributes:
+      oidc/provider/configuration:
+        jwks_uri:
+        id_token_signing_alg_values_supported:
     errors:
       models:
         oidc/api_key_permissions:
           attributes:
             valid_for:
               inclusion: "%{value} 秒數應介於 5 分鐘 (300 秒) 和 1 天 (86,400 秒) 之間"
+            gems:
+              too_long:
   api_keys:
     create:
       success: "已建立新 API 金鑰"
@@ -561,6 +574,10 @@ zh-TW:
         wiki: Wiki
         resend_ownership_confirmation: 重新傳送確認信
         ownership: 所有權
+        oidc:
+          api_key_role:
+            name:
+            new:
     reserved:
       reserved_namespace: 此命名空間被 rubygems.org 保留。
     dependencies:
@@ -714,3 +731,66 @@ zh-TW:
       new_device: 註冊新安全裝置
       nickname: 暱稱
       submit: 註冊裝置
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles:
+        new_role:
+      show:
+        api_key_role_name:
+        automate_gh_actions_publishing:
+        view_provider:
+        edit_role:
+        delete_role:
+        confirm_delete:
+        deleted_at_html:
+      edit:
+        edit_role:
+      git_hub_actions_workflow:
+        title:
+        configured_for_html:
+        to_automate_html:
+        not_github:
+        not_push:
+        copy_to_clipboard:
+        copied:
+        a_gem:
+        instructions_html:
+      new:
+        title:
+      update:
+        success:
+      create:
+        success:
+      destroy:
+        success:
+      form:
+        add_condition:
+        remove_condition:
+        add_statement:
+        remove_statement:
+      deleted:
+    providers:
+      index:
+        title:
+        description_html:
+      show:
+        title:
+    id_tokens:
+      index:
+        title:
+      show:
+        title:
+  duration:
+    minutes:
+      other:
+      one:
+    hours:
+      other:
+      one:
+    days:
+      other:
+      one:
+    seconds:
+      other:
+      one:

@@ -7,6 +7,8 @@ Rails.autoloaders.main.ignore(Rails.root.join("lib/shoryuken"))
 
 Rails.autoloaders.main.ignore(Rails.root.join("lib/cops"))
 
+Rails.autoloaders.main.ignore(Rails.root.join("lib/puma/plugin"))
+
 Rails.autoloaders.once.inflector.inflect(
   "http" => "HTTP",
   "oidc" => "OIDC"

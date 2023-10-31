@@ -1,6 +1,7 @@
 require "simplecov"
 SimpleCov.start "rails" do
   add_filter "lib/tasks"
+  add_filter "lib/puma/plugin"
   add_filter "lib/rails_development_log_formatter.rb"
 
   # Will be deleted after all the delayed jobs have run

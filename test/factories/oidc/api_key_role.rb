@@ -7,7 +7,7 @@ FactoryBot.define do
         scopes: ["push_rubygem"]
       }
     end
-    name { "GitHub Pusher" }
+    sequence(:name) { |n| "GitHub Pusher #{n}" }
     access_policy do
       {
         statements: [

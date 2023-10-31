@@ -53,10 +53,11 @@ gem "browser", "~> 5.3", ">= 5.3.1"
 gem "bcrypt", "~> 3.1", ">= 3.1.18"
 gem "maintenance_tasks", "~> 2.1"
 gem "strong_migrations", "~> 1.6"
+gem "phlex-rails", "~> 1.0"
 
 # Admin dashboard
 gem "avo", "~> 2.42"
-gem "view_component", "~> 2.0"
+gem "view_component", "~> 3.6"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
 gem "groupdate", "~> 6.2"
@@ -64,6 +65,10 @@ gem "groupdate", "~> 6.2"
 # Logging
 gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.11"
+
+group :assets, :development do
+  gem "tailwindcss-rails", "~> 2.0"
+end
 
 group :assets do
   gem "dartsass-sprockets", "~> 3.0"

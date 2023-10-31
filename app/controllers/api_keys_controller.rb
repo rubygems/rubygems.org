@@ -7,7 +7,7 @@ class ApiKeysController < ApplicationController
 
   def index
     @api_key  = session.delete(:api_key)
-    @api_keys = current_user.api_keys.unexpired
+    @api_keys = current_user.api_keys.unexpired.not_oidc
     redirect_to new_profile_api_key_path if @api_keys.empty?
   end
 

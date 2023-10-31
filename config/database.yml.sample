@@ -2,6 +2,7 @@ default: &default
   adapter: postgresql
   encoding: utf8
   username: postgres
+  prepared_statements: false
 
 development:
   <<: *default

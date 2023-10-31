@@ -34,10 +34,6 @@ Rails/HelperInstanceVariable:
 Rails/FilePath:
   Enabled: false
 
-Rails/RakeEnvironment:
-  Exclude:
-    - lib/tasks/gen_erd.rake
-
 Rails/UnknownEnv:
   Environments:
     - production
@@ -50,6 +46,11 @@ Rails/UniqueValidationWithoutIndex:
 
 Rails/ActionControllerTestCase:
   Enabled: false # Causes every integration test to fail
+
+Rails/Output:
+  Exclude:
+    - app/views/**/*_view.rb
+    - app/views/**/*_component.rb
 
 Layout/ArgumentAlignment:
   Enabled: false

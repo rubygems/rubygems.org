@@ -55,6 +55,13 @@ zh-CN:
         full_name: 全名
         handle: 用户名
         password: 密码
+      api_key:
+        oidc_api_key_role:
+      oidc/id_token:
+        jti:
+        api_key_role:
+      oidc/api_key_role:
+        api_key_permissions:
     errors:
       messages:
         unpwn: 曾出现过数据泄露，不应该再使用
@@ -74,12 +81,18 @@ zh-CN:
     models:
       user: 用户
   activemodel:
+    attributes:
+      oidc/provider/configuration:
+        jwks_uri:
+        id_token_signing_alg_values_supported:
     errors:
       models:
         oidc/api_key_permissions:
           attributes:
             valid_for:
               inclusion:
+            gems:
+              too_long:
   api_keys:
     create:
       success: 新的 API 密钥已创建
@@ -574,6 +587,10 @@ zh-CN:
         wiki: Wiki
         resend_ownership_confirmation: 重新发送
         ownership: 所有权
+        oidc:
+          api_key_role:
+            name:
+            new:
     reserved:
       reserved_namespace: 该命名空间由 RubyGems.org 保留。
     dependencies:
@@ -733,3 +750,66 @@ zh-CN:
       new_device: 创建一个新的安全设备
       nickname: 昵称
       submit: 注册设备
+  oidc:
+    api_key_roles:
+      index:
+        api_key_roles:
+        new_role:
+      show:
+        api_key_role_name:
+        automate_gh_actions_publishing:
+        view_provider:
+        edit_role:
+        delete_role:
+        confirm_delete:
+        deleted_at_html:
+      edit:
+        edit_role:
+      git_hub_actions_workflow:
+        title:
+        configured_for_html:
+        to_automate_html:
+        not_github:
+        not_push:
+        copy_to_clipboard:
+        copied:
+        a_gem:
+        instructions_html:
+      new:
+        title:
+      update:
+        success:
+      create:
+        success:
+      destroy:
+        success:
+      form:
+        add_condition:
+        remove_condition:
+        add_statement:
+        remove_statement:
+      deleted:
+    providers:
+      index:
+        title:
+        description_html:
+      show:
+        title:
+    id_tokens:
+      index:
+        title:
+      show:
+        title:
+  duration:
+    minutes:
+      other:
+      one:
+    hours:
+      other:
+      one:
+    days:
+      other:
+      one:
+    seconds:
+      other:
+      one:

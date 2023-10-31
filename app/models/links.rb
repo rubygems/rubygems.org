@@ -17,12 +17,13 @@ class Links
     "docs"      => "documentation_uri"
   }.freeze
 
-  attr_accessor :rubygem, :version, :linkset
+  attr_accessor :rubygem, :version, :linkset, :link_verifications
 
   def initialize(rubygem, version)
     self.rubygem = rubygem
     self.version = version
     self.linkset = rubygem.linkset
+    self.link_verifications = rubygem.link_verifications.verified.for_uri(version ? each.map { |_, url| url } : []).strict_loading
   end
 
   def links
@@ -43,6 +44,11 @@ class Links
       value = send(long)
       yield short, value if value
     end
+  end
+
+  def verified?(uri)
+    # intentionally using #any? here because we want to ensure the query is materialized only once to avoid an N+1
+    link_verifications.any? { |lv| lv.uri == uri }
   end
 
   # documentation uri:

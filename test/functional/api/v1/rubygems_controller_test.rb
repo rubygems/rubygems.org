@@ -401,14 +401,15 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, name: "test", number: "0.0.0", owners: [@other_user])
         create(:global_web_hook, user: @user, url: "http://example.org")
 
-        post :create, body: gem_file("test-1.0.0.gem", &:read)
+        assert_no_enqueued_jobs do
+          post :create, body: gem_file("test-1.0.0.gem", &:read)
+        end
       end
       should respond_with 403
       should "not allow new version to be saved" do
         assert_equal 1, @rubygem.ownerships.size
         assert_equal @other_user, @rubygem.ownerships.first.user
         assert_equal 1, @rubygem.versions.size
-        assert_no_enqueued_jobs
         assert_includes @response.body, "You do not have permission to push to this gem."
       end
     end

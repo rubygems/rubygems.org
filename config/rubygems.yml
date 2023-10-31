@@ -46,4 +46,5 @@ oidc-api-token:
   s3_region: us-west-2
   s3_endpoint: s3-us-west-2.amazonaws.com
   s3_contents_bucket: contents.oregon.oidc-api-token.s3.rubygems.org
+  s3_compact_index_bucket: compact-index.oregon.oidc-api-token.s3.rubygems.org
   versions_file_location: "./config/versions.list"
