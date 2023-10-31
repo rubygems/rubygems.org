@@ -673,7 +673,7 @@ GEM
     validates_formatting_of (0.9.0)
       activemodel
     version_gem (1.1.1)
-    view_component (3.6.0)
+    view_component (3.7.0)
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
