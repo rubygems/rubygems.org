@@ -273,6 +273,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       assert_equal 1, buckets["description"]["doc_count"]
     end
 
+    # NOTE: this can fail when OpenSearch date is different to Ruby date
     should "aggregate date range" do
       buckets = @response.response["aggregations"]["date_range"]["buckets"]
 
