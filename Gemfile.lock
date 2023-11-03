@@ -84,7 +84,7 @@ GEM
     attr_required (1.0.1)
     autoprefixer-rails (10.4.15.0)
       execjs (~> 2)
-    avo (2.43.0)
+    avo (2.44.0)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -96,6 +96,7 @@ GEM
       meta-tags
       pagy
       turbo-rails
+      turbo_power (~> 0.5.0)
       view_component (>= 2.54.0)
       zeitwerk (>= 2.6.2)
     awrence (1.2.1)
@@ -469,7 +470,7 @@ GEM
       activesupport (>= 3.0.0)
     pwned (2.3.0)
     raabro (1.4.0)
-    racc (1.7.1)
+    racc (1.7.2)
     rack (2.2.8)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
@@ -655,6 +656,8 @@ GEM
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
       railties (>= 6.0.0)
+    turbo_power (0.5.0)
+      turbo-rails (~> 1.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unf (0.1.4)
