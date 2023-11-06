@@ -632,7 +632,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    statsd-instrument (3.6.0)
+    statsd-instrument (3.6.1)
     stringio (3.0.8)
     strong_migrations (1.6.4)
       activerecord (>= 5.2)
