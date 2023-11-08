@@ -117,6 +117,10 @@ class User < ApplicationRecord
     ""
   end
 
+  def self.security_user
+    find_by!(email: "security@rubygems.org")
+  end
+
   def gravatar_url(*)
     public_email ? super : nil
   end

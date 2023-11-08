@@ -384,7 +384,7 @@ class Rubygem < ApplicationRecord
   end
 
   def yank_versions!(version_id: nil)
-    security_user = User.find_by!(email: "security@rubygems.org")
+    security_user = User.security_user
     versions_to_yank = version_id ? versions.where(id: version_id) : versions
 
     versions_to_yank.find_each do |version|
