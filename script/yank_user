@@ -14,7 +14,7 @@ require_relative "../config/environment"
 
 user = User.find_by!(handle: handle)
 
-security_user = User.find_by!(email: "security@rubygems.org")
+security_user = User.security_user
 
 user.rubygems.each do |rubygem|
   puts "Yanking #{rubygem.name}"
