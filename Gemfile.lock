@@ -174,11 +174,11 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    datadog-ci (0.2.0)
+    datadog-ci (0.3.0)
       msgpack
     date (3.3.3)
-    ddtrace (1.15.0)
-      datadog-ci (~> 0.2.0)
+    ddtrace (1.16.1)
+      datadog-ci (~> 0.3.0)
       debase-ruby_core_source (= 3.2.2)
       libdatadog (~> 5.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
