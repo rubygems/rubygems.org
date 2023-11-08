@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 7.0.0"
+gem "rails", "~> 7.1.1"
 gem "rails-i18n", "~> 7.0"
 
 gem "aws-sdk-s3", "~> 1.119"
