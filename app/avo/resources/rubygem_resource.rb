@@ -8,7 +8,6 @@ class RubygemResource < Avo::BaseResource
   action ReleaseReservedNamespace
   action AddOwner
   action YankRubygem
-  action ReserveNamespace
   action UploadInfoFile
   action UploadVersionsFile
 
