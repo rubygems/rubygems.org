@@ -1,4 +1,5 @@
 require 'faraday_middleware/aws_sigv4'
+require 'opensearch-dsl'
 
 port = 9200
 if (Rails.env.test? || Rails.env.development?) && Toxiproxy.running?
