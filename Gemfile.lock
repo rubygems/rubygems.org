@@ -603,7 +603,7 @@ GEM
     semantic (1.6.1)
     semantic_logger (4.15.0)
       concurrent-ruby (~> 1.0)
-    shoryuken (5.3.2)
+    shoryuken (6.1.0)
       aws-sdk-core (>= 2)
       concurrent-ruby
       thor
@@ -789,7 +789,7 @@ DEPENDENCIES
   ruby-magic (~> 0.6)
   searchkick (~> 5.2)
   selenium-webdriver (~> 4.8)
-  shoryuken (~> 5.0)
+  shoryuken (~> 6.1)
   shoulda (~> 4.0)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
