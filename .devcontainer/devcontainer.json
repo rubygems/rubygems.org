@@ -13,7 +13,10 @@
     "toxiproxy"
   ],
   "forwardPorts": [
-    3000 // Rails
+    3000, // Rails
+    11211, // Memcache
+    9200, // Opensearch
+    5432 // PostgreSQL
   ],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   // Use 'postCreateCommand' to run commands after the container is created.
