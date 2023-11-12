@@ -14,6 +14,17 @@ class UsersControllerTest < ActionController::TestCase
       page.assert_text "Sign up"
       page.assert_selector "input[type=password][autocomplete=new-password]"
     end
+
+    context "when logged in" do
+      setup do
+        @user = create(:user)
+        sign_in_as(@user)
+
+        get :new
+      end
+
+      should redirect_to("root") { root_path }
+    end
   end
 
   context "on POST to create" do
@@ -26,9 +37,9 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "when missing a parameter" do
-      should "raises parameter missing" do
+      should "reports validation error" do
         assert_no_changes -> { User.count } do
-          post :create
+          post :create, params: { user: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
         assert_response :ok
         assert page.has_content?("Email address is not a valid email")

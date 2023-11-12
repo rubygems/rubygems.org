@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
-  include Clearance::Authorization
   include ApplicationMultifactorMethods
   include TraceTagger
 
@@ -67,6 +66,10 @@ class ApplicationController < ActionController::Base
   def redirect_to_signin
     response.headers["Cache-Control"] = "private, max-age=0"
     redirect_to sign_in_path, alert: t("please_sign_in")
+  end
+
+  def redirect_to_root
+    redirect_to root_path
   end
 
   def find_rubygem

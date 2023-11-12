@@ -111,7 +111,7 @@ class SessionsController < Clearance::SessionsController
       if status.success?
         StatsD.increment "login.success"
         set_login_flash
-        redirect_back_or(url_after_create)
+        redirect_to(url_after_create)
       else
         login_failure(status.failure_message)
       end
