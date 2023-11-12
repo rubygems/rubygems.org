@@ -4,18 +4,6 @@ class User < ApplicationRecord
   include Gravtastic
   is_gravtastic default: "retro"
 
-  PERMITTED_ATTRS = %i[
-    bio
-    email
-    handle
-    public_email
-    location
-    password
-    website
-    twitter_username
-    full_name
-  ].freeze
-
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
   before_create :_generate_confirmation_token_no_reset_unconfirmed_email
   before_destroy :yank_gems
