@@ -104,7 +104,7 @@ uniqueness: { case_sensitive: false }
   end
 
   def self.find_by_email(email)
-    find_by("lower(email) = ?", email.downcase)
+    find_by("lower(email) = lower(?)", email)
   end
 
   def self.find_by_slug!(slug)
