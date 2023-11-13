@@ -3,11 +3,11 @@ require "test_helper"
 
 class CompactIndexTest < ActionDispatch::IntegrationTest
   def etag(body)
-    '"' << Digest::MD5.hexdigest(body) << '"'
+    %("#{Digest::MD5.hexdigest(body)}")
   end
 
   def digest(body)
-    "sha-256=#{Base64.encode64(Digest::SHA256.digest(body)).strip}"
+    Digest::SHA256.base64digest(body)
   end
 
   setup do
@@ -62,10 +62,12 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     expected_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
+    expected_digest = digest(expected_body)
 
     assert_equal expected_body, @response.body
     assert_equal etag(expected_body), @response.headers["ETag"]
-    assert_equal digest(expected_body), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
     assert_equal %w[gemA gemA1 gemA2 gemB], Rails.cache.read("names")
   end
 
@@ -74,9 +76,11 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     assert_response 206
     full_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
+    expected_digest = digest(full_body)
 
     assert_equal etag(full_body), @response.headers["ETag"]
-    assert_equal digest(full_body), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
     assert_equal "gemA2\ngemB\n", @response.body
   end
 
@@ -87,25 +91,29 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     gem_b_match = "gemB 1.0.0 qw2dwe\n"
 
     get versions_path
+    expected_digest = digest(@response.body)
 
     assert_response :success
     assert_match file_contents, @response.body
     assert_match(/#{gem_b_match}#{gem_a_match}/, @response.body)
     assert_equal etag(@response.body), @response.headers["ETag"]
-    assert_equal digest(@response.body), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
   end
 
   test "/versions partial response" do
     get versions_path
     full_response_body = @response.body
     partial_body = "1.0.0 013we2\ngemA 2.0.0 1cf94r\ngemA 1.2.0 13q4es\ngemA 2.1.0 e217fz\n"
+    expected_digest = digest(full_response_body)
 
     get versions_path, env: { range: "bytes=229-" }
 
     assert_response 206
     assert_equal partial_body, @response.body
     assert_equal etag(full_response_body), @response.headers["ETag"]
-    assert_equal digest(full_response_body), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
   end
 
   test "/versions updates on gem yank" do
@@ -121,10 +129,13 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     get versions_path
     full_response_body = @response.body
+    expected_digest = digest(full_response_body)
+
     get versions_path, env: { range: "bytes=206-" }
 
     assert_equal etag(full_response_body), @response.headers["ETag"]
-    assert_equal digest(full_response_body), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
     assert_equal expected, @response.body
   end
 
@@ -143,13 +154,15 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
       1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
       2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
     VERSIONS_FILE
+    expected_digest = digest(expected)
 
     get info_path(gem_name: "gemA")
 
     assert_response :success
     assert_equal expected, @response.body
     assert_equal etag(expected), @response.headers["ETag"]
-    assert_equal digest(expected), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
     assert_equal expected, CompactIndex.info(Rails.cache.read("info/gemA"))
   end
 
@@ -182,13 +195,15 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
       ---
       1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
     VERSIONS_FILE
+    expected_digest = digest(expected)
 
     get info_path(gem_name: "gemC")
 
     assert_response :success
     assert_equal(expected, @response.body)
     assert_equal etag(expected), @response.headers["ETag"]
-    assert_equal digest(expected), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
   end
 
   test "/info with nonexistent gem" do
@@ -217,12 +232,14 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
       ---
       1.0.0 aaab:>= 0,aaab:~> 0.2,bbcc:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
     VERSIONS_FILE
+    expected_digest = digest(expected)
 
     get info_path(gem_name: "gemB")
 
     assert_response :success
     assert_equal(expected, @response.body)
     assert_equal etag(expected), @response.headers["ETag"]
-    assert_equal digest(expected), @response.headers["Digest"]
+    assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+    assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
   end
 end
