@@ -27,8 +27,18 @@ class Rstuf::CheckJobTest < ActiveJob::TestCase
     end
   end
 
-  test "perform raises a retry exception on retry state and retries" do
+  test "perform raises a retry exception on pending state and retries" do
     retry_response = { "data" => { "state" => "PENDING" } }
+    stub_request(:get, "#{Rstuf.base_url}/api/v1/task/?task_id=#{@task_id}")
+      .to_return(status: 200, body: retry_response.to_json, headers: { "Content-Type" => "application/json" })
+
+    assert_enqueued_with(job: Rstuf::CheckJob, args: [@task_id]) do
+      Rstuf::CheckJob.perform_now(@task_id)
+    end
+  end
+
+  test "perform raises a retry exception on retry state and retries" do
+    retry_response = { "data" => { "state" => "UNKNOWN" } }
     stub_request(:get, "#{Rstuf.base_url}/api/v1/task/?task_id=#{@task_id}")
       .to_return(status: 200, body: retry_response.to_json, headers: { "Content-Type" => "application/json" })
 

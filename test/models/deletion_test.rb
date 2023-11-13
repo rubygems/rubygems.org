@@ -101,7 +101,7 @@ class DeletionTest < ActiveSupport::TestCase
     end
 
     should "enqueue rstuf removal" do
-      assert_enqueued_jobs 1, only: Rstuf::RemoveJob do
+      assert_enqueued_with(job: Rstuf::RemoveJob, args: [{ version: @version }]) do
         delete_gem
       end
     end

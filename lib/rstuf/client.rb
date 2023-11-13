@@ -24,6 +24,7 @@ class Rstuf::Client
     Faraday.new(url: Rstuf.base_url) do |f|
       f.request :json
       f.response :json
+      f.response :logger, Rails.logger
     end
   end
 

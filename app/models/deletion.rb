@@ -57,13 +57,13 @@ class Deletion < ApplicationRecord
   def remove_from_index
     version.update!(indexed: false, yanked_at: Time.now.utc)
     reindex
-    Rstuf::RemoveJob.perform_later(version: version)
+    Rstuf::RemoveJob.perform_later(version:)
   end
 
   def restore_to_index
     version.update!(indexed: true, yanked_at: nil, yanked_info_checksum: nil)
     reindex
-    Rstuf::AddJob.perform_later(version: version)
+    Rstuf::AddJob.perform_later(version:)
   end
 
   def reindex
