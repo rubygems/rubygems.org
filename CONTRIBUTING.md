@@ -94,7 +94,7 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
   * Show all memcached options: `memcached -h`
-* Install Google-Chrome: `brew cask install google-chrome`
+* Install Google-Chrome: `brew install google-chrome --cask`
 
 #### Environment (Linux - Debian/Ubuntu)
 
