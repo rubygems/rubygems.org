@@ -4,8 +4,7 @@ class ElasticSearcher
     Faraday::TimeoutError,
     Searchkick::Error,
     OpenSearch::Transport::Transport::Error,
-    Errno::ECONNRESET,
-    HTTPClient::KeepAliveDisconnected
+    Errno::ECONNRESET
   ].freeze
 
   SearchNotAvailableError = Class.new(StandardError)
