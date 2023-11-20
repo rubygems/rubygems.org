@@ -129,7 +129,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   end
 
   def assert_poll_status(status)
-    @api_key ||= create(:api_key, key: "12345", push_rubygem: true, user: @user)
+    @api_key ||= create(:api_key, key: "12345", push_rubygem: true, owner: @user)
 
     Capybara.current_driver = :rack_test
     page.driver.header "AUTHORIZATION", "12345"

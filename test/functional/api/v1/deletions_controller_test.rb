@@ -136,7 +136,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
       context "with api key gem scoped" do
         setup do
-          @api_key = create(:api_key, name: "gem-scoped-delete-key", key: "123456", yank_rubygem: true, user: @user, rubygem_id: @rubygem.id)
+          @api_key = create(:api_key, name: "gem-scoped-delete-key", key: "123456", yank_rubygem: true, owner: @user, rubygem_id: @rubygem.id)
           @request.env["HTTP_AUTHORIZATION"] = "123456"
         end
 

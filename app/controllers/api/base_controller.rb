@@ -45,23 +45,23 @@ class Api::BaseController < ApplicationController
   def verify_mfa_requirement
     if @rubygem && !@rubygem.mfa_requirement_satisfied_for?(@api_key.user)
       render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
-    elsif @api_key.user.mfa_required_not_yet_enabled?
+    elsif @api_key.mfa_required_not_yet_enabled?
       render_mfa_setup_required_error
-    elsif @api_key.user.mfa_required_weak_level_enabled?
+    elsif @api_key.mfa_required_weak_level_enabled?
       render_mfa_strong_level_required_error
     end
   end
 
   def response_with_mfa_warning(response)
     message = response
-    if @api_key.user.mfa_recommended_not_yet_enabled?
+    if @api_key.mfa_recommended_not_yet_enabled?
       message += <<~WARN.chomp
 
 
         [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
         at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
       WARN
-    elsif @api_key.user.mfa_recommended_weak_level_enabled?
+    elsif @api_key.mfa_recommended_weak_level_enabled?
       message += <<~WARN.chomp
 
 
@@ -99,8 +99,12 @@ class Api::BaseController < ApplicationController
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
     return render_unauthorized unless @api_key
-    set_tags "gemcutter.user.id" => @api_key.user_id, "gemcutter.user.api_key_id" => @api_key.id
+    set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.user.api_key_id" => @api_key.id
     render_soft_deleted_api_key if @api_key.soft_deleted?
+  end
+
+  def verify_user_api_key
+    render_api_key_forbidden if @api_key.user.blank?
   end
 
   def render_unauthorized

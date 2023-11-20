@@ -395,7 +395,7 @@ class UserTest < ActiveSupport::TestCase
 
         context "blocking user with api key" do
           setup do
-            api_key = create(:api_key, user: @user)
+            api_key = create(:api_key, owner: @user)
             # simulate gem pushed using api key to ensure
             # user with pushed gems can be blocked
             create(:version, pusher: @user, pusher_api_key: api_key)

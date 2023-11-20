@@ -71,7 +71,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
       context "api key exists" do
         setup do
-          @api_key = create(:api_key, user: @user)
+          @api_key = create(:api_key, owner: @user)
           get :index
         end
 
@@ -162,7 +162,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
     context "on GET to edit" do
       setup do
-        @api_key = create(:api_key, user: @user)
+        @api_key = create(:api_key, owner: @user)
         get :edit, params: { id: @api_key.id }
       end
 
@@ -183,7 +183,7 @@ class ApiKeysControllerTest < ActionController::TestCase
     end
 
     context "on PATCH to update" do
-      setup { @api_key = create(:api_key, user: @user) }
+      setup { @api_key = create(:api_key, owner: @user) }
 
       context "with successful save" do
         setup do
@@ -251,7 +251,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
     context "on DELETE to destroy" do
       context "user is owner of key" do
-        setup { @api_key = create(:api_key, user: @user) }
+        setup { @api_key = create(:api_key, owner: @user) }
 
         context "with successful destroy" do
           setup { delete :destroy, params: { id: @api_key.id } }
@@ -294,8 +294,8 @@ class ApiKeysControllerTest < ActionController::TestCase
 
     context "on DELETE to reset" do
       setup do
-        create(:api_key, key: "1234", user: @user)
-        create(:api_key, key: "2345", user: @user)
+        create(:api_key, key: "1234", owner: @user)
+        create(:api_key, key: "2345", owner: @user)
 
         delete :reset
       end
@@ -368,7 +368,7 @@ path: "/profile/api_keys/1" },
 
         context "on DELETE to reset" do
           setup do
-            create(:api_key, key: "1234", user: @user)
+            create(:api_key, key: "1234", owner: @user)
             delete :reset
           end
 
@@ -401,7 +401,7 @@ path: "/profile/api_keys/1" },
 
         context "on GET to edit" do
           setup do
-            @api_key = create(:api_key, user: @user)
+            @api_key = create(:api_key, owner: @user)
             get :edit, params: { id: @api_key.id }
           end
 
@@ -414,7 +414,7 @@ path: "/profile/api_keys/1" },
 
         context "on PATCH to update" do
           setup do
-            @api_key = create(:api_key, user: @user)
+            @api_key = create(:api_key, owner: @user)
             patch :update, params: { api_key: { name: "test", add_owner: true }, id: @api_key.id }
             @api_key.reload
           end
@@ -424,7 +424,7 @@ path: "/profile/api_keys/1" },
 
         context "on DELETE to destroy" do
           setup do
-            @api_key = create(:api_key, user: @user)
+            @api_key = create(:api_key, owner: @user)
             delete :destroy, params: { id: @api_key.id }
           end
 

@@ -29,7 +29,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "creating new api key from index" do
-    create(:api_key, user: @user)
+    create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "New API key"
@@ -132,7 +132,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update api key scope" do
-    api_key = create(:api_key, user: @user)
+    api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -148,7 +148,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update api key gem scope" do
-    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -163,7 +163,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update gem scoped api key with applicable scopes removed" do
-    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -179,7 +179,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update gem scoped api key to another applicable scope" do
-    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -197,7 +197,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update api key gem scope to a gem the user does not own" do
-    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
     @another_ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "another_gem"))
 
     visit_profile_api_keys_path
@@ -218,7 +218,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   test "update api key with MFA UI enabled" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
-    api_key = create(:api_key, user: @user)
+    api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -235,7 +235,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   test "update api key with MFA UI and API enabled" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
 
-    api_key = create(:api_key, user: @user)
+    api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -251,7 +251,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "deleting api key" do
-    create(:api_key, user: @user)
+    create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "Delete"
@@ -262,7 +262,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "deleting all api key" do
-    create(:api_key, user: @user)
+    create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "Reset"
@@ -273,7 +273,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "gem ownership removed displays api key as invalid" do
-    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
     visit_profile_api_keys_path
 
     refute page.has_css? ".owners__row__invalid"

@@ -33,7 +33,7 @@ class User < ApplicationRecord
 
   # used for deleting unconfirmed ownerships as well on user destroy
   has_many :unconfirmed_ownerships, -> { unconfirmed }, dependent: :destroy, inverse_of: :user, class_name: "Ownership"
-  has_many :api_keys, dependent: :destroy
+  has_many :api_keys, dependent: :destroy, inverse_of: :owner, as: :owner
 
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :user
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :user
@@ -247,6 +247,10 @@ class User < ApplicationRecord
 
   def can_request_ownership?(rubygem)
     !rubygem.owned_by?(self) && rubygem.ownership_requestable?
+  end
+
+  def owns_gem?(rubygem)
+    rubygem.owned_by?(self)
   end
 
   def ld_context

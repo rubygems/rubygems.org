@@ -25,7 +25,7 @@ class DashboardsController < ApplicationController
     hashed_key = Digest::SHA256.hexdigest(params_key)
     return unless (@api_key = ApiKey.unexpired.find_by_hashed_key(hashed_key))
 
-    set_tags "gemcutter.user.id" => @api_key.user_id, "gemcutter.user.api_key_id" => @api_key.id
+    set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.api_key" => @api_key.to_gid
     render plain: "An invalid API key cannot be used. Please delete it and create a new one.", status: :forbidden if @api_key.soft_deleted?
   end
 

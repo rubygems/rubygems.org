@@ -130,7 +130,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
         assert_equal "true_positive", json.last["label"]
         assert_equal @tokens.last["token"], json.last["token_raw"]
 
-        assert_raises(ActiveRecord::RecordNotFound) { @api_key.reload }
+        assert_predicate @api_key.reload, :expired?
       end
 
       should "delivers an email" do

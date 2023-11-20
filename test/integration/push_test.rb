@@ -7,7 +7,7 @@ class PushTest < ActionDispatch::IntegrationTest
     Dir.chdir(Dir.mktmpdir)
     @key = "12345"
     @user = create(:user)
-    create(:api_key, user: @user, key: @key, push_rubygem: true)
+    create(:api_key, owner: @user, key: @key, push_rubygem: true)
   end
 
   test "pushing a gem" do
@@ -438,6 +438,26 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       assert_response :forbidden
+    end
+
+    should "fail when spec.date cannot Marshal.dump" do
+      build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+        --- !ruby/object:Gem::Specification
+        specification_version: 100
+        name: book
+        version: '1'
+        platform: ruby
+        summary: 'malicious'
+        authors: [test@example.com]
+        date: !ruby/object:Time
+          a: 1
+      YAML
+
+      capture_io do
+        push_gem "malicious.gem"
+      end
+
+      assert_response :unprocessable_entity
     end
   end
 

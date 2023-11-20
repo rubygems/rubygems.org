@@ -181,7 +181,7 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "include an Authorization header for a user with many API keys" do
       @hook.user.update(api_key: nil)
-      create(:api_key, user: @hook.user)
+      create(:api_key, owner: @hook.user)
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_keys.first.hashed_key)
       stub_request(:post, @url).with(headers: { "Authorization" => authorization })
 

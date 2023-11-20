@@ -8,7 +8,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       @role = create(:oidc_api_key_role)
       @user = @role.user
       @user_api_key = "12323"
-      @api_key = create(:api_key, user: @user, key: @user_api_key)
+      @api_key = create(:api_key, owner: @user, key: @user_api_key)
     end
 
     should "return the user's roles" do
@@ -47,7 +47,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       @role = create(:oidc_api_key_role)
       @user = @role.user
       @user_api_key = "12323"
-      @api_key = create(:api_key, user: @user, key: @user_api_key)
+      @api_key = create(:api_key, owner: @user, key: @user_api_key)
     end
 
     should "return the user's roles" do
@@ -107,7 +107,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
          "base_ref" => "",
          "head_ref" => "",
          "ref_type" => "branch",
-         "workflow" => ".github/workflows/token.yml",
+         "workflow" => "token",
          "event_name" => "push",
          "repository" => "segiddins/oidc-test",
          "run_number" => "4",

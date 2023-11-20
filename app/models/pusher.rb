@@ -4,34 +4,26 @@ class Pusher
   include TraceTagger
   include SemanticLogger::Loggable
 
-  attr_reader :api_key, :user, :spec, :spec_contents, :message, :code, :rubygem, :body, :version, :version_id, :size
+  attr_reader :api_key, :owner, :spec, :spec_contents, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(api_key, body, remote_ip = "", scoped_rubygem = nil)
-    # this is ugly, but easier than updating all the unit tests, for now
-    case api_key
-    when ApiKey
-      @api_key = api_key
-      @user = api_key.user
-      raise ArgumentError if scoped_rubygem
-      scoped_rubygem = api_key.rubygem
-    else
-      @user = api_key
-    end
+  def initialize(api_key, body, remote_ip = "")
+    @api_key = api_key
+    @owner = api_key.owner
+    @scoped_rubygem = api_key.rubygem
 
     @body = StringIO.new(body.read)
     @size = @body.size
     @remote_ip = remote_ip
-    @scoped_rubygem = scoped_rubygem
   end
 
   def process
-    trace("gemcutter.pusher.process", tags: { "gemcutter.user.id" => user.id }) do
+    trace("gemcutter.pusher.process", tags: { "gemcutter.api_key.owner" => owner.to_gid }) do
       pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
     end
   end
 
   def authorize
-    rubygem.pushable? || rubygem.owned_by?(user) || notify_unauthorized
+    (rubygem.pushable? && api_key.user?) || owner.owns_gem?(rubygem) || notify_unauthorized
   end
 
   def verify_gem_scope
@@ -41,7 +33,7 @@ class Pusher
   end
 
   def verify_mfa_requirement
-    user.mfa_enabled? || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
+    api_key.mfa_enabled? || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
       notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
   end
 
@@ -67,11 +59,11 @@ class Pusher
       write_gem @body, @spec_contents
     end
   rescue ArgumentError => e
-    @version.destroy
+    @version&.destroy
     Rails.error.report(e, handled: true)
     notify("There was a problem saving your gem. #{e}", 400)
   rescue StandardError => e
-    @version.destroy
+    @version&.destroy
     Rails.error.report(e, handled: true)
     notify("There was a problem saving your gem. Please try again.", 500)
   else
@@ -94,7 +86,7 @@ class Pusher
     MSG
   end
 
-  def find
+  def find # rubocop:disable Metrics/AbcSize
     name = spec.name.to_s
     set_tag "gemcutter.rubygem.name", name
 
@@ -124,7 +116,7 @@ class Pusher
                                      size: size,
                                      sha256: sha256,
                                      spec_sha256: spec_sha256,
-                                     pusher: user,
+                                     pusher: api_key.user,
                                      pusher_api_key: api_key,
                                      cert_chain: spec.cert_chain
 
@@ -136,7 +128,7 @@ class Pusher
 
   # Overridden so we don't get megabytes of the raw data printing out
   def inspect
-    attrs = %i[@rubygem @user @message @code].map do |attr|
+    attrs = %i[@rubygem @owner @message @code].map do |attr|
       "#{attr}=#{instance_variable_get(attr).inspect}"
     end
     "<Pusher #{attrs.join(' ')}>"
@@ -147,7 +139,7 @@ class Pusher
   def after_write
     @version_id = version.id
     version.rubygem.push_notifiable_owners.each do |notified_user|
-      Mailer.gem_pushed(user.id, @version_id, notified_user.id).deliver_later
+      Mailer.gem_pushed(owner, @version_id, notified_user.id).deliver_later
     end
     Indexer.perform_later
     UploadVersionsFileJob.perform_later
@@ -156,18 +148,18 @@ class Pusher
     ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
     StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)
-    RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?
+    RackAttackReset.gem_push_backoff(@remote_ip, owner.to_gid) if @remote_ip.present?
     StatsD.increment "push.success"
   end
 
   def ld_variation(key:, default:)
     Rails.configuration.launch_darkly_client.variation(
-      key, user.ld_context, default
+      key, owner.ld_context, default
     )
   end
 
   def notify(message, code)
-    logger.info { { message:, code:, user: user.id, api_key: api_key&.id, rubygem: rubygem&.name, version: version&.full_name } }
+    logger.info { { message:, code:, owner: owner, api_key: api_key&.id, rubygem: rubygem&.name, version: version&.full_name } }
 
     @message = message
     @code    = code
@@ -177,7 +169,7 @@ class Pusher
   def update
     rubygem.disown if rubygem.versions.indexed.count.zero?
     rubygem.update_attributes_from_gem_specification!(version, spec)
-    rubygem.create_ownership(user)
+    rubygem.create_ownership(owner)
     set_info_checksum
 
     true
@@ -197,18 +189,20 @@ class Pusher
              "Please bump the version number and push a new different release.\n" \
              "See also `gem yank` if you want to unpublish the bad release.", 409)
     else
-      different_owner = "pushed by a previous owner of this gem " unless version.rubygem.owners.include?(@user)
+      different_owner = "pushed by a previous owner of this gem " unless owner.owns_gem?(version.rubygem)
       notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
              "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
     end
   end
 
   def notify_unauthorized
-    if rubygem.unconfirmed_ownership?(user)
+    if !api_key.user?
+      notify("You are not allowed to push this gem.", 403)
+    elsif rubygem.unconfirmed_ownership?(owner)
       notify("You do not have permission to push to this gem. " \
-             "Please confirm the ownership by clicking on the confirmation link sent your email #{user.email}", 403)
+             "Please confirm the ownership by clicking on the confirmation link sent your email #{owner.email}", 403)
     else
-      notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
+      notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{owner.email}", 403)
     end
   end
 
@@ -264,7 +258,7 @@ class Pusher
           }
         end
 
-      { message: "Pushing gem", version:, rubygem: @version.rubygem.name, pusher: user.as_json }
+      { message: "Pushing gem", version:, rubygem: @version.rubygem.name, pusher: owner.as_json }
     end
   end
 

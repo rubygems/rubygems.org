@@ -8,6 +8,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
     setup do
       @fs = RubygemFs.mock!
       @user = create(:user, email: "user@example.com")
+      @api_key = create(:api_key, owner: @user)
     end
 
     teardown do
@@ -22,7 +23,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
       Thread.new do
         gem_file("hola-0.0.0.gem") do |gem1|
-          Pusher.new(@user, gem1).process
+          Pusher.new(@api_key, gem1).process
         end
         ActiveRecord::Base.connection.close
         latch.count_down
@@ -30,7 +31,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
       Thread.new do
         gem_file("hola/hola-0.0.0.gem") do |gem2|
-          Pusher.new(@user, gem2).process
+          Pusher.new(@api_key, gem2).process
         end
         ActiveRecord::Base.connection.close
         latch.count_down

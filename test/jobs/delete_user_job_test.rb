@@ -23,7 +23,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
   test "succeeds with api key" do
     user = create(:user)
-    create(:api_key, user:)
+    create(:api_key, owner: user)
     Mailer.expects(:deletion_complete).with(user.email).returns(mock(deliver_later: nil))
 
     DeleteUserJob.perform_now(user:)
@@ -31,7 +31,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
   test "succeeds with api key used to push version" do
     user = create(:user)
-    api_key = create(:api_key, user:)
+    api_key = create(:api_key, owner: user)
     create(:version, pusher_api_key: api_key, pusher: user)
     Mailer.expects(:deletion_complete).with(user.email).returns(mock(deliver_later: nil))
 

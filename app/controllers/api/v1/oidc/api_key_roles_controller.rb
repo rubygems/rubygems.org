@@ -2,6 +2,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   include ApiKeyable
 
   before_action :authenticate_with_api_key, except: :assume_role
+  before_action :verify_user_api_key, except: :assume_role
 
   with_options only: :assume_role do
     before_action :set_api_key_role

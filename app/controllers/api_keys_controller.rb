@@ -24,7 +24,7 @@ class ApiKeysController < ApplicationController
 
   def create
     key = generate_unique_rubygems_key
-    build_params = { user: current_user, hashed_key: hashed_key(key), **api_key_params }
+    build_params = { owner: current_user, hashed_key: hashed_key(key), **api_key_params }
     @api_key = ApiKey.new(build_params)
 
     if @api_key.errors.present?

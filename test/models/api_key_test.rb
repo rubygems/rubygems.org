@@ -1,7 +1,6 @@
 require "test_helper"
 
 class ApiKeyTest < ActiveSupport::TestCase
-  should belong_to :user
   should belong_to :owner
   should validate_presence_of(:name)
   should validate_presence_of(:hashed_key)
@@ -54,12 +53,12 @@ class ApiKeyTest < ActiveSupport::TestCase
   context "gem scope" do
     setup do
       @ownership = create(:ownership)
-      @api_key = create(:api_key, push_rubygem: true, user: @ownership.user, ownership: @ownership)
-      @api_key_no_gem_scope = create(:api_key, key: SecureRandom.hex(24), index_rubygems: true, user: @ownership.user)
+      @api_key = create(:api_key, push_rubygem: true, owner: @ownership.user, ownership: @ownership)
+      @api_key_no_gem_scope = create(:api_key, key: SecureRandom.hex(24), index_rubygems: true, owner: @ownership.user)
     end
 
     should "be invalid if non applicable API scope is enabled" do
-      api_key = build(:api_key, index_rubygems: true, user: @ownership.user, ownership: @ownership)
+      api_key = build(:api_key, index_rubygems: true, owner: @ownership.user, ownership: @ownership)
 
       refute_predicate api_key, :valid?
       assert_contains api_key.errors[:rubygem], "scope can only be set for push/yank rubygem, and add/remove owner scopes"
@@ -67,7 +66,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
     should "be valid if applicable API scope is enabled" do
       %i[push_rubygem yank_rubygem add_owner remove_owner].each do |scope|
-        api_key = build(:api_key, scope => true, user: @ownership.user, ownership: @ownership)
+        api_key = build(:api_key, scope => true, owner: @ownership.user, ownership: @ownership)
 
         assert_predicate api_key, :valid?
       end
@@ -95,7 +94,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
     context "#rubygem_id=" do
       should "set ownership to a gem" do
-        api_key = create(:api_key, key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: @ownership.rubygem_id)
+        api_key = create(:api_key, key: SecureRandom.hex(24), push_rubygem: true, owner: @ownership.user, rubygem_id: @ownership.rubygem_id)
 
         assert_equal @ownership.rubygem_id, api_key.rubygem_id
       end
@@ -107,7 +106,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       end
 
       should "add error when id is not associated with the user" do
-        api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: -1)
+        api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), push_rubygem: true, owner: @ownership.user, rubygem_id: -1)
 
         assert_contains api_key.errors[:rubygem], "must be a gem that you are an owner of"
       end
@@ -119,7 +118,7 @@ class ApiKeyTest < ActiveSupport::TestCase
           :api_key,
           key: SecureRandom.hex(24),
           push_rubygem: true,
-          user: @ownership.user,
+          owner: @ownership.user,
           rubygem_name: @ownership.rubygem.name
         )
 
@@ -137,7 +136,7 @@ class ApiKeyTest < ActiveSupport::TestCase
         api_key = ApiKey.new(
           hashed_key: SecureRandom.hex(24),
           push_rubygem: true,
-          user: @ownership.user,
+          owner: @ownership.user,
           rubygem_name: rubygem.name
         )
 
@@ -148,7 +147,7 @@ class ApiKeyTest < ActiveSupport::TestCase
         api_key = ApiKey.new(
           hashed_key: SecureRandom.hex(24),
           push_rubygem: true,
-          user: @ownership.user,
+          owner: @ownership.user,
           rubygem_name: "invalid-gem-name"
         )
 
@@ -185,7 +184,7 @@ class ApiKeyTest < ActiveSupport::TestCase
   context "#soft_deleted_by_ownership?" do
     should "return true if soft deleted gem name is present" do
       ownership = create(:ownership)
-      api_key = create(:api_key, push_rubygem: true, user: ownership.user, ownership: ownership)
+      api_key = create(:api_key, push_rubygem: true, owner: ownership.user, ownership: ownership)
       api_key.soft_delete!(ownership: ownership)
 
       assert_predicate api_key, :soft_deleted_by_ownership?

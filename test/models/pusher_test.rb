@@ -5,8 +5,9 @@ class PusherTest < ActiveSupport::TestCase
 
   setup do
     @user = create(:user, email: "user@example.com")
+    @api_key = create(:api_key, owner: @user)
     @gem = gem_file
-    @cutter = Pusher.new(@user, @gem)
+    @cutter = Pusher.new(@api_key, @gem)
 
     # Ensure we test #log_pushing
     @cutter.logger.level = :info
@@ -18,7 +19,7 @@ class PusherTest < ActiveSupport::TestCase
 
   context "creating a new gemcutter" do
     should "have some state" do
-      assert_respond_to @cutter, :user
+      assert_respond_to @cutter, :owner
       assert_respond_to @cutter, :version
       assert_respond_to @cutter, :version_id
       assert_respond_to @cutter, :spec
@@ -27,7 +28,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_respond_to @cutter, :rubygem
       assert_respond_to @cutter, :body
 
-      assert_equal @user, @cutter.user
+      assert_equal @user, @cutter.owner
     end
 
     should "initialize size from the gem" do
@@ -35,7 +36,7 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "#inspect" do
-      assert_equal "<Pusher @rubygem=nil @user=#{@user.inspect} @message=nil @code=nil>",
+      assert_equal "<Pusher @rubygem=nil @owner=#{@user.inspect} @message=nil @code=nil>",
                    @cutter.inspect
     end
 
@@ -133,7 +134,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "not be able to pull spec with metadata containing bad ruby objects" do
       @gem = gem_file("exploit.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       out, err = capture_io do
         @cutter.pull_spec
       end
@@ -152,7 +153,7 @@ class PusherTest < ActiveSupport::TestCase
       # this isn't the kind of invalid that we're testing with this gem
       Gem::Specification.any_instance.stubs(:authors).returns(["user@example.com"])
       @gem = gem_file("legit-gem-0.0.1.gem.fake")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       @cutter.stubs(:save).never
       @cutter.process
 
@@ -164,7 +165,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "not be able to save a gem if the date is not valid" do
       @gem = gem_file("bad-date-1.0.0.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       out, err = capture_io do
         @cutter.process
       end
@@ -241,7 +242,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "not be able to save a gem if it is signed and has been tampered with" do
       @gem = gem_file("valid_signature_tampered-0.0.1.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
 
       assert_includes @cutter.message, %(missing signing certificate)
@@ -250,7 +251,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "not be able to save a gem if it is signed with an expired signing certificate" do
       @gem = gem_file("expired_signature-0.0.0.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
 
       assert_includes @cutter.message, %(not valid after 2021-07-08 08:21:01 UTC)
@@ -269,7 +270,7 @@ class PusherTest < ActiveSupport::TestCase
           spec.cert_chain = two_cert_chain(signing_key: signing_key)
         end
 
-        @cutter = Pusher.new(@user, File.open(gem_file))
+        @cutter = Pusher.new(@api_key, File.open(gem_file))
         @cutter.process
 
         assert_equal 200, @cutter.code
@@ -289,7 +290,7 @@ class PusherTest < ActiveSupport::TestCase
           Gem::Security::SigningPolicy.verify_root = old_verify_root_policy
         end
 
-        @cutter = Pusher.new(@user, File.open(gem_file))
+        @cutter = Pusher.new(@api_key, File.open(gem_file))
         @cutter.process
 
         assert_includes @cutter.message, %(CN=Root not valid after)
@@ -304,7 +305,7 @@ class PusherTest < ActiveSupport::TestCase
     should "not be able to pull spec with metadata containing bad ruby symbols" do
       ["1.0.0", "2.0.0", "3.0.0", "4.0.0"].each do |version|
         @gem = gem_file("dos-#{version}.gem")
-        @cutter = Pusher.new(@user, @gem)
+        @cutter = Pusher.new(@api_key, @gem)
         out, err = capture_io do
           @cutter.pull_spec
         end
@@ -320,7 +321,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "be able to pull spec with metadata containing aliases" do
       @gem = gem_file("aliases-0.0.0.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       @cutter.pull_spec
 
       assert_not_nil @cutter.spec
@@ -329,7 +330,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "not be able to pull spec when no data available" do
       @gem = gem_file("aliases-nodata-0.0.1.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       @cutter.pull_spec
 
       assert_includes @cutter.message, %{package content (data.tar.gz) is missing}
@@ -495,6 +496,20 @@ class PusherTest < ActiveSupport::TestCase
       assert @cutter.authorize
     end
 
+    should "be false if rubygem is new and api key has unexpected owner type" do
+      @cutter.stubs(:rubygem).returns Rubygem.new
+
+      owner = stub("owner")
+      @api_key.update_columns(owner_id: 0, owner_type: "stub")
+      @cutter.stubs(:owner).returns owner
+      owner.expects(:owns_gem?).with(@cutter.rubygem).returns(false)
+
+      refute @cutter.authorize
+      assert_equal "You are not allowed to push this gem.",
+        @cutter.message
+      assert_equal 403, @cutter.code
+    end
+
     context "with a existing rubygem" do
       setup do
         @rubygem = create(:rubygem, name: "the_gem_name")
@@ -516,6 +531,18 @@ class PusherTest < ActiveSupport::TestCase
 
         refute @cutter.authorize
         assert_equal "You do not have permission to push to this gem. Ask an owner to add you with: gem owner the_gem_name --add user@example.com",
+          @cutter.message
+        assert_equal 403, @cutter.code
+      end
+
+      should "be false if api key has unexpected owner type" do
+        owner = stub("owner")
+        @api_key.update_columns(owner_id: 0, owner_type: "stub")
+        @cutter.stubs(:owner).returns owner
+        owner.expects(:owns_gem?).with(@rubygem).returns(false)
+
+        refute @cutter.authorize
+        assert_equal "You are not allowed to push this gem.",
           @cutter.message
         assert_equal 403, @cutter.code
       end
@@ -680,7 +707,7 @@ class PusherTest < ActiveSupport::TestCase
   context "pushing to s3 fails" do
     setup do
       @gem = gem_file("test-1.0.0.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       @fs = RubygemFs.s3!("https://some.host")
       s3_exception = Aws::S3::Errors::ServiceError.new("stub raises", "something went wrong")
       Aws::S3::Client.any_instance.stubs(:put_object).with(any_parameters).raises(s3_exception)
@@ -700,6 +727,23 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "saving fails with ArgumentError" do
+    setup do
+      @gem = gem_file("test-1.0.0.gem")
+      @cutter = Pusher.new(@api_key, @gem)
+      @cutter.stubs(:update).raises(ArgumentError.new("some message"))
+      @cutter.process
+    end
+
+    should "not create rubygem or version" do
+      rubygem = Rubygem.find_by(name: "test")
+      expected_message = "There was a problem saving your gem. some message"
+
+      assert_equal expected_message, @cutter.message
+      assert_nil rubygem
+    end
+  end
+
   context "has a scoped gem" do
     setup do
       @rubygem = create(:rubygem)
@@ -707,7 +751,8 @@ class PusherTest < ActiveSupport::TestCase
 
     should "pushes gem if scoped to the same gem" do
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
-      cutter = Pusher.new(@user, @gem, "", @rubygem)
+      @api_key.ownership = create(:ownership, rubygem: @rubygem, user: @user)
+      cutter = Pusher.new(@api_key, @gem, "")
       cutter.stubs(:rubygem).returns @rubygem
 
       assert cutter.verify_gem_scope
@@ -715,7 +760,8 @@ class PusherTest < ActiveSupport::TestCase
 
     should "does not push gem if scoped to another gem" do
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
-      cutter = Pusher.new(@user, @gem, "", create(:rubygem))
+      @api_key.ownership = create(:ownership, rubygem: create(:rubygem), user: @user)
+      cutter = Pusher.new(@api_key, @gem, "")
       cutter.stubs(:rubygem).returns @rubygem
 
       refute cutter.verify_gem_scope
@@ -725,7 +771,7 @@ class PusherTest < ActiveSupport::TestCase
   context "the gem has been signed and not tampered with" do
     setup do
       @gem = gem_file("valid_signature-0.0.0.gem")
-      @cutter = Pusher.new(@user, @gem)
+      @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
     end
 
