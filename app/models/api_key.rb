@@ -2,7 +2,8 @@ class ApiKey < ApplicationRecord
   API_SCOPES = %i[index_rubygems push_rubygem yank_rubygem add_owner remove_owner access_webhooks show_dashboard].freeze
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner].freeze
 
-  belongs_to :user
+  belongs_to :user, inverse_of: :api_keys
+  belongs_to :owner, polymorphic: true
 
   has_one :api_key_rubygem_scope, dependent: :destroy
   has_one :ownership, through: :api_key_rubygem_scope
@@ -10,7 +11,9 @@ class ApiKey < ApplicationRecord
   has_one :oidc_api_key_role, through: :oidc_id_token, inverse_of: :api_key
   has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
 
-  validates :user, :name, :hashed_key, presence: true
+  before_validation :set_owner_from_user
+
+  validates :name, :hashed_key, presence: true
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
   validate :scope_presence
   validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
@@ -114,5 +117,9 @@ class ApiKey < ApplicationRecord
   def not_expired?
     return if changed == %w[expires_at]
     errors.add :base, "An expired API key cannot be used. Please create a new one." if expired?
+  end
+
+  def set_owner_from_user
+    self.owner ||= user
   end
 end
