@@ -19,6 +19,12 @@ Rails.application.configure do
       class: "MfaUsageStatsJob",
       set: { priority: 10 },
       description: "Sending MFA usage metrics to statsd every hour"
+    },
+    refresh_oidc_providers: {
+      cron: "every 30m",
+      class: "RefreshOIDCProvidersJob",
+      set: { priority: 10 },
+      description: "Refreshing all OIDC provider configurations every 30m"
     }
   }
 
