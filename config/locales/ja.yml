@@ -61,6 +61,10 @@ ja:
         api_key_role:
       oidc/api_key_role:
         api_key_permissions:
+      oidc/trusted_publisher/github_action:
+        repository_owner_id:
+      oidc/pending_trusted_publisher:
+        rubygem_name:
     errors:
       messages:
         unpwn: 過去にデータ侵害を受けたためお使いになれません
@@ -77,6 +81,14 @@ ja:
               taken: "%{value}は既に存在します"
             full_name:
               taken: "%{value}は既に存在します"
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken:
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              unavailable:
     models:
       user: ユーザー
   activemodel:
@@ -331,6 +343,8 @@ ja:
       global_html: このwebhookは以前<em>何らかの</em>gemがプッシュされたときに呼ばれました。
       gem_text: このwebhookは以前%{gem}がプッシュされたときに呼ばれました。
       gem_html: このwebhookは以前<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>がプッシュされたときに呼ばれました。
+    gem_trusted_publisher_added:
+      title:
   news:
     show:
       title: 新しいリリース - 全てのgem
@@ -341,7 +355,7 @@ ja:
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"
-      downloads_amount: '何億回ものgemダウンロード'
+      downloads_amount: 何億回ものgemダウンロード
       checkout_code:
       mit_licensed:
       logo_header:
@@ -583,6 +597,7 @@ ja:
           api_key_role:
             name:
             new:
+        trusted_publishers:
     reserved:
       reserved_namespace: この名前空間はrubygems.orgにより予約されています。
     dependencies:
@@ -792,6 +807,42 @@ ja:
         title:
       show:
         title:
+    rubygem_trusted_publishers:
+      index:
+        title:
+        subtitle_owner_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+        subtitle_owner_html:
+    pending_trusted_publishers:
+      index:
+        title:
+        valid_for_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+    trusted_publisher:
+      unsupported_type:
+      github_actions:
+        repository_owner_help_html:
+        repository_name_help_html:
+        workflow_filename_help_html:
+        environment_help_html:
+      pending:
+        rubygem_name_help_html:
   duration:
     minutes:
       other:
@@ -805,3 +856,5 @@ ja:
     seconds:
       other:
       one:
+  form:
+    optional:

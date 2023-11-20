@@ -38,6 +38,9 @@ class RubygemResource < Avo::BaseResource
     field :linkset, as: :has_one
     field :gem_download, as: :has_one
 
+    field :link_verifications, as: :has_many
+    field :oidc_rubygem_trusted_publishers, as: :has_many
+
     field :audits, as: :has_many
   end
 end

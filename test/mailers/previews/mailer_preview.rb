@@ -33,6 +33,19 @@ class MailerPreview < ActionMailer::Preview
     Mailer.gem_pushed(ownership.user, ownership.rubygem.versions.last.id, ownership.user_id)
   end
 
+  def gem_pushed_by_trusted_publisher
+    ownership = Ownership.where.not(user: nil).where(push_notifier: true).last
+
+    Mailer.gem_pushed(OIDC::RubygemTrustedPublisher.first.trusted_publisher, ownership.rubygem.versions.last.id, ownership.user_id)
+  end
+
+  def gem_trusted_publisher_added
+    rubygem_trusted_publisher = OIDC::RubygemTrustedPublisher.last
+    created_by_user = User.last
+    notified_user = User.first
+    Mailer.gem_trusted_publisher_added(rubygem_trusted_publisher, created_by_user, notified_user)
+  end
+
   def mfa_notification
     Mailer.mfa_notification(User.last.id)
   end
@@ -89,7 +102,7 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def api_key_created_oidc_api_key_role
-    api_key = OIDC::IdToken.last.api_key
+    api_key = OIDC::IdToken.where.not(api_key_role: nil).last.api_key
     Mailer.api_key_created(api_key.id)
   end
 

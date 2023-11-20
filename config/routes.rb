@@ -113,6 +113,7 @@ Rails.application.routes.draw do
       resources :timeframe_versions, only: :index
 
       namespace :oidc do
+        post 'trusted_publisher/exchange_token'
         resources :api_key_roles, only: %i[index show], param: :token, format: 'json', defaults: { format: :json } do
           member do
             post :assume_role
@@ -182,6 +183,7 @@ Rails.application.routes.draw do
         resources :api_key_roles, param: :token, only: %i[show], constraints: { format: :json }
         resources :id_tokens, only: %i[index show]
         resources :providers, only: %i[index show]
+        resources :pending_trusted_publishers, except: %i[show edit update]
       end
     end
     resources :stats, only: :index
@@ -214,6 +216,7 @@ Rails.application.routes.draw do
         patch 'close_all', to: 'ownership_requests#close_all', as: :close_all, on: :collection
       end
       resources :adoptions, only: %i[index]
+      resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
     end
 
     resources :ownership_calls, only: :index

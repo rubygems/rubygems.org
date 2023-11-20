@@ -43,7 +43,9 @@ class User < ApplicationRecord
 
   has_many :oidc_api_key_roles, dependent: :nullify, class_name: "OIDC::ApiKeyRole", inverse_of: :user
   has_many :oidc_id_tokens, through: :oidc_api_key_roles, class_name: "OIDC::IdToken", inverse_of: :user, source: :id_tokens
-  has_many :oidc_providers, through: :oidc_api_key_roles, class_name: "OIDC::Provider", inverse_of: :users, source: :providers
+  has_many :oidc_providers, through: :oidc_api_key_roles, class_name: "OIDC::Provider", inverse_of: :users, source: :provider
+  has_many :oidc_pending_trusted_publishers, class_name: "OIDC::PendingTrustedPublisher", inverse_of: :user, dependent: :destroy
+  has_many :oidc_rubygem_trusted_publishers, through: :rubygems, class_name: "OIDC::RubygemTrustedPublisher"
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true

@@ -23,7 +23,7 @@ class Pusher
   end
 
   def authorize
-    (rubygem.pushable? && api_key.user?) || owner.owns_gem?(rubygem) || notify_unauthorized
+    (rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)) || owner.owns_gem?(rubygem) || notify_unauthorized
   end
 
   def verify_gem_scope
@@ -33,7 +33,7 @@ class Pusher
   end
 
   def verify_mfa_requirement
-    owner.mfa_enabled? || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
+    (!api_key.user? || owner.mfa_enabled?) || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
       notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
   end
 
@@ -169,7 +169,23 @@ class Pusher
   def update
     rubygem.disown if rubygem.versions.indexed.count.zero?
     rubygem.update_attributes_from_gem_specification!(version, spec)
-    rubygem.create_ownership(owner)
+
+    if rubygem.unowned?
+      case owner
+      when User
+        rubygem.create_ownership(owner)
+      else
+        pending_publisher = find_pending_trusted_publisher
+        return notify_unauthorized if pending_publisher.blank?
+
+        rubygem.transaction do
+          logger.info { "Reifying pending publisher" }
+          rubygem.create_ownership(pending_publisher.user)
+          owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
+        end
+      end
+    end
+
     set_info_checksum
 
     true
@@ -288,5 +304,10 @@ class Pusher
     spec.sanitize
     @spec_contents = Gem.deflate(Marshal.dump(spec))
     true
+  end
+
+  def find_pending_trusted_publisher
+    return unless owner.class.module_parent_name == "OIDC::TrustedPublisher"
+    owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
   end
 end
