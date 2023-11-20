@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_29_233528) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_30_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -37,7 +37,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_233528) do
   end
 
   create_table "api_keys", force: :cascade do |t|
-    t.bigint "user_id"
     t.string "name", null: false
     t.string "hashed_key", null: false
     t.boolean "index_rubygems", default: false, null: false
@@ -58,7 +57,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_233528) do
     t.bigint "owner_id"
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["owner_type", "owner_id"], name: "index_api_keys_on_owner"
-    t.index ["user_id"], name: "index_api_keys_on_user_id"
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
     t.check_constraint "owner_type IS NOT NULL", name: "api_keys_owner_type_null"
   end
@@ -490,7 +488,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_233528) do
     t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
   end
 
-  add_foreign_key "api_keys", "users"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
