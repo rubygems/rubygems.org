@@ -56,7 +56,7 @@ gem "strong_migrations", "~> 1.6"
 gem "phlex-rails", "~> 1.0"
 
 # Admin dashboard
-gem "avo", "~> 2.42"
+gem "avo", "~> 3.0"
 gem "view_component", "~> 3.6"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"

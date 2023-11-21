@@ -84,10 +84,11 @@ GEM
     attr_required (1.0.1)
     autoprefixer-rails (10.4.15.0)
       execjs (~> 2)
-    avo (2.44.0)
-      actionview (>= 6.0)
+    avo (3.0.2)
+      actionview (>= 6.1)
       active_link_to
-      activerecord (>= 6.0)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
       addressable
       docile
       dry-initializer
@@ -97,8 +98,8 @@ GEM
       pagy
       turbo-rails
       turbo_power (~> 0.5.0)
-      view_component (>= 2.54.0)
-      zeitwerk (>= 2.6.2)
+      view_component (>= 3.7.0)
+      zeitwerk (>= 2.6.12)
     awrence (1.2.1)
     aws-eventstream (1.2.0)
     aws-partitions (1.848.0)
@@ -376,7 +377,7 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.15.4)
+    nokogiri (1.15.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -428,7 +429,7 @@ GEM
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.0.1)
-    pagy (6.1.0)
+    pagy (6.2.0)
     parallel (1.22.1)
     parser (3.2.1.1)
       ast (~> 2.4.1)
@@ -449,7 +450,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.1.1.1)
       stringio
-    public_suffix (5.0.3)
+    public_suffix (5.0.4)
     puma (6.4.0)
       nio4r (~> 2.0)
     pundit (2.3.1)
@@ -702,7 +703,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.4)
   autoprefixer-rails (~> 10.4)
-  avo (~> 2.42)
+  avo (~> 3.0)
   aws-sdk-s3 (~> 1.119)
   aws-sdk-sqs (~> 1.67)
   bcrypt (~> 3.1, >= 3.1.18)
