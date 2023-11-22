@@ -79,7 +79,7 @@ end
 group :development, :test do
   gem "pry-byebug", "~> 3.10"
   gem "toxiproxy", "~> 2.0"
-  gem "factory_bot_rails", "~> 6.2"
+  gem "factory_bot_rails", "~> 6.4"
   gem "dotenv-rails", "~> 2.8"
 
   gem "brakeman", "~> 6.0", require: false
