@@ -2,13 +2,19 @@ require "test_helper"
 
 class ApiKeyTest < ActiveSupport::TestCase
   should belong_to :user
+  should belong_to :owner
   should validate_presence_of(:name)
-  should validate_presence_of(:user)
   should validate_presence_of(:hashed_key)
   should have_one(:api_key_rubygem_scope).dependent(:destroy)
 
   should "be valid with factory" do
     assert_predicate build(:api_key), :valid?
+  end
+
+  should "set owner to user by default" do
+    api_key = create(:api_key)
+
+    assert_equal api_key.user, api_key.owner
   end
 
   should "be invalid when name is empty string" do
