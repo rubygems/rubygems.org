@@ -215,10 +215,10 @@ GEM
     et-orbi (1.2.7)
       tzinfo
     execjs (2.9.1)
-    factory_bot (6.2.0)
+    factory_bot (6.4.2)
       activesupport (>= 5.0.0)
-    factory_bot_rails (6.2.0)
-      factory_bot (~> 6.2.0)
+    factory_bot_rails (6.4.0)
+      factory_bot (~> 6.4)
       railties (>= 5.0.0)
     faraday (2.7.12)
       base64
@@ -376,7 +376,7 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.15.4)
+    nokogiri (1.15.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -719,7 +719,7 @@ DEPENDENCIES
   derailed_benchmarks (~> 2.1)
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 2.8)
-  factory_bot_rails (~> 6.2)
+  factory_bot_rails (~> 6.4)
   faraday (~> 2.7)
   faraday_middleware-aws-sigv4 (~> 1.0)
   good_job (~> 3.21)
