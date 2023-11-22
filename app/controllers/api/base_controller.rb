@@ -1,5 +1,6 @@
 class Api::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
+  after_action :skip_session
 
   private
 
@@ -116,5 +117,9 @@ class Api::BaseController < ApplicationController
 
   def render_soft_deleted_api_key
     render plain: "An invalid API key cannot be used. Please delete it and create a new one.", status: :forbidden
+  end
+
+  def skip_session
+    request.session_options[:skip] = true
   end
 end
