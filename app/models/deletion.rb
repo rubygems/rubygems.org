@@ -68,6 +68,7 @@ class Deletion < ApplicationRecord
     Indexer.perform_later
     UploadInfoFileJob.perform_later(rubygem_name: rubygem_name)
     UploadVersionsFileJob.perform_later
+    UploadNamesFileJob.perform_later
   end
 
   def remove_from_storage

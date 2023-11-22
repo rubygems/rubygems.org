@@ -326,6 +326,27 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_not_nil Audit.last
   end
 
+  test "upload names file" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    visit avo.resources_rubygems_path
+
+    _ = create(:version)
+
+    click_button "Actions"
+    click_on "Upload Names File"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 1, only: UploadNamesFileJob do
+      click_button "Upload"
+
+      page.assert_text "Upload job scheduled"
+    end
+
+    assert_not_nil Audit.last
+  end
+
   test "upload info file" do
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user

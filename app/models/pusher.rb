@@ -152,6 +152,7 @@ class Pusher
     Indexer.perform_later
     UploadVersionsFileJob.perform_later
     UploadInfoFileJob.perform_later(rubygem_name: rubygem.name)
+    UploadNamesFileJob.perform_later
     ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
     StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)

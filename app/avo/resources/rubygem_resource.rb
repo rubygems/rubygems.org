@@ -9,6 +9,7 @@ class RubygemResource < Avo::BaseResource
   action AddOwner
   action YankRubygem
   action UploadInfoFile
+  action UploadNamesFile
   action UploadVersionsFile
 
   class IndexedFilter < ScopeBooleanFilter; end
