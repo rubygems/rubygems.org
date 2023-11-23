@@ -1,9 +1,8 @@
 class ApiKeysController < ApplicationController
   include ApiKeyable
-  before_action :redirect_to_signin, unless: :signed_in?
-  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
-  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
-  before_action :redirect_to_verify, unless: :password_session_active?
+
+  include SessionVerifiable
+  verify_session_before
 
   def index
     @api_key  = session.delete(:api_key)
@@ -84,12 +83,20 @@ class ApiKeysController < ApplicationController
 
   private
 
-  def api_key_params
-    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id)
+  def verify_session_redirect_path
+    case action_name
+    when "reset", "destroy"
+      profile_api_keys_path
+    when "create"
+      new_profile_api_key_path
+    when "update"
+      edit_profile_api_key_path(params.require(:id))
+    else
+      super
+    end
   end
 
-  def redirect_to_verify
-    session[:redirect_uri] = profile_api_keys_path
-    redirect_to verify_session_path
+  def api_key_params
+    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id)
   end
 end
