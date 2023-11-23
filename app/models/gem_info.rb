@@ -1,11 +1,11 @@
 class GemInfo
-  def initialize(rubygem_name)
+  def initialize(rubygem_name, cached: true)
     @rubygem_name = rubygem_name
+    @cached = cached
   end
 
   def compact_index_info
-    info = Rails.cache.read("info/#{@rubygem_name}")
-    if info
+    if @cached && (info = Rails.cache.read("info/#{@rubygem_name}"))
       StatsD.increment "compact_index.memcached.info.hit"
       info
     else
@@ -21,9 +21,8 @@ class GemInfo
     Digest::MD5.hexdigest(compact_index_info)
   end
 
-  def self.ordered_names
-    names = Rails.cache.read("names")
-    if names
+  def self.ordered_names(cached: true)
+    if cached && (names = Rails.cache.read("names"))
       StatsD.increment "compact_index.memcached.names.hit"
     else
       StatsD.increment "compact_index.memcached.names.miss"
