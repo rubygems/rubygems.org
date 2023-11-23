@@ -14,7 +14,7 @@ class UploadNamesFileJob < ApplicationJob
   )
 
   def perform
-    names = GemInfo.ordered_names
+    names = GemInfo.ordered_names(cached: false)
     response_body = CompactIndex.names(names)
 
     content_md5 = Digest::MD5.base64digest(response_body)
