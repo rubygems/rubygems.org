@@ -82,7 +82,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.1)
-    autoprefixer-rails (10.4.15.0)
+    autoprefixer-rails (10.4.16.0)
       execjs (~> 2)
     avo (2.44.0)
       actionview (>= 6.0)
