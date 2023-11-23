@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "rails", "~> 7.0.0"
 gem "rails-i18n", "~> 7.0"
 
-gem "aws-sdk-s3", "~> 1.138"
+gem "aws-sdk-s3", "~> 1.139"
 gem "aws-sdk-sqs", "~> 1.67"
 gem "bootsnap", "~> 1.16"
 gem "clearance", "~> 2.6"
