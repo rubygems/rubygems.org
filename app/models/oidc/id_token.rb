@@ -1,5 +1,5 @@
 class OIDC::IdToken < ApplicationRecord
-  belongs_to :api_key_role, class_name: "OIDC::ApiKeyRole", foreign_key: "oidc_api_key_role_id", inverse_of: :id_tokens
+  belongs_to :api_key_role, class_name: "OIDC::ApiKeyRole", foreign_key: :oidc_api_key_role_id, inverse_of: :id_tokens
   belongs_to :api_key, inverse_of: :oidc_id_token
   has_one :provider, through: :api_key_role, inverse_of: :id_tokens
   has_one :user, through: :api_key_role, inverse_of: :oidc_id_tokens
