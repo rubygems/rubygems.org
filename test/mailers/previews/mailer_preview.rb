@@ -88,6 +88,11 @@ class MailerPreview < ActionMailer::Preview
     Mailer.api_key_created(api_key.id)
   end
 
+  def api_key_created_oidc_api_key_role
+    api_key = OIDC::IdToken.last.api_key
+    Mailer.api_key_created(api_key.id)
+  end
+
   def api_key_revoked
     api_key = ApiKey.last
     Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.enabled_scopes.join(", "), "https://example.com")
