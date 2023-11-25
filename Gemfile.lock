@@ -744,7 +744,7 @@ DEPENDENCIES
   pg (~> 1.4)
   phlex-rails (~> 1.1)
   pry-byebug (~> 3.10)
-  puma (~> 6.1)
+  puma (~> 6.4)
   pundit (~> 2.3)
   rack (~> 2.2)
   rack-attack (~> 6.6)
