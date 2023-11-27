@@ -2,7 +2,8 @@ class ApiKey < ApplicationRecord
   API_SCOPES = %i[index_rubygems push_rubygem yank_rubygem add_owner remove_owner access_webhooks show_dashboard].freeze
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner].freeze
 
-  belongs_to :user, inverse_of: :api_keys
+  self.ignored_columns += %w[user_id]
+
   belongs_to :owner, polymorphic: true
 
   has_one :api_key_rubygem_scope, dependent: :destroy
@@ -47,6 +48,18 @@ class ApiKey < ApplicationRecord
     end
   end
 
+  def user
+    owner if user?
+  end
+
+  def user?
+    owner_type == "User"
+  end
+
+  delegate :mfa_required_not_yet_enabled?, :mfa_required_weak_level_enabled?,
+    :mfa_recommended_not_yet_enabled?, :mfa_recommended_weak_level_enabled?,
+    to: :user, allow_nil: true
+
   def mfa_authorized?(otp)
     return true unless mfa_enabled?
     return true if oidc_id_token.present?
@@ -54,6 +67,7 @@ class ApiKey < ApplicationRecord
   end
 
   def mfa_enabled?
+    return false unless user?
     return false unless user.mfa_enabled?
     user.mfa_ui_and_api? || mfa
   end

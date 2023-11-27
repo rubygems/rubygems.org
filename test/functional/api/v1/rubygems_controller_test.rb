@@ -696,7 +696,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "to a gem with ownership removed" do
       setup do
         ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test-gem123"))
-        @api_key = create(:api_key, key: "12343", user: ownership.user, ownership: ownership, push_rubygem: true)
+        @api_key = create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, push_rubygem: true)
         ownership.destroy!
         @request.env["HTTP_AUTHORIZATION"] = "12343"
 
@@ -713,7 +713,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "to a different gem" do
       setup do
         ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test-gem"))
-        create(:api_key, key: "12343", user: ownership.user, ownership: ownership, push_rubygem: true)
+        create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, push_rubygem: true)
         @request.env["HTTP_AUTHORIZATION"] = "12343"
 
         post :create, body: gem_file("test-1.0.0.gem", &:read)
@@ -729,7 +729,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "to the gem being pushed" do
       setup do
         ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test"))
-        create(:api_key, key: "12343", user: ownership.user, ownership: ownership, push_rubygem: true)
+        create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, push_rubygem: true)
         @request.env["HTTP_AUTHORIZATION"] = "12343"
 
         post :create, body: gem_file("test-1.0.0.gem", &:read)

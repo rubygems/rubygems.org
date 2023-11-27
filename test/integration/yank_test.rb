@@ -7,7 +7,7 @@ class YankTest < SystemTest
     create(:ownership, user: @user, rubygem: @rubygem)
 
     @user_api_key = "12345"
-    create(:api_key, user: @user, key: @user_api_key, yank_rubygem: true)
+    create(:api_key, owner: @user, key: @user_api_key, yank_rubygem: true)
     Dir.chdir(Dir.mktmpdir)
 
     visit sign_in_path

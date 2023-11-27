@@ -318,7 +318,7 @@ class PasswordsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @api_key = @user.api_key
-      @new_api_key = create(:api_key, user: @user)
+      @new_api_key = create(:api_key, owner: @user)
       @old_encrypted_password = @user.encrypted_password
     end
 

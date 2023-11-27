@@ -20,7 +20,7 @@ class Api::V1::ApiKeysController < Api::BaseController
 
       check_mfa(user) do
         key = generate_unique_rubygems_key
-        build_params = { user: user, hashed_key: hashed_key(key), **api_key_create_params }
+        build_params = { owner: user, hashed_key: hashed_key(key), **api_key_create_params }
         api_key = ApiKey.new(build_params)
 
         save_and_respond(api_key, key)

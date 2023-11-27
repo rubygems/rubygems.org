@@ -30,7 +30,7 @@ class MailerPreview < ActionMailer::Preview
 
   def gem_pushed
     ownership = Ownership.where.not(user: nil).where(push_notifier: true).last
-    Mailer.gem_pushed(ownership.user_id, ownership.rubygem.versions.last.id, ownership.user_id)
+    Mailer.gem_pushed(ownership.user, ownership.rubygem.versions.last.id, ownership.user_id)
   end
 
   def mfa_notification
@@ -84,7 +84,7 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def api_key_created
-    api_key = ApiKey.last
+    api_key = ApiKey.where(owner_type: "User").last
     Mailer.api_key_created(api_key.id)
   end
 
@@ -94,7 +94,7 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def api_key_revoked
-    api_key = ApiKey.last
+    api_key = ApiKey.where(owner_type: "User").last
     Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.enabled_scopes.join(", "), "https://example.com")
   end
 

@@ -29,16 +29,16 @@ class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
     empty_gems = create(:oidc_api_key_role, api_key_permissions: { gems: [], scopes: ["push_rubygem"] }, user:)
     nil_gems = create(:oidc_api_key_role, api_key_permissions: { gems: nil, scopes: ["push_rubygem"] }, user:)
 
-    assert_equal [rubygem_role], OIDC::ApiKeyRole.for_rubygem(rubygem).to_a
-    assert_equal [@role, empty_gems, nil_gems], OIDC::ApiKeyRole.for_rubygem(nil).to_a
+    assert_same_elements [rubygem_role], OIDC::ApiKeyRole.for_rubygem(rubygem).to_a
+    assert_same_elements [@role, empty_gems, nil_gems], OIDC::ApiKeyRole.for_rubygem(nil).to_a
   end
 
   test "for_scope scope" do
     role1 = create(:oidc_api_key_role, api_key_permissions: { gems: [], scopes: %w[push_rubygem yank_rubygem] })
     role2 = create(:oidc_api_key_role, api_key_permissions: { gems: [], scopes: ["push_rubygem"] })
 
-    assert_equal [role1, role2], OIDC::ApiKeyRole.for_scope("push_rubygem").to_a
-    assert_equal [role1], OIDC::ApiKeyRole.for_scope("yank_rubygem").to_a
+    assert_same_elements [role1, role2], OIDC::ApiKeyRole.for_scope("push_rubygem").to_a
+    assert_same_elements [role1], OIDC::ApiKeyRole.for_scope("yank_rubygem").to_a
     assert_predicate OIDC::ApiKeyRole.for_scope("show_dashboard"), :none?
   end
 

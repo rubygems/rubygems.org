@@ -9,7 +9,7 @@ class Api::V1::OIDC::IdTokensTest < ActionDispatch::IntegrationTest
     @id_token = create(:oidc_id_token, user: @user, api_key_role: @role)
 
     @user_api_key = "12323"
-    @api_key = create(:api_key, user: @user, key: @user_api_key)
+    @api_key = create(:api_key, owner: @user, key: @user_api_key)
   end
 
   context "on GET to index" do

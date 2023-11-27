@@ -1,5 +1,6 @@
 class Api::V1::WebHooksController < Api::BaseController
   before_action :authenticate_with_api_key
+  before_action :verify_user_api_key
   before_action :render_api_key_forbidden, if: :api_key_unauthorized?
   before_action :find_rubygem_by_name, :set_url, except: :index
 

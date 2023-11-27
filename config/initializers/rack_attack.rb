@@ -90,6 +90,14 @@ class Rack::Attack
     ApiKey.find_by_hashed_key(hashed_key)
   end
 
+  def self.api_key_owner_id(req)
+    api_key = api_hashed_key(req)
+    return unless api_key
+
+    URI::GID.build(app: GlobalID.app,
+                   model_name: api_key.association(:owner).klass.name, model_id: api_key.owner_id).to_s
+  end
+
   safelist("assets path") do |req|
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
@@ -128,7 +136,7 @@ class Rack::Attack
 
     ########################### rate limit per api key ###########################
     throttle("api/key/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      api_hashed_key(req)&.user&.display_id.presence if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
+      api_key_owner_id(req) if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 
@@ -144,7 +152,7 @@ class Rack::Attack
     end
 
     throttle("#{PUSH_THROTTLE_PER_USER_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      api_hashed_key(req)&.user&.display_id.presence if protected_route?(protected_push_action, req.path, req.request_method)
+      api_key_owner_id(req) if protected_route?(protected_push_action, req.path, req.request_method)
     end
   end
 

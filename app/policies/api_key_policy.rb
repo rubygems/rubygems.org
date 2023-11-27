@@ -6,7 +6,7 @@ class ApiKeyPolicy < ApplicationPolicy
   end
 
   def avo_show?
-    Pundit.policy!(user, record.user).avo_show?
+    Pundit.policy!(user, record.owner).avo_show?
   end
 
   has_association :api_key_rubygem_scope

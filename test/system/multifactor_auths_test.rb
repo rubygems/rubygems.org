@@ -42,7 +42,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   end
 
   test "user with mfa disabled gets redirected back to profile api keys pages after setting up mfa" do
-    create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+    create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
     redirect_test_mfa_disabled(profile_api_keys_path) { verify_password }
   end
 
@@ -75,7 +75,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   end
 
   test "user with weak level mfa gets redirected back to profile api keys pages after setting up mfa" do
-    create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+    create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
     redirect_test_mfa_weak_level(profile_api_keys_path) { verify_password }
   end
 

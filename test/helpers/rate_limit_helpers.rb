@@ -73,30 +73,31 @@ module RateLimitHelpers
     Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
       under_backoff_limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
       throttle_level_key = "#{scope}/#{level}:#{@ip_address}"
-      under_backoff_limit.times { Rack::Attack.cache.count(throttle_level_key, exp_base_limit_period**level) }
+      update_limit_for(throttle_level_key, under_backoff_limit, exp_base_limit_period**level)
     end
   end
 
   def update_limit_for(key, limit, period = limit_period)
+    key = Rack::Attack.throttle_discriminator_normalizer.call(key)
     limit.times { Rack::Attack.cache.count(key, period) }
   end
 
   def exceed_exponential_limit_for(scope, level)
     expo_exceeding_limit = exceeding_exp_base_limit * level
     expo_limit_period = exp_base_limit_period**level
-    expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{@ip_address}", expo_limit_period) }
+    update_limit_for("#{scope}:#{@ip_address}", expo_exceeding_limit, expo_limit_period)
   end
 
   def exceed_exponential_user_limit_for(scope, id, level)
     expo_exceeding_limit = exceeding_exp_base_limit * level
     expo_limit_period = exp_base_limit_period**level
-    expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{id}", expo_limit_period) }
+    update_limit_for("#{scope}:#{id}", expo_exceeding_limit, expo_limit_period)
   end
 
   def exceed_exponential_api_key_limit_for(scope, user_display_id, level)
     expo_exceeding_limit = exceeding_exp_base_limit * level
     expo_limit_period = exp_base_limit_period**level
-    expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{user_display_id}", expo_limit_period) }
+    update_limit_for("#{scope}:#{user_display_id}", expo_exceeding_limit, expo_limit_period)
   end
 
   def encode(username, password)

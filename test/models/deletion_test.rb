@@ -6,8 +6,9 @@ class DeletionTest < ActiveSupport::TestCase
 
   setup do
     @user = create(:user)
+    @api_key = create(:api_key, owner: @user)
     @gem_file = gem_file("test-0.0.0.gem")
-    Pusher.new(@user, @gem_file).process
+    Pusher.new(@api_key, @gem_file).process
     @gem_file.rewind
     @version = Version.last
     @spec_rz = RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")

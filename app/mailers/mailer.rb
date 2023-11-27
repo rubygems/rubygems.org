@@ -57,10 +57,10 @@ class Mailer < ApplicationMailer
            default: "You changed your RubyGems.org email notification settings")
   end
 
-  def gem_pushed(pushed_by_user_id, version_id, notified_user_id)
+  def gem_pushed(pushed_by, version_id, notified_user_id)
     @version = Version.find(version_id)
     notified_user = User.find(notified_user_id)
-    @pushed_by_user = User.find(pushed_by_user_id)
+    @pushed_by_user = pushed_by
 
     mail to: notified_user.email,
       subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title, host: Gemcutter::HOST_DISPLAY,

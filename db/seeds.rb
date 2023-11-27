@@ -233,7 +233,6 @@ author_oidc_api_key_role.user.api_keys.create_with(
 end
 
 author.api_keys.find_or_create_by!(
-  user: author,
   hashed_key: "unexpiredmanualhashedkey",
   name: "Manual",
   push_rubygem: true,

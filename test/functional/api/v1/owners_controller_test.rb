@@ -107,7 +107,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @second_user = create(:user)
         @third_user = create(:user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @user)
-        @api_key = create(:api_key, key: "12334", add_owner: true, user: @user)
+        @api_key = create(:api_key, key: "12334", add_owner: true, owner: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12334"
       end
 
@@ -549,7 +549,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @ownership = create(:ownership, rubygem: @rubygem, user: @user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
 
-        @api_key = create(:api_key, key: "12223", remove_owner: true, user: @user)
+        @api_key = create(:api_key, key: "12223", remove_owner: true, owner: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12223"
       end
 
