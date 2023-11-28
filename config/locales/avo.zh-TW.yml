@@ -1,0 +1,120 @@
+---
+en:
+  avo:
+    action_ran_successfully: 操作已成功執行！
+    actions: 操作
+    and_x_other_resources: 和 %{count} 個其他資源
+    are_you_sure: 您確定嗎？
+    are_you_sure_detach_item: 您確定要中斷此 %{item} 的連結嗎？
+    are_you_sure_you_want_to_run_this_option: 您確定要執行此操作嗎？
+    attach: 連結
+    attach_and_attach_another: 連結 & 連結其他
+    attach_item: 連結 %{item}
+    attachment_class_attached: "已連結 %{attachment_class}。"
+    attachment_class_detached: "已中斷 %{attachment_class} 的連結。"
+    attachment_destroyed: 已刪除附件
+    cancel: 取消
+    choose_a_country: 選擇國家
+    choose_an_option: 選擇選項
+    choose_item: 選擇 %{item}
+    clear_value: 清除數值
+    click_to_reveal_filters: 點擊以顯示篩選器
+    confirm: 確認
+    create_new_item: 建立新 %{item}
+    dashboard: 儀表板
+    dashboards: 儀表板
+    delete: 刪除
+    delete_file: 刪除檔案
+    delete_item: 刪除 %{item}
+    detach_item: 中斷 %{item} 的連結
+    details: 詳細資料
+    download: 下載
+    download_file: 下載檔案
+    download_item: 下載 %{item}
+    edit: 編輯
+    edit_item: 編輯 %{item}
+    empty_dashboard_message: 將卡片加入儀表板
+    failed: 失敗
+    failed_to_find_attachment: 找不到附件
+    failed_to_load: 載入失敗
+    field_translations:
+      file:
+        one: 檔案
+        other: 檔案
+        zero: 檔案
+      people:
+        one: peep
+        other: peeps
+        zero: peeps
+    filter_by: 篩選方式
+    filters: 篩選器
+    go_back: 返回
+    grid_view: 網格檢視
+    hide_content: 隱藏內容
+    home: 首頁
+    key_value_field:
+      add_row: 新增行
+      delete_row: 刪除行
+      key: 索引鍵
+      value: 值
+    list_is_empty: 列表是空的
+    loading: 正在載入
+    more: 更多
+    new: 新
+    next_page: 下一頁
+    no_cards_present: 無卡片
+    no_item_found: 找不到記錄
+    no_options_available: 無可用選項
+    no_related_item_found: 找不到相關記錄
+    not_authorized: 您無權執行此操作。
+    number_of_items:
+      one: 一個 %{item}
+      other: "%{count} %{item}"
+      zero: 無 %{item}
+    oops_nothing_found: 糟糕！完全找不到...
+    order:
+      higher: 將記錄上移
+      lower: 將記錄下移
+      reorder_record: 重新排列記錄
+      to_bottom: 將記錄移至最下方
+      to_top: 將記錄移至最上方
+    per_page: 每頁
+    prev_page: 上一頁
+    remove_selection: 移除所選
+    reset_filters: 重設篩選器
+    resource_created: 已建立記錄
+    resource_destroyed: 已刪除記錄
+    resource_translations:
+      user:
+        one: 使用者
+        other: 使用者
+        zero: 使用者
+    resource_updated: 已更新記錄
+    resources: 資源
+    run: 執行
+    save: 儲存
+    search:
+      cancel_button: 取消
+      placeholder: 搜尋
+    select_all: 全選
+    select_all_matching: 選擇所有相符
+    select_item: 選擇項目
+    show_content: 顯示內容
+    sign_out: 登出
+    switch_to_view: 切換至 %{view_type} 檢視
+    table_view: 表格檢視
+    tools: 工具
+    type_to_search: 輸入以搜尋。
+    unauthorized: 未經授權
+    undo: 復原
+    view: 檢視
+    view_item: 檢視 %{item}
+    was_successfully_created: 已成功建立
+    was_successfully_updated: 已成功更新
+    x_items_more:
+      one: 還有一個項目
+      other: "還有 %{count} 個項目"
+      zero: 沒有項目了
+    x_records_selected_from_a_total_of_x_html: 已從此頁面的 <span class="font-bold text-gray-700">%{count}</span> 項記錄中選取了 <span class="font-bold text-gray-700">%{selected}</span> 項
+    x_records_selected_from_all_pages_html: 從所有頁面選取了 <span class="font-bold text-gray-700">%{count}</span> 項記錄
+    you_missed_something_check_form: 您似乎漏掉了什麼。請檢查表單。
