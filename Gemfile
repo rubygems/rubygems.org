@@ -56,7 +56,7 @@ gem "phlex-rails", "~> 1.1"
 
 # Admin dashboard
 gem "avo", "~> 2.45"
-gem "view_component", "~> 3.6"
+gem "view_component", "~> 3.8"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
 gem "groupdate", "~> 6.2"
