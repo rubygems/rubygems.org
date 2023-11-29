@@ -86,16 +86,36 @@ class Pusher
     MSG
   end
 
-  def find # rubocop:disable Metrics/AbcSize
+  def find # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     name = spec.name.to_s
     set_tag "gemcutter.rubygem.name", name
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
+    sha256 = Digest::SHA2.base64digest(body.string)
+    spec_sha256 = Digest::SHA2.base64digest(spec_contents)
+
+    version = @rubygem.versions
+      .create_with(indexed: false, cert_chain: spec.cert_chain)
+      .find_or_initialize_by(
+        number: spec.version.to_s,
+        platform: spec.original_platform.to_s,
+        gem_platform: spec.platform.to_s,
+        size: size,
+        sha256: sha256,
+        spec_sha256: spec_sha256,
+        pusher: api_key.user,
+        pusher_api_key: api_key
+      )
+
     unless @rubygem.new_record?
-      if (version = @rubygem.find_version_from_spec spec)
-        republish_notification(version)
-        return false
+      # Return success for idempotent pushes
+      return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?
+
+      # If the gem is yanked, we can't repush it
+      # Additionally, we don't allow overwriting existing versions
+      if (existing = @rubygem.versions.find_by(number: version.number, platform: version.platform))
+        return republish_notification(existing)
       end
 
       if @rubygem.name != name && @rubygem.indexed_versions?
@@ -106,19 +126,7 @@ class Pusher
 
     # Update the name to reflect a valid case change
     @rubygem.name = name
-
-    sha256 = Digest::SHA2.base64digest(body.string)
-    spec_sha256 = Digest::SHA2.base64digest(spec_contents)
-
-    @version = @rubygem.versions.new number: spec.version.to_s,
-                                     platform: spec.original_platform.to_s,
-                                     gem_platform: spec.platform.to_s,
-                                     size: size,
-                                     sha256: sha256,
-                                     spec_sha256: spec_sha256,
-                                     pusher: api_key.user,
-                                     pusher_api_key: api_key,
-                                     cert_chain: spec.cert_chain
+    @version = version
 
     set_tags "gemcutter.rubygem.version" => @version.number, "gemcutter.rubygem.platform" => @version.platform
     log_pushing
@@ -137,25 +145,10 @@ class Pusher
   private
 
   def after_write
-    @version_id = version.id
-    version.rubygem.push_notifiable_owners.each do |notified_user|
-      Mailer.gem_pushed(owner, @version_id, notified_user.id).deliver_later
-    end
-    Indexer.perform_later
-    UploadVersionsFileJob.perform_later
-    UploadInfoFileJob.perform_later(rubygem_name: rubygem.name)
-    UploadNamesFileJob.perform_later
-    ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
-    StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)
     RackAttackReset.gem_push_backoff(@remote_ip, owner.to_gid) if @remote_ip.present?
+    AfterVersionWriteJob.new(version:).perform(version:)
     StatsD.increment "push.success"
-  end
-
-  def ld_variation(key:, default:)
-    Rails.configuration.launch_darkly_client.variation(
-      key, owner.ld_context, default
-    )
   end
 
   def notify(message, code)
@@ -188,6 +181,9 @@ class Pusher
       notify("Repushing of gem versions is not allowed.\n" \
              "Please bump the version number and push a new different release.\n" \
              "See also `gem yank` if you want to unpublish the bad release.", 409)
+    elsif version.deletion.nil?
+      notify("It appears that #{version.full_name} did not finish pushing.\n" \
+             "Please contact support@rubygems.org for assistance if you pushed this gem more than a minute ago.", 409)
     else
       different_owner = "pushed by a previous owner of this gem " unless owner.owns_gem?(version.rubygem)
       notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
