@@ -1,5 +1,6 @@
 class Deletion < ApplicationRecord
-  belongs_to :user
+  # we nullify the user when they delete their account
+  belongs_to :user, optional: true
 
   belongs_to :version, ->(d) { joins(:rubygem).where(platform: d.platform, rubygem: { name: d.rubygem }) },
     class_name: "Version",
@@ -7,7 +8,8 @@ class Deletion < ApplicationRecord
     primary_key: :number,
     inverse_of: :deletion
 
-  validates :user, :rubygem, :number, presence: true
+  validates :user, presence: true, on: :create
+  validates :rubygem, :number, presence: true
   validates :version, presence: true
   validate :version_is_indexed, on: :create
   validate :metadata_matches_version

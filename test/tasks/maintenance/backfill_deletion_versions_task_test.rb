@@ -24,4 +24,20 @@ class Maintenance::BackfillDeletionVersionsTaskTest < ActiveSupport::TestCase
       Maintenance::BackfillDeletionVersionsTask.process(deletion)
     end
   end
+
+  test "#process with deleted user" do
+    version = create(:version)
+    deletion = create(:deletion, version:)
+
+    deletion.update_column(:version_id, nil)
+
+    assert_nil deletion.version_id
+
+    deletion.user.destroy!
+
+    Maintenance::BackfillDeletionVersionsTask.process(deletion.reload)
+
+    assert_equal version.id, deletion.version_id
+    assert_equal version, deletion.version
+  end
 end
