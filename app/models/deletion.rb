@@ -47,6 +47,7 @@ class Deletion < ApplicationRecord
     self.rubygem = rubygem_name
     self.number = version.number
     self.platform = version.platform
+    self.version_id = version.id
   end
 
   def expire_cache

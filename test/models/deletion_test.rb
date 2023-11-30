@@ -121,6 +121,7 @@ class DeletionTest < ActiveSupport::TestCase
     deletion.valid?
 
     assert_equal deletion.rubygem, @version.rubygem.name
+    assert_equal @version.id, deletion.version_id
   end
 
   context "with restored gem" do
