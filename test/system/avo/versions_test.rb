@@ -112,7 +112,8 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
               "number" => [version_attributes[:number], nil],
               "platform" => ["ruby", nil],
               "created_at" => [deletion.created_at.as_json, nil],
-              "updated_at" => [deletion.updated_at.as_json, nil]
+              "updated_at" => [deletion.updated_at.as_json, nil],
+              "version_id" => [version.id, nil]
             },
             "unchanged" => {}
           }

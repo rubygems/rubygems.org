@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_20_033411) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_29_233528) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -83,7 +83,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_033411) do
     t.string "platform"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.bigint "version_id"
     t.index ["user_id"], name: "index_deletions_on_user_id"
+    t.index ["version_id"], name: "index_deletions_on_version_id"
   end
 
   create_table "dependencies", id: :serial, force: :cascade do |t|
