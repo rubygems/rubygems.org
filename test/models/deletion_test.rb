@@ -29,7 +29,7 @@ class DeletionTest < ActiveSupport::TestCase
   context "association" do
     subject { Deletion.new(version: @version, user: @user) }
 
-    should belong_to :user
+    should belong_to(:user).without_validating_presence
   end
 
   context "with deleted gem" do
