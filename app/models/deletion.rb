@@ -2,7 +2,7 @@ class Deletion < ApplicationRecord
   # we nullify the user when they delete their account
   belongs_to :user, optional: true
 
-  belongs_to :version, ->(d) { joins(:rubygem).where(platform: d.platform, rubygem: { name: d.rubygem }) },
+  belongs_to :version, ->(d) { joins(:rubygem).where(platform: d.platform).where("UPPER(rubygems.name) = UPPER(?)", d.rubygem) },
     class_name: "Version",
     foreign_key: :number,
     primary_key: :number,
