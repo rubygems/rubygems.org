@@ -40,4 +40,21 @@ class Maintenance::BackfillDeletionVersionsTaskTest < ActiveSupport::TestCase
     assert_equal version.id, deletion.version_id
     assert_equal version, deletion.version
   end
+
+  test "#process with changed gem capitalization" do
+    rubygem = create(:rubygem, name: "rubygem0")
+    version = create(:version, rubygem:)
+    deletion = create(:deletion, version:)
+
+    deletion.update_column(:version_id, nil)
+
+    assert_nil deletion.version_id
+
+    rubygem.update!(name: "Rubygem0")
+
+    Maintenance::BackfillDeletionVersionsTask.process(deletion.reload)
+
+    assert_equal version.id, deletion.version_id
+    assert_equal version, deletion.version
+  end
 end
