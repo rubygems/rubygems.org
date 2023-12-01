@@ -15,6 +15,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
+  before_validation :rubygem_nameify!
   before_save :create_link_verifications, if: :metadata_changed?
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
@@ -117,6 +118,12 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def self.by_created_at
     order(created_at: :desc)
+  end
+
+  def self.for_index
+    indexed
+      .order(rubygem_name: :asc, position: :desc)
+      .pluck(:rubygem_name, :number, :platform)
   end
 
   def self.rows_for_index
@@ -449,6 +456,11 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     return if rubygem.nil?
     self.gem_full_name = "#{rubygem.name}-#{number}"
     gem_full_name << "-#{gem_platform}" unless gem_platform == "ruby"
+  end
+
+  def rubygem_nameify!
+    return if rubygem.nil?
+    self.rubygem_name = rubygem.name
   end
 
   def set_canonical_number

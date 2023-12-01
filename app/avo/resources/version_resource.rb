@@ -21,6 +21,7 @@ class VersionResource < Avo::BaseResource
   field :platform, as: :text
 
   field :canonical_number, as: :text
+  field :rubygem_name, as: :text
 
   field :indexed, as: :boolean
   field :prerelease, as: :boolean

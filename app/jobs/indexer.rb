@@ -66,7 +66,8 @@ class Indexer < ApplicationJob
 
     data.each do |row|
       row[0] = names[row[0]]
-      row[1] = versions[row[1].strip]
+      row[1].strip!
+      row[1] = versions[row[1]]
       row[2] = platforms[row[2]]
     end
 
