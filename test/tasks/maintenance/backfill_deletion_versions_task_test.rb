@@ -57,4 +57,15 @@ class Maintenance::BackfillDeletionVersionsTaskTest < ActiveSupport::TestCase
     assert_equal version.id, deletion.version_id
     assert_equal version, deletion.version
   end
+
+  test "#process with missing version" do
+    Deletion.insert!({ rubygem: "missing", number: "1.0.0", platform: "ruby" })
+    deletion = Deletion.where(rubygem: "missing", number: "1.0.0", platform: "ruby").sole
+
+    assert_nil deletion.version_id
+
+    Maintenance::BackfillDeletionVersionsTask.process(deletion)
+
+    assert_nil deletion.version_id
+  end
 end
