@@ -26,21 +26,8 @@ class Maintenance::VerifyGemContentsInFsTask < MaintenanceTasks::Task
 
   def process(version)
     logger.tagged(version_id: version.id, name: version.rubygem.name, number: version.number, platform: version.platform) do
-      gem_path = "gems/#{version.gem_file_name}"
-      spec_path = "quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
-
-      expected_checksum = version.sha256
-      logger.warn "Version #{version.full_name} has no checksum" if expected_checksum.blank?
-
-      gem_contents = RubygemFs.instance.get(gem_path)
-      logger.warn "Version #{version.full_name} is missing gem contents" if gem_contents.blank?
-
-      logger.warn "#{spec_path} is missing" if RubygemFs.instance.head(spec_path).blank?
-
-      return unless gem_contents.present? && expected_checksum.present?
-
-      sha256 = Digest::SHA256.base64digest(gem_contents)
-      logger.error "#{gem_path} has incorrect checksum (expected #{expected_checksum}, got #{sha256})" if sha256 != expected_checksum
+      validate_checksum(version, "gem", "gems/#{version.gem_file_name}", version.sha256)
+      validate_checksum(version, "spec", "quick/Marshal.4.8/#{version.full_name}.gemspec.rz", version.spec_sha256)
     end
   end
 
@@ -59,5 +46,15 @@ class Maintenance::VerifyGemContentsInFsTask < MaintenanceTasks::Task
 
   def matches_regexp(collection, field, regexp)
     collection.where(collection.arel_table[field].matches_regexp(regexp))
+  end
+
+  def validate_checksum(version, name, path, expected_checksum)
+    logger.warn "Version #{version.fullname} has no #{name} checksum" if expected_checksum.blank?
+    contents = RubygemFs.instance.get(path)
+    logger.warn "Version #{version.full_name} is missing #{name} contents (#{path})" if contents.blank?
+
+    return unless contents.present? && expected_checksum.present?
+    sha256 = Digest::SHA256.base64digest(contents)
+    logger.error "#{path} has incorrect checksum (expected #{expected_checksum}, got #{sha256})" if sha256 != expected_checksum
   end
 end
