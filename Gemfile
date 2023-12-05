@@ -31,7 +31,7 @@ gem "puma", "~> 6.4"
 gem "rack", "~> 2.2"
 gem "rack-utf8_sanitizer", "~> 1.8"
 gem "rbtrace", "~> 0.5.0"
-gem "rdoc", "~> 6.5"
+gem "rdoc", "~> 6.6"
 gem "roadie-rails", "~> 3.0"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 6.1", require: false
