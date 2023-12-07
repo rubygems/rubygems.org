@@ -13,3 +13,6 @@
     <%= form.submit t(".confirm"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
   </div>
 <% end %>
+<% if @user.webauthn_enabled?%>
+    <%= render "multifactor_auths/webauthn_prompt" %>
+<% end %>

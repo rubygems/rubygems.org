@@ -1,16 +1,16 @@
 (function() {
-  var handleEvent = function(event) {
+  const handleEvent = function(event) {
     event.preventDefault();
     return event.target;
   };
 
-  var setError = function(submit, error, message) {
+  const setError = function(submit, error, message) {
     submit.attr("disabled", false);
     error.attr("hidden", false);
     error.text(message);
   };
 
-  var handleHtmlResponse = function(submit, responseError, response) {
+  const handleHtmlResponse = function(submit, responseError, response) {
     if (response.redirected) {
       window.location.href = response.url;
     } else {
@@ -22,7 +22,7 @@
     }
   };
 
-  var credentialsToBase64 = function(credentials) {
+  const credentialsToBase64 = function(credentials) {
     return {
       type: credentials.type,
       id: credentials.id,
@@ -32,12 +32,13 @@
         authenticatorData: bufferToBase64url(credentials.response.authenticatorData),
         attestationObject: bufferToBase64url(credentials.response.attestationObject),
         clientDataJSON: bufferToBase64url(credentials.response.clientDataJSON),
-        signature: bufferToBase64url(credentials.response.signature)
+        signature: bufferToBase64url(credentials.response.signature),
+        userHandle: bufferToBase64url(credentials.response.userHandle),
       },
     };
   };
 
-  var credentialsToBuffer = function(credentials) {
+  const credentialsToBuffer = function(credentials) {
     return credentials.map(function(credential) {
       return {
         id: base64urlToBuffer(credential.id),
@@ -46,15 +47,32 @@
     });
   };
 
+  const parseCreationOptionsFromJSON = function(json) {
+    return { 
+      ...json,
+      challenge: base64urlToBuffer(json.challenge),
+      user: { ...json.user, id: base64urlToBuffer(json.user.id) },
+      excludeCredentials: credentialsToBuffer(json.excludeCredentials),
+    };
+  };
+
+  const parseRequestOptionsFromJSON = function(json) {
+    return {
+      ...json,
+      challenge: base64urlToBuffer(json.challenge),
+      allowCredentials: credentialsToBuffer(json.allowCredentials),
+    };
+  };
+
   $(function() {
-    var credentialForm = $(".js-new-webauthn-credential--form");
-    var credentialError = $(".js-new-webauthn-credential--error");
-    var credentialSubmit = $(".js-new-webauthn-credential--submit");
-    var csrfToken = $("[name='csrf-token']").attr("content");
+    const credentialForm = $(".js-new-webauthn-credential--form");
+    const credentialError = $(".js-new-webauthn-credential--error");
+    const credentialSubmit = $(".js-new-webauthn-credential--submit");
+    const csrfToken = $("[name='csrf-token']").attr("content");
 
     credentialForm.submit(function(event) {
-      var form = handleEvent(event);
-      var nickname = $(".js-new-webauthn-credential--nickname").val();
+      const form = handleEvent(event);
+      const nickname = $(".js-new-webauthn-credential--nickname").val();
 
       fetch(form.action + ".json", {
         method: "POST",
@@ -63,11 +81,8 @@
       }).then(function (response) {
         return response.json();
       }).then(function (json) {
-        json.user.id = base64urlToBuffer(json.user.id);
-        json.challenge = base64urlToBuffer(json.challenge);
-        json.excludeCredentials = credentialsToBuffer(json.excludeCredentials);
         return navigator.credentials.create({
-          publicKey: json
+          publicKey: parseCreationOptionsFromJSON(json)
         });
       }).then(function (credentials) {
         return fetch(form.action + "/callback.json", {
@@ -98,36 +113,33 @@
     });
   });
 
-  var getCredentials = function(event, csrfToken) {
-    var form = handleEvent(event);
-    var options = JSON.parse(form.dataset.options);
-    options.challenge = base64urlToBuffer(options.challenge);
-    options.allowCredentials = credentialsToBuffer(options.allowCredentials);
-    return navigator.credentials.get({
-      publicKey: options
-    }).then(function (credentials) {
-      return fetch(form.action, {
-        method: "POST",
-        credentials: "same-origin",
-        redirect: "follow",
-        headers: {
-          "X-CSRF-Token": csrfToken,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          credentials: credentialsToBase64(credentials)
-        })
-      });
-    })
+  const getCredentials = async function(event, csrfToken) {
+    const form = handleEvent(event);
+    const options = JSON.parse(form.dataset.options);
+    const credentials = await navigator.credentials.get({
+      publicKey: parseRequestOptionsFromJSON(options)
+    });
+    return await fetch(form.action, {
+      method: "POST",
+      credentials: "same-origin",
+      redirect: "follow",
+      headers: {
+        "X-CSRF-Token": csrfToken,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        credentials: credentialsToBase64(credentials),
+      })
+    });
   };
 
   $(function() {
-    var cliSessionForm = $(".js-webauthn-session-cli--form");
-    var cliSessionError = $(".js-webauthn-session-cli--error");
-    var csrfToken = $("[name='csrf-token']").attr("content");
+    const cliSessionForm = $(".js-webauthn-session-cli--form");
+    const cliSessionError = $(".js-webauthn-session-cli--error");
+    const csrfToken = $("[name='csrf-token']").attr("content");
 
     function failed_verification_url(message) {
-      var url =  new URL(`${location.origin}/webauthn_verification/failed_verification`);
+      const url =  new URL(`${location.origin}/webauthn_verification/failed_verification`);
       url.searchParams.append("error", message);
       return url.href;
     };
@@ -148,17 +160,18 @@
   });
 
   $(function() {
-    var sessionForm = $(".js-webauthn-session--form");
-    var sessionSubmit = $(".js-webauthn-session--submit");
-    var sessionError = $(".js-webauthn-session--error");
-    var csrfToken = $("[name='csrf-token']").attr("content");
+    const sessionForm = $(".js-webauthn-session--form");
+    const sessionSubmit = $(".js-webauthn-session--submit");
+    const sessionError = $(".js-webauthn-session--error");
+    const csrfToken = $("[name='csrf-token']").attr("content");
 
-    sessionForm.submit(function(event) {
-      getCredentials(event, csrfToken).then(function (response) {
+    sessionForm.submit(async function(event) {
+      try {
+        const response = await getCredentials(event, csrfToken);
         handleHtmlResponse(sessionSubmit, sessionError, response);
-      }).catch(function (error) {
+      } catch (error) {
         setError(sessionSubmit, sessionError, error);
-      });
+      }
     });
   });
 })();

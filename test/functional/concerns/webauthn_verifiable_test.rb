@@ -78,7 +78,7 @@ class WebauthnVerifiableTest < ActionController::TestCase
     setup do
       get :prompt, params: { user_id: @user.id }
       @challenge = session[:webauthn_authentication]["challenge"]
-      @origin = "http://localhost:3000"
+      @origin = WebAuthn.configuration.origin
       @rp_id = URI.parse(@origin).host
       @client = WebAuthn::FakeClient.new(@origin, encoding: false)
       WebauthnHelpers.create_credential(

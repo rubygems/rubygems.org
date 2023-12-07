@@ -150,9 +150,12 @@ class ActiveSupport::TestCase
     click_button "Sign in"
     visit edit_settings_path
 
-    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
+    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
+      resident_key: true,
+      user_verification: true,
+      user_verified: true
+    )
     @authenticator = page.driver.browser.add_virtual_authenticator(options)
-    WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
 
     credential_nickname = "new cred"
     fill_in "Nickname", with: credential_nickname
@@ -180,14 +183,18 @@ end
 
 Gemcutter::Application.load_tasks
 
+# Force loading of ActionDispatch::SystemTesting::* helpers
+_ = ActionDispatch::SystemTestCase
+
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
+  include Capybara::Minitest::Assertions
+  include ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
+  include ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
 
   setup do
     Capybara.current_driver = :rack_test
   end
-
-  teardown { reset_session! }
 end
 
 Shoulda::Matchers.configure do |config|

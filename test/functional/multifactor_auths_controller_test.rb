@@ -408,7 +408,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
       context "on POST to webauthn_update" do
         setup do
-          @origin = "http://localhost:3000"
+          @origin = WebAuthn.configuration.origin
           @rp_id = URI.parse(@origin).host
           @client = WebAuthn::FakeClient.new(@origin, encoding: false)
           WebauthnHelpers.create_credential(
@@ -818,7 +818,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
       context "on POST to webauthn_update" do
         setup do
-          origin = "http://localhost:3000"
+          origin = WebAuthn.configuration.origin
           @rp_id = URI.parse(origin).host
           @client = WebAuthn::FakeClient.new(origin, encoding: false)
           WebauthnHelpers.create_credential(

@@ -522,7 +522,7 @@ GEM
       optimist (>= 3.0.0)
     rdoc (6.6.1)
       psych (>= 4.0.0)
-    regexp_parser (2.8.1)
+    regexp_parser (2.8.3)
     rexml (3.2.6)
     roadie (5.2.0)
       css_parser (~> 1.4)

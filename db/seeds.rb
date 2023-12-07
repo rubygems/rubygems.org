@@ -3,7 +3,8 @@ password = "super-secret-password"
 author = User.create_with(
   handle: "gem-author",
   password: password,
-  email_confirmed: true
+  email_confirmed: true,
+  webauthn_id: "a1TLW3o1W18mTuDBfDALHhL2tZ1_E-2B03Fqsdu8Rv05V4tSsRzepe-L7Uprg356dw1tktXXcTI9TIRaK4gM-A"
 ).find_or_create_by!(email: "gem-author@example.com")
 
 maintainer = User.create_with(
@@ -289,6 +290,12 @@ author.oidc_pending_trusted_publishers.create_with(
   trusted_publisher: trusted_publisher,
   rubygem_name: "pending-trusted-publisher-rubygem"
 )
+
+author.webauthn_credentials.create_with(nickname: "segiddins development")
+  .find_or_create_by!(
+    external_id: "QdfU3FxkjNpPqfjC4uTuNA",
+    public_key: "pQECAyYgASFYIKMIHolehDjslWQ6oOVP1-R8OR6LXEBdDfqxhjgtiiDEIlgg1RgUq_AJFT-cSMo-xP_9XxGIbBsQDEj8253QPwc8-88",
+  )
 
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:
