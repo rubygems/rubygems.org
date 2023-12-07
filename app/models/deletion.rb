@@ -2,11 +2,7 @@ class Deletion < ApplicationRecord
   # we nullify the user when they delete their account
   belongs_to :user, optional: true
 
-  belongs_to :version, ->(d) { joins(:rubygem).where(platform: d.platform).where("UPPER(rubygems.name) = UPPER(?)", d.rubygem) },
-    class_name: "Version",
-    foreign_key: :number,
-    primary_key: :number,
-    inverse_of: :deletion
+  belongs_to :version, inverse_of: :deletion
 
   validates :user, presence: true, on: :create
   validates :rubygem, :number, presence: true
@@ -49,7 +45,6 @@ class Deletion < ApplicationRecord
     self.rubygem = rubygem_name
     self.number = version.number
     self.platform = version.platform
-    self.version_id = version.id
   end
 
   def expire_cache
