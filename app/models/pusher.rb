@@ -33,7 +33,7 @@ class Pusher
   end
 
   def verify_mfa_requirement
-    api_key.mfa_enabled? || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
+    owner.mfa_enabled? || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
       notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
   end
 

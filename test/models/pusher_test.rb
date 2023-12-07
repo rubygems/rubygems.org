@@ -556,7 +556,7 @@ class PusherTest < ActiveSupport::TestCase
       context "version metadata has rubygems_mfa_required set" do
         setup do
           spec = mock
-          spec.expects(:metadata).returns({ "rubygems_mfa_required" => true })
+          spec.stubs(:metadata).returns({ "rubygems_mfa_required" => true })
           @cutter.stubs(:spec).returns spec
 
           metadata = { "rubygems_mfa_required" => "true" }
@@ -565,6 +565,24 @@ class PusherTest < ActiveSupport::TestCase
 
         should "be false if user has no mfa setup" do
           refute @cutter.verify_mfa_requirement
+        end
+
+        should "be true if user has ui_and_api mfa but API key does not require MFA" do
+          @user.enable_totp!("abc123", User.mfa_levels["ui_and_api"])
+
+          assert_predicate @cutter, :verify_mfa_requirement
+        end
+
+        should "be true if user has ui_only mfa but API key does not require MFA" do
+          @user.enable_totp!("abc123", User.mfa_levels["ui_only"])
+
+          assert_predicate @cutter, :verify_mfa_requirement
+        end
+
+        should "be true if user has ui_and_gem_signin mfa but API key does not require MFA" do
+          @user.enable_totp!("abc123", User.mfa_levels["ui_and_gem_signin"])
+
+          assert_predicate @cutter, :verify_mfa_requirement
         end
       end
     end
