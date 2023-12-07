@@ -27,7 +27,7 @@ class User < ApplicationRecord
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
   has_many :pushed_versions, -> { by_created_at }, dependent: :nullify, inverse_of: :pusher, class_name: "Version", foreign_key: :pusher_id
-  has_many :yanked_versions, through: :deletions, source: :version
+  has_many :yanked_versions, through: :deletions, source: :version, inverse_of: :yanker
 
   has_many :deletions, dependent: :nullify
   has_many :web_hooks, dependent: :destroy
