@@ -577,7 +577,7 @@ GEM
     searchkick (5.3.1)
       activemodel (>= 6.1)
       hashie
-    selenium-webdriver (4.15.0)
+    selenium-webdriver (4.16.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -767,7 +767,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.18)
   ruby-magic (~> 0.6)
   searchkick (~> 5.3)
-  selenium-webdriver (~> 4.8)
+  selenium-webdriver (~> 4.16)
   shoryuken (~> 6.1)
   shoulda-context (~> 2.0)
   shoulda-matchers (~> 5.3)
