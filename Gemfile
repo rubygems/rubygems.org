@@ -81,7 +81,7 @@ group :development, :test do
   gem "factory_bot_rails", "~> 6.4"
   gem "dotenv-rails", "~> 2.8"
 
-  gem "brakeman", "~> 6.0", require: false
+  gem "brakeman", "~> 6.1", require: false
   gem "rubocop", "~> 1.48", require: false
   gem "rubocop-rails", "~> 2.18", require: false
   gem "rubocop-performance", "~> 1.16", require: false
