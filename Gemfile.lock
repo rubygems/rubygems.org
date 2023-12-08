@@ -144,7 +144,7 @@ GEM
       xpath (~> 3.2)
     cbor (0.5.9.6)
     cgi (0.4.0)
-    chartkick (5.0.4)
+    chartkick (5.0.5)
     choice (0.2.0)
     chunky_png (1.4.0)
     clearance (2.6.1)
