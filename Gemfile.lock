@@ -84,7 +84,7 @@ GEM
     attr_required (1.0.1)
     autoprefixer-rails (10.4.16.0)
       execjs (~> 2)
-    avo (2.45.0)
+    avo (2.46.0)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -693,7 +693,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.4)
   autoprefixer-rails (~> 10.4)
-  avo (~> 2.45)
+  avo (~> 2.46)
   aws-sdk-s3 (~> 1.141)
   aws-sdk-sqs (~> 1.69)
   bcrypt (~> 3.1)
