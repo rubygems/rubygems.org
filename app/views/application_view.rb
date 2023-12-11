@@ -10,4 +10,8 @@ class ApplicationView < ApplicationComponent
   def title=(title)
     @_view_context.instance_variable_set :@title, title
   end
+
+  def title_for_header_only=(title)
+    @_view_context.instance_variable_set :@title_for_header_only, title
+  end
 end

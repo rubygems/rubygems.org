@@ -67,6 +67,18 @@ class Mailer < ApplicationMailer
                       default: "Gem %{gem} pushed to RubyGems.org")
   end
 
+  def gem_trusted_publisher_added(rubygem_trusted_publisher, created_by_user, notified_user)
+    @rubygem_trusted_publisher = rubygem_trusted_publisher
+    @created_by_user = created_by_user
+    @notified_user = notified_user
+
+    mail to: notified_user.email,
+      subject: I18n.t("mailer.gem_trusted_publisher_added.subject",
+        gem: @rubygem_trusted_publisher.rubygem.name,
+        host: Gemcutter::HOST_DISPLAY,
+        default: "Trusted publisher added to %{gem} on RubyGems.org")
+  end
+
   def mfa_notification(user_id)
     @user = User.find(user_id)
 

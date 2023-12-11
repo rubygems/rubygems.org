@@ -259,6 +259,37 @@ rubygem0.link_verifications.create_with(
   last_verified_at: 10.years.since,
 ).find_or_create_by!(uri: "https://example.com/rubygem0/code")
 
+trusted_publisher = OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
+  repository_owner: "example",
+  repository_name: "rubygem0",
+  repository_owner_id: "1234567890",
+  workflow_filename: "push_gem.yml",
+  environment: nil
+)
+trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0).trusted_publisher.api_keys.find_or_create_by!(
+  name: "GitHub Actions something",
+  hashed_key: "securehashedkey-tp",
+  push_rubygem: true,
+).pushed_versions.create_with(indexed: true).find_or_create_by!(
+  rubygem: rubygem0, number: "0.1.0", platform: "ruby", gem_platform: "ruby"
+)
+trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem1)
+
+OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
+  repository_owner: "example",
+  repository_name: "rubygem0",
+  repository_owner_id: "1234567890",
+  workflow_filename: "push_gem2.yml",
+  environment: "deploy"
+).rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0)
+
+author.oidc_pending_trusted_publishers.create_with(
+  expires_at: 100.years.from_now
+).find_or_create_by!(
+  trusted_publisher: trusted_publisher,
+  rubygem_name: "pending-trusted-publisher-rubygem"
+)
+
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:
     - email: #{author.email}, password: #{password} -> gem author owning few example gems
