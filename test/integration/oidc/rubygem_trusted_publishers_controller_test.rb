@@ -88,6 +88,25 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
     end
 
+    should "create rubygem trusted publisher when trusted publisher already exists" do
+      stub_request(:get, "https://api.github.com/users/example")
+        .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+      github_action_trusted_publisher = create(:oidc_trusted_publisher_github_action)
+
+      assert_difference("OIDC::RubygemTrustedPublisher.count") do
+        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+          oidc_rubygem_trusted_publisher: {
+            trusted_publisher_type: github_action_trusted_publisher.class.polymorphic_name,
+            trusted_publisher_attributes: github_action_trusted_publisher.as_json
+              .slice("workflow_filename", "repository_owner", "repository_name").merge("environment" => "")
+          }
+        }
+      end
+
+      assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
+    end
+
     should "error creating trusted publisher with type" do
       assert_no_difference("OIDC::RubygemTrustedPublisher.count") do
         post rubygem_trusted_publishers_url(@rubygem.slug), params: {
