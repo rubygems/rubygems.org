@@ -37,7 +37,7 @@ gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 6.1", require: false
 gem "statsd-instrument", "~> 3.5"
 gem "validates_formatting_of", "~> 0.9"
-gem "opensearch-ruby", "~> 3.0"
+gem "opensearch-ruby", "~> 3.1"
 gem "searchkick", "~> 5.3"
 gem "faraday_middleware-aws-sigv4", "~> 1.0"
 gem "xml-simple", "~> 1.1"

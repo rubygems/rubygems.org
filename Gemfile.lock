@@ -415,7 +415,7 @@ GEM
       validate_email
       validate_url
       webfinger (~> 2.0)
-    opensearch-ruby (3.0.1)
+    opensearch-ruby (3.1.0)
       faraday (>= 1.0, < 3)
       multi_json (>= 1.0)
     openssl (3.1.0)
@@ -740,7 +740,7 @@ DEPENDENCIES
   omniauth-github (~> 2.0)
   omniauth-rails_csrf_protection (~> 1.0)
   openid_connect (~> 2.2)
-  opensearch-ruby (~> 3.0)
+  opensearch-ruby (~> 3.1)
   pg (~> 1.4)
   phlex-rails (~> 1.1)
   pry-byebug (~> 3.10)
