@@ -582,6 +582,7 @@ nl:
         code: Broncode
         docs: Documentatie
         download: Download
+        funding:
         header: Links
         home: Startpagina
         mail: Mailing-list
