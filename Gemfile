@@ -1,5 +1,12 @@
 source "https://rubygems.org"
 
+# Former default gems
+gem "bigdecimal", "~> 3.1" # activesupport-7.0.8
+gem "mutex_m", "~> 0.2.0" # activesupport-7.0.8
+gem "net-smtp", "~> 0.4.0" # mail-2.8.1
+gem "csv", "~> 3.2" # zeitwerk-2.6.12
+gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
+
 gem "rails", "~> 7.0.0"
 gem "rails-i18n", "~> 7.0"
 

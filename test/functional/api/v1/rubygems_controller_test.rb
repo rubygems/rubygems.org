@@ -23,7 +23,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  def self.should_respond_to(format, &)
+  def self.should_respond_to(format, &blk) # rubocop:disable Naming/BlockForwarding
     context "with #{format.to_s.upcase} for a hosted gem" do
       setup do
         @rubygem = create(:rubygem)
@@ -31,7 +31,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: @rubygem.slug }, format: format
       end
 
-      should_respond_to_show(&)
+      should_respond_to_show(&blk) # rubocop:disable Naming/BlockForwarding
     end
 
     context "with #{format.to_s.upcase} for a hosted gem with a period in its name" do
@@ -41,7 +41,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: @rubygem.slug }, format: format
       end
 
-      should_respond_to_show(&)
+      should_respond_to_show(&blk) # rubocop:disable Naming/BlockForwarding
     end
   end
 
