@@ -776,7 +776,7 @@ class SessionsControllerTest < ActionController::TestCase
       params: { session: { who: @user.handle, password: @user.password } }
     )
     @challenge = session[:webauthn_authentication]["challenge"]
-    @origin = "http://localhost:3000"
+    @origin = WebAuthn.configuration.origin
     @rp_id = URI.parse(@origin).host
     @client = WebAuthn::FakeClient.new(@origin, encoding: false)
     WebauthnHelpers.create_credential(

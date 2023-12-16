@@ -42,8 +42,7 @@ class UserResource < Avo::BaseResource
       field :mfa_level, as: :select, enum: ::User.mfa_levels
       field :mfa_recovery_codes, as: :text, visible: ->(_) { false }
       field :mfa_hashed_recovery_codes, as: :text, visible: ->(_) { false }
-      field :webauthn_id, as: :text, visible: ->(_) { false }
-      field :webauthn_credentials, as: :has_many, visible: ->(_) { false }
+      field :webauthn_id, as: :text
       field :remember_token_expires_at, as: :date_time
       field :api_key, as: :text, visible: ->(_) { false }
       field :confirmation_token, as: :text, visible: ->(_) { false }
@@ -64,6 +63,8 @@ class UserResource < Avo::BaseResource
     field :ownership_requests, as: :has_many
     field :pushed_versions, as: :has_many
     field :oidc_api_key_roles, as: :has_many
+    field :webauthn_credentials, as: :has_many
+    field :webauthn_verification, as: :has_one
 
     field :audits, as: :has_many
   end

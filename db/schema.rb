@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_29_233528) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_004220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -434,6 +434,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_233528) do
     t.index ["id", "token"], name: "index_users_on_id_and_token"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["token"], name: "index_users_on_token"
+    t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
   end
 
   create_table "versions", id: :serial, force: :cascade do |t|

@@ -243,8 +243,10 @@ Rails.application.routes.draw do
     resource :session, only: %i[create destroy] do
       post 'otp_create', to: 'sessions#otp_create', as: :otp_create
       post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
+      post 'webauthn_full_create', to: 'sessions#webauthn_full_create', as: :webauthn_full_create
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
+      post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
     end
 
     resources :users, only: %i[new create] do

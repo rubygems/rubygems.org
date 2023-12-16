@@ -18,7 +18,6 @@ class UserPolicy < ApplicationPolicy
     rubygems_org_admin?
   end
 
-  has_association :webauthn_credentials
   has_association :ownerships
   has_association :rubygems
   has_association :subscriptions
@@ -32,4 +31,6 @@ class UserPolicy < ApplicationPolicy
   has_association :pushed_versions
   has_association :audits
   has_association :oidc_api_key_roles
+  has_association :webauthn_credentials
+  has_association :webauthn_verification
 end

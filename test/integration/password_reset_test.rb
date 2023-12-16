@@ -124,8 +124,6 @@ class PasswordResetTest < SystemTest
     assert page.has_content? "Security Device"
     assert_not_nil page.find(".js-webauthn-session--form")[:action]
 
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
-
     click_on "Authenticate with security device"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD

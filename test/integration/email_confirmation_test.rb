@@ -91,8 +91,6 @@ class EmailConfirmationTest < SystemTest
     assert page.has_content? "Multi-factor authentication"
     assert page.has_content? "Security Device"
 
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
-
     click_on "Authenticate with security device"
 
     find(:css, ".header__popup-link").click

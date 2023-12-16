@@ -17,7 +17,7 @@ module UserWebauthnMethods
         name: display_id
       },
       exclude: webauthn_credentials.pluck(:external_id),
-      authenticator_selection: { user_verification: "discouraged" }
+      authenticator_selection: { user_verification: "discouraged", resident_key: "preferred" }
     )
   end
 
