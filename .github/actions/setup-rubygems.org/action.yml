@@ -18,20 +18,14 @@ runs:
       shell: bash
       run: |
         timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
-    - uses: ruby/setup-ruby@a05e47355e80e57b9a67566a813648fa67d92011 # v1.157.0
+    - uses: ruby/setup-ruby@af848b40be8bb463a751551a1180d74782ba8a72 # v1.162.0
       with:
         ruby-version: ${{ inputs.ruby-version }}
         bundler-cache: true
-    - name: set rubygems version
+        rubygems: ${{ inputs.rubygems-version }}
+    - name: Print bundle environment
       shell: bash
-      run: |
-        if [ "${{ inputs.rubygems-version }}" != "latest" ]; then
-          gem update --system ${{ inputs.rubygems-version }};
-        else
-          gem update --system
-        fi
-        gem --version
-        bundle --version
+      run: bundle env
     - name: Prepare environment
       shell: bash
       run: |
