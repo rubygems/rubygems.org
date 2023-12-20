@@ -33,4 +33,7 @@ class RubygemPolicy < ApplicationPolicy
   has_association :linkset
   has_association :gem_download
   has_association :audits
+  has_association :link_verifications
+
+  has_association :oidc_rubygem_trusted_publishers
 end

@@ -57,6 +57,10 @@ de:
         api_key_role:
       oidc/api_key_role:
         api_key_permissions:
+      oidc/trusted_publisher/github_action:
+        repository_owner_id:
+      oidc/pending_trusted_publisher:
+        rubygem_name:
     errors:
       messages:
         unpwn:
@@ -73,6 +77,14 @@ de:
               taken:
             full_name:
               taken:
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken:
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              unavailable:
     models:
       user:
   activemodel:
@@ -317,6 +329,8 @@ de:
       global_html:
       gem_text:
       gem_html:
+    gem_trusted_publisher_added:
+      title:
   news:
     show:
       title:
@@ -564,6 +578,7 @@ de:
         code: Quellcode
         docs: Dokumentation
         download: Download
+        funding:
         header: Links
         home: Homepage
         mail: Mailingliste
@@ -580,6 +595,7 @@ de:
           api_key_role:
             name:
             new:
+        trusted_publishers:
     reserved:
       reserved_namespace:
     dependencies:
@@ -783,6 +799,42 @@ de:
         title:
       show:
         title:
+    rubygem_trusted_publishers:
+      index:
+        title:
+        subtitle_owner_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+        subtitle_owner_html:
+    pending_trusted_publishers:
+      index:
+        title:
+        valid_for_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+    trusted_publisher:
+      unsupported_type:
+      github_actions:
+        repository_owner_help_html:
+        repository_name_help_html:
+        workflow_filename_help_html:
+        environment_help_html:
+      pending:
+        rubygem_name_help_html:
   duration:
     minutes:
       other:
@@ -796,3 +848,5 @@ de:
     seconds:
       other:
       one:
+  form:
+    optional:

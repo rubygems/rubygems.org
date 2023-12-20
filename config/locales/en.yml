@@ -67,6 +67,10 @@ en:
         api_key_role: API Key Role
       oidc/api_key_role:
         api_key_permissions: API Key Permissions
+      oidc/trusted_publisher/github_action:
+        repository_owner_id: GitHub Repository Owner ID
+      oidc/pending_trusted_publisher:
+        rubygem_name: RubyGem name
     errors:
       messages:
         unpwn: has previously appeared in a data breach and should not be used
@@ -83,6 +87,14 @@ en:
               taken: "%{value} already exists"
             full_name:
               taken: "%{value} already exists"
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken: "has already been configured with this trusted publisher"
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              unavailable: "is already in use"
     models:
       user: User
   activemodel:
@@ -331,6 +343,8 @@ en:
       global_html: This webhook was previously called when <em>any</em> gem was pushed.
       gem_text: This webhook was previously called when %{gem} was pushed.
       gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
+    gem_trusted_publisher_added:
+      title: TRUSTED PUBLISHER ADDED
   news:
     show:
       title: New Releases — All Gems
@@ -564,6 +578,7 @@ en:
         code: Source Code
         docs: Documentation
         download: Download
+        funding: Funding
         header: Links
         home: Homepage
         mail: Mailing List
@@ -580,6 +595,7 @@ en:
           api_key_role:
             name: "OIDC: %{name}"
             new: "OIDC: Create"
+        trusted_publishers: Trusted publishers
     reserved:
       reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
@@ -784,6 +800,49 @@ en:
         title: "OIDC ID Tokens"
       show:
         title: "OIDC ID Token"
+    rubygem_trusted_publishers:
+      index:
+        title: Trusted Publishers
+        subtitle_owner_html: "Trusted publishers for %{gem_html}"
+        delete: Delete
+        create: Create
+        description_html: |
+          Trusted publishers allow you to push gems from CI without storing any long-lived sensitive credentials.
+          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/adding-a-publisher/" class="t-link">trusted publishing documentation</a>.
+      destroy:
+        success: "Trusted Publisher deleted"
+      create:
+        success: "Trusted Publisher created"
+      new:
+        title: "New Trusted Publisher"
+        subtitle_owner_html: "Add a trusted publisher for %{gem_html}"
+    pending_trusted_publishers:
+      index:
+        title: Pending Trusted Publishers
+        valid_for_html: "Valid for %{time_html}"
+        delete: Delete
+        create: Create
+        description_html: |
+          Pending trusted publishers allow you to configure trusted publishing before you have pushed the first version of a gem.
+          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/" class="t-link">trusted publishing documentation</a>.
+      destroy:
+        success: "Pending Trusted Publisher deleted"
+      create:
+        success: "Pending Trusted Publisher created"
+      new:
+        title: "New Pending Trusted Publisher"
+    trusted_publisher:
+      unsupported_type: "Unsupported trusted publisher type"
+      github_actions:
+        repository_owner_help_html: "The GitHub organization name or GitHub username that owns the repository"
+        repository_name_help_html: "The name of the GitHub repository that contains the publishing workflow"
+        workflow_filename_help_html: "The filename of the publishing workflow.<br>This file should exist in the <code>.github/workflows/</code> directory in the repository configured above."
+        environment_help_html: |
+          The name of the <a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">GitHub Actions environment</a> that the above workflow uses for publishing.<br>
+          This should be configured under the repository's settings.<br>
+          While not required, a dedicated publishing environment is strongly encouraged, especially if your repository has maintainers with commit access who shouldn't have RubyGems.org gem push access.
+      pending:
+        rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
   duration:
     minutes:
       other: "%{count} minutes"
@@ -797,3 +856,5 @@ en:
     seconds:
       other: "%{count} seconds"
       one: "1 second"
+  form:
+    optional: optional

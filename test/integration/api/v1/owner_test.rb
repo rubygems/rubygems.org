@@ -9,6 +9,10 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
     @other_user = create(:api_key, key: @other_user_api_key, add_owner: true, remove_owner: true).user
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
+    @trusted_publisher_api_key = "12325"
+    @trusted_publisher = create(:oidc_trusted_publisher_github_action)
+    create(:api_key, key: @trusted_publisher_api_key, owner: @trusted_publisher)
+
     @rubygem = create(:rubygem, number: "1.0.0")
     create(:ownership, user: @user, rubygem: @rubygem)
   end
@@ -66,5 +70,17 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
       headers: { "HTTP_AUTHORIZATION" => @other_user_api_key }
 
     assert_response :unauthorized
+
+    post api_v1_rubygem_owners_path(@rubygem.slug),
+      params: { email: @other_user.email },
+      headers: { "HTTP_AUTHORIZATION" => @trusted_publisher_api_key }
+
+    assert_response :forbidden
+
+    delete api_v1_rubygem_owners_path(@rubygem.slug),
+      params: { email: @other_user.email },
+      headers: { "HTTP_AUTHORIZATION" => @trusted_publisher_api_key }
+
+    assert_response :forbidden
   end
 end

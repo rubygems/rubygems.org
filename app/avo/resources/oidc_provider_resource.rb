@@ -2,9 +2,6 @@ class OIDCProviderResource < Avo::BaseResource
   self.title = :issuer
   self.includes = []
   self.model_class = ::OIDC::Provider
-  # self.search_query = -> do
-  #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
-  # end
 
   action RefreshOIDCProvider
 

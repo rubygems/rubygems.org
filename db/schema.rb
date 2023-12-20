@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_30_000000) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_004220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -282,6 +282,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_000000) do
     t.index ["oidc_api_key_role_id"], name: "index_oidc_id_tokens_on_oidc_api_key_role_id"
   end
 
+  create_table "oidc_pending_trusted_publishers", force: :cascade do |t|
+    t.string "rubygem_name"
+    t.bigint "user_id", null: false
+    t.string "trusted_publisher_type", null: false
+    t.bigint "trusted_publisher_id", null: false
+    t.datetime "expires_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_pending_trusted_publishers_on_trusted_publisher"
+    t.index ["user_id"], name: "index_oidc_pending_trusted_publishers_on_user_id"
+  end
+
   create_table "oidc_providers", force: :cascade do |t|
     t.text "issuer"
     t.jsonb "configuration"
@@ -289,6 +301,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["issuer"], name: "index_oidc_providers_on_issuer", unique: true
+  end
+
+  create_table "oidc_rubygem_trusted_publishers", force: :cascade do |t|
+    t.bigint "rubygem_id", null: false
+    t.string "trusted_publisher_type", null: false
+    t.bigint "trusted_publisher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rubygem_id", "trusted_publisher_id", "trusted_publisher_type"], name: "index_oidc_rubygem_trusted_publishers_unique", unique: true
+    t.index ["rubygem_id"], name: "index_oidc_rubygem_trusted_publishers_on_rubygem_id"
+    t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_rubygem_trusted_publishers_on_trusted_publisher"
+  end
+
+  create_table "oidc_trusted_publisher_github_actions", force: :cascade do |t|
+    t.string "repository_owner", null: false
+    t.string "repository_name", null: false
+    t.string "repository_owner_id", null: false
+    t.string "workflow_filename", null: false
+    t.string "environment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
   create_table "ownership_calls", force: :cascade do |t|
@@ -398,6 +432,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_000000) do
     t.index ["id", "token"], name: "index_users_on_id_and_token"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["token"], name: "index_users_on_token"
+    t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
   end
 
   create_table "versions", id: :serial, force: :cascade do |t|
@@ -492,6 +527,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_000000) do
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
+  add_foreign_key "oidc_pending_trusted_publishers", "users"
+  add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "webauthn_credentials", "users"

@@ -113,6 +113,7 @@ Rails.application.routes.draw do
       resources :timeframe_versions, only: :index
 
       namespace :oidc do
+        post 'trusted_publisher/exchange_token'
         resources :api_key_roles, only: %i[index show], param: :token, format: 'json', defaults: { format: :json } do
           member do
             post :assume_role
@@ -156,6 +157,7 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
+    get "profile/me", to: "profiles#me", as: :my_profile
     resource :multifactor_auth, only: %i[new create update destroy] do
       get 'recovery'
       post 'otp_update', to: 'multifactor_auths#otp_update', as: :otp_update
@@ -182,6 +184,7 @@ Rails.application.routes.draw do
         resources :api_key_roles, param: :token, only: %i[show], constraints: { format: :json }
         resources :id_tokens, only: %i[index show]
         resources :providers, only: %i[index show]
+        resources :pending_trusted_publishers, except: %i[show edit update]
       end
     end
     resources :stats, only: :index
@@ -214,6 +217,7 @@ Rails.application.routes.draw do
         patch 'close_all', to: 'ownership_requests#close_all', as: :close_all, on: :collection
       end
       resources :adoptions, only: %i[index]
+      resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
     end
 
     resources :ownership_calls, only: :index
@@ -239,8 +243,10 @@ Rails.application.routes.draw do
     resource :session, only: %i[create destroy] do
       post 'otp_create', to: 'sessions#otp_create', as: :otp_create
       post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
+      post 'webauthn_full_create', to: 'sessions#webauthn_full_create', as: :webauthn_full_create
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
+      post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
     end
 
     resources :users, only: %i[new create] do

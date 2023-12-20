@@ -32,6 +32,11 @@
     <div class="gem__users">
       <%= link_to_user(latest_version.pusher) %>
     </div>
+  <% elsif latest_version.pusher_api_key&.owner.present? %>
+    <h3 class="t-list__heading"><%= t '.pushed_by' %>:</h3>
+    <div class="gem__users">
+      <%= link_to_pusher(latest_version.pusher_api_key.owner) %>
+    </div>
   <% end %>
 
   <% if latest_version.yanker.present? %>

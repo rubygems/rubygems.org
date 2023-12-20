@@ -9,7 +9,7 @@ Datadog.configure do |c|
 
   # Enabling datadog functionality
 
-  enabled = (Rails.env.production? || Rails.env.staging?) && ENV["DD_AGENT_HOST"].present? && !defined?(Rails::Console)
+  enabled = !(Rails.env.development? || Rails.env.test?) && ENV["DD_AGENT_HOST"].present? && !defined?(Rails::Console)
   c.runtime_metrics.enabled = enabled
   c.profiling.enabled = enabled
   c.tracing.enabled = enabled

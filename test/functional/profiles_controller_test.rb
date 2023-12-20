@@ -25,6 +25,13 @@ class ProfilesControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to me" do
+      setup { get :me }
+
+      should respond_with :redirect
+      should redirect_to("the sign in path") { sign_in_path }
+    end
+
     context "on GET to show when hide email" do
       setup do
         @user.update(public_email: false)
@@ -73,6 +80,15 @@ class ProfilesControllerTest < ActionController::TestCase
       should "render user show page" do
         assert page.has_content? @user.handle
       end
+    end
+
+    context "on GET to me" do
+      setup do
+        get :me
+      end
+
+      should respond_with :redirect
+      should redirect_to("the user's profile page") { profile_path(@user.handle) }
     end
 
     context "on GET to delete" do

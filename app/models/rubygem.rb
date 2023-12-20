@@ -20,6 +20,7 @@ class Rubygem < ApplicationRecord
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :audits, as: :auditable, inverse_of: :auditable
   has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
+  has_many :oidc_rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", inverse_of: :rubygem, dependent: :destroy
 
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
@@ -315,8 +316,11 @@ class Rubygem < ApplicationRecord
   end
 
   def disown
-    ownerships_including_unconfirmed.each(&:delete)
+    ownerships_including_unconfirmed.find_each(&:delete)
     ownerships_including_unconfirmed.clear
+
+    oidc_rubygem_trusted_publishers.find_each(&:delete)
+    oidc_rubygem_trusted_publishers.clear
   end
 
   def find_version_from_spec(spec)

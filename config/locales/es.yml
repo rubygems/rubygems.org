@@ -68,10 +68,16 @@ es:
         api_key_role:
       oidc/api_key_role:
         api_key_permissions:
+      oidc/trusted_publisher/github_action:
+        repository_owner_id:
+      oidc/pending_trusted_publisher:
+        rubygem_name:
     errors:
       messages:
-        unpwn: ha aparecido con anterioridad en una filtración de datos y no se debería usar
-        blocked: "El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza un email personal válido."
+        unpwn: ha aparecido con anterioridad en una filtración de datos y no se debería
+          usar
+        blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
+          un email personal válido.
       models:
         ownership:
           attributes:
@@ -84,6 +90,14 @@ es:
               taken: "%{value} ya existe"
             full_name:
               taken: "%{value} ya existe"
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken:
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              unavailable:
     models:
       user: Usuario
   activemodel:
@@ -96,15 +110,16 @@ es:
         oidc/api_key_permissions:
           attributes:
             valid_for:
-              inclusion: "%{value} segundos debe estar entre 5 minutos (300 segundos) y 1 día (86.400 segundos)"
+              inclusion: "%{value} segundos debe estar entre 5 minutos (300 segundos)
+                y 1 día (86.400 segundos)"
             gems:
-              too_long: "como mucho puede incluir una gema"
+              too_long: como mucho puede incluir una gema
   api_keys:
     create:
-      success: "Nueva clave de API creada"
+      success: Nueva clave de API creada
       invalid_gem: La gema seleccionada no se puede incluir en esta clave
     destroy:
-      success: "Clave de API eliminada con éxito: %{name}"
+      success: 'Clave de API eliminada con éxito: %{name}'
     index:
       api_keys: Claves de API
       name: Nombre
@@ -125,28 +140,34 @@ es:
       access_webhooks: Acceso a webhooks
       show_dashboard: Mostrar dashboard
       reset: Restablecer
-      save_key: "Ten en cuenta que no se volverá a mostrar la clave de API. Nueva clave de API:"
+      save_key: 'Ten en cuenta que no se volverá a mostrar la clave de API. Nueva
+        clave de API:'
       mfa: AMF
     new:
       new_api_key: Nueva clave de API
       multifactor_auth: Autenticación multifactor
       enable_mfa: Activar AMF
       rubygem_scope: Ámbito de aplicación
-      rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas y añadir/eliminar propietarios a una gema específica.
+      rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas
+        y añadir/eliminar propietarios a una gema específica.
     reset:
-      success: "Borradas todas las claves de API"
+      success: Borradas todas las claves de API
     update:
-      success: "Clave de API actualizada con éxito"
-      invalid_gem: La gema seleccionada no se puede incluir en el alcance de esta clave
+      success: Clave de API actualizada con éxito
+      invalid_gem: La gema seleccionada no se puede incluir en el alcance de esta
+        clave
     edit:
       edit_api_key: Editar clave de API
       multifactor_auth: Autenticación de múltiples factores
       enable_mfa: Activar AMF
       rubygem_scope: Ámbito de aplicación
-      rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas y añadir/eliminar propietarios a una gema específica.
-      invalid_key: No se puede editar una clave de API inválida. Por favor bórrala y crea una nueva.
+      rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas
+        y añadir/eliminar propietarios a una gema específica.
+      invalid_key: No se puede editar una clave de API inválida. Por favor bórrala
+        y crea una nueva.
     all_gems: Todas las gemas
-    gem_ownership_removed: Se ha eliminado la propiedad de %{rubygem_name} tras haber sido añadida a esta clave.
+    gem_ownership_removed: Se ha eliminado la propiedad de %{rubygem_name} tras haber
+      sido añadida a esta clave.
   clearance_mailer:
     change_password:
       title: CAMBIAR CONTRASEÑA
@@ -212,7 +233,7 @@ es:
         uptime: Uptime
         verified_by: Verificado por
         secured_by: Protegido por
-        looking_for_maintainers: "Se buscan mantenedores/as"
+        looking_for_maintainers: Se buscan mantenedores/as
       header:
         dashboard: Dashboard
         settings: Configuración
@@ -225,18 +246,21 @@ es:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
-    link_expiration_explanation_html: Por favor ten en cuenta que este enlace es válido solo durante 3 horas. Puedes solicitar un enlace actualizado usando la página de <a href='https://rubygems.org/email_confirmations/new'>reenvío del correo de confirmación</a>.
+    link_expiration_explanation_html: Por favor ten en cuenta que este enlace es válido
+      solo durante 3 horas. Puedes solicitar un enlace actualizado usando la página
+      de <a href='https://rubygems.org/email_confirmations/new'>reenvío del correo
+      de confirmación</a>.
     email_confirmation:
       title: CONFIRMACIÓN DE EMAIL
       subtitle: "¡Último paso!"
       confirmation_link: Confirma la dirección de correo
-      welcome_message: Bienvenidos a %{host}! Haz clic en el enlace de abajo
-        para verificar tu dirección de correo.
+      welcome_message: Bienvenidos a %{host}! Haz clic en el enlace de abajo para
+        verificar tu dirección de correo.
     email_reset:
       title: CAMBIO DE EMAIL
       subtitle: "¡Hola %{handle}!"
-      visit_link_instructions: Cambiaste tu dirección de correo en %{host}. Por
-        favor visita el siguiente enlace para reactivar tu cuenta.
+      visit_link_instructions: Cambiaste tu dirección de correo en %{host}. Por favor
+        visita el siguiente enlace para reactivar tu cuenta.
     deletion_complete:
       title: ELIMINACIÓN COMPLETADA
       subtitle: "¡Adiós!"
@@ -247,15 +271,15 @@ es:
       title: ELIMINACIÓN FALLIDA
       subtitle: "¡Lo sentimos!"
       subject: Tu solicitud para eliminar tu cuenta de %{host} ha fallado
-      body_html: Has solicitado eliminar tu cuenta de %{host}. Lamentablemente,
-        no hemos podido procesar tu pedido. Por favor inténtalo de nuevo más adelante
+      body_html: Has solicitado eliminar tu cuenta de %{host}. Lamentablemente, no
+        hemos podido procesar tu pedido. Por favor inténtalo de nuevo más adelante
         o %{contact} si el problema persiste.
     notifiers_changed:
       subject: Cambiaste la configuración de tus notificaciones por email de %{host}
       title: NOTIFICACIONES POR EMAIL
       subtitle: "¡Hola %{handle}!"
-      "on": "ON"
-      off_html: <b>OFF</b>
+      'on': 'ON'
+      off_html: "<b>OFF</b>"
     gem_pushed:
       subject: Gema %{gem} subida a %{host}
       title: GEMA SUBIDA
@@ -263,7 +287,7 @@ es:
       subject: Gema %{gem} eliminada de %{host}
       title: GEMA ELIMINADA
     reset_api_key:
-      subject: "Clave de API de %{host} restablecida"
+      subject: Clave de API de %{host} restablecida
       title: CLAVE DE API RESTABLECIDA
       subtitle: "¡Hola %{handle}!"
     webauthn_credential_created:
@@ -289,29 +313,44 @@ es:
       subject: Por favor confirma la propiedad de la gema %{gem} en %{host}
       title: CONFIMACIÓN DE PROPIEDAD
       subtitle: "¡Hola %{handle}!"
-      body_text: Has sido añadido/a como propietario/a de la gema %{gem} por %{authorizer}. Por favor visita el enlace siguiente para confirmarlo.
-      body_html: Has sido añadido/a como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> por <strong>%{authorizer}</strong>. Por favor visita el enlace siguiente para confirmarlo.
-      link_expiration_explanation_html: Ten en cuenta que este enlace es válido solo durante %{expiry_hours}. Puedes reenviar el correo de confirmación desde la página de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> una vez autenticado.
+      body_text: Has sido añadido/a como propietario/a de la gema %{gem} por %{authorizer}.
+        Por favor visita el enlace siguiente para confirmarlo.
+      body_html: Has sido añadido/a como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        por <strong>%{authorizer}</strong>. Por favor visita el enlace siguiente para
+        confirmarlo.
+      link_expiration_explanation_html: Ten en cuenta que este enlace es válido solo
+        durante %{expiry_hours}. Puedes reenviar el correo de confirmación desde la
+        página de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        una vez autenticado.
     owner_added:
       subject_self: Has sido añadido/a como propietario/a de la gema %{gem}
-      subject_others: El usuario %{owner_handle} ha sido añadido/a como propietario/a de la gema %{gem}
+      subject_others: El usuario %{owner_handle} ha sido añadido/a como propietario/a
+        de la gema %{gem}
       title: PROPIETARIO AÑADIDO
       subtitle: "¡Hola %{handle}!"
-      body_self_html: <b>Has</b> sido añadido/a como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> en %{host}.
-      body_others_html: El usuario <b>%{owner_handle}</b> ha sido añadido/a como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> por <b>%{authorizer}</b>. Recibes esta notificación por ser propietario de %{gem}.
+      body_self_html: <b>Has</b> sido añadido/a como propietario/a de la gema <strong><a
+        href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> en %{host}.
+      body_others_html: El usuario <b>%{owner_handle}</b> ha sido añadido/a como propietario/a
+        de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        por <b>%{authorizer}</b>. Recibes esta notificación por ser propietario de
+        %{gem}.
     owner_removed:
       subject: Has sido eliminado como propietario/a de la gema %{gem}
       title: PROPIETARIO ELIMINADO
       subtitle: "¡Hola %{handle}!"
-      body_html: Has sido eliminado como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> en %{host} por <b>%{remover}</b>.
+      body_html: Has sido eliminado como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        en %{host} por <b>%{remover}</b>.
     ownerhip_request_closed:
       title: CANDIDATURA A PROPIETARIO
       subtitle: "¡Hola %{handle}!"
-      body_html: Gracias por proponerte como propietario para <strong>%{gem}</strong>. Lamentamos informarte de que el dueño de la gema ha cerrado tu solicitud.
+      body_html: Gracias por proponerte como propietario para <strong>%{gem}</strong>.
+        Lamentamos informarte de que el dueño de la gema ha cerrado tu solicitud.
     ownerhip_request_approved:
-      body_html: ¡Enhorabuena! Tu candidatura a propietario de <strong>%{gem}</strong> ha sido aprobada. Se te ha añadido a la lista de propietarios de la gema.
+      body_html: "¡Enhorabuena! Tu candidatura a propietario de <strong>%{gem}</strong>
+        ha sido aprobada. Se te ha añadido a la lista de propietarios de la gema."
     new_opwnership_requests:
-      body_html: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>. Por favor haz click en el botón siguiente para ver todas las candidaturas.
+      body_html: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>.
+        Por favor haz click en el botón siguiente para ver todas las candidaturas.
       button: CANDIDATURAS A PROPIETARIO
       disable_notifications: Para dejar de recibir estos mensajes actualiza tus
       owners_page: PROPIETARIOS
@@ -319,10 +358,13 @@ es:
       title: WEBHOOK ELIMINADO
       subject: Se ha borrado tu webhook en %{host}
       subtitle: "¡Hola %{handle}!"
-      body_text: Tu webhook que enviaba peticiones POST a %{url} ha sido eliminado tras %{failures} fallos.
-      body_html: Tu webhook que enviaba peticiones <code>POST</code> a <a href="%{url}"><code>%{url}</code></a> ha sido eliminado tras %{failures} fallos
+      body_text: Tu webhook que enviaba peticiones POST a %{url} ha sido eliminado
+        tras %{failures} fallos.
+      body_html: Tu webhook que enviaba peticiones <code>POST</code> a <a href="%{url}"><code>%{url}</code></a>
+        ha sido eliminado tras %{failures} fallos
       global_text: Este webhook se ejecutaba antes cuando se subía cualquier gema.
-      global_html: Este webhook se ejecutaba antes cuando se subía <em>cualquier</em> gema.
+      global_html: Este webhook se ejecutaba antes cuando se subía <em>cualquier</em>
+        gema.
       gem_text: Este webhook se ejecutaba antes cuando se subía %{gem}.
       gem_html: Este webhook se ejecutaba antes cuando se subía <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>.
     web_hook_disabled:
@@ -338,9 +380,12 @@ es:
         <p>La última que se ejecutó con éxito fue en <code>%{last_success}</code> y desde entonces ha fallado %{failures_since_last_success} veces.</p>
         <p>Puedes borrar este webhook usando el comando <code>%{delete_command}</code>.</p>
       global_text: Este webhook se ejecutaba antes cuando se subía cualquier gema.
-      global_html: Este webhook se ejecutaba antes cuando se subía <em>cualquier</em> gema.
+      global_html: Este webhook se ejecutaba antes cuando se subía <em>cualquier</em>
+        gema.
       gem_text: Este webhook se ejecutaba antes cuando se subía %{gem}.
       gem_html: Este webhook se ejecutaba antes cuando se subía <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>.
+    gem_trusted_publisher_added:
+      title:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -351,11 +396,12 @@ es:
   pages:
     about:
       contributors_amount: "%{count} Rubystas"
-      downloads_amount: "millones de descargas de gemas"
-      checkout_code: "por favor echa un ojo al código"
-      mit_licensed: "MIT"
+      downloads_amount: millones de descargas de gemas
+      checkout_code: por favor echa un ojo al código
+      mit_licensed: MIT
       logo_header: "¿Buscas nuestro logo?"
-      logo_details: Usa el botón de descarga y obtendrás tres archivos .PNG y un .SVG del logo de RubyGems.
+      logo_details: Usa el botón de descarga y obtendrás tres archivos .PNG y un .SVG
+        del logo de RubyGems.
       founding_html: El proyecto comenzó en abril del 2009 por %{founder}, y desde
         entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}.
         A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para
@@ -398,26 +444,41 @@ es:
     new:
       submit: Restablecer contraseña
       title: Cambiar tu contraseña
-      will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo electrónico.
+      will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo
+        electrónico.
   multifactor_auths:
     incorrect_otp: Tu código OTP no es correcto.
     session_expired: Ha expirado tu sesión en la página de acceso.
-    require_totp_disabled: La autenticación de múltiples factores basada en OTP ya está activa. Para reconfigurarla debes primero eliminarla.
-    require_mfa_enabled: No se ha activado la autenticación de múltiples factores. Primero tienes que activarla.
-    require_totp_enabled: No tienes aplicación de autenticación activa. Debes activarla primero.
-    require_webauthn_enabled: No tienes ningún dispositivo de seguridad activado. Primero debes asociar un dispositivo a tu cuenta.
-    setup_required_html: Por la seguridad de tu cuenta y de tus gemas se te requiere activar la autenticación de múltiples factores.
-      Lee por favor el <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">artículo en nuestro blog</a> para saber más detalles.
-    setup_recommended: Por la seguridad de tu cuenta y de tus gemas te animamos a configurar la autenticación de múltiples factores. En el futuro será obligatorio tener AMF activada en tu cuenta.
-    strong_mfa_level_required_html: Por la seguridad de tu cuenta y de tus gemas es necesario que cambies el nivel de AMF a "Interfaz de usuario y firma de gemas" o "Interfaz de usuario y API".
-      Lee por favor el <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">artículo en nuestro blog</a> para saber más detalles.
-    strong_mfa_level_recommended: Por la seguridad de tu cuenta y de tus gemas te recomendamos que cambies el nivel de AMF a "Interfaz de usuario y firma de gemas" o "Interfaz de usuario y API". En el futuro será obligatorio tener AMF configurada en alguno de esos niveles.
-    setup_webauthn_html: 🎉 ¡Ahora soportamos dispositivos de seguridad! Aumenta la seguridad de tu cuenta <a href="/settings/edit#security-device">configurando</a> un nuevo dispositivo.
+    require_totp_disabled: La autenticación de múltiples factores basada en OTP ya
+      está activa. Para reconfigurarla debes primero eliminarla.
+    require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
+      Primero tienes que activarla.
+    require_totp_enabled: No tienes aplicación de autenticación activa. Debes activarla
+      primero.
+    require_webauthn_enabled: No tienes ningún dispositivo de seguridad activado.
+      Primero debes asociar un dispositivo a tu cuenta.
+    setup_required_html: Por la seguridad de tu cuenta y de tus gemas se te requiere
+      activar la autenticación de múltiples factores. Lee por favor el <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">artículo
+      en nuestro blog</a> para saber más detalles.
+    setup_recommended: Por la seguridad de tu cuenta y de tus gemas te animamos a
+      configurar la autenticación de múltiples factores. En el futuro será obligatorio
+      tener AMF activada en tu cuenta.
+    strong_mfa_level_required_html: Por la seguridad de tu cuenta y de tus gemas es
+      necesario que cambies el nivel de AMF a "Interfaz de usuario y firma de gemas"
+      o "Interfaz de usuario y API". Lee por favor el <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">artículo
+      en nuestro blog</a> para saber más detalles.
+    strong_mfa_level_recommended: Por la seguridad de tu cuenta y de tus gemas te
+      recomendamos que cambies el nivel de AMF a "Interfaz de usuario y firma de gemas"
+      o "Interfaz de usuario y API". En el futuro será obligatorio tener AMF configurada
+      en alguno de esos niveles.
+    setup_webauthn_html: "\U0001F389 ¡Ahora soportamos dispositivos de seguridad!
+      Aumenta la seguridad de tu cuenta <a href=\"/settings/edit#security-device\">configurando</a>
+      un nuevo dispositivo."
     new:
       title: Activando autenticación de múltiples factores
       scan_prompt: Por favor escanea el código QR con tu aplicación de autenticación.
-        Si no puedes escanear el código, agrega manualmente la información siguiente a tu
-        aplicación.
+        Si no puedes escanear el código, agrega manualmente la información siguiente
+        a tu aplicación.
       otp_prompt: Escribe el código de la aplicación de autenticación para continuar.
       confirm: He mantenido seguros mis códigos de recuperación.
       enable: Activar
@@ -425,8 +486,8 @@ es:
       key: 'Clave: %{key}'
       time_based: 'Basado en tiempo: Sí'
     create:
-      qrcode_expired: El código QR y la clave han vencido. Por favor intenta otra vez
-        registrar un nuevo dispositivo.
+      qrcode_expired: El código QR y la clave han vencido. Por favor intenta otra
+        vez registrar un nuevo dispositivo.
       success: Has activado con éxito la autenticación de múltiples factores.
     recovery:
       copied: "[ copiado ]"
@@ -434,7 +495,10 @@ es:
       title: Códigos de recuperación
       copy: "[ copiar ]"
       saved: Declaro haber guardado mis códigos de recuperación.
-      note_html: "Por favor <strong class='recovery__bold'>copia y guarda</strong> estos códigos de recuperación. Puedes usar estos códigos para acceder y restablecer tu autenticación de múltiples factores si pierdes tu dispositivo. Cada código se puede usar una sola vez."
+      note_html: Por favor <strong class='recovery__bold'>copia y guarda</strong>
+        estos códigos de recuperación. Puedes usar estos códigos para acceder y restablecer
+        tu autenticación de múltiples factores si pierdes tu dispositivo. Cada código
+        se puede usar una sola vez.
       already_generated: Ya deberías haber guardado tus códigos de recuperación.
     destroy:
       success: Has desactivado exitosamente la autenticación de múltiples factores.
@@ -442,22 +506,26 @@ es:
       invalid_level: Nivel de AMF inválido.
       success: Has actualizado exitosamente la autenticación de múltiples factores.
     prompt:
-      webauthn_credential_note: Autentícate con un dispositivo de seguridad como Touch Id, YubiKey, etc.
+      webauthn_credential_note: Autentícate con un dispositivo de seguridad como Touch
+        Id, YubiKey, etc.
       sign_in_with_webauthn_credential: Autenticar con dispositivo de seguridad
       otp_code: Código OTP
       otp_or_recovery: OTP o código de recuperación
       recovery_code: Código de recuperación
-      recovery_code_html: 'Puedes utilizar un <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">código de recuperación</a> válido si has perdido el acceso a tu dispositivo de seguridad o de autenticación de múltiples factores.'
+      recovery_code_html: Puedes utilizar un <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa",
+        class="t-link">código de recuperación</a> válido si has perdido el acceso
+        a tu dispositivo de seguridad o de autenticación de múltiples factores.
       security_device: Dispositivo de seguridad
       verify_code: Verificar código
   notifiers:
     update:
-      success: Has actualizado exitosamente la configuración de tus notificaciones por correo.
+      success: Has actualizado exitosamente la configuración de tus notificaciones
+        por correo.
     show:
-      info:
-        Para ayudar a detectar cambios no autorizados en gemas o en propietarios, te enviamos un correo electrónico
-        cada vez que se sube o se elimina una versión de cualquiera de tus gemas o se le añade un nuevo propietario.
-        Recibiendo y leyendo esos mensajes ayudas al ecosistema de Ruby.
+      info: Para ayudar a detectar cambios no autorizados en gemas o en propietarios,
+        te enviamos un correo electrónico cada vez que se sube o se elimina una versión
+        de cualquiera de tus gemas o se le añade un nuevo propietario. Recibiendo
+        y leyendo esos mensajes ayudas al ecosistema de Ruby.
       'on': Activado
       'off': Desactivado
       recommended: recomendado
@@ -467,7 +535,8 @@ es:
       owner_request_heading: Notificaciones de solicitud de propietarios
       push_heading: Notificaciones Push
   webauthn_verifications:
-    expired_or_already_used: El token del enlace utilizado ha expirado o ya ha sido utilizado.
+    expired_or_already_used: El token del enlace utilizado ha expirado o ya ha sido
+      utilizado.
     no_port: No se especifica el puerto. Por favor inténtalo de nuevo.
     pending: La autenticación del dispositivo de seguridad está pendiente todavía.
     prompt:
@@ -483,11 +552,12 @@ es:
       close_browser: Por favor cierra este navegador e inténtalo de nuevo.
   owners:
     confirm:
-      confirmed_email: "Has sido añadido/a como propietario de la gema %{gem}"
-      token_expired: El token de confirmación ha expirado. Por favor intenta reenviar el token desde la página de la gema.
+      confirmed_email: Has sido añadido/a como propietario de la gema %{gem}
+      token_expired: El token de confirmación ha expirado. Por favor intenta reenviar
+        el token desde la página de la gema.
     index:
       add_owner: AÑADIR PROPIETARIO
-      name: "PROPIETARIO/A"
+      name: PROPIETARIO/A
       mfa: ESTADO DE AMF
       status: ESTADO
       confirmed_at: CONFIRMADO
@@ -498,21 +568,25 @@ es:
       info: añadir o eliminar propietarios
       confirmed: Confirmado
       pending: Pendiente
-      confirm_remove: ¿Seguro que quieres eliminar a este usuario de los propietarios?
+      confirm_remove: "¿Seguro que quieres eliminar a este usuario de los propietarios?"
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
-      success_notice: "Se ha añadido a %{handle} como propietario sin confirmar. Su acceso como propietario se activará cuando haga click en el mensaje de confirmación que se le ha enviado a su correo"
+      success_notice: Se ha añadido a %{handle} como propietario sin confirmar. Su
+        acceso como propietario se activará cuando haga click en el mensaje de confirmación
+        que se le ha enviado a su correo
     destroy:
       removed_notice: "%{owner_name} eliminado con éxito de la lista de propietarios"
       failed_notice: No se puede eliminar al único propietario de una gema
-    mfa_required: La gema tiene activado el requerimiento de AMF, configura AMF en tu cuenta por favor.
+    mfa_required: La gema tiene activado el requerimiento de AMF, configura AMF en
+      tu cuenta por favor.
   settings:
     edit:
       title: Editar configuración
       webauthn_credentials: Dispositivo de seguridad
       no_webauthn_credentials: No tienes dispositivos de seguridad
-      webauthn_credential_note: Un dispositivo de seguridad puede ser cualquier dispositivo que cumpla el estándar FIDO2 como las llaves biométrica y de seguridad.
+      webauthn_credential_note: Un dispositivo de seguridad puede ser cualquier dispositivo
+        que cumpla el estándar FIDO2 como las llaves biométrica y de seguridad.
       otp_code: Código OTP o código de recuperación
       api_access:
         confirm_reset: "¿Seguro? Este cambio no puede deshacerse."
@@ -529,10 +603,16 @@ es:
       mfa:
         multifactor_auth: Autenticación de múltiples factores
         otp: Aplicación de autenticación
-        disabled_html:  No has activado todavía la autenticación de múltiples factores basada en OTP. Por favor lee la <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía sobre AMF</a> para informarte sobre los distintos niveles de AMF.
+        disabled_html: No has activado todavía la autenticación de múltiples factores
+          basada en OTP. Por favor lee la <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
+          sobre AMF</a> para informarte sobre los distintos niveles de AMF.
         go_settings: Registrar un nuevo dispositivo
-        level_html: Has activado la autenticación de múltiples factores. Pincha en "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía sobre AMF</a> para informarte sobre los distintos niveles de AMF.
-        enabled_note: Has activado la autenticación de múltiples factores. Para desactivarla usa tu OTP o uno de tus códigos de recuperación activos.
+        level_html: Has activado la autenticación de múltiples factores. Pincha en
+          "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank"
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
+          sobre AMF</a> para informarte sobre los distintos niveles de AMF.
+        enabled_note: Has activado la autenticación de múltiples factores. Para desactivarla
+          usa tu OTP o uno de tus códigos de recuperación activos.
         update: Actualizar
         disable: Desactivar
         enabled: Activado
@@ -545,17 +625,25 @@ es:
           ui_and_gem_signin: Interfaz de Usuario y firma de gemas
   profiles:
     adoptions:
-      no_ownership_calls: No has creado llamadas a ser propietario para ninguna de tus gemas
+      no_ownership_calls: No has creado llamadas a ser propietario para ninguna de
+        tus gemas
       no_ownership_requests: No has creado ninguna petición para ser propietario
       title: Adopción
-      subtitle_html: Pide nuevos responsables de mantenimiento o solicita propietarios <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
+      subtitle_html: Pide nuevos responsables de mantenimiento o solicita propietarios
+        <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
+        más)</a>
     edit:
       change_avatar: Cambiar avatar
-      disabled_avatar_html: Se usa un avatar por defecto debido a la configuración de privacidad del email. Para usar un <a href='https://gravatar.com'>Gravatar</a> personalizado activa la opción 'Mostrar correo electrónico en perfil público'. Ten en cuenta que esto hará público tu correo."
-      email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo %{unconfirmed_email}
+      disabled_avatar_html: Se usa un avatar por defecto debido a la configuración
+        de privacidad del email. Para usar un <a href='https://gravatar.com'>Gravatar</a>
+        personalizado activa la opción 'Mostrar correo electrónico en perfil público'.
+        Ten en cuenta que esto hará público tu correo."
+      email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo
+        %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
       optional_full_name: Opcional. Será mostrado en tu perfil público
-      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil público
+      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil
+        público
       title: Editar perfil
       delete:
         delete: Eliminar
@@ -600,6 +688,7 @@ es:
         code: Código fuente
         docs: Documentación
         download: Descarga
+        funding: Financiación
         header: Enlace
         home: Página
         mail: Lista de Correo
@@ -614,17 +703,21 @@ es:
         ownership: Propietarios
         oidc:
           api_key_role:
-            name: "OIDC: %{name}"
-            new: "OIDC: Crear"
+            name: 'OIDC: %{name}'
+            new: 'OIDC: Crear'
+        trusted_publishers:
     reserved:
       reserved_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
       header: dependencias de %{title}
     gem_members:
       authors_header: Autores
-      self_no_mfa_warning_html: Considera por favor <a href="/settings/edit">activar la autenticación de múltiples factores (AMF)</a> para mantener tu cuenta segura.
-      not_using_mfa_warning_show: "* Algunos propietarios no están usando AMF. Haga click para ver la lista completa."
-      not_using_mfa_warning_hide: "* Los siguientes propietarios no están usando AMF. Haga click para ocultar."
+      self_no_mfa_warning_html: Considera por favor <a href="/settings/edit">activar
+        la autenticación de múltiples factores (AMF)</a> para mantener tu cuenta segura.
+      not_using_mfa_warning_show: "* Algunos propietarios no están usando AMF. Haga
+        click para ver la lista completa."
+      not_using_mfa_warning_hide: "* Los siguientes propietarios no están usando AMF.
+        Haga click para ocultar."
       owners_header: Propietarios
       pushed_by: Subida por
       using_mfa_info: "* Todos los propietarios están usando AMF."
@@ -633,7 +726,7 @@ es:
       signature_period: Periodo de validez de la firma
       expired: Expirado
     version_navigation:
-      previous_version: ← Versión anterior
+      previous_version: "← Versión anterior"
       next_version: Siguiente versión →
     index:
       downloads: Descargas
@@ -671,7 +764,7 @@ es:
   reverse_dependencies:
     index:
       title: Dependencias inversas para %{name}
-      subtitle: "La última versión de las siguientes gemas requieren %{name}"
+      subtitle: La última versión de las siguientes gemas requieren %{name}
       no_reverse_dependencies: Esta gema no tiene dependencias inversas
     search:
       search_reverse_dependencies_html: Buscar dependencias inversas&hellip;
@@ -699,7 +792,8 @@ es:
       confirm: Confirmar
       notice: Por favor confirma tu contraseña para continuar.
     create:
-      account_blocked: Tu cuenta ha sido bloqueada por el equipo de rubygems. Para recuperar tu cuenta envía un mensaje a support@rubygems.org, por favor.
+      account_blocked: Tu cuenta ha sido bloqueada por el equipo de rubygems. Para
+        recuperar tu cuenta envía un mensaje a support@rubygems.org, por favor.
   stats:
     index:
       title: Estadísticas
@@ -709,7 +803,8 @@ es:
       total_users: Usuarios totales
   users:
     create:
-      email_sent: Se ha enviado un correo de confirmación a tu dirección de correo electrónico.
+      email_sent: Se ha enviado un correo de confirmación a tu dirección de correo
+        electrónico.
     new:
       have_account: "¿Ya tienes una cuenta?"
   versions:
@@ -717,16 +812,23 @@ es:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
       title: Todas las versiones de %{name}
       versions_since: "%{count} versiones desde %{since}"
-      imported_gem_version_notice: "Esta versión de la gema se importó a RubyGems.org el %{import_date}. La fecha que se muestra fue especificada por el autor en el archivo gemspec."
+      imported_gem_version_notice: Esta versión de la gema se importó a RubyGems.org
+        el %{import_date}. La fecha que se muestra fue especificada por el autor en
+        el archivo gemspec.
     version:
       yanked: borrada
   adoptions:
     index:
       title: Adopciones
-      subtitle_owner_html: Solicita nuevos responsables de mantenimiento para %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
-      subtitle_user_html: Solicita ser propietario de %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
+      subtitle_owner_html: Solicita nuevos responsables de mantenimiento para %{gem}
+        <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
+        más)</a>
+      subtitle_user_html: Solicita ser propietario de %{gem} <a class="adoption__blog__link"
+        href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
+        más)</a>
       ownership_calls: Solicitud de propietarios
-      no_ownership_calls: No hay convocatorias de propietarios para %{gem}. Los dueños de la gema no están buscando nuevos responsables de mantenimiento.
+      no_ownership_calls: No hay convocatorias de propietarios para %{gem}. Los dueños
+        de la gema no están buscando nuevos responsables de mantenimiento.
   ownership_calls:
     update:
       success_notice: Convocatoria para propietarios de %{gem} cerrada.
@@ -734,14 +836,17 @@ es:
       success_notice: Creada convocatoria para propietarios de %{gem}.
     index:
       title: Se buscan responsables de mantenimiento
-      subtitle_html: Gemas que buscan nuevos responsables de mantenimiento <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer más)</a>
+      subtitle_html: Gemas que buscan nuevos responsables de mantenimiento <a class="adoption__blog__link"
+        href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
+        más)</a>
     share_requirements: Por favor especifica en que areas necesitas ayuda
-    note_for_applicants: "Nota para candidatos:"
+    note_for_applicants: 'Nota para candidatos:'
     created_by: Creado por
     details: Detalles
     apply: Proponte
     close: Cerrar
-    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">Etiquetas Rdoc soportadas</a>
+    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">Etiquetas
+      Rdoc soportadas</a>
     create_call: Crear convocatoria para propietarios
   ownership_requests:
     create:
@@ -752,28 +857,33 @@ es:
     close:
       success_notice: Se han cerrado todas las candidaturas a propietario de %{gem}.
     ownership_requests: Candidaturas a propietario
-    note_for_owners: "Nota para propietarios:"
+    note_for_owners: 'Nota para propietarios:'
     your_ownership_requests: Tus candidaturas a propietario
     close_all: Cerrar todas
     approve: Aprobar
     gems_published: Gemas publicadas
     created_at: Creado el
-    no_ownership_requests: Las peticiones para unirse a tu proyecto aparecerán aquí. Todavia no hay candidaturas a propietario para %{gem}.
+    no_ownership_requests: Las peticiones para unirse a tu proyecto aparecerán aquí.
+      Todavia no hay candidaturas a propietario para %{gem}.
     create_req: Crea una candidatura a propietario
-    signin_to_create_html: Por favor <a href="https://rubygems.org/sign_in">accede</a> para crear una candidatura a propietario.
+    signin_to_create_html: Por favor <a href="https://rubygems.org/sign_in">accede</a>
+      para crear una candidatura a propietario.
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.
     recovery:
       continue: Continuar
       title: Has añadido con éxito un dispositivo de seguridad
-      notice_html: 'Por favor <strong class="recovery__bold">copia y guarda</strong> estos códigos de recuperación. Puedes utilizar estos códigos para acceder si pierdes tu dispositivo de seguridad. Cada código solo se puede usar una vez.'
+      notice_html: Por favor <strong class="recovery__bold">copia y guarda</strong>
+        estos códigos de recuperación. Puedes utilizar estos códigos para acceder
+        si pierdes tu dispositivo de seguridad. Cada código solo se puede usar una
+        vez.
       copied: "[ copiado ]"
       copy: "[ copiar ]"
       saved: Declaro haber guardado mis códigos de recuperación.
     webauthn_credential:
-      confirm_delete: "Credencial borrada"
-      delete_failed: "No se pudo borrar la credencial"
+      confirm_delete: Credencial borrada
+      delete_failed: No se pudo borrar la credencial
       delete: Borrar
       confirm: "¿Seguro que quieres borrar esta credencial?"
       saved: Dispositivo de seguridad creado con éxito
@@ -787,61 +897,110 @@ es:
         api_key_roles: Roles de clave API OIDC
         new_role: Crear rol de clave API
       show:
-        api_key_role_name: "Rol de clave API %{name}"
-        automate_gh_actions_publishing: "Automatizar publicación de gemas con GitHub Actions"
-        view_provider: "Ver proveedor %{issuer}"
-        edit_role: "Editar rol de clave API"
-        delete_role: "Borrar rol de clave API"
+        api_key_role_name: Rol de clave API %{name}
+        automate_gh_actions_publishing: Automatizar publicación de gemas con GitHub
+          Actions
+        view_provider: Ver proveedor %{issuer}
+        edit_role: Editar rol de clave API
+        delete_role: Borrar rol de clave API
         confirm_delete: "¿Seguro que quieres borrar este rol?"
-        deleted_at_html: "Este rol se borró hace %{time_html} y ya no puede usarse."
+        deleted_at_html: Este rol se borró hace %{time_html} y ya no puede usarse.
       edit:
-        edit_role: "Editar rol de clave API"
+        edit_role: Editar rol de clave API
       git_hub_actions_workflow:
-        title: "OIDC GitHub Actions Workflow para subir gema"
-        configured_for_html: "Este rol de clave API OIDC está configurado para permitir subir %{link_html} desde GitHub Actions."
-        to_automate_html: "Para automatizar lanzar %{link_html} cuando se suba una nueva etiqueta, añade el siguiente workflow a tu repositorio."
-        not_github: "Este rol de clave API OIDC no está configurado para usar GitHub Actions."
-        not_push: "Este rol de clave API OIDC no está configurado para permitir subir gemas."
+        title: OIDC GitHub Actions Workflow para subir gema
+        configured_for_html: Este rol de clave API OIDC está configurado para permitir
+          subir %{link_html} desde GitHub Actions.
+        to_automate_html: Para automatizar lanzar %{link_html} cuando se suba una
+          nueva etiqueta, añade el siguiente workflow a tu repositorio.
+        not_github: Este rol de clave API OIDC no está configurado para usar GitHub
+          Actions.
+        not_push: Este rol de clave API OIDC no está configurado para permitir subir
+          gemas.
         copy_to_clipboard: Copiar al portapapeles
-        copied: ¡Copiado!
+        copied: "¡Copiado!"
         a_gem: una gema
-        instructions_html: |
-          Para lanzar una gema, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">crea la nueva versión</a> y genera una etiqueta nueva (usando <code>rake release:source_control_push</code>) a GitHub. El workflow empaquetará y subirá automáticamente la gema a RubyGems.org.
+        instructions_html: 'Para lanzar una gema, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem"
+          rel="noreferer">crea la nueva versión</a> y genera una etiqueta nueva (usando
+          <code>rake release:source_control_push</code>) a GitHub. El workflow empaquetará
+          y subirá automáticamente la gema a RubyGems.org.
+
+          '
       new:
-        title: "Nuevo rol de clave API OIDC"
+        title: Nuevo rol de clave API OIDC
       update:
-        success: "Rol de clave API OIDC actualizado"
+        success: Rol de clave API OIDC actualizado
       create:
-        success: "Rol de clave API OIDC creado"
+        success: Rol de clave API OIDC creado
       destroy:
-        success: "Rol de clave API OIDC borrado"
+        success: Rol de clave API OIDC borrado
       form:
-        add_condition: "Añadir condición"
-        remove_condition: "Eliminar condición!"
-        add_statement: "Añadir declaración"
-        remove_statement: "Eliminar declaración"
-      deleted: "El rol se ha eliminado."
+        add_condition: Añadir condición
+        remove_condition: Eliminar condición!
+        add_statement: Añadir declaración
+        remove_statement: Eliminar declaración
+      deleted: El rol se ha eliminado.
     providers:
       index:
-        title: "Proveedores de OIDC"
-        description_html: "Estos son los proveedores de OIDC que están configurados para RubyGems.org.<br> Por favor, contacta con soporte si necesitas añadir otro proveedor OIDC."
+        title: Proveedores de OIDC
+        description_html: Estos son los proveedores de OIDC que están configurados
+          para RubyGems.org.<br> Por favor, contacta con soporte si necesitas añadir
+          otro proveedor OIDC.
       show:
-        title: "Proveedor de OIDC"
+        title: Proveedor de OIDC
     id_tokens:
       index:
-        title: "Tokens OIDC ID"
+        title: Tokens OIDC ID
       show:
-        title: "Token OIDC ID"
+        title: Token OIDC ID
+    rubygem_trusted_publishers:
+      index:
+        title:
+        subtitle_owner_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+        subtitle_owner_html:
+    pending_trusted_publishers:
+      index:
+        title:
+        valid_for_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+    trusted_publisher:
+      unsupported_type:
+      github_actions:
+        repository_owner_help_html:
+        repository_name_help_html:
+        workflow_filename_help_html:
+        environment_help_html:
+      pending:
+        rubygem_name_help_html:
   duration:
     minutes:
       other: "%{count} minutos"
-      one: "1 minuto"
+      one: 1 minuto
     hours:
       other: "%{count} horas"
-      one: "1 hora"
+      one: 1 hora
     days:
       other: "%{count} días"
-      one: "1 día"
+      one: 1 día
     seconds:
       other: "%{count} segundos"
-      one: "1 segundo"
+      one: 1 segundo
+  form:
+    optional:

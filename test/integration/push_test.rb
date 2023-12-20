@@ -59,6 +59,76 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("2.0.0")
   end
 
+  test "pushing a new version of a gem with a trusted publisher" do
+    rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+
+    rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+
+    @key = "543321"
+    create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+
+    build_gem "sandworm", "2.0.0"
+
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :success
+
+    get rubygem_path("sandworm")
+
+    assert_response :success
+    page.assert_text("Pushed by")
+    page.assert_selector(:xpath, ".//img[@title=#{rubygem_trusted_publisher.trusted_publisher.name.inspect}]")
+  end
+
+  test "pushing a new gem with a pending trusted publisher" do
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user)
+
+    @key = "543321"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+
+    build_gem "sandworm", "2.0.0"
+
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :success
+
+    get rubygem_path("sandworm")
+
+    assert_response :success
+    page.assert_text("Pushed by")
+    page.assert_selector(:xpath, ".//img[@title=#{pending_trusted_publisher.trusted_publisher.name.inspect}]")
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert rubygem.owned_by?(@user)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
+  end
+
+  test "pushing a new gem with a pending trusted publisher case insensitive" do
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "SaNdWoRm", user: @user)
+
+    @key = "543321"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+
+    build_gem "sandworm", "2.0.0"
+
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :success
+
+    get rubygem_path("sandworm")
+
+    assert_response :success
+    page.assert_text("Pushed by")
+    page.assert_selector(:xpath, ".//img[@title=#{pending_trusted_publisher.trusted_publisher.name.inspect}]")
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert rubygem.owned_by?(@user)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
+  end
+
   test "pushing a gem with a known dependency" do
     rubygem = create(:rubygem, name: "crysknife", number: "1.0.0")
 

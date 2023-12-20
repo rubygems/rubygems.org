@@ -20,3 +20,5 @@
     <%= form.submit t('sign_in'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>
 <% end %>
+
+<%= render "multifactor_auths/webauthn_prompt" %>

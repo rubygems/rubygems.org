@@ -226,7 +226,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
       get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-      @origin = "http://localhost:3000"
+      @origin = WebAuthn.configuration.origin
       @rp_id = URI.parse(@origin).host
       @client = WebAuthn::FakeClient.new(@origin, encoding: false)
     end

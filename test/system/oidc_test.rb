@@ -214,4 +214,142 @@ class OIDCTest < ApplicationSystemTestCase
                    }
                  ), role.reload.as_json.slice(*expected.keys))
   end
+
+  test "creating rubygem trusted publishers" do
+    rubygem = create(:rubygem, name: "rubygem0")
+    create(:version, rubygem: rubygem, metadata: { "source_code_uri" => "https://github.com/example/rubygem0" })
+
+    visit new_rubygem_trusted_publisher_path(rubygem.slug)
+
+    assert_text "Please sign in to continue."
+
+    sign_in
+    visit new_rubygem_trusted_publisher_path(rubygem.slug)
+    verify_session
+
+    assert_text "forbidden"
+
+    create(:ownership, rubygem: rubygem, user: @user)
+
+    visit rubygem_trusted_publishers_path(rubygem.slug)
+
+    page.assert_selector "h1", text: "Trusted Publishers"
+    page.assert_text("Trusted publishers for rubygem0")
+    page.assert_text "NO RUBYGEM TRUSTED PUBLISHERS FOUND"
+
+    stub_request(:get, "https://api.github.com/repos/example/rubygem0/contents/.github/workflows")
+      .to_return(status: 200, body: [
+        { name: "ci.yml", type: "file" },
+        { name: "push_rubygem.yml", type: "file" },
+        { name: "push_README.md", type: "file" },
+        { name: "push.yml", type: "directory" }
+      ].to_json, headers: { "Content-Type" => "application/json" })
+
+    click_button "Create"
+
+    page.assert_selector "h1", text: "New Trusted Publisher"
+
+    assert_field "Repository owner", with: "example"
+    assert_field "Repository name", with: "rubygem0"
+    assert_field "Workflow filename", with: "push_rubygem.yml"
+    assert_field "Environment", with: ""
+
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    click_button "Create Rubygem trusted publisher"
+
+    page.assert_text "Trusted Publisher created"
+    page.assert_selector "h1", text: "Trusted Publishers"
+    page.assert_text("Trusted publishers for rubygem0")
+    page.assert_text "GitHub Actions\nDelete\nGitHub Repository\nexample/rubygem0\nWorkflow Filename\npush_rubygem.yml"
+  end
+
+  test "deleting rubygem trusted publishers" do
+    rubygem = create(:rubygem, owners: [@user])
+    create(:oidc_rubygem_trusted_publisher, rubygem:)
+    create(:version, rubygem:)
+
+    sign_in
+    visit rubygem_trusted_publishers_path(rubygem.slug)
+    verify_session
+
+    click_button "Delete"
+
+    page.assert_text "Trusted Publisher deleted"
+    page.assert_text "NO RUBYGEM TRUSTED PUBLISHERS FOUND"
+  end
+
+  test "creating pending trusted publishers" do
+    rubygem = create(:rubygem, name: "rubygem0")
+    create(:version, rubygem: rubygem, metadata: { "source_code_uri" => "https://github.com/example/rubygem0" })
+
+    visit profile_oidc_pending_trusted_publishers_path
+
+    assert_text "Please sign in to continue."
+
+    sign_in
+    visit profile_oidc_pending_trusted_publishers_path
+    verify_session
+    click_button "Create"
+
+    page.assert_selector "h1", text: "New Pending Trusted Publisher"
+
+    click_button "Create"
+
+    page.assert_text "can't be blank"
+    page.assert_selector "h1", text: "New Pending Trusted Publisher"
+
+    page.fill_in "RubyGem name", with: "rubygem0"
+    page.fill_in "Repository owner", with: "example"
+    page.fill_in "Repository name", with: "rubygem1"
+    page.fill_in "Workflow filename", with: "push_rubygem.yml"
+    page.fill_in "Environment", with: "prod"
+
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    click_button "Create"
+
+    page.assert_text "RubyGem name is already in use"
+    page.assert_selector "h1", text: "New Pending Trusted Publisher"
+
+    assert_field "RubyGem name", with: "rubygem0"
+    assert_field "Repository owner", with: "example"
+    assert_field "Repository name", with: "rubygem1"
+    assert_field "Workflow filename", with: "push_rubygem.yml"
+    assert_field "Environment", with: "prod"
+
+    page.fill_in "RubyGem name", with: "rubygem1"
+
+    click_button "Create Pending trusted publisher"
+
+    page.assert_text "Pending Trusted Publisher created"
+    page.assert_selector "h1", text: "Pending Trusted Publishers"
+    page.assert_text <<~TEXT
+      rubygem1
+      Delete
+      GitHub Actions
+      Valid for about 12 hours
+      GitHub Repository
+      example/rubygem1
+      Workflow Filename
+      push_rubygem.yml
+      Environment
+      prod
+    TEXT
+  end
+
+  test "deleting pending trusted publishers" do
+    create(:oidc_pending_trusted_publisher, user: @user)
+
+    sign_in
+    visit profile_oidc_pending_trusted_publishers_path
+    verify_session
+
+    click_button "Delete"
+
+    page.assert_text "Pending Trusted Publisher deleted"
+    page.assert_text "NO PENDING TRUSTED PUBLISHERS FOUND"
+  end
 end

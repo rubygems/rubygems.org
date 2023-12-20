@@ -14,6 +14,10 @@ class ProfilesController < ApplicationController
     @extra_rubygems = rubygems
   end
 
+  def me
+    redirect_to profile_path(current_user.display_id)
+  end
+
   def edit
     @user = current_user
   end

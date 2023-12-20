@@ -12,7 +12,7 @@ class ApiKeyResource < Avo::BaseResource
   field :user, as: :belongs_to, visible: ->(_) { false }
   field :owner, as: :belongs_to,
     polymorphic_as: :owner,
-    types: [::User]
+    types: [::User, ::OIDC::TrustedPublisher::GitHubAction]
   field :last_accessed_at, as: :date_time
   field :soft_deleted_at, as: :date_time
   field :soft_deleted_rubygem_name, as: :text

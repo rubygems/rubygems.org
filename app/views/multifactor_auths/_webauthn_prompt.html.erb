@@ -1,0 +1,13 @@
+<div class="mfa__option">
+  <h2 class="page__subheading--block"> <%= t("multifactor_auths.prompt.security_device") %></h2>
+  <div class="t-body">
+    <p><%= t("multifactor_auths.prompt.webauthn_credential_note") %></p>
+  </div>
+  <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
+    <div class="form_bottom">
+      <p hidden class="l-text-red-600 js-webauthn-session--error"></p>
+
+      <%= submit_tag t("multifactor_auths.prompt.sign_in_with_webauthn_credential"), class: 'js-webauthn-session--submit form__submit form__submit--no-hover' %>
+    </div>
+  <% end %>
+</div>

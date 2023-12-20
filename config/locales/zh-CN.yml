@@ -62,6 +62,10 @@ zh-CN:
         api_key_role:
       oidc/api_key_role:
         api_key_permissions:
+      oidc/trusted_publisher/github_action:
+        repository_owner_id:
+      oidc/pending_trusted_publisher:
+        rubygem_name:
     errors:
       messages:
         unpwn: 曾出现过数据泄露，不应该再使用
@@ -78,6 +82,14 @@ zh-CN:
               taken:
             full_name:
               taken:
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken:
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              unavailable:
     models:
       user: 用户
   activemodel:
@@ -336,6 +348,8 @@ zh-CN:
       gem_text: 这个 webhook 在 %{gem} 被推送时被调用。
       gem_html: 这个 webhook 在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         被推送时被调用。
+    gem_trusted_publisher_added:
+      title:
   news:
     show:
       title: 新的发布 — 所有 Gem
@@ -575,6 +589,7 @@ zh-CN:
         code: 源代码
         docs: 文档
         download: 下载
+        funding: 募集资金
         header: 链接
         home: 主页
         mail: 邮件列表
@@ -591,6 +606,7 @@ zh-CN:
           api_key_role:
             name:
             new:
+        trusted_publishers:
     reserved:
       reserved_namespace: 该命名空间由 RubyGems.org 保留。
     dependencies:
@@ -800,6 +816,42 @@ zh-CN:
         title:
       show:
         title:
+    rubygem_trusted_publishers:
+      index:
+        title:
+        subtitle_owner_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+        subtitle_owner_html:
+    pending_trusted_publishers:
+      index:
+        title:
+        valid_for_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+    trusted_publisher:
+      unsupported_type:
+      github_actions:
+        repository_owner_help_html:
+        repository_name_help_html:
+        workflow_filename_help_html:
+        environment_help_html:
+      pending:
+        rubygem_name_help_html:
   duration:
     minutes:
       other:
@@ -813,3 +865,5 @@ zh-CN:
     seconds:
       other:
       one:
+  form:
+    optional:

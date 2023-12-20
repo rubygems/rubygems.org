@@ -2,11 +2,13 @@ class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
   include WebauthnVerifiable
 
-  before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
-  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify authenticate]
-  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify authenticate]
-  before_action :ensure_not_blocked, only: :create
-  after_action :delete_mfa_session, only: %i[webauthn_create otp_create]
+  before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
+  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
+  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify webauthn_authenticate authenticate]
+  before_action :ensure_not_blocked, only: %i[create webauthn_full_create]
+  before_action :webauthn_new_setup, only: :new
+  after_action :delete_mfa_session, only: %i[webauthn_create webauthn_full_create otp_create]
+  after_action :delete_session_verification, only: :destroy
 
   def create
     @user = find_user
@@ -39,6 +41,14 @@ class SessionsController < Clearance::SessionsController
     do_login
   end
 
+  def webauthn_full_create
+    return login_failure(@webauthn_error) unless webauthn_credential_verified?
+
+    @user = user_webauthn_credential.user
+
+    do_login
+  end
+
   def otp_create
     @user = User.find(session[:mfa_user])
 
@@ -54,20 +64,39 @@ class SessionsController < Clearance::SessionsController
   end
 
   def verify
+    @user = current_user
+    setup_webauthn_authentication(form_url: webauthn_authenticate_session_path)
   end
 
   def authenticate
+    @user = current_user
     if verify_user
-      session[:verified_user] = current_user.id
-      session[:verification]  = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
-      redirect_to session.delete(:redirect_uri) || root_path
+      mark_verified
     else
       flash.now[:alert] = t("profiles.request_denied")
+      setup_webauthn_authentication(form_url: webauthn_authenticate_session_path)
+      render :verify, status: :unauthorized
+    end
+  end
+
+  def webauthn_authenticate
+    @user = current_user
+    if webauthn_credential_verified?
+      mark_verified
+    else
+      flash.now[:alert] = @webauthn_error
+      setup_webauthn_authentication(form_url: webauthn_authenticate_session_path)
       render :verify, status: :unauthorized
     end
   end
 
   private
+
+  def mark_verified
+    session[:verified_user] = current_user.id
+    session[:verification] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
+    redirect_to session.delete(:redirect_uri) || root_path
+  end
 
   def verify_user
     current_user.authenticated? verify_password_params[:password]
@@ -92,6 +121,7 @@ class SessionsController < Clearance::SessionsController
   def login_failure(message)
     StatsD.increment "login.failure"
     flash.now.notice = message
+    webauthn_new_setup
     render "sessions/new", status: :unauthorized
   end
 
@@ -134,6 +164,7 @@ class SessionsController < Clearance::SessionsController
     return unless user&.blocked_email
 
     flash.now.alert = t(".account_blocked")
+    webauthn_new_setup
     render template: "sessions/new", status: :unauthorized
   end
 
@@ -153,5 +184,21 @@ class SessionsController < Clearance::SessionsController
     duration = Time.now.utc - started_at
 
     StatsD.distribution("login.mfa.#{mfa_type}.duration", duration)
+  end
+
+  def webauthn_new_setup
+    @webauthn_options = WebAuthn::Credential.options_for_get(
+      user_verification: "discouraged"
+    )
+
+    @webauthn_verification_url = webauthn_full_create_session_path
+
+    session[:webauthn_authentication] = {
+      "challenge" => @webauthn_options.challenge
+    }
+  end
+
+  def delete_session_verification
+    session[:verified_user] = session[:verification] = nil
   end
 end
