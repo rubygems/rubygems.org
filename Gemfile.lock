@@ -220,7 +220,7 @@ GEM
     factory_bot_rails (6.4.2)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
-    faraday (2.7.12)
+    faraday (2.8.0)
       base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
@@ -711,7 +711,7 @@ DEPENDENCIES
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 2.8)
   factory_bot_rails (~> 6.4)
-  faraday (~> 2.7)
+  faraday (~> 2.8)
   faraday_middleware-aws-sigv4 (~> 1.0)
   good_job (~> 3.21)
   google-protobuf (~> 3.25)
