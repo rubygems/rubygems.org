@@ -66,7 +66,7 @@ gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.14"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 2.0"
+  gem "tailwindcss-rails", "~> 2.1"
 end
 
 group :assets do
