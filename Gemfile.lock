@@ -435,6 +435,9 @@ GEM
       phlex (~> 1.9)
       railties (>= 6.1, < 8)
       zeitwerk (~> 2.6)
+    pp (0.5.0)
+      prettyprint
+    prettyprint (0.2.0)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -743,6 +746,7 @@ DEPENDENCIES
   opensearch-ruby (~> 3.1)
   pg (~> 1.4)
   phlex-rails (~> 1.1)
+  pp (= 0.5.0)
   pry-byebug (~> 3.10)
   puma (~> 6.4)
   pundit (~> 2.3)
