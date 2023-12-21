@@ -37,7 +37,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_004220) do
   end
 
   create_table "api_keys", force: :cascade do |t|
-    t.bigint "user_id"
     t.string "name", null: false
     t.string "hashed_key", null: false
     t.boolean "index_rubygems", default: false, null: false
@@ -58,7 +57,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_004220) do
     t.bigint "owner_id"
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["owner_type", "owner_id"], name: "index_api_keys_on_owner"
-    t.index ["user_id"], name: "index_api_keys_on_user_id"
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
     t.check_constraint "owner_type IS NOT NULL", name: "api_keys_owner_type_null"
   end
@@ -525,7 +523,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_004220) do
     t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
   end
 
-  add_foreign_key "api_keys", "users"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"

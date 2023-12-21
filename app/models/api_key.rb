@@ -2,8 +2,6 @@ class ApiKey < ApplicationRecord
   API_SCOPES = %i[index_rubygems push_rubygem yank_rubygem add_owner remove_owner access_webhooks show_dashboard].freeze
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner].freeze
 
-  self.ignored_columns += %w[user_id]
-
   belongs_to :owner, polymorphic: true
 
   has_one :api_key_rubygem_scope, dependent: :destroy
