@@ -3,6 +3,7 @@ zh-CN:
   credentials_required: 需要凭证
   edit: 编辑
   failure_when_forbidden: 请再次确认 URL 或尝试重新提交
+  verification_expired:
   feed_latest: RubyGems.org | 最新的 Gem
   feed_subscribed: RubyGems.org | 订阅的 Gem
   footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。 立即 <a href="%{publish_docs}">发布您的

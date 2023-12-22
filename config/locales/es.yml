@@ -3,6 +3,7 @@ es:
   credentials_required: Credenciales requeridas
   edit: Editar
   failure_when_forbidden: Por favor verifica la URL o inténtalo nuevamente.
+  verification_expired:
   feed_latest: RubyGems.org | Gemas más recientes
   feed_subscribed: RubyGems.org | Suscripciones a gemas
   footer_about_html: RubyGems.org es el servicio de alojamiento de Gemas de la comunidad

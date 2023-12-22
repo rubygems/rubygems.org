@@ -3,6 +3,7 @@ ja:
   credentials_required: 認証情報が必要です
   edit: 編集
   failure_when_forbidden: URLを見返すか、再度送信してみてください。
+  verification_expired:
   feed_latest: RubyGems.org | 最新のgemの一覧
   feed_subscribed: RubyGems.org | 購読したgemの一覧
   footer_about_html: RubyGems.orgはRubyコミュニティのgemのホスティングサービスです。すぐに<a href="%{publish_docs}">gemを公開</a>して<a

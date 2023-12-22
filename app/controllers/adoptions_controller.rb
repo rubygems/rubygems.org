@@ -3,7 +3,7 @@ class AdoptionsController < ApplicationController
 
   before_action :find_rubygem
   before_action :verify_ownership_requestable
-  before_action :redirect_to_verify, if: -> { current_user_is_owner? && !password_session_active? }
+  before_action :redirect_to_verify, if: -> { current_user_is_owner? && !verified_session_active? }
 
   def index
     @ownership_call     = @rubygem.ownership_call

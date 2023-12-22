@@ -3,6 +3,7 @@ en:
   credentials_required: Credentials required
   edit: Edit
   failure_when_forbidden: Please double check the URL or try submitting it again.
+  verification_expired: The verification has expired. Please verify again.
   feed_latest: RubyGems.org | Latest Gems
   feed_subscribed: RubyGems.org | Subscribed Gems
   footer_about_html:

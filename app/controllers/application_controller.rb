@@ -153,10 +153,6 @@ class ApplicationController < ActionController::Base
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 
-  def password_session_active?
-    session[:verification] && session[:verification] > Time.current && session.fetch(:verified_user, "") == current_user.id
-  end
-
   def set_error_context_user
     return unless current_user
 

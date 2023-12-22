@@ -35,6 +35,14 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :success
 
+      should "sign in the user" do
+        assert_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "invalidate the confirmation_token" do
+        assert_nil @user.reload.confirmation_token
+      end
+
       should "display edit form" do
         page.assert_text("Reset password")
         page.assert_selector("input[type=password][autocomplete=new-password]")
@@ -49,6 +57,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should redirect_to("the home page") { root_path }
 
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
       should "warn about invalid url" do
         assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
       end
@@ -61,6 +73,10 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
 
       should "display otp form" do
         assert page.has_content?("Multi-factor authentication")
@@ -80,6 +96,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :success
 
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
       should "display webauthn prompt" do
         assert page.has_button?("Authenticate with security device")
       end
@@ -96,6 +116,10 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
 
       should "display webauthn prompt" do
         assert page.has_button?("Authenticate with security device")
@@ -114,6 +138,10 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
 
       should "display webauthn prompt" do
         assert page.has_button?("Authenticate with security device")
@@ -142,9 +170,18 @@ class PasswordsControllerTest < ActionController::TestCase
 
         should respond_with :success
 
+        should "sign in the user" do
+          assert_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "invalidate the confirmation_token" do
+          assert_nil @user.reload.confirmation_token
+        end
+
         should "display edit form" do
           page.assert_text("Reset password")
         end
+
         should "clear mfa_expires_at" do
           assert_nil @controller.session[:mfa_expires_at]
         end
@@ -157,6 +194,10 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should respond_with :unauthorized
+
+        should "not sign in the user" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
+        end
 
         should "alert about otp being incorrect" do
           assert_equal "Your OTP code is incorrect.", flash[:alert]
@@ -222,6 +263,14 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :success
 
+      should "sign in the user" do
+        assert_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "invalidate the confirmation_token" do
+        assert_nil @user.reload.confirmation_token
+      end
+
       should "display edit form" do
         page.assert_text("Reset password")
       end
@@ -237,6 +286,10 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
 
       should "set flash notice" do
         assert_equal "Credentials required", flash[:alert]
@@ -266,9 +319,14 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :unauthorized
 
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
       should "set flash notice" do
         assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
       end
+
       should "still have the webauthn form url" do
         assert_not_nil page.find(".js-webauthn-session--form")[:action]
       end
@@ -322,87 +380,7 @@ class PasswordsControllerTest < ActionController::TestCase
       @old_encrypted_password = @user.encrypted_password
     end
 
-    context "with reset_api_key and invalid password" do
-      setup do
-        put :update, params: {
-          user_id: @user.id,
-          token: @user.confirmation_token,
-          password_reset: { reset_api_key: "true", password: "pass" }
-        }
-      end
-
-      should respond_with :success
-
-      should "not change api_key" do
-        assert_equal(@user.reload.api_key, @api_key)
-      end
-      should "not change password" do
-        assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
-      end
-    end
-
-    context "without reset_api_key and valid password" do
-      setup do
-        put :update, params: {
-          user_id: @user.id,
-          token: @user.confirmation_token,
-          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
-        }
-      end
-
-      should respond_with :found
-
-      should "not change api_key" do
-        assert_equal(@user.reload.api_key, @api_key)
-      end
-      should "change password" do
-        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
-      end
-    end
-
-    context "with reset_api_key false and valid password" do
-      setup do
-        put :update, params: {
-          user_id: @user.id,
-          token: @user.confirmation_token,
-          password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
-        }
-      end
-
-      should respond_with :found
-
-      should "not change api_key" do
-        assert_equal(@user.reload.api_key, @api_key)
-      end
-      should "change password" do
-        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
-      end
-    end
-
-    context "with reset_api_key and valid password" do
-      setup do
-        put :update, params: {
-          user_id: @user.id,
-          token: @user.confirmation_token,
-          password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
-        }
-      end
-
-      should respond_with :found
-
-      should "change api_key" do
-        refute_equal(@user.reload.api_key, @api_key)
-      end
-      should "change password" do
-        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
-      end
-      should "not delete new api key" do
-        refute_predicate @new_api_key.reload, :destroyed?
-        refute_empty @user.reload.api_keys
-      end
-    end
-
-    context "with reset_api_key and reset_api_keys and valid password" do
+    context "when not signed in" do
       setup do
         put :update, params: {
           user_id: @user.id,
@@ -411,17 +389,153 @@ class PasswordsControllerTest < ActionController::TestCase
         }
       end
 
-      should respond_with :found
+      should redirect_to("the sign in page") { sign_in_path }
 
-      should "change api_key" do
-        refute_equal(@user.reload.api_key, @api_key)
+      should "not change api_key" do
+        assert_equal(@user.reload.api_key, @api_key)
       end
-      should "change password" do
-        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
+      should "not change password" do
+        assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
-      should "expire new api key" do
-        assert_empty @user.reload.api_keys.unexpired
-        refute_empty @user.reload.api_keys.expired
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+    end
+
+    context "when signed in" do
+      setup do
+        sign_in_as @user
+        session[:verification] = 10.minutes.from_now
+        session[:verified_user] = @user.id
+      end
+
+      teardown do
+        session[:verification] = nil
+        session[:verified_user] = nil
+      end
+
+      context "with invalid password" do
+        setup do
+          put :update, params: {
+            user_id: @user.id,
+            token: @user.confirmation_token,
+            password_reset: { reset_api_key: "true", password: "pass" }
+          }
+        end
+
+        should respond_with :success
+
+        should "not change api_key" do
+          assert_equal(@user.reload.api_key, @api_key)
+        end
+        should "not change password" do
+          assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
+        end
+      end
+
+      context "with a valid password" do
+        context "when verification has expired" do
+          setup do
+            travel 16.minutes do
+              put :update, params: {
+                user_id: @user.id,
+                token: @user.confirmation_token,
+                password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+              }
+            end
+          end
+
+          should set_flash[:alert]
+          should redirect_to("the verification page") { verify_session_path }
+
+          should "not sign the user out" do
+            assert_predicate @controller.request.env[:clearance], :signed_in?
+          end
+        end
+
+        context "without reset_api_key" do
+          setup do
+            put :update, params: {
+              user_id: @user.id,
+              token: @user.confirmation_token,
+              password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
+
+          should respond_with :found
+
+          should "not change api_key" do
+            assert_equal(@user.reload.api_key, @api_key)
+          end
+          should "change password" do
+            refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
+          end
+        end
+
+        context "with reset_api_key false" do
+          setup do
+            put :update, params: {
+              user_id: @user.id,
+              token: @user.confirmation_token,
+              password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
+
+          should respond_with :found
+
+          should "not change api_key" do
+            assert_equal(@user.reload.api_key, @api_key)
+          end
+          should "change password" do
+            refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
+          end
+        end
+
+        context "with reset_api_key" do
+          setup do
+            put :update, params: {
+              user_id: @user.id,
+              token: @user.confirmation_token,
+              password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
+
+          should respond_with :found
+
+          should "change api_key" do
+            refute_equal(@user.reload.api_key, @api_key)
+          end
+          should "change password" do
+            refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
+          end
+          should "not delete new api key" do
+            refute_predicate @new_api_key.reload, :destroyed?
+            refute_empty @user.reload.api_keys
+          end
+        end
+
+        context "with reset_api_key and reset_api_keys" do
+          setup do
+            put :update, params: {
+              user_id: @user.id,
+              token: @user.confirmation_token,
+              password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
+
+          should respond_with :found
+
+          should "change api_key" do
+            refute_equal(@user.reload.api_key, @api_key)
+          end
+          should "change password" do
+            refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
+          end
+          should "expire new api key" do
+            assert_empty @user.reload.api_keys.unexpired
+            refute_empty @user.reload.api_keys.expired
+          end
+        end
       end
     end
   end

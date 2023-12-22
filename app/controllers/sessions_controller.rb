@@ -1,6 +1,7 @@
 class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
   include WebauthnVerifiable
+  include SessionVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
@@ -93,8 +94,7 @@ class SessionsController < Clearance::SessionsController
   private
 
   def mark_verified
-    session[:verified_user] = current_user.id
-    session[:verification] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
+    session_verified
     redirect_to session.delete(:redirect_uri) || root_path
   end
 

@@ -3,6 +3,7 @@ nl:
   credentials_required:
   edit: Wijzig
   failure_when_forbidden: Controleer het webadres, en probeer het opnieuw.
+  verification_expired:
   feed_latest: RubyGems.org | Nieuwste Gems
   feed_subscribed: RubyGems.org | Geabonneerde Gems
   footer_about_html: RubyGems.org is de gem hosting service van de Ruby community.

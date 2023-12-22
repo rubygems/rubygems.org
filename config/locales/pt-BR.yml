@@ -3,6 +3,7 @@ pt-BR:
   credentials_required:
   edit: Editar
   failure_when_forbidden: Por favor, confira a URL ou tente submetê-la novamente.
+  verification_expired:
   feed_latest: RubyGems.org | Últimas Gems
   feed_subscribed: RubyGems.org | Gems do seu Feed
   footer_about_html: RubyGems.org é o serviço de hospedagem de gems da comunidade

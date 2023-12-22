@@ -1,9 +1,16 @@
 class PasswordsController < Clearance::PasswordsController
   include MfaExpiryMethods
   include WebauthnVerifiable
+  include SessionVerifiable
 
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
+
+  # By default, clearance expects the token to be submitted with the password update.
+  # We already invalidated the token when the user became verified by token(+mfa).
+  skip_before_action :ensure_existing_user, only: %i[update]
+  # Instead of the token, we now require the user to have been verified recently.
+  verify_session_before only: %i[update]
 
   def edit
     if @user.mfa_enabled?
@@ -14,17 +21,16 @@ class PasswordsController < Clearance::PasswordsController
 
       render template: "multifactor_auths/prompt"
     else
+      # When user doesn't have mfa, a valid token is a full "magic link" sign in.
+      verified_sign_in
       render template: "passwords/edit"
     end
   end
 
   def update
-    @user = find_user_for_update
-
-    if @user.update_password password_from_password_reset_params
-      @user.reset_api_key! if reset_params[:reset_api_key] == "true"
-      @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true"
-      sign_in @user
+    if current_user.update_password password_from_password_reset_params
+      current_user.reset_api_key! if reset_params[:reset_api_key] == "true"
+      current_user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true"
       redirect_to url_after_update
       session[:password_reset_token] = nil
     else
@@ -35,6 +41,8 @@ class PasswordsController < Clearance::PasswordsController
 
   def otp_edit
     if otp_edit_conditions_met?
+      # When the user identified by the email token submits adequate totp, they are logged in
+      verified_sign_in
       render template: "passwords/edit"
     elsif !session_active?
       login_failure(t("multifactor_auths.session_expired"))
@@ -51,10 +59,19 @@ class PasswordsController < Clearance::PasswordsController
 
     return login_failure(@webauthn_error) unless webauthn_credential_verified?
 
+    # When the user identified by the email token submits verified webauthn, they are logged in
+    verified_sign_in
     render template: "passwords/edit"
   end
 
   private
+
+  def verified_sign_in
+    sign_in @user
+    session_verified
+    @user.update!(confirmation_token: nil)
+    StatsD.increment "login.success"
+  end
 
   def url_after_update
     dashboard_path
@@ -80,5 +97,10 @@ class PasswordsController < Clearance::PasswordsController
   def login_failure(message)
     flash.now.alert = message
     render template: "multifactor_auths/prompt", status: :unauthorized
+  end
+
+  def redirect_to_verify
+    session[:redirect_uri] = verify_session_redirect_path
+    redirect_to verify_session_path, alert: t("verification_expired")
   end
 end

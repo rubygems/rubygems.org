@@ -3,6 +3,7 @@ de:
   credentials_required:
   edit: Bearbeiten
   failure_when_forbidden:
+  verification_expired:
   feed_latest: RubyGems.org | Neueste Gems
   feed_subscribed: RubyGems.org | Abonnierte Gems
   footer_about_html:

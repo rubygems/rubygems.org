@@ -55,12 +55,35 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
+    assert page.has_content?("Sign out")
+
     fill_in "Password", with: ""
     click_button "Save this password"
 
     assert page.has_content? "Password can't be blank."
-    assert page.has_content? "Sign in"
+    assert page.has_content? "Reset password"
+
+    # try again
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
+
+  test "resetting a password but waiting too long after token auth" do
+    forgot_password_with @user.email
+
+    visit password_reset_link
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+
+    travel 16.minutes do
+      click_button "Save this password"
+
+      assert page.has_content? "verification has expired. Please verify again."
+    end
+  end
+
 
   test "resetting a password when signed in" do
     visit sign_in_path
@@ -78,6 +101,8 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
+    assert page.has_content?("Sign out")
+
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
@@ -90,13 +115,15 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
+    refute page.has_content?("Sign out")
+
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
 
+    assert page.has_content?("Sign out")
+
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
-
-    assert page.has_content?("Sign out")
   end
 
   test "resetting a password when mfa is enabled but mfa session is expired" do
@@ -141,6 +168,7 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
+    refute page.has_content? "Sign out"
     assert page.has_content? "Multi-factor authentication"
     assert page.has_content? "Security Device"
     assert page.has_content? "Recovery code"
