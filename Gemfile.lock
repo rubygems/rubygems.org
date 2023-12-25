@@ -593,7 +593,7 @@ GEM
       concurrent-ruby
       thor
     shoulda-context (2.0.0)
-    shoulda-matchers (5.3.0)
+    shoulda-matchers (6.0.0)
       activesupport (>= 5.2.0)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -775,7 +775,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.16)
   shoryuken (~> 6.1)
   shoulda-context (~> 2.0)
-  shoulda-matchers (~> 5.3)
+  shoulda-matchers (~> 6.0)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
   sprockets-rails (~> 3.4)
