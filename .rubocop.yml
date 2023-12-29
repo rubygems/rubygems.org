@@ -13,7 +13,7 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db|tmp|server)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.3
   NewCops: enable
 
 Rails:
