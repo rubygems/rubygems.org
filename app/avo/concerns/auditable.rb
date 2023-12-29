@@ -10,7 +10,7 @@ module Auditable
       end
     end
 
-    def in_audited_transaction(auditable:, admin_github_user:, action:, fields:, arguments:, models:, &) # rubocop:disable Metrics
+    def in_audited_transaction(auditable:, admin_github_user:, action:, fields:, arguments:, models:, &blk) # rubocop:disable Metrics Naming/BlockForwarding
       logger.debug { "Auditing changes to #{auditable}: #{fields}" }
 
       User.transaction do
@@ -25,7 +25,7 @@ module Auditable
             merge_changes!((changed_records[record] ||= {}), record.attributes.transform_values { [nil, _1] }) if record.new_record?
             merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
           end
-        end, "sql.active_record", &)
+        end, "sql.active_record", &blk)
 
         case auditable
         when :return
