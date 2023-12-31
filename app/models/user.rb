@@ -63,9 +63,13 @@ class User < ApplicationRecord
   validate :toxic_email_domain, on: :create
 
   def self.authenticate(who, password)
+    # Avoid exceptions when string is invalid in the given encoding, _or_ cannot be converted
+    # to UTF-8.
+    who = who.encode(Encoding::UTF_8)
+
     user = find_by(email: who.downcase) || find_by(handle: who)
     user if user&.authenticated?(password)
-  rescue BCrypt::Errors::InvalidHash
+  rescue BCrypt::Errors::InvalidHash, Encoding::UndefinedConversionError
     nil
   end
 

@@ -207,6 +207,15 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       should_deny_access
     end
 
+    context "with credentials with invalid encoding" do
+      setup do
+        @user = create(:user)
+        authorize_with("\x12\xff\x12:creds".force_encoding(Encoding::UTF_8))
+        get :show
+      end
+      should_deny_access
+    end
+
     context "with correct credentials" do
       setup do
         @user = create(:user)
