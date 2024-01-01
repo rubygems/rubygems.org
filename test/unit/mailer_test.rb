@@ -4,6 +4,10 @@ class MailerTest < ActionMailer::TestCase
   MIN_DOWNLOADS_FOR_MFA_RECOMMENDATION_POLICY = 165_000_000
   MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY = 180_000_000
 
+  setup do
+    TOPLEVEL_BINDING.receiver.stubs(:mx_exists?).returns(true)
+  end
+
   context "sending mail for mfa recommendation announcement" do
     setup do
       @user = create(:user)
