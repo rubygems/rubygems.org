@@ -78,7 +78,7 @@ group :assets, :development do
 end
 
 group :assets do
-  gem "dartsass-sprockets", "~> 3.0"
+  gem "dartsass-sprockets", "~> 3.1"
   gem "terser", "~> 1.1"
   gem "autoprefixer-rails", "~> 10.4"
 end
