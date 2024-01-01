@@ -29,15 +29,12 @@ jobs:
             version: "3.5.3"
           - name: latest
             version: latest
-        ruby_version: ["3.2.2", "3.3.0"]
+        ruby_version: ["3.3.0"]
         tests:
           - name: general
             command: test
           - name: system
             command: test:system
-        exclude:
-          - ruby_version: "3.3.0"
-            rubygems: { name: latest, version: latest }
     name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-22.04
     env:

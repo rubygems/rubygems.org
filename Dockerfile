@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1.4
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=3.2.2
+ARG RUBY_VERSION=3.3.0
 ARG ALPINE_VERSION=3.18
 FROM ruby:$RUBY_VERSION-alpine${ALPINE_VERSION} as base
 
@@ -25,11 +25,7 @@ ENV BUNDLE_APP_CONFIG=".bundle_app_config"
 
 # Update rubygems
 ARG RUBYGEMS_VERSION
-RUN gem update --system ${RUBYGEMS_VERSION} --no-document && \
-  # rubygems-update is completely unused after the `gem update --system` process
-  gem uninstall rubygems-update -x && \
-  # Remove rubygems cache files, they are unused
-  rm -r /usr/local/bundle/cache/ /root/.local/share/gem/
+RUN gem update --system ${RUBYGEMS_VERSION} --no-document
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
