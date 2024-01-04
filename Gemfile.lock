@@ -283,9 +283,10 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (2.7.1)
-    json-jwt (1.16.4)
+    json-jwt (1.16.5)
       activesupport (>= 4.2)
       aes_key_wrap
+      base64
       bindata
       faraday (~> 2.0)
       faraday-follow_redirects
@@ -405,16 +406,17 @@ GEM
     omniauth-rails_csrf_protection (1.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
-    openid_connect (2.2.1)
+    openid_connect (2.3.0)
       activemodel
       attr_required (>= 1.0.0)
+      email_validator
       faraday (~> 2.0)
       faraday-follow_redirects
       json-jwt (>= 1.16)
+      mail
       rack-oauth2 (~> 2.2)
       swd (~> 2.0)
       tzinfo
-      validate_email
       validate_url
       webfinger (~> 2.0)
     opensearch-ruby (3.1.0)
@@ -651,9 +653,6 @@ GEM
     unpwn (1.0.0)
       bloomer (~> 1.0)
       pwned (~> 2.0)
-    validate_email (0.1.6)
-      activemodel (>= 3.0)
-      mail (>= 2.2.5)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
@@ -749,7 +748,7 @@ DEPENDENCIES
   omniauth (~> 2.1)
   omniauth-github (~> 2.0)
   omniauth-rails_csrf_protection (~> 1.0)
-  openid_connect (~> 2.2)
+  openid_connect (~> 2.3)
   opensearch-ruby (~> 3.1)
   pg (~> 1.4)
   phlex-rails (~> 1.1)
