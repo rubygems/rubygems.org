@@ -17,7 +17,6 @@
           <br/>
           <% if @pushed_by_user.is_a?(User) %>
           Pushed by user:
-          <% if @pushed_by_user %>
           <strong>
             <%= link_to @pushed_by_user.handle, profile_url(@pushed_by_user.display_id), target: "_blank" %> <%= mail_to(@pushed_by_user.email) if @pushed_by_user.public_email? %>
           </strong>
@@ -28,9 +27,6 @@
           </strong>
           <% end %>
           <br/>
-          <% else %>
-          <strong>Unknown</strong>
-          <% end %>
           Pushed at: <strong><%= @version.created_at.to_formatted_s(:rfc822) %></strong>
         </p>
         <br/>
