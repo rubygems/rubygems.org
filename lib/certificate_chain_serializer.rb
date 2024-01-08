@@ -3,7 +3,7 @@ class CertificateChainSerializer
 
   def self.load(chain)
     return [] unless chain
-    chain.scan(PATTERN).map! do |cert|
+    chain.scan(PATTERN).map do |cert|
       OpenSSL::X509::Certificate.new(cert)
     end
   end
@@ -13,6 +13,6 @@ class CertificateChainSerializer
     normalised = chain.map do |cert|
       cert.respond_to?(:to_pem) ? cert : OpenSSL::X509::Certificate.new(cert)
     end
-    normalised.map!(&:to_pem).join
+    normalised.map(&:to_pem).join
   end
 end
