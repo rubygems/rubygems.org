@@ -84,7 +84,6 @@ class PasswordResetTest < SystemTest
     end
   end
 
-
   test "resetting a password when signed in" do
     visit sign_in_path
 
