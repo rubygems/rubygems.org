@@ -58,7 +58,7 @@ gem "webauthn", "~> 3.1"
 gem "browser", "~> 5.3", ">= 5.3.1"
 gem "bcrypt", "~> 3.1"
 gem "maintenance_tasks", "~> 2.4"
-gem "strong_migrations", "~> 1.6"
+gem "strong_migrations", "~> 1.7"
 gem "phlex-rails", "~> 1.1"
 
 # Admin dashboard
