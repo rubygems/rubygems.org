@@ -7,7 +7,7 @@ class FixDependencies < ActiveRecord::Migration[4.2]
         Gem::Requirement.new(reqs)
       rescue ArgumentError
         list = reqs.split(/(>=)|(<=)|(~>)|(>)|(<)|(=)/).reject(&:empty?)
-        fixed = list[0] + list[1] + ", " + list[2] + list[3]
+        fixed = "#{list[0]}#{list[1]}, #{list[2]}#{list[3]}"
 
         dep.update_attribute(:requirements, fixed)
       end

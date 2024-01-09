@@ -65,7 +65,7 @@ Version.create_with(
   pusher: author,
   metadata: {
     homepage_uri: "https://example.com/rubygem0/home",
-    source_code_uri: "https://github.com/example/#{rubygem1.name}",
+    source_code_uri: "https://github.com/example/#{rubygem1.name}"
   }
 ).find_or_create_by!(rubygem: rubygem0, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
@@ -94,73 +94,73 @@ author.api_keys.find_or_create_by!(hashed_key: "securehashedkey", name: "api key
 
 Admin::GitHubUser.create_with(
   is_admin: true,
-  oauth_token: 'fake',
+  oauth_token: "fake",
   info_data: {
-  "viewer": {
-    "name": "Rad Admin",
-    "login": "rad_admin",
-    "email": "rad_admin@rubygems.team",
-    "avatarUrl": "/favicon.ico",
-    "organization": {
-      "login": "rubygems",
-      "name": "RubyGems",
-      "viewerIsAMember": true,
-      "teams": {
-        "edges": [
-          {
-            "node": {
-              "name": "Infrastructure",
-              "slug": "infrastructure"
+    viewer: {
+      name: "Rad Admin",
+      login: "rad_admin",
+      email: "rad_admin@rubygems.team",
+      avatarUrl: "/favicon.ico",
+      organization: {
+        login: "rubygems",
+        name: "RubyGems",
+        viewerIsAMember: true,
+        teams: {
+          edges: [
+            {
+              node: {
+                name: "Infrastructure",
+                slug: "infrastructure"
+              }
+            },
+            {
+              node: {
+                name: "Maintainers",
+                slug: "maintainers"
+              }
+            },
+            {
+              node: {
+                name: "Monitoring",
+                slug: "monitoring"
+              }
+            },
+            {
+              node: {
+                name: "RubyGems.org",
+                slug: "rubygems-org"
+              }
+            },
+            {
+              node: {
+                name: "Rubygems.org Deployers",
+                slug: "rubygems-org-deployers"
+              }
+            },
+            {
+              node: {
+                name: "Security",
+                slug: "security"
+              }
             }
-          },
-          {
-            "node": {
-              "name": "Maintainers",
-              "slug": "maintainers"
-            }
-          },
-          {
-            "node": {
-              "name": "Monitoring",
-              "slug": "monitoring"
-            }
-          },
-          {
-            "node": {
-              "name": "RubyGems.org",
-              "slug": "rubygems-org"
-            }
-          },
-          {
-            "node": {
-              "name": "Rubygems.org Deployers",
-              "slug": "rubygems-org-deployers"
-            }
-          },
-          {
-            "node": {
-              "name": "Security",
-              "slug": "security"
-            }
-          }
-        ]
+          ]
+        }
       }
     }
   }
-}
 ).find_or_create_by!(github_id: "FAKE-rad_admin")
 
 Admin::GitHubUser.create_with(
   is_admin: false,
   info_data: {
-  "viewer": {
-    "name": "Not An Admin",
-    "login": "not_an_admin",
-    "email": "not_an_admin@rubygems.team",
-    "avatarUrl": "/favicon.ico",
-    "organization": nil
+    viewer: {
+      name: "Not An Admin",
+      login: "not_an_admin",
+      email: "not_an_admin@rubygems.team",
+      avatarUrl: "/favicon.ico",
+      organization: nil
+    }
   }
-}
 ).find_or_create_by!(github_id: "FAKE-not_an_admin")
 
 github_oidc_provider = OIDC::Provider
@@ -195,7 +195,7 @@ author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
         operator: "string_equals",
         claim: "repository",
         value: "rubygems/rubygem0"
-      }],
+      }]
     ]
   }
 ).find_or_create_by!(
@@ -206,13 +206,13 @@ author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
 author_oidc_api_key_role.user.api_keys.create_with(
   hashed_key: "expiredhashedkey",
   ownership: rubygem0.ownerships.find_by!(user: author),
-  push_rubygem: true,
+  push_rubygem: true
 ).find_or_create_by!(
-  name: "push-rubygem-1-expired",
+  name: "push-rubygem-1-expired"
 ).tap do |api_key|
   OIDC::IdToken.find_or_create_by!(
     api_key:,
-    jwt: { claims: {jti: "expired"}, header: {}},
+    jwt: { claims: { jti: "expired" }, header: {} },
     api_key_role: author_oidc_api_key_role
   )
   api_key.touch(:expires_at, time: "2020-01-01T00:00:00Z")
@@ -224,11 +224,11 @@ author_oidc_api_key_role.user.api_keys.create_with(
   push_rubygem: true,
   expires_at: "2120-01-01T00:00:00Z"
 ).find_or_create_by!(
-  name: "push-rubygem-1-unexpired",
+  name: "push-rubygem-1-unexpired"
 ).tap do |api_key|
   OIDC::IdToken.find_or_create_by!(
     api_key:,
-    jwt: { claims: {jti: "unexpired"}, header: {}},
+    jwt: { claims: { jti: "unexpired" }, header: {} },
     api_key_role: author_oidc_api_key_role
   )
 end
@@ -236,7 +236,7 @@ end
 author.api_keys.find_or_create_by!(
   hashed_key: "unexpiredmanualhashedkey",
   name: "Manual",
-  push_rubygem: true,
+  push_rubygem: true
 )
 
 SendgridEvent.create_with(
@@ -248,16 +248,16 @@ SendgridEvent.create_with(
     tls: 1,
     email: author.email,
     event: "delivered",
-    sg_event_id: "sg_event_id_1",
+    sg_event_id: "sg_event_id_1"
   },
   status: :processed
 ).find_or_create_by!(sendgrid_id: "sendgrid_id_1")
 
 rubygem0.link_verifications.create_with(
-  last_verified_at: 10.years.since,
+  last_verified_at: 10.years.since
 ).find_or_create_by!(uri: "https://example.com/rubygem0/home")
 rubygem0.link_verifications.create_with(
-  last_verified_at: 10.years.since,
+  last_verified_at: 10.years.since
 ).find_or_create_by!(uri: "https://example.com/rubygem0/code")
 
 trusted_publisher = OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
@@ -270,7 +270,7 @@ trusted_publisher = OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
 trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0).trusted_publisher.api_keys.find_or_create_by!(
   name: "GitHub Actions something",
   hashed_key: "securehashedkey-tp",
-  push_rubygem: true,
+  push_rubygem: true
 ).pushed_versions.create_with(indexed: true).find_or_create_by!(
   rubygem: rubygem0, number: "0.1.0", platform: "ruby", gem_platform: "ruby"
 )
@@ -294,7 +294,7 @@ author.oidc_pending_trusted_publishers.create_with(
 author.webauthn_credentials.create_with(nickname: "segiddins development")
   .find_or_create_by!(
     external_id: "QdfU3FxkjNpPqfjC4uTuNA",
-    public_key: "pQECAyYgASFYIKMIHolehDjslWQ6oOVP1-R8OR6LXEBdDfqxhjgtiiDEIlgg1RgUq_AJFT-cSMo-xP_9XxGIbBsQDEj8253QPwc8-88",
+    public_key: "pQECAyYgASFYIKMIHolehDjslWQ6oOVP1-R8OR6LXEBdDfqxhjgtiiDEIlgg1RgUq_AJFT-cSMo-xP_9XxGIbBsQDEj8253QPwc8-88"
   )
 
 puts <<~MESSAGE # rubocop:disable Rails/Output

@@ -8,7 +8,7 @@ class CreateOIDCRubygemTrustedPublishers < ActiveRecord::Migration[7.0]
     end
 
     add_index :oidc_rubygem_trusted_publishers,
-      [:rubygem_id, :trusted_publisher_id, :trusted_publisher_type],
+      %i[rubygem_id trusted_publisher_id trusted_publisher_type],
       unique: true, name: "index_oidc_rubygem_trusted_publishers_unique"
   end
 end
