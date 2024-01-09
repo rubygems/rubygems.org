@@ -29,8 +29,8 @@ else
   # Allow puma to be restarted by `bin/rails restart` command.
   plugin :tmp_restart
 
-  require_relative "../lib/puma/plugin/tailwind"
-  plugin :tailwind
+  # Run tailwindcss:watch in the background
+  plugin :tailwindcss
 end
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
