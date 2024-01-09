@@ -179,17 +179,9 @@ class Pusher
       end
     end
 
-    set_info_checksum
-
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
     false
-  end
-
-  def set_info_checksum
-    # TODO: may as well just upload this straight to S3...
-    checksum = GemInfo.new(rubygem.name).info_checksum
-    version.update_attribute :info_checksum, checksum
   end
 
   def republish_notification(version)

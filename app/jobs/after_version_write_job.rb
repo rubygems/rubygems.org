@@ -14,6 +14,8 @@ class AfterVersionWriteJob < ApplicationJob
       ReindexRubygemJob.perform_later(rubygem:)
       StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)
       version.update!(indexed: true)
+      checksum = GemInfo.new(rubygem.name, cached: false).info_checksum
+      version.update_attribute :info_checksum, checksum
     end
   end
 
