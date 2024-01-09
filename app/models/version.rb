@@ -267,8 +267,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       requirements: spec.requirements,
       built_at: spec.date,
       required_rubygems_version: spec.required_rubygems_version.to_s,
-      required_ruby_version: spec.required_ruby_version.to_s,
-      indexed: true
+      required_ruby_version: spec.required_ruby_version.to_s
     )
   end
 

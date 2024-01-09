@@ -28,7 +28,6 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
   end
 
   test "restore a rubygem version" do
-    Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
 
@@ -136,5 +135,40 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
       platform: version.platform,
       version_gid: version.to_gid.to_s
     }, version_unyank_event
+  end
+
+  test "run afer version write job" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    rubygem = create(:rubygem, owners: [create(:user)])
+    version = create(:version, rubygem: rubygem)
+
+    visit avo.resources_version_path(version)
+
+    click_button "Actions"
+
+    click_on "Run version post-write job"
+
+    fill_in "Comment", with: "A nice long comment"
+
+    click_button "Run Job"
+
+    page.assert_text "Action ran successfully!"
+    page.assert_text version.to_global_id.uri.to_s
+
+    perform_enqueued_jobs
+
+    assert_equal 1, ActionMailer::Base.deliveries.size
+
+    rubygem.reload
+    version.reload
+
+    audit = version.audits.sole
+
+    assert_equal(
+      ["gid://gemcutter/Version/#{version.id}"],
+      audit.audited_changes["models"]
+    )
   end
 end
