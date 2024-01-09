@@ -65,7 +65,7 @@ Version.create_with(
   pusher: author,
   metadata: {
     homepage_uri: "https://example.com/rubygem0/home",
-    source_code_uri: "https://github.com/example/#{rubygem1.name}",
+    source_code_uri: "https://github.com/example/#{rubygem1.name}"
   }
 ).find_or_create_by!(rubygem: rubygem0, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
@@ -254,10 +254,10 @@ SendgridEvent.create_with(
 ).find_or_create_by!(sendgrid_id: "sendgrid_id_1")
 
 rubygem0.link_verifications.create_with(
-  last_verified_at: 10.years.since,
+  last_verified_at: 10.years.since
 ).find_or_create_by!(uri: "https://example.com/rubygem0/home")
 rubygem0.link_verifications.create_with(
-  last_verified_at: 10.years.since,
+  last_verified_at: 10.years.since
 ).find_or_create_by!(uri: "https://example.com/rubygem0/code")
 
 trusted_publisher = OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
@@ -270,7 +270,7 @@ trusted_publisher = OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
 trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0).trusted_publisher.api_keys.find_or_create_by!(
   name: "GitHub Actions something",
   hashed_key: "securehashedkey-tp",
-  push_rubygem: true,
+  push_rubygem: true
 ).pushed_versions.create_with(indexed: true).find_or_create_by!(
   rubygem: rubygem0, number: "0.1.0", platform: "ruby", gem_platform: "ruby"
 )
@@ -294,7 +294,7 @@ author.oidc_pending_trusted_publishers.create_with(
 author.webauthn_credentials.create_with(nickname: "segiddins development")
   .find_or_create_by!(
     external_id: "QdfU3FxkjNpPqfjC4uTuNA",
-    public_key: "pQECAyYgASFYIKMIHolehDjslWQ6oOVP1-R8OR6LXEBdDfqxhjgtiiDEIlgg1RgUq_AJFT-cSMo-xP_9XxGIbBsQDEj8253QPwc8-88",
+    public_key: "pQECAyYgASFYIKMIHolehDjslWQ6oOVP1-R8OR6LXEBdDfqxhjgtiiDEIlgg1RgUq_AJFT-cSMo-xP_9XxGIbBsQDEj8253QPwc8-88"
   )
 
 puts <<~MESSAGE # rubocop:disable Rails/Output

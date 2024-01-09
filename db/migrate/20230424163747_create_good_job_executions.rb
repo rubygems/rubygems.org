@@ -24,7 +24,7 @@ class CreateGoodJobExecutions < ActiveRecord::Migration[7.0]
       t.index %i[active_job_id created_at], name: :index_good_job_executions_on_active_job_id_and_created_at
     end
 
-    change_table :good_jobs do |t| # rubocop:disable Rails/BulkChangeTable
+    change_table(:good_jobs, bulk: true) do |t|
       t.boolean :is_discrete
       t.integer :executions_count
       t.text :job_class

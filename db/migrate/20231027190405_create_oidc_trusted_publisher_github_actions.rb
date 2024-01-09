@@ -11,7 +11,7 @@ class CreateOIDCTrustedPublisherGitHubActions < ActiveRecord::Migration[7.0]
     end
 
     add_index :oidc_trusted_publisher_github_actions,
-      [:repository_owner, :repository_name, :repository_owner_id, :workflow_filename, :environment],
+      %i[repository_owner repository_name repository_owner_id workflow_filename environment],
       unique: true, name: "index_oidc_trusted_publisher_github_actions_claims"
   end
 end

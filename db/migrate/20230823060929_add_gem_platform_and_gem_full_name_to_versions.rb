@@ -1,6 +1,8 @@
 class AddGemPlatformAndGemFullNameToVersions < ActiveRecord::Migration[7.0]
   def change
-    add_column :versions, :gem_platform, :string # rubocop:disable Rails/BulkChangeTable
-    add_column :versions, :gem_full_name, :string
+    change_table(:versions, bulk: true) do |t|
+      t.string :gem_platform
+      t.string :gem_full_name
+    end
   end
 end
