@@ -1,4 +1,4 @@
-class VersionsMetric < Avo::Dashboards::MetricCard
+class Avo::Cards::VersionsMetric < Avo::Cards::MetricCard
   self.id = "versions_metric"
   self.label = "Versions pushed"
 

@@ -7,7 +7,6 @@ Avo.configure do |config|
   config.home_path = "/admin/dashboards/dashy"
 
   ## == Licensing ==
-  config.license = 'pro' # change this to 'pro' when you add the license key
   config.license_key = ENV['AVO_LICENSE_KEY']
 
   ## == Set the context ==
@@ -118,7 +117,7 @@ end
 Rails.configuration.to_prepare do
   Avo::ApplicationController.include GitHubOAuthable
   Avo::BaseController.prepend AvoAuditable
-  Avo::BaseResource.include Concerns::AvoAuditableResource
+  Avo::BaseResource.include Avo::Resources::Concerns::AvoAuditableResource
 
   Avo::ApplicationController.content_security_policy do |policy|
     policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline

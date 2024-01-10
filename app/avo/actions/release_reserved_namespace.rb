@@ -1,4 +1,4 @@
-class ReleaseReservedNamespace < BaseAction
+class Avo::Actions::ReleaseReservedNamespace < Avo::Actions::ApplicationAction
   self.name = "Release reserved namespace"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
@@ -11,7 +11,7 @@ class ReleaseReservedNamespace < BaseAction
   self.confirm_button_label = "Release namespace"
 
   class ActionHandler < ActionHandler
-    def handle_model(rubygem)
+    def handle_record(rubygem)
       rubygem.release_reserved_namespace!
     end
   end

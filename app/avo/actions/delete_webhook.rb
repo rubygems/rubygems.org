@@ -1,4 +1,4 @@
-class DeleteWebhook < BaseAction
+class Avo::Actions::DeleteWebhook < Avo::Actions::ApplicationAction
   self.name = "Delete Webhook"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
@@ -11,7 +11,7 @@ class DeleteWebhook < BaseAction
   self.confirm_button_label = "Delete Webhook"
 
   class ActionHandler < ActionHandler
-    def handle_model(webhook)
+    def handle_record(webhook)
       webhook.destroy!
       WebHooksMailer.webhook_deleted(webhook.user_id, webhook.rubygem_id, webhook.url, webhook.failure_count).deliver_later
     end

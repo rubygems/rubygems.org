@@ -1,4 +1,4 @@
-class SelectRecordField < Avo::Fields::BelongsToField
+class Avo::Fields::SelectRecordField < Avo::Fields::BelongsToField
   def foreign_key
     id
   end

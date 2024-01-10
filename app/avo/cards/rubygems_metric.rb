@@ -1,4 +1,4 @@
-class RubygemsMetric < Avo::Dashboards::MetricCard
+class Avo::Cards::RubygemsMetric < Avo::Cards::MetricCard
   self.id = "rubygems_metric"
   self.label = "RubyGems "
   self.cols = 2

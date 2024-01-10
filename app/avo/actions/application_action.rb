@@ -1,15 +1,17 @@
-class BaseAction < Avo::BaseAction
+class Avo::Actions::ApplicationAction < Avo::BaseAction
   include SemanticLogger::Loggable
 
-  field :comment, as: :textarea, required: true,
-    help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
-
-  def self.inherited(base)
-    super
-    base.items_holder = Avo::ItemsHolder.new
-    base.items_holder.instance_variable_get(:@items).replace items_holder.instance_variable_get(:@items).deep_dup
-    base.items_holder.invalid_fields.replace items_holder.invalid_fields.deep_dup
+  def fields
+    field :comment, as: :textarea, required: true,
+      help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
   end
+
+  # def self.inherited(base)
+  #   super
+  #   base.items_holder = Avo::Resources::Items::Holder.new
+  #   base.items_holder.instance_variable_get(:@items).replace items_holder.instance_variable_get(:@items).deep_dup
+  #   base.items_holder.invalid_fields.replace items_holder.invalid_fields.deep_dup
+  # end
 
   class ActionHandler
     include Auditable
@@ -20,7 +22,7 @@ class BaseAction < Avo::BaseAction
       result_lambda.call
       target.errored?
     }
-    define_callbacks :handle_model, terminator: lambda { |target, result_lambda|
+    define_callbacks :handle_record, terminator: lambda { |target, result_lambda|
       result_lambda.call
       target.errored?
     }
@@ -35,9 +37,9 @@ class BaseAction < Avo::BaseAction
       arguments:,
       resource:,
       action:,
-      models: nil
+      records: nil
     )
-      @models = models
+      @records = records
       @fields = fields
       @current_user = current_user
       @arguments = arguments
@@ -46,7 +48,7 @@ class BaseAction < Avo::BaseAction
       @action = action
     end
 
-    attr_reader :models, :fields, :current_user, :arguments, :resource
+    attr_reader :records, :fields, :current_user, :arguments, :resource
 
     delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name, :succeed, :logger,
       to: :@action
@@ -72,9 +74,9 @@ class BaseAction < Avo::BaseAction
       keep_modal_open if errored?
     end
 
-    def do_handle_model(model)
-      run_callbacks :handle_model do
-        handle_model(model)
+    def do_handle_record(record)
+      run_callbacks :handle_record do
+        handle_record(record)
       end
     end
 
@@ -89,7 +91,7 @@ class BaseAction < Avo::BaseAction
         action: action_name,
         fields:,
         arguments:,
-        models:
+        records:
       ) do
         run_callbacks :handle_standalone do
           handle_standalone
@@ -99,17 +101,17 @@ class BaseAction < Avo::BaseAction
     end
 
     def handle
-      return do_handle_standalone if models.nil?
-      models.each do |model|
+      return do_handle_standalone if records.nil?
+      records.each do |record|
         _, audit = in_audited_transaction(
-          auditable: model,
+          auditable: record,
           admin_github_user: current_user,
           action: action_name,
           fields:,
           arguments:,
-          models:
+          records:
         ) do
-          do_handle_model(model)
+          do_handle_record(record)
         end
         redirect_to avo.resources_audit_path(audit)
       end

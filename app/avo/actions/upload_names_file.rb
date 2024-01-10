@@ -1,4 +1,4 @@
-class UploadNamesFile < BaseAction
+class Avo::Actions::UploadNamesFile < Avo::Actions::ApplicationAction
   self.name = "Upload Names File"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :index

@@ -1,4 +1,4 @@
-class BlockUser < BaseAction
+class Avo::Actions::BlockUser < Avo::Actions::ApplicationAction
   self.name = "Block User"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
@@ -11,7 +11,7 @@ class BlockUser < BaseAction
   self.confirm_button_label = "Block User"
 
   class ActionHandler < ActionHandler
-    def handle_model(user)
+    def handle_record(user)
       user.block!
     end
   end

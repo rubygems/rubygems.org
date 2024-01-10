@@ -1,21 +1,21 @@
-class Dashy < Avo::Dashboards::BaseDashboard
+class Avo::Dashboards::Dashy < Avo::Dashboards::BaseDashboard
   self.id = "dashy"
-  self.name = "Dashy"
+  self.name = "Avo::Dashboards::Dashy"
   self.grid_cols = 6
   self.visible = lambda {
     current_user.team_member?("rubygems-org")
   }
 
   # cards go here
-  card DashboardWelcomeCard
+  card Avo::Cards::DashboardWelcomeCard
 
   divider label: "Metrics"
 
-  card UsersMetric
-  card VersionsMetric
-  card RubygemsMetric
+  card Avo::Cards::UsersMetric
+  card Avo::Cards::VersionsMetric
+  card Avo::Cards::RubygemsMetric
 
   divider label: "Charts"
 
-  card PushesChart
+  card Avo::Cards::PushesChart
 end

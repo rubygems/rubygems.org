@@ -1,6 +1,4 @@
-class CreateUser < BaseAction
-  field :email, name: "Email", as: :text, required: true
-
+class Avo::Actions::CreateUser < Avo::Actions::ApplicationAction
   self.name = "Create User"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :index && !Rails.env.production?
@@ -8,6 +6,10 @@ class CreateUser < BaseAction
   self.standalone = true
 
   self.confirm_button_label = "Create User"
+
+  def fields
+    field :email, name: "Email", as: :text, required: true
+  end
 
   class ActionHandler < ActionHandler
     def handle_standalone
