@@ -1,8 +1,8 @@
-class NestedField < Avo::Fields::BaseField
-  include Avo::Concerns::HasFields
+class Avo::Fields::NestedField < Avo::Fields::BaseField
+  include Avo::Concerns::HasItems
 
   def initialize(name, stacked: true, **args, &block)
-    @items_holder = Avo::ItemsHolder.new
+    @items_holder = Avo::Resources::Items::Holder.new
     hide_on :index
     super(name, stacked:, **args, &nil)
     instance_exec(&block) if block

@@ -1,31 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.2.0)
-      avo (>= 3.2.1)
-      avo-dynamic_filters (>= 3.2.0)
-      avo-pro (>= 3.2.0)
+    avo-advanced (3.11.10)
+      avo (= 3.11.10)
+      avo-dynamic_filters (= 3.11.10)
+      avo-pro (= 3.11.10)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.2.3)
-      avo (>= 3.2.1)
+    avo-dashboards (3.11.10)
+      avo (= 3.11.10)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.2.0)
-      active_record_extended
-      avo (>= 3.2.1)
-      ransack (>= 4.1.1)
+    avo-dynamic_filters (3.11.10)
+      avo (= 3.11.10)
+      ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.2.0)
-      avo (>= 3.2.1)
+    avo-menu (3.11.10)
+      avo (= 3.11.10)
       docile
-      dry-initializer
       zeitwerk (>= 2.6.12)
-    avo-pro (3.2.2)
-      avo (>= 3.2.3)
-      avo-dashboards (>= 3.2.0)
-      avo-menu (>= 3.2.0)
+    avo-pro (3.11.10)
+      avo (= 3.11.10)
+      avo-dashboards (= 3.11.10)
+      avo-menu (= 3.11.10)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -122,22 +120,24 @@ GEM
     attr_required (1.0.2)
     autoprefixer-rails (10.4.19.0)
       execjs (~> 2)
-    avo (3.2.3)
+    avo (3.11.10)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
       activesupport (>= 6.1)
       addressable
       docile
-      dry-initializer
-      httparty
       inline_svg
+      literal (~> 0.2)
       meta-tags
-      pagy
-      turbo-rails
+      pagy (>= 7.0.0)
+      turbo-rails (>= 2.0.0)
       turbo_power (>= 0.6.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
+    avo_upgrade (0.1.1)
+      rails (>= 6.0.0)
+      zeitwerk
     awrence (1.2.1)
     aws-eventstream (1.3.0)
     aws-partitions (1.983.0)
@@ -347,10 +347,6 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     http_accept_language (2.1.1)
-    httparty (0.22.0)
-      csv
-      mini_mime (>= 1.0.0)
-      multi_xml (>= 0.5.2)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.1)
@@ -426,6 +422,7 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    literal (0.2.1)
     llhttp-ffi (0.5.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
@@ -896,8 +893,9 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
-  avo (~> 3.2.1)
-  avo-advanced (~> 3.2.0)!
+  avo (~> 3.11)
+  avo-advanced (~> 3.11)!
+  avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.167)
   aws-sdk-sqs (~> 1.86)
   bcrypt (~> 3.1)
@@ -918,6 +916,7 @@ DEPENDENCIES
   discard (~> 1.3)
   dogstatsd-ruby (~> 5.6)
   dotenv-rails (~> 3.1)
+  dry-initializer (~> 3.1)
   factory_bot_rails (~> 6.4)
   faraday (~> 2.12)
   faraday-multipart (~> 1.0)
@@ -1034,12 +1033,13 @@ CHECKSUMS
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   autoprefixer-rails (10.4.19.0) sha256=ccd21f47e5a07a581c7d239025e0d8d06a005825e96e06f72382d818fe665f4e
-  avo (3.2.3) sha256=632eae6803df6148804a2f87a8cf1a521a8778bc6ab2f82ba797907e30b82206
-  avo-advanced (3.2.0) sha256=b10f224b01b14eaf5e23891470c9688dbab24af9fe39a03aa24dba36ebc26140
-  avo-dashboards (3.2.3) sha256=f5bdc8f7650bf5f21a7e4caabfc476d6e71e73c4194bfc4549d1e17e1f93db6b
-  avo-dynamic_filters (3.2.0) sha256=ba0cb12d9e3eae86e5d91b1ce1f6e0090fd02aae58d8fa23ba1fd0a8cb941ff3
-  avo-menu (3.2.0) sha256=9b45193993307265b07eee9a0874b92921476772610eb5171f99414e5059ec80
-  avo-pro (3.2.2) sha256=dec357d60a1143cb1b7cc02c34bdc39ecdb6b12998b1d4097b0dd22b35c2affe
+  avo (3.11.10) sha256=5598770a18b36349ed9acc8b9aef4769b7f6301663cecc70a1a99cda76594fec
+  avo-advanced (3.11.10) sha256=5eec4d20fd5c148074897f9110a60a161311842ad60a1f6ee0080ab790bcf54f
+  avo-dashboards (3.11.10) sha256=741664c13985ba634639d5732312fb92e9422250beeef63005c24fe52fa0a3d5
+  avo-dynamic_filters (3.11.10) sha256=bb74c6433bb027fe58ebc234d18681ad0afcaaa3914c0e95d036642d024a41f8
+  avo-menu (3.11.10) sha256=d82fc939d978e267d1c38b2122035599c19248482e6479bef33eb3cd9f891666
+  avo-pro (3.11.10) sha256=8cc8c1b04c44a530533d8d2042bb01a182c9a744e53db3915ee7cfbe31553a4d
+  avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.983.0) sha256=eb3ab086749ca426e735a50bd1ea669a4b7bc52be3c119a772bd277cc906bb11
@@ -1136,7 +1136,6 @@ CHECKSUMS
   http-cookie (1.0.7) sha256=cb7a399f3344f720b8a0f3b0765f29b62608ebb9c3ce4abf4d6eeff2caf42253
   http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
-  httparty (0.22.0) sha256=78652a5c9471cf0093d3b2083c2295c9c8f12b44c65112f1846af2b71430fa6c
   i18n (1.14.6) sha256=dc229a74f5d181f09942dd60ab5d6e667f7392c4ee826f35096db36d1fe3614c
   importmap-rails (2.0.1) sha256=e739a6e70c09f797688c6983fa79567ec1edc9becc30d55b3f7cc897b1825586
   inline_svg (1.10.0) sha256=5b652934236fd9f8adc61f3fd6e208b7ca3282698b19f28659971da84bf9a10f
@@ -1166,6 +1165,7 @@ CHECKSUMS
   libddwaf (1.14.0.0.0-x86_64-darwin) sha256=33017c057fd6b4948ef4577c4a13bc89d878541961b205309fac1e71516433ff
   libddwaf (1.14.0.0.0-x86_64-linux) sha256=030640a4158ae05f9276cc1e09bfe9d19dda5af26703235cf17cf3752f1985b1
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
+  literal (0.2.1) sha256=7544725886486ce6ae701fea1ea23bb7955ef218ef109f91ad4414f3b7921261
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
   local_time (3.0.2) sha256=cb8abb2d56726ae285d00b0bd7f4c34bafc38c0c1cbc70ddc28f3a5661168d9d
   logger (1.6.1) sha256=3ad9587ed3940bf7897ea64a673971415523f4f7d6b22c5e3af5219705669653

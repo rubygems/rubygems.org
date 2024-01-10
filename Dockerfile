@@ -52,6 +52,7 @@ RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor <<BASH
   set -ex
 
   bundle config set --local without 'development test'
+  bundle config set --local with 'avo'
   bundle config set --local path /srv/vendor
   bundle install --jobs 20 --retry 5
   bundle clean

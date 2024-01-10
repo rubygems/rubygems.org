@@ -1,23 +1,23 @@
 require "test_helper"
 
 class BaseActionTest < ActiveSupport::TestCase
-  class DestroyerAction < BaseAction
-    class ActionHandler < ActionHandler
+  class DestroyerAction < Avo::Actions::ApplicationAction
+    class ActionHandler < Avo::Actions::ActionHandler
       def handle_model(model)
         model.destroy!
       end
     end
   end
 
-  class EmptyAction < BaseAction
-    class ActionHandler < ActionHandler
+  class EmptyAction < Avo::Actions::ApplicationAction
+    class ActionHandler < Avo::Actions::ActionHandler
       def handle_model(model)
       end
     end
   end
 
-  class WebHookCreateAction < BaseAction
-    class ActionHandler < BaseAction::ActionHandler
+  class WebHookCreateAction < Avo::Actions::ApplicationAction
+    class ActionHandler < Avo::Actions::ActionHandler
       def handle_model(user)
         user.web_hooks.create(url: "https://example.com/path")
       end
@@ -32,7 +32,7 @@ class BaseActionTest < ActiveSupport::TestCase
     @view_context.stubs(:avo).returns(@avo)
     @avo.stubs(:resources_audit_path).returns("resources_audit_path")
 
-    ::Avo::App.init request: nil, context: nil, current_user: nil, view_context: @view_context, params: {}
+    ::Avo.init
   end
 
   test "handles errors" do
@@ -41,7 +41,7 @@ class BaseActionTest < ActiveSupport::TestCase
         raise "Cannot enumerate"
       end
     end.new
-    action = BaseAction.new
+    action = Avo::Actions::ApplicationAction.new
 
     args = {
       fields: {
