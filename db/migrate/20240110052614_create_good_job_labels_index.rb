@@ -13,9 +13,7 @@ class CreateGoodJobLabelsIndex < ActiveRecord::Migration[7.0]
       end
 
       dir.down do
-        if connection.index_name_exists?(:good_jobs, :index_good_jobs_on_labels)
-          remove_index :good_jobs, name: :index_good_jobs_on_labels
-        end
+        remove_index :good_jobs, name: :index_good_jobs_on_labels if connection.index_name_exists?(:good_jobs, :index_good_jobs_on_labels)
       end
     end
   end
