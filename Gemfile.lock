@@ -176,17 +176,17 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    datadog-ci (0.5.0)
+    datadog-ci (0.6.0)
       msgpack
     date (3.3.4)
-    ddtrace (1.18.0)
-      datadog-ci (~> 0.5.0)
-      debase-ruby_core_source (= 3.2.3)
+    ddtrace (1.19.0)
+      datadog-ci (~> 0.6.0)
+      debase-ruby_core_source (= 3.3.1)
       libdatadog (~> 5.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
       msgpack
     dead_end (4.0.0)
-    debase-ruby_core_source (3.2.3)
+    debase-ruby_core_source (3.3.1)
     derailed_benchmarks (2.1.2)
       benchmark-ips (~> 2)
       dead_end
@@ -714,7 +714,7 @@ DEPENDENCIES
   csv (~> 3.2)
   dalli (~> 3.2)
   dartsass-sprockets (~> 3.1)
-  ddtrace (~> 1.18)
+  ddtrace (~> 1.19)
   derailed_benchmarks (~> 2.1)
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 2.8)
