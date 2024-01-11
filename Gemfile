@@ -74,7 +74,7 @@ gem "rails_semantic_logger", "~> 4.14"
 gem "pp", "0.5.0"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 2.2"
+  gem "tailwindcss-rails", "~> 2.3"
 end
 
 group :assets do
