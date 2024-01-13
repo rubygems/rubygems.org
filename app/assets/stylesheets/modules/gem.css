@@ -96,6 +96,14 @@
   font-size: 18px;
   color: #141c22; }
 
+.gem__ruby-version-age {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  display: block;
+  font-weight: 800;
+  font-size: 16px;
+  color: #141c22; }
+
 .gem__code-wrap {
   margin-top: 12px;
   position: relative;

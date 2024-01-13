@@ -16,6 +16,12 @@
     </h2>
   </div>
   <h2 class="gem__ruby-version__heading t-list__heading">
+    <%= t('.gem_version_age') %>:
+    <span class="gem__ruby-version-age">
+      <p><%= time_ago_in_words(@latest_version.authored_at) %> ago</p>
+    </span>
+  </h2>
+  <h2 class="gem__ruby-version__heading t-list__heading">
     <%= pluralized_licenses_header @latest_version %>:
     <span class="gem__ruby-version">
       <p><%= formatted_licenses @latest_version.licenses %></p>
