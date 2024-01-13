@@ -107,7 +107,7 @@ group :development do
 end
 
 group :test do
-  gem "minitest", "~> 5.18", require: false
+  gem "minitest", "~> 5.21", require: false
   gem "capybara", "~> 3.38"
   gem "launchy", "~> 2.5"
   gem "rack-test", "~> 2.1", require: "rack/test"
