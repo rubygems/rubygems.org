@@ -707,6 +707,7 @@ es:
   rubygems:
     aside:
       downloads_for_this_version: Para esta versión
+      gem_version_age: Versión publicada
       required_ruby_version: Versión de Ruby requerida
       required_rubygems_version: Versión de Rubygems requerida
       requires_mfa: Nuevas versiones requieren AMF

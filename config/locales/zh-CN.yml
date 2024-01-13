@@ -610,6 +610,7 @@ zh-CN:
   rubygems:
     aside:
       downloads_for_this_version: 这个版本
+      gem_version_age: 版本发布
       required_ruby_version: 需要的 Ruby 版本
       required_rubygems_version: 需要的 RubyGems 版本
       requires_mfa: 新的版本需要开启多因素验证

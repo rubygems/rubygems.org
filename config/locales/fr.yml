@@ -634,6 +634,7 @@ fr:
   rubygems:
     aside:
       downloads_for_this_version: Pour cette version
+      gem_version_age: Version publiée
       required_ruby_version: Version de Ruby requise
       required_rubygems_version:
       requires_mfa:

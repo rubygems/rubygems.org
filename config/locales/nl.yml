@@ -602,6 +602,7 @@ nl:
   rubygems:
     aside:
       downloads_for_this_version: Voor deze versie
+      gem_version_age: Versie vrijgegeven
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa:

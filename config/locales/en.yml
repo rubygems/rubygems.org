@@ -600,6 +600,7 @@ en:
   rubygems:
     aside:
       downloads_for_this_version: For this version
+      gem_version_age: Version Released
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa: New versions require MFA

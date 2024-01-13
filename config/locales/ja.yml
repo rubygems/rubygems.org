@@ -601,6 +601,7 @@ ja:
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
+      gem_version_age: 解放された
       required_ruby_version: 必要なRubyのバージョン
       required_rubygems_version: 必要なRubyGemsのバージョン
       requires_mfa: 新しいバージョンはMFAを必要とします

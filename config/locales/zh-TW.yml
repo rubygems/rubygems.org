@@ -604,6 +604,7 @@ zh-TW:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      gem_version_age: 版本发布
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
       requires_mfa: 新版本需要 MFA
