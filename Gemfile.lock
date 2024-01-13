@@ -128,7 +128,7 @@ GEM
     bloomer (1.0.0)
       bitarray
       msgpack
-    bootsnap (1.17.0)
+    bootsnap (1.17.1)
       msgpack (~> 1.2)
     brakeman (6.1.1)
       racc
@@ -704,7 +704,7 @@ DEPENDENCIES
   aws-sdk-sqs (~> 1.69)
   bcrypt (~> 3.1)
   bigdecimal (~> 3.1)
-  bootsnap (~> 1.16)
+  bootsnap (~> 1.17)
   brakeman (~> 6.1)
   browser (~> 5.3, >= 5.3.1)
   capybara (~> 3.38)
