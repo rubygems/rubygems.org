@@ -1,6 +1,8 @@
 ---
 zh-CN:
   credentials_required: 需要凭证
+  copied: 已复制！
+  copy_to_clipboard: 复制到剪贴板
   edit: 编辑
   failure_when_forbidden: 请再次确认 URL 或尝试重新提交
   verification_expired:
@@ -632,8 +634,6 @@ zh-CN:
       title: Gem
     show:
       bundler_header: Gemfile
-      copied: 已复制！
-      copy_to_clipboard: 复制到剪贴板
       install: 安装
       licenses_header:
         one: 许可
@@ -788,8 +788,6 @@ zh-CN:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:

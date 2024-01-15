@@ -1,6 +1,8 @@
 ---
 ja:
   credentials_required: 認証情報が必要です
+  copied: コピー完了!
+  copy_to_clipboard: クリップボードにコピー
   edit: 編集
   failure_when_forbidden: URLを見返すか、再度送信してみてください。
   verification_expired:
@@ -625,8 +627,6 @@ ja:
       title: gem
     show:
       bundler_header: Gemfile
-      copied: コピー完了!
-      copy_to_clipboard: クリップボードにコピー
       install: インストール
       licenses_header:
         one: ライセンス
@@ -780,8 +780,6 @@ ja:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:

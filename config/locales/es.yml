@@ -1,6 +1,8 @@
 ---
 es:
   credentials_required: Credenciales requeridas
+  copied: "¡Copiado!"
+  copy_to_clipboard: Copiar al portapapeles
   edit: Editar
   failure_when_forbidden: Por favor verifica la URL o inténtalo nuevamente.
   verification_expired:
@@ -734,8 +736,6 @@ es:
       title: Gemas
     show:
       bundler_header: Gemfile
-      copied: "¡Copiado!"
-      copy_to_clipboard: Copiar al portapapeles
       install: instalar
       licenses_header:
         one: Licencia
@@ -918,8 +918,6 @@ es:
           Actions.
         not_push: Este rol de clave API OIDC no está configurado para permitir subir
           gemas.
-        copy_to_clipboard: Copiar al portapapeles
-        copied: "¡Copiado!"
         a_gem: una gema
         instructions_html: 'Para lanzar una gema, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem"
           rel="noreferer">crea la nueva versión</a> y genera una etiqueta nueva (usando

@@ -1,6 +1,8 @@
 ---
 en:
   credentials_required: Credentials required
+  copied: Copied!
+  copy_to_clipboard: Copy to clipboard
   edit: Edit
   failure_when_forbidden: Please double check the URL or try submitting it again.
   verification_expired: The verification has expired. Please verify again.
@@ -621,8 +623,6 @@ en:
       title: Gems
     show:
       bundler_header: Gemfile
-      copied: Copied!
-      copy_to_clipboard: Copy to clipboard
       install: install
       licenses_header:
         one: License
@@ -771,8 +771,6 @@ en:
         to_automate_html: "To automate releasing %{link_html} when a new tag is pushed, add the following workflow to your repository."
         not_github: "This OIDC API Key Role is not configured for GitHub Actions."
         not_push: "This OIDC API Key Role is not configured to allow pushing gems."
-        copy_to_clipboard: Copy to clipboard
-        copied: Copied!
         a_gem: a gem
         instructions_html: |
           To release, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">bump the gem version</a> and push a new tag (using <code>rake release:source_control_push</code>) to GitHub. The workflow will automatically build the gem and push it to RubyGems.org.

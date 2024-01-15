@@ -1,6 +1,8 @@
 ---
 fr:
   credentials_required:
+  copied: Copié!
+  copy_to_clipboard: Copier
   edit: Modification
   failure_when_forbidden: Veuillez vérifier l'URL ou réessayer.
   verification_expired:
@@ -658,8 +660,6 @@ fr:
       title: Gems
     show:
       bundler_header: Gemfile
-      copied: Copié!
-      copy_to_clipboard: Copier
       install: installation
       licenses_header:
         one: License
@@ -821,8 +821,6 @@ fr:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:

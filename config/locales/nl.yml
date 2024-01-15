@@ -1,6 +1,8 @@
 ---
 nl:
   credentials_required:
+  copied:
+  copy_to_clipboard:
   edit: Wijzig
   failure_when_forbidden: Controleer het webadres, en probeer het opnieuw.
   verification_expired:
@@ -625,8 +627,6 @@ nl:
       title: alle gems
     show:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
       install: Installeer
       licenses_header:
         one: Licentie
@@ -775,8 +775,6 @@ nl:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:
