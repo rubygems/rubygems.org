@@ -160,10 +160,6 @@ fr:
       invalid_key:
     all_gems:
     gem_ownership_removed:
-  clearance_mailer:
-    change_password:
-      title:
-      subtitle:
   dashboards:
     show:
       creating_link_text: création
@@ -403,6 +399,12 @@ fr:
       title:
     sponsors:
       title:
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title:
+      subtitle:
   passwords:
     edit:
       submit: Enregistrer ce mot de passe

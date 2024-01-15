@@ -159,10 +159,6 @@ en:
       invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
     all_gems: All Gems
     gem_ownership_removed: Ownership of %{rubygem_name} has been removed after being scoped to this key.
-  clearance_mailer:
-    change_password:
-      title: CHANGE PASSWORD
-      subtitle: Hi %{handle}!
   dashboards:
     show:
       creating_link_text: creating
@@ -382,6 +378,14 @@ en:
       title: Security
     sponsors:
       title: Sponsors
+  password_mailer:
+    change_password:
+      closing: If you didn't request this, ignore this email. Your password has
+        not been changed.
+      opening: "Someone, hopefully you, requested we send you a link to change
+        your password:"
+      title: CHANGE PASSWORD
+      subtitle: Hi %{handle}!
   passwords:
     edit:
       submit: Save this password

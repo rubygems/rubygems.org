@@ -87,7 +87,7 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def deliver_email(user)
-    ::ClearanceMailer.change_password(user).deliver_later
+    ::PasswordMailer.change_password(user).deliver_later
   end
 
   def otp_edit_conditions_met?
