@@ -169,10 +169,6 @@ es:
     all_gems: Todas las gemas
     gem_ownership_removed: Se ha eliminado la propiedad de %{rubygem_name} tras haber
       sido añadida a esta clave.
-  clearance_mailer:
-    change_password:
-      title: CAMBIAR CONTRASEÑA
-      subtitle: "¡Hola %{handle}!"
   dashboards:
     show:
       creating_link_text: crear
@@ -438,6 +434,12 @@ es:
       title: Seguridad
     sponsors:
       title: Patrocinadores
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title: CAMBIAR CONTRASEÑA
+      subtitle: "¡Hola %{handle}!"
   passwords:
     edit:
       submit: Guardar esta contraseña

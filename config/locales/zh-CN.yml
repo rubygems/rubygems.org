@@ -154,10 +154,6 @@ zh-CN:
       invalid_key: 已作废的 API 密钥不能被编辑。请删除它并创建一个新的 API 密钥。
     all_gems: 所有 Gem
     gem_ownership_removed: 对 %{rubygem_name} 的所有权已经被移除（在使用此 API 密钥决定作用范围后）
-  clearance_mailer:
-    change_password:
-      title: 修改密码
-      subtitle: 你好啊，%{handle}！
   dashboards:
     show:
       creating_link_text: 创建
@@ -391,6 +387,12 @@ zh-CN:
       title: 安全
     sponsors:
       title: 赞助商
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title: 修改密码
+      subtitle: 你好啊，%{handle}！
   passwords:
     edit:
       submit: 保存该密码

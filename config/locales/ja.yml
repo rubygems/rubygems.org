@@ -153,10 +153,6 @@ ja:
       invalid_key: 正しくないAPIキーは編集できません。削除して新規作成してください。
     all_gems: 全てのgem
     gem_ownership_removed: このキーのスコープにあった%{rubygem_name}の所有権が削除されました。
-  clearance_mailer:
-    change_password:
-      title: パスワードを変更する
-      subtitle: こんにちは、%{handle}！
   dashboards:
     show:
       creating_link_text: 作成
@@ -383,6 +379,12 @@ ja:
       title: セキュリティ
     sponsors:
       title: 出資者
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title: パスワードを変更する
+      subtitle: こんにちは、%{handle}！
   passwords:
     edit:
       submit: このパスワードを保存する

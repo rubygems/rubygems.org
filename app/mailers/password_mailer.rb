@@ -1,4 +1,4 @@
-class ClearanceMailer < ApplicationMailer
+class PasswordMailer < ApplicationMailer
   include Roadie::Rails::Automatic
 
   default_url_options[:host] = Gemcutter::HOST
