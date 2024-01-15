@@ -58,7 +58,7 @@ jobs:
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
         uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
         with:
-          name: capybara-screenshots
+          name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
           path: tmp/capybara
           if-no-files-found: ignore
 
