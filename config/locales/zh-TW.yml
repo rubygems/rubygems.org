@@ -1,6 +1,8 @@
 ---
 zh-TW:
   credentials_required:
+  copied: 已複製
+  copy_to_clipboard: 複製
   edit: 編輯
   failure_when_forbidden: 請確認 URL 或再次提交
   verification_expired:
@@ -610,8 +612,6 @@ zh-TW:
       title: Gems
     show:
       bundler_header: Gemfile
-      copied: 已複製
-      copy_to_clipboard: 複製
       install: 安裝
       licenses_header:
         one: License
@@ -760,8 +760,6 @@ zh-TW:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:

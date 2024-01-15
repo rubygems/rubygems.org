@@ -1,6 +1,8 @@
 ---
 pt-BR:
   credentials_required:
+  copied:
+  copy_to_clipboard:
   edit: Editar
   failure_when_forbidden: Por favor, confira a URL ou tente submetê-la novamente.
   verification_expired:
@@ -640,8 +642,6 @@ pt-BR:
       title: Gems
     show:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
       install: instalar
       licenses_header:
         one: Licença
@@ -800,8 +800,6 @@ pt-BR:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:
