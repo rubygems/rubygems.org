@@ -67,10 +67,15 @@ class PasswordsController < Clearance::PasswordsController
   private
 
   def verified_sign_in
-    sign_in @user
-    session_verified
-    @user.update!(confirmation_token: nil)
-    StatsD.increment "login.success"
+    sign_in(@user) do |status|
+      if status.success?
+        StatsD.increment "login.success"
+        current_user.update!(confirmation_token: nil)
+        session_verified
+      else
+        redirect_to root_path, alert: t("failure_when_forbidden")
+      end
+    end
   end
 
   def url_after_update
