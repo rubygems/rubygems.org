@@ -1,3 +1,4 @@
+# DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2.
 Rails.application.configure do
   ld_config = LaunchDarkly::Config.new(
     logger: SemanticLogger[LaunchDarkly],

@@ -11,7 +11,7 @@ class ApplicationJob < ActiveJob::Base
 
   # Default to retrying errors a few times, so we don't get an alert for
   # spurious errors
-  retry_on StandardError, wait: :exponentially_longer, attempts: 5
+  retry_on StandardError, wait: :polynomially_longer, attempts: 5
 
   # Automatically retry jobs that encountered a deadlock
   retry_on ActiveRecord::Deadlocked

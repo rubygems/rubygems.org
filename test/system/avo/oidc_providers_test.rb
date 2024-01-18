@@ -165,7 +165,7 @@ class Avo::OIDCProvidersSystemTest < ApplicationSystemTestCase
     )
     assert_equal(
       "78167F727DEC5D801DD1C8784C704A1C880EC0E1",
-      audit.audited_changes.dig("records", "gid://gemcutter/OIDC::Provider/#{provider.id}", "changes", "jwks", 1, "keys", 0, "kid")
+      audit.audited_changes.dig("records", "gid://gemcutter/OIDC::Provider/#{provider.id}", "changes", "jwks", 1, 0, "kid")
     )
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
