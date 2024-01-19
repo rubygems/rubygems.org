@@ -1,6 +1,8 @@
 ---
 de:
   credentials_required:
+  copied: Kopiert!
+  copy_to_clipboard: In die Zwischenablage kopieren
   edit: Bearbeiten
   failure_when_forbidden:
   verification_expired:
@@ -149,10 +151,6 @@ de:
       invalid_key:
     all_gems:
     gem_ownership_removed:
-  clearance_mailer:
-    change_password:
-      title:
-      subtitle:
   dashboards:
     show:
       creating_link_text: Erstellen
@@ -385,6 +383,12 @@ de:
       title:
     sponsors:
       title:
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title:
+      subtitle:
   passwords:
     edit:
       submit: Speichern dieses Passworts
@@ -621,8 +625,6 @@ de:
       title: Gems
     show:
       bundler_header: Gemfile
-      copied: Kopiert!
-      copy_to_clipboard: In die Zwischenablage kopieren
       install: installieren
       licenses_header:
         one: Lizenz
@@ -771,8 +773,6 @@ de:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:

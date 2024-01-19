@@ -1,6 +1,8 @@
 ---
 nl:
   credentials_required:
+  copied:
+  copy_to_clipboard:
   edit: Wijzig
   failure_when_forbidden: Controleer het webadres, en probeer het opnieuw.
   verification_expired:
@@ -152,10 +154,6 @@ nl:
       invalid_key:
     all_gems:
     gem_ownership_removed:
-  clearance_mailer:
-    change_password:
-      title:
-      subtitle:
   dashboards:
     show:
       creating_link_text: aanmaken
@@ -389,6 +387,12 @@ nl:
       title:
     sponsors:
       title:
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title:
+      subtitle:
   passwords:
     edit:
       submit: Sla dit wachtwoord op
@@ -625,8 +629,6 @@ nl:
       title: alle gems
     show:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
       install: Installeer
       licenses_header:
         one: Licentie
@@ -775,8 +777,6 @@ nl:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:

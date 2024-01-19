@@ -37,6 +37,10 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
 
       assert page.has_content?(@rubygem_two.name)
       refute page.has_content?(@rubygem_three.name)
+
+      form_path = rubygem_reverse_dependencies_path(@rubygem_one.slug)
+
+      assert page.has_selector?("form#rdeps-search[action='#{form_path}']")
     end
 
     should "search reverse dependencies" do

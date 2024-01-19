@@ -1,6 +1,8 @@
 ---
 fr:
   credentials_required:
+  copied: Copié!
+  copy_to_clipboard: Copier
   edit: Modification
   failure_when_forbidden: Veuillez vérifier l'URL ou réessayer.
   verification_expired:
@@ -160,10 +162,6 @@ fr:
       invalid_key:
     all_gems:
     gem_ownership_removed:
-  clearance_mailer:
-    change_password:
-      title:
-      subtitle:
   dashboards:
     show:
       creating_link_text: création
@@ -403,6 +401,12 @@ fr:
       title:
     sponsors:
       title:
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title:
+      subtitle:
   passwords:
     edit:
       submit: Enregistrer ce mot de passe
@@ -658,8 +662,6 @@ fr:
       title: Gems
     show:
       bundler_header: Gemfile
-      copied: Copié!
-      copy_to_clipboard: Copier
       install: installation
       licenses_header:
         one: License
@@ -821,8 +823,6 @@ fr:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:

@@ -34,8 +34,8 @@
           <div class="gem__code-wrap">
             <input type="text" class="gem__code" id="gemfile_text" value="<%= @latest_version.to_bundler(locked_version: @on_version_page) %>" readonly="readonly">
             <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-target="#gemfile_text">=</span>
-            <span class="gem__code__tooltip--copy"><%= t('.copy_to_clipboard') %></span>
-            <span class="gem__code__tooltip--copied"><%= t('.copied') %></span>
+            <span class="gem__code__tooltip--copy"><%= t('copy_to_clipboard') %></span>
+            <span class="gem__code__tooltip--copied"><%= t('copied') %></span>
           </div>
         </h2>
         <h2 class="gem__ruby-version__heading t-list__heading">

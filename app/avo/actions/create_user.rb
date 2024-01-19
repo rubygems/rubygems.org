@@ -19,7 +19,7 @@ class CreateUser < BaseAction
       user.generate_confirmation_token
       user.save!
 
-      ::ClearanceMailer.change_password(user).deliver_later
+      ::PasswordMailer.change_password(user).deliver_later
       user
     end
   end

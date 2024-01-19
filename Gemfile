@@ -1,24 +1,18 @@
 source "https://rubygems.org"
 
-# Former default gems
-gem "bigdecimal", "~> 3.1" # activesupport-7.0.8
-gem "mutex_m", "~> 0.2.0" # activesupport-7.0.8
-gem "net-smtp", "~> 0.4.0" # mail-2.8.1
-gem "csv", "~> 3.2" # zeitwerk-2.6.12
-gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
-
-gem "rails", "~> 7.0.0"
+gem "rails", "~> 7.1.0"
 gem "rails-i18n", "~> 7.0"
 
 gem "aws-sdk-s3", "~> 1.142"
 gem "aws-sdk-sqs", "~> 1.69"
-gem "bootsnap", "~> 1.16"
+gem "bootsnap", "~> 1.17"
 gem "clearance", "~> 2.6"
 gem "dalli", "~> 3.2"
 gem "ddtrace", "~> 1.19", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby", "~> 5.5"
 gem "google-protobuf", "~> 3.25"
 gem "faraday", "~> 2.9"
+gem "faraday-retry", "~> 2.2"
 gem "good_job", "~> 3.22"
 gem "gravtastic", "~> 3.2"
 gem "high_voltage", "~> 3.1"
@@ -62,7 +56,7 @@ gem "strong_migrations", "~> 1.7"
 gem "phlex-rails", "~> 1.1"
 
 # Admin dashboard
-gem "avo", "~> 2.46"
+gem "avo", "~> 2.47"
 gem "view_component", "~> 3.10"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
@@ -72,6 +66,10 @@ gem "groupdate", "~> 6.2"
 gem "amazing_print", "~> 1.4"
 gem "rails_semantic_logger", "~> 4.14"
 gem "pp", "0.5.0"
+
+# Former default gems
+gem "csv", "~> 3.2" # zeitwerk-2.6.12
+gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 
 group :assets, :development do
   gem "tailwindcss-rails", "~> 2.3"
@@ -107,7 +105,7 @@ group :development do
 end
 
 group :test do
-  gem "minitest", "~> 5.18", require: false
+  gem "minitest", "~> 5.21", require: false
   gem "capybara", "~> 3.38"
   gem "launchy", "~> 2.5"
   gem "rack-test", "~> 2.1", require: "rack/test"
@@ -121,6 +119,5 @@ group :test do
   gem "simplecov-cobertura", "~> 2.1", require: false
   gem "aggregate_assertions", "~> 0.2.0"
   gem "minitest-gcstats", "~> 1.3"
-  gem "minitest-profile", "~> 0.0.2"
   gem "minitest-reporters", "~> 1.6"
 end

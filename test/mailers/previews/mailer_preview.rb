@@ -12,7 +12,7 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def change_password
-    ClearanceMailer.change_password(User.last)
+    PasswordMailer.change_password(User.last)
   end
 
   def deletion_complete
