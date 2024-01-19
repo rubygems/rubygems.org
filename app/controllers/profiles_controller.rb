@@ -54,6 +54,11 @@ class ProfilesController < ApplicationController
     @ownership_requests = current_user.ownership_requests.includes(:rubygem)
   end
 
+  def security_events
+    @security_events = current_user.events.order(id: :desc).page(params[:page]).per(50)
+    render Profiles::SecurityEventsView.new(security_events: @security_events)
+  end
+
   private
 
   def params_user

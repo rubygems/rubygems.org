@@ -24,7 +24,7 @@ class SessionsController < Clearance::SessionsController
 
       render "multifactor_auths/prompt"
     else
-      do_login
+      do_login(two_factor_label: nil, two_factor_method: nil, authentication_method: "password")
     end
   end
 
@@ -39,7 +39,7 @@ class SessionsController < Clearance::SessionsController
 
     record_mfa_login_duration(mfa_type: "webauthn")
 
-    do_login
+    do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: "webauthn", authentication_method: "password")
   end
 
   def webauthn_full_create
@@ -47,7 +47,7 @@ class SessionsController < Clearance::SessionsController
 
     @user = user_webauthn_credential.user
 
-    do_login
+    do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: nil, authentication_method: "webauthn")
   end
 
   def otp_create
@@ -56,7 +56,7 @@ class SessionsController < Clearance::SessionsController
     if login_conditions_met?
       record_mfa_login_duration(mfa_type: "otp")
 
-      do_login
+      do_login(two_factor_label: "OTP", two_factor_method: "otp", authentication_method: "password")
     elsif !session_active?
       login_failure(t("multifactor_auths.session_expired"))
     else
@@ -106,10 +106,12 @@ class SessionsController < Clearance::SessionsController
     params.require(:verify_password).permit(:password)
   end
 
-  def do_login
+  def do_login(two_factor_label:, two_factor_method:, authentication_method:)
     sign_in(@user) do |status|
       if status.success?
         StatsD.increment "login.success"
+        current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
+          two_factor_method:, two_factor_label:, authentication_method:)
         set_login_flash
         redirect_to(url_after_create)
       else

@@ -12,6 +12,8 @@ class Deletion < ApplicationRecord
 
   before_validation :record_metadata
   after_create :remove_from_index, :set_yanked_info_checksum
+  after_create :record_yank_event
+  after_destroy :record_unyank_event
   after_commit :remove_from_storage, on: :create
   after_commit :remove_version_contents, on: :create
   after_commit :expire_cache
@@ -107,5 +109,15 @@ class Deletion < ApplicationRecord
     version.rubygem.push_notifiable_owners.each do |notified_user|
       Mailer.gem_yanked(user.id, version.id, notified_user.id).deliver_later
     end
+  end
+
+  def record_yank_event
+    version.rubygem.record_event!(Events::RubygemEvent::VERSION_YANKED, number: version.number, platform: version.platform,
+yanked_by: user&.display_handle, actor_gid: user&.to_gid, version_gid: version.to_gid)
+  end
+
+  def record_unyank_event
+    version.rubygem.record_event!(Events::RubygemEvent::VERSION_UNYANKED, number: version.number, platform: version.platform,
+version_gid: version.to_gid)
   end
 end

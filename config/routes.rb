@@ -166,6 +166,7 @@ Rails.application.routes.draw do
     resource :settings, only: :edit
     resource :profile, only: %i[edit update] do
       get :adoptions
+      get :security_events
       member do
         get :delete
         delete :destroy, as: :destroy
@@ -198,6 +199,8 @@ Rails.application.routes.draw do
       only: %i[index show],
       path: 'gems',
       constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
+      get :security_events, on: :member
+
       resource :subscription,
         only: %i[create destroy],
         constraints: { format: :js },

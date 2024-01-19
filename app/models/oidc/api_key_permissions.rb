@@ -7,7 +7,7 @@ class OIDC::ApiKeyPermissions < OIDC::BaseModel
   end
 
   attribute :scopes, Types::ArrayOf.new(:string)
-  attribute :valid_for, Types::Duration.new, default: -> { 30.minutes.freeze }
+  attribute :valid_for, :duration, default: -> { 30.minutes.freeze }
   attribute :gems, Types::ArrayOf.new(:string)
 
   validates :scopes, presence: true

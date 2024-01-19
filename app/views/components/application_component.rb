@@ -22,7 +22,7 @@ class ApplicationComponent < Phlex::HTML
   delegate :t, to: "self.class.translation_helper"
 
   def self.translation_helper
-    @translation_helper ||= TranslationHelper.new(translation_path: translation_path)
+    @translation_helper ||= TranslationHelper.new(translation_path:)
   end
 
   def self.translation_path

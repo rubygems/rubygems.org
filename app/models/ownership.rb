@@ -11,6 +11,10 @@ class Ownership < ApplicationRecord
 
   before_create :generate_confirmation_token
 
+  after_create :record_create_event
+  after_update :record_confirmation_event, if: :saved_change_to_confirmed_at?
+  after_destroy :record_destroy_event
+
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
 
@@ -84,5 +88,31 @@ class Ownership < ApplicationRecord
     else
       errors.add :user_id, I18n.t("activerecord.errors.models.ownership.attributes.user_id.already_invited")
     end
+  end
+
+  private
+
+  def record_create_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_ADDED,
+      owner: user.display_handle,
+      authorizer: authorizer.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid)
+  end
+
+  def record_confirmation_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_CONFIRMED,
+      owner: user.display_handle,
+      authorizer: authorizer.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid)
+  end
+
+  def record_destroy_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_REMOVED,
+      owner: user.display_handle,
+      removed_by: Current.user&.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid)
   end
 end

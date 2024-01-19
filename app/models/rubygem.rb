@@ -13,7 +13,7 @@ class Rubygem < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
-  has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version", inverse_of: :rubygem
+  has_one :latest_version, -> { latest.order(:position) }, class_name: "Version", inverse_of: :rubygem
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem

@@ -1,3 +1,5 @@
+require_relative "../helpers/password_helpers"
+
 FactoryBot.define do
   factory :user do
     email

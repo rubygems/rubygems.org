@@ -46,7 +46,7 @@ Avo.configure do |config|
   # config.locale = 'en-US'
 
   ## == Resource options ==
-  # config.resource_controls_placement = :right
+  config.resource_controls_placement = :left
   # config.model_resource_mapping = {}
   # config.default_view_type = :table
   # config.per_page = 24
@@ -104,7 +104,19 @@ Avo.configure do |config|
     end
 
     section "Resources", icon: "resources" do
-      all_resources
+      Avo::App.resources_for_navigation.group_by { |r| r.model_class.module_parent_name }.sort_by { |k, _| k.to_s }.each do |namespace, reses|
+        if namespace.present?
+          group namespace.titleize, icon: "folder" do
+            reses.each do |res|
+              resource res.route_key
+            end
+          end
+        else
+          reses.each do |res|
+            resource res.route_key
+          end
+        end
+      end
     end
 
     unless all_tools.empty?
@@ -137,4 +149,17 @@ Rails.configuration.to_prepare do
       super(object_name, *, **)
     end
   end
+
+  Avo::Fields::IndexComponent.prepend(Module.new do
+    def initialize(flush: false, **)
+      super(**)
+      @flush = flush
+    end
+
+    def field_wrapper_args
+      args = super
+      args[:flush] = @flush
+      args
+    end
+  end)
 end
