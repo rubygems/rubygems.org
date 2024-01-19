@@ -60,8 +60,8 @@
     <div class="gem__code-wrap">
       <input type="text" class="gem__code" id="gem_sha_256_checksum" value="<%= latest_version.sha256_hex %>" readonly="readonly">
       <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-target="#gem_sha_256_checksum">=</span>
-      <span class="gem__code__tooltip--copy"><%= t('.copy_to_clipboard') %></span>
-      <span class="gem__code__tooltip--copied"><%= t('.copied') %></span>
+      <span class="gem__code__tooltip--copy"><%= t('copy_to_clipboard') %></span>
+      <span class="gem__code__tooltip--copied"><%= t('copied') %></span>
     </div>
   <% end %>
 
