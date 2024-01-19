@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - uses: ruby/setup-ruby@b203567269b5bbc256dbc1c84f7495913f977353 # v1.167.0
+      - uses: ruby/setup-ruby@432702e864cadc1b56247e31aa341be5be3e129a # v1.168.0
         with:
           bundler-cache: true
       - name: Rubocop
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - uses: ruby/setup-ruby@b203567269b5bbc256dbc1c84f7495913f977353 # v1.167.0
+      - uses: ruby/setup-ruby@432702e864cadc1b56247e31aa341be5be3e129a # v1.168.0
         with:
           bundler-cache: true
       - name: Brakeman
@@ -41,7 +41,7 @@ jobs:
       - name: login to Github Packages
         run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - uses: ruby/setup-ruby@b203567269b5bbc256dbc1c84f7495913f977353 # v1.167.0
+      - uses: ruby/setup-ruby@432702e864cadc1b56247e31aa341be5be3e129a # v1.168.0
         with:
           bundler-cache: true
       - name: krane render
