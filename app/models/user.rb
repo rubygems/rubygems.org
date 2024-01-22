@@ -8,6 +8,9 @@ class User < ApplicationRecord
   before_create :_generate_confirmation_token_no_reset_unconfirmed_email
   before_destroy :yank_gems
 
+  scope :active, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
+
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
 
   has_many :rubygems, through: :ownerships, source: :rubygem
@@ -25,7 +28,10 @@ class User < ApplicationRecord
   has_many :api_keys, dependent: :destroy, inverse_of: :owner, as: :owner
 
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :user
+  has_many :closed_ownership_calls, -> { closed }, dependent: :destroy, inverse_of: :user, class_name: "OwnershipCall"
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :user
+  has_many :closed_ownership_requests, -> { closed }, dependent: :destroy, inverse_of: :user, class_name: "OwnershipRequest"
+  has_many :approved_ownership_requests, -> { approved }, dependent: :destroy, inverse_of: :user, class_name: "OwnershipRequest"
 
   has_many :audits, as: :auditable, dependent: :nullify
 
@@ -67,7 +73,8 @@ class User < ApplicationRecord
     # to UTF-8.
     who = who.encode(Encoding::UTF_8)
 
-    user = find_by(email: who.downcase) || find_by(handle: who)
+    scope = active
+    user = scope.find_by(email: who.downcase) || scope.find_by(handle: who)
     user if user&.authenticated?(password)
   rescue BCrypt::Errors::InvalidHash, Encoding::UndefinedConversionError
     nil
@@ -251,6 +258,13 @@ class User < ApplicationRecord
     )
   end
 
+  def yank_gems
+    versions_to_yank = only_owner_gems.map(&:versions).flatten
+    versions_to_yank.each do |v|
+      deletions.create(version: v)
+    end
+  end
+
   private
 
   def update_email
@@ -264,13 +278,6 @@ class User < ApplicationRecord
 
   def unconfirmed_email_exists?
     User.exists?(email: unconfirmed_email)
-  end
-
-  def yank_gems
-    versions_to_yank = only_owner_gems.map(&:versions).flatten
-    versions_to_yank.each do |v|
-      deletions.create(version: v)
-    end
   end
 
   def toxic_email_domain

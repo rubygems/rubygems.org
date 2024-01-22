@@ -49,7 +49,7 @@ module WebauthnVerifiable
     if @user.present?
       @user.webauthn_credentials
     else
-      User.find_by(webauthn_id: @credential.user_handle)&.webauthn_credentials || WebauthnCredential.none
+      User.active.find_by(webauthn_id: @credential.user_handle)&.webauthn_credentials || WebauthnCredential.none
     end
   end
 

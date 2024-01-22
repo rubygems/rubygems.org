@@ -3,7 +3,7 @@ class StatsController < ApplicationController
 
   def index
     @number_of_gems        = Rubygem.total_count
-    @number_of_users       = User.count
+    @number_of_users       = User.active.count
     @number_of_downloads   = GemDownload.total_count
     @most_downloaded       = Rubygem.by_downloads.includes(:gem_download).page(@page).per(Gemcutter::STATS_PER_PAGE)
     @most_downloaded_count = GemDownload.most_downloaded_gem_count

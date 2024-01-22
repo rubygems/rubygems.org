@@ -8,7 +8,7 @@ class ProfilesController < ApplicationController
   before_action :set_cache_headers, only: :edit
 
   def show
-    @user           = User.find_by_slug!(params[:id])
+    @user           = User.active.find_by_slug!(params[:id])
     rubygems        = @user.rubygems_downloaded
     @rubygems       = rubygems.slice!(0, 10)
     @extra_rubygems = rubygems

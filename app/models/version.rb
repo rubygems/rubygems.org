@@ -7,10 +7,13 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_many :audits, as: :auditable, inverse_of: :auditable, dependent: :nullify
   has_one :gem_download, inverse_of: :version, dependent: :destroy
-  belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
+  belongs_to :pusher, class_name: "User", inverse_of: :pushed_versions, optional: true
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true
   has_one :deletion, dependent: :delete, inverse_of: :version, required: false
   has_one :yanker, through: :deletion, source: :user, inverse_of: :yanked_versions, required: false
+
+  belongs_to :active_pusher, -> { active }, class_name: "User", inverse_of: :pushed_versions, foreign_key: :pusher_id, optional: true
+  has_one :active_yanker, -> { active }, through: :deletion, source: :user, inverse_of: :yanked_versions, required: false
 
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!

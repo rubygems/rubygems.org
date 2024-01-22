@@ -33,7 +33,7 @@ class OwnersController < ApplicationController
   end
 
   def create
-    owner = User.find_by_name(handle_params)
+    owner = User.active.find_by_name(handle_params)
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later

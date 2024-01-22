@@ -5,6 +5,9 @@ class UserResource < Avo::BaseResource
     scope.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
   }
 
+  class DeletedFilter < ScopeBooleanFilter; end
+  filter DeletedFilter, arguments: { default: { active: true, deleted: false } }
+
   action BlockUser
   action CreateUser
   action ChangeUserEmail
@@ -33,6 +36,8 @@ class UserResource < Avo::BaseResource
 
   field :mail_fails, as: :number
   field :blocked_email, as: :text
+
+  field :deleted_at, as: :date_time
 
   tabs style: :pills do
     tab "Auth" do
