@@ -1,7 +1,7 @@
 namespace :api_keys do
   desc "Migrate user api keys to ApiKey model"
   task migrate: :environment do
-    users = User.active.where.not(api_key: nil).all
+    users = User.where.not(api_key: nil).all
 
     total = users.count
     i = 0

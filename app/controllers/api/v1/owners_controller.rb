@@ -17,7 +17,7 @@ class Api::V1::OwnersController < Api::BaseController
   def create
     return render_api_key_forbidden unless @api_key.can_add_owner?
 
-    owner = User.active.find_by_name(email_param)
+    owner = User.find_by_name(email_param)
     if owner
       ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user)
       if ownership.save
@@ -51,7 +51,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def gems
-    user = User.active.find_by_slug(params[:handle])
+    user = User.find_by_slug(params[:handle])
     if user
       rubygems = user.rubygems.with_versions
       respond_to do |format|

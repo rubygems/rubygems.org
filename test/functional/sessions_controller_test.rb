@@ -235,9 +235,7 @@ class SessionsControllerTest < ActionController::TestCase
           setup do
             @controller.session[:mfa_login_started_at] = Time.now.utc.to_s
             @controller.session[:mfa_user] = @user.id
-            mock = mock("User.active")
-            mock.expects(:find).with(@user.id).returns @user
-            User.expects(:active).returns mock
+            User.expects(:find).with(@user.id).returns @user
           end
 
           context "on `ui_only` level" do

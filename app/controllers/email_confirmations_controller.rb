@@ -75,7 +75,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def validate_confirmation_token
-    @user = User.active.find_by(confirmation_token: token_params)
+    @user = User.find_by(confirmation_token: token_params)
     redirect_to root_path, alert: t("email_confirmations.update.token_failure") unless @user&.valid_confirmation_token?
   end
 

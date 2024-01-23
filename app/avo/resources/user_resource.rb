@@ -4,9 +4,10 @@ class UserResource < Avo::BaseResource
   self.search_query = lambda {
     scope.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
   }
+  self.unscoped_queries_on_index = true
 
   class DeletedFilter < ScopeBooleanFilter; end
-  filter DeletedFilter, arguments: { default: { active: true, deleted: false } }
+  filter DeletedFilter, arguments: { default: { not_deleted: true, deleted: false } }
 
   action BlockUser
   action CreateUser

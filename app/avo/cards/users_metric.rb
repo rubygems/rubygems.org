@@ -4,6 +4,6 @@ class UsersMetric < Avo::Dashboards::MetricCard
   self.cols = 2
 
   def query
-    result User.active.count
+    result User.count
   end
 end

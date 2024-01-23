@@ -36,8 +36,10 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_delete user
     assert_predicate user.reload, :deleted_at
     assert_predicate api_key.reload, :expired?
-    assert_equal api_key.reload.user, user
-    assert_equal version.reload.pusher, user
+    User.unscoped do
+      assert_equal api_key.reload.owner, user
+      assert_equal version.reload.pusher, user
+    end
     assert_equal version.reload.pusher_api_key, api_key
   end
 
@@ -51,10 +53,12 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_delete user
     assert_predicate user.reload, :deleted_at
     assert_predicate api_key.reload, :expired?
-    assert_equal api_key.reload.user, user
-    assert_equal version.reload.pusher, user
+    User.unscoped do
+      assert_equal api_key.reload.owner, user
+      assert_equal version.reload.pusher, user
+      assert_equal deletion.reload.user, user
+    end
     assert_equal version.reload.pusher_api_key, api_key
-    assert_equal deletion.reload.user, user
     assert_empty rubygem.reload.owners
     assert_empty user.ownerships
     assert_predicate version.reload, :yanked?
@@ -72,16 +76,17 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_delete user
     assert_predicate user.reload, :deleted_at
     assert_predicate api_key.reload, :expired?
-    assert_equal api_key.reload.user, user
-    assert_equal version.reload.pusher, user
-    assert_nil version.reload.active_pusher
+    User.unscoped do
+      assert_equal api_key.reload.owner, user
+      assert_equal version.reload.pusher, user
+    end
     assert_equal version.reload.pusher_api_key, api_key
     assert_equal [other_user], rubygem.reload.owners
     assert_empty user.ownerships
     assert_predicate rubygem.reload, :indexed?
     refute_predicate version.reload, :yanked?
     refute_predicate other_version.reload, :yanked?
-    assert_equal other_user, other_version.active_pusher
+    assert_equal other_user, other_version.pusher
   end
 
   test "succeeds with webauthn credentials" do

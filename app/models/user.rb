@@ -4,12 +4,15 @@ class User < ApplicationRecord
   include Gravtastic
   is_gravtastic default: "retro"
 
+  default_scope { not_deleted }
+
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
   before_create :_generate_confirmation_token_no_reset_unconfirmed_email
   before_destroy :yank_gems
 
-  scope :active, -> { where(deleted_at: nil) }
-  scope :deleted, -> { where.not(deleted_at: nil) }
+  scope :not_deleted, -> { where(deleted_at: nil) }
+  scope :deleted, -> { with_deleted.where.not(deleted_at: nil) }
+  scope :with_deleted, -> { unscope(where: :deleted_at) }
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
 
@@ -73,8 +76,7 @@ class User < ApplicationRecord
     # to UTF-8.
     who = who.encode(Encoding::UTF_8)
 
-    scope = active
-    user = scope.find_by(email: who.downcase) || scope.find_by(handle: who)
+    user = find_by(email: who.downcase) || find_by(handle: who)
     user if user&.authenticated?(password)
   rescue BCrypt::Errors::InvalidHash, Encoding::UndefinedConversionError
     nil

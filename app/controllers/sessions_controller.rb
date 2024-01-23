@@ -29,7 +29,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_create
-    @user = User.active.find(session[:mfa_user])
+    @user = User.find(session[:mfa_user])
 
     unless session_active?
       login_failure(t("multifactor_auths.session_expired"))
@@ -51,7 +51,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def otp_create
-    @user = User.active.find(session[:mfa_user])
+    @user = User.find(session[:mfa_user])
 
     if login_conditions_met?
       record_mfa_login_duration(mfa_type: "otp")
