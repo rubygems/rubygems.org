@@ -65,7 +65,7 @@ Version.create_with(
   pusher: author,
   metadata: {
     homepage_uri: "https://example.com/rubygem0/home",
-    source_code_uri: "https://github.com/example/#{rubygem1.name}"
+    source_code_uri: "https://github.com/example/#{rubygem0.name}"
   },
   sha256: Digest::SHA2.base64digest("rubygem0-1.0.0.gem")
 ).find_or_create_by!(rubygem: rubygem0, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
