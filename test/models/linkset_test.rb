@@ -18,7 +18,7 @@ class LinksetTest < ActiveSupport::TestCase
 
     should "be empty with no links filled out" do
       Linkset::LINKS.each do |link|
-        @linkset.send("#{link}=", nil)
+        @linkset.send(:"#{link}=", nil)
       end
 
       assert_empty @linkset

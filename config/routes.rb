@@ -279,7 +279,7 @@ Rails.application.routes.draw do
 
   ################################################################################
   # high_voltage static routes
-  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: /(#{HighVoltage.page_ids.join("|")})/ }, as: :page
+  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: Regexp.union(HighVoltage.page_ids) }, as: :page
 
   ################################################################################
   # Internal Routes
@@ -292,7 +292,7 @@ Rails.application.routes.draw do
   ################################################################################
   # Incoming Webhook Endpoint
 
-  if (Rails.env.development? || Rails.env.test?) || (ENV['SENDGRID_WEBHOOK_USERNAME'].present? && ENV['SENDGRID_WEBHOOK_PASSWORD'].present?)
+  if Rails.env.local? || (ENV['SENDGRID_WEBHOOK_USERNAME'].present? && ENV['SENDGRID_WEBHOOK_PASSWORD'].present?)
     resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
   end
 

@@ -286,7 +286,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
         context "by user with mfa disabled" do
           should "include mfa setup warning" do
-            @gems.each do |_, gem|
+            @gems.each_value do |gem|
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]
@@ -308,7 +308,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
 
           should "include change mfa level warning" do
-            @gems.each do |_, gem|
+            @gems.each_value do |gem|
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]
@@ -331,7 +331,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
 
           should "not include mfa warnings" do
-            @gems.each do |_, gem|
+            @gems.each_value do |gem|
               @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
@@ -349,7 +349,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
 
           should "not include mfa warnings" do
-            @gems.each do |_, gem|
+            @gems.each_value do |gem|
               @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 

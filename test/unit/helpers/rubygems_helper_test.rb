@@ -110,7 +110,7 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create links to owners gem overviews" do
-      users = Array.new(2) { create(:user) }
+      users = create_list(:user, 2)
       @rubygem = create(:rubygem, owners: users)
 
       expected_links = users.sort_by(&:id).map do |u|

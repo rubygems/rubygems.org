@@ -149,16 +149,10 @@ class User < ApplicationRecord
     attrs
   end
 
-  def as_json(*)
-    payload
-  end
+  delegate :as_json, :to_yaml, to: :payload
 
   def to_xml(options = {})
     payload.to_xml(options.merge(root: "user"))
-  end
-
-  def to_yaml(*args)
-    payload.to_yaml(*args)
   end
 
   def encode_with(coder)

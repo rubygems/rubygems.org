@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :api_key do
     transient { key { "12345" } }
 
-    association :owner, factory: :user
+    owner factory: %i[user]
     name { "ci-key" }
 
     # enabled by default. disabled when show_dashboard is enabled.

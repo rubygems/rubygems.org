@@ -16,10 +16,10 @@ class VersionTest < ActiveSupport::TestCase
                   ruby_version rubygems_version prerelease downloads_count licenses
                   requirements sha spec_sha metadata created_at]
 
-      assert_equal fields.map(&:to_s).sort, json.keys.sort
+      assert_equal fields.sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
-      assert_equal @version.built_at, json["built_at"]
-      assert_equal @version.created_at, json["created_at"]
+      assert_equal @version.built_at.as_json, json["built_at"]
+      assert_equal @version.created_at.as_json, json["created_at"]
       assert_equal @version.description, json["description"]
       assert_equal @version.downloads_count, json["downloads_count"]
       assert_equal @version.metadata, json["metadata"]

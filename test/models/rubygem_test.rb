@@ -606,7 +606,7 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem_with_versions = create(:rubygem)
 
       create(:version, rubygem: @rubygem_with_version)
-      3.times { create(:version, rubygem: @rubygem_with_versions) }
+      create_list(:version, 3, rubygem: @rubygem_with_versions)
 
       @owner = create(:user)
       create(:ownership, rubygem: @rubygem_with_version, user: @owner)

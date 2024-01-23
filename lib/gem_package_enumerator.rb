@@ -25,11 +25,11 @@ class GemPackageEnumerator
 
   private
 
-  def open_data_tar(&blk) # rubocop:disable Naming/BlockForwarding
+  def open_data_tar(&blk)
     @package.verify
     @package.gem.with_read_io do |io|
       Gem::Package::TarReader.new(io).seek("data.tar.gz") do |gem_entry|
-        @package.open_tar_gz(gem_entry, &blk) # rubocop:disable Naming/BlockForwarding
+        @package.open_tar_gz(gem_entry, &blk)
       end
     end
   end

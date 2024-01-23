@@ -39,7 +39,7 @@ class Gemcutter::Middleware::AdminAuth
 
     def requires_auth_for_admin?(request)
       # always required on the admin instance
-      return true if Gemcutter::SEPARATE_ADMIN_HOST&.==(request.host)
+      return true if request.host == Gemcutter::SEPARATE_ADMIN_HOST
 
       # always required for admin namespace
       return true if request.path.match?(%r{\A/admin(/|\z)})

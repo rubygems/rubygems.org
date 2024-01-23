@@ -88,11 +88,14 @@ group :development, :test do
   gem "dotenv-rails", "~> 2.8"
 
   gem "brakeman", "~> 6.1", require: false
+
+  # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.48", require: false
   gem "rubocop-rails", "~> 2.18", require: false
   gem "rubocop-performance", "~> 1.16", require: false
   gem "rubocop-minitest", "~> 0.29", require: false
   gem "rubocop-capybara", "~> 2.17", require: false
+  gem "rubocop-factory_bot", "~> 2.25", require: false
 end
 
 group :development do

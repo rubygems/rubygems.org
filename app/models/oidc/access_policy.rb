@@ -1,7 +1,7 @@
 class OIDC::AccessPolicy < OIDC::BaseModel
   class Statement < OIDC::BaseModel
     def match_jwt?(jwt)
-      return unless principal.oidc == jwt[:iss]
+      return false unless principal.oidc == jwt[:iss]
 
       conditions.all? { _1.match?(jwt) }
     end

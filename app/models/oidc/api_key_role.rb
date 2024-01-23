@@ -58,12 +58,11 @@ class OIDC::ApiKeyRole < ApplicationRecord
     known_claims = provider.configuration.claims_supported
     access_policy.statements&.each_with_index do |s, si|
       s.conditions&.each_with_index do |c, ci|
-        unless known_claims&.include?(c.claim)
-          errors.add("access_policy.statements[#{si}].conditions[#{ci}].claim",
-                     "unknown for the provider")
-          c.errors.add(:claim,
-                     "unknown for the provider")
-        end
+        next if known_claims&.include?(c.claim)
+        errors.add("access_policy.statements[#{si}].conditions[#{ci}].claim",
+                   "unknown for the provider")
+        c.errors.add(:claim,
+                   "unknown for the provider")
       end
     end
   end

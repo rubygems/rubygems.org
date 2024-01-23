@@ -27,13 +27,13 @@ module ApplicationHelper
     end
   end
 
-  def avatar(size, id = "gravatar", user = current_user, theme: :light, **options)
+  def avatar(size, id = "gravatar", user = current_user, theme: :light, **)
     url = user.gravatar_url(size: size, secure: true) || default_avatar(theme: theme)
-    image_tag url,
+    image_tag(url,
       id: id,
       width: size,
       height: size,
-      **options
+      **)
   end
 
   def download_count(rubygem)

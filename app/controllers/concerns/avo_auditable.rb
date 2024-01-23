@@ -5,7 +5,7 @@ module AvoAuditable
     include Auditable
   end
 
-  def perform_action_and_record_errors(&blk) # rubocop:disable Naming/BlockForwarding
+  def perform_action_and_record_errors(&blk)
     super do
       action = params.fetch(:action)
       fields = action == "destroy" ? {} : cast_nullable(model_params)
@@ -21,7 +21,7 @@ module AvoAuditable
         fields: fields.reverse_merge(comment: action_name),
         arguments: {},
         models: [@model],
-        &blk # rubocop:disable Naming/BlockForwarding
+        &blk
       )
       value
     end

@@ -16,12 +16,12 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
 
   private
 
-  def field(form, type, name, optional: false, **opts)
+  def field(form, type, name, optional: false, **)
     form.label name, class: "form__label" do
       plain form.object.class.human_attribute_name(name)
       span(class: "t-text--s") { " (#{t('form.optional')})" } if optional
     end
-    form.send type, name, class: helpers.class_names("form__input", "tw-border tw-border-red-500" => form.object.errors.include?(name)), **opts
+    form.send(type, name, class: helpers.class_names("form__input", "tw-border tw-border-red-500" => form.object.errors.include?(name)), **)
     p(class: "form__field__instructions") { t("oidc.trusted_publisher.github_actions.#{name}_help_html") }
   end
 end

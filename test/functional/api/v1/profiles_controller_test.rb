@@ -15,7 +15,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
   end
 
   def response_body
-    send("to_#{@format}", @response.body)
+    send(:"to_#{@format}", @response.body)
   end
 
   def authorize_with(str)

@@ -127,7 +127,7 @@ class ApiKey < ApplicationRecord
   end
 
   def not_expired?
-    return if changed == %w[expires_at]
+    return false if changed == %w[expires_at]
     errors.add :base, "An expired API key cannot be used. Please create a new one." if expired?
   end
 

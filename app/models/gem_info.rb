@@ -58,7 +58,7 @@ class GemInfo
               ORDER BY r.name, stamp, v.number, v.platform", updated_at, updated_at]
 
     versions_by_gem = execute_raw_sql(query).group_by { |v| v["name"] }
-    versions_by_gem.each do |_, versions|
+    versions_by_gem.each_value do |versions|
       info_checksum = versions.last["info_checksum"]
       versions.select! { |v| v["indexed"] == true }
       # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20

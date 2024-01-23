@@ -4,7 +4,7 @@ class LinkVerificationTest < ActiveSupport::TestCase
   should belong_to :linkable
 
   def verification!(name, **)
-    instance_variable_set "@#{name}", create(:link_verification, uri: "https://example.com/#{name}", **)
+    instance_variable_set :"@#{name}", create(:link_verification, uri: "https://example.com/#{name}", **)
   end
 
   setup do
