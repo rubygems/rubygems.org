@@ -427,6 +427,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_052615) do
     t.string "totp_seed"
     t.string "mfa_hashed_recovery_codes", default: [], array: true
     t.boolean "public_email", default: false, null: false
+    t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
