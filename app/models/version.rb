@@ -27,8 +27,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   serialize :cert_chain, coder: CertificateChainSerializer
 
   validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::VERSION_PATTERN }
-  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
-  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN },
+  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::NAME_PATTERN }
+  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::NAME_PATTERN },
             if: -> { validation_context == :create || gem_platform_changed? }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false },
             if: -> { validation_context == :create || full_name_changed? }
