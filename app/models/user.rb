@@ -54,7 +54,7 @@ class User < ApplicationRecord
   validates :password,
     length: { within: 10..200 },
     unpwn: true,
-    allow_nil: true,
+    allow_blank: true, # avoid double errors with can't be blank
     unless: :skip_password_validation?
 
   validates :full_name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_nil: true

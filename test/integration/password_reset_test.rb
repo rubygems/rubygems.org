@@ -50,7 +50,7 @@ class PasswordResetTest < SystemTest
     assert page.has_content? "Sign out"
   end
 
-  test "resetting a password with a blank password" do
+  test "resetting a password with a blank or short password" do
     forgot_password_with @user.email
 
     visit password_reset_link
@@ -60,10 +60,18 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: ""
     click_button "Save this password"
 
-    assert page.has_content? "Password can't be blank."
+    assert page.has_content? "Your password could not be changed. Please try again."
+    assert page.has_content? "Password can't be blank"
     assert page.has_content? "Reset password"
 
-    # try again
+    # try again with short password
+    fill_in "Password", with: "pass"
+    click_button "Save this password"
+
+    assert page.has_content? "Password is too short (minimum is 10 characters)"
+    assert page.has_content? "Reset password"
+
+    # try again with valid password
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 

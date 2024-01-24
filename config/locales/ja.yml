@@ -4,7 +4,6 @@ ja:
   copied: コピー完了!
   copy_to_clipboard: クリップボードにコピー
   edit: 編集
-  failure_when_forbidden: URLを見返すか、再度送信してみてください。
   verification_expired:
   feed_latest: RubyGems.org | 最新のgemの一覧
   feed_subscribed: RubyGems.org | 購読したgemの一覧
@@ -179,6 +178,7 @@ ja:
       will_email_notice: アカウントを有効化するための確認リンクをメールで送ります。
     update:
       confirmed_email: メールアドレスが確認されました。
+      token_failure: URLを見返すか、再度送信してみてください。
   home:
     index:
       downloads_counting_html: ダウンロード数
@@ -391,10 +391,16 @@ ja:
     edit:
       submit: このパスワードを保存する
       title: パスワードをリセット
+      token_failure: URLを見返すか、再度送信してみてください。
     new:
       submit: パスワードをリセット
       title: パスワードを変更する
       will_email_notice: パスワード変更のためのリンクをEメールで送ります。
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp: OTPのコードが正しくありません。
     session_expired: ログインページのセッションが期限切れになりました。

@@ -4,7 +4,6 @@ de:
   copied: Kopiert!
   copy_to_clipboard: In die Zwischenablage kopieren
   edit: Bearbeiten
-  failure_when_forbidden:
   verification_expired:
   feed_latest: RubyGems.org | Neueste Gems
   feed_subscribed: RubyGems.org | Abonnierte Gems
@@ -177,6 +176,7 @@ de:
       will_email_notice:
     update:
       confirmed_email:
+      token_failure:
   home:
     index:
       downloads_counting_html: Gezählte Downloads
@@ -393,10 +393,16 @@ de:
     edit:
       submit: Speichern dieses Passworts
       title: Zurücksetzen des Passworts
+      token_failure:
     new:
       submit: Zurücksetzen des Passworts
       title: Ändere dein Passwort
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp:
     session_expired:

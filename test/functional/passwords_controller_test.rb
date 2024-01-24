@@ -28,6 +28,22 @@ class PasswordsControllerTest < ActionController::TestCase
       @user.forgot_password!
     end
 
+    context "with not found user" do
+      setup do
+        get :edit, params: { token: @user.confirmation_token, user_id: 0 }
+      end
+
+      should redirect_to("the home page") { root_path }
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "warn about invalid url" do
+        assert_equal "Please double check the URL or try submitting a new password reset.", flash[:alert]
+      end
+    end
+
     context "with valid confirmation_token" do
       setup do
         get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
@@ -62,7 +78,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should "warn about invalid url" do
-        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
+        assert_equal "Please double check the URL or try submitting a new password reset.", flash[:alert]
       end
     end
 
@@ -280,6 +296,22 @@ class PasswordsControllerTest < ActionController::TestCase
       end
     end
 
+    context "when providing incorrect token" do
+      setup do
+        post(:webauthn_edit, params: { user_id: @user.id, token: "badtoken" })
+      end
+
+      should redirect_to("the home page") { root_path }
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "warn about invalid url" do
+        assert_equal "Please double check the URL or try submitting a new password reset.", flash[:alert]
+      end
+    end
+
     context "when not providing credentials" do
       setup do
         post :webauthn_edit, params: { user_id: @user.id, token: @user.confirmation_token }, format: :html
@@ -384,7 +416,6 @@ class PasswordsControllerTest < ActionController::TestCase
       setup do
         put :update, params: {
           user_id: @user.id,
-          token: @user.confirmation_token,
           password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
       end
@@ -399,6 +430,68 @@ class PasswordsControllerTest < ActionController::TestCase
       end
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+    end
+
+    context "when signed in as another user" do
+      setup do
+        @other_user = create(:user, api_key: "otheruserkey")
+        @other_api_key = @other_user.api_key
+        @other_new_api_key = create(:api_key, owner: @other_user, key: "rubygems_otheruserkey")
+        @other_old_encrypted_password = @other_user.encrypted_password
+        sign_in_as @other_user
+        session[:verification] = 10.minutes.from_now
+        session[:verified_user] = @other_user.id
+
+        put :update, params: {
+          user_id: @user.id,
+          password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+        }
+      end
+
+      teardown do
+        session[:verification] = nil
+        session[:verified_user] = nil
+      end
+
+      should redirect_to("the dashboard") { dashboard_path }
+
+      should "not change user_id user's api_key" do
+        assert_equal(@user.reload.api_key, @api_key)
+      end
+      should "not change user_id user's password" do
+        assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
+      end
+
+      # The password controller does not care what user_id is in the url for the update action.
+      should "change logged in user's api_key" do
+        refute_equal(@other_user.reload.api_key, @other_api_key)
+      end
+      should "change logged in user's password" do
+        refute_equal(@other_user.reload.encrypted_password, @other_old_encrypted_password)
+      end
+      should "expire logged in user's new api key" do
+        assert_empty @other_user.reload.api_keys.unexpired
+        refute_empty @other_user.reload.api_keys.expired
+      end
+    end
+
+    context "when signed in but not verified" do
+      setup do
+        sign_in_as @user
+        put :update, params: {
+          user_id: @user.id,
+          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+        }
+      end
+
+      should redirect_to("the verification page") { verify_session_path }
+
+      should "not change api_key" do
+        assert_equal(@user.reload.api_key, @api_key)
+      end
+      should "not change password" do
+        assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
     end
 
@@ -418,7 +511,6 @@ class PasswordsControllerTest < ActionController::TestCase
         setup do
           put :update, params: {
             user_id: @user.id,
-            token: @user.confirmation_token,
             password_reset: { reset_api_key: "true", password: "pass" }
           }
         end
@@ -431,6 +523,9 @@ class PasswordsControllerTest < ActionController::TestCase
         should "not change password" do
           assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
         end
+        should "alert about invalid password" do
+          assert_equal "Your password could not be changed. Please try again.", flash[:alert]
+        end
       end
 
       context "with a valid password" do
@@ -439,7 +534,6 @@ class PasswordsControllerTest < ActionController::TestCase
             travel 16.minutes do
               put :update, params: {
                 user_id: @user.id,
-                token: @user.confirmation_token,
                 password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
               }
             end
@@ -457,12 +551,11 @@ class PasswordsControllerTest < ActionController::TestCase
           setup do
             put :update, params: {
               user_id: @user.id,
-              token: @user.confirmation_token,
               password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end
 
-          should respond_with :found
+          should redirect_to("the dashboard") { dashboard_path }
 
           should "not change api_key" do
             assert_equal(@user.reload.api_key, @api_key)
@@ -476,12 +569,11 @@ class PasswordsControllerTest < ActionController::TestCase
           setup do
             put :update, params: {
               user_id: @user.id,
-              token: @user.confirmation_token,
               password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end
 
-          should respond_with :found
+          should redirect_to("the dashboard") { dashboard_path }
 
           should "not change api_key" do
             assert_equal(@user.reload.api_key, @api_key)
@@ -495,12 +587,11 @@ class PasswordsControllerTest < ActionController::TestCase
           setup do
             put :update, params: {
               user_id: @user.id,
-              token: @user.confirmation_token,
               password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end
 
-          should respond_with :found
+          should redirect_to("the dashboard") { dashboard_path }
 
           should "change api_key" do
             refute_equal(@user.reload.api_key, @api_key)
@@ -518,12 +609,11 @@ class PasswordsControllerTest < ActionController::TestCase
           setup do
             put :update, params: {
               user_id: @user.id,
-              token: @user.confirmation_token,
               password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end
 
-          should respond_with :found
+          should redirect_to("the dashboard") { dashboard_path }
 
           should "change api_key" do
             refute_equal(@user.reload.api_key, @api_key)

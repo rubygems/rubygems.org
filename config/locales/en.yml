@@ -4,7 +4,6 @@ en:
   copied: Copied!
   copy_to_clipboard: Copy to clipboard
   edit: Edit
-  failure_when_forbidden: Please double check the URL or try submitting it again.
   verification_expired: The verification has expired. Please verify again.
   feed_latest: RubyGems.org | Latest Gems
   feed_subscribed: RubyGems.org | Subscribed Gems
@@ -185,6 +184,7 @@ en:
       will_email_notice: We will email you confirmation link to activate your account.
     update:
       confirmed_email: Your email address has been verified.
+      token_failure: Please double check the URL or try submitting it again.
   home:
     index:
       downloads_counting_html: downloads &amp; counting
@@ -392,10 +392,16 @@ en:
     edit:
       submit: Save this password
       title: Reset password
+      token_failure: Please double check the URL or try submitting a new password reset.
     new:
       submit: Reset password
       title: Change your password
       will_email_notice: We will email you a link to change your password.
+    create:
+      success: You will receive an email within the next few minutes. It contains instructions for changing your password.
+      failure_on_missing_email: Email can't be blank.
+    update:
+      failure: Your password could not be changed. Please try again.
   multifactor_auths:
     incorrect_otp: Your OTP code is incorrect.
     session_expired: Your login page session has expired.

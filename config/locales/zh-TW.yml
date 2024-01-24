@@ -4,7 +4,6 @@ zh-TW:
   copied: 已複製
   copy_to_clipboard: 複製
   edit: 編輯
-  failure_when_forbidden: 請確認 URL 或再次提交
   verification_expired:
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 訂閱 Gems
@@ -176,6 +175,7 @@ zh-TW:
       will_email_notice: 我們將會通過 Email 發送帳號認證信連結給你。
     update:
       confirmed_email: Email 驗證成功。
+      token_failure: 請確認 URL 或再次提交
   home:
     index:
       downloads_counting_html: 總下載次數
@@ -381,10 +381,16 @@ zh-TW:
     edit:
       submit: 更新密碼
       title: 重設密碼
+      token_failure: 請確認 URL 或再次提交
     new:
       submit: 更新密碼
       title: 修改密碼
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給你
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp: 你的 OTP 碼 不正確。
     session_expired:
