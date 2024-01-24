@@ -57,7 +57,7 @@ class GemDownloadTest < ActiveSupport::TestCase
   context ".bulk_update" do
     context "with multiple versions of same gem" do
       setup do
-        @versions = Array.new(2) { create(:version) }
+        @versions = create_list(:version, 2)
         @gems     = @versions.map(&:rubygem)
         @versions << create(:version, rubygem: @gems[0])
         @counts   = Array.new(3) { rand(100) }
@@ -153,7 +153,7 @@ class GemDownloadTest < ActiveSupport::TestCase
 
   context ".most_downloaded_gem_count" do
     setup do
-      versions = Array.new(20) { create(:version) }
+      versions = create_list(:version, 20) # rubocop:disable FactoryBot/ExcessiveCreateList
       @counts  = Array.new(20) { rand(100) }
       data     = versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
 

@@ -13,7 +13,7 @@ class Admin::GitHubUser < ApplicationRecord
   validates :info_data, presence: true
 
   def teams
-    info_data.dig(:viewer, :organization, :teams, :edges)&.map { _1[:node] } || []
+    info_data.dig(:viewer, :organization, :teams, :edges)&.pluck(:node) || []
   end
 
   def team_member?(slug)

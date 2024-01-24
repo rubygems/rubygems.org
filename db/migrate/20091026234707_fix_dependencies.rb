@@ -1,7 +1,7 @@
 class FixDependencies < ActiveRecord::Migration[4.2]
   def self.up
     # fix bad version reqs
-    Dependency.all.each do |dep|
+    Dependency.find_each do |dep|
       reqs = dep.requirements
       begin
         Gem::Requirement.new(reqs)

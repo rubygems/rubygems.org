@@ -39,7 +39,7 @@ class DashboardsControllerTest < ActionController::TestCase
 
     context "on GET to show" do
       setup do
-        3.times { create(:rubygem) }
+        create_list(:rubygem, 3)
         @gems = (1..3).map do
           rubygem = create(:rubygem)
           create(:ownership, rubygem: rubygem, user: @user)

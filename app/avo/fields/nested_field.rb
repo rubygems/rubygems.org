@@ -12,9 +12,7 @@ class NestedField < Avo::Fields::BaseField
     @items_holder.instance_variable_get(:@items).grep Avo::Fields::BaseField
   end
 
-  def field(name, **kwargs, &)
-    @items_holder.field(name, **kwargs, &)
-  end
+  delegate :field, to: :@items_holder
 
   def fill_field(model, key, value, params)
     value = value.to_h.to_h do |k, v|

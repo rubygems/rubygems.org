@@ -5,6 +5,7 @@ require:
   - rubocop-rails
   - rubocop-minitest
   - rubocop-capybara
+  - rubocop-factory_bot
 
 AllCops:
   Exclude:
@@ -296,3 +297,9 @@ Style/ClassAndModuleChildren:
   Exclude:
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb
+
+Capybara/ClickLinkOrButtonStyle:
+  Enabled: false
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: false

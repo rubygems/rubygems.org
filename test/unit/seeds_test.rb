@@ -5,7 +5,7 @@ class SeedsTest < ActiveSupport::TestCase
 
   def all_records
     ApplicationRecord.descendants.reject(&:abstract_class?).sort_by(&:name).to_h do |record_class|
-      [record_class.name, record_class.all.order(:id).map(&:attributes).as_json]
+      [record_class.name, record_class.order(:id).map(&:attributes).as_json]
     end
   end
 

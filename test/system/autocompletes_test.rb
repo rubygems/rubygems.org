@@ -34,7 +34,7 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   test "selected field is only one with cursor selecting" do
-    find(".suggest-list").all("li").each(&:hover)
+    find(".suggest-list").all("li").each(&:hover) # rubocop:disable Rails/FindEach
 
     assert_selector ".selected", count: 1
   end

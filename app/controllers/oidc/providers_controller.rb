@@ -8,7 +8,7 @@ class OIDC::ProvidersController < ApplicationController
   before_action :set_page, only: :index
 
   def index
-    providers = OIDC::Provider.all.strict_loading.page(@page)
+    providers = OIDC::Provider.strict_loading.page(@page)
     render OIDC::Providers::IndexView.new(providers:)
   end
 
