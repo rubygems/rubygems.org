@@ -1,9 +1,7 @@
 class Types::Duration < ActiveModel::Type::Value
   def cast_value(value)
-    return value if value.blank?
-
     case value
-    when ActiveSupport::Duration
+    when NilClass, ActiveSupport::Duration
       value
     when String
       if /\A\d+\z/.match?(value)

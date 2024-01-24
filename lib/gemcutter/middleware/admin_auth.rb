@@ -32,7 +32,7 @@ class Gemcutter::Middleware::AdminAuth
       end
       return if allow_unauthenticated_request?(request)
       login_page = ApplicationController.renderer.new(request.env).render(template: "avo/login", layout: false)
-      [200, { "Cache-Control" => "private, max-age=0", "Set-Cookie" => cookies.to_header }, [login_page]]
+      [200, { "cache-control" => "private, max-age=0", "set-cookie" => cookies.to_header }, [login_page]]
     end
 
     private
