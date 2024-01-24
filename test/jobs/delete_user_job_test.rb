@@ -9,6 +9,9 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_delete user
     assert_predicate version.reload, :yanked?
     refute_predicate rubygem.reload, :indexed?
+
+    rubygem.validate!
+    version.validate!
   end
 
   test "sends deletion failed on failure" do
@@ -36,11 +39,14 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_delete user
     assert_predicate user.reload, :deleted_at
     assert_predicate api_key.reload, :expired?
+    assert_equal version.reload.pusher_api_key, api_key
+
     User.unscoped do
       assert_equal api_key.reload.owner, user
       assert_equal version.reload.pusher, user
     end
-    assert_equal version.reload.pusher_api_key, api_key
+
+    version.validate!
   end
 
   test "succeeds with version deletion" do
@@ -53,16 +59,24 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_delete user
     assert_predicate user.reload, :deleted_at
     assert_predicate api_key.reload, :expired?
-    User.unscoped do
-      assert_equal api_key.reload.owner, user
-      assert_equal version.reload.pusher, user
-      assert_equal deletion.reload.user, user
-    end
+    assert_nil api_key.reload.owner
+    assert_nil version.reload.pusher
+    assert_nil deletion.reload.user
+
     assert_equal version.reload.pusher_api_key, api_key
     assert_empty rubygem.reload.owners
     assert_empty user.ownerships
     assert_predicate version.reload, :yanked?
     refute_predicate rubygem.reload, :indexed?
+
+    User.unscoped do
+      assert_equal api_key.reload.owner, user
+      assert_equal version.reload.pusher, user
+      assert_equal deletion.reload.user, user
+    end
+
+    version.validate!
+    deletion.validate!
   end
 
   test "succeeds with rubygem with shared ownership" do
@@ -80,6 +94,8 @@ class DeleteUserJobTest < ActiveJob::TestCase
       assert_equal api_key.reload.owner, user
       assert_equal version.reload.pusher, user
     end
+    assert_nil api_key.reload.owner
+    assert_nil version.reload.pusher
     assert_equal version.reload.pusher_api_key, api_key
     assert_equal [other_user], rubygem.reload.owners
     assert_empty user.ownerships
@@ -92,9 +108,11 @@ class DeleteUserJobTest < ActiveJob::TestCase
   test "succeeds with webauthn credentials" do
     user = create(:user)
     user_credential = create(:webauthn_credential, user: user)
+    webauthn_verification = create(:webauthn_verification, user: user)
 
     assert_delete user
     assert_deleted user_credential
+    assert_deleted webauthn_verification
   end
 
   test "succeeds with subscription" do
@@ -132,15 +150,15 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
   def assert_delete(user)
     Mailer.expects(:deletion_complete).with(user.email).returns(mock(deliver_later: nil))
+    Mailer.expects(:deletion_failed).never
     DeleteUserJob.new(user:).perform(user:)
 
     refute_predicate user, :destroyed?
     assert_predicate user.reload, :deleted_at
+    user.validate!
   end
 
   def assert_deleted(record)
-    error = assert_raises(ActiveRecord::RecordNotFound) { assert_predicate record.reload, :destroyed? }
-
-    assert_equal record.class.name, error.model, "Expected #{record.class} to be class of not found error"
+    refute record.class.unscoped.exists?(record.id), "Expected #{record.class} with id #{record.id} to be deleted"
   end
 end
