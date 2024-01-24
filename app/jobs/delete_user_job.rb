@@ -57,9 +57,7 @@ class DeleteUserJob < ApplicationJob
     user.class.reflect_on_all_associations.each do |reflection|
       next if reflection.through_reflection?
 
-      action = ASSOCIATIONS.fetch(reflection.name) do
-        raise ActiveRecord::DeleteRestrictionError, reflection.name
-      end
+      action = ASSOCIATIONS.fetch(reflection.name)
       next unless action
       send(:"#{action}_#{reflection.class.name.tr(':', '_')}", user.association(reflection.name), reflection)
     end
