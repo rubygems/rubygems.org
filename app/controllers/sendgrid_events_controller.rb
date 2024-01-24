@@ -12,8 +12,8 @@ class SendgridEventsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create
 
   http_basic_authenticate_with(
-    name: Rails.application.secrets.sendgrid_webhook_username,
-    password: Rails.application.secrets.sendgrid_webhook_password
+    name: ENV.fetch("SENDGRID_WEBHOOK_USERNAME", "#{Rails.env}_sendgrid_webhook_user"),
+    password: ENV.fetch("SENDGRID_WEBHOOK_PASSWORD", "password")
   )
 
   def create

@@ -291,7 +291,10 @@ Rails.application.routes.draw do
 
   ################################################################################
   # Incoming Webhook Endpoint
-  resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
+
+  if (Rails.env.development? || Rails.env.test?) || (ENV['SENDGRID_WEBHOOK_USERNAME'].present? && ENV['SENDGRID_WEBHOOK_PASSWORD'].present?)
+    resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
+  end
 
   ################################################################################
   # Admin routes
