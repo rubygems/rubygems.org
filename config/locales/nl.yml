@@ -4,7 +4,6 @@ nl:
   copied:
   copy_to_clipboard:
   edit: Wijzig
-  failure_when_forbidden: Controleer het webadres, en probeer het opnieuw.
   verification_expired:
   feed_latest: RubyGems.org | Nieuwste Gems
   feed_subscribed: RubyGems.org | Geabonneerde Gems
@@ -182,6 +181,7 @@ nl:
       will_email_notice: We zullen je een nieuwe email sturen met een bevestigingslink
     update:
       confirmed_email:
+      token_failure: Controleer het webadres, en probeer het opnieuw.
   home:
     index:
       downloads_counting_html:
@@ -397,10 +397,16 @@ nl:
     edit:
       submit: Sla dit wachtwoord op
       title: reset wachtwoord
+      token_failure: Controleer het webadres, en probeer het opnieuw.
     new:
       submit: Wachtwoord wijzigen
       title: Wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp:
     session_expired:

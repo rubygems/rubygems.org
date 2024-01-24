@@ -4,7 +4,6 @@ fr:
   copied: Copié!
   copy_to_clipboard: Copier
   edit: Modification
-  failure_when_forbidden: Veuillez vérifier l'URL ou réessayer.
   verification_expired:
   feed_latest: RubyGems.org | Derniers Gems
   feed_subscribed: RubyGems.org | Gems abonnés
@@ -190,6 +189,7 @@ fr:
         de confirmation pour l'activer.
     update:
       confirmed_email: Votre adresse email a été vérifiée.
+      token_failure: Veuillez vérifier l'URL ou réessayer.
   home:
     index:
       downloads_counting_html: téléchargements à ce jour
@@ -411,10 +411,16 @@ fr:
     edit:
       submit: Enregistrer ce mot de passe
       title: Nouveau mot de passe
+      token_failure: Veuillez vérifier l'URL ou réessayer.
     new:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp: Votre clé OTP est incorrecte.
     session_expired:

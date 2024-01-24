@@ -4,7 +4,6 @@ es:
   copied: "¡Copiado!"
   copy_to_clipboard: Copiar al portapapeles
   edit: Editar
-  failure_when_forbidden: Por favor verifica la URL o inténtalo nuevamente.
   verification_expired:
   feed_latest: RubyGems.org | Gemas más recientes
   feed_subscribed: RubyGems.org | Suscripciones a gemas
@@ -199,6 +198,7 @@ es:
         activar tu cuenta.
     update:
       confirmed_email: Tu dirección de correo se ha verificado.
+      token_failure: Por favor verifica la URL o inténtalo nuevamente.
   home:
     index:
       downloads_counting_html: descargas y contando
@@ -446,11 +446,17 @@ es:
     edit:
       submit: Guardar esta contraseña
       title: Restablecer contraseña
+      token_failure: Por favor verifica la URL o inténtalo nuevamente.
     new:
       submit: Restablecer contraseña
       title: Cambiar tu contraseña
       will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo
         electrónico.
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp: Tu código OTP no es correcto.
     session_expired: Ha expirado tu sesión en la página de acceso.

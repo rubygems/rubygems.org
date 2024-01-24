@@ -4,7 +4,6 @@ zh-CN:
   copied: 已复制！
   copy_to_clipboard: 复制到剪贴板
   edit: 编辑
-  failure_when_forbidden: 请再次确认 URL 或尝试重新提交
   verification_expired:
   feed_latest: RubyGems.org | 最新的 Gem
   feed_subscribed: RubyGems.org | 订阅的 Gem
@@ -181,6 +180,7 @@ zh-CN:
       will_email_notice: 我们将会通过 Email 发送确认激活账号的链接给您。
     update:
       confirmed_email: 邮箱地址验证成功。
+      token_failure: 请再次确认 URL 或尝试重新提交
   home:
     index:
       downloads_counting_html: 总下载次数
@@ -399,10 +399,16 @@ zh-CN:
     edit:
       submit: 保存该密码
       title: 重置密码
+      token_failure: 请再次确认 URL 或尝试重新提交
     new:
       submit: 重置密码
       title: 修改您的密码
       will_email_notice: 我们将会向您发送一封包含修改密码链接的邮件。
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp: 你的 OTP 码 不正确。
     session_expired: 您的登录页面会话已过期。

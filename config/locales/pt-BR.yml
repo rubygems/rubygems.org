@@ -4,7 +4,6 @@ pt-BR:
   copied:
   copy_to_clipboard:
   edit: Editar
-  failure_when_forbidden: Por favor, confira a URL ou tente submetê-la novamente.
   verification_expired:
   feed_latest: RubyGems.org | Últimas Gems
   feed_subscribed: RubyGems.org | Gems do seu Feed
@@ -187,6 +186,7 @@ pt-BR:
       will_email_notice:
     update:
       confirmed_email:
+      token_failure: Por favor, confira a URL ou tente submetê-la novamente.
   home:
     index:
       downloads_counting_html: downloads
@@ -408,10 +408,16 @@ pt-BR:
     edit:
       submit: Salvar senha
       title: Resetar senha
+      token_failure: Por favor, confira a URL ou tente submetê-la novamente.
     new:
       submit: Resetar senha
       title: Alterar senha
       will_email_notice: Você vai receber um email com o link para atualizar sua senha.
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp:
     session_expired:

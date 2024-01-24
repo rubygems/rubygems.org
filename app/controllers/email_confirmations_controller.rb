@@ -76,7 +76,7 @@ class EmailConfirmationsController < ApplicationController
 
   def validate_confirmation_token
     @user = User.find_by(confirmation_token: token_params)
-    redirect_to root_path, alert: t("failure_when_forbidden") unless @user&.valid_confirmation_token?
+    redirect_to root_path, alert: t("email_confirmations.update.token_failure") unless @user&.valid_confirmation_token?
   end
 
   def confirm_email
