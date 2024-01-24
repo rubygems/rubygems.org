@@ -61,9 +61,12 @@ module Gemcutter
 
     config.active_job.queue_adapter = :good_job
 
+    config.add_autoload_paths_to_load_path = false
     config.autoload_paths << "#{root}/app/views"
     config.autoload_paths << "#{root}/app/views/layouts"
     config.autoload_paths << "#{root}/app/views/components"
+
+    config.active_support.cache_format_version = 7.1
   end
 
   def self.config

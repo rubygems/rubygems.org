@@ -22,8 +22,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
   after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
-  serialize :licenses
-  serialize :requirements
+  serialize :licenses, coder: YAML
+  serialize :requirements, coder: YAML
   serialize :cert_chain, coder: CertificateChainSerializer
 
   validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::VERSION_PATTERN }
