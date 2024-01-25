@@ -1,23 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  connect() {
-    var arrowIcon        = $('.header__popup-link');
-    var popupNav         = $('.header__popup__nav-links');
+  static targets = [ "button", "dropdown" ]
 
-    var navExpandedClass = 'is-expanded';
+  buttonTargetConnected(el) {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.dropdownTarget.classList.toggle('is-expanded');
+    });
 
-    function removeNavExpandedClass() {
-      popupNav.removeClass(navExpandedClass);
-    }
-
-    function addNavExpandedClass() {
-      popupNav.addClass(navExpandedClass);
-    }
-
-    arrowIcon.click(function(e){
-      var nav = {expandedClass: navExpandedClass, popUp: popupNav}
-      handleClick(e, nav, removeNavExpandedClass, addNavExpandedClass);
+    document.addEventListener("click", (e) => {
+      if (!this.element.contains(e.target)) {
+        this.dropdownTarget.classList.remove('is-expanded');
+      }
     });
   }
 }

@@ -51,7 +51,7 @@
             <%= submit_tag "⌕", id: "search_submit", name: nil, class: "header__search__icon" %>
           <% end %>
 
-          <nav class="header__nav-links">
+          <nav class="header__nav-links" data-controller="popup-nav">
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
                 <span><%= current_user.name %></span>
@@ -75,10 +75,10 @@
                 <span><%= current_user.name %></span>
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
-              <a href="#" class="header__popup-link" data-icon="▼">
+              <a href="#" class="header__popup-link" data-icon="▼" data-popup-nav-target="button">
                 <span class="t-hidden">More items</span>
               </a>
-              <div class="header__popup__nav-links">
+              <div class="header__popup__nav-links" data-popup-nav-target="dropdown">
                 <%= link_to t('.header.settings'), edit_settings_path, class: "header__nav-link" %>
                 <%= link_to t('.header.dashboard'), dashboard_path, class: "header__nav-link" %>
                 <%= link_to t('.header.edit_profile'), edit_profile_path, class: "header__nav-link" %>
