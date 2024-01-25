@@ -42,7 +42,7 @@
       </div>
     <% end%>
   </div>
-  <div class="form__group">
+  <div class="form__group" data-controller="oidc-api-key-role-form">
     <%= f.label :access_policy, class: "form__label" %>
     <%= f.fields_for :access_policy, f.object.access_policy do |f|%>
       <div class="form__nested_fields"  id="<%= f.field_id :wrapper %>">

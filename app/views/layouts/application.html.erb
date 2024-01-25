@@ -31,7 +31,7 @@
         <%= yield :banner %>
       </div>
     <% end %>
-    <header class="header <%= 'header--interior' if request.path_info != '/' %>">
+    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-controller="mobile-nav">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap') do %>
           <span class="header__logo" data-icon="⬡">⬢</span>
