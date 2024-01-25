@@ -24,26 +24,26 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= 'body--index' if request.path_info == '/' %>">
+  <body class="<%= 'body--index' if request.path_info == '/' %>" data-controller="nav">
     <!-- Top banner -->
     <% if content_for?(:banner) %>
       <div class="banner">
         <%= yield :banner %>
       </div>
     <% end %>
-    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-controller="mobile-nav">
+    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header">
       <div class="l-wrap--header">
-        <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap') do %>
+        <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "headerLogo" }) do %>
           <span class="header__logo" data-icon="⬡">⬢</span>
           <span class="t-hidden">RubyGems</span>
         <% end %>
-        <a class="header__club-sandwich" href="#">
+        <a class="header__club-sandwich" href="#" data-nav-target="sandwichIcon">
           <span class="t-hidden">Navigation menu</span>
         </a>
 
         <div class="header__nav-links-wrap">
           <%= form_tag search_path, class: search_form_class, method: :get do %>
-            <%= search_field_tag :query, params[:query], placeholder: t(".header.search_gem_html"), class: "header__search", autocomplete: "off", data: { autocomplete_target: "query" } %>
+            <%= search_field_tag :query, params[:query], placeholder: t(".header.search_gem_html"), class: "header__search", autocomplete: "off", data: { autocomplete_target: "query", nav_target: "headerSearch" } %>
             <ul id="suggest" class="suggest-list" data-autocomplete-target="suggest"></ul>
             <%= label_tag :query do %>
               <span class="t-hidden"><%= t(".header.search_gem_html") %></span>
@@ -51,7 +51,7 @@
             <%= submit_tag "⌕", id: "search_submit", name: nil, class: "header__search__icon" %>
           <% end %>
 
-          <nav class="header__nav-links" data-controller="popup-nav">
+          <nav class="header__nav-links">
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
                 <span><%= current_user.name %></span>
@@ -75,10 +75,10 @@
                 <span><%= current_user.name %></span>
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
-              <a href="#" class="header__popup-link" data-icon="▼" data-popup-nav-target="button">
+              <a href="#" class="header__popup-link" data-icon="▼" data-nav-target="dropdownButton">
                 <span class="t-hidden">More items</span>
               </a>
-              <div class="header__popup__nav-links" data-popup-nav-target="dropdown">
+              <div class="header__popup__nav-links" data-nav-target="dropdown">
                 <%= link_to t('.header.settings'), edit_settings_path, class: "header__nav-link" %>
                 <%= link_to t('.header.dashboard'), dashboard_path, class: "header__nav-link" %>
                 <%= link_to t('.header.edit_profile'), edit_profile_path, class: "header__nav-link" %>
@@ -109,7 +109,7 @@
       </div>
     <% end %>
 
-    <main class="<%= 'main--interior' if request.path_info != '/' %>">
+    <main class="<%= 'main--interior' if request.path_info != '/' %>" data-nav-target="main">
       <% if request.path_info != '/' %>
         <div class="l-wrap--b">
           <% if @title %>
@@ -129,7 +129,7 @@
       <% end %>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" data-nav-target="footer">
       <div class="l-wrap--footer">
         <div class="l-overflow">
           <div class="nav--v l-col--r--pad">
