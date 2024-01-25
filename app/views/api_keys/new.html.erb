@@ -6,11 +6,19 @@
     <%= f.text_field :name, class: "form__input", autocomplete: :off %>
 
     <div class="form__group">
-      <%= label_tag :scope, t("api_keys.index.scopes"), class: "form__label" %>
-      <% ApiKey::API_SCOPES.each do |api_scope| %>
-        <% data = { api_key_form_target: "gemCheckbox" } if ApiKey::APPLICABLE_GEM_API_SCOPES.include?(api_scope) %>
+      <%= label_tag :scope, t("api_keys.index.exclusive_scopes"), class: "form__label" %>
+      <% ApiKey::EXCLUSIVE_SCOPES.each do |api_scope| %>
         <div class = "form__checkbox__item">
-          <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}", data: data }, "true", "false" %>
+          <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}", data: api_key_scope_html_data(api_scope) }, "true", "false" %>
+          <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
+        </div>
+      <% end %>
+    </div>
+    <div class="form__group">
+      <%= label_tag :scope, t("api_keys.index.scopes"), class: "form__label" %>
+      <% (ApiKey::API_SCOPES - ApiKey::EXCLUSIVE_SCOPES).each do |api_scope| %>
+        <div class = "form__checkbox__item">
+          <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}", data: api_key_scope_html_data(api_scope) }, "true", "false" %>
           <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
         </div>
       <% end %>
