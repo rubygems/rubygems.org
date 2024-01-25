@@ -1,39 +1,44 @@
 import { Controller } from "@hotwired/stimulus"
+import ClipboardJS from "clipboard"
 
 export default class extends Controller {
+  static targets = [ "copyTooltip copiedTooltip button" ]
+
   connect() {
-    var clipboard = new ClipboardJS('.gem__code__icon');
-    var copyTooltip = $('.gem__code__tooltip--copy');
-    var copiedTooltip = $('.gem__code__tooltip--copied');
-    var copyButtons = $('.gem__code__icon');
+    this.copyTooltip = $(this.copyTooltipTarget);
+    this.copiedTooltip = $(this.copiedTooltipTarget);
+  }
 
-    function hideCopyShowCopiedTooltips(e) {
-      copyTooltip.removeClass("clipboard-is-hover");
-      copiedTooltip.insertAfter(e.trigger);
-      copiedTooltip.addClass("clipboard-is-active");
-    };
+  buttonTargetConnected(el) {
+    console.log("buttonTargetConnected", el);
+    const controller = this;
 
-    clipboard.on('success', function(e) {
-      hideCopyShowCopiedTooltips(e);
+    el.addEventListener('hover', function() {
+      controller.copyTooltip.insertAfter(this);
+      controller.copyTooltip.addClass("clipboard-is-hover");
+    });
+
+    el.addEventListener('mouseout', function() {
+      controller.copyTooltip.removeClass("clipboard-is-hover");
+      controller.copiedTooltip.removeClass("clipboard-is-active");
+    });
+
+    const clipboard = new ClipboardJS(el);
+
+    clipboard.on('success', (e) => {
+      this.hideCopyShowCopiedTooltips(e);
       e.clearSelection();
     });
 
-    clipboard.on('error', function(e) {
-      hideCopyShowCopiedTooltips(e);
-      copiedTooltip.text("Ctrl-C to Copy");
+    clipboard.on('error', (e) => {
+      this.hideCopyShowCopiedTooltips(e);
+      this.copiedTooltip.text("Ctrl-C to Copy");
     });
+  }
 
-    copyButtons.hover(function() {
-      copyTooltip.insertAfter(this);
-      copyTooltip.addClass("clipboard-is-hover");
-    });
-
-    copyButtons.mouseout(function() {
-      copyTooltip.removeClass("clipboard-is-hover");
-    });
-
-    copyButtons.mouseout(function() {
-      copiedTooltip.removeClass("clipboard-is-active");
-    });
+  hideCopyShowCopiedTooltips(e) {
+    this.copyTooltip.removeClass("clipboard-is-hover");
+    this.copiedTooltip.insertAfter(e.trigger);
+    this.copiedTooltip.addClass("clipboard-is-active");
   }
 }
