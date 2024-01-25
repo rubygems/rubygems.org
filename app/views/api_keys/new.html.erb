@@ -1,15 +1,16 @@
 <% @title = t(".new_api_key") %>
 
 <div class="t-body">
-  <%= form_for @api_key, url: profile_api_keys_path do |f| %>
+  <%= form_for @api_key, url: profile_api_keys_path, data: { controller: "api-key-form" } do |f| %>
     <%= label_tag :name, t("api_keys.index.name"), class: "form__label" %>
     <%= f.text_field :name, class: "form__input", autocomplete: :off %>
 
     <div class="form__group">
       <%= label_tag :scope, t("api_keys.index.scopes"), class: "form__label" %>
       <% ApiKey::API_SCOPES.each do |api_scope| %>
+        <% data = { api_key_form_target: "gemCheckbox" } if ApiKey::APPLICABLE_GEM_API_SCOPES.include?(api_scope) %>
         <div class = "form__checkbox__item">
-          <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}" } , "true", "false" %>
+          <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}", data: data }, "true", "false" %>
           <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
         </div>
       <% end %>
@@ -18,7 +19,7 @@
     <div class="form__group api_key_rubygem_id_form">
       <%= label_tag :rubygem_id, t(".rubygem_scope"), class: "form__label" %>
       <p><%= t(".rubygem_scope_info") %></p>
-      <%= f.collection_select :rubygem_id, current_user.rubygems.by_name, :id, :name, { include_blank: t("api_keys.all_gems") }, selected: :rubygem_id, class: "form__input form__select" %>
+      <%= f.collection_select :rubygem_id, current_user.rubygems.by_name, :id, :name, { include_blank: t("api_keys.all_gems") }, selected: :rubygem_id, class: "form__input form__select", data: { api_key_form_target: "gemSelector" } %>
     </div>
 
     <% unless current_user.mfa_disabled? || current_user.mfa_ui_and_api? %>

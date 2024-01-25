@@ -1,5 +1,7 @@
-$(function () {
-  function wire() {
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  connect() {
     var removeNestedButtons = $("button.form__remove_nested_button");
 
     removeNestedButtons.off("click");
@@ -27,6 +29,4 @@ $(function () {
       wire();
     });
   }
-
-  wire();
-});
+}

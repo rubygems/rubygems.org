@@ -124,3 +124,8 @@ group :test do
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.6"
 end
+
+gem "stimulus-rails", "~> 1.3"
+
+
+gem "importmap-rails", "~> 2.0"

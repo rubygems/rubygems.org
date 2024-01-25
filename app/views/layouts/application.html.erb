@@ -21,6 +21,7 @@
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
     <%= yield :head %>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body class="<%= 'body--index' if request.path_info == '/' %>">
@@ -217,7 +218,6 @@
       </div>
     </footer>
 
-    <%= javascript_include_tag "application" %>
     <%= yield :javascript %>
     <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>
   </body>
