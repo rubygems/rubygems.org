@@ -125,4 +125,3 @@ group :test do
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.6"
 end
-
