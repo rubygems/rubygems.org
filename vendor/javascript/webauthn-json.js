@@ -46,3 +46,9 @@ var bufferToBase64url = function (buffer) {
     .replace(/=/g, "")
   return base64urlString
 }
+
+// This is a modified version that adds these exports:
+export {
+  base64urlToBuffer,
+  bufferToBase64url
+}

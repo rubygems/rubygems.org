@@ -1,4 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
+import $ from "jquery"
+import { bufferToBase64url, base64urlToBuffer } from "webauthn-json"
 
 export default class extends Controller {
   connect() {
