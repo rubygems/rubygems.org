@@ -290,6 +290,10 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    importmap-rails (2.0.1)
+      actionpack (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      railties (>= 6.0.0)
     inline_svg (1.9.0)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
@@ -300,10 +304,6 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.4.1)
       activejob (>= 5.2)
-    jquery-rails (4.6.0)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
     json (2.7.1)
     json-jwt (1.16.5)
       activesupport (>= 4.2)
@@ -784,7 +784,7 @@ DEPENDENCIES
   high_voltage (~> 3.1)
   honeybadger (~> 5.4)
   http_accept_language (~> 2.1)
-  jquery-rails (~> 4.5)
+  importmap-rails (~> 2.0)
   kaminari (~> 1.2)
   launchdarkly-server-sdk (~> 8.1)
   launchy (~> 2.5)
@@ -964,12 +964,12 @@ CHECKSUMS
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
   httparty (0.21.0) sha256=00ef7bf9a71f30a3bff88edeb5b16a34bea883ab67c246b3f0db2d6794fe1214
   i18n (1.14.1) sha256=9d03698903547c060928e70a9bc8b6b87fda674453cda918fc7ab80235ae4a61
+  importmap-rails (2.0.1) sha256=e739a6e70c09f797688c6983fa79567ec1edc9becc30d55b3f7cc897b1825586
   inline_svg (1.9.0) sha256=f44c5e3d2e401fd619ad3047b7c8cee384517d855edb1d1fb1a248d3cae535d6
   io-console (0.7.2) sha256=f0dccff252f877a4f60d04a4dc6b442b185ebffb4b320ab69212a92b48a7a221
   irb (1.11.1) sha256=0700d626c92f7d47d12e73932ddb0c11b73c1f00608f5eae78dbc44968690842
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.4.1) sha256=7243c40e4decc3d49529867e9c504afaea332976c967ffdebed9ff863c6424af
-  jquery-rails (4.6.0) sha256=3c4e6bf47274340b44d836b8aa1b5472c6d451e2739af5ec094421f39025a7e2
   json (2.7.1) sha256=187ea312fb58420ff0c40f40af1862651d4295c8675267c6a1c353f1a0ac3265
   json-jwt (1.16.5) sha256=c899d6d9c6892e1ed8e423ac153837d4ca4f7069777342f0e3a3398482f309fb
   jwt (2.7.1) sha256=07357cd2f180739b2f8184eda969e252d850ac996ed0a23f616e8ff0a90ae19b

@@ -18,7 +18,6 @@ gem "gravtastic", "~> 3.2"
 gem "high_voltage", "~> 3.1"
 gem "honeybadger", "~> 5.4"
 gem "http_accept_language", "~> 2.1"
-gem "jquery-rails", "~> 4.5"
 gem "kaminari", "~> 1.2"
 gem "launchdarkly-server-sdk", "~> 8.1"
 gem "mail", "~> 2.8"
@@ -43,7 +42,6 @@ gem "searchkick", "~> 5.3"
 gem "faraday_middleware-aws-sigv4", "~> 1.0"
 gem "xml-simple", "~> 1.1"
 gem "compact_index", "~> 0.15.0"
-gem "sprockets-rails", "~> 3.4"
 gem "rack-attack", "~> 6.6"
 gem "rqrcode", "~> 2.1"
 gem "rotp", "~> 6.2"
@@ -72,6 +70,10 @@ gem "pp", "0.5.0"
 # Former default gems
 gem "csv", "~> 3.2" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
+
+# Assets
+gem "sprockets-rails", "~> 3.4"
+gem "importmap-rails", "~> 2.0"
 
 group :assets, :development do
   gem "tailwindcss-rails", "~> 2.3"

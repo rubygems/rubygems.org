@@ -1,5 +1,7 @@
+import $ from "jquery";
+
 //data page
-$(document).ready(function() {
+$(function() {
   var getDumpData = function(target, type) {
     return $.get('https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_' + type).done(function(data) {
       var files, xml;
@@ -56,16 +58,18 @@ $(document).ready(function() {
     getDumpData('ul.rubygems-dump-listing-postgresql', 'postgresql');
     getDumpData('ul.rubygems-dump-listing-redis', 'redis');
   }
+
 });
 
 //stats page
-$('.stats__graph__gem__meter').each(function() {
-  bar_width = $(this).data("bar_width");
-  $(this).animate({ width: bar_width + '%' }, 700).removeClass('t-item--hidden').css("display", "block");
+$(function() {
+  $('.stats__graph__gem__meter').each(function() {
+    $(this).animate({ width: $(this).data("bar-width") + '%' }, 700).removeClass('t-item--hidden').css("display", "block");
+  });
 });
 
 //gem page
-$(document).ready(function() {
+$(function() {
   $('.gem__users__mfa-text.mfa-warn').on('click', function() {
     $('.gem__users__mfa-text.mfa-warn').toggleClass('t-item--hidden');
 

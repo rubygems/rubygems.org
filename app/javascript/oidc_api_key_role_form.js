@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 $(function () {
   function wire() {
     var removeNestedButtons = $("button.form__remove_nested_button");

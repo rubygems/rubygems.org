@@ -1,3 +1,6 @@
+import $ from "jquery";
+import { bufferToBase64url, base64urlToBuffer } from "webauthn-json"
+
 (function() {
   const handleEvent = function(event) {
     event.preventDefault();
@@ -48,7 +51,7 @@
   };
 
   const parseCreationOptionsFromJSON = function(json) {
-    return { 
+    return {
       ...json,
       challenge: base64urlToBuffer(json.challenge),
       user: { ...json.user, id: base64urlToBuffer(json.user.id) },

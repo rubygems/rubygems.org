@@ -87,7 +87,7 @@ COPY --link config/database.yml.sample /app/config/database.yml
 RUN <<BASH
   set -ex
   RAILS_GROUPS=assets SECRET_KEY_BASE_DUMMY=1 bin/rails assets:precompile
-  rm -r /app/tmp/cache/assets/
+  rm -fr /app/tmp/cache/assets/
 BASH
 
 RUN <<BASH

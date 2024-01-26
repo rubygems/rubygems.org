@@ -17,6 +17,23 @@ class ApplicationController < ActionController::Base
 
   add_flash_types :notice_html
 
+  ###
+  # Content security policy override for script-src
+  # This is necessary because we use a SHA256 for the importmap script tag
+  # because caching behavior of the mostly static pages could mean longer lived nonces
+  # being served from cache instead of unique nonces for each request.
+  # This ensures that importmap passes CSP and can be cached safely.
+  content_security_policy do |policy|
+    policy.script_src(
+      :self,
+      "'sha256-#{Digest::SHA256.base64digest(Rails.application.importmap.to_json(resolver: ApplicationController.helpers))}'",
+      "https://secure.gaug.es",
+      "https://www.fastly-insights.com",
+      "https://unpkg.com/@hotwired/stimulus/dist/stimulus.umd.js",
+      "https://unpkg.com/stimulus-rails-nested-form/dist/stimulus-rails-nested-form.umd.js"
+    )
+  end
+
   def set_locale
     I18n.locale = user_locale
 
