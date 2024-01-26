@@ -43,6 +43,7 @@ gem "faraday_middleware-aws-sigv4", "~> 1.0"
 gem "xml-simple", "~> 1.1"
 gem "compact_index", "~> 0.15.0"
 gem "sprockets-rails", "~> 3.4"
+gem "importmap-rails", "~> 2.0"
 gem "rack-attack", "~> 6.6"
 gem "rqrcode", "~> 2.1"
 gem "rotp", "~> 6.2"
@@ -75,6 +76,7 @@ group :assets, :development do
 end
 
 group :assets do
+  gem "stimulus-rails", "~> 1.3"
   gem "dartsass-sprockets", "~> 3.1"
   gem "terser", "~> 1.2"
   gem "autoprefixer-rails", "~> 10.4"
@@ -124,7 +126,3 @@ group :test do
   gem "minitest-reporters", "~> 1.6"
 end
 
-gem "stimulus-rails", "~> 1.3"
-
-
-gem "importmap-rails", "~> 2.0"
