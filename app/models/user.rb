@@ -16,8 +16,8 @@ class User < ApplicationRecord
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
   before_discard :clear_personal_attributes
-  before_destroy :yank_gems
   after_discard :send_deletion_complete_email
+  before_destroy :yank_gems
 
   scope :not_deleted, -> { kept }
   scope :deleted, -> { with_discarded.discarded }
