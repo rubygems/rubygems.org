@@ -209,6 +209,8 @@ GEM
       rake (> 10, < 14)
       ruby-statistics (>= 2.1)
       thor (>= 0.19, < 2)
+    discard (1.3.0)
+      activerecord (>= 4.2, < 8)
     docile (1.4.0)
     dogstatsd-ruby (5.6.1)
     domain_name (0.6.20231109)
@@ -749,6 +751,7 @@ DEPENDENCIES
   dartsass-sprockets (~> 3.1)
   ddtrace (~> 1.19)
   derailed_benchmarks (~> 2.1)
+  discard (~> 1.3)
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 2.8)
   factory_bot_rails (~> 6.4)
@@ -898,6 +901,7 @@ CHECKSUMS
   dead_end (4.0.0) sha256=695c8438993bb4c5415b1618a1b6e0afcae849ef2812fb8cb3846723904307eb
   debase-ruby_core_source (3.3.1) sha256=ed904cae290edf0cf274ad707f8981bf1cefad8081e78d4bb71be2a483bc2c08
   derailed_benchmarks (2.1.2) sha256=eaadc6206ceeb5538ff8f5e04a0023d54ebdd95d04f33e8960fb95a5f189a14f
+  discard (1.3.0) sha256=55218997ca4dc11f0594f1bb2d1196c4a959ceb562f1ab6490130233598dda67
   docile (1.4.0) sha256=5f1734bde23721245c20c3d723e76c104208e1aa01277a69901ce770f0ebb8d3
   dogstatsd-ruby (5.6.1) sha256=615dd1328c57ab66fb48cbf83b38ce2060d8353707be0bc3deb0ae960a659982
   domain_name (0.6.20231109) sha256=5127a1521ecca79d54accefc393f6d19db8600c6224416004414f7eaa28aecbe

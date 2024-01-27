@@ -17,8 +17,9 @@ class DeleteUserJobTest < ActiveJob::TestCase
   test "sends deletion failed on failure" do
     user = create(:user)
 
+    Mailer.expects(:deletion_failed).with(user.email).returns(mock(deliver_later: nil))
     User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
-    DeleteUserJob.perform_now(user:)
+    DeleteUserJob.new(user:).perform(user:)
 
     refute_predicate user.reload, :destroyed?
     refute_predicate user, :deleted_at
@@ -141,10 +142,10 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_delete user
     assert_deleted open_call
     assert_deleted closed_call
-    assert_deleted open_request
-    assert_deleted approved_request
-    assert_deleted closed_request
     assert_deleted other_request
+    assert_predicate approved_request.reload, :approved?
+    assert_predicate open_request.reload, :closed?
+    assert_predicate closed_request.reload, :closed?
     assert_equal other_call.reload.user, other_user
   end
 
@@ -153,8 +154,9 @@ class DeleteUserJobTest < ActiveJob::TestCase
     Mailer.expects(:deletion_failed).never
     DeleteUserJob.new(user:).perform(user:)
 
-    refute_predicate user, :destroyed?
+    refute_predicate user.reload, :destroyed?
     assert_predicate user.reload, :deleted_at
+    assert_predicate user.reload, :discarded?
     user.validate!
   end
 
