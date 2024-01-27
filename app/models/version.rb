@@ -7,7 +7,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_many :audits, as: :auditable, inverse_of: :auditable, dependent: :nullify
   has_one :gem_download, inverse_of: :version, dependent: :destroy
-  belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
+  belongs_to :pusher, class_name: "User", inverse_of: :pushed_versions, optional: true
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true
   has_one :deletion, dependent: :delete, inverse_of: :version, required: false
   has_one :yanker, through: :deletion, source: :user, inverse_of: :yanked_versions, required: false
@@ -27,8 +27,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   serialize :cert_chain, coder: CertificateChainSerializer
 
   validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::VERSION_PATTERN }
-  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
-  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN },
+  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::NAME_PATTERN }
+  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::NAME_PATTERN },
             if: -> { validation_context == :create || gem_platform_changed? }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false },
             if: -> { validation_context == :create || full_name_changed? }

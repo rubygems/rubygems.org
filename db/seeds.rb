@@ -65,26 +65,31 @@ Version.create_with(
   pusher: author,
   metadata: {
     homepage_uri: "https://example.com/rubygem0/home",
-    source_code_uri: "https://github.com/example/#{rubygem1.name}"
-  }
+    source_code_uri: "https://github.com/example/#{rubygem0.name}"
+  },
+  sha256: Digest::SHA2.base64digest("rubygem0-1.0.0.gem")
 ).find_or_create_by!(rubygem: rubygem0, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
-  indexed: true
+  indexed: true,
+  sha256: Digest::SHA2.base64digest("rubygem0-1.0.0-x86_64-darwin.gem")
 ).find_or_create_by!(rubygem: rubygem0, number: "1.0.0", platform: "x86_64-darwin", gem_platform: Gem::Platform.new("x86_64-darwin").to_s)
 
 Version.create_with(
   indexed: true,
-  pusher: author
+  pusher: author,
+  sha256: Digest::SHA2.base64digest("rubygem1-1.0.0.pre.1.gem")
 ).find_or_create_by!(rubygem: rubygem1, number: "1.0.0.pre.1", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
   indexed: true,
   pusher: maintainer,
-  dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))]
+  dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))],
+  sha256: Digest::SHA2.base64digest("rubygem1-1.1.0.pre.2.gem")
 ).find_or_create_by!(rubygem: rubygem1, number: "1.1.0.pre.2", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
   indexed: false,
   pusher: author,
-  yanked_at: Time.utc(2020, 3, 3)
+  yanked_at: Time.utc(2020, 3, 3),
+  sha256: Digest::SHA2.base64digest("rubygem_requestable-1.0.0.gem")
 ).find_or_create_by!(rubygem: rubygem_requestable, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
@@ -271,7 +276,7 @@ trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem
   name: "GitHub Actions something",
   hashed_key: "securehashedkey-tp",
   push_rubygem: true
-).pushed_versions.create_with(indexed: true).find_or_create_by!(
+).pushed_versions.create_with(indexed: true, sha256: Digest::SHA2.base64digest("rubygem0-0.1.0.gem")).find_or_create_by!(
   rubygem: rubygem0, number: "0.1.0", platform: "ruby", gem_platform: "ruby"
 )
 trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem1)

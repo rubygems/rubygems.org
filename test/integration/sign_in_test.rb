@@ -283,6 +283,18 @@ class SignInTest < SystemTest
     assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
 
+  test "sign in to deleted account" do
+    User.find_by!(email: "nick@example.com").update!(deleted_at: Time.zone.now)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    page.assert_text "Sign in"
+    page.assert_text "Bad email or password."
+  end
+
   teardown do
     Capybara.reset_sessions!
     Capybara.use_default_driver

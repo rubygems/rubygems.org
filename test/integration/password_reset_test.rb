@@ -224,6 +224,15 @@ class PasswordResetTest < SystemTest
     assert_equal email, @user.email
   end
 
+  test "resetting password of soft-deleted user" do
+    @user.update!(deleted_at: Time.zone.now, email: "deleted+#{@user.id}@rubygems.org")
+
+    forgot_password_with @user.email
+
+    assert_empty ActionMailer::Base.deliveries
+    page.assert_text "instructions for changing your password"
+  end
+
   teardown do
     @authenticator&.remove!
     Capybara.reset_sessions!

@@ -4,6 +4,10 @@ class UserResource < Avo::BaseResource
   self.search_query = lambda {
     scope.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
   }
+  self.unscoped_queries_on_index = true
+
+  class DeletedFilter < ScopeBooleanFilter; end
+  filter DeletedFilter, arguments: { default: { not_deleted: true, deleted: false } }
 
   action BlockUser
   action CreateUser
@@ -33,6 +37,8 @@ class UserResource < Avo::BaseResource
 
   field :mail_fails, as: :number
   field :blocked_email, as: :text
+
+  field :deleted_at, as: :date_time
 
   tabs style: :pills do
     tab "Auth" do

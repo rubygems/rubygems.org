@@ -3,6 +3,8 @@ module AvoAuditable
 
   prepended do
     include Auditable
+
+    prepend_around_action :unscope_users
   end
 
   def perform_action_and_record_errors(&blk)
@@ -37,5 +39,9 @@ module AvoAuditable
     return avo.resources_audit_path(@audit) if @audit.present?
 
     super
+  end
+
+  def unscope_users(&)
+    User.unscoped(&)
   end
 end
