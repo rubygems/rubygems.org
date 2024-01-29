@@ -4,7 +4,7 @@ gem "rails", "~> 7.1.0"
 gem "rails-i18n", "~> 7.0"
 
 gem "aws-sdk-s3", "~> 1.143"
-gem "aws-sdk-sqs", "~> 1.69"
+gem "aws-sdk-sqs", "~> 1.70"
 gem "bootsnap", "~> 1.17"
 gem "clearance", "~> 2.6"
 gem "dalli", "~> 3.2"
