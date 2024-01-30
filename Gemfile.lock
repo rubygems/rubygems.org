@@ -137,7 +137,7 @@ GEM
     bloomer (1.0.0)
       bitarray
       msgpack
-    bootsnap (1.17.1)
+    bootsnap (1.18.0)
       msgpack (~> 1.2)
     brakeman (6.1.1)
       racc
@@ -740,7 +740,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1.143)
   aws-sdk-sqs (~> 1.70)
   bcrypt (~> 3.1)
-  bootsnap (~> 1.17)
+  bootsnap (~> 1.18)
   brakeman (~> 6.1)
   browser (~> 5.3, >= 5.3.1)
   capybara (~> 3.40)
@@ -873,7 +873,7 @@ CHECKSUMS
   bindata (2.4.15) sha256=e567e4278223e041caf4e623de870b2df8a93479d8f13e2b478bad45e0fbc413
   bitarray (1.2.0) sha256=7f9f31fadbd87bf51544cf13058e81cd6ec408ff40f127902cef3d6767b23f11
   bloomer (1.0.0) sha256=57a0d3a78628db9a92c6723f06c67697e420abcdb05aa757c6dfae607251d272
-  bootsnap (1.17.1) sha256=dbb2c6d4d594b0c87854f34a9073c9114a0c9a1023b8579e2eaaeb28848b1809
+  bootsnap (1.18.0) sha256=5d79b0359c5150ea44a964b5af4b00935d5dfd69aef16ef80489d518ae0c6953
   brakeman (6.1.1) sha256=7ee39855c3f0c3bf7169ea58e60e4a9968468e5ab3343f3ddf87b7db8bd613aa
   browser (5.3.1) sha256=62745301701ff2c6c5d32d077bb12532b20be261929dcb52c6781ed0d5658b3c
   builder (3.2.4) sha256=99caf08af60c8d7f3a6b004029c4c3c0bdaebced6c949165fe98f1db27fbbc10

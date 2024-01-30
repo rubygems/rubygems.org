@@ -5,7 +5,7 @@ gem "rails-i18n", "~> 7.0"
 
 gem "aws-sdk-s3", "~> 1.143"
 gem "aws-sdk-sqs", "~> 1.70"
-gem "bootsnap", "~> 1.17"
+gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.6"
 gem "dalli", "~> 3.2"
 gem "ddtrace", "~> 1.19", require: "ddtrace/auto_instrument"
