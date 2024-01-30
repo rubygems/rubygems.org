@@ -1,6 +1,7 @@
 class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
+  include Events::Recordable
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
