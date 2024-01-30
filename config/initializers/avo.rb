@@ -19,6 +19,12 @@ Avo.configure do |config|
   config.current_user_method = :admin_user
   config.authenticate_with do
     redirect_to '/' unless _current_user&.valid?
+    Current.user = begin
+      User.security_user
+    rescue ActiveRecord::RecordNotFound
+      nil
+    end
+    Current.request = request
   end
   config.sign_out_path_name = :admin_logout_path
 
