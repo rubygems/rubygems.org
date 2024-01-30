@@ -499,7 +499,7 @@ class PusherTest < ActiveSupport::TestCase
     should "be false if rubygem is new and api key has unexpected owner type" do
       @cutter.stubs(:rubygem).returns Rubygem.new
 
-      owner = stub("owner")
+      owner = stub("owner", to_gid: nil)
       @api_key.update_columns(owner_id: 0, owner_type: "stub")
       @cutter.stubs(:owner).returns owner
       owner.expects(:owns_gem?).with(@cutter.rubygem).returns(false)
@@ -536,7 +536,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "be false if api key has unexpected owner type" do
-        owner = stub("owner")
+        owner = stub("owner", to_gid: nil)
         @api_key.update_columns(owner_id: 0, owner_type: "stub")
         @cutter.stubs(:owner).returns owner
         owner.expects(:owns_gem?).with(@rubygem).returns(false)

@@ -15,7 +15,7 @@ class VerifyLinkJob < ApplicationJob
 
   rescue_from LinkNotPresentError, HTTPResponseError, *ERRORS do |error|
     logger.info "Linkback verification failed with error: #{error.message}", error: error, uri: link_verification.uri,
-      linkable: link_verification.linkable
+      linkable: link_verification.linkable.to_gid
 
     link_verification.transaction do
       record_failure
