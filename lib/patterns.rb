@@ -12,4 +12,5 @@ module Patterns
   URL_VALIDATION_REGEXP = %r{\Ahttps?://([^\s:@]+:[^\s:@]*@)?[A-Za-z\d-]+(\.[A-Za-z\d-]+)+\.?(:\d{1,5})?([/?]\S*)?\z}
   VERSION_PATTERN       = /\A#{Gem::Version::VERSION_PATTERN}\z/o
   REQUIREMENT_PATTERN   = Gem::Requirement::PATTERN
+  BASE64_SHA256_PATTERN = %r{\A[0-9a-zA-Z_+/-]{43}={0,2}\z}
 end
