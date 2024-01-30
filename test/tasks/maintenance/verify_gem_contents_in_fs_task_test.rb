@@ -51,7 +51,9 @@ class Maintenance::VerifyGemContentsInFsTaskTest < ActiveSupport::TestCase
     end
 
     should "error when checksums do not match" do
-      version = create(:version, sha256: "abcd", spec_sha256: "defg")
+      sha256 = Digest::SHA256.base64digest("abcd - other")
+      spec_sha256 = Digest::SHA256.base64digest("defg - other")
+      version = create(:version, sha256:, spec_sha256:)
       RubygemFs.instance.store("gems/#{version.full_name}.gem", "abcd")
       RubygemFs.instance.store("quick/Marshal.4.8/#{version.full_name}.gemspec.rz", "defg")
 
@@ -62,12 +64,12 @@ class Maintenance::VerifyGemContentsInFsTaskTest < ActiveSupport::TestCase
       assert_semantic_logger_event(
         @task.logger.events[0],
         level:            :error,
-        message_includes: "has incorrect checksum (expected abcd, got #{Digest::SHA256.base64digest('abcd')})"
+        message_includes: "has incorrect checksum (expected #{sha256}, got #{Digest::SHA256.base64digest('abcd')})"
       )
       assert_semantic_logger_event(
         @task.logger.events[1],
         level:            :error,
-        message_includes: "has incorrect checksum (expected defg, got #{Digest::SHA256.base64digest('defg')})"
+        message_includes: "has incorrect checksum (expected #{spec_sha256}, got #{Digest::SHA256.base64digest('defg')})"
       )
     end
   end

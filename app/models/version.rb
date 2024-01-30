@@ -41,6 +41,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :description, :summary, :authors, :requirements, :cert_chain,
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
+  validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
 
   validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create
