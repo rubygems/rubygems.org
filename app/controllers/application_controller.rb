@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :reject_null_char_cookie
   before_action :set_error_context_user
   before_action :set_user_tag
+  before_action :set_current_request
 
   add_flash_types :notice_html
 
@@ -160,6 +161,11 @@ class ApplicationController < ActionController::Base
       user_id: current_user.id,
       user_email: current_user.email
     )
+  end
+
+  def set_current_request
+    Current.request = request
+    Current.user = current_user
   end
 
   def browser
