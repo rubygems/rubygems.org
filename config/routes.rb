@@ -324,5 +324,8 @@ Rails.application.routes.draw do
   ################################################################################
   # Development routes
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+    mount Lookbook::Engine, at: "/lookbook"
+  end
 end

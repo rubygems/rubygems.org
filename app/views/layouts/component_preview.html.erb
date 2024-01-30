@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html style="background-color: <%= params[:lookbook][:display][:bg_color] || "white" %>">
+<head>
+  <title>Component Preview</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
+    <%= stylesheet_link_tag("application") %>
+    <%= stylesheet_link_tag("tailwind", "data-turbo-track": "reload") %>
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
+    <%= yield :head %>
+</head>
+<body class="!tw-bg-white tw-p-5">
+  <div style="max-width: <%= params[:lookbook][:display][:max_width] || "100%" %>" class="tw-mx-auto">
+    <div class="l-wrap--b">
+      <% if @title %>
+        <h1 class="t-display page__heading">
+          <%= content_for_title @title, @title_url %>
+          <% if @subtitle %>
+            <i class="page__subheading"><%= @subtitle.html_safe %></i>
+          <% end %>
+        </h1>
+      <% end %>
+      <%= yield :title %>
+      <div class="t-body">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+  <%= javascript_include_tag "application" %>
+  <%= yield :javascript %>
+</body>
+</html>
