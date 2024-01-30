@@ -274,6 +274,8 @@ GEM
       thor
     high_voltage (3.1.2)
     honeybadger (5.4.1)
+    htmlbeautifier (1.4.2)
+    htmlentities (4.3.4)
     http (5.1.1)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
@@ -354,6 +356,18 @@ GEM
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
+    lookbook (2.2.0)
+      activemodel
+      css_parser
+      htmlbeautifier (~> 1.3)
+      htmlentities (~> 4.3.4)
+      marcel (~> 1.0)
+      railties (>= 5.0)
+      redcarpet (~> 3.5)
+      rouge (>= 3.26, < 5.0)
+      view_component (>= 2.0)
+      yard (~> 0.9.25)
+      zeitwerk (~> 2.5)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -559,6 +573,7 @@ GEM
       optimist (>= 3.0.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
+    redcarpet (3.6.0)
     regexp_parser (2.9.0)
     reline (0.4.2)
       io-console (~> 0.5)
@@ -570,6 +585,7 @@ GEM
       railties (>= 5.1, < 8.0)
       roadie (~> 5.0)
     rotp (6.3.0)
+    rouge (4.2.0)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -727,6 +743,7 @@ GEM
       rexml
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yard (0.9.34)
     zeitwerk (2.6.12)
 
 PLATFORMS
@@ -773,6 +790,7 @@ DEPENDENCIES
   letter_opener (~> 1.8)
   letter_opener_web (~> 2.0)
   listen (~> 3.8)
+  lookbook (~> 2.2)
   mail (~> 2.8)
   maintenance_tasks (~> 2.4)
   memory_profiler (~> 1.0)
@@ -936,6 +954,8 @@ CHECKSUMS
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
   high_voltage (3.1.2) sha256=7786716114cc21b3754e537818a6d9b2c91aa1126aa77272977d50598e556c2f
   honeybadger (5.4.1) sha256=aea65109e148db2b0a0916e9600ecb7e0f11c9ee753c1c71764cb0ade13e0b1a
+  htmlbeautifier (1.4.2) sha256=9de0c98480fe80d795ed5734a11f183563cd969686f25a04609c0f5a446fa5f8
+  htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http (5.1.1) sha256=fcaec14a4f82de6d2f9cb978c07326814c6c2b42b8974f6ec166ff19c645ebaf
   http-cookie (1.0.5) sha256=73756d46c7dbdc7023deecdb8a171348ea95a1b99810b31cfe8b4fb4e9a6318f
   http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
@@ -966,6 +986,7 @@ CHECKSUMS
   listen (3.8.0) sha256=9679040ac6e7845ad9f19cf59ecde60861c78e2fae57a5c20fe35e94959b2f8f
   llhttp-ffi (0.4.0) sha256=e5f7327db3cf8007e648342ef76347d6e0ae545a8402e519cca9c886eb37b001
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
+  lookbook (2.2.0) sha256=27c869364cf8bb8e9c61e43f909cbf5aec91dc35f4db791c3d0b7287a637a2d9
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
   maintenance_tasks (2.4.0) sha256=807899c1aa55e6a9eeed57cf5b9c595a9724670356d7e872181bcf8887f7aca7
   marcel (1.0.2) sha256=a013b677ef46cbcb49fd5c59b3d35803d2ee04dd75d8bfdc43533fc5a31f7e4e
@@ -1042,12 +1063,14 @@ CHECKSUMS
   rb-inotify (0.10.1) sha256=050062d4f31d307cca52c3f6a7f4b946df8de25fc4bd373e1a5142e41034a7ca
   rbtrace (0.5.1) sha256=e8cba64d462bfb8ba102d7be2ecaacc789247d52ac587d8003549d909cb9c5dc
   rdoc (6.6.2) sha256=f763dbec81079236bcccded19d69680471bd55da8f731ea6f583d019dacd9693
+  redcarpet (3.6.0) sha256=8ad1889c0355ff4c47174af14edd06d62f45a326da1da6e8a121d59bdcd2e9e9
   regexp_parser (2.9.0) sha256=81a00ba141cec0d4b4bf58cb80cd9193e5180836d3fa6ef623f7886d3ba8bdd9
   reline (0.4.2) sha256=14042962b71d4cf52cc7d348f411886e2df54fc9d434d69b0b0bff84786d1c3a
   rexml (3.2.6) sha256=e0669a2d4e9f109951cb1fde723d8acd285425d81594a2ea929304af50282816
   roadie (5.2.0) sha256=f4dc8e41ccc331ebe4833cfa8e7495446db8bfd725c1a9b480147cb53c4945e3
   roadie-rails (3.1.0) sha256=5a45e1a7eb2f7cac29325ef8be64684c9d67cec608b235a69e38a7b79c64de21
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
+  rouge (4.2.0) sha256=60dd666b3a223467dc72f5b7384764dfd7ad4e50b0df9eff072be58123506eba
   rqrcode (2.2.0) sha256=23eea88bb44c7ee6d6cab9354d08c287f7ebcdc6112e1fe7bcc2d010d1ffefc1
   rqrcode_core (1.2.0) sha256=cf4989dc82d24e2877984738c4ee569308625fed2a810960f1b02d68d0308d1a
   rubocop (1.60.1) sha256=a992a4b3d8c3123397c70e5fe675e0a30c6576acd1bc15a02b6fe6d5acd7fe64
@@ -1111,6 +1134,7 @@ CHECKSUMS
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xml-simple (1.1.9) sha256=d21131e519c86f1a5bc2b6d2d57d46e6998e47f18ed249b25cad86433dbd695d
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
+  yard (0.9.34) sha256=5a8e04114d7f15f77814973ea56b7c38282126fb2930eb82851ffed0b9cd7e04
   zeitwerk (2.6.12) sha256=561e12975d0332fd3b62cc859aff3bab432e5f320689c8a10cd4674b5c0439be
 
 BUNDLED WITH

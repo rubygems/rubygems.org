@@ -28,6 +28,7 @@ require "helpers/password_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "webmock/minitest"
+require "phlex/testing/rails/view_helper"
 
 # setup license early since some tests are testing Avo outside of requests
 # and license is set with first request
@@ -184,6 +185,32 @@ class SystemTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = :rack_test
+  end
+end
+
+class ComponentTest < ActiveSupport::TestCase
+  include Phlex::Testing::Rails::ViewHelper
+  include Capybara::Minitest::Assertions
+
+  attr_reader :page
+
+  def render(...)
+    response = super
+    @page = Capybara.string(response)
+  end
+
+  def preview(path = preview_path, scenario: :default, **params)
+    preview = Lookbook::Engine.previews.find_by_path(path)
+
+    refute_nil preview, "Preview not found: #{path}"
+    render_args = preview.render_args(scenario, params:)
+    component = render_args.fetch(:component)
+    yield component if block_given?
+    render component
+  end
+
+  def preview_path
+    self.class.name.sub(/ComponentTest$/, "").underscore
   end
 end
 
