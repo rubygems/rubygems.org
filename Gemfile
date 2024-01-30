@@ -55,6 +55,7 @@ gem "maintenance_tasks", "~> 2.4"
 gem "strong_migrations", "~> 1.7"
 gem "phlex-rails", "~> 1.1"
 gem "discard", "~> 1.3"
+gem "user_agent_parser", "~> 2.16"
 
 # Admin dashboard
 gem "avo", "~> 2.47"
