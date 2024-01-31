@@ -94,7 +94,7 @@ class Events::TableComponent < ApplicationComponent
 
   def show_additional_info?(event)
     return true if event.has_attribute?(:user_id) && event.user == current_user
-    return true if event.additional.has_attribute?("actor_gid") && event.additional.actor_gid == current_user.to_gid
+    return true if event.additional.has_attribute?("actor_gid") && event.additional.actor_gid == current_user&.to_gid
 
     false
   end
