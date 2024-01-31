@@ -161,7 +161,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.string "city"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["continent_code", "country_code", "country_code3", "region", "city"], name: "index_geoip_infos_on_fields", unique: true
+    t.index ["continent_code", "country_code", "country_code3", "country_name", "region", "city"], name: "index_geoip_infos_on_fields", unique: true
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

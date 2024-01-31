@@ -10,7 +10,7 @@ class CreateGeoipInfos < ActiveRecord::Migration[7.1]
 
       t.timestamps
 
-      t.index %w[continent_code country_code country_code3 region city], unique: true, name: "index_geoip_infos_on_fields"
+      t.index %w[continent_code country_code country_code3 country_name region city], unique: true, name: "index_geoip_infos_on_fields"
     end
   end
 end

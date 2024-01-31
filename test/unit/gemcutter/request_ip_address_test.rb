@@ -67,7 +67,7 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
   should "record GEOIP_INFO" do
     @request.headers["RUBYGEMS_PROXY_TOKEN"] = "abc"
 
-    Gemcutter::RequestIpAddress::GEOIP_FIELDS.each_with_object(build(:geoip_info)) do |(field, header), info|
+    Gemcutter::RequestIpAddress::GEOIP_FIELDS.each_with_object(build(:geoip_info, :usa)) do |(field, header), info|
       @request.headers[header] = info[field]
     end
 
