@@ -1,10 +1,10 @@
-class GeoipInfo < OIDC::BaseModel
-  attribute :continent_code, :string
-  attribute :country_code, :string
-  attribute :country_code3, :string
-  attribute :country_name, :string
-  attribute :region, :string
-  attribute :city, :string
+class GeoipInfo < ApplicationRecord
+  has_many :ip_addresses, dependent: :nullify
+  has_many :user_events, class_name: "Events::UserEvent", dependent: :nullify
+  has_many :rubygem_events, class_name: "Events::RubygemEvent", dependent: :nullify
+
+  validates :continent_code, :country_code, length: { maximum: 2 }
+  validates :country_code3, length: { maximum: 3 }
 
   def to_s
     parts = [city&.titleize, region&.upcase, country_code&.upcase].compact

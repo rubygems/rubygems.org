@@ -104,9 +104,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.string "trace_id"
     t.bigint "rubygem_id", null: false
     t.bigint "ip_address_id"
+    t.bigint "geoip_info_id"
     t.jsonb "additional"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["geoip_info_id"], name: "index_events_rubygem_events_on_geoip_info_id"
     t.index ["ip_address_id"], name: "index_events_rubygem_events_on_ip_address_id"
     t.index ["rubygem_id"], name: "index_events_rubygem_events_on_rubygem_id"
     t.index ["tag"], name: "index_events_rubygem_events_on_tag"
@@ -117,9 +119,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.string "trace_id"
     t.bigint "user_id", null: false
     t.bigint "ip_address_id"
+    t.bigint "geoip_info_id"
     t.jsonb "additional"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["geoip_info_id"], name: "index_events_user_events_on_geoip_info_id"
     t.index ["ip_address_id"], name: "index_events_user_events_on_ip_address_id"
     t.index ["tag"], name: "index_events_user_events_on_tag"
     t.index ["user_id"], name: "index_events_user_events_on_user_id"
@@ -146,6 +150,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.text "info"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "geoip_infos", force: :cascade do |t|
+    t.string "continent_code", limit: 2
+    t.string "country_code", limit: 2
+    t.string "country_code3", limit: 3
+    t.string "country_name"
+    t.string "region"
+    t.string "city"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["continent_code", "country_code", "country_code3", "region", "city"], name: "index_geoip_infos_on_fields", unique: true
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -230,9 +246,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
   create_table "ip_addresses", force: :cascade do |t|
     t.inet "ip_address", null: false
     t.text "hashed_ip_address", null: false
-    t.jsonb "geoip_info"
+    t.bigint "geoip_info_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["geoip_info_id"], name: "index_ip_addresses_on_geoip_info_id"
     t.index ["hashed_ip_address"], name: "index_ip_addresses_on_hashed_ip_address", unique: true
     t.index ["ip_address"], name: "index_ip_addresses_on_ip_address", unique: true
   end
@@ -562,10 +579,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
   end
 
+  add_foreign_key "events_rubygem_events", "geoip_infos"
   add_foreign_key "events_rubygem_events", "ip_addresses"
   add_foreign_key "events_rubygem_events", "rubygems"
+  add_foreign_key "events_user_events", "geoip_infos"
   add_foreign_key "events_user_events", "ip_addresses"
   add_foreign_key "events_user_events", "users"
+  add_foreign_key "ip_addresses", "geoip_infos"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"

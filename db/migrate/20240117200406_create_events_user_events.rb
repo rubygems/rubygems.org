@@ -5,6 +5,7 @@ class CreateEventsUserEvents < ActiveRecord::Migration[7.0]
       t.string :trace_id, null: true
       t.references :user, null: false, foreign_key: true
       t.references :ip_address, null: true, foreign_key: true
+      t.references :geoip_info, null: true, foreign_key: true
       t.jsonb :additional
 
       t.timestamps

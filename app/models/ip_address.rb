@@ -2,11 +2,9 @@ class IpAddress < ApplicationRecord
   validates :ip_address, presence: true, uniqueness: true
   validates :hashed_ip_address, presence: true, uniqueness: true
 
-  validates :geoip_info, presence: true, allow_nil: true
-  attribute :geoip_info, Types::JsonDeserializable.new(GeoipInfo)
-
   before_validation :hash_ip_address!
 
+  belongs_to :geoip_info, optional: true
   has_many :user_events, class_name: "Events::UserEvent", dependent: :nullify
   has_many :rubygem_events, class_name: "Events::RubygemEvent", dependent: :nullify
 
