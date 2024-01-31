@@ -6,7 +6,7 @@ class Rstuf::CheckJob < Rstuf::ApplicationJob
   queue_with_priority PRIORITIES.fetch(:push)
 
   def perform(task_id)
-    case status = Rstuf::Client.task_status(task_id)
+    case status = Rstuf::Client.task_state(task_id)
     when "SUCCESS"
       # no-op, all good
     when "FAILURE"

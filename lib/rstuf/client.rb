@@ -15,7 +15,7 @@ class Rstuf::Client
     raise Error, "Error deleting artifacts: #{response.body}"
   end
 
-  def self.task_status(task_id)
+  def self.task_state(task_id)
     result = get_task(task_id)
     result.dig("data", "state")
   end

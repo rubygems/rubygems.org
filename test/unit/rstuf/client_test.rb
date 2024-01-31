@@ -49,19 +49,19 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
     end
   end
 
-  test "task_status should return the status of the task" do
+  test "task_state should return the status of the task" do
     task_id = "12345"
     state = "processing"
     stub_request(:get, "#{Rstuf.base_url}/api/v1/task/")
       .with(query: { task_id: task_id })
       .to_return(body: { data: { state: state } }.to_json, status: 200, headers: { "Content-Type" => "application/json" })
 
-    status = Rstuf::Client.task_status(task_id)
+    status = Rstuf::Client.task_state(task_id)
 
     assert_equal state, status
   end
 
-  test "task_status should raise Error if task retrieval fails" do
+  test "task_state should raise Error if task retrieval fails" do
     task_id = "12345"
     error_message = "Task not found"
     stub_request(:get, "#{Rstuf.base_url}/api/v1/task/")
@@ -69,7 +69,7 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
       .to_return(body: { error: error_message }.to_json, status: 404, headers: { "Content-Type" => "application/json" })
 
     assert_raises(Rstuf::Client::Error) do
-      Rstuf::Client.task_status(task_id)
+      Rstuf::Client.task_state(task_id)
     end
   end
 
