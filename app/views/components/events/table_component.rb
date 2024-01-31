@@ -72,16 +72,16 @@ class Events::TableComponent < ApplicationComponent
     render component.new(event:)
   end
 
-  def additional_info(event) # rubocop:disable Metrics
+  def additional_info(event)
     return unless event.tags.key?(event.tag)
-    return if event.additional.blank? || (event.additional.geoip_info.nil? && event.additional.user_agent_info.nil?)
+    return if event.geoip_info.nil? && (event.additional.blank? && event.additional.user_agent_info.nil?)
 
     p(class: "!tw-mb-0") do
       break div { t(".redacted") } unless show_additional_info?(event)
 
-      if (geoip_info = event.additional&.geoip_info)
+      if event.geoip_info.present?
         div do
-          plain geoip_info.to_s
+          plain event.geoip_info.to_s
         end
       end
 

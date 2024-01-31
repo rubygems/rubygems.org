@@ -6,8 +6,7 @@ module Events::Recordable
 
     def record_event!(tag, request: Current.request, **additional)
       ip_address = request&.ip_address
-
-      additional[:geoip_info] = ip_address.geoip_info if ip_address&.geoip_info.present?
+      geoip_info = ip_address&.geoip_info
 
       if (user_agent = request&.user_agent.presence)
         begin
@@ -18,7 +17,7 @@ module Events::Recordable
         end
       end
 
-      event = events.create!(tag:, ip_address:, additional:, trace_id: Datadog::Tracing.correlation.trace_id)
+      event = events.create!(tag:, ip_address:, geoip_info:, additional:, trace_id: Datadog::Tracing.correlation.trace_id)
       logger.info("Recorded event #{tag}", record: cache_key,
         event: event.as_json, tag:, ip_address: ip_address.as_json, additional: event.additional)
       event

@@ -14,6 +14,7 @@ class Events::TableComponentTest < ActiveSupport::TestCase
 
     attribute :additional
     attribute :created_at, :datetime, default: -> { Time.zone.now }
+    attribute :geoip_info, Types::JsonDeserializable.new(GeoipInfo)
 
     include Events::Tags
   end
@@ -61,8 +62,8 @@ class Events::TableComponentTest < ActiveSupport::TestCase
     user = create(:user)
 
     page = render table(page([
-                               UserTestEvent.new(tag: tag, user_id: user.id + 1, additional: {
-                                                   geoip_info: build(:geoip_info), user_agent_info: build(:events_user_agent_info)
+                               UserTestEvent.new(tag: tag, user_id: user.id + 1, geoip_info: build(:geoip_info), additional: {
+                                                   user_agent_info: build(:events_user_agent_info)
                                                  })
                              ]), stubs: { current_user: user })
 
@@ -79,8 +80,8 @@ class Events::TableComponentTest < ActiveSupport::TestCase
     user = create(:user)
 
     page = render table(page([
-                               UserTestEvent.new(tag: tag, user_id: user.id, additional: {
-                                                   geoip_info: build(:geoip_info), user_agent_info: build(:events_user_agent_info)
+                               UserTestEvent.new(tag: tag, user_id: user.id, geoip_info: build(:geoip_info), additional: {
+                                                   user_agent_info: build(:events_user_agent_info)
                                                  })
                              ]), stubs: { current_user: user })
 
