@@ -1,7 +1,8 @@
 class Rstuf::CheckJob < Rstuf::ApplicationJob
   RetryException = Class.new(StandardError)
   FailureException = Class.new(StandardError)
-  retry_on RetryException, wait: :exponentially_longer, attempts: 10
+  ErrorException = Class.new(StandardError)
+  retry_on RetryException, wait: :polynomially_longer, attempts: 10
 
   queue_with_priority PRIORITIES.fetch(:push)
 
@@ -10,8 +11,10 @@ class Rstuf::CheckJob < Rstuf::ApplicationJob
     when "SUCCESS"
       # no-op, all good
     when "FAILURE"
-      raise FailureException, "RSTUF job failed"
-    when "PENDING"
+      raise FailureException, "RSTUF job failed, please check payload and retry"
+    when "ERRORED", "REVOKED", "REJECTED"
+      raise ErrorException, "RSTUF internal problem, please check RSTUF health"
+    when "PENDING", "RUNNING", "RECEIVED", "STARTED"
       raise RetryException
     else
       Rails.logger.info "RSTUF job returned unexpected state #{status}"
