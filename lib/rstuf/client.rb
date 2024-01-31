@@ -1,4 +1,6 @@
 class Rstuf::Client
+  include SemanticLogger::Loggable
+
   Error = Class.new(StandardError)
 
   def self.post_artifacts(targets)
@@ -24,7 +26,7 @@ class Rstuf::Client
     Faraday.new(url: Rstuf.base_url) do |f|
       f.request :json
       f.response :json
-      f.response :logger, Rails.logger
+      f.response :logger, logger
     end
   end
 
