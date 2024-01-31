@@ -55,9 +55,3 @@ class Events::RubygemEvent < ApplicationRecord
     attribute :owner_gid, :global_id
   end
 end
-
-class Events::RubygemEvent < ApplicationRecord
-  belongs_to :rubygem
-  belongs_to :ip_address, optional: true
-  belongs_to :geoip_info, optional: true
-end

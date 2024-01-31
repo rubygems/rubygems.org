@@ -919,6 +919,3 @@ en:
         api_key_gem_html: "Gem: %{gem}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
-  events/user_agent_info:
-    unknown_browser: Unknown browser
-    unknown: Unknown

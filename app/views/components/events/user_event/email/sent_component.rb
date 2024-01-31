@@ -2,10 +2,10 @@
 
 class Events::UserEvent::Email::SentComponent < Events::TableDetailsComponent
   def template
-    t(".email_sent_subject", subject: event.additional["subject"])
+    plain t(".email_sent_subject", subject: additional.subject)
     br
-    t(".email_sent_from", from: event.additional["from"])
+    plain t(".email_sent_from", from: additional.from)
     br
-    t(".email_sent_to", to: event.additional["to"])
+    plain t(".email_sent_to", to: additional.to)
   end
 end

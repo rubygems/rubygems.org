@@ -11,16 +11,15 @@ module Events::Tags
     cattr_reader(:tags) { {} }
 
     def additional_type
-      tags.fetch(tag) { raise KeyError, "No #{tag.inspect} amongst #{tags.keys.inspect}" }
+      tags.fetch(tag, nil)
     end
 
     def additional
-      additional_type
-        .new(super)
+      additional_type&.new(super) || super
     end
 
     def additional=(value)
-      super(value.to_h)
+      super(value&.to_h)
     end
   end
 

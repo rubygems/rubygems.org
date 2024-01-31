@@ -14,6 +14,14 @@ class Events::UserEvent::Login::SuccessComponentPreview < Lookbook::Preview
     render Events::UserEvent::Login::SuccessComponent.new(event:)
   end
 
+  def password_with_otp
+    event = build_event(
+      authentication_method: "password",
+      two_factor_method: "otp"
+    )
+    render Events::UserEvent::Login::SuccessComponent.new(event:)
+  end
+
   private
 
   def build_event(**additional)

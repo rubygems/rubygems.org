@@ -196,7 +196,10 @@ class ComponentTest < ActiveSupport::TestCase
 
   def render(...)
     response = super
-    @page = Capybara.string(response)
+    app = ->(_env) { [200, { "Content-Type" => "text/html" }, [response]] }
+    session = Capybara::Session.new(:rack_test, app)
+    session.visit("/")
+    @page = session.document
   end
 
   def preview(path = preview_path, scenario: :default, **params)

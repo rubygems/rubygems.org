@@ -2,13 +2,9 @@
 
 class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
   include Phlex::Rails::Helpers::LinkTo
+  extend Dry::Initializer
 
-  attr_reader :api_key_roles
-
-  def initialize(api_key_roles:)
-    @api_key_roles = api_key_roles
-    super()
-  end
+  option :api_key_roles
 
   def template
     table(class: "t-body") do
