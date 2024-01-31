@@ -1,4 +1,4 @@
-class OIDC::ApiKeyPermissions < OIDC::BaseModel
+class OIDC::ApiKeyPermissions < ApplicationModel
   def create_params(user)
     params = scopes.map(&:to_sym).index_with(true)
     params[:ownership] = gems&.first&.then { user.ownerships.joins(:rubygem).find_by!(rubygem: { name: _1 }) }

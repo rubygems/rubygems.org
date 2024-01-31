@@ -1,4 +1,4 @@
-class Events::Tag < OIDC::BaseModel
+class Events::Tag < ApplicationModel
   attribute :source_type, :string
   attribute :subject_type, :string
   attribute :action, :string
@@ -19,7 +19,7 @@ class Events::Tag < OIDC::BaseModel
   delegate :as_json, to: :to_s
 
   def self.to_struct(&blk)
-    Class.new(OIDC::BaseModel) do
+    Class.new(ApplicationModel) do
       attribute :user_agent_info, Types::JsonDeserializable.new(Events::UserAgentInfo)
 
       class_eval(&blk) if blk

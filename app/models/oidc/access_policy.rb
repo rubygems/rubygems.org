@@ -1,18 +1,18 @@
-class OIDC::AccessPolicy < OIDC::BaseModel
-  class Statement < OIDC::BaseModel
+class OIDC::AccessPolicy < ApplicationModel
+  class Statement < ApplicationModel
     def match_jwt?(jwt)
       return false unless principal.oidc == jwt[:iss]
 
       conditions.all? { _1.match?(jwt) }
     end
 
-    class Principal < OIDC::BaseModel
+    class Principal < ApplicationModel
       attribute :oidc, :string
 
       validates :oidc, presence: true
     end
 
-    class Condition < OIDC::BaseModel
+    class Condition < ApplicationModel
       def match?(jwt)
         claim_value = jwt[claim]
         case operator

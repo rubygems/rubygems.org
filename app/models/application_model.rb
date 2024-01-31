@@ -1,4 +1,4 @@
-class OIDC::BaseModel
+class ApplicationModel
   include ActiveModel::Model
   include ActiveModel::Attributes
   include ActiveModel::Serializers::JSON
