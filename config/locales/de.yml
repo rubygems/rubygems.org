@@ -869,6 +869,7 @@ de:
       time:
       additional_info:
       redacted:
+      no_user_agent_info:
     rubygem_event:
       version:
         version_pushed:

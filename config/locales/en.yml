@@ -879,6 +879,7 @@ en:
       time: Time
       additional_info: Additional Info
       redacted: Redacted
+      no_user_agent_info: No user agent info
     rubygem_event:
       version:
         version_pushed: Version Pushed
