@@ -2,6 +2,11 @@ class EventAdditionalField < Avo::Fields::BaseField
   def nested_field
     return unless @model
     additional_type = @model.additional_type
+    if additional_type.nil?
+      return JsonViewerField.new(id, **@args)
+          .hydrate(model:, resource:, action:, view:, panel_name:, user:)
+    end
+
     NestedField.new(id, **@args) do
       additional_type.attribute_types.each do |attribute_name, type|
         case type
