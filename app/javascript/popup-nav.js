@@ -1,3 +1,6 @@
+import $ from "jquery";
+import { handleClick } from "./handle-click";
+
 $(function() {
   var arrowIcon        = $('.header__popup-link');
   var popupNav         = $('.header__popup__nav-links');
@@ -17,4 +20,3 @@ $(function() {
     handleClick(e, nav, removeNavExpandedClass, addNavExpandedClass);
   });
 });
-

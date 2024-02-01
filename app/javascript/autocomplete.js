@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 $(function() {
   if ($('#home_query').length){
     autocomplete($('#home_query'));
@@ -13,6 +15,8 @@ $(function() {
     search.bind('input', function(e) {
       var term = $.trim($(search).val());
       if (term.length >= 2) {
+        search.removeClass('autocomplete-done');
+        search.addClass('autocomplete-loading');
         $.ajax({
           url: '/api/v1/search/autocomplete',
           type: 'GET',
@@ -20,6 +24,8 @@ $(function() {
           processData: false,
           dataType: 'json'
         }).done(function(data) {
+          search.removeClass('autocomplete-loading');
+          search.addClass('autocomplete-done');
           addToSuggestList(search, data);
         });
       } else {

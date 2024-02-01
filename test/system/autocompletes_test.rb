@@ -13,16 +13,7 @@ class AutocompletesTest < ApplicationSystemTestCase
     visit root_path
     @fill_field = find_by_id "home_query"
     @fill_field.set "rubo"
-    wait_for_ajax
-  end
-
-  def wait_for_ajax
-    Timeout.timeout(Capybara.default_max_wait_time) do
-      loop do
-        active = page.evaluate_script("jQuery.active")
-        break if active.zero?
-      end
-    end
+    page.find(".autocomplete-done", wait: Capybara.default_max_wait_time)
   end
 
   test "search field" do

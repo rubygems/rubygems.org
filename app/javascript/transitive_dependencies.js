@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 $(document).on('click', '.deps_expanded-link', function () {
   var current = $(this);
   var gem_id = $(this).attr('data-gem_id');

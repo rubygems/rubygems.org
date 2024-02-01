@@ -1,3 +1,6 @@
+import $ from "jquery";
+import { handleClick } from "./handle-click";
+
 $(function() {
   // cache jQuery lookups into variables
   // so we don't have to traverse the DOM every time
