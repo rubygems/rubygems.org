@@ -2,6 +2,7 @@
 # the user with a Webauthn login. That is done in controllers/webauthn_verifications_controller.
 class Api::V1::WebauthnVerificationsController < Api::BaseController
   before_action :authenticate_with_credentials
+  before_action :set_cache_headers, only: :status
 
   def create
     if @user.webauthn_enabled?
