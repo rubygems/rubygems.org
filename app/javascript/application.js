@@ -2,15 +2,15 @@
 import Rails from "@rails/ujs";
 Rails.start();
 
-import "./api_key_form";
-import "./autocomplete";
-import "./clipboard_buttons";
-import "./mobile-nav";
-import "./multifactor_auths";
-import "./oidc_api_key_role_form";
-import "./pages";
-import "./popup-nav";
-import "./search";
-import "./transitive_dependencies";
-import "./webauthn";
+import "src/api_key_form";
+import "src/autocomplete";
+import "src/clipboard_buttons";
+import "src/mobile-nav";
+import "src/multifactor_auths";
+import "src/oidc_api_key_role_form";
+import "src/pages";
+import "src/popup-nav";
+import "src/search";
+import "src/transitive_dependencies";
+import "src/webauthn";
 import "github-buttons";

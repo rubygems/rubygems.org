@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { handleClick } from "./handle-click";
+import { handleClick } from "src/handle-click";
 
 $(function() {
   // cache jQuery lookups into variables
