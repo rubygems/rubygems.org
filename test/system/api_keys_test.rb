@@ -251,7 +251,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "deleting api key" do
-    create(:api_key, owner: @user)
+    api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "Delete"
@@ -259,10 +259,11 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.accept_alert
 
     assert page.has_content? "New API key"
+    page.assert_text "Successfully deleted API key: #{api_key.name}"
   end
 
   test "deleting all api key" do
-    create(:api_key, owner: @user)
+    api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
     click_button "Reset"
@@ -270,6 +271,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.accept_alert
 
     assert page.has_content? "New API key"
+    page.assert_no_text api_key.name
   end
 
   test "gem ownership removed displays api key as invalid" do
