@@ -1,6 +1,6 @@
 class EventsRubygemEventResource < Avo::BaseResource
   self.title = :cache_key
-  self.includes = %i[rubygem ip_address]
+  self.includes = %i[rubygem ip_address geoip_info]
   self.model_class = ::Events::RubygemEvent
 
   field :id, as: :id, hide_on: :index
@@ -23,5 +23,6 @@ class EventsRubygemEventResource < Avo::BaseResource
   field :tag, as: :text
   field :rubygem, as: :belongs_to
   field :ip_address, as: :belongs_to
+  field :geoip_info, as: :belongs_to
   field :additional, as: :event_additional, show_on: :index
 end
