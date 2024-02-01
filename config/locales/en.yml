@@ -43,6 +43,10 @@ en:
   try_again: Something went wrong. Please try again.
   advanced_search: Advanced Search
   authenticate: Authenticate
+  helpers:
+    submit:
+      create: "Create %{model}"
+      update: "Update %{model}"
   activerecord:
     attributes:
       linkset:
@@ -99,6 +103,10 @@ en:
               unavailable: "is already in use"
     models:
       user: User
+      api_key:
+        zero: API Keys
+        one: API Key
+        many: API Keys
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -113,6 +121,12 @@ en:
             gems:
               too_long: "may include at most 1 gem"
   api_keys:
+    form:
+      exclusive_scopes: Exclusive Scopes
+      rubygem_scope: Gem Scope
+      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
+      multifactor_auth: Multi-factor authentication
+      enable_mfa: Enable MFA
     create:
       success: "Created new API key"
       invalid_gem: Selected gem cannot be scoped to this key
@@ -142,10 +156,6 @@ en:
       mfa: MFA
     new:
       new_api_key: New API key
-      multifactor_auth: Multi-factor authentication
-      enable_mfa: Enable MFA
-      rubygem_scope: Gem Scope
-      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
     reset:
       success: "Deleted all API keys"
     update:
@@ -153,10 +163,6 @@ en:
       invalid_gem: Selected gem cannot be scoped to this key
     edit:
       edit_api_key: "Edit API key"
-      multifactor_auth: Multi-factor authentication
-      enable_mfa: Enable MFA
-      rubygem_scope: Gem Scope
-      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
       invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
     all_gems: All Gems
     gem_ownership_removed: Ownership of %{rubygem_name} has been removed after being scoped to this key.

@@ -37,6 +37,10 @@ ja:
   try_again: エラーが発生しました。再試行してください。
   advanced_search: 高度な検索
   authenticate: 認証
+  helpers:
+    submit:
+      create:
+      update:
   activerecord:
     attributes:
       linkset:
@@ -93,6 +97,10 @@ ja:
               unavailable:
     models:
       user: ユーザー
+      api_key:
+        zero:
+        one:
+        many:
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -107,6 +115,12 @@ ja:
             gems:
               too_long:
   api_keys:
+    form:
+      exclusive_scopes:
+      rubygem_scope: gemのスコープ
+      rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
+      multifactor_auth: 多要素認証
+      enable_mfa: MFAを有効にする
     create:
       success: 新しいAPIキーを作成しました
       invalid_gem: 選択されたgemはこのキーのスコープにありません
@@ -136,10 +150,6 @@ ja:
       mfa: MFA
     new:
       new_api_key: 新しいAPIキー
-      multifactor_auth: 多要素認証
-      enable_mfa: MFAを有効にする
-      rubygem_scope: gemのスコープ
-      rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
     reset:
       success: 全てのAPIキーを削除しました
     update:
@@ -147,10 +157,6 @@ ja:
       invalid_gem: 選択されたgemはこのキーのスコープにありません
     edit:
       edit_api_key: APIキーを編集する
-      multifactor_auth: 多要素認証
-      enable_mfa: MFAを有効にする
-      rubygem_scope: gemのスコープ
-      rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
       invalid_key: 正しくないAPIキーは編集できません。削除して新規作成してください。
     all_gems: 全てのgem
     gem_ownership_removed: このキーのスコープにあった%{rubygem_name}の所有権が削除されました。

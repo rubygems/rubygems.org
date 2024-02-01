@@ -1,6 +1,7 @@
 class ApiKey < ApplicationRecord
-  API_SCOPES = %i[index_rubygems push_rubygem yank_rubygem add_owner remove_owner access_webhooks show_dashboard].freeze
+  API_SCOPES = %i[show_dashboard index_rubygems push_rubygem yank_rubygem add_owner remove_owner access_webhooks].freeze
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner].freeze
+  EXCLUSIVE_SCOPES = %i[show_dashboard].freeze
 
   belongs_to :owner, polymorphic: true
 

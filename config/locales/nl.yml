@@ -36,6 +36,10 @@ nl:
   try_again: Er is iets fout gegaan, probeer het opnieuw.
   advanced_search: Uitgebreid zoeken
   authenticate:
+  helpers:
+    submit:
+      create:
+      update:
   activerecord:
     attributes:
       linkset:
@@ -92,6 +96,10 @@ nl:
               unavailable:
     models:
       user:
+      api_key:
+        zero:
+        one:
+        many:
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -106,6 +114,12 @@ nl:
             gems:
               too_long:
   api_keys:
+    form:
+      exclusive_scopes:
+      rubygem_scope:
+      rubygem_scope_info:
+      multifactor_auth:
+      enable_mfa:
     create:
       success:
       invalid_gem:
@@ -135,10 +149,6 @@ nl:
       mfa:
     new:
       new_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
     reset:
       success:
     update:
@@ -146,10 +156,6 @@ nl:
       invalid_gem:
     edit:
       edit_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
       invalid_key:
     all_gems:
     gem_ownership_removed:
