@@ -144,4 +144,12 @@ class ApiKey < ApplicationRecord
           name:, scopes: enabled_scopes, gem: rubygem&.name, mfa:, api_key_gid: to_gid)
     end
   end
+
+  def record_expire_event
+    case owner
+    when User
+      user.record_event!(Events::UserEvent::API_KEY_DELETED,
+          name:, api_key_gid: to_gid)
+    end
+  end
 end
