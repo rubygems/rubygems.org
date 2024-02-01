@@ -3,6 +3,7 @@ class User < ApplicationRecord
   include Clearance::User
 
   include Gravtastic
+  include Events::Recordable
   is_gravtastic default: "retro"
 
   include Discard::Model

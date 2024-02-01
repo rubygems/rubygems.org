@@ -63,6 +63,14 @@ rubygem_requestable.ownership_requests.create_with(
 Version.create_with(
   indexed: true,
   pusher: author,
+  sha256: Digest::SHA256.base64digest("abc123"),
+  info_checksum: Digest::MD5.base64digest("abc123")
+).find_or_create_by!(rubygem: rubygem0, number: "0.0.1", platform: "ruby", gem_platform: "ruby") do |version|
+  author.deletions.find_or_create_by!(version: version)
+end
+Version.create_with(
+  indexed: true,
+  pusher: author,
   metadata: {
     homepage_uri: "https://example.com/rubygem0/home",
     source_code_uri: "https://github.com/example/#{rubygem0.name}"
@@ -301,6 +309,8 @@ author.webauthn_credentials.create_with(nickname: "segiddins development")
     external_id: "QdfU3FxkjNpPqfjC4uTuNA",
     public_key: "pQECAyYgASFYIKMIHolehDjslWQ6oOVP1-R8OR6LXEBdDfqxhjgtiiDEIlgg1RgUq_AJFT-cSMo-xP_9XxGIbBsQDEj8253QPwc8-88"
   )
+
+IpAddress.find_or_create_by!(ip_address: "127.0.0.1")
 
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:
