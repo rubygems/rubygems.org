@@ -1,7 +1,7 @@
 class SettingsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
-  before_action :set_cache_headers
+  before_action :disable_cache
 
   def edit
     @user = current_user

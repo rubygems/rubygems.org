@@ -165,7 +165,7 @@ class ApplicationController < ActionController::Base
     params.delete(:params)
   end
 
-  def set_cache_headers
+  def disable_cache
     response.headers["Cache-Control"] = "no-cache, no-store"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
