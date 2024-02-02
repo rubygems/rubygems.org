@@ -11,7 +11,7 @@ class AutocompletesTest < ApplicationSystemTestCase
     import_and_refresh
 
     visit root_path
-    @fill_field = find_by_id "home_query"
+    @fill_field = find_by_id "query"
     @fill_field.set "rubo"
     page.find(".autocomplete-done", wait: Capybara.default_max_wait_time)
   end
@@ -53,25 +53,25 @@ class AutocompletesTest < ApplicationSystemTestCase
   test "down arrow key to choose suggestion" do
     @fill_field.native.send_keys :down
 
-    assert page.has_no_field? "home_query", with: "rubo"
+    assert page.has_no_field? "query", with: "rubo"
   end
 
   test "up arrow key to choose suggestion" do
     @fill_field.native.send_keys :up
 
-    assert page.has_no_field? "home_query", with: "rubo"
+    assert page.has_no_field? "query", with: "rubo"
   end
 
   test "down arrow key should loop" do
     @fill_field.native.send_keys :down, :down, :down, :down
 
-    assert find_by_id("suggest-home").all(".menu-item").last.matches_css?(".selected")
+    assert find(".suggest-list").all(".menu-item").last.matches_css?(".selected")
   end
 
   test "up arrow key should loop" do
     @fill_field.native.send_keys :up, :up, :up, :up
 
-    assert find_by_id("suggest-home").all(".menu-item").first.matches_css?(".selected")
+    assert find(".suggest-list").all(".menu-item").first.matches_css?(".selected")
   end
 
   test "mouse hover a suggest item to choose suggestion" do

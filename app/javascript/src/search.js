@@ -1,7 +1,7 @@
 import $ from "jquery";
 
 if($("#advanced-search").length){
-  var $main        = $('#home_query');
+  var $main        = $('#query');
   var $name        = $('input#name');
   var $summary     = $('input#summary');
   var $description = $('input#description');

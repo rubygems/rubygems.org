@@ -51,14 +51,6 @@ module ApplicationHelper
     gem.downloads * 1.0 / count * 100
   end
 
-  def search_form_class
-    if [root_path, advanced_search_path].include? request.path_info
-      "header__search-wrap--home"
-    else
-      "header__search-wrap"
-    end
-  end
-
   def active?(path)
     "is-active" if request.path_info == path
   end
@@ -77,6 +69,34 @@ module ApplicationHelper
   def flash_message(name, msg)
     return sanitize(msg) if name.end_with? "html"
     msg
+  end
+
+  def search_field(home: false)
+    data = {
+      autocomplete_target: "query",
+      action: %w[
+        autocomplete#suggest
+        keydown.down->autocomplete#next
+        keydown.up->autocomplete#prev
+        keydown.esc->autocomplete#hide
+        keydown.enter->autocomplete#clear
+        click@window->autocomplete#hide
+        focus->autocomplete#suggest
+        blur->autocomplete#hide
+      ].join(" ")
+    }
+    data[:nav_target] = "search" unless home
+
+    search_field_tag(
+      :query,
+      params[:query],
+      placeholder: t("layouts.application.header.search_gem_html"),
+      autofocus: current_page?(root_url),
+      class: home ? "home__search" : "header__search",
+      autocomplete: "off",
+      aria: { autocomplete: "list" },
+      data: data
+    )
   end
 
   private
