@@ -3,29 +3,6 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "076f564d79f0e732d93925ac722bf7276e121d6f96827c1e651540ca91fd1153",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/controllers/oidc/id_tokens_controller.rb",
-      "line": 16,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => OIDC::IdTokens::IndexView.new(:id_tokens => current_user.oidc_id_tokens.includes(:api_key, :api_key_role, :provider).page(params[:page].to_i).strict_loading), {})",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OIDC::IdTokensController",
-        "method": "index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
       "fingerprint": "0961cc0a168ef86428d84889a7092c841454aadea80c0294f6703bac98307444",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -49,52 +26,6 @@
       "location": {
         "type": "template",
         "template": "oidc/api_key_roles/show"
-      },
-      "user_input": "params.require(:token)",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "175ed1fa3ddae92efe03e70a1fea7df153ac9bd53edf617e0c70f420f4ac6781",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/controllers/oidc/rubygem_trusted_publishers_controller.rb",
-      "line": 11,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => OIDC::RubygemTrustedPublishers::IndexView.new(:rubygem => Rubygem.find_by_name((params[:rubygem_id] or params[:id])), :trusted_publishers => Rubygem.find_by_name((params[:rubygem_id] or params[:id])).oidc_rubygem_trusted_publishers.includes(:trusted_publisher).page(params[:page].to_i).strict_loading), {})",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OIDC::RubygemTrustedPublishersController",
-        "method": "index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "7395657e2ba2c741584d62f34f8528f5c909c8ba67fe3b7d653643ab1bb40079",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/controllers/oidc/api_key_roles_controller.rb",
-      "line": 32,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => OIDC::ApiKeyRoles::GitHubActionsWorkflowView.new(:api_key_role => current_user.oidc_api_key_roles.includes(:provider).find_by!(:token => params.require(:token))), {})",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OIDC::ApiKeyRolesController",
-        "method": "github_actions_workflow"
       },
       "user_input": "params.require(:token)",
       "confidence": "Weak",
@@ -129,52 +60,6 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "ab59d54552d08258896fd31f8f4342971b02124008afe35a1507a5d1eef438b6",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/controllers/oidc/providers_controller.rb",
-      "line": 12,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => OIDC::Providers::IndexView.new(:providers => OIDC::Provider.all.strict_loading.page(params[:page].to_i)), {})",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OIDC::ProvidersController",
-        "method": "index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "c120032e149023b5d6bb95739c27f2d47bfdb64f78b9bccb2e92c7707bd92a78",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/controllers/oidc/pending_trusted_publishers_controller.rb",
-      "line": 11,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => OIDC::PendingTrustedPublishers::IndexView.new(:trusted_publishers => current_user.oidc_pending_trusted_publishers.unexpired.includes(:trusted_publisher).order(:rubygem_name, :created_at).page(params[:page].to_i).strict_loading), {})",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OIDC::PendingTrustedPublishersController",
-        "method": "index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
       "fingerprint": "f23085c93323ec923578bed895c153b25b5bc2e9b64687c05ce426da16e6c755",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -205,31 +90,8 @@
         22
       ],
       "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "fb6ebb2f4b1a58b85cf0e01691f09c395754282fdfe576750538fc3dc62c57b2",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/controllers/oidc/providers_controller.rb",
-      "line": 16,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => OIDC::Providers::ShowView.new(:provider => OIDC::Provider.find(params.require(:id))), {})",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OIDC::ProvidersController",
-        "method": "show"
-      },
-      "user_input": "params.require(:id)",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
     }
   ],
-  "updated": "2023-11-24 13:29:48 -0600",
-  "brakeman_version": "6.0.1"
+  "updated": "2024-02-02 09:20:10 -0800",
+  "brakeman_version": "6.1.2"
 }
