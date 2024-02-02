@@ -6,11 +6,9 @@ import "controllers"
 import "src/api_key_form";
 import "src/autocomplete";
 import "src/clipboard_buttons";
-import "src/mobile-nav";
 import "src/multifactor_auths";
 import "src/oidc_api_key_role_form";
 import "src/pages";
-import "src/popup-nav";
 import "src/search";
 import "src/transitive_dependencies";
 import "src/webauthn";
