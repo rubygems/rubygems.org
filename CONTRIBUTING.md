@@ -157,7 +157,7 @@ build will fail.
 If you'd like RuboCop to attempt to automatically fix your style offenses, you
 can try running:
 
-    bundle exec rake rubocop:auto_correct
+    bundle exec rake rubocop:autocorrect
 
 #### Importing gems into the database
 
