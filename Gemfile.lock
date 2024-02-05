@@ -187,11 +187,11 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    datadog-ci (0.6.0)
+    datadog-ci (0.7.0)
       msgpack
     date (3.3.4)
-    ddtrace (1.19.0)
-      datadog-ci (~> 0.6.0)
+    ddtrace (1.20.0)
+      datadog-ci (~> 0.7.0)
       debase-ruby_core_source (= 3.3.1)
       libdatadog (~> 5.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
@@ -770,7 +770,7 @@ DEPENDENCIES
   csv (~> 3.2)
   dalli (~> 3.2)
   dartsass-sprockets (~> 3.1)
-  ddtrace (~> 1.19)
+  ddtrace (~> 1.20)
   derailed_benchmarks (~> 2.1)
   discard (~> 1.3)
   dogstatsd-ruby (~> 5.5)
@@ -919,9 +919,9 @@ CHECKSUMS
   csv (3.2.8) sha256=2f5e11e8897040b97baf2abfe8fa265b314efeb8a9b7f756db9ebcf79e7db9fe
   dalli (3.2.7) sha256=877dcf1d1b1cfea91d4447929488e385ce438950770a41b6357cdfa6e67a3a77
   dartsass-sprockets (3.1.0) sha256=c238ec9f7f496489ac5a7813cd1f83d1e077a1826921acefc7e290a521b7a20a
-  datadog-ci (0.6.0) sha256=3d79380e8abc9022b02ab28d082cc2a14610a5d9acf9b8b898d7d0b2c050bf45
+  datadog-ci (0.7.0) sha256=9667cbf98734dc3a63d805049d675756f133b4228e21ec76c147a37a2fddd0da
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
-  ddtrace (1.19.0) sha256=1e8f6b85d2333e23f9a6c683878c189622eb0a8d7b9648ca313c5e31d564c7c0
+  ddtrace (1.20.0) sha256=6189e17fcadafde6e18e436b3c24c1c6b3b0696e58b0be20ba034f355f2d14f5
   dead_end (4.0.0) sha256=695c8438993bb4c5415b1618a1b6e0afcae849ef2812fb8cb3846723904307eb
   debase-ruby_core_source (3.3.1) sha256=ed904cae290edf0cf274ad707f8981bf1cefad8081e78d4bb71be2a483bc2c08
   derailed_benchmarks (2.1.2) sha256=eaadc6206ceeb5538ff8f5e04a0023d54ebdd95d04f33e8960fb95a5f189a14f
