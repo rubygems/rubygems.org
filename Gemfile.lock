@@ -356,7 +356,7 @@ GEM
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    lookbook (2.2.0)
+    lookbook (2.2.1)
       activemodel
       css_parser
       htmlbeautifier (~> 1.3)
@@ -415,7 +415,7 @@ GEM
     net-smtp (0.4.0.1)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.16.0)
+    nokogiri (1.16.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -991,7 +991,7 @@ CHECKSUMS
   listen (3.8.0) sha256=9679040ac6e7845ad9f19cf59ecde60861c78e2fae57a5c20fe35e94959b2f8f
   llhttp-ffi (0.4.0) sha256=e5f7327db3cf8007e648342ef76347d6e0ae545a8402e519cca9c886eb37b001
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
-  lookbook (2.2.0) sha256=27c869364cf8bb8e9c61e43f909cbf5aec91dc35f4db791c3d0b7287a637a2d9
+  lookbook (2.2.1) sha256=079677cea164f0fcaba819037f0956e22b4730e0167f4f1db37863963b5a8da6
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
   maintenance_tasks (2.5.0) sha256=eb82b58398eb6c50dcbb9d6073b30b2095a239301b5b0b97b27cb6da79bb2502
   marcel (1.0.2) sha256=a013b677ef46cbcb49fd5c59b3d35803d2ee04dd75d8bfdc43533fc5a31f7e4e
@@ -1016,7 +1016,7 @@ CHECKSUMS
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.4.0.1) sha256=098d28fab9d9bc280a2cfada77692cdca89c83c6789bdbb8d8429f97f1bf5a33
   nio4r (2.7.0) sha256=9586a685eca8246d6406e712a525e705d15bb88f709d78fc3f141e864df97276
-  nokogiri (1.16.0) sha256=341388184e975d091e6e38ce3f3b3388bfb7e4ac3d790efd8e39124844040bd1
+  nokogiri (1.16.2) sha256=68922ee5cde27497d995c46f2821957bae961947644eed2822d173daf7567f9c
   oauth2 (2.0.9) sha256=b21f9defcf52dc1610e0dfab4c868342173dcd707fd15c777d9f4f04e153f7fb
   observer (0.1.2) sha256=d8a3107131ba661138d748e7be3dbafc0d82e732fffba9fccb3d7829880950ac
   octokit (8.0.0) sha256=c362be3ee7cd2f01f5af98c06b182587fbe4ae57c2385cdf94a1b04154d8d085
