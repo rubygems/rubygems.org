@@ -46,7 +46,7 @@ $(function() {
   var renderDumpList = function(files) {
     var content;
     content = [];
-    jQuery.each(files, function(idx, item) {
+    $.each(files, function(idx, item) {
       if ('STANDARD' === item.StorageClass) {
         return content.push("<li><a href='https://s3-us-west-2.amazonaws.com/rubygems-dumps/" + item.Key + "'>" + (item.LastModified.replace('.000Z', '')) + " (" + (bytesToSize(item.Size)) + ")</a></li>");
       }
