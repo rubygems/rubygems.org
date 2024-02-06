@@ -157,7 +157,7 @@ build will fail.
 If you'd like RuboCop to attempt to automatically fix your style offenses, you
 can try running:
 
-    bundle exec rake rubocop:auto_correct
+    bundle exec rake rubocop:autocorrect
 
 #### Importing gems into the database
 
@@ -215,7 +215,7 @@ Database Layout
 
 Courtesy of [Rails ERD](https://voormedia.github.io/rails-erd/)
 
-![Rubygems.org Domain Model](https://cdn.rawgit.com/rubygems/rubygems.org/master/doc/erd.svg)
+    bin/rails gen_erd
 
 Locales
 -------
