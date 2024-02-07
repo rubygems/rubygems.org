@@ -173,7 +173,8 @@ GEM
     cose (1.3.0)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
-    crack (0.4.5)
+    crack (0.4.6)
+      bigdecimal
       rexml
     crass (1.0.6)
     css_parser (1.16.0)
@@ -268,7 +269,7 @@ GEM
     gravtastic (3.2.6)
     groupdate (6.4.0)
       activesupport (>= 6.1)
-    hashdiff (1.0.1)
+    hashdiff (1.1.0)
     hashie (5.0.0)
     heapy (0.2.0)
       thor
@@ -734,7 +735,7 @@ GEM
       activesupport
       faraday (~> 2.0)
       faraday-follow_redirects
-    webmock (3.19.1)
+    webmock (3.20.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -855,7 +856,7 @@ DEPENDENCIES
   validates_formatting_of (~> 0.9)
   view_component (~> 3.10)
   webauthn (~> 3.1)
-  webmock (~> 3.18)
+  webmock (~> 3.20)
   xml-simple (~> 1.1)
 
 CHECKSUMS
@@ -914,7 +915,7 @@ CHECKSUMS
   concurrent-ruby (1.2.3) sha256=82fdd3f8a0816e28d513e637bb2b90a45d7b982bdf4f3a0511722d2e495801e2
   connection_pool (2.4.1) sha256=0f40cf997091f1f04ff66da67eabd61a9fe0d4928b9a3645228532512fab62f4
   cose (1.3.0) sha256=63247c66a5bc76e53926756574fe3724cc0a88707e358c90532ae2a320e98601
-  crack (0.4.5) sha256=798416fb29b8c9f655d139d5559169b39c4a0a3b8f8f39b7f670eec1af9b21b3
+  crack (0.4.6) sha256=ee251d0aab36ab196946b851fd129870d66bdde4855cfdb3078d86a619c28864
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   css_parser (1.16.0) sha256=f70fb492254418522ea77c01d57bf64452d6c7465001926c3620d0b50289b1a2
   csv (3.2.8) sha256=2f5e11e8897040b97baf2abfe8fa265b314efeb8a9b7f756db9ebcf79e7db9fe
@@ -955,7 +956,7 @@ CHECKSUMS
   google-protobuf (3.25.2) sha256=9c2e6121d768f812f50b78cb6f26056f2af6bab92af793d376b772126e26500b
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.4.0) sha256=65940645bf2a48f9b2d10ab7a1d19bdc78f3c89559d8fce39cea3448a15aec54
-  hashdiff (1.0.1) sha256=2cd4d04f5080314ecc8403c4e2e00dbaa282dff395e2d031bc16c8d501bdd6db
+  hashdiff (1.1.0) sha256=b5465f0e7375f1ee883f53a766ece4dbc764b7674a7c5ffd76e79b2f5f6fc9c9
   hashie (5.0.0) sha256=9d6c4e51f2a36d4616cbc8a322d619a162d8f42815a792596039fc95595603da
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
   high_voltage (3.1.2) sha256=7786716114cc21b3754e537818a6d9b2c91aa1126aa77272977d50598e556c2f
@@ -1135,7 +1136,7 @@ CHECKSUMS
   view_component (3.10.0) sha256=92ac883a75178e6e936b37abc1751624342229fca5918842cb309f49c10f558b
   webauthn (3.1.0) sha256=e545fcf17d8a6b821161a37c1c4bc8c3d2ead0ff6ff3b098f57f417e731790b7
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
-  webmock (3.19.1) sha256=eae7eee33989478188451f1fda4224d7fbe097c5c14e96b40b57347ef2d5d16d
+  webmock (3.20.0) sha256=cc33eaacc0fcfb5b36a127949557ab7089d4249b03a7cb0215dbc40e617a8365
   webrick (1.8.1) sha256=19411ec6912911fd3df13559110127ea2badd0c035f7762873f58afc803e158f
   websocket (1.2.10) sha256=2cc1a4a79b6e63637b326b4273e46adcddf7871caa5dc5711f2ca4061a629fa8
   websocket-driver (0.7.6) sha256=f69400be7bc197879726ad8e6f5869a61823147372fd8928836a53c2c741d0db
