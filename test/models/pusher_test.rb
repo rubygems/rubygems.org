@@ -658,6 +658,16 @@ class PusherTest < ActiveSupport::TestCase
 
         assert_equal expected_response, response["_source"]
       end
+
+      should "record the push event" do
+        assert_equal Events::RubygemEvent::VersionPushedAdditional.new(
+          number: "0.1.1",
+          platform: "ruby",
+          sha256: @rubygem.versions.last.sha256_hex,
+          version_gid: @rubygem.versions.last.to_gid.to_s
+        ),
+          @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole.additional
+      end
     end
 
     should "purge gem cache" do
@@ -719,6 +729,12 @@ class PusherTest < ActiveSupport::TestCase
 
       assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
       assert_equal [@user.email], email.to
+
+      assert_equal Events::UserEvent::EmailSentAdditional.new(
+        to: @user.email, from: "no-reply@mailer.rubygems.org", subject: email.subject,
+        message_id: email.message_id, mailer: "mailer", action: "gem_pushed"
+      ),
+        @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole.additional
     end
   end
 

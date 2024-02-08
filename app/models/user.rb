@@ -14,7 +14,8 @@ class User < ApplicationRecord
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
   before_create :_generate_confirmation_token_no_reset_unconfirmed_email
   after_create :record_create_event
-  after_update :record_email_update_event, if: :saved_change_to_email?
+  after_update :record_email_update_event, if: -> { saved_change_to_unconfirmed_email? && unconfirmed_email.present? }
+  after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }
   after_update :record_password_update_event, if: :saved_change_to_encrypted_password?
   before_discard :yank_gems
   before_discard :expire_all_api_keys
@@ -342,7 +343,11 @@ class User < ApplicationRecord
   end
 
   def record_email_update_event
-    record_event!(Events::UserEvent::EMAIL_ADDED, email:)
+    record_event!(Events::UserEvent::EMAIL_ADDED, email: unconfirmed_email)
+  end
+
+  def record_email_verified_event
+    record_event!(Events::UserEvent::EMAIL_VERIFIED, email:)
   end
 
   def record_password_update_event

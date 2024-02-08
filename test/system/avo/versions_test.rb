@@ -130,5 +130,13 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
       },
       audit.audited_changes
     )
+
+    assert_equal Events::RubygemEvent::VersionUnyankedAdditional.new(
+      number: version.number,
+      platform: version.platform,
+      version_gid: version.to_gid.to_s,
+      user_agent_info:
+    ),
+      version_unyank_event.additional
   end
 end

@@ -102,7 +102,7 @@ class ApiKey < ApplicationRecord
   end
 
   def expire!
-    touch(:expires_at)
+    update!(expires_at: Time.current)
   end
 
   private
