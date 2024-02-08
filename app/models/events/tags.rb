@@ -1,6 +1,18 @@
 module Events::Tags
   extend ActiveSupport::Concern
 
+  def additional_type
+    tags.fetch(tag, nil)
+  end
+
+  def additional
+    additional_type&.new(super) || super
+  end
+
+  def additional=(value)
+    super(value&.to_h)
+  end
+
   included do
     validates :tag, presence: true, inclusion: { in: ->(_) { tags.keys } }
     attribute :tag, Events::Tag::Type.new
@@ -9,18 +21,6 @@ module Events::Tags
     belongs_to :geoip_info, optional: true
 
     cattr_reader(:tags) { {} }
-
-    def additional_type
-      tags.fetch(tag, nil)
-    end
-
-    def additional
-      additional_type&.new(super) || super
-    end
-
-    def additional=(value)
-      super(value&.to_h)
-    end
   end
 
   class_methods do
