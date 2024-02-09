@@ -65,6 +65,10 @@ spec:
             value: "<%= environment %>"
           - name: GOOD_JOB_PROBE_PORT
             value: "7001"
+          <% if environment != "production" %>
+          - name: GOOD_JOB_MAX_THREADS
+            value: "2"
+          <% end %>
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
