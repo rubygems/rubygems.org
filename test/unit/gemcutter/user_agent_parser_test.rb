@@ -31,6 +31,11 @@ class Gemcutter::UserAgentParserTest < ActiveSupport::TestCase
       { installer: "RubyGems", implementation: "Ruby" }
   end
 
+  test "parses a rubygems-oidc-action user agent" do
+    assert_parse_as "rubygems-oidc-action",
+      { installer: "RubyGems OIDC GitHub Action" }
+  end
+
   test "raises on an unknown user agent" do
     refute_parse "Unknown/1.0"
     refute_parse "Unknown"
