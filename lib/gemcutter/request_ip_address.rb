@@ -4,12 +4,12 @@ module Gemcutter::RequestIpAddress
   extend ActiveSupport::Concern
 
   GEOIP_FIELDS = {
-    continent_code: "GEOIP_CONTINENT_CODE",
-    country_code: "GEOIP_COUNTRY_CODE",
-    country_code3: "GEOIP_COUNTRY_CODE3",
-    country_name: "GEOIP_COUNTRY_NAME",
-    region: "GEOIP_REGION",
-    city: "GEOIP_CITY"
+    continent_code: "GEOIP-CONTINENT-CODE",
+    country_code: "GEOIP-COUNTRY-CODE",
+    country_code3: "GEOIP-COUNTRY-CODE3",
+    country_name: "GEOIP-COUNTRY-NAME",
+    region: "GEOIP-REGION",
+    city: "GEOIP-CITY"
   }.freeze
 
   PROXY_TOKEN = ENV["RUBYGEMS_PROXY_TOKEN"].presence.freeze
@@ -28,7 +28,7 @@ module Gemcutter::RequestIpAddress
         addr = IpAddress.find_or_create_by(ip_address: ip_addr)
         return unless addr
 
-        token = headers["RUBYGEMS_PROXY_TOKEN"].presence
+        token = headers["RUBYGEMS-PROXY-TOKEN"].presence
 
         if token && PROXY_TOKEN && ActiveSupport::SecurityUtils.secure_compare(token, PROXY_TOKEN)
           values = GEOIP_FIELDS.transform_values { |v| headers[v] }

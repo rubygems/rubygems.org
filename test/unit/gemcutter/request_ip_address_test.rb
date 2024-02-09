@@ -38,14 +38,14 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
     assert_equal "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0", ip_address.hashed_ip_address
   end
 
-  should "not record GEOIP_INFO without RUBYGEMS_PROXY_TOKEN set" do
+  should "not record GEOIP_INFO without RUBYGEMS-PROXY-TOKEN set" do
     stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
       assert_nil @request.ip_address.geoip_info
     end
   end
 
   should "not record GEOIP_INFO without Gemcutter::PROXY_TOKEN set" do
-    @request.headers["RUBYGEMS_PROXY_TOKEN"] = "abc"
+    @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
 
     stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, nil) do
       assert_nil @request.ip_address.geoip_info
@@ -53,7 +53,7 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
   end
 
   should "record empty GEOIP_INFO" do
-    @request.headers["RUBYGEMS_PROXY_TOKEN"] = "abc"
+    @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
 
     stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
       geoip_info = @request.ip_address.geoip_info
@@ -65,7 +65,7 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
   end
 
   should "record GEOIP_INFO" do
-    @request.headers["RUBYGEMS_PROXY_TOKEN"] = "abc"
+    @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
 
     Gemcutter::RequestIpAddress::GEOIP_FIELDS.each_with_object(build(:geoip_info, :usa)) do |(field, header), info|
       @request.headers[header] = info[field]
@@ -86,9 +86,9 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
   end
 
   should "record ignoring invalid GEOIP_INFO" do
-    @request.headers["RUBYGEMS_PROXY_TOKEN"] = "abc"
-    @request.headers["GEOIP_CONTINENT_CODE"] = "NAH"
-    @request.headers["GEOIP_COUNTRY_CODE3"] = "NAH"
+    @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
+    @request.headers["GEOIP-CONTINENT-CODE"] = "NAH"
+    @request.headers["GEOIP-COUNTRY-CODE3"] = "NAH"
 
     stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
       geoip_info = @request.ip_address.geoip_info
