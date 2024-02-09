@@ -178,6 +178,22 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_response :not_found
     end
 
+    should "return not found when issuer has no jwks and jwt is unsigned" do
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      OIDC::Provider.github_actions.update!(jwks: nil)
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: JSON::JWT.new(@claims).to_s }
+
+      assert_response :not_found
+    end
+
     should "succeed with matching trusted publisher" do
       trusted_publisher = build(:oidc_trusted_publisher_github_action,
         repository_name: "oidc-test",

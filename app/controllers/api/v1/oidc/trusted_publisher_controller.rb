@@ -50,6 +50,7 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   end
 
   def verify_signature
+    raise UnsupportedIssuer, "Provider is missing jwks" if @provider.jwks.blank?
     raise UnverifiedJWT, "Invalid time" unless (@jwt["nbf"]..@jwt["exp"]).cover?(Time.now.to_i)
     @jwt.verify!(@provider.jwks)
   end
