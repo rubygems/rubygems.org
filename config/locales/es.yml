@@ -44,6 +44,10 @@ es:
   try_again: Algo salió mal. Por favor inténtalo nuevamente.
   advanced_search: Búsqueda avanzada
   authenticate: Autenticar
+  helpers:
+    submit:
+      create:
+      update:
   activerecord:
     attributes:
       linkset:
@@ -102,6 +106,10 @@ es:
               unavailable:
     models:
       user: Usuario
+      api_key:
+        zero:
+        one:
+        many:
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -117,6 +125,13 @@ es:
             gems:
               too_long: como mucho puede incluir una gema
   api_keys:
+    form:
+      exclusive_scopes:
+      rubygem_scope: Ámbito de aplicación
+      rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas
+        y añadir/eliminar propietarios a una gema específica.
+      multifactor_auth: Autenticación multifactor
+      enable_mfa: Activar AMF
     create:
       success: Nueva clave de API creada
       invalid_gem: La gema seleccionada no se puede incluir en esta clave
@@ -147,11 +162,6 @@ es:
       mfa: AMF
     new:
       new_api_key: Nueva clave de API
-      multifactor_auth: Autenticación multifactor
-      enable_mfa: Activar AMF
-      rubygem_scope: Ámbito de aplicación
-      rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas
-        y añadir/eliminar propietarios a una gema específica.
     reset:
       success: Borradas todas las claves de API
     update:
@@ -160,11 +170,6 @@ es:
         clave
     edit:
       edit_api_key: Editar clave de API
-      multifactor_auth: Autenticación de múltiples factores
-      enable_mfa: Activar AMF
-      rubygem_scope: Ámbito de aplicación
-      rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas
-        y añadir/eliminar propietarios a una gema específica.
       invalid_key: No se puede editar una clave de API inválida. Por favor bórrala
         y crea una nueva.
     all_gems: Todas las gemas

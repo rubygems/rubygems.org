@@ -20,7 +20,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     check "api_key[index_rubygems]"
 
     refute page.has_content? "Enable MFA"
-    click_button "Create"
+    click_button "Create API Key"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :can_index_rubygems?
@@ -47,7 +47,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     check "api_key[index_rubygems]"
 
     refute page.has_content? "Enable MFA"
-    click_button "Create"
+    click_button "Create API Key"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :can_index_rubygems?
@@ -63,7 +63,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
     page.select @ownership.rubygem.name
-    click_button "Create"
+    click_button "Create API Key"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
     assert_equal @ownership.rubygem.name, page.find('.owners__cell[data-title="Gem"]').text
@@ -87,11 +87,39 @@ class ApiKeysTest < ApplicationSystemTestCase
 
       assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
       page.select @ownership.rubygem.name
-      click_button "Create"
+      click_button "Create API Key"
 
       assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
       assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
     end
+  end
+
+  test "selecting the exclusive scope deselects the other scopes and vice versa" do
+    visit_profile_api_keys_path
+    fill_in "api_key[name]", with: "test"
+    check "api_key[index_rubygems]"
+    check "api_key[push_rubygem]"
+
+    assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
+
+    page.select @ownership.rubygem.name
+
+    assert page.has_select? "api_key_rubygem_id", selected: @ownership.rubygem.name
+
+    check "api_key[show_dashboard]"
+
+    assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
+    assert page.has_unchecked_field? "api_key[index_rubygems]"
+    assert page.has_unchecked_field? "api_key[push_rubygem]"
+
+    check "api_key[index_rubygems]"
+
+    assert page.has_unchecked_field? "api_key[show_dashboard]"
+
+    click_button "Create API Key"
+
+    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_predicate @user.api_keys.last, :can_index_rubygems?
   end
 
   test "creating new api key scoped to gem that the user does not own" do
@@ -104,7 +132,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.select @ownership.rubygem.name
 
     @ownership.destroy!
-    click_button "Create"
+    click_button "Create API Key"
 
     assert page.has_css? ".flash"
     assert page.has_content? "Rubygem must be a gem that you are an owner of"
@@ -119,7 +147,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     fill_in "api_key[name]", with: "test"
     check "api_key[index_rubygems]"
     check "mfa"
-    click_button "Create"
+    click_button "Create API Key"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :mfa_enabled?
@@ -132,7 +160,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     fill_in "api_key[name]", with: "test"
     check "api_key[index_rubygems]"
-    click_button "Create"
+    click_button "Create API Key"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :mfa_enabled?
@@ -149,7 +177,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     check "api_key[add_owner]"
 
     refute page.has_content? "Enable MFA"
-    click_button "Update"
+    click_button "Update API Key"
 
     assert_predicate api_key.reload, :can_add_owner?
   end
@@ -163,7 +191,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert page.has_content? "Edit API key"
     assert page.has_select? "api_key_rubygem_id", selected: @ownership.rubygem.name
     page.select "All Gems"
-    click_button "Update"
+    click_button "Update API Key"
 
     assert_equal "All Gems", page.find('.owners__cell[data-title="Gem"]').text
     assert_nil api_key.reload.rubygem
@@ -180,7 +208,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.uncheck "api_key[push_rubygem]"
 
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
-    click_button "Update"
+    click_button "Update API Key"
 
     assert_nil api_key.reload.rubygem
   end
@@ -198,7 +226,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     page.check "api_key[yank_rubygem]"
     page.select @ownership.rubygem.name
-    click_button "Update"
+    click_button "Update API Key"
 
     assert_equal api_key.reload.rubygem, @ownership.rubygem
   end
@@ -215,7 +243,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.select "another_gem"
 
     @another_ownership.destroy!
-    click_button "Update"
+    click_button "Update API Key"
 
     assert page.has_css? ".flash"
     assert page.has_content? "Rubygem must be a gem that you are an owner of"
@@ -233,7 +261,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert page.has_content? "Edit API key"
     check "api_key[add_owner]"
     check "mfa"
-    click_button "Update"
+    click_button "Update API Key"
 
     assert_predicate api_key.reload, :can_add_owner?
     assert_predicate @user.api_keys.last, :mfa_enabled?
@@ -251,7 +279,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     check "api_key[add_owner]"
 
     refute page.has_content? "Enable MFA"
-    click_button "Update"
+    click_button "Update API Key"
 
     assert_predicate api_key.reload, :can_add_owner?
     assert_predicate @user.api_keys.last, :mfa_enabled?

@@ -38,6 +38,10 @@ zh-CN:
   try_again: 出了点儿问题。请重试。
   advanced_search: 高级搜索
   authenticate: 身份认证
+  helpers:
+    submit:
+      create:
+      update:
   activerecord:
     attributes:
       linkset:
@@ -94,6 +98,10 @@ zh-CN:
               unavailable:
     models:
       user: 用户
+      api_key:
+        zero:
+        one:
+        many:
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -108,6 +116,12 @@ zh-CN:
             gems:
               too_long:
   api_keys:
+    form:
+      exclusive_scopes:
+      rubygem_scope: Gem 作用范围
+      rubygem_scope_info: 该作用范围仅允许对一个 Gem 进行 推送/撤回 以及 对业主的 添加/移除
+      multifactor_auth: 多因素验证——身份认证
+      enable_mfa: 启用多因素验证
     create:
       success: 新的 API 密钥已创建
       invalid_gem: 该 Gem 未被此 API 密钥所允许的作用范围包含
@@ -137,10 +151,6 @@ zh-CN:
       mfa: 多因素验证
     new:
       new_api_key: 生成新 API 密钥
-      multifactor_auth: 多因素验证——身份认证
-      enable_mfa: 启用多因素验证
-      rubygem_scope: Gem 作用范围
-      rubygem_scope_info: 该作用范围仅允许对一个 Gem 进行 推送/撤回 以及 对业主的 添加/移除
     reset:
       success: 所有的 API 密钥已删除
     update:
@@ -148,10 +158,6 @@ zh-CN:
       invalid_gem: 该 Gem 未被此 API 密钥所允许的作用范围包含
     edit:
       edit_api_key: 编辑 API 密钥
-      multifactor_auth: 多因素验证
-      enable_mfa: 启用多因素验证
-      rubygem_scope: Gem 作用范围
-      rubygem_scope_info: 该作用范围仅允许对一个 Gem 进行 推送/撤回 以及 对业主的 添加/移除
       invalid_key: 已作废的 API 密钥不能被编辑。请删除它并创建一个新的 API 密钥。
     all_gems: 所有 Gem
     gem_ownership_removed: 对 %{rubygem_name} 的所有权已经被移除（在使用此 API 密钥决定作用范围后）

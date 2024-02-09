@@ -33,6 +33,10 @@ de:
   try_again:
   advanced_search:
   authenticate:
+  helpers:
+    submit:
+      create:
+      update:
   activerecord:
     attributes:
       linkset:
@@ -89,6 +93,10 @@ de:
               unavailable:
     models:
       user:
+      api_key:
+        zero:
+        one:
+        many:
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -103,6 +111,12 @@ de:
             gems:
               too_long:
   api_keys:
+    form:
+      exclusive_scopes:
+      rubygem_scope:
+      rubygem_scope_info:
+      multifactor_auth:
+      enable_mfa:
     create:
       success:
       invalid_gem:
@@ -132,10 +146,6 @@ de:
       mfa:
     new:
       new_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
     reset:
       success:
     update:
@@ -143,10 +153,6 @@ de:
       invalid_gem:
     edit:
       edit_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
       invalid_key:
     all_gems:
     gem_ownership_removed:

@@ -43,6 +43,10 @@ pt-BR:
   try_again: Algo deu errado. Por favor, tente novamente.
   advanced_search: Busca avançada
   authenticate:
+  helpers:
+    submit:
+      create:
+      update:
   activerecord:
     attributes:
       linkset:
@@ -99,6 +103,10 @@ pt-BR:
               unavailable:
     models:
       user: Usuário
+      api_key:
+        zero:
+        one:
+        many:
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -113,6 +121,12 @@ pt-BR:
             gems:
               too_long:
   api_keys:
+    form:
+      exclusive_scopes:
+      rubygem_scope:
+      rubygem_scope_info:
+      multifactor_auth:
+      enable_mfa:
     create:
       success:
       invalid_gem:
@@ -142,10 +156,6 @@ pt-BR:
       mfa:
     new:
       new_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
     reset:
       success:
     update:
@@ -153,10 +163,6 @@ pt-BR:
       invalid_gem:
     edit:
       edit_api_key:
-      multifactor_auth:
-      enable_mfa:
-      rubygem_scope:
-      rubygem_scope_info:
       invalid_key:
     all_gems:
     gem_ownership_removed:

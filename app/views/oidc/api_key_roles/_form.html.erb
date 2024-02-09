@@ -35,8 +35,8 @@
           <% end %>
         </div>
         <div class="form__group">
-          <%= f.label :gems, t("api_keys.new.rubygem_scope"), class: "form__label" %>
-          <p><%= t("api_keys.new.rubygem_scope_info") %></p>
+          <%= f.label :gems, t("api_keys.form.rubygem_scope"), class: "form__label" %>
+          <p><%= t("api_keys.form.rubygem_scope_info") %></p>
           <%= f.collection_select :gems, current_user.rubygems.by_name, :name, :name, { include_blank: t("api_keys.all_gems"), include_hidden: false }, selected: :name, class: "form__input form__select",  multiple: true %>
         </div>
       </div>
