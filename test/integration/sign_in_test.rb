@@ -17,8 +17,8 @@ class SignInTest < SystemTest
     assert page.has_content? "Sign out"
     assert page.has_content? "We now support security devices!"
 
-    assert_equal Events::UserEvent::LoginSuccessAdditional.new(authentication_method: "password"),
-      User.find_by(email: "nick@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole.additional
+    assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password" },
+      User.find_by(email: "nick@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with uppercase email" do
@@ -82,8 +82,8 @@ class SignInTest < SystemTest
     assert page.has_content? "Sign out"
     assert page.has_content? "We now support security devices!"
 
-    assert_equal Events::UserEvent::LoginSuccessAdditional.new(authentication_method: "password", two_factor_method: "otp", two_factor_label: "OTP"),
-      User.find_by(email: "john@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole.additional
+    assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password", two_factor_method: "otp", two_factor_label: "OTP" },
+      User.find_by(email: "john@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with current valid otp when mfa enabled but 30 minutes has passed" do

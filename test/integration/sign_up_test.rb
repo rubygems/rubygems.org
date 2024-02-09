@@ -10,8 +10,8 @@ class SignUpTest < SystemTest
     click_button "Sign up"
 
     assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
-    assert_equal Events::UserEvent::CreatedAdditional.new(email: "email@person.com"),
-      User.find_by(handle: "nick").events.where(tag: Events::UserEvent::CREATED).sole.additional
+    assert_event Events::UserEvent::CREATED, { email: "email@person.com" },
+      User.find_by(handle: "nick").events.where(tag: Events::UserEvent::CREATED).sole
   end
 
   test "sign up with no handle" do

@@ -27,14 +27,12 @@ class ApiKeysTest < ApplicationSystemTestCase
     refute_predicate @user.api_keys.last, :mfa_enabled?
     assert_nil @user.api_keys.last.rubygem
 
-    assert_equal Events::UserEvent::ApiKeyCreatedAdditional.new(
+    assert_event Events::UserEvent::API_KEY_CREATED, {
       name: "test",
       scopes: ["index_rubygems"],
       mfa: false,
-      api_key_gid: @user.api_keys.last.to_global_id.to_s,
-      user_agent_info:
-    ),
-      @user.events.where(tag: Events::UserEvent::API_KEY_CREATED).sole.additional
+      api_key_gid: @user.api_keys.last.to_global_id.to_s
+    }, @user.events.where(tag: Events::UserEvent::API_KEY_CREATED).sole
   end
 
   test "creating new api key from index" do
@@ -270,8 +268,8 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert page.has_content? "New API key"
     page.assert_text "Successfully deleted API key: #{api_key.name}"
 
-    assert_equal Events::UserEvent::ApiKeyDeletedAdditional.new(name: api_key.name, api_key_gid: api_key.to_global_id.to_s, user_agent_info:),
-      @user.events.where(tag: Events::UserEvent::API_KEY_DELETED).sole.additional
+    assert_event Events::UserEvent::API_KEY_DELETED, { name: api_key.name, api_key_gid: api_key.to_global_id.to_s },
+      @user.events.where(tag: Events::UserEvent::API_KEY_DELETED).sole
   end
 
   test "deleting all api key" do

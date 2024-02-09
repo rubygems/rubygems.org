@@ -118,6 +118,14 @@ class ActiveSupport::TestCase
     end
   end
 
+  def assert_event(tag, expected_additional, actual)
+    refute_nil actual, "Expected event with tag #{tag} but none found"
+    assert_equal tag, actual.tag
+    user_agent_info = actual.additional.user_agent_info
+
+    assert_equal actual.additional_type.new(user_agent_info:, **expected_additional), actual.additional
+  end
+
   def headless_chrome_driver
     Capybara.current_driver = :selenium_chrome_headless
     Capybara.default_max_wait_time = 2

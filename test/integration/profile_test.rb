@@ -78,8 +78,8 @@ class ProfileTest < SystemTest
                                                      "an email within the next few minutes. It contains instructions " \
                                                      "for confirming your new email address."
 
-    assert_equal Events::UserEvent::EmailAddedAdditional.new(email: "nick2@example.com"),
-      @user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole.additional
+    assert_event Events::UserEvent::EMAIL_ADDED, { email: "nick2@example.com" },
+      @user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
 
     link = last_email_link
 
@@ -94,8 +94,8 @@ class ProfileTest < SystemTest
       assert page.has_selector? "input[value='nick2@example.com']"
     end
 
-    assert_equal Events::UserEvent::EmailVerifiedAdditional.new(email: "nick2@example.com"),
-      @user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole.additional
+    assert_event Events::UserEvent::EMAIL_VERIFIED, { email: "nick2@example.com" },
+      @user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
   end
 
   test "enabling email on profile" do

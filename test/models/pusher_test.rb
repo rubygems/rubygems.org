@@ -660,13 +660,12 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "record the push event" do
-        assert_equal Events::RubygemEvent::VersionPushedAdditional.new(
+        assert_event Events::RubygemEvent::VERSION_PUSHED, {
           number: "0.1.1",
           platform: "ruby",
           sha256: @rubygem.versions.last.sha256_hex,
           version_gid: @rubygem.versions.last.to_gid.to_s
-        ),
-          @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole.additional
+        }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole
       end
     end
 
@@ -730,11 +729,10 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
       assert_equal [@user.email], email.to
 
-      assert_equal Events::UserEvent::EmailSentAdditional.new(
+      assert_event Events::UserEvent::EMAIL_SENT, {
         to: @user.email, from: "no-reply@mailer.rubygems.org", subject: email.subject,
         message_id: email.message_id, mailer: "mailer", action: "gem_pushed"
-      ),
-        @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole.additional
+      }, @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
     end
   end
 
