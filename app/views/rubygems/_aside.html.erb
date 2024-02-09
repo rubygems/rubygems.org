@@ -71,5 +71,6 @@
     <%= oidc_api_key_role_links(@rubygem) if @rubygem.owned_by?(current_user) %>
     <%= resend_owner_confirmation_link(@rubygem) if @rubygem.unconfirmed_ownership?(current_user) %>
     <%= rubygem_adoptions_link(@rubygem) if @rubygem.owned_by?(current_user) || @rubygem.ownership_requestable?%>
+    <%= rubygem_security_events_link(@rubygem) if @rubygem.owned_by?(current_user) %>
   </div>
 </div>

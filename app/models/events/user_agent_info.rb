@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Events::UserAgentInfo < OIDC::BaseModel
+class Events::UserAgentInfo < ApplicationModel
   attribute :installer, :string
   attribute :device, :string
   attribute :os, :string

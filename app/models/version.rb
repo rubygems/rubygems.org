@@ -19,6 +19,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
+  after_create :record_push_event
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
   after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
@@ -497,5 +498,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       next if uri.blank?
       rubygem.link_verifications.find_or_create_by!(uri:).retry_if_needed
     end
+  end
+
+  def record_push_event
+    rubygem.record_event!(Events::RubygemEvent::VERSION_PUSHED, number: number, platform: platform, sha256: sha256_hex,
+      pushed_by: pusher&.display_handle, version_gid: to_gid, actor_gid: pusher&.to_gid)
   end
 end

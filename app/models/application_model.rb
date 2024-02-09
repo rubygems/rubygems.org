@@ -1,4 +1,4 @@
-class OIDC::BaseModel
+class ApplicationModel
   include ActiveModel::Model
   include ActiveModel::Attributes
   include ActiveModel::Serializers::JSON
@@ -53,6 +53,10 @@ class OIDC::BaseModel
       def [](attr_name)
         _read_attribute(attr_name) { |n| missing_attribute(n, caller) }
       end
+
+      def has_attribute?(attr_name) # rubocop:disable Naming/PredicateName
+        @attributes.key?(attr_name.to_s)
+      end
     end
   end
 
@@ -64,6 +68,16 @@ class OIDC::BaseModel
             self[k] == other[k]
           end)
       end
+
+      alias_method :eql?, :==
+    end
+  end
+
+  concerning "Hashing" do
+    included do
+      alias_method :eql?, :==
+
+      delegate :hash, to: :attributes
     end
   end
 end

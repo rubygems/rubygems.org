@@ -36,6 +36,7 @@ class GemDownload < ApplicationRecord
     def increment(count, rubygem_id:, version_id: 0)
       scope = GemDownload.where(rubygem_id: rubygem_id).select("id")
       scope = scope.where(version_id: version_id)
+      return scope.first if count.zero?
       sql = scope.to_sql
 
       update = "UPDATE #{quoted_table_name} SET count = count + ? WHERE id = (#{sql}) RETURNING *"

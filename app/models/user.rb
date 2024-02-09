@@ -13,6 +13,10 @@ class User < ApplicationRecord
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
   before_create :_generate_confirmation_token_no_reset_unconfirmed_email
+  after_create :record_create_event
+  after_update :record_email_update_event, if: :email_was_updated?
+  after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }
+  after_update :record_password_update_event, if: :saved_change_to_encrypted_password?
   before_discard :yank_gems
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
@@ -47,6 +51,7 @@ class User < ApplicationRecord
   has_many :approved_ownership_requests, -> { approved }, dependent: :destroy, inverse_of: :user, class_name: "OwnershipRequest"
 
   has_many :audits, as: :auditable, dependent: :nullify
+  has_many :rubygem_events, through: :rubygems, source: :events
 
   has_many :oidc_api_key_roles, dependent: :nullify, class_name: "OIDC::ApiKeyRole", inverse_of: :user
   has_many :oidc_id_tokens, through: :oidc_api_key_roles, class_name: "OIDC::IdToken", inverse_of: :user, source: :id_tokens
@@ -331,5 +336,26 @@ class User < ApplicationRecord
 
   def send_deletion_complete_email
     Mailer.deletion_complete(@email_before_discard).deliver_later
+  end
+
+  def record_create_event
+    record_event!(Events::UserEvent::CREATED, email:)
+  end
+
+  def email_was_updated?
+    (saved_change_to_unconfirmed_email? || saved_change_to_email?) &&
+      email != attribute_before_last_save(:unconfirmed_email)
+  end
+
+  def record_email_update_event
+    record_event!(Events::UserEvent::EMAIL_ADDED, email: unconfirmed_email)
+  end
+
+  def record_email_verified_event
+    record_event!(Events::UserEvent::EMAIL_VERIFIED, email:)
+  end
+
+  def record_password_update_event
+    record_event!(Events::UserEvent::PASSWORD_CHANGED)
   end
 end

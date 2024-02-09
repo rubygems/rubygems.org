@@ -658,6 +658,15 @@ class PusherTest < ActiveSupport::TestCase
 
         assert_equal expected_response, response["_source"]
       end
+
+      should "record the push event" do
+        assert_event Events::RubygemEvent::VERSION_PUSHED, {
+          number: "0.1.1",
+          platform: "ruby",
+          sha256: @rubygem.versions.last.sha256_hex,
+          version_gid: @rubygem.versions.last.to_gid.to_s
+        }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole
+      end
     end
 
     should "purge gem cache" do
@@ -719,6 +728,11 @@ class PusherTest < ActiveSupport::TestCase
 
       assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
       assert_equal [@user.email], email.to
+
+      assert_event Events::UserEvent::EMAIL_SENT, {
+        to: @user.email, from: "no-reply@mailer.rubygems.org", subject: email.subject,
+        message_id: email.message_id, mailer: "mailer", action: "gem_pushed"
+      }, @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
     end
   end
 
@@ -770,7 +784,7 @@ class PusherTest < ActiveSupport::TestCase
     should "pushes gem if scoped to the same gem" do
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
       @api_key.ownership = create(:ownership, rubygem: @rubygem, user: @user)
-      cutter = Pusher.new(@api_key, @gem, "")
+      cutter = Pusher.new(@api_key, @gem)
       cutter.stubs(:rubygem).returns @rubygem
 
       assert cutter.verify_gem_scope
@@ -779,7 +793,7 @@ class PusherTest < ActiveSupport::TestCase
     should "does not push gem if scoped to another gem" do
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
       @api_key.ownership = create(:ownership, rubygem: create(:rubygem), user: @user)
-      cutter = Pusher.new(@api_key, @gem, "")
+      cutter = Pusher.new(@api_key, @gem)
       cutter.stubs(:rubygem).returns @rubygem
 
       refute cutter.verify_gem_scope

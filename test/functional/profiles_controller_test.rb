@@ -32,6 +32,13 @@ class ProfilesControllerTest < ActionController::TestCase
       should redirect_to("the sign in path") { sign_in_path }
     end
 
+    context "on GET to security_events" do
+      setup { get :security_events }
+
+      should respond_with :redirect
+      should redirect_to("the sign in path") { sign_in_path }
+    end
+
     context "on GET to show when hide email" do
       setup do
         @user.update(public_email: false)
@@ -274,6 +281,28 @@ class ProfilesControllerTest < ActionController::TestCase
           should set_flash.to("This request was denied. We could not verify your password.")
         end
       end
+    end
+
+    context "on GET to security_events" do
+      setup do
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS)
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { authentication_method: "webauthn" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { two_factor_method: "webauthn" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { two_factor_method: "OTP" })
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_SENT)
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_ADDED, additional: { email: "other@example.com" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_VERIFIED, additional: { email: "other@example.com" })
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_CREATED, additional: { gem: create(:rubygem).name })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_DELETED)
+        create(:events_user_event, user: @user, tag: Events::UserEvent::PASSWORD_CHANGED)
+
+        get :security_events
+      end
+
+      should respond_with :success
     end
 
     context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do

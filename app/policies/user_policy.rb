@@ -33,4 +33,5 @@ class UserPolicy < ApplicationPolicy
   has_association :oidc_api_key_roles
   has_association :webauthn_credentials
   has_association :webauthn_verification
+  has_association :events
 end

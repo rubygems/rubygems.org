@@ -685,6 +685,9 @@ es:
     request_denied: La solicitud fue denegada. No pudimos verificar tu contraseña.
     show:
       title: Perfil de %{username}
+    security_events:
+      title:
+      description_html:
   rubygems:
     aside:
       downloads_for_this_version: Para esta versión
@@ -770,6 +773,9 @@ es:
           <br/> Si eres el anterior propietario, puedes cambiar la propiedad de esta
           gema usando el comando `gem owner`. También puedes crear nuevas versiones
           de esta gema usando `gem push`.
+    security_events:
+      title:
+      description_html:
   reverse_dependencies:
     index:
       title: Dependencias inversas para %{name}
@@ -1011,3 +1017,50 @@ es:
       one: 1 segundo
   form:
     optional:
+  events:
+    table_component:
+      event:
+      time:
+      additional_info:
+      redacted:
+      no_user_agent_info:
+    rubygem_event:
+      version:
+        version_pushed:
+        version_yanked:
+        version_unyanked:
+        version_html:
+        version_pushed_sha256_html:
+        version_pushed_by_html:
+        version_yanked_by_html:
+      owner:
+        owner_added:
+        owner_added_owner_html:
+        owner_added_authorizer_html:
+        owner_removed:
+        owner_removed_owner_html:
+        owner_removed_by_html:
+        owner_confirmed:
+    user_event:
+      user:
+        created:
+        email:
+      login:
+        login_success:
+        webauthn_login:
+        mfa_method:
+        mfa_device:
+        none:
+      email:
+        email_verified:
+        email_sent_subject:
+        email_sent_from:
+        email_sent_to:
+      api_key:
+        api_key_created:
+        api_key_deleted:
+        api_key_name:
+        api_key_scopes:
+        api_key_gem_html:
+        api_key_mfa:
+        not_required:

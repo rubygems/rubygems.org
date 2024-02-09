@@ -1,7 +1,7 @@
 <%= field_wrapper **field_wrapper_args, data: {} do %>
   <div class="divide-y">
     <% field.get_fields.each do |f| %>
-      <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f) %>
+      <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f, resource:) %>
     <% end %>
   </div>
 <% end %>

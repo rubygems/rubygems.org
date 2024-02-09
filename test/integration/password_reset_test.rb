@@ -114,6 +114,9 @@ class PasswordResetTest < SystemTest
     click_button "Save this password"
 
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
+
+    assert_event Events::UserEvent::PASSWORD_CHANGED, {},
+      @user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
   end
 
   test "restting password when mfa is enabled" do

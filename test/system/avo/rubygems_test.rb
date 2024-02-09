@@ -18,6 +18,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
       }
     )
 
+    create(:ip_address, ip_address: "127.0.0.1")
+
     stub_github_info_request(user.info_data)
 
     visit avo.root_path
@@ -142,6 +144,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
           audit.audited_changes["records"].select do |k, _|
             k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
           end
+        ).merge(
+          audit.audited_changes["records"].select do |k, _|
+            k =~ %r{gid://gemcutter/Events::RubygemEvent/\d+}
+          end
         )
       },
       audit.audited_changes
@@ -222,6 +228,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
           audit.audited_changes["records"].select do |k, _|
             k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
           end
+        ).merge(
+          audit.audited_changes["records"].select do |k, _|
+            k =~ %r{gid://gemcutter/Events::RubygemEvent/\d+}
+          end
         )
       },
       audit.audited_changes
@@ -268,6 +278,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_equal security_user, ownership.authorizer
 
     audit = rubygem.audits.sole
+    event = rubygem.events.where(tag: Events::RubygemEvent::OWNER_ADDED).sole
 
     page.assert_text audit.id
     assert_equal "Rubygem", audit.auditable_type
@@ -295,6 +306,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
                 "authorizer_id" => [nil, security_user.id],
                 "ownership_request_notifier" => [nil, true]
               },
+              "unchanged" => {}
+            },
+            "gid://gemcutter/Events::RubygemEvent/#{event.id}" => {
+              "changes" => event.attributes.transform_values { [nil, _1.as_json] },
               "unchanged" => {}
             }
           }

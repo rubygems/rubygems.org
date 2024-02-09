@@ -45,6 +45,14 @@ class YankTest < SystemTest
     css = %(div.gem__users a[alt=#{@user.handle}])
 
     assert page.has_css?(css, count: 3)
+
+    assert_event Events::RubygemEvent::VERSION_YANKED, {
+      number: "2.2.2",
+      platform: "ruby",
+      yanked_by: @user.handle,
+      version_gid: Version.last.to_gid_param,
+      actor_gid: @user.to_gid.to_s
+    }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
   end
 
   test "yanked gem entirely then someone else pushes a new version" do

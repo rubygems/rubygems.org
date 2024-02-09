@@ -11,6 +11,8 @@ class ApiKey < ApplicationRecord
   has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
 
   before_validation :set_owner_from_user
+  after_create :record_create_event
+  after_update :record_expire_event, if: :saved_change_to_expires_at?
 
   validates :name, :hashed_key, presence: true
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
@@ -100,7 +102,7 @@ class ApiKey < ApplicationRecord
   end
 
   def expire!
-    touch(:expires_at)
+    update!(expires_at: Time.current)
   end
 
   private
@@ -133,5 +135,21 @@ class ApiKey < ApplicationRecord
 
   def set_owner_from_user
     self.owner ||= user
+  end
+
+  def record_create_event
+    case owner
+    when User
+      user.record_event!(Events::UserEvent::API_KEY_CREATED,
+          name:, scopes: enabled_scopes, gem: rubygem&.name, mfa:, api_key_gid: to_gid)
+    end
+  end
+
+  def record_expire_event
+    case owner
+    when User
+      user.record_event!(Events::UserEvent::API_KEY_DELETED,
+          name:, api_key_gid: to_gid)
+    end
   end
 end

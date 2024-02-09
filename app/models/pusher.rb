@@ -6,14 +6,14 @@ class Pusher
 
   attr_reader :api_key, :owner, :spec, :spec_contents, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(api_key, body, remote_ip = "")
+  def initialize(api_key, body, request: nil)
     @api_key = api_key
     @owner = api_key.owner
     @scoped_rubygem = api_key.rubygem
 
     @body = StringIO.new(body.read)
     @size = @body.size
-    @remote_ip = remote_ip
+    @request = request
   end
 
   def process
@@ -148,7 +148,7 @@ class Pusher
     ReindexRubygemJob.perform_later(rubygem:)
     GemCachePurger.call(rubygem.name)
     StoreVersionContentsJob.perform_later(version:) if ld_variation(key: "gemcutter.pusher.store_version_contents", default: false)
-    RackAttackReset.gem_push_backoff(@remote_ip, owner.to_gid) if @remote_ip.present?
+    RackAttackReset.gem_push_backoff(@request.remote_ip, owner.to_gid) if @request&.remote_ip.present?
     StatsD.increment "push.success"
   end
 

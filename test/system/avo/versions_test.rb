@@ -18,6 +18,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
       }
     )
 
+    @ip_address = create(:ip_address, ip_address: "127.0.0.1")
     stub_github_info_request(user.info_data)
 
     visit avo.root_path
@@ -73,6 +74,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
       k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
     end
     rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
+    version_unyank_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_UNYANKED).sole
 
     assert_equal(
       {
@@ -116,6 +118,10 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
               "version_id" => [version.id, nil]
             },
             "unchanged" => {}
+          },
+          version_unyank_event.to_gid.to_s => {
+            "changes" => version_unyank_event.attributes.transform_values { [nil, _1] }.as_json,
+            "unchanged" => {}
           }
         },
         "fields" => {},
@@ -124,5 +130,11 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
       },
       audit.audited_changes
     )
+
+    assert_event Events::RubygemEvent::VERSION_UNYANKED, {
+      number: version.number,
+      platform: version.platform,
+      version_gid: version.to_gid.to_s
+    }, version_unyank_event
   end
 end

@@ -34,7 +34,7 @@ class Api::V1::RubygemsController < Api::BaseController
   def create
     return render_api_key_forbidden unless @api_key.can_push_rubygem?
 
-    gemcutter = Pusher.new(@api_key, request.body, request.remote_ip)
+    gemcutter = Pusher.new(@api_key, request.body, request:)
     enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue StandardError => e
