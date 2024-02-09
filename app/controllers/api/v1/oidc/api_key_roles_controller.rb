@@ -70,6 +70,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   end
 
   def decode_jwt
+    raise UnverifiedJWT, "Provider missing JWKS" if @api_key_role.provider.jwks.blank?
     @jwt = JSON::JWT.decode_compact_serialized(params.require(:jwt), @api_key_role.provider.jwks)
   rescue JSON::ParserError
     raise UnverifiedJWT, "Invalid JSON"
