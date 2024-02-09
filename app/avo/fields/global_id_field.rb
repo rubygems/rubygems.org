@@ -4,7 +4,7 @@ class GlobalIdField < Avo::Fields::BelongsToField
   delegate(*%i[values_for_type custom?], to: :@nil)
 
   def value
-    super.find
+    super&.find
   rescue ActiveRecord::RecordNotFound
     nil
   end
