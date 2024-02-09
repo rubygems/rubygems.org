@@ -138,6 +138,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     audit = user.audits.sole
     email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+    email_verified_event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
     password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
@@ -175,6 +176,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
           },
           email_added_event.to_gid.as_json => {
             "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          email_verified_event.to_gid.as_json => {
+            "changes" => email_verified_event.attributes.transform_values { [nil, _1.as_json] },
             "unchanged" => {}
           },
           password_changed_event.to_gid.as_json => {
@@ -405,6 +410,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     end
     rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
     email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+    email_verified_event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
     password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
     version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
 
@@ -470,6 +476,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
           },
           email_added_event.to_gid.as_json => {
             "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          email_verified_event.to_gid.as_json => {
+            "changes" => email_verified_event.attributes.transform_values { [nil, _1.as_json] },
             "unchanged" => {}
           },
           password_changed_event.to_gid.as_json => {

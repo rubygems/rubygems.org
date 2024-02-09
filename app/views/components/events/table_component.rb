@@ -45,7 +45,7 @@ class Events::TableComponent < ApplicationComponent
   private
 
   def tag_header(tag)
-    key = "events.#{tag.source_type}_event.#{tag.subject_type}.#{tag.to_s.sub(/\A.+?:/, '').tr(':', '_')}"
+    key = Events::Tag.translation_key(tag)
     h4 { t(key, default: tag.to_s) }
   end
 
@@ -66,7 +66,7 @@ class Events::TableComponent < ApplicationComponent
 
   def event_details(event)
     tag_header event.tag
-    component_name = "#{event.class.name}::#{event.tag.to_a.drop(1).map(&:classify).join('::')}Component".classify
+    component_name = "#{event.class.name}::#{Events::Tag.const_name(event.tag)}Component"
     component = component_name.safe_constantize
     return if component.blank?
     render component.new(event:)

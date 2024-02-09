@@ -15,7 +15,6 @@ module Events::Tags
 
   included do
     validates :tag, presence: true, inclusion: { in: ->(_) { tags.keys } }
-    attribute :tag, Events::Tag::Type.new
     validates :additional, nested: true, allow_nil: true
     belongs_to :ip_address, optional: true
     belongs_to :geoip_info, optional: true
@@ -24,16 +23,18 @@ module Events::Tags
   end
 
   class_methods do
-    def define_event(string, &blk)
-      tag = Events::Tag.new(string).freeze
-      raise ArgumentError, "Tag #{tag.inspect} already defined" if tags.key?(tag)
-      event = Events::Tag.to_struct(&blk)
+    def define_event(tag, &blk)
+      raise ArgumentError, "Tag #{tag.inspect} already defined #{tags.inspect}" if tags.key?(tag)
+
+      event = Class.new(ApplicationModel) do
+        attribute :user_agent_info, Types::JsonDeserializable.new(Events::UserAgentInfo)
+
+        class_eval(&blk) if blk
+      end
+      const_set(Events::Tag.additional_name(tag), event)
       tags[tag] = event
 
-      const_name = [tag.subject_type == tag.source_type ? nil : tag.subject_type, tag.action].compact.join("_").upcase
-      const_set(:"#{const_name.downcase.classify}Additional", event)
-
-      tag
+      -tag
     end
   end
 end

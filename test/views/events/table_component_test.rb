@@ -12,6 +12,7 @@ class Events::TableComponentTest < ActiveSupport::TestCase
     def self.belongs_to(...) = nil
     def has_attribute?(name) = respond_to?(name) # rubocop:disable Naming/PredicateName
 
+    attribute :tag, :string
     attribute :additional
     attribute :created_at, :datetime, default: -> { Time.zone.now }
     attribute :geoip_info, Types::JsonDeserializable.new(GeoipInfo)
