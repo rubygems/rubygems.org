@@ -142,6 +142,12 @@ class Gemcutter::UserAgentParser
     Events::UserAgentInfo.new(installer: "RubyGems", system: platform, implementation: ruby_engine&.capitalize || "Ruby")
   end
 
+  register regex_ua_parser \
+    %r{\Arubygems-oidc-action/?}x,
+  def self.rubygems_oidc_action_user_agent
+    Events::UserAgentInfo.new(installer: "RubyGems OIDC GitHub Action")
+  end
+
   SET.freeze
 
   def self.call(...)
