@@ -435,8 +435,11 @@ class PusherTest < ActiveSupport::TestCase
       spec = mock
       spec.expects(:name).returns @rubygem.name.upcase
       spec.expects(:version).returns Gem::Version.new("1.3.3.7")
+      spec.expects(:platform).returns "ruby"
       spec.expects(:original_platform).returns "ruby"
+      spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
 
       refute @cutter.find
 
@@ -592,7 +595,7 @@ class PusherTest < ActiveSupport::TestCase
     setup do
       @rubygem = create(:rubygem, name: "gemsgemsgems")
       @cutter.stubs(:rubygem).returns @rubygem
-      create(:version, rubygem: @rubygem, number: "0.1.1", summary: "old summary")
+      create(:version, rubygem: @rubygem, number: "0.1.1", summary: "old summary", pusher_api_key: @cutter.api_key)
       @spec = mock
       @cutter.stubs(:version).returns @rubygem.versions[0]
       @cutter.stubs(:spec).returns(@spec)
@@ -704,7 +707,7 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem = create(:rubygem)
       @cutter.stubs(:rubygem).returns @rubygem
       create(:version, rubygem: @rubygem, summary: "old summary")
-      @version = create(:version, rubygem: @rubygem, summary: "new summary")
+      @version = create(:version, rubygem: @rubygem, summary: "new summary", pusher_api_key: @cutter.api_key)
       @cutter.stubs(:version).returns @version
       @rubygem.stubs(:update_attributes_from_gem_specification!)
       @cutter.stubs(:version).returns @version

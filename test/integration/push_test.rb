@@ -27,6 +27,11 @@ class PushTest < ActionDispatch::IntegrationTest
     css = %(div.gem__users a[alt=#{@user.handle}])
 
     assert page.has_css?(css, count: 2)
+
+    assert_equal Digest::MD5.hexdigest(<<~INFO), Rubygem.find_by!(name: "sandworm").versions.sole.info_checksum
+      ---
+      1.0.0 |checksum:#{Digest::SHA256.hexdigest File.binread('sandworm-1.0.0.gem')}
+    INFO
   end
 
   test "push a new version of a gem" do
@@ -252,7 +257,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "republish a yanked version" do
     rubygem = create(:rubygem, name: "sandworm", owners: [@user])
-    create(:version, number: "1.0.0", indexed: false, rubygem: rubygem)
+    version = create(:version, number: "1.0.0", rubygem: rubygem)
+    create(:deletion, version:)
 
     build_gem "sandworm", "1.0.0"
 
@@ -264,7 +270,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "republish a yanked version by a different owner" do
     rubygem = create(:rubygem, name: "sandworm")
-    create(:version, number: "1.0.0", indexed: false, rubygem: rubygem)
+    version = create(:version, number: "1.0.0", rubygem: rubygem)
+    create(:deletion, version:)
 
     build_gem "sandworm", "1.0.0"
 
@@ -272,6 +279,42 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :conflict
     assert_match(/A yanked version pushed by a previous owner of this gem already exists \(sandworm-1.0.0\)/, response.body)
+  end
+
+  test "republish an indexed version" do
+    build_gem "sandworm", "1.0.0"
+
+    push_gem "sandworm-1.0.0.gem"
+
+    assert_response :success
+
+    assert_enqueued_jobs 0 do
+      push_gem "sandworm-1.0.0.gem"
+    end
+
+    assert_response :success
+    assert_equal("Gem was already pushed: sandworm (1.0.0)", response.body)
+  end
+
+  test "republish a version where the gem is un-indexed but not yanked" do
+    build_gem "sandworm", "1.0.0"
+
+    Pusher.any_instance.stubs(:after_write)
+
+    push_gem "sandworm-1.0.0.gem"
+
+    Pusher.any_instance.unstub(:after_write)
+
+    assert_enqueued_jobs 0 do
+      push_gem "sandworm-1.0.0.gem"
+    end
+
+    assert_response :conflict
+    assert_equal(
+      "It appears that sandworm-1.0.0 did not finish pushing.\n" \
+      "Please contact support@rubygems.org for assistance if you pushed this gem more than a minute ago.",
+      response.body
+    )
   end
 
   test "publishing a gem with ceritifcate but not signatures" do

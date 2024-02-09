@@ -322,10 +322,6 @@ class Rubygem < ApplicationRecord
     oidc_rubygem_trusted_publishers.clear
   end
 
-  def find_version_from_spec(spec)
-    versions.find_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
-  end
-
   def find_or_initialize_version_from_spec(spec)
     version = versions.find_or_initialize_by(number: spec.version.to_s,
                                              platform: spec.original_platform.to_s,
