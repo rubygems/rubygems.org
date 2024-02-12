@@ -110,8 +110,8 @@ GEM
       zeitwerk (>= 2.6.2)
     awrence (1.2.1)
     aws-eventstream (1.3.0)
-    aws-partitions (1.887.0)
-    aws-sdk-core (3.191.0)
+    aws-partitions (1.889.0)
+    aws-sdk-core (3.191.1)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.8)
@@ -649,7 +649,7 @@ GEM
     semantic (1.6.1)
     semantic_logger (4.15.0)
       concurrent-ruby (~> 1.0)
-    shoryuken (6.2.0)
+    shoryuken (6.2.1)
       aws-sdk-core (>= 2)
       concurrent-ruby
       thor
@@ -885,8 +885,8 @@ CHECKSUMS
   avo (2.47.0) sha256=92913a585a4a2d276ea1800864053c4d989453deb0ce0ba737aeece7f6c46ded
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
-  aws-partitions (1.887.0) sha256=f451bcde8cf105f2cfef0d074d0a6658109b403206c48afd41ab2b1d1f9b2c0e
-  aws-sdk-core (3.191.0) sha256=de1dfbd22c0e16602f52b14cf0beadcebb329f345e1f01cf2dc3fcc089fa7bab
+  aws-partitions (1.889.0) sha256=45c2e6070eddeb127d91eab686c9b152ab048db6d925b4c48c8b7312baefa8bc
+  aws-sdk-core (3.191.1) sha256=f8608fc0569cbe4c6be07f4d4978b5f537ab990faeb501fc4532888f0e02c83b
   aws-sdk-kms (1.77.0) sha256=0e7b49aa44df59709df4c5500e1e4df56137f0cd92eb846625f46bd586ae7dbd
   aws-sdk-s3 (1.143.0) sha256=7a2cef087c73eacc2a50712440af97a9e3d8ea9ae80794b6a82794cf7c5f4ee9
   aws-sdk-sqs (1.70.0) sha256=56067fc1fbca504ab038ce3c15808ef59824b6782d36278c8adb50c919d9ac3a
@@ -1101,7 +1101,7 @@ CHECKSUMS
   selenium-webdriver (4.17.0) sha256=d876814216cf4d731e0fad07060e184cefc120c9e0de2a8e0bbca4b96d1c743c
   semantic (1.6.1) sha256=3cdbb48f59198ebb782a3fdfb87b559e0822a311610db153bae22777a7d0c163
   semantic_logger (4.15.0) sha256=ec4f56122b5d2e2117d148b86c69fb62c1194a2b01a271be04ba8678a85f81ff
-  shoryuken (6.2.0) sha256=c197ff7afb2971066035df453eeedce8011d07ee1e242ac1807a90fb96574380
+  shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (2.0.0) sha256=7adf45342cd800f507d2a053658cb1cce2884b616b26004d39684b912ea32c34
   shoulda-matchers (6.1.0) sha256=f11bc4bf14419196b8d1c89d4018615a26244a0758703d5f81222088886203dd
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
