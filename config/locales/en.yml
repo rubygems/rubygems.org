@@ -106,7 +106,7 @@ en:
       api_key:
         zero: API Keys
         one: API Key
-        many: API Keys
+        other: API Keys
   activemodel:
     attributes:
       oidc/provider/configuration:

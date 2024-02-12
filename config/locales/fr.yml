@@ -107,7 +107,7 @@ fr:
       api_key:
         zero:
         one:
-        many:
+        other:
   activemodel:
     attributes:
       oidc/provider/configuration:
