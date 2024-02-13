@@ -180,8 +180,7 @@ GEM
     css_parser (1.16.0)
       addressable
     csv (3.2.8)
-    dalli (3.2.7)
-      base64
+    dalli (3.2.8)
     dartsass-sprockets (3.1.0)
       railties (>= 4.0.0)
       sassc-embedded (~> 1.69)
@@ -919,7 +918,7 @@ CHECKSUMS
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   css_parser (1.16.0) sha256=f70fb492254418522ea77c01d57bf64452d6c7465001926c3620d0b50289b1a2
   csv (3.2.8) sha256=2f5e11e8897040b97baf2abfe8fa265b314efeb8a9b7f756db9ebcf79e7db9fe
-  dalli (3.2.7) sha256=877dcf1d1b1cfea91d4447929488e385ce438950770a41b6357cdfa6e67a3a77
+  dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
   dartsass-sprockets (3.1.0) sha256=c238ec9f7f496489ac5a7813cd1f83d1e077a1826921acefc7e290a521b7a20a
   datadog-ci (0.7.0) sha256=9667cbf98734dc3a63d805049d675756f133b4228e21ec76c147a37a2fddd0da
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
