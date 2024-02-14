@@ -337,7 +337,7 @@ GEM
     ld-eventsource (2.2.2)
       concurrent-ruby (~> 1.0)
       http (>= 4.4.1, < 6.0.0)
-    letter_opener (1.8.1)
+    letter_opener (1.9.0)
       launchy (>= 2.2, < 3)
     letter_opener_web (2.0.0)
       actionmailer (>= 5.2)
@@ -791,7 +791,7 @@ DEPENDENCIES
   kaminari (~> 1.2)
   launchdarkly-server-sdk (~> 8.1)
   launchy (~> 2.5)
-  letter_opener (~> 1.8)
+  letter_opener (~> 1.9)
   letter_opener_web (~> 2.0)
   listen (~> 3.8)
   lookbook (~> 2.2)
@@ -985,7 +985,7 @@ CHECKSUMS
   launchdarkly-server-sdk (8.1.0) sha256=41f12df377dab77574d9a1c3f17a6b989aedd67187b7ccffedab7f2d1e2fbdb5
   launchy (2.5.2) sha256=8aa0441655aec5514008e1d04892c2de3ba57bd337afb984568da091121a241b
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
-  letter_opener (1.8.1) sha256=2d2841ec4767786996498f3f71e591458d1d0ba14d7df5162a5b044a6e24adf8
+  letter_opener (1.9.0) sha256=cbc8bd87aee05ae16d4946f8b2032f0a3b2ae044ccc39c7db51ea880a7aaac08
   letter_opener_web (2.0.0) sha256=33860ad41e1785d75456500e8ca8bba8ed71ee6eaf08a98d06bbab67c5577b6f
   libdatadog (5.0.0.1.0) sha256=c61b02584c02447089ad8e71b7aa8e5a660fd675b727635c1a2eaec59b1840e8
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
