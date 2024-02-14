@@ -373,7 +373,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    maintenance_tasks (2.5.1)
+    maintenance_tasks (2.6.0)
       actionpack (>= 6.0)
       activejob (>= 6.0)
       activerecord (>= 6.0)
@@ -796,7 +796,7 @@ DEPENDENCIES
   listen (~> 3.8)
   lookbook (~> 2.2)
   mail (~> 2.8)
-  maintenance_tasks (~> 2.5)
+  maintenance_tasks (~> 2.6)
   memory_profiler (~> 1.0)
   minitest (~> 5.22)
   minitest-gcstats (~> 1.3)
@@ -994,7 +994,7 @@ CHECKSUMS
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
   lookbook (2.2.1) sha256=079677cea164f0fcaba819037f0956e22b4730e0167f4f1db37863963b5a8da6
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
-  maintenance_tasks (2.5.1) sha256=94ce0a1d5ff83eced1fd768f5d0002480cc101af52d10ba8228525922a29c42f
+  maintenance_tasks (2.6.0) sha256=b684b44ec4eef26f204cb783d965024be1fcf0058ecfaca65f616c6b83adf045
   marcel (1.0.2) sha256=a013b677ef46cbcb49fd5c59b3d35803d2ee04dd75d8bfdc43533fc5a31f7e4e
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
   memory_profiler (1.0.1) sha256=38cdb42f22d9100df2eba0365c199724b58b05c38e765cd764a07392916901b1
