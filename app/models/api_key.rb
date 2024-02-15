@@ -103,7 +103,10 @@ class ApiKey < ApplicationRecord
   end
 
   def expire!
-    update!(expires_at: Time.current)
+    transaction do
+      update_column(:expires_at, Time.current)
+      record_expire_event
+    end
   end
 
   private

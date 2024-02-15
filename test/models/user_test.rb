@@ -850,6 +850,24 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "block invalid legacy user" do
+    setup do
+      @user = create(:user, handle: "MikeJudge")
+      @api_key = create(:api_key, owner: @user)
+
+      # simulate legacy invalid api key
+      @api_key.update_columns(show_dashboard: true, add_owner: true)
+
+      refute_predicate @api_key, :valid?
+    end
+
+    should "block user anyway" do
+      assert_changed(@user, :email, :password, :api_key, :remember_token) do
+        @user.block!
+      end
+    end
+  end
+
   context ".normalize_email" do
     should "return the normalized email" do
       assert_equal "user@example.com", User.normalize_email(:"UsEr@ example . COM")
