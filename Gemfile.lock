@@ -468,7 +468,7 @@ GEM
     parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
-    pg (1.5.4)
+    pg (1.5.5)
     phlex (1.9.0)
       concurrent-ruby (~> 1.2)
       erb (>= 4)
@@ -809,7 +809,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection (~> 1.0)
   openid_connect (~> 2.3)
   opensearch-ruby (~> 3.1)
-  pg (~> 1.4)
+  pg (~> 1.5)
   phlex-rails (~> 1.1)
   pp (= 0.5.0)
   pry-byebug (~> 3.10)
@@ -1033,7 +1033,7 @@ CHECKSUMS
   pagy (6.4.2) sha256=92f3bac9f6f3c5e897457c9e5c47ba024a86cdeaf13ef281e29a7e69fdba4d5a
   parallel (1.24.0) sha256=5bf38efb9b37865f8e93d7a762727f8c5fc5deb19949f4040c76481d5eee9397
   parser (3.3.0.5) sha256=7748313e505ca87045dc0465c776c802043f777581796eb79b1654c5d19d2687
-  pg (1.5.4) sha256=04f7b247151c639a0b955d8e5a9a41541343f4640aa3c2bdf749a872c339d25d
+  pg (1.5.5) sha256=7e4baa3395619424fe0e82d0b0489e54d3015c6ee5896dd007b3bce6d7d49b68
   phlex (1.9.0) sha256=75b06a334833542594ef65d0532c6c964c78648f459d855cb54cd8c0ddcdb549
   phlex-rails (1.1.1) sha256=b0e82d0ba541eca55ca39051de8be2817a7ed400f8a630e21b261239c8f812d0
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
