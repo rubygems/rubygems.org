@@ -1,0 +1,7 @@
+<div class="sorting">
+  <%= form_with url: profile_path(@user&.handle), method: :get do |f| %>
+    <%= f.label :sort_by, class: "t-text--s"%>
+    <%= f.select :sort_by, options_for_select([["Name", "name"], ["Downloads", "downloads"]]) %>
+    <%= f.submit "Sort" %>
+  <% end %>
+</div>

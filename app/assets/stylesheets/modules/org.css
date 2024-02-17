@@ -196,7 +196,21 @@
   .profile__downloads-wrap {
     padding-top: 32px; } }
 
+.sorting form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
 
+.sorting form label:first-child,
+.sorting form select{
+  margin-bottom: 0.5rem;
+}
+
+.sorting form select,
+.sorting form button {
+  width: fit-content;
+}
 
 /* Dashboard Gems and Subscriptions */
 
