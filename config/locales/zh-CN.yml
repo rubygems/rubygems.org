@@ -319,8 +319,11 @@ zh-CN:
       body_html: 感谢您申请对 <strong>%{gem}</strong> 的所有权。我们很遗憾地通知您，您的所有权申请已被该 Gem 的业主驳回。
     ownerhip_request_approved:
       body_html: 恭喜您！您对 <strong>%{gem}</strong> 的所有权申请已被批准。您已被添加为该 Gem 的业主之一。
-    new_opwnership_requests:
-      body_html: "<strong>%{gem}</strong> 有 <em>%{count}</em> 个新的所有权申请。请点击下面的按钮查看所有请求。"
+    new_ownership_requests:
+      body_html:
+        zero:
+        one:
+        other: "<strong>%{gem}</strong> 有 <em>%{count}</em> 个新的所有权申请。请点击下面的按钮查看所有请求。"
       button: 所有权申请
       disable_notifications: 要停止接收这些信息，请更新您的
       owners_page: 所有权

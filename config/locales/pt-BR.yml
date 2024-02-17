@@ -326,8 +326,11 @@ pt-BR:
       body_html:
     ownerhip_request_approved:
       body_html:
-    new_opwnership_requests:
+    new_ownership_requests:
       body_html:
+        zero:
+        one:
+        other:
       button:
       disable_notifications:
       owners_page:

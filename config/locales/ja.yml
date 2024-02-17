@@ -317,8 +317,11 @@ ja:
       body_html: "<strong>%{gem}</strong>の所有権を申請いただきありがとうございます。心苦しいのですが所有権の申請はgemの所有者により却下されました。"
     ownerhip_request_approved:
       body_html: おめでとうございます！<strong>%{gem}</strong>の所有権の申請が許諾されました。gemの所有者として追加されました。
-    new_opwnership_requests:
-      body_html: "<strong>%{gem}</strong>には<em>%{count}</em>件の新しい所有権の申請があります。全ての申請を見るには以下のボタンをクリックしてください。"
+    new_ownership_requests:
+      body_html:
+        zero:
+        one:
+        other: "<strong>%{gem}</strong>には<em>%{count}</em>件の新しい所有権の申請があります。全ての申請を見るには以下のボタンをクリックしてください。"
       button: 所有権の申請
       disable_notifications: これらのメッセージの受け取りを停止するには、こちらを更新してください：
       owners_page: 所有権
