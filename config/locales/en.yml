@@ -318,7 +318,10 @@ en:
     ownerhip_request_approved:
       body_html: Congratulations! Your ownership request for <strong>%{gem}</strong> was approved. You were added as an owner to the gem.
     new_opwnership_requests:
-      body_html: There are <em>%{count}</em> new ownership requests for <strong>%{gem}</strong>. Please click on the button below to see all requests.
+      body_html: 
+        zero: There are <em>no</em> new ownership requests for <strong>%{gem}</strong>.
+        one: There is <em>one</em> new ownership request for <strong>%{gem}</strong>. Please click on the button below to see it.
+        other: There are <em>%{count}</em> new ownership requests for <strong>%{gem}</strong>. Please click on the button below to see all requests.
       button: OWNERSHIP REQUESTS
       disable_notifications: To stop receiving these messages, update your
       owners_page: OWNERSHIPS
