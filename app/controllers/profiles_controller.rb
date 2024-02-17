@@ -8,10 +8,14 @@ class ProfilesController < ApplicationController
   before_action :disable_cache, only: :edit
 
   def show
-    @user           = User.find_by_slug!(params[:id])
-    rubygems        = @user.rubygems_downloaded
-    @rubygems       = rubygems.slice!(0, 10)
-    @extra_rubygems = rubygems
+    @user = User.find_by_slug!(params[:id])
+    rubygems = @user.rubygems
+    @rubygems = case params[:sort_by]
+                when "name"
+                  rubygems.reorder(:name)
+                else
+                  rubygems.by_downloads
+                end
   end
 
   def me

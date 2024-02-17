@@ -113,6 +113,14 @@
       <h2 id="downloads_count" class="gem__downloads">
         <%= number_with_delimiter(@user.total_downloads_count) %>
       </h2>
+
+      <div class="sorting">
+        <%= form_with url: profile_path(@user&.handle), method: :get do |f| %>
+          <%= f.label :sort_by, class: "t-text--s"%>
+          <%= f.select :sort_by, options_for_select([["Name", "name"], ["Downloads", "downloads"]]) %>
+          <%= f.submit "Sort" %>
+        <% end %>
+      </div>
     </div>
   </header>
 <% end %>
@@ -123,7 +131,7 @@
       <%=
         render(
           partial: 'rubygem',
-          collection: @rubygems + @extra_rubygems,
+          collection: @rubygems,
           locals: {graph: false}
         )
       %>
