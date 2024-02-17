@@ -1,7 +1,25 @@
 <div class="sorting">
-  <%= form_with url: profile_path(@user&.handle), method: :get do |f| %>
+  <%=
+    form_with(
+      data: {
+        "controller": "gem-sort",
+        "gem-sort-target": "form",
+      },
+      method: :get,
+      url: profile_path(@user&.handle)
+    ) do |f|
+  %>
     <%= f.label :sort_by, class: "t-text--s"%>
-    <%= f.select :sort_by, options_for_select([["Name", "name"], ["Downloads", "downloads"]]) %>
-    <%= f.submit "Sort" %>
+    <%=
+      select_tag :sort_by,
+                 options_for_select(
+                   [
+                     ["Name", "name"],
+                     ["Downloads", "downloads"]
+                   ],
+                   params[:sort_by] || "downloads"
+                 ),
+                 data: { "gem-sort-target" => "select" }
+    %>
   <% end %>
 </div>
