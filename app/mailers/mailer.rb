@@ -20,7 +20,7 @@ class Mailer < ApplicationMailer
   def email_reset_update(user)
     @user = user
     mail to: @user.email,
-         subject: I18n.t("mailer.email_reset_update.subject")
+         subject: I18n.t("mailer.email_reset_update.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
   def email_confirmation(user)
