@@ -5,6 +5,10 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
     setup_rstuf
   end
 
+  teardown do
+    teardown_rstuf
+  end
+
   test "post_artifacts should post targets and return task_id on success" do
     task_id = "12345"
     stub_request(:post, "#{Rstuf.base_url}/api/v1/artifacts/")
@@ -71,9 +75,5 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
     assert_raises(Rstuf::Client::Error) do
       Rstuf::Client.task_state(task_id)
     end
-  end
-
-  teardown do
-    teardown_rstuf
   end
 end
