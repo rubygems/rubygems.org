@@ -620,11 +620,11 @@ es:
         multifactor_auth: Autenticación de múltiples factores
         otp: Aplicación de autenticación
         disabled_html: No has activado todavía la autenticación de múltiples factores
-          basada en OTP. Por favor lee la <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
+          basada en OTP. Por favor lee la <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
           sobre AMF</a> para informarte sobre los distintos niveles de AMF.
         go_settings: Registrar un nuevo dispositivo
         level_html: Has activado la autenticación de múltiples factores. Pincha en
-          "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank"
+          "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank" rel="noopener"
           href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
           sobre AMF</a> para informarte sobre los distintos niveles de AMF.
         enabled_note: Has activado la autenticación de múltiples factores. Para desactivarla
