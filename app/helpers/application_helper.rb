@@ -13,13 +13,6 @@ module ApplicationHelper
                 title: title)
   end
 
-  # Copied from importmap-rails but with the nonce removed. We rely on the sha256 hash instead.
-  # Relying on the hash improves the caching behavior by not sending the cached nonce to the client.
-  def javascript_inline_importmap_tag(importmap_json = Rails.application.importmap.to_json(resolver: self))
-    tag.script importmap_json.html_safe,
-      type: "importmap", "data-turbo-track": "reload"
-  end
-
   def short_info(rubygem)
     info = gem_info(rubygem).strip.truncate(90)
     escape_once(sanitize(info))

@@ -21,7 +21,9 @@
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
     <%= yield :head %>
-    <%= javascript_importmap_tags %>
+    <%= javascript_inline_importmap_tag :importmap %>
+    <%= javascript_importmap_module_preload_tags %>
+    <%= javascript_module_tag :entrypoint %>
   </head>
 
   <body class="<%= 'body--index' if request.path_info == '/' %>" data-controller="nav">
