@@ -705,7 +705,9 @@ de:
     index:
       not_hosted_notice: Dieses Gem wird nicht gerade von RubyGems.org gehostet.
       title: Alle Versionen von %{name}
-      versions_since: "%{count} Versionen seit %{since}"
+      versions_since:
+        other: "%{count} Versionen seit %{since}"
+        one: "%{count} Version seit %{since}"
       imported_gem_version_notice:
     version:
       yanked:

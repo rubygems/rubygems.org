@@ -692,7 +692,9 @@ zh-TW:
     index:
       not_hosted_notice: 這個 Gem 目前沒有在 Gemcutter 上
       title: "%{name} 的所有版本"
-      versions_since: 自從 %{since} 以來，有 %{count} 個版本
+      versions_since:
+        other: 自從 %{since} 以來，有 %{count} 個版本
+        one: 自從 %{since} 以來，有 %{count} 個版本
       imported_gem_version_notice:
     version:
       yanked: 已被移除
