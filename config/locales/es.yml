@@ -352,9 +352,12 @@ es:
     ownerhip_request_approved:
       body_html: "¡Enhorabuena! Tu candidatura a propietario de <strong>%{gem}</strong>
         ha sido aprobada. Se te ha añadido a la lista de propietarios de la gema."
-    new_opwnership_requests:
-      body_html: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>.
-        Por favor haz click en el botón siguiente para ver todas las candidaturas.
+    new_ownership_requests:
+      body_html:
+        zero:
+        one:
+        other: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>.
+          Por favor haz click en el botón siguiente para ver todas las candidaturas.
       button: CANDIDATURAS A PROPIETARIO
       disable_notifications: Para dejar de recibir estos mensajes actualiza tus
       owners_page: PROPIETARIOS
