@@ -758,7 +758,9 @@ fr:
     index:
       not_hosted_notice: Gem non hébergé sur Rubygems.
       title: Toutes les versions de %{name}
-      versions_since: "%{count} versions depuis %{since}"
+      versions_since:
+        other: "%{count} versions depuis %{since}"
+        one: "%{count} version depuis %{since}"
       imported_gem_version_notice:
     version:
       yanked: retiré

@@ -67,6 +67,8 @@ module Gemcutter
     config.autoload_paths << "#{root}/app/views/components"
 
     config.active_support.cache_format_version = 7.1
+
+    config.action_dispatch.rescue_responses["Rack::Multipart::EmptyContentError"] = :bad_request
   end
 
   def self.config

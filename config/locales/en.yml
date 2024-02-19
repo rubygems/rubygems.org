@@ -710,7 +710,9 @@ en:
     index:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       title: All versions of %{name}
-      versions_since: "%{count} versions since %{since}"
+      versions_since:
+        other: "%{count} versions since %{since}"
+        one: "1 version since %{since}"
       imported_gem_version_notice: "This gem version was imported to RubyGems.org on %{import_date}. The date displayed was specified by the author in the gemspec."
     version:
       yanked: yanked

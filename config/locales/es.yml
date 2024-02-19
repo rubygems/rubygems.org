@@ -834,7 +834,9 @@ es:
     index:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
       title: Todas las versiones de %{name}
-      versions_since: "%{count} versiones desde %{since}"
+      versions_since:
+        other: "%{count} versiones desde %{since}"
+        one: "%{count} versión desde %{since}"
       imported_gem_version_notice: Esta versión de la gema se importó a RubyGems.org
         el %{import_date}. La fecha que se muestra fue especificada por el autor en
         el archivo gemspec.

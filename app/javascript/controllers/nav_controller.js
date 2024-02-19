@@ -2,76 +2,38 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "dropdownButton", // carrot icon in full size
-    "dropdown", // full size dropdown
-    "sandwichIcon", // mobile sandwich icon
-    "header", 
-    "main",
-    "footer",
-    "headerSearch",
-    "headerLogo"
+    "collapse", // targets that receive expanded class when mobile nav shows
+    "header", // target on which clicks don't hide mobile nav
+    "logo",
+    "search",
   ]
+  static classes = ["expanded"]
 
-  static mobileNavExpandedClass = 'mobile-nav-is-expanded';
+  connect() { this.skipSandwichIcon = true }
 
-  connect() {
-    // variable to support mobile nav tab behaviour
-    // * skipSandwichIcon is for skipping sandwich icon
-    //   when you tab from "gem" icon
-    // * tabDirection is for hiding and showing navbar
-    //   when you tab in and out
-    this.skipSandwichIcon = true;
-
-    document.addEventListener("click", (e) => {
-      // Must check both dropdowns otherwise you always close
-      // the dropdown because one or the other isn't being clicked
-      if (!this.dropdownTarget.contains(e.target) && !this.headerTarget.contains(e.target)) {
-        this.dropdownTarget.classList.remove('is-expanded');
-        this.collapseMobileNav();
-      }
-    });
+  toggle(e) {
+    e.preventDefault();
+    if (this.collapseTarget.classList.contains(this.expandedClass)) {
+      this.leave()
+      this.logoTarget.focus();
+    } else {
+      this.enter()
+    }
   }
 
-  dropdownButtonTargetConnected(el) {
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.dropdownTarget.classList.toggle('is-expanded');
-    });
+  focus() {
+    if (this.skipSandwichIcon) { // skip sandwich icon when you tab from "gem" icon
+      this.enter();
+      this.hasSearchTarget && this.searchTarget.focus();
+      this.skipSandwichIcon = false;
+    } else {
+      this.leave();
+      this.logoTarget.focus();
+      this.skipSandwichIcon = true;
+    }
   }
 
-  sandwichIconTargetConnected(el) {
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      if (this.headerTarget.classList.contains(this.constructor.mobileNavExpandedClass)) {
-        this.collapseMobileNav();
-      } else {
-        this.expandMobileNav();
-      }
-    });
-
-    el.addEventListener('focusin', () => {
-      if (this.skipSandwichIcon) {
-        this.expandeMobileNav();
-        this.headerSearchTarget.focus();
-        this.skipSandwichIcon = false;
-      } else {
-        this.collapseMobileNav();
-        this.headerLogoTarget.focus();
-        this.skipSandwichIcon = true;
-      }
-    });
-  }
-
-  collapseMobileNav() {
-    this.headerTarget.classList.remove(this.constructor.mobileNavExpandedClass);
-    this.mainTarget.classList.remove(this.constructor.mobileNavExpandedClass);
-    this.footerTarget.classList.remove(this.constructor.mobileNavExpandedClass);
-  }
-
-  expandMobileNav() {
-    this.headerTarget.classList.add(this.constructor.mobileNavExpandedClass);
-    this.mainTarget.classList.add(this.constructor.mobileNavExpandedClass);
-    this.footerTarget.classList.add(this.constructor.mobileNavExpandedClass);
-  }
+  hide(e) { !this.headerTarget.contains(e.target) && this.leave() }
+  leave() { this.collapseTargets.forEach(el => el.classList.remove(this.expandedClass)) }
+  enter() { this.collapseTargets.forEach(el => el.classList.add(this.expandedClass)) }
 }
