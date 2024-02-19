@@ -194,21 +194,25 @@
     text-align: right; } }
 @media (min-width: 780px) {
   .profile__downloads-wrap {
-    padding-top: 32px; } }
-
-.sorting form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+    padding-top: 32px;
+  }
+  .profile__downloads-wrap form {
+    align-items: flex-end;
+  }
 }
 
-.sorting form label:first-child,
-.sorting form select{
+.profile__downloads-wrap form {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile__downloads-wrap form label:first-child,
+.profile__downloads-wrap form select{
   margin-bottom: 0.5rem;
 }
 
-.sorting form select,
-.sorting form button {
+.profile__downloads-wrap form select,
+.profile__downloads-wrap form button {
   width: fit-content;
 }
 
