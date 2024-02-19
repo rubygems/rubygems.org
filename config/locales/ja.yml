@@ -713,7 +713,9 @@ ja:
     index:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。
       title: "%{name}の全バージョン履歴"
-      versions_since: "%{since}からの%{count}件"
+      versions_since:
+        other: "%{since}からの%{count}件"
+        one: "%{since}からの%{count}件"
       imported_gem_version_notice: このgemのバージョンは%{import_date}にRubyGems.orgにインポートされました。表示されている日付は作者によってgemspec中で指定されました。
     version:
       yanked: ヤンク済み

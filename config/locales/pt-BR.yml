@@ -732,7 +732,9 @@ pt-BR:
     index:
       not_hosted_notice: Esta gem não está hospdada no Gemcutter.
       title: Todas as versões para %{name}
-      versions_since: "%{count} versões desde %{since}"
+      versions_since:
+        other: "%{count} versões desde %{since}"
+        one: "%{count} versão desde %{since}"
       imported_gem_version_notice:
     version:
       yanked: removida

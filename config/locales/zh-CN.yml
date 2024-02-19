@@ -720,7 +720,9 @@ zh-CN:
     index:
       not_hosted_notice: 此 Gem 目前没有托管在 RubyGems.org 中。
       title: "%{name} 的所有版本"
-      versions_since: 自 %{since} 以来有 %{count} 个版本
+      versions_since:
+        other: 自 %{since} 以来有 %{count} 个版本
+        one: 自 %{since} 以来有 %{count} 个版本
       imported_gem_version_notice: 此版本的 Gem 已在 %{import_date} 导入到 RubyGems.org 中。显示的日期由作者在
         gemspec 中指定。
     version:

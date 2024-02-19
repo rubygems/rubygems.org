@@ -64,6 +64,33 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to index - pluralization" do
+    context "with one version" do
+      setup do
+        rubygem = create(:rubygem)
+        create(:version, number: "1.1.2", rubygem: rubygem)
+        get :index, params: { rubygem_id: rubygem.name }
+      end
+
+      should "use the singular version" do
+        assert_select ".t-list__heading", text: /1 version\b/, count: 1
+      end
+    end
+
+    context "with two versions" do
+      setup do
+        rubygem = create(:rubygem)
+        create(:version, number: "1.1.2", rubygem: rubygem)
+        create(:version, number: "1.1.3", rubygem: rubygem)
+        get :index, params: { rubygem_id: rubygem.name }
+      end
+
+      should "use the plural version" do
+        assert_select ".t-list__heading", text: /2 versions\b/, count: 1
+      end
+    end
+  end
+
   context "on GET to index with imported versions" do
     setup do
       @built_at = Date.parse("2000-01-01")
