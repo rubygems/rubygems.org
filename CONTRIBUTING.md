@@ -205,6 +205,14 @@ and prefixing your commands with `script/dev`.
 For example, running `script/dev bin/rails s` will launch the development server with development secrets set in
 the environment.
 
+#### Running with local RSTUF
+
+There is experimental [RSTUF](https://repository-service-tuf.readthedocs.io/en/stable/) support in RubyGems.org. When `RSTUF_API_URL` environment variable is set, RSTUF functionality is enabled. Easiest way to setup RSTUF locally is to follow [official docker guide](https://repository-service-tuf.readthedocs.io/en/latest/guide/deployment/guide/docker.html). It starts RSTUF API available at `http://localhost:80` by default and app can be locally started using following command.
+
+```bash
+RSTUF_API_URL="http://localhost:80" bin/rails s
+```
+
 ---
 
 When everything is set up, start the web server with `rails server` and browse to

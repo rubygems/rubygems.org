@@ -677,6 +677,22 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.save
     end
 
+    context "with rstuf enabled" do
+      setup do
+        setup_rstuf
+      end
+
+      should "enqueue rstuf addition" do
+        assert_enqueued_with(job: Rstuf::AddJob, args: [{ version: @cutter.version }]) do
+          @cutter.save
+        end
+      end
+
+      teardown do
+        teardown_rstuf
+      end
+    end
+
     should "update rubygem attributes when saved" do
       @rubygem.expects(:update_attributes_from_gem_specification!).with(@cutter.version, @spec)
       @cutter.save

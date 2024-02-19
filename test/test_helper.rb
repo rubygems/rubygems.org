@@ -173,6 +173,18 @@ class ActiveSupport::TestCase
     @user.reload
     @authenticator
   end
+
+  def setup_rstuf
+    @original_rstuf_enabled = Rstuf.enabled
+    @original_base_url = Rstuf.base_url
+    Rstuf.base_url = "https://rstuf.example.com"
+    Rstuf.enabled = true
+  end
+
+  def teardown_rstuf
+    Rstuf.enabled = @original_rstuf_enabled
+    Rstuf.base_url = @original_base_url
+  end
 end
 
 class ActionDispatch::IntegrationTest
