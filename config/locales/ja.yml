@@ -532,11 +532,11 @@ ja:
       mfa:
         multifactor_auth: 多要素認証
         otp: 認証アプリ
-        disabled_html: OTPベースの多要素認証を有効にしていません。MFAの水準に関する詳細情報については<a target="_blank"
+        disabled_html: OTPベースの多要素認証を有効にしていません。MFAの水準に関する詳細情報については<a target="_blank" rel="noopener"
           href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。
         go_settings: 新しい機器を登録
         level_html: 多要素認証が有効になっています。「更新」をクリックしてMFAの水準を変更してください。MFAの水準についての詳細情報は<a
-          target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。
+          target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。
         enabled_note: 多要素認証が有効化済みです。認証器上のOTPか有効な復旧コードの1つを入力して無効にしてください。
         update: 更新
         disable: 無効
