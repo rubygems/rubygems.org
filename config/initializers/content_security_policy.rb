@@ -12,12 +12,8 @@ Rails.application.config.content_security_policy do |policy|
   policy.object_src  :none
   # NOTE: This scirpt_src is overridden for all requests in ApplicationController
   # This is the baseline in case the override is ever skipped
-  policy.script_src :self,
-                    "https://secure.gaug.es",
-                    "https://www.fastly-insights.com",
-                    "https://unpkg.com/@hotwired/stimulus/dist/stimulus.umd.js",
-                    "https://unpkg.com/stimulus-rails-nested-form/dist/stimulus-rails-nested-form.umd.js"
-  policy.style_src   :self, "https://fonts.googleapis.com"
+  policy.script_src :self, "https://secure.gaug.es", "https://www.fastly-insights.com"
+  policy.style_src :self, "https://fonts.googleapis.com"
   policy.connect_src :self, "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://fastly-insights.com",
     "https://api.github.com", "http://localhost:*"
   policy.form_action :self, "https://github.com/login/oauth/authorize"

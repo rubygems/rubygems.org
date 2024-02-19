@@ -28,9 +28,7 @@ class ApplicationController < ActionController::Base
       :self,
       "'sha256-#{Digest::SHA256.base64digest(Rails.application.importmap.to_json(resolver: ApplicationController.helpers))}'",
       "https://secure.gaug.es",
-      "https://www.fastly-insights.com",
-      "https://unpkg.com/@hotwired/stimulus/dist/stimulus.umd.js",
-      "https://unpkg.com/stimulus-rails-nested-form/dist/stimulus-rails-nested-form.umd.js"
+      "https://www.fastly-insights.com"
     )
   end
 
