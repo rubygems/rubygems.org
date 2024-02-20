@@ -62,6 +62,19 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validate :metadata_attribute_length
   validate :no_dashes_in_version_number, on: :create
 
+  scope :oldest_authored_at, lambda {
+    minimum(
+      <<~SQL.squish
+        CASE WHEN DATE(created_at) = '#{RUBYGEMS_IMPORT_DATE}'
+            AND built_at <= created_at THEN
+            built_at
+        ELSE
+            created_at
+        END
+      SQL
+    )&.in_time_zone
+  }
+
   class AuthorType < ActiveModel::Type::String
     def cast_value(value)
       if value.is_a?(Array)
