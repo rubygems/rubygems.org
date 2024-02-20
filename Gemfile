@@ -123,7 +123,7 @@ group :test do
   gem "shoulda-context", "~> 2.0"
   gem "shoulda-matchers", "~> 6.1"
   gem "selenium-webdriver", "~> 4.17"
-  gem "webmock", "~> 3.20"
+  gem "webmock", "~> 3.21"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
   gem "aggregate_assertions", "~> 0.2.0"
