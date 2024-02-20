@@ -50,14 +50,9 @@ Rails.application.config.content_security_policy do |policy|
   }
 end
 
-# Generate session nonces for permitted importmap, inline scripts, and inline styles.
-Rails.application.config.content_security_policy_nonce_generator = lambda { |request|
-  # Suggested nonce generator doesn't work on first page load https://github.com/rails/rails/issues/48463
-  # Related PR attempting to fix: https://github.com/rails/rails/pull/48510
-  request.session.send(:load_for_write!) # force session to be created
-  request.session.id.to_s.presence || SecureRandom.base64(16)
-}
-Rails.application.config.content_security_policy_nonce_directives = %w[script-src style-src]
+# We purposely do not use nonce directives. It doesn't play as nice with edge caching.
+# Instead, we use sha256 hashes for inline scripts. See InlineScripts for more details.
+Rails.application.config.content_security_policy_nonce_directives = nil
 
 # Report CSP violations to a specified URI. See:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only
