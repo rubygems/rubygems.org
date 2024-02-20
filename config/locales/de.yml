@@ -8,35 +8,45 @@ de:
   feed_latest: RubyGems.org | Neueste Gems
   feed_subscribed: RubyGems.org | Abonnierte Gems
   footer_about_html:
+    RubyGems.org ist der Gem-Hosting-Dienst der Ruby-Community.
+    <a href="%{publish_docs}">Veröffentlichen Sie Ihre Gems</a> sofort und <a href="%{install_docs}">installieren Sie sie dann</a>.
+    Verwenden Sie <a href="%{api_docs}">die API</a>, um mehr über <a href="%{gem_list}">verfügbare Gems</a> herauszufinden.
+    <a href="%{contributing_docs}">Werden Sie ein Mitwirkender</a> und verbessern Sie die Website selbst.
   footer_sponsors_html:
+    RubyGems.org wird durch eine Partnerschaft mit der breiteren Ruby-Gemeinschaft ermöglicht.
+    <a href="https://www.fastly.com/">Fastly</a>, der Anbieter von Bandbreite und CDN-Support,
+    <a href="https://www.rubycentral.org/">Ruby Central</a>, das die Infrastrukturkosten trägt, und die Finanzierung der Entwicklung und Verwaltung der Server übernimmt.
+    <a href="%{sponsors_page}">Erfahren Sie mehr über unsere Sponsoren und wie sie zusammenarbeiten.</a>
   footer_join_rt_html:
+    Wir benötigen Ihre Hilfe, um die Entwicklerzeit zu finanzieren, die RubyGems.org für alle reibungslos am Laufen hält.
+    <a href="https://rubycentral.org/#/portal/signup">Treten Sie heute Ruby Central bei</a>.
   form_disable_with: Bitte warten...
-  invalid_page:
+  invalid_page: Die Seitennummer liegt außerhalb des Bereichs. Umleitung zur Standardseite.
   locale_name: Deutsch
-  none:
-  not_found:
+  none: None
+  not_found: Nicht gefunden
   api_key_forbidden:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
-  please_sign_in:
-  otp_incorrect:
-  otp_missing:
+  please_sign_in: Bitte melden Sie sich an, um fortzufahren.
+  otp_incorrect: Ihr OTP-Code ist falsch. Bitte überprüfen Sie ihn und versuchen Sie es erneut.
+  otp_missing: Sie haben die Mehrfaktor-Authentifizierung aktiviert, aber keinen OTP-Code angegeben. Bitte füllen Sie diesen aus und versuchen Sie es erneut.
   sign_in: Anmelden
   sign_up: Registrieren
-  dependency_list:
-  multifactor_authentication:
+  dependency_list: Alle transitiven Abhängigkeiten anzeigen
+  multifactor_authentication: Mehrfaktorauthentifizierung
   subtitle: Ihre Community des Gem-Hostingservices
   this_rubygem_could_not_be_found: Dieses Ruby Gem konnte nicht gefunden werden.
   time_ago: seit %{duration}
   title: RubyGems.org
   update: Aktualisieren
-  try_again:
-  advanced_search:
-  authenticate:
+  try_again: Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
+  advanced_search: Erweiterte Suche
+  authenticate: Authentifizieren
   helpers:
     submit:
-      create:
-      update:
+      create: "Erstelle %{model}"
+      update: "Aktualisiere %{model}"
   activerecord:
     attributes:
       linkset:
@@ -46,7 +56,7 @@ de:
         docs: Dokumentation URL
         mail: Mailingliste URL
         wiki: Wiki URL
-        funding:
+        funding: Finanzierungs-URL
       session:
         password: Passwort
         who: E-Mail oder Benutzername
@@ -57,16 +67,16 @@ de:
         handle: Benutzername
         password: Passwort
       api_key:
-        oidc_api_key_role:
+        oidc_api_key_role: OIDC-API-Schlüsselrolle
       oidc/id_token:
         jti:
-        api_key_role:
+        api_key_role: API-Schlüsselrolle
       oidc/api_key_role:
-        api_key_permissions:
+        api_key_permissions: API-Schlüsselberechtigungen
       oidc/trusted_publisher/github_action:
-        repository_owner_id:
+        repository_owner_id: GitHub Repository-Besitzer-ID
       oidc/pending_trusted_publisher:
-        rubygem_name:
+        rubygem_name: RubyGem-Name
     errors:
       messages:
         unpwn:
@@ -580,7 +590,7 @@ de:
     update:
       confirmation_mail_sent:
       updated:
-    public_email: Anzeige E-Mails in öffentlichem Profil
+    public_email: E-Mails im öffentlichem Profil anzeigen
     request_denied:
     show:
       title: Profil von %{username}
