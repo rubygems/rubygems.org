@@ -12,6 +12,15 @@ class OIDC::Provider < ApplicationRecord
   has_many :audits, as: :auditable, dependent: :nullify
 
   GITHUB_ACTIONS_ISSUER = "https://token.actions.githubusercontent.com".freeze
+  BUILDKITE_ISSUER = "https://agent.buildkite.com".freeze
+
+  def self.buildkite
+    find_by(issuer: BUILDKITE_ISSUER)
+  end
+
+  def buildkite?
+    issuer == BUILDKITE_ISSUER
+  end
 
   def self.github_actions
     find_by(issuer: GITHUB_ACTIONS_ISSUER)
