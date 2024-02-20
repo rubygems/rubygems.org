@@ -16,3 +16,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin "github-buttons"
 # vendored from github in the before times, not compatible with newest version without changes
 pin "webauthn-json"
+
+# Avo custom JS entrypoint
+pin "avo.custom", preload: false
+pin "stimulus-rails-nested-form", preload: false # @4.1.0
