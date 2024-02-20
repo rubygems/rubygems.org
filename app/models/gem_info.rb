@@ -26,7 +26,7 @@ class GemInfo
       StatsD.increment "compact_index.memcached.names.hit"
     else
       StatsD.increment "compact_index.memcached.names.miss"
-      names = Rubygem.order("name").pluck("name")
+      names = Rubygem.with_versions.order("name").pluck("name")
       Rails.cache.write("names", names)
     end
     names
