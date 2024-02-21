@@ -122,7 +122,7 @@ group :test do
   gem "mocha", "~> 2.0", require: false
   gem "shoulda-context", "~> 2.0"
   gem "shoulda-matchers", "~> 6.1"
-  gem "selenium-webdriver", "~> 4.17"
+  gem "selenium-webdriver", "~> 4.18"
   gem "webmock", "~> 3.22"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
