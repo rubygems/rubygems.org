@@ -16,8 +16,8 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     # another gem
     rubygem = create(:rubygem, name: "gemA")
-    dep1 = create(:rubygem, name: "gemA1")
-    dep2 = create(:rubygem, name: "gemA2")
+    dep1 = create(:rubygem, name: "gemA1", indexed: true)
+    dep2 = create(:rubygem, name: "gemA2", indexed: true)
 
     # minimal version
     create(:version,
