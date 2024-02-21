@@ -33,6 +33,8 @@ class Gemcutter::UserAgentParser
 
       return ret if ret
 
+      logger.warn("No parser could parse the user agent", user_agent: user_agent)
+
       raise UnableToParse, "No parser could parse the user agent"
     end
   end
