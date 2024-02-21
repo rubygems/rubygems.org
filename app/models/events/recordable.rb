@@ -9,8 +9,8 @@ module Events::Recordable
       begin
         user_agent_info = Gemcutter::UserAgentParser.call(user_agent)
         additional[:user_agent_info] = user_agent_info
-      rescue Gemcutter::UserAgentParser::UnableToParse => e
-        Rails.error.report(e, context: { user_agent: }, handled: true)
+      rescue Gemcutter::UserAgentParser::UnableToParse
+        nil
       end
     end
 
