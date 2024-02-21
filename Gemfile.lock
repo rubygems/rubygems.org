@@ -469,6 +469,8 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.6)
+    pghero (3.4.1)
+      activerecord (>= 6)
     phlex (1.9.0)
       concurrent-ruby (~> 1.2)
       erb (>= 4)
@@ -810,6 +812,7 @@ DEPENDENCIES
   openid_connect (~> 2.3)
   opensearch-ruby (~> 3.1)
   pg (~> 1.5)
+  pghero (~> 3.4)
   phlex-rails (~> 1.1)
   pp (= 0.5.0)
   pry-byebug (~> 3.10)
@@ -1034,6 +1037,7 @@ CHECKSUMS
   parallel (1.24.0) sha256=5bf38efb9b37865f8e93d7a762727f8c5fc5deb19949f4040c76481d5eee9397
   parser (3.3.0.5) sha256=7748313e505ca87045dc0465c776c802043f777581796eb79b1654c5d19d2687
   pg (1.5.6) sha256=4bc3ad2438825eea68457373555e3fd4ea1a82027b8a6be98ef57c0d57292b1c
+  pghero (3.4.1) sha256=7f949828119ab17de22ebaef1854ab8c738106bdc31bee3ac0acd0462c0efa88
   phlex (1.9.0) sha256=75b06a334833542594ef65d0532c6c964c78648f459d855cb54cd8c0ddcdb549
   phlex-rails (1.1.1) sha256=b0e82d0ba541eca55ca39051de8be2817a7ed400f8a630e21b261239c8f812d0
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
