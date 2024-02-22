@@ -717,7 +717,7 @@ GEM
     validates_formatting_of (0.9.0)
       activemodel
     version_gem (1.1.1)
-    view_component (3.10.0)
+    view_component (3.11.0)
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -853,7 +853,7 @@ DEPENDENCIES
   unpwn (~> 1.0)
   user_agent_parser (~> 2.16)
   validates_formatting_of (~> 0.9)
-  view_component (~> 3.10)
+  view_component (~> 3.11)
   webauthn (~> 3.1)
   webmock (~> 3.22)
   xml-simple (~> 1.1)
@@ -1132,7 +1132,7 @@ CHECKSUMS
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
   validates_formatting_of (0.9.0) sha256=139590a4b87596dbfb04d93e897bd2e6d30fb849d04fab0343e71ed2ca856e7e
   version_gem (1.1.1) sha256=3c2da6ded29045ddcc0387e152dc634e1f0c490b7128dce0697ccc1cf0915b6c
-  view_component (3.10.0) sha256=92ac883a75178e6e936b37abc1751624342229fca5918842cb309f49c10f558b
+  view_component (3.11.0) sha256=6994c3dcc6f8da1fab42420a367f5071c00291241bc5a56f73a34ec8c10fc5ff
   webauthn (3.1.0) sha256=e545fcf17d8a6b821161a37c1c4bc8c3d2ead0ff6ff3b098f57f417e731790b7
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
   webmock (3.22.0) sha256=277f69335267f6b18d2d9bc8c287e60d4022b1e58a912c55e052a58d014e4b8e
