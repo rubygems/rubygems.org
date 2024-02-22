@@ -57,7 +57,7 @@ gem "user_agent_parser", "~> 2.16"
 
 # Admin dashboard
 gem "avo", "~> 2.47"
-gem "view_component", "~> 3.10"
+gem "view_component", "~> 3.11"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
 gem "groupdate", "~> 6.2"
