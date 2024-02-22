@@ -79,93 +79,93 @@ de:
         rubygem_name: RubyGem-Name
     errors:
       messages:
-        unpwn:
-        blocked:
+        unpwn: ist bereits in einem Datenleck aufgetaucht und sollte nicht verwendet werden
+        blocked: "Die Domain '%{domain}' wurde wegen Spam blockiert. Bitte verwenden Sie eine gültige persönliche E-Mail-Adresse."
       models:
         ownership:
           attributes:
             user_id:
-              already_confirmed:
-              already_invited:
+              already_confirmed: "ist bereits Eigentümer dieses Gems"
+              already_invited: "wurde bereits zu diesem Gem eingeladen"
         version:
           attributes:
             gem_full_name:
-              taken:
+              taken: "%{value} existiert bereits"
             full_name:
-              taken:
+              taken: "%{value} existiert bereits"
         oidc/rubygem_trusted_publisher:
           attributes:
             rubygem:
-              taken:
+              taken: "wurde bereits mit diesem vertrauenswürdigen Herausgeber konfiguriert"
         oidc/pending_trusted_publisher:
           attributes:
             rubygem_name:
-              unavailable:
+              unavailable: "wird bereits verwendet"
     models:
-      user:
+      user: Benutzer
       api_key:
-        zero:
-        one:
-        other:
+        zero: API-Schlüssel
+        one: API-Schlüssel
+        other: API-Schlüssel
   activemodel:
     attributes:
       oidc/provider/configuration:
-        jwks_uri:
-        id_token_signing_alg_values_supported:
+        jwks_uri: JWKS-URI
+        id_token_signing_alg_values_supported: Unterstützte ID-Token-Signaturalgorithmen
     errors:
       models:
         oidc/api_key_permissions:
           attributes:
             valid_for:
-              inclusion:
+              inclusion: "%{value} Sekunden müssen zwischen 5 Minuten (300 Sekunden) und 1 Tag (86.400 Sekunden) liegen"
             gems:
-              too_long:
+              too_long: "darf höchstens 1 Gem enthalten"
   api_keys:
     form:
-      exclusive_scopes:
-      rubygem_scope:
-      rubygem_scope_info:
-      multifactor_auth:
-      enable_mfa:
+      exclusive_scopes: Exklusive Berechtigungen
+      rubygem_scope: Gem-Bereich
+      rubygem_scope_info: Dieser Bereich beschränkt die Befehle gem push/yank und owner add/remove auf ein bestimmtes Gem.
+      multifactor_auth: Mehrfaktor-Authentifizierung
+      enable_mfa: MFA aktivieren
     create:
-      success:
-      invalid_gem:
+      success: "Neuen API-Schlüssel erstellt"
+      invalid_gem: Das ausgewählte Gem kann diesem Schlüssel nicht zugeordnet werden
     destroy:
-      success:
+      success: "API-Schlüssel erfolgreich gelöscht: %{name}"
     index:
-      api_keys:
-      name:
-      scopes:
-      gem:
-      age:
-      last_access:
-      action:
-      delete:
-      confirm:
-      confirm_all:
-      new_key:
-      index_rubygems:
-      push_rubygem:
-      yank_rubygem:
-      add_owner:
-      remove_owner:
-      access_webhooks:
-      show_dashboard:
-      reset:
-      save_key:
-      mfa:
+      api_keys: API-Schlüssel
+      name: Name
+      scopes: Berechtigungen
+      gem: Gem
+      age: Alter
+      last_access: Letzter Zugriff
+      action: Aktion
+      delete: Löschen
+      confirm: Der API-Schlüssel wird ungültig. Sind Sie sicher?
+      confirm_all: Alle API-Schlüssel werden ungültig. Sind Sie sicher?
+      new_key: Neuer API-Schlüssel
+      index_rubygems: Rubygems indizieren
+      push_rubygem: Rubygem veröffentlichen
+      yank_rubygem: Rubygem zurückziehen
+      add_owner: Besitzer hinzufügen
+      remove_owner: Besitzer entfernen
+      access_webhooks: Webhooks zugreifen
+      show_dashboard: Dashboard anzeigen
+      reset: Zurücksetzen
+      save_key: "Beachten Sie, dass wir Ihnen den Schlüssel nicht erneut anzeigen können. Neuer API-Schlüssel:"
+      mfa: MFA
     new:
-      new_api_key:
+      new_api_key: Neuer API-Schlüssel
     reset:
-      success:
+      success: "Alle API-Schlüssel gelöscht"
     update:
-      success:
-      invalid_gem:
+      success: "API-Schlüssel erfolgreich aktualisiert"
+      invalid_gem: Das ausgewählte Gem kann diesem Schlüssel nicht zugeordnet werden
     edit:
-      edit_api_key:
-      invalid_key:
-    all_gems:
-    gem_ownership_removed:
+      edit_api_key: "API-Schlüssel bearbeiten"
+      invalid_key: Ein ungültiger API-Schlüssel kann nicht bearbeitet werden. Bitte löschen Sie ihn und erstellen Sie einen neuen.
+    all_gems: Alle Gems
+    gem_ownership_removed: Die Eigentümerschaft von %{rubygem_name} wurde nach der Zuordnung zu diesem Schlüssel entfernt.
   dashboards:
     show:
       creating_link_text: Erstellen
@@ -182,17 +182,17 @@ de:
       title: Dashboard
   dependencies:
     show:
-      click_to_expand:
+      click_to_expand: Klicken Sie auf das Pfeilsymbol, um es zu erweitern.
   email_confirmations:
     create:
-      promise_resend:
+      promise_resend: Wir senden Ihnen einen Bestätigungslink per E-Mail, um Ihr Konto zu aktivieren, falls eines vorhanden ist.
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: Bestätigung erneut senden
+      title: E-Mail zur Bestätigung erneut senden
+      will_email_notice: Wir senden Ihnen einen Bestätigungslink per E-Mail, um Ihr Konto zu aktivieren.
     update:
-      confirmed_email:
-      token_failure:
+      confirmed_email: Ihre E-Mail-Adresse wurde verifiziert.
+      token_failure: Bitte überprüfen Sie die URL oder versuchen Sie es erneut.
   home:
     index:
       downloads_counting_html: Gezählte Downloads
@@ -237,82 +237,82 @@ de:
         sign_up: Registrieren
       mfa_banner_html:
   mailer:
-    confirm_your_email:
-    confirmation_subject:
-    link_expiration_explanation_html:
+    confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der an Ihre E-Mail gesendet wurde.
+    confirmation_subject: Bitte bestätigen Sie Ihre E-Mail-Adresse mit %{host}
+    link_expiration_explanation_html: Bitte beachten Sie, dass dieser Link nur 3 Stunden gültig ist. Sie können den aktualisierten Link über die Seite <a href='https://rubygems.org/email_confirmations/new'>Bestätigungsmail erneut senden</a> anfordern.
     email_confirmation:
-      title:
-      subtitle:
-      confirmation_link:
-      welcome_message:
+      title: E-MAIL-BESTÄTIGUNG
+      subtitle: Fast geschafft!
+      confirmation_link: E-Mail-Adresse bestätigen
+      welcome_message: Willkommen bei %{host}! Besuchen Sie den unten stehenden Link, um Ihre E-Mail zu verifizieren.
     email_reset:
-      title:
-      subtitle:
-      visit_link_instructions:
+      title: E-MAIL-ZURÜCKSETZEN
+      subtitle: Hallo %{handle}!
+      visit_link_instructions: Sie haben Ihre E-Mail-Adresse auf %{host} geändert. Bitte besuchen Sie die folgende URL, um Ihr Konto erneut zu aktivieren.
     deletion_complete:
-      title:
-      subtitle:
-      subject:
-      body_html:
+      title: LÖSCHUNG ABGESCHLOSSEN
+      subtitle: Tschüss!
+      subject: Ihr Konto wurde von %{host} gelöscht
+      body_html: Ihr Antrag auf Kontolöschung auf %{host} wurde bearbeitet. Sie können jederzeit ein neues Konto über unsere %{sign_up}-Seite erstellen.
     deletion_failed:
-      title:
-      subtitle:
-      subject:
-      body_html:
+      title: LÖSCHUNG FEHLGESCHLAGEN
+      subtitle: Entschuldigung!
+      subject: Ihr Antrag auf Kontolöschung auf %{host} ist fehlgeschlagen
+      body_html: Sie hatten eine Kontolöschung auf %{host} beantragt. Leider konnten wir Ihren Antrag nicht bearbeiten. Bitte versuchen Sie es nach einiger Zeit erneut oder kontaktieren Sie uns, wenn das Problem weiterhin besteht.
     notifiers_changed:
-      subject:
-      title:
-      subtitle:
-      'on':
-      off_html:
+      subject: Sie haben Ihre E-Mail-Benachrichtigungseinstellungen für %{host} geändert
+      title: E-MAIL-BENACHRICHTIGUNGEN
+      subtitle: Hallo %{handle}
+      "on": "AKTIVIERT"
+      off_html: <b>DEAKTIVIERT</b>
     gem_pushed:
-      subject:
-      title:
+      subject: Gem %{gem} auf %{host} veröffentlicht
+      title: GEM VERÖFFENTLICHT
     gem_yanked:
-      subject:
-      title:
+      subject: Gem %{gem} von %{host} zurückgezogen
+      title: GEM ZURÜCKGEZOGEN
     reset_api_key:
-      subject:
-      title:
-      subtitle:
+      subject: "%{host} API-Schlüssel wurde zurückgesetzt"
+      title: API-SCHLÜSSEL ZURÜCKGESETZT
+      subtitle: Hallo %{handle}
     webauthn_credential_created:
-      subject:
-      title:
-      subtitle:
+      subject: Neue Sicherheitsvorrichtung hinzugefügt
+      title: SICHERHEITS GERÄT HINZUGEFÜGT
+      subtitle: Hallo %{handle}!
     webauthn_credential_removed:
-      subject:
-      title:
-      subtitle:
+      subject: Sicherheitsgerät entfernt auf %{host}
+      title: SICHERHEITSGERÄT ENTFERNT
+      subtitle: Hallo %{handle}!
     totp_enabled:
-      subject:
-      title:
-      subtitle:
+      subject: Authentifizierungs-App auf %{host} aktiviert
+      title: AUTHENTIFIZIERUNGS-APP AKTIVIERT
+      subtitle: Hallo %{handle}!
     totp_disabled:
-      subject:
-      title:
-      subtitle:
+      subject: Authentifizierungs-App auf %{host} deaktiviert
+      title: AUTHENTIFIZIERUNGS-APP DEAKTIVIERT
+      subtitle: Hallo %{handle}!
     email_reset_update:
-      subject:
-      title:
+      subject: Sie haben eine Aktualisierung der E-Mail-Adresse auf %{host} angefordert
+      title: E-MAIL-AKTUALISIERUNG ANGEFORDERT
     ownership_confirmation:
-      subject:
-      title:
-      subtitle:
-      body_text:
-      body_html:
-      link_expiration_explanation_html:
+      subject: Bitte bestätigen Sie die Eigentümerschaft des Gems %{gem} auf %{host}
+      title: EIGENTÜMERBESTÄTIGUNG
+      subtitle: Hallo %{handle}!
+      body_text: Sie wurden von %{authorizer} als Eigentümer des Gems %{gem} hinzugefügt. Bitte besuchen Sie den unten stehenden Link, um Ihre Eigentümerschaft zu bestätigen.
+      body_html: Sie wurden von <strong><a href="https://rubygems.org/gems/%{gem}">%{authorizer}</a></strong> als Eigentümer des Gems <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> hinzugefügt. Bitte klicken Sie auf den unten stehenden Link, um Ihre Eigentümerschaft zu bestätigen.
+      link_expiration_explanation_html: Bitte beachten Sie, dass dieser Link nur %{expiry_hours} gültig ist. Sie können die Bestätigungsmail von der Seite <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> erneut senden, nachdem Sie sich angemeldet haben.
     owner_added:
-      subject_self:
-      subject_others:
-      title:
-      subtitle:
-      body_self_html:
-      body_others_html:
+      subject_self: Sie wurden als Eigentümer des Gems %{gem} hinzugefügt
+      subject_others: Benutzer %{owner_handle} wurde als Eigentümer des Gems %{gem} hinzugefügt
+      title: EIGENTÜMER HINZUGEFÜGT
+      subtitle: Hallo %{user_handle}!
+      body_self_html: <b>Sie</b> wurden als Eigentümer des Gems <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> auf %{host} hinzugefügt.
+      body_others_html: <b>%{owner_handle}</b> wurde als Eigentümer des Gems <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> von <b>%{authorizer}</b> hinzugefügt. Sie erhalten diese Benachrichtigung, weil Sie ein Eigentümer von %{gem} sind.
     owner_removed:
-      subject:
-      title:
-      subtitle:
-      body_html:
+      subject: Du wurdest als Besitzer vom %{gem}-Gem entfernt
+      title: BESITZER ENTFERNT
+      subtitle: Hallo %{user_handle}!
+      body_html: <b>Du</b> wurdest als Besitzer für das <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>-Gem auf %{host} von <b>%{remover}</b> entfernt.
     ownerhip_request_closed:
       title:
       subtitle:
