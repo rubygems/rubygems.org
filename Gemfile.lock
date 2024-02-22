@@ -93,7 +93,7 @@ GEM
     attr_required (1.0.2)
     autoprefixer-rails (10.4.16.0)
       execjs (~> 2)
-    avo (2.47.0)
+    avo (2.48.0)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -463,7 +463,7 @@ GEM
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.1.0)
-    pagy (6.4.2)
+    pagy (7.0.4)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -757,7 +757,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.4)
   autoprefixer-rails (~> 10.4)
-  avo (~> 2.47)
+  avo (~> 2.48)
   aws-sdk-s3 (~> 1.143)
   aws-sdk-sqs (~> 1.70)
   bcrypt (~> 3.1)
@@ -881,7 +881,7 @@ CHECKSUMS
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   autoprefixer-rails (10.4.16.0) sha256=40c4b14d6f26f66026cd0d4631baf18d6c56aab425b36059c8abbda17f19a706
-  avo (2.47.0) sha256=92913a585a4a2d276ea1800864053c4d989453deb0ce0ba737aeece7f6c46ded
+  avo (2.48.0) sha256=6d634367a1df91cf4bdaf8b65ed9eead6ed7d8bea19382d4e945fe71ab68499b
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.889.0) sha256=45c2e6070eddeb127d91eab686c9b152ab048db6d925b4c48c8b7312baefa8bc
@@ -1030,7 +1030,7 @@ CHECKSUMS
   openssl (3.2.0) sha256=3c4bb8760977b4becd2819c6c2569bcf5c6f48b32b9f7a4ce1fd37f996378d14
   openssl-signature_algorithm (1.3.0) sha256=a3b40b5e8276162d4a6e50c7c97cdaf1446f9b2c3946a6fa2c14628e0c957e80
   optimist (3.1.0) sha256=81886f53ee8919f330aa30076d320d88eef9bc85aae2275376b4afb007c69260
-  pagy (6.4.2) sha256=92f3bac9f6f3c5e897457c9e5c47ba024a86cdeaf13ef281e29a7e69fdba4d5a
+  pagy (7.0.4) sha256=0a6138db31a559c4f390b1d264ebb756777e69d40d3ee5037b68acef5fd0419b
   parallel (1.24.0) sha256=5bf38efb9b37865f8e93d7a762727f8c5fc5deb19949f4040c76481d5eee9397
   parser (3.3.0.5) sha256=7748313e505ca87045dc0465c776c802043f777581796eb79b1654c5d19d2687
   pg (1.5.5) sha256=7e4baa3395619424fe0e82d0b0489e54d3015c6ee5896dd007b3bce6d7d49b68
