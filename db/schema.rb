@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -365,7 +365,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["rubygem_id", "trusted_publisher_id", "trusted_publisher_type"], name: "index_oidc_rubygem_trusted_publishers_unique", unique: true
-    t.index ["rubygem_id"], name: "index_oidc_rubygem_trusted_publishers_on_rubygem_id"
     t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_rubygem_trusted_publishers_on_trusted_publisher"
   end
 
@@ -419,7 +418,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.boolean "ownership_request_notifier", default: true, null: false
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
-    t.index ["user_id"], name: "index_ownerships_on_user_id"
   end
 
   create_table "rubygems", id: :serial, force: :cascade do |t|
@@ -530,14 +528,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_010637) do
     t.index ["created_at"], name: "index_versions_on_created_at"
     t.index ["full_name"], name: "index_versions_on_full_name"
     t.index ["indexed", "yanked_at"], name: "index_versions_on_indexed_and_yanked_at"
-    t.index ["indexed"], name: "index_versions_on_indexed"
     t.index ["number"], name: "index_versions_on_number"
     t.index ["position", "rubygem_id"], name: "index_versions_on_position_and_rubygem_id"
     t.index ["prerelease"], name: "index_versions_on_prerelease"
     t.index ["pusher_api_key_id"], name: "index_versions_on_pusher_api_key_id"
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
-    t.index ["rubygem_id"], name: "index_versions_on_rubygem_id"
   end
 
   create_table "web_hooks", id: :serial, force: :cascade do |t|
