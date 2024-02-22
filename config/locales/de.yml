@@ -314,56 +314,62 @@ de:
       subtitle: Hallo %{user_handle}!
       body_html: <b>Du</b> wurdest als Besitzer für das <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>-Gem auf %{host} von <b>%{remover}</b> entfernt.
     ownerhip_request_closed:
-      title:
-      subtitle:
-      body_html:
+      title: ANFRAGE ZUR BESITZERRECHTIGUNG
+      subtitle: Hallo %{handle}!
+      body_html: Vielen Dank, dass du dich um die Besitzerrechte für das <strong>%{gem}</strong>-Gem beworben hast. Leider müssen wir dir mitteilen, dass deine Anfrage vom Gem-Besitzer geschlossen wurde.
     ownerhip_request_approved:
-      body_html:
+      body_html: Herzlichen Glückwunsch! Deine Anfrage zur Besitzerrechte für das <strong>%{gem}</strong>-Gem wurde genehmigt. Du wurdest als Besitzer zum Gem hinzugefügt.
     new_ownership_requests:
       body_html:
-        zero:
-        one:
-        other:
-      button:
-      disable_notifications:
-      owners_page:
+        zero: Es gibt <em>keine</em> neuen Anfragen zur Besitzerrechte für das <strong>%{gem}</strong>-Gem.
+        one: Es gibt <em>eine</em> neue Anfrage zur Besitzerrechte für das <strong>%{gem}</strong>-Gem. Bitte klicke auf den unten stehenden Button, um sie anzuzeigen.
+        other: Es gibt <em>%{count}</em> neue Anfragen zur Besitzerrechte für das <strong>%{gem}</strong>-Gem. Bitte klicke auf den unten stehenden Button, um alle Anfragen anzuzeigen.
+      button: BESITZERRECHTE
+      disable_notifications: Um diese Nachrichten nicht mehr zu erhalten, aktualisiere deine
+      owners_page: BESITZERRECHTE
     web_hook_deleted:
-      title:
-      subject:
-      subtitle:
-      body_text:
-      body_html:
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
+      title: WEBHOOK GELÖSCHT
+      subject: Dein %{host}-Webhook wurde gelöscht
+      subtitle: Hallo %{handle}!
+      body_text: Dein Webhook, der an %{url} gepostet hat, wurde nach %{failures} Fehlversuchen gelöscht.
+      body_html: Dein Webhook, der an <code>%{url}</code> gepostet hat, wurde nach %{failures} Fehlversuchen gelöscht.
+      global_text: Dieser Webhook wurde zuvor aufgerufen, wenn ein beliebiges Gem gepusht wurde.
+      global_html: Dieser Webhook wurde zuvor aufgerufen, wenn <em>irgendein</em> Gem gepusht wurde.
+      gem_text: Dieser Webhook wurde zuvor aufgerufen, wenn %{gem} gepusht wurde.
+      gem_html: Dieser Webhook wurde zuvor aufgerufen, wenn <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gepusht wurde.
     web_hook_disabled:
-      title:
-      subject:
-      subtitle:
-      body_text:
-      body_html:
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
+      title: WEBHOOK DEAKTIVIERT
+      subject: Dein %{host}-Webhook wurde deaktiviert
+      subtitle: Hallo %{handle}!
+      body_text: |
+        Dein Webhook, der an %{url} gepostet hat, wurde aufgrund von %{disabled_reason} deaktiviert.
+        Er war zuletzt erfolgreich um %{last_success} und ist seitdem %{failures_since_last_success} Mal fehlgeschlagen.
+        Du kannst diesen Webhook löschen, indem du `%{delete_command}` ausführst.
+      body_html: |
+        <p>Dein Webhook, der an <code>%{url}</code> gepostet hat, wurde aufgrund von %{disabled_reason} deaktiviert.</p>
+        <p>Er war zuletzt erfolgreich um <code>%{last_success}</code> und ist seitdem %{failures_since_last_success} Mal fehlgeschlagen.</p>
+        <p>Du kannst diesen Webhook löschen, indem du <code>%{delete_command}</code> ausführst.</p>
+      global_text: Dieser Webhook wurde zuvor aufgerufen, wenn ein beliebiges Gem gepusht wurde.
+      global_html: Dieser Webhook wurde zuvor aufgerufen, wenn <em>irgendein</em> Gem gepusht wurde.
+      gem_text: Dieser Webhook wurde zuvor aufgerufen, wenn %{gem} gepusht wurde.
+      gem_html: Dieser Webhook wurde zuvor aufgerufen, wenn <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gepusht wurde.
     gem_trusted_publisher_added:
-      title:
+      title: VERTRAUENSWÜRDIGER PUBLISHER HINZUGEFÜGT
   news:
     show:
-      title:
-      all_gems:
-      popular_gems:
+      title: Neue Veröffentlichungen — Alle Gems
+      all_gems: Alle Gems
+      popular_gems: Beliebte Gems
     popular:
-      title:
+      title: Neue Veröffentlichungen — Beliebte Gems
   pages:
     about:
-      contributors_amount:
-      downloads_amount:
-      checkout_code:
-      mit_licensed:
-      logo_header:
-      logo_details:
+      contributors_amount: "%{count} Rubyists"
+      downloads_amount: "Millionen von Gem-Downloads"
+      checkout_code: "bitte prüfe den Code"
+      mit_licensed: "MIT-lizenziert"
+      logo_header: Auf der Suche nach unserem Logo?
+      logo_details: Wähle einfach den Download-Button, um drei .PNGs und eine .SVG des RubyGems-Logos für dich zu erhalten.
       founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und
         hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems
         1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale
@@ -391,23 +397,25 @@ de:
           Die Gründe sind vielfältig:'
         transparent_pages: Erstellen transparenter und zugänglicher Projektseiten
     data:
-      title:
+      title: RubyGems.org Data Dumps
     download:
-      title:
+      title: Download RubyGems
     faq:
-      title:
+      title: FAQ
     migrate:
-      title:
+      title: Migrate gems
     security:
-      title:
+      title: Security
     sponsors:
-      title:
+      title: Sponsors
   password_mailer:
     change_password:
-      closing:
-      opening:
-      title:
-      subtitle:
+      closing: If you didn't request this, ignore this email. Your password has
+        not been changed.
+      opening: "Someone, hopefully you, requested we send you a link to change
+        your password:"
+      title: CHANGE PASSWORD
+      subtitle: Hi %{handle}!
   passwords:
     edit:
       submit: Speichern dieses Passworts
@@ -418,56 +426,56 @@ de:
       title: Ändere dein Passwort
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
     create:
-      success:
-      failure_on_missing_email:
+      success: In den nächsten Minuten erhältst du eine E-Mail mit Anweisungen zum Ändern deines Passworts.
+      failure_on_missing_email: Die E-Mail darf nicht leer sein.
     update:
-      failure:
+      failure: Dein Passwort konnte nicht geändert werden. Bitte versuche es erneut.
   multifactor_auths:
-    incorrect_otp:
-    session_expired:
-    require_totp_disabled:
-    require_mfa_enabled:
-    require_totp_enabled:
-    require_webauthn_enabled:
-    setup_required_html:
-    setup_recommended:
-    strong_mfa_level_required_html:
-    strong_mfa_level_recommended:
-    setup_webauthn_html:
+    incorrect_otp: Dein OTP-Code ist falsch.
+    session_expired: Deine Sitzung auf der Anmeldeseite ist abgelaufen.
+    require_totp_disabled: Deine auf OTP basierende Zwei-Faktor-Authentifizierung ist bereits aktiviert. Um sie neu zu konfigurieren, musst du sie zuerst entfernen.
+    require_mfa_enabled: Deine Zwei-Faktor-Authentifizierung ist nicht aktiviert. Du musst sie zuerst aktivieren.
+    require_totp_enabled: Du hast keine Authenticator-App aktiviert. Du musst sie zuerst aktivieren.
+    require_webauthn_enabled: Du hast keine Sicherheitsgeräte aktiviert. Du musst zuerst ein Gerät mit deinem Konto verknüpfen.
+    setup_required_html: Zum Schutz deines Kontos und deiner Gems musst du die Zwei-Faktor-Authentifizierung einrichten. Bitte lies unseren <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">Blog-Beitrag</a> für weitere Details.
+    setup_recommended: Zum Schutz deines Kontos und deiner Gems empfehlen wir dir, die Zwei-Faktor-Authentifizierung einzurichten. In Zukunft wird dein Konto verpflichtend MFA aktiviert haben.
+    strong_mfa_level_required_html: Zum Schutz deines Kontos und deiner Gems musst du dein MFA-Level auf "UI und Gem-Anmeldung" oder "UI und API" ändern. Bitte lies unseren <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">Blog-Beitrag</a> für weitere Details.
+    strong_mfa_level_recommended: Zum Schutz deines Kontos und deiner Gems empfehlen wir dir, dein MFA-Level auf "UI und Gem-Anmeldung" oder "UI und API" zu ändern. In Zukunft wird dein Konto verpflichtend MFA auf einem dieser Level aktiviert haben.
+    setup_webauthn_html: 🎉 Wir unterstützen jetzt Sicherheitsgeräte! Verbessere die Sicherheit deines Kontos, indem du <a href="/settings/edit#security-device">ein neues Gerät einrichtest</a>. <a href="https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html">Erfahre mehr</a>!
     new:
-      title:
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
-      time_based:
+      title: Aktivierung der Zwei-Faktor-Authentifizierung
+      scan_prompt: Bitte scannen Sie den QR-Code mit Ihrer Authenticator-App. Wenn Sie den Code nicht scannen können, fügen Sie die Informationen unten manuell in Ihre App ein.
+      otp_prompt: Geben Sie den Zifferncode aus der Authentifizierungs-App ein, um fortzufahren.
+      confirm: Ich habe meine Wiederherstellungscodes sicher aufbewahrt.
+      enable: Aktivieren
+      account: "Konto: %{account}"
+      key: "Schlüssel: %{key}"
+      time_based: "Zeitbasiert: Ja"
     create:
-      qrcode_expired:
-      success:
+      qrcode_expired: Der QR-Code und der Schlüssel sind abgelaufen. Bitte versuchen Sie, ein neues Gerät zu registrieren.
+      success: Sie haben die OTP-basierte Zwei-Faktor-Authentifizierung erfolgreich aktiviert.
     recovery:
-      copied:
-      continue:
-      title:
-      copy:
-      saved:
-      note_html:
-      already_generated:
+      copied: "[ kopiert ]"
+      continue: Weiter
+      title: Wiederherstellungscodes
+      copy: "[ kopieren ]"
+      saved: Ich bestätige, dass ich meine Wiederherstellungscodes gespeichert habe.
+      note_html: "Bitte <strong class='recovery__bold'>kopieren und speichern</strong> Sie diese Wiederherstellungscodes. Sie können diese Codes verwenden, um sich anzumelden und Ihre MFA zurückzusetzen, wenn Sie Ihr Authentifizierungsgerät verlieren. Jeder Code kann nur einmal verwendet werden."
+      already_generated: Sie sollten Ihre Wiederherstellungscodes bereits gespeichert haben.
     destroy:
-      success:
+      success: Sie haben die OTP-basierte Zwei-Faktor-Authentifizierung erfolgreich deaktiviert.
     update:
-      invalid_level:
-      success:
+      invalid_level: Ungültiges MFA-Level.
+      success: Sie haben Ihr Multi-Faktor-Authentifizierungslevel erfolgreich aktualisiert.
     prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      recovery_code_html:
-      security_device:
-      verify_code:
+      webauthn_credential_note: Authentifizieren Sie sich mit einem Sicherheitsgerät wie Touch ID, YubiKey usw.
+      sign_in_with_webauthn_credential: Authentifizieren Sie sich mit einem Sicherheitsgerät
+      otp_code: OTP-Code
+      otp_or_recovery: OTP- oder Wiederherstellungscodes
+      recovery_code: Wiederherstellungscodes
+      recovery_code_html: 'Sie können einen gültigen <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">Wiederherstellungscodes</a> verwenden, wenn Sie den Zugriff auf Ihr Multi-Faktor-Authentifizierungsgerät oder Ihr Sicherheitsgerät verloren haben.'
+      security_device: Sicherheitsgerät
+      verify_code: Verifizieren Sie den Code
   notifiers:
     update:
       success:
