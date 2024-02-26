@@ -3,6 +3,7 @@
     <h2 class="gems__gem__name">
       <%= rubygem.name %>
       <span class="gems__gem__version"><%= latest_version_number(rubygem) %></span>
+      <%= latest_release_date(rubygem) %>
     </h2>
     <p class="gems__gem__desc t-text"><%= short_info(rubygem) %></p>
   </span>
