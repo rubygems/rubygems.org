@@ -711,7 +711,7 @@ GEM
       bloomer (~> 1.0)
       pwned (~> 2.0)
     uri (0.13.0)
-    user_agent_parser (2.16.0)
+    user_agent_parser (2.17.0)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
@@ -852,7 +852,7 @@ DEPENDENCIES
   terser (~> 1.2)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
-  user_agent_parser (~> 2.16)
+  user_agent_parser (~> 2.17)
   validates_formatting_of (~> 0.9)
   view_component (~> 3.11)
   webauthn (~> 3.1)
@@ -1129,7 +1129,7 @@ CHECKSUMS
   unicode-display_width (2.5.0) sha256=7e7681dcade1add70cb9fda20dd77f300b8587c81ebbd165d14fd93144ff0ab4
   unpwn (1.0.0) sha256=6239d17d46a882b3719b24fb79c78a34caff89d57ab0f5e546be5b5c882bc7d3
   uri (0.13.0) sha256=26553c2a9399762e1e8bebd4444b4361c4b21298cf1c864b22eeabc9c4998f24
-  user_agent_parser (2.16.0) sha256=2c066d6e4594900295f5dcc8a0e6132f51e4381d6e674cdb235a5bdbfe4af2eb
+  user_agent_parser (2.17.0) sha256=2d61f58dceda00b3f6e65b557a35be36d10c277dc8405cfedce04a8e6a6ffde5
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
   validates_formatting_of (0.9.0) sha256=139590a4b87596dbfb04d93e897bd2e6d30fb849d04fab0343e71ed2ca856e7e
   version_gem (1.1.1) sha256=3c2da6ded29045ddcc0387e152dc634e1f0c490b7128dce0697ccc1cf0915b6c
