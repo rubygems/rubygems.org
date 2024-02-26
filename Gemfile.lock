@@ -735,7 +735,7 @@ GEM
       activesupport
       faraday (~> 2.0)
       faraday-follow_redirects
-    webmock (3.22.0)
+    webmock (3.23.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -856,7 +856,7 @@ DEPENDENCIES
   validates_formatting_of (~> 0.9)
   view_component (~> 3.11)
   webauthn (~> 3.1)
-  webmock (~> 3.22)
+  webmock (~> 3.23)
   xml-simple (~> 1.1)
 
 CHECKSUMS
@@ -1136,7 +1136,7 @@ CHECKSUMS
   view_component (3.11.0) sha256=6994c3dcc6f8da1fab42420a367f5071c00291241bc5a56f73a34ec8c10fc5ff
   webauthn (3.1.0) sha256=e545fcf17d8a6b821161a37c1c4bc8c3d2ead0ff6ff3b098f57f417e731790b7
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
-  webmock (3.22.0) sha256=277f69335267f6b18d2d9bc8c287e60d4022b1e58a912c55e052a58d014e4b8e
+  webmock (3.23.0) sha256=100787435c1f556129a238c11cc7cbee38cb9c2864709c6a0dcdcf822545f31f
   webrick (1.8.1) sha256=19411ec6912911fd3df13559110127ea2badd0c035f7762873f58afc803e158f
   websocket (1.2.10) sha256=2cc1a4a79b6e63637b326b4273e46adcddf7871caa5dc5711f2ca4061a629fa8
   websocket-driver (0.7.6) sha256=f69400be7bc197879726ad8e6f5869a61823147372fd8928836a53c2c741d0db
