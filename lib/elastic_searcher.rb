@@ -152,6 +152,7 @@ load: false)
        summary
        description
        downloads
+       updated
        version]
   end
 end

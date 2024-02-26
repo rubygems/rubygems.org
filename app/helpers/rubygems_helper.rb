@@ -156,6 +156,12 @@ module RubygemsHelper
     rubygem.versions_count > 5 || rubygem.yanked_versions?
   end
 
+  def latest_release_date(rubygem)
+    return version_date_tag(rubygem.latest_version) if rubygem.latest_version.present?
+
+    tag.small("- #{nice_date_for(rubygem.updated)}", class: "gem__version__date") if rubygem.respond_to?(:updated) && rubygem.updated.present?
+  end
+
   def latest_version_number(rubygem)
     return rubygem.version if rubygem.respond_to?(:version)
     (rubygem.latest_version || rubygem.versions.last)&.number
