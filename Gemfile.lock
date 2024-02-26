@@ -348,7 +348,7 @@ GEM
     libdatadog (5.0.0.1.0)
     libddwaf (1.14.0.0.0)
       ffi (~> 1.0)
-    listen (3.8.0)
+    listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     llhttp-ffi (0.5.0)
@@ -794,7 +794,7 @@ DEPENDENCIES
   launchy (~> 2.5)
   letter_opener (~> 1.9)
   letter_opener_web (~> 2.0)
-  listen (~> 3.8)
+  listen (~> 3.9)
   lookbook (~> 2.2)
   mail (~> 2.8)
   maintenance_tasks (~> 2.6)
@@ -990,7 +990,7 @@ CHECKSUMS
   letter_opener_web (2.0.0) sha256=33860ad41e1785d75456500e8ca8bba8ed71ee6eaf08a98d06bbab67c5577b6f
   libdatadog (5.0.0.1.0) sha256=c61b02584c02447089ad8e71b7aa8e5a660fd675b727635c1a2eaec59b1840e8
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
-  listen (3.8.0) sha256=9679040ac6e7845ad9f19cf59ecde60861c78e2fae57a5c20fe35e94959b2f8f
+  listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
   lookbook (2.2.1) sha256=079677cea164f0fcaba819037f0956e22b4730e0167f4f1db37863963b5a8da6
