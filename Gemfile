@@ -90,7 +90,7 @@ group :development, :test do
   gem "pry-byebug", "~> 3.10"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.4"
-  gem "dotenv-rails", "~> 3.0"
+  gem "dotenv-rails", "~> 3.1"
   gem "lookbook", "~> 2.2"
 
   gem "brakeman", "~> 6.1", require: false
