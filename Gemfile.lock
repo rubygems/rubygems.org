@@ -215,9 +215,9 @@ GEM
     docile (1.4.0)
     dogstatsd-ruby (5.6.1)
     domain_name (0.6.20240107)
-    dotenv (3.0.2)
-    dotenv-rails (3.0.2)
-      dotenv (= 3.0.2)
+    dotenv (3.1.0)
+    dotenv-rails (3.1.0)
+      dotenv (= 3.1.0)
       railties (>= 6.1)
     drb (2.2.0)
       ruby2_keywords
@@ -577,7 +577,7 @@ GEM
       psych (>= 4.0.0)
     redcarpet (3.6.0)
     regexp_parser (2.9.0)
-    reline (0.4.2)
+    reline (0.4.3)
       io-console (~> 0.5)
     rexml (3.2.6)
     roadie (5.2.0)
@@ -690,7 +690,7 @@ GEM
       railties (>= 6.0.0)
     terser (1.2.0)
       execjs (>= 0.3.0, < 3)
-    thor (1.3.0)
+    thor (1.3.1)
     tilt (2.3.0)
     timeout (0.4.1)
     toxiproxy (2.0.2)
@@ -776,7 +776,7 @@ DEPENDENCIES
   derailed_benchmarks (~> 2.1)
   discard (~> 1.3)
   dogstatsd-ruby (~> 5.5)
-  dotenv-rails (~> 3.0)
+  dotenv-rails (~> 3.1)
   factory_bot_rails (~> 6.4)
   faraday (~> 2.9)
   faraday-retry (~> 2.2)
@@ -931,8 +931,8 @@ CHECKSUMS
   docile (1.4.0) sha256=5f1734bde23721245c20c3d723e76c104208e1aa01277a69901ce770f0ebb8d3
   dogstatsd-ruby (5.6.1) sha256=615dd1328c57ab66fb48cbf83b38ce2060d8353707be0bc3deb0ae960a659982
   domain_name (0.6.20240107) sha256=5f693b2215708476517479bf2b3802e49068ad82167bcd2286f899536a17d933
-  dotenv (3.0.2) sha256=6f1546e8e1c30f1dc7e0aa10dbeac2b819cbb728958e95daccafda2c925d45d7
-  dotenv-rails (3.0.2) sha256=8e28573a51f9412e8df62c8ad3b3df82d0c2cdf41082d56f0a96ab09d1fde9eb
+  dotenv (3.1.0) sha256=8b7e682e197dbaa69bd5660cc18bc821e8152e1bb2b3c02e32f2be718fd8b2b4
+  dotenv-rails (3.1.0) sha256=d2e1bc7bf39acf7f135920c81306b1eb7dbfa27a4577fce7665488d77d7fe719
   drb (2.2.0) sha256=e9e4af1cded3306cfe37e064a0086e302d5f40df9cb4d161d059a6bb3a75d40f
   dry-initializer (3.1.1) sha256=4d267dea367ccabe498b259c62b909b99d577d6db547d9510561999403546dec
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
@@ -1072,7 +1072,7 @@ CHECKSUMS
   rdoc (6.6.2) sha256=f763dbec81079236bcccded19d69680471bd55da8f731ea6f583d019dacd9693
   redcarpet (3.6.0) sha256=8ad1889c0355ff4c47174af14edd06d62f45a326da1da6e8a121d59bdcd2e9e9
   regexp_parser (2.9.0) sha256=81a00ba141cec0d4b4bf58cb80cd9193e5180836d3fa6ef623f7886d3ba8bdd9
-  reline (0.4.2) sha256=14042962b71d4cf52cc7d348f411886e2df54fc9d434d69b0b0bff84786d1c3a
+  reline (0.4.3) sha256=36100b310863f29733c1da56b57837f4d56280336a2637d8399fdc1060d3a7ff
   rexml (3.2.6) sha256=e0669a2d4e9f109951cb1fde723d8acd285425d81594a2ea929304af50282816
   roadie (5.2.0) sha256=f4dc8e41ccc331ebe4833cfa8e7495446db8bfd725c1a9b480147cb53c4945e3
   roadie-rails (3.1.0) sha256=5a45e1a7eb2f7cac29325ef8be64684c9d67cec608b235a69e38a7b79c64de21
@@ -1118,7 +1118,7 @@ CHECKSUMS
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (2.3.0) sha256=eb194b760eb637f01490f8ad30147d93f402346babfc6eeac04039cff8169ad9
   terser (1.2.0) sha256=a25e6213233ad332378fd2add7d79a55bf31a383cc732d17f116450774d05303
-  thor (1.3.0) sha256=1adc7f9e5b3655a68c71393fee8bd0ad088d14ee8e83a0b73726f23cbb3ca7c3
+  thor (1.3.1) sha256=fa7e3471d4f6a27138e3d9c9b0d4daac9c3d7383927667ae83e9ab42ae7401ef
   tilt (2.3.0) sha256=82dd903d61213c63679d28e404ee8e10d1b0fdf5270f1ad0898ec314cc3e745c
   timeout (0.4.1) sha256=6f1f4edd4bca28cffa59501733a94215407c6960bd2107331f0280d4abdebb9a
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
