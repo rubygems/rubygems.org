@@ -3,7 +3,6 @@ import Rails from "@rails/ujs";
 Rails.start();
 import "controllers"
 
-import "src/autocomplete";
 import "src/clipboard_buttons";
 import "src/multifactor_auths";
 import "src/oidc_api_key_role_form";
