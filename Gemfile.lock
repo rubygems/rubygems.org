@@ -155,7 +155,7 @@ GEM
       xpath (~> 3.2)
     cbor (0.5.9.6)
     cgi (0.4.0)
-    chartkick (5.0.5)
+    chartkick (5.0.6)
     choice (0.2.0)
     chunky_png (1.4.0)
     clearance (2.6.2)
@@ -906,7 +906,7 @@ CHECKSUMS
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   cbor (0.5.9.6) sha256=434a147658dd1df24ec9e7b3297c1fd4f8a691c97d0e688b3049df8e728b2114
   cgi (0.4.0) sha256=20a62f3b05234e09e141d461ad4de057c4aea699d72a958b3a3bf00680a49d48
-  chartkick (5.0.5) sha256=62f096048bc5c7cdab00a0f125042863eb7832ab70ec317002484b6e35d3d8f2
+  chartkick (5.0.6) sha256=96c5984471d4c2017b28914bd1bcda7f9e8a3a9d1903059aaadc7a4044c87193
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
   clearance (2.6.2) sha256=6dd69ebcdb4767ca6ca9e2e2ac31c00412f2cf4b1a4dae58c821d36bd455c3c7
