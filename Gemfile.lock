@@ -219,8 +219,7 @@ GEM
     dotenv-rails (3.1.0)
       dotenv (= 3.1.0)
       railties (>= 6.1)
-    drb (2.2.0)
-      ruby2_keywords
+    drb (2.2.1)
     dry-initializer (3.1.1)
     email_validator (2.2.4)
       activemodel
@@ -250,14 +249,14 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    fugit (1.10.0)
+    fugit (1.10.1)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
     get_process_mem (0.2.7)
       ffi (~> 1.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    good_job (3.25.0)
+    good_job (3.26.0)
       activejob (>= 6.0.0)
       activerecord (>= 6.0.0)
       concurrent-ruby (>= 1.0.2)
@@ -781,7 +780,7 @@ DEPENDENCIES
   faraday (~> 2.9)
   faraday-retry (~> 2.2)
   faraday_middleware-aws-sigv4 (~> 1.0)
-  good_job (~> 3.25)
+  good_job (~> 3.26)
   google-protobuf (~> 3.25)
   gravtastic (~> 3.2)
   groupdate (~> 6.2)
@@ -933,7 +932,7 @@ CHECKSUMS
   domain_name (0.6.20240107) sha256=5f693b2215708476517479bf2b3802e49068ad82167bcd2286f899536a17d933
   dotenv (3.1.0) sha256=8b7e682e197dbaa69bd5660cc18bc821e8152e1bb2b3c02e32f2be718fd8b2b4
   dotenv-rails (3.1.0) sha256=d2e1bc7bf39acf7f135920c81306b1eb7dbfa27a4577fce7665488d77d7fe719
-  drb (2.2.0) sha256=e9e4af1cded3306cfe37e064a0086e302d5f40df9cb4d161d059a6bb3a75d40f
+  drb (2.2.1) sha256=e9d472bf785f558b96b25358bae115646da0dbfd45107ad858b0bc0d935cb340
   dry-initializer (3.1.1) sha256=4d267dea367ccabe498b259c62b909b99d577d6db547d9510561999403546dec
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
   erb (4.0.3) sha256=351a013ffee7e4e40b593df76dd4d0b2bd612e14dbff1d66273221d0cff6a49a
@@ -949,10 +948,10 @@ CHECKSUMS
   faraday_middleware-aws-sigv4 (1.0.1) sha256=a001ea4f687ca1c60bad8f2a627196905ce3dbf285e461dc153240e92eaabe8f
   ffi (1.16.3) sha256=6d3242ff10c87271b0675c58d68d3f10148fabc2ad6da52a18123f06078871fb
   ffi-compiler (1.0.1) sha256=019f389b078a2fec9de7f4f65771095f80a447e34436b4588bcb629e2a564c30
-  fugit (1.10.0) sha256=e47fd4f050d01dd3221f2bf4e764d07a26331939af1797a6202693a0d11908c1
+  fugit (1.10.1) sha256=0572989717d6181d6ff3eefd58fbec62de83913db8020082a9753bbe9f58a982
   get_process_mem (0.2.7) sha256=4afd3c3641dd6a817c09806c7d6d509d8a9984512ac38dea8b917426bbf77eba
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
-  good_job (3.25.0) sha256=73a4899d884ae484c1299ee1a34e72bc3e6af02f81b1a764dedb640c93e59bf3
+  good_job (3.26.0) sha256=edf1adf2877708bb931f4494aa2de9fd1bd220891b7d32c6737352fc820a6750
   google-protobuf (3.25.3) sha256=39bd97cbc7631905e76cdf8f1bf3dda1c3d05200d7e23f575aced78930fbddd6
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.4.0) sha256=65940645bf2a48f9b2d10ab7a1d19bdc78f3c89559d8fce39cea3448a15aec54
