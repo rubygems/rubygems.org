@@ -748,7 +748,7 @@ GEM
       rexml
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.35)
+    yard (0.9.36)
     zeitwerk (2.6.13)
 
 PLATFORMS
@@ -1143,7 +1143,7 @@ CHECKSUMS
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xml-simple (1.1.9) sha256=d21131e519c86f1a5bc2b6d2d57d46e6998e47f18ed249b25cad86433dbd695d
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
-  yard (0.9.35) sha256=999cf338f7a7e2e35a1b4a8ecc537b6226082b66c993e54ead1d8725364e053d
+  yard (0.9.36) sha256=5505736c1b00c926f71053a606ab75f02070c5960d0778b901fe9d8b0a470be4
   zeitwerk (2.6.13) sha256=2db861b021d020f48b5bf51613f355fcd041bf0a27ad8c748fa88fa974c5c7d4
 
 BUNDLED WITH
