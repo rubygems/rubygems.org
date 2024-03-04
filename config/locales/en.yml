@@ -449,7 +449,7 @@ en:
       invalid_level: Invalid MFA level.
       success: You have successfully updated your multi-factor authentication level.
     prompt:
-      webauthn_credential_note: Authenticate with a security device such as Touch Id, YubiKey, etc.
+      webauthn_credential_note: Authenticate with a security device such as Touch ID, YubiKey, etc.
       sign_in_with_webauthn_credential: Authenticate with security device
       otp_code: OTP code
       otp_or_recovery: OTP or recovery code

@@ -458,7 +458,7 @@ zh-CN:
       invalid_level: 无效的 MFA 级别。
       success: 您已成功修改多因素验证级别。
     prompt:
-      webauthn_credential_note: 使用如 Touch Id, YubiKey 等安全设备来认证身份。
+      webauthn_credential_note: 使用如 Touch ID, YubiKey 等安全设备来认证身份。
       sign_in_with_webauthn_credential: 通过安全设备认证人身
       otp_code: 一次性密码
       otp_or_recovery: OTP 或 恢复码
