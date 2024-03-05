@@ -42,11 +42,16 @@ data:
 
         real_ip_recursive on;
 
-        # Fastly
+        # Fastly (https://api.fastly.com/public-ip-list)
+        set_real_ip_from '23.235.32.0/20';
+        set_real_ip_from '43.249.72.0/22';
         set_real_ip_from '103.244.50.0/24';
         set_real_ip_from '103.245.222.0/23';
         set_real_ip_from '103.245.224.0/24';
         set_real_ip_from '104.156.80.0/20';
+        set_real_ip_from '140.248.64.0/18';
+        set_real_ip_from '140.248.128.0/17';
+        set_real_ip_from '146.75.0.0/17';
         set_real_ip_from '151.101.0.0/16';
         set_real_ip_from '157.52.64.0/18';
         set_real_ip_from '167.82.0.0/17';
@@ -55,14 +60,11 @@ data:
         set_real_ip_from '167.82.224.0/20';
         set_real_ip_from '172.111.64.0/18';
         set_real_ip_from '185.31.16.0/22';
-        set_real_ip_from '199.232.0.0/16';
         set_real_ip_from '199.27.72.0/21';
-        set_real_ip_from '202.21.128.11/32';
-        set_real_ip_from '202.21.128.12/32';
-        set_real_ip_from '203.57.145.11/32';
-        set_real_ip_from '203.57.145.12/32';
-        set_real_ip_from '23.235.32.0/20';
-        set_real_ip_from '43.249.72.0/22';
+        set_real_ip_from '199.232.0.0/16';
+
+        set_real_ip_from '2a04:4e40::/32';
+        set_real_ip_from '2a04:4e42::/32';
 
         # AWS
         set_real_ip_from '172.30.0.0/16';
