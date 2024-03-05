@@ -54,6 +54,7 @@ gem "strong_migrations", "~> 1.7"
 gem "phlex-rails", "~> 1.1"
 gem "discard", "~> 1.3"
 gem "user_agent_parser", "~> 2.17"
+gem "pghero", "~> 3.4"
 
 # Admin dashboard
 gem "avo", "~> 2.48"
