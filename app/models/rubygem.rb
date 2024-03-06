@@ -22,6 +22,10 @@ class Rubygem < ApplicationRecord
   has_many :audits, as: :auditable, inverse_of: :auditable
   has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", inverse_of: :rubygem, dependent: :destroy
+  has_many :incoming_dependencies, -> { where(versions: { indexed: true, position: 0 }) }, class_name: "Dependency", inverse_of: :rubygem
+  has_many :reverse_dependencies, through: :incoming_dependencies, source: :version_rubygem
+  has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
+  has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
 
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
@@ -339,20 +343,6 @@ class Rubygem < ApplicationRecord
 
   def release_reserved_namespace!
     update_attribute(:updated_at, 101.days.ago)
-  end
-
-  def reverse_dependencies
-    self.class.joins("inner join versions as v on v.rubygem_id = rubygems.id
-      inner join dependencies as d on d.version_id = v.id").where("v.indexed = 't'
-      and v.position = 0 and d.rubygem_id = ?", id)
-  end
-
-  def reverse_development_dependencies
-    reverse_dependencies.where("d.scope = 'development'")
-  end
-
-  def reverse_runtime_dependencies
-    reverse_dependencies.where("d.scope ='runtime'")
   end
 
   def metadata_mfa_required?
