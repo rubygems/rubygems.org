@@ -272,7 +272,7 @@ GEM
     heapy (0.2.0)
       thor
     high_voltage (3.1.2)
-    honeybadger (5.5.1)
+    honeybadger (5.6.0)
     htmlbeautifier (1.4.2)
     htmlentities (4.3.4)
     http (5.2.0)
@@ -787,7 +787,7 @@ DEPENDENCIES
   gravtastic (~> 3.2)
   groupdate (~> 6.2)
   high_voltage (~> 3.1)
-  honeybadger (~> 5.5)
+  honeybadger (~> 5.6)
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.0)
   kaminari (~> 1.2)
@@ -962,7 +962,7 @@ CHECKSUMS
   hashie (5.0.0) sha256=9d6c4e51f2a36d4616cbc8a322d619a162d8f42815a792596039fc95595603da
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
   high_voltage (3.1.2) sha256=7786716114cc21b3754e537818a6d9b2c91aa1126aa77272977d50598e556c2f
-  honeybadger (5.5.1) sha256=22350ccfc9f3bac4bf7c5c733d5263d21dc57adeba16f14054428d9cc63fb56d
+  honeybadger (5.6.0) sha256=ccff7d21e2dd15a09ec126fe6c35cb76f8c6505dcb6552774e3c1ace9ad663ca
   htmlbeautifier (1.4.2) sha256=9de0c98480fe80d795ed5734a11f183563cd969686f25a04609c0f5a446fa5f8
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http (5.2.0) sha256=b99ed3c65376e0fd8107647fbaf5a8ab4f66c347d1271fb74cea757e209c6115
