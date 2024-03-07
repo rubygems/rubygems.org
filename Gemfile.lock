@@ -273,7 +273,7 @@ GEM
       thor
     high_voltage (3.1.2)
     honeybadger (5.6.0)
-    htmlbeautifier (1.4.2)
+    htmlbeautifier (1.4.3)
     htmlentities (4.3.4)
     http (5.2.0)
       addressable (~> 2.8)
@@ -288,9 +288,8 @@ GEM
     httparty (0.21.0)
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
-    i18n (1.14.3)
+    i18n (1.14.4)
       concurrent-ruby (~> 1.0)
-      racc (~> 1.7)
     importmap-rails (2.0.1)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -299,7 +298,7 @@ GEM
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     io-console (0.7.2)
-    irb (1.11.2)
+    irb (1.12.0)
       rdoc
       reline (>= 0.4.2)
     jmespath (1.6.2)
@@ -357,7 +356,7 @@ GEM
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    lookbook (2.2.1)
+    lookbook (2.2.2)
       activemodel
       css_parser
       htmlbeautifier (~> 1.3)
@@ -367,7 +366,7 @@ GEM
       redcarpet (~> 3.5)
       rouge (>= 3.26, < 5.0)
       view_component (>= 2.0)
-      yard (~> 0.9.25)
+      yard (~> 0.9)
       zeitwerk (~> 2.5)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
@@ -381,7 +380,7 @@ GEM
       job-iteration (>= 1.3.6)
       railties (>= 6.0)
       zeitwerk (>= 2.6.2)
-    marcel (1.0.2)
+    marcel (1.0.4)
     matrix (0.4.2)
     memory_profiler (1.0.1)
     meta-tags (2.20.0)
@@ -964,18 +963,18 @@ CHECKSUMS
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
   high_voltage (3.1.2) sha256=7786716114cc21b3754e537818a6d9b2c91aa1126aa77272977d50598e556c2f
   honeybadger (5.6.0) sha256=ccff7d21e2dd15a09ec126fe6c35cb76f8c6505dcb6552774e3c1ace9ad663ca
-  htmlbeautifier (1.4.2) sha256=9de0c98480fe80d795ed5734a11f183563cd969686f25a04609c0f5a446fa5f8
+  htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http (5.2.0) sha256=b99ed3c65376e0fd8107647fbaf5a8ab4f66c347d1271fb74cea757e209c6115
   http-cookie (1.0.5) sha256=73756d46c7dbdc7023deecdb8a171348ea95a1b99810b31cfe8b4fb4e9a6318f
   http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
   httparty (0.21.0) sha256=00ef7bf9a71f30a3bff88edeb5b16a34bea883ab67c246b3f0db2d6794fe1214
-  i18n (1.14.3) sha256=bad527f4c54539758c45175bcf38b181cfe9346c93d1206c936d42adb5a13fc9
+  i18n (1.14.4) sha256=c7deedead0866ea9102975a4eab7968f53de50793a0c211a37808f75dd187551
   importmap-rails (2.0.1) sha256=e739a6e70c09f797688c6983fa79567ec1edc9becc30d55b3f7cc897b1825586
   inline_svg (1.9.0) sha256=f44c5e3d2e401fd619ad3047b7c8cee384517d855edb1d1fb1a248d3cae535d6
   io-console (0.7.2) sha256=f0dccff252f877a4f60d04a4dc6b442b185ebffb4b320ab69212a92b48a7a221
-  irb (1.11.2) sha256=a05f07e81d32dc79d78b0019283b9877463da0d40253774d1fe89f9586ae1cb9
+  irb (1.12.0) sha256=07634937fbb7d28d07e46da50d0aa43b4d2f7258174d08de4e32dfb57c10539d
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.4.1) sha256=7243c40e4decc3d49529867e9c504afaea332976c967ffdebed9ff863c6424af
   json (2.7.1) sha256=187ea312fb58420ff0c40f40af1862651d4295c8675267c6a1c353f1a0ac3265
@@ -996,10 +995,10 @@ CHECKSUMS
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
-  lookbook (2.2.1) sha256=079677cea164f0fcaba819037f0956e22b4730e0167f4f1db37863963b5a8da6
+  lookbook (2.2.2) sha256=a5c309b13f2fa46b3caf18f59399ab1767d900c63a136bf38563f7b131d4b64f
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
   maintenance_tasks (2.6.0) sha256=b684b44ec4eef26f204cb783d965024be1fcf0058ecfaca65f616c6b83adf045
-  marcel (1.0.2) sha256=a013b677ef46cbcb49fd5c59b3d35803d2ee04dd75d8bfdc43533fc5a31f7e4e
+  marcel (1.0.4) sha256=0d5649feb64b8f19f3d3468b96c680bae9746335d02194270287868a661516a4
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
   memory_profiler (1.0.1) sha256=38cdb42f22d9100df2eba0365c199724b58b05c38e765cd764a07392916901b1
   meta-tags (2.20.0) sha256=ad3eecb41ea3e9b0ece79fde7cc65f553a712b59672f8abfcaf6a565ae61a6c4
