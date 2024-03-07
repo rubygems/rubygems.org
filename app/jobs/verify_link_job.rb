@@ -9,8 +9,8 @@ class VerifyLinkJob < ApplicationJob
   class LinkNotPresentError < StandardError; end
   class HTTPResponseError < StandardError; end
 
-  discard_on NotHTTPSError do |job, _error|
-    job.record_failure
+  rescue_from NotHTTPSError do |_error|
+    record_failure
   end
 
   rescue_from LinkNotPresentError, HTTPResponseError, *ERRORS do |error|
@@ -19,11 +19,7 @@ class VerifyLinkJob < ApplicationJob
 
     link_verification.transaction do
       record_failure
-      if should_retry?
-        retry_job(wait: 5.seconds * (3.5**link_verification.failures_since_last_verification.pred), error:)
-      else
-        instrument :retry_stopped, error: error
-      end
+      retry_job(wait: 5.seconds * (3.5**link_verification.failures_since_last_verification.pred), error:) if should_retry?
     end
   end
 
