@@ -13,7 +13,7 @@ class AdvancedSearchTest < ApplicationSystemTestCase
 
     import_and_refresh
 
-    fill_in "home_query", with: "downloads: <5"
+    fill_in "query", with: "downloads: <5"
     click_button "advanced_search_submit"
 
     assert_current_path(search_path, ignore_query: true)

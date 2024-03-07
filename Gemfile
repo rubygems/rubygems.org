@@ -13,10 +13,10 @@ gem "dogstatsd-ruby", "~> 5.5"
 gem "google-protobuf", "~> 3.25"
 gem "faraday", "~> 2.9"
 gem "faraday-retry", "~> 2.2"
-gem "good_job", "~> 3.25"
+gem "good_job", "~> 3.26"
 gem "gravtastic", "~> 3.2"
 gem "high_voltage", "~> 3.1"
-gem "honeybadger", "~> 5.5"
+gem "honeybadger", "~> 5.6"
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "launchdarkly-server-sdk", "~> 8.2"
@@ -53,7 +53,8 @@ gem "maintenance_tasks", "~> 2.6"
 gem "strong_migrations", "~> 1.7"
 gem "phlex-rails", "~> 1.1"
 gem "discard", "~> 1.3"
-gem "user_agent_parser", "~> 2.16"
+gem "user_agent_parser", "~> 2.17"
+gem "pghero", "~> 3.4"
 
 # Admin dashboard
 gem "avo", "~> 2.48"
@@ -90,7 +91,7 @@ group :development, :test do
   gem "pry-byebug", "~> 3.10"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.4"
-  gem "dotenv-rails", "~> 3.0"
+  gem "dotenv-rails", "~> 3.1"
   gem "lookbook", "~> 2.2"
 
   gem "brakeman", "~> 6.1", require: false
@@ -106,7 +107,7 @@ end
 
 group :development do
   gem "rails-erd", "~> 1.7"
-  gem "listen", "~> 3.8"
+  gem "listen", "~> 3.9"
   gem "letter_opener", "~> 1.9"
   gem "letter_opener_web", "~> 2.0"
   gem "derailed_benchmarks", "~> 2.1"
@@ -123,7 +124,7 @@ group :test do
   gem "shoulda-context", "~> 2.0"
   gem "shoulda-matchers", "~> 6.1"
   gem "selenium-webdriver", "~> 4.18"
-  gem "webmock", "~> 3.22"
+  gem "webmock", "~> 3.23"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
   gem "aggregate_assertions", "~> 0.2.0"

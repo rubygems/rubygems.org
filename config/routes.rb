@@ -311,6 +311,7 @@ Rails.application.routes.draw do
       namespace :admin, constraints: Constraints::Admin::RubygemsOrgAdmin do
         mount GoodJob::Engine, at: 'good_job'
         mount MaintenanceTasks::Engine, at: "maintenance_tasks"
+        mount PgHero::Engine, at: "pghero"
       end
 
       mount Avo::Engine, at: Avo.configuration.root_path

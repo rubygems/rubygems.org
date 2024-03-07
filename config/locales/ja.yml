@@ -450,7 +450,7 @@ ja:
       invalid_level: 不正なMFAの水準です。
       success: 多要素認証の水準が正常に更新されました。
     prompt:
-      webauthn_credential_note: Touch Id、YubiKeyなどのセキュリティ機器で認証してください。
+      webauthn_credential_note: Touch ID、YubiKeyなどのセキュリティ機器で認証してください。
       sign_in_with_webauthn_credential: セキュリティ機器で認証
       otp_code: OTPのコード
       otp_or_recovery: OTPまたは復旧コード

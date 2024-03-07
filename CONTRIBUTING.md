@@ -90,7 +90,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
   * Note that `-e "xpack.security.enabled=false"` disables authentication.
 
-* Install PostgreSQL (>= 12.x): `brew install postgres`
+* Install PostgreSQL (>= 13.x): `brew install postgres`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
   * Show all memcached options: `memcached -h`

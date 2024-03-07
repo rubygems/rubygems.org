@@ -274,7 +274,7 @@ class Rack::Attack
         }
       }
     }
-    logger.info 'Rack::Attack Throttling', event.to_json
+    Rack::Attack.logger.info 'Rack::Attack Throttling', event.to_json
   end
 
   self.throttled_response_retry_after_header = true
