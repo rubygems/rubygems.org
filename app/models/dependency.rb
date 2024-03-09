@@ -1,6 +1,7 @@
 class Dependency < ApplicationRecord
   belongs_to :rubygem, optional: true
   belongs_to :version
+  has_one :version_rubygem, through: :version, source: :rubygem
 
   before_validation :use_gem_dependency,
     :use_existing_rubygem,
