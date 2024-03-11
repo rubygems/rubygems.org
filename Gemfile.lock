@@ -83,7 +83,7 @@ GEM
     aes_key_wrap (1.1.0)
     aggregate_assertions (0.2.0)
       minitest (~> 5.0)
-    amazing_print (1.5.0)
+    amazing_print (1.6.0)
     android_key_attestation (0.3.0)
     ansi (1.5.0)
     argon2 (2.3.0)
@@ -758,7 +758,7 @@ PLATFORMS
 
 DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
-  amazing_print (~> 1.4)
+  amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
   avo (~> 2.48)
   aws-sdk-s3 (~> 1.143)
@@ -878,7 +878,7 @@ CHECKSUMS
   addressable (2.8.6) sha256=798f6af3556641a7619bad1dce04cdb6eb44b0216a991b0396ea7339276f2b47
   aes_key_wrap (1.1.0) sha256=b935f4756b37375895db45669e79dfcdc0f7901e12d4e08974d5540c8e0776a5
   aggregate_assertions (0.2.0) sha256=9bc51a48323a8e7b82f47cc38d48132817247345e5a8713686c9d65b25daca9e
-  amazing_print (1.5.0) sha256=f9f411b37257333a0f0cc16ce6520b2217a6f0b5a9f35656e1d403cd5e0c3362
+  amazing_print (1.6.0) sha256=9903e93daadc15411c854239f8ca1ca6ce78be279ed99d43fec2bd3b0aa37397
   android_key_attestation (0.3.0) sha256=467eb01a99d2bb48ef9cf24cc13712669d7056cba5a52d009554ff037560570b
   ansi (1.5.0) sha256=5408253274e33d9d27d4a98c46d2998266fd51cba58a7eb9d08f50e57ed23592
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
