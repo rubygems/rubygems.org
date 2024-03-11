@@ -726,6 +726,7 @@ pt-BR:
       total_downloads: Total de downloads
       total_gems: Total de gems
       total_users: Total de usuários
+      ranking: "%{count} de %{total}"
   users:
     create:
       email_sent:

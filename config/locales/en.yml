@@ -701,6 +701,7 @@ en:
       total_downloads: Total downloads
       total_gems: Total gems
       total_users: Total users
+      ranking: "%{count} of %{total}"
   users:
     create:
       email_sent: A confirmation mail has been sent to your email address.

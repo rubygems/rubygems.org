@@ -686,6 +686,7 @@ zh-TW:
       total_downloads: 總下載次數
       total_gems: Gems 總數
       total_users: 總使用者數量
+      ranking:
   users:
     create:
       email_sent: 已發送確認信到你的信箱地址。

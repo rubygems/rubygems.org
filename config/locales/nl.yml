@@ -703,6 +703,7 @@ nl:
       total_downloads:
       total_gems:
       total_users:
+      ranking:
   users:
     create:
       email_sent: Een bevestigingsemail is naar je e-mailadres gestuurd

@@ -824,6 +824,7 @@ es:
       total_downloads: Total de descargas
       total_gems: Gemas totales
       total_users: Usuarios totales
+      ranking: "%{count} de %{total}"
   users:
     create:
       email_sent: Se ha enviado un correo de confirmación a tu dirección de correo

@@ -98,19 +98,19 @@
     </div>
 
     <div class="profile__downloads-wrap">
-      <h4 class="gem__downloads__heading t-text--s">
+      <h4 class="gem__downloads__heading t-text--s t-uppercase">
         <%= t('stats.index.total_gems') %>
       </h4>
 
-      <h2 id="profile-gems-count" class="gem__downloads">
+      <h2 id="profile-gems-count" class="gem__downloads l-mb-6">
         <%= @user.total_rubygems_count.to_s %>
       </h2>
 
-      <h4 id="downloads" class="gem__downloads__heading t-text--s">
+      <h4 id="downloads" class="gem__downloads__heading t-text--s t-uppercase">
         <%= t('stats.index.total_downloads') %>
       </h4>
 
-      <h2 id="downloads_count" class="gem__downloads">
+      <h2 id="downloads_count" class="gem__downloads l-mb-6">
         <%= number_with_delimiter(@user.total_downloads_count) %>
       </h2>
     </div>

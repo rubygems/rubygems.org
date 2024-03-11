@@ -195,6 +195,15 @@ class Rubygem < ApplicationRecord
     gem_download&.count || 0
   end
 
+  def gem_rank
+    gem_ranking = update_gems_ranking
+
+    return gem_ranking[id] if gem_ranking.key?(id)
+
+    Rails.cache.delete("gems_ranking")
+    update_gems_ranking[id]
+  end
+
   def most_recent_version
     versions.most_recent
   end
@@ -435,5 +444,18 @@ class Rubygem < ApplicationRecord
 
     sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, update_query)
     ActiveRecord::Base.connection.execute(sanitized_query)
+  end
+
+  def update_gems_ranking
+    Rails.cache.fetch("gems_ranking", expires_in: 24.hours) do
+      update_query = <<-SQL.squish
+        SELECT rubygem_id, row_number() OVER(ORDER BY count DESC) AS position
+        FROM gem_downloads
+        WHERE version_id = 0 AND rubygem_id <> 0
+      SQL
+      sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, [update_query])
+      pg_result = ActiveRecord::Base.connection.execute(sanitized_query)
+      pg_result.to_h { |row| [row["rubygem_id"], row["position"]] }
+    end
   end
 end

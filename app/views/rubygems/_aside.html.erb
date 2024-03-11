@@ -7,10 +7,11 @@
   <% end %>
   <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
     <h2 class="gem__downloads__heading t-text--s">
-      <%= t('stats.index.total_downloads') %>
+      <span class="t-uppercase"><%= t('stats.index.total_downloads') %></span>
       <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
+      <span class="gem__downloads t-text--s l-mb-6"><%= t('stats.index.ranking', count: number_with_delimiter(@rubygem.gem_rank), total: number_with_delimiter(Rubygem.total_count)) %></span>
     </h2>
-    <h2 class="gem__downloads__heading t-text--s">
+    <h2 class="gem__downloads__heading t-text--s t-uppercase">
       <%= t('.downloads_for_this_version') %>
       <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
     </h2>

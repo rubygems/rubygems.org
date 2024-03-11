@@ -1199,4 +1199,41 @@ class RubygemTest < ActiveSupport::TestCase
       refute_predicate @version_three, :yanked?
     end
   end
+
+  context "#gem_rank" do
+    setup do
+      @rank_one = create(:rubygem, downloads: 5)
+      @rank_two = create(:rubygem, downloads: 1)
+
+      @dummy_rank = { @rank_one.id => 1, @rank_two.id => 2 }
+    end
+
+    should "write to cache" do
+      @rank_one.gem_rank
+
+      assert_equal Rails.cache.read("gems_ranking"), @dummy_rank
+    end
+
+    should "read from cache" do
+      @rank_two.gem_rank
+
+      GemDownload.increment(10, rubygem_id: @rank_two.id)
+
+      @rank_two.gem_rank
+
+      assert_equal Rails.cache.read("gems_ranking"), @dummy_rank
+    end
+
+    should "return the gem rank" do
+      assert_equal 1, @rank_one.gem_rank
+    end
+
+    should "update when rubygem not ranked" do
+      @rank_two.gem_rank
+
+      @rank_three = create(:rubygem, downloads: 3)
+
+      assert_equal(2, @rank_three.gem_rank)
+    end
+  end
 end
