@@ -64,7 +64,7 @@ gem "chartkick", "~> 5.0"
 gem "groupdate", "~> 6.2"
 
 # Logging
-gem "amazing_print", "~> 1.4"
+gem "amazing_print", "~> 1.6"
 gem "rails_semantic_logger", "~> 4.14"
 gem "pp", "0.5.0"
 
