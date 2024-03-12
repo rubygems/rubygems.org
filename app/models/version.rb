@@ -4,7 +4,9 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
 
   belongs_to :rubygem, touch: true
-  has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
+  has_many :dependencies, lambda {
+                            order(Rubygem.arel_table["name"].asc).includes(:rubygem).references(:rubygem)
+                          }, dependent: :destroy, inverse_of: "version"
   has_many :audits, as: :auditable, inverse_of: :auditable, dependent: :nullify
   has_one :gem_download, inverse_of: :version, dependent: :destroy
   belongs_to :pusher, class_name: "User", inverse_of: :pushed_versions, optional: true
@@ -145,10 +147,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       .pluck("rubygems.name", :number, :platform)
   end
 
-  def self.most_recent
-    latest.find_by(platform: "ruby") || latest.order(number: :desc).first || last
-  end
-
   # This method returns the new versions for brand new rubygems
   def self.new_pushed_versions(limit = 5)
     subquery = <<~SQL.squish
@@ -179,8 +177,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       .limit(limit)
   end
 
-  def self.published(limit)
-    indexed.by_created_at.limit(limit)
+  def self.published
+    indexed.by_created_at
   end
 
   def self.rubygem_name_for(full_name)
@@ -362,7 +360,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     latest = if prerelease
                rubygem.versions.by_position.prerelease.first
              else
-               rubygem.versions.most_recent
+               rubygem.most_recent_version
              end
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease

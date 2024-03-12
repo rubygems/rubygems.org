@@ -27,6 +27,14 @@ class Rubygem < ApplicationRecord
   has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
 
+  has_one :most_recent_version,
+    lambda {
+      order(Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 2 else 1 end desc"))
+        .order(Arel.sql("case when #{quoted_table_name}.latest then #{quoted_table_name}.number else NULL end desc"))
+        .order(id: :desc)
+    },
+    class_name: "Version", inverse_of: :rubygem
+
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
     presence: true,
@@ -127,12 +135,10 @@ class Rubygem < ApplicationRecord
     end.flatten.join(", ")
   end
 
-  def public_versions(limit = nil)
-    versions.includes(:gem_download).by_position.published(limit)
-  end
+  has_many :public_versions, -> { by_position.published }, class_name: "Version", inverse_of: :rubygem
 
   def public_versions_with_extra_version(extra_version)
-    versions = public_versions(5).to_a
+    versions = public_versions.limit(5).to_a
     versions << extra_version
     versions.uniq.sort_by(&:position)
   end
@@ -195,17 +201,13 @@ class Rubygem < ApplicationRecord
     gem_download&.count || 0
   end
 
-  def most_recent_version
-    versions.most_recent
-  end
-
   def links(version = most_recent_version)
     Links.new(self, version)
   end
 
   def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
     versioned_links = links(version)
-    deps = version.dependencies.to_a
+    deps = version.dependencies.where.associated(:rubygem).to_a
     {
       "name"               => name,
       "downloads"          => downloads,
@@ -230,8 +232,8 @@ class Rubygem < ApplicationRecord
       "changelog_uri"      => versioned_links.changelog_uri,
       "funding_uri"        => versioned_links.funding_uri,
       "dependencies"       => {
-        "development" => deps.select { |r| r.rubygem && r.scope == "development" },
-        "runtime"     => deps.select { |r| r.rubygem && r.scope == "runtime" }
+        "development" => deps.select { |r| r.scope == "development" },
+        "runtime"     => deps.select { |r| r.scope == "runtime" }
       }
     }
   end

@@ -7,7 +7,7 @@ class Api::V1::VersionsController < Api::BaseController
     cache_expiry_headers
     set_surrogate_key "gem/#{@rubygem.name}"
 
-    if @rubygem.public_versions.count.nonzero?
+    if @rubygem.public_versions.present?
       respond_to do |format|
         format.json { render json: @rubygem.public_versions }
         format.yaml { render yaml: @rubygem.public_versions }
@@ -24,7 +24,7 @@ class Api::V1::VersionsController < Api::BaseController
     set_surrogate_key "gem/#{params[:id]}"
 
     version = nil
-    version = rubygem.versions.most_recent if rubygem&.public_versions&.indexed&.count&.nonzero?
+    version = rubygem.most_recent_version if rubygem&.public_versions.present?
     number = version.number if version
     render json: { "version" => number || "unknown" }, callback: params["callback"]
   end

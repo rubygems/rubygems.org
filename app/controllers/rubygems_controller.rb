@@ -15,7 +15,7 @@ class RubygemsController < ApplicationController
         @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
       end
       format.atom do
-        @versions = Version.published(Gemcutter::DEFAULT_PAGINATION)
+        @versions = Version.published.limit(Gemcutter::DEFAULT_PAGINATION)
         render "versions/feed"
       end
     end
@@ -25,7 +25,7 @@ class RubygemsController < ApplicationController
     if @reserved_gem
       render "reserved"
     else
-      @versions = @rubygem.public_versions(5)
+      @versions = @rubygem.public_versions.limit(5)
       @adoption = @rubygem.ownership_call
       if @versions.to_a.any?
         render "show"

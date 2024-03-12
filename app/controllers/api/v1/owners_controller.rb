@@ -53,7 +53,10 @@ class Api::V1::OwnersController < Api::BaseController
   def gems
     user = User.find_by_slug(params[:handle])
     if user
-      rubygems = user.rubygems.with_versions
+      rubygems = user.rubygems.with_versions.includes(
+        :linkset, :gem_download,
+        most_recent_version: %i[dependencies gem_download]
+      ).strict_loading
       respond_to do |format|
         format.json { render json: rubygems }
         format.yaml { render yaml: rubygems }
