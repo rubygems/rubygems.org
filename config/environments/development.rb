@@ -104,7 +104,7 @@ Rails.application.configure do
   # and benchmarking the application locally. All changes you make to the app
   # will require restart.
   if ENV['PROFILE']
-    config.cache_classes = true
+    config.enable_reloading = false
     config.eager_load = true
 
     config.log_level = :info
