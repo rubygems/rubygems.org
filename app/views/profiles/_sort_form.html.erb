@@ -1,0 +1,23 @@
+<%=
+  form_with(
+    data: {
+      "controller": "gem-sort",
+      "gem-sort-target": "form",
+    },
+    method: :get,
+    url: profile_path(@user&.handle)
+  ) do |f|
+%>
+  <%= f.label :sort_by, class: "t-text--s"%>
+  <%=
+    select_tag :sort_by,
+               options_for_select(
+                 [
+                   ["Name", "name"],
+                   ["Downloads", "downloads"]
+                 ],
+                 params[:sort_by] || "downloads"
+               ),
+               data: { "gem-sort-target" => "select" }
+  %>
+<% end %>

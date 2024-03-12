@@ -194,9 +194,27 @@
     text-align: right; } }
 @media (min-width: 780px) {
   .profile__downloads-wrap {
-    padding-top: 32px; } }
+    padding-top: 32px;
+  }
+  .profile__downloads-wrap form {
+    align-items: flex-end;
+  }
+}
 
+.profile__downloads-wrap form {
+  display: flex;
+  flex-direction: column;
+}
 
+.profile__downloads-wrap form label:first-child,
+.profile__downloads-wrap form select{
+  margin-bottom: 0.5rem;
+}
+
+.profile__downloads-wrap form select,
+.profile__downloads-wrap form button {
+  width: fit-content;
+}
 
 /* Dashboard Gems and Subscriptions */
 

@@ -113,6 +113,8 @@
       <h2 id="downloads_count" class="gem__downloads">
         <%= number_with_delimiter(@user.total_downloads_count) %>
       </h2>
+
+      <%= render partial: "sort_form" %>
     </div>
   </header>
 <% end %>
@@ -123,7 +125,7 @@
       <%=
         render(
           partial: 'rubygem',
-          collection: @rubygems + @extra_rubygems,
+          collection: @rubygems,
           locals: {graph: false}
         )
       %>

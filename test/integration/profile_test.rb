@@ -177,4 +177,19 @@ class ProfileTest < SystemTest
     assert page.has_content? "special note"
     assert page.has_content? "request note"
   end
+
+  test "sort gems alphabetically in profile" do
+    alphabetical_first = FactoryBot.create(:rubygem, name: "AGem", owners: [@user], downloads: 1)
+    alphabetical_last = FactoryBot.create(:rubygem, name: "ZGem", owners: [@user], downloads: 999)
+
+    visit profile_path(@user.handle)
+    dropdown = find(:element, "data-gem-sort-target": "select")
+    form = find(:element, "data-gem-sort-target": "form")
+    dropdown.select("Name")
+    # Submit form without button
+    Capybara::RackTest::Form.new(form.base.driver, form.native).submit({})
+    rubygem_links = page.all(:element, "a", class: "gems__gem__name")
+    assert rubygem_links.first.text == alphabetical_first.name
+    assert rubygem_links.last.text == alphabetical_last.name
+  end
 end

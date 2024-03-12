@@ -9,9 +9,13 @@ class ProfilesController < ApplicationController
 
   def show
     @user           = User.find_by_slug!(params[:id])
-    rubygems        = @user.rubygems_downloaded
-    @rubygems       = rubygems.slice!(0, 10)
-    @extra_rubygems = rubygems
+    rubygems        = @user.rubygems
+    @rubygems       = case params[:sort_by]
+                      when "name"
+                        rubygems.reorder(:name)
+                      else
+                        rubygems.by_downloads
+                      end
   end
 
   def me
