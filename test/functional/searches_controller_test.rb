@@ -18,7 +18,7 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra = create(:rubygem, name: "sinatra")
       import_and_refresh
 
-      assert_nil @sinatra.versions.most_recent
+      assert_nil @sinatra.most_recent_version
       assert_predicate @sinatra.reload.versions.count, :zero?
       get :show, params: { query: "sinatra" }
     end

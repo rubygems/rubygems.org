@@ -3,7 +3,7 @@ module LatestVersion
 
   included do
     def latest_version
-      @latest_version ||= @rubygem.versions.most_recent
+      @latest_version ||= @rubygem.most_recent_version
     end
 
     def latest_version_by_slug

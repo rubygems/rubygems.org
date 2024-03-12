@@ -117,7 +117,7 @@ class GemDownloadTest < ActiveSupport::TestCase
 
       should "set version_downloads of ES record with most_recent version downloads" do
         2.times.each do |i|
-          most_recent_version = @gems[i].versions.most_recent
+          most_recent_version = @gems[i].most_recent_version
 
           assert_equal most_recent_version.downloads_count, es_version_downloads(@gems[i].id)
         end
@@ -128,7 +128,7 @@ class GemDownloadTest < ActiveSupport::TestCase
       setup do
         @rubygem = create(:rubygem, number: "0.0.1.rc")
         import_and_refresh
-        most_recent_version = @rubygem.versions.most_recent
+        most_recent_version = @rubygem.most_recent_version
         version_downloads = [most_recent_version.full_name, 40]
         GemDownload.bulk_update([version_downloads])
       end

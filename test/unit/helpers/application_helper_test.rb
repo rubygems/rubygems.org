@@ -32,8 +32,8 @@ class ApplicationHelperTest < ActionView::TestCase
     create(:version, rubygem: rubygem, number: "3.0.0", platform: "ruby", description: text)
 
     assert_equal "alert(&quot;foo&quot;);Rails authentication &amp; authorization",
-      short_info(rubygem.versions.most_recent)
-    assert_predicate short_info(rubygem.versions.most_recent), :html_safe?
+      short_info(rubygem.most_recent_version)
+    assert_predicate short_info(rubygem.most_recent_version), :html_safe?
   end
 
   should "use gem summary before gem description" do
@@ -42,7 +42,7 @@ class ApplicationHelperTest < ActionView::TestCase
     rubygem = create(:rubygem, name: "SomeGem")
     create(:version, rubygem: rubygem, number: "3.0.0", platform: "ruby", description: desc, summary: summary)
 
-    assert_equal "an awesome gem", short_info(rubygem.versions.most_recent)
+    assert_equal "an awesome gem", short_info(rubygem.most_recent_version)
   end
 
   context "rubygem" do

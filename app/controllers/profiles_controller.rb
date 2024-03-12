@@ -8,8 +8,9 @@ class ProfilesController < ApplicationController
   before_action :disable_cache, only: :edit
 
   def show
-    @user           = User.find_by_slug!(params[:id])
-    rubygems        = @user.rubygems_downloaded
+    @user = User.includes(rubygems_downloaded: %i[most_recent_version gem_download]).strict_loading
+      .find_by_slug!(params[:id])
+    rubygems        = @user.rubygems_downloaded.to_a
     @rubygems       = rubygems.slice!(0, 10)
     @extra_rubygems = rubygems
   end
@@ -40,7 +41,7 @@ class ProfilesController < ApplicationController
 
   def delete
     @only_owner_gems = current_user.only_owner_gems
-    @multi_owner_gems = current_user.rubygems_downloaded - @only_owner_gems
+    @multi_owner_gems = current_user.rubygems_downloaded.to_a - @only_owner_gems
   end
 
   def destroy

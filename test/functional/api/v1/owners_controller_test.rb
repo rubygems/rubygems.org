@@ -71,6 +71,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   context "on GET to owner gems with id" do
     setup do
       @user = create(:user)
+      rubygem = create(:rubygem, owners: [@user])
+      create(:version, rubygem: rubygem)
       get :gems, params: { handle: @user.id }, format: :json
     end
 

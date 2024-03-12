@@ -53,7 +53,7 @@ class DashboardsControllerTest < ActionController::TestCase
       should "render links" do
         @gems.each do |g|
           assert page.has_content?(g.name)
-          selector = "a[href='#{rubygem_path(g.slug)}'][title='#{g.versions.most_recent.info}']"
+          selector = "a[href='#{rubygem_path(g.slug)}'][title='#{g.most_recent_version.info}']"
 
           page.assert_selector(selector)
         end

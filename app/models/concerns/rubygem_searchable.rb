@@ -30,7 +30,7 @@ module RubygemSearchable
       }
 
     def search_data # rubocop:disable Metrics/MethodLength
-      if (latest_version = versions.most_recent)
+      if (latest_version = most_recent_version)
         deps = latest_version.dependencies.to_a
         versioned_links = links(latest_version)
       end

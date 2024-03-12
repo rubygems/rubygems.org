@@ -34,6 +34,11 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
+  has_many :rubygems_downloaded,
+    -> { with_versions.joins(:gem_download).order(GemDownload.arel_table["count"].desc) },
+    through: :ownerships,
+    source: :rubygem
+
   has_many :pushed_versions, -> { by_created_at }, dependent: :nullify, inverse_of: :pusher, class_name: "Version", foreign_key: :pusher_id
   has_many :yanked_versions, through: :deletions, source: :version, inverse_of: :yanker
 
@@ -190,11 +195,7 @@ class User < ApplicationRecord
   end
 
   def total_downloads_count
-    rubygems.to_a.sum(&:downloads)
-  end
-
-  def rubygems_downloaded
-    rubygems.with_versions.sort_by { |rubygem| -rubygem.downloads }
+    rubygems.joins(:gem_download).sum(:count)
   end
 
   def total_rubygems_count

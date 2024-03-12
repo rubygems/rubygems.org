@@ -21,7 +21,7 @@ class Api::V1::RubygemsController < Api::BaseController
     cache_expiry_headers
     set_surrogate_key "gem/#{@rubygem.name}"
 
-    if @rubygem.hosted? && @rubygem.public_versions.indexed.count.nonzero?
+    if @rubygem.hosted? && @rubygem.public_versions.indexed.present?
       respond_to do |format|
         format.json { render json: @rubygem }
         format.yaml { render yaml: @rubygem }
