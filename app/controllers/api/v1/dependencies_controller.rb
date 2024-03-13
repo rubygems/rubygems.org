@@ -1,90 +1,12 @@
 class Api::V1::DependenciesController < Api::BaseController
-  before_action :check_brownout
-  before_action :check_gem_count
-
-  mattr_reader :brownout_ranges, default: [
-    # March 22 at 00:00 UTC (4pm PT / 7pm ET) for 5 minutes
-    [Time.utc(2023, 3, 22), 5.minutes],
-    # March 29 at the top of every hour UTC for 10 minutes
-    *(0..23).map do |h|
-      [Time.utc(2023, 3, 29, h), 10.minutes]
-    end,
-    # April 03, 10, 17, 24, and May 1, 3, 5 for the entire day UTC
-    [Time.utc(2023, 4, 3), 1.day],
-    [Time.utc(2023, 4, 10), 1.day],
-    [Time.utc(2023, 4, 17), 1.day],
-    [Time.utc(2023, 4, 24), 1.day],
-    [Time.utc(2023, 5, 1), 1.day],
-    [Time.utc(2023, 5, 3), 1.day],
-    [Time.utc(2023, 5, 5), 1.day],
-    # May 12, 15, 17, 19, 22 for the entire day UTC
-    [Time.utc(2023, 5, 12), 1.day],
-    [Time.utc(2023, 5, 15), 1.day],
-    [Time.utc(2023, 5, 17), 1.day],
-    [Time.utc(2023, 5, 19), 1.day],
-    [Time.utc(2023, 5, 22), 1.day]
-  ].map { |start, duration| start..(start + duration) } <<
-    # May 24 from 00:00 UTC onward
-    (Time.utc(2023, 5, 24)...)
-
   def index
-    deps = GemDependent.new(gem_names).to_a
-
-    cacheable!
-    respond_to do |format|
-      format.json { render json: deps }
-      format.marshal { render plain: Marshal.dump(deps) }
-    end
-  end
-
-  private
-
-  def cacheable!
     cache_expiry_headers(expiry: 30, fastly_expiry: 60)
-    set_surrogate_key("dependencyapi", gem_names.map { |name| "gem/#{name}" })
-  end
-
-  def check_brownout
-    return if request.headers["x-dependency-api-allowed"]
-    return if Patterns::JAVA_HTTP_USER_AGENT.match?(request.user_agent)
-
-    current_time = Time.current.utc
-    return if brownout_ranges.none? { |r| r.cover?(current_time) }
-
-    cacheable!
+    set_surrogate_key("dependencyapi")
 
     respond_to do |format|
-      error = "The dependency API is going away. See https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html for more information"
+      error = "The dependency API has gone away. See https://blog.rubygems.org/2023/02/22/dependency-api-deprecation.html for more information"
       format.marshal { render plain: error, status: :not_found }
       format.json { render json: { error: error, code: 404 }, status: :not_found }
     end
-  end
-
-  def _set_vary_header
-    super
-    headers["Vary"] = [headers["Vary"], "x-dependency-api-allowed"].compact.join(", ")
-  end
-
-  def check_gem_count
-    if gem_names.empty?
-      cacheable!
-      return render plain: ""
-    end
-    return if gem_names.size <= Gemcutter::GEM_REQUEST_LIMIT
-
-    case request.format.symbol
-    when :marshal
-      render plain: "Too many gems! (use --full-index instead)", status: :unprocessable_entity
-    when :json
-      render json: { error: "Too many gems! (use --full-index instead)", code: 422 }, status: :unprocessable_entity
-    end
-  end
-
-  def gem_names
-    @gem_names ||= gems_params[:gems].blank? ? [] : gems_params[:gems].split(",".freeze)
-  end
-
-  def gems_params
-    params.permit(:gems)
   end
 end
