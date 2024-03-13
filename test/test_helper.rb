@@ -189,10 +189,9 @@ end
 
 class ActionController::TestCase
   def process(...)
-    Prosopite.scan
-    super
-  ensure
-    Prosopite.finish
+    Prosopite.scan do
+      super
+    end
   end
 end
 

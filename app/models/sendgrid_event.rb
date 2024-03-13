@@ -25,8 +25,6 @@ class SendgridEvent < ApplicationRecord
   end
 
   def self.process_later(payload)
-    return if exists?(sendgrid_id: payload[:sg_event_id])
-
     transaction do
       sendgrid_event = create!(
         sendgrid_id: payload[:sg_event_id],
@@ -38,6 +36,8 @@ class SendgridEvent < ApplicationRecord
       )
       ProcessSendgridEventJob.perform_later(sendgrid_event:)
     end
+  rescue ActiveRecord::RecordNotUnique
+    nil
   end
 
   def self.process(id)

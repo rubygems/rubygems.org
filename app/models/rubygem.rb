@@ -41,7 +41,7 @@ class Rubygem < ApplicationRecord
     uniqueness: { case_sensitive: false },
     name_format: true,
     if: :needs_name_validation?
-  validate :reserved_names_exclusion
+  validate :reserved_names_exclusion, if: :needs_name_validation?
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
@@ -420,7 +420,7 @@ class Rubygem < ApplicationRecord
   end
 
   def bulk_reorder_versions
-    numbers = reload.versions.sort.reverse.map(&:number).uniq
+    numbers = reload.versions.pluck(:number).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
 
     ids = []
     positions = []
