@@ -130,9 +130,9 @@ class Rubygem < ApplicationRecord
   end
 
   def all_errors(version = nil)
-    [self, linkset, version].compact.map do |ar|
+    [self, linkset, version].compact.flat_map do |ar|
       ar.errors.full_messages
-    end.flatten.join(", ")
+    end.join(", ")
   end
 
   has_many :public_versions, -> { by_position.published }, class_name: "Version", inverse_of: :rubygem
