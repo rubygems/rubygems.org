@@ -24,7 +24,11 @@ class DependenciesControllerTest < ActionController::TestCase
 
   def render_str_call(scope, dependencies)
     local_var = { scope: scope, dependencies: dependencies, gem_name: @rubygem.name }
-    DependenciesController.renderer.new({}).render(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
+    DependenciesController.renderer.new(
+      {
+        "HTTP_HOST" => "test.host"
+      }
+    ).render(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
   end
 
   context "GET to show in html" do
