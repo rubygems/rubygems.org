@@ -168,8 +168,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
                         .indexed
                         .created_after(6.months.ago)
                         .group(:rubygem_id)
-                        .having(arel_table['id'].count.gt(1))
-                        .order(arel_table['created_at'].maximum.desc)
+                        .having(arel_table["id"].count.gt(1))
+                        .order(arel_table["created_at"].maximum.desc)
                         .limit(limit))
       .joins(:rubygem)
       .indexed
