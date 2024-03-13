@@ -7,7 +7,7 @@
         <span>
           <span class="deps_expanded deps_expanded-link" data-gem_id="<%= name %>" data-version="<%= version %>"></span>
         </span>
-        <%= link_to rubygem_version_url(name, version), target: :_blank do %>
+        <%= link_to "/gems/#{name}/versions/#{version}", target: :_blank do %>
           <span class="deps_item"><%= name %> <%= version %>
           <span class='deps_item--details'> <%= req %></span></span>
         <% end %>
