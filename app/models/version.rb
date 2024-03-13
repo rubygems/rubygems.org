@@ -490,10 +490,11 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def create_link_verifications
-    Links::LINKS.each_value do |long|
-      uri = metadata[long]
-      next if uri.blank?
-      rubygem.link_verifications.find_or_create_by!(uri:).retry_if_needed
+    uris = metadata.values_at(*Links::LINKS.values).compact_blank.uniq
+    verifications = rubygem.link_verifications.where(uri: uris).index_by(&:uri)
+    uris.each do |uri|
+      verification = verifications.fetch(uri) { rubygem.link_verifications.create_or_find_by!(uri:) }
+      verification.retry_if_needed
     end
   end
 
