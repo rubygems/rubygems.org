@@ -40,7 +40,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
   end
 
   def render_rubygems(versions)
-    rubygems = versions.includes(:dependencies, rubygem: :linkset).map do |version|
+    rubygems = versions.includes(:dependencies, :gem_download, rubygem: %i[linkset gem_download]).map do |version|
       payload = version.rubygem.payload(version)
       payload.merge(version.as_json)
     end

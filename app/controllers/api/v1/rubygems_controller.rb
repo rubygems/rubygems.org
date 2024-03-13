@@ -11,6 +11,7 @@ class Api::V1::RubygemsController < Api::BaseController
     return render_forbidden unless @api_key.can_index_rubygems?
 
     @rubygems = @api_key.user.rubygems.with_versions
+      .preload(:linkset, :gem_download, most_recent_version: { dependencies: :rubygem, gem_download: nil })
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }

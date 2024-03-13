@@ -53,9 +53,9 @@ class Api::V1::OwnersController < Api::BaseController
   def gems
     user = User.find_by_slug(params[:handle])
     if user
-      rubygems = user.rubygems.with_versions.includes(
+      rubygems = user.rubygems.with_versions.preload(
         :linkset, :gem_download,
-        most_recent_version: %i[dependencies gem_download]
+        most_recent_version: { dependencies: :rubygem, gem_download: nil }
       ).strict_loading
       respond_to do |format|
         format.json { render json: rubygems }

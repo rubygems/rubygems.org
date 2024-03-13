@@ -96,6 +96,10 @@ group :development, :test do
 
   gem "brakeman", "~> 6.1", require: false
 
+  # used to find n+1 queries
+  gem "prosopite", "~> 1.4"
+  gem "pg_query", "~> 5.1"
+
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.48", require: false
   gem "rubocop-rails", "~> 2.18", require: false
