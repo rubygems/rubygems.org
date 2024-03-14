@@ -72,7 +72,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       rubygem = create(:rubygem, owners: [@user])
-      create(:version, rubygem: rubygem)
+      version = create(:version, rubygem: rubygem)
+      rubygem2 = create(:rubygem, owners: [@user])
+      rubygem3 = create(:rubygem, owners: [@user])
+      version2 = create(:version, rubygem: rubygem2)
+      create(:dependency, version: version, rubygem: rubygem2, requirements: ">= 0", scope: "runtime")
+      create(:dependency, version: version, rubygem: rubygem3, requirements: ">= 0", scope: "development")
+      create(:dependency, version: version2, rubygem: rubygem3, requirements: ">= 0", scope: "runtime")
       get :gems, params: { handle: @user.id }, format: :json
     end
 

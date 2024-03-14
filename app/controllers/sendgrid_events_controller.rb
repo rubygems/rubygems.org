@@ -17,7 +17,10 @@ class SendgridEventsController < ApplicationController
   )
 
   def create
+    existing = SendgridEvent.where(sendgrid_id: events_params.pluck(:sg_event_id)).pluck(:sendgrid_id).to_set
     events_params.each do |event_payload|
+      next unless existing.add?(event_payload.require(:sg_event_id))
+
       SendgridEvent.process_later(event_payload)
     end
     head :ok

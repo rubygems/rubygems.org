@@ -12,7 +12,8 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         create(:version, rubygem: @sinatra)
 
         @foobar = create(:rubygem, name: "foobar")
-        create(:version, rubygem: @foobar)
+        create(:version, rubygem: @foobar,
+               dependencies: [build(:dependency, rubygem: @rails), build(:dependency, rubygem: @sinatra)])
       end
 
       should "return correct JSON for latest gems" do

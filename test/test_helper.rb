@@ -187,6 +187,14 @@ class ActiveSupport::TestCase
   end
 end
 
+class ActionController::TestCase
+  def process(...)
+    Prosopite.scan do
+      super
+    end
+  end
+end
+
 class ActionDispatch::IntegrationTest
   include OauthHelpers
   setup { host! Gemcutter::HOST }

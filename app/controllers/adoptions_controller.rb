@@ -8,7 +8,7 @@ class AdoptionsController < ApplicationController
   def index
     @ownership_call     = @rubygem.ownership_call
     @user_request       = @rubygem.ownership_requests.find_by(user: current_user)
-    @ownership_requests = @rubygem.ownership_requests.includes(:user)
+    @ownership_requests = @rubygem.ownership_requests.preload(:user)
   end
 
   private

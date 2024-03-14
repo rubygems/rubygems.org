@@ -41,7 +41,7 @@ class Rubygem < ApplicationRecord
     uniqueness: { case_sensitive: false },
     name_format: true,
     if: :needs_name_validation?
-  validate :reserved_names_exclusion
+  validate :reserved_names_exclusion, if: :needs_name_validation?
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
@@ -207,7 +207,7 @@ class Rubygem < ApplicationRecord
 
   def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
     versioned_links = links(version)
-    deps = version.dependencies.where.associated(:rubygem).to_a
+    deps = version.dependencies.to_a.select(&:rubygem)
     {
       "name"               => name,
       "downloads"          => downloads,
@@ -311,9 +311,7 @@ class Rubygem < ApplicationRecord
       .indexed
       .group_by(&:platform)
 
-    versions_of_platforms.each_value do |platforms|
-      Version.default_scoped.find(platforms.max.id).update_column(:latest, true)
-    end
+    Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
   end
 
   def refresh_indexed!
@@ -422,7 +420,7 @@ class Rubygem < ApplicationRecord
   end
 
   def bulk_reorder_versions
-    numbers = reload.versions.sort.reverse.map(&:number).uniq
+    numbers = reload.versions.pluck(:number).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
 
     ids = []
     positions = []

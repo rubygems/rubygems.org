@@ -95,6 +95,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       .by_created_at
   end
 
+  def self.created_after(time)
+    where(arel_table[:created_at].gt(Arel::Nodes::BindParam.new(time)))
+  end
+
   def self.latest
     where(latest: true)
   end
@@ -159,18 +163,14 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def self.just_updated(limit = 5)
-    six_months_ago_ts = 6.months.ago
-    subquery = <<~SQL.squish
-      versions.rubygem_id IN (SELECT versions.rubygem_id
-                                FROM versions
-                            WHERE versions.indexed = 'true' AND
-                                  versions.created_at > '#{six_months_ago_ts}'
-                            GROUP BY versions.rubygem_id
-                              HAVING COUNT(versions.id) > 1
-                              ORDER BY MAX(created_at) DESC LIMIT :limit)
-    SQL
-
-    where(subquery, limit: limit)
+    where(rubygem_id: Version.default_scoped
+                        .select(:rubygem_id)
+                        .indexed
+                        .created_after(6.months.ago)
+                        .group(:rubygem_id)
+                        .having(arel_table["id"].count.gt(1))
+                        .order(arel_table["created_at"].maximum.desc)
+                        .limit(limit))
       .joins(:rubygem)
       .indexed
       .by_created_at
@@ -490,10 +490,11 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def create_link_verifications
-    Links::LINKS.each_value do |long|
-      uri = metadata[long]
-      next if uri.blank?
-      rubygem.link_verifications.find_or_create_by!(uri:).retry_if_needed
+    uris = metadata.values_at(*Links::LINKS.values).compact_blank.uniq
+    verifications = rubygem.link_verifications.where(uri: uris).index_by(&:uri)
+    uris.each do |uri|
+      verification = verifications.fetch(uri) { rubygem.link_verifications.create_or_find_by!(uri:) }
+      verification.retry_if_needed
     end
   end
 
