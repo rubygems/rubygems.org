@@ -5,11 +5,7 @@ if Rails.env.local?
   Rails.application.config.after_initialize do
     Prosopite.custom_logger = SemanticLogger[Prosopite]
     Prosopite.raise = true
-    Prosopite.ignore_queries = [
-      # dependency api intentionally loads 1 by 1, so each gem can be stored in the cache
-      # plus the API is deprecated
-      Regexp.new(Regexp.quote("SELECT rv.name, rv.number, rv.platform, d.requirements, for_dep_name.name dep_name"))
-    ]
+    Prosopite.ignore_queries = []
     Prosopite.allow_stack_paths = [
       # mailers need refactoring to not find based on IDs when we already have objects in memory
       "app/mailers/",
