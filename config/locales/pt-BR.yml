@@ -609,6 +609,7 @@ pt-BR:
       required_rubygems_version: Versão Requerida do RubyGems
       requires_mfa:
       released_with_mfa:
+      link_verified:
       links:
         badge: Badge
         bugs:

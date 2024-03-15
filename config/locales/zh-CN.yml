@@ -605,6 +605,7 @@ zh-CN:
       required_rubygems_version: 需要的 RubyGems 版本
       requires_mfa: 新的版本需要开启多因素验证
       released_with_mfa: 使用多因素验证发布的版本
+      link_verified:
       links:
         badge: 徽章
         bugs: Bug 追踪

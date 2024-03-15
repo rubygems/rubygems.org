@@ -581,6 +581,7 @@ zh-TW:
       required_rubygems_version: RubyGems 版本需求
       requires_mfa:
       released_with_mfa:
+      link_verified:
       links:
         badge: 徽章
         bugs: Bug 追蹤

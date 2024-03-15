@@ -612,6 +612,7 @@ de:
       required_rubygems_version:
       requires_mfa:
       released_with_mfa:
+      link_verified:
       links:
         badge: Abzeichen
         bugs: Bug Tracker

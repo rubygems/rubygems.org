@@ -597,6 +597,7 @@ ja:
       required_rubygems_version: 必要なRubyGemsのバージョン
       requires_mfa: 新しいバージョンはMFAを必要とします
       released_with_mfa: MFAで投稿されたバージョン
+      link_verified:
       links:
         badge: バッジ
         bugs: バグトラッカー

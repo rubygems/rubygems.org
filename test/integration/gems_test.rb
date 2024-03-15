@@ -168,6 +168,16 @@ class GemsSystemTest < SystemTest
     assert page.has_selector?(".github-btn")
   end
 
+  test "shows verified link when hompage_uri is set and verified" do
+    github_link = "http://github.com/user/project"
+    version = create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => github_link })
+    version.rubygem.link_verifications.create!(uri: github_link, last_verified_at: 1.day.ago)
+
+    visit rubygem_path(@rubygem.slug)
+
+    assert page.has_selector?(".gem__link__verified")
+  end
+
   test "shows github link when homepage_uri is set" do
     github_link = "http://github.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => github_link })
