@@ -828,6 +828,7 @@ DEPENDENCIES
   rack-attack (~> 6.6)
   rack-test (~> 2.1)
   rack-utf8_sanitizer (~> 1.8)
+  rackup (~> 2.1)
   rails (~> 7.1.0)
   rails-controller-testing (~> 1.0)
   rails-erd (~> 1.7)
