@@ -659,7 +659,7 @@ GEM
       concurrent-ruby
       thor
     shoulda-context (2.0.0)
-    shoulda-matchers (6.1.0)
+    shoulda-matchers (6.2.0)
       activesupport (>= 5.2.0)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -850,7 +850,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.18)
   shoryuken (~> 6.2)
   shoulda-context (~> 2.0)
-  shoulda-matchers (~> 6.1)
+  shoulda-matchers (~> 6.2)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
   sprockets-rails (~> 3.4)
@@ -1115,7 +1115,7 @@ CHECKSUMS
   semantic_logger (4.15.0) sha256=ec4f56122b5d2e2117d148b86c69fb62c1194a2b01a271be04ba8678a85f81ff
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (2.0.0) sha256=7adf45342cd800f507d2a053658cb1cce2884b616b26004d39684b912ea32c34
-  shoulda-matchers (6.1.0) sha256=f11bc4bf14419196b8d1c89d4018615a26244a0758703d5f81222088886203dd
+  shoulda-matchers (6.2.0) sha256=a702c059c5f3bbda2295827231a28654e33063d7c4d409662980ec630207d8dd
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-cobertura (2.1.0) sha256=2c6532e34df2e38a379d72cef9a05c3b16c64ce90566beebc6887801c4ad3f02
   simplecov-html (0.12.3) sha256=4b1aad33259ffba8b29c6876c12db70e5750cb9df829486e4c6e5da4fa0aa07b
