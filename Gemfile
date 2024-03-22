@@ -70,7 +70,7 @@ gem "rails_semantic_logger", "~> 4.14"
 gem "pp", "0.5.0"
 
 # Former default gems
-gem "csv", "~> 3.2" # zeitwerk-2.6.12
+gem "csv", "~> 3.3" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 
 # Assets
