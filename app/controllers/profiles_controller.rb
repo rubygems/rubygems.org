@@ -11,9 +11,7 @@ class ProfilesController < ApplicationController
     @user = User.includes(rubygems_downloaded: %i[most_recent_version gem_download])
       .order("gem_downloads_rubygems.count DESC").strict_loading
       .find_by_slug!(params[:id])
-    rubygems        = @user.rubygems_downloaded.to_a
-    @rubygems       = rubygems.slice!(0, 10)
-    @extra_rubygems = rubygems
+    @rubygems = @user.rubygems_downloaded.to_a
   end
 
   def me

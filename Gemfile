@@ -3,17 +3,17 @@ source "https://rubygems.org"
 gem "rails", "~> 7.1.0"
 gem "rails-i18n", "~> 7.0"
 
-gem "aws-sdk-s3", "~> 1.145"
+gem "aws-sdk-s3", "~> 1.146"
 gem "aws-sdk-sqs", "~> 1.70"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.6"
 gem "dalli", "~> 3.2"
-gem "ddtrace", "~> 1.20", require: "ddtrace/auto_instrument"
+gem "ddtrace", "~> 1.21", require: "ddtrace/auto_instrument"
 gem "dogstatsd-ruby", "~> 5.5"
 gem "google-protobuf", "~> 4.26"
 gem "faraday", "~> 2.9"
 gem "faraday-retry", "~> 2.2"
-gem "good_job", "~> 3.26"
+gem "good_job", "~> 3.27"
 gem "gravtastic", "~> 3.2"
 gem "high_voltage", "~> 3.1"
 gem "honeybadger", "~> 5.7"
@@ -70,7 +70,7 @@ gem "rails_semantic_logger", "~> 4.14"
 gem "pp", "0.5.0"
 
 # Former default gems
-gem "csv", "~> 3.2" # zeitwerk-2.6.12
+gem "csv", "~> 3.3" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 
 # Assets
@@ -127,7 +127,7 @@ group :test do
   gem "rails-controller-testing", "~> 1.0"
   gem "mocha", "~> 2.0", require: false
   gem "shoulda-context", "~> 2.0"
-  gem "shoulda-matchers", "~> 6.1"
+  gem "shoulda-matchers", "~> 6.2"
   gem "selenium-webdriver", "~> 4.18"
   gem "webmock", "~> 3.23"
   gem "simplecov", "~> 0.22", require: false

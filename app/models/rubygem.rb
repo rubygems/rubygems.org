@@ -353,17 +353,6 @@ class Rubygem < ApplicationRecord
     user.mfa_enabled? || !metadata_mfa_required?
   end
 
-  # TODO: broken. don't use until #2964 is resolved.
-  def mfa_required_since_version
-    return unless metadata_mfa_required?
-    non_mfa_version = public_versions.find { |v| !v.rubygems_metadata_mfa_required? }
-    if non_mfa_version
-      non_mfa_version.next.number
-    else
-      public_versions.last.number
-    end
-  end
-
   def version_manifest(number, platform = nil)
     VersionManifest.new(gem: name, number: number, platform: platform)
   end

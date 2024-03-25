@@ -354,8 +354,8 @@ es:
         ha sido aprobada. Se te ha añadido a la lista de propietarios de la gema."
     new_ownership_requests:
       body_html:
-        zero:
-        one:
+        zero: No hay nuevas candidaturas a propietario para <strong>%{gem}</strong>.
+        one: Hay <em>una</em> nueva candidatura a propietario para <strong>%{gem}</strong>. Por favor haz click en el botón siguiente para verla.
         other: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>.
           Por favor haz click en el botón siguiente para ver todas las candidaturas.
       button: CANDIDATURAS A PROPIETARIO
