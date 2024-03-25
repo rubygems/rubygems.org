@@ -7,7 +7,7 @@
   <div id="profile">
     <div class="profile-list">
       <ul>
-        <%= render partial: 'rubygem', collection: @only_owner_gems, locals: {graph: false, owners: true}  %>
+        <%= render partial: 'rubygem', collection: @only_owner_gems, locals: {owners: true}  %>
       </ul>
     </div>
   </div>
@@ -20,7 +20,7 @@
   <div id="profile">
     <div class="profile-list">
       <ul>
-        <%= render partial: 'rubygem', collection: @multi_owner_gems, locals: {graph: false, owners: true}  %>
+        <%= render partial: 'rubygem', collection: @multi_owner_gems, locals: {owners: true}  %>
       </ul>
     </div>
   </div>
