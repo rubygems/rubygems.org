@@ -8,10 +8,8 @@ class ProfilesController < ApplicationController
   before_action :disable_cache, only: :edit
 
   def show
-    @user = User.includes(rubygems_downloaded: %i[most_recent_version gem_download])
-      .order("gem_downloads_rubygems.count DESC").strict_loading
-      .find_by_slug!(params[:id])
-    @rubygems = @user.rubygems_downloaded.to_a
+    @user = User.find_by_slug!(params[:id])
+    @rubygems = @user.rubygems_downloaded.includes(%i[most_recent_version gem_download]).strict_loading
   end
 
   def me
