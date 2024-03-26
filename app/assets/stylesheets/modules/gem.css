@@ -203,14 +203,10 @@
   .clipboard-is-active:before {
     content: "";
     position: absolute;
-    top: -4px;
+    top: -15px;
     right: 8px;
-    height: 15px;
-    width: 15px;
-    background-color: #141c22;
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg); }
+    border: 8px solid transparent;
+    border-bottom: 8px solid #141c22; }
 
 .gem__link:before {
   margin-right: 16px; }
