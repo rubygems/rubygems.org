@@ -1,26 +1,8 @@
-@import url("base.css");
-@import url("layout.css");
-@import url("suggest-list.css");
-@import url("type.css");
-@import url("github_buttons.css");
-
-@import url("modules/badge.css");
-@import url("modules/button.css");
-@import url("modules/dependencies.css");
-@import url("modules/error.css");
-@import url("modules/footer.css");
-@import url("modules/form.css");
-@import url("modules/gem.css");
-@import url("modules/gems.css");
-@import url("modules/header.css");
-@import url("modules/home.css");
-@import url("modules/mfa.css");
-@import url("modules/nav/nav--paginated.css");
-@import url("modules/nav/nav--v.css");
-@import url("modules/news.css");
-@import url("modules/org.css");
-@import url("modules/owners.css");
-@import url("modules/search.css");
-@import url("modules/shared.css");
-@import url("modules/stats.css");
-@import url("modules/status-icon.css");
+/*
+ * This is a manifest file that'll automatically include all the stylesheets available in this directory
+ * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
+ * the top of the compiled file, but it's generally better to create a new file per style scope.
+ *= require_self
+ *= require github_buttons
+ *= require_tree .
+*/
