@@ -418,6 +418,7 @@ pt-BR:
       submit: Salvar senha
       title: Resetar senha
       token_failure: Por favor, confira a URL ou tente submetê-la novamente.
+      session_expired:
     new:
       submit: Resetar senha
       title: Alterar senha

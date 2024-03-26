@@ -44,6 +44,22 @@ class PasswordsControllerTest < ActionController::TestCase
       end
     end
 
+    context "with incorrect token" do
+      setup do
+        get :edit, params: { token: @user.confirmation_token.succ, user_id: @user.id }
+      end
+
+      should redirect_to("the home page") { root_path }
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "warn about invalid url" do
+        assert_equal "Please double check the URL or try submitting a new password reset.", flash[:alert]
+      end
+    end
+
     context "with valid confirmation_token" do
       setup do
         get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
@@ -51,12 +67,12 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :success
 
-      should "sign in the user" do
-        assert_predicate @controller.request.env[:clearance], :signed_in?
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
       end
 
-      should "invalidate the confirmation_token" do
-        assert_nil @user.reload.confirmation_token
+      should "not invalidate the confirmation_token" do
+        refute_nil @user.reload.confirmation_token
       end
 
       should "display edit form" do
@@ -186,12 +202,12 @@ class PasswordsControllerTest < ActionController::TestCase
 
         should respond_with :success
 
-        should "sign in the user" do
-          assert_predicate @controller.request.env[:clearance], :signed_in?
+        should "not sign in the user" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
         end
 
-        should "invalidate the confirmation_token" do
-          assert_nil @user.reload.confirmation_token
+        should "not invalidate the confirmation_token" do
+          refute_nil @user.reload.confirmation_token
         end
 
         should "display edit form" do
@@ -279,12 +295,8 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :success
 
-      should "sign in the user" do
-        assert_predicate @controller.request.env[:clearance], :signed_in?
-      end
-
-      should "invalidate the confirmation_token" do
-        assert_nil @user.reload.confirmation_token
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
       end
 
       should "display edit form" do
@@ -412,15 +424,17 @@ class PasswordsControllerTest < ActionController::TestCase
       @old_encrypted_password = @user.encrypted_password
     end
 
-    context "when not signed in" do
+    context "when not verified" do
       setup do
+        session[:password_reset_verification] = nil
+        session[:password_reset_user] = nil
         put :update, params: {
           user_id: @user.id,
           password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
       end
 
-      should redirect_to("the sign in page") { sign_in_path }
+      should redirect_to("the home page") { root_path }
 
       should "not change api_key" do
         assert_equal(@user.reload.api_key, @api_key)
@@ -439,9 +453,8 @@ class PasswordsControllerTest < ActionController::TestCase
         @other_api_key = @other_user.api_key
         @other_new_api_key = create(:api_key, owner: @other_user, key: "rubygems_otheruserkey")
         @other_old_encrypted_password = @other_user.encrypted_password
-        sign_in_as @other_user
-        session[:verification] = 10.minutes.from_now
-        session[:verified_user] = @other_user.id
+        session[:password_reset_verification] = 10.minutes.from_now
+        session[:password_reset_user] = @other_user.id
 
         put :update, params: {
           user_id: @user.id,
@@ -450,8 +463,8 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       teardown do
-        session[:verification] = nil
-        session[:verified_user] = nil
+        session[:password_reset_verification] = nil
+        session[:password_reset_user] = nil
       end
 
       should redirect_to("the dashboard") { dashboard_path }
@@ -485,7 +498,7 @@ class PasswordsControllerTest < ActionController::TestCase
         }
       end
 
-      should redirect_to("the verification page") { verify_session_path }
+      should redirect_to("the home page") { root_path }
 
       should "not change api_key" do
         assert_equal(@user.reload.api_key, @api_key)
@@ -495,16 +508,16 @@ class PasswordsControllerTest < ActionController::TestCase
       end
     end
 
-    context "when signed in" do
+    context "when verified" do
       setup do
         sign_in_as @user
-        session[:verification] = 10.minutes.from_now
-        session[:verified_user] = @user.id
+        session[:password_reset_verification] = 10.minutes.from_now
+        session[:password_reset_user] = @user.id
       end
 
       teardown do
-        session[:verification] = nil
-        session[:verified_user] = nil
+        session[:password_reset_verification] = nil
+        session[:password_reset_user] = nil
       end
 
       context "with invalid password" do
@@ -540,7 +553,7 @@ class PasswordsControllerTest < ActionController::TestCase
           end
 
           should set_flash[:alert]
-          should redirect_to("the verification page") { verify_session_path }
+          should redirect_to("the home page") { root_path }
 
           should "not sign the user out" do
             assert_predicate @controller.request.env[:clearance], :signed_in?
