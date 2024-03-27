@@ -703,6 +703,7 @@ es:
       required_rubygems_version: Versión de Rubygems requerida
       requires_mfa: Nuevas versiones requieren AMF
       released_with_mfa: Versión publicada con AMF
+      link_verified:
       links:
         badge: Badge
         bugs: Seguimiento de Bugs

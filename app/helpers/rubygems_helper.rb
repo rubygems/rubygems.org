@@ -12,9 +12,15 @@ module RubygemsHelper
   end
 
   def link_to_page(id, url, verified: false)
+    return if url.blank?
+
     classes = %w[gem__link t-list__item]
-    classes << "gem__link__verified" if verified
-    link_to(t("rubygems.aside.links.#{id}"), url, rel: "nofollow", class: classes, id: id) if url.present?
+    if verified
+      classes << "gem__link__verified"
+      title = t("rubygems.aside.link_verified")
+    end
+
+    link_to(t("rubygems.aside.links.#{id}"), url, rel: "nofollow", class: classes, id:, title:)
   end
 
   def link_to_directory

@@ -598,6 +598,7 @@ nl:
       required_rubygems_version: Required Rubygems Version
       requires_mfa:
       released_with_mfa:
+      link_verified:
       links:
         badge: Badge
         bugs: Bug-tracker
