@@ -64,6 +64,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.rubygems.name == 'locked' && (success() || failure())
-        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4.1.0
+        uses: codecov/codecov-action@c16abc29c95fcf9174b58eb7e1abf4c866893bc8 # v4.1.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
