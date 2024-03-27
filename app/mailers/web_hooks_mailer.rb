@@ -1,11 +1,4 @@
 class WebHooksMailer < ApplicationMailer
-  include Roadie::Rails::Automatic
-
-  default from: Clearance.configuration.mailer_sender
-
-  default_url_options[:host] = Gemcutter::HOST
-  default_url_options[:protocol] = Gemcutter::PROTOCOL
-
   def webhook_deleted(user_id, rubygem_id, url, failure_count)
     @user = User.find(user_id)
     @rubygem = Rubygem.find(rubygem_id) if rubygem_id
