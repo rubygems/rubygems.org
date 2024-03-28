@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_27_005038) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -575,6 +575,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
     t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
   end
 
+  add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
+  add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
   add_foreign_key "events_rubygem_events", "geoip_infos"
   add_foreign_key "events_rubygem_events", "ip_addresses"
   add_foreign_key "events_rubygem_events", "rubygems"
@@ -588,8 +590,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
+  add_foreign_key "ownership_calls", "users", name: "ownership_calls_user_id_fk"
+  add_foreign_key "ownership_requests", "ownership_calls", name: "ownership_requests_ownership_call_id_fk"
+  add_foreign_key "ownership_requests", "rubygems", name: "ownership_requests_rubygem_id_fk"
+  add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
+  add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
+  add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"
+  add_foreign_key "web_hooks", "users", name: "web_hooks_user_id_fk"
   add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "webauthn_verifications", "users"
 end
