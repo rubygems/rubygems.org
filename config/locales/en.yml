@@ -402,6 +402,7 @@ en:
       submit: Save this password
       title: Reset password
       token_failure: Please double check the URL or try submitting a new password reset.
+      session_expired: Your password reset session has expired.
     new:
       submit: Reset password
       title: Change your password
