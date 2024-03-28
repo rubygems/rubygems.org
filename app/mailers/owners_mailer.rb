@@ -1,13 +1,6 @@
 class OwnersMailer < ApplicationMailer
-  include Roadie::Rails::Automatic
-
   include OwnersHelper
   helper :owners
-
-  default from: Clearance.configuration.mailer_sender
-
-  default_url_options[:host] = Gemcutter::HOST
-  default_url_options[:protocol] = Gemcutter::PROTOCOL
 
   def ownership_confirmation(ownership)
     @ownership = ownership
