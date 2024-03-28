@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -582,6 +582,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
   add_foreign_key "events_user_events", "ip_addresses"
   add_foreign_key "events_user_events", "users"
   add_foreign_key "ip_addresses", "geoip_infos"
+  add_foreign_key "linksets", "rubygems", name: "linksets_rubygem_id_fk"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
