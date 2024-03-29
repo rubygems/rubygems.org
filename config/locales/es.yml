@@ -661,8 +661,8 @@ es:
         %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
       optional_full_name: Opcional. Será mostrado en tu perfil público
-      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil
-        público
+      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil público
+      twitter_username: Usuario
       title: Editar perfil
       delete:
         delete: Eliminar

@@ -27,7 +27,7 @@ class ProfileTest < SystemTest
     assert page.has_content? "nick1"
 
     click_link "Edit Profile"
-    fill_in "Username", with: "nick2"
+    fill_in "user_handle", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -41,7 +41,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Username", with: "nick2"
+    fill_in "user_handle", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -53,7 +53,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Username", with: "nick1" * 10
+    fill_in "user_handle", with: "nick1" * 10
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -118,12 +118,12 @@ class ProfileTest < SystemTest
     assert page.has_content?("Email Me")
   end
 
-  test "adding Twitter username" do
+  test "adding X(formerly Twitter) username" do
     sign_in
     visit profile_path("nick1")
 
     click_link "Edit Profile"
-    fill_in "Twitter username", with: "nick1"
+    fill_in "user_twitter_username", with: "nick1"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 

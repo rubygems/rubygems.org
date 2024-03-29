@@ -207,7 +207,7 @@ class PasswordResetTest < SystemTest
 
     visit edit_profile_path
 
-    fill_in "Username", with: "username"
+    fill_in "user_handle", with: "username"
     fill_in "Email address", with: new_email
     fill_in "Password", with: @user.password
     perform_enqueued_jobs { click_button "Update" }

@@ -547,7 +547,8 @@ zh-TW:
       email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
       enter_password: 輸入密碼
       optional_full_name:
-      optional_twitter_username: Twitter 帳號（可選）
+      optional_twitter_username: X 帳號（可選）
+      twitter_username:
       title: 編輯個人檔案
       delete:
         delete: 刪除
