@@ -585,7 +585,7 @@ fr:
       enter_password: Veuillez entrer le mot de passe de votre compte
       optional_full_name:
       optional_twitter_username: Nom d'utilisateur X optionnel. Sera affiché publiquement
-      twitter_username:
+      twitter_username: Pseudonyme
       title: Modification de profil
       delete:
         delete: Supprimer

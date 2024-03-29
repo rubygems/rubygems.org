@@ -576,7 +576,7 @@ pt-BR:
       enter_password:
       optional_full_name:
       optional_twitter_username:
-      twitter_username:
+      twitter_username: Usuário
       title: Editar Perfil
       delete:
         delete:

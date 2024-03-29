@@ -548,7 +548,7 @@ zh-TW:
       enter_password: 輸入密碼
       optional_full_name:
       optional_twitter_username: X 帳號（可選）
-      twitter_username:
+      twitter_username: 帳號
       title: 編輯個人檔案
       delete:
         delete: 刪除

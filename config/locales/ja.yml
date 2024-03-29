@@ -564,7 +564,7 @@ ja:
       enter_password: アカウントのパスワードを入力してください。
       optional_full_name: 省略可能です。公開されます。
       optional_twitter_username: Xのユーザー名。省略可能です。公開されます。
-      twitter_username:
+      twitter_username: ユーザー名
       title: プロフィールを編集
       delete:
         delete: 削除
