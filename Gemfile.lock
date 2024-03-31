@@ -327,7 +327,7 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
-    launchdarkly-server-sdk (8.3.0)
+    launchdarkly-server-sdk (8.3.1)
       concurrent-ruby (~> 1.1)
       http (>= 4.4.0, < 6.0.0)
       json (~> 2.3)
@@ -992,7 +992,7 @@ CHECKSUMS
   kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
-  launchdarkly-server-sdk (8.3.0) sha256=e7ca980716466e357b86984c705b26c4fa1b3858ff928a0b97623b2237e918ca
+  launchdarkly-server-sdk (8.3.1) sha256=c888ebc0c297abe61620adb0ce6f2314311af0e63c9a521c5ddfb360c5dd8fac
   launchy (2.5.2) sha256=8aa0441655aec5514008e1d04892c2de3ba57bd337afb984568da091121a241b
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.9.0) sha256=cbc8bd87aee05ae16d4946f8b2032f0a3b2ae044ccc39c7db51ea880a7aaac08
