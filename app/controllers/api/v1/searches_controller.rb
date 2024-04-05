@@ -3,7 +3,7 @@ class Api::V1::SearchesController < Api::BaseController
   before_action :verify_query_string, only: %i[show autocomplete]
 
   rescue_from ElasticSearcher::SearchNotAvailableError, with: :search_not_available_error
-  rescue_from ElasticSearcher::InvalidQueryError, with: :invalid_query_error
+  rescue_from ElasticSearcher::InvalidQueryError, with: :render_bad_request
 
   def show
     @rubygems = ElasticSearcher.new(query_params, page: @page).api_search
@@ -21,15 +21,11 @@ class Api::V1::SearchesController < Api::BaseController
   private
 
   def verify_query_string
-    render plain: "bad request", status: :bad_request unless query_params.is_a?(String)
+    render_bad_request unless query_params.is_a?(String)
   end
 
   def search_not_available_error(error)
     render plain: error.message, status: :service_unavailable
-  end
-
-  def invalid_query_error(error)
-    render plain: error.message, status: :bad_request
   end
 
   def query_params
