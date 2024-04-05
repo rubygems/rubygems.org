@@ -159,6 +159,16 @@ class ProfilesControllerTest < ActionController::TestCase
         end
       end
 
+      context "updating without params" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, params: {}
+        end
+
+        should respond_with :bad_request
+      end
+
       context "updating without password" do
         setup do
           @user = create(:user, handle: "johndoe")
