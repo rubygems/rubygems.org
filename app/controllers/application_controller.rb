@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_locale
   before_action :reject_null_char_param
+  before_action :reject_path_params_param
   before_action :reject_null_char_cookie
   before_action :set_error_context_user
   before_action :set_user_tag
@@ -152,6 +153,11 @@ class ApplicationController < ActionController::Base
 
   def reject_null_char_param
     render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
+  end
+
+  # Fix for https://github.com/kaminari/kaminari/pull/1123, remove after this is merged and in use.
+  def reject_path_params_param
+    params.delete(:path_params)
   end
 
   def reject_null_char_cookie
