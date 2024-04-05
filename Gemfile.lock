@@ -338,8 +338,8 @@ GEM
     ld-eventsource (2.2.2)
       concurrent-ruby (~> 1.0)
       http (>= 4.4.1, < 6.0.0)
-    letter_opener (1.9.0)
-      launchy (>= 2.2, < 3)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     letter_opener_web (2.0.0)
       actionmailer (>= 5.2)
       letter_opener (~> 1.7)
@@ -494,7 +494,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.1.2)
       stringio
-    public_suffix (5.0.4)
+    public_suffix (5.0.5)
     puma (6.4.2)
       nio4r (~> 2.0)
     pundit (2.3.1)
@@ -797,7 +797,7 @@ DEPENDENCIES
   kaminari (~> 1.2)
   launchdarkly-server-sdk (~> 8.3)
   launchy (~> 2.5)
-  letter_opener (~> 1.9)
+  letter_opener (~> 1.10)
   letter_opener_web (~> 2.0)
   listen (~> 3.9)
   lookbook (~> 2.2)
@@ -995,7 +995,7 @@ CHECKSUMS
   launchdarkly-server-sdk (8.3.1) sha256=c888ebc0c297abe61620adb0ce6f2314311af0e63c9a521c5ddfb360c5dd8fac
   launchy (2.5.2) sha256=8aa0441655aec5514008e1d04892c2de3ba57bd337afb984568da091121a241b
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
-  letter_opener (1.9.0) sha256=cbc8bd87aee05ae16d4946f8b2032f0a3b2ae044ccc39c7db51ea880a7aaac08
+  letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (2.0.0) sha256=33860ad41e1785d75456500e8ca8bba8ed71ee6eaf08a98d06bbab67c5577b6f
   libdatadog (6.0.0.2.0) sha256=a49b1695275ab21b5f899b15a3633141f6edf79baa17a63c65e765bc8e7ce027
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
@@ -1054,7 +1054,7 @@ CHECKSUMS
   pry (0.14.1) sha256=99b6df0665875dd5a39d85e0150aa5a12e2bb4fef401b6c4f64d32ee502f8454
   pry-byebug (3.10.1) sha256=c8f975c32255bfdb29e151f5532130be64ff3d0042dc858d0907e849125581f8
   psych (5.1.2) sha256=337322f58fc2bf24827d2b9bd5ab595f6a72971867d151bb39980060ea40a368
-  public_suffix (5.0.4) sha256=35cd648e0d21d06b8dce9331d19619538d1d898ba6d56a6f2258409d2526d1ae
+  public_suffix (5.0.5) sha256=72c340218bb384610536919988705cc29e09749c0021fd7005f715c7e5dfc493
   puma (6.4.2) sha256=3eb41999d00733280be3faeb00d610331b6965a537a8cd3d905f316c38575b44
   pundit (2.3.1) sha256=5c62a2e7c65278828d51fb921a3e608472a262a39a046d53d0e78588a556b181
   pwned (2.3.0) sha256=63f5a9576f109203684e9dd053f815649fd5bc0a0348b7190568272641b22353

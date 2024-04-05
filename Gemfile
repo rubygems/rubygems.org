@@ -113,7 +113,7 @@ end
 group :development do
   gem "rails-erd", "~> 1.7"
   gem "listen", "~> 3.9"
-  gem "letter_opener", "~> 1.9"
+  gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 2.0"
   gem "derailed_benchmarks", "~> 2.1"
   gem "memory_profiler", "~> 1.0"
