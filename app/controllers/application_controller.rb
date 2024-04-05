@@ -157,7 +157,7 @@ class ApplicationController < ActionController::Base
 
   # Fix for https://github.com/kaminari/kaminari/pull/1123, remove after this is merged and in use.
   def reject_path_params_param
-    render plain: "bad request", status: :bad_request if params.key?(:path_params)
+    params.delete(:path_params)
   end
 
   def reject_null_char_cookie
