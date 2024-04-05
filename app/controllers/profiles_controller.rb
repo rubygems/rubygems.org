@@ -61,13 +61,16 @@ class ProfilesController < ApplicationController
   private
 
   def params_user
-    params.require(:user).permit(:handle, :twitter_username, :unconfirmed_email, :public_email, :full_name).tap do |hash|
+    params.permit(user: PERMITTED_PROFILE_PARAMS).require(:user).tap do |hash|
       hash.delete(:unconfirmed_email) if hash[:unconfirmed_email] == current_user.email
     end
   end
 
+  PERMITTED_PROFILE_PARAMS = %i[handle twitter_username unconfirmed_email public_email full_name].freeze
+
   def verify_password
-    return if current_user.authenticated?(params.require(:user).delete(:password))
+    password = params.permit(user: :password).require(:user)[:password]
+    return if current_user.authenticated?(password)
     redirect_to edit_profile_path, notice: t("profiles.request_denied")
   end
 end

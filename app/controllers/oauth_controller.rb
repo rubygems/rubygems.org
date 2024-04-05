@@ -18,7 +18,7 @@ class OAuthController < ApplicationController
   end
 
   def failure
-    render_forbidden params.require(:message)
+    render_forbidden params_fetch(:message)
   end
 
   def development_log_in_as

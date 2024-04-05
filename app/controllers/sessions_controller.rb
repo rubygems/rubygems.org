@@ -109,7 +109,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def verify_password_params
-    params.require(:verify_password).permit(:password)
+    params.permit(verify_password: :password).require(:verify_password)
   end
 
   def do_login(two_factor_label:, two_factor_method:, authentication_method:)
@@ -133,18 +133,14 @@ class SessionsController < Clearance::SessionsController
     render "sessions/new", status: :unauthorized
   end
 
-  def session_params
-    params.require(:session)
-  end
-
   def find_user
-    password = session_params[:password].is_a?(String) && session_params.fetch(:password)
-
-    User.authenticate(who, password) if who && password
+    password = params.permit(session: :password).require(:session).fetch(:password, nil)
+    User.authenticate(who, password) if password.is_a?(String) && who
   end
 
   def who
-    session_params[:who].is_a?(String) && session_params.fetch(:who)
+    who_param = params.permit(session: :who).require(:session).fetch(:who, nil)
+    who_param if who_param.is_a?(String)
   end
 
   def set_login_flash

@@ -74,6 +74,6 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def email_param
-    params.permit(:email).require(:email)
+    params_fetch(:email)
   end
 end

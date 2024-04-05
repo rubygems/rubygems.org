@@ -28,7 +28,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
   end
 
   def from_time
-    @from_time ||= Time.iso8601(params.require(:from))
+    @from_time ||= Time.iso8601(params_fetch(:from))
   rescue ArgumentError
     raise InvalidTimeframeParameterError, "the from parameter must be iso8601 formatted"
   end
