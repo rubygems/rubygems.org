@@ -167,6 +167,35 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show with bad params" do
+    setup do
+      @latest_version = create(:version, built_at: 1.week.ago, created_at: 1.day.ago)
+      @rubygem = @latest_version.rubygem
+      @versions = (1..5).map do
+        FactoryBot.create(:version, rubygem: @rubygem)
+      end
+      get :show, params: { rubygem_id: @rubygem.name, id: @latest_version.number, path_params: "injection_attempt" }
+    end
+
+    should respond_with :success
+
+    should "render info about the gem" do
+      assert page.has_content?(@rubygem.name)
+    end
+    should "render the specified version" do
+      assert page.has_content?(@latest_version.number)
+    end
+    should "render other related versions" do
+      @versions.each do |version|
+        assert page.has_content?(version.number)
+      end
+    end
+
+    should "render the checksum version" do
+      assert page.has_content?(@latest_version.sha256_hex)
+    end
+  end
+
   context "On GET to show with *a* yanked version" do
     setup do
       @version = create(:version, number: "1.0.1")
