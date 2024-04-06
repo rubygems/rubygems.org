@@ -6,7 +6,7 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify webauthn_authenticate authenticate]
-  before_action :ensure_not_blocked, only: %i[create webauthn_full_create]
+  before_action :ensure_not_blocked, only: %i[create]
   before_action :webauthn_new_setup, only: :new
   after_action :delete_mfa_session, only: %i[webauthn_create webauthn_full_create otp_create]
   after_action :delete_session_verification, only: :destroy
@@ -47,7 +47,13 @@ class SessionsController < Clearance::SessionsController
 
     @user = user_webauthn_credential.user
 
-    do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: nil, authentication_method: "webauthn")
+    if @user.blocked_email
+      flash.now.alert = t("sessions.create.account_blocked")
+      webauthn_new_setup
+      render template: "sessions/new", status: :unauthorized
+    else
+      do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: nil, authentication_method: "webauthn")
+    end
   end
 
   def otp_create
