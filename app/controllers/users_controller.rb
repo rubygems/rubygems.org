@@ -31,6 +31,6 @@ class UsersController < ApplicationController
   ].freeze
 
   def user_params
-    params.permit(user: PERMITTED_USER_PARAMS).require(:user)
+    params_fetch(user: PERMITTED_USER_PARAMS)
   end
 end

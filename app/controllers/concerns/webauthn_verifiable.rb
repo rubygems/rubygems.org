@@ -64,7 +64,7 @@ module WebauthnVerifiable
   end
 
   def credential_params
-    params.permit(credentials: PERMITTED_CREDENTIALS).require(:credentials)
+    params_fetch(credentials: PERMITTED_CREDENTIALS)
   end
 
   PERMITTED_CREDENTIALS = [

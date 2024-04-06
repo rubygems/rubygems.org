@@ -25,7 +25,7 @@ class NotifiersController < ApplicationController
   private
 
   def notifier_params
-    params.permit(ownerships: %i[push owner ownership_request]).require(:ownerships)
+    params_fetch(ownerships: %i[push owner ownership_request])
   end
 
   def notifier_options(param)

@@ -125,7 +125,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
   ].freeze
 
   def api_key_role_params
-    params.permit(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS).require(:oidc_api_key_role)
+    params_fetch(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS)
   end
 
   def add_default_params(rubygem, statement, condition)

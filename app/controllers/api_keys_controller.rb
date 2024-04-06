@@ -97,7 +97,7 @@ class ApiKeysController < ApplicationController
   end
 
   def api_key_params
-    params.permit(api_key: PERMITTED_API_KEY_PARAMS).require(:api_key)
+    params_fetch(api_key: PERMITTED_API_KEY_PARAMS)
   end
 
   PERMITTED_API_KEY_PARAMS = [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id].freeze

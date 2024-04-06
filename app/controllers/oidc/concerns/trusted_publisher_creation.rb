@@ -11,7 +11,7 @@ module OIDC::Concerns::TrustedPublisherCreation
   end
 
   def set_trusted_publisher_type
-    trusted_publisher_type = params.permit(create_params_key => :trusted_publisher_type).require(create_params_key).require(:trusted_publisher_type)
+    trusted_publisher_type = params_fetch(create_params_key: :trusted_publisher_type).require(:trusted_publisher_type)
 
     @trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.polymorphic_name == trusted_publisher_type }
 

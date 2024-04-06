@@ -31,6 +31,6 @@ class SendgridEventsController < ApplicationController
   def events_params
     # SendGrid send a JSON array of 1+ events. Each event is a JSON object, see docs:
     # https://sendgrid.com/docs/for-developers/tracking-events/event/
-    params.permit(_json: SENDGRID_EVENT_ATTRIBUTES).require(:_json)
+    params_fetch(_json: SENDGRID_EVENT_ATTRIBUTES)
   end
 end

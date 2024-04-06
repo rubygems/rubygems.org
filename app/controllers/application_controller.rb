@@ -171,7 +171,8 @@ class ApplicationController < ActionController::Base
 
   def params_fetch(keys, default = :required)
     if default == :required
-      params.permit(keys).require(keys)
+      key = keys.is_a?(Hash) && keys.size == 1 ? keys.keys.first : keys
+      params.permit(keys).require(key)
     else
       params.permit(keys).fetch(keys, default)
     end
