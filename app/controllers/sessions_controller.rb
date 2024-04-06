@@ -48,7 +48,7 @@ class SessionsController < Clearance::SessionsController
     @user = user_webauthn_credential.user
 
     if @user.blocked_email
-      flash.now.alert = t(".account_blocked")
+      flash.now.alert = t("sessions.create.account_blocked")
       webauthn_new_setup
       render template: "sessions/new", status: :unauthorized
     else
