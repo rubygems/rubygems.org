@@ -478,8 +478,8 @@ GEM
       concurrent-ruby (~> 1.2)
       erb (>= 4)
       zeitwerk (~> 2.6)
-    phlex-rails (1.1.1)
-      phlex (~> 1.9)
+    phlex-rails (1.1.2)
+      phlex (~> 1.9.1)
       railties (>= 6.1, < 8)
       zeitwerk (~> 2.6)
     pp (0.5.0)
@@ -1047,7 +1047,7 @@ CHECKSUMS
   pg_query (5.1.0) sha256=b7f7f47c864f08ccbed46a8244906fb6ee77ee344fd27250717963928c93145d
   pghero (3.4.1) sha256=7f949828119ab17de22ebaef1854ab8c738106bdc31bee3ac0acd0462c0efa88
   phlex (1.9.1) sha256=cd1500f75ae075930c1f141de0d5c1456c27aa8731796e74548061f742b24d06
-  phlex-rails (1.1.1) sha256=b0e82d0ba541eca55ca39051de8be2817a7ed400f8a630e21b261239c8f812d0
+  phlex-rails (1.1.2) sha256=8c61993a0477328adc100cd0d1c1ba5cfba77ba7b20be14507048fc86c08a7c8
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prosopite (1.4.2) sha256=b2e422e2d9dbf3ce20130ded3252fe14adb3833555eacd451f5015d8c9177e79
