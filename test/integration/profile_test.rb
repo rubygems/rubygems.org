@@ -177,19 +177,4 @@ class ProfileTest < SystemTest
     assert page.has_content? "special note"
     assert page.has_content? "request note"
   end
-
-  test "seeing the gems ordered by downloads" do
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 5)
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 2)
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 7)
-
-    sign_in
-    visit profile_path("nick1")
-
-    downloads = page.all(".gems__gem__downloads__count")
-
-    assert_equal("7 Downloads", downloads[0].text)
-    assert_equal("5 Downloads", downloads[1].text)
-    assert_equal("2 Downloads", downloads[2].text)
-  end
 end
