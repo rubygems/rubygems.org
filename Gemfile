@@ -79,7 +79,7 @@ gem "importmap-rails", "~> 2.0"
 gem "stimulus-rails", "~> 1.3" # this adds stimulus-loading.js so it must be available at runtime
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 2.3"
+  gem "tailwindcss-rails", "~> 2.4"
 end
 
 group :assets do

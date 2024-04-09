@@ -582,7 +582,7 @@ GEM
       psych (>= 4.0.0)
     redcarpet (3.6.0)
     regexp_parser (2.9.0)
-    reline (0.5.0)
+    reline (0.5.1)
       io-console (~> 0.5)
     rexml (3.2.6)
     roadie (5.2.0)
@@ -691,7 +691,7 @@ GEM
       attr_required (>= 0.0.5)
       faraday (~> 2.0)
       faraday-follow_redirects
-    tailwindcss-rails (2.3.0)
+    tailwindcss-rails (2.4.0)
       railties (>= 6.0.0)
     terser (1.2.2)
       execjs (>= 0.3.0, < 3)
@@ -857,7 +857,7 @@ DEPENDENCIES
   statsd-instrument (~> 3.7)
   stimulus-rails (~> 1.3)
   strong_migrations (~> 1.8)
-  tailwindcss-rails (~> 2.3)
+  tailwindcss-rails (~> 2.4)
   terser (~> 1.2)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
@@ -1084,7 +1084,7 @@ CHECKSUMS
   rdoc (6.6.3.1) sha256=39f7b749229ab5ad9d21c81586151c1dd7a549fa8be4070ee09b524f9c656345
   redcarpet (3.6.0) sha256=8ad1889c0355ff4c47174af14edd06d62f45a326da1da6e8a121d59bdcd2e9e9
   regexp_parser (2.9.0) sha256=81a00ba141cec0d4b4bf58cb80cd9193e5180836d3fa6ef623f7886d3ba8bdd9
-  reline (0.5.0) sha256=2c4d4570a3fe730225d62e07ec2ad4c5726d8f211b240cf8f8c648ed006d26b7
+  reline (0.5.1) sha256=f94bcd62bcd87f9708b78bf4a868aeeb8fe9383894ec1b431c89b091ebd58fbe
   rexml (3.2.6) sha256=e0669a2d4e9f109951cb1fde723d8acd285425d81594a2ea929304af50282816
   roadie (5.2.0) sha256=f4dc8e41ccc331ebe4833cfa8e7495446db8bfd725c1a9b480147cb53c4945e3
   roadie-rails (3.1.0) sha256=5a45e1a7eb2f7cac29325ef8be64684c9d67cec608b235a69e38a7b79c64de21
@@ -1128,7 +1128,7 @@ CHECKSUMS
   stringio (3.1.0) sha256=c1f6263ae03a15025e51194ab19b06b15e06adcaaedb7f5f6c06ab60f5d67718
   strong_migrations (1.8.0) sha256=18de155ebcddf44e60e74f9a6c0b4bfd2d1e576dfe1c67f4aafc4ec5b0442f5d
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
-  tailwindcss-rails (2.3.0) sha256=eb194b760eb637f01490f8ad30147d93f402346babfc6eeac04039cff8169ad9
+  tailwindcss-rails (2.4.0) sha256=145389f1f4eb1ffd4a55e52dbc9b1b81b8cc7029840fc7ece199ca48c27230d3
   terser (1.2.2) sha256=86ddfa0de7fa8f6c8fd34ad611596f787a77e21bed3db08b90e7c30942d20288
   thor (1.3.1) sha256=fa7e3471d4f6a27138e3d9c9b0d4daac9c3d7383927667ae83e9ab42ae7401ef
   tilt (2.3.0) sha256=82dd903d61213c63679d28e404ee8e10d1b0fdf5270f1ad0898ec314cc3e745c
