@@ -156,6 +156,7 @@ GEM
     cbor (0.5.9.6)
     cgi (0.4.1)
     chartkick (5.0.6)
+    childprocess (5.0.0)
     choice (0.2.0)
     chunky_png (1.4.0)
     clearance (2.6.2)
@@ -333,8 +334,9 @@ GEM
       json (~> 2.3)
       ld-eventsource (= 2.2.2)
       semantic (~> 1.6)
-    launchy (2.5.2)
+    launchy (3.0.0)
       addressable (~> 2.8)
+      childprocess (~> 5.0)
     ld-eventsource (2.2.2)
       concurrent-ruby (~> 1.0)
       http (>= 4.4.1, < 6.0.0)
@@ -796,7 +798,7 @@ DEPENDENCIES
   importmap-rails (~> 2.0)
   kaminari (~> 1.2)
   launchdarkly-server-sdk (~> 8.4)
-  launchy (~> 2.5)
+  launchy (~> 3.0)
   letter_opener (~> 1.10)
   letter_opener_web (~> 2.0)
   listen (~> 3.9)
@@ -916,6 +918,7 @@ CHECKSUMS
   cbor (0.5.9.6) sha256=434a147658dd1df24ec9e7b3297c1fd4f8a691c97d0e688b3049df8e728b2114
   cgi (0.4.1) sha256=4349e1e2025c9cc73534c52c93cffc0dafc93e0a81edc0830d851a3b2c49a430
   chartkick (5.0.6) sha256=96c5984471d4c2017b28914bd1bcda7f9e8a3a9d1903059aaadc7a4044c87193
+  childprocess (5.0.0) sha256=0746b7ab1d6c68156e64a3767631d7124121516192c0492929a7f0af7310d835
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
   clearance (2.6.2) sha256=6dd69ebcdb4767ca6ca9e2e2ac31c00412f2cf4b1a4dae58c821d36bd455c3c7
@@ -993,7 +996,7 @@ CHECKSUMS
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
   launchdarkly-server-sdk (8.4.0) sha256=98463a44e89e0e9d9e6f56f0cac767ac2d2466342c2a664bd2b304096ed1c797
-  launchy (2.5.2) sha256=8aa0441655aec5514008e1d04892c2de3ba57bd337afb984568da091121a241b
+  launchy (3.0.0) sha256=4abcdab659689550ceca6ec0630cd9efd9940b51dc14cb4ebceee8f7aedc791b
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (2.0.0) sha256=33860ad41e1785d75456500e8ca8bba8ed71ee6eaf08a98d06bbab67c5577b6f
