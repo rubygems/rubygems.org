@@ -125,7 +125,7 @@ group :test do
   gem "launchy", "~> 2.5"
   gem "rack-test", "~> 2.1", require: "rack/test"
   gem "rails-controller-testing", "~> 1.0"
-  gem "mocha", "~> 2.0", require: false
+  gem "mocha", "~> 2.2", require: false
   gem "shoulda-context", "~> 2.0"
   gem "shoulda-matchers", "~> 6.2"
   gem "selenium-webdriver", "~> 4.19"
