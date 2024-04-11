@@ -40,11 +40,15 @@ WebMock.disable_net_connect!(
     "chromedriver.storage.googleapis.com"
   ]
 )
-WebMock.globally_stub_request do |request|
+WebMock.globally_stub_request(:after_local_stubs) do |request|
   avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
   if avo_request_pattern.matches?(request)
     { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
       headers: { "Content-Type" => "application/json" } }
+  end
+
+  if WebMock::RequestPattern.new(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s={size}")).matches?(request)
+    { status: 404, body: "", headers: {} }
   end
 end
 

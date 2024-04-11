@@ -35,7 +35,9 @@ module ApplicationHelper
   end
 
   def avatar(size, id = "gravatar", user = current_user, theme: :light, **)
-    url = user.gravatar_url(size: size, secure: true) || default_avatar(theme: theme)
+    raise ArgumentError, "invalid default avatar theme, only light and dark are suported" unless %i[light dark].include? theme
+
+    url = avatar_user_path(user.id, params: { size: size, theme: theme })
     image_tag(url,
       id: id,
       width: size,
@@ -97,15 +99,5 @@ module ApplicationHelper
       aria: { autocomplete: "list" },
       data: data
     )
-  end
-
-  private
-
-  def default_avatar(theme:)
-    case theme
-    when :light then "/images/avatar.svg"
-    when :dark then "/images/avatar_inverted.svg"
-    else raise "invalid default avatar theme, only light and dark are suported"
-    end
   end
 end
