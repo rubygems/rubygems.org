@@ -47,7 +47,7 @@ WORKDIR /app
 ENV RAILS_ENV="production"
 
 # Install application gems
-COPY Gemfile* /app/
+COPY Gemfile* .ruby-version /app/
 RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor <<BASH
   set -ex
 
