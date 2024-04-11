@@ -793,7 +793,7 @@ DEPENDENCIES
   gravtastic (~> 3.2)
   groupdate (~> 6.2)
   high_voltage (~> 3.1)
-  honeybadger (~> 5.5)
+  honeybadger (~> 5.5.1)
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.0)
   kaminari (~> 1.2)
