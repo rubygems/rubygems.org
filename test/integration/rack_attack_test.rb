@@ -109,7 +109,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "return 401 for unauthorized request" do
-        post "/session", params: { session: { password: @user.password } }
+        post "/session", params: { session: { who: "no@example.com", password: @user.password } }
 
         assert_response :unauthorized
       end

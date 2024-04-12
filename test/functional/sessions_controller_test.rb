@@ -303,7 +303,7 @@ class SessionsControllerTest < ActionController::TestCase
         post :create, params: { session: { who: ["1"], password: "pass" } }
       end
 
-      should respond_with :unauthorized
+      should respond_with :bad_request
 
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?

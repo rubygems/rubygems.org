@@ -14,7 +14,7 @@ class Api::V1::SearchesController < Api::BaseController
   end
 
   def autocomplete
-    results = ElasticSearcher.new(params[:query], page: @page).suggestions
+    results = ElasticSearcher.new(query_params, page: @page).suggestions
     render json: results
   end
 
@@ -33,6 +33,6 @@ class Api::V1::SearchesController < Api::BaseController
   end
 
   def query_params
-    params.require(:query)
+    params_fetch(:query)
   end
 end

@@ -18,17 +18,19 @@ class UsersController < ApplicationController
 
   private
 
+  PERMITTED_USER_PARAMS = %i[
+    bio
+    email
+    handle
+    public_email
+    location
+    password
+    website
+    twitter_username
+    full_name
+  ].freeze
+
   def user_params
-    params.require(:user).permit(
-      :bio,
-      :email,
-      :handle,
-      :public_email,
-      :location,
-      :password,
-      :website,
-      :twitter_username,
-      :full_name
-    )
+    params.permit(user: PERMITTED_USER_PARAMS).require(:user)
   end
 end

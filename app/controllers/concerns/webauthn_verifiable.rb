@@ -64,12 +64,14 @@ module WebauthnVerifiable
   end
 
   def credential_params
-    params.require(:credentials).permit(
-      :id,
-      :type,
-      :rawId,
-      :authenticatorAttachment,
-      response: %i[authenticatorData attestationObject clientDataJSON signature userHandle]
-    )
+    params.permit(credentials: PERMITTED_CREDENTIALS).require(:credentials)
   end
+
+  PERMITTED_CREDENTIALS = [
+    :id,
+    :type,
+    :rawId,
+    :authenticatorAttachment,
+    { response: %i[authenticatorData attestationObject clientDataJSON signature userHandle] }
+  ].freeze
 end

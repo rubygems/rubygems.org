@@ -398,6 +398,12 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
         assert_response 400 # bad status raised by strong params
       end
+
+      should "handle non-scalar params" do
+        post :create, params: { email_confirmation: { email: { foo: "bar" } } }
+
+        assert_response 400 # bad status raised by strong params
+      end
     end
 
     context "user does not exist" do

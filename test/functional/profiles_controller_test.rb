@@ -169,11 +169,21 @@ class ProfilesControllerTest < ActionController::TestCase
         should respond_with :bad_request
       end
 
-      context "updating without password" do
+      context "updating with missing password params" do
         setup do
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
           put :update, params: { user: { handle: "doejohn" } }
+        end
+
+        should respond_with :bad_request
+      end
+
+      context "updating without inputting password" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, params: { user: { handle: "doejohn", password: "" } }
         end
 
         should set_flash.to("This request was denied. We could not verify your password.")

@@ -83,7 +83,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   end
 
   def key_param
-    params.permit(:api_key).require(:api_key)
+    params_fetch(:api_key)
   end
 
   def api_key_create_params

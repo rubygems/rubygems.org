@@ -23,6 +23,6 @@ class OIDC::IdTokensController < ApplicationController
   private
 
   def find_id_token
-    @id_token = current_user.oidc_id_tokens.find(params.require(:id))
+    @id_token = current_user.oidc_id_tokens.find(params_fetch(:id))
   end
 end

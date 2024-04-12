@@ -56,7 +56,7 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   def create_params_key = :oidc_rubygem_trusted_publisher
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params.require(:id))
+    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params_fetch(:id))
   end
 
   def gh_actions_trusted_publisher

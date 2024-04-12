@@ -169,6 +169,14 @@ class ApplicationController < ActionController::Base
     params.delete(:params)
   end
 
+  def params_fetch(keys, default = :required)
+    if default == :required
+      params.permit(keys).require(keys)
+    else
+      params.permit(keys).fetch(keys, default)
+    end
+  end
+
   def disable_cache
     response.headers["Cache-Control"] = "no-cache, no-store"
     response.headers["Pragma"] = "no-cache"

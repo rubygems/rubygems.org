@@ -62,6 +62,6 @@ class OwnershipRequestsController < ApplicationController
   end
 
   def status_params
-    params.require(:status)
+    params_fetch(:status)
   end
 end
