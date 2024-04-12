@@ -391,7 +391,6 @@ zh-TW:
       submit: 更新密碼
       title: 重設密碼
       token_failure: 請確認 URL 或再次提交
-      session_expired:
     new:
       submit: 更新密碼
       title: 修改密碼

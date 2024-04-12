@@ -421,7 +421,6 @@ de:
       submit: Speichern dieses Passworts
       title: Zurücksetzen des Passworts
       token_failure:
-      session_expired:
     new:
       submit: Zurücksetzen des Passworts
       title: Ändere dein Passwort
