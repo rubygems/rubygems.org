@@ -127,4 +127,9 @@ class Api::BaseController < ApplicationController
   def skip_session
     request.session_options[:skip] = true
   end
+
+  def render_bad_request(error = "bad request")
+    error = error.message if error.is_a?(Exception)
+    render json: { error: error.to_s }, status: :bad_request
+  end
 end

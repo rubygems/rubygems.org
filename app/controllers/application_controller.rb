@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :render_forbidden
+  rescue_from ActionController::UnpermittedParameters, with: :render_bad_request
 
   before_action :set_locale
   before_action :reject_null_char_param
@@ -47,7 +48,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
-    render plain: "Request is missing param '#{e.param}'", status: :bad_request
+    render_bad_request "Request is missing param '#{e.param}'"
   end
 
   def self.http_basic_authenticate_with(**options)
@@ -139,6 +140,11 @@ class ApplicationController < ActionController::Base
     render plain: error, status: :forbidden
   end
 
+  def render_bad_request(error = "bad request")
+    error = error.message if error.is_a?(Exception)
+    render plain: error.to_s, status: :bad_request
+  end
+
   def redirect_to_page_with_error
     flash[:error] = t("invalid_page") unless controller_path.starts_with? "api"
     page_params = params.except(:controller, :action, :page)
@@ -152,7 +158,7 @@ class ApplicationController < ActionController::Base
   end
 
   def reject_null_char_param
-    render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
+    render_bad_request if params.to_s.include?("\\u0000")
   end
 
   # Fix for https://github.com/kaminari/kaminari/pull/1123, remove after this is merged and in use.
@@ -162,7 +168,7 @@ class ApplicationController < ActionController::Base
 
   def reject_null_char_cookie
     contains_null_char = cookies.map { |cookie| cookie.join("=") }.join(";").include?("\u0000")
-    render plain: "bad request", status: :bad_request if contains_null_char
+    render_bad_request if contains_null_char
   end
 
   def sanitize_params
