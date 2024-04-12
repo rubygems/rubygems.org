@@ -60,7 +60,7 @@ gem "user_agent_parser", "~> 2.17"
 gem "pghero", "~> 3.4"
 
 # Admin dashboard
-gem "avo", "~> 2.48"
+gem "avo", "~> 2.49"
 gem "view_component", "~> 3.11"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
