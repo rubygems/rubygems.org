@@ -21,6 +21,12 @@ class PasswordResetTest < SystemTest
     perform_enqueued_jobs { click_button "Reset password" }
   end
 
+  test "GET to /passwords redirects to /passwords/new" do
+    visit "/passwords"
+
+    assert_equal new_password_path, page.current_path, "redirects to homepage if link is invalid"
+  end
+
   test "reset password form does not tell if a user exists" do
     forgot_password_with "someone@example.com"
 

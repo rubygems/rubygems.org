@@ -242,6 +242,7 @@ Rails.application.routes.draw do
     end
 
     resources :passwords, only: %i[new create]
+    get "/passwords", to: redirect("/passwords/new")
 
     resource :session, only: %i[create destroy] do
       post 'otp_create', to: 'sessions#otp_create', as: :otp_create
