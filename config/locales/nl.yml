@@ -407,6 +407,7 @@ nl:
       submit: Sla dit wachtwoord op
       title: reset wachtwoord
       token_failure: Controleer het webadres, en probeer het opnieuw.
+      session_expired:
     new:
       submit: Wachtwoord wijzigen
       title: Wachtwoord wijzigen

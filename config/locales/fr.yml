@@ -421,6 +421,7 @@ fr:
       submit: Enregistrer ce mot de passe
       title: Nouveau mot de passe
       token_failure: Veuillez vérifier l'URL ou réessayer.
+      session_expired:
     new:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe

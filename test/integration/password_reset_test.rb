@@ -27,13 +27,23 @@ class PasswordResetTest < SystemTest
     assert page.has_content? "instructions for changing your password"
   end
 
+  test "resetting password with expired token" do
+    forgot_password_with @user.email
+
+    travel Gemcutter::EMAIL_TOKEN_EXPIRES_AFTER + 1.minute do
+      visit password_reset_link
+
+      assert page.has_content? "Please double check the URL or try submitting a new password reset."
+    end
+  end
+
   test "resetting password without handle" do
     forgot_password_with @user.email
 
     visit password_reset_link
     expected_path = "/users/#{@user.id}/password/edit"
 
-    assert_equal expected_path, page.current_path, "removes confirmation token from url"
+    assert_equal expected_path, page.current_path, "loads password edit page"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
@@ -50,12 +60,60 @@ class PasswordResetTest < SystemTest
     assert page.has_content? "Sign out"
   end
 
+  test "resetting a password with multiple unfurls of the same link before reset doesn't expire the url" do
+    forgot_password_with @user.email
+
+    visit password_reset_link
+    expected_path = "/users/#{@user.id}/password/edit"
+
+    assert_equal expected_path, page.current_path, "loads password edit page"
+
+    visit password_reset_link
+
+    assert_equal expected_path, page.current_path, "works the second time as well"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert_equal dashboard_path, page.current_path, "redirects to dashboard after password reset"
+
+    click_link "Sign out"
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Sign out"
+  end
+
+  test "resetting a password invalidates the link after password saved" do
+    forgot_password_with @user.email
+
+    visit password_reset_link
+    expected_path = "/users/#{@user.id}/password/edit"
+
+    assert_equal expected_path, page.current_path, "loads password edit page"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert_equal dashboard_path, page.current_path
+
+    click_link "Sign out"
+
+    visit password_reset_link
+
+    assert_equal root_path, page.current_path, "redirects to homepage if link is invalid"
+    assert page.has_content? "Please double check the URL or try submitting a new password reset."
+  end
+
   test "resetting a password with a blank or short password" do
     forgot_password_with @user.email
 
     visit password_reset_link
 
-    assert page.has_content?("Sign out")
+    refute page.has_content?("Sign out")
 
     fill_in "Password", with: ""
     click_button "Save this password"
@@ -76,6 +134,8 @@ class PasswordResetTest < SystemTest
     click_button "Save this password"
 
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
+
+    assert page.has_content?("Sign out")
   end
 
   test "resetting a password but waiting too long after token auth" do
@@ -88,7 +148,7 @@ class PasswordResetTest < SystemTest
     travel 16.minutes do
       click_button "Save this password"
 
-      assert page.has_content? "verification has expired. Please verify again."
+      assert page.has_content? "Your password reset session has expired."
     end
   end
 
@@ -113,10 +173,40 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
+    assert page.has_content?("Sign out")
+
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
 
     assert_event Events::UserEvent::PASSWORD_CHANGED, {},
       @user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
+  end
+
+  test "resetting a password when signed in as a different user, changes the password reset user" do
+    @other = create(:user, handle: nil, password: "otherTestP4ssword")
+    visit sign_in_path
+
+    fill_in "Email or Username", with: @other.email
+    fill_in "Password", with: @other.password
+    click_button "Sign in"
+
+    visit edit_settings_path
+
+    click_link "Reset password"
+
+    fill_in "Email address", with: @user.email
+    perform_enqueued_jobs { click_button "Reset password" }
+
+    visit password_reset_link
+
+    assert page.has_content?("Sign out")
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert page.has_content?("Sign out")
+
+    assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
+    refute @other.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
   test "restting password when mfa is enabled" do
@@ -130,10 +220,12 @@ class PasswordResetTest < SystemTest
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
 
-    assert page.has_content?("Sign out")
+    refute page.has_content?("Sign out")
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
+
+    assert page.has_content?("Sign out")
   end
 
   test "resetting a password when mfa is enabled but mfa session is expired" do

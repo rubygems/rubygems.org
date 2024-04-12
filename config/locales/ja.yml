@@ -401,6 +401,7 @@ ja:
       submit: このパスワードを保存する
       title: パスワードをリセット
       token_failure: URLを見返すか、再度送信してみてください。
+      session_expired:
     new:
       submit: パスワードをリセット
       title: パスワードを変更する
