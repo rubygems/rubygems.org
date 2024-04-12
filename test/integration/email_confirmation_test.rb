@@ -31,7 +31,23 @@ class EmailConfirmationTest < SystemTest
     visit link
 
     assert page.has_content? "Sign out"
-    assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
+    assert_flash :notice, "Your email address has been verified"
+  end
+
+  test "requesting confirmation with expired token" do
+    request_confirmation_mail @user.email
+
+    link = last_email_link
+
+    assert_not_nil link
+
+    travel 2.days do
+      visit link
+
+      refute page.has_content? "Sign out"
+      refute page.has_selector? "#flash_notice", text: "Your email address has been verified"
+      assert_flash :alert, "Please double check the URL or try submitting it again."
+    end
   end
 
   test "re-using confirmation link does not sign in user" do
@@ -39,12 +55,14 @@ class EmailConfirmationTest < SystemTest
 
     link = last_email_link
     visit link
+
+    assert_flash :notice, "Your email address has been verified"
     click_link "Sign out"
 
     visit link
 
     assert page.has_content? "Sign in"
-    assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
+    assert_flash :alert, "Please double check the URL or try submitting it again."
   end
 
   test "requesting multiple confirmation email" do
@@ -75,6 +93,7 @@ class EmailConfirmationTest < SystemTest
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
 
+    assert_flash :notice, "Your email address has been verified"
     assert page.has_content? "Sign out"
   end
 
@@ -93,6 +112,7 @@ class EmailConfirmationTest < SystemTest
 
     click_on "Authenticate with security device"
 
+    assert_flash :notice, "Your email address has been verified"
     find(:css, ".header__popup-link").click
 
     assert page.has_content?("SIGN OUT")
@@ -114,6 +134,7 @@ class EmailConfirmationTest < SystemTest
     fill_in "otp", with: @mfa_recovery_codes.first
     click_button "Authenticate"
 
+    assert_flash :notice, "Your email address has been verified"
     find(:css, ".header__popup-link").click
 
     assert page.has_content?("SIGN OUT")
@@ -132,7 +153,7 @@ class EmailConfirmationTest < SystemTest
     travel 16.minutes do
       click_button "Authenticate"
 
-      assert page.has_content? "Your login page session has expired."
+      assert_flash :alert, "Your login page session has expired."
     end
   end
 

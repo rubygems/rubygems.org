@@ -12,6 +12,10 @@ module WebauthnVerifiable
     }.merge(session_options)
   end
 
+  def webauthn_credential_present?
+    params.permit(credentials: PERMITTED_CREDENTIALS).fetch(:credentials, nil).present?
+  end
+
   def webauthn_credential_verified?
     @credential = WebAuthn::Credential.from_get(credential_params)
 

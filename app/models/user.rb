@@ -203,9 +203,13 @@ class User < ApplicationRecord
     update!(email_confirmed: true, confirmation_token: nil)
   end
 
-  # confirmation token expires after 15 minutes
+  # confirmation token expires after Gemcutter::EMAIL_TOKEN_EXPIRES_AFTER
   def valid_confirmation_token?
     token_expires_at > Time.zone.now
+  end
+
+  def invalidate_confirmation_token!(confirmation_token)
+    User.where(id:, confirmation_token:).update(confirmation_token: nil, token_expires_at: nil)
   end
 
   def generate_confirmation_token(reset_unconfirmed_email: true)

@@ -218,6 +218,10 @@ class SystemTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = :rack_test
   end
+
+  def assert_flash(type, message)
+    assert_selector("#flash_#{type}", text: message, wait: 1)
+  end
 end
 
 class ComponentTest < ActiveSupport::TestCase
