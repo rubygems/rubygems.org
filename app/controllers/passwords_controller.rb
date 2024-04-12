@@ -1,18 +1,17 @@
 class PasswordsController < ApplicationController
   include MfaExpiryMethods
   include WebauthnVerifiable
+  include SessionVerifiable
 
   before_action :ensure_email_present, only: %i[create]
-  before_action :clear_password_reset_session, only: %i[create edit]
 
-  before_action :no_referrer, only: %i[edit]
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
   before_action :session_expired_failure, only: %i[otp_edit webauthn_edit], unless: :session_active?
   before_action :webauthn_failure, only: %i[webauthn_edit], unless: :webauthn_credential_verified?
   before_action :otp_failure, only: %i[otp_edit], unless: :otp_edit_conditions_met?
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
-  before_action :validate_password_reset_session, only: %i[update]
+  verify_session_before only: %i[update]
 
   def new
   end
@@ -26,7 +25,8 @@ class PasswordsController < ApplicationController
 
       render template: "multifactor_auths/prompt"
     else
-      password_reset_verified
+      # When user doesn't have mfa, a valid token is a full "magic link" sign in.
+      verified_sign_in
       render :edit
     end
   end
@@ -43,12 +43,11 @@ class PasswordsController < ApplicationController
   end
 
   def update
-    if @user.update_password reset_params[:password]
-      @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
-      @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
-      clear_password_reset_session
-      sign_in @user
+    if current_user.update_password reset_params[:password]
+      current_user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
+      current_user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
       redirect_to dashboard_path
+      session[:password_reset_token] = nil
     else
       flash.now[:alert] = t(".failure")
       render :edit
@@ -56,16 +55,23 @@ class PasswordsController < ApplicationController
   end
 
   def otp_edit
-    password_reset_verified
+    verified_sign_in
     render :edit
   end
 
   def webauthn_edit
-    password_reset_verified
+    verified_sign_in
     render :edit
   end
 
   private
+
+  def verified_sign_in
+    sign_in @user
+    session_verified
+    @user.update!(confirmation_token: nil)
+    StatsD.increment "login.success"
+  end
 
   def reset_params
     params.fetch(:password_reset, {}).permit(:password, :reset_api_key, :reset_api_keys)
@@ -80,52 +86,23 @@ class PasswordsController < ApplicationController
   end
 
   def validate_confirmation_token
-    confirmation_token = params[:token] || session[:password_reset_token]
-    @user = User.find_by(id: params[:user_id], confirmation_token:)
-    return token_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
-    session[:password_reset_token] = confirmation_token
+    @user = User.find_by(id: params[:user_id], confirmation_token: params[:token].to_s)
+    redirect_to root_path, alert: t("passwords.edit.token_failure") unless @user&.valid_confirmation_token?
   end
 
   def otp_edit_conditions_met? = @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && session_active?
 
-  def session_expired_failure = mfa_failure(t("multifactor_auths.session_expired"))
-  def webauthn_failure = mfa_failure(@webauthn_error)
-  def otp_failure = mfa_failure(t("multifactor_auths.incorrect_otp"))
+  def session_expired_failure = login_failure(t("multifactor_auths.session_expired"))
+  def webauthn_failure = login_failure(@webauthn_error)
+  def otp_failure = login_failure(t("multifactor_auths.incorrect_otp"))
 
-  def mfa_failure(message)
+  def login_failure(message)
     flash.now.alert = message
     render template: "multifactor_auths/prompt", status: :unauthorized
   end
 
-  def token_failure(message)
-    clear_password_reset_session
-    redirect_to root_path, alert: message
-  end
-
-  # password reset session is a short lived session that can only perform password reset.
-  def password_reset_verified
-    clear_password_reset_session
-    session[:password_reset_user] = @user.id
-    session[:password_reset_verification] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
-  end
-
-  def validate_password_reset_session
-    return token_failure(t("passwords.edit.session_expired")) unless password_reset_session_active?
-    @user = User.find(session[:password_reset_user])
-  end
-
-  def password_reset_session_active?
-    session[:password_reset_verification] && session[:password_reset_verification] > Time.current
-  end
-
-  def clear_password_reset_session
-    session.delete(:password_reset_token)
-    session.delete(:password_reset_user)
-    session.delete(:password_reset_verification)
-  end
-
-  # Avoid leaking token in referrer header (OWASP: forgot password)
-  def no_referrer
-    headers["Referrer-Policy"] = "no-referrer"
+  def redirect_to_verify
+    session[:redirect_uri] = verify_session_redirect_path
+    redirect_to verify_session_path, alert: t("verification_expired")
   end
 end

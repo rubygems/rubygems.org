@@ -409,7 +409,6 @@ zh-CN:
       submit: 保存该密码
       title: 重置密码
       token_failure: 请再次确认 URL 或尝试重新提交
-      session_expired:
     new:
       submit: 重置密码
       title: 修改您的密码

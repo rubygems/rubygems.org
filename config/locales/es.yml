@@ -455,7 +455,6 @@ es:
       submit: Guardar esta contraseña
       title: Restablecer contraseña
       token_failure: Por favor verifica la URL o inténtalo nuevamente.
-      session_expired:
     new:
       submit: Restablecer contraseña
       title: Cambiar tu contraseña
