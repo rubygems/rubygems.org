@@ -69,7 +69,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         get :show, params: { query: "AND other" }, format: :json
 
         assert_response :bad_request
-        assert_equal "Failed to parse search term: 'AND other'.", @response.body
+        assert_equal "Failed to parse search term: 'AND other'.", JSON.parse(@response.body)["error"]
       end
     end
   end
