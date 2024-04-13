@@ -284,6 +284,33 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [my_rubygem], @user.rubygems
     end
 
+    context "generate_confirmation_token" do
+      should "set confirmation token and token_expires_at" do
+        assert_changed(@user, :confirmation_token, :token_expires_at) do
+          @user.generate_confirmation_token
+          @user.save!
+        end
+      end
+
+      should "clear unconfirmed_email if requested" do
+        @user.update(unconfirmed_email: "unconfirmed@example.com")
+
+        assert_changed(@user, :unconfirmed_email, :confirmation_token, :token_expires_at) do
+          @user.generate_confirmation_token(reset_unconfirmed_email: true)
+          @user.save!
+        end
+
+        assert_nil @user.unconfirmed_email
+      end
+
+      should "generate a sufficiently long token" do
+        @user.generate_confirmation_token
+        @user.save!
+
+        assert_operator @user.confirmation_token.length, :>=, 24, "Token must be at least 24 characters long"
+      end
+    end
+
     context "unconfirmed_email update" do
       should "set confirmation token and token_expires_at" do
         assert_changed(@user, :confirmation_token, :token_expires_at) do

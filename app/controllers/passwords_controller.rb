@@ -18,8 +18,8 @@ class PasswordsController < ApplicationController
 
   def edit
     if @user.mfa_enabled?
-      @otp_verification_url = otp_edit_user_password_url(@user, token: @user.confirmation_token)
-      setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
+      @otp_verification_url = otp_edit_password_url(token: @user.confirmation_token)
+      setup_webauthn_authentication(form_url: webauthn_edit_password_url(token: @user.confirmation_token))
 
       create_new_mfa_expiry
 
@@ -86,7 +86,7 @@ class PasswordsController < ApplicationController
   end
 
   def validate_confirmation_token
-    @user = User.find_by(id: params[:user_id], confirmation_token: params[:token].to_s)
+    @user = User.find_by(confirmation_token: params[:token].to_s)
     redirect_to root_path, alert: t("passwords.edit.token_failure") unless @user&.valid_confirmation_token?
   end
 
