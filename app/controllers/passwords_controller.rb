@@ -6,7 +6,7 @@ class PasswordsController < ApplicationController
   before_action :ensure_email_present, only: %i[create]
 
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
-  before_action :session_expired_failure, only: %i[otp_edit webauthn_edit], unless: :session_active?
+  before_action :session_expired_failure, only: %i[otp_edit webauthn_edit], unless: :mfa_session_active?
   before_action :webauthn_failure, only: %i[webauthn_edit], unless: :webauthn_credential_verified?
   before_action :otp_failure, only: %i[otp_edit], unless: :otp_edit_conditions_met?
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
@@ -90,7 +90,7 @@ class PasswordsController < ApplicationController
     redirect_to root_path, alert: t("passwords.edit.token_failure") unless @user&.valid_confirmation_token?
   end
 
-  def otp_edit_conditions_met? = @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && session_active?
+  def otp_edit_conditions_met? = @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && mfa_session_active?
 
   def session_expired_failure = login_failure(t("multifactor_auths.session_expired"))
   def webauthn_failure = login_failure(@webauthn_error)
