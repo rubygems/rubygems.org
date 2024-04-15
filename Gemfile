@@ -61,7 +61,7 @@ gem "pghero", "~> 3.4"
 
 # Admin dashboard
 gem "avo", "~> 2.49"
-gem "view_component", "~> 3.11"
+gem "view_component", "~> 3.12"
 gem "pundit", "~> 2.3"
 gem "chartkick", "~> 5.0"
 gem "groupdate", "~> 6.2"
