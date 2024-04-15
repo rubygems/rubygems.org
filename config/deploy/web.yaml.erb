@@ -62,7 +62,7 @@ spec:
           - name: ENV
             value: "<%= environment %>"
           - name: WEB_CONCURRENCY
-            value: <%= if environment == 'production' ? 8 : 2 %>
+            value: <%= environment == 'production' ? 8 : 2 %>
           - name: RAILS_MAX_THREADS
             value: 5
           - name: DD_AGENT_HOST
