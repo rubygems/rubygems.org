@@ -281,6 +281,15 @@ Rails.application.routes.draw do
   end
 
   ################################################################################
+  # UI Images
+
+  scope constraints: { format: /jpe?g/ }, defaults: { format: :jpeg } do
+    resources :users, only: [] do
+      get 'avatar', on: :member, to: 'avatars#show', format: true
+    end
+  end
+
+  ################################################################################
   # high_voltage static routes
   get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: Regexp.union(HighVoltage.page_ids) }, as: :page
 
