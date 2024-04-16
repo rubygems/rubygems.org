@@ -6,7 +6,7 @@ module RubygemSearchable
       callbacks: false,
       settings: {
         number_of_shards: 1,
-        number_of_replicas: 1,
+        number_of_replicas: Gemcutter::SEARCH_NUM_REPLICAS,
         analysis: {
           analyzer: {
             rubygem: {
