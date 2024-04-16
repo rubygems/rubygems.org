@@ -17,6 +17,11 @@ services:
       - plugins.security.disabled=true
     ports:
       - "9200:9200"
+    healthcheck:
+      test: ["CMD", "curl", "-s", "http://localhost:9200/_cluster/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
   toxiproxy:
     image: ghcr.io/shopify/toxiproxy:2.5.0
     network_mode: "host"
