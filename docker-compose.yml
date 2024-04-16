@@ -10,7 +10,7 @@ services:
     ports:
       - "11211:11211"
   search:
-    image: opensearchproject/opensearch:1.3.7
+    image: opensearchproject/opensearch:2.13.0
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
