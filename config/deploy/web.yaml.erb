@@ -16,7 +16,18 @@ spec:
   template:
     metadata:
       annotations:
-        ad.datadoghq.com/puma.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+        ad.datadoghq.com/puma.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>},"environment": <%= environment.dump %>]'
+        ad.datadoghq.com/puma.checks: |
+        {
+          "puma": {
+            "init_config": {
+              service: "rubygems.org",
+            },
+            "instances": [
+              "control_url": "http://%%host%%:9293/stats?token=%%ENC[k8s_secret@rubygems-<%= environment %>/<%= environment %>/puma_control_auth_token]%%"
+            ]
+          }
+        }
       labels:
         name: web
         tags.datadoghq.com/env: "<%= environment %>"
@@ -30,6 +41,8 @@ spec:
         ports:
         - containerPort: 3000
           name: http-puma
+        - containerPort: 9293
+          name: puma-control
         readinessProbe:
           httpGet:
             path: /internal/ping
@@ -213,6 +226,13 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: database_url
+          - name: PUMA_CONTROL_ENABLED
+            value: "true"
+          - name: PUMA_CONTROL_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: puma_control_auth_token
         securityContext:
           privileged: false
         lifecycle:

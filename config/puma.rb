@@ -42,6 +42,11 @@ environment rails_env
 # Specifies the `pidfile` that Puma will use.
 pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
+# Optionally enable the Puma Control/Metrics API
+if ENV["PUMA_CONTROL_ENABLED"]&.present?
+  activate_control_app "tcp://127.0.0.1:9293", { auth_token: ENV.fetch("PUMA_CONTROL_AUTH_TOKEN") }
+end
+
 before_fork do
   sleep 1
 end
