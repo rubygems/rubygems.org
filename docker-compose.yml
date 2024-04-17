@@ -12,10 +12,8 @@ services:
   search:
     image: opensearchproject/opensearch:2.13.0
     environment:
-      - http.host=0.0.0.0
-      - transport.host=127.0.0.1
-      - plugins.security.disabled=true
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Opensearch1
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
     ports:
       - "9200:9200"
     healthcheck:
@@ -25,11 +23,29 @@ services:
           "curl",
           "--fail",
           "--silent",
-          "http://localhost:9200/_cluster/health",
+          "http://localhost:9200/_cluster/health?wait_for_status=green&timeout=5s",
         ]
       interval: 5s
       timeout: 5s
       retries: 6
+  search-console:
+    image: opensearchproject/opensearch-dashboards:2.13.0
+    ports:
+      - "5601:5601"
+    environment:
+      - 'OPENSEARCH_HOSTS=["http://search:9200"]'
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail --silent http://localhost:5601/api/status || exit 1",
+        ]
+      interval: 5s
+      timeout: 3s
+    depends_on:
+      search:
+        condition: service_healthy
   toxiproxy:
     image: ghcr.io/shopify/toxiproxy:2.5.0
     network_mode: "host"
