@@ -90,6 +90,7 @@ module Gemcutter
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
   SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze
+  SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 1).to_i
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
   STATS_PER_PAGE = 10
