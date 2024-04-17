@@ -15,10 +15,18 @@ services:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
       - plugins.security.disabled=true
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Opensearch1
     ports:
       - "9200:9200"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:9200/_cluster/health"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "--silent",
+          "http://localhost:9200/_cluster/health",
+        ]
       interval: 5s
       timeout: 5s
       retries: 6
