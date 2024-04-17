@@ -459,7 +459,7 @@ GEM
       tzinfo
       validate_url
       webfinger (~> 2.0)
-    opensearch-ruby (3.1.0)
+    opensearch-ruby (3.2.0)
       faraday (>= 1.0, < 3)
       multi_json (>= 1.0)
     openssl (3.2.0)
@@ -816,7 +816,7 @@ DEPENDENCIES
   omniauth-github (~> 2.0)
   omniauth-rails_csrf_protection (~> 1.0)
   openid_connect (~> 2.3)
-  opensearch-ruby (~> 3.1)
+  opensearch-ruby (~> 3.2)
   pg (~> 1.5)
   pg_query (~> 5.1)
   pghero (~> 3.4)
@@ -1039,7 +1039,7 @@ CHECKSUMS
   omniauth-oauth2 (1.8.0) sha256=b2f8e9559cc7e2d4efba57607691d6d2b634b879fc5b5b6ccfefa3da85089e78
   omniauth-rails_csrf_protection (1.0.1) sha256=fc546aeb7d43b7b9d7737051c380156e61c8f080b898cd4934d523eaa7e59acf
   openid_connect (2.3.0) sha256=0dbb9cefeb11e0a65e706349266355bbbb060382ae138fc9e199ab1aa622744c
-  opensearch-ruby (3.1.0) sha256=fc6147c682be51356140a8163e46713018b5220bde3f80ba0b36a0fd1feffdb6
+  opensearch-ruby (3.2.0) sha256=662b73bcde74a21bfe3fc218a38e667c224f793b35003a72a28625552bcc596f
   openssl (3.2.0) sha256=3c4bb8760977b4becd2819c6c2569bcf5c6f48b32b9f7a4ce1fd37f996378d14
   openssl-signature_algorithm (1.3.0) sha256=a3b40b5e8276162d4a6e50c7c97cdaf1446f9b2c3946a6fa2c14628e0c957e80
   optimist (3.1.0) sha256=81886f53ee8919f330aa30076d320d88eef9bc85aae2275376b4afb007c69260
