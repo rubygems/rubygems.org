@@ -476,7 +476,7 @@ GEM
       google-protobuf (>= 3.22.3)
     pghero (3.4.1)
       activerecord (>= 6)
-    phlex (1.9.1)
+    phlex (1.9.2)
       concurrent-ruby (~> 1.2)
       erb (>= 4)
       zeitwerk (~> 2.6)
@@ -1049,7 +1049,7 @@ CHECKSUMS
   pg (1.5.6) sha256=4bc3ad2438825eea68457373555e3fd4ea1a82027b8a6be98ef57c0d57292b1c
   pg_query (5.1.0) sha256=b7f7f47c864f08ccbed46a8244906fb6ee77ee344fd27250717963928c93145d
   pghero (3.4.1) sha256=7f949828119ab17de22ebaef1854ab8c738106bdc31bee3ac0acd0462c0efa88
-  phlex (1.9.1) sha256=cd1500f75ae075930c1f141de0d5c1456c27aa8731796e74548061f742b24d06
+  phlex (1.9.2) sha256=b6a78f0378e003696d25607b19b89770dd61efc661aed04ab890a65b7af6da77
   phlex-rails (1.1.2) sha256=8c61993a0477328adc100cd0d1c1ba5cfba77ba7b20be14507048fc86c08a7c8
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
