@@ -154,7 +154,6 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     cbor (0.5.9.6)
-    cgi (0.4.1)
     chartkick (5.0.6)
     childprocess (5.0.0)
     choice (0.2.0)
@@ -224,8 +223,6 @@ GEM
     dry-initializer (3.1.1)
     email_validator (2.2.4)
       activemodel
-    erb (4.0.4)
-      cgi (>= 0.3.3)
     erubi (1.12.0)
     et-orbi (1.2.11)
       tzinfo
@@ -476,14 +473,10 @@ GEM
       google-protobuf (>= 3.22.3)
     pghero (3.4.1)
       activerecord (>= 6)
-    phlex (1.9.2)
-      concurrent-ruby (~> 1.2)
-      erb (>= 4)
-      zeitwerk (~> 2.6)
-    phlex-rails (1.1.2)
-      phlex (~> 1.9.1)
+    phlex (1.10.1)
+    phlex-rails (1.2.1)
+      phlex (~> 1.10.0)
       railties (>= 6.1, < 8)
-      zeitwerk (~> 2.6)
     pp (0.5.0)
       prettyprint
     prettyprint (0.2.0)
@@ -820,7 +813,7 @@ DEPENDENCIES
   pg (~> 1.5)
   pg_query (~> 5.1)
   pghero (~> 3.4)
-  phlex-rails (~> 1.1)
+  phlex-rails (~> 1.2)
   pp (= 0.5.0)
   prosopite (~> 1.4)
   pry-byebug (~> 3.10)
@@ -916,7 +909,6 @@ CHECKSUMS
   byebug (11.1.3) sha256=2485944d2bb21283c593d562f9ae1019bf80002143cc3a255aaffd4e9cf4a35b
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   cbor (0.5.9.6) sha256=434a147658dd1df24ec9e7b3297c1fd4f8a691c97d0e688b3049df8e728b2114
-  cgi (0.4.1) sha256=4349e1e2025c9cc73534c52c93cffc0dafc93e0a81edc0830d851a3b2c49a430
   chartkick (5.0.6) sha256=96c5984471d4c2017b28914bd1bcda7f9e8a3a9d1903059aaadc7a4044c87193
   childprocess (5.0.0) sha256=0746b7ab1d6c68156e64a3767631d7124121516192c0492929a7f0af7310d835
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
@@ -948,7 +940,6 @@ CHECKSUMS
   drb (2.2.1) sha256=e9d472bf785f558b96b25358bae115646da0dbfd45107ad858b0bc0d935cb340
   dry-initializer (3.1.1) sha256=4d267dea367ccabe498b259c62b909b99d577d6db547d9510561999403546dec
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
-  erb (4.0.4) sha256=de116e106205c46bc01918789b611aaad1328dcc6e9f12cf8cd2cc60ef619717
   erubi (1.12.0) sha256=27bedb74dfb1e04ff60674975e182d8ca787f2224f2e8143268c7696f42e4723
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
   execjs (2.9.1) sha256=e8fd066f6df60c8e8fbebc32c6fb356b5212c77374e8416a9019ca4bb154dcfb
@@ -1049,8 +1040,8 @@ CHECKSUMS
   pg (1.5.6) sha256=4bc3ad2438825eea68457373555e3fd4ea1a82027b8a6be98ef57c0d57292b1c
   pg_query (5.1.0) sha256=b7f7f47c864f08ccbed46a8244906fb6ee77ee344fd27250717963928c93145d
   pghero (3.4.1) sha256=7f949828119ab17de22ebaef1854ab8c738106bdc31bee3ac0acd0462c0efa88
-  phlex (1.9.2) sha256=b6a78f0378e003696d25607b19b89770dd61efc661aed04ab890a65b7af6da77
-  phlex-rails (1.1.2) sha256=8c61993a0477328adc100cd0d1c1ba5cfba77ba7b20be14507048fc86c08a7c8
+  phlex (1.10.1) sha256=cab3b63bcaaff181c0dff57e1b5c8218d639807693dba5245ac4f889e4665f70
+  phlex-rails (1.2.1) sha256=1d80709c02114cda869951d22bfca189b5f208d1eb89f2e6fafbe3c0240a822f
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prosopite (1.4.2) sha256=b2e422e2d9dbf3ce20130ded3252fe14adb3833555eacd451f5015d8c9177e79
