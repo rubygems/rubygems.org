@@ -136,7 +136,7 @@ spec:
                 name: <%= environment %>
                 key: elasticsearch_url
           - name: SEARCH_NUM_REPLICAS
-            value: "1"
+            value: "<%= environment == 'production' ? 2 : 1 %>"
           - name: MEMCACHED_ENDPOINT
             valueFrom:
               secretKeyRef:
