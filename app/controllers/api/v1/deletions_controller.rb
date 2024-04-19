@@ -48,13 +48,24 @@ class Api::V1::DeletionsController < Api::BaseController
   end
 
   def verify_deletion_eligibility
-    contact_admin = "Please contact RubyGems support to request deletion of this version if it represents a legal or security risk."
     if @version.created_at.before? 30.days.ago
-      render plain: response_with_mfa_warning("Versions published more than 30 days ago cannot be deleted. #{contact_admin}"),
-             status: :forbidden
+      render_yank_forbidden "Versions published more than 30 days ago cannot be deleted."
     elsif @version.downloads_count > 100_000
-      render plain: response_with_mfa_warning("Versions with more than 100,000 downloads cannot be deleted. #{contact_admin}"),
-             status: :forbidden
+      render_yank_forbidden "Versions with more than 100,000 downloads cannot be deleted."
     end
+  end
+
+  def render_yank_forbidden(reason)
+    @version.rubygem.record_event!(
+      Events::RubygemEvent::VERSION_YANK_FORBIDDEN,
+      reason: reason,
+      number: @version.number,
+      platform: @version.platform,
+      yanked_by: @api_key.user&.display_handle,
+      actor_gid: @api_key.user&.to_gid,
+      version_gid: @version.to_gid
+    )
+    message = "#{reason} Please contact RubyGems support to request deletion of this version if it represents a legal or security risk."
+    render plain: response_with_mfa_warning(message), status: :forbidden
   end
 end

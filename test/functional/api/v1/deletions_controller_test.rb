@@ -546,6 +546,16 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         should "not record the deletion" do
           assert_empty Deletion.where(user: @user, rubygem: @rubygem.name, number: @v1.number)
         end
+        should "record a yank forbidden event" do
+          assert_event Events::RubygemEvent::VERSION_YANK_FORBIDDEN, {
+            number: @v1.number,
+            platform: "ruby",
+            yanked_by: @user.handle,
+            version_gid: @v1.to_gid_param,
+            actor_gid: @user.to_gid.to_s,
+            reason: "Versions with more than 100,000 downloads cannot be deleted."
+          }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANK_FORBIDDEN).sole
+        end
       end
 
       context "published too long ago" do
@@ -570,6 +580,16 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
         should "not record the deletion" do
           assert_empty Deletion.where(user: @user, rubygem: @rubygem.name, number: @v1.number)
+        end
+        should "record a yank forbidden event" do
+          assert_event Events::RubygemEvent::VERSION_YANK_FORBIDDEN, {
+            number: @v1.number,
+            platform: "ruby",
+            yanked_by: @user.handle,
+            version_gid: @v1.to_gid_param,
+            actor_gid: @user.to_gid.to_s,
+            reason: "Versions published more than 30 days ago cannot be deleted."
+          }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANK_FORBIDDEN).sole
         end
       end
     end
