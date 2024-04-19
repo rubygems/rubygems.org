@@ -529,12 +529,13 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           GemDownload.increment(
             100_001,
             rubygem_id: @rubygem.id,
-            version_id: @v1.id,
+            version_id: @v1.id
           )
           delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
         end
 
         should respond_with :forbidden
+
         should "respond with a message" do
           assert_equal(
             "Versions with more than 100,000 downloads cannot be deleted. " \
@@ -559,6 +560,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
 
         should respond_with :forbidden
+
         should "respond with a message" do
           assert_equal(
             "Versions published more than 30 days ago cannot be deleted. " \
