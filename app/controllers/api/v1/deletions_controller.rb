@@ -7,6 +7,7 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :verify_with_otp
   before_action :render_api_key_forbidden, if: :api_key_unauthorized?
   before_action :verify_mfa_requirement
+  before_action :verify_deletion_eligibility
 
   def create
     @deletion = @api_key.user.deletions.build(version: @version)
@@ -44,5 +45,16 @@ class Api::V1::DeletionsController < Api::BaseController
 
   def api_key_unauthorized?
     !@api_key.can_yank_rubygem?
+  end
+
+  def verify_deletion_eligibility
+    contact_admin = "Please contact RubyGems support to request deletion of this version if it represents a legal or security risk."
+    if @version.created_at.before? 30.days.ago
+      render plain: response_with_mfa_warning("Versions published more than 30 days ago cannot be deleted. #{contact_admin}"),
+             status: :forbidden
+    elsif @version.downloads_count > 100_000
+      render plain: response_with_mfa_warning("Versions with more than 100,000 downloads cannot be deleted. #{contact_admin}"),
+             status: :forbidden
+    end
   end
 end
