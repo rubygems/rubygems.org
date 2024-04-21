@@ -518,6 +518,81 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "rubygem that is deletion ineligible" do
+      context "with too many downloads" do
+        setup do
+          @rubygem   = create(:rubygem, name: "SomeGem")
+          @v1        = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby")
+          @ownership = create(:ownership, user: @user, rubygem: @rubygem)
+
+          GemDownload.increment(
+            100_001,
+            rubygem_id: @rubygem.id,
+            version_id: @v1.id
+          )
+          delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
+        end
+
+        should respond_with :forbidden
+
+        should "respond with a message" do
+          assert_equal(
+            "Versions with more than 100,000 downloads cannot be deleted. " \
+            "Please contact RubyGems support to request deletion of this version if it represents a legal or security risk.",
+            @response.body
+          )
+        end
+        should "not record the deletion" do
+          assert_empty Deletion.where(user: @user, rubygem: @rubygem.name, number: @v1.number)
+        end
+        should "record a yank forbidden event" do
+          assert_event Events::RubygemEvent::VERSION_YANK_FORBIDDEN, {
+            number: @v1.number,
+            platform: "ruby",
+            yanked_by: @user.handle,
+            version_gid: @v1.to_gid_param,
+            actor_gid: @user.to_gid.to_s,
+            reason: "Versions with more than 100,000 downloads cannot be deleted."
+          }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANK_FORBIDDEN).sole
+        end
+      end
+
+      context "published too long ago" do
+        setup do
+          travel_to 31.days.ago do
+            @rubygem   = create(:rubygem, name: "SomeGem")
+            @v1        = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby")
+            @ownership = create(:ownership, user: @user, rubygem: @rubygem)
+          end
+
+          delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
+        end
+
+        should respond_with :forbidden
+
+        should "respond with a message" do
+          assert_equal(
+            "Versions published more than 30 days ago cannot be deleted. " \
+            "Please contact RubyGems support to request deletion of this version if it represents a legal or security risk.",
+            @response.body
+          )
+        end
+        should "not record the deletion" do
+          assert_empty Deletion.where(user: @user, rubygem: @rubygem.name, number: @v1.number)
+        end
+        should "record a yank forbidden event" do
+          assert_event Events::RubygemEvent::VERSION_YANK_FORBIDDEN, {
+            number: @v1.number,
+            platform: "ruby",
+            yanked_by: @user.handle,
+            version_gid: @v1.to_gid_param,
+            actor_gid: @user.to_gid.to_s,
+            reason: "Versions published more than 30 days ago cannot be deleted."
+          }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANK_FORBIDDEN).sole
+        end
+      end
+    end
   end
 
   context "without yank rubygem api key scope" do
