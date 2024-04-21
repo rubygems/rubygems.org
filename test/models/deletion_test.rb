@@ -26,6 +26,42 @@ class DeletionTest < ActiveSupport::TestCase
       "Deletion should only work on indexed gems"
   end
 
+  should "not be popular" do
+    GemDownload.increment(
+      100_001,
+      rubygem_id: @version.rubygem.id,
+      version_id: @version.id
+    )
+
+    assert_predicate Deletion.new(version: @version, user: @user), :invalid?,
+      "Versions with more than 100_000 downloads should not be deletable"
+  end
+
+  should "be forceable even when popular" do
+    GemDownload.increment(
+      100_001,
+      rubygem_id: @version.rubygem.id,
+      version_id: @version.id
+    )
+
+    assert_predicate Deletion.new(version: @version, user: @user, force: true), :valid?,
+      "Admins should be allowed to delete popular versions when necessary"
+  end
+
+  should "not be old" do
+    @version.update(created_at: 31.days.ago)
+
+    assert_predicate Deletion.new(version: @version, user: @user), :invalid?,
+      "Versions older than 30 days should not be deletable"
+  end
+
+  should "be forceable even when old" do
+    @version.update(created_at: 31.days.ago)
+
+    assert_predicate Deletion.new(version: @version, user: @user, force: true), :valid?,
+      "Admins should be allowed to delete old versions when necessary"
+  end
+
   context "association" do
     subject { Deletion.new(version: @version, user: @user) }
 

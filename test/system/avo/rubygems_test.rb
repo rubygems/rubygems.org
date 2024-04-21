@@ -93,6 +93,11 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     security_user = create(:user, email: "security@rubygems.org")
     rubygem = create(:rubygem)
     version = create(:version, rubygem: rubygem)
+    GemDownload.increment(
+      100_001,
+      rubygem_id: rubygem.id,
+      version_id: version.id
+    )
 
     visit avo.resources_rubygem_path(rubygem)
 
@@ -164,6 +169,11 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     rubygem = create(:rubygem)
     version1 = create(:version, rubygem: rubygem)
     version2 = create(:version, rubygem: rubygem)
+    GemDownload.increment(
+      100_001,
+      rubygem_id: rubygem.id,
+      version_id: version1.id
+    )
 
     visit avo.resources_rubygem_path(rubygem)
 
