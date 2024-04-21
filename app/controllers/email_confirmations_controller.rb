@@ -38,6 +38,7 @@ class EmailConfirmationsController < ApplicationController
   def unconfirmed
     if current_user.generate_confirmation_token(reset_unconfirmed_email: false) && current_user.save
       email_reset(current_user)
+      session[:email_confirmation_token] = nil
       flash[:notice] = t("profiles.update.confirmation_mail_sent")
     else
       flash[:notice] = t("try_again")
@@ -51,8 +52,11 @@ class EmailConfirmationsController < ApplicationController
     Clearance.configuration.user_model.find_by_normalized_email email_params
   end
 
+  def confirmation_token
+    params.permit(:token).fetch(:token, session[:email_confirmation_token]).to_s
+  end
+
   def validate_confirmation_token
-    confirmation_token = params_fetch(:token, session[:email_confirmation_token]).to_s
     @user = User.find_by(confirmation_token:)
     invalidate_session(t("email_confirmations.update.token_failure")) unless @user&.valid_confirmation_token?
   end
@@ -64,14 +68,11 @@ class EmailConfirmationsController < ApplicationController
     redirect_to url_for
   end
 
-  def invalidate_session(reason = t("multifactor_auths.session_expired"))
-    @user&.invalidate_confirmation_token!(session[:password_reset_token])
-    session[:email_confirmation_token] = nil
+  def invalidate_session(reason)
+    @user&.invalidate_confirmation_token!(confirmation_token)
+    session.delete(:email_confirmation_token)
     redirect_to root_path, alert: reason
   end
-
-  # callback from require_mfa
-  alias mfa_expired invalidate_session
 
   def email_params
     params.permit(email_confirmation: :email).require(:email_confirmation).require(:email)

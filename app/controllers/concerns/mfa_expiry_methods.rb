@@ -6,13 +6,13 @@
 # require them to log in again (or start a new password reset).
 #
 # After successfully completing MFA, the user will have an additional 15 minutes
-# to complete the process before mfa session is cleared, calling `mfa_expired`.
+# to complete the process before mfa session is cleared, calling `invalidate_session`.
 #
 # When a user initiates an authenticated process that requires MFA:
 # 1. Call `initialize_mfa` only once to before the require_mfa call.
 # 2. Call `require_mfa` in a before_action that protects all actions
 #    that require MFA (not just rendering the form but also submitting it).
-# 3. Implement mfa_expired(reason) in the controller to clear any session state
+# 3. Implement invalidate_session(reason) in the controller to clear any session state
 #    and redirect the user to the beginning of the process.
 module MfaExpiryMethods
   extend ActiveSupport::Concern
@@ -31,9 +31,9 @@ module MfaExpiryMethods
     validate_webauthn || validate_otp(user) || prompt_mfa
   end
 
-  # Implement mfa_expired in the controller to clear any session state and redirect the user to the beginning of the process.
-  def mfa_expired(reason)
-    raise NotImplementedError, "mfa_expired must be implemented in the controller"
+  # Implement invalidate_session in the controller to clear any session state and redirect the user to the beginning of the process.
+  def invalidate_session(reason)
+    raise NotImplementedError, "invalidate_session must be implemented in the controller"
   end
 
   # Call delete_mfa_session if the user invalidates or completes the process requiring MFA.
@@ -47,7 +47,7 @@ module MfaExpiryMethods
 
   def mfa_complete?(user)
     if mfa_session_invalid?(user)
-      mfa_expired(t("multifactor_auths.session_expired"))
+      invalidate_session(t("multifactor_auths.session_expired"))
       delete_mfa_session
       true
     else

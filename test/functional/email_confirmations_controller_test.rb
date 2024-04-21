@@ -93,11 +93,22 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         get :update, params: { token: @user.confirmation_token }
       end
 
-      should respond_with :success
+      should respond_with :redirect
+      should redirect_to("confirm email without token") { confirm_email_path }
 
-      should "display otp form" do
-        assert page.has_content?("Multi-factor authentication")
-        assert page.has_content?("OTP or recovery code")
+      should "set the confirmation token in the session" do
+        assert_equal @user.confirmation_token, @controller.session[:email_confirmation_token]
+      end
+
+      context "when confirmation_token is in session" do
+        before do
+          @controller.session[:email_confirmation_token] = @user.confirmation_token
+        end
+
+        should "display otp form" do
+          assert page.has_content?("Multi-factor authentication")
+          assert page.has_content?("OTP or recovery code")
+        end
       end
     end
 
@@ -159,7 +170,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "on POST to otp_update" do
+  context "on POST to update" do
     context "user has mfa enabled" do
       setup do
         @user = create(:user)
@@ -169,7 +180,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       context "when OTP is correct" do
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+          post :update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should redirect_to("the homepage") { root_url }
@@ -185,7 +196,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       context "when OTP is incorrect" do
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+          post :update, params: { otp: "incorrect" }
         end
 
         should respond_with :unauthorized
@@ -199,7 +210,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         setup do
           get :update, params: { token: @user.confirmation_token, user_id: @user.id }
           travel 16.minutes do
-            post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+            post :update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
         end
 
@@ -221,7 +232,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "on POST to webauthn_update" do
+  context "webauthn enabled" do
     setup do
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
@@ -239,10 +250,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           client: @client
         )
         post(
-          :webauthn_update,
+          :update,
           params: {
             user_id: @user.id,
-            token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
               client: @client,
@@ -268,10 +278,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     context "when not providing credentials" do
       setup do
         post(
-          :webauthn_update,
+          :update,
           params: {
-            user_id: @user.id,
-            token: @user.confirmation_token
+            user_id: @user.id
           }
         )
       end
@@ -291,10 +300,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           client: @client
         )
         post(
-          :webauthn_update,
+          :update,
           params: {
             user_id: @user.id,
-            token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
               client: @client,
@@ -323,10 +331,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         )
         travel 16.minutes do
           post(
-            :webauthn_update,
+            :update,
             params: {
               user_id: @user.id,
-              token: @user.confirmation_token,
               credentials:
               WebauthnHelpers.get_result(
                 client: @client,
@@ -497,9 +504,10 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
           end
 
-          context "on POST to otp_update" do
+          context "on POST to update" do
             setup do
-              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              get :update, params: { token: @user.confirmation_token }
+              post :update, params: { otp: "incorrect" }
             end
 
             should respond_with :unauthorized
@@ -550,9 +558,10 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
           end
 
-          context "on POST to otp_update" do
+          context "on POST to update" do
             setup do
-              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              get :update, params: { token: @user.confirmation_token }
+              post :update, params: { otp: "incorrect" }
             end
 
             should respond_with :unauthorized
@@ -603,9 +612,10 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
           end
 
-          context "on POST to otp_update" do
+          context "on POST to update" do
             setup do
-              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              get :update, params: { token: @user.confirmation_token }
+              post :update, params: { otp: "incorrect" }
             end
 
             should respond_with :unauthorized
