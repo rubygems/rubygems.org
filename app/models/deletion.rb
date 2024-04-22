@@ -8,6 +8,7 @@ class Deletion < ApplicationRecord
   validates :rubygem, :number, presence: true
   validates :version, presence: true
   validate :version_is_indexed, on: :create
+  validate :eligibility, on: :create
   validate :metadata_matches_version
 
   before_validation :record_metadata
@@ -20,6 +21,8 @@ class Deletion < ApplicationRecord
   after_commit :update_search_index
   after_commit :send_gem_yanked_mail, on: :create
 
+  attr_accessor :force
+
   def restore!
     restore_to_index
     restore_to_storage
@@ -27,10 +30,40 @@ class Deletion < ApplicationRecord
     destroy!
   end
 
+  def ineligible?
+    ineligible_reason.present?
+  end
+
+  def ineligible_reason
+    if version.created_at&.before? 30.days.ago
+      "Versions published more than 30 days ago cannot be deleted."
+    elsif version.downloads_count > 100_000
+      "Versions with more than 100,000 downloads cannot be deleted."
+    end
+  end
+
+  def record_yank_forbidden_event!
+    return unless user && version && version.indexed? && ineligible?
+    version.rubygem.record_event!(
+      Events::RubygemEvent::VERSION_YANK_FORBIDDEN,
+      reason: ineligible_reason,
+      number: version.number,
+      platform: version.platform,
+      yanked_by: user.display_handle,
+      actor_gid: user.to_gid,
+      version_gid: version.to_gid
+    )
+  end
+
   private
 
   def version_is_indexed
     errors.add(:base, "#{rubygem_name} #{version} has already been deleted") unless version.indexed?
+  end
+
+  def eligibility
+    return if force
+    errors.add(:base, ineligible_reason) if ineligible?
   end
 
   def metadata_matches_version
@@ -115,7 +148,7 @@ class Deletion < ApplicationRecord
 
   def record_yank_event
     version.rubygem.record_event!(Events::RubygemEvent::VERSION_YANKED, number: version.number, platform: version.platform,
-yanked_by: user&.display_handle, actor_gid: user&.to_gid, version_gid: version.to_gid)
+yanked_by: user&.display_handle, actor_gid: user&.to_gid, version_gid: version.to_gid, force:)
   end
 
   def record_unyank_event

@@ -290,7 +290,10 @@ class User < ApplicationRecord
   def yank_gems
     versions_to_yank = only_owner_gems.map(&:versions).flatten
     versions_to_yank.each do |v|
-      deletions.create(version: v)
+      deletion = deletions.create(version: v)
+      next if deletion.persisted?
+      next unless deletion.ineligible?
+      deletion.record_yank_forbidden_event!
     end
   end
 

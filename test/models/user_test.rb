@@ -660,7 +660,9 @@ class UserTest < ActiveSupport::TestCase
       @user = create(:user)
       @rubygem = create(:rubygem)
       create(:ownership, rubygem: @rubygem, user: @user)
-      @version = create(:version, rubygem: @rubygem)
+      @version1 = create(:version, rubygem: @rubygem)
+      @version2 = create(:version, rubygem: @rubygem)
+      GemDownload.increment(100_001, rubygem_id: @rubygem.id, version_id: @version1.id)
     end
 
     context "user is only owner of gem" do
@@ -668,6 +670,20 @@ class UserTest < ActiveSupport::TestCase
         assert_difference "Deletion.count", 1 do
           @user.destroy
         end
+      end
+      should "preserve ineligible deletion version" do
+        @user.destroy
+
+        assert_predicate @version1.reload, :indexed?
+
+        assert_event Events::RubygemEvent::VERSION_YANK_FORBIDDEN, {
+          number: @version1.number,
+          platform: "ruby",
+          yanked_by: @user.handle,
+          version_gid: @version1.to_gid_param,
+          actor_gid: @user.to_gid.to_s,
+          reason: "Versions with more than 100,000 downloads cannot be deleted."
+        }, @rubygem.reload.events.where(tag: Events::RubygemEvent::VERSION_YANK_FORBIDDEN).sole
       end
       should "mark rubygem unowned" do
         @user.destroy
