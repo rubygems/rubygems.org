@@ -192,4 +192,16 @@ class ProfileTest < SystemTest
     assert_equal("5 Downloads", downloads[1].text)
     assert_equal("2 Downloads", downloads[2].text)
   end
+
+  test "seeing the latest version when there is a newer previous version" do
+    create(:rubygem, owners: [@user], number: "1.0.1")
+    create(:version, rubygem: Rubygem.first, number: "0.0.2")
+
+    sign_in
+    visit profile_path("nick1")
+
+    version = page.find(".gems__gem__version").text
+
+    assert_equal("1.0.1", version)
+  end
 end
