@@ -128,7 +128,7 @@ group :test do
   gem "rack-test", "~> 2.1", require: "rack/test"
   gem "rails-controller-testing", "~> 1.0"
   gem "mocha", "~> 2.2", require: false
-  gem "shoulda-context", "~> 2.0"
+  gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 6.2"
   gem "selenium-webdriver", "~> 4.19"
   gem "webmock", "~> 3.23"
