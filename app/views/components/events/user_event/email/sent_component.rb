@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Events::UserEvent::Email::SentComponent < Events::TableDetailsComponent
-  def template
+  def view_template
     plain t(".email_sent_subject", subject: additional.subject)
     br
     plain t(".email_sent_from", from: additional.from)

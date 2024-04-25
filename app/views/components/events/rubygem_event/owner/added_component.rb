@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Events::RubygemEvent::Owner::AddedComponent < Events::TableDetailsComponent
-  def template
+  def view_template
     plain t(".owner_added_owner_html", owner: link_to_user_from_gid(additional.owner_gid, additional.owner))
     return unless (authorizer = additional.authorizer.presence)
     br

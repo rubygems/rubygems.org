@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Events::UserEvent::ApiKey::CreatedComponent < Events::TableDetailsComponent
-  def template
+  def view_template
     div { t(".api_key_name", name: additional.name) }
     div { t(".api_key_scopes", scopes: additional.scopes&.to_sentence) }
     if additional.gem.present?

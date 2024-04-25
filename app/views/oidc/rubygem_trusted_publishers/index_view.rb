@@ -10,7 +10,7 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
   option :rubygem
   option :trusted_publishers
 
-  def template
+  def view_template
     title_content
 
     div(class: "tw-space-y-2 t-body") do

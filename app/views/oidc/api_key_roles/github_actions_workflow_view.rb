@@ -10,7 +10,7 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
     super()
   end
 
-  def template
+  def view_template
     self.title = t(".title")
 
     return if not_configured
