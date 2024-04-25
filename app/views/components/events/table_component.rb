@@ -8,9 +8,9 @@ class Events::TableComponent < ApplicationComponent
 
   extend Phlex::Rails::HelperMacros
 
-  define_value_helper :current_user
-  define_value_helper :page_entries_info
-  define_value_helper :paginate
+  register_value_helper :current_user
+  register_value_helper :page_entries_info
+  register_value_helper :paginate
 
   extend Dry::Initializer
 
