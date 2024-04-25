@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        kubernetes_version: ["1.29.1"]
+        kubernetes_version: ["1.22.0"]
         environment:
           - staging
           - production
