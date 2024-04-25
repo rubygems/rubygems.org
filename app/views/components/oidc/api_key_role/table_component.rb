@@ -6,7 +6,7 @@ class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
 
   option :api_key_roles
 
-  def template
+  def view_template
     table(class: "t-body") do
       thead do
         tr(class: "owners__row owners__header") do

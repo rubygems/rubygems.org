@@ -9,7 +9,7 @@ class Rubygems::SecurityEventsView < ApplicationView
   option :rubygem
   option :security_events
 
-  def template
+  def view_template
     title_content
 
     div(class: "tw-space-y-2 t-body") do

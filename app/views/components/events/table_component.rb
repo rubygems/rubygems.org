@@ -16,7 +16,7 @@ class Events::TableComponent < ApplicationComponent
 
   option :security_events
 
-  def template
+  def view_template
     header(class: "gems__header push--s") do
       p(class: "gems__meter l-mb-0") { plain page_entries_info(security_events) }
     end
