@@ -24,7 +24,7 @@ class PasswordResetTest < SystemTest
   test "GET to /passwords redirects to /passwords/new" do
     visit "/passwords"
 
-    assert_equal new_password_path, page.current_path, "redirects to homepage if link is invalid"
+    assert_equal new_password_path, page.current_path, "redirects to new password reset when reloading password create resulting page."
   end
 
   test "reset password form does not tell if a user exists" do
