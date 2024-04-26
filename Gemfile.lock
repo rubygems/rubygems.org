@@ -110,8 +110,8 @@ GEM
       zeitwerk (>= 2.6.2)
     awrence (1.2.1)
     aws-eventstream (1.3.0)
-    aws-partitions (1.914.0)
-    aws-sdk-core (3.192.0)
+    aws-partitions (1.920.0)
+    aws-sdk-core (3.193.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.8)
@@ -123,8 +123,8 @@ GEM
       aws-sdk-core (~> 3, >= 3.192.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.8)
-    aws-sdk-sqs (1.70.0)
-      aws-sdk-core (~> 3, >= 3.191.0)
+    aws-sdk-sqs (1.71.0)
+      aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
@@ -760,7 +760,7 @@ DEPENDENCIES
   autoprefixer-rails (~> 10.4)
   avo (~> 2.49)
   aws-sdk-s3 (~> 1.147)
-  aws-sdk-sqs (~> 1.70)
+  aws-sdk-sqs (~> 1.71)
   bcrypt (~> 3.1)
   bootsnap (~> 1.18)
   brakeman (~> 6.1)
@@ -889,11 +889,11 @@ CHECKSUMS
   avo (2.49.0) sha256=390598a85bf7a5be6060b4076f68b4ac3e6e7bcd4652a0a3cdba542e0490d81f
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
-  aws-partitions (1.914.0) sha256=e936d64571822a59d691639f7ae3481de71c86006ad21a2a3b3e6126f5cb8364
-  aws-sdk-core (3.192.0) sha256=106b391d232f64475e048ce35d54ab22487744e2e78d6256905689ed83cca3b2
+  aws-partitions (1.920.0) sha256=d3454f58c47d5cb132176c2061a5c40e9720dd9be83171278fca1b9a1c589ad9
+  aws-sdk-core (3.193.0) sha256=146b2c73d22ddaa010b403161748af028de3f2a0a6ec00122167d06f204ae63c
   aws-sdk-kms (1.79.0) sha256=5c21460bc50fbde3a9c745b29f47370801f1bb697bf2965bc13a16d70d0060b1
   aws-sdk-s3 (1.147.0) sha256=367753c25d98b8019932d403d3ec56def51e70be917a2612d762a369ca167c45
-  aws-sdk-sqs (1.70.0) sha256=56067fc1fbca504ab038ce3c15808ef59824b6782d36278c8adb50c919d9ac3a
+  aws-sdk-sqs (1.71.0) sha256=b15299da4c6f9850622c62f79e11b1a52176d90df9a9d822a2631d7a757dc8c6
   aws-sigv4 (1.8.0) sha256=84dd99768b91b93b63d1d8e53ee837cfd06ab402812772a7899a78f9f9117cbc
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
   bcrypt (3.1.20) sha256=8410f8c7b3ed54a3c00cd2456bf13917d695117f033218e2483b2e40b0784099
