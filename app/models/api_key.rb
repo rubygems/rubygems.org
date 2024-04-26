@@ -11,6 +11,7 @@ class ApiKey < ApplicationRecord
   has_one :oidc_api_key_role, class_name: "OIDC::ApiKeyRole", through: :oidc_id_token, source: :api_key_role, inverse_of: :api_keys
   has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
 
+  before_validation :set_scopes
   before_validation :set_owner_from_user
   after_create :record_create_event
   after_update :record_expire_event, if: :saved_change_to_expires_at?
@@ -20,6 +21,7 @@ class ApiKey < ApplicationRecord
   validate :scope_presence
   validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validate :rubygem_scope_definition, if: :ownership
+  validate :known_scopes
   validate :not_soft_deleted?
   validate :not_expired?
 
@@ -55,6 +57,10 @@ class ApiKey < ApplicationRecord
 
   def user?
     owner_type == "User"
+  end
+
+  def scopes
+    super&.map(&:to_sym)
   end
 
   delegate :mfa_required_not_yet_enabled?, :mfa_required_weak_level_enabled?,
@@ -128,6 +134,10 @@ class ApiKey < ApplicationRecord
     errors.add :rubygem, "scope can only be set for push/yank rubygem, and add/remove owner scopes"
   end
 
+  def known_scopes
+    errors.add :scopes, "scopes must be from #{API_SCOPES}, got: #{scopes}" if (scopes - API_SCOPES).present?
+  end
+
   def not_soft_deleted?
     errors.add :base, "An invalid API key cannot be used. Please delete it and create a new one." if soft_deleted?
   end
@@ -139,6 +149,10 @@ class ApiKey < ApplicationRecord
 
   def set_owner_from_user
     self.owner ||= user
+  end
+
+  def set_scopes
+    self.scopes = enabled_scopes
   end
 
   def record_create_event

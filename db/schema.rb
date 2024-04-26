@@ -55,6 +55,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_25_190438) do
     t.datetime "expires_at", precision: nil
     t.string "owner_type"
     t.bigint "owner_id"
+    t.string "scopes", array: true
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["owner_type", "owner_id"], name: "index_api_keys_on_owner"
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
