@@ -22,7 +22,7 @@ class Api::V1::HookRelayController < Api::BaseController
   end
 
   def authenticate_hook_relay_report
-    account_id, hook_id = params_fetch(%i[account_id hook_id])
+    account_id, hook_id = params.permit(%i[account_id hook_id]).require(%i[account_id hook_id])
 
     ActiveSupport::SecureCompareRotator.new(ENV.fetch("HOOK_RELAY_ACCOUNT_ID", "")).secure_compare!(account_id)
     ActiveSupport::SecureCompareRotator.new(ENV.fetch("HOOK_RELAY_HOOK_ID", "")).secure_compare!(hook_id)

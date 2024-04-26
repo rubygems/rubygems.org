@@ -100,11 +100,11 @@ class MultifactorAuthsController < ApplicationController
   private
 
   def otp_param
-    params_fetch(:otp, "")
+    params.permit(:otp).fetch(:otp, "")
   end
 
   def level_param
-    params_fetch(:level, "")
+    params.permit(:level).fetch(:level, "")
   end
 
   def issuer

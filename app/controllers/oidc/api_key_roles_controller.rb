@@ -103,7 +103,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
   def find_api_key_role
     @api_key_role = current_user.oidc_api_key_roles
       .includes(:provider)
-      .find_by!(token: params_fetch(:token))
+      .find_by!(token: params.permit(:token).require(:token))
   end
 
   def redirect_for_deleted

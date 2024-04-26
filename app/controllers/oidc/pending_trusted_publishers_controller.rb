@@ -60,6 +60,6 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
   def create_params_key = :oidc_pending_trusted_publisher
 
   def find_pending_trusted_publisher
-    @pending_trusted_publisher = current_user.oidc_pending_trusted_publishers.find(params_fetch(:id))
+    @pending_trusted_publisher = current_user.oidc_pending_trusted_publishers.find(params.permit(:id).require(:id))
   end
 end

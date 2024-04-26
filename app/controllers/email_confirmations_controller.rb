@@ -93,7 +93,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def token_params
-    params_fetch(:token)
+    params.permit(:token).require(:token)
   end
 
   def otp_update_conditions_met?
