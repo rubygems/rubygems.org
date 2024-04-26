@@ -32,7 +32,7 @@ class WebauthnVerificationsController < ApplicationController
   end
 
   def failed_verification
-    @message = params_fetch(:error, "")
+    @message = params.permit(:error).fetch(:error, "")
     logger.info("WebAuthn Verification failed", error: @message)
   end
 
@@ -58,7 +58,7 @@ class WebauthnVerificationsController < ApplicationController
   end
 
   def webauthn_token_param
-    params_fetch(:webauthn_token)
+    params.permit(:webauthn_token).require(:webauthn_token)
   end
 
   def render_expired

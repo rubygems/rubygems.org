@@ -38,8 +38,8 @@ class Api::V1::DeletionsController < Api::BaseController
              status: :forbidden
     else
       begin
-        version = params_fetch(:version)
-        platform = params_fetch(:platform, nil)
+        version = params.permit(:version).require(:version)
+        platform = params.permit(:platform).fetch(:platform, nil)
         @version = @rubygem.find_version!(number: version, platform: platform)
       rescue ActiveRecord::RecordNotFound
         render plain: response_with_mfa_warning("The version #{version}#{" (#{platform})" if platform.present?} does not exist."),

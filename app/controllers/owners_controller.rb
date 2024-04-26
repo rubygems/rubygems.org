@@ -60,11 +60,11 @@ class OwnersController < ApplicationController
   end
 
   def token_params
-    params_fetch(:token)
+    params.permit(:token).require(:token)
   end
 
   def handle_params
-    params_fetch(:handle)
+    params.permit(:handle).require(:handle)
   end
 
   def notify_owner_added(ownership)
