@@ -431,7 +431,6 @@ class PasswordsControllerTest < ActionController::TestCase
 
     context "when signed in as another user" do
       setup do
-        sign_in_as @user
         @other_user = create(:user, api_key: "otheruserkey")
         @other_api_key = @other_user.api_key
         @other_new_api_key = create(:api_key, owner: @other_user, key: "rubygems_otheruserkey")
