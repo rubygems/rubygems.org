@@ -292,15 +292,28 @@ class UserTest < ActiveSupport::TestCase
         end
       end
 
-      should "clear unconfirmed_email if requested" do
-        @user.update(unconfirmed_email: "unconfirmed@example.com")
-
-        assert_changed(@user, :unconfirmed_email, :confirmation_token, :token_expires_at) do
-          @user.generate_confirmation_token(reset_unconfirmed_email: true)
-          @user.save!
+      context "when user has an unconfirmed email" do
+        setup do
+          @user.update(unconfirmed_email: "unconfirmed@example.com")
         end
 
-        assert_nil @user.unconfirmed_email
+        should "delete the unconfirmed email by default" do
+          assert_changed(@user, :unconfirmed_email, :confirmation_token, :token_expires_at) do
+            @user.generate_confirmation_token
+            @user.save!
+          end
+
+          assert_nil @user.unconfirmed_email
+        end
+
+        should "not delete unconfirmed email when reset_unconfirmed_email is false" do
+          assert_changed(@user, :confirmation_token, :token_expires_at) do
+            @user.generate_confirmation_token(reset_unconfirmed_email: false)
+            @user.save!
+          end
+
+          assert_equal "unconfirmed@example.com", @user.unconfirmed_email
+        end
       end
 
       should "generate a sufficiently long token" do

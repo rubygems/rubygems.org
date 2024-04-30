@@ -30,7 +30,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
     context "with incorrect token" do
       setup do
-        get :edit, params: { token: @user.confirmation_token.succ }
+        get :edit, params: { token: "invalidtoken" }
       end
 
       should redirect_to("the home page") { root_path }
