@@ -241,7 +241,15 @@ Rails.application.routes.draw do
       patch 'unconfirmed'
     end
 
-    resources :passwords, only: %i[new create]
+    # The resource was plural path /passwords/new, but now we are using singular path /password/new
+    # TODO: remove the following get/post routes a few days after this PR is deployed
+    get "passwords/new", to: "passwords#new"
+    post "passwords", to: "passwords#create"
+
+    resource :password, only: %i[new create edit update] do
+      post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
+      post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
+    end
 
     resource :session, only: %i[create destroy] do
       post 'otp_create', to: 'sessions#otp_create', as: :otp_create
@@ -253,6 +261,8 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: %i[new create] do
+      # TODO: remove the password resource a few days after this PR is deployed
+      # allowing time for existing password reset emails to be used
       resource :password, only: %i[create edit update] do
         post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
         post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
