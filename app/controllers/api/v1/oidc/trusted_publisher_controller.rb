@@ -23,14 +23,14 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
     api_key = @trusted_publisher.api_keys.create!(
       hashed_key: hashed_key(key),
       name: "#{@trusted_publisher.name} #{iat.iso8601}",
-      push_rubygem: true,
+      scopes: %i[push_rubygem],
       expires_at: 15.minutes.from_now
     )
 
     render json: {
       rubygems_api_key: key,
       name: api_key.name,
-      scopes: api_key.enabled_scopes,
+      scopes: api_key.scopes,
       gem: api_key.rubygem,
       expires_at: api_key.expires_at
     }.compact, status: :created

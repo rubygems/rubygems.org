@@ -103,7 +103,7 @@ Version.create_with(
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
 
-author.api_keys.find_or_create_by!(hashed_key: "securehashedkey", name: "api key", push_rubygem: true)
+author.api_keys.find_or_create_by!(hashed_key: "securehashedkey", name: "api key", scopes: %i[push_rubygem])
 
 Admin::GitHubUser.create_with(
   is_admin: true,
@@ -219,7 +219,7 @@ author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
 author_oidc_api_key_role.user.api_keys.create_with(
   hashed_key: "expiredhashedkey",
   ownership: rubygem0.ownerships.find_by!(user: author),
-  push_rubygem: true
+  scopes: %i[push_rubygem]
 ).find_or_create_by!(
   name: "push-rubygem-1-expired"
 ).tap do |api_key|
@@ -234,7 +234,7 @@ end
 author_oidc_api_key_role.user.api_keys.create_with(
   hashed_key: "unexpiredhashedkey",
   ownership: rubygem0.ownerships.find_by!(user: author),
-  push_rubygem: true,
+  scopes: %i[push_rubygem],
   expires_at: "2120-01-01T00:00:00Z"
 ).find_or_create_by!(
   name: "push-rubygem-1-unexpired"
@@ -249,7 +249,7 @@ end
 author.api_keys.find_or_create_by!(
   hashed_key: "unexpiredmanualhashedkey",
   name: "Manual",
-  push_rubygem: true
+  scopes: %i[push_rubygem]
 )
 
 SendgridEvent.create_with(
@@ -283,7 +283,7 @@ trusted_publisher = OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
 trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0).trusted_publisher.api_keys.find_or_create_by!(
   name: "GitHub Actions something",
   hashed_key: "securehashedkey-tp",
-  push_rubygem: true
+  scopes: %i[push_rubygem]
 ).pushed_versions.create_with(indexed: true, sha256: Digest::SHA2.base64digest("rubygem0-0.1.0.gem")).find_or_create_by!(
   rubygem: rubygem0, number: "0.1.0", platform: "ruby", gem_platform: "ruby"
 )

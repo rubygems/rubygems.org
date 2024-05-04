@@ -44,7 +44,7 @@
           <%= api_key.name %>
         </td>
         <td class="owners__cell" data-title="Scopes">
-          <% api_key.enabled_scopes.each do |scope| %>
+          <% api_key.scopes.each do |scope| %>
             <ul class="scopes__list"><%= t(".#{scope}") %></ul>
           <% end %>
         </td>

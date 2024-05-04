@@ -87,7 +87,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
         create(:ownership, user: @user, rubygem: @rubygem)
-        create(:api_key, key: "12334", push_rubygem: true, owner: @user)
+        create(:api_key, key: "12334", scopes: %i[push_rubygem], owner: @user)
       end
 
       should "allow gem push by ip" do
@@ -127,7 +127,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             under_backoff_limit.times { Rack::Attack.cache.count(@push_throttle_per_user_key, exp_base_limit_period**level) }
           end
 
-          create(:api_key, key: "12334", push_rubygem: true, owner: @user)
+          create(:api_key, key: "12334", scopes: %i[push_rubygem], owner: @user)
           post "/api/v1/gems",
             params: gem_file("test-0.0.0.gem", &:read),
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
@@ -197,7 +197,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           stay_under_exponential_limit("api/ip")
 
-          create(:api_key, key: "12334", add_owner: true, yank_rubygem: true, remove_owner: true, owner: @user)
+          create(:api_key, key: "12334", scopes: %i[add_owner yank_rubygem remove_owner], owner: @user)
           @rubygem = create(:rubygem, name: "test", number: "0.0.1")
           create(:ownership, user: @user, rubygem: @rubygem)
         end
@@ -419,7 +419,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "throttle gem push by ip" do
         exceed_push_limit_for("api/push/ip")
-        create(:api_key, key: "12334", push_rubygem: true, owner: @user)
+        create(:api_key, key: "12334", scopes: %i[push_rubygem], owner: @user)
 
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem", &:read),

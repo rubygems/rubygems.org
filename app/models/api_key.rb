@@ -11,7 +11,7 @@ class ApiKey < ApplicationRecord
   has_one :oidc_api_key_role, class_name: "OIDC::ApiKeyRole", through: :oidc_id_token, source: :api_key_role, inverse_of: :api_keys
   has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
 
-  before_validation :set_scopes
+  before_validation :set_legacy_scope_columns
   before_validation :set_owner_from_user
   after_create :record_create_event
   after_update :record_expire_event, if: :saved_change_to_expires_at?
@@ -39,16 +39,16 @@ class ApiKey < ApplicationRecord
     end
   end
 
-  def enabled_scopes
-    API_SCOPES.filter_map { |scope| scope if send(scope) }
-  end
-
   API_SCOPES.each do |scope|
     define_method(:"can_#{scope}?") do
-      scope_enabled = send(scope)
+      scope_enabled = scopes.include?(scope)
       return scope_enabled if !scope_enabled || new_record?
       touch :last_accessed_at
     end
+  end
+
+  def scopes
+    super&.map(&:to_sym) || []
   end
 
   def user
@@ -57,10 +57,6 @@ class ApiKey < ApplicationRecord
 
   def user?
     owner_type == "User"
-  end
-
-  def scopes
-    super&.map(&:to_sym)
   end
 
   delegate :mfa_required_not_yet_enabled?, :mfa_required_weak_level_enabled?,
@@ -122,15 +118,15 @@ class ApiKey < ApplicationRecord
   end
 
   def other_enabled_scopes?
-    enabled_scopes.tap { |scope| scope.delete(:show_dashboard) }.any?
+    scopes.-(%i[show_dashboard]).any?
   end
 
   def scope_presence
-    errors.add :base, "Please enable at least one scope" unless enabled_scopes.any?
+    errors.add :base, "Please enable at least one scope" if scopes.blank?
   end
 
   def rubygem_scope_definition
-    return if APPLICABLE_GEM_API_SCOPES.intersect?(enabled_scopes)
+    return if APPLICABLE_GEM_API_SCOPES.intersect?(scopes)
     errors.add :rubygem, "scope can only be set for push/yank rubygem, and add/remove owner scopes"
   end
 
@@ -151,15 +147,18 @@ class ApiKey < ApplicationRecord
     self.owner ||= user
   end
 
-  def set_scopes
-    self.scopes = enabled_scopes
+  def set_legacy_scope_columns
+    scopes = self.scopes
+    API_SCOPES.each do |scope|
+      self[scope] = scopes.include?(scope)
+    end
   end
 
   def record_create_event
     case owner
     when User
       user.record_event!(Events::UserEvent::API_KEY_CREATED,
-          name:, scopes: enabled_scopes, gem: rubygem&.name, mfa:, api_key_gid: to_gid)
+          name:, scopes:, gem: rubygem&.name, mfa:, api_key_gid: to_gid)
     end
   end
 

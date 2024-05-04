@@ -188,7 +188,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "with index and push rubygem api key scope" do
     setup do
-      @api_key = create(:api_key, key: "12345", push_rubygem: true, index_rubygems: true)
+      @api_key = create(:api_key, key: "12345", scopes: %i[push_rubygem index_rubygems])
       @user = @api_key.user
 
       @request.env["HTTP_AUTHORIZATION"] = "12345"
@@ -455,7 +455,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "push to create with mfa required" do
     setup do
-      @user = create(:api_key, key: "12345", push_rubygem: true).user
+      @user = create(:api_key, key: "12345", scopes: %w[push_rubygem]).user
       @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
@@ -696,7 +696,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "to a gem with ownership removed" do
       setup do
         ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test-gem123"))
-        @api_key = create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, push_rubygem: true)
+        @api_key = create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, scopes: %i[push_rubygem])
         ownership.destroy!
         @request.env["HTTP_AUTHORIZATION"] = "12343"
 
@@ -713,7 +713,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "to a different gem" do
       setup do
         ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test-gem"))
-        create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, push_rubygem: true)
+        create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, scopes: %i[push_rubygem])
         @request.env["HTTP_AUTHORIZATION"] = "12343"
 
         post :create, body: gem_file("test-1.0.0.gem", &:read)
@@ -729,7 +729,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "to the gem being pushed" do
       setup do
         ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test"))
-        create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, push_rubygem: true)
+        create(:api_key, key: "12343", owner: ownership.user, ownership: ownership, scopes: %i[push_rubygem])
         @request.env["HTTP_AUTHORIZATION"] = "12343"
 
         post :create, body: gem_file("test-1.0.0.gem", &:read)
@@ -742,7 +742,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   context "create with a soft deleted api key" do
     setup do
       create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test"))
-      create(:api_key, key: "12343", push_rubygem: true).soft_delete!
+      create(:api_key, key: "12343", scopes: %i[push_rubygem]).soft_delete!
       @request.env["HTTP_AUTHORIZATION"] = "12343"
 
       post :create, body: gem_file("test-1.0.0.gem", &:read)
@@ -769,7 +769,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "on GET to index without index rubygem scope" do
       setup do
-        create(:api_key, key: "12345", index_rubygems: false, push_rubygem: true)
+        create(:api_key, key: "12345", scopes: %i[push_rubygem])
         @request.env["HTTP_AUTHORIZATION"] = "12345"
         get :index, format: :json
       end

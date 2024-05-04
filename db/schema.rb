@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_25_190438) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_06_180817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -60,6 +60,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_25_190438) do
     t.index ["owner_type", "owner_id"], name: "index_api_keys_on_owner"
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
     t.check_constraint "owner_type IS NOT NULL", name: "api_keys_owner_type_null"
+    t.check_constraint "scopes IS NOT NULL", name: "api_keys_scopes_null"
   end
 
   create_table "audits", force: :cascade do |t|

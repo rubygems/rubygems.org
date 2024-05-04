@@ -51,7 +51,7 @@ class Api::V1::GitHubSecretScanningController < Api::BaseController
 
   def schedule_revoke_email(api_key, url)
     return unless api_key.user?
-    Mailer.api_key_revoked(api_key.owner_id, api_key.name, api_key.enabled_scopes.join(", "), url).deliver_later
+    Mailer.api_key_revoked(api_key.owner_id, api_key.name, api_key.scopes.join(", "), url).deliver_later
   end
 
   def secret_scanning_key(key_id)

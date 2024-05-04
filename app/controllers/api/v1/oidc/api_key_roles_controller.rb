@@ -57,7 +57,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
     render json: {
       rubygems_api_key: key,
       name: api_key.name,
-      scopes: api_key.enabled_scopes,
+      scopes: api_key.scopes,
       gem: api_key.rubygem,
       expires_at: api_key.expires_at
     }.compact, status: :created

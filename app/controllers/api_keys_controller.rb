@@ -46,7 +46,7 @@ class ApiKeysController < ApplicationController
 
   def update
     @api_key = current_user.api_keys.find(params.permit(:id).require(:id))
-    @api_key.assign_attributes(api_key_params)
+    @api_key.assign_attributes(api_key_params(@api_key))
 
     if @api_key.errors.present?
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
@@ -96,9 +96,9 @@ class ApiKeysController < ApplicationController
     end
   end
 
-  def api_key_params
-    params.permit(api_key: PERMITTED_API_KEY_PARAMS).require(:api_key)
+  def api_key_params(existing_api_key = nil)
+    ApiKeysHelper.api_key_params(params.permit(api_key: PERMITTED_API_KEY_PARAMS).require(:api_key), existing_api_key)
   end
 
-  PERMITTED_API_KEY_PARAMS = [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id].freeze
+  PERMITTED_API_KEY_PARAMS = [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id, { scopes: [ApiKey::API_SCOPES] }].freeze
 end
