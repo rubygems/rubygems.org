@@ -215,7 +215,7 @@ class ApiKeysControllerTest < ActionController::TestCase
       context "gem scope" do
         setup do
           @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
-          @api_key.update(rubygem_id: @ownership.rubygem.id, push_rubygem: true)
+          @api_key.update(rubygem_id: @ownership.rubygem.id, scopes: %i[push_rubygem])
         end
 
         should "to all gems" do
@@ -242,9 +242,8 @@ class ApiKeysControllerTest < ActionController::TestCase
         should "displays error with gem scope without applicable scope enabled" do
           assert_no_changes @api_key do
             patch :update, params: { api_key: { push_rubygem: false }, id: @api_key.id }
-
-            assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", flash[:error]
           end
+          assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", flash[:error]
         end
       end
     end

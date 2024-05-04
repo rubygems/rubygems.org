@@ -10,7 +10,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
   test "request with array of api keys does not pass autorization" do
     delete sign_out_path
-    create(:api_key, owner: @user, key: "1234", show_dashboard: true)
+    create(:api_key, owner: @user, key: "1234", scopes: %i[show_dashboard])
 
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:subscription, rubygem: rubygem, user: @user)

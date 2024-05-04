@@ -97,8 +97,10 @@ class ApiKeysController < ApplicationController
   end
 
   def api_key_params
-    params.permit(api_key: PERMITTED_API_KEY_PARAMS).require(:api_key)
+    api_key = params.permit(api_key: PERMITTED_API_KEY_PARAMS).require(:api_key)
+    api_key[:scopes] = api_key.fetch(:scopes, []) + ApiKey::API_SCOPES.select { |scope| api_key.delete(scope) }
+    api_key
   end
 
-  PERMITTED_API_KEY_PARAMS = [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id].freeze
+  PERMITTED_API_KEY_PARAMS = [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id, { scopes: [ApiKey::API_SCOPES] }].freeze
 end

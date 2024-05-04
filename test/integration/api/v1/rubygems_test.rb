@@ -4,7 +4,7 @@ class Api::V1::RubygemsTest < ActionDispatch::IntegrationTest
   setup do
     @key = "12345"
     @user = create(:user)
-    create(:api_key, owner: @user, key: @key, index_rubygems: true, push_rubygem: true)
+    create(:api_key, owner: @user, key: @key, scopes: %i[index_rubygems push_rubygem])
   end
 
   test "request has remote addr present" do

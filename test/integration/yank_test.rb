@@ -7,7 +7,7 @@ class YankTest < SystemTest
     create(:ownership, user: @user, rubygem: @rubygem)
 
     @user_api_key = "12345"
-    create(:api_key, owner: @user, key: @user_api_key, yank_rubygem: true)
+    create(:api_key, owner: @user, key: @user_api_key, scopes: %i[yank_rubygem])
     Dir.chdir(Dir.mktmpdir)
 
     visit sign_in_path
@@ -72,7 +72,7 @@ class YankTest < SystemTest
     assert page.has_content? "This gem is not currently hosted on RubyGems.org"
 
     other_user_key = "12323"
-    other_api_key = create(:api_key, key: other_user_key, push_rubygem: true)
+    other_api_key = create(:api_key, key: other_user_key, scopes: %i[push_rubygem])
 
     build_gem "sandworm", "1.0.0"
     page.driver.browser.header("Authorization", other_user_key)

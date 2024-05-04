@@ -7,7 +7,7 @@ class PushTest < ActionDispatch::IntegrationTest
     Dir.chdir(Dir.mktmpdir)
     @key = "12345"
     @user = create(:user)
-    create(:api_key, owner: @user, key: @key, push_rubygem: true)
+    create(:api_key, owner: @user, key: @key, scopes: %i[push_rubygem])
   end
 
   test "pushing a gem" do
@@ -71,7 +71,7 @@ class PushTest < ActionDispatch::IntegrationTest
     rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
 
     @key = "543321"
-    create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+    create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
     build_gem "sandworm", "2.0.0"
 
@@ -90,7 +90,7 @@ class PushTest < ActionDispatch::IntegrationTest
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user)
 
     @key = "543321"
-    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
     build_gem "sandworm", "2.0.0"
 
@@ -114,7 +114,7 @@ class PushTest < ActionDispatch::IntegrationTest
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "SaNdWoRm", user: @user)
 
     @key = "543321"
-    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
     build_gem "sandworm", "2.0.0"
 

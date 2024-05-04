@@ -158,7 +158,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "with correct OTP" do
       setup do
         @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-        @api_key = create(:api_key, owner: @user, key: "12345", push_rubygem: true)
+        @api_key = create(:api_key, owner: @user, key: "12345", scopes: %i[push_rubygem])
 
         put :update, params: { api_key: "12345", index_rubygems: "true" }
         @api_key.reload
@@ -545,7 +545,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "with correct credentials" do
       setup do
-        @api_key = create(:api_key, owner: @user, key: "12345", push_rubygem: true)
+        @api_key = create(:api_key, owner: @user, key: "12345", scopes: %i[push_rubygem])
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
