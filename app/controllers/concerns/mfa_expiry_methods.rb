@@ -20,6 +20,7 @@ module MfaExpiryMethods
   # Call initialize_mfa once at the start of the MFA flow for a user (after login, after reset token verified).
   def initialize_mfa(user = @user)
     delete_mfa_session
+    session[:mfa_login_started_at] = Time.now.utc.to_s
     session[:mfa_expiry] = 15.minutes.from_now.to_s
     session[:mfa_user] = user.id
   end
@@ -27,8 +28,8 @@ module MfaExpiryMethods
   # Call require_mfa in a before_action to protect all actions that require MFA.
   def require_mfa(user = @user)
     return unless user.mfa_enabled?
-    return if mfa_complete?(user)
-    validate_webauthn || validate_otp(user) || prompt_mfa
+    return invalidate_mfa_session if invalid_mfa_session?(user)
+    mfa_verified?(user) || validate_webauthn || validate_otp(user) || prompt_mfa
   end
 
   # Implement invalidate_session in the controller to clear any session state and redirect the user to the beginning of the process.
@@ -41,42 +42,58 @@ module MfaExpiryMethods
     session.delete(:mfa_user)
     session.delete(:mfa_expiry)
     session.delete(:mfa_verified)
+    session.delete(:mfa_login_started_at)
+    session.delete(:webauthn_authentication)
   end
 
   private
 
-  def mfa_complete?(user)
-    if mfa_session_invalid?(user)
-      invalidate_session(t("multifactor_auths.session_expired"))
-      delete_mfa_session
-      true
-    else
-      session[:mfa_verified_user].present?
-    end
+  def invalidate_mfa_session
+    invalidate_session(t("multifactor_auths.session_expired"))
+    delete_mfa_session
+    true
   end
 
-  def mfa_session_invalid?(user)
-    return true if session[:mfa_expiry].blank? || Time.current.after?(session[:mfa_expiry])
-    return false if session[:mfa_user].blank? # TODO: remove me next! Allows existing sessions to finish after first deploy.
-    true if session[:mfa_user] != user.id
+  def valid_mfa_session?(user = nil)
+    return false if session[:mfa_expiry].blank? || Time.current.after?(session[:mfa_expiry])
+    return true if session[:mfa_user].blank? # TODO: remove me next! Allows existing sessions to finish after first deploy.
+    user.nil? || session[:mfa_user] == user.id
+  end
+
+  def invalid_mfa_session?(user = nil) = !valid_mfa_session?(user)
+
+  def mfa_verified?(user)
+    valid_mfa_session?(user) && session[:mfa_verified]
   end
 
   def validate_webauthn
     return unless webauthn_credential_present?
     return mfa_verified if webauthn_credential_verified?
-    prompt_mfa alert: @webauthn_error, status: :unauthorized
+    mfa_failure @webauthn_error
   end
 
   def validate_otp(user)
     otp_param = params.permit(:otp).fetch(:otp, nil)
     return if otp_param.blank?
     return mfa_verified if user.ui_mfa_verified?(otp_param)
-    prompt_mfa alert: t("multifactor_auths.incorrect_otp"), status: :unauthorized
+    mfa_failure t("multifactor_auths.incorrect_otp")
+  end
+
+  def mfa_failure(alert)
+    prompt_mfa alert:, status: :unauthorized
+  end
+
+  def otp_verification_url
+    url_for
+  end
+
+  def webauthn_verification_url
+    url_for
   end
 
   def prompt_mfa(alert: nil, status: :ok)
-    @otp_verification_url = url_for
-    setup_webauthn_authentication form_url: url_for
+    @otp_verification_url = otp_verification_url
+    setup_webauthn_authentication form_url: webauthn_verification_url
     flash.now.alert = alert if alert
     render template: "multifactor_auths/prompt", status:
   end
@@ -84,6 +101,13 @@ module MfaExpiryMethods
   def mfa_verified
     session[:mfa_expiry] = 15.minutes.from_now.to_s
     session[:mfa_verified] = true
+  end
+
+  def record_mfa_login_duration(mfa_type:)
+    started_at = Time.zone.parse(session[:mfa_login_started_at]).utc
+    duration = Time.now.utc - started_at
+
+    StatsD.distribution("login.mfa.#{mfa_type}.duration", duration)
   end
 
   included do

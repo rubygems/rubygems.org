@@ -229,8 +229,15 @@ class SessionsControllerTest < ActionController::TestCase
 
         context "when mfa is enabled" do
           setup do
+<<<<<<< HEAD
             @controller.session[:mfa_login_started_at] = Time.now.utc.to_s
             @controller.session[:mfa_user] = @user.id
+=======
+            User.expects(:authenticate).with("login", "pass").returns @user
+            raise "#{@user.id.inspect}"
+            User.expects(:find).with(@user.id).returns @user
+            post :create, params: { session: { who: "login", password: "pass" } }
+>>>>>>> 0d6de47fb (WIP)
           end
 
           context "on `ui_only` level" do

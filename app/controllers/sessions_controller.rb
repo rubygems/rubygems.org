@@ -6,68 +6,31 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify webauthn_authenticate authenticate]
-  before_action :ensure_not_blocked, only: %i[create]
+
   before_action :webauthn_new_setup, only: :new
-  after_action :delete_mfa_session, only: %i[webauthn_create webauthn_full_create otp_create]
+
+  before_action :ensure_not_blocked, only: %i[create]
+  before_action :validate_user, only: %i[create]
+  before_action :validate_mfa_user, only: %i[webauthn_create otp_create]
+  before_action :require_mfa, only: %i[create webauthn_create otp_create]
   after_action :delete_session_verification, only: :destroy
 
   def create
-    @user = find_user
-
-    if @user&.mfa_enabled?
-      @otp_verification_url = otp_create_session_path
-      setup_webauthn_authentication(form_url: webauthn_create_session_path)
-      session[:mfa_user] = @user.id
-
-      session[:mfa_login_started_at] = Time.now.utc.to_s
-      create_new_mfa_expiry
-
-      render "multifactor_auths/prompt"
-    else
-      do_login(two_factor_label: nil, two_factor_method: nil, authentication_method: "password")
-    end
+    do_login(two_factor_label: nil, two_factor_method: nil, authentication_method: "password")
   end
 
   def webauthn_create
-    @user = User.find(session[:mfa_user])
-
-    unless mfa_session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-      return
-    end
-    return login_failure(@webauthn_error) unless webauthn_credential_verified?
-
     record_mfa_login_duration(mfa_type: "webauthn")
-
     do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: "webauthn", authentication_method: "password")
   end
 
   def webauthn_full_create
-    return login_failure(@webauthn_error) unless webauthn_credential_verified?
-
-    @user = user_webauthn_credential.user
-
-    if @user.blocked_email
-      flash.now.alert = t("sessions.create.account_blocked")
-      webauthn_new_setup
-      render template: "sessions/new", status: :unauthorized
-    else
-      do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: nil, authentication_method: "webauthn")
-    end
+    do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: nil, authentication_method: "webauthn")
   end
 
   def otp_create
-    @user = User.find(session[:mfa_user])
-
-    if login_conditions_met?
-      record_mfa_login_duration(mfa_type: "otp")
-
-      do_login(two_factor_label: "OTP", two_factor_method: "otp", authentication_method: "password")
-    elsif !mfa_session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-    else
-      login_failure(t("multifactor_auths.incorrect_otp"))
-    end
+    record_mfa_login_duration(mfa_type: "otp")
+    do_login(two_factor_label: "OTP", two_factor_method: "otp", authentication_method: "password")
   end
 
   def verify
@@ -118,6 +81,7 @@ class SessionsController < Clearance::SessionsController
         StatsD.increment "login.success"
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
+        delete_mfa_session
         set_login_flash
         redirect_to(url_after_create)
       else
@@ -133,14 +97,27 @@ class SessionsController < Clearance::SessionsController
     render "sessions/new", status: :unauthorized
   end
 
-  def find_user
+  def validate_user
     password = params.permit(session: :password).require(:session).fetch(:password, nil)
-    User.authenticate(who, password) if password.is_a?(String) && who
+    @user = User.authenticate(who, password) if password.is_a?(String) && who
+  end
+
+  def validate_mfa_user
+    return invalidate_mfa_session if invalid_mfa_session?
+    @user = mfa_user
   end
 
   def who
     who_param = params.permit(session: :who).require(:session).fetch(:who, nil)
     who_param if who_param.is_a?(String)
+  end
+
+  def otp_verification_url
+    otp_create_session_path
+  end
+
+  def webauthn_verification_url
+    webauthn_create_session_path
   end
 
   def set_login_flash
@@ -176,11 +153,9 @@ class SessionsController < Clearance::SessionsController
     @user&.mfa_enabled? && @user&.ui_mfa_verified?(params[:otp]) && mfa_session_active?
   end
 
-  def delete_mfa_session
-    delete_mfa_expiry_session
-    session.delete(:webauthn_authentication)
-    session.delete(:mfa_login_started_at)
-    session.delete(:mfa_user)
+  def invalidate_session(reason)
+    delete_mfa_session
+    redirect_to sign_in_path, alert: reason
   end
 
   def record_mfa_login_duration(mfa_type:)
