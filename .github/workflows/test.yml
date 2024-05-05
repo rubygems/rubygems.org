@@ -26,7 +26,7 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.5.9"
+            version: "3.5.10"
           - name: latest
             version: latest
         ruby_version: ["3.3.1"]

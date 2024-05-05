@@ -14,7 +14,7 @@ jobs:
     name: Docker build (and optional push)
     runs-on: ubuntu-22.04
     env:
-      RUBYGEMS_VERSION: 3.5.9
+      RUBYGEMS_VERSION: 3.5.10
       RUBY_VERSION: 3.3.1
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
