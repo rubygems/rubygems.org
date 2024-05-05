@@ -332,7 +332,7 @@ GEM
       ld-eventsource (= 2.2.2)
       observer (~> 0.1.2)
       semantic (~> 1.6)
-    launchy (3.0.0)
+    launchy (3.0.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
     ld-eventsource (2.2.2)
@@ -988,7 +988,7 @@ CHECKSUMS
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
   launchdarkly-server-sdk (8.4.1) sha256=10edd22a6fcf4be19f06eb1237f40d4ca9a5ad11a0b3ac67ce8689c28cba7795
-  launchy (3.0.0) sha256=4abcdab659689550ceca6ec0630cd9efd9940b51dc14cb4ebceee8f7aedc791b
+  launchy (3.0.1) sha256=b7fa60bda0197cf57614e271a250a8ca1f6a34ab889a3c73f67ec5d57c8a7f2c
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (2.0.0) sha256=33860ad41e1785d75456500e8ca8bba8ed71ee6eaf08a98d06bbab67c5577b6f
