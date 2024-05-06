@@ -151,6 +151,7 @@ zh-CN:
       remove_owner: 移除（某个）Gem 业主
       access_webhooks: 访问后 (Access) Webhook
       show_dashboard: 显示仪表盘
+      configure_trusted_publishers:
       reset: 重置
       save_key: 请注意在此之后我们不会再次向您显示该密钥。新的 API 密钥为：
       mfa: 多因素验证

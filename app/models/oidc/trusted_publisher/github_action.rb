@@ -50,6 +50,19 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def self.publisher_name = "GitHub Actions"
 
+  def payload
+    {
+      name:,
+      repository_owner:,
+      repository_name:,
+      repository_owner_id:,
+      workflow_filename:,
+      environment:
+    }
+  end
+
+  delegate :as_json, to: :payload
+
   def repository_condition
     OIDC::AccessPolicy::Statement::Condition.new(
       operator: "string_equals",

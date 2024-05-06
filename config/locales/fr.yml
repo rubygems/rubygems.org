@@ -157,6 +157,7 @@ fr:
       remove_owner:
       access_webhooks:
       show_dashboard:
+      configure_trusted_publishers:
       reset:
       save_key:
       mfa:

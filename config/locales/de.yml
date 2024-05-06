@@ -163,6 +163,7 @@ de:
       remove_owner: Besitzer entfernen
       access_webhooks: Webhooks zugreifen
       show_dashboard: Dashboard anzeigen
+      configure_trusted_publishers:
       reset: Zurücksetzen
       save_key: 'Beachten Sie, dass wir Ihnen den Schlüssel nicht erneut anzeigen
         können. Neuer API-Schlüssel:'
