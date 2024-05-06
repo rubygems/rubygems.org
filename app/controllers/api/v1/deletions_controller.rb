@@ -17,7 +17,8 @@ class Api::V1::DeletionsController < Api::BaseController
     elsif @deletion.ineligible?
       StatsD.increment "yank.forbidden"
       @deletion.record_yank_forbidden_event!
-      contact = "Please contact RubyGems support (support@rubygems.org) to request deletion of this version if it represents a legal or security risk."
+      contact = "Please contact RubyGems support (support@rubygems.org) to request deletion of this version " \
+                "if it represents a legal or security risk."
       message = "#{@deletion.ineligible_reason} #{contact}"
       render plain: response_with_mfa_warning(message), status: :forbidden
     else
