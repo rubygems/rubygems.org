@@ -539,7 +539,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         should "respond with a message" do
           assert_equal(
             "Versions with more than 100,000 downloads cannot be deleted. " \
-            "Please contact RubyGems support to request deletion of this version if it represents a legal or security risk.",
+            "Please contact RubyGems support (support@rubygems.org) to request deletion of this version if it represents a legal or security risk.",
             @response.body
           )
         end
@@ -574,7 +574,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         should "respond with a message" do
           assert_equal(
             "Versions published more than 30 days ago cannot be deleted. " \
-            "Please contact RubyGems support to request deletion of this version if it represents a legal or security risk.",
+            "Please contact RubyGems support (support@rubygems.org) to request deletion of this version if it represents a legal or security risk.",
             @response.body
           )
         end
