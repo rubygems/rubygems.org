@@ -2,7 +2,7 @@ require "test_helper"
 
 class RoutingTest < ActionDispatch::IntegrationTest
   def contoller_in_ui?(controller)
-    !controller.nil? && controller !~ %r{^api|internal|sendgrid_events.*|view_components(_system_test)?|turbo|admin/admin$}
+    !controller.nil? && controller !~ %r{^api|internal|sendgrid_events.*|view_components(_system_test)?|turbo|admin/admin|avatars$}
   end
 
   setup do
@@ -22,7 +22,7 @@ class RoutingTest < ActionDispatch::IntegrationTest
     @ui_paths_verb.each do |path, verb|
       next if path == "/" # adding random format after root (/) gives 404
 
-      assert_raises(ActionController::RoutingError) do
+      assert_raises(ActionController::RoutingError, "#{verb} #{path} should raise") do
         # ex: get(/password/new.json)
         send(verb.downcase, path.gsub("(.:format)", ".something"))
       end

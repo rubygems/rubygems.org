@@ -22,6 +22,18 @@ class Events::RubygemEvent < ApplicationRecord
 
     attribute :version_gid, :global_id
     attribute :actor_gid, :global_id
+    attribute :force, :boolean
+  end
+
+  VERSION_YANK_FORBIDDEN = define_event "rubygem:version:yank_forbidden" do
+    attribute :number, :string
+    attribute :platform, :string
+
+    attribute :yanked_by, :string
+
+    attribute :version_gid, :global_id
+    attribute :actor_gid, :global_id
+    attribute :reason, :string
   end
 
   VERSION_UNYANKED = define_event "rubygem:version:unyanked" do

@@ -77,6 +77,13 @@ class Pusher
     @spec = package.spec
     @files = package.files
     validate_spec && serialize_spec
+  rescue Psych::AliasesNotEnabled
+    notify <<~MSG, 422
+      RubyGems.org cannot process this gem.
+      Pushing gems where there are aliases in the YAML gemspec is no longer supported.
+      Ensure you are using a recent version of RubyGems to build the gem by running
+      `gem update --system` and then try pushing again.
+    MSG
   rescue StandardError => e
     notify <<~MSG, 422
       RubyGems.org cannot process this gem.

@@ -1,6 +1,6 @@
 class Api::V1::TimeframeVersionsController < Api::BaseController
   class InvalidTimeframeParameterError < StandardError; end
-  rescue_from InvalidTimeframeParameterError, with: :bad_request_response
+  rescue_from InvalidTimeframeParameterError, with: :render_bad_request
   before_action :set_page, :ensure_valid_timerange, only: :index
 
   MAXIMUM_TIMEFRAME_QUERY_IN_DAYS = 7
@@ -13,10 +13,6 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
 
   private
 
-  def bad_request_response(exception)
-    render plain: exception.message, status: :bad_request
-  end
-
   def ensure_valid_timerange
     if (to_time - from_time).to_i > MAXIMUM_TIMEFRAME_QUERY_IN_DAYS.days
       raise InvalidTimeframeParameterError,
@@ -28,7 +24,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
   end
 
   def from_time
-    @from_time ||= Time.iso8601(params.require(:from))
+    @from_time ||= Time.iso8601(params.permit(:from).require(:from))
   rescue ArgumentError
     raise InvalidTimeframeParameterError, "the from parameter must be iso8601 formatted"
   end

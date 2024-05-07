@@ -145,10 +145,6 @@ class User < ApplicationRecord
     find_by!(email: "security@rubygems.org")
   end
 
-  def gravatar_url(*)
-    public_email ? super : nil
-  end
-
   def name
     handle || email
   end
@@ -214,7 +210,7 @@ class User < ApplicationRecord
 
   def generate_confirmation_token(reset_unconfirmed_email: true)
     self.unconfirmed_email = nil if reset_unconfirmed_email
-    self.confirmation_token = Clearance::Token.new
+    self.confirmation_token = SecureRandom.hex(24)
     self.token_expires_at = Time.zone.now + Gemcutter::EMAIL_TOKEN_EXPIRES_AFTER
   end
 
@@ -294,7 +290,10 @@ class User < ApplicationRecord
   def yank_gems
     versions_to_yank = only_owner_gems.map(&:versions).flatten
     versions_to_yank.each do |v|
-      deletions.create(version: v)
+      deletion = deletions.create(version: v)
+      next if deletion.persisted?
+      next unless deletion.ineligible?
+      deletion.record_yank_forbidden_event!
     end
   end
 

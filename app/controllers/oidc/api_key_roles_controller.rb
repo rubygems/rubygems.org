@@ -103,22 +103,29 @@ class OIDC::ApiKeyRolesController < ApplicationController
   def find_api_key_role
     @api_key_role = current_user.oidc_api_key_roles
       .includes(:provider)
-      .find_by!(token: params.require(:token))
+      .find_by!(token: params.permit(:token).require(:token))
   end
 
   def redirect_for_deleted
     redirect_to profile_oidc_api_key_roles_path, flash: { error: t(".deleted") } if @api_key_role.deleted_at?
   end
 
-  def api_key_role_params
-    params.require(:oidc_api_key_role).permit(
-      :name, :oidc_provider_id,
-      api_key_permissions: [{ scopes: [] }, :valid_for, { gems: [] }],
+  PERMITTED_API_KEY_ROLE_PARAMS = [
+    :name,
+    :oidc_provider_id,
+    {
+      api_key_permissions: [:valid_for, { scopes: [], gems: [] }],
       access_policy: {
-        statements_attributes: [:effect, { principal: :oidc },
-                                { conditions_attributes: %i[operator claim value] }]
+        statements_attributes: [
+          :effect,
+          { principal: :oidc, conditions_attributes: %i[operator claim value] }
+        ]
       }
-    )
+    }
+  ].freeze
+
+  def api_key_role_params
+    params.permit(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS).require(:oidc_api_key_role)
   end
 
   def add_default_params(rubygem, statement, condition)

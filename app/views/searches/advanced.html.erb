@@ -9,7 +9,7 @@
     <%= submit_tag "⌕", id: "advanced_search_submit", name: nil, class: "home__search__icon" %>
   <% end %>
 
-  <dl id="search-fields">
+  <dl class="search-fields">
     <dt><%= label_tag :name, t(".name"), class: "form__label" %></dt>
     <dd><%= text_field_tag :name, "", placeholder: "active OR action", class: "form__input"%></dd>
 

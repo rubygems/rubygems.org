@@ -5,7 +5,7 @@ class PasswordResetTest < SystemTest
 
   def password_reset_link
     body = ActionMailer::Base.deliveries.last.parts[1].body.decoded.to_s
-    link = %r{http://localhost(?::\d+)?/users([^";]*)}.match(body)
+    link = %r{http://localhost(?::\d+)?/password([^";]*)}.match(body)
     link[0]
   end
 
@@ -31,7 +31,7 @@ class PasswordResetTest < SystemTest
     forgot_password_with @user.email
 
     visit password_reset_link
-    expected_path = "/users/#{@user.id}/password/edit"
+    expected_path = "/password/edit"
 
     assert_equal expected_path, page.current_path, "removes confirmation token from url"
 

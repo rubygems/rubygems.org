@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_25_190438) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -55,6 +55,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
     t.datetime "expires_at", precision: nil
     t.string "owner_type"
     t.bigint "owner_id"
+    t.string "scopes", array: true
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["owner_type", "owner_id"], name: "index_api_keys_on_owner"
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
@@ -190,6 +191,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_235930) do
     t.datetime "finished_at"
     t.text "error"
     t.integer "error_event", limit: 2
+    t.text "error_backtrace", array: true
     t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
   end
 

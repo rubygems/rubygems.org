@@ -12,7 +12,7 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
 
   option :rubygem_trusted_publisher
 
-  def template
+  def view_template
     title_content
 
     div(class: "t-body") do

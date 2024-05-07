@@ -158,7 +158,7 @@ class MultifactorAuthsController < ApplicationController
   # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
   def verify_session_expiration
-    return if session_active?
+    return if mfa_session_active?
 
     delete_mfa_level_update_session_variables
     redirect_to edit_settings_path, flash: { error: t("multifactor_auths.session_expired") }

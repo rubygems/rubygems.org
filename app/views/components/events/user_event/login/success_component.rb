@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Events::UserEvent::Login::SuccessComponent < Events::TableDetailsComponent
-  def template
+  def view_template
     if additional.authentication_method == "webauthn"
       plain t(".webauthn_login", device: additional.two_factor_label)
     elsif additional.two_factor_method.blank?

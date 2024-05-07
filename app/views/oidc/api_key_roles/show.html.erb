@@ -18,11 +18,11 @@
   </div>
   <h3 class="t-list__heading"><%= OIDC::ApiKeyRole.human_attribute_name(:api_key_permissions) %></h3>
   <div class="push--s">
-    <%= render @api_key_role.api_key_permissions %>
+    <%= render partial: "oidc/api_key_permissions/api_key_permissions", object: @api_key_role.api_key_permissions %>
   </div>
   <h3 class="t-list__heading"><%= OIDC::ApiKeyRole.human_attribute_name(:access_policy) %></h3>
   <div class="push--s">
-    <%= render @api_key_role.access_policy %>
+    <%= render partial: "oidc/access_policies/access_policy", object: @api_key_role.access_policy %>
   </div>
 
   <% unless @api_key_role.deleted_at? %>

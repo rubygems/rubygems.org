@@ -7,6 +7,6 @@ class Api::V1::OIDC::IdTokensController < Api::BaseController
   end
 
   def show
-    render json: @api_key.user.oidc_id_tokens.find(params.require(:id))
+    render json: @api_key.user.oidc_id_tokens.find(params.permit(:id).require(:id))
   end
 end

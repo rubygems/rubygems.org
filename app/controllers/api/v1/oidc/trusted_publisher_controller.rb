@@ -39,7 +39,7 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   private
 
   def decode_jwt
-    @jwt = JSON::JWT.decode_compact_serialized(params.require(:jwt), :skip_verification)
+    @jwt = JSON::JWT.decode_compact_serialized(params.permit(:jwt).require(:jwt), :skip_verification)
   rescue JSON::JWT::InvalidFormat, JSON::ParserError, ArgumentError
     # invalid base64 raises ArgumentError
     render_bad_request
