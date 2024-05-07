@@ -24,6 +24,9 @@
       <th class="owners__cell">
         <%= t(".age") %>
       </th>
+      <th class="owners__cell">
+        <%= t(".expiration") %>
+      </th>
       <% if current_user.mfa_enabled? %>
         <th class="owners__cell">
           <%= t(".mfa") %>
@@ -62,6 +65,9 @@
         <td class="owners__cell" data-title="Last access">
           <%= api_key.last_accessed_at&.strftime("%Y-%m-%d %H:%M %Z") %>
         </td>
+        <td class="owners__cell" data-title="Expiration">
+          <%= api_key.expires_at&.strftime("%Y-%m-%d %H:%M %Z") %>
+        </td>
         <td class="owners__cell">
           <% unless api_key.soft_deleted? %>
             <%= button_to t("edit"),
@@ -80,6 +86,8 @@
       </tr>
     <% end %>
     <tr class="owners__row">
+      <td class="owners__cell">
+      </td>
       <td class="owners__cell">
       </td>
       <td class="owners__cell">

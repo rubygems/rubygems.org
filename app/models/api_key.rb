@@ -20,6 +20,7 @@ class ApiKey < ApplicationRecord
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
   validate :scope_presence
   validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :expires_at, inclusion: { in: -> { 1.minute.from_now.. } }, allow_nil: true, on: :create
   validate :rubygem_scope_definition, if: :ownership
   validate :known_scopes
   validate :not_soft_deleted?

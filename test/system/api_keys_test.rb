@@ -153,6 +153,21 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
+  test "creating new api key with expiration" do
+    visit_profile_api_keys_path
+
+    expiration = 1.day.from_now.beginning_of_minute
+
+    fill_in "api_key[name]", with: "test"
+    check "api_key[index_rubygems]"
+    fill_in "api_key[expires_at]", with: expiration
+    click_button "Create API Key"
+
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
+    assert_equal expiration.strftime("%Y-%m-%d %H:%M %Z"), page.find('.owners__cell[data-title="Expiration"]').text
+    assert_equal expiration, @user.api_keys.last.expires_at
+  end
+
   test "creating new api key with MFA UI and API enabled" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
 
@@ -283,6 +298,16 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     assert_predicate api_key.reload, :can_add_owner?
     assert_predicate @user.api_keys.last, :mfa_enabled?
+  end
+
+  test "disable expires_at field" do
+    _api_key = create(:api_key, owner: @user)
+
+    visit_profile_api_keys_path
+    click_button "Edit"
+
+    assert page.has_content? "Edit API key"
+    assert page.has_field? "api_key[expires_at]", disabled: true
   end
 
   test "deleting api key" do

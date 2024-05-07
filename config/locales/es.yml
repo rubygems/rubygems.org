@@ -85,6 +85,10 @@ es:
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -132,6 +136,7 @@ es:
         y añadir/eliminar propietarios a una gema específica.
       multifactor_auth: Autenticación multifactor
       enable_mfa: Activar AMF
+      expiration:
     create:
       success: Nueva clave de API creada
       invalid_gem: La gema seleccionada no se puede incluir en esta clave
@@ -160,6 +165,7 @@ es:
       save_key: 'Ten en cuenta que no se volverá a mostrar la clave de API. Nueva
         clave de API:'
       mfa: AMF
+      expiration:
     new:
       new_api_key: Nueva clave de API
     reset:

@@ -72,6 +72,10 @@ zh-TW:
         unpwn:
         blocked:
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -117,6 +121,7 @@ zh-TW:
       rubygem_scope_info:
       multifactor_auth:
       enable_mfa:
+      expiration:
     create:
       success:
       invalid_gem:
@@ -144,6 +149,7 @@ zh-TW:
       reset:
       save_key:
       mfa:
+      expiration:
     new:
       new_api_key:
     reset:
