@@ -115,7 +115,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @second_user = create(:user)
         @third_user = create(:user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @user)
-        @api_key = create(:api_key, key: "12334", add_owner: true, owner: @user)
+        @api_key = create(:api_key, key: "12334", scopes: %i[add_owner], owner: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12334"
       end
 
@@ -557,7 +557,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @ownership = create(:ownership, rubygem: @rubygem, user: @user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
 
-        @api_key = create(:api_key, key: "12223", remove_owner: true, owner: @user)
+        @api_key = create(:api_key, key: "12223", scopes: %i[remove_owner], owner: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12223"
       end
 
@@ -915,7 +915,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "return plain text 404 error" do
-    create(:api_key, key: "12223", add_owner: true)
+    create(:api_key, key: "12223", scopes: %i[add_owner])
     @request.env["HTTP_AUTHORIZATION"] = "12223"
     @request.accept = "*/*"
     post :create, params: { rubygem_id: "bananas" }
