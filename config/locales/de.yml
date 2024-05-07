@@ -87,6 +87,10 @@ de:
         blocked: Die Domain '%{domain}' wurde wegen Spam blockiert. Bitte verwenden
           Sie eine gültige persönliche E-Mail-Adresse.
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -134,6 +138,7 @@ de:
         owner add/remove auf ein bestimmtes Gem.
       multifactor_auth: Mehrfaktor-Authentifizierung
       enable_mfa: MFA aktivieren
+      expiration:
     create:
       success: Neuen API-Schlüssel erstellt
       invalid_gem: Das ausgewählte Gem kann diesem Schlüssel nicht zugeordnet werden
@@ -162,6 +167,7 @@ de:
       save_key: 'Beachten Sie, dass wir Ihnen den Schlüssel nicht erneut anzeigen
         können. Neuer API-Schlüssel:'
       mfa: MFA
+      expiration:
     new:
       new_api_key: Neuer API-Schlüssel
     reset:

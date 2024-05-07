@@ -158,6 +158,25 @@ class ApiKeysControllerTest < ActionController::TestCase
           assert_empty @user.reload.api_keys
         end
       end
+
+      context "with an expiration" do
+        should "create a key" do
+          expires_at = 1.month.from_now
+          post :create, params: { api_key: { name: "expiration", add_owner: true, expires_at: } }
+
+          created_key = @user.reload.api_keys.sole
+
+          assert_equal expires_at.change(usec: 0), created_key.expires_at
+        end
+
+        should "display error with invalid expiration" do
+          expires_at = 1.month.ago
+          post :create, params: { api_key: { name: "expiration", add_owner: true, expires_at: } }
+
+          assert_includes flash[:error], "Expires at must be in the future"
+          assert_empty @user.reload.api_keys
+        end
+      end
     end
 
     context "on GET to edit" do
@@ -200,11 +219,11 @@ class ApiKeysControllerTest < ActionController::TestCase
 
       context "with unsuccessful save" do
         setup do
-          patch :update, params: { api_key: { name: "", add_owner: true }, id: @api_key.id }
+          patch :update, params: { api_key: { name: "", add_owner: true, show_dashboard: true }, id: @api_key.id }
         end
 
         should "show error to user" do
-          assert page.has_content? "Name can't be blank"
+          page.assert_text "Show dashboard scope must be enabled exclusively"
         end
 
         should "not update scope of test key" do
@@ -245,6 +264,28 @@ class ApiKeysControllerTest < ActionController::TestCase
           end
           assert_equal "Please enable at least one scope and Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes",
                        flash[:error]
+        end
+      end
+
+      context "with an expiration" do
+        should "not allow chaging expiration" do
+          @api_key.update_column(:expires_at, 1.month.from_now)
+          expires_at = 1.year.from_now
+
+          assert_no_changes -> { @api_key.reload.expires_at } do
+            patch :update, params: { api_key: { expires_at: }, id: @api_key.id }
+
+            assert_response :bad_request
+          end
+        end
+
+        should "not allow adding expiration" do
+          expires_at = 1.year.from_now
+          assert_no_changes -> { @api_key.reload.expires_at } do
+            patch :update, params: { api_key: { expires_at: }, id: @api_key.id }
+
+            assert_response :bad_request
+          end
         end
       end
     end

@@ -87,7 +87,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   end
 
   def api_key_create_params
-    ApiKeysHelper.api_key_params(params.permit(:name, *ApiKey::API_SCOPES, :mfa, :rubygem_name, scopes: [ApiKey::API_SCOPES]))
+    ApiKeysHelper.api_key_params(params.permit(:name, *ApiKey::API_SCOPES, :mfa, :rubygem_name, :expires_at, scopes: [ApiKey::API_SCOPES]))
   end
 
   def api_key_update_params(key)

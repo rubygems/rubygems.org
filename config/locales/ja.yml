@@ -76,6 +76,10 @@ ja:
         unpwn: 過去にデータ侵害を受けたためお使いになれません
         blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -121,6 +125,7 @@ ja:
       rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
       multifactor_auth: 多要素認証
       enable_mfa: MFAを有効にする
+      expiration:
     create:
       success: 新しいAPIキーを作成しました
       invalid_gem: 選択されたgemはこのキーのスコープにありません
@@ -148,6 +153,7 @@ ja:
       reset: リセット
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA
+      expiration:
     new:
       new_api_key: 新しいAPIキー
     reset:
