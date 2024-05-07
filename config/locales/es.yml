@@ -355,7 +355,8 @@ es:
     new_ownership_requests:
       body_html:
         zero: No hay nuevas candidaturas a propietario para <strong>%{gem}</strong>.
-        one: Hay <em>una</em> nueva candidatura a propietario para <strong>%{gem}</strong>. Por favor haz click en el botón siguiente para verla.
+        one: Hay <em>una</em> nueva candidatura a propietario para <strong>%{gem}</strong>.
+          Por favor haz click en el botón siguiente para verla.
         other: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>.
           Por favor haz click en el botón siguiente para ver todas las candidaturas.
       button: CANDIDATURAS A PROPIETARIO
@@ -627,8 +628,8 @@ es:
           sobre AMF</a> para informarte sobre los distintos niveles de AMF.
         go_settings: Registrar un nuevo dispositivo
         level_html: Has activado la autenticación de múltiples factores. Pincha en
-          "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank" rel="noopener"
-          href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
+          "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank"
+          rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
           sobre AMF</a> para informarte sobre los distintos niveles de AMF.
         enabled_note: Has activado la autenticación de múltiples factores. Para desactivarla
           usa tu OTP o uno de tus códigos de recuperación activos.
