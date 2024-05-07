@@ -545,7 +545,8 @@ zh-CN:
         disabled_html: 您尚未启用基于 OTP 的多因素身份验证。请参考<a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
           多因素验证指南</a> 来了解更多关于多因素验证级别的信息。
         go_settings: 注册新设备
-        level_html: 您已启用多因素身份验证。请点击 “更新” 来改变您的 MFA 级别。请参考 <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+        level_html: 您已启用多因素身份验证。请点击 “更新” 来改变您的 MFA 级别。请参考 <a target="_blank" rel="noopener"
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
           多重身份验证指南 来了解更多 MFA 级别的信息。
         enabled_note: 您已启用多因素身份验证。请输入您从身份验证器上获得的 OTP 码，或使用您已生效的恢复码来禁用。
         update: 更新
