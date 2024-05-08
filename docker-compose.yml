@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
   cache:
-    image: memcached:1.5.22
+    image: memcached:1.4.39
     ports:
       - "11211:11211"
   search:
