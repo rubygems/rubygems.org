@@ -23,11 +23,15 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
   end
 
   def create
-    trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.create!(
+    trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.build(
       create_params
     )
 
-    render json: trusted_publisher, status: :created
+    if trusted_publisher.save
+      render json: trusted_publisher, status: :created
+    else
+      render json: { errors: trusted_publisher.errors, status: :unprocessable_entity }, status: :unprocessable_entity
+    end
   end
 
   def destroy

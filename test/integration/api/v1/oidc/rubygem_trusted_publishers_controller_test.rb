@@ -167,6 +167,23 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
         assert_response :unprocessable_entity
         assert_equal "Unsupported trusted publisher type", response.parsed_body["error"]
       end
+
+      should "error creating trusted publisher with invalid config" do
+        stub_request(:get, "https://api.github.com/users/example")
+          .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+        post api_v1_rubygem_trusted_publishers_path(@rubygem.slug),
+             params: {
+               trusted_publisher_type: "OIDC::TrustedPublisher::GitHubAction",
+               trusted_publisher: { repository_owner: "example" }
+             },
+             headers: { "HTTP_AUTHORIZATION" => "12345" }
+
+        assert_response :unprocessable_entity
+        assert_equal({ "trusted_publisher.repository_name" => ["can't be blank"],
+                       "trusted_publisher.workflow_filename" => ["can't be blank"] },
+                     response.parsed_body["errors"])
+      end
     end
 
     context "on DELETE to destroy" do
