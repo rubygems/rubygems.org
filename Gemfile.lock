@@ -215,9 +215,9 @@ GEM
     docile (1.4.0)
     dogstatsd-ruby (5.6.1)
     domain_name (0.6.20240107)
-    dotenv (3.1.1)
-    dotenv-rails (3.1.1)
-      dotenv (= 3.1.1)
+    dotenv (3.1.2)
+    dotenv-rails (3.1.2)
+      dotenv (= 3.1.2)
       railties (>= 6.1)
     drb (2.2.1)
     dry-initializer (3.1.1)
@@ -938,8 +938,8 @@ CHECKSUMS
   docile (1.4.0) sha256=5f1734bde23721245c20c3d723e76c104208e1aa01277a69901ce770f0ebb8d3
   dogstatsd-ruby (5.6.1) sha256=615dd1328c57ab66fb48cbf83b38ce2060d8353707be0bc3deb0ae960a659982
   domain_name (0.6.20240107) sha256=5f693b2215708476517479bf2b3802e49068ad82167bcd2286f899536a17d933
-  dotenv (3.1.1) sha256=6f0807f9b32546a4db00e3c721f2de0bf1c7a5ce530ce3aeb87773c633f0139a
-  dotenv-rails (3.1.1) sha256=dbb366e50d3e9761eca01579482939d6dc44a343e5f8a3c750c743930259df17
+  dotenv (3.1.2) sha256=08036c2aa1246590034a83df2adc85b72cb4944692c49da24d8e911f97924478
+  dotenv-rails (3.1.2) sha256=66d2ad1a5aca1de742dd8ec2ceed2148675c73617a3b8d7703ef86ed47ca5d6a
   drb (2.2.1) sha256=e9d472bf785f558b96b25358bae115646da0dbfd45107ad858b0bc0d935cb340
   dry-initializer (3.1.1) sha256=4d267dea367ccabe498b259c62b909b99d577d6db547d9510561999403546dec
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
