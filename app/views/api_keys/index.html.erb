@@ -24,9 +24,6 @@
       <th class="owners__cell">
         <%= t(".age") %>
       </th>
-      <th class="owners__cell">
-        <%= t(".expiration") %>
-      </th>
       <% if current_user.mfa_enabled? %>
         <th class="owners__cell">
           <%= t(".mfa") %>
@@ -34,6 +31,9 @@
       <% end %>
       <th class="owners__cell">
         <%= t(".last_access") %>
+      </th>
+      <th class="owners__cell">
+        <%= t(".expiration") %>
       </th>
       <th class="owners__cell">
       </th>
