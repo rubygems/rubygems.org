@@ -313,5 +313,19 @@ class ApiKeyTest < ActiveSupport::TestCase
 
       assert_predicate @api_key, :mfa_enabled?
     end
+
+    should "return false with MFA UI and API enabled user & short duration token" do
+      @api_key.user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+
+      [false, true].each do |mfa|
+        @api_key.update(mfa: mfa, expires_at: @api_key.created_at + 14.minutes)
+
+        refute_predicate @api_key, :mfa_enabled?
+
+        @api_key.update(mfa: mfa, expires_at: @api_key.created_at + 15.minutes)
+
+        assert_predicate @api_key, :mfa_enabled?
+      end
+    end
   end
 end
