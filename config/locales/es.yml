@@ -85,6 +85,10 @@ es:
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -132,6 +136,7 @@ es:
         y añadir/eliminar propietarios a una gema específica.
       multifactor_auth: Autenticación multifactor
       enable_mfa: Activar AMF
+      expiration:
     create:
       success: Nueva clave de API creada
       invalid_gem: La gema seleccionada no se puede incluir en esta clave
@@ -156,10 +161,12 @@ es:
       remove_owner: Eliminar propietario
       access_webhooks: Acceso a webhooks
       show_dashboard: Mostrar dashboard
+      configure_trusted_publishers:
       reset: Restablecer
       save_key: 'Ten en cuenta que no se volverá a mostrar la clave de API. Nueva
         clave de API:'
       mfa: AMF
+      expiration:
     new:
       new_api_key: Nueva clave de API
     reset:
@@ -355,7 +362,8 @@ es:
     new_ownership_requests:
       body_html:
         zero: No hay nuevas candidaturas a propietario para <strong>%{gem}</strong>.
-        one: Hay <em>una</em> nueva candidatura a propietario para <strong>%{gem}</strong>. Por favor haz click en el botón siguiente para verla.
+        one: Hay <em>una</em> nueva candidatura a propietario para <strong>%{gem}</strong>.
+          Por favor haz click en el botón siguiente para verla.
         other: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>.
           Por favor haz click en el botón siguiente para ver todas las candidaturas.
       button: CANDIDATURAS A PROPIETARIO
@@ -627,8 +635,8 @@ es:
           sobre AMF</a> para informarte sobre los distintos niveles de AMF.
         go_settings: Registrar un nuevo dispositivo
         level_html: Has activado la autenticación de múltiples factores. Pincha en
-          "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank" rel="noopener"
-          href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
+          "Actualizar" para modificar el nivel de AMF. Por favor lee la <a target="_blank"
+          rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">guía
           sobre AMF</a> para informarte sobre los distintos niveles de AMF.
         enabled_note: Has activado la autenticación de múltiples factores. Para desactivarla
           usa tu OTP o uno de tus códigos de recuperación activos.

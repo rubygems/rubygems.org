@@ -76,6 +76,10 @@ ja:
         unpwn: 過去にデータ侵害を受けたためお使いになれません
         blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -121,6 +125,7 @@ ja:
       rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
       multifactor_auth: 多要素認証
       enable_mfa: MFAを有効にする
+      expiration:
     create:
       success: 新しいAPIキーを作成しました
       invalid_gem: 選択されたgemはこのキーのスコープにありません
@@ -145,9 +150,11 @@ ja:
       remove_owner: 所有者を削除する
       access_webhooks: webhookにアクセスする
       show_dashboard: ダッシュボードを表示
+      configure_trusted_publishers:
       reset: リセット
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA
+      expiration:
     new:
       new_api_key: 新しいAPIキー
     reset:
@@ -535,8 +542,8 @@ ja:
       mfa:
         multifactor_auth: 多要素認証
         otp: 認証アプリ
-        disabled_html: OTPベースの多要素認証を有効にしていません。MFAの水準に関する詳細情報については<a target="_blank" rel="noopener"
-          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。
+        disabled_html: OTPベースの多要素認証を有効にしていません。MFAの水準に関する詳細情報については<a target="_blank"
+          rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。
         go_settings: 新しい機器を登録
         level_html: 多要素認証が有効になっています。「更新」をクリックしてMFAの水準を変更してください。MFAの水準についての詳細情報は<a
           target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGemsのMFAのガイド</a>をご参照ください。

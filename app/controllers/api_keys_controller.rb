@@ -24,12 +24,12 @@ class ApiKeysController < ApplicationController
 
   def create
     key = generate_unique_rubygems_key
-    build_params = { owner: current_user, hashed_key: hashed_key(key), **api_key_params }
+    build_params = { owner: current_user, hashed_key: hashed_key(key), **api_key_create_params }
     @api_key = ApiKey.new(build_params)
 
     if @api_key.errors.present?
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
-      @api_key = current_user.api_keys.build(api_key_params.merge(rubygem_id: nil))
+      @api_key = current_user.api_keys.build(api_key_create_params.merge(rubygem_id: nil))
       return render :new
     end
 
@@ -46,7 +46,7 @@ class ApiKeysController < ApplicationController
 
   def update
     @api_key = current_user.api_keys.find(params.permit(:id).require(:id))
-    @api_key.assign_attributes(api_key_params)
+    @api_key.assign_attributes(api_key_update_params(@api_key))
 
     if @api_key.errors.present?
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
@@ -96,9 +96,13 @@ class ApiKeysController < ApplicationController
     end
   end
 
-  def api_key_params
-    params.permit(api_key: PERMITTED_API_KEY_PARAMS).require(:api_key)
+  def api_key_create_params
+    ApiKeysHelper.api_key_params(params.permit(api_key: [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id, :expires_at]).require(:api_key))
   end
 
-  PERMITTED_API_KEY_PARAMS = [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id].freeze
+  def api_key_update_params(existing_api_key = nil)
+    ApiKeysHelper.api_key_params(
+      params.permit(api_key: [*ApiKey::API_SCOPES, :mfa, :rubygem_id, { scopes: [ApiKey::API_SCOPES] }]).require(:api_key), existing_api_key
+    )
+  end
 end

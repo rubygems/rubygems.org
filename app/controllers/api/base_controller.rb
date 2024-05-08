@@ -132,4 +132,8 @@ class Api::BaseController < ApplicationController
     error = error.message if error.is_a?(Exception)
     render json: { error: error.to_s }, status: :bad_request
   end
+
+  def owner?
+    @api_key.owner.owns_gem?(@rubygem)
+  end
 end

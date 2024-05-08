@@ -153,6 +153,21 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
+  test "creating new api key with expiration" do
+    visit_profile_api_keys_path
+
+    expiration = 1.day.from_now.beginning_of_minute
+
+    fill_in "api_key[name]", with: "test"
+    check "api_key[index_rubygems]"
+    fill_in "api_key[expires_at]", with: expiration
+    click_button "Create API Key"
+
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
+    assert_equal expiration.strftime("%Y-%m-%d %H:%M %Z"), page.find('.owners__cell[data-title="Expiration"]').text
+    assert_equal expiration, @user.api_keys.last.expires_at
+  end
+
   test "creating new api key with MFA UI and API enabled" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
 
@@ -183,7 +198,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update api key gem scope" do
-    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
+    api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -198,7 +213,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update gem scoped api key with applicable scopes removed" do
-    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
+    api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -214,7 +229,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update gem scoped api key to another applicable scope" do
-    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
+    api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -232,7 +247,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "update api key gem scope to a gem the user does not own" do
-    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
+    api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
     @another_ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "another_gem"))
 
     visit_profile_api_keys_path
@@ -285,6 +300,16 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
+  test "disable expires_at field" do
+    _api_key = create(:api_key, owner: @user)
+
+    visit_profile_api_keys_path
+    click_button "Edit"
+
+    assert page.has_content? "Edit API key"
+    assert page.has_field? "api_key[expires_at]", disabled: true
+  end
+
   test "deleting api key" do
     api_key = create(:api_key, owner: @user)
 
@@ -313,7 +338,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   test "gem ownership removed displays api key as invalid" do
-    api_key = create(:api_key, push_rubygem: true, owner: @user, ownership: @ownership)
+    api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
     visit_profile_api_keys_path
 
     refute page.has_css? ".owners__row__invalid"

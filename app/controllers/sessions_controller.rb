@@ -6,8 +6,10 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify webauthn_authenticate authenticate]
-  before_action :ensure_not_blocked, only: %i[create]
   before_action :webauthn_new_setup, only: :new
+
+  before_action :ensure_not_blocked, only: %i[create]
+  before_action :find_mfa_user, only: %i[webauthn_create otp_create]
   after_action :delete_mfa_session, only: %i[webauthn_create webauthn_full_create otp_create]
   after_action :delete_session_verification, only: :destroy
 
@@ -18,7 +20,6 @@ class SessionsController < Clearance::SessionsController
       @otp_verification_url = otp_create_session_path
       setup_webauthn_authentication(form_url: webauthn_create_session_path)
       session[:mfa_user] = @user.id
-
       session[:mfa_login_started_at] = Time.now.utc.to_s
       create_new_mfa_expiry
 
@@ -29,8 +30,6 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_create
-    @user = User.find(session[:mfa_user])
-
     unless mfa_session_active?
       login_failure(t("multifactor_auths.session_expired"))
       return
@@ -57,8 +56,6 @@ class SessionsController < Clearance::SessionsController
   end
 
   def otp_create
-    @user = User.find(session[:mfa_user])
-
     if login_conditions_met?
       record_mfa_login_duration(mfa_type: "otp")
 
@@ -136,6 +133,13 @@ class SessionsController < Clearance::SessionsController
   def find_user
     password = params.permit(session: :password).require(:session).fetch(:password, nil)
     User.authenticate(who, password) if password.is_a?(String) && who
+  end
+
+  def find_mfa_user
+    @user = User.find_by(id: session[:mfa_user]) if session[:mfa_user]
+    return if @user
+    delete_mfa_session
+    login_failure t("multifactor_auths.session_expired")
   end
 
   def who

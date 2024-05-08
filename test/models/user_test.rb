@@ -912,7 +912,7 @@ class UserTest < ActiveSupport::TestCase
       @api_key = create(:api_key, owner: @user)
 
       # simulate legacy invalid api key
-      @api_key.update_columns(show_dashboard: true, add_owner: true)
+      @api_key.update_columns(scopes: @api_key.scopes + %i[show_dashboard add_owner])
 
       refute_predicate @api_key, :valid?
     end

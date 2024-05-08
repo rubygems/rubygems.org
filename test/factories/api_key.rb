@@ -6,7 +6,7 @@ FactoryBot.define do
     name { "ci-key" }
 
     # enabled by default. disabled when show_dashboard is enabled.
-    index_rubygems { show_dashboard ? false : true }
+    scopes { %w[index_rubygems] }
 
     hashed_key { Digest::SHA256.hexdigest(key) }
   end

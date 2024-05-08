@@ -82,6 +82,10 @@ pt-BR:
         unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
         blocked:
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -127,6 +131,7 @@ pt-BR:
       rubygem_scope_info:
       multifactor_auth:
       enable_mfa:
+      expiration:
     create:
       success:
       invalid_gem:
@@ -151,9 +156,11 @@ pt-BR:
       remove_owner:
       access_webhooks:
       show_dashboard:
+      configure_trusted_publishers:
       reset:
       save_key:
       mfa:
+      expiration:
     new:
       new_api_key:
     reset:

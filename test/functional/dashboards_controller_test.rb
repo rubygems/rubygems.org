@@ -4,7 +4,7 @@ class DashboardsControllerTest < ActionController::TestCase
   context "When not logged in" do
     context "with show dashboard api key scope" do
       setup do
-        api_key = create(:api_key, key: "12345", show_dashboard: true)
+        api_key = create(:api_key, key: "12345", scopes: %i[show_dashboard])
         @subscribed_version = create(:version, created_at: 1.hour.ago)
         create(:subscription, rubygem: @subscribed_version.rubygem, user: api_key.user)
 
