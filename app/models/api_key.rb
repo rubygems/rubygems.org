@@ -4,6 +4,8 @@ class ApiKey < ApplicationRecord
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner configure_trusted_publishers].freeze
   EXCLUSIVE_SCOPES = %i[show_dashboard].freeze
 
+  self.ignored_columns += API_SCOPES
+
   belongs_to :owner, polymorphic: true
 
   has_one :api_key_rubygem_scope, dependent: :destroy
@@ -12,7 +14,6 @@ class ApiKey < ApplicationRecord
   has_one :oidc_api_key_role, class_name: "OIDC::ApiKeyRole", through: :oidc_id_token, source: :api_key_role, inverse_of: :api_keys
   has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
 
-  before_validation :set_legacy_scope_columns
   before_validation :set_owner_from_user
   after_create :record_create_event
   after_update :record_expire_event, if: :saved_change_to_expires_at?
@@ -47,6 +48,7 @@ class ApiKey < ApplicationRecord
       return scope_enabled if !scope_enabled || new_record?
       touch :last_accessed_at
     end
+    alias_method scope, :"can_#{scope}?"
   end
 
   def scopes
@@ -153,14 +155,6 @@ class ApiKey < ApplicationRecord
 
   def set_owner_from_user
     self.owner ||= user
-  end
-
-  def set_legacy_scope_columns
-    scopes = self.scopes
-    API_SCOPES.each do |scope|
-      next if scope == :configure_trusted_publishers
-      self[scope] = scopes.include?(scope)
-    end
   end
 
   def record_create_event
