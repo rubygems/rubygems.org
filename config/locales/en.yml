@@ -569,7 +569,8 @@ en:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
       optional_full_name: Optional. Will be displayed publicly
-      optional_twitter_username: Optional Twitter username. Will be displayed publicly
+      optional_twitter_username: Optional X username. Will be displayed publicly
+      twitter_username: Username
       title: Edit profile
       delete:
         delete: Delete

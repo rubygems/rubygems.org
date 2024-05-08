@@ -578,7 +578,8 @@ zh-CN:
       email_awaiting_confirmation: 请确认您新的邮箱地址 %{unconfirmed_email}
       enter_password: 请输入您账户的密码
       optional_full_name: 可填。将公开显示
-      optional_twitter_username: 可选 Twitter 用户名。这将会被公开显示
+      optional_twitter_username: 可选 X 用户名。这将会被公开显示
+      twitter_username: 用户名
       title: 修改个人资料
       delete:
         delete: 删除

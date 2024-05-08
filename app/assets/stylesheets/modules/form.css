@@ -17,11 +17,11 @@
 
 .form__label__icon {
   position: absolute;
-  top: -4px;
-  height: 30px; }
+  top: -1px;
+  height: 20px; }
 
 .form__label__icon-container .form__label__text {
-  padding-left: 33px;}
+  padding-left: 27px;}
 
 .form__input__addon-container {
   position: relative; }
