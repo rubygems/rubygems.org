@@ -74,7 +74,13 @@ class ApiKey < ApplicationRecord
   def mfa_enabled?
     return false unless user?
     return false unless user.mfa_enabled?
+    return false if short_lived?
     user.mfa_ui_and_api? || mfa
+  end
+
+  def short_lived?
+    return false unless created_at && expires_at
+    (expires_at - created_at) < 15.minutes
   end
 
   def rubygem_id=(id)
