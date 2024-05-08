@@ -156,6 +156,7 @@ en:
       remove_owner: Remove owner
       access_webhooks: Access webhooks
       show_dashboard: Show dashboard
+      configure_trusted_publishers: Configure trusted publishers
       reset: Reset
       save_key: "Note that we won't be able to show the key to you again. New API key:"
       mfa: MFA
