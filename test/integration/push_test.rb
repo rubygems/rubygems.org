@@ -79,6 +79,23 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
+    perform_enqueued_jobs
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
+    email = ActionMailer::Base.deliveries.last
+
+    assert_equal "Gem sandworm (2.0.0) pushed to RubyGems.org", email.subject
+    assert_equal [@user.email], email.to
+    email_body = Capybara.string(email.body.raw_source)
+
+    email_body.assert_text("Pushed by trusted publisher")
+    email_body.assert_text(rubygem_trusted_publisher.trusted_publisher.name)
+
+    assert_event Events::UserEvent::EMAIL_SENT, {
+      to: @user.email, from: "no-reply@mailer.rubygems.org", subject: email.subject,
+      message_id: email.message_id, mailer: "mailer", action: "gem_pushed"
+    }, @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
+
     get rubygem_path("sandworm")
 
     assert_response :success
