@@ -30,10 +30,6 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_create
-    unless mfa_session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-      return
-    end
     return login_failure(@webauthn_error) unless webauthn_credential_verified?
 
     record_mfa_login_duration(mfa_type: "webauthn")
@@ -60,8 +56,6 @@ class SessionsController < Clearance::SessionsController
       record_mfa_login_duration(mfa_type: "otp")
 
       do_login(two_factor_label: "OTP", two_factor_method: "otp", authentication_method: "password")
-    elsif !mfa_session_active?
-      login_failure(t("multifactor_auths.session_expired"))
     else
       login_failure(t("multifactor_auths.incorrect_otp"))
     end
@@ -136,7 +130,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def find_mfa_user
-    @user = User.find_by(id: session[:mfa_user]) if session[:mfa_user]
+    @user = User.find_by(id: session[:mfa_user]) if mfa_session_active? && session[:mfa_user]
     return if @user
     delete_mfa_session
     login_failure t("multifactor_auths.session_expired")

@@ -661,6 +661,8 @@ class SessionsControllerTest < ActionController::TestCase
     context "when providing credentials but the session expired" do
       setup do
         travel 30.minutes
+        @existing_webauthn = @controller.session[:webauthn_authentication]
+
         post(
           :webauthn_create,
           params: {
@@ -680,7 +682,6 @@ class SessionsControllerTest < ActionController::TestCase
         assert_nil @controller.session[:mfa_expires_at]
         assert_nil @controller.session[:mfa_login_started_at]
         assert_nil @controller.session[:mfa_user]
-        assert_nil @controller.session[:webauthn_authentication]
       end
 
       should "not sign in the user" do
@@ -693,6 +694,8 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "render sign in page" do
         assert_template "sessions/new"
+        refute_nil @controller.session[:webauthn_authentication]
+        refute_equal @existing_webauthn, @controller.session[:webauthn_authentication]
       end
     end
   end
