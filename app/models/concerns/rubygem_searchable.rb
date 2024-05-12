@@ -28,6 +28,7 @@ module RubygemSearchable
           updated: { type: "date" }
         }
       }
+    scope :search_import, -> { includes(:linkset, :gem_download, :most_recent_version, :versions, :latest_version) }
 
     def search_data # rubocop:disable Metrics/MethodLength
       if (latest_version = most_recent_version)
