@@ -418,7 +418,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.16.4)
+    nokogiri (1.16.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -583,10 +583,10 @@ GEM
     reline (0.5.6)
       io-console (~> 0.5)
     rexml (3.2.6)
-    roadie (5.2.0)
+    roadie (5.2.1)
       css_parser (~> 1.4)
       nokogiri (~> 1.15)
-    roadie-rails (3.1.0)
+    roadie-rails (3.2.0)
       railties (>= 5.1, < 8.0)
       roadie (~> 5.0)
     rotp (6.3.0)
@@ -834,7 +834,7 @@ DEPENDENCIES
   rails_semantic_logger (~> 4.14)
   rbtrace (~> 0.5.1)
   rdoc (~> 6.6)
-  roadie-rails (~> 3.0)
+  roadie-rails (~> 3.2)
   rotp (~> 6.2)
   rqrcode (~> 2.1)
   rubocop (~> 1.48)
@@ -1024,7 +1024,7 @@ CHECKSUMS
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.0) sha256=5fc0415e6ea1cc0b3dfea7270438ec22b278ca8d524986a3ae4e5ae8d087b42a
   nio4r (2.7.0) sha256=9586a685eca8246d6406e712a525e705d15bb88f709d78fc3f141e864df97276
-  nokogiri (1.16.4) sha256=62c116c3a14b4ed4e1faec786da266c4bd4c717a0bd04a9916164a7046040f45
+  nokogiri (1.16.5) sha256=ec36162c68984fa0a90a5c4ae7ab7759460639e716cc1ce75f34c3cb54158ad2
   oauth2 (2.0.9) sha256=b21f9defcf52dc1610e0dfab4c868342173dcd707fd15c777d9f4f04e153f7fb
   observer (0.1.2) sha256=d8a3107131ba661138d748e7be3dbafc0d82e732fffba9fccb3d7829880950ac
   octokit (8.1.0) sha256=82229ce9b54e910e27ae75ff21e54bc97072913b5af06750999966e6817af8cd
@@ -1083,8 +1083,8 @@ CHECKSUMS
   regexp_parser (2.9.0) sha256=81a00ba141cec0d4b4bf58cb80cd9193e5180836d3fa6ef623f7886d3ba8bdd9
   reline (0.5.6) sha256=0cfa889a415bdaa7b2965f976af922c0a226a2959123911606c5e5099add573e
   rexml (3.2.6) sha256=e0669a2d4e9f109951cb1fde723d8acd285425d81594a2ea929304af50282816
-  roadie (5.2.0) sha256=f4dc8e41ccc331ebe4833cfa8e7495446db8bfd725c1a9b480147cb53c4945e3
-  roadie-rails (3.1.0) sha256=5a45e1a7eb2f7cac29325ef8be64684c9d67cec608b235a69e38a7b79c64de21
+  roadie (5.2.1) sha256=e4a4f61ce792bd91b228b6844b4bad6b160cdc1b8df86c81a8b983082a5001d6
+  roadie-rails (3.2.0) sha256=90a534857fcfe9fdbe4f9ebfdbc47e5d33462c4f36f478fc80ba6a7b6257433f
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
   rouge (4.2.1) sha256=f371732db127913fe10f13b1c25500b927539167a746dc8ee8089ad868bba1fd
   rqrcode (2.2.0) sha256=23eea88bb44c7ee6d6cab9354d08c287f7ebcdc6112e1fe7bcc2d010d1ffefc1
