@@ -8,6 +8,7 @@ class MultifactorAuthsController < ApplicationController
   before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
   before_action :verify_session_expiration, only: %i[otp_update webauthn_update]
+  before_action :disable_cache, only: %i[new recovery]
   after_action :delete_mfa_level_update_session_variables, only: %i[otp_update webauthn_update]
   helper_method :issuer
 

@@ -17,6 +17,44 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     @user.disable_totp!
   end
 
+  test "setup mfa does not cache OTP setup" do
+    sign_in
+    visit edit_settings_path
+
+    click_button "Register a new device"
+    saved_otp_key = otp_key
+    totp = ROTP::TOTP.new(saved_otp_key)
+    fill_in "otp", with: totp.now
+    click_button "Enable"
+
+    assert page.has_content? "Recovery codes"
+
+    go_back
+
+    assert page.has_content? "has already been enabled"
+    refute page.has_content? "Register a new device"
+    refute page.has_content? saved_otp_key
+  end
+
+  test "setup mfa does not cache recovery codes" do
+    sign_in
+    visit edit_settings_path
+
+    click_button "Register a new device"
+    totp = ROTP::TOTP.new(otp_key)
+    fill_in "otp", with: totp.now
+    click_button "Enable"
+
+    assert page.has_content? "Recovery codes"
+    click_link "[ copy ]"
+    check "ack"
+    click_button "Continue"
+
+    go_back
+
+    refute page.has_content? "Recovery codes"
+  end
+
   test "user with mfa disabled gets redirected back to adoptions after setting up mfa" do
     redirect_test_mfa_disabled(adoptions_profile_path)
   end
@@ -143,5 +181,9 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   def change_auth_level(type)
     page.select type
     click_button "Update"
+  end
+
+  def go_back
+    page.evaluate_script("window.history.back()")
   end
 end
