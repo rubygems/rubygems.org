@@ -133,11 +133,8 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def seed_and_expire
-    @seed = session[:totp_seed]
-    @expire = Time.at(session[:totp_seed_expire] || 0).utc
-    %i[totp_seed totp_seed_expire].each do |key|
-      session.delete(key)
-    end
+    @seed = session.delete(:totp_seed)
+    @expire = Time.at(session.delete(:totp_seed_expire) || 0).utc
   end
 
   def update_level_and_redirect
