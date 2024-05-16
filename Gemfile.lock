@@ -391,7 +391,7 @@ GEM
     mini_histogram (0.3.1)
     mini_mime (1.1.5)
     mini_portile2 (2.8.6)
-    minitest (5.22.3)
+    minitest (5.23.0)
     minitest-gcstats (1.3.1)
       minitest (~> 5.0)
     minitest-reporters (1.6.1)
@@ -802,7 +802,7 @@ DEPENDENCIES
   mail (~> 2.8)
   maintenance_tasks (~> 2.7)
   memory_profiler (~> 1.0)
-  minitest (~> 5.22)
+  minitest (~> 5.23)
   minitest-gcstats (~> 1.3)
   minitest-reporters (~> 1.6)
   mocha (~> 2.2)
@@ -1010,7 +1010,7 @@ CHECKSUMS
   mini_histogram (0.3.1) sha256=6a114b504e4618b0e076cc672996036870f7cc6f16b8e5c25c0c637726d2dd94
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_portile2 (2.8.6) sha256=4e2ab09b924906fd42c0b6eb72816db6a435d0404e9cbdcc5d722c133b493991
-  minitest (5.22.3) sha256=ea84676290cb5e2b4f31f25751af6050aa90d3e43e4337141c3e3e839611981e
+  minitest (5.23.0) sha256=4c488e69b6a0a8bece496bfde92e39fb806f3d786eb935d55864b4dc927639a0
   minitest-gcstats (1.3.1) sha256=cb25490f93aac02e3a5ff307e560d41afcdcafa7952c1c32efdeb9886b1f4711
   minitest-reporters (1.6.1) sha256=f8fe74e46ab40dada29402f55ca236368d0af65afc410db4219189b7a1c0fc38
   mocha (2.2.0) sha256=8ba0d52c035973f950a9a4fa29f6f1022138518dfb2c846d9db2597aa9912431

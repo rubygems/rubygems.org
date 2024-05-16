@@ -122,7 +122,7 @@ group :development do
 end
 
 group :test do
-  gem "minitest", "~> 5.22", require: false
+  gem "minitest", "~> 5.23", require: false
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.0"
   gem "rack-test", "~> 2.1", require: "rack/test"
