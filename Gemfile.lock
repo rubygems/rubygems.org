@@ -645,7 +645,7 @@ GEM
     searchkick (5.3.1)
       activemodel (>= 6.1)
       hashie
-    selenium-webdriver (4.20.1)
+    selenium-webdriver (4.21.0)
       base64 (~> 0.2)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -847,7 +847,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.18)
   ruby-magic (~> 0.6)
   searchkick (~> 5.3)
-  selenium-webdriver (~> 4.20)
+  selenium-webdriver (~> 4.21)
   shoryuken (~> 6.2)
   shoulda-context (~> 3.0.0.rc1)
   shoulda-matchers (~> 6.2)
@@ -1109,7 +1109,7 @@ CHECKSUMS
   sassc-embedded (1.70.1) sha256=a95172c9c6725dfc412c702a0e705fb8a5bcb3aac2a32586b18e5432987103d3
   sawyer (0.9.2) sha256=fa3a72d62a4525517b18857ddb78926aab3424de0129be6772a8e2ba240e7aca
   searchkick (5.3.1) sha256=dc1181543f6a68354e380651f235fa7f3df6a09e4cd67fc284dc293fa9860f57
-  selenium-webdriver (4.20.1) sha256=560ca00d45bed16d661089da674290ce81564949888daa1f8659fe77fd39a2ac
+  selenium-webdriver (4.21.0) sha256=1ef8c92d1b882e84578c9b85fe960d9614ea0c19101e72fb8e0e2ebf5ab6fd6f
   semantic (1.6.1) sha256=3cdbb48f59198ebb782a3fdfb87b559e0822a311610db153bae22777a7d0c163
   semantic_logger (4.15.0) sha256=ec4f56122b5d2e2117d148b86c69fb62c1194a2b01a271be04ba8678a85f81ff
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
