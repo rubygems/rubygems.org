@@ -95,7 +95,7 @@ Rails.application.configure do
   config.rails_semantic_logger.rendered   = !enable_semantic_log_format
   unless enable_semantic_log_format
     require 'rails_development_log_formatter'
-    SemanticLogger.add_appender(io: $stdout, formatter: RailsDevelopmentLogFormatter.new)
+    config.semantic_logger.add_appender(io: $stdout, formatter: RailsDevelopmentLogFormatter.new)
     config.rails_semantic_logger.format = RailsDevelopmentLogFormatter.new
   end
 
