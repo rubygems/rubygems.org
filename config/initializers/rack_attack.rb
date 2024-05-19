@@ -208,11 +208,19 @@ class Rack::Attack
     end
   end
 
-  protected_confirmation_action = [{ controller: "email_confirmations", action: "create" }]
+  protected_confirmation_action = [
+    { controller: "email_confirmations", action: "create" },
+    { controller: "email_confirmations", action: "unconfirmed" }
+  ]
 
   throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
-    if protected_route?(protected_confirmation_action, req.path, req.request_method) && req.params['email_confirmation']
-      User.normalize_email(req.params['email_confirmation']['email']).presence
+    if protected_route?(protected_confirmation_action, req.path, req.request_method)
+      if req.params['email_confirmation']
+        User.normalize_email(req.params['email_confirmation']['email']).presence
+      else
+        action_dispatch_req = ActionDispatch::Request.new(req.env)
+        User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
+      end
     end
   end
 
