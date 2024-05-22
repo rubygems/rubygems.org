@@ -254,7 +254,7 @@ GEM
       ffi (~> 1.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    good_job (3.28.3)
+    good_job (3.29.0)
       activejob (>= 6.0.0)
       activerecord (>= 6.0.0)
       concurrent-ruby (>= 1.0.2)
@@ -787,7 +787,7 @@ DEPENDENCIES
   faraday (~> 2.9)
   faraday-retry (~> 2.2)
   faraday_middleware-aws-sigv4 (~> 1.0)
-  good_job (~> 3.28)
+  good_job (~> 3.29)
   google-protobuf (~> 4.27)
   gravtastic (~> 3.2)
   groupdate (~> 6.2)
@@ -961,7 +961,7 @@ CHECKSUMS
   fugit (1.11.0) sha256=addc9cd3031611921d1dbac094de3a645bc8858828639fd035c9cedd3b460bb9
   get_process_mem (0.2.7) sha256=4afd3c3641dd6a817c09806c7d6d509d8a9984512ac38dea8b917426bbf77eba
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
-  good_job (3.28.3) sha256=3067cbc15d4a31a4c82e0b7bfa3919b9eb9659ebe58bc158b484388d35c59ecc
+  good_job (3.29.0) sha256=c94f8df2d107053910a34b12edfb09134066ee46f73e52b66710317d435b6d22
   google-protobuf (4.27.0) sha256=5e679347abc4721a3346913b8f69640a4ee13e0105d605b1da226b25346cd88d
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.4.0) sha256=65940645bf2a48f9b2d10ab7a1d19bdc78f3c89559d8fce39cea3448a15aec54
