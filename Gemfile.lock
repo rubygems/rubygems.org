@@ -474,7 +474,7 @@ GEM
     pg (1.5.6)
     pg_query (5.1.0)
       google-protobuf (>= 3.22.3)
-    pghero (3.4.1)
+    pghero (3.5.0)
       activerecord (>= 6)
     phlex (1.10.2)
     phlex-rails (1.2.1)
@@ -817,7 +817,7 @@ DEPENDENCIES
   opensearch-ruby (~> 3.3)
   pg (~> 1.5)
   pg_query (~> 5.1)
-  pghero (~> 3.4)
+  pghero (~> 3.5)
   phlex-rails (~> 1.2)
   pp (= 0.5.0)
   prosopite (~> 1.4)
@@ -1044,7 +1044,7 @@ CHECKSUMS
   parser (3.3.0.5) sha256=7748313e505ca87045dc0465c776c802043f777581796eb79b1654c5d19d2687
   pg (1.5.6) sha256=4bc3ad2438825eea68457373555e3fd4ea1a82027b8a6be98ef57c0d57292b1c
   pg_query (5.1.0) sha256=b7f7f47c864f08ccbed46a8244906fb6ee77ee344fd27250717963928c93145d
-  pghero (3.4.1) sha256=7f949828119ab17de22ebaef1854ab8c738106bdc31bee3ac0acd0462c0efa88
+  pghero (3.5.0) sha256=7b459d383673e358017d0dd210c11b6a82bbfb340c73236ba0e50bb6c0351e6a
   phlex (1.10.2) sha256=49dca7df081258f937be5e4ee0a81b11743f2b4fea25ac7537912b9c9344b1e6
   phlex-rails (1.2.1) sha256=1d80709c02114cda869951d22bfca189b5f208d1eb89f2e6fafbe3c0240a822f
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
