@@ -154,7 +154,7 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     cbor (0.5.9.8)
-    chartkick (5.0.6)
+    chartkick (5.0.7)
     childprocess (5.0.0)
     choice (0.2.0)
     chunky_png (1.4.0)
@@ -914,7 +914,7 @@ CHECKSUMS
   byebug (11.1.3) sha256=2485944d2bb21283c593d562f9ae1019bf80002143cc3a255aaffd4e9cf4a35b
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   cbor (0.5.9.8) sha256=9ee097fc58d9bc5e406d112cd2d4e112c7354ec16f8b6ff34e4732c1e44b4eb7
-  chartkick (5.0.6) sha256=96c5984471d4c2017b28914bd1bcda7f9e8a3a9d1903059aaadc7a4044c87193
+  chartkick (5.0.7) sha256=fe52cfd34a51ff0c42dabe26c59a827ffc5c74de56816eddcb74b7c639938893
   childprocess (5.0.0) sha256=0746b7ab1d6c68156e64a3767631d7124121516192c0492929a7f0af7310d835
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
