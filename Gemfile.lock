@@ -358,7 +358,7 @@ GEM
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    lookbook (2.3.0)
+    lookbook (2.3.1)
       activemodel
       css_parser
       htmlbeautifier (~> 1.3)
@@ -1001,7 +1001,7 @@ CHECKSUMS
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
-  lookbook (2.3.0) sha256=0d225070902451124cd37279112d773c05f3b396fc2d86f9d971da559fd4b6bd
+  lookbook (2.3.1) sha256=d6ba294f3bd2fe8c39c30530a12aa99d42d202a5d6bff3d3edcafd6d2978dc39
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
   maintenance_tasks (2.7.0) sha256=0857d732e6c3078a501a1552d0ffb6321c900dc821c15bf09b6457931d6ccbcb
   marcel (1.0.4) sha256=0d5649feb64b8f19f3d3468b96c680bae9746335d02194270287868a661516a4
