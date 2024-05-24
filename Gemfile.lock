@@ -261,7 +261,8 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-protobuf (4.26.1)
+    google-protobuf (4.27.0)
+      bigdecimal
       rake (>= 13)
     gravtastic (3.2.6)
     groupdate (6.4.0)
@@ -787,7 +788,7 @@ DEPENDENCIES
   faraday-retry (~> 2.2)
   faraday_middleware-aws-sigv4 (~> 1.0)
   good_job (~> 3.28)
-  google-protobuf (~> 4.26)
+  google-protobuf (~> 4.27)
   gravtastic (~> 3.2)
   groupdate (~> 6.2)
   high_voltage (~> 3.1)
@@ -961,7 +962,7 @@ CHECKSUMS
   get_process_mem (0.2.7) sha256=4afd3c3641dd6a817c09806c7d6d509d8a9984512ac38dea8b917426bbf77eba
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
   good_job (3.28.3) sha256=3067cbc15d4a31a4c82e0b7bfa3919b9eb9659ebe58bc158b484388d35c59ecc
-  google-protobuf (4.26.1) sha256=52059a231bd6521728f5e278b64f1dea9d9ffecccbde7d53ef719721bb074493
+  google-protobuf (4.27.0) sha256=5e679347abc4721a3346913b8f69640a4ee13e0105d605b1da226b25346cd88d
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.4.0) sha256=65940645bf2a48f9b2d10ab7a1d19bdc78f3c89559d8fce39cea3448a15aec54
   hashdiff (1.1.0) sha256=b5465f0e7375f1ee883f53a766ece4dbc764b7674a7c5ffd76e79b2f5f6fc9c9
