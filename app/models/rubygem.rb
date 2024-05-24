@@ -205,7 +205,7 @@ class Rubygem < ApplicationRecord
     Links.new(self, version)
   end
 
-  def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+  def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST) # rubocop:disable Metrics/MethodLength
     versioned_links = links(version)
     deps = version.dependencies.to_a.select(&:rubygem)
     {
@@ -221,6 +221,7 @@ class Rubygem < ApplicationRecord
       "metadata"           => version.metadata,
       "yanked"             => version.yanked?,
       "sha"                => version.sha256_hex,
+      "spec_sha"           => version.spec_sha256_hex,
       "project_uri"        => "#{protocol}://#{host_with_port}/gems/#{name}",
       "gem_uri"            => "#{protocol}://#{host_with_port}/gems/#{version.gem_file_name}",
       "homepage_uri"       => versioned_links.homepage_uri,
