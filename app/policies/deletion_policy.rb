@@ -5,6 +5,8 @@ class DeletionPolicy < ApplicationPolicy
     end
   end
 
+  has_association :version
+
   def avo_index?
     rubygems_org_admin?
   end
@@ -12,6 +14,4 @@ class DeletionPolicy < ApplicationPolicy
   def avo_show?
     rubygems_org_admin?
   end
-
-  has_association :version
 end
