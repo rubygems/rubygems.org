@@ -209,6 +209,12 @@ class ActionController::TestCase
       super
     end
   end
+
+  def verified_sign_in_as(user)
+    sign_in_as(user)
+    session[:verification] = 10.minutes.from_now
+    session[:verified_user] = user.id
+  end
 end
 
 class ActionDispatch::IntegrationTest

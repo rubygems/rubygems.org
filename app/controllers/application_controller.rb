@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
+  include Pundit::Authorization
   include ApplicationMultifactorMethods
   include TraceTagger
 
@@ -8,6 +9,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :render_forbidden
   rescue_from ActionController::UnpermittedParameters, with: :render_bad_request
+  rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
 
   before_action :set_locale
   before_action :reject_null_char_param

@@ -2,7 +2,6 @@ class OwnersController < ApplicationController
   include SessionVerifiable
 
   before_action :find_rubygem, except: :confirm
-  before_action :render_forbidden, unless: :owner?, except: %i[confirm resend_confirmation]
   verify_session_before only: %i[index create destroy]
   before_action :verify_mfa_requirement, only: %i[create destroy]
 
@@ -29,12 +28,13 @@ class OwnersController < ApplicationController
   end
 
   def index
+    authorize @rubygem, :show_unconfirmed_ownerships?
     @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
   end
 
   def create
     owner = User.find_by_name(handle_params)
-    ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
+    ownership = authorize @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
@@ -44,7 +44,7 @@ class OwnersController < ApplicationController
   end
 
   def destroy
-    @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
+    @ownership = authorize @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
     if @ownership.safe_destroy
       OwnersMailer.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id).deliver_later
       redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".removed_notice", owner_name: @ownership.owner_name)

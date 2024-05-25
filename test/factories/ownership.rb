@@ -3,7 +3,7 @@ FactoryBot.define do
     rubygem
     user
     confirmed_at { Time.current }
-    authorizer { user }
+    authorizer { association :user }
     trait :unconfirmed do
       confirmed_at { nil }
     end
