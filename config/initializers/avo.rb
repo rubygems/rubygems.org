@@ -40,7 +40,7 @@ Avo.configure do |config|
     search: 'avo_search?'
   }
   config.raise_error_on_missing_policy = true
-  config.authorization_client = :pundit
+  config.authorization_client = "Admin::AuthorizationClient"
 
   ## == Localization ==
   # config.locale = 'en-US'

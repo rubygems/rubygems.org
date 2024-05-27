@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class ApplicationPolicy
-  include AdminUser
+class Admin::ApplicationPolicy
+  include Admin::Concerns::PolicyHelpers
   include SemanticLogger::Loggable
 
   attr_reader :user, :record
@@ -51,12 +51,12 @@ class ApplicationPolicy
     %w[create attach detach destroy edit].each do |action|
       define_method(:"#{action}_#{assocation}?") { false }
     end
-    define_method(:"show_#{assocation}?") { Pundit.policy!(user, record).avo_show? }
+    define_method(:"show_#{assocation}?") { policy!(user, record).avo_show? }
     alias_method :"view_#{assocation}?", :avo_show?
   end
 
   class Scope
-    include AdminUser
+    include Admin::Concerns::PolicyHelpers
 
     def initialize(user, scope)
       @user = user

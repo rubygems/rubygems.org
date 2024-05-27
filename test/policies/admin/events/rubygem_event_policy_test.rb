@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::Events::RubygemEventPolicyTest < ActiveSupport::TestCase
+class Admin::Events::RubygemEventPolicyTest < AdminPolicyTestCase
   def test_scope
   end
 

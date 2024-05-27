@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::GemDownloadPolicyTest < ActiveSupport::TestCase
+class Admin::GemDownloadPolicyTest < AdminPolicyTestCase
   def test_scope
   end
 

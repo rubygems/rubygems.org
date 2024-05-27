@@ -1,4 +1,4 @@
-class IpAddressPolicy < ApplicationPolicy
+class Admin::IpAddressPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

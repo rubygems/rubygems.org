@@ -1,4 +1,4 @@
-class ApiKeyPolicy < ApplicationPolicy
+class Admin::ApiKeyPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all
@@ -10,6 +10,6 @@ class ApiKeyPolicy < ApplicationPolicy
   has_association :oidc_id_token
 
   def avo_show?
-    Pundit.policy!(user, record.owner).avo_show?
+    policy!(user, record.owner).avo_show?
   end
 end

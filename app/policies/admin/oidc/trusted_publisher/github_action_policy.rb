@@ -1,4 +1,4 @@
-class OIDC::TrustedPublisher::GitHubActionPolicy < ApplicationPolicy
+class Admin::OIDC::TrustedPublisher::GitHubActionPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

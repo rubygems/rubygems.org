@@ -1,4 +1,4 @@
-class OIDC::ProviderPolicy < ApplicationPolicy
+class Admin::OIDC::ProviderPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

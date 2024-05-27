@@ -1,4 +1,4 @@
-class LinkVerificationPolicy < ApplicationPolicy
+class Admin::LinkVerificationPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

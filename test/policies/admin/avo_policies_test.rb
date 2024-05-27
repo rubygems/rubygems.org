@@ -1,13 +1,13 @@
 require "test_helper"
 
-class AvoPoliciesTest < ActiveSupport::TestCase
+class Admin::AvoPoliciesTest < AdminPolicyTestCase
   def test_association_methods_defined
     resources = Avo::App.init_resources
     association_actions = %w[create attach detach destroy edit show view]
 
     aggregate_assertions do
       resources.each do |resource|
-        policy = Pundit.policy(nil, resource)
+        policy = policy!(nil, resource)
 
         refute_nil policy
 

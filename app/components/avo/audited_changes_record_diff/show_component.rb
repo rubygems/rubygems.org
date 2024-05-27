@@ -64,7 +64,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
   end
 
   def authorized?
-    Pundit.policy!(user, resource.model).avo_show?
+    Pundit.policy!(user, [:admin, resource.model]).avo_show?
   end
 
   def title_link

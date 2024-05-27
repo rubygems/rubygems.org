@@ -1,4 +1,4 @@
-class OwnershipPolicy < ApplicationPolicy
+class Admin::OwnershipPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

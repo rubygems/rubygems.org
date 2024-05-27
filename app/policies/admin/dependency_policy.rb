@@ -1,4 +1,4 @@
-class DependencyPolicy < ApplicationPolicy
+class Admin::DependencyPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

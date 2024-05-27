@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::UserPolicyTest < ActiveSupport::TestCase
+class Admin::UserPolicyTest < AdminPolicyTestCase
   setup do
     @user = FactoryBot.create(:user)
     @admin = FactoryBot.create(:admin_github_user, :is_admin)
@@ -23,7 +23,7 @@ class Admin::UserPolicyTest < ActiveSupport::TestCase
   end
 
   def test_search
-    assert_predicate Pundit.policy!(@admin, @user), :avo_search?
-    refute_predicate Pundit.policy!(@non_admin, @user), :avo_search?
+    assert_predicate policy!(@admin, @user), :avo_search?
+    refute_predicate policy!(@non_admin, @user), :avo_search?
   end
 end

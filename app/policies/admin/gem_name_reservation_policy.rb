@@ -1,4 +1,4 @@
-class GemNameReservationPolicy < ApplicationPolicy
+class Admin::GemNameReservationPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

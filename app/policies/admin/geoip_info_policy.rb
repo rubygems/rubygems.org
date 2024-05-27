@@ -1,4 +1,4 @@
-class GeoipInfoPolicy < ApplicationPolicy
+class Admin::GeoipInfoPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

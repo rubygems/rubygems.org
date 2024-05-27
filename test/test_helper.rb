@@ -224,6 +224,20 @@ class SystemTest < ActionDispatch::IntegrationTest
   end
 end
 
+class AdminPolicyTestCase < ActiveSupport::TestCase
+  def setup
+    @authorization_client = Admin::AuthorizationClient.new
+  end
+
+  def policy!(user, record)
+    @authorization_client.policy!(user, record)
+  end
+
+  def policy_scope!(user, record)
+    @authorization_client.apply_policy(user, record)
+  end
+end
+
 class ComponentTest < ActiveSupport::TestCase
   include Phlex::Testing::Rails::ViewHelper
   include Capybara::Minitest::Assertions

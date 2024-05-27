@@ -1,4 +1,4 @@
-class SendgridEventPolicy < ApplicationPolicy
+class Admin::SendgridEventPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

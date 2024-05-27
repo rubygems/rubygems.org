@@ -1,4 +1,4 @@
-class LogTicketPolicy < ApplicationPolicy
+class Admin::LogTicketPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

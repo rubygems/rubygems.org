@@ -1,4 +1,4 @@
-class WebauthnVerificationPolicy < ApplicationPolicy
+class Admin::WebauthnVerificationPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all
@@ -8,6 +8,6 @@ class WebauthnVerificationPolicy < ApplicationPolicy
   has_association :user
 
   def avo_show?
-    Pundit.policy!(user, record.user).avo_show?
+    policy!(user, record.user).avo_show?
   end
 end

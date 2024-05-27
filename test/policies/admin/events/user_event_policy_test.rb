@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::Events::UserEventPolicyTest < ActiveSupport::TestCase
+class Admin::Events::UserEventPolicyTest < AdminPolicyTestCase
   def test_scope
   end
 

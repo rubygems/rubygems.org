@@ -1,4 +1,4 @@
-class DeletionPolicy < ApplicationPolicy
+class Admin::DeletionPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

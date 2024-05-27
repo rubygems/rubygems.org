@@ -1,4 +1,4 @@
-class OIDC::RubygemTrustedPublisherPolicy < ApplicationPolicy
+class Admin::OIDC::RubygemTrustedPublisherPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

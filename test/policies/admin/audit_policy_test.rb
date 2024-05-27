@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::AuditPolicyTest < ActiveSupport::TestCase
+class Admin::AuditPolicyTest < AdminPolicyTestCase
   def test_scope
   end
 

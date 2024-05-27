@@ -1,4 +1,4 @@
-module AdminUser
+module Admin::Concerns::PolicyHelpers
   extend ActiveSupport::Concern
 
   included do
@@ -12,6 +12,10 @@ module AdminUser
 
     def rubygems_org_admin?
       belongs_to_team?("rubygems-org")
+    end
+
+    def policy!(user, record)
+      Pundit.policy!(user, [:admin, record])
     end
   end
 end

@@ -1,4 +1,4 @@
-class MaintenanceTasks::RunPolicy < ApplicationPolicy
+class Admin::MaintenanceTasks::RunPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

@@ -1,4 +1,4 @@
-class Events::RubygemEventPolicy < ApplicationPolicy
+class Admin::Events::RubygemEventPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

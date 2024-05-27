@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::IpAddressPolicyTest < ActiveSupport::TestCase
+class Admin::IpAddressPolicyTest < AdminPolicyTestCase
   def test_scope
   end
 

@@ -1,4 +1,4 @@
-class GemTypoExceptionPolicy < ApplicationPolicy
+class Admin::GemTypoExceptionPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

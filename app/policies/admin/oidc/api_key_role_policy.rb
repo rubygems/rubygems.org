@@ -1,4 +1,4 @@
-class OIDC::ApiKeyRolePolicy < ApplicationPolicy
+class Admin::OIDC::ApiKeyRolePolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

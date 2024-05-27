@@ -1,4 +1,4 @@
-class OIDC::IdTokenPolicy < ApplicationPolicy
+class Admin::OIDC::IdTokenPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

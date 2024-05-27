@@ -1,4 +1,4 @@
-class WebHookPolicy < ApplicationPolicy
+class Admin::WebHookPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all

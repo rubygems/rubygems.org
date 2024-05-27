@@ -1,4 +1,4 @@
-class RubygemPolicy < ApplicationPolicy
+class Admin::RubygemPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       if rubygems_org_admin?

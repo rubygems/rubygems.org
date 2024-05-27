@@ -1,4 +1,4 @@
-class OIDC::PendingTrustedPublisherPolicy < ApplicationPolicy
+class Admin::OIDC::PendingTrustedPublisherPolicy < Admin::ApplicationPolicy
   class Scope < Scope
     def resolve
       scope.all
