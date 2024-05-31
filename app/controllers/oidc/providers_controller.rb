@@ -19,6 +19,6 @@ class OIDC::ProvidersController < ApplicationController
   private
 
   def find_provider
-    @provider = OIDC::Provider.find(params.require(:id))
+    @provider = OIDC::Provider.find(params.permit(:id).require(:id))
   end
 end

@@ -7,7 +7,7 @@ class PushTest < ActionDispatch::IntegrationTest
     Dir.chdir(Dir.mktmpdir)
     @key = "12345"
     @user = create(:user)
-    create(:api_key, owner: @user, key: @key, push_rubygem: true)
+    create(:api_key, owner: @user, key: @key, scopes: %i[push_rubygem])
   end
 
   test "pushing a gem" do
@@ -71,13 +71,30 @@ class PushTest < ActionDispatch::IntegrationTest
     rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
 
     @key = "543321"
-    create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+    create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
     build_gem "sandworm", "2.0.0"
 
     push_gem "sandworm-2.0.0.gem"
 
     assert_response :success
+
+    perform_enqueued_jobs
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
+    email = ActionMailer::Base.deliveries.last
+
+    assert_equal "Gem sandworm (2.0.0) pushed to RubyGems.org", email.subject
+    assert_equal [@user.email], email.to
+    email_body = Capybara.string(email.body.raw_source)
+
+    email_body.assert_text("Pushed by trusted publisher")
+    email_body.assert_text(rubygem_trusted_publisher.trusted_publisher.name)
+
+    assert_event Events::UserEvent::EMAIL_SENT, {
+      to: @user.email, from: "no-reply@mailer.rubygems.org", subject: email.subject,
+      message_id: email.message_id, mailer: "mailer", action: "gem_pushed"
+    }, @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
     get rubygem_path("sandworm")
 
@@ -90,7 +107,7 @@ class PushTest < ActionDispatch::IntegrationTest
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user)
 
     @key = "543321"
-    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
     build_gem "sandworm", "2.0.0"
 
@@ -114,7 +131,7 @@ class PushTest < ActionDispatch::IntegrationTest
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "SaNdWoRm", user: @user)
 
     @key = "543321"
-    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, push_rubygem: true)
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
     build_gem "sandworm", "2.0.0"
 

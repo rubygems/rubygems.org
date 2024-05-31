@@ -90,6 +90,7 @@ module Gemcutter
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
   SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze
+  SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 1).to_i
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
   STATS_PER_PAGE = 10
@@ -101,4 +102,5 @@ module Gemcutter
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
   ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.local?
+  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
 end

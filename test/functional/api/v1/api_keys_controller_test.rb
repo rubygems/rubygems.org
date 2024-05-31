@@ -158,7 +158,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "with correct OTP" do
       setup do
         @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-        @api_key = create(:api_key, owner: @user, key: "12345", push_rubygem: true)
+        @api_key = create(:api_key, owner: @user, key: "12345", scopes: %i[push_rubygem])
 
         put :update, params: { api_key: "12345", index_rubygems: "true" }
         @api_key.reload
@@ -525,6 +525,29 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "expiration" do
+      setup do
+        authorize_with("#{@user.email}:#{@user.password}")
+      end
+
+      should "not allow setting expiration in the past" do
+        assert_no_difference -> { @user.api_keys.count } do
+          post :create, params: { name: "test-key", index_rubygems: "true", expires_at: 1.day.ago }, format: "text"
+
+          assert_response :unprocessable_entity
+        end
+      end
+
+      should "allow setting expiration in the future" do
+        expires_at = 1.day.from_now
+        post :create, params: { name: "test-key", index_rubygems: "true", expires_at: }, format: "text"
+
+        assert_response :success
+
+        assert_equal expires_at.change(usec: 0), @user.api_keys.last.expires_at
+      end
+    end
   end
 
   context "on PUT to update" do
@@ -545,7 +568,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "with correct credentials" do
       setup do
-        @api_key = create(:api_key, owner: @user, key: "12345", push_rubygem: true)
+        @api_key = create(:api_key, owner: @user, key: "12345", scopes: %i[push_rubygem])
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -582,6 +605,21 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           error = "Failed to update scopes for the API key ci-key: [\"Show dashboard scope must be enabled exclusively\"]"
 
           assert_equal @response.body, error
+        end
+      end
+
+      context "expiration" do
+        should "not allow updating expiration" do
+          @api_key.update!(expires_at: 1.month.from_now)
+          assert_no_changes -> { @api_key.expires_at } do
+            put :update, params: { api_key: "12345", expires_at: 1.day.from_now }
+          end
+        end
+
+        should "not allow adding expiration" do
+          assert_no_changes -> { @api_key.expires_at } do
+            put :update, params: { api_key: "12345", expires_at: 1.day.from_now }
+          end
         end
       end
     end

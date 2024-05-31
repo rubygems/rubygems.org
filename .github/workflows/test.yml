@@ -26,10 +26,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.5.4"
+            version: "3.5.10"
           - name: latest
             version: latest
-        ruby_version: ["3.3.0"]
+        ruby_version: ["3.3.1"]
         tests:
           - name: general
             command: test
@@ -42,7 +42,7 @@ jobs:
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org
@@ -56,7 +56,7 @@ jobs:
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
           path: tmp/capybara
@@ -64,6 +64,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.rubygems.name == 'locked' && (success() || failure())
-        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4.1.0
+        uses: codecov/codecov-action@125fc84a9a348dbcf27191600683ec096ec9021c # v4.4.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -1,7 +1,7 @@
 class Events::RubygemEvent::Version::PushedComponent < Events::TableDetailsComponent
   delegate :rubygem, to: :event
 
-  def template
+  def view_template
     div do
       t(".version_html", version:
         link_to_version_from_gid(additional.version_gid, additional.number, additional.platform))

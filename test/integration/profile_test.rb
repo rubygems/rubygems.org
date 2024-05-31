@@ -27,7 +27,7 @@ class ProfileTest < SystemTest
     assert page.has_content? "nick1"
 
     click_link "Edit Profile"
-    fill_in "Username", with: "nick2"
+    fill_in "user_handle", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -41,7 +41,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Username", with: "nick2"
+    fill_in "user_handle", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -53,7 +53,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Username", with: "nick1" * 10
+    fill_in "user_handle", with: "nick1" * 10
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -118,12 +118,12 @@ class ProfileTest < SystemTest
     assert page.has_content?("Email Me")
   end
 
-  test "adding Twitter username" do
+  test "adding X(formerly Twitter) username" do
     sign_in
     visit profile_path("nick1")
 
     click_link "Edit Profile"
-    fill_in "Twitter username", with: "nick1"
+    fill_in "user_twitter_username", with: "nick1"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -176,5 +176,32 @@ class ProfileTest < SystemTest
     assert page.has_link?(rubygem.name, href: "/gems/#{rubygem.name}")
     assert page.has_content? "special note"
     assert page.has_content? "request note"
+  end
+
+  test "seeing the gems ordered by downloads" do
+    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 5)
+    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 2)
+    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 7)
+
+    sign_in
+    visit profile_path("nick1")
+
+    downloads = page.all(".gems__gem__downloads__count")
+
+    assert_equal("7 Downloads", downloads[0].text)
+    assert_equal("5 Downloads", downloads[1].text)
+    assert_equal("2 Downloads", downloads[2].text)
+  end
+
+  test "seeing the latest version when there is a newer previous version" do
+    create(:rubygem, owners: [@user], number: "1.0.1")
+    create(:version, rubygem: Rubygem.first, number: "0.0.2")
+
+    sign_in
+    visit profile_path("nick1")
+
+    version = page.find(".gems__gem__version").text
+
+    assert_equal("1.0.1", version)
   end
 end

@@ -1,12 +1,4 @@
 class Mailer < ApplicationMailer
-  include Roadie::Rails::Automatic
-  include MailerHelper
-
-  default from: Clearance.configuration.mailer_sender
-
-  default_url_options[:host] = Gemcutter::HOST
-  default_url_options[:protocol] = Gemcutter::PROTOCOL
-
   def email_reset(user)
     @user = user
     mail to: @user.unconfirmed_email,

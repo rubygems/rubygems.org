@@ -139,8 +139,8 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.pull_spec
       end
 
-      assert_equal "", out
-      assert_equal("Exception while verifying \n", err)
+      assert_empty out
+      assert_empty err
       assert_nil @cutter.spec
       assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
       assert_match(/ActionController::Routing::RouteSet::NamedRouteCollection/, @cutter.message)
@@ -170,8 +170,8 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.process
       end
 
-      assert_equal "", out
-      assert_equal("Exception while verifying \n", err)
+      assert_empty out
+      assert_empty err
       assert_match(/mon out of range/, @cutter.message)
       assert_equal 422, @cutter.code
     end
@@ -310,8 +310,8 @@ class PusherTest < ActiveSupport::TestCase
           @cutter.pull_spec
         end
 
-        assert_equal "", out
-        assert_equal("Exception while verifying \n", err)
+        assert_empty out
+        assert_empty err
         assert_nil @cutter.spec
         assert_includes @cutter.message, %(RubyGems.org cannot process this gem)
         assert_includes @cutter.message, %(Tried to load unspecified class: Symbol)
@@ -319,13 +319,19 @@ class PusherTest < ActiveSupport::TestCase
       end
     end
 
-    should "be able to pull spec with metadata containing aliases" do
+    should "not be able to pull spec with metadata containing aliases" do
       @gem = gem_file("aliases-0.0.0.gem")
       @cutter = Pusher.new(@api_key, @gem)
-      @cutter.pull_spec
 
-      assert_not_nil @cutter.spec
-      assert_not_nil @cutter.spec.dependencies.first.requirement
+      refute @cutter.pull_spec
+      assert_nil @cutter.spec
+      assert_equal <<~MSG, @cutter.message
+        RubyGems.org cannot process this gem.
+        Pushing gems where there are aliases in the YAML gemspec is no longer supported.
+        Ensure you are using a recent version of RubyGems to build the gem by running
+        `gem update --system` and then try pushing again.
+      MSG
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to pull spec when no data available" do
@@ -333,7 +339,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@api_key, @gem)
       @cutter.pull_spec
 
-      assert_includes @cutter.message, %{package content (data.tar.gz) is missing}
+      assert_includes @cutter.message, "Pushing gems where there are aliases in the YAML gemspec is no longer supported"
     end
   end
 

@@ -1,4 +1,3 @@
-require 'rubygems/package'
 require 'rdoc/markup'
 require 'rdoc/markup/to_html'
 require 'patterns'

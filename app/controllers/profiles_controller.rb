@@ -8,9 +8,8 @@ class ProfilesController < ApplicationController
   before_action :disable_cache, only: :edit
 
   def show
-    @user = User.includes(rubygems_downloaded: %i[most_recent_version gem_download]).strict_loading
-      .find_by_slug!(params[:id])
-    @rubygems = @user.rubygems_downloaded.to_a
+    @user = User.find_by_slug!(params[:id])
+    @rubygems = @user.rubygems_downloaded.includes(%i[latest_version gem_download]).strict_loading
   end
 
   def me
@@ -61,14 +60,16 @@ class ProfilesController < ApplicationController
   private
 
   def params_user
-    params.require(:user).permit(:handle, :twitter_username, :unconfirmed_email, :public_email, :full_name).tap do |hash|
+    params.permit(user: PERMITTED_PROFILE_PARAMS).require(:user).tap do |hash|
       hash.delete(:unconfirmed_email) if hash[:unconfirmed_email] == current_user.email
     end
   end
 
+  PERMITTED_PROFILE_PARAMS = %i[handle twitter_username unconfirmed_email public_email full_name].freeze
+
   def verify_password
-    return if current_user.authenticated?(params[:user].delete(:password))
-    flash[:notice] = t("profiles.request_denied")
-    redirect_to edit_profile_path
+    password = params.permit(user: :password).require(:user)[:password]
+    return if current_user.authenticated?(password)
+    redirect_to edit_profile_path, notice: t("profiles.request_denied")
   end
 end

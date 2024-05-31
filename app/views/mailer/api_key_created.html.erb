@@ -15,12 +15,16 @@
         <p>
           Name: <strong><%= @api_key.name %></strong>
           <br>
-          Scope: <strong><%= @api_key.enabled_scopes.join(", ") %></strong>
+          Scope: <strong><%= @api_key.scopes.to_sentence %></strong>
           <br>
           Created at: <strong><%= @api_key.created_at.to_formatted_s(:rfc822) %></strong>
           <% if @api_key.oidc_id_token.present? %>
             <br>
             <%= ApiKey.human_attribute_name(:oidc_api_key_role) %>: <strong><%= link_to(@api_key.oidc_api_key_role.name, profile_oidc_api_key_role_url(@api_key.oidc_api_key_role.token), target: :_blank) %></strong>
+          <% end %>
+          <% if @api_key.expires_at.present? %>
+            <br>
+            <%= ApiKey.human_attribute_name(:expires_at) %>: <strong><%= @api_key.expires_at.to_formatted_s(:rfc822) %></strong>
           <% end %>
           <br>
         </p>

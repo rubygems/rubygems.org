@@ -7,7 +7,7 @@ class OIDC::IdTokens::ShowView < ApplicationView
 
   option :id_token
 
-  def template # rubocop:disable Metrics/AbcSize
+  def view_template # rubocop:disable Metrics/AbcSize
     self.title = t(".title")
 
     div(class: "t-body") do

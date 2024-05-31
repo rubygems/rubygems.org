@@ -361,12 +361,12 @@ class Rubygem < ApplicationRecord
     RubygemContents.new(gem: name).get(fingerprint)
   end
 
-  def yank_versions!(version_id: nil)
+  def yank_versions!(version_id: nil, force: false)
     security_user = User.security_user
     versions_to_yank = version_id ? versions.where(id: version_id) : versions
 
     versions_to_yank.find_each do |version|
-      security_user.deletions.create!(version: version) unless version.yanked?
+      security_user.deletions.create!(version: version, force:) unless version.yanked?
     end
   end
 
