@@ -1,8 +1,8 @@
 # syntax = docker/dockerfile:1.4
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=3.3.1
-ARG ALPINE_VERSION=3.18
+ARG RUBY_VERSION=3.3.2
+ARG ALPINE_VERSION=3.20
 FROM ruby:$RUBY_VERSION-alpine${ALPINE_VERSION} as base
 
 # Install packages
