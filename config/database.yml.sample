@@ -13,7 +13,6 @@ development:
     pool: 5
     timeout: 5000
 
-
 test:
   primary:
     <<: *default
@@ -23,14 +22,6 @@ test:
     password: testpassword
     pool: 5
     timeout: 5000
-
-oidc-api-token:
-  primary:
-    <<: *default
-    database: rubygems_oidc_api_token
-    min_messages: error
-    pool: 30
-    reconnect: true
 
 staging:
   primary:
