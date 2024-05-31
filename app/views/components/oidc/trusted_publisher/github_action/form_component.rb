@@ -5,7 +5,7 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
 
   option :github_action_form
 
-  def template
+  def view_template
     github_action_form.fields_for :trusted_publisher do |trusted_publisher_form|
       field trusted_publisher_form, :text_field, :repository_owner, autocomplete: :off
       field trusted_publisher_form, :text_field, :repository_name, autocomplete: :off

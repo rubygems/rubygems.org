@@ -37,7 +37,7 @@ class Api::V1::WebHooksController < Api::BaseController
                     @rubygem.most_recent_version, delayed: false)
       render plain: webhook.deployed_message(@rubygem)
     else
-      render plain: webhook.failed_message(@rubygem), status: :bad_request
+      render_bad_request webhook.failed_message(@rubygem)
     end
   end
 
@@ -50,7 +50,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def set_url
-    render plain: "URL was not provided", status: :bad_request unless params[:url]
+    render_bad_request "URL was not provided" unless params[:url]
     @url = params[:url]
   end
 

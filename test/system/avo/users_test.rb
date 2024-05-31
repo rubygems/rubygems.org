@@ -274,6 +274,11 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     user = ownership.user
     rubygem = ownership.rubygem
     version = create(:version, rubygem: rubygem)
+    GemDownload.increment(
+      100_001,
+      rubygem_id: rubygem.id,
+      version_id: version.id
+    )
 
     user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     version_attributes = version.attributes.with_indifferent_access

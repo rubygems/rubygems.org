@@ -32,33 +32,33 @@ class ApiKeyTest < ActiveSupport::TestCase
 
   context "#scope" do
     setup do
-      @api_key = create(:api_key, index_rubygems: true, push_rubygem: true)
+      @api_key = create(:api_key, scopes: %i[index_rubygems push_rubygem])
     end
 
     should "return enabled scopes" do
-      assert_equal %i[index_rubygems push_rubygem], @api_key.enabled_scopes
+      assert_equal %i[index_rubygems push_rubygem], @api_key.scopes
     end
   end
 
   context "show_dashboard scope" do
     should "be valid when enabled exclusively" do
-      assert_predicate build(:api_key, show_dashboard: true), :valid?
+      assert_predicate build(:api_key, scopes: %i[show_dashboard]), :valid?
     end
 
     should "be invalid when enabled with any other scope" do
-      refute_predicate build(:api_key, show_dashboard: true, push_rubygem: true), :valid?
+      refute_predicate build(:api_key, scopes: %i[show_dashboard push_rubygem]), :valid?
     end
   end
 
   context "gem scope" do
     setup do
       @ownership = create(:ownership)
-      @api_key = create(:api_key, push_rubygem: true, owner: @ownership.user, ownership: @ownership)
-      @api_key_no_gem_scope = create(:api_key, key: SecureRandom.hex(24), index_rubygems: true, owner: @ownership.user)
+      @api_key = create(:api_key, scopes: %w[push_rubygem], owner: @ownership.user, ownership: @ownership)
+      @api_key_no_gem_scope = create(:api_key, key: SecureRandom.hex(24), scopes: %i[index_rubygems], owner: @ownership.user)
     end
 
     should "be invalid if non applicable API scope is enabled" do
-      api_key = build(:api_key, index_rubygems: true, owner: @ownership.user, ownership: @ownership)
+      api_key = build(:api_key, scopes: %w[index_rubygems], owner: @ownership.user, ownership: @ownership)
 
       refute_predicate api_key, :valid?
       assert_contains api_key.errors[:rubygem], "scope can only be set for push/yank rubygem, and add/remove owner scopes"
@@ -66,7 +66,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
     should "be valid if applicable API scope is enabled" do
       %i[push_rubygem yank_rubygem add_owner remove_owner].each do |scope|
-        api_key = build(:api_key, scope => true, owner: @ownership.user, ownership: @ownership)
+        api_key = build(:api_key, scopes: [scope], owner: @ownership.user, ownership: @ownership)
 
         assert_predicate api_key, :valid?
       end
@@ -94,7 +94,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
     context "#rubygem_id=" do
       should "set ownership to a gem" do
-        api_key = create(:api_key, key: SecureRandom.hex(24), push_rubygem: true, owner: @ownership.user, rubygem_id: @ownership.rubygem_id)
+        api_key = create(:api_key, key: SecureRandom.hex(24), scopes: %i[push_rubygem], owner: @ownership.user, rubygem_id: @ownership.rubygem_id)
 
         assert_equal @ownership.rubygem_id, api_key.rubygem_id
       end
@@ -106,7 +106,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       end
 
       should "add error when id is not associated with the user" do
-        api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), push_rubygem: true, owner: @ownership.user, rubygem_id: -1)
+        api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), scopes: %i[push_rubygem], owner: @ownership.user, rubygem_id: -1)
 
         assert_contains api_key.errors[:rubygem], "must be a gem that you are an owner of"
       end
@@ -117,7 +117,7 @@ class ApiKeyTest < ActiveSupport::TestCase
         api_key = create(
           :api_key,
           key: SecureRandom.hex(24),
-          push_rubygem: true,
+          scopes: %i[push_rubygem],
           owner: @ownership.user,
           rubygem_name: @ownership.rubygem.name
         )
@@ -135,7 +135,7 @@ class ApiKeyTest < ActiveSupport::TestCase
         rubygem = create(:rubygem, name: "another-gem")
         api_key = ApiKey.new(
           hashed_key: SecureRandom.hex(24),
-          push_rubygem: true,
+          scopes: %i[push_rubygem],
           owner: @ownership.user,
           rubygem_name: rubygem.name
         )
@@ -146,7 +146,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       should "add error when name is not a valid gem name" do
         api_key = ApiKey.new(
           hashed_key: SecureRandom.hex(24),
-          push_rubygem: true,
+          scopes: %i[push_rubygem],
           owner: @ownership.user,
           rubygem_name: "invalid-gem-name"
         )
@@ -184,7 +184,7 @@ class ApiKeyTest < ActiveSupport::TestCase
   context "#soft_deleted_by_ownership?" do
     should "return true if soft deleted gem name is present" do
       ownership = create(:ownership)
-      api_key = create(:api_key, push_rubygem: true, owner: ownership.user, ownership: ownership)
+      api_key = create(:api_key, scopes: %i[push_rubygem], owner: ownership.user, ownership: ownership)
       api_key.soft_delete!(ownership: ownership)
 
       assert_predicate api_key, :soft_deleted_by_ownership?
@@ -283,7 +283,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
   context "#mfa_enabled?" do
     setup do
-      @api_key = create(:api_key, index_rubygems: true)
+      @api_key = create(:api_key, scopes: %i[index_rubygems])
     end
 
     should "return false with MFA disabled user" do
@@ -312,6 +312,20 @@ class ApiKeyTest < ActiveSupport::TestCase
       @api_key.update(mfa: true)
 
       assert_predicate @api_key, :mfa_enabled?
+    end
+
+    should "return false with MFA UI and API enabled user & short duration token" do
+      @api_key.user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+
+      [false, true].each do |mfa|
+        @api_key.update(mfa: mfa, expires_at: @api_key.created_at + 14.minutes)
+
+        refute_predicate @api_key, :mfa_enabled?
+
+        @api_key.update(mfa: mfa, expires_at: @api_key.created_at + 15.minutes)
+
+        assert_predicate @api_key, :mfa_enabled?
+      end
     end
   end
 end

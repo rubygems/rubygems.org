@@ -12,6 +12,8 @@
     margin-left: auto; } }
 
 .header {
+  position: relative;
+  z-index: 1;
   -webkit-transform: translateZ(0); }
   @media (max-width: 1019px) {
     .header {

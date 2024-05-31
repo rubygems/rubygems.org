@@ -10,7 +10,7 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
 
   option :pending_trusted_publisher
 
-  def template
+  def view_template
     self.title = t(".title")
 
     div(class: "t-body") do

@@ -108,7 +108,7 @@ class MailerPreview < ActionMailer::Preview
 
   def api_key_revoked
     api_key = ApiKey.where(owner_type: "User").last
-    Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.enabled_scopes.join(", "), "https://example.com")
+    Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.scopes.to_sentence, "https://example.com")
   end
 
   def new_ownership_requests

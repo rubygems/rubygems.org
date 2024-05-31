@@ -39,7 +39,7 @@ class EmailConfirmationsController < ApplicationController
   def otp_update
     if otp_update_conditions_met?
       confirm_email
-    elsif !session_active?
+    elsif !mfa_session_active?
       login_failure(t("multifactor_auths.session_expired"))
     else
       login_failure(t("multifactor_auths.incorrect_otp"))
@@ -47,7 +47,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def webauthn_update
-    unless session_active?
+    unless mfa_session_active?
       login_failure(t("multifactor_auths.session_expired"))
       return
     end
@@ -97,7 +97,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def otp_update_conditions_met?
-    @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && session_active?
+    @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && mfa_session_active?
   end
 
   def login_failure(message)

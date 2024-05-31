@@ -77,6 +77,10 @@ zh-CN:
         unpwn: 曾出现过数据泄露，不应该再使用
         blocked: 域名 '%{domain}' 因发送垃圾邮件已被禁用。请使用另外有效的个人邮箱。
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -122,6 +126,7 @@ zh-CN:
       rubygem_scope_info: 该作用范围仅允许对一个 Gem 进行 推送/撤回 以及 对业主的 添加/移除
       multifactor_auth: 多因素验证——身份认证
       enable_mfa: 启用多因素验证
+      expiration:
     create:
       success: 新的 API 密钥已创建
       invalid_gem: 该 Gem 未被此 API 密钥所允许的作用范围包含
@@ -146,9 +151,11 @@ zh-CN:
       remove_owner: 移除（某个）Gem 业主
       access_webhooks: 访问后 (Access) Webhook
       show_dashboard: 显示仪表盘
+      configure_trusted_publishers:
       reset: 重置
       save_key: 请注意在此之后我们不会再次向您显示该密钥。新的 API 密钥为：
       mfa: 多因素验证
+      expiration:
     new:
       new_api_key: 生成新 API 密钥
     reset:
@@ -545,7 +552,8 @@ zh-CN:
         disabled_html: 您尚未启用基于 OTP 的多因素身份验证。请参考<a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
           多因素验证指南</a> 来了解更多关于多因素验证级别的信息。
         go_settings: 注册新设备
-        level_html: 您已启用多因素身份验证。请点击 “更新” 来改变您的 MFA 级别。请参考 <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+        level_html: 您已启用多因素身份验证。请点击 “更新” 来改变您的 MFA 级别。请参考 <a target="_blank" rel="noopener"
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
           多重身份验证指南 来了解更多 MFA 级别的信息。
         enabled_note: 您已启用多因素身份验证。请输入您从身份验证器上获得的 OTP 码，或使用您已生效的恢复码来禁用。
         update: 更新
@@ -570,7 +578,8 @@ zh-CN:
       email_awaiting_confirmation: 请确认您新的邮箱地址 %{unconfirmed_email}
       enter_password: 请输入您账户的密码
       optional_full_name: 可填。将公开显示
-      optional_twitter_username: 可选 Twitter 用户名。这将会被公开显示
+      optional_twitter_username: 可选 X 用户名。这将会被公开显示
+      twitter_username: 用户名
       title: 修改个人资料
       delete:
         delete: 删除

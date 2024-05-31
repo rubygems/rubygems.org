@@ -88,6 +88,7 @@ Rails.application.routes.draw do
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
           resource :owners, only: %i[show create destroy]
+          resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy show]
         end
       end
 
@@ -241,7 +242,10 @@ Rails.application.routes.draw do
       patch 'unconfirmed'
     end
 
-    resources :passwords, only: %i[new create]
+    resource :password, only: %i[new create edit update] do
+      post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
+      post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
+    end
 
     resource :session, only: %i[create destroy] do
       post 'otp_create', to: 'sessions#otp_create', as: :otp_create
@@ -252,12 +256,7 @@ Rails.application.routes.draw do
       post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
     end
 
-    resources :users, only: %i[new create] do
-      resource :password, only: %i[create edit update] do
-        post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
-        post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
-      end
-    end
+    resources :users, only: %i[new create]
 
     get '/sign_in' => 'sessions#new', as: 'sign_in'
     delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
@@ -277,6 +276,15 @@ Rails.application.routes.draw do
   scope constraints: { format: :text }, defaults: { format: :text } do
     resource :webauthn_verification, only: [] do
       post ':webauthn_token', to: 'webauthn_verifications#authenticate', as: :authenticate
+    end
+  end
+
+  ################################################################################
+  # UI Images
+
+  scope constraints: { format: /jpe?g/ }, defaults: { format: :jpeg } do
+    resources :users, only: [] do
+      get 'avatar', on: :member, to: 'avatars#show', format: true
     end
   end
 

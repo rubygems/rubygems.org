@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -39,13 +39,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
   create_table "api_keys", force: :cascade do |t|
     t.string "name", null: false
     t.string "hashed_key", null: false
-    t.boolean "index_rubygems", default: false, null: false
-    t.boolean "push_rubygem", default: false, null: false
-    t.boolean "yank_rubygem", default: false, null: false
-    t.boolean "add_owner", default: false, null: false
-    t.boolean "remove_owner", default: false, null: false
-    t.boolean "access_webhooks", default: false, null: false
-    t.boolean "show_dashboard", default: false, null: false
     t.datetime "last_accessed_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -55,10 +48,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
     t.datetime "expires_at", precision: nil
     t.string "owner_type"
     t.bigint "owner_id"
+    t.string "scopes", array: true
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["owner_type", "owner_id"], name: "index_api_keys_on_owner"
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
     t.check_constraint "owner_type IS NOT NULL", name: "api_keys_owner_type_null"
+    t.check_constraint "scopes IS NOT NULL", name: "api_keys_scopes_null"
   end
 
   create_table "audits", force: :cascade do |t|
@@ -190,13 +185,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
     t.datetime "finished_at"
     t.text "error"
     t.integer "error_event", limit: 2
+    t.text "error_backtrace", array: true
+    t.uuid "process_id"
     t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
+    t.index ["process_id", "created_at"], name: "index_good_job_executions_on_process_id_and_created_at"
   end
 
   create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "state"
+    t.integer "lock_type", limit: 2
   end
 
   create_table "good_job_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -229,6 +228,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
     t.text "job_class"
     t.integer "error_event", limit: 2
     t.text "labels", array: true
+    t.uuid "locked_by_id"
+    t.datetime "locked_at"
     t.index ["active_job_id", "created_at"], name: "index_good_jobs_on_active_job_id_and_created_at"
     t.index ["batch_callback_id"], name: "index_good_jobs_on_batch_callback_id", where: "(batch_callback_id IS NOT NULL)"
     t.index ["batch_id"], name: "index_good_jobs_on_batch_id", where: "(batch_id IS NOT NULL)"
@@ -237,8 +238,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
     t.index ["cron_key", "cron_at"], name: "index_good_jobs_on_cron_key_and_cron_at_cond", unique: true, where: "(cron_key IS NOT NULL)"
     t.index ["finished_at"], name: "index_good_jobs_jobs_on_finished_at", where: "((retried_good_job_id IS NULL) AND (finished_at IS NOT NULL))"
     t.index ["labels"], name: "index_good_jobs_on_labels", where: "(labels IS NOT NULL)", using: :gin
+    t.index ["locked_by_id"], name: "index_good_jobs_on_locked_by_id", where: "(locked_by_id IS NOT NULL)"
     t.index ["priority", "created_at"], name: "index_good_job_jobs_for_candidate_lookup", where: "(finished_at IS NULL)"
     t.index ["priority", "created_at"], name: "index_good_jobs_jobs_on_priority_created_at_when_unfinished", order: { priority: "DESC NULLS LAST" }, where: "(finished_at IS NULL)"
+    t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
@@ -480,6 +483,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
     t.string "mfa_hashed_recovery_codes", default: [], array: true
     t.boolean "public_email", default: false, null: false
     t.datetime "deleted_at"
+    t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
@@ -575,6 +579,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
     t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
   end
 
+  add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
+  add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
   add_foreign_key "events_rubygem_events", "geoip_infos"
   add_foreign_key "events_rubygem_events", "ip_addresses"
   add_foreign_key "events_rubygem_events", "rubygems"
@@ -589,8 +595,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_004017) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
+  add_foreign_key "ownership_calls", "users", name: "ownership_calls_user_id_fk"
+  add_foreign_key "ownership_requests", "ownership_calls", name: "ownership_requests_ownership_call_id_fk"
+  add_foreign_key "ownership_requests", "rubygems", name: "ownership_requests_rubygem_id_fk"
+  add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
+  add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
+  add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"
+  add_foreign_key "web_hooks", "users", name: "web_hooks_user_id_fk"
   add_foreign_key "webauthn_credentials", "users"
   add_foreign_key "webauthn_verifications", "users"
 end

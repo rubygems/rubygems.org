@@ -28,9 +28,9 @@ class PasswordsControllerTest < ActionController::TestCase
       @user.forgot_password!
     end
 
-    context "with not found user" do
+    context "with incorrect token" do
       setup do
-        get :edit, params: { token: @user.confirmation_token, user_id: 0 }
+        get :edit, params: { token: "invalidtoken" }
       end
 
       should redirect_to("the home page") { root_path }
@@ -46,7 +46,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
     context "with valid confirmation_token" do
       setup do
-        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        get :edit, params: { token: @user.confirmation_token }
       end
 
       should respond_with :success
@@ -68,7 +68,7 @@ class PasswordsControllerTest < ActionController::TestCase
     context "with expired confirmation_token" do
       setup do
         @user.update_attribute(:token_expires_at, 1.minute.ago)
-        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        get :edit, params: { token: @user.confirmation_token }
       end
 
       should redirect_to("the home page") { root_path }
@@ -85,7 +85,7 @@ class PasswordsControllerTest < ActionController::TestCase
     context "with totp enabled" do
       setup do
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
-        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        get :edit, params: { token: @user.confirmation_token }
       end
 
       should respond_with :success
@@ -107,7 +107,7 @@ class PasswordsControllerTest < ActionController::TestCase
         @user.new_mfa_recovery_codes = nil
         @user.mfa_hashed_recovery_codes = []
         @user.save!
-        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        get :edit, params: { token: @user.confirmation_token }
       end
 
       should respond_with :success
@@ -128,7 +128,7 @@ class PasswordsControllerTest < ActionController::TestCase
     context "when user has webauthn credentials and recovery codes" do
       setup do
         create(:webauthn_credential, user: @user)
-        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        get :edit, params: { token: @user.confirmation_token }
       end
 
       should respond_with :success
@@ -150,7 +150,7 @@ class PasswordsControllerTest < ActionController::TestCase
       setup do
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         create(:webauthn_credential, user: @user)
-        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+        get :edit, params: { token: @user.confirmation_token }
       end
 
       should respond_with :success
@@ -180,8 +180,8 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when OTP is correct" do
         setup do
-          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :otp_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+          get :edit, params: { token: @user.confirmation_token }
+          post :otp_edit, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
         should respond_with :success
@@ -205,8 +205,8 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when OTP is incorrect" do
         setup do
-          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :otp_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: "eatthis" }
+          get :edit, params: { token: @user.confirmation_token }
+          post :otp_edit, params: { token: @user.confirmation_token, otp: "eatthis" }
         end
 
         should respond_with :unauthorized
@@ -222,9 +222,9 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when the OTP session is expired" do
         setup do
-          get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+          get :edit, params: { token: @user.confirmation_token }
           travel 16.minutes do
-            post :otp_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+            post :otp_edit, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
         end
 
@@ -250,7 +250,7 @@ class PasswordsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
-      get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
+      get :edit, params: { token: @user.confirmation_token }
       @origin = WebAuthn.configuration.origin
       @rp_id = URI.parse(@origin).host
       @client = WebAuthn::FakeClient.new(@origin, encoding: false)
@@ -266,7 +266,6 @@ class PasswordsControllerTest < ActionController::TestCase
         post(
           :webauthn_edit,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
@@ -298,7 +297,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
     context "when providing incorrect token" do
       setup do
-        post(:webauthn_edit, params: { user_id: @user.id, token: "badtoken" })
+        post(:webauthn_edit, params: { token: "badtoken" })
       end
 
       should redirect_to("the home page") { root_path }
@@ -314,7 +313,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
     context "when not providing credentials" do
       setup do
-        post :webauthn_edit, params: { user_id: @user.id, token: @user.confirmation_token }, format: :html
+        post :webauthn_edit, params: { token: @user.confirmation_token }, format: :html
       end
 
       should respond_with :unauthorized
@@ -338,7 +337,6 @@ class PasswordsControllerTest < ActionController::TestCase
         post(
           :webauthn_edit,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
@@ -375,7 +373,6 @@ class PasswordsControllerTest < ActionController::TestCase
           post(
             :webauthn_edit,
             params: {
-              user_id: @user.id,
               token: @user.confirmation_token,
               credentials:
               WebauthnHelpers.get_result(
@@ -415,7 +412,6 @@ class PasswordsControllerTest < ActionController::TestCase
     context "when not signed in" do
       setup do
         put :update, params: {
-          user_id: @user.id,
           password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
       end
@@ -444,7 +440,6 @@ class PasswordsControllerTest < ActionController::TestCase
         session[:verified_user] = @other_user.id
 
         put :update, params: {
-          user_id: @user.id,
           password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
       end
@@ -456,14 +451,14 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should redirect_to("the dashboard") { dashboard_path }
 
-      should "not change user_id user's api_key" do
+      should "not change the signed in user's api_key" do
         assert_equal(@user.reload.api_key, @api_key)
       end
-      should "not change user_id user's password" do
+      should "not change the sign in user's password" do
         assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
 
-      # The password controller does not care what user_id is in the url for the update action.
+      # The password controller does not care who is signed in.
       should "change logged in user's api_key" do
         refute_equal(@other_user.reload.api_key, @other_api_key)
       end
@@ -480,7 +475,6 @@ class PasswordsControllerTest < ActionController::TestCase
       setup do
         sign_in_as @user
         put :update, params: {
-          user_id: @user.id,
           password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
       end
@@ -510,7 +504,6 @@ class PasswordsControllerTest < ActionController::TestCase
       context "with invalid password" do
         setup do
           put :update, params: {
-            user_id: @user.id,
             password_reset: { reset_api_key: "true", password: "pass" }
           }
         end
@@ -533,7 +526,6 @@ class PasswordsControllerTest < ActionController::TestCase
           setup do
             travel 16.minutes do
               put :update, params: {
-                user_id: @user.id,
                 password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
               }
             end
@@ -550,7 +542,6 @@ class PasswordsControllerTest < ActionController::TestCase
         context "without reset_api_key" do
           setup do
             put :update, params: {
-              user_id: @user.id,
               password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end
@@ -568,7 +559,6 @@ class PasswordsControllerTest < ActionController::TestCase
         context "with reset_api_key false" do
           setup do
             put :update, params: {
-              user_id: @user.id,
               password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end
@@ -586,7 +576,6 @@ class PasswordsControllerTest < ActionController::TestCase
         context "with reset_api_key" do
           setup do
             put :update, params: {
-              user_id: @user.id,
               password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end
@@ -608,7 +597,6 @@ class PasswordsControllerTest < ActionController::TestCase
         context "with reset_api_key and reset_api_keys" do
           setup do
             put :update, params: {
-              user_id: @user.id,
               password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
             }
           end

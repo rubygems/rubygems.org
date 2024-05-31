@@ -178,10 +178,11 @@
     top: 1px; }
 
 .profile__header__icon {
-  height: 28px;
+  height: 14px;
   float: left;
-  margin-top: 3px;
-  margin-left: -5px; }
+  margin-top: 12px;
+  margin-left: 1px;
+  padding-right: 7px; }
 
 @media (max-width: 599px) {
   .profile__downloads-wrap {

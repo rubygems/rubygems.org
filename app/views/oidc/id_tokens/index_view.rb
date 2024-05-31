@@ -8,7 +8,7 @@ class OIDC::IdTokens::IndexView < ApplicationView
     super()
   end
 
-  def template
+  def view_template
     self.title = t(".title")
 
     div(class: "t-body") do

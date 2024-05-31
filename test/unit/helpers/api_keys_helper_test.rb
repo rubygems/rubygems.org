@@ -4,7 +4,7 @@ class ApiKeysHelperTest < ActionView::TestCase
   context "gem_scope" do
     should "return gem name" do
       @ownership = create(:ownership)
-      @api_key = create(:api_key, push_rubygem: true, owner: @ownership.user, ownership: @ownership)
+      @api_key = create(:api_key, scopes: %i[push_rubygem], owner: @ownership.user, ownership: @ownership)
 
       assert_equal @ownership.rubygem.name, gem_scope(@api_key)
     end
@@ -15,7 +15,7 @@ class ApiKeysHelperTest < ActionView::TestCase
 
     should "return error tooltip if key if gem ownership is removed" do
       @ownership = create(:ownership)
-      @api_key = create(:api_key, push_rubygem: true, owner: @ownership.user, ownership: @ownership)
+      @api_key = create(:api_key, scopes: %i[push_rubygem], owner: @ownership.user, ownership: @ownership)
       @ownership.destroy!
       rubygem_name = @ownership.rubygem.name
 

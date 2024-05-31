@@ -4,7 +4,7 @@ class Events::TableDetailsComponent < ApplicationComponent
   option :event
   delegate :additional, :rubygem, to: :event
 
-  def template
+  def view_template
     raise NotImplementedError
   end
 

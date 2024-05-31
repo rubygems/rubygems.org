@@ -12,7 +12,7 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponentPreview < Lookbook::Pre
     extend Dry::Initializer
     option :form_object
 
-    def template
+    def view_template
       form_with(model: form_object, url: "/") do |github_action_form|
         render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form:)
         github_action_form.submit class: "form__submit", disabled: true

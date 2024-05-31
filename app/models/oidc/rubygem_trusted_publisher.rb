@@ -9,4 +9,14 @@ class OIDC::RubygemTrustedPublisher < ApplicationRecord
   def build_trusted_publisher(params)
     self.trusted_publisher = trusted_publisher_type.constantize.build_trusted_publisher(params)
   end
+
+  def payload
+    {
+      id:,
+      trusted_publisher_type:,
+      trusted_publisher: trusted_publisher
+    }
+  end
+
+  delegate :as_json, to: :payload
 end

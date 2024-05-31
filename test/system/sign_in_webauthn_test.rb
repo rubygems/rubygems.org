@@ -124,4 +124,25 @@ class SignInWebauthnTest < ApplicationSystemTestCase
       assert page.has_content? "Dashboard"
     end
   end
+
+  test "sign in with webauthn to blocked account" do
+    @user.block!
+
+    visit sign_in_path
+    click_on "Authenticate with security device"
+
+    refute page.has_content? "Dashboard"
+    assert page.has_content? "Sign in"
+    assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+  end
+
+  test "sign in with webauthn to deleted account" do
+    @user.update!(deleted_at: Time.zone.now)
+
+    visit sign_in_path
+    click_on "Authenticate with security device"
+
+    refute page.has_content? "Dashboard"
+    assert page.has_content? "Sign in"
+  end
 end

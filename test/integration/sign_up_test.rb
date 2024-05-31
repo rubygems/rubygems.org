@@ -14,6 +14,19 @@ class SignUpTest < SystemTest
       User.find_by(handle: "nick").events.where(tag: Events::UserEvent::CREATED).sole
   end
 
+  test "sign up stores original email casing" do
+    visit sign_up_path
+
+    fill_in "Email", with: "Email@person.com"
+    fill_in "Username", with: "nick"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign up"
+
+    assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
+
+    assert_equal "Email@person.com", User.last.email
+  end
+
   test "sign up with no handle" do
     visit sign_up_path
 

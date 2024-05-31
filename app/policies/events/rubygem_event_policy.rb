@@ -5,9 +5,9 @@ class Events::RubygemEventPolicy < ApplicationPolicy
     end
   end
 
-  def avo_index? = rubygems_org_admin?
-  def avo_show? = rubygems_org_admin?
-
   has_association :rubygem
   has_association :ip_address
+
+  def avo_index? = rubygems_org_admin?
+  def avo_show? = rubygems_org_admin?
 end
