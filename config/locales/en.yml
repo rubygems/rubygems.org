@@ -604,6 +604,7 @@ en:
       required_rubygems_version: Required Rubygems Version
       requires_mfa: New versions require MFA
       released_with_mfa: Version published with MFA
+      link_verified: ✓ indicates a verified backlink
       links:
         badge: Badge
         bugs: Bug Tracker
