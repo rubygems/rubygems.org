@@ -1,5 +1,6 @@
 class MultifactorAuthsController < ApplicationController
   include MfaExpiryMethods
+  include RequireMfa
   include WebauthnVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?
@@ -7,7 +8,9 @@ class MultifactorAuthsController < ApplicationController
   before_action :require_mfa_enabled, only: %i[update otp_update]
   before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
-  before_action :verify_session_expiration, only: %i[otp_update webauthn_update]
+  before_action :verify_session_expiration, only: %i[webauthn_update]
+  before_action :find_mfa_user, only: %i[otp_update]
+  before_action :validate_otp, only: %i[otp_update]
   before_action :disable_cache, only: %i[new recovery]
   after_action :delete_mfa_level_update_session_variables, only: %i[otp_update webauthn_update]
   helper_method :issuer
@@ -43,8 +46,8 @@ class MultifactorAuthsController < ApplicationController
     session[:level] = level_param
     @user = current_user
 
-    @otp_verification_url = otp_update_multifactor_auth_url(token: current_user.confirmation_token)
-    setup_webauthn_authentication(form_url: webauthn_update_multifactor_auth_url(token: current_user.confirmation_token))
+    @otp_verification_url = otp_verification_url
+    setup_webauthn_authentication(form_url: webauthn_verification_url)
 
     create_new_mfa_expiry
 
@@ -52,24 +55,17 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def otp_update
-    if current_user.ui_mfa_verified?(params[:otp])
-      update_level_and_redirect
-    else
-      redirect_to edit_settings_path, flash: { error: t("multifactor_auths.incorrect_otp") }
-    end
+    update_level_and_redirect
   end
 
   def webauthn_update
     @user = current_user
-    unless @user.webauthn_enabled?
-      redirect_to edit_settings_path, flash: { error: t("multifactor_auths.require_webauthn_enabled") }
-      return
-    end
+    return mfa_failure(t("multifactor_auths.require_webauthn_enabled")) unless @user.webauthn_enabled?
 
     if webauthn_credential_verified?
       update_level_and_redirect
     else
-      redirect_to edit_settings_path, flash: { error: @webauthn_error }
+      mfa_failure(@webauthn_error)
     end
   end
 
@@ -162,9 +158,26 @@ class MultifactorAuthsController < ApplicationController
     redirect_to edit_settings_path, flash: { error: t("multifactor_auths.session_expired") }
   end
 
+  def find_mfa_user
+    @user = current_user
+  end
+
   def delete_mfa_level_update_session_variables
     session.delete(:level)
     session.delete(:webauthn_authentication)
     delete_mfa_expiry_session
+  end
+
+  def mfa_failure(message)
+    delete_mfa_level_update_session_variables
+    redirect_to edit_settings_path, flash: { error: message }
+  end
+
+  def otp_verification_url
+    otp_update_multifactor_auth_url(token: current_user.confirmation_token)
+  end
+
+  def webauthn_verification_url
+    setup_webauthn_authentication(form_url: webauthn_update_multifactor_auth_url(token: current_user.confirmation_token))
   end
 end

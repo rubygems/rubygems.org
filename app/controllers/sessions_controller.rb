@@ -1,5 +1,6 @@
 class SessionsController < Clearance::SessionsController
   include MfaExpiryMethods
+  include RequireMfa
   include WebauthnVerifiable
   include SessionVerifiable
 
@@ -10,6 +11,7 @@ class SessionsController < Clearance::SessionsController
 
   before_action :ensure_not_blocked, only: %i[create]
   before_action :find_mfa_user, only: %i[webauthn_create otp_create]
+  before_action :validate_otp, only: %i[otp_create]
   after_action :delete_mfa_session, only: %i[webauthn_create webauthn_full_create otp_create]
   after_action :delete_session_verification, only: :destroy
 
@@ -17,8 +19,8 @@ class SessionsController < Clearance::SessionsController
     @user = find_user
 
     if @user&.mfa_enabled?
-      @otp_verification_url = otp_create_session_path
-      setup_webauthn_authentication(form_url: webauthn_create_session_path)
+      @otp_verification_url = otp_verification_url
+      setup_webauthn_authentication(form_url: webauthn_verification_url)
       session[:mfa_user] = @user.id
       session[:mfa_login_started_at] = Time.now.utc.to_s
       create_new_mfa_expiry
@@ -30,7 +32,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_create
-    return login_failure(@webauthn_error) unless webauthn_credential_verified?
+    return mfa_failure(@webauthn_error) unless webauthn_credential_verified?
 
     record_mfa_login_duration(mfa_type: "webauthn")
 
@@ -52,13 +54,8 @@ class SessionsController < Clearance::SessionsController
   end
 
   def otp_create
-    if login_conditions_met?
-      record_mfa_login_duration(mfa_type: "otp")
-
-      do_login(two_factor_label: "OTP", two_factor_method: "otp", authentication_method: "password")
-    else
-      login_failure(t("multifactor_auths.incorrect_otp"))
-    end
+    record_mfa_login_duration(mfa_type: @mfa_method)
+    do_login(two_factor_label: @mfa_label, two_factor_method: @mfa_method, authentication_method: "password")
   end
 
   def verify
@@ -124,6 +121,10 @@ class SessionsController < Clearance::SessionsController
     render "sessions/new", status: :unauthorized
   end
 
+  def mfa_failure(message)
+    login_failure(message)
+  end
+
   def find_user
     password = params.permit(session: :password).require(:session).fetch(:password, nil)
     User.authenticate(who, password) if password.is_a?(String) && who
@@ -170,17 +171,6 @@ class SessionsController < Clearance::SessionsController
     render template: "sessions/new", status: :unauthorized
   end
 
-  def login_conditions_met?
-    @user&.mfa_enabled? && @user&.ui_mfa_verified?(params[:otp]) && mfa_session_active?
-  end
-
-  def delete_mfa_session
-    delete_mfa_expiry_session
-    session.delete(:webauthn_authentication)
-    session.delete(:mfa_login_started_at)
-    session.delete(:mfa_user)
-  end
-
   def record_mfa_login_duration(mfa_type:)
     started_at = Time.zone.parse(session[:mfa_login_started_at]).utc
     duration = Time.now.utc - started_at
@@ -202,5 +192,18 @@ class SessionsController < Clearance::SessionsController
 
   def delete_session_verification
     session[:verified_user] = session[:verification] = nil
+  end
+
+  def otp_verification_url
+    otp_create_session_path
+  end
+
+  def webauthn_verification_url
+    webauthn_create_session_path
+  end
+
+  def incorrect_otp
+    delete_mfa_session
+    super
   end
 end
