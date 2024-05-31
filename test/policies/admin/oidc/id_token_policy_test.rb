@@ -16,27 +16,29 @@ class Admin::OIDC::IdTokenPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    assert_predicate policy!(@admin, OIDC::IdToken), :avo_index?
-    refute_predicate policy!(@non_admin, OIDC::IdToken), :avo_index?
+    assert_authorizes @admin, OIDC::IdToken, :avo_index?
+
+    refute_authorizes @non_admin, OIDC::IdToken, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, @id_token), :avo_show?
-    refute_predicate policy!(@non_admin, @id_token), :avo_show?
+    assert_authorizes @admin, @id_token, :avo_show?
+
+    refute_authorizes @non_admin, @id_token, :avo_show?
   end
 
   def test_avo_create
-    refute_predicate policy!(@admin, OIDC::IdToken), :avo_create?
-    refute_predicate policy!(@non_admin, OIDC::IdToken), :avo_create?
+    refute_authorizes @admin, OIDC::IdToken, :avo_create?
+    refute_authorizes @non_admin, OIDC::IdToken, :avo_create?
   end
 
   def test_avo_update
-    refute_predicate policy!(@admin, @id_token), :avo_update?
-    refute_predicate policy!(@non_admin, @id_token), :avo_update?
+    refute_authorizes @admin, @id_token, :avo_update?
+    refute_authorizes @non_admin, @id_token, :avo_update?
   end
 
   def test_avo_destroy
-    refute_predicate policy!(@admin, @id_token), :avo_destroy?
-    refute_predicate policy!(@non_admin, @id_token), :avo_destroy?
+    refute_authorizes @admin, @id_token, :avo_destroy?
+    refute_authorizes @non_admin, @id_token, :avo_destroy?
   end
 end

@@ -1,5 +1,5 @@
 class Admin::AuditPolicy < Admin::ApplicationPolicy
-  class Scope < Scope
+  class Scope < Admin::ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
       if rubygems_org_admin?

@@ -15,32 +15,33 @@ class Admin::SendgridEventPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    refute_predicate policy!(@admin, ApiKey), :avo_index?
-    refute_predicate policy!(@non_admin, ApiKey), :avo_index?
+    refute_authorizes @admin, ApiKey, :avo_index?
+    refute_authorizes @non_admin, ApiKey, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, @sendgrid_event), :avo_show?
-    refute_predicate policy!(@non_admin, @sendgrid_event), :avo_show?
+    assert_authorizes @admin, @sendgrid_event, :avo_show?
+
+    refute_authorizes @non_admin, @sendgrid_event, :avo_show?
   end
 
   def test_avo_create
-    refute_predicate policy!(@admin, ApiKey), :avo_create?
-    refute_predicate policy!(@non_admin, ApiKey), :avo_create?
+    refute_authorizes @admin, ApiKey, :avo_create?
+    refute_authorizes @non_admin, ApiKey, :avo_create?
   end
 
   def test_avo_update
-    refute_predicate policy!(@admin, @sendgrid_event), :avo_update?
-    refute_predicate policy!(@non_admin, @sendgrid_event), :avo_update?
+    refute_authorizes @admin, @sendgrid_event, :avo_update?
+    refute_authorizes @non_admin, @sendgrid_event, :avo_update?
   end
 
   def test_avo_destroy
-    refute_predicate policy!(@admin, @sendgrid_event), :avo_destroy?
-    refute_predicate policy!(@non_admin, @sendgrid_event), :avo_destroy?
+    refute_authorizes @admin, @sendgrid_event, :avo_destroy?
+    refute_authorizes @non_admin, @sendgrid_event, :avo_destroy?
   end
 
   def test_act_on
-    refute_predicate policy!(@admin, @sendgrid_event), :act_on?
-    refute_predicate policy!(@non_admin, @sendgrid_event), :act_on?
+    refute_authorizes @admin, @sendgrid_event, :act_on?
+    refute_authorizes @non_admin, @sendgrid_event, :act_on?
   end
 end

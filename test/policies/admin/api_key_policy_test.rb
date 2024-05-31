@@ -15,27 +15,27 @@ class Admin::ApiKeyPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    refute_predicate policy!(@admin, ApiKey), :avo_index?
-    refute_predicate policy!(@non_admin, ApiKey), :avo_index?
+    refute_authorizes @admin, ApiKey, :avo_index?
+    refute_authorizes @non_admin, ApiKey, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, @api_key), :avo_show?
-    refute_predicate policy!(@non_admin, @api_key), :avo_show?
+    assert_authorizes @admin, @api_key, :avo_show?
+    refute_authorizes @non_admin, @api_key, :avo_show?
   end
 
   def test_avo_create
-    refute_predicate policy!(@admin, ApiKey), :avo_create?
-    refute_predicate policy!(@non_admin, ApiKey), :avo_create?
+    refute_authorizes @admin, ApiKey, :avo_create?
+    refute_authorizes @non_admin, ApiKey, :avo_create?
   end
 
   def test_avo_update
-    refute_predicate policy!(@admin, @api_key), :avo_update?
-    refute_predicate policy!(@non_admin, @api_key), :avo_update?
+    refute_authorizes @admin, @api_key, :avo_update?
+    refute_authorizes @non_admin, @api_key, :avo_update?
   end
 
   def test_avo_destroy
-    refute_predicate policy!(@admin, @api_key), :avo_destroy?
-    refute_predicate policy!(@non_admin, @api_key), :avo_destroy?
+    refute_authorizes @admin, @api_key, :avo_destroy?
+    refute_authorizes @non_admin, @api_key, :avo_destroy?
   end
 end

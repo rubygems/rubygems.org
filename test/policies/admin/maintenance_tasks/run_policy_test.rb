@@ -15,27 +15,29 @@ class Admin::MaintenanceTasks::RunPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    assert_predicate policy!(@admin, MaintenanceTasks::Run), :avo_index?
-    refute_predicate policy!(@non_admin, MaintenanceTasks::Run), :avo_index?
+    assert_authorizes @admin, MaintenanceTasks::Run, :avo_index?
+
+    refute_authorizes @non_admin, MaintenanceTasks::Run, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, @run), :avo_show?
-    refute_predicate policy!(@non_admin, @run), :avo_show?
+    assert_authorizes @admin, @run, :avo_show?
+
+    refute_authorizes @non_admin, @run, :avo_show?
   end
 
   def test_avo_create
-    refute_predicate policy!(@admin, MaintenanceTasks::Run), :avo_create?
-    refute_predicate policy!(@non_admin, MaintenanceTasks::Run), :avo_create?
+    refute_authorizes @admin, MaintenanceTasks::Run, :avo_create?
+    refute_authorizes @non_admin, MaintenanceTasks::Run, :avo_create?
   end
 
   def test_avo_update
-    refute_predicate policy!(@admin, @run), :avo_update?
-    refute_predicate policy!(@non_admin, @run), :avo_update?
+    refute_authorizes @admin, @run, :avo_update?
+    refute_authorizes @non_admin, @run, :avo_update?
   end
 
   def test_avo_destroy
-    refute_predicate policy!(@admin, @run), :avo_destroy?
-    refute_predicate policy!(@non_admin, @run), :avo_destroy?
+    refute_authorizes @admin, @run, :avo_destroy?
+    refute_authorizes @non_admin, @run, :avo_destroy?
   end
 end

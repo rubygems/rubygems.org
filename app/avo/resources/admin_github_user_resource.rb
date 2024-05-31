@@ -2,6 +2,7 @@ class AdminGitHubUserResource < Avo::BaseResource
   self.title = :login
   self.includes = []
   self.model_class = ::Admin::GitHubUser
+  self.authorization_policy = ::Admin::GitHubUserPolicy
   self.search_query = lambda {
     scope.where("login LIKE ?", "%#{params[:q]}%")
   }

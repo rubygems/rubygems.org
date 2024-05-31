@@ -23,7 +23,7 @@ class Admin::UserPolicyTest < AdminPolicyTestCase
   end
 
   def test_search
-    assert_predicate policy!(@admin, @user), :avo_search?
-    refute_predicate policy!(@non_admin, @user), :avo_search?
+    assert_authorizes @admin, @user, :avo_search?
+    refute_authorizes @non_admin, @user, :avo_search?
   end
 end

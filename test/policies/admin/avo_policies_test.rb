@@ -7,7 +7,12 @@ class Admin::AvoPoliciesTest < AdminPolicyTestCase
 
     aggregate_assertions do
       resources.each do |resource|
-        policy = policy!(nil, resource)
+        policy =
+          if resource.authorization_policy
+            resource.authorization_policy.new(nil, resource)
+          else
+            policy!(nil, resource)
+          end
 
         refute_nil policy
 

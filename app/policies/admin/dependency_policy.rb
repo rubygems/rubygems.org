@@ -1,5 +1,5 @@
 class Admin::DependencyPolicy < Admin::ApplicationPolicy
-  class Scope < Scope
+  class Scope < Admin::ApplicationPolicy::Scope
     def resolve
       scope.all
     end

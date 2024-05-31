@@ -14,26 +14,26 @@ class Admin::GemNameReservationPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    assert_predicate policy!(@admin, GemNameReservation), :avo_index?
+    assert_authorizes @admin, GemNameReservation, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, GemNameReservation), :avo_show?
+    assert_authorizes @admin, GemNameReservation, :avo_show?
   end
 
   def test_avo_create
-    assert_predicate policy!(@admin, GemNameReservation), :avo_create?
+    assert_authorizes @admin, GemNameReservation, :avo_create?
   end
 
   def test_avo_destroy
-    assert_predicate policy!(@admin, GemNameReservation), :avo_destroy?
+    assert_authorizes @admin, GemNameReservation, :avo_destroy?
   end
 
   def test_avo_search
-    assert_predicate policy!(@admin, GemNameReservation), :avo_search?
+    assert_authorizes @admin, GemNameReservation, :avo_search?
   end
 
   def test_avo_update
-    refute_predicate policy!(@admin, GemNameReservation), :avo_update?
+    refute_authorizes @admin, GemNameReservation, :avo_update?
   end
 end

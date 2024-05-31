@@ -16,27 +16,29 @@ class Admin::OIDC::RubygemTrustedPublisherPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    assert_predicate policy!(@admin, OIDC::RubygemTrustedPublisher), :avo_index?
-    refute_predicate policy!(@non_admin, OIDC::RubygemTrustedPublisher), :avo_index?
+    assert_authorizes @admin, OIDC::RubygemTrustedPublisher, :avo_index?
+
+    refute_authorizes @non_admin, OIDC::RubygemTrustedPublisher, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, @rubygem_trusted_publisher), :avo_show?
-    refute_predicate policy!(@non_admin, @rubygem_trusted_publisher), :avo_show?
+    assert_authorizes @admin, @rubygem_trusted_publisher, :avo_show?
+
+    refute_authorizes @non_admin, @rubygem_trusted_publisher, :avo_show?
   end
 
   def test_avo_create
-    refute_predicate policy!(@admin, OIDC::RubygemTrustedPublisher), :avo_create?
-    refute_predicate policy!(@non_admin, OIDC::RubygemTrustedPublisher), :avo_create?
+    refute_authorizes @admin, OIDC::RubygemTrustedPublisher, :avo_create?
+    refute_authorizes @non_admin, OIDC::RubygemTrustedPublisher, :avo_create?
   end
 
   def test_avo_update
-    refute_predicate policy!(@admin, @rubygem_trusted_publisher), :avo_update?
-    refute_predicate policy!(@non_admin, @rubygem_trusted_publisher), :avo_update?
+    refute_authorizes @admin, @rubygem_trusted_publisher, :avo_update?
+    refute_authorizes @non_admin, @rubygem_trusted_publisher, :avo_update?
   end
 
   def test_avo_destroy
-    refute_predicate policy!(@admin, @rubygem_trusted_publisher), :avo_destroy?
-    refute_predicate policy!(@non_admin, @rubygem_trusted_publisher), :avo_destroy?
+    refute_authorizes @admin, @rubygem_trusted_publisher, :avo_destroy?
+    refute_authorizes @non_admin, @rubygem_trusted_publisher, :avo_destroy?
   end
 end

@@ -16,27 +16,29 @@ class Admin::DeletionPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    assert_predicate policy!(@admin, Deletion), :avo_index?
-    refute_predicate policy!(@non_admin, Deletion), :avo_index?
+    assert_authorizes @admin, Deletion, :avo_index?
+
+    refute_authorizes @non_admin, Deletion, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, @deletion), :avo_show?
-    refute_predicate policy!(@non_admin, @deletion), :avo_show?
+    assert_authorizes @admin, @deletion, :avo_show?
+
+    refute_authorizes @non_admin, @deletion, :avo_show?
   end
 
   def test_avo_create
-    refute_predicate policy!(@admin, Deletion), :avo_create?
-    refute_predicate policy!(@non_admin, Deletion), :avo_create?
+    refute_authorizes @admin, Deletion, :avo_create?
+    refute_authorizes @non_admin, Deletion, :avo_create?
   end
 
   def test_avo_update
-    refute_predicate policy!(@admin, @deletion), :avo_update?
-    refute_predicate policy!(@non_admin, @deletion), :avo_update?
+    refute_authorizes @admin, @deletion, :avo_update?
+    refute_authorizes @non_admin, @deletion, :avo_update?
   end
 
   def test_avo_destroy
-    refute_predicate policy!(@admin, @deletion), :avo_destroy?
-    refute_predicate policy!(@non_admin, @deletion), :avo_destroy?
+    refute_authorizes @admin, @deletion, :avo_destroy?
+    refute_authorizes @non_admin, @deletion, :avo_destroy?
   end
 end

@@ -1,5 +1,5 @@
 class Admin::UserPolicy < Admin::ApplicationPolicy
-  class Scope < Scope
+  class Scope < Admin::ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
       scope.all

@@ -15,12 +15,14 @@ class Admin::RubygemPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    assert_predicate policy!(@admin, Rubygem), :avo_index?
-    refute_predicate policy!(@non_admin, Rubygem), :avo_index?
+    assert_authorizes @admin, Rubygem, :avo_index?
+
+    refute_authorizes @non_admin, Rubygem, :avo_index?
   end
 
   def test_avo_show
-    assert_predicate policy!(@admin, @rubygem), :avo_show?
-    refute_predicate policy!(@non_admin, @rubygem), :avo_show?
+    assert_authorizes @admin, @rubygem, :avo_show?
+
+    refute_authorizes @non_admin, @rubygem, :avo_show?
   end
 end
