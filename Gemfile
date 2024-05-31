@@ -123,6 +123,7 @@ end
 
 group :test do
   gem "minitest", "~> 5.23", require: false
+  gem "minitest-retry", "~> 0.2.2"
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.0"
   gem "rack-test", "~> 2.1", require: "rack/test"
