@@ -1,6 +1,6 @@
 class LogTicket < ApplicationRecord
-  enum backend: { s3: 0, local: 1 }
-  enum status: %i[pending processing failed processed].index_with(&:to_s)
+  enum :backend, { s3: 0, local: 1 }
+  enum :status, %i[pending processing failed processed].index_with(&:to_s)
 
   def self.pop(key: nil, directory: nil)
     scope = pending.limit(1).lock(true).order("id ASC")
