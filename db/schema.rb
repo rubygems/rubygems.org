@@ -588,6 +588,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
   add_foreign_key "events_user_events", "ip_addresses"
   add_foreign_key "events_user_events", "users"
   add_foreign_key "ip_addresses", "geoip_infos"
+  add_foreign_key "linksets", "rubygems", name: "linksets_rubygem_id_fk"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
