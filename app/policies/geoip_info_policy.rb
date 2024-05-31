@@ -5,8 +5,8 @@ class GeoipInfoPolicy < ApplicationPolicy
     end
   end
 
+  has_association :ip_addresses
+
   def avo_index? = rubygems_org_admin?
   def avo_show? = rubygems_org_admin?
-
-  has_association :ip_addresses
 end

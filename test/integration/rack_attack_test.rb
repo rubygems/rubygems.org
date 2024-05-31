@@ -60,6 +60,17 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :success
     end
 
+    should "allow email confirmation resend via unconfirmed" do
+      stay_under_limit_for("clearance/ip/1")
+      stay_under_email_limit_for("email_confirmations/email")
+
+      patch "/email_confirmations/unconfirmed",
+        headers: { REMOTE_ADDR: @ip_address }
+      follow_redirect!
+
+      assert_response :success
+    end
+
     context "owners requests" do
       setup do
         post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
