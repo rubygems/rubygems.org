@@ -2,7 +2,7 @@
 
 class Maintenance::BackfillLinksetLinksToVersionMetadataTask < MaintenanceTasks::Task
   def collection
-    Version.all.includes(:rubygem, rubygem: [:linkset])
+    Version.includes(:rubygem, rubygem: [:linkset])
   end
 
   def process(version)
