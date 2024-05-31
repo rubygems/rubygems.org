@@ -39,13 +39,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
   create_table "api_keys", force: :cascade do |t|
     t.string "name", null: false
     t.string "hashed_key", null: false
-    t.boolean "index_rubygems", default: false, null: false
-    t.boolean "push_rubygem", default: false, null: false
-    t.boolean "yank_rubygem", default: false, null: false
-    t.boolean "add_owner", default: false, null: false
-    t.boolean "remove_owner", default: false, null: false
-    t.boolean "access_webhooks", default: false, null: false
-    t.boolean "show_dashboard", default: false, null: false
     t.datetime "last_accessed_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -490,6 +483,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.string "mfa_hashed_recovery_codes", default: [], array: true
     t.boolean "public_email", default: false, null: false
     t.datetime "deleted_at"
+    t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
