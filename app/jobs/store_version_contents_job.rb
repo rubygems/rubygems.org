@@ -9,8 +9,8 @@ class StoreVersionContentsJob < ApplicationJob
   discard_on ActiveJob::DeserializationError
   discard_on Gem::Package::FormatError, Gem::Security::Exception
 
-  retry_on VersionNotIndexed, wait: :exponentially_longer, attempts: 5
-  retry_on GemNotFound, wait: :exponentially_longer, attempts: 5
+  retry_on VersionNotIndexed, wait: :polynomially_longer, attempts: 5
+  retry_on GemNotFound, wait: :polynomially_longer, attempts: 5
 
   rescue_from(GemNotFound, Gem::Package::FormatError, Gem::Security::Exception) do |error|
     version = version_arg.full_name

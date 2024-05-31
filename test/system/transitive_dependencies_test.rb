@@ -24,7 +24,7 @@ class TransitiveDependenciesTest < ApplicationSystemTestCase
     assert page.has_content?(rubygem_one.name)
     assert page.has_content?(version_one.number)
     assert page.has_content?(rubygem_two.name)
-    assert page.has_content?(version_two[2].number)
+    page.assert_text(version_two[2].number)
     find("span.deps_expanded-link").click
 
     assert page.has_content?(version_four.rubygem.name)

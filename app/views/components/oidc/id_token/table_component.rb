@@ -7,7 +7,7 @@ class OIDC::IdToken::TableComponent < ApplicationComponent
   include Phlex::Rails::Helpers::TimeTag
   include Phlex::Rails::Helpers::LinkToUnlessCurrent
 
-  def template
+  def view_template
     table(class: "owners__table") do
       thead do
         tr(class: "owners__row owners__header") do

@@ -36,14 +36,12 @@ class GemDownload < ApplicationRecord
     def increment(count, rubygem_id:, version_id: 0)
       scope = GemDownload.where(rubygem_id: rubygem_id).select("id")
       scope = scope.where(version_id: version_id)
-      sql = scope.to_sql
-
-      update = "UPDATE #{quoted_table_name} SET count = count + ? WHERE id = (#{sql}) RETURNING *"
+      return scope.first if count.zero?
 
       # TODO: Remove this comments, once we move to GemDownload only.
       # insert = "INSERT INTO #{quoted_table_name} (rubygem_id, version_id, count) SELECT ?, ?, ?"
       # find_by_sql(["WITH upsert AS (#{update}) #{insert} WHERE NOT EXISTS (SELECT * FROM upsert)", count, rubygem_id, version_id, count]).first
-      find_by_sql([update, count]).first
+      scope.update_all(["count = count + ?", count])
     end
 
     # Takes an array where members have the form

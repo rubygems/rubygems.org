@@ -1,5 +1,6 @@
 class Api::V1::WebHooksController < Api::BaseController
   before_action :authenticate_with_api_key
+  before_action :verify_user_api_key
   before_action :render_api_key_forbidden, if: :api_key_unauthorized?
   before_action :find_rubygem_by_name, :set_url, except: :index
 
@@ -33,10 +34,10 @@ class Api::V1::WebHooksController < Api::BaseController
     @rubygem ||= Rubygem.find_by_name("gemcutter")
 
     if webhook.fire(request.protocol.delete("://"), request.host_with_port,
-                    @rubygem.versions.most_recent, delayed: false)
+                    @rubygem.most_recent_version, delayed: false)
       render plain: webhook.deployed_message(@rubygem)
     else
-      render plain: webhook.failed_message(@rubygem), status: :bad_request
+      render_bad_request webhook.failed_message(@rubygem)
     end
   end
 
@@ -49,7 +50,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def set_url
-    render plain: "URL was not provided", status: :bad_request unless params[:url]
+    render_bad_request "URL was not provided" unless params[:url]
     @url = params[:url]
   end
 

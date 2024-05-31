@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 class OIDC::IdToken::KeyValuePairsComponent < ApplicationComponent
-  attr_reader :pairs
+  extend Dry::Initializer
+  option :pairs
 
-  def initialize(pairs:)
-    @pairs = pairs
-    super()
-  end
-
-  def template
+  def view_template
     dl(class: "t-body provider_attributes full-width overflow-wrap") do
       pairs.each do |key, val|
         dt(class: "adoption__heading text-right") { code { key } }

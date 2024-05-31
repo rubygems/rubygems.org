@@ -18,6 +18,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
       }
     )
 
+    @ip_address = create(:ip_address, ip_address: "127.0.0.1")
     stub_github_info_request(user.info_data)
 
     visit avo.root_path
@@ -27,7 +28,6 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
   end
 
   test "restore a rubygem version" do
-    Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
 
@@ -73,6 +73,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
       k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
     end
     rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
+    version_unyank_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_UNYANKED).sole
 
     assert_equal(
       {
@@ -112,8 +113,13 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
               "number" => [version_attributes[:number], nil],
               "platform" => ["ruby", nil],
               "created_at" => [deletion.created_at.as_json, nil],
-              "updated_at" => [deletion.updated_at.as_json, nil]
+              "updated_at" => [deletion.updated_at.as_json, nil],
+              "version_id" => [version.id, nil]
             },
+            "unchanged" => {}
+          },
+          version_unyank_event.to_gid.to_s => {
+            "changes" => version_unyank_event.attributes.transform_values { [nil, _1] }.as_json,
             "unchanged" => {}
           }
         },
@@ -122,6 +128,47 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
         "models" => ["gid://gemcutter/Version/#{version.id}"]
       },
       audit.audited_changes
+    )
+
+    assert_event Events::RubygemEvent::VERSION_UNYANKED, {
+      number: version.number,
+      platform: version.platform,
+      version_gid: version.to_gid.to_s
+    }, version_unyank_event
+  end
+
+  test "run afer version write job" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    rubygem = create(:rubygem, owners: [create(:user)])
+    version = create(:version, rubygem: rubygem)
+
+    visit avo.resources_version_path(version)
+
+    click_button "Actions"
+
+    click_on "Run version post-write job"
+
+    fill_in "Comment", with: "A nice long comment"
+
+    click_button "Run Job"
+
+    page.assert_text "Action ran successfully!"
+    page.assert_text version.to_global_id.uri.to_s
+
+    perform_enqueued_jobs
+
+    assert_equal 1, ActionMailer::Base.deliveries.size
+
+    rubygem.reload
+    version.reload
+
+    audit = version.audits.sole
+
+    assert_equal(
+      ["gid://gemcutter/Version/#{version.id}"],
+      audit.audited_changes["models"]
     )
   end
 end

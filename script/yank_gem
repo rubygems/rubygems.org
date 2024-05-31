@@ -16,7 +16,7 @@ rubygem = Rubygem.where(name: gemname).first
 
 to_yank = version ? rubygem.versions.where(number: version) : rubygem.versions
 
-user = User.where(email: "security@rubygems.org").first
+user = User.security_user
 
 puts "Yanking #{rubygem.name}"
 to_yank.each do |v|

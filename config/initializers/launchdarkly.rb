@@ -1,11 +1,12 @@
 Rails.application.configure do
+  launch_darkly_sdk_key = ENV["LAUNCH_DARKLY_SDK_KEY"]
   ld_config = LaunchDarkly::Config.new(
     logger: SemanticLogger[LaunchDarkly],
-    offline: Rails.application.secrets.launch_darkly_sdk_key.blank?
+    offline: launch_darkly_sdk_key.blank?
   )
 
   config.launch_darkly_client = LaunchDarkly::LDClient.new(
-    Rails.application.secrets.launch_darkly_sdk_key.to_s,
+    launch_darkly_sdk_key.to_s,
     ld_config
   )
 end

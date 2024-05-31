@@ -65,6 +65,32 @@ class RubygemsControllerTest < ActionController::TestCase
         refute page.has_content? "Unsubscribe"
       end
     end
+
+    context "On GET to security_events for a gem that the user is not an owner of" do
+      setup { get :security_events, params: { id: create(:rubygem).slug } }
+
+      should respond_with :forbidden
+    end
+
+    context "On GET to security_events for a gem that the user is an owner of" do
+      setup do
+        @rubygem = create(:rubygem)
+        @other_user = create(:user)
+        Current.set(user: @user) do
+          @rubygem.ownerships.create!(user: @other_user, authorizer: @user).destroy!
+        end
+        @rubygem.ownerships.create!(user: @user, authorizer: @user).confirm!
+        get :security_events, params: { id: @rubygem.slug }
+      end
+
+      should respond_with :success
+
+      should "include the security events" do
+        page.assert_text "Owner Added"
+        page.assert_text "Owner Confirmed"
+        page.assert_text "Owner Removed"
+      end
+    end
   end
 
   context "On GET to index with no parameters" do
@@ -404,6 +430,16 @@ class RubygemsControllerTest < ActionController::TestCase
       should "not have an unsubscribe link" do
         refute page.has_selector?("a#unsubscribe")
       end
+    end
+
+    context "On GET to security_events for a gem" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:version, rubygem: @rubygem)
+        get :security_events, params: { id: @rubygem.slug }
+      end
+
+      should respond_with :redirect
     end
   end
 end

@@ -1,12 +1,11 @@
 class OIDC::ApiKeyRolesController < ApplicationController
   include ApiKeyable
 
+  include SessionVerifiable
+  verify_session_before
+
   helper RubygemsHelper
 
-  before_action :redirect_to_signin, unless: :signed_in?
-  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
-  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
-  before_action :redirect_to_verify, unless: :password_session_active?
   before_action :find_api_key_role, except: %i[index new create]
   before_action :redirect_for_deleted, only: %i[edit update destroy]
   before_action :set_page, only: :index
@@ -90,30 +89,43 @@ class OIDC::ApiKeyRolesController < ApplicationController
 
   private
 
+  def verify_session_redirect_path
+    case action_name
+    when "create"
+      new_profile_api_key_path
+    when "update"
+      edit_profile_api_key_path
+    else
+      super
+    end
+  end
+
   def find_api_key_role
     @api_key_role = current_user.oidc_api_key_roles
       .includes(:provider)
-      .find_by!(token: params.require(:token))
-  end
-
-  def redirect_to_verify
-    session[:redirect_uri] = request.path_info + (request.query_string.present? ? "?#{request.query_string}" : "")
-    redirect_to verify_session_path
+      .find_by!(token: params.permit(:token).require(:token))
   end
 
   def redirect_for_deleted
     redirect_to profile_oidc_api_key_roles_path, flash: { error: t(".deleted") } if @api_key_role.deleted_at?
   end
 
-  def api_key_role_params
-    params.require(:oidc_api_key_role).permit(
-      :name, :oidc_provider_id,
-      api_key_permissions: [{ scopes: [] }, :valid_for, { gems: [] }],
+  PERMITTED_API_KEY_ROLE_PARAMS = [
+    :name,
+    :oidc_provider_id,
+    {
+      api_key_permissions: [:valid_for, { scopes: [], gems: [] }],
       access_policy: {
-        statements_attributes: [:effect, { principal: :oidc },
-                                { conditions_attributes: %i[operator claim value] }]
+        statements_attributes: [
+          :effect,
+          { principal: :oidc, conditions_attributes: %i[operator claim value] }
+        ]
       }
-    )
+    }
+  ].freeze
+
+  def api_key_role_params
+    params.permit(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS).require(:oidc_api_key_role)
   end
 
   def add_default_params(rubygem, statement, condition)

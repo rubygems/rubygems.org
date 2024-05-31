@@ -114,6 +114,43 @@ class OwnerTest < SystemTest
     assert_no_emails
   end
 
+  test "verify using webauthn" do
+    create_webauthn_credential
+
+    visit sign_in_path
+    click_button "Authenticate with security device"
+    find(:css, ".header__popup-link")
+
+    visit rubygem_path(@rubygem.slug)
+    click_link "Ownership"
+
+    assert page.has_css? "#verify_password_password"
+
+    click_button "Authenticate with security device"
+
+    page.assert_text "add or remove owners"
+  end
+
+  test "verify failure using webauthn shows error" do
+    create_webauthn_credential
+
+    visit sign_in_path
+    click_button "Authenticate with security device"
+    find(:css, ".header__popup-link")
+
+    visit rubygem_path(@rubygem.slug)
+    click_link "Ownership"
+
+    assert page.has_css? "#verify_password_password"
+
+    @user.webauthn_credentials.find_each { |c| c.update!(external_id: "a") }
+
+    click_button "Authenticate with security device"
+
+    page.assert_text "Credentials required"
+    assert page.has_css? "#verify_password_password"
+  end
+
   test "verify password again after 10 minutes" do
     visit_ownerships_page
     travel 15.minutes
@@ -219,6 +256,12 @@ class OwnerTest < SystemTest
     refute page.has_content? @other_user.handle
   end
 
+  teardown do
+    @authenticator&.remove!
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+  end
+
   private
 
   def owner_row(owner)
@@ -247,5 +290,7 @@ class OwnerTest < SystemTest
     fill_in "Email or Username", with: user.email
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
+
+    find(:css, ".header__popup-link")
   end
 end

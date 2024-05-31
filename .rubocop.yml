@@ -5,15 +5,16 @@ require:
   - rubocop-rails
   - rubocop-minitest
   - rubocop-capybara
+  - rubocop-factory_bot
 
 AllCops:
   Exclude:
     - config/initializers/forbidden_yaml.rb
     - app/helpers/dynamic_errors_helper.rb
-    - !ruby/regexp /(vendor|bundle|bin|db|tmp|server)\/.*/
+    - !ruby/regexp /(vendor|bundle|bin|db/(migrate/|schema\.rb)|tmp|server)($|\/.*)/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.3
   NewCops: enable
 
 Rails:
@@ -59,6 +60,7 @@ Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
   Exclude:
     - test/functional/api/v1/owners_controller_test.rb
+    - db/**/*.rb
 
 Metrics/BlockLength:
   Exclude:
@@ -68,11 +70,13 @@ Metrics/BlockLength:
     - app/models/concerns/**/*.rb
     - config/routes.rb
     - config/environments/development.rb
+    - db/**/*.rb
 
 Metrics/ClassLength:
-  Max: 356 # TODO: Lower to 100
+  Max: 357 # TODO: Lower to 100
   Exclude:
     - test/**/*
+    - db/**/*.rb
 
 Metrics/CyclomaticComplexity:
   Max: 9 # TODO: Lower to 6
@@ -82,6 +86,8 @@ Layout/LineLength:
 
 Metrics/MethodLength:
   Max: 30 # TODO: Lower to 10
+  Exclude:
+    - db/**/*.rb
 
 Metrics/ModuleLength:
   Exclude:
@@ -291,3 +297,9 @@ Style/ClassAndModuleChildren:
   Exclude:
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb
+
+Capybara/ClickLinkOrButtonStyle:
+  Enabled: false
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: false

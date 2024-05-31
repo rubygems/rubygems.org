@@ -69,6 +69,11 @@
   <h2><%= link_to t('api_keys.index.api_keys'), profile_api_keys_path %></h2>
 </div>
 
+<div class="t-body">
+  <h2><%= link_to t('oidc.pending_trusted_publishers.index.title'), profile_oidc_pending_trusted_publishers_path %></h2>
+  <span>Pending trusted publishers allow you to configure trusted publishing before you have pushed the first version of a gem. For more information about how to set up trusted publishing, see <a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/">the trusted publishing documentation</a>.</span>
+</div>
+
 <% if @user.oidc_api_key_roles.any? %>
   <div class="t-body">
     <h2><%= link_to t('oidc.api_key_roles.index.api_key_roles'), profile_oidc_api_key_roles_path %></h2>

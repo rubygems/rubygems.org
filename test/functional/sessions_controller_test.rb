@@ -3,7 +3,7 @@ require "test_helper"
 class SessionsControllerTest < ActionController::TestCase
   context "when user has mfa enabled" do
     setup do
-      @user = User.new(email_confirmed: true, handle: "test")
+      @user = create(:user, email_confirmed: true, handle: "login")
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     end
 
@@ -13,12 +13,11 @@ class SessionsControllerTest < ActionController::TestCase
         travel_to @current_time
         freeze_time
 
-        User.expects(:authenticate).with("login", "pass").returns @user
-        post :create, params: { session: { who: "login", password: "pass" } }
+        post :create, params: { session: { who: "login", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
       end
 
       should respond_with :success
-      should "save user name in session" do
+      should "save user id in session" do
         assert_equal @controller.session[:mfa_user], @user.id
         assert page.has_content? "Multi-factor authentication"
       end
@@ -38,8 +37,7 @@ class SessionsControllerTest < ActionController::TestCase
         travel_to @current_time
         freeze_time
 
-        User.expects(:authenticate).with("login", "pass").returns @user
-        post :create, params: { session: { who: "login", password: "pass" } }
+        post :create, params: { session: { who: "login", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
       end
 
       context "when OTP is correct" do
@@ -133,8 +131,8 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when OTP is correct but session expired" do
       setup do
-        @controller.session[:mfa_user] = @user.id
-        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
+        post :create, params: { session: { who: "login", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+
         travel 30.minutes
 
         post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
@@ -163,10 +161,29 @@ class SessionsControllerTest < ActionController::TestCase
     context "when no mfa_expires_at session is present" do
       setup do
         @controller.session[:mfa_user] = @user.id
-        travel 30.minutes do
-          post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
-        end
+
+        post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
       end
+
+      should respond_with :unauthorized
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "display the error message" do
+        assert page.has_content? "Your login page session has expired."
+      end
+    end
+
+    context "when mfa session is missing mfa_user" do
+      setup do
+        @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
+
+        post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+      end
+
+      should respond_with :unauthorized
 
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
@@ -181,14 +198,13 @@ class SessionsControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when login and password are correct" do
       setup do
-        @user = User.new(email_confirmed: true)
+        @user = create(:user, handle: "login")
         @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
       end
 
       context "when mfa is not recommended" do
         setup do
-          User.expects(:authenticate).with("login", "pass").returns @user
-          post :create, params: { session: { who: "login", password: "pass" } }
+          post :create, params: { session: { who: "login", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
 
         should respond_with :redirect
@@ -210,13 +226,12 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "when mfa is recommended" do
         setup do
-          @user.stubs(:mfa_recommended?).returns true
+          User.any_instance.stubs(:mfa_recommended?).returns true
         end
 
         context "when mfa is disabled" do
           setup do
-            User.expects(:authenticate).with("login", "pass").returns @user
-            post :create, params: { session: { who: "login", password: "pass" } }
+            post :create, params: { session: { who: "login", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
           end
 
           should respond_with :redirect
@@ -235,7 +250,6 @@ class SessionsControllerTest < ActionController::TestCase
           setup do
             @controller.session[:mfa_login_started_at] = Time.now.utc.to_s
             @controller.session[:mfa_user] = @user.id
-            User.expects(:find).with(@user.id).returns @user
           end
 
           context "on `ui_only` level" do
@@ -282,8 +296,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login and password are incorrect" do
       setup do
-        User.expects(:authenticate).with("login", "pass")
-        post :create, params: { session: { who: "login", password: "pass" } }
+        post :create, params: { session: { who: "login", password: "incorrectpassword" } }
       end
 
       should respond_with :unauthorized
@@ -298,12 +311,12 @@ class SessionsControllerTest < ActionController::TestCase
       end
     end
 
-    context "when login is an array" do
+    context "when login params are invalid" do
       setup do
-        post :create, params: { session: { who: ["1"], password: "pass" } }
+        post :create, params: { session: { who: ["1"], password: PasswordHelpers::SECURE_TEST_PASSWORD } }
       end
 
-      should respond_with :unauthorized
+      should respond_with :bad_request
 
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
@@ -648,6 +661,8 @@ class SessionsControllerTest < ActionController::TestCase
     context "when providing credentials but the session expired" do
       setup do
         travel 30.minutes
+        @existing_webauthn = @controller.session[:webauthn_authentication]
+
         post(
           :webauthn_create,
           params: {
@@ -667,7 +682,6 @@ class SessionsControllerTest < ActionController::TestCase
         assert_nil @controller.session[:mfa_expires_at]
         assert_nil @controller.session[:mfa_login_started_at]
         assert_nil @controller.session[:mfa_user]
-        assert_nil @controller.session[:webauthn_authentication]
       end
 
       should "not sign in the user" do
@@ -680,6 +694,8 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "render sign in page" do
         assert_template "sessions/new"
+        refute_nil @controller.session[:webauthn_authentication]
+        refute_equal @existing_webauthn, @controller.session[:webauthn_authentication]
       end
     end
   end
@@ -776,7 +792,7 @@ class SessionsControllerTest < ActionController::TestCase
       params: { session: { who: @user.handle, password: @user.password } }
     )
     @challenge = session[:webauthn_authentication]["challenge"]
-    @origin = "http://localhost:3000"
+    @origin = WebAuthn.configuration.origin
     @rp_id = URI.parse(@origin).host
     @client = WebAuthn::FakeClient.new(@origin, encoding: false)
     WebauthnHelpers.create_credential(

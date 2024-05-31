@@ -1,9 +1,7 @@
 <% @title = t('.title') %>
 
-<%= form_for(:password_reset,
-             :url => user_password_path(@user, :token => @user.confirmation_token),
-             :html => { :method => :put }) do |form| %>
-  <%= error_messages_for @user %>
+<%= form_for(:password_reset, url: password_path, html: { method: :put }) do |form| %>
+  <%= error_messages_for current_user %>
   <div class="password_field">
     <%= form.label :password, "Password", :class => 'form__label' %>
     <%= form.password_field :password, autocomplete: 'new-password', class: 'form__input' %>

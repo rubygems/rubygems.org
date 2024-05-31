@@ -31,16 +31,19 @@ class Gemcutter::Middleware::AdminAuth
         return
       end
       return if allow_unauthenticated_request?(request)
+      login_page = ApplicationController.renderer.new(request.env).render(template: "avo/login", layout: false)
 
-      login_page = ApplicationController.renderer.new(request.env).render(template: "avo/login", layout: false, locals: { request: })
-      [200, { "Cache-Control" => "private, max-age=0" }, [login_page]]
+      headers = { "cache-control" => "private, max-age=0", "set-cookie" => cookies.to_header }
+      headers.compact_blank!
+
+      [200, headers, [login_page]]
     end
 
     private
 
     def requires_auth_for_admin?(request)
       # always required on the admin instance
-      return true if Gemcutter::SEPARATE_ADMIN_HOST&.==(request.host)
+      return true if request.host == Gemcutter::SEPARATE_ADMIN_HOST
 
       # always required for admin namespace
       return true if request.path.match?(%r{\A/admin(/|\z)})

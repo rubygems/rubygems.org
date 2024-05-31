@@ -9,7 +9,7 @@ class CreateLinkVerifications < ActiveRecord::Migration[7.0]
 
       t.timestamps
 
-      t.index ["linkable_id", "linkable_type", "uri"], name: "index_link_verifications_on_linkable_and_uri"
+      t.index %w[linkable_id linkable_type uri], name: "index_link_verifications_on_linkable_and_uri"
     end
   end
 end

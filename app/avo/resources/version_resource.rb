@@ -6,6 +6,7 @@ class VersionResource < Avo::BaseResource
   }
 
   action RestoreVersion
+  action VersionAfterWrite
 
   class IndexedFilter < ScopeBooleanFilter; end
   filter IndexedFilter, arguments: { default: { indexed: true, yanked: true } }

@@ -226,7 +226,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
       get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-      @origin = "http://localhost:3000"
+      @origin = WebAuthn.configuration.origin
       @rp_id = URI.parse(@origin).host
       @client = WebAuthn::FakeClient.new(@origin, encoding: false)
     end
@@ -395,6 +395,12 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     context "invalid params" do
       should "fail friendly" do
         post :create, params: { email_confirmation: "ABC" }
+
+        assert_response 400 # bad status raised by strong params
+      end
+
+      should "handle non-scalar params" do
+        post :create, params: { email_confirmation: { email: { foo: "bar" } } }
 
         assert_response 400 # bad status raised by strong params
       end

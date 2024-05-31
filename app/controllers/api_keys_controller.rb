@@ -1,13 +1,14 @@
 class ApiKeysController < ApplicationController
+  before_action :disable_cache, only: :index
+
   include ApiKeyable
-  before_action :redirect_to_signin, unless: :signed_in?
-  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
-  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
-  before_action :redirect_to_verify, unless: :password_session_active?
+
+  include SessionVerifiable
+  verify_session_before
 
   def index
     @api_key  = session.delete(:api_key)
-    @api_keys = current_user.api_keys.unexpired.not_oidc
+    @api_keys = current_user.api_keys.unexpired.not_oidc.preload(ownership: :rubygem)
     redirect_to new_profile_api_key_path if @api_keys.empty?
   end
 
@@ -16,7 +17,7 @@ class ApiKeysController < ApplicationController
   end
 
   def edit
-    @api_key = current_user.api_keys.find(params.require(:id))
+    @api_key = current_user.api_keys.find(params.permit(:id).require(:id))
     return unless @api_key.soft_deleted?
 
     flash[:error] = t(".invalid_key")
@@ -25,12 +26,12 @@ class ApiKeysController < ApplicationController
 
   def create
     key = generate_unique_rubygems_key
-    build_params = { user: current_user, hashed_key: hashed_key(key), **api_key_params }
+    build_params = { owner: current_user, hashed_key: hashed_key(key), **api_key_create_params }
     @api_key = ApiKey.new(build_params)
 
     if @api_key.errors.present?
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
-      @api_key = current_user.api_keys.build(api_key_params.merge(rubygem_id: nil))
+      @api_key = current_user.api_keys.build(api_key_create_params.merge(rubygem_id: nil))
       return render :new
     end
 
@@ -46,8 +47,8 @@ class ApiKeysController < ApplicationController
   end
 
   def update
-    @api_key = current_user.api_keys.find(params.require(:id))
-    @api_key.assign_attributes(api_key_params)
+    @api_key = current_user.api_keys.find(params.permit(:id).require(:id))
+    @api_key.assign_attributes(api_key_update_params(@api_key))
 
     if @api_key.errors.present?
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
@@ -63,7 +64,7 @@ class ApiKeysController < ApplicationController
   end
 
   def destroy
-    api_key = current_user.api_keys.find(params.require(:id))
+    api_key = current_user.api_keys.find(params.permit(:id).require(:id))
 
     if api_key.expire!
       flash[:notice] = t(".success", name: api_key.name)
@@ -84,12 +85,26 @@ class ApiKeysController < ApplicationController
 
   private
 
-  def api_key_params
-    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id)
+  def verify_session_redirect_path
+    case action_name
+    when "reset", "destroy"
+      profile_api_keys_path
+    when "create"
+      new_profile_api_key_path
+    when "update"
+      edit_profile_api_key_path(params.permit(:id).require(:id))
+    else
+      super
+    end
   end
 
-  def redirect_to_verify
-    session[:redirect_uri] = profile_api_keys_path
-    redirect_to verify_session_path
+  def api_key_create_params
+    ApiKeysHelper.api_key_params(params.permit(api_key: [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id, :expires_at]).require(:api_key))
+  end
+
+  def api_key_update_params(existing_api_key = nil)
+    ApiKeysHelper.api_key_params(
+      params.permit(api_key: [*ApiKey::API_SCOPES, :mfa, :rubygem_id, { scopes: [ApiKey::API_SCOPES] }]).require(:api_key), existing_api_key
+    )
   end
 end

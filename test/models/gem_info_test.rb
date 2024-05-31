@@ -46,7 +46,9 @@ class GemInfoTest < ActiveSupport::TestCase
 
   context ".ordered_names" do
     setup do
-      %w[abc bcd abd].each { |name| create(:rubygem, name: name) }
+      %w[abc bcd abd].each { |name| create(:rubygem, name:, indexed: true) }
+
+      create(:rubygem, name: "abe", indexed: false)
 
       @ordered_names = %w[abc abd bcd]
     end

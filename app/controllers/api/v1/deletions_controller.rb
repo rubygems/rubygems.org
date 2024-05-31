@@ -1,5 +1,6 @@
 class Api::V1::DeletionsController < Api::BaseController
   before_action :authenticate_with_api_key
+  before_action :verify_user_api_key
   before_action :find_rubygem_by_name
   before_action :verify_api_key_gem_scope
   before_action :validate_gem_and_version
@@ -13,6 +14,13 @@ class Api::V1::DeletionsController < Api::BaseController
       StatsD.increment "yank.success"
       enqueue_web_hook_jobs(@version)
       render plain: response_with_mfa_warning("Successfully deleted gem: #{@version.to_title}")
+    elsif @deletion.ineligible?
+      StatsD.increment "yank.forbidden"
+      @deletion.record_yank_forbidden_event!
+      contact = "Please contact RubyGems support (support@rubygems.org) to request deletion of this version " \
+                "if it represents a legal or security risk."
+      message = "#{@deletion.ineligible_reason} #{contact}"
+      render plain: response_with_mfa_warning(message), status: :forbidden
     else
       StatsD.increment "yank.failure"
       render plain: response_with_mfa_warning(@deletion.errors.full_messages.to_sentence),
@@ -31,7 +39,7 @@ class Api::V1::DeletionsController < Api::BaseController
              status: :forbidden
     else
       begin
-        version = params.require(:version)
+        version = params.permit(:version).require(:version)
         platform = params.permit(:platform).fetch(:platform, nil)
         @version = @rubygem.find_version!(number: version, platform: platform)
       rescue ActiveRecord::RecordNotFound

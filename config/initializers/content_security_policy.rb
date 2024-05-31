@@ -10,13 +10,15 @@ Rails.application.config.content_security_policy do |policy|
   policy.img_src     :self, "https://secure.gaug.es", "https://gravatar.com", "https://www.gravatar.com", "https://secure.gravatar.com",
     "https://*.fastly-insights.com", "https://avatars.githubusercontent.com"
   policy.object_src  :none
-  policy.script_src  :self, "https://secure.gaug.es", "https://www.fastly-insights.com",
-                     "https://unpkg.com/@hotwired/stimulus/dist/stimulus.umd.js", "https://unpkg.com/stimulus-rails-nested-form/dist/stimulus-rails-nested-form.umd.js"
-  policy.style_src   :self, "https://fonts.googleapis.com"
+  # NOTE: This scirpt_src is overridden for all requests in ApplicationController
+  # This is the baseline in case the override is ever skipped
+  policy.script_src :self, "https://secure.gaug.es", "https://www.fastly-insights.com"
+  policy.style_src :self, "https://fonts.googleapis.com"
   policy.connect_src :self, "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://fastly-insights.com",
     "https://api.github.com", "http://localhost:*"
   policy.form_action :self, "https://github.com/login/oauth/authorize"
   policy.frame_ancestors :self
+  policy.base_uri :self
 
   # Specify URI for violation reports
   policy.report_uri lambda {
@@ -44,9 +46,14 @@ Rails.application.config.content_security_policy do |policy|
   }
 end
 
-# Generate session nonces for permitted importmap and inline scripts
-Rails.application.config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
+# Generate session nonces for permitted importmap, inline scripts, and inline styles.
+Rails.application.config.content_security_policy_nonce_generator = lambda { |request|
+  # Suggested nonce generator doesn't work on first page load https://github.com/rails/rails/issues/48463
+  # Related PR attempting to fix: https://github.com/rails/rails/pull/48510
+  request.session.send(:load_for_write!) # force session to be created
+  request.session.id.to_s.presence || SecureRandom.base64(16)
+}
+Rails.application.config.content_security_policy_nonce_directives = %w[script-src style-src]
 
 # Report CSP violations to a specified URI. See:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only

@@ -12,7 +12,7 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def change_password
-    ClearanceMailer.change_password(User.last)
+    PasswordMailer.change_password(User.last)
   end
 
   def deletion_complete
@@ -30,7 +30,20 @@ class MailerPreview < ActionMailer::Preview
 
   def gem_pushed
     ownership = Ownership.where.not(user: nil).where(push_notifier: true).last
-    Mailer.gem_pushed(ownership.user_id, ownership.rubygem.versions.last.id, ownership.user_id)
+    Mailer.gem_pushed(ownership.user, ownership.rubygem.versions.last.id, ownership.user_id)
+  end
+
+  def gem_pushed_by_trusted_publisher
+    ownership = Ownership.where.not(user: nil).where(push_notifier: true).last
+
+    Mailer.gem_pushed(OIDC::RubygemTrustedPublisher.first.trusted_publisher, ownership.rubygem.versions.last.id, ownership.user_id)
+  end
+
+  def gem_trusted_publisher_added
+    rubygem_trusted_publisher = OIDC::RubygemTrustedPublisher.last
+    created_by_user = User.last
+    notified_user = User.first
+    Mailer.gem_trusted_publisher_added(rubygem_trusted_publisher, created_by_user, notified_user)
   end
 
   def mfa_notification
@@ -84,13 +97,18 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def api_key_created
-    api_key = ApiKey.last
+    api_key = ApiKey.where(owner_type: "User").last
+    Mailer.api_key_created(api_key.id)
+  end
+
+  def api_key_created_oidc_api_key_role
+    api_key = OIDC::IdToken.where.not(api_key_role: nil).last.api_key
     Mailer.api_key_created(api_key.id)
   end
 
   def api_key_revoked
-    api_key = ApiKey.last
-    Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.enabled_scopes.join(", "), "https://example.com")
+    api_key = ApiKey.where(owner_type: "User").last
+    Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.scopes.to_sentence, "https://example.com")
   end
 
   def new_ownership_requests

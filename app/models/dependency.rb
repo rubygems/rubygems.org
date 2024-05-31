@@ -1,6 +1,7 @@
 class Dependency < ApplicationRecord
   belongs_to :rubygem, optional: true
   belongs_to :version
+  has_one :version_rubygem, through: :version, source: :rubygem
 
   before_validation :use_gem_dependency,
     :use_existing_rubygem,
@@ -41,16 +42,10 @@ class Dependency < ApplicationRecord
     }
   end
 
-  def as_json(*)
-    payload
-  end
+  delegate :as_json, :to_yaml, to: :payload
 
   def to_xml(options = {})
     payload.to_xml(options.merge(root: "dependency"))
-  end
-
-  def to_yaml(*args)
-    payload.to_yaml(*args)
   end
 
   def encode_with(coder)

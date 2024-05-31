@@ -25,6 +25,20 @@ class ProfilesControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to me" do
+      setup { get :me }
+
+      should respond_with :redirect
+      should redirect_to("the sign in path") { sign_in_path }
+    end
+
+    context "on GET to security_events" do
+      setup { get :security_events }
+
+      should respond_with :redirect
+      should redirect_to("the sign in path") { sign_in_path }
+    end
+
     context "on GET to show when hide email" do
       setup do
         @user.update(public_email: false)
@@ -73,6 +87,15 @@ class ProfilesControllerTest < ActionController::TestCase
       should "render user show page" do
         assert page.has_content? @user.handle
       end
+    end
+
+    context "on GET to me" do
+      setup do
+        get :me
+      end
+
+      should respond_with :redirect
+      should redirect_to("the user's profile page") { profile_path(@user.handle) }
     end
 
     context "on GET to delete" do
@@ -136,11 +159,31 @@ class ProfilesControllerTest < ActionController::TestCase
         end
       end
 
-      context "updating without password" do
+      context "updating without params" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, params: {}
+        end
+
+        should respond_with :bad_request
+      end
+
+      context "updating with missing password params" do
         setup do
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
           put :update, params: { user: { handle: "doejohn" } }
+        end
+
+        should respond_with :bad_request
+      end
+
+      context "updating without inputting password" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, params: { user: { handle: "doejohn", password: "" } }
         end
 
         should set_flash.to("This request was denied. We could not verify your password.")
@@ -258,6 +301,28 @@ class ProfilesControllerTest < ActionController::TestCase
           should set_flash.to("This request was denied. We could not verify your password.")
         end
       end
+    end
+
+    context "on GET to security_events" do
+      setup do
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS)
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { authentication_method: "webauthn" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { two_factor_method: "webauthn" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { two_factor_method: "OTP" })
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_SENT)
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_ADDED, additional: { email: "other@example.com" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_VERIFIED, additional: { email: "other@example.com" })
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_CREATED, additional: { gem: create(:rubygem).name })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_DELETED)
+        create(:events_user_event, user: @user, tag: Events::UserEvent::PASSWORD_CHANGED)
+
+        get :security_events
+      end
+
+      should respond_with :success
     end
 
     context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do

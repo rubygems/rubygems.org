@@ -6,7 +6,7 @@ module RubygemSearchable
       callbacks: false,
       settings: {
         number_of_shards: 1,
-        number_of_replicas: 1,
+        number_of_replicas: Gemcutter::SEARCH_NUM_REPLICAS,
         analysis: {
           analyzer: {
             rubygem: {
@@ -28,9 +28,10 @@ module RubygemSearchable
           updated: { type: "date" }
         }
       }
+    scope :search_import, -> { includes(:linkset, :gem_download, :most_recent_version, :versions, :latest_version) }
 
     def search_data # rubocop:disable Metrics/MethodLength
-      if (latest_version = versions.most_recent)
+      if (latest_version = most_recent_version)
         deps = latest_version.dependencies.to_a
         versioned_links = links(latest_version)
       end

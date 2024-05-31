@@ -1,7 +1,9 @@
 class OwnersController < ApplicationController
+  include SessionVerifiable
+
   before_action :find_rubygem, except: :confirm
   before_action :render_forbidden, unless: :owner?, except: %i[confirm resend_confirmation]
-  before_action :redirect_to_verify, unless: :password_session_active?, only: %i[index create destroy]
+  verify_session_before only: %i[index create destroy]
   before_action :verify_mfa_requirement, only: %i[create destroy]
 
   def confirm
@@ -53,17 +55,16 @@ class OwnersController < ApplicationController
 
   private
 
-  def redirect_to_verify
-    session[:redirect_uri] = rubygem_owners_url(@rubygem.slug)
-    redirect_to verify_session_path
+  def verify_session_redirect_path
+    rubygem_owners_url(params[:rubygem_id])
   end
 
   def token_params
-    params.require(:token)
+    params.permit(:token).require(:token)
   end
 
   def handle_params
-    params.require(:handle)
+    params.permit(:handle).require(:handle)
   end
 
   def notify_owner_added(ownership)

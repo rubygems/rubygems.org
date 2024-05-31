@@ -93,6 +93,10 @@ module RubygemsHelper
     link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
+  def rubygem_trusted_publishers_link(rubygem)
+    link_to t("rubygems.aside.links.trusted_publishers"), rubygem_trusted_publishers_path(rubygem.slug), class: "gem__link t-list__item"
+  end
+
   def oidc_api_key_role_links(rubygem)
     roles = current_user.oidc_api_key_roles.for_rubygem(rubygem)
 
@@ -122,6 +126,11 @@ module RubygemsHelper
       rubygem_adoptions_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
+  def rubygem_security_events_link(rubygem)
+    link_to "Security Events",
+      security_events_rubygem_path(rubygem.slug), class: "gem__link t-list__item"
+  end
+
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
   end
@@ -133,6 +142,15 @@ module RubygemsHelper
   def link_to_user(user)
     link_to avatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
       alt: user.display_handle, title: user.display_handle
+  end
+
+  def link_to_pusher(api_key_owner)
+    case api_key_owner
+    when OIDC::TrustedPublisher::GitHubAction
+      image_tag "github_icon.png", width: 48, height: 48, theme: :light, alt: "GitHub", title: api_key_owner.name
+    else
+      raise ArgumentError, "unknown api_key_owner type #{api_key_owner.class}"
+    end
   end
 
   def nice_date_for(time)

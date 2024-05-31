@@ -22,7 +22,7 @@ class NotifyWebHookJob < ApplicationJob
   # has to come after the retry on
   discard_on(Faraday::UnprocessableEntityError) do |j, e|
     raise unless j.use_hook_relay?
-    Rails.logger.info({ webhook_id: j.webhook.id, url: j.webhook.url, response: JSON.parse(e.response_body) }.to_json)
+    logger.info({ webhook_id: j.webhook.id, url: j.webhook.url, response: JSON.parse(e.response_body) })
     j.webhook.increment! :failure_count
   end
 

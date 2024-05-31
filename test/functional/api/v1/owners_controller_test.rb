@@ -71,6 +71,14 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   context "on GET to owner gems with id" do
     setup do
       @user = create(:user)
+      rubygem = create(:rubygem, owners: [@user])
+      version = create(:version, rubygem: rubygem)
+      rubygem2 = create(:rubygem, owners: [@user])
+      rubygem3 = create(:rubygem, owners: [@user])
+      version2 = create(:version, rubygem: rubygem2)
+      create(:dependency, version: version, rubygem: rubygem2, requirements: ">= 0", scope: "runtime")
+      create(:dependency, version: version, rubygem: rubygem3, requirements: ">= 0", scope: "development")
+      create(:dependency, version: version2, rubygem: rubygem3, requirements: ">= 0", scope: "runtime")
       get :gems, params: { handle: @user.id }, format: :json
     end
 
@@ -107,7 +115,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @second_user = create(:user)
         @third_user = create(:user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @user)
-        @api_key = create(:api_key, key: "12334", add_owner: true, user: @user)
+        @api_key = create(:api_key, key: "12334", scopes: %i[add_owner], owner: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12334"
       end
 
@@ -549,7 +557,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @ownership = create(:ownership, rubygem: @rubygem, user: @user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
 
-        @api_key = create(:api_key, key: "12223", remove_owner: true, user: @user)
+        @api_key = create(:api_key, key: "12223", scopes: %i[remove_owner], owner: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12223"
       end
 
@@ -907,7 +915,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "return plain text 404 error" do
-    create(:api_key, key: "12223", add_owner: true)
+    create(:api_key, key: "12223", scopes: %i[add_owner])
     @request.env["HTTP_AUTHORIZATION"] = "12223"
     @request.accept = "*/*"
     post :create, params: { rubygem_id: "bananas" }

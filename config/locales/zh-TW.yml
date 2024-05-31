@@ -1,8 +1,10 @@
 ---
 zh-TW:
   credentials_required: 需要認證
+  copied: 已複製
+  copy_to_clipboard: 複製
   edit: 編輯
-  failure_when_forbidden: 請確認 URL 或再次提交
+  verification_expired:
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 訂閱 Gems
   footer_about_html:
@@ -38,6 +40,10 @@ zh-TW:
   try_again: 發生錯誤。請再試一次。
   advanced_search: 進階搜尋
   authenticate: 驗證
+  helpers:
+    submit:
+      create:
+      update:
   activerecord:
     attributes:
       linkset:
@@ -64,11 +70,19 @@ zh-TW:
         api_key_role: API 金鑰角色
       oidc/api_key_role:
         api_key_permissions: API 金鑰權限
+      oidc/trusted_publisher/github_action:
+        repository_owner_id:
+      oidc/pending_trusted_publisher:
+        rubygem_name:
     errors:
       messages:
         unpwn: 曾出現在資料外洩事件中，不應再使用
         blocked: "網域 '%{domain}' 因濫發垃圾郵件而遭封鎖。請使用有效的個人電子郵件地址。"
       models:
+        api_key:
+          attributes:
+            expires_at:
+              inclusion:
         ownership:
           attributes:
             user_id:
@@ -82,6 +96,20 @@ zh-TW:
               taken: "%{value} 已存在"
     models:
       user: 使用者
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken:
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              unavailable:
+    models:
+      user:
+      api_key:
+        zero:
+        one:
+        other:
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -96,6 +124,13 @@ zh-TW:
             gems:
               too_long:
   api_keys:
+    form:
+      exclusive_scopes:
+      rubygem_scope:
+      rubygem_scope_info:
+      multifactor_auth:
+      enable_mfa:
+      expiration:
     create:
       success: "已建立新 API 金鑰"
       invalid_gem:
@@ -147,6 +182,10 @@ zh-TW:
     change_password:
       title: 更改密碼
       subtitle: 嗨 %{handle}！
+      edit_api_key:
+      invalid_key:
+    all_gems:
+    gem_ownership_removed:
   dashboards:
     show:
       creating_link_text: Gem 建立
@@ -172,6 +211,7 @@ zh-TW:
       will_email_notice: 我們將會通過電子郵件傳送帳號認證信連結給您。
     update:
       confirmed_email: 電子郵件地址驗證成功。
+      token_failure: 請確認 URL 或再次提交
   home:
     index:
       downloads_counting_html: 總下載次數
@@ -298,11 +338,13 @@ zh-TW:
       body_html: 感謝您申請 <strong>%{gem}</strong> 的所有權。我們很遺憾地通知您，您的所有權請求已被 Gem 擁有者關閉。
     ownerhip_request_approved:
       body_html: 恭喜！您對 <strong>%{gem}</strong> 的所有權請求已通過。您已加入 Gem 的擁有者名單。
-    new_opwnership_requests:
-      body_html: <strong>%{gem}</strong> 有 <em>%{count}</em> 項新所有權請求。請點擊下方按鈕來查看所有請求。
+    new_ownership_requests:
+      body_html:
+        other: <strong>%{gem}</strong> 有 <em>%{count}</em> 項新所有權請求。請點擊下方按鈕來查看所有請求。
       button: 所有權請求
       disable_notifications: 若要停止接收這些訊息，請更新您的
       owners_page: 所有權
+
     web_hook_deleted:
       title: Webhook 遭刪除
       subject: 您在 RubyGems.org 上的 Webhook 遭到刪除
@@ -326,6 +368,8 @@ zh-TW:
       global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
       gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
       gem_html: 之前這個 Webhook 會在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 被推送的時候被呼叫。
+    gem_trusted_publisher_added:
+      title:
   news:
     show:
       title: 最新發佈
@@ -368,14 +412,26 @@ zh-TW:
       title: 安全性
     sponsors:
       title: 贊助者
+  password_mailer:
+    change_password:
+      closing:
+      opening:
+      title:
+      subtitle:
   passwords:
     edit:
       submit: 更新密碼
       title: 重設密碼
+      token_failure: 請確認 URL 或再次提交
     new:
       submit: 更新密碼
       title: 修改密碼
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給您
+    create:
+      success:
+      failure_on_missing_email:
+    update:
+      failure:
   multifactor_auths:
     incorrect_otp: 您的 OTP 碼不正確。
     session_expired: 您的登入頁面工作階段已過期。
@@ -524,7 +580,8 @@ zh-TW:
       disabled_avatar_html:
       enter_password: 輸入密碼
       optional_full_name: 選填。將公開顯示
-      optional_twitter_username: Twitter 帳號（選填）。將公開顯示
+      optional_twitter_username: X 帳號（可選）
+      twitter_username: 帳號
       title: 編輯個人檔案
       delete:
         delete: 刪除
@@ -548,6 +605,9 @@ zh-TW:
     request_denied: 此請求遭拒。我們無法驗證您的密碼。
     show:
       title: %{username} 的個人檔案
+    security_events:
+      title:
+      description_html:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
@@ -562,6 +622,7 @@ zh-TW:
         code: 原始碼
         docs: 文件
         download: 下載
+        funding:
         header: 相關連結
         home: 首頁
         mail: 郵件群組
@@ -578,6 +639,7 @@ zh-TW:
           api_key_role:
             name:
             new:
+        trusted_publishers:
     reserved:
       reserved_namespace: 此命名空間被 rubygems.org 保留。
     dependencies:
@@ -602,8 +664,6 @@ zh-TW:
       title: Gems
     show:
       bundler_header: Gemfile
-      copied: 已複製
-      copy_to_clipboard: 複製
       install: 安裝
       licenses_header:
         one: 授權
@@ -618,6 +678,9 @@ zh-TW:
       reserved_namespace_html:
         one:
         other:
+    security_events:
+      title:
+      description_html:
   reverse_dependencies:
     index:
       title: "%{name} 的反向依賴"
@@ -666,7 +729,9 @@ zh-TW:
     index:
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上
       title: "%{name} 的所有版本"
-      versions_since: 自從 %{since} 以來，有 %{count} 個版本
+      versions_since:
+        other: 自從 %{since} 以來，有 %{count} 個版本
+        one: 自從 %{since} 以來，有 %{count} 個版本
       imported_gem_version_notice: "此版本的 Gem 於 %{import_date} 匯入 RubyGems.org。顯示日期由作者在 gemspec 指定。"
     version:
       yanked: 已被移除
@@ -752,8 +817,6 @@ zh-TW:
         to_automate_html:
         not_github:
         not_push:
-        copy_to_clipboard:
-        copied:
         a_gem:
         instructions_html:
       new:
@@ -781,6 +844,42 @@ zh-TW:
         title:
       show:
         title:
+    rubygem_trusted_publishers:
+      index:
+        title:
+        subtitle_owner_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+        subtitle_owner_html:
+    pending_trusted_publishers:
+      index:
+        title:
+        valid_for_html:
+        delete:
+        create:
+        description_html:
+      destroy:
+        success:
+      create:
+        success:
+      new:
+        title:
+    trusted_publisher:
+      unsupported_type:
+      github_actions:
+        repository_owner_help_html:
+        repository_name_help_html:
+        workflow_filename_help_html:
+        environment_help_html:
+      pending:
+        rubygem_name_help_html:
   duration:
     minutes:
       other:
@@ -794,3 +893,52 @@ zh-TW:
     seconds:
       other:
       one:
+  form:
+    optional:
+  events:
+    table_component:
+      event:
+      time:
+      additional_info:
+      redacted:
+      no_user_agent_info:
+    rubygem_event:
+      version:
+        version_pushed:
+        version_yanked:
+        version_unyanked:
+        version_html:
+        version_pushed_sha256_html:
+        version_pushed_by_html:
+        version_yanked_by_html:
+      owner:
+        owner_added:
+        owner_added_owner_html:
+        owner_added_authorizer_html:
+        owner_removed:
+        owner_removed_owner_html:
+        owner_removed_by_html:
+        owner_confirmed:
+    user_event:
+      user:
+        created:
+        email:
+      login:
+        login_success:
+        webauthn_login:
+        mfa_method:
+        mfa_device:
+        none:
+      email:
+        email_verified:
+        email_sent_subject:
+        email_sent_from:
+        email_sent_to:
+      api_key:
+        api_key_created:
+        api_key_deleted:
+        api_key_name:
+        api_key_scopes:
+        api_key_gem_html:
+        api_key_mfa:
+        not_required:

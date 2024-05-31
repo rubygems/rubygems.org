@@ -1,7 +1,8 @@
 require 'faraday_middleware/aws_sigv4'
+require 'opensearch-dsl'
 
 port = 9200
-if (Rails.env.test? || Rails.env.development?) && Toxiproxy.running?
+if Rails.env.local? && Toxiproxy.running?
   port = 22_221
   Toxiproxy.populate(
     [
@@ -21,7 +22,7 @@ options[:url] = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 options[:tracer] = SemanticLogger[OpenSearch::Client]
 
 Searchkick.client = OpenSearch::Client.new(**options.compact) do |f|
-  unless Rails.env.development? || Rails.env.test?
+  unless Rails.env.local?
     f.request :aws_sigv4,
       service: 'es',
       region: ENV['AWS_REGION'],

@@ -9,13 +9,16 @@ class ApiKeyResource < Avo::BaseResource
 
   field :name, as: :text, link_to_resource: true
   field :hashed_key, as: :text, visible: ->(_) { false }
-  field :user, as: :belongs_to
+  field :user, as: :belongs_to, visible: ->(_) { false }
+  field :owner, as: :belongs_to,
+    polymorphic_as: :owner,
+    types: ["User", "OIDC::TrustedPublisher::GitHubAction"]
   field :last_accessed_at, as: :date_time
   field :soft_deleted_at, as: :date_time
   field :soft_deleted_rubygem_name, as: :text
   field :expires_at, as: :date_time
 
-  field :enabled_scopes, as: :tags
+  field :scopes, as: :tags
 
   sidebar do
     heading "Permissions"

@@ -4,15 +4,15 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
 
   belongs_to :rubygem, touch: true
-  has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
+  has_many :dependencies, lambda {
+                            order(Rubygem.arel_table["name"].asc).includes(:rubygem).references(:rubygem)
+                          }, dependent: :destroy, inverse_of: "version"
   has_many :audits, as: :auditable, inverse_of: :auditable, dependent: :nullify
   has_one :gem_download, inverse_of: :version, dependent: :destroy
-  belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
+  belongs_to :pusher, class_name: "User", inverse_of: :pushed_versions, optional: true
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true
-  has_one :deletion, ->(v) { where(rubygem: v.rubygem.name, platform: v.platform) },
-    dependent: :delete, inverse_of: :version, required: false,
-    primary_key: :number,
-    foreign_key: :number
+  has_one :deletion, dependent: :delete, inverse_of: :version, required: false
+  has_one :yanker, through: :deletion, source: :user, inverse_of: :yanked_versions, required: false
 
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
@@ -21,16 +21,17 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
+  after_create :record_push_event
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
   after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
-  serialize :licenses
-  serialize :requirements
-  serialize :cert_chain, CertificateChainSerializer
+  serialize :licenses, coder: YAML
+  serialize :requirements, coder: YAML
+  serialize :cert_chain, coder: CertificateChainSerializer
 
   validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::VERSION_PATTERN }
-  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
-  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN },
+  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::NAME_PATTERN }
+  validates :gem_platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::NAME_PATTERN },
             if: -> { validation_context == :create || gem_platform_changed? }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false },
             if: -> { validation_context == :create || full_name_changed? }
@@ -43,6 +44,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :description, :summary, :authors, :requirements, :cert_chain,
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
+  validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
 
   validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create
@@ -91,6 +93,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def self.subscribed_to_by(user)
     where(rubygem_id: user.subscribed_gem_ids)
       .by_created_at
+  end
+
+  def self.created_after(time)
+    where(arel_table[:created_at].gt(Arel::Nodes::BindParam.new(time)))
   end
 
   def self.latest
@@ -145,10 +151,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       .pluck("rubygems.name", :number, :platform)
   end
 
-  def self.most_recent
-    latest.find_by(platform: "ruby") || latest.order(number: :desc).first || last
-  end
-
   # This method returns the new versions for brand new rubygems
   def self.new_pushed_versions(limit = 5)
     subquery = <<~SQL.squish
@@ -161,26 +163,22 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def self.just_updated(limit = 5)
-    six_months_ago_ts = 6.months.ago
-    subquery = <<~SQL.squish
-      versions.rubygem_id IN (SELECT versions.rubygem_id
-                                FROM versions
-                            WHERE versions.indexed = 'true' AND
-                                  versions.created_at > '#{six_months_ago_ts}'
-                            GROUP BY versions.rubygem_id
-                              HAVING COUNT(versions.id) > 1
-                              ORDER BY MAX(created_at) DESC LIMIT :limit)
-    SQL
-
-    where(subquery, limit: limit)
+    where(rubygem_id: Version.default_scoped
+                        .select(:rubygem_id)
+                        .indexed
+                        .created_after(6.months.ago)
+                        .group(:rubygem_id)
+                        .having(arel_table["id"].count.gt(1))
+                        .order(arel_table["created_at"].maximum.desc)
+                        .limit(limit))
       .joins(:rubygem)
       .indexed
       .by_created_at
       .limit(limit)
   end
 
-  def self.published(limit)
-    indexed.by_created_at.limit(limit)
+  def self.published
+    indexed.by_created_at
   end
 
   def self.rubygem_name_for(full_name)
@@ -267,8 +265,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       requirements: spec.requirements,
       built_at: spec.date,
       required_rubygems_version: spec.required_rubygems_version.to_s,
-      required_ruby_version: spec.required_ruby_version.to_s,
-      indexed: true
+      required_ruby_version: spec.required_ruby_version.to_s
     )
   end
 
@@ -320,9 +317,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     }
   end
 
-  def as_json(*)
-    payload
-  end
+  delegate :as_json, :to_yaml, to: :payload
 
   def to_xml(options = {})
     payload.to_xml(options.merge(root: "version"))
@@ -365,7 +360,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     latest = if prerelease
                rubygem.versions.by_position.prerelease.first
              else
-               rubygem.versions.most_recent
+               rubygem.most_recent_version
              end
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
@@ -394,10 +389,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def rubygems_metadata_mfa_required?
     ActiveRecord::Type::Boolean.new.cast(metadata["rubygems_mfa_required"])
-  end
-
-  def yanker
-    Deletion.find_by(rubygem: rubygem.name, number: number, platform: platform)&.user unless indexed
   end
 
   def prerelease
@@ -499,10 +490,16 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def create_link_verifications
-    Links::LINKS.each_value do |long|
-      uri = metadata[long]
-      next if uri.blank?
-      rubygem.link_verifications.find_or_create_by!(uri:).retry_if_needed
+    uris = metadata.values_at(*Links::LINKS.values).compact_blank.uniq
+    verifications = rubygem.link_verifications.where(uri: uris).index_by(&:uri)
+    uris.each do |uri|
+      verification = verifications.fetch(uri) { rubygem.link_verifications.create_or_find_by!(uri:) }
+      verification.retry_if_needed
     end
+  end
+
+  def record_push_event
+    rubygem.record_event!(Events::RubygemEvent::VERSION_PUSHED, number: number, platform: platform, sha256: sha256_hex,
+      pushed_by: pusher&.display_handle, version_gid: to_gid, actor_gid: pusher&.to_gid)
   end
 end

@@ -39,6 +39,13 @@ class OIDC::Provider < ApplicationRecord
 
   attribute :jwks, Types::JsonDeserializable.new(JSON::JWK::Set)
 
+  def trusted_publisher_class
+    case issuer
+    when GITHUB_ACTIONS_ISSUER
+      OIDC::TrustedPublisher::GitHubAction
+    end
+  end
+
   private
 
   def issuer_match

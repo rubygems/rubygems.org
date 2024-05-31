@@ -8,8 +8,8 @@ class RubygemResource < Avo::BaseResource
   action ReleaseReservedNamespace
   action AddOwner
   action YankRubygem
-  action ReserveNamespace
   action UploadInfoFile
+  action UploadNamesFile
   action UploadVersionsFile
 
   class IndexedFilter < ScopeBooleanFilter; end
@@ -37,6 +37,9 @@ class RubygemResource < Avo::BaseResource
     field :web_hooks, as: :has_many
     field :linkset, as: :has_one
     field :gem_download, as: :has_one
+
+    field :link_verifications, as: :has_many
+    field :oidc_rubygem_trusted_publishers, as: :has_many
 
     field :audits, as: :has_many
   end

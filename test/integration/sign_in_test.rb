@@ -16,6 +16,9 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Sign out"
     assert page.has_content? "We now support security devices!"
+
+    assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password" },
+      User.find_by(email: "nick@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with uppercase email" do
@@ -78,6 +81,9 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Sign out"
     assert page.has_content? "We now support security devices!"
+
+    assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password", two_factor_method: "otp", two_factor_label: "OTP" },
+      User.find_by(email: "john@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with current valid otp when mfa enabled but 30 minutes has passed" do
@@ -281,6 +287,18 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Sign in"
     assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+  end
+
+  test "sign in to deleted account" do
+    User.find_by!(email: "nick@example.com").update!(deleted_at: Time.zone.now)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    page.assert_text "Sign in"
+    page.assert_text "Bad email or password."
   end
 
   teardown do

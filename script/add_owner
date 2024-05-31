@@ -10,7 +10,7 @@ require_relative "../config/environment"
 user    = User.find_by_email!(email)
 rubygem = Rubygem.find_by_name!(name)
 
-authorizer = User.find_by_email!("security@rubygems.org")
+authorizer = User.security_user
 
 rubygem.ownerships.create(user_id: user.id, authorizer: authorizer, confirmed_at: Time.current)
 

@@ -10,7 +10,7 @@ class OwnershipCallsTest < SystemTest
   end
 
   test "ownership calls listing and pagination on index" do
-    gems = create_list(:rubygem, 15, owners: [@owner], number: "1.0.0")
+    gems = create_list(:rubygem, 15, owners: [@owner], number: "1.0.0") # rubocop:disable FactoryBot/ExcessiveCreateList
     gems.each do |gem|
       create(:ownership_call, rubygem: gem, user: @owner)
     end

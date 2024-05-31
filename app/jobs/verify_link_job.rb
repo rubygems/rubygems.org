@@ -1,7 +1,7 @@
 class VerifyLinkJob < ApplicationJob
   queue_as :default
 
-  retry_on ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid, wait: :exponentially_longer, attempts: 3
+  retry_on ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid, wait: :polynomially_longer, attempts: 3
 
   ERRORS = (HTTP_ERRORS + [Faraday::Error, SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
 
@@ -9,21 +9,17 @@ class VerifyLinkJob < ApplicationJob
   class LinkNotPresentError < StandardError; end
   class HTTPResponseError < StandardError; end
 
-  discard_on NotHTTPSError do |job, _error|
-    job.record_failure
+  rescue_from NotHTTPSError do |_error|
+    record_failure
   end
 
   rescue_from LinkNotPresentError, HTTPResponseError, *ERRORS do |error|
     logger.info "Linkback verification failed with error: #{error.message}", error: error, uri: link_verification.uri,
-      linkable: link_verification.linkable
+      linkable: link_verification.linkable.to_gid
 
     link_verification.transaction do
       record_failure
-      if should_retry?
-        retry_job(wait: 5.seconds * (3.5**link_verification.failures_since_last_verification.pred), error:)
-      else
-        instrument :retry_stopped, error: error
-      end
+      retry_job(wait: 5.seconds * (3.5**link_verification.failures_since_last_verification.pred), error:) if should_retry?
     end
   end
 

@@ -16,10 +16,10 @@ class VersionTest < ActiveSupport::TestCase
                   ruby_version rubygems_version prerelease downloads_count licenses
                   requirements sha spec_sha metadata created_at]
 
-      assert_equal fields.map(&:to_s).sort, json.keys.sort
+      assert_equal fields.sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
-      assert_equal @version.built_at, json["built_at"]
-      assert_equal @version.created_at, json["created_at"]
+      assert_equal @version.built_at.as_json, json["built_at"]
+      assert_equal @version.created_at.as_json, json["created_at"]
       assert_equal @version.description, json["description"]
       assert_equal @version.downloads_count, json["downloads_count"]
       assert_equal @version.metadata, json["metadata"]
@@ -77,7 +77,7 @@ class VersionTest < ActiveSupport::TestCase
       @most_recent = create(:version, rubygem: @gem, number: "0.2", platform: "universal-rubinius")
       create(:version, rubygem: @gem, number: "0.1", platform: "mswin32")
 
-      assert_equal @most_recent, Version.most_recent
+      assert_equal @most_recent, @gem.most_recent_version
     end
   end
 
@@ -715,7 +715,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "show last pushed as latest version" do
-      assert_equal @three, @rubygem.versions.most_recent
+      assert_equal @three, @rubygem.most_recent_version
     end
   end
 
@@ -734,7 +734,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "know its latest version" do
-      assert_equal "0.7", @gem.versions.most_recent.number
+      assert_equal "0.7", @gem.most_recent_version.number
     end
 
     context "with multiple rubygems and versions created out of order" do
@@ -768,9 +768,9 @@ class VersionTest < ActiveSupport::TestCase
 
     should "get the latest versions" do
       assert_equal [@dust, @haml, @rack, @thor, @json].map(&:authors),
-        Version.published(5).map(&:authors)
+        Version.published.limit(5).map(&:authors)
       assert_equal [@dust, @haml, @rack, @thor, @json, @rake].map(&:authors),
-        Version.published(6).map(&:authors)
+        Version.published.limit(6).map(&:authors)
     end
   end
 

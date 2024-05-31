@@ -14,7 +14,7 @@ threads min_threads_count, max_threads_count
 require "concurrent"
 
 rails_env = ENV.fetch("RAILS_ENV") { "development" }
-production_like = !%w[development test].include?(rails_env) # rubocop:disable Rails/NegateInclude,Style/InverseMethods
+production_like = !%w[development test].include?(rails_env) # rubocop:disable Rails/NegateInclude
 
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
@@ -29,8 +29,8 @@ else
   # Allow puma to be restarted by `bin/rails restart` command.
   plugin :tmp_restart
 
-  require_relative "../lib/puma/plugin/tailwind"
-  plugin :tailwind
+  # Run tailwindcss:watch in the background
+  plugin :tailwindcss
 end
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
@@ -44,6 +44,11 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 before_fork do
   sleep 1
+end
+
+on_worker_boot do
+  # Re-open appenders after forking the process. https://logger.rocketjob.io/forking.html
+  SemanticLogger.reopen
 end
 
 on_restart do

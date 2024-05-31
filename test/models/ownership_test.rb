@@ -8,7 +8,6 @@ class OwnershipTest < ActiveSupport::TestCase
   should belong_to :rubygem
   should have_db_index :rubygem_id
   should belong_to :user
-  should have_db_index :user_id
   should belong_to :authorizer
   should have_db_index %i[user_id rubygem_id]
   should have_many(:api_key_rubygem_scopes).dependent(:destroy)

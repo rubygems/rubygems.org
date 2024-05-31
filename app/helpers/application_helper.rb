@@ -13,6 +13,13 @@ module ApplicationHelper
                 title: title)
   end
 
+  # Copied from importmap-rails but with the nonce removed. We rely on the sha256 hash instead.
+  # Relying on the hash improves the caching behavior by not sending the cached nonce to the client.
+  def javascript_inline_importmap_tag(importmap_json = Rails.application.importmap.to_json(resolver: self))
+    tag.script importmap_json.html_safe,
+      type: "importmap", "data-turbo-track": "reload"
+  end
+
   def short_info(rubygem)
     info = gem_info(rubygem).strip.truncate(90)
     escape_once(sanitize(info))
@@ -27,13 +34,15 @@ module ApplicationHelper
     end
   end
 
-  def avatar(size, id = "gravatar", user = current_user, theme: :light, **options)
-    url = user.gravatar_url(size: size, secure: true) || default_avatar(theme: theme)
-    image_tag url,
+  def avatar(size, id = "gravatar", user = current_user, theme: :light, **)
+    raise ArgumentError, "invalid default avatar theme, only light and dark are suported" unless %i[light dark].include? theme
+
+    url = avatar_user_path(user.id, params: { size: size, theme: theme })
+    image_tag(url,
       id: id,
       width: size,
       height: size,
-      **options
+      **)
   end
 
   def download_count(rubygem)
@@ -42,14 +51,6 @@ module ApplicationHelper
 
   def stats_graph_meter(gem, count)
     gem.downloads * 1.0 / count * 100
-  end
-
-  def search_form_class
-    if [root_path, advanced_search_path].include? request.path_info
-      "header__search-wrap--home"
-    else
-      "header__search-wrap"
-    end
   end
 
   def active?(path)
@@ -72,13 +73,31 @@ module ApplicationHelper
     msg
   end
 
-  private
+  def search_field(home: false)
+    data = {
+      autocomplete_target: "query",
+      action: %w[
+        autocomplete#suggest
+        keydown.down->autocomplete#next
+        keydown.up->autocomplete#prev
+        keydown.esc->autocomplete#hide
+        keydown.enter->autocomplete#clear
+        click@window->autocomplete#hide
+        focus->autocomplete#suggest
+        blur->autocomplete#hide
+      ].join(" ")
+    }
+    data[:nav_target] = "search" unless home
 
-  def default_avatar(theme:)
-    case theme
-    when :light then "/images/avatar.svg"
-    when :dark then "/images/avatar_inverted.svg"
-    else raise "invalid default avatar theme, only light and dark are suported"
-    end
+    search_field_tag(
+      :query,
+      params[:query],
+      placeholder: t("layouts.application.header.search_gem_html"),
+      autofocus: current_page?(root_url),
+      class: home ? "home__search" : "header__search",
+      autocomplete: "off",
+      aria: { autocomplete: "list" },
+      data: data
+    )
   end
 end

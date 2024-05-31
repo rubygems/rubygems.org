@@ -21,36 +21,30 @@
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
     <%= yield :head %>
+    <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= 'body--index' if request.path_info == '/' %>">
+  <body class="<%= 'body--index' if request.path_info == '/' %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
     <!-- Top banner -->
     <% if content_for?(:banner) %>
       <div class="banner">
         <%= yield :banner %>
       </div>
     <% end %>
-    <header class="header <%= 'header--interior' if request.path_info != '/' %>">
+    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
       <div class="l-wrap--header">
-        <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap') do %>
+        <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "logo" }) do %>
           <span class="header__logo" data-icon="⬡">⬢</span>
           <span class="t-hidden">RubyGems</span>
         <% end %>
-        <a class="header__club-sandwich" href="#">
+        <a class="header__club-sandwich" href="#" data-action="nav#toggle focusin->nav#focus click@window->nav#hide">
           <span class="t-hidden">Navigation menu</span>
         </a>
 
         <div class="header__nav-links-wrap">
-          <%= form_tag search_path, class: search_form_class, method: :get do %>
-            <%= search_field_tag :query, params[:query], placeholder: t(".header.search_gem_html"), class: "header__search", autocomplete: "off" %>
-            <ul id="suggest" class="suggest-list"></ul>
-            <%= label_tag :query do %>
-              <span class="t-hidden"><%= t(".header.search_gem_html") %></span>
-            <% end %>
-            <%= submit_tag "⌕", id: "search_submit", name: nil, class: "header__search__icon" %>
-          <% end %>
+          <%= render "layouts/search" unless current_page?(root_path) || current_page?(advanced_search_path) %>
 
-          <nav class="header__nav-links">
+          <nav class="header__nav-links" data-controller="dropdown">
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
                 <span><%= current_user.name %></span>
@@ -74,10 +68,10 @@
                 <span><%= current_user.name %></span>
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
-              <a href="#" class="header__popup-link" data-icon="▼">
+              <a href="#" class="header__popup-link" data-icon="▼" data-action="dropdown#toggle click@window->dropdown#hide">
                 <span class="t-hidden">More items</span>
               </a>
-              <div class="header__popup__nav-links">
+              <div class="header__popup__nav-links hidden" data-dropdown-target="menu" >
                 <%= link_to t('.header.settings'), edit_settings_path, class: "header__nav-link" %>
                 <%= link_to t('.header.dashboard'), dashboard_path, class: "header__nav-link" %>
                 <%= link_to t('.header.edit_profile'), edit_profile_path, class: "header__nav-link" %>
@@ -108,7 +102,7 @@
       </div>
     <% end %>
 
-    <main class="<%= 'main--interior' if request.path_info != '/' %>">
+    <main class="<%= 'main--interior' if request.path_info != '/' %>" data-nav-target="collapse">
       <% if request.path_info != '/' %>
         <div class="l-wrap--b">
           <% if @title %>
@@ -128,7 +122,7 @@
       <% end %>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" data-nav-target="collapse">
       <div class="l-wrap--footer">
         <div class="l-overflow">
           <div class="nav--v l-col--r--pad">
@@ -175,35 +169,35 @@
         </div>
       </div>
       <div class="footer__sponsors">
-        <a class="footer__sponsor footer__sponsor__ruby_central" href="https://rubycentral.org/" target="_blank">
+        <a class="footer__sponsor footer__sponsor__ruby_central" href="https://rubycentral.org/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.supported_by") %>
           <span class="t-hidden">Ruby Central</span>
         </a>
-        <a class="footer__sponsor footer__sponsor__dockyard" href="https://dockyard.com/ruby-on-rails-consulting" target="_blank">
+        <a class="footer__sponsor footer__sponsor__dockyard" href="https://dockyard.com/ruby-on-rails-consulting" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.designed_by") %>
           <span class="t-hidden">DockYard</span>
         </a>
-        <a class="footer__sponsor footer__sponsor__dnsimple" href="https://dnsimple.link/resolving-rubygems" target="_blank">
+        <a class="footer__sponsor footer__sponsor__dnsimple" href="https://dnsimple.link/resolving-rubygems" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.resolved_with") %>
           <span class="t-hidden">DNSimple</span>
         </a>
-        <a class="footer__sponsor footer__sponsor__datadog" href="https://www.datadoghq.com/" target="_blank">
+        <a class="footer__sponsor footer__sponsor__datadog" href="https://www.datadoghq.com/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.monitored_by") %>
           <span class="t-hidden">Datadog</span>
         </a>
-        <a class="footer__sponsor footer__sponsor__fastly" href="https://www.fastly.com/" target="_blank">
+        <a class="footer__sponsor footer__sponsor__fastly" href="https://www.fastly.com/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.gems_served_by") %>
           <span class="t-hidden">Fastly</span>
         </a>
-        <a class="footer__sponsor footer__sponsor__honeybadger" href="https://www.honeybadger.io/" target="_blank">
+        <a class="footer__sponsor footer__sponsor__honeybadger" href="https://www.honeybadger.io/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.monitored_by") %>
           <span class="t-hidden">Honeybadger</span>
         </a>
-        <a class="footer__sponsor footer__sponsor__domainr" href="https://domainr.com/" target="_blank">
+        <a class="footer__sponsor footer__sponsor__domainr" href="https://domainr.com/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.verified_by") %>
           <span class="t-hidden">Domainr</span>
         </a>
-        <a class="footer__sponsor footer__sponsor__whitesource" href="https://www.whitesourcesoftware.com/" target="_blank">
+        <a class="footer__sponsor footer__sponsor__whitesource" href="https://www.whitesourcesoftware.com/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.secured_by") %>
           <span class="t-hidden">Whitesource</span>
         </a>
@@ -216,8 +210,6 @@
         <% end %>
       </div>
     </footer>
-
-    <%= javascript_include_tag "application" %>
     <%= yield :javascript %>
     <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>
   </body>

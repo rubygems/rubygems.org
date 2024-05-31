@@ -3,7 +3,8 @@ password = "super-secret-password"
 author = User.create_with(
   handle: "gem-author",
   password: password,
-  email_confirmed: true
+  email_confirmed: true,
+  webauthn_id: "a1TLW3o1W18mTuDBfDALHhL2tZ1_E-2B03Fqsdu8Rv05V4tSsRzepe-L7Uprg356dw1tktXXcTI9TIRaK4gM-A"
 ).find_or_create_by!(email: "gem-author@example.com")
 
 maintainer = User.create_with(
@@ -62,104 +63,117 @@ rubygem_requestable.ownership_requests.create_with(
 Version.create_with(
   indexed: true,
   pusher: author,
+  sha256: Digest::SHA256.base64digest("abc123"),
+  info_checksum: Digest::MD5.base64digest("abc123")
+).find_or_create_by!(rubygem: rubygem0, number: "0.0.1", platform: "ruby", gem_platform: "ruby") do |version|
+  author.deletions.find_or_create_by!(version: version)
+end
+Version.create_with(
+  indexed: true,
+  pusher: author,
   metadata: {
     homepage_uri: "https://example.com/rubygem0/home",
-    source_code_uri: "https://github.com/example/#{rubygem1.name}",
-  }
+    source_code_uri: "https://github.com/example/#{rubygem0.name}"
+  },
+  sha256: Digest::SHA2.base64digest("rubygem0-1.0.0.gem")
 ).find_or_create_by!(rubygem: rubygem0, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
-  indexed: true
+  indexed: true,
+  sha256: Digest::SHA2.base64digest("rubygem0-1.0.0-x86_64-darwin.gem")
 ).find_or_create_by!(rubygem: rubygem0, number: "1.0.0", platform: "x86_64-darwin", gem_platform: Gem::Platform.new("x86_64-darwin").to_s)
 
 Version.create_with(
   indexed: true,
-  pusher: author
+  pusher: author,
+  sha256: Digest::SHA2.base64digest("rubygem1-1.0.0.pre.1.gem")
 ).find_or_create_by!(rubygem: rubygem1, number: "1.0.0.pre.1", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
   indexed: true,
   pusher: maintainer,
-  dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))]
+  dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))],
+  sha256: Digest::SHA2.base64digest("rubygem1-1.1.0.pre.2.gem")
 ).find_or_create_by!(rubygem: rubygem1, number: "1.1.0.pre.2", platform: "ruby", gem_platform: "ruby")
 Version.create_with(
   indexed: false,
   pusher: author,
-  yanked_at: Time.utc(2020, 3, 3)
+  yanked_at: Time.utc(2020, 3, 3),
+  sha256: Digest::SHA2.base64digest("rubygem_requestable-1.0.0.gem")
 ).find_or_create_by!(rubygem: rubygem_requestable, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
 
-author.api_keys.find_or_create_by!(hashed_key: "securehashedkey", name: "api key", push_rubygem: true)
+author.api_keys.find_or_create_by!(hashed_key: "securehashedkey", name: "api key", scopes: %i[push_rubygem])
 
 Admin::GitHubUser.create_with(
   is_admin: true,
-  oauth_token: 'fake',
+  oauth_token: "fake",
   info_data: {
-  "viewer": {
-    "name": "Rad Admin",
-    "login": "rad_admin",
-    "email": "rad_admin@rubygems.team",
-    "avatarUrl": "/favicon.ico",
-    "organization": {
-      "login": "rubygems",
-      "name": "RubyGems",
-      "viewerIsAMember": true,
-      "teams": {
-        "edges": [
-          {
-            "node": {
-              "name": "Infrastructure",
-              "slug": "infrastructure"
+    viewer: {
+      name: "Rad Admin",
+      login: "rad_admin",
+      email: "rad_admin@rubygems.team",
+      avatarUrl: "/favicon.ico",
+      organization: {
+        login: "rubygems",
+        name: "RubyGems",
+        viewerIsAMember: true,
+        teams: {
+          edges: [
+            {
+              node: {
+                name: "Infrastructure",
+                slug: "infrastructure"
+              }
+            },
+            {
+              node: {
+                name: "Maintainers",
+                slug: "maintainers"
+              }
+            },
+            {
+              node: {
+                name: "Monitoring",
+                slug: "monitoring"
+              }
+            },
+            {
+              node: {
+                name: "RubyGems.org",
+                slug: "rubygems-org"
+              }
+            },
+            {
+              node: {
+                name: "Rubygems.org Deployers",
+                slug: "rubygems-org-deployers"
+              }
+            },
+            {
+              node: {
+                name: "Security",
+                slug: "security"
+              }
             }
-          },
-          {
-            "node": {
-              "name": "Maintainers",
-              "slug": "maintainers"
-            }
-          },
-          {
-            "node": {
-              "name": "Monitoring",
-              "slug": "monitoring"
-            }
-          },
-          {
-            "node": {
-              "name": "RubyGems.org",
-              "slug": "rubygems-org"
-            }
-          },
-          {
-            "node": {
-              "name": "Rubygems.org Deployers",
-              "slug": "rubygems-org-deployers"
-            }
-          },
-          {
-            "node": {
-              "name": "Security",
-              "slug": "security"
-            }
-          }
-        ]
+          ]
+        }
       }
     }
   }
-}
 ).find_or_create_by!(github_id: "FAKE-rad_admin")
 
 Admin::GitHubUser.create_with(
   is_admin: false,
   info_data: {
-  "viewer": {
-    "name": "Not An Admin",
-    "login": "not_an_admin",
-    "email": "not_an_admin@rubygems.team",
-    "avatarUrl": "/favicon.ico",
-    "organization": nil
+    viewer: {
+      name: "Not An Admin",
+      login: "not_an_admin",
+      email: "not_an_admin@rubygems.team",
+      avatarUrl: "/favicon.ico",
+      organization: nil
+    }
   }
-}
 ).find_or_create_by!(github_id: "FAKE-not_an_admin")
 
 github_oidc_provider = OIDC::Provider
@@ -194,7 +208,7 @@ author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
         operator: "string_equals",
         claim: "repository",
         value: "rubygems/rubygem0"
-      }],
+      }]
     ]
   }
 ).find_or_create_by!(
@@ -205,13 +219,13 @@ author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
 author_oidc_api_key_role.user.api_keys.create_with(
   hashed_key: "expiredhashedkey",
   ownership: rubygem0.ownerships.find_by!(user: author),
-  push_rubygem: true,
+  scopes: %i[push_rubygem]
 ).find_or_create_by!(
-  name: "push-rubygem-1-expired",
+  name: "push-rubygem-1-expired"
 ).tap do |api_key|
   OIDC::IdToken.find_or_create_by!(
     api_key:,
-    jwt: { claims: {jti: "expired"}, header: {}},
+    jwt: { claims: { jti: "expired" }, header: {} },
     api_key_role: author_oidc_api_key_role
   )
   api_key.touch(:expires_at, time: "2020-01-01T00:00:00Z")
@@ -220,23 +234,22 @@ end
 author_oidc_api_key_role.user.api_keys.create_with(
   hashed_key: "unexpiredhashedkey",
   ownership: rubygem0.ownerships.find_by!(user: author),
-  push_rubygem: true,
+  scopes: %i[push_rubygem],
   expires_at: "2120-01-01T00:00:00Z"
 ).find_or_create_by!(
-  name: "push-rubygem-1-unexpired",
+  name: "push-rubygem-1-unexpired"
 ).tap do |api_key|
   OIDC::IdToken.find_or_create_by!(
     api_key:,
-    jwt: { claims: {jti: "unexpired"}, header: {}},
+    jwt: { claims: { jti: "unexpired" }, header: {} },
     api_key_role: author_oidc_api_key_role
   )
 end
 
 author.api_keys.find_or_create_by!(
-  user: author,
   hashed_key: "unexpiredmanualhashedkey",
   name: "Manual",
-  push_rubygem: true,
+  scopes: %i[push_rubygem]
 )
 
 SendgridEvent.create_with(
@@ -248,17 +261,56 @@ SendgridEvent.create_with(
     tls: 1,
     email: author.email,
     event: "delivered",
-    sg_event_id: "sg_event_id_1",
+    sg_event_id: "sg_event_id_1"
   },
   status: :processed
 ).find_or_create_by!(sendgrid_id: "sendgrid_id_1")
 
 rubygem0.link_verifications.create_with(
-  last_verified_at: 10.years.since,
+  last_verified_at: 10.years.since
 ).find_or_create_by!(uri: "https://example.com/rubygem0/home")
 rubygem0.link_verifications.create_with(
-  last_verified_at: 10.years.since,
+  last_verified_at: 10.years.since
 ).find_or_create_by!(uri: "https://example.com/rubygem0/code")
+
+trusted_publisher = OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
+  repository_owner: "example",
+  repository_name: "rubygem0",
+  repository_owner_id: "1234567890",
+  workflow_filename: "push_gem.yml",
+  environment: nil
+)
+trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0).trusted_publisher.api_keys.find_or_create_by!(
+  name: "GitHub Actions something",
+  hashed_key: "securehashedkey-tp",
+  scopes: %i[push_rubygem]
+).pushed_versions.create_with(indexed: true, sha256: Digest::SHA2.base64digest("rubygem0-0.1.0.gem")).find_or_create_by!(
+  rubygem: rubygem0, number: "0.1.0", platform: "ruby", gem_platform: "ruby"
+)
+trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem1)
+
+OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
+  repository_owner: "example",
+  repository_name: "rubygem0",
+  repository_owner_id: "1234567890",
+  workflow_filename: "push_gem2.yml",
+  environment: "deploy"
+).rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0)
+
+author.oidc_pending_trusted_publishers.create_with(
+  expires_at: 100.years.from_now
+).find_or_create_by!(
+  trusted_publisher: trusted_publisher,
+  rubygem_name: "pending-trusted-publisher-rubygem"
+)
+
+author.webauthn_credentials.create_with(nickname: "segiddins development")
+  .find_or_create_by!(
+    external_id: "QdfU3FxkjNpPqfjC4uTuNA",
+    public_key: "pQECAyYgASFYIKMIHolehDjslWQ6oOVP1-R8OR6LXEBdDfqxhjgtiiDEIlgg1RgUq_AJFT-cSMo-xP_9XxGIbBsQDEj8253QPwc8-88"
+  )
+
+IpAddress.find_or_create_by!(ip_address: "127.0.0.1")
 
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:

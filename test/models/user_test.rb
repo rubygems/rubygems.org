@@ -284,6 +284,46 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [my_rubygem], @user.rubygems
     end
 
+    context "generate_confirmation_token" do
+      should "set confirmation token and token_expires_at" do
+        assert_changed(@user, :confirmation_token, :token_expires_at) do
+          @user.generate_confirmation_token
+          @user.save!
+        end
+      end
+
+      context "when user has an unconfirmed email" do
+        setup do
+          @user.update(unconfirmed_email: "unconfirmed@example.com")
+        end
+
+        should "delete the unconfirmed email by default" do
+          assert_changed(@user, :unconfirmed_email, :confirmation_token, :token_expires_at) do
+            @user.generate_confirmation_token
+            @user.save!
+          end
+
+          assert_nil @user.unconfirmed_email
+        end
+
+        should "not delete unconfirmed email when reset_unconfirmed_email is false" do
+          assert_changed(@user, :confirmation_token, :token_expires_at) do
+            @user.generate_confirmation_token(reset_unconfirmed_email: false)
+            @user.save!
+          end
+
+          assert_equal "unconfirmed@example.com", @user.unconfirmed_email
+        end
+      end
+
+      should "generate a sufficiently long token" do
+        @user.generate_confirmation_token
+        @user.save!
+
+        assert_operator @user.confirmation_token.length, :>=, 24, "Token must be at least 24 characters long"
+      end
+    end
+
     context "unconfirmed_email update" do
       should "set confirmation token and token_expires_at" do
         assert_changed(@user, :confirmation_token, :token_expires_at) do
@@ -395,7 +435,7 @@ class UserTest < ActiveSupport::TestCase
 
         context "blocking user with api key" do
           setup do
-            api_key = create(:api_key, user: @user)
+            api_key = create(:api_key, owner: @user)
             # simulate gem pushed using api key to ensure
             # user with pushed gems can be blocked
             create(:version, pusher: @user, pusher_api_key: api_key)
@@ -660,7 +700,9 @@ class UserTest < ActiveSupport::TestCase
       @user = create(:user)
       @rubygem = create(:rubygem)
       create(:ownership, rubygem: @rubygem, user: @user)
-      @version = create(:version, rubygem: @rubygem)
+      @version1 = create(:version, rubygem: @rubygem)
+      @version2 = create(:version, rubygem: @rubygem)
+      GemDownload.increment(100_001, rubygem_id: @rubygem.id, version_id: @version1.id)
     end
 
     context "user is only owner of gem" do
@@ -668,6 +710,20 @@ class UserTest < ActiveSupport::TestCase
         assert_difference "Deletion.count", 1 do
           @user.destroy
         end
+      end
+      should "preserve ineligible deletion version" do
+        @user.destroy
+
+        assert_predicate @version1.reload, :indexed?
+
+        assert_event Events::RubygemEvent::VERSION_YANK_FORBIDDEN, {
+          number: @version1.number,
+          platform: "ruby",
+          yanked_by: @user.handle,
+          version_gid: @version1.to_gid_param,
+          actor_gid: @user.to_gid.to_s,
+          reason: "Versions with more than 100,000 downloads cannot be deleted."
+        }, @rubygem.reload.events.where(tag: Events::RubygemEvent::VERSION_YANK_FORBIDDEN).sole
       end
       should "mark rubygem unowned" do
         @user.destroy
@@ -850,6 +906,24 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "block invalid legacy user" do
+    setup do
+      @user = create(:user, handle: "MikeJudge")
+      @api_key = create(:api_key, owner: @user)
+
+      # simulate legacy invalid api key
+      @api_key.update_columns(scopes: @api_key.scopes + %i[show_dashboard add_owner])
+
+      refute_predicate @api_key, :valid?
+    end
+
+    should "block user anyway" do
+      assert_changed(@user, :email, :password, :api_key, :remember_token) do
+        @user.block!
+      end
+    end
+  end
+
   context ".normalize_email" do
     should "return the normalized email" do
       assert_equal "user@example.com", User.normalize_email(:"UsEr@ example . COM")
@@ -857,16 +931,6 @@ class UserTest < ActiveSupport::TestCase
 
     should "return an empty string on invalid inputs" do
       assert_equal "", User.normalize_email("\u9999".force_encoding("ascii"))
-    end
-  end
-
-  context "#gravatar_url" do
-    should "return gravatar if email is publicly visible" do
-      assert_includes User.new(public_email: true, email: "text@example.com").gravatar_url, "gravatar.com"
-    end
-
-    should "return nil if email is publicly hidden" do
-      assert_nil User.new(public_email: false, email: "text@example.com").gravatar_url
     end
   end
 end

@@ -92,7 +92,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     page.assert_text "Another comment"
 
-    assert_equal 2, Audit.all.count
+    assert_equal 2, Audit.count
 
     audit = Audit.last
 
@@ -140,7 +140,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     assert_raise(ActiveRecord::RecordNotFound) { log_ticket.reload }
 
-    assert_equal 3, Audit.all.count
+    assert_equal 3, Audit.count
     audit = Audit.last
     visit avo.resources_audit_path(audit)
 

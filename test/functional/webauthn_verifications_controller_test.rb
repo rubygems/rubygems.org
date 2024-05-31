@@ -105,7 +105,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     context "when verifying the challenge" do
       setup do
         @challenge = session[:webauthn_authentication]["challenge"]
-        @origin = "http://localhost:3000"
+        @origin = WebAuthn.configuration.origin
         @rp_id = URI.parse(@origin).host
         @client = WebAuthn::FakeClient.new(@origin, encoding: false)
         WebauthnHelpers.create_credential(
@@ -138,7 +138,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     context "when verifying the challenge with safari" do
       setup do
         @challenge = session[:webauthn_authentication]["challenge"]
-        @origin = "http://localhost:3000"
+        @origin = WebAuthn.configuration.origin
         @rp_id = URI.parse(@origin).host
         @client = WebAuthn::FakeClient.new(@origin, encoding: false)
         WebauthnHelpers.create_credential(
@@ -197,7 +197,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     context "when providing wrong credentials" do
       setup do
         @wrong_challenge = "16b8e11ea1b46abc64aea3ecdac1c418"
-        @origin = "http://localhost:3000"
+        @origin = WebAuthn.configuration.origin
         @rp_id = URI.parse(@origin).host
         @client = WebAuthn::FakeClient.new(@origin, encoding: false)
         WebauthnHelpers.create_credential(
@@ -228,7 +228,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       setup do
         @wrong_webauthn_token = "pRpwn2mTH2D18t58"
         @challenge = session[:webauthn_authentication]["challenge"]
-        @origin = "http://localhost:3000"
+        @origin = WebAuthn.configuration.origin
         @rp_id = URI.parse(@origin).host
         @client = WebAuthn::FakeClient.new(@origin, encoding: false)
         WebauthnHelpers.create_credential(
@@ -252,7 +252,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     context "when the webauthn token has expired" do
       setup do
         @challenge = session[:webauthn_authentication]["challenge"]
-        @origin = "http://localhost:3000"
+        @origin = WebAuthn.configuration.origin
         @rp_id = URI.parse(@origin).host
         @client = WebAuthn::FakeClient.new(@origin, encoding: false)
         WebauthnHelpers.create_credential(
@@ -277,7 +277,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       setup do
         @challenge = session[:webauthn_authentication]["challenge"]
         session[:webauthn_authentication]["port"] = nil
-        @origin = "http://localhost:3000"
+        @origin = WebAuthn.configuration.origin
         @rp_id = URI.parse(@origin).host
         @client = WebAuthn::FakeClient.new(@origin, encoding: false)
         WebauthnHelpers.create_credential(

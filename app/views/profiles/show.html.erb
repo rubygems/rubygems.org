@@ -80,8 +80,8 @@
         <% if @user.twitter_username.present? %>
           <%=
             image_tag(
-              "/images/twitter_icon.png",
-              alt: "Twitter icon",
+              "/images/x_icon.png",
+              alt: "X icon",
               class: "profile__header__icon"
             )
           %>
@@ -120,13 +120,7 @@
 <div id="profile">
   <div class="profile-list">
     <ul>
-      <%=
-        render(
-          partial: 'rubygem',
-          collection: @rubygems + @extra_rubygems,
-          locals: {graph: false}
-        )
-      %>
+      <%= render partial: 'rubygem', collection: @rubygems %>
     </ul>
   </div>
 </div>

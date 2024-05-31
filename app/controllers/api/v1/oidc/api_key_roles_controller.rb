@@ -2,6 +2,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   include ApiKeyable
 
   before_action :authenticate_with_api_key, except: :assume_role
+  before_action :verify_user_api_key, except: :assume_role
 
   with_options only: :assume_role do
     before_action :set_api_key_role
@@ -31,7 +32,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   end
 
   def show
-    render json: @api_key.user.oidc_api_key_roles.find_by!(token: params.require(:token))
+    render json: @api_key.user.oidc_api_key_roles.find_by!(token: params.permit(:token).require(:token))
   end
 
   def assume_role
@@ -56,7 +57,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
     render json: {
       rubygems_api_key: key,
       name: api_key.name,
-      scopes: api_key.enabled_scopes,
+      scopes: api_key.scopes,
       gem: api_key.rubygem,
       expires_at: api_key.expires_at
     }.compact, status: :created
@@ -65,11 +66,12 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   private
 
   def set_api_key_role
-    @api_key_role = OIDC::ApiKeyRole.active.find_by!(token: params.require(:token))
+    @api_key_role = OIDC::ApiKeyRole.active.find_by!(token: params.permit(:token).require(:token))
   end
 
   def decode_jwt
-    @jwt = JSON::JWT.decode_compact_serialized(params.require(:jwt), @api_key_role.provider.jwks)
+    raise UnverifiedJWT, "Provider missing JWKS" if @api_key_role.provider.jwks.blank?
+    @jwt = JSON::JWT.decode_compact_serialized(params.permit(:jwt).require(:jwt), @api_key_role.provider.jwks)
   rescue JSON::ParserError
     raise UnverifiedJWT, "Invalid JSON"
   end

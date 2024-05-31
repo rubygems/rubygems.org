@@ -19,6 +19,12 @@ Avo.configure do |config|
   config.current_user_method = :admin_user
   config.authenticate_with do
     redirect_to '/' unless _current_user&.valid?
+    Current.user = begin
+      User.security_user
+    rescue ActiveRecord::RecordNotFound
+      nil
+    end
+    Current.request = request
   end
   config.sign_out_path_name = :admin_logout_path
 
@@ -40,7 +46,7 @@ Avo.configure do |config|
   # config.locale = 'en-US'
 
   ## == Resource options ==
-  # config.resource_controls_placement = :right
+  config.resource_controls_placement = :left
   # config.model_resource_mapping = {}
   # config.default_view_type = :table
   # config.per_page = 24
@@ -98,7 +104,19 @@ Avo.configure do |config|
     end
 
     section "Resources", icon: "resources" do
-      all_resources
+      Avo::App.resources_for_navigation.group_by { |r| r.model_class.module_parent_name }.sort_by { |k, _| k.to_s }.each do |namespace, reses|
+        if namespace.present?
+          group namespace.titleize, icon: "folder" do
+            reses.each do |res|
+              resource res.route_key
+            end
+          end
+        else
+          reses.each do |res|
+            resource res.route_key
+          end
+        end
+      end
     end
 
     unless all_tools.empty?
@@ -123,4 +141,25 @@ Rails.configuration.to_prepare do
   Avo::ApplicationController.content_security_policy do |policy|
     policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline
   end
+
+  # Fix for https://github.com/rails/rails/issues/49783
+  Avo::Views::ResourceEditComponent.class_eval do
+    def field_name(object_name, *, **)
+      object_name = object_name.to_s.gsub(/\[(\w+)\[(\w+)\]\]/, '[\1][\2]')
+      super(object_name, *, **)
+    end
+  end
+
+  Avo::Fields::IndexComponent.prepend(Module.new do
+    def initialize(flush: false, **)
+      super(**)
+      @flush = flush
+    end
+
+    def field_wrapper_args
+      args = super
+      args[:flush] = @flush
+      args
+    end
+  end)
 end

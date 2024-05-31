@@ -6,19 +6,6 @@ class UserPolicy < ApplicationPolicy
     end
   end
 
-  def avo_index?
-    rubygems_org_admin?
-  end
-
-  def avo_show?
-    rubygems_org_admin?
-  end
-
-  def act_on?
-    rubygems_org_admin?
-  end
-
-  has_association :webauthn_credentials
   has_association :ownerships
   has_association :rubygems
   has_association :subscriptions
@@ -32,4 +19,19 @@ class UserPolicy < ApplicationPolicy
   has_association :pushed_versions
   has_association :audits
   has_association :oidc_api_key_roles
+  has_association :webauthn_credentials
+  has_association :webauthn_verification
+  has_association :events
+
+  def avo_index?
+    rubygems_org_admin?
+  end
+
+  def avo_show?
+    rubygems_org_admin?
+  end
+
+  def act_on?
+    rubygems_org_admin?
+  end
 end

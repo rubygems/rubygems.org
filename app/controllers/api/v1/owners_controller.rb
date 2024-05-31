@@ -1,5 +1,6 @@
 class Api::V1::OwnersController < Api::BaseController
   before_action :authenticate_with_api_key, except: %i[show gems]
+  before_action :verify_user_api_key, except: %i[show gems]
   before_action :find_rubygem, except: :gems
   before_action :verify_api_key_gem_scope, except: %i[show gems]
   before_action :verify_gem_ownership, except: %i[show gems]
@@ -52,7 +53,10 @@ class Api::V1::OwnersController < Api::BaseController
   def gems
     user = User.find_by_slug(params[:handle])
     if user
-      rubygems = user.rubygems.with_versions
+      rubygems = user.rubygems.with_versions.preload(
+        :linkset, :gem_download,
+        most_recent_version: { dependencies: :rubygem, gem_download: nil }
+      ).strict_loading
       respond_to do |format|
         format.json { render json: rubygems }
         format.yaml { render yaml: rubygems }

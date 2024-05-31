@@ -7,7 +7,7 @@ class PushTest < ActionDispatch::IntegrationTest
     Dir.chdir(Dir.mktmpdir)
     @key = "12345"
     @user = create(:user)
-    create(:api_key, user: @user, key: @key, push_rubygem: true)
+    create(:api_key, owner: @user, key: @key, scopes: %i[push_rubygem])
   end
 
   test "pushing a gem" do
@@ -27,6 +27,11 @@ class PushTest < ActionDispatch::IntegrationTest
     css = %(div.gem__users a[alt=#{@user.handle}])
 
     assert page.has_css?(css, count: 2)
+
+    assert_equal Digest::MD5.hexdigest(<<~INFO), Rubygem.find_by!(name: "sandworm").versions.sole.info_checksum
+      ---
+      1.0.0 |checksum:#{Digest::SHA256.hexdigest File.binread('sandworm-1.0.0.gem')}
+    INFO
   end
 
   test "push a new version of a gem" do
@@ -57,6 +62,93 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert page.has_content?("sandworm")
     assert page.has_content?("2.0.0")
+  end
+
+  test "pushing a new version of a gem with a trusted publisher" do
+    rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+
+    rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+
+    @key = "543321"
+    create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+
+    build_gem "sandworm", "2.0.0"
+
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :success
+
+    perform_enqueued_jobs
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+
+    email = ActionMailer::Base.deliveries.last
+
+    assert_equal "Gem sandworm (2.0.0) pushed to RubyGems.org", email.subject
+    assert_equal [@user.email], email.to
+    email_body = Capybara.string(email.body.raw_source)
+
+    email_body.assert_text("Pushed by trusted publisher")
+    email_body.assert_text(rubygem_trusted_publisher.trusted_publisher.name)
+
+    assert_event Events::UserEvent::EMAIL_SENT, {
+      to: @user.email, from: "no-reply@mailer.rubygems.org", subject: email.subject,
+      message_id: email.message_id, mailer: "mailer", action: "gem_pushed"
+    }, @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
+
+    get rubygem_path("sandworm")
+
+    assert_response :success
+    page.assert_text("Pushed by")
+    page.assert_selector(:xpath, ".//img[@title=#{rubygem_trusted_publisher.trusted_publisher.name.inspect}]")
+  end
+
+  test "pushing a new gem with a pending trusted publisher" do
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user)
+
+    @key = "543321"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+
+    build_gem "sandworm", "2.0.0"
+
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :success
+
+    get rubygem_path("sandworm")
+
+    assert_response :success
+    page.assert_text("Pushed by")
+    page.assert_selector(:xpath, ".//img[@title=#{pending_trusted_publisher.trusted_publisher.name.inspect}]")
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert rubygem.owned_by?(@user)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
+  end
+
+  test "pushing a new gem with a pending trusted publisher case insensitive" do
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "SaNdWoRm", user: @user)
+
+    @key = "543321"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+
+    build_gem "sandworm", "2.0.0"
+
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :success
+
+    get rubygem_path("sandworm")
+
+    assert_response :success
+    page.assert_text("Pushed by")
+    page.assert_selector(:xpath, ".//img[@title=#{pending_trusted_publisher.trusted_publisher.name.inspect}]")
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert rubygem.owned_by?(@user)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
   end
 
   test "pushing a gem with a known dependency" do
@@ -182,7 +274,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "republish a yanked version" do
     rubygem = create(:rubygem, name: "sandworm", owners: [@user])
-    create(:version, number: "1.0.0", indexed: false, rubygem: rubygem)
+    version = create(:version, number: "1.0.0", rubygem: rubygem)
+    create(:deletion, version:)
 
     build_gem "sandworm", "1.0.0"
 
@@ -194,7 +287,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "republish a yanked version by a different owner" do
     rubygem = create(:rubygem, name: "sandworm")
-    create(:version, number: "1.0.0", indexed: false, rubygem: rubygem)
+    version = create(:version, number: "1.0.0", rubygem: rubygem)
+    create(:deletion, version:)
 
     build_gem "sandworm", "1.0.0"
 
@@ -202,6 +296,42 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :conflict
     assert_match(/A yanked version pushed by a previous owner of this gem already exists \(sandworm-1.0.0\)/, response.body)
+  end
+
+  test "republish an indexed version" do
+    build_gem "sandworm", "1.0.0"
+
+    push_gem "sandworm-1.0.0.gem"
+
+    assert_response :success
+
+    assert_enqueued_jobs 0 do
+      push_gem "sandworm-1.0.0.gem"
+    end
+
+    assert_response :success
+    assert_equal("Gem was already pushed: sandworm (1.0.0)", response.body)
+  end
+
+  test "republish a version where the gem is un-indexed but not yanked" do
+    build_gem "sandworm", "1.0.0"
+
+    Pusher.any_instance.stubs(:after_write)
+
+    push_gem "sandworm-1.0.0.gem"
+
+    Pusher.any_instance.unstub(:after_write)
+
+    assert_enqueued_jobs 0 do
+      push_gem "sandworm-1.0.0.gem"
+    end
+
+    assert_response :conflict
+    assert_equal(
+      "It appears that sandworm-1.0.0 did not finish pushing.\n" \
+      "Please contact support@rubygems.org for assistance if you pushed this gem more than a minute ago.",
+      response.body
+    )
   end
 
   test "publishing a gem with ceritifcate but not signatures" do
@@ -438,6 +568,26 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       assert_response :forbidden
+    end
+
+    should "fail when spec.date cannot Marshal.dump" do
+      build_gem_raw(file_name: "malicious.gem", spec: <<~YAML)
+        --- !ruby/object:Gem::Specification
+        specification_version: 100
+        name: book
+        version: '1'
+        platform: ruby
+        summary: 'malicious'
+        authors: [test@example.com]
+        date: !ruby/object:Time
+          a: 1
+      YAML
+
+      capture_io do
+        push_gem "malicious.gem"
+      end
+
+      assert_response :unprocessable_entity
     end
   end
 

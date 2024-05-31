@@ -3,7 +3,7 @@ class NestedField < Avo::Fields::BaseField
 
   def initialize(name, stacked: true, **args, &block)
     @items_holder = Avo::ItemsHolder.new
-    hide_on [:index]
+    hide_on :index
     super(name, stacked:, **args, &nil)
     instance_exec(&block) if block
   end
@@ -12,9 +12,7 @@ class NestedField < Avo::Fields::BaseField
     @items_holder.instance_variable_get(:@items).grep Avo::Fields::BaseField
   end
 
-  def field(name, **kwargs, &)
-    @items_holder.field(name, **kwargs, &)
-  end
+  delegate :field, to: :@items_holder
 
   def fill_field(model, key, value, params)
     value = value.to_h.to_h do |k, v|

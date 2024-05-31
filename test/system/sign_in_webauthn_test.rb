@@ -12,10 +12,12 @@ class SignInWebauthnTest < ApplicationSystemTestCase
   end
 
   teardown do
-    @authenticator.remove!
+    @authenticator&.remove!
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 
-  test "sign in with webauthn" do
+  test "sign in with webauthn mfa" do
     visit sign_in_path
 
     fill_in "Email or Username", with: @user.email
@@ -24,8 +26,6 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
     assert page.has_content? "Multi-factor authentication"
     assert page.has_content? "Security Device"
-
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     click_on "Authenticate with security device"
 
@@ -33,7 +33,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     refute page.has_content? "We now support security devices!"
   end
 
-  test "sign in with webauthn but it expired" do
+  test "sign in with webauthn mfa but it expired" do
     visit sign_in_path
 
     fill_in "Email or Username", with: @user.email
@@ -42,8 +42,6 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
     assert page.has_content? "Multi-factor authentication"
     assert page.has_content? "Security Device"
-
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     travel 30.minutes do
       click_on "Authenticate with security device"
@@ -53,7 +51,25 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     end
   end
 
-  test "sign in with webauthn using recovery codes" do
+  test "sign in with webauthn mfa wrong user handle" do
+    visit sign_in_path
+
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+
+    assert page.has_content? "Multi-factor authentication"
+    assert page.has_content? "Security Device"
+
+    @user.update!(webauthn_id: "a")
+
+    click_on "Authenticate with security device"
+
+    refute page.has_content? "Dashboard"
+    assert page.has_content? "Sign in"
+  end
+
+  test "sign in with webauthn mfa using recovery codes" do
     visit sign_in_path
 
     fill_in "Email or Username", with: @user.email
@@ -67,5 +83,66 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     click_button "Authenticate"
 
     assert page.has_content? "Dashboard"
+  end
+
+  test "sign in with webauthn" do
+    visit sign_in_path
+
+    click_on "Authenticate with security device"
+
+    assert page.has_content? "Dashboard"
+    refute page.has_content? "We now support security devices!"
+  end
+
+  test "sign in with webauthn failure" do
+    visit sign_in_path
+
+    @user.webauthn_credentials.find_each { |c| c.update!(external_id: "a") }
+
+    click_on "Authenticate with security device"
+
+    refute page.has_content? "Dashboard"
+  end
+
+  test "sign in with webauthn user_handle changed failure" do
+    visit sign_in_path
+
+    @user.update!(webauthn_id: "a")
+
+    click_on "Authenticate with security device"
+
+    refute page.has_content? "Dashboard"
+    assert page.has_content? "Sign in"
+  end
+
+  test "sign in with webauthn does not expire" do
+    visit sign_in_path
+
+    travel 30.minutes do
+      click_on "Authenticate with security device"
+
+      assert page.has_content? "Dashboard"
+    end
+  end
+
+  test "sign in with webauthn to blocked account" do
+    @user.block!
+
+    visit sign_in_path
+    click_on "Authenticate with security device"
+
+    refute page.has_content? "Dashboard"
+    assert page.has_content? "Sign in"
+    assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+  end
+
+  test "sign in with webauthn to deleted account" do
+    @user.update!(deleted_at: Time.zone.now)
+
+    visit sign_in_path
+    click_on "Authenticate with security device"
+
+    refute page.has_content? "Dashboard"
+    assert page.has_content? "Sign in"
   end
 end

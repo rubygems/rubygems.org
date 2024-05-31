@@ -9,7 +9,7 @@ class LinkVerificationResource < Avo::BaseResource
   # Fields generated from the model
   field :linkable, as: :belongs_to,
     polymorphic_as: :linkable,
-    types: [::Rubygem]
+    types: %w[Rubygem]
   field :uri, as: :text
   field :verified?, as: :boolean
   field :last_verified_at, as: :date_time

@@ -78,7 +78,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
 
     context "when authenticating with an api key" do
       setup do
-        @api_key = create(:api_key, key: "12345", push_rubygem: true)
+        @api_key = create(:api_key, key: "12345", scopes: %i[push_rubygem])
         @user = @api_key.user
         create(:webauthn_credential, user: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12345"
@@ -162,7 +162,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
 
     context "when authenticating with an api key" do
       setup do
-        create(:api_key, key: "12345", push_rubygem: true, user: @user)
+        create(:api_key, key: "12345", scopes: %i[push_rubygem], owner: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12345"
         get :status, params: { webauthn_token: @user.webauthn_verification.path_token, format: :json }
       end

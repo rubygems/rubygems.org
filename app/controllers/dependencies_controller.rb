@@ -6,6 +6,7 @@ class DependenciesController < ApplicationController
   def show
     @dependencies = Hash.new { |h, k| h[k] = [] }
     resolvable_dependencies = @latest_version.dependencies.where(unresolved_name: nil)
+      .strict_loading.preload(rubygem: :public_versions)
 
     resolvable_dependencies.each do |dependency|
       gem_name = dependency.rubygem.name
@@ -44,6 +45,6 @@ class DependenciesController < ApplicationController
 
   def render_str_call(scope)
     local_var = { scope: scope, dependencies: @dependencies, gem_name: @latest_version.rubygem.name }
-    ActionController::Base.new.render_to_string(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
+    self.class.renderer.new(request.env).render(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
   end
 end

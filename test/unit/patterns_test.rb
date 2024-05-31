@@ -44,4 +44,8 @@ class PatternsTest < ActiveSupport::TestCase
   test "SPECIAL_CHAR_PREFIX_REGEXP is linear" do
     assert Regexp.linear_time?(Patterns::SPECIAL_CHAR_PREFIX_REGEXP)
   end
+
+  test "BASE64_SHA256_PATTERN is linear" do
+    assert Regexp.linear_time?(Patterns::BASE64_SHA256_PATTERN)
+  end
 end

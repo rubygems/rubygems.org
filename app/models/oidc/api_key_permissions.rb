@@ -1,13 +1,13 @@
-class OIDC::ApiKeyPermissions < OIDC::BaseModel
+class OIDC::ApiKeyPermissions < ApplicationModel
   def create_params(user)
-    params = scopes.map(&:to_sym).index_with(true)
+    params = { scopes: scopes }
     params[:ownership] = gems&.first&.then { user.ownerships.joins(:rubygem).find_by!(rubygem: { name: _1 }) }
     params[:expires_at] = DateTime.now.utc + valid_for
     params
   end
 
   attribute :scopes, Types::ArrayOf.new(:string)
-  attribute :valid_for, Types::Duration.new, default: -> { 30.minutes.freeze }
+  attribute :valid_for, :duration, default: -> { 30.minutes.freeze }
   attribute :gems, Types::ArrayOf.new(:string)
 
   validates :scopes, presence: true

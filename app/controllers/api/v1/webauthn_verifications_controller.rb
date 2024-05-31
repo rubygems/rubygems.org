@@ -2,6 +2,7 @@
 # the user with a Webauthn login. That is done in controllers/webauthn_verifications_controller.
 class Api::V1::WebauthnVerificationsController < Api::BaseController
   before_action :authenticate_with_credentials
+  before_action :disable_cache, only: :status
 
   def create
     if @user.webauthn_enabled?
@@ -35,13 +36,13 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
   def authenticate_with_credentials
     params_key = request.headers["Authorization"] || ""
     hashed_key = Digest::SHA256.hexdigest(params_key)
-    api_key = ApiKey.find_by_hashed_key(hashed_key)
+    api_key = ApiKey.unexpired.find_by_hashed_key(hashed_key)
 
     @user = authenticated_user(api_key)
   end
 
   def authenticated_user(api_key)
-    return api_key.user if api_key
+    return api_key.user if api_key&.user?
     authenticate_or_request_with_http_basic do |username, password|
       User.authenticate(username.strip, password)
     end

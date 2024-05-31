@@ -6,8 +6,9 @@ class DeletionTest < ActiveSupport::TestCase
 
   setup do
     @user = create(:user)
+    @api_key = create(:api_key, owner: @user)
     @gem_file = gem_file("test-0.0.0.gem")
-    Pusher.new(@user, @gem_file).process
+    Pusher.new(@api_key, @gem_file).process
     @gem_file.rewind
     @version = Version.last
     @spec_rz = RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
@@ -25,10 +26,46 @@ class DeletionTest < ActiveSupport::TestCase
       "Deletion should only work on indexed gems"
   end
 
+  should "not be popular" do
+    GemDownload.increment(
+      100_001,
+      rubygem_id: @version.rubygem.id,
+      version_id: @version.id
+    )
+
+    assert_predicate Deletion.new(version: @version, user: @user), :invalid?,
+      "Versions with more than 100_000 downloads should not be deletable"
+  end
+
+  should "be forceable even when popular" do
+    GemDownload.increment(
+      100_001,
+      rubygem_id: @version.rubygem.id,
+      version_id: @version.id
+    )
+
+    assert_predicate Deletion.new(version: @version, user: @user, force: true), :valid?,
+      "Admins should be allowed to delete popular versions when necessary"
+  end
+
+  should "not be old" do
+    @version.update(created_at: 31.days.ago)
+
+    assert_predicate Deletion.new(version: @version, user: @user), :invalid?,
+      "Versions older than 30 days should not be deletable"
+  end
+
+  should "be forceable even when old" do
+    @version.update(created_at: 31.days.ago)
+
+    assert_predicate Deletion.new(version: @version, user: @user, force: true), :valid?,
+      "Admins should be allowed to delete old versions when necessary"
+  end
+
   context "association" do
     subject { Deletion.new(version: @version, user: @user) }
 
-    should belong_to :user
+    should belong_to(:user).without_validating_presence
   end
 
   context "with deleted gem" do
@@ -94,6 +131,22 @@ class DeletionTest < ActiveSupport::TestCase
     end
   end
 
+  context "when rstuf is enabled" do
+    setup do
+      setup_rstuf
+    end
+
+    should "enqueue rstuf removal" do
+      assert_enqueued_with(job: Rstuf::RemoveJob, args: [{ version: @version }]) do
+        delete_gem
+      end
+    end
+
+    teardown do
+      teardown_rstuf
+    end
+  end
+
   should "enque job for updating ES index, spec index and purging cdn" do
     assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
       assert_enqueued_jobs 8, only: FastlyPurgeJob do
@@ -120,6 +173,7 @@ class DeletionTest < ActiveSupport::TestCase
     deletion.valid?
 
     assert_equal deletion.rubygem, @version.rubygem.name
+    assert_equal @version.id, deletion.version_id
   end
 
   context "with restored gem" do
@@ -184,6 +238,23 @@ class DeletionTest < ActiveSupport::TestCase
       @deletion = delete_gem
       assert_enqueued_jobs 1, only: StoreVersionContentsJob do
         @deletion.restore!
+      end
+    end
+
+    context "with rstuf enabled" do
+      setup do
+        setup_rstuf
+      end
+
+      should "enqueue rstuf addition" do
+        @deletion = delete_gem
+        assert_enqueued_jobs 1, only: Rstuf::AddJob do
+          @deletion.restore!
+        end
+      end
+
+      teardown do
+        teardown_rstuf
       end
     end
 

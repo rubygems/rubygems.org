@@ -10,9 +10,11 @@ module MfaExpiryMethods
       session.delete(:mfa_expires_at)
     end
 
-    def session_active?
+    # Clear the session key when mfa has expired. This makes mfa_session_active? before_action guards simpler to write.
+    def mfa_session_active?
       return false if session[:mfa_expires_at].nil?
-      session[:mfa_expires_at] > Time.current
+      delete_mfa_expiry_session if Time.current > session[:mfa_expires_at]
+      session[:mfa_expires_at].present?
     end
   end
 end

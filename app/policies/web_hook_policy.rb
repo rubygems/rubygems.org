@@ -5,6 +5,8 @@ class WebHookPolicy < ApplicationPolicy
     end
   end
 
+  has_association :audits
+
   def avo_index?
     rubygems_org_admin?
   end
@@ -16,6 +18,4 @@ class WebHookPolicy < ApplicationPolicy
   def act_on?
     rubygems_org_admin?
   end
-
-  has_association :audits
 end

@@ -5,7 +5,7 @@ class PasswordResetTest < SystemTest
 
   def password_reset_link
     body = ActionMailer::Base.deliveries.last.parts[1].body.decoded.to_s
-    link = %r{http://localhost(?::\d+)?/users([^";]*)}.match(body)
+    link = %r{http://localhost(?::\d+)?/password([^";]*)}.match(body)
     link[0]
   end
 
@@ -31,7 +31,7 @@ class PasswordResetTest < SystemTest
     forgot_password_with @user.email
 
     visit password_reset_link
-    expected_path = "/users/#{@user.id}/password/edit"
+    expected_path = "/password/edit"
 
     assert_equal expected_path, page.current_path, "removes confirmation token from url"
 
@@ -50,16 +50,46 @@ class PasswordResetTest < SystemTest
     assert page.has_content? "Sign out"
   end
 
-  test "resetting a password with a blank password" do
+  test "resetting a password with a blank or short password" do
     forgot_password_with @user.email
 
     visit password_reset_link
 
+    assert page.has_content?("Sign out")
+
     fill_in "Password", with: ""
     click_button "Save this password"
 
-    assert page.has_content? "Password can't be blank."
-    assert page.has_content? "Sign in"
+    assert page.has_content? "Your password could not be changed. Please try again."
+    assert page.has_content? "Password can't be blank"
+    assert page.has_content? "Reset password"
+
+    # try again with short password
+    fill_in "Password", with: "pass"
+    click_button "Save this password"
+
+    assert page.has_content? "Password is too short (minimum is 10 characters)"
+    assert page.has_content? "Reset password"
+
+    # try again with valid password
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
+  end
+
+  test "resetting a password but waiting too long after token auth" do
+    forgot_password_with @user.email
+
+    visit password_reset_link
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+
+    travel 16.minutes do
+      click_button "Save this password"
+
+      assert page.has_content? "verification has expired. Please verify again."
+    end
   end
 
   test "resetting a password when signed in" do
@@ -78,10 +108,15 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
+    assert page.has_content?("Sign out")
+
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
+
+    assert_event Events::UserEvent::PASSWORD_CHANGED, {},
+      @user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
   end
 
   test "restting password when mfa is enabled" do
@@ -90,13 +125,15 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
+    refute page.has_content?("Sign out")
+
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
 
+    assert page.has_content?("Sign out")
+
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
-
-    assert page.has_content?("Sign out")
   end
 
   test "resetting a password when mfa is enabled but mfa session is expired" do
@@ -124,8 +161,6 @@ class PasswordResetTest < SystemTest
     assert page.has_content? "Security Device"
     assert_not_nil page.find(".js-webauthn-session--form")[:action]
 
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
-
     click_on "Authenticate with security device"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -143,6 +178,7 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
+    refute page.has_content? "Sign out"
     assert page.has_content? "Multi-factor authentication"
     assert page.has_content? "Security Device"
     assert page.has_content? "Recovery code"
@@ -171,7 +207,7 @@ class PasswordResetTest < SystemTest
 
     visit edit_profile_path
 
-    fill_in "Username", with: "username"
+    fill_in "user_handle", with: "username"
     fill_in "Email address", with: new_email
     fill_in "Password", with: @user.password
     perform_enqueued_jobs { click_button "Update" }
@@ -189,6 +225,15 @@ class PasswordResetTest < SystemTest
 
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
     assert_equal email, @user.email
+  end
+
+  test "resetting password of soft-deleted user" do
+    @user.update!(deleted_at: Time.zone.now, email: "deleted+#{@user.id}@rubygems.org")
+
+    forgot_password_with @user.email
+
+    assert_empty ActionMailer::Base.deliveries
+    page.assert_text "instructions for changing your password"
   end
 
   teardown do

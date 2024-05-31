@@ -62,7 +62,7 @@ class VerifyLinkJobTest < ActiveJob::TestCase
     @rubygem = create(:rubygem, name: "mygem", linkset: build(:linkset, home: nil))
     @links.each do |link, url|
       LinkVerification.insert!({ linkable_id: @rubygem.id, linkable_type: "Rubygem", uri: url })
-      instance_variable_set "@#{link}", LinkVerification.find_by!(linkable: @rubygem, uri: url)
+      instance_variable_set :"@#{link}", LinkVerification.find_by!(linkable: @rubygem, uri: url)
     end
 
     assert_no_enqueued_jobs only: VerifyLinkJob

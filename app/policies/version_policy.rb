@@ -9,6 +9,10 @@ class VersionPolicy < ApplicationPolicy
     end
   end
 
+  has_association :dependencies
+  has_association :gem_download
+  has_association :deletion
+
   def avo_index?
     rubygems_org_admin?
   end
@@ -20,8 +24,4 @@ class VersionPolicy < ApplicationPolicy
   def act_on?
     rubygems_org_admin?
   end
-
-  has_association :dependencies
-  has_association :gem_download
-  has_association :deletion
 end

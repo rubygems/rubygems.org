@@ -1,6 +1,7 @@
 class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
+  include Events::Recordable
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
@@ -12,7 +13,7 @@ class Rubygem < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
-  has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version", inverse_of: :rubygem
+  has_one :latest_version, -> { latest.order(:position) }, class_name: "Version", inverse_of: :rubygem
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
@@ -20,6 +21,19 @@ class Rubygem < ApplicationRecord
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :audits, as: :auditable, inverse_of: :auditable
   has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
+  has_many :oidc_rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", inverse_of: :rubygem, dependent: :destroy
+  has_many :incoming_dependencies, -> { where(versions: { indexed: true, position: 0 }) }, class_name: "Dependency", inverse_of: :rubygem
+  has_many :reverse_dependencies, through: :incoming_dependencies, source: :version_rubygem
+  has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
+  has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
+
+  has_one :most_recent_version,
+    lambda {
+      order(Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 2 else 1 end desc"))
+        .order(Arel.sql("case when #{quoted_table_name}.latest then #{quoted_table_name}.number else NULL end desc"))
+        .order(id: :desc)
+    },
+    class_name: "Version", inverse_of: :rubygem
 
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
@@ -27,7 +41,7 @@ class Rubygem < ApplicationRecord
     uniqueness: { case_sensitive: false },
     name_format: true,
     if: :needs_name_validation?
-  validate :reserved_names_exclusion
+  validate :reserved_names_exclusion, if: :needs_name_validation?
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
@@ -121,12 +135,10 @@ class Rubygem < ApplicationRecord
     end.flatten.join(", ")
   end
 
-  def public_versions(limit = nil)
-    versions.includes(:gem_download).by_position.published(limit)
-  end
+  has_many :public_versions, -> { by_position.published }, class_name: "Version", inverse_of: :rubygem
 
   def public_versions_with_extra_version(extra_version)
-    versions = public_versions(5).to_a
+    versions = public_versions.limit(5).to_a
     versions << extra_version
     versions.uniq.sort_by(&:position)
   end
@@ -189,17 +201,13 @@ class Rubygem < ApplicationRecord
     gem_download&.count || 0
   end
 
-  def most_recent_version
-    versions.most_recent
-  end
-
   def links(version = most_recent_version)
     Links.new(self, version)
   end
 
   def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
     versioned_links = links(version)
-    deps = version.dependencies.to_a
+    deps = version.dependencies.to_a.select(&:rubygem)
     {
       "name"               => name,
       "downloads"          => downloads,
@@ -224,15 +232,13 @@ class Rubygem < ApplicationRecord
       "changelog_uri"      => versioned_links.changelog_uri,
       "funding_uri"        => versioned_links.funding_uri,
       "dependencies"       => {
-        "development" => deps.select { |r| r.rubygem && r.scope == "development" },
-        "runtime"     => deps.select { |r| r.rubygem && r.scope == "runtime" }
+        "development" => deps.select { |r| r.scope == "development" },
+        "runtime"     => deps.select { |r| r.scope == "runtime" }
       }
     }
   end
 
-  def as_json(*)
-    payload
-  end
+  delegate :as_json, :to_yaml, to: :payload
 
   def to_xml(options = {})
     payload.to_xml(options.merge(root: "rubygem"))
@@ -305,9 +311,7 @@ class Rubygem < ApplicationRecord
       .indexed
       .group_by(&:platform)
 
-    versions_of_platforms.each_value do |platforms|
-      Version.find(platforms.max.id).update_column(:latest, true)
-    end
+    Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
   end
 
   def refresh_indexed!
@@ -315,12 +319,11 @@ class Rubygem < ApplicationRecord
   end
 
   def disown
-    ownerships_including_unconfirmed.each(&:delete)
+    ownerships_including_unconfirmed.find_each(&:delete)
     ownerships_including_unconfirmed.clear
-  end
 
-  def find_version_from_spec(spec)
-    versions.find_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
+    oidc_rubygem_trusted_publishers.find_each(&:delete)
+    oidc_rubygem_trusted_publishers.clear
   end
 
   def find_or_initialize_version_from_spec(spec)
@@ -342,37 +345,12 @@ class Rubygem < ApplicationRecord
     update_attribute(:updated_at, 101.days.ago)
   end
 
-  def reverse_dependencies
-    self.class.joins("inner join versions as v on v.rubygem_id = rubygems.id
-      inner join dependencies as d on d.version_id = v.id").where("v.indexed = 't'
-      and v.position = 0 and d.rubygem_id = ?", id)
-  end
-
-  def reverse_development_dependencies
-    reverse_dependencies.where("d.scope = 'development'")
-  end
-
-  def reverse_runtime_dependencies
-    reverse_dependencies.where("d.scope ='runtime'")
-  end
-
   def metadata_mfa_required?
     latest_version&.rubygems_metadata_mfa_required?
   end
 
   def mfa_requirement_satisfied_for?(user)
     user.mfa_enabled? || !metadata_mfa_required?
-  end
-
-  # TODO: broken. don't use until #2964 is resolved.
-  def mfa_required_since_version
-    return unless metadata_mfa_required?
-    non_mfa_version = public_versions.find { |v| !v.rubygems_metadata_mfa_required? }
-    if non_mfa_version
-      non_mfa_version.next.number
-    else
-      public_versions.last.number
-    end
   end
 
   def version_manifest(number, platform = nil)
@@ -383,12 +361,12 @@ class Rubygem < ApplicationRecord
     RubygemContents.new(gem: name).get(fingerprint)
   end
 
-  def yank_versions!(version_id: nil)
-    security_user = User.find_by!(email: "security@rubygems.org")
+  def yank_versions!(version_id: nil, force: false)
+    security_user = User.security_user
     versions_to_yank = version_id ? versions.where(id: version_id) : versions
 
     versions_to_yank.find_each do |version|
-      security_user.deletions.create!(version: version) unless version.yanked?
+      security_user.deletions.create!(version: version, force:) unless version.yanked?
     end
   end
 
@@ -431,7 +409,7 @@ class Rubygem < ApplicationRecord
   end
 
   def bulk_reorder_versions
-    numbers = reload.versions.sort.reverse.map(&:number).uniq
+    numbers = reload.versions.pluck(:number).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
 
     ids = []
     positions = []

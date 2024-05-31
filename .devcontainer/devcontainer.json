@@ -1,0 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+{
+  "name": "RubyGems.org",
+  "dockerComposeFile": [
+    "docker-compose.yml",
+    "../docker-compose.yml"
+  ],
+  "service": "app",
+  "runServices": [
+    "db",
+    "cache",
+    "search",
+    "toxiproxy"
+  ],
+  "forwardPorts": [
+    3000, // Rails
+    11211, // Memcache
+    9200, // Opensearch
+    5432 // PostgreSQL
+  ],
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "onCreateCommand": "bin/setup",
+  // Use 'updateContentCommand' to run commands when the container is updated.
+  "updateContentCommand": "bin/setup",
+  // Configure tool-specific properties.
+  "containerEnv": {
+    "EDITOR": "code --wait",
+    "GIT_EDITOR": "code --wait"
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md",
+        "CONTRIBUTING.md"
+      ]
+    },
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-lsp"
+      ]
+    }
+  }
+}

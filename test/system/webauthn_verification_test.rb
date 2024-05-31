@@ -11,7 +11,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   test "when verifying webauthn credential" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -28,7 +27,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   test "when verifying webauthn credential on safari" do
     assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -47,7 +45,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   test "when client closes connection during verification" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -66,7 +63,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   test "when port given does not match the client port" do
     wrong_port = 1111
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: wrong_port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -84,7 +80,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   test "when there is a client error" do
     @mock_client.response = @mock_client.bad_request_response
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -100,7 +95,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   test "when webauthn verification is expired during verification" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     travel 3.minutes do
       assert_match "Authenticate with Security Device", page.html
@@ -117,7 +111,9 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   def teardown
     @mock_client.kill_server
-    @authenticator.remove!
+    @authenticator&.remove!
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 
   private
@@ -129,7 +125,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   end
 
   def assert_poll_status(status)
-    @api_key ||= create(:api_key, key: "12345", push_rubygem: true, user: @user)
+    @api_key ||= create(:api_key, key: "12345", scopes: %i[push_rubygem], owner: @user)
 
     Capybara.current_driver = :rack_test
     page.driver.header "AUTHORIZATION", "12345"

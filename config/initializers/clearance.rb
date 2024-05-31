@@ -2,8 +2,8 @@ require_relative "../../lib/confirmed_user_guard"
 
 Clearance.configure do |config|
   config.allow_sign_up = ENV['DISABLE_SIGNUP'].to_s != 'true'
-  config.mailer_sender = "RubyGems.org <no-reply@mailer.rubygems.org>"
-  config.secure_cookie = true unless Rails.env.test? || Rails.env.development?
+  config.mailer_sender = Gemcutter::MAIL_SENDER
+  config.secure_cookie = true unless Rails.env.local?
   config.password_strategy = Clearance::PasswordStrategies::BCrypt
   config.sign_in_guards = [ConfirmedUserGuard]
   config.rotate_csrf_on_sign_in = true
