@@ -2,6 +2,8 @@
 # It just adds the admin scope automatically so that Avo pundit policies can be kept separate.
 class Admin::AuthorizationClient < Avo::Services::AuthorizationClients::PunditClient
   def authorize(user, record, action, policy_class: nil)
+    # After https://github.com/avo-hq/avo/pull/2827 lands, we can hopefully remove this hack
+    policy_class ||= Admin::GitHubUserPolicy if record == Admin::GitHubUser
     super(user, [:admin, record], action, policy_class: policy_class)
   end
 
