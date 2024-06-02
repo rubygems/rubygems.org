@@ -600,6 +600,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when not providing credentials" do
       setup do
+        @existing_webauthn = @controller.session[:webauthn_authentication]
         post(
           :webauthn_create,
           format: :html
@@ -614,18 +615,20 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "render sign in page" do
         assert_template "sessions/new"
+        refute_nil @controller.session[:webauthn_authentication]
+        refute_equal @existing_webauthn, @controller.session[:webauthn_authentication]
       end
 
       should "clear session" do
         assert_nil @controller.session[:mfa_expires_at]
         assert_nil @controller.session[:mfa_login_started_at]
         assert_nil @controller.session[:mfa_user]
-        assert_nil @controller.session[:webauthn_authentication]
       end
     end
 
     context "when providing wrong credentials" do
       setup do
+        @existing_webauthn = @controller.session[:webauthn_authentication]
         @wrong_challenge = SecureRandom.hex
         post(
           :webauthn_create,
@@ -648,13 +651,14 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "render sign in page" do
         assert_template "sessions/new"
+        refute_nil @controller.session[:webauthn_authentication]
+        refute_equal @existing_webauthn, @controller.session[:webauthn_authentication]
       end
 
       should "clear session" do
         assert_nil @controller.session[:mfa_expires_at]
         assert_nil @controller.session[:mfa_login_started_at]
         assert_nil @controller.session[:mfa_user]
-        assert_nil @controller.session[:webauthn_authentication]
       end
     end
 
