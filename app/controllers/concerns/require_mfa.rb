@@ -1,6 +1,14 @@
 module RequireMfa
   extend ActiveSupport::Concern
 
+  # Call initialize_mfa once at the start of the MFA flow for a user (after login, after reset token verified).
+  def initialize_mfa(user = @user)
+    delete_mfa_session
+    create_new_mfa_expiry
+    session[:mfa_login_started_at] = Time.now.utc.to_s
+    session[:mfa_user] = user.id
+  end
+
   def otp_param
     params.permit(:otp).fetch(:otp, "")
   end

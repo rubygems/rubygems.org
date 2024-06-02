@@ -44,13 +44,11 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def update
-    session[:level] = level_param
     @user = current_user
-
+    initialize_mfa(@user)
+    session[:level] = level_param
     @otp_verification_url = otp_verification_url
     setup_webauthn_authentication(form_url: webauthn_verification_url)
-
-    create_new_mfa_expiry
 
     render template: "multifactor_auths/prompt"
   end
