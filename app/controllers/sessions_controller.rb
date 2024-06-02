@@ -10,6 +10,8 @@ class SessionsController < Clearance::SessionsController
   before_action :webauthn_new_setup, only: :new
 
   before_action :ensure_not_blocked, only: %i[create]
+  before_action :find_user, only: %i[create]
+  before_action :require_mfa, only: %i[create]
   before_action :find_mfa_user, only: %i[webauthn_create otp_create]
   before_action :validate_otp, only: %i[otp_create]
   before_action :validate_webauthn, only: %i[webauthn_create]
@@ -17,14 +19,7 @@ class SessionsController < Clearance::SessionsController
   after_action :delete_session_verification, only: :destroy
 
   def create
-    @user = find_user
-
-    if @user&.mfa_enabled?
-      initialize_mfa(@user)
-      prompt_mfa
-    else
-      do_login(two_factor_label: nil, two_factor_method: nil, authentication_method: "password")
-    end
+    do_login(two_factor_label: nil, two_factor_method: nil, authentication_method: "password")
   end
 
   def webauthn_create
@@ -120,7 +115,7 @@ class SessionsController < Clearance::SessionsController
 
   def find_user
     password = params.permit(session: :password).require(:session).fetch(:password, nil)
-    User.authenticate(who, password) if password.is_a?(String) && who
+    @user = User.authenticate(who, password) if password.is_a?(String) && who
   end
 
   def find_mfa_user

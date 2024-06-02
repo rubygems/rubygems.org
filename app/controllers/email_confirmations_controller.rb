@@ -8,6 +8,7 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
   before_action :validate_confirmation_token, only: %i[update otp_update webauthn_update]
+  before_action :require_mfa, only: %i[update]
   before_action :validate_otp, only: :otp_update
   before_action :validate_webauthn, only: :webauthn_update
   after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
@@ -27,12 +28,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def update
-    if @user.mfa_enabled?
-      initialize_mfa(@user)
-      prompt_mfa
-    else
-      confirm_email
-    end
+    confirm_email
   end
 
   def otp_update

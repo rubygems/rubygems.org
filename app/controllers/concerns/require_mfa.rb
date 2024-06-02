@@ -1,6 +1,12 @@
 module RequireMfa
   extend ActiveSupport::Concern
 
+  def require_mfa(user = @user)
+    return unless user&.mfa_enabled?
+    initialize_mfa(user)
+    prompt_mfa
+  end
+
   # Call initialize_mfa once at the start of the MFA flow for a user (after login, after reset token verified).
   def initialize_mfa(user = @user)
     delete_mfa_session
