@@ -7,9 +7,8 @@ class PasswordsController < ApplicationController
   before_action :ensure_email_present, only: %i[create]
 
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
-  before_action :session_expired_failure, only: %i[otp_edit webauthn_edit], unless: :mfa_session_active?
-  before_action :webauthn_failure, only: %i[webauthn_edit], unless: :webauthn_credential_verified?
   before_action :validate_otp, only: %i[otp_edit]
+  before_action :validate_webauthn, only: %i[webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
   verify_session_before only: %i[update]
@@ -90,9 +89,6 @@ class PasswordsController < ApplicationController
     @user = User.find_by(confirmation_token: params[:token].to_s)
     redirect_to root_path, alert: t("passwords.edit.token_failure") unless @user&.valid_confirmation_token?
   end
-
-  def session_expired_failure = login_failure(t("multifactor_auths.session_expired"))
-  def webauthn_failure = login_failure(@webauthn_error)
 
   def login_failure(message)
     flash.now.alert = message
