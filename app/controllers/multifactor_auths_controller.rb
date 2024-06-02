@@ -47,10 +47,7 @@ class MultifactorAuthsController < ApplicationController
     @user = current_user
     initialize_mfa(@user)
     session[:level] = level_param
-    @otp_verification_url = otp_verification_url
-    setup_webauthn_authentication(form_url: webauthn_verification_url)
-
-    render template: "multifactor_auths/prompt"
+    prompt_mfa
   end
 
   def otp_update

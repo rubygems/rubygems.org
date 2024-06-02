@@ -29,10 +29,7 @@ class EmailConfirmationsController < ApplicationController
   def update
     if @user.mfa_enabled?
       initialize_mfa(@user)
-      @otp_verification_url = otp_verification_url
-      setup_webauthn_authentication(form_url: webauthn_verification_url)
-
-      render template: "multifactor_auths/prompt"
+      prompt_mfa
     else
       confirm_email
     end

@@ -9,6 +9,13 @@ module RequireMfa
     session[:mfa_user] = user.id
   end
 
+  def prompt_mfa(alert: nil, status: :ok)
+    @otp_verification_url = otp_verification_url
+    setup_webauthn_authentication form_url: webauthn_verification_url
+    flash.now.alert = alert if alert
+    render template: "multifactor_auths/prompt", status:
+  end
+
   def otp_param
     params.permit(:otp).fetch(:otp, "")
   end

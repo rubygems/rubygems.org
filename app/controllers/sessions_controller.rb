@@ -21,10 +21,7 @@ class SessionsController < Clearance::SessionsController
 
     if @user&.mfa_enabled?
       initialize_mfa(@user)
-      @otp_verification_url = otp_verification_url
-      setup_webauthn_authentication(form_url: webauthn_verification_url)
-
-      render "multifactor_auths/prompt"
+      prompt_mfa
     else
       do_login(two_factor_label: nil, two_factor_method: nil, authentication_method: "password")
     end
