@@ -1,5 +1,6 @@
 class PasswordsController < ApplicationController
   include MfaExpiryMethods
+  include RequireMfa
   include WebauthnVerifiable
   include SessionVerifiable
 
@@ -8,7 +9,7 @@ class PasswordsController < ApplicationController
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
   before_action :session_expired_failure, only: %i[otp_edit webauthn_edit], unless: :mfa_session_active?
   before_action :webauthn_failure, only: %i[webauthn_edit], unless: :webauthn_credential_verified?
-  before_action :otp_failure, only: %i[otp_edit], unless: :otp_edit_conditions_met?
+  before_action :validate_otp, only: %i[otp_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
   verify_session_before only: %i[update]
@@ -18,8 +19,8 @@ class PasswordsController < ApplicationController
 
   def edit
     if @user.mfa_enabled?
-      @otp_verification_url = otp_edit_password_url(token: @user.confirmation_token)
-      setup_webauthn_authentication(form_url: webauthn_edit_password_url(token: @user.confirmation_token))
+      @otp_verification_url = otp_verification_url
+      setup_webauthn_authentication(form_url: webauthn_verification_url)
 
       create_new_mfa_expiry
 
@@ -90,19 +91,28 @@ class PasswordsController < ApplicationController
     redirect_to root_path, alert: t("passwords.edit.token_failure") unless @user&.valid_confirmation_token?
   end
 
-  def otp_edit_conditions_met? = @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && mfa_session_active?
-
   def session_expired_failure = login_failure(t("multifactor_auths.session_expired"))
   def webauthn_failure = login_failure(@webauthn_error)
-  def otp_failure = login_failure(t("multifactor_auths.incorrect_otp"))
 
   def login_failure(message)
     flash.now.alert = message
     render template: "multifactor_auths/prompt", status: :unauthorized
   end
 
+  def mfa_failure(message)
+    login_failure(message)
+  end
+
   def redirect_to_verify
     session[:redirect_uri] = verify_session_redirect_path
     redirect_to verify_session_path, alert: t("verification_expired")
+  end
+
+  def otp_verification_url
+    otp_edit_password_url(token: @user.confirmation_token)
+  end
+
+  def webauthn_verification_url
+    webauthn_edit_password_url(token: @user.confirmation_token)
   end
 end

@@ -1,5 +1,6 @@
 class EmailConfirmationsController < ApplicationController
   include EmailResettable
+  include RequireMfa
   include MfaExpiryMethods
   include WebauthnVerifiable
 
@@ -7,6 +8,7 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
   before_action :validate_confirmation_token, only: %i[update otp_update webauthn_update]
+  before_action :validate_otp, only: :otp_update
   after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
 
   def new
@@ -25,8 +27,8 @@ class EmailConfirmationsController < ApplicationController
 
   def update
     if @user.mfa_enabled?
-      @otp_verification_url = otp_update_email_confirmations_url(token: @user.confirmation_token)
-      setup_webauthn_authentication(form_url: webauthn_update_email_confirmations_url(token: @user.confirmation_token))
+      @otp_verification_url = otp_verification_url
+      setup_webauthn_authentication(form_url: webauthn_verification_url)
 
       create_new_mfa_expiry
 
@@ -37,13 +39,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def otp_update
-    if otp_update_conditions_met?
-      confirm_email
-    elsif !mfa_session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-    else
-      login_failure(t("multifactor_auths.incorrect_otp"))
-    end
+    confirm_email
   end
 
   def webauthn_update
@@ -96,12 +92,20 @@ class EmailConfirmationsController < ApplicationController
     params.permit(:token).require(:token)
   end
 
-  def otp_update_conditions_met?
-    @user.mfa_enabled? && @user.ui_mfa_verified?(params[:otp]) && mfa_session_active?
-  end
-
   def login_failure(message)
     flash.now.alert = message
     render template: "multifactor_auths/prompt", status: :unauthorized
+  end
+
+  def otp_verification_url
+    otp_update_email_confirmations_url(token: @user.confirmation_token)
+  end
+
+  def webauthn_verification_url
+    webauthn_update_email_confirmations_url(token: @user.confirmation_token)
+  end
+
+  def mfa_failure(alert)
+    login_failure(alert)
   end
 end
