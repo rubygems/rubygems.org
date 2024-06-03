@@ -13,6 +13,14 @@ module RequireMfa
     @mfa_method = "otp"
   end
 
+  def validate_webauthn(user = @user)
+    return mfa_session_expired unless mfa_session_active?
+    return mfa_not_enabled unless user&.mfa_enabled?
+    return webauthn_failure unless webauthn_credential_verified?
+    @mfa_label = user_webauthn_credential.nickname
+    @mfa_method = "webauthn"
+  end
+
   def mfa_session_expired
     invalidate_mfa_session(t("multifactor_auths.session_expired"))
   end
@@ -22,6 +30,10 @@ module RequireMfa
 
   def incorrect_otp
     mfa_failure(t("multifactor_auths.incorrect_otp"))
+  end
+
+  def webauthn_failure
+    invalidate_mfa_session(@webauthn_error)
   end
 
   def invalidate_mfa_session(message)

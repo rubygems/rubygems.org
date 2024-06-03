@@ -12,6 +12,7 @@ class SessionsController < Clearance::SessionsController
   before_action :ensure_not_blocked, only: %i[create]
   before_action :find_mfa_user, only: %i[webauthn_create otp_create]
   before_action :validate_otp, only: %i[otp_create]
+  before_action :validate_webauthn, only: %i[webauthn_create]
   after_action :delete_mfa_session, only: %i[webauthn_create webauthn_full_create otp_create]
   after_action :delete_session_verification, only: :destroy
 
@@ -32,10 +33,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_create
-    return mfa_failure(@webauthn_error) unless webauthn_credential_verified?
-
     record_mfa_login_duration(mfa_type: "webauthn")
-
     do_login(two_factor_label: user_webauthn_credential.nickname, two_factor_method: "webauthn", authentication_method: "password")
   end
 

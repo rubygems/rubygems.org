@@ -8,9 +8,10 @@ class MultifactorAuthsController < ApplicationController
   before_action :require_mfa_enabled, only: %i[update otp_update]
   before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
-  before_action :verify_session_expiration, only: %i[webauthn_update]
-  before_action :find_mfa_user, only: %i[otp_update]
+  before_action :find_mfa_user, only: %i[otp_update webauthn_update]
   before_action :validate_otp, only: %i[otp_update]
+  before_action :require_webauthn_enabled, only: %i[webauthn_update]
+  before_action :validate_webauthn, only: %i[webauthn_update]
   before_action :disable_cache, only: %i[new recovery]
   after_action :delete_mfa_level_update_session_variables, only: %i[otp_update webauthn_update]
   helper_method :issuer
@@ -59,14 +60,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def webauthn_update
-    @user = current_user
-    return mfa_failure(t("multifactor_auths.require_webauthn_enabled")) unless @user.webauthn_enabled?
-
-    if webauthn_credential_verified?
-      update_level_and_redirect
-    else
-      mfa_failure(@webauthn_error)
-    end
+    update_level_and_redirect
   end
 
   def destroy
@@ -128,6 +122,14 @@ class MultifactorAuthsController < ApplicationController
     redirect_to edit_settings_path
   end
 
+  def require_webauthn_enabled
+    return if current_user.webauthn_enabled?
+
+    flash[:error] = t("multifactor_auths.require_webauthn_enabled")
+    delete_mfa_level_update_session_variables
+    redirect_to edit_settings_path
+  end
+
   def seed_and_expire
     @seed = session.delete(:totp_seed)
     @expire = Time.at(session.delete(:totp_seed_expire) || 0).utc
@@ -150,13 +152,6 @@ class MultifactorAuthsController < ApplicationController
     end
   end
   # rubocop:enable Rails/ActionControllerFlashBeforeRender
-
-  def verify_session_expiration
-    return if mfa_session_active?
-
-    delete_mfa_level_update_session_variables
-    redirect_to edit_settings_path, flash: { error: t("multifactor_auths.session_expired") }
-  end
 
   def find_mfa_user
     @user = current_user
