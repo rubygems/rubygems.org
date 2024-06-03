@@ -67,6 +67,5 @@ module RequireMfa
     session.delete(:webauthn_authentication)
     session.delete(:mfa_login_started_at)
     session.delete(:mfa_user)
-    session.delete(:level)
   end
 end
