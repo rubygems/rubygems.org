@@ -7,7 +7,7 @@ module UserMultifactorMethods
 
     attr_accessor :new_mfa_recovery_codes
 
-    enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2, ui_and_gem_signin: 3 }, _prefix: :mfa
+    enum :mfa_level, { disabled: 0, ui_only: 1, ui_and_api: 2, ui_and_gem_signin: 3 }, prefix: :mfa
 
     validate :mfa_level_for_enabled_devices
   end
