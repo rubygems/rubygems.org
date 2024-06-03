@@ -17,7 +17,6 @@ gem "faraday", "~> 2.9"
 gem "faraday-retry", "~> 2.2"
 gem "good_job", "~> 3.29"
 gem "gravtastic", "~> 3.2"
-gem "high_voltage", "~> 3.1"
 gem "honeybadger", "~> 5.5.1" # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"

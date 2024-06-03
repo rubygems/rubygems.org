@@ -289,8 +289,8 @@ Rails.application.routes.draw do
   end
 
   ################################################################################
-  # high_voltage static routes
-  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: Regexp.union(HighVoltage.page_ids) }, as: :page
+  # static pages routes
+  get 'pages/*id' => 'pages#show', constraints: { id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
   ################################################################################
   # Internal Routes
