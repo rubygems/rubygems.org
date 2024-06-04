@@ -8,7 +8,7 @@ class MultifactorAuthsController < ApplicationController
   before_action :require_mfa_enabled, only: %i[update otp_update]
   before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
-  before_action :find_mfa_user, only: %i[otp_update webauthn_update]
+  before_action :find_mfa_user, only: %i[update otp_update webauthn_update]
   before_action :validate_otp, only: %i[otp_update]
   before_action :require_webauthn_enabled, only: %i[webauthn_update]
   before_action :validate_webauthn, only: %i[webauthn_update]
@@ -44,15 +44,9 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def update
+    initialize_mfa(@user)
     session[:level] = level_param
-    @user = current_user
-
-    @otp_verification_url = otp_verification_url
-    setup_webauthn_authentication(form_url: webauthn_verification_url)
-
-    create_new_mfa_expiry
-
-    render template: "multifactor_auths/prompt"
+    prompt_mfa
   end
 
   def otp_update

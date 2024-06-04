@@ -7,6 +7,7 @@ class PasswordsController < ApplicationController
   before_action :ensure_email_present, only: %i[create]
 
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
+  before_action :require_mfa, only: %i[edit]
   before_action :validate_otp, only: %i[otp_edit]
   before_action :validate_webauthn, only: %i[webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
@@ -17,18 +18,9 @@ class PasswordsController < ApplicationController
   end
 
   def edit
-    if @user.mfa_enabled?
-      @otp_verification_url = otp_verification_url
-      setup_webauthn_authentication(form_url: webauthn_verification_url)
-
-      create_new_mfa_expiry
-
-      render template: "multifactor_auths/prompt"
-    else
-      # When user doesn't have mfa, a valid token is a full "magic link" sign in.
-      verified_sign_in
-      render :edit
-    end
+    # When user doesn't have mfa, a valid token is a full "magic link" sign in.
+    verified_sign_in
+    render :edit
   end
 
   def create
