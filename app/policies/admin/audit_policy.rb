@@ -1,22 +1,20 @@
-class Admin::GitHubUserPolicy < Admin::ApplicationPolicy
+class Admin::AuditPolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
       if rubygems_org_admin?
         scope.all
       else
-        scope.where(id: user.id)
+        scope.where(admin_github_user: current_user)
       end
     end
   end
 
   def avo_index?
-    rubygems_org_admin?
+    true
   end
 
   def avo_show?
-    rubygems_org_admin?
+    true
   end
-
-  has_association :audits
 end

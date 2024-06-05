@@ -224,6 +224,41 @@ class SystemTest < ActionDispatch::IntegrationTest
   end
 end
 
+class AdminPolicyTestCase < ActiveSupport::TestCase
+  def setup
+    @authorization_client = Admin::AuthorizationClient.new
+  end
+
+  def assert_authorizes(user, record, action)
+    assert @authorization_client.authorize(user, record, action, policy_class: policy_class)
+  rescue Avo::NotAuthorizedError
+    policy_class ||= policy!(user, record).class
+
+    flunk("Expected #{policy_class} to authorize #{action} on #{record} for #{user}")
+  end
+
+  def refute_authorizes(user, record, action)
+    @authorization_client.authorize(user, record, action, policy_class: policy_class)
+    policy_class ||= policy!(user, record).class
+
+    flunk("Expected #{policy_class} not to authorize #{action} on #{record} for #{user}")
+  rescue Avo::NotAuthorizedError
+    # Expected
+  end
+
+  def policy_class
+    nil
+  end
+
+  def policy!(user, record)
+    @authorization_client.policy!(user, record)
+  end
+
+  def policy_scope!(user, record)
+    @authorization_client.apply_policy(user, record, policy_class: policy_class)
+  end
+end
+
 class ComponentTest < ActiveSupport::TestCase
   include Phlex::Testing::Rails::ViewHelper
   include Capybara::Minitest::Assertions

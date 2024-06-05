@@ -28,9 +28,9 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
 
-    LogTicketPolicy.any_instance.stubs(:avo_create?).returns(true)
-    LogTicketPolicy.any_instance.stubs(:avo_update?).returns(true)
-    LogTicketPolicy.any_instance.stubs(:avo_destroy?).returns(true)
+    Admin::LogTicketPolicy.any_instance.stubs(:avo_create?).returns(true)
+    Admin::LogTicketPolicy.any_instance.stubs(:avo_update?).returns(true)
+    Admin::LogTicketPolicy.any_instance.stubs(:avo_destroy?).returns(true)
 
     visit avo.resources_log_tickets_path
     click_on "Create new log ticket"
