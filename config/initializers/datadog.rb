@@ -31,6 +31,11 @@ Datadog.configure do |c|
     c.diagnostics.startup_logs.enabled = false
   end
 
+  c.tags = {
+    "git.commit.sha" => AppRevision.version,
+    "git.repository_url" => "https://github.com/rubygems/rubygems.org"
+  }
+
   # Configuring the datadog library
 
   c.logger.instance = SemanticLogger[Datadog]
