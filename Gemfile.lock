@@ -261,7 +261,7 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-protobuf (4.27.0)
+    google-protobuf (4.27.1)
       bigdecimal
       rake (>= 13)
     gravtastic (3.2.6)
@@ -965,7 +965,7 @@ CHECKSUMS
   get_process_mem (0.2.7) sha256=4afd3c3641dd6a817c09806c7d6d509d8a9984512ac38dea8b917426bbf77eba
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
   good_job (3.29.3) sha256=9ee44573af5195068d57078627c1e7a9b2bd415412f7efe13a228f04fe507d73
-  google-protobuf (4.27.0) sha256=5e679347abc4721a3346913b8f69640a4ee13e0105d605b1da226b25346cd88d
+  google-protobuf (4.27.1) sha256=a988ba32cbb4a85c2340e4840dd3e88874225b54f23f7432dedea6ae25695578
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.4.0) sha256=65940645bf2a48f9b2d10ab7a1d19bdc78f3c89559d8fce39cea3448a15aec54
   hashdiff (1.1.0) sha256=b5465f0e7375f1ee883f53a766ece4dbc764b7674a7c5ffd76e79b2f5f6fc9c9
