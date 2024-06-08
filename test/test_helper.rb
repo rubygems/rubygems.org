@@ -155,6 +155,16 @@ class ActiveSupport::TestCase
     fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
+
+    @authenticator = create_webauthn_credential_while_signed_in
+
+    find(:css, ".header__popup-link").click
+    click_on "Sign out"
+
+    @authenticator
+  end
+
+  def create_webauthn_credential_while_signed_in
     visit edit_settings_path
 
     options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
@@ -173,10 +183,8 @@ class ActiveSupport::TestCase
     check "ack"
     click_on "Continue"
 
+    visit edit_settings_path
     find("div", text: credential_nickname, match: :first)
-
-    find(:css, ".header__popup-link").click
-    click_on "Sign out"
 
     @user.reload
     @authenticator
