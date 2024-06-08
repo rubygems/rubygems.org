@@ -167,6 +167,6 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def webauthn_verification_url
-    setup_webauthn_authentication(form_url: webauthn_update_multifactor_auth_url(token: current_user.confirmation_token))
+    webauthn_update_multifactor_auth_url(token: current_user.confirmation_token)
   end
 end
