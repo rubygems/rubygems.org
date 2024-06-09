@@ -238,64 +238,64 @@ ja:
         to blog post)！"
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
-    confirmation_subject: RubyGems.orgに登録されたメールアドレスを確認してください
+    confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
     link_expiration_explanation_html: このリンクは3時間のみ有効ですのでご留意ください。更新されたリンクの申請には<a href='https://rubygems.org/email_confirmations/new'>確認メールの再送</a>ページが使えます。
     email_confirmation:
       title: Eメールの確認
       subtitle: あともう少しです！
       confirmation_link: メールアドレスを確認する
-      welcome_message: RubyGems.orgにようこそ! 以下のリンクからEメールを確認してください。
+      welcome_message: "%{host}にようこそ! 以下のリンクからEメールを確認してください。"
     email_reset:
       title: Eメールのリセット
       subtitle: こんにちは、%{handle}！
-      visit_link_instructions: RubyGems.orgでのEメールアドレスが変更されました。アカウントを再度有効にするには以下のURLに進んでください。
+      visit_link_instructions: "%{host}でのEメールアドレスが変更されました。アカウントを再度有効にするには以下のURLに進んでください。"
     deletion_complete:
       title: 削除完了
       subtitle: さようなら！
-      subject: アカウントがrubygems.orgから削除されました
-      body_html: rubygems.orgのアカウント削除申請が処理されました。%{sign_up}ページからいつでも再登録できます。
+      subject: アカウントが%{host}から削除されました
+      body_html: "%{host}のアカウント削除申請が処理されました。%{sign_up}ページからいつでも再登録できます。"
     deletion_failed:
       title: 削除失敗
       subtitle: すみません！
-      subject: rubygems.orgのアカウントの削除申請が失敗しました
-      body_html: rubygems.orgにおけるアカウント削除申請がありました。恐れ入りますが申請を処理できませんでした。しばらく待ってから再度お試しいただくか、問題が継続するようならば%{contact}をお願いいたします。
+      subject: "%{host}のアカウントの削除申請が失敗しました"
+      body_html: "%{host}におけるアカウント削除申請がありました。恐れ入りますが申請を処理できませんでした。しばらく待ってから再度お試しいただくか、問題が継続するようならば%{contact}をお願いいたします。"
     notifiers_changed:
-      subject: RubyGems.orgのEメール通知設定を変更しました
+      subject: "%{host}のEメール通知設定を変更しました"
       title: Eメール通知
       subtitle: こんにちは、%{handle}
       'on': 'ON'
       off_html: "<b>切</b>"
     gem_pushed:
-      subject: gem %{gem} がRubyGems.orgにプッシュされました
+      subject: "%{gem} gemが%{host}にプッシュされした"
       title: gemがプッシュされました
     gem_yanked:
-      subject: gem %{gem} がRubyGems.orgでヤンクされました
+      subject: "%{gem} gemが%{host}からヤンクされました"
       title: gemがヤンクされました
     reset_api_key:
-      subject: RubyGems.orgのAPIキーがリセットされました
+      subject: "%{host}のAPIキーがリセットされました"
       title: APIキーがリセットされました
       subtitle: こんにちは、%{handle}
     webauthn_credential_created:
-      subject: RubyGems.orgに新しいセキュリティ機器が追加されました
+      subject: "%{host}に新しいセキュリティ機器を追加しました"
       title: セキュリティ機器が追加されました
       subtitle: こんにちは、%{handle}！
     webauthn_credential_removed:
-      subject: RubyGems.orgからセキュリティ機器が削除されました
+      subject: "%{host}のセキュリティ機器を削除しました"
       title: セキュリティ機器が削除されました
       subtitle: こんにちは、%{handle}！
     totp_enabled:
-      subject: RubyGems.orgで認証アプリが有効になりました
+      subject: "%{host}で認証アプリを有効にしました"
       title: 認証アプリが有効になりました
       subtitle: こんにちは、%{handle}！
     totp_disabled:
-      subject: RubyGems.orgで認証アプリが無効になりました
+      subject: "%{host}で認証アプリを無効にしました"
       title: 認証アプリが無効になりました
       subtitle: こんにちは、%{handle}！
     email_reset_update:
-      subject: RubyGems.orgにEメールアドレスの更新を申請しました
+      subject: "%{host}にEメールアドレスの更新を申請しました"
       title: Eメールの更新を申請しました
     ownership_confirmation:
-      subject: RubyGems.org上で%{gem} gemの所有権を確定してください
+      subject: "%{host}上で%{gem} gemの所有権を確定してください"
       title: 所有権の確定
       subtitle: こんにちは、%{handle}！
       body_text: "%{authorizer}により%{gem} gemの所有者として追加されました。所有権を確定するには以下のリンクに進んでください。"
@@ -308,7 +308,7 @@ ja:
       subject_others: ユーザー%{owner_handle}が%{gem} gemの所有者として追加されました
       title: 所有者が追加されました
       subtitle: こんにちは、%{user_handle}！
-      body_self_html: <b>あなた</b>はRubyGems.orgの<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+      body_self_html: <b>あなた</b>は%{host}の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者として追加されました。
       body_others_html: <b>%{owner_handle}</b>は<b>%{authorizer}</b>により<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者として追加されました。この通知を受け取ったのは、%{gem}の所有者の1人だからです。
@@ -316,7 +316,7 @@ ja:
       subject: "%{gem} gemの所有者から削除されました"
       title: 所有者が削除されました
       subtitle: こんにちは、%{user_handle}！
-      body_html: <b>あなた</b>は<b>%{remover}</b>によってRubyGems.org上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+      body_html: <b>あなた</b>は<b>%{remover}</b>によって%{host}上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者から削除されました。
     ownerhip_request_closed:
       title: 所有権の申請
@@ -334,7 +334,7 @@ ja:
       owners_page: 所有権
     web_hook_deleted:
       title: webhookが削除されました
-      subject: RubyGems.orgのwebhookが削除されました
+      subject: "%{host}のwebhookが削除されました"
       subtitle: こんにちは、%{handle}！
       body_text: "%{url}にPOSTするwebhookが%{failures}回の失敗の後に削除されました。"
       body_html: <a href="%{url}"><code>%{url}</code></a>に<code>POST</code>するwebhookが%{failures}回の失敗の後に削除されました。
@@ -344,7 +344,7 @@ ja:
       gem_html: このwebhookは以前<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>がプッシュされたときに呼ばれました。
     web_hook_disabled:
       title: webhookが無効になりました
-      subject: RubyGems.orgのwebhookが削除されました
+      subject: "%{host}のwebhookを無効にしました"
       subtitle: こんにちは、%{handle}！
       body_text: |
         %{url}にPOSTするwebhookが%{disabled_reason}のため無効になりました。
