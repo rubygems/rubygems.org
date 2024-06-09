@@ -104,7 +104,7 @@ ja:
       api_key:
         zero: APIキー
         one: APIキー
-        many: APIキー
+        other: APIキー
   activemodel:
     attributes:
       oidc/provider/configuration:
