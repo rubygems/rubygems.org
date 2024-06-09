@@ -4,7 +4,7 @@ ja:
   copied: コピー完了!
   copy_to_clipboard: クリップボードにコピー
   edit: 編集
-  verification_expired:
+  verification_expired: 検証が期限切れです。もう一度検証してください。
   feed_latest: RubyGems.org | 最新のgemの一覧
   feed_subscribed: RubyGems.org | 購読したgemの一覧
   footer_about_html: RubyGems.orgはRubyコミュニティのgemのホスティングサービスです。すぐに<a href="%{publish_docs}">gemを公開</a>して<a
@@ -407,16 +407,17 @@ ja:
     edit:
       submit: このパスワードを保存する
       title: パスワードをリセット
-      token_failure: URLを見返すか、再度送信してみてください。
+      token_failure: URLをダブルチェックするか、リセットする新しいパスワードを送ってみてください。
+      session_expired:
     new:
       submit: パスワードをリセット
       title: パスワードを変更する
       will_email_notice: パスワード変更のためのリンクをEメールで送ります。
     create:
-      success:
-      failure_on_missing_email:
+      success: 数分でEメールが届きます。メールにはパスワードを変更する手順があります。
+      failure_on_missing_email: Eメールは空にできません。
     update:
-      failure:
+      failure: パスワードを変更できませんでした。もう一度お試しください。
   multifactor_auths:
     incorrect_otp: OTPのコードが正しくありません。
     session_expired: ログインページのセッションが期限切れになりました。
