@@ -408,7 +408,7 @@ ja:
       submit: このパスワードを保存する
       title: パスワードをリセット
       token_failure: URLをダブルチェックするか、リセットする新しいパスワードを送ってみてください。
-      session_expired:
+      session_expired: パスワードリセットのセッションが期限切れになりました。
     new:
       submit: パスワードをリセット
       title: パスワードを変更する
