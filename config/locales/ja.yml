@@ -399,8 +399,8 @@ ja:
       title: 出資者
   password_mailer:
     change_password:
-      closing:
-      opening:
+      closing: こちらを申請しなかった場合はこのEメールはご放念ください。パスワードは変更されません。
+      opening: あなただと良いのですが、誰かがあなたにパスワードを変更するリンクを送るよう申請しました。
       title: パスワードを変更する
       subtitle: こんにちは、%{handle}！
   passwords:
