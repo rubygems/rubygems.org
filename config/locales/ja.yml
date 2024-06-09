@@ -68,9 +68,9 @@ ja:
       oidc/api_key_role:
         api_key_permissions: APIキーのパーミッション
       oidc/trusted_publisher/github_action:
-        repository_owner_id:
+        repository_owner_id: GitHubリポジトリの所有者ID
       oidc/pending_trusted_publisher:
-        rubygem_name:
+        rubygem_name: RubyGem名
     errors:
       messages:
         unpwn: 過去にデータ侵害を受けたためお使いになれません
@@ -94,11 +94,11 @@ ja:
         oidc/rubygem_trusted_publisher:
           attributes:
             rubygem:
-              taken:
+              taken: この信頼できる発行元で既に構成されています
         oidc/pending_trusted_publisher:
           attributes:
             rubygem_name:
-              unavailable:
+              unavailable: 既に使われています
     models:
       user: ユーザー
       api_key:
@@ -359,7 +359,7 @@ ja:
       gem_text: このwebhookは以前%{gem}がプッシュされたときに呼ばれました。
       gem_html: このwebhookは以前<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>がプッシュされたときに呼ばれました。
     gem_trusted_publisher_added:
-      title:
+      title: 信頼できる発行元が追加されました
   news:
     show:
       title: 新しいリリース - 全てのgem
@@ -629,7 +629,7 @@ ja:
           api_key_role:
             name: 'OIDC: %{name}'
             new: 'OIDC: 作成'
-        trusted_publishers:
+        trusted_publishers: 信頼できる発行元
     reserved:
       reserved_namespace: この名前空間はrubygems.orgにより予約されています。
     dependencies:
@@ -848,40 +848,50 @@ ja:
         title: OIDC IDトークン
     rubygem_trusted_publishers:
       index:
-        title:
-        subtitle_owner_html:
-        delete:
-        create:
-        description_html:
+        title: 信頼できる発行元
+        subtitle_owner_html: "%{gem_html}の信頼できる発行元"
+        delete: 削除
+        create: 作成
+        description_html: |
+          信頼できる発行元を使うと、長く残る機密な認証情報を保管することなくCIからgemをプッシュできます。
+          信頼できる発行元を設定する方法についての詳しい情報は、<a href="https://guides.rubygems.org/trusted-publishing/adding-a-publisher/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
       destroy:
-        success:
+        success: 信頼できる発行元が削除されました
       create:
-        success:
+        success: 信頼できる発行元が作成されました
       new:
-        title:
-        subtitle_owner_html:
+        title: 新しい信頼できる発行元
+        subtitle_owner_html: "%{gem_html}に信頼できる発行元を追加"
     pending_trusted_publishers:
       index:
-        title:
-        valid_for_html:
-        delete:
-        create:
-        description_html:
+        title: 待機中の信頼できる発行元
+        valid_for_html: "%{time_html}まで有効"
+        delete: 削除
+        create: 作成
+        description_html: |
+          待機中の信頼できる発行元を使うと、gemの最初のバージョンをプッシュする前に信頼できる発行元を構成できます。
+           信頼できる発行元を設定する方法についてより詳しくは、<a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
       destroy:
-        success:
+        success: 待機中の信頼できる発行元が削除されました
       create:
-        success:
+        success: 待機中の信頼できる発行元が作成されました
       new:
-        title:
+        title: 新しい待機中の信頼できる発行元
     trusted_publisher:
-      unsupported_type:
+      unsupported_type: サポートされていない信頼できる発行元の種類
       github_actions:
-        repository_owner_help_html:
-        repository_name_help_html:
-        workflow_filename_help_html:
-        environment_help_html:
+        repository_owner_help_html: リポジトリを所有するGitHubの組織名またはGitHubのユーザー名
+        repository_name_help_html: 公開ワークフローを含むGitHubリポジトリ名
+        workflow_filename_help_html: |-
+          公開ワークフローのファイル名。<br>
+          このファイルは上で構成されたリポジトリの<code>.github/workflows/</code>ディレクトリになければなりません。
+        environment_help_html: |
+          上のワークフローが公開で使う<a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">GitHub Actionsの環境</a>名。<br>
+          これはリポジトリの設定で構成されていると良いでしょう。<br>
+          必須ではありませんが、個別の公開環境は強く推奨されます。
+          特にリポジトリに、コミットアクセスを持つがRubyGems.orgへのgemのプッシュアクセスを持つべきではないメンテナがいるときが該当します。
       pending:
-        rubygem_name_help_html:
+        rubygem_name_help_html: "（RubyGems.orgの）gemはこの発行元が使われたときに作られます"
   duration:
     minutes:
       other: "%{count}分"
@@ -896,7 +906,7 @@ ja:
       other: "%{count}秒"
       one: 1秒
   form:
-    optional:
+    optional: 省略できます
   events:
     table_component:
       event:
