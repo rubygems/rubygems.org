@@ -83,8 +83,8 @@ ja:
         ownership:
           attributes:
             user_id:
-              already_confirmed:
-              already_invited:
+              already_confirmed: は既にこのgemの所有者です
+              already_invited: は既にこのgemに招待されています
         version:
           attributes:
             gem_full_name:
