@@ -813,8 +813,6 @@ ja:
         to_automate_html: 新しいタグがプッシュされたときの%{link_html}へのリリースを自動化するには、以下のワークフローをリポジトリに追加してください。
         not_github: このOIDC APIキーのロールはGitHub Actions用に構成されていません。
         not_push: このOIDC APIキーのロールはgemのプッシュができるように構成されていません。
-        copy_to_clipboard: クリップボードにコピー
-        copied: コピー完了!
         a_gem: gem
         instructions_html: |
           リリースするには、<a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">gemのバージョンを上げ</a>て（<code>rake release:source_control_push</code>を使って）GitHubへ新しいタグをプッシュしてください。
