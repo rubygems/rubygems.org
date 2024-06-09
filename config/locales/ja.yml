@@ -371,14 +371,14 @@ ja:
     about:
       contributors_amount: "%{count}人以上のRubyist"
       downloads_amount: 何億回ものgemダウンロード
-      checkout_code:
-      mit_licensed:
-      logo_header:
-      logo_details:
+      checkout_code: コードをご確認ください
+      mit_licensed: MITライセンスの下に配布されています
+      logo_header: ロゴをお探しですか
+      logo_details: ダウンロードボタンを押すと、3つの.PNGと.SVGでRubyGemsのロゴが手に入ります。
       founding_html: 2009年4月に%{founder}の手によって発足したプロジェクトは、現在%{contributors}の貢献を得て%{downloads}に到るまで成長を遂げました。RubyGems
         1.3.6 リリースからは、サイト名称をGemcutterから%{title}に変更し、Rubyコミュニティの中におけるサイトの役割を明確化しました。
       support_html: Rubygems.orgは特定の企業によって運営されているわけではありませんが、これまで沢山の企業により助けられてきました。現行のサイトのデザイン、イラストレーション、そして本サイトのフロントエンド開発は%{dockyard}により為されました。%{github}も私たちがコードを共有し協力し合う上で助けになっており、掛け替えのないものです。当初のサービスが稼働していた%{heroku}の素晴しいサービスは、RubyGemsがコミュニティ全体から信頼される持続性のあるものであることを示しました。現在のインフラは%{aws}でホストされています。
-      technical_html: このサイトの技術的な側面に目を向けるなら、100% Rubyでできています。サイトの主要な部分は%{rails}アプリケーションです。gemは%{s3}上にホストされ、%{fastly}によりサーブされており、新しく公開したgemがインストール可能になるまで通常はほんの数秒です。詳細は%{source_code}。GitHub上で%{license}となっています。
+      technical_html: このサイトの技術的な側面に目を向けるなら、100% Rubyでできています。サイトの主要な部分は%{rails}アプリケーションです。gemは%{s3}上にホストされ、%{fastly}によりサーブされており、新しく公開したgemがインストール可能になるまで通常はほんの数秒です。詳細は%{source_code}。GitHubで%{license}。
       title: 概要
       purpose:
         better_api: gemを取り扱う、より良いAPIを提供すること
