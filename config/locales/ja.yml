@@ -61,12 +61,12 @@ ja:
         handle: ユーザー名
         password: パスワード
       api_key:
-        oidc_api_key_role:
+        oidc_api_key_role: OIDC APIキーのロール
       oidc/id_token:
-        jti:
-        api_key_role:
+        jti: JWT ID
+        api_key_role: APIキーのロール
       oidc/api_key_role:
-        api_key_permissions:
+        api_key_permissions: APIキーのパーミッション
       oidc/trusted_publisher/github_action:
         repository_owner_id:
       oidc/pending_trusted_publisher:
@@ -108,8 +108,8 @@ ja:
   activemodel:
     attributes:
       oidc/provider/configuration:
-        jwks_uri:
-        id_token_signing_alg_values_supported:
+        jwks_uri: JWKS URI
+        id_token_signing_alg_values_supported: サポート対象のIDトークン書名アルゴリズム
     errors:
       models:
         oidc/api_key_permissions:
@@ -117,7 +117,7 @@ ja:
             valid_for:
               inclusion: "%{value}秒は5分（300秒）から1日（86,400秒）までの間でなければなりません"
             gems:
-              too_long:
+              too_long: 最大1個のgemを含められます。
   api_keys:
     form:
       exclusive_scopes:
@@ -627,8 +627,8 @@ ja:
         ownership: 所有者
         oidc:
           api_key_role:
-            name:
-            new:
+            name: 'OIDC: %{name}'
+            new: 'OIDC: 作成'
         trusted_publishers:
     reserved:
       reserved_namespace: この名前空間はrubygems.orgにより予約されています。
@@ -795,51 +795,57 @@ ja:
   oidc:
     api_key_roles:
       index:
-        api_key_roles:
-        new_role:
+        api_key_roles: OIDC APIキーのロール
+        new_role: APIキーのロールを作成
       show:
-        api_key_role_name:
-        automate_gh_actions_publishing:
-        view_provider:
-        edit_role:
-        delete_role:
-        confirm_delete:
-        deleted_at_html:
+        api_key_role_name: APIキーのロール%{name}
+        automate_gh_actions_publishing: GitHub Actionsでgemの発表を自動化
+        view_provider: プロバイダ%{issuer}を確認
+        edit_role: APIキーのロールを編集
+        delete_role: APIキーのロールを削除
+        confirm_delete: このロールを削除してよろしいですか。
+        deleted_at_html: このロールは%{time_html}前に削除され、使えなくなりました。
       edit:
-        edit_role:
+        edit_role: APIキーのロールを編集
       git_hub_actions_workflow:
-        title:
-        configured_for_html:
-        to_automate_html:
-        not_github:
-        not_push:
-        a_gem:
-        instructions_html:
+        title: OIDCでgemをプッシュするGitHub Actionsワークフロー
+        configured_for_html: このOIDC APIキーのロールはGitHub Actionsから%{link_html}へプッシュできるように構成されています。
+        to_automate_html: 新しいタグがプッシュされたときの%{link_html}へのリリースを自動化するには、以下のワークフローをリポジトリに追加してください。
+        not_github: このOIDC APIキーのロールはGitHub Actions用に構成されていません。
+        not_push: このOIDC APIキーのロールはgemのプッシュができるように構成されていません。
+        copy_to_clipboard: クリップボードにコピー
+        copied: コピー完了!
+        a_gem: gem
+        instructions_html: |
+          リリースするには、<a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">gemのバージョンを上げ</a>て（<code>rake release:source_control_push</code>を使って）GitHubへ新しいタグをプッシュしてください。
+          ワークフローは自動的にgemをビルドしてRubyGems.orgへプッシュします。
       new:
-        title:
+        title: 新しいOIDC APIキーのロール
       update:
-        success:
+        success: OIDC APIキーのロールが更新されました
       create:
-        success:
+        success: OIDC APIキーのロールを作成しました
       destroy:
-        success:
+        success: OIDC APIキーのロールを削除しました
       form:
-        add_condition:
-        remove_condition:
-        add_statement:
-        remove_statement:
-      deleted:
+        add_condition: 条件を追加
+        remove_condition: 条件を削除
+        add_statement: ステートメントを追加
+        remove_statement: ステートメントを削除
+      deleted: ロールが削除されました。
     providers:
       index:
-        title:
-        description_html:
+        title: OIDCプロバイダ
+        description_html: |-
+          以下はRubyGems.orgに構成されたOIDCプロバイダです。<br>
+          別のOIDCプロバイダを追加する必要があるときはサポートにお問い合わせください。
       show:
-        title:
+        title: OIDCプロバイダ
     id_tokens:
       index:
-        title:
+        title: OIDC IDトークン
       show:
-        title:
+        title: OIDC IDトークン
     rubygem_trusted_publishers:
       index:
         title:
@@ -878,17 +884,17 @@ ja:
         rubygem_name_help_html:
   duration:
     minutes:
-      other:
-      one:
+      other: "%{count}分"
+      one: 1分
     hours:
-      other:
-      one:
+      other: "%{count}時間"
+      one: 1時間
     days:
-      other:
-      one:
+      other: "%{count}日"
+      one: 1日
     seconds:
-      other:
-      one:
+      other: "%{count}秒"
+      one: 1秒
   form:
     optional:
   events:
