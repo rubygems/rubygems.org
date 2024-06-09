@@ -150,7 +150,7 @@ ja:
       remove_owner: 所有者を削除する
       access_webhooks: webhookにアクセスする
       show_dashboard: ダッシュボードを表示
-      configure_trusted_publishers:
+      configure_trusted_publishers: 信頼できる発行元を構成
       reset: リセット
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA
