@@ -39,8 +39,8 @@ ja:
   authenticate: 認証
   helpers:
     submit:
-      create:
-      update:
+      create: "%{model}を作成"
+      update: "%{model}を更新"
   activerecord:
     attributes:
       linkset:
@@ -102,9 +102,9 @@ ja:
     models:
       user: ユーザー
       api_key:
-        zero:
-        one:
-        other:
+        zero: APIキー
+        one: APIキー
+        many: APIキー
   activemodel:
     attributes:
       oidc/provider/configuration:
@@ -120,7 +120,7 @@ ja:
               too_long: 最大1個のgemを含められます。
   api_keys:
     form:
-      exclusive_scopes:
+      exclusive_scopes: 除外するスコープ
       rubygem_scope: gemのスコープ
       rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
       multifactor_auth: 多要素認証
