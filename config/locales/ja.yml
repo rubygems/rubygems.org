@@ -597,8 +597,10 @@ ja:
     show:
       title: "%{username} のプロフィール"
     security_events:
-      title:
-      description_html:
+      title: セキュリティ事象
+      description_html: |-
+        このページにはアカウントに起こったセキュリティ事象が表示されます。
+        何か疑わしい活動を見かけたら、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
@@ -675,8 +677,8 @@ ja:
           pushによりこの名前を要求できます。<br/>もしあなたがこのgemの以前の所有者ならば、gem ownerコマンドを用いて所有者を変更できる他、新しいバージョンをgem
           pushを用いて公開できます。
     security_events:
-      title:
-      description_html:
+      title: セキュリティ事象
+      description_html: このページには%{gem}に起こったセキュリティ事象が表示されます。何か疑わしい活動が見られたときは、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
   reverse_dependencies:
     index:
       title: "%{name}の被依存関係"
@@ -908,48 +910,48 @@ ja:
     optional: 省略できます
   events:
     table_component:
-      event:
-      time:
-      additional_info:
-      redacted:
-      no_user_agent_info:
+      event: 事象
+      time: 時刻
+      additional_info: 追加情報
+      redacted: 訂正
+      no_user_agent_info: ユーザーエージェント情報なし
     rubygem_event:
       version:
-        version_pushed:
-        version_yanked:
-        version_unyanked:
-        version_html:
-        version_pushed_sha256_html:
-        version_pushed_by_html:
-        version_yanked_by_html:
+        version_pushed: バージョンがプッシュされました
+        version_yanked: バージョンがヤンクされました
+        version_unyanked: バージョンのヤンクが取り消されました
+        version_html: バージョン：%{version}
+        version_pushed_sha256_html: 'SHA256: %{sha256}'
+        version_pushed_by_html: プッシュ者：%{pusher}
+        version_yanked_by_html: ヤンク者：%{pusher}
       owner:
-        owner_added:
-        owner_added_owner_html:
-        owner_added_authorizer_html:
-        owner_removed:
-        owner_removed_owner_html:
-        owner_removed_by_html:
-        owner_confirmed:
+        owner_added: 所有者が追加されました
+        owner_added_owner_html: 新しく追加された所有者：%{owner}
+        owner_added_authorizer_html: 承認者：%{authorizer}
+        owner_removed: 所有者が削除されました
+        owner_removed_owner_html: 削除された所有者：%{owner}
+        owner_removed_by_html: 削除者：%{remover}
+        owner_confirmed: 所有者が確認されました
     user_event:
       user:
-        created:
-        email:
+        created: ユーザーが作成されました
+        email: Eメール：%{email}
       login:
-        login_success:
-        webauthn_login:
-        mfa_method:
-        mfa_device:
-        none:
+        login_success: ログインが成功しました
+        webauthn_login: Webauthnのログイン：%{device}
+        mfa_method: MFAの方法：%{method}
+        mfa_device: MFA機器：%{device}
+        none: なし
       email:
-        email_verified:
-        email_sent_subject:
-        email_sent_from:
-        email_sent_to:
+        email_verified: Eメールが検証されました
+        email_sent_subject: 題名：%{subject}
+        email_sent_from: 差出人：%{from}
+        email_sent_to: 宛先：%{to}
       api_key:
-        api_key_created:
-        api_key_deleted:
-        api_key_name:
-        api_key_scopes:
-        api_key_gem_html:
-        api_key_mfa:
-        not_required:
+        api_key_created: APIキーが作成されました
+        api_key_deleted: APIキーが削除されました
+        api_key_name: 名前：%{name}
+        api_key_scopes: スコープ：%{scopes}
+        api_key_gem_html: 'gem: %{gem}'
+        api_key_mfa: 'MFA: %{mfa}'
+        not_required: 必要ではありません
