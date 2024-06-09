@@ -326,8 +326,8 @@ ja:
       body_html: おめでとうございます！<strong>%{gem}</strong>の所有権の申請が許諾されました。gemの所有者として追加されました。
     new_ownership_requests:
       body_html:
-        zero:
-        one:
+        zero: "<strong>%{gem}</strong>には新しい所有権の申請が<em>ありません</em>。"
+        one: "<strong>%{gem}</strong>には<em>1</em>件の新しい所有権の申請があります。申請を見るには以下のボタンをクリックしてください。"
         other: "<strong>%{gem}</strong>には<em>%{count}</em>件の新しい所有権の申請があります。全ての申請を見るには以下のボタンをクリックしてください。"
       button: 所有権の申請
       disable_notifications: これらのメッセージの受け取りを停止するには、こちらを更新してください：
