@@ -168,7 +168,7 @@ GEM
       railties (>= 5.0)
     coderay (1.1.3)
     compact_index (0.15.0)
-    concurrent-ruby (1.3.1)
+    concurrent-ruby (1.3.3)
     connection_pool (2.4.1)
     cose (1.3.0)
       cbor (~> 0.5.9)
@@ -281,7 +281,7 @@ GEM
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
       llhttp-ffi (~> 0.5.0)
-    http-cookie (1.0.5)
+    http-cookie (1.0.6)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     http_accept_language (2.1.1)
@@ -327,7 +327,7 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
-    launchdarkly-server-sdk (8.4.2)
+    launchdarkly-server-sdk (8.5.0)
       concurrent-ruby (~> 1.1)
       http (>= 4.4.0, < 6.0.0)
       json (~> 2.3)
@@ -797,7 +797,7 @@ DEPENDENCIES
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.0)
   kaminari (~> 1.2)
-  launchdarkly-server-sdk (~> 8.4)
+  launchdarkly-server-sdk (~> 8.5)
   launchy (~> 3.0)
   letter_opener (~> 1.10)
   letter_opener_web (~> 3.0)
@@ -924,7 +924,7 @@ CHECKSUMS
   clearance (2.7.1) sha256=6604beacb8abe4ba939da41491148d8ff965f4484bba946bb50a61be61683f0d
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
   compact_index (0.15.0) sha256=5c6c404afca8928a7d9f4dde9524f6e1610db17e675330803055db282da84a8b
-  concurrent-ruby (1.3.1) sha256=c369f1d0875b42295fe0fabc321065f3cfeab8c32c526c01b6b05af1efc8b0ce
+  concurrent-ruby (1.3.3) sha256=4f9cd28965c4dcf83ffd3ea7304f9323277be8525819cb18a3b61edcb56a7c6a
   connection_pool (2.4.1) sha256=0f40cf997091f1f04ff66da67eabd61a9fe0d4928b9a3645228532512fab62f4
   cose (1.3.0) sha256=63247c66a5bc76e53926756574fe3724cc0a88707e358c90532ae2a320e98601
   crack (1.0.0) sha256=c83aefdb428cdc7b66c7f287e488c796f055c0839e6e545fec2c7047743c4a49
@@ -975,7 +975,7 @@ CHECKSUMS
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http (5.2.0) sha256=b99ed3c65376e0fd8107647fbaf5a8ab4f66c347d1271fb74cea757e209c6115
-  http-cookie (1.0.5) sha256=73756d46c7dbdc7023deecdb8a171348ea95a1b99810b31cfe8b4fb4e9a6318f
+  http-cookie (1.0.6) sha256=7713d3196f21ff5ab0944011d7d4e619b62ec082374a52de2193ccfe78924044
   http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
   httparty (0.22.0) sha256=78652a5c9471cf0093d3b2083c2295c9c8f12b44c65112f1846af2b71430fa6c
@@ -994,7 +994,7 @@ CHECKSUMS
   kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
-  launchdarkly-server-sdk (8.4.2) sha256=36cdf34777f80687ee34acd0bd563b00153f4b24fe12be5eff15c4708be65ec3
+  launchdarkly-server-sdk (8.5.0) sha256=5c286fb97b7e68996e9bfe2688ce0e1c5bdc092980b84934746e2e3668367de0
   launchy (3.0.1) sha256=b7fa60bda0197cf57614e271a250a8ca1f6a34ab889a3c73f67ec5d57c8a7f2c
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
