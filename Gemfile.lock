@@ -503,7 +503,7 @@ GEM
     pwned (2.3.0)
     raabro (1.4.0)
     racc (1.8.0)
-    rack (3.0.11)
+    rack (3.1.0)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-oauth2 (2.2.1)
@@ -828,7 +828,7 @@ DEPENDENCIES
   pry-byebug (~> 3.10)
   puma (~> 6.4)
   pundit (~> 2.3)
-  rack (~> 3.0)
+  rack (~> 3.1)
   rack-attack (~> 6.6)
   rack-test (~> 2.1)
   rack-utf8_sanitizer (~> 1.8)
@@ -1064,7 +1064,7 @@ CHECKSUMS
   pwned (2.3.0) sha256=63f5a9576f109203684e9dd053f815649fd5bc0a0348b7190568272641b22353
   raabro (1.4.0) sha256=d4fa9ff5172391edb92b242eed8be802d1934b1464061ae5e70d80962c5da882
   racc (1.8.0) sha256=09349a65c37c4fe710a435f25c9f1652e39f29ad6b1fa08d4a8d30c0553d3a08
-  rack (3.0.11) sha256=a08473678160760d9085ebe14508a42add18cde4217107b4b1aa01c8f14ff98c
+  rack (3.1.0) sha256=68ef4c061ef1e6b8b07b66d8fce9636c113c6cae6201a5f089fbc2ec8014dd9b
   rack-attack (6.7.0) sha256=3ca47e8f66cd33b2c96af53ea4754525cd928ed3fa8da10ee6dad0277791d77c
   rack-oauth2 (2.2.1) sha256=c73aa87c508043e2258f02b4fb110cacba9b37d2ccf884e22487d014a120d1a5
   rack-protection (4.0.0) sha256=d0db6185caa46a8c0d134c2c6b4803f4f392a67b2984da311409cb505f67bbf6
