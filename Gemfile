@@ -57,6 +57,7 @@ gem "phlex-rails", "~> 1.2"
 gem "discard", "~> 1.3"
 gem "user_agent_parser", "~> 2.18"
 gem "pghero", "~> 3.5"
+gem "timescaledb", "~> 0.2"
 
 # Admin dashboard
 gem "avo", "~> 2.51"
