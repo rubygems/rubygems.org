@@ -696,7 +696,7 @@ GEM
       faraday-follow_redirects
     tailwindcss-rails (2.6.1)
       railties (>= 7.0.0)
-    terser (1.2.2)
+    terser (1.2.3)
       execjs (>= 0.3.0, < 3)
     thor (1.3.1)
     tilt (2.3.0)
@@ -1134,7 +1134,7 @@ CHECKSUMS
   strscan (3.1.0) sha256=01b8a81d214fbf7b5308c6fb51b5972bbfc4a6aa1f166fd3618ba97e0fcd5555
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (2.6.1) sha256=60e66e243761402f9ce834132f59dd6c08b6fea5987e321bd9886dd0b0ce04ac
-  terser (1.2.2) sha256=86ddfa0de7fa8f6c8fd34ad611596f787a77e21bed3db08b90e7c30942d20288
+  terser (1.2.3) sha256=c03111b9b01a7e70cd456b5d9aedf0a56fb99314a19311c4278c01ccebe3da9c
   thor (1.3.1) sha256=fa7e3471d4f6a27138e3d9c9b0d4daac9c3d7383927667ae83e9ab42ae7401ef
   tilt (2.3.0) sha256=82dd903d61213c63679d28e404ee8e10d1b0fdf5270f1ad0898ec314cc3e745c
   timeout (0.4.1) sha256=6f1f4edd4bca28cffa59501733a94215407c6960bd2107331f0280d4abdebb9a
