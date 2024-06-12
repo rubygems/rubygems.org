@@ -278,7 +278,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
           @gems = {
             success: { name: @rubygem.slug, version: @v1.number, deletion_status: :success },
-            already_deleted: { name: @rubygem.slug, version: v2.number, deletion_status: :unprocessable_entity },
+            already_deleted: { name: @rubygem.slug, version: v2.number, deletion_status: :unprocessable_content },
             not_owned_gem: { name: another_gem.slug, version: @v1.number, deletion_status: :forbidden },
             without_version: { name: create(:rubygem).name, deletion_status: :not_found }
           }
@@ -488,7 +488,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           Deletion.create!(user: @user, version: @v1)
           delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
         end
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
 
         should "not re-record the deletion" do
           assert_equal 1, Deletion.where(user: @user,

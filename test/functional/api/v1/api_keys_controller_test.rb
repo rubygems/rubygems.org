@@ -311,7 +311,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           post :create, params: { name: "test-key", index_rubygems: "true", show_dashboard: "true" }, format: "text"
         end
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
 
         should "not create api key" do
           assert_empty @user.reload.api_keys
@@ -365,7 +365,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
                 format: "text"
             end
 
-            should respond_with :unprocessable_entity
+            should respond_with :unprocessable_content
 
             should "respond with an error" do
               assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", response.body
@@ -380,7 +380,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
               format: "text"
           end
 
-          should respond_with :unprocessable_entity
+          should respond_with :unprocessable_content
 
           should "respond with an error" do
             assert_equal "Rubygem could not be found", response.body
@@ -535,7 +535,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         assert_no_difference -> { @user.api_keys.count } do
           post :create, params: { name: "test-key", index_rubygems: "true", expires_at: 1.day.ago }, format: "text"
 
-          assert_response :unprocessable_entity
+          assert_response :unprocessable_content
         end
       end
 
@@ -595,7 +595,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           @api_key.reload
         end
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
 
         should "not update api key" do
           refute_predicate @api_key, :can_show_dashboard?

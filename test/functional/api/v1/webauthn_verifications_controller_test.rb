@@ -106,7 +106,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
         post :create
       end
 
-      should respond_with :unprocessable_entity
+      should respond_with :unprocessable_content
 
       should "tell the user they don't have a WebAuthn hardware token" do
         assert_match "You don't have any security devices", response.body

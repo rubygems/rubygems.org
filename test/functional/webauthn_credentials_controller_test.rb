@@ -163,7 +163,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
           )
         end
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
       end
 
       context "when challenge is incorrect" do
@@ -187,7 +187,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
         setup { subject }
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
       end
 
       context "when totp is already registered on the user" do

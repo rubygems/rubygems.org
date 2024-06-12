@@ -376,7 +376,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
             },
             headers: {}
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_equal({
                        "errors" => { "jwt.claims.jti" => ["must be unique"] }
                      }, response.parsed_body)

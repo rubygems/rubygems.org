@@ -164,7 +164,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
              },
              headers: { "HTTP_AUTHORIZATION" => "12345" }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_equal "Unsupported trusted publisher type", response.parsed_body["error"]
       end
 
@@ -179,7 +179,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
              },
              headers: { "HTTP_AUTHORIZATION" => "12345" }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_equal({ "trusted_publisher.repository_name" => ["can't be blank"],
                        "trusted_publisher.workflow_filename" => ["can't be blank"] },
                      response.parsed_body["errors"])

@@ -247,7 +247,7 @@ class PushTest < ActionDispatch::IntegrationTest
   test "push errors bubble out" do
     push_gem Rails.root.join("test", "gems", "bad-characters-1.0.0.gem")
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_match(/cannot process this gem/, response.body)
     assert_nil RubygemFs.instance.get("gems/bad-characters-1.0.0.gem")
     assert_nil RubygemFs.instance.get("quick/Marshal.4.8/bad-characters-1.0.0.gemspec.rz")
@@ -263,7 +263,7 @@ class PushTest < ActionDispatch::IntegrationTest
     Gem::Specification.any_instance.stubs(:_dump).raises(NoMethodError)
     push_gem "sandworm-1.0.0.gem"
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_match(/Please try rebuilding it and installing it locally to make sure it's valid./, response.body)
 
     assert_nil Rubygem.find_by(name: "sandworm")
@@ -550,7 +550,7 @@ class PushTest < ActionDispatch::IntegrationTest
       YAML
       push_gem "malicious.gem"
 
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
     end
 
     should "fail when spec.platform is invalid" do
@@ -587,7 +587,7 @@ class PushTest < ActionDispatch::IntegrationTest
         push_gem "malicious.gem"
       end
 
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
     end
   end
 

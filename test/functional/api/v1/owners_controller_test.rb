@@ -246,7 +246,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.slug, email: @user.email }
         end
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
 
         should "respond with error message" do
           assert_equal "User is already an owner of this gem", @response.body
@@ -259,7 +259,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
         end
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
 
         should "respond with error message" do
           assert_equal "User is already invited to this gem", @response.body
