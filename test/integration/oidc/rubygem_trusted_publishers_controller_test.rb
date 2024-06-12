@@ -133,7 +133,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
           }
         }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_equal [
           "Trusted publisher repository name can't be blank",
           "Trusted publisher workflow filename can't be blank",
@@ -154,7 +154,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
           }
         }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_equal ["Trusted publisher workflow filename must end with .yml or .yaml"].to_sentence, flash[:error]
       end
     end

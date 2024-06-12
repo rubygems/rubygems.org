@@ -374,7 +374,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         post :create, body: "really bad gem"
       end
-      should respond_with :unprocessable_entity
+      should respond_with :unprocessable_content
       should "not register gem" do
         assert_predicate Rubygem.count, :zero?
         assert_match(/RubyGems\.org cannot process this gem/, @response.body)

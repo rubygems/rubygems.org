@@ -54,7 +54,7 @@ class OwnersControllerTest < ActionController::TestCase
             end
           end
 
-          should respond_with :unprocessable_entity
+          should respond_with :unprocessable_content
 
           should "show error message" do
             expected_alert = "User must exist"
