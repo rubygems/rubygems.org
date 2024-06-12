@@ -263,7 +263,7 @@ ja:
       subject: "%{host}のEメール通知設定を変更しました"
       title: Eメール通知
       subtitle: こんにちは、%{handle}
-      'on': 'ON'
+      'on': 入
       off_html: "<b>切</b>"
     gem_pushed:
       subject: "%{gem} gemが%{host}にプッシュされした"
@@ -473,8 +473,8 @@ ja:
       info: |-
         不正なgemや所有権の変更の検出を助けるため、所有するgemに関して新しいバージョンがプッシュ、ヤンク、または新しい所有者が追加されるたびに、電子メールが送信されます。
         これらのメールを受信して​​読むことで、Rubyのエコシステムの保護に役立ちます。
-      'on': 'On'
-      'off': 'Off'
+      'on': 入
+      'off': 切
       recommended: 推奨
       title: Eメール通知
       update: 更新
