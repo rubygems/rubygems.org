@@ -187,15 +187,15 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    datadog-ci (0.8.3)
-      msgpack
-    date (3.3.4)
-    ddtrace (1.23.2)
-      datadog-ci (~> 0.8.1)
+    datadog (2.1.0)
       debase-ruby_core_source (= 3.3.1)
-      libdatadog (~> 7.0.0.1.0)
+      libdatadog (~> 9.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
       msgpack
+    datadog-ci (1.0.1)
+      datadog (~> 2.0)
+      msgpack
+    date (3.3.4)
     dead_end (4.0.0)
     debase-ruby_core_source (3.3.1)
     derailed_benchmarks (2.1.2)
@@ -347,7 +347,7 @@ GEM
       letter_opener (~> 1.9)
       railties (>= 6.1)
       rexml
-    libdatadog (7.0.0.1.0)
+    libdatadog (9.0.0.1.0)
     libddwaf (1.14.0.0.0)
       ffi (~> 1.0)
     listen (3.9.0)
@@ -780,7 +780,8 @@ DEPENDENCIES
   csv (~> 3.3)
   dalli (~> 3.2)
   dartsass-sprockets (~> 3.1)
-  ddtrace (~> 1.23)
+  datadog (~> 2.1)
+  datadog-ci (~> 1.0)
   derailed_benchmarks (~> 2.1)
   discard (~> 1.3)
   dogstatsd-ruby (~> 5.5)
@@ -934,9 +935,9 @@ CHECKSUMS
   csv (3.3.0) sha256=0bbd1defdc31134abefed027a639b3723c2753862150f4c3ee61cab71b20d67d
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
   dartsass-sprockets (3.1.0) sha256=c238ec9f7f496489ac5a7813cd1f83d1e077a1826921acefc7e290a521b7a20a
-  datadog-ci (0.8.3) sha256=6e78c03aa2524476dc99b969a7c3154195d1d84a912a21707e7f5c17783e03f9
+  datadog (2.1.0) sha256=6a9be58bb3dc01e1890d1b3452cef262de925bda9ad0bfdb8bb854f5f9384e0b
+  datadog-ci (1.0.1) sha256=04176e5d12adbee135880d8102077cb5be85399246f185c7d3b5ffbf081a89c5
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
-  ddtrace (1.23.2) sha256=3e91ab17cb4a778d3996d323b900c062318516fa8fe365e626b76a3e63d58977
   dead_end (4.0.0) sha256=695c8438993bb4c5415b1618a1b6e0afcae849ef2812fb8cb3846723904307eb
   debase-ruby_core_source (3.3.1) sha256=ed904cae290edf0cf274ad707f8981bf1cefad8081e78d4bb71be2a483bc2c08
   derailed_benchmarks (2.1.2) sha256=eaadc6206ceeb5538ff8f5e04a0023d54ebdd95d04f33e8960fb95a5f189a14f
@@ -1000,7 +1001,7 @@ CHECKSUMS
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860
-  libdatadog (7.0.0.1.0) sha256=b4321485dd0f664ad43540cacb5ace0fedba064ad978f97510172c1ad6940316
+  libdatadog (9.0.0.1.0) sha256=2a24dd3ee462e59de04f098687ed3d98823042aebfdd3f1b75fd92374b926f07
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
