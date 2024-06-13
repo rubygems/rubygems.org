@@ -8,9 +8,7 @@ class OwnersControllerTest < ActionController::TestCase
       @user = create(:user)
       @rubygem = create(:rubygem)
       create(:ownership, user: @user, rubygem: @rubygem)
-      sign_in_as(@user)
-      session[:verification] = 10.minutes.from_now
-      session[:verified_user] = @user.id
+      verified_sign_in_as(@user)
     end
 
     teardown do
@@ -37,7 +35,7 @@ class OwnersControllerTest < ActionController::TestCase
       context "when user does not own the gem" do
         setup do
           @other_user = create(:user)
-          sign_in_as(@other_user)
+          verified_sign_in_as(@other_user)
           get :index, params: { rubygem_id: @rubygem.name }
         end
 
@@ -148,7 +146,7 @@ class OwnersControllerTest < ActionController::TestCase
       context "when user does not own the gem" do
         setup do
           @other_user = create(:user)
-          sign_in_as(@other_user)
+          verified_sign_in_as(@other_user)
           post :create, params: { handle: @other_user.display_id, rubygem_id: @rubygem.name }
         end
 
@@ -272,7 +270,7 @@ class OwnersControllerTest < ActionController::TestCase
       context "when user does not own the gem" do
         setup do
           @other_user = create(:user)
-          sign_in_as(@other_user)
+          verified_sign_in_as(@other_user)
 
           @last_owner = @rubygem.owners.last
           delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
@@ -289,7 +287,7 @@ class OwnersControllerTest < ActionController::TestCase
     context "on GET to resend confirmation" do
       setup do
         @new_owner = create(:user)
-        sign_in_as(@new_owner)
+        verified_sign_in_as(@new_owner)
       end
 
       context "when unconfirmed ownership exists" do
