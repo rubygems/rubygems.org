@@ -139,6 +139,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_forbidden(error = "forbidden")
+    error = "forbidden" if error.is_a?(Pundit::NotAuthorizedError)
     render plain: error, status: :forbidden
   end
 
