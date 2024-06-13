@@ -10,7 +10,7 @@ gem "aws-sdk-sqs", "~> 1.76"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.7"
 gem "dalli", "~> 3.2"
-gem "ddtrace", "~> 1.23", require: "ddtrace/auto_instrument"
+gem "datadog", "~> 2.1", require: "datadog/auto_instrument"
 gem "dogstatsd-ruby", "~> 5.5"
 gem "google-protobuf", "~> 4.27"
 gem "faraday", "~> 2.9"
@@ -122,6 +122,7 @@ group :development do
 end
 
 group :test do
+  gem "datadog-ci", "~> 1.0"
   gem "minitest", "~> 5.23", require: false
   gem "minitest-retry", "~> 0.2.2"
   gem "capybara", "~> 3.40"
