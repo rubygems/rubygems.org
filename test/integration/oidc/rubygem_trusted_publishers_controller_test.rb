@@ -71,6 +71,16 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       page.assert_selector("input[name='oidc_rubygem_trusted_publisher[trusted_publisher_attributes][repository_name]'][value='rubygem1']")
     end
 
+    should "get new for a github rubygem with invalid github URL" do
+      assert_no_difference("OIDC::RubygemTrustedPublisher.count") do
+        create(:version, rubygem: @rubygem, metadata: { "source_code_uri" => "https://github.com/CaioGarcia1" })
+
+        get new_rubygem_trusted_publisher_url(@rubygem.slug)
+
+        assert_response :success
+      end
+    end
+
     should "create trusted publisher" do
       stub_request(:get, "https://api.github.com/users/example")
         .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
