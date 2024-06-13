@@ -9,11 +9,12 @@ class MultifactorAuthsController < ApplicationController
   before_action :require_totp_enabled, only: :destroy
   before_action :seed_and_expire, only: :create
   before_action :find_mfa_user, only: %i[update otp_update webauthn_update]
+  before_action :require_mfa, only: %i[update]
   before_action :validate_otp, only: %i[otp_update]
   before_action :require_webauthn_enabled, only: %i[webauthn_update]
   before_action :validate_webauthn, only: %i[webauthn_update]
   before_action :disable_cache, only: %i[new recovery]
-  after_action :delete_mfa_level_update_session_variables, only: %i[otp_update webauthn_update]
+  after_action :delete_mfa_session, only: %i[otp_update webauthn_update]
   helper_method :issuer
 
   def new
@@ -43,10 +44,8 @@ class MultifactorAuthsController < ApplicationController
     end
   end
 
+  # not possible to arrive here because of require_mfa_enabled + require_mfa, but it must stay for rails to be happy.
   def update
-    initialize_mfa(@user)
-    session[:level] = level_param
-    prompt_mfa
   end
 
   def otp_update
@@ -89,7 +88,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def level_param
-    params.permit(:level).fetch(:level, "")
+    params.permit(:level).require(:level)
   end
 
   def issuer
@@ -112,7 +111,7 @@ class MultifactorAuthsController < ApplicationController
     return if current_user.totp_enabled?
 
     flash[:error] = t("multifactor_auths.require_totp_enabled")
-    delete_mfa_level_update_session_variables
+    delete_mfa_session
     redirect_to edit_settings_path
   end
 
@@ -120,7 +119,7 @@ class MultifactorAuthsController < ApplicationController
     return if current_user.webauthn_enabled?
 
     flash[:error] = t("multifactor_auths.require_webauthn_enabled")
-    delete_mfa_level_update_session_variables
+    delete_mfa_session
     redirect_to edit_settings_path
   end
 
@@ -130,43 +129,32 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def update_level_and_redirect
-    handle_new_level_param
+    case level_param
+    when "ui_and_api", "ui_and_gem_signin"
+      flash[:success] = t("multifactor_auths.update.success")
+      current_user.update!(mfa_level: level_param)
+    else
+      flash[:error] = t("multifactor_auths.update.invalid_level") # rubocop:disable Rails/ActionControllerFlashBeforeRender
+    end
+
     redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
     session.delete(:mfa_redirect_uri)
   end
-
-  # rubocop:disable Rails/ActionControllerFlashBeforeRender
-  def handle_new_level_param
-    case session[:level]
-    when "ui_and_api", "ui_and_gem_signin"
-      flash[:success] = t("multifactor_auths.update.success")
-      current_user.update!(mfa_level: session[:level])
-    else
-      flash[:error] = t("multifactor_auths.update.invalid_level")
-    end
-  end
-  # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
   def find_mfa_user
     @user = current_user
   end
 
-  def delete_mfa_level_update_session_variables
-    session.delete(:level)
-    session.delete(:webauthn_authentication)
-    delete_mfa_expiry_session
-  end
-
   def mfa_failure(message)
-    delete_mfa_level_update_session_variables
+    delete_mfa_session
     redirect_to edit_settings_path, flash: { error: message }
   end
 
   def otp_verification_url
-    otp_update_multifactor_auth_url(token: current_user.confirmation_token)
+    otp_update_multifactor_auth_url(token: current_user.confirmation_token, level: level_param)
   end
 
   def webauthn_verification_url
-    webauthn_update_multifactor_auth_url(token: current_user.confirmation_token)
+    webauthn_update_multifactor_auth_url(token: current_user.confirmation_token, level: level_param)
   end
 end
