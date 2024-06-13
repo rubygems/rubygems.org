@@ -1,4 +1,6 @@
 class ApiKey < ApplicationRecord
+  class ScopeError < RuntimeError; end
+
   API_SCOPES = %i[show_dashboard index_rubygems push_rubygem yank_rubygem add_owner remove_owner access_webhooks
                   configure_trusted_publishers].freeze
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner configure_trusted_publishers].freeze
@@ -42,12 +44,17 @@ class ApiKey < ApplicationRecord
     end
   end
 
+  def scope?(scope, scoped_gem = nil)
+    scope_enabled = scopes.include?(scope)
+    # TODO: once all calls to scope checks are changed, this check should
+    # fail if the api_key has a rubygem but scope? is called without a scoped_gem
+    scope_enabled = false if scoped_gem && rubygem_id && rubygem_id != scoped_gem.id
+    return scope_enabled if !scope_enabled || new_record?
+    touch :last_accessed_at
+  end
+
   API_SCOPES.each do |scope|
-    define_method(:"can_#{scope}?") do
-      scope_enabled = scopes.include?(scope)
-      return scope_enabled if !scope_enabled || new_record?
-      touch :last_accessed_at
-    end
+    define_method(:"can_#{scope}?") { scope?(scope) }
     alias_method scope, :"can_#{scope}?"
   end
 

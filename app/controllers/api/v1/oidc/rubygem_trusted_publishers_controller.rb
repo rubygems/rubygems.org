@@ -4,18 +4,14 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
 
   before_action :find_rubygem
 
-  before_action :verify_api_key_gem_scope
   before_action :verify_with_otp
   before_action :verify_mfa_requirement
-  before_action :verify_api_key_scope
 
-  before_action :render_forbidden, unless: :owner?
   before_action :find_rubygem_trusted_publisher, except: %i[index create]
   before_action :set_trusted_publisher_type, only: %i[create]
 
   def index
-    render json: @rubygem.oidc_rubygem_trusted_publishers.strict_loading
-      .includes(:trusted_publisher)
+    render json: @rubygem.oidc_rubygem_trusted_publishers.strict_loading.includes(:trusted_publisher)
   end
 
   def show
@@ -23,9 +19,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
   end
 
   def create
-    trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.build(
-      create_params
-    )
+    trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.build(create_params)
 
     if trusted_publisher.save
       render json: trusted_publisher, status: :created
@@ -40,12 +34,13 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
 
   private
 
-  def verify_api_key_scope
-    render_api_key_forbidden unless @api_key.can_configure_trusted_publishers?
+  def find_rubygem
+    super
+    authorize @rubygem, :show_trusted_publishers?
   end
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
+    @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
   end
 
   def set_trusted_publisher_type
