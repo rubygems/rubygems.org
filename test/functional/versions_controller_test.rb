@@ -163,7 +163,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should "render the checksum version" do
-      assert page.has_content?(@latest_version.sha256_hex)
+      assert page.has_field?("gem_sha_256_checksum", with: @latest_version.sha256_hex)
     end
   end
 
