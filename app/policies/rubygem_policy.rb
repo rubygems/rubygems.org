@@ -24,4 +24,8 @@ class RubygemPolicy < ApplicationPolicy
   def show_unconfirmed_ownerships?
     record.owned_by?(user)
   end
+
+  def show_events?
+    record.owned_by?(user)
+  end
 end

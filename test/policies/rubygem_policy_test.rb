@@ -24,6 +24,12 @@ class RubygemPolicyTest < ActiveSupport::TestCase
     refute_predicate Pundit.policy!(nil, @rubygem), :show_unconfirmed_ownerships?
   end
 
+  def test_show_events?
+    assert_predicate Pundit.policy!(@owner, @rubygem), :show_events?
+    refute_predicate Pundit.policy!(@user, @rubygem), :show_events?
+    refute_predicate Pundit.policy!(nil, @rubygem), :show_events?
+  end
+
   def test_create
     assert_predicate Pundit.policy!(@owner, @rubygem), :create?
     refute_predicate Pundit.policy!(nil, @rubygem), :create?
