@@ -1,5 +1,5 @@
 class RubygemPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       scope.none # unused
     end
