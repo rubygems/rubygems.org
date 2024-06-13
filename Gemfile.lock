@@ -190,7 +190,7 @@ GEM
     datadog-ci (0.8.3)
       msgpack
     date (3.3.4)
-    ddtrace (1.23.1)
+    ddtrace (1.23.2)
       datadog-ci (~> 0.8.1)
       debase-ruby_core_source (= 3.3.1)
       libdatadog (~> 7.0.0.1.0)
@@ -936,7 +936,7 @@ CHECKSUMS
   dartsass-sprockets (3.1.0) sha256=c238ec9f7f496489ac5a7813cd1f83d1e077a1826921acefc7e290a521b7a20a
   datadog-ci (0.8.3) sha256=6e78c03aa2524476dc99b969a7c3154195d1d84a912a21707e7f5c17783e03f9
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
-  ddtrace (1.23.1) sha256=44634a5c5c693f3e49f8db0b18d9a0815c2d887e767d3b0967d5187bb6413e50
+  ddtrace (1.23.2) sha256=3e91ab17cb4a778d3996d323b900c062318516fa8fe365e626b76a3e63d58977
   dead_end (4.0.0) sha256=695c8438993bb4c5415b1618a1b6e0afcae849ef2812fb8cb3846723904307eb
   debase-ruby_core_source (3.3.1) sha256=ed904cae290edf0cf274ad707f8981bf1cefad8081e78d4bb71be2a483bc2c08
   derailed_benchmarks (2.1.2) sha256=eaadc6206ceeb5538ff8f5e04a0023d54ebdd95d04f33e8960fb95a5f189a14f
