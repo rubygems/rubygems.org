@@ -225,7 +225,7 @@ ja:
         uptime: 稼働時間
         verified_by: 検証
         secured_by: セキュリティ
-        looking_for_maintainers: 保守者の募集
+        looking_for_maintainers: メンテナの募集
       header:
         dashboard: ダッシュボード
         settings: 設定
@@ -735,19 +735,19 @@ ja:
   adoptions:
     index:
       title: 引き継ぎ
-      subtitle_owner_html: '%{gem} に新しく参加する保守者を呼び掛ける <a class="adoption__blog__link"
+      subtitle_owner_html: '%{gem} に新しく参加するメンテナを呼び掛ける <a class="adoption__blog__link"
         href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>'
       subtitle_user_html: '%{gem}の所有権を申請する <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>'
-      ownership_calls: 保守者の募集
-      no_ownership_calls: "%{gem}の所有権の募集はありません。gemの所有者は新しい保守者を探していません。"
+      ownership_calls: メンテナの募集
+      no_ownership_calls: "%{gem}の所有権の募集はありません。gemの所有者は新しいメンテナを探していません。"
   ownership_calls:
     update:
       success_notice: "%{gem}の所有権の募集は修了しました。"
     create:
       success_notice: "%{gem}への所有権の募集を作成します。"
     index:
-      title: 保守者の募集
-      subtitle_html: RubyGemsは新しく参加する保守者を求めています<a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>
+      title: メンテナの募集
+      subtitle_html: RubyGemsは新しく参加するメンテナを求めています<a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>
     share_requirements: 手を借りたい領域を共有してください
     note_for_applicants: 応募者への補足：
     created_by: 作成者
