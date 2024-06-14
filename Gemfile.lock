@@ -356,6 +356,7 @@ GEM
     llhttp-ffi (0.5.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
+    local_time (3.0.2)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -804,6 +805,7 @@ DEPENDENCIES
   letter_opener (~> 1.10)
   letter_opener_web (~> 3.0)
   listen (~> 3.9)
+  local_time (~> 3.0)
   lookbook (~> 2.3)
   mail (~> 2.8)
   maintenance_tasks (~> 2.7)
@@ -1005,6 +1007,7 @@ CHECKSUMS
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
+  local_time (3.0.2) sha256=cb8abb2d56726ae285d00b0bd7f4c34bafc38c0c1cbc70ddc28f3a5661168d9d
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
   lookbook (2.3.1) sha256=d6ba294f3bd2fe8c39c30530a12aa99d42d202a5d6bff3d3edcafd6d2978dc39
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad

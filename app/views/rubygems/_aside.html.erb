@@ -16,11 +16,10 @@
     </h2>
   </div>
 
-
   <h2 class="gem__ruby-version__heading t-list__heading">
     <%= t('.gem_version_age') %>:
     <span class="gem__rubygem-version-age">
-      <p><%= time_ago_in_words(@latest_version.authored_at) %> ago</p>
+      <p><%= local_time_ago(@latest_version.authored_at) %></p>
     </span>
   </h2>
 

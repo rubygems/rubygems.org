@@ -20,3 +20,4 @@ pin "webauthn-json"
 # Avo custom JS entrypoint
 pin "avo.custom", preload: false
 pin "stimulus-rails-nested-form", preload: false # @4.1.0
+pin "local-time" # @3.0.2
