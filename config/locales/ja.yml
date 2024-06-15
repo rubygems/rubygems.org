@@ -407,13 +407,13 @@ ja:
     edit:
       submit: このパスワードを保存する
       title: パスワードをリセット
-      token_failure: URLをダブルチェックするか、リセットする新しいパスワードを送ってみてください。
+      token_failure: URLをダブルチェックするか、パスワードリセットを再度試してみてください。
     new:
       submit: パスワードをリセット
       title: パスワードを変更する
       will_email_notice: パスワード変更のためのリンクをEメールで送ります。
     create:
-      success: 数分でEメールが届きます。メールにはパスワードを変更する手順があります。
+      success: 数分でEメールが届きます。メールにはパスワードを変更する手順が記載されています。
       failure_on_missing_email: Eメールは空にできません。
     update:
       failure: パスワードを変更できませんでした。もう一度お試しください。
@@ -598,7 +598,7 @@ ja:
     security_events:
       title: セキュリティ事象
       description_html: |-
-        このページにはアカウントに起こったセキュリティ事象が表示されます。
+        このページにはあなたのアカウントに起こったセキュリティ事象が表示されます。
         何か疑わしい活動を見かけたら、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
   rubygems:
     aside:
@@ -727,7 +727,7 @@ ja:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。
       title: "%{name}の全バージョン履歴"
       versions_since:
-        other: "%{since}からの%{count}件"
+        other: "%{since}からの%{count}バージョン"
         one: "%{since}からの1バージョン"
       imported_gem_version_notice: このgemのバージョンは%{import_date}にRubyGems.orgにインポートされました。表示されている日付は作者によってgemspec中で指定されました。
     version:
