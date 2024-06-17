@@ -168,7 +168,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       context "when OTP is correct" do
         setup do
-          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
+          get :update, params: { token: @user.confirmation_token }
           post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
@@ -184,7 +184,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       context "when OTP is incorrect" do
         setup do
-          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
+          get :update, params: { token: @user.confirmation_token }
           post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
         end
 
@@ -197,7 +197,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       context "when the OTP session is expired" do
         setup do
-          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
+          get :update, params: { token: @user.confirmation_token }
           travel 16.minutes do
             post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
@@ -225,7 +225,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
-      get :update, params: { token: @user.confirmation_token, user_id: @user.id }
+      get :update, params: { token: @user.confirmation_token }
       @origin = WebAuthn.configuration.origin
       @rp_id = URI.parse(@origin).host
       @client = WebAuthn::FakeClient.new(@origin, encoding: false)
@@ -241,7 +241,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         post(
           :webauthn_update,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
@@ -270,7 +269,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         post(
           :webauthn_update,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token
           }
         )
@@ -293,7 +291,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         post(
           :webauthn_update,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
@@ -325,7 +322,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           post(
             :webauthn_update,
             params: {
-              user_id: @user.id,
               token: @user.confirmation_token,
               credentials:
               WebauthnHelpers.get_result(
