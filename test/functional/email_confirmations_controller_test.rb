@@ -5,7 +5,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
   context "on GET to update" do
-    setup { @user = create(:user) }
+    setup { @user = create(:user, :unconfirmed) }
 
     context "user exists and token has not expired" do
       setup do
@@ -13,9 +13,27 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "should confirm user account" do
-        assert @user.email_confirmed
+        assert @user.reload.email_confirmed
       end
-      should "sign in user" do
+      should "not sign in user" do
+        refute cookies[:remember_token]
+      end
+    end
+
+    context "successful confirmation while signed in" do
+      setup do
+        @user.confirm_email! # must be confirmed to sign in
+        sign_in_as(@user)
+        @user.update!(unconfirmed_email: "new@example.com")
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should redirect_to("the dashboard") { dashboard_url }
+
+      should "should confirm user account" do
+        assert @user.reload.email_confirmed
+      end
+      should "keep the user signed in" do
         assert cookies[:remember_token]
       end
     end
@@ -65,7 +83,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         get :update, params: { token: @user.confirmation_token }
       end
 
-      should redirect_to("the homepage") { root_url }
+      should redirect_to("the sign in page") { sign_in_url }
 
       should "confirm email for first user" do
         assert_equal @email, @user.reload.email
@@ -76,7 +94,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           get :update, params: { token: @second_user.confirmation_token }
         end
 
-        should "show error to second user on confirmation request and not " do
+        should "show error to second user on confirmation request" do
           assert_equal "Email address has already been taken", flash[:alert]
         end
 
@@ -162,7 +180,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
   context "on POST to otp_update" do
     context "user has mfa enabled" do
       setup do
-        @user = create(:user)
+        @user = create(:user, :unconfirmed)
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
       end
 
@@ -172,13 +190,36 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
-        should redirect_to("the homepage") { root_url }
+        should set_flash[:notice]
+        should redirect_to("the sign in page") { sign_in_url }
 
         should "should confirm user account" do
-          assert @user.email_confirmed
+          assert @user.reload.email_confirmed
         end
+
         should "clear mfa_expires_at" do
           assert_nil @controller.session[:mfa_expires_at]
+        end
+      end
+
+      context "user is already signed in and OTP is correct" do
+        setup do
+          @user.confirm_email!
+          sign_in_as(@user)
+          @user.update!(unconfirmed_email: "new@example.com")
+
+          assert @user.confirmation_token
+          get :update, params: { token: @user.confirmation_token }
+          post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+        end
+
+        should redirect_to("the dashboard") { dashboard_url }
+
+        should "should confirm user account" do
+          assert @user.reload.email_confirmed
+        end
+        should "keep the user signed in" do
+          assert cookies[:remember_token]
         end
       end
 
@@ -223,7 +264,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
   context "on POST to webauthn_update" do
     setup do
-      @user = create(:user)
+      @user = create(:user, :unconfirmed)
       @webauthn_credential = create(:webauthn_credential, user: @user)
       get :update, params: { token: @user.confirmation_token }
       @origin = WebAuthn.configuration.origin
@@ -251,9 +292,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         )
       end
 
-      should "redirect to root" do
-        assert_redirected_to root_url
-      end
+      should redirect_to("the sign in page") { sign_in_url }
 
       should "change the user's email" do
         assert @user.reload.email_confirmed
@@ -261,6 +300,49 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should "clear mfa_expires_at" do
         assert_nil @controller.session[:mfa_expires_at]
+      end
+
+      should "set flash notice" do
+        assert_equal "Your email address has been verified.", flash[:notice]
+      end
+    end
+
+    context "while signed in with successful webauthn" do
+      setup do
+        @user.confirm_email!
+        sign_in_as(@user)
+        @user.update!(unconfirmed_email: "new@example.com")
+        @challenge = session[:webauthn_authentication]["challenge"]
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        post(
+          :webauthn_update,
+          params: {
+            token: @user.confirmation_token,
+            credentials:
+            WebauthnHelpers.get_result(
+              client: @client,
+              challenge: @challenge
+            )
+          }
+        )
+      end
+
+      should redirect_to("the dashboard") { dashboard_url }
+
+      should "change the user's email" do
+        assert @user.reload.email_confirmed
+        assert_equal "new@example.com", @user.email
+      end
+
+      should "clear mfa_expires_at" do
+        assert_nil @controller.session[:mfa_expires_at]
+      end
+
+      should "set flash notice" do
+        assert_equal "Your email address has been verified.", flash[:notice]
       end
     end
 
@@ -489,7 +571,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
 
             should "should confirm user account" do
-              assert @user.email_confirmed
+              assert @user.reload.email_confirmed
             end
           end
 
@@ -542,7 +624,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
 
             should "should confirm user account" do
-              assert @user.email_confirmed
+              assert @user.reload.email_confirmed
             end
           end
 
@@ -595,7 +677,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
 
             should "should confirm user account" do
-              assert @user.email_confirmed
+              assert @user.reload.email_confirmed
             end
           end
 

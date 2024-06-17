@@ -8,7 +8,7 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
   before_action :validate_confirmation_token, only: %i[update otp_update webauthn_update]
-  before_action :require_mfa, only: %i[update]
+  before_action :require_mfa, only: :update
   before_action :validate_otp, only: :otp_update
   before_action :validate_webauthn, only: :webauthn_update
   after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
@@ -63,11 +63,11 @@ class EmailConfirmationsController < ApplicationController
 
   def confirm_email
     if @user.confirm_email!
-      sign_in @user
-      redirect_to root_path, notice: t("email_confirmations.update.confirmed_email")
+      flash[:notice] = t("email_confirmations.update.confirmed_email")
     else
-      redirect_to root_path, alert: @user.errors.full_messages.to_sentence
+      flash[:alert] = @user.errors.full_messages.to_sentence
     end
+    redirect_to signed_in? ? dashboard_path : sign_in_path
   end
 
   def email_params
