@@ -2,7 +2,6 @@ class PasswordsController < ApplicationController
   include MfaExpiryMethods
   include RequireMfa
   include WebauthnVerifiable
-  include SessionVerifiable
 
   before_action :ensure_email_present, only: %i[create]
 
@@ -13,14 +12,13 @@ class PasswordsController < ApplicationController
   before_action :validate_webauthn, only: %i[webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
-  verify_session_before only: %i[update]
+  before_action :validate_password_reset_session, only: :update
 
   def new
   end
 
   def edit
-    # When user doesn't have mfa, a valid token is a full "magic link" sign in.
-    verified_sign_in
+    password_reset_session_verified
     render :edit
   end
 
@@ -36,11 +34,11 @@ class PasswordsController < ApplicationController
   end
 
   def update
-    if current_user.update_password reset_params[:password]
-      current_user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
-      current_user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
-      redirect_to dashboard_path
-      session[:password_reset_token] = nil
+    if @user.update_password reset_params[:password]
+      @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
+      @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
+      delete_password_reset_session
+      redirect_to signed_in? ? dashboard_path : sign_in_path
     else
       flash.now[:alert] = t(".failure")
       render :edit
@@ -48,27 +46,16 @@ class PasswordsController < ApplicationController
   end
 
   def otp_edit
-    verified_sign_in
+    password_reset_session_verified
     render :edit
   end
 
   def webauthn_edit
-    verified_sign_in
+    password_reset_session_verified
     render :edit
   end
 
   private
-
-  def verified_sign_in
-    sign_in @user
-    session_verified
-    @user.update!(confirmation_token: nil)
-    StatsD.increment "login.success"
-  end
-
-  def reset_params
-    params.fetch(:password_reset, {}).permit(:password, :reset_api_key, :reset_api_keys)
-  end
 
   def ensure_email_present
     @email = params.dig(:password, :email)
@@ -79,22 +66,44 @@ class PasswordsController < ApplicationController
   end
 
   def validate_confirmation_token
-    @user = User.find_by(confirmation_token: params[:token].to_s)
-    redirect_to root_path, alert: t("passwords.edit.token_failure") unless @user&.valid_confirmation_token?
+    confirmation_token = params.permit(:token).fetch(:token, "").to_s
+    @user = User.find_by(confirmation_token:)
+    return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
+    sign_out if signed_in? && @user != current_user
   end
 
-  def login_failure(message)
+  def password_reset_session_verified
+    reset_session
+    session[:password_reset_verified_user] = @user.id
+    session[:password_reset_verified] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
+    @user.update!(confirmation_token: nil)
+  end
+
+  def validate_password_reset_session
+    return login_failure(t("passwords.edit.token_failure")) if session[:password_reset_verified].nil?
+    return login_failure(t("verification_expired")) if session[:password_reset_verified] < Time.current
+    @user = User.find_by(id: session[:password_reset_verified_user])
+    login_failure(t("verification_expired")) unless @user
+  end
+
+  def delete_password_reset_session
+    delete_mfa_session
+    session.delete(:password_reset_verified_user)
+    session.delete(:password_reset_verified)
+  end
+
+  def reset_params
+    params.permit(password_reset: %i[password reset_api_key reset_api_keys]).require(:password_reset)
+  end
+
+  def mfa_failure(message)
     flash.now.alert = message
     render template: "multifactor_auths/prompt", status: :unauthorized
   end
 
-  def mfa_failure(message)
-    login_failure(message)
-  end
-
-  def redirect_to_verify
-    session[:redirect_uri] = verify_session_redirect_path
-    redirect_to verify_session_path, alert: t("verification_expired")
+  def login_failure(alert)
+    reset_session
+    redirect_to sign_in_path, alert:
   end
 
   def otp_verification_url
