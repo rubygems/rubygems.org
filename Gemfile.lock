@@ -386,7 +386,7 @@ GEM
       zeitwerk (>= 2.6.2)
     marcel (1.0.4)
     matrix (0.4.2)
-    memory_profiler (1.0.1)
+    memory_profiler (1.0.2)
     meta-tags (2.21.0)
       actionpack (>= 6.0.0, < 7.2)
     method_source (1.1.0)
@@ -1011,7 +1011,7 @@ CHECKSUMS
   maintenance_tasks (2.7.1) sha256=2f1f42239a11f5b30ef34e821f1beb42010d08e81634d8945884aba8bdb982db
   marcel (1.0.4) sha256=0d5649feb64b8f19f3d3468b96c680bae9746335d02194270287868a661516a4
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
-  memory_profiler (1.0.1) sha256=38cdb42f22d9100df2eba0365c199724b58b05c38e765cd764a07392916901b1
+  memory_profiler (1.0.2) sha256=0e7c5c2a1a7bea5b5a05b9df25b2d628afa0db37b9344ba42b42eb8a604762df
   meta-tags (2.21.0) sha256=cfaa2ccd32b2700c3538c9eae647191295a06f47f0d8558e685a6a7158171cfb
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_histogram (0.3.1) sha256=6a114b504e4618b0e076cc672996036870f7cc6f16b8e5c25c0c637726d2dd94
