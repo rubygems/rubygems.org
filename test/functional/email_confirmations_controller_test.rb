@@ -18,6 +18,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       should "not sign in user" do
         refute cookies[:remember_token]
       end
+      should "instruct the browser not to send referrer that contains the token" do
+        assert_equal "no-referrer", response.headers["Referrer-Policy"]
+      end
     end
 
     context "successful confirmation while signed in" do
