@@ -94,8 +94,14 @@ class SignUpTest < SystemTest
     assert_not_nil link
     visit link
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Sign in"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
+
+    fill_in "Email or Username", with: "email@person.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Sign out"
   end
 
   teardown do

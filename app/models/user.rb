@@ -280,8 +280,7 @@ uniqueness: { case_sensitive: false }
   private
 
   def update_email
-    self.attributes = { email: unconfirmed_email, unconfirmed_email: nil, mail_fails: 0 }
-    save
+    update(email: unconfirmed_email, unconfirmed_email: nil, mail_fails: 0)
   end
 
   def unconfirmed_email_uniqueness
