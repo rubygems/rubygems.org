@@ -682,7 +682,7 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    statsd-instrument (3.7.0)
+    statsd-instrument (3.8.0)
     stimulus-rails (1.3.3)
       railties (>= 6.0.0)
     stringio (3.1.0)
@@ -859,7 +859,7 @@ DEPENDENCIES
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
   sprockets-rails (~> 3.5)
-  statsd-instrument (~> 3.7)
+  statsd-instrument (~> 3.8)
   stimulus-rails (~> 1.3)
   strong_migrations (~> 1.8)
   tailwindcss-rails (~> 2.6)
@@ -1128,7 +1128,7 @@ CHECKSUMS
   snaky_hash (2.0.1) sha256=1ac87ec157fcfe7a460e821e0cd48ae1e6f5e3e082ab520f03f31a9259dbdc31
   sprockets (4.2.1) sha256=951b13dd2f2fcae840a7184722689a803e0ff9d2702d902bd844b196da773f97
   sprockets-rails (3.5.1) sha256=c44626cb3887a1a8b572ca258685db33b4ebd041aa73428a716eac444ee5ef48
-  statsd-instrument (3.7.0) sha256=071eb94be7af7f529da45528ab4e3d96976fcdc8f4afd198ef2057b6b7987491
+  statsd-instrument (3.8.0) sha256=122e294845d9a05a74fa53a859010424b455b44f1605abac3108fbbabb2aa7cd
   stimulus-rails (1.3.3) sha256=4d1f9ab1d64e605f4c9cdd4cc530a9538b510606d32d02249d106256845c562c
   stringio (3.1.0) sha256=c1f6263ae03a15025e51194ab19b06b15e06adcaaedb7f5f6c06ab60f5d67718
   strong_migrations (1.8.0) sha256=18de155ebcddf44e60e74f9a6c0b4bfd2d1e576dfe1c67f4aafc4ec5b0442f5d
