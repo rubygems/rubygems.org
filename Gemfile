@@ -138,5 +138,5 @@ group :test do
   gem "simplecov-cobertura", "~> 2.1", require: false
   gem "aggregate_assertions", "~> 0.2.0"
   gem "minitest-gcstats", "~> 1.3"
-  gem "minitest-reporters", "~> 1.6"
+  gem "minitest-reporters", "~> 1.7"
 end
