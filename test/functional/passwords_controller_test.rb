@@ -63,6 +63,10 @@ class PasswordsControllerTest < ActionController::TestCase
         page.assert_text("Reset password")
         page.assert_selector("input[type=password][autocomplete=new-password]")
       end
+
+      should "instruct the browser not to send referrer that contains the token" do
+        assert_equal "no-referrer", response.headers["Referrer-Policy"]
+      end
     end
 
     context "with expired confirmation_token" do

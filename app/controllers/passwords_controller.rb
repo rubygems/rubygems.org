@@ -6,6 +6,7 @@ class PasswordsController < ApplicationController
 
   before_action :ensure_email_present, only: %i[create]
 
+  before_action :no_referrer, only: %i[edit otp_edit webauthn_edit]
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
   before_action :require_mfa, only: %i[edit]
   before_action :validate_otp, only: %i[otp_edit]

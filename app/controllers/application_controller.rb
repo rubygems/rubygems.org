@@ -184,6 +184,11 @@ class ApplicationController < ActionController::Base
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 
+  # Avoid leaking confirmation token in referrer header on certain pages
+  def no_referrer
+    headers["Referrer-Policy"] = "no-referrer"
+  end
+
   def set_error_context_user
     return unless current_user
 

@@ -7,6 +7,7 @@ class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
+  before_action :no_referrer, only: %i[update otp_update webauthn_update]
   before_action :validate_confirmation_token, only: %i[update otp_update webauthn_update]
   before_action :require_mfa, only: :update
   before_action :validate_otp, only: :otp_update
