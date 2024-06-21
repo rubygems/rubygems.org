@@ -356,6 +356,7 @@ GEM
     llhttp-ffi (0.5.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
+    logger (1.6.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -585,8 +586,8 @@ GEM
     regexp_parser (2.9.0)
     reline (0.5.9)
       io-console (~> 0.5)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.0)
+      strscan
     roadie (5.2.1)
       css_parser (~> 1.4)
       nokogiri (~> 1.15)
@@ -648,8 +649,9 @@ GEM
     searchkick (5.3.1)
       activemodel (>= 6.1)
       hashie
-    selenium-webdriver (4.21.1)
+    selenium-webdriver (4.22.0)
       base64 (~> 0.2)
+      logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -852,7 +854,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.18)
   ruby-magic (~> 0.6)
   searchkick (~> 5.3)
-  selenium-webdriver (~> 4.21)
+  selenium-webdriver (~> 4.22)
   shoryuken (~> 6.2)
   shoulda-context (~> 3.0.0.rc1)
   shoulda-matchers (~> 6.2)
@@ -1005,6 +1007,7 @@ CHECKSUMS
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
+  logger (1.6.0) sha256=0ab7c120262dd8de2a18cb8d377f1f318cbe98535160a508af9e7710ff43ef3e
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
   lookbook (2.3.1) sha256=d6ba294f3bd2fe8c39c30530a12aa99d42d202a5d6bff3d3edcafd6d2978dc39
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
@@ -1090,7 +1093,7 @@ CHECKSUMS
   redcarpet (3.6.0) sha256=8ad1889c0355ff4c47174af14edd06d62f45a326da1da6e8a121d59bdcd2e9e9
   regexp_parser (2.9.0) sha256=81a00ba141cec0d4b4bf58cb80cd9193e5180836d3fa6ef623f7886d3ba8bdd9
   reline (0.5.9) sha256=5d2dd7ed0fd078e79a05e4eaa47dc91b8dacec7358e9e1dd6d9c4636cff7d378
-  rexml (3.2.8) sha256=0908a86381d9f973824680df4e0a75422766272f03b1c0e49db7e79c23db1135
+  rexml (3.3.0) sha256=2959f7f006adcec3cea6ebe916f3fa15a9e5b7ccdf29cbabad5ae3447c534810
   roadie (5.2.1) sha256=e4a4f61ce792bd91b228b6844b4bad6b160cdc1b8df86c81a8b983082a5001d6
   roadie-rails (3.2.0) sha256=90a534857fcfe9fdbe4f9ebfdbc47e5d33462c4f36f478fc80ba6a7b6257433f
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
@@ -1115,7 +1118,7 @@ CHECKSUMS
   sassc-embedded (1.70.1) sha256=a95172c9c6725dfc412c702a0e705fb8a5bcb3aac2a32586b18e5432987103d3
   sawyer (0.9.2) sha256=fa3a72d62a4525517b18857ddb78926aab3424de0129be6772a8e2ba240e7aca
   searchkick (5.3.1) sha256=dc1181543f6a68354e380651f235fa7f3df6a09e4cd67fc284dc293fa9860f57
-  selenium-webdriver (4.21.1) sha256=c30b64014532fc5156c60797985f839f36adbe60ff4653e7112b008dc1c83263
+  selenium-webdriver (4.22.0) sha256=644370abcdcf1f14b2581c125d39014a1933b20e355c74b0dc5d0ca877a45d66
   semantic (1.6.1) sha256=3cdbb48f59198ebb782a3fdfb87b559e0822a311610db153bae22777a7d0c163
   semantic_logger (4.15.0) sha256=ec4f56122b5d2e2117d148b86c69fb62c1194a2b01a271be04ba8678a85f81ff
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
