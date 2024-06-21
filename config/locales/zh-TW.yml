@@ -420,11 +420,8 @@ zh-TW:
     update:
       failure:
   multifactor_auths:
-    incorrect_otp: 您的 OTP 碼不正確。
     session_expired: 您的登入頁面工作階段已過期。
-    require_totp_disabled: 您基於 OTP 的多重要素驗證已經啟用。您需要先移除才能重新設定。
     require_mfa_enabled: 您尚未啟用多重要素驗證，請先啟用。
-    require_totp_enabled: 您未啟用驗證器應用程式。請先啟用。
     require_webauthn_enabled: 您未啟用任何安全裝置。您需要先將裝置綁定到您的帳號。
     setup_required_html: 您必須設定多重要素驗證以保護您的帳號和 Gems。請閱讀我們的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">部落格文章</a>以了解詳情。
     setup_recommended: 為保護您的帳號和 Gems，我們建議您設定多重要素驗證。未來我們將強制要求所有帳號啟用 MFA。
@@ -434,18 +431,6 @@ zh-TW:
       或 "使用者介面和 API"。未來我們將強制要求所有帳號將設為上述 MFA 等級。
     setup_webauthn_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">了解詳情</a>！"
-    new:
-      title: 啟用多重要素驗證
-      scan_prompt: 請用您的驗證裝置掃描 QR-code。如果您沒辦法掃描，手動輸入下面的資料。
-      otp_prompt: 輸入驗證裝置上的數字來繼續。
-      confirm: 我已把復原碼收在安全的地方。
-      enable: 啟用
-      account: 帳號：%{account}
-      key: 金鑰：%{key}
-      time_based: 基於時間：是
-    create:
-      qrcode_expired: QR-code 和金鑰已過期。請重新註冊裝置。
-      success: 您已成功啟用基於 OTP 的多重要素驗證。
     recovery:
       copied: "[ 已複製 ]"
       continue: 繼續
@@ -454,8 +439,6 @@ zh-TW:
       saved:
       note_html:
       already_generated:
-    destroy:
-      success: 您已成功停用基於 OTP 的多重要素驗證。
     update:
       invalid_level: MFA 等級無效。
       success: 您已成功修改多重驗證等級。
@@ -468,6 +451,24 @@ zh-TW:
       recovery_code_html:
       security_device: 安全裝置
       verify_code: 驗證碼
+  totps:
+    incorrect_otp: 您的 OTP 碼不正確。
+    require_totp_disabled: 您基於 OTP 的多重要素驗證已經啟用。您需要先移除才能重新設定。
+    require_totp_enabled: 您未啟用驗證器應用程式。請先啟用。
+    new:
+      title: 啟用多重要素驗證
+      scan_prompt: 請用您的驗證裝置掃描 QR-code。如果您沒辦法掃描，手動輸入下面的資料。
+      otp_prompt: 輸入驗證裝置上的數字來繼續。
+      confirm: 我已把復原碼收在安全的地方。
+      enable: 啟用
+      account: 帳號：%{account}
+      key: 金鑰：%{key}
+      time_based: 基於時間：是
+    create:
+      qrcode_expired: QR-code 和金鑰已過期。請重新註冊裝置。
+      success: 您已成功啟用基於 OTP 的多重要素驗證。
+    destroy:
+      success: 您已成功停用基於 OTP 的多重要素驗證。
   notifiers:
     update:
       success: 您已成功更新您的電子郵件通知設定。

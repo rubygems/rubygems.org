@@ -418,11 +418,8 @@ ja:
     update:
       failure: パスワードを変更できませんでした。もう一度お試しください。
   multifactor_auths:
-    incorrect_otp: OTPのコードが正しくありません。
     session_expired: ログインページのセッションが期限切れになりました。
-    require_totp_disabled: OTPベースの多要素認証が既に有効になっています。OTPベースの認証を再構成するには最初に削除しなければなりません。
     require_mfa_enabled: 多要素認証が有効になっていません。最初に有効にしなくてはなりません。
-    require_totp_enabled: 有効になっている認証器がありません。最初に有効にしなければなりません。
     require_webauthn_enabled: 有効になっているセキュリティ機器がありません。最初に機器をアカウントに紐付けなければなりません。
     setup_required_html: アカウントとgemの保護のため、多要素認証の設定が必要です。詳細は<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">ブログ記事</a>をお読みください。
     setup_recommended: アカウントとgemの保護のため、多要素認証を設定することを推奨します。今後アカウントにはMFAの有効化が必須になります。
@@ -431,18 +428,6 @@ ja:
     strong_mfa_level_recommended: アカウントとgemの保護のため、MFAの水準を「UIとgemのサインイン」または「UIとAPI」に変更することをお勧めします。将来のアカウントはこれらの水準のどちらか1つにMFAが有効になっていることが必須になります。
     setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">詳細はこちら</a>！"
-    new:
-      title: 多要素認証を有効にする
-      scan_prompt: 認証アプリでQRコードを読み取ってください。コードを読み取れないようであれば手作業でアプリに以下の情報を追加してください。
-      otp_prompt: 認証アプリ上の数値のコードを入力して続けてください。
-      confirm: 復旧コードを安全に保持しました。
-      enable: 有効
-      account: アカウント：%{account}
-      key: キー：%{key}
-      time_based: 時間ベース：はい
-    create:
-      qrcode_expired: QRコードとキーが期限切れです。新しい機器を再度登録してみてください。
-      success: OTPベースの多要素認証が正常に有効になりました。
     recovery:
       copied: "[ コピーしました ]"
       continue: 続ける
@@ -451,8 +436,6 @@ ja:
       saved: 復旧コードを保存したことを確認しました。
       note_html: これらの復旧コードを<strong class='recovery__bold'>コピー及び保存</strong>してください。認証機器を紛失した場合にこれらのコードを使ってログインしMFAをリセットできます。各コードは1回使えます。
       already_generated: 既に復旧コードを保存したはずです。
-    destroy:
-      success: OTPベースの多要素認証の有効化に失敗しました。
     update:
       invalid_level: 不正なMFAの水準です。
       success: 多要素認証の水準が正常に更新されました。
@@ -466,6 +449,24 @@ ja:
         class="t-link">復旧コード</a>を使えます。
       security_device: セキュリティ機器
       verify_code: コードを検証
+  totps:
+    incorrect_otp: OTPのコードが正しくありません。
+    require_totp_disabled: OTPベースの多要素認証が既に有効になっています。OTPベースの認証を再構成するには最初に削除しなければなりません。
+    require_totp_enabled: 有効になっている認証器がありません。最初に有効にしなければなりません。
+    new:
+      title: 多要素認証を有効にする
+      scan_prompt: 認証アプリでQRコードを読み取ってください。コードを読み取れないようであれば手作業でアプリに以下の情報を追加してください。
+      otp_prompt: 認証アプリ上の数値のコードを入力して続けてください。
+      confirm: 復旧コードを安全に保持しました。
+      enable: 有効
+      account: アカウント：%{account}
+      key: キー：%{key}
+      time_based: 時間ベース：はい
+    create:
+      qrcode_expired: QRコードとキーが期限切れです。新しい機器を再度登録してみてください。
+      success: OTPベースの多要素認証が正常に有効になりました。
+    destroy:
+      success: OTPベースの多要素認証の有効化に失敗しました。
   notifiers:
     update:
       success: Eメール通知設定が正常に更新されました。

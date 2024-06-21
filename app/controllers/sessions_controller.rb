@@ -142,7 +142,7 @@ class SessionsController < Clearance::SessionsController
 
   def url_after_create
     if current_user.mfa_recommended_not_yet_enabled?
-      new_multifactor_auth_path
+      new_totp_path
     elsif current_user.mfa_recommended_weak_level_enabled?
       edit_settings_path
     else

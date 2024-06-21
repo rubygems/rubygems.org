@@ -419,29 +419,14 @@ en:
     update:
       failure: Your password could not be changed. Please try again.
   multifactor_auths:
-    incorrect_otp: Your OTP code is incorrect.
     session_expired: Your login page session has expired.
-    require_totp_disabled: Your OTP based multi-factor authentication has already been enabled. To reconfigure your OTP based authentication, you'll have to remove it first.
     require_mfa_enabled: Your multi-factor authentication has not been enabled. You have to enable it first.
-    require_totp_enabled: You don't have an authenticator app enabled. You have to enable it first.
     require_webauthn_enabled: You don't have any security devices enabled. You have to associate a device to your account first.
     setup_required_html: For protection of your account and your gems, you are required to set up multi-factor authentication. Please read our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">blog post</a> for more details.
     setup_recommended: For protection of your account and your gems, we encourage you to set up multi-factor authentication. Your account will be required to have MFA enabled in the future.
     strong_mfa_level_required_html: For protection of your account and your gems, you are required to change your MFA level to "UI and gem signin" or "UI and API". Please read our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">blog post</a> for more details.
     strong_mfa_level_recommended: For protection of your account and your gems, we encourage you to change your MFA level to "UI and gem signin" or "UI and API". Your account will be required to have MFA enabled on one of these levels in the future.
     setup_webauthn_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. <a href="https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html">Learn more</a>!
-    new:
-      title: Enabling multi-factor auth
-      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually.
-      otp_prompt: Type digit code from auth app to continue.
-      confirm: I have kept my recovery codes safe.
-      enable: Enable
-      account: "Account: %{account}"
-      key: "Key: %{key}"
-      time_based: "Time based: Yes"
-    create:
-      qrcode_expired: The QR-code and key is expired. Please try registering a new device again.
-      success: You have successfully enabled OTP based multi-factor authentication.
     recovery:
       copied: "[ copied ]"
       continue: Continue
@@ -450,8 +435,6 @@ en:
       saved: I acknowledge that I have saved my recovery codes.
       note_html: "Please <strong class='recovery__bold'>copy and save</strong> these recovery codes. You can use these codes to login and reset your MFA if your lose your authentication device. Each code can be used once."
       already_generated: You should have already saved your recovery codes.
-    destroy:
-      success: You have successfully disabled OTP based multi-factor authentication.
     update:
       invalid_level: Invalid MFA level.
       success: You have successfully updated your multi-factor authentication level.
@@ -464,6 +447,24 @@ en:
       recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
       security_device: Security Device
       verify_code: Verify code
+  totps:
+    incorrect_otp: Your OTP code is incorrect.
+    require_totp_disabled: Your OTP based multi-factor authentication has already been enabled. To reconfigure your OTP based authentication, you'll have to remove it first.
+    require_totp_enabled: You don't have an authenticator app enabled. You have to enable it first.
+    new:
+      title: Enabling multi-factor auth
+      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually.
+      otp_prompt: Type digit code from auth app to continue.
+      confirm: I have kept my recovery codes safe.
+      enable: Enable
+      account: "Account: %{account}"
+      key: "Key: %{key}"
+      time_based: "Time based: Yes"
+    create:
+      qrcode_expired: The QR-code and key is expired. Please try registering a new device again.
+      success: You have successfully enabled OTP based multi-factor authentication.
+    destroy:
+      success: You have successfully disabled OTP based multi-factor authentication.
   notifiers:
     update:
       success: You have successfully updated your email notification settings.

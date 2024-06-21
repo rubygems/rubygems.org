@@ -235,7 +235,7 @@ class SessionsControllerTest < ActionController::TestCase
           end
 
           should respond_with :redirect
-          should redirect_to("the mfa setup page") { new_multifactor_auth_path }
+          should redirect_to("the mfa setup page") { new_totp_path }
 
           should "set notice flash" do
             expected_notice = "For protection of your account and your gems, we encourage you to set up multi-factor authentication. " \

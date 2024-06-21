@@ -103,7 +103,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
             should "include warning" do
               expected_warning =
                 "For protection of your account and gems, we encourage you to set up multi-factor authentication " \
-                "at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future."
+                "at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future."
 
               assert_warning_included(expected_warning)
             end

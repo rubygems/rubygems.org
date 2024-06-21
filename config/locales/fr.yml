@@ -438,18 +438,39 @@ fr:
     update:
       failure:
   multifactor_auths:
-    incorrect_otp: Votre clé OTP est incorrecte.
     session_expired:
-    require_totp_disabled:
     require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
       Vous devez d'abord l'activer.
-    require_totp_enabled:
     require_webauthn_enabled:
     setup_required_html:
     setup_recommended:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
     setup_webauthn_html:
+    recovery:
+      copied:
+      continue: Continuer
+      title: Codes de récupération
+      copy:
+      saved:
+      note_html:
+      already_generated:
+    update:
+      invalid_level:
+      success:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      recovery_code:
+      recovery_code_html:
+      security_device:
+      verify_code:
+  totps:
+    incorrect_otp: Votre clé OTP est incorrecte.
+    require_totp_disabled:
+    require_totp_enabled:
     new:
       title: Activer l'authentification multifacteur
       scan_prompt: Veuillez scanner le QR code avec votre app d'authentification.
@@ -466,28 +487,8 @@ fr:
       qrcode_expired: Le QR code et la clé sont expirés. Veuillez essayer d'enregistrer
         un nouvel appareil.
       success: Vous avez activé l'authentification multifacteur.
-    recovery:
-      copied:
-      continue: Continuer
-      title: Codes de récupération
-      copy:
-      saved:
-      note_html:
-      already_generated:
     destroy:
       success: Vous avez désactivé l'authentification multifacteur.
-    update:
-      invalid_level:
-      success:
-    prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      recovery_code_html:
-      security_device:
-      verify_code:
   notifiers:
     update:
       success:

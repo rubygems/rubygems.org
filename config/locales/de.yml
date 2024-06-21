@@ -488,14 +488,9 @@ de:
     update:
       failure: Dein Passwort konnte nicht geändert werden. Bitte versuche es erneut.
   multifactor_auths:
-    incorrect_otp: Dein OTP-Code ist falsch.
     session_expired: Deine Sitzung auf der Anmeldeseite ist abgelaufen.
-    require_totp_disabled: Deine auf OTP basierende Zwei-Faktor-Authentifizierung
-      ist bereits aktiviert. Um sie neu zu konfigurieren, musst du sie zuerst entfernen.
     require_mfa_enabled: Deine Zwei-Faktor-Authentifizierung ist nicht aktiviert.
       Du musst sie zuerst aktivieren.
-    require_totp_enabled: Du hast keine Authenticator-App aktiviert. Du musst sie
-      zuerst aktivieren.
     require_webauthn_enabled: Du hast keine Sicherheitsgeräte aktiviert. Du musst
       zuerst ein Gerät mit deinem Konto verknüpfen.
     setup_required_html: Zum Schutz deines Kontos und deiner Gems musst du die Zwei-Faktor-Authentifizierung
@@ -516,6 +511,40 @@ de:
       die Sicherheit deines Kontos, indem du <a href=\"/settings/edit#security-device\">ein
       neues Gerät einrichtest</a>. <a href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">Erfahre
       mehr</a>!"
+    recovery:
+      copied: "[ kopiert ]"
+      continue: Weiter
+      title: Wiederherstellungscodes
+      copy: "[ kopieren ]"
+      saved: Ich bestätige, dass ich meine Wiederherstellungscodes gespeichert habe.
+      note_html: Bitte <strong class='recovery__bold'>kopieren und speichern</strong>
+        Sie diese Wiederherstellungscodes. Sie können diese Codes verwenden, um sich
+        anzumelden und Ihre MFA zurückzusetzen, wenn Sie Ihr Authentifizierungsgerät
+        verlieren. Jeder Code kann nur einmal verwendet werden.
+      already_generated: Sie sollten Ihre Wiederherstellungscodes bereits gespeichert
+        haben.
+    update:
+      invalid_level: Ungültiges MFA-Level.
+      success: Sie haben Ihr Multi-Faktor-Authentifizierungslevel erfolgreich aktualisiert.
+    prompt:
+      webauthn_credential_note: Authentifizieren Sie sich mit einem Sicherheitsgerät
+        wie Touch ID, YubiKey usw.
+      sign_in_with_webauthn_credential: Authentifizieren Sie sich mit einem Sicherheitsgerät
+      otp_code: OTP-Code
+      otp_or_recovery: OTP- oder Wiederherstellungscodes
+      recovery_code: Wiederherstellungscodes
+      recovery_code_html: Sie können einen gültigen <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa",
+        class="t-link">Wiederherstellungscodes</a> verwenden, wenn Sie den Zugriff
+        auf Ihr Multi-Faktor-Authentifizierungsgerät oder Ihr Sicherheitsgerät verloren
+        haben.
+      security_device: Sicherheitsgerät
+      verify_code: Verifizieren Sie den Code
+  totps:
+    incorrect_otp: Dein OTP-Code ist falsch.
+    require_totp_disabled: Deine auf OTP basierende Zwei-Faktor-Authentifizierung
+      ist bereits aktiviert. Um sie neu zu konfigurieren, musst du sie zuerst entfernen.
+    require_totp_enabled: Du hast keine Authenticator-App aktiviert. Du musst sie
+      zuerst aktivieren.
     new:
       title: Aktivierung der Zwei-Faktor-Authentifizierung
       scan_prompt: Bitte scannen Sie den QR-Code mit Ihrer Authenticator-App. Wenn
@@ -533,37 +562,9 @@ de:
         Sie, ein neues Gerät zu registrieren.
       success: Sie haben die OTP-basierte Zwei-Faktor-Authentifizierung erfolgreich
         aktiviert.
-    recovery:
-      copied: "[ kopiert ]"
-      continue: Weiter
-      title: Wiederherstellungscodes
-      copy: "[ kopieren ]"
-      saved: Ich bestätige, dass ich meine Wiederherstellungscodes gespeichert habe.
-      note_html: Bitte <strong class='recovery__bold'>kopieren und speichern</strong>
-        Sie diese Wiederherstellungscodes. Sie können diese Codes verwenden, um sich
-        anzumelden und Ihre MFA zurückzusetzen, wenn Sie Ihr Authentifizierungsgerät
-        verlieren. Jeder Code kann nur einmal verwendet werden.
-      already_generated: Sie sollten Ihre Wiederherstellungscodes bereits gespeichert
-        haben.
     destroy:
       success: Sie haben die OTP-basierte Zwei-Faktor-Authentifizierung erfolgreich
         deaktiviert.
-    update:
-      invalid_level: Ungültiges MFA-Level.
-      success: Sie haben Ihr Multi-Faktor-Authentifizierungslevel erfolgreich aktualisiert.
-    prompt:
-      webauthn_credential_note: Authentifizieren Sie sich mit einem Sicherheitsgerät
-        wie Touch ID, YubiKey usw.
-      sign_in_with_webauthn_credential: Authentifizieren Sie sich mit einem Sicherheitsgerät
-      otp_code: OTP-Code
-      otp_or_recovery: OTP- oder Wiederherstellungscodes
-      recovery_code: Wiederherstellungscodes
-      recovery_code_html: Sie können einen gültigen <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa",
-        class="t-link">Wiederherstellungscodes</a> verwenden, wenn Sie den Zugriff
-        auf Ihr Multi-Faktor-Authentifizierungsgerät oder Ihr Sicherheitsgerät verloren
-        haben.
-      security_device: Sicherheitsgerät
-      verify_code: Verifizieren Sie den Code
   notifiers:
     update:
       success:
