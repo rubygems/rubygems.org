@@ -3,7 +3,7 @@ class OwnershipCallsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?, except: :index
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, except: :index
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, except: :index
-  before_action :render_forbidden, unless: :owner?, only: %i[create close]
+  before_action :find_ownership_call, only: :close
 
   def index
     set_page
@@ -13,7 +13,7 @@ class OwnershipCallsController < ApplicationController
   end
 
   def create
-    @ownership_call = @rubygem.ownership_calls.new(user: current_user, note: params[:note])
+    @ownership_call = authorize @rubygem.ownership_calls.new(user: current_user, note: params[:note])
     if @ownership_call.save
       redirect_to rubygem_adoptions_path(@rubygem.slug), notice: t(".success_notice", gem: @rubygem.name)
     else
@@ -22,11 +22,18 @@ class OwnershipCallsController < ApplicationController
   end
 
   def close
-    @ownership_call = @rubygem.ownership_call
-    if @ownership_call&.close
+    if @ownership_call.close
       redirect_to rubygem_path(@rubygem.slug), notice: t("ownership_calls.update.success_notice", gem: @rubygem.name)
     else
       redirect_to rubygem_adoptions_path(@rubygem.slug), alert: t("try_again")
     end
+  end
+
+  private
+
+  def find_ownership_call
+    @ownership_call = @rubygem.ownership_call
+    return authorize @ownership_call if @ownership_call
+    redirect_to rubygem_adoptions_path(@rubygem.slug), alert: t("try_again")
   end
 end

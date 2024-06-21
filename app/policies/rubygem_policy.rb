@@ -1,5 +1,5 @@
 class RubygemPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       scope.none # unused
     end
@@ -22,6 +22,10 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_unconfirmed_ownerships?
+    record.owned_by?(user)
+  end
+
+  def show_events?
     record.owned_by?(user)
   end
 end
