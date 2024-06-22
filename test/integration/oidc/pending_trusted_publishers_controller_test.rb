@@ -5,7 +5,8 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
     @user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
-    @trusted_publisher = create(:oidc_pending_trusted_publisher, user: @user)
+    @trusted_publisher = create(:oidc_pending_trusted_publisher, user: @user, rubygem_name: "pending-gem-name")
+    @expired_trusted_publisher = create(:oidc_pending_trusted_publisher, user: @user, expires_at: 1.day.ago, rubygem_name: "expired-gem-name")
   end
 
   context "with a verified session" do
@@ -17,6 +18,9 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
       get profile_oidc_pending_trusted_publishers_url
 
       assert_response :success
+
+      assert page.has_content?(@trusted_publisher.rubygem_name)
+      refute page.has_content?(@expired_trusted_publisher.rubygem_name)
     end
 
     should "get new" do
