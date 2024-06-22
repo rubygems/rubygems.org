@@ -21,11 +21,15 @@ class RubygemPolicy < ApplicationPolicy
     false
   end
 
-  def show_unconfirmed_ownerships?
+  def show_events?
     record.owned_by?(user)
   end
 
-  def show_events?
+  def show_trusted_publishers?
+    record.owned_by?(user)
+  end
+
+  def show_unconfirmed_ownerships?
     record.owned_by?(user)
   end
 end
