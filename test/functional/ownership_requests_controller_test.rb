@@ -198,11 +198,8 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           request = create(:ownership_request, rubygem: @rubygem)
           patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "close" }
         end
-        should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
 
-        should "set try again flash" do
-          assert_equal "Something went wrong. Please try again.", flash[:alert]
-        end
+        should respond_with :forbidden
       end
     end
 
@@ -234,7 +231,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
 
         context "with unsuccessful update" do
           setup do
-            OwnershipRequest.stubs(:update_all).returns(false)
+            OwnershipRequest.any_instance.stubs(:update!).raises(ActiveRecord::RecordNotSaved)
             patch :close_all, params: { rubygem_id: @rubygem.name }
           end
 

@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OwnershipRequestTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   setup do
     @user = create(:user)
     @rubygem = create(:rubygem)
@@ -66,29 +68,42 @@ class OwnershipRequestTest < ActiveSupport::TestCase
       create(:ownership, rubygem: @rubygem, user: @approver)
     end
 
-    should "return true" do
-      assert @ownership_request.approve(@approver)
-    end
     should "update approver" do
-      @ownership_request.approve(@approver)
+      @ownership_request.approve!(@approver)
 
       assert_predicate @ownership_request, :approved?
       assert_equal @approver, @ownership_request.approver
     end
 
+    should "send emails" do
+      @ownership_request.approve!(@approver)
+
+      assert_enqueued_emails 3
+    end
+
     should "create confirmed ownership" do
-      @ownership_request.approve(@approver)
+      @ownership_request.approve!(@approver)
       ownership = Ownership.find_by(user: @user, rubygem: @rubygem)
 
       assert_equal @approver, ownership.authorizer
       assert_predicate ownership, :confirmed?
     end
 
-    should "return false if cannot update status" do
-      OwnershipRequest.any_instance.stubs(:update).returns(false)
+    should "raises if cannot update status" do
+      OwnershipRequest.any_instance.stubs(:update!).raises(ActiveRecord::RecordInvalid)
 
-      refute @ownership_request.approve(@approver)
+      assert_raises(ActiveRecord::RecordInvalid) { @ownership_request.approve!(@approver) }
       assert_nil Ownership.find_by(user: @user, rubygem: @rubygem)
+    end
+
+    should "raises if ownership cannot be confirmed" do
+      Ownership.any_instance.stubs(:update!).raises(ActiveRecord::RecordNotSaved)
+
+      assert_raises(ActiveRecord::RecordNotSaved) { @ownership_request.approve!(@approver) }
+      assert_nil Ownership.find_by(user: @user, rubygem: @rubygem)
+      refute_predicate @ownership_request.reload, :approved?
+
+      assert_enqueued_emails 0
     end
   end
 
@@ -97,43 +112,30 @@ class OwnershipRequestTest < ActiveSupport::TestCase
       @ownership_request = create(:ownership_request, user: @user, rubygem: @rubygem)
     end
 
-    should "return false if cannot close" do
-      other_user = create(:user)
+    should "close and not send emails if closed by requester" do
+      @ownership_request.close!(@user)
 
-      refute @ownership_request.close(other_user)
-      refute_predicate @ownership_request, :closed?
-    end
-
-    should "return true if closed by requester" do
-      assert @ownership_request.close(@user)
       assert_predicate @ownership_request, :closed?
+
+      assert_enqueued_emails 0
     end
 
-    should "return true if closed by owner" do
+    should "close and sends email to requester if closed by owner" do
       other_user = create(:user)
       create(:ownership, user: other_user, rubygem: @rubygem)
 
-      assert @ownership_request.close(other_user)
+      @ownership_request.close!(other_user)
+
       assert_predicate @ownership_request, :closed?
+
+      assert_enqueued_emails 1
     end
 
-    should "return false if cannot update status" do
-      OwnershipRequest.any_instance.stubs(:update).returns(false)
+    should "raises if cannot update status" do
+      OwnershipRequest.any_instance.stubs(:update!).raises(ActiveRecord::RecordInvalid)
 
-      refute @ownership_request.close(@user)
+      assert_raises(ActiveRecord::RecordInvalid) { @ownership_request.close!(@user) }
       refute_predicate @ownership_request, :closed?
-    end
-  end
-
-  context "#close_all" do
-    should "return count of records closed" do
-      create_list(:ownership_request, 3, rubygem: @rubygem)
-
-      assert @rubygem.ownership_requests.close_all
-    end
-
-    should "return 0 no records updated" do
-      assert @rubygem.ownership_requests.close_all
     end
   end
 end

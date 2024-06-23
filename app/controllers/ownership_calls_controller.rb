@@ -5,6 +5,9 @@ class OwnershipCallsController < ApplicationController
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, except: :index
   before_action :find_ownership_call, only: :close
 
+  rescue_from ActiveRecord::RecordInvalid, with: :redirect_try_again
+  rescue_from ActiveRecord::RecordNotSaved, with: :redirect_try_again
+
   def index
     set_page
     @ownership_calls = OwnershipCall.opened.includes(:user, rubygem: %i[latest_version gem_download]).order(created_at: :desc)
@@ -22,18 +25,19 @@ class OwnershipCallsController < ApplicationController
   end
 
   def close
-    if @ownership_call.close
-      redirect_to rubygem_path(@rubygem.slug), notice: t("ownership_calls.update.success_notice", gem: @rubygem.name)
-    else
-      redirect_to rubygem_adoptions_path(@rubygem.slug), alert: t("try_again")
-    end
+    @ownership_call.close!
+    redirect_to rubygem_path(@rubygem.slug), notice: t("ownership_calls.update.success_notice", gem: @rubygem.name)
   end
 
   private
 
   def find_ownership_call
     @ownership_call = @rubygem.ownership_call
-    return authorize @ownership_call if @ownership_call
+    return redirect_try_again unless @ownership_call
+    authorize @ownership_call
+  end
+
+  def redirect_try_again(_exception = nil)
     redirect_to rubygem_adoptions_path(@rubygem.slug), alert: t("try_again")
   end
 end

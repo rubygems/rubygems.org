@@ -260,10 +260,6 @@ uniqueness: { case_sensitive: false }
     end
   end
 
-  def can_request_ownership?(rubygem)
-    !rubygem.owned_by?(self) && rubygem.ownership_requestable?
-  end
-
   def owns_gem?(rubygem)
     rubygem.owned_by?(self)
   end

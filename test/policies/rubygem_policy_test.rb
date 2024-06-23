@@ -2,9 +2,9 @@ require "test_helper"
 
 class RubygemPolicyTest < ActiveSupport::TestCase
   setup do
-    @owner = FactoryBot.create(:user)
-    @rubygem = FactoryBot.create(:rubygem, owners: [@owner])
-    @user = FactoryBot.create(:user)
+    @owner = create(:user)
+    @rubygem = create(:rubygem, owners: [@owner])
+    @user = create(:user)
   end
 
   def test_scope
@@ -18,36 +18,76 @@ class RubygemPolicyTest < ActiveSupport::TestCase
     assert_predicate Pundit.policy!(nil, @rubygem), :show?
   end
 
-  def test_show_events?
-    assert_predicate Pundit.policy!(@owner, @rubygem), :show_events?
-    refute_predicate Pundit.policy!(@user, @rubygem), :show_events?
-    refute_predicate Pundit.policy!(nil, @rubygem), :show_events?
+  context "#request_ownership?" do
+    should "be false if the gem is owned by the user" do
+      refute_predicate Pundit.policy!(@owner, @rubygem), :request_ownership?
+    end
+
+    should "be true if the gem has ownership calls" do
+      create(:ownership_call, rubygem: @rubygem, user: @owner)
+
+      assert_predicate Pundit.policy!(@user, @rubygem), :request_ownership?
+    end
+
+    should "be false if the gem has more than 10,000 downloads" do
+      @rubygem = create(:rubygem, owners: [@owner], downloads: 10_001)
+      create(:version, rubygem: @rubygem, created_at: 2.years.ago)
+
+      assert_operator @rubygem.downloads, :>, RubygemPolicy::ABANDONED_DOWNLOADS_MAX
+      refute_predicate Pundit.policy!(@user, @rubygem), :request_ownership?
+    end
+
+    should "be false if the gem has no versions" do
+      assert_empty @rubygem.versions
+      refute_predicate Pundit.policy!(@user, @rubygem), :request_ownership?
+    end
+
+    should "be false if the gem has a version newer than 1 year" do
+      create(:version, rubygem: @rubygem, created_at: 11.months.ago)
+
+      refute_predicate Pundit.policy!(@user, @rubygem), :request_ownership?
+    end
+
+    should "be true if the gem's latest version is older than 1 year and less than 10,000 downloads" do
+      create(:version, rubygem: @rubygem, created_at: 2.years.ago)
+
+      assert_predicate Pundit.policy!(@user, @rubygem), :request_ownership?
+    end
   end
 
-  def test_show_trusted_publishers?
-    assert_predicate Pundit.policy!(@owner, @rubygem), :show_trusted_publishers?
-    refute_predicate Pundit.policy!(@user, @rubygem), :show_trusted_publishers?
-    refute_predicate Pundit.policy!(nil, @rubygem), :show_trusted_publishers?
+  context "#show_adoption?" do
+    should "be true if the gem is owned by the user" do
+      assert_predicate Pundit.policy!(@owner, @rubygem), :show_adoption?
+    end
+
+    should "be true if the rubygem is adoptable" do
+      create(:version, rubygem: @rubygem, created_at: 2.years.ago)
+
+      assert_predicate Pundit.policy!(@owner, @rubygem), :show_adoption?
+    end
   end
 
-  def test_show_unconfirmed_ownerships?
-    assert_predicate Pundit.policy!(@owner, @rubygem), :show_unconfirmed_ownerships?
-    refute_predicate Pundit.policy!(@user, @rubygem), :show_unconfirmed_ownerships?
-    refute_predicate Pundit.policy!(nil, @rubygem), :show_unconfirmed_ownerships?
+  context "#show_events?" do
+    should "only allow the owner" do
+      assert_predicate Pundit.policy!(@owner, @rubygem), :show_events?
+      refute_predicate Pundit.policy!(@user, @rubygem), :show_events?
+      refute_predicate Pundit.policy!(nil, @rubygem), :show_events?
+    end
   end
 
-  def test_create
-    assert_predicate Pundit.policy!(@owner, @rubygem), :create?
-    refute_predicate Pundit.policy!(nil, @rubygem), :create?
+  context "#show_trusted_publishers?" do
+    should "only allow the owner" do
+      assert_predicate Pundit.policy!(@owner, @rubygem), :show_trusted_publishers?
+      refute_predicate Pundit.policy!(@user, @rubygem), :show_trusted_publishers?
+      refute_predicate Pundit.policy!(nil, @rubygem), :show_trusted_publishers?
+    end
   end
 
-  def test_update
-    refute_predicate Pundit.policy!(@owner, @rubygem), :update?
-    refute_predicate Pundit.policy!(nil, @rubygem), :update?
-  end
-
-  def test_destroy
-    refute_predicate Pundit.policy!(@owner, @rubygem), :destroy?
-    refute_predicate Pundit.policy!(nil, @rubygem), :destroy?
+  context "#show_unconfirmed_ownerships?" do
+    should "only allow the owner" do
+      assert_predicate Pundit.policy!(@owner, @rubygem), :show_unconfirmed_ownerships?
+      refute_predicate Pundit.policy!(@user, @rubygem), :show_unconfirmed_ownerships?
+      refute_predicate Pundit.policy!(nil, @rubygem), :show_unconfirmed_ownerships?
+    end
   end
 end
