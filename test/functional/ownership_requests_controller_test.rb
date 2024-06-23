@@ -20,6 +20,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
             create(:ownership, user: @user, rubygem: @rubygem)
             post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
           end
+
           should respond_with :forbidden
 
           should "not create ownership request" do
@@ -120,10 +121,18 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, downloads: 2_000_000)
         create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
       end
-      context "when user is owner" do
+      context "when user is owner and verified" do
         setup do
           create(:ownership, user: @user, rubygem: @rubygem)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
         end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         context "on close" do
           setup do
             @requester = create(:user)
@@ -193,10 +202,27 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         end
       end
 
+      context "when user is owner and not verified" do
+        setup do
+          create(:ownership, user: @user, rubygem: @rubygem)
+          @requester = create(:user)
+          ownership_request = create(:ownership_request, rubygem: @rubygem, user: @requester)
+          patch :update, params: { rubygem_id: @rubygem.name, id: ownership_request.id, status: "close" }
+        end
+        should redirect_to("verify page") { verify_session_path }
+      end
+
       context "when user is not an owner" do
         setup do
           request = create(:ownership_request, rubygem: @rubygem)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
           patch :update, params: { rubygem_id: @rubygem.name, id: request.id, status: "close" }
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
         end
 
         should respond_with :forbidden
@@ -208,10 +234,17 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, downloads: 2_000_000)
         create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
       end
-      context "when user is owner" do
+      context "when user is owner and verified" do
         setup do
           create(:ownership, rubygem: @rubygem, user: @user)
           create_list(:ownership_request, 3, rubygem: @rubygem)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
         end
 
         context "with successful update" do
@@ -244,11 +277,20 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         end
       end
 
+      context "when user is owner and not verified" do
+        setup do
+          create(:ownership, rubygem: @rubygem, user: @user)
+          patch :close_all, params: { rubygem_id: @rubygem.name }
+        end
+        should redirect_to("verify page") { verify_session_path }
+      end
+
       context "user is not owner" do
         setup do
           create_list(:ownership_request, 3, rubygem: @rubygem)
           patch :close_all, params: { rubygem_id: @rubygem.name }
         end
+
         should respond_with :forbidden
 
         should "not close all open requests" do
@@ -363,7 +405,15 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
           @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
         end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         context "POST to create" do
           setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
 

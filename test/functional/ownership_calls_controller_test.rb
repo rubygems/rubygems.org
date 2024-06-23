@@ -16,7 +16,17 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
       end
 
-      context "user is owner of rubygem" do
+      context "user is owner of rubygem and verified" do
+        setup do
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         context "with correct params" do
           setup do
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
@@ -64,12 +74,28 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         end
       end
 
-      context "user is not owner of rubygem" do
+      context "user is owner and not verified" do
         setup do
-          user = create(:user)
-          sign_in_as(user)
           post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
         end
+
+        should redirect_to("verify page") { verify_session_path }
+      end
+
+      context "user is not owner of rubygem" do
+        setup do
+          @user = create(:user)
+          sign_in_as(@user)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+          post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         should respond_with :forbidden
 
         should "not create a call" do
@@ -83,7 +109,17 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
       end
 
-      context "user is owner of rubygem" do
+      context "user is owner of rubygem and verified" do
+        setup do
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         context "ownership call exists" do
           setup do
             create(:ownership_call, rubygem: @rubygem, user: @user, status: "opened")
@@ -112,13 +148,31 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         end
       end
 
-      context "user is not owner of rubygem" do
+      context "user is owner and not verified" do
         setup do
-          user = create(:user)
-          sign_in_as(user)
           create(:ownership_call, rubygem: @rubygem, user: @user)
           patch :close, params: { rubygem_id: @rubygem.name }
         end
+
+        should redirect_to("verify page") { verify_session_path }
+      end
+
+      context "user is not owner of rubygem" do
+        setup do
+          @user = create(:user)
+          sign_in_as(@user)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+
+          create(:ownership_call, rubygem: @rubygem, user: @user)
+          patch :close, params: { rubygem_id: @rubygem.name }
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         should respond_with :forbidden
 
         should "not update status to close" do
@@ -214,6 +268,13 @@ class OwnershipCallsControllerTest < ActionController::TestCase
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
           @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
         end
 
         context "on GET to index" do
