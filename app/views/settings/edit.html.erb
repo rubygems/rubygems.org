@@ -42,7 +42,7 @@
       <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
     </div>
     <p><%= t(".mfa.enabled_note") %></p>
-    <%= form_tag multifactor_auth_path, method: :delete, id: "mfa-delete" do %>
+    <%= form_tag totp_path, method: :delete, id: "mfa-delete" do %>
       <div class="text_field">
         <%= label_tag :otp, t(".otp_code"), class: "form__label" %>
         <%= text_field_tag :otp, "", class: "form__input", autocomplete: :off %>
@@ -56,7 +56,7 @@
     </div>
     <p>
       <%= t(".mfa.disabled_html") %>
-      <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
+      <%= button_to t(".mfa.go_settings"), new_totp_path, method: "get", class: "form__submit" %>
     </p>
   <% end %>
 </div>

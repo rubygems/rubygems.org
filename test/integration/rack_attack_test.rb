@@ -481,20 +481,39 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           end
         end
 
-        should "throttle mfa create at level #{level}" do
+        should "throttle totp create at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
-            post "/multifactor_auth", headers: { REMOTE_ADDR: @ip_address }
+            post "/totp", headers: { REMOTE_ADDR: @ip_address }
 
             assert_throttle_at(level)
           end
         end
 
-        should "throttle mfa create per user at level #{level}" do
+        should "throttle totp create per user at level #{level}" do
           freeze_time do
             sign_in_as(@user)
             exceed_exponential_user_limit_for("clearance/user/#{level}", @user.email, level)
-            post "/multifactor_auth"
+            post "/totp"
+
+            assert_throttle_at(level)
+          end
+        end
+
+        should "throttle totp destroy at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
+            post "/totp", headers: { REMOTE_ADDR: @ip_address }
+
+            assert_throttle_at(level)
+          end
+        end
+
+        should "throttle totp destroy per user at level #{level}" do
+          freeze_time do
+            sign_in_as(@user)
+            exceed_exponential_user_limit_for("clearance/user/#{level}", @user.email, level)
+            post "/totp"
 
             assert_throttle_at(level)
           end

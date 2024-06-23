@@ -426,11 +426,8 @@ zh-CN:
     update:
       failure:
   multifactor_auths:
-    incorrect_otp: 你的 OTP 码 不正确。
     session_expired: 您的登录页面会话已过期。
-    require_totp_disabled: 您的多因素验证已启用。要重新配置多因素验证，您必须首先停用它。
     require_mfa_enabled: 您的多因素验证已停用，请先启用。
-    require_totp_enabled: 您还没有启用一个身份验证器应用。您必须先启用它。
     require_webauthn_enabled: 您还没有启用任何安全设备。您必须首先关联一个设备到您的账户。
     setup_required_html: 为了保护您的帐户和您的 Gem，您需要设置多因素验证。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">博客文章</a>了解详情。
     setup_recommended: 为了保护您的帐户和您的 Gem，我们鼓励您设置多因素验证。在将来，您的帐户将被要求启用多因素验证。
@@ -439,18 +436,6 @@ zh-CN:
     strong_mfa_level_recommended: 为了保护您的帐户和您的 Gem，我们建议您将您的多因素验证级别更改为 "UI and gem signin"
       或 "UI and API"。在将来，您的帐户将被要求在其中某一个级别上启用多因素验证。
     setup_webauthn_html:
-    new:
-      title: 启用多因素验证
-      scan_prompt: 请用您的身份验证程序扫描二维码。如果您没办法扫描，请在您的程序中手动输入下面的内容。
-      otp_prompt: 输入身份验证程序上的数字代码以继续。
-      confirm: 我已把复原码存放在安全的地方。
-      enable: 启用
-      account: 账户：%{account}
-      key: 密钥：%{key}
-      time_based: 基于时间的：是
-    create:
-      qrcode_expired: 二维码和密钥已过期。请尝试重新注册一个新的设备。
-      success: 您已成功启用多因素验证。
     recovery:
       copied: "[ 已复制 ]"
       continue: 继续
@@ -459,8 +444,6 @@ zh-CN:
       saved: 我声明我已经保存了我的恢复码。
       note_html: 请 <strong class='recovery__bold'>复制并保存</strong> 这些恢复码。如果您丢失了身份验证设备，您可以使用这些恢复码登录并重置您的多因素验证配置。每个恢复码只能使用一次。
       already_generated: 您应该已经保存了您的恢复码。
-    destroy:
-      success: 您已成功停用多因素验证。
     update:
       invalid_level: 无效的 MFA 级别。
       success: 您已成功修改多因素验证级别。
@@ -473,6 +456,24 @@ zh-CN:
       recovery_code_html: 如果您无法访问用于多因素验证的设备或安全设备，您可以使用一个有效的 <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa"，class="t-link">恢复码</a>。
       security_device: 安全设备
       verify_code: 验证码
+  totps:
+    incorrect_otp: 你的 OTP 码 不正确。
+    require_totp_disabled: 您的多因素验证已启用。要重新配置多因素验证，您必须首先停用它。
+    require_totp_enabled: 您还没有启用一个身份验证器应用。您必须先启用它。
+    new:
+      title: 启用多因素验证
+      scan_prompt: 请用您的身份验证程序扫描二维码。如果您没办法扫描，请在您的程序中手动输入下面的内容。
+      otp_prompt: 输入身份验证程序上的数字代码以继续。
+      confirm: 我已把复原码存放在安全的地方。
+      enable: 启用
+      account: 账户：%{account}
+      key: 密钥：%{key}
+      time_based: 基于时间的：是
+    create:
+      qrcode_expired: 二维码和密钥已过期。请尝试重新注册一个新的设备。
+      success: 您已成功启用多因素验证。
+    destroy:
+      success: 您已成功停用多因素验证。
   notifiers:
     update:
       success: 您已成功更新邮件通知设置。

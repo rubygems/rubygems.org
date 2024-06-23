@@ -59,7 +59,7 @@ class Api::BaseController < ApplicationController
 
 
         [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
-        at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
+        at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future.
       WARN
     elsif @api_key.mfa_recommended_weak_level_enabled?
       message += <<~WARN.chomp
@@ -77,7 +77,7 @@ class Api::BaseController < ApplicationController
   def render_mfa_setup_required_error
     error = <<~ERROR.chomp
       [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-      at https://rubygems.org/multifactor_auth/new.
+      at https://rubygems.org/totp/new.
 
       Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
     ERROR

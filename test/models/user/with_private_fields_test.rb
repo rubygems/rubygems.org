@@ -16,7 +16,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
         should "include warning in user json" do
           expected_notice =
             "[WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication " \
-            "at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future."
+            "at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future."
 
           assert_match expected_notice, @user.to_json
         end

@@ -50,7 +50,7 @@ module RequireMfa
   end
 
   def incorrect_otp
-    mfa_failure(t("multifactor_auths.incorrect_otp"))
+    mfa_failure(t("totps.incorrect_otp"))
   end
 
   def webauthn_failure
