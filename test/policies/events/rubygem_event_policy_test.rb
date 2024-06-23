@@ -8,11 +8,6 @@ class Events::RubygemEventPolicyTest < ActiveSupport::TestCase
     @user = FactoryBot.create(:user)
   end
 
-  def test_scope
-    assert_empty Pundit.policy_scope!(@owner, Events::RubygemEvent).to_a
-    assert_empty Pundit.policy_scope!(@owner, @rubygem.events).to_a
-  end
-
   def test_show
     assert_predicate Pundit.policy!(@owner, @event), :show?
     refute_predicate Pundit.policy!(@user, @event), :show?

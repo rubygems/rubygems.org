@@ -6,14 +6,14 @@ class OIDC::PendingTrustedPublisherPolicy < ApplicationPolicy
   end
 
   def show?
-    record.user == user
+    current_user?(record.user)
   end
 
   def create?
-    record.user == user
+    current_user?(record.user)
   end
 
   def destroy?
-    record.user == user
+    current_user?(record.user)
   end
 end

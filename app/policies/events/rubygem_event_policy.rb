@@ -1,12 +1,11 @@
 class Events::RubygemEventPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
-    def resolve
-      scope.none
-    end
   end
 
+  delegate :rubygem, to: :record
+
   def show?
-    record.rubygem.owned_by?(user)
+    rubygem.owned_by?(user)
   end
 
   def create?

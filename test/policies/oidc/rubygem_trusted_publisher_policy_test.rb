@@ -8,11 +8,6 @@ class OIDC::RubygemTrustedPublisherPolicyTest < ActiveSupport::TestCase
     @user = FactoryBot.create(:user)
   end
 
-  def test_scope
-    assert_empty Pundit.policy_scope!(@owner, OIDC::RubygemTrustedPublisher).to_a
-    assert_empty Pundit.policy_scope!(@owner, @rubygem.oidc_rubygem_trusted_publishers).to_a
-  end
-
   def test_show
     assert_predicate Pundit.policy!(@owner, @trusted_publisher), :show?
     refute_predicate Pundit.policy!(@user, @trusted_publisher), :show?

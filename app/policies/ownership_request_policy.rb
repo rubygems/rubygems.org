@@ -1,20 +1,18 @@
 class OwnershipRequestPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
-    def resolve
-      scope.none
-    end
   end
 
+  delegate :rubygem, to: :record
+
   def create?
-    return false unless record.user == user
-    Pundit.policy!(user, record.rubygem).request_ownership?
+    current_user?(record.user) && Pundit.policy!(user, rubygem).request_ownership?
   end
 
   def approve?
-    record.rubygem.owned_by?(user)
+    rubygem.owned_by?(user)
   end
 
   def close?
-    (user.present? && record.user == user) || record.rubygem.owned_by?(user)
+    current_user?(record.user) || rubygem.owned_by?(user)
   end
 end
