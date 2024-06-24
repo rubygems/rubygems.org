@@ -12,5 +12,9 @@ class PagesTest < SystemTest
     assert_raises(ActionController::RoutingError) do
       visit "/pages/not-existing-one"
     end
+
+    assert_raises(ActionController::RoutingError) do
+      visit "/pages/data.zip"
+    end
   end
 end
