@@ -12,7 +12,6 @@ class Api::V1::DeletionsController < Api::BaseController
     @deletion = @api_key.user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment "yank.success"
-      enqueue_web_hook_jobs(@version)
       render plain: response_with_mfa_warning("Successfully deleted gem: #{@version.to_title}")
     elsif @deletion.ineligible?
       StatsD.increment "yank.forbidden"

@@ -23,6 +23,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   after_create :create_gem_download
   after_create :record_push_event
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
+  after_save :enqueue_web_hook_jobs, if: -> { saved_change_to_indexed? && (!saved_change_to_id? || indexed?) }
   after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
   serialize :licenses, coder: YAML
@@ -501,5 +502,12 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def record_push_event
     rubygem.record_event!(Events::RubygemEvent::VERSION_PUSHED, number: number, platform: platform, sha256: sha256_hex,
       pushed_by: pusher&.display_handle, version_gid: to_gid, actor_gid: pusher&.to_gid)
+  end
+
+  def enqueue_web_hook_jobs
+    jobs = rubygem.web_hooks.or(WebHook.global).enabled
+    jobs.find_each do |job|
+      job.fire(Gemcutter::PROTOCOL, Gemcutter::HOST, self)
+    end
   end
 end
