@@ -291,7 +291,7 @@ Rails.application.routes.draw do
 
   ################################################################################
   # static pages routes
-  get 'pages/*id' => 'pages#show', constraints: { id: Regexp.union(Gemcutter::PAGES) }, as: :page
+  get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
   ################################################################################
   # Internal Routes
