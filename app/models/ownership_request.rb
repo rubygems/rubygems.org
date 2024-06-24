@@ -13,29 +13,23 @@ class OwnershipRequest < ApplicationRecord
 
   enum status: { opened: 0, approved: 1, closed: 2 }
 
-  def approve(approver)
-    return false unless rubygem.owned_by?(approver)
-    return false unless update(status: :approved, approver: approver)
-
-    Ownership.create_confirmed(rubygem, user, approver)
-  end
-
-  def close(user)
-    can_close?(user) && update(status: :closed)
-  end
-
-  def self.close_all
-    closed_ids = ids
-    return false unless update_all(status: :closed) == closed_ids.size
-    closed_ids.each do |id|
-      OwnersMailer.ownership_request_closed(id).deliver_later
+  def approve!(approver)
+    return unless Pundit.policy!(approver, self).approve?
+    transaction do
+      update!(status: :approved, approver: approver)
+      Ownership.create_confirmed(rubygem, user, approver)
     end
-    true
+
+    rubygem.ownership_notifiable_owners.each do |notified_user|
+      OwnersMailer.owner_added(notified_user.id, user_id, approver.id, rubygem_id).deliver_later
+    end
+
+    OwnersMailer.ownership_request_approved(id).deliver_later
   end
 
-  private
-
-  def can_close?(user)
-    self.user == user || rubygem.owned_by?(user)
+  def close!(closer = nil)
+    update!(status: :closed)
+    return if closer && closer == user # Don't notify the requester if they closed their own request
+    OwnersMailer.ownership_request_closed(id).deliver_later
   end
 end

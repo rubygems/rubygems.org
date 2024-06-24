@@ -261,12 +261,6 @@ class Rubygem < ApplicationRecord
     ownership_calls.find_by(status: "opened")
   end
 
-  def ownership_requestable?
-    abandoned_release_threshold   = 1.year.ago
-    abandoned_downloads_threshold = 10_000
-    ownership_calls.any? || (latest_version && latest_version.created_at < abandoned_release_threshold && downloads < abandoned_downloads_threshold)
-  end
-
   def update_versions!(version, spec)
     version.update_attributes_from_gem_specification!(spec)
   end
