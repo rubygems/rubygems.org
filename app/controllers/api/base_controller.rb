@@ -18,17 +18,6 @@ class Api::BaseController < ApplicationController
     render plain: "This gem could not be found", status: :not_found
   end
 
-  def enqueue_web_hook_jobs(version)
-    jobs = version.rubygem.web_hooks.enabled + WebHook.global.enabled
-    jobs.each do |job|
-      job.fire(
-        request.protocol.delete("://"),
-        request.host_with_port,
-        version
-      )
-    end
-  end
-
   def verify_api_key_gem_scope
     return unless @api_key.rubygem && @api_key.rubygem != @rubygem
 
