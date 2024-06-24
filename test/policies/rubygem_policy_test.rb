@@ -18,16 +18,22 @@ class RubygemPolicyTest < ActiveSupport::TestCase
     assert_predicate Pundit.policy!(nil, @rubygem), :show?
   end
 
-  def test_show_unconfirmed_ownerships?
-    assert_predicate Pundit.policy!(@owner, @rubygem), :show_unconfirmed_ownerships?
-    refute_predicate Pundit.policy!(@user, @rubygem), :show_unconfirmed_ownerships?
-    refute_predicate Pundit.policy!(nil, @rubygem), :show_unconfirmed_ownerships?
-  end
-
   def test_show_events?
     assert_predicate Pundit.policy!(@owner, @rubygem), :show_events?
     refute_predicate Pundit.policy!(@user, @rubygem), :show_events?
     refute_predicate Pundit.policy!(nil, @rubygem), :show_events?
+  end
+
+  def test_show_trusted_publishers?
+    assert_predicate Pundit.policy!(@owner, @rubygem), :show_trusted_publishers?
+    refute_predicate Pundit.policy!(@user, @rubygem), :show_trusted_publishers?
+    refute_predicate Pundit.policy!(nil, @rubygem), :show_trusted_publishers?
+  end
+
+  def test_show_unconfirmed_ownerships?
+    assert_predicate Pundit.policy!(@owner, @rubygem), :show_unconfirmed_ownerships?
+    refute_predicate Pundit.policy!(@user, @rubygem), :show_unconfirmed_ownerships?
+    refute_predicate Pundit.policy!(nil, @rubygem), :show_unconfirmed_ownerships?
   end
 
   def test_create

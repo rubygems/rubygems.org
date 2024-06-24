@@ -2,7 +2,6 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   include OIDC::Concerns::TrustedPublisherCreation
 
   before_action :find_rubygem
-  before_action :render_forbidden, unless: :owner?
   before_action :find_rubygem_trusted_publisher, except: %i[index new create]
 
   def index
@@ -19,10 +18,7 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def create
-    trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.new(
-      create_params
-    )
-
+    trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.new(create_params)
     if trusted_publisher.save
       redirect_to rubygem_trusted_publishers_path(@rubygem.slug), flash: { notice: t(".success") }
     else
@@ -55,8 +51,13 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
 
   def create_params_key = :oidc_rubygem_trusted_publisher
 
+  def find_rubygem
+    super
+    authorize @rubygem, :show_trusted_publishers?
+  end
+
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
+    @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
   end
 
   def gh_actions_trusted_publisher
