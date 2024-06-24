@@ -12,16 +12,14 @@ class RubygemPolicy < ApplicationPolicy
     true
   end
 
-  def create?
-    user.present?
+  def push?
+    return false unless user.can_push_rubygem?
+    return true if gem_owner?
+    rubygem.pushable? && (user.user? || find_pending_trusted_publisher)
   end
 
-  def update?
-    false
-  end
-
-  def destroy?
-    false
+  def show_unconfirmed_ownerships?
+    gem_owner?
   end
 
   def show_adoption?
@@ -29,7 +27,13 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_events?
-    record.owned_by?(user)
+    gem_owner?
+  end
+
+  private
+
+  def rubygem
+    record
   end
 
   def request_ownership?
@@ -41,14 +45,14 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def close_ownership_requests?
-    record.owned_by?(user)
+    gem_owner?
   end
 
   def show_trusted_publishers?
-    record.owned_by?(user)
+    gem_owner?
   end
 
   def show_unconfirmed_ownerships?
-    record.owned_by?(user)
+    gem_owner?
   end
 end

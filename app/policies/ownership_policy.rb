@@ -6,10 +6,10 @@ class OwnershipPolicy < ApplicationPolicy
   end
 
   def create?
-    record.rubygem.owned_by?(user) && record.authorizer == user
+    gem_owner? && same_user?(record.authorizer)
   end
 
   def destroy?
-    record.rubygem.owned_by?(user)
+    gem_owner?
   end
 end

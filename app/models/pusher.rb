@@ -23,7 +23,7 @@ class Pusher
   end
 
   def authorize
-    (rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)) || owner.owns_gem?(rubygem) || notify_unauthorized
+    Pundit.policy!(api_key, rubygem).push? || notify_unauthorized
   end
 
   def verify_gem_scope

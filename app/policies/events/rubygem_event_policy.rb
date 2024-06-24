@@ -6,7 +6,7 @@ class Events::RubygemEventPolicy < ApplicationPolicy
   end
 
   def show?
-    record.rubygem.owned_by?(user)
+    gem_owner?
   end
 
   def create?

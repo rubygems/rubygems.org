@@ -21,7 +21,16 @@ class ApplicationPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
-    @user = user
+    case user
+    when ApiKey
+      @user = PunditApiKey.new(user)
+    when User
+      @user = PunditUser.new(user)
+    when nil
+      @user = nil
+    else
+      raise ArgumentError, "Invalid user type: #{user.class}"
+    end
     @record = record
   end
 
@@ -55,5 +64,23 @@ class ApplicationPolicy
 
   def search?
     index?
+  end
+
+  private
+
+  def api_key?
+    @api_key.present?
+  end
+
+  def rubygem
+    record.rubygem
+  end
+
+  def gem_owner?
+    user&.owns_gem?(rubygem)
+  end
+
+  def same_user?(record_user)
+    user.same_user?(record_user)
   end
 end

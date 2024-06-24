@@ -6,10 +6,10 @@ class OwnershipCallPolicy < ApplicationPolicy
   end
 
   def create?
-    record.rubygem.owned_by?(user) && record.user == user
+    gem_owner? && same_user?(record.user)
   end
 
   def close?
-    record.rubygem.owned_by?(user)
+    gem_owner?
   end
 end

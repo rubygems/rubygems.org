@@ -2,20 +2,32 @@ require "test_helper"
 
 class RubygemPolicyTest < ActiveSupport::TestCase
   setup do
-    @owner = create(:user)
+    @owner = create(:user, handle: "owner")
     @rubygem = create(:rubygem, owners: [@owner])
-    @user = create(:user)
+    @user = create(:user, handle: "user")
+
+    @owner_key_no_scope = create(:api_key, key: "ono", owner: @owner, scopes: %w[show_dashboard])
+    @owner_key_scope = create(:api_key, key: "o", owner: @owner, scopes: %w[push_rubygem])
+    @user_key_no_scope = create(:api_key, key: "uno", owner: @user, scopes: %w[show_dashboard])
+    @user_key_scope = create(:api_key, key: "u", owner: @user, scopes: %w[push_rubygem])
   end
 
-  def test_scope
-    # Tests that nothing is returned currently because scope is unused
-    assert_empty Pundit.policy_scope!(@owner, Rubygem).to_a
-    assert_empty Pundit.policy_scope!(@user, Rubygem).to_a
+  def owner_key(*scopes)
+    scopes = %w[show_dashboard] if scopes.empty?
+    create(:api_key, key: "owner", owner: @owner, scopes: scopes)
   end
 
-  def test_show
-    assert_predicate Pundit.policy!(@owner, @rubygem), :show?
-    assert_predicate Pundit.policy!(nil, @rubygem), :show?
+  def user_key(*scopes)
+    scopes = %w[show_dashboard] if scopes.empty?
+    create(:api_key, key: "user", owner: @user, scopes: scopes)
+  end
+
+  context "Scope#resolve" do
+    should "return an empty scope" do
+      # Tests that nothing is returned currently because scope is unused
+      assert_empty Pundit.policy_scope!(@owner, Rubygem).to_a
+      assert_empty Pundit.policy_scope!(@user, Rubygem).to_a
+    end
   end
 
   context "#request_ownership?" do
@@ -52,6 +64,27 @@ class RubygemPolicyTest < ActiveSupport::TestCase
       create(:version, rubygem: @rubygem, created_at: 2.years.ago)
 
       assert_predicate Pundit.policy!(@user, @rubygem), :request_ownership?
+    end
+  end
+
+  context "#push?" do
+    should "reject users (since gems are pushed via API key)" do
+      refute_predicate Pundit.policy!(@owner, @rubygem), :push?
+      refute_predicate Pundit.policy!(@user, @rubygem), :push?
+      refute_predicate Pundit.policy!(nil, @rubygem), :push?
+    end
+
+    should "allow owners with push_rubygem scope" do
+      assert_predicate Pundit.policy!(@owner_key_scope, @rubygem), :push?
+    end
+
+    should "reject owners without push_rubygem scope" do
+      refute_predicate Pundit.policy!(@owner_key_no_scope, @rubygem), :push?
+    end
+
+    should "reject non-owner users with or without push_rubygem scope" do
+      refute_predicate Pundit.policy!(@user_key_scope, @rubygem), :push?
+      refute_predicate Pundit.policy!(@user_key_no_scope, @rubygem), :push?
     end
   end
 
