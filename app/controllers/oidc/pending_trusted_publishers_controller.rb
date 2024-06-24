@@ -4,8 +4,8 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
   before_action :find_pending_trusted_publisher, only: %i[destroy]
 
   def index
-    trusted_publishers = current_user
-      .oidc_pending_trusted_publishers.unexpired.includes(:trusted_publisher)
+    trusted_publishers = policy_scope(OIDC::PendingTrustedPublisher)
+      .unexpired.includes(:trusted_publisher)
       .order(:rubygem_name, :created_at).page(@page).strict_loading
     render OIDC::PendingTrustedPublishers::IndexView.new(
       trusted_publishers:
@@ -20,7 +20,7 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
   end
 
   def create
-    trusted_publisher = current_user.oidc_pending_trusted_publishers.new(
+    trusted_publisher = authorize current_user.oidc_pending_trusted_publishers.new(
       create_params.merge(
         expires_at: 12.hours.from_now
       )
@@ -60,6 +60,6 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
   def create_params_key = :oidc_pending_trusted_publisher
 
   def find_pending_trusted_publisher
-    @pending_trusted_publisher = current_user.oidc_pending_trusted_publishers.find(params.permit(:id).require(:id))
+    @pending_trusted_publisher = authorize current_user.oidc_pending_trusted_publishers.find(params.permit(:id).require(:id))
   end
 end
