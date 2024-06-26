@@ -26,10 +26,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.5.12"
+            version: "3.5.14"
           - name: latest
             version: latest
-        ruby_version: ["3.3.2"]
+        ruby_version: ["3.3.3"]
         tests:
           - name: general
             command: test
