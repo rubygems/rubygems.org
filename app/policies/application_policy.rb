@@ -56,4 +56,10 @@ class ApplicationPolicy
   def search?
     index?
   end
+
+  private
+
+  def current_user?(record_user)
+    user && user == record_user
+  end
 end

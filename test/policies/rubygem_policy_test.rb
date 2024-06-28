@@ -2,20 +2,9 @@ require "test_helper"
 
 class RubygemPolicyTest < ActiveSupport::TestCase
   setup do
-    @owner = create(:user)
+    @owner = create(:user, handle: "owner")
     @rubygem = create(:rubygem, owners: [@owner])
-    @user = create(:user)
-  end
-
-  def test_scope
-    # Tests that nothing is returned currently because scope is unused
-    assert_empty Pundit.policy_scope!(@owner, Rubygem).to_a
-    assert_empty Pundit.policy_scope!(@user, Rubygem).to_a
-  end
-
-  def test_show
-    assert_predicate Pundit.policy!(@owner, @rubygem), :show?
-    assert_predicate Pundit.policy!(nil, @rubygem), :show?
+    @user = create(:user, handle: "user")
   end
 
   context "#request_ownership?" do

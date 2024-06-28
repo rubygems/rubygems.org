@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :render_forbidden
   rescue_from ActionController::UnpermittedParameters, with: :render_bad_request
-  rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
+  rescue_from(Pundit::NotAuthorizedError) { |_| render_forbidden } # don't pass pundit error message
 
   before_action :set_locale
   before_action :reject_null_char_param
@@ -139,7 +139,6 @@ class ApplicationController < ActionController::Base
   end
 
   def render_forbidden(error = "forbidden")
-    error = "forbidden" if error.is_a?(Pundit::NotAuthorizedError)
     render plain: error, status: :forbidden
   end
 

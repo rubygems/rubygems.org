@@ -1,8 +1,5 @@
 class RubygemPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
-    def resolve
-      scope.none # unused
-    end
   end
 
   ABANDONED_RELEASE_AGE = 1.year

@@ -1,15 +1,14 @@
 class OwnershipCallPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
-    def resolve
-      scope.none
-    end
   end
 
+  delegate :rubygem, to: :record
+
   def create?
-    record.rubygem.owned_by?(user) && record.user == user
+    rubygem.owned_by?(user) && current_user?(record.user)
   end
 
   def close?
-    record.rubygem.owned_by?(user)
+    rubygem.owned_by?(user)
   end
 end
