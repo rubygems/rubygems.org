@@ -9,10 +9,10 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
     teardown_rstuf
   end
 
-  test "post_artifacts should post targets and return task_id on success" do
+  test "post_artifacts should post artifacts and return task_id on success" do
     task_id = "12345"
     stub_request(:post, "#{Rstuf.base_url}/api/v1/artifacts/")
-      .with(body: { targets: %w[artifact1 artifact2] })
+      .with(body: { artifacts: %w[artifact1 artifact2] })
       .to_return(body: { data: { task_id: task_id } }.to_json, status: 200, headers: { "Content-Type" => "application/json" })
 
     response_task_id = Rstuf::Client.post_artifacts(%w[artifact1 artifact2])
@@ -21,9 +21,9 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
   end
 
   test "post_artifacts should raise Error on failure" do
-    error_message = "Invalid targets"
+    error_message = "Invalid artifacts"
     stub_request(:post, "#{Rstuf.base_url}/api/v1/artifacts/")
-      .with(body: { targets: %w[artifact1 artifact2] })
+      .with(body: { artifacts: %w[artifact1 artifact2] })
       .to_return(body: { error: error_message }.to_json, status: 400, headers: { "Content-Type" => "application/json" })
 
     assert_raises(Rstuf::Client::Error) do
@@ -31,10 +31,10 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
     end
   end
 
-  test "delete_artifacts should post targets for deletion and return task_id on success" do
+  test "delete_artifacts should post artifacts for deletion and return task_id on success" do
     task_id = "67890"
     stub_request(:post, "#{Rstuf.base_url}/api/v1/artifacts/delete")
-      .with(body: { targets: %w[artifact1 artifact2] })
+      .with(body: { artifacts: %w[artifact1 artifact2] })
       .to_return(body: { data: { task_id: task_id } }.to_json, status: 200, headers: { "Content-Type" => "application/json" })
 
     response_task_id = Rstuf::Client.delete_artifacts(%w[artifact1 artifact2])
@@ -45,7 +45,7 @@ class Rstuf::ClientTest < ActiveSupport::TestCase
   test "delete_artifacts should raise Error on failure" do
     error_message = "Could not delete"
     stub_request(:post, "#{Rstuf.base_url}/api/v1/artifacts/delete")
-      .with(body: { targets: %w[artifact1 artifact2] })
+      .with(body: { artifacts: %w[artifact1 artifact2] })
       .to_return(body: { error: error_message }.to_json, status: 400, headers: { "Content-Type" => "application/json" })
 
     assert_raises(Rstuf::Client::Error) do

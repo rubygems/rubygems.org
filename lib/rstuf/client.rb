@@ -4,14 +4,14 @@ class Rstuf::Client
   Error = Class.new(StandardError)
 
   def self.post_artifacts(targets)
-    response = connection.post("/api/v1/artifacts/", { targets: targets })
+    response = connection.post("/api/v1/artifacts/", { artifacts: targets })
 
     return response.body.dig("data", "task_id") if response.success?
     raise Error, "Error posting artifacts: #{response.body}"
   end
 
   def self.delete_artifacts(targets)
-    response = connection.post("/api/v1/artifacts/delete", { targets: targets }, {})
+    response = connection.post("/api/v1/artifacts/delete", { artifacts: targets }, {})
 
     return response.body.dig("data", "task_id") if response.success?
     raise Error, "Error deleting artifacts: #{response.body}"
