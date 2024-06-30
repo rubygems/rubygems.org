@@ -393,7 +393,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
 
   create_table "orgs", force: :cascade do |t|
     t.string "handle"
-    t.string "full_name"
+    t.string "name"
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
