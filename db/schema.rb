@@ -318,6 +318,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
   create_table "memberships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "org_id", null: false
+    t.datetime "confirmed_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["org_id"], name: "index_memberships_on_org_id"
