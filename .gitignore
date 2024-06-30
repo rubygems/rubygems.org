@@ -24,6 +24,7 @@ latest_dump
 coverage
 REVISION
 /.env*
+/.pumaenv.local
 /doc/erd.*
 
 /app/assets/builds/*
