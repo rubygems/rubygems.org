@@ -382,6 +382,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "orgs", force: :cascade do |t|
+    t.string "handle"
+    t.string "full_name"
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ownership_calls", force: :cascade do |t|
     t.bigint "rubygem_id"
     t.bigint "user_id"
