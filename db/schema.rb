@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -315,6 +315,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.index ["task_name", "status", "created_at"], name: "index_maintenance_tasks_runs", order: { created_at: :desc }
   end
 
+  create_table "memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "org_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["org_id"], name: "index_memberships_on_org_id"
+    t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
   create_table "oidc_api_key_roles", force: :cascade do |t|
     t.bigint "oidc_provider_id", null: false
     t.bigint "user_id", null: false
@@ -597,6 +606,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
   add_foreign_key "events_user_events", "users"
   add_foreign_key "ip_addresses", "geoip_infos"
   add_foreign_key "linksets", "rubygems", name: "linksets_rubygem_id_fk"
+  add_foreign_key "memberships", "orgs"
+  add_foreign_key "memberships", "users"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
