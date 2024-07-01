@@ -687,8 +687,8 @@ GEM
     stimulus-rails (1.3.3)
       railties (>= 6.0.0)
     stringio (3.1.1)
-    strong_migrations (1.8.0)
-      activerecord (>= 5.2)
+    strong_migrations (2.0.0)
+      activerecord (>= 6.1)
     strscan (3.1.0)
     swd (2.0.3)
       activesupport (>= 3)
@@ -865,7 +865,7 @@ DEPENDENCIES
   sprockets-rails (~> 3.5)
   statsd-instrument (~> 3.8)
   stimulus-rails (~> 1.3)
-  strong_migrations (~> 1.8)
+  strong_migrations (~> 2.0)
   tailwindcss-rails (~> 2.6)
   terser (~> 1.2)
   timescaledb (~> 0.2)
@@ -1136,7 +1136,7 @@ CHECKSUMS
   statsd-instrument (3.8.0) sha256=122e294845d9a05a74fa53a859010424b455b44f1605abac3108fbbabb2aa7cd
   stimulus-rails (1.3.3) sha256=4d1f9ab1d64e605f4c9cdd4cc530a9538b510606d32d02249d106256845c562c
   stringio (3.1.1) sha256=53456e14175c594e0e8eb2206a1be33f3974d4fe21c131e628908b05c8c2ae1e
-  strong_migrations (1.8.0) sha256=18de155ebcddf44e60e74f9a6c0b4bfd2d1e576dfe1c67f4aafc4ec5b0442f5d
+  strong_migrations (2.0.0) sha256=88750f294403e18ec674eda6901f2fc195f553ed6a7928c52e8a3f5b57ff501d
   strscan (3.1.0) sha256=01b8a81d214fbf7b5308c6fb51b5972bbfc4a6aa1f166fd3618ba97e0fcd5555
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (2.6.1) sha256=60e66e243761402f9ce834132f59dd6c08b6fea5987e321bd9886dd0b0ce04ac
