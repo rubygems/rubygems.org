@@ -1,7 +1,9 @@
 FactoryBot.define do
   factory :api_key do
-    transient { key { "12345" } }
-    transient { rubygem { nil } }
+    transient do
+      sequence(:key, &:to_s)
+      rubygem { nil }
+    end
 
     owner factory: %i[user]
     name { "ci-key" }

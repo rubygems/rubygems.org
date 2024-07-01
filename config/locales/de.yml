@@ -798,6 +798,7 @@ de:
       sha_256_checksum: SHA 256-Prüfsumme
       signature_period:
       expired:
+      provenance_header:
     version_navigation:
       previous_version:
       next_version:

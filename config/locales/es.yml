@@ -812,6 +812,7 @@ es:
       sha_256_checksum: SHA 256 checksum
       signature_period: Periodo de validez de la firma
       expired: Expirado
+      provenance_header:
     version_navigation:
       previous_version: "← Versión anterior"
       next_version: Siguiente versión →

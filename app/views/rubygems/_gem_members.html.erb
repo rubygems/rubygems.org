@@ -70,4 +70,11 @@
       <% end %>
     </div>
   <% end %>
+
+  <% if latest_version.attestations.present? %>
+    <h3 class="t-list__heading"><%= t '.provenance_header' %>:</h3>
+    <% latest_version.attestations.each do |attestation| %>
+      <%= render Version::ProvenanceComponent.new(attestation:) %>
+    <%end%>
+  <% end %>
 </div>

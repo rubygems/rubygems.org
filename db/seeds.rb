@@ -103,7 +103,9 @@ Version.create_with(
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
 
-author.api_keys.find_or_create_by!(hashed_key: "securehashedkey", name: "api key", scopes: %i[push_rubygem])
+author.api_keys.create_with(
+  hashed_key: Digest::SHA256.hexdigest("gem-author-key")
+).find_or_create_by!(name: "api key", scopes: %i[push_rubygem])
 
 Admin::GitHubUser.create_with(
   is_admin: true,
@@ -296,6 +298,11 @@ OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
   workflow_filename: "push_gem2.yml",
   environment: "deploy"
 ).rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem0)
+
+rubygem0.versions.find_by(full_name: "rubygem0-1.0.0").attestations.find_or_create_by!(
+  media_type: Sigstore::BundleType::BUNDLE_0_3.media_type,
+  body: { media_type: Sigstore::BundleType::BUNDLE_0_3.media_type }
+)
 
 author.oidc_pending_trusted_publishers.create_with(
   expires_at: 100.years.from_now

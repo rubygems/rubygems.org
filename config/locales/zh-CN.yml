@@ -710,6 +710,7 @@ zh-CN:
       sha_256_checksum: SHA 256 校验和
       signature_period: 签名有效期
       expired: 过期
+      provenance_header:
     version_navigation:
       previous_version: "← 以前的版本"
       next_version: 接下来的版本 →
