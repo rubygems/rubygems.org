@@ -119,6 +119,23 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     )
   end
 
+  def to_sigstore_identity_policy(ref)
+    Policy.new(
+      identity: "https://github.com/#{repository}/#{workflow_slug}@#{ref}",
+      issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER,
+      to_s: "github(\"#{repository}/#{workflow_slug}\")"
+    )
+  end
+
+  class Policy < Sigstore::Policy::Identity
+    attr_reader :to_s
+
+    def initialize(to_s:, **)
+      super(**)
+      @to_s = to_s
+    end
+  end
+
   def name
     name = "#{self.class.publisher_name} #{repository_owner}/#{repository_name} @ #{workflow_slug}"
     name << " (#{environment})" if environment?

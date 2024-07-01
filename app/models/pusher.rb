@@ -6,19 +6,30 @@ class Pusher
 
   attr_reader :api_key, :owner, :spec, :spec_contents, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(api_key, body, request: nil)
+  def initialize(api_key, body, request: nil, attestations: nil)
     @api_key = api_key
     @owner = api_key.owner
     @scoped_rubygem = api_key.rubygem
 
     @body = StringIO.new(body.read)
+    @attestations = attestations
+
     @size = @body.size
     @request = request
   end
 
-  def process
+  def process # rubocop:disable Metrics/CyclomaticComplexity
     trace("gemcutter.pusher.process", tags: { "gemcutter.api_key.owner" => owner.to_gid }) do
-      pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
+      pull_spec &&
+        normalize_sigstore &&
+        find &&
+        authorize &&
+        verify_gem_scope &&
+        verify_mfa_requirement &&
+        validate &&
+        verify_sigstore &&
+        sign_sigstore &&
+        save
     end
   end
 
@@ -56,7 +67,7 @@ class Pusher
     # can clean things up well.
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
     trace("gemcutter.pusher.write_gem") do
-      write_gem @body, @spec_contents
+      write_gem @body, @spec_contents, @sigstore
     end
   rescue ArgumentError => e
     @version&.destroy
@@ -99,6 +110,21 @@ class Pusher
       RubyGems.org cannot process this gem.
       Please try rebuilding it and installing it locally to make sure it's valid.
     MSG
+  end
+
+  def normalize_sigstore
+    return true unless @sigstore
+
+    case @sigstore_content_type
+    when "application/json"
+      @sigstore = JSON.dump JSON.parse @sigstore
+    when "text/jsonl"
+      # JSONL is what we normalize to
+    else
+      return notify("Sigstore error: invalid content-type #{@sigstore_content_type.inspect}", 422)
+    end
+
+    true
   end
 
   def find # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -251,18 +277,21 @@ class Pusher
   end
 
   # we validate that the version full_name == spec.original_name
-  def write_gem(body, spec_contents)
+  def write_gem(body, spec_contents, sigstore_bundle)
     gem_path = "gems/#{@version.gem_file_name}"
     gem_contents = body.string
 
     spec_path = "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"
+    sigstore_path = "sigstore/#{@version.gem_file_name}.sigstore.jsonl"
 
     # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
     RubygemFs.instance.store(gem_path, gem_contents, checksum_sha256: version.sha256)
     RubygemFs.instance.store(spec_path, spec_contents, checksum_sha256: version.spec_sha256)
+    RubygemFs.instance.store(sigstore_path, sigstore_bundle) if sigstore_bundle
 
     Fastly.purge(path: gem_path)
     Fastly.purge(path: spec_path)
+    Fastly.purge(path: sigstore_path)
   end
 
   def log_pushing
@@ -313,5 +342,59 @@ class Pusher
   def find_pending_trusted_publisher
     return unless owner.class.module_parent_name == "OIDC::TrustedPublisher"
     owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
+  end
+
+  def verify_sigstore
+    return true if @attestations.blank?
+
+    unless OIDC::TrustedPublisher.all.any? { |t| @api_key.owner.is_a?(t) }
+      return notify("Pushing with an attestation requires trusted publishing", 400)
+    end
+    policy = @api_key.owner.to_sigstore_identity_policy(@api_key.oidc_id_token.jwt.dig("claims", "ref"))
+
+    @attestations.each do |attestation|
+      bundle = Sigstore::Bundle::V1::Bundle.decode_json_hash(attestation, registry: Sigstore::REGISTRY)
+
+      verification_input = Sigstore::Verification::V1::Input.new
+      verification_input.artifact = Sigstore::Verification::V1::Artifact.new
+      verification_input.artifact.artifact = @body.string
+      verification_input.bundle = bundle
+      sigstore_verification = sigstore_verifier.verify(input: Sigstore::VerificationInput.new(verification_input),
+                                                       policy: policy, offline: false)
+      logger.info { { sigstore_verification: sigstore_verification, policy: policy } }
+      return notify("Sigstore error: #{sigstore_verification.reason}+\n#{policy.inspect}", 422) unless sigstore_verification.verified?
+      @version.attestations << Attestation.new(body: bundle, media_type: bundle.media_type)
+    end
+
+    true
+  end
+
+  def sign_sigstore
+    return true if @attestations.blank?
+
+    bundle = sigstore_signer.sign(@body.string)
+    @version.attestations << Attestation.new(body: bundle.to_json, media_type: sigstore_signer.identity_token.identity)
+
+    true
+  rescue StandardError => e
+    logger.error(message: "Failed to sign #{@version.full_name}", error: e)
+
+    # don't fail the push if we can't sign, for now
+    true
+  end
+
+  def sigstore_verifier
+    @sigstore_verifier ||= Sigstore::Verifier.production
+  end
+
+  def sigstore_signer
+    @sigstore_signer ||= Sigstore::Signer.new(
+      jwt: sigstore_signing_jwt,
+      trusted_root: Sigstore::TrustedRoot.production
+    )
+  end
+
+  def sigstore_signing_jwt
+    File.read("/var/run/secrets/sigstore/sigstore-signing-token")
   end
 end
