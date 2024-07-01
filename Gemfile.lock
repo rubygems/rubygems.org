@@ -110,8 +110,8 @@ GEM
       zeitwerk (>= 2.6.2)
     awrence (1.2.1)
     aws-eventstream (1.3.0)
-    aws-partitions (1.947.0)
-    aws-sdk-core (3.199.0)
+    aws-partitions (1.949.0)
+    aws-sdk-core (3.200.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.8)
@@ -119,7 +119,7 @@ GEM
     aws-sdk-kms (1.87.0)
       aws-sdk-core (~> 3, >= 3.199.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.154.0)
+    aws-sdk-s3 (1.155.0)
       aws-sdk-core (~> 3, >= 3.199.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.8)
@@ -772,7 +772,7 @@ DEPENDENCIES
   amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
   avo (~> 2.51)
-  aws-sdk-s3 (~> 1.154)
+  aws-sdk-s3 (~> 1.155)
   aws-sdk-sqs (~> 1.78)
   bcrypt (~> 3.1)
   bootsnap (~> 1.18)
@@ -904,10 +904,10 @@ CHECKSUMS
   avo (2.51.0) sha256=0d5785cda01b5b0d2575e7419cda4dc7a5d7805068f160d48ecc7458ee74ec03
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
-  aws-partitions (1.947.0) sha256=1b9dda269bd92c55aed369f29b20b49b34593b7ff8dfd4e34f53a147c1bf1aef
-  aws-sdk-core (3.199.0) sha256=46daa7d16f9a22f493f22942a36b1a8f894ae93af004dc4e62a62b97d80f62d1
+  aws-partitions (1.949.0) sha256=5961f471cf1412126ce1b9a88fc2aa79022d8d7a1e9e850f75b46c669895f220
+  aws-sdk-core (3.200.0) sha256=1d9ac535f82b5ea7b3d6e0cee7be3c48981a948123a48ff755504b7343d16951
   aws-sdk-kms (1.87.0) sha256=1e0b71fc0345460800fd92c69a40f15393d7a67851149d9a50f9fa3fbb97cada
-  aws-sdk-s3 (1.154.0) sha256=7061deb8b73d7b00650f0736a753852ec615316642f7da43612a28cd062ead0c
+  aws-sdk-s3 (1.155.0) sha256=4674e07846cc6d77d5bd122cef7fea5055e8b53bf238ab05beebc25ecb01c2e2
   aws-sdk-sqs (1.78.0) sha256=0c0e4469ca9757146673e11eb2dd7b2d21d89445c4b2b516f77366ac6356cc57
   aws-sigv4 (1.8.0) sha256=84dd99768b91b93b63d1d8e53ee837cfd06ab402812772a7899a78f9f9117cbc
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
