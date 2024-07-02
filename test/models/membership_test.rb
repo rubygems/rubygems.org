@@ -1,7 +1,6 @@
 require "test_helper"
 
 class MembershipTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  should belong_to(:org)
+  should belong_to(:user)
 end
