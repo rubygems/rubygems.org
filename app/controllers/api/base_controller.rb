@@ -2,6 +2,8 @@ class Api::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
   after_action :skip_session
 
+  rescue_from(Pundit::NotAuthorizedError) { |_| render_api_key_forbidden }
+
   private
 
   def name_params
@@ -93,6 +95,18 @@ class Api::BaseController < ApplicationController
     render_soft_deleted_api_key if @api_key.soft_deleted?
   end
 
+  def pundit_user
+    @api_key
+  end
+
+  def policy_scope(scope)
+    super(Array.wrap(scope).prepend(:api))
+  end
+
+  def authorize(record, query = nil)
+    super(Array.wrap(record).prepend(:api), query)
+  end
+
   def verify_user_api_key
     render_api_key_forbidden if @api_key.user.blank?
   end
@@ -101,11 +115,12 @@ class Api::BaseController < ApplicationController
     render plain: t(:please_sign_up), status: :unauthorized
   end
 
-  def render_api_key_forbidden
+  def render_api_key_forbidden(error = nil)
+    error = error&.message || t(:api_key_forbidden)
     respond_to do |format|
-      format.any(:all) { render plain: t(:api_key_forbidden), status: :forbidden }
-      format.json { render json: { error: t(:api_key_forbidden) }, status: :forbidden }
-      format.yaml { render yaml: { error: t(:api_key_forbidden) }, status: :forbidden }
+      format.any(:all) { render plain: error, status: :forbidden }
+      format.json { render json: { error: }, status: :forbidden }
+      format.yaml { render yaml: { error: }, status: :forbidden }
     end
   end
 
