@@ -43,7 +43,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       end
 
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "Missing GitHub Signature", @response.body
       end
     end
@@ -56,7 +56,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       end
 
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "Missing GitHub Signature", @response.body
       end
     end
@@ -69,7 +69,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       end
 
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "Can't fetch public key from GitHub", @response.body
       end
     end
@@ -83,7 +83,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
       end
 
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "Invalid GitHub Signature", @response.body
       end
     end

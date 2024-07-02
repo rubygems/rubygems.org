@@ -165,7 +165,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
 
         should "deny access" do
-          assert_response 401
+          assert_response :unauthorized
           assert_match "Invalid credentials", @response.body
         end
       end
