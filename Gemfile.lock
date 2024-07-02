@@ -558,7 +558,7 @@ GEM
     rails-i18n (7.0.9)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
-    rails_semantic_logger (4.15.0)
+    rails_semantic_logger (4.16.0)
       rack
       railties (>= 5.1)
       semantic_logger (~> 4.13)
@@ -842,7 +842,7 @@ DEPENDENCIES
   rails-controller-testing (~> 1.0)
   rails-erd (~> 1.7)
   rails-i18n (~> 7.0)
-  rails_semantic_logger (~> 4.15)
+  rails_semantic_logger (~> 4.16)
   rbtrace (~> 0.5.1)
   rdoc (~> 6.7)
   roadie-rails (~> 3.2)
@@ -1084,7 +1084,7 @@ CHECKSUMS
   rails-erd (1.7.2) sha256=0b17d0fba25d319d8da8af7a3e5e2149d02d6187cc7351e8be43423f07c48bcd
   rails-html-sanitizer (1.6.0) sha256=86e9f19d2e6748890dcc2633c8945ca45baa08a1df9d8c215ce17b3b0afaa4de
   rails-i18n (7.0.9) sha256=c184db80a7c7bf21c14e0e400fe9e27c4c20312f019aaff5b364a82858dc1369
-  rails_semantic_logger (4.15.0) sha256=91c354a2f342c4e878bdf7ac7f07c95b79a3c4f2439ffd4dde88f8b25abca20d
+  rails_semantic_logger (4.16.0) sha256=766f6cd482f3c811083b24777ea8ac04bb7f44c4fdb189cf1af3ae2b9b844cf6
   railties (7.1.3.4) sha256=6c6049f3a788669d94f95c7bf6378204ae94098567cc25237e3c73dac4a21afc
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.2.1) sha256=46cb38dae65d7d74b6020a4ac9d48afed8eb8149c040eccf0523bec91907059d
