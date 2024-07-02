@@ -36,21 +36,21 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   def self.should_deny_access
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match "HTTP Basic: Access denied.", @response.body
     end
   end
 
   def self.should_deny_access_incorrect_otp
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match I18n.t("otp_incorrect"), @response.body
     end
   end
 
   def self.should_deny_access_missing_otp
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match I18n.t("otp_missing"), @response.body
     end
 
@@ -179,7 +179,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       get :show
     end
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match "HTTP Basic: Access denied.", @response.body
     end
   end
@@ -259,7 +259,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         authorize_with("#{@user.handle}:pass")
         get :show
 
-        assert_response 401
+        assert_response :unauthorized
         assert_match "HTTP Basic: Access denied.", @response.body
       end
     end
@@ -468,7 +468,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
 
         should "deny access" do
-          assert_response 403
+          assert_response :forbidden
           mfa_error = <<~ERROR.chomp
             [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
             at https://rubygems.org/totp/new.
@@ -487,7 +487,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
 
         should "deny access" do
-          assert_response 403
+          assert_response :forbidden
           mfa_error = <<~ERROR.chomp
             [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
             at https://rubygems.org/settings/edit.

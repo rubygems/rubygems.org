@@ -22,11 +22,11 @@ module Gemcutter::Middleware
         /quick/latest_index
       ]
 
-      super(app, options)
+      super
     end
 
     def can_serve(path)
-      super(path) || gem_download_path(path) || path =~ %r{^/quick/Marshal\.4\.8/.*\.gemspec.rz}
+      super || gem_download_path(path) || path =~ %r{^/quick/Marshal\.4\.8/.*\.gemspec.rz}
     end
 
     def gem_download_path(path)

@@ -62,9 +62,8 @@ class LinksTest < ActiveSupport::TestCase
     rubygem = build(:rubygem, linkset: build(:linkset), versions: [version])
     links = rubygem.links(version)
 
-    enumerated = []
-    links.each do |short, value|
-      enumerated << [short, value]
+    enumerated = links.map do |short, value|
+      [short, value]
     end
 
     assert_equal([["home", "https://example.code"], ["download", "/downloads/.gem"]], enumerated)

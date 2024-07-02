@@ -57,7 +57,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
     context "with no credentials" do
       setup { post :create }
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "HTTP Basic: Access denied.", @response.body
       end
     end
@@ -71,7 +71,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "HTTP Basic: Access denied.", @response.body
       end
     end
@@ -143,7 +143,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "HTTP Basic: Access denied.", @response.body
       end
     end
@@ -155,7 +155,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       end
 
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_match "HTTP Basic: Access denied.", @response.body
       end
     end

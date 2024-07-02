@@ -761,7 +761,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :index, format: "json"
       end
       should "deny access" do
-        assert_response 401
+        assert_response :unauthorized
         assert_equal "Access Denied. Please sign up for an account at https://rubygems.org",
                      @response.body
       end

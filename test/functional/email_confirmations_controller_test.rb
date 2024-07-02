@@ -477,13 +477,13 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       should "fail friendly" do
         post :create, params: { email_confirmation: "ABC" }
 
-        assert_response 400 # bad status raised by strong params
+        assert_response :bad_request # bad status raised by strong params
       end
 
       should "handle non-scalar params" do
         post :create, params: { email_confirmation: { email: { foo: "bar" } } }
 
-        assert_response 400 # bad status raised by strong params
+        assert_response :bad_request # bad status raised by strong params
       end
     end
 

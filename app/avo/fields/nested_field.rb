@@ -19,7 +19,7 @@ class NestedField < Avo::Fields::BaseField
       [k, get_field(k).fill_field(Holder.new, :item, v, params).item]
     end
 
-    super(model, key, value, params)
+    super
   end
 
   def to_permitted_param
