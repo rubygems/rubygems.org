@@ -15,4 +15,7 @@ class Org < ApplicationRecord
   has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :org
   has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :org
   has_many :users, through: :memberships
+
+  scope :not_deleted, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
 end
