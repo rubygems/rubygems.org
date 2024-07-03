@@ -1,9 +1,8 @@
 class Org < ApplicationRecord
-  validates :handle, presence: true, uniqueness: { case_sensitive: false }, length: { within: 2..40 }
-  validates :handle, format: {
-    with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/,
-    message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
-  }, allow_nil: true
+  validates :handle, presence: true,
+    uniqueness: { case_sensitive: false },
+    length: { within: 2..40 },
+    format: { with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/ }
   validates :name, presence: true, length: { within: 2..255 }
   validate :unique_with_user_handle
 

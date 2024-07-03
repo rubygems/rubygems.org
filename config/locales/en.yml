@@ -94,6 +94,10 @@ en:
             user_id:
               already_confirmed: "is already an owner of this gem"
               already_invited: "is already invited to this gem"
+        user:
+          attributes:
+            handle:
+              invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
         version:
           attributes:
             gem_full_name:
