@@ -73,7 +73,7 @@
                         </td>
                         <td bgcolor="#e9573f">
                           <div class="text-btn" style="color:#ffffff; font-family:Arial, sans-serif; min-width:auto !important; font-size:16px; line-height:20px; text-align:center">
-                            <a href=<%= new_totp_url %> target="_blank" class="link-white" style="color:#ffffff; text-decoration:none">
+                            <a href="<%= new_totp_url %>" target="_blank" class="link-white" style="color:#ffffff; text-decoration:none">
                               <span class="link-white" style="color:#ffffff; text-decoration:none">
                                 <%= "ENABLE MFA" if @user.mfa_disabled? %>
                                 <%= "STRENGTHEN MFA LEVEL" if @user.mfa_ui_only? %>

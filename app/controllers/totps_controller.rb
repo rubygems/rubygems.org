@@ -15,7 +15,7 @@ class TotpsController < ApplicationController
     session[:totp_seed] = @seed
     session[:totp_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
     text = ROTP::TOTP.new(@seed, issuer: issuer).provisioning_uri(current_user.email)
-    @qrcode_svg = RQRCode::QRCode.new(text, level: :l).as_svg(module_size: 6)
+    @qrcode_svg = RQRCode::QRCode.new(text, level: :l).as_svg(module_size: 6).html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def create
