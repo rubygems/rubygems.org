@@ -17,7 +17,7 @@ gem "faraday", "~> 2.10"
 gem "faraday-retry", "~> 2.2"
 gem "good_job", "~> 3.29"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 5.5.1" # see https://github.com/rubygems/rubygems.org/pull/4598
+gem "honeybadger", "~> 5.5.1", require: false # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "launchdarkly-server-sdk", "~> 8.6"
