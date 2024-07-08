@@ -254,13 +254,13 @@ GEM
       ffi (~> 1.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    good_job (3.29.5)
-      activejob (>= 6.0.0)
-      activerecord (>= 6.0.0)
-      concurrent-ruby (>= 1.0.2)
-      fugit (>= 1.1)
-      railties (>= 6.0.0)
-      thor (>= 0.14.1)
+    good_job (4.0.0)
+      activejob (>= 6.1.0)
+      activerecord (>= 6.1.0)
+      concurrent-ruby (>= 1.3.1)
+      fugit (>= 1.11.0)
+      railties (>= 6.1.0)
+      thor (>= 1.0.0)
     google-protobuf (4.27.2)
       bigdecimal
       rake (>= 13)
@@ -298,7 +298,7 @@ GEM
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     io-console (0.7.2)
-    irb (1.13.2)
+    irb (1.14.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jmespath (1.6.2)
@@ -795,7 +795,7 @@ DEPENDENCIES
   faraday (~> 2.9)
   faraday-retry (~> 2.2)
   faraday_middleware-aws-sigv4 (~> 1.0)
-  good_job (~> 3.29)
+  good_job (~> 4.0)
   google-protobuf (~> 4.27)
   gravtastic (~> 3.2)
   groupdate (~> 6.2)
@@ -970,7 +970,7 @@ CHECKSUMS
   fugit (1.11.0) sha256=addc9cd3031611921d1dbac094de3a645bc8858828639fd035c9cedd3b460bb9
   get_process_mem (0.2.7) sha256=4afd3c3641dd6a817c09806c7d6d509d8a9984512ac38dea8b917426bbf77eba
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
-  good_job (3.29.5) sha256=3d71236c7e89b9678ba0cf16d6a93b9ee2ff12795959a0c10f77fd52f6479a13
+  good_job (4.0.0) sha256=6e6488fdaf5ae4c6d1f8edadc1983365670557efc525c53def79fe1464ff9939
   google-protobuf (4.27.2) sha256=9f69eb20acde6e3cf3cd197c09f38911cd7eed5fdf1bf4d4bce4c55e9dc9966f
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.4.0) sha256=65940645bf2a48f9b2d10ab7a1d19bdc78f3c89559d8fce39cea3448a15aec54
@@ -989,7 +989,7 @@ CHECKSUMS
   importmap-rails (2.0.1) sha256=e739a6e70c09f797688c6983fa79567ec1edc9becc30d55b3f7cc897b1825586
   inline_svg (1.9.0) sha256=f44c5e3d2e401fd619ad3047b7c8cee384517d855edb1d1fb1a248d3cae535d6
   io-console (0.7.2) sha256=f0dccff252f877a4f60d04a4dc6b442b185ebffb4b320ab69212a92b48a7a221
-  irb (1.13.2) sha256=e72928d8047a515cd868967ecafbe5388097402449fb8ef658c33db6ccde8117
+  irb (1.14.0) sha256=53d805013bbd194874b8c13a56aca6aebcd11dd79166d88724f8a434fedde615
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.5.1) sha256=1428ad5b308adbaae8776c16b7792a846eb1ad7f4ab3c6e0f9668dd2ab1179e5
   json (2.7.2) sha256=1898b5cbc81cd36c0fd4d0b7ad2682c39fb07c5ff682fc6265f678f550d4982c

@@ -15,7 +15,7 @@ gem "dogstatsd-ruby", "~> 5.5"
 gem "google-protobuf", "~> 4.27"
 gem "faraday", "~> 2.9"
 gem "faraday-retry", "~> 2.2"
-gem "good_job", "~> 3.29"
+gem "good_job", "~> 4.0"
 gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 5.5.1" # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
