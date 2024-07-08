@@ -1,12 +1,14 @@
 import $ from "jquery";
 
 $(document).on('click', '.deps_expanded-link', function () {
+  try {
   var current = $(this);
-  var gem_id = $(this).attr('data-gem_id');
-  var version_id = $(this).attr('data-version');
+  var gem_id = this.dataset.gemId;
+  var version_id = this.dataset.version;
+  const url = "/gems/"+gem_id+"/versions/"+version_id+"/dependencies.json";
   $.ajax({
     type: "get",
-    url: "/gems/"+gem_id+"/versions/"+version_id+"/dependencies.json",
+    url: url,
     success: function(resp) {
       renderDependencies(resp, current);
     },
@@ -15,6 +17,9 @@ $(document).on('click', '.deps_expanded-link', function () {
       current.parent().next().next().html(error_message);
     }
   });
+} catch (e) {
+  alert(e);
+}
 });
 
 function renderDependencies(resp, current) {
