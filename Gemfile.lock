@@ -298,7 +298,7 @@ GEM
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     io-console (0.7.2)
-    irb (1.13.2)
+    irb (1.14.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jmespath (1.6.2)
@@ -558,10 +558,10 @@ GEM
     rails-i18n (7.0.9)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
-    rails_semantic_logger (4.16.0)
+    rails_semantic_logger (4.17.0)
       rack
       railties (>= 5.1)
-      semantic_logger (~> 4.13)
+      semantic_logger (~> 4.16)
     railties (7.1.3.4)
       actionpack (= 7.1.3.4)
       activesupport (= 7.1.3.4)
@@ -655,7 +655,7 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic (1.6.1)
-    semantic_logger (4.15.0)
+    semantic_logger (4.16.0)
       concurrent-ruby (~> 1.0)
     shoryuken (6.2.1)
       aws-sdk-core (>= 2)
@@ -842,7 +842,7 @@ DEPENDENCIES
   rails-controller-testing (~> 1.0)
   rails-erd (~> 1.7)
   rails-i18n (~> 7.0)
-  rails_semantic_logger (~> 4.16)
+  rails_semantic_logger (~> 4.17)
   rbtrace (~> 0.5.1)
   rdoc (~> 6.7)
   roadie-rails (~> 3.2)
@@ -989,7 +989,7 @@ CHECKSUMS
   importmap-rails (2.0.1) sha256=e739a6e70c09f797688c6983fa79567ec1edc9becc30d55b3f7cc897b1825586
   inline_svg (1.9.0) sha256=f44c5e3d2e401fd619ad3047b7c8cee384517d855edb1d1fb1a248d3cae535d6
   io-console (0.7.2) sha256=f0dccff252f877a4f60d04a4dc6b442b185ebffb4b320ab69212a92b48a7a221
-  irb (1.13.2) sha256=e72928d8047a515cd868967ecafbe5388097402449fb8ef658c33db6ccde8117
+  irb (1.14.0) sha256=53d805013bbd194874b8c13a56aca6aebcd11dd79166d88724f8a434fedde615
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.5.1) sha256=1428ad5b308adbaae8776c16b7792a846eb1ad7f4ab3c6e0f9668dd2ab1179e5
   json (2.7.2) sha256=1898b5cbc81cd36c0fd4d0b7ad2682c39fb07c5ff682fc6265f678f550d4982c
@@ -1084,7 +1084,7 @@ CHECKSUMS
   rails-erd (1.7.2) sha256=0b17d0fba25d319d8da8af7a3e5e2149d02d6187cc7351e8be43423f07c48bcd
   rails-html-sanitizer (1.6.0) sha256=86e9f19d2e6748890dcc2633c8945ca45baa08a1df9d8c215ce17b3b0afaa4de
   rails-i18n (7.0.9) sha256=c184db80a7c7bf21c14e0e400fe9e27c4c20312f019aaff5b364a82858dc1369
-  rails_semantic_logger (4.16.0) sha256=766f6cd482f3c811083b24777ea8ac04bb7f44c4fdb189cf1af3ae2b9b844cf6
+  rails_semantic_logger (4.17.0) sha256=cc10cca01491736596cd5ab40b52b3bbf98338d9d1f5a7916b2be10231615047
   railties (7.1.3.4) sha256=6c6049f3a788669d94f95c7bf6378204ae94098567cc25237e3c73dac4a21afc
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.2.1) sha256=46cb38dae65d7d74b6020a4ac9d48afed8eb8149c040eccf0523bec91907059d
@@ -1122,7 +1122,7 @@ CHECKSUMS
   searchkick (5.3.1) sha256=dc1181543f6a68354e380651f235fa7f3df6a09e4cd67fc284dc293fa9860f57
   selenium-webdriver (4.22.0) sha256=644370abcdcf1f14b2581c125d39014a1933b20e355c74b0dc5d0ca877a45d66
   semantic (1.6.1) sha256=3cdbb48f59198ebb782a3fdfb87b559e0822a311610db153bae22777a7d0c163
-  semantic_logger (4.15.0) sha256=ec4f56122b5d2e2117d148b86c69fb62c1194a2b01a271be04ba8678a85f81ff
+  semantic_logger (4.16.0) sha256=ffba0bd0e008ceaf6be26da588f610a61208b9a9f55676b32729e962904023d9
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
   shoulda-matchers (6.2.0) sha256=a702c059c5f3bbda2295827231a28654e33063d7c4d409662980ec630207d8dd
