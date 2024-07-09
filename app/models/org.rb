@@ -1,4 +1,6 @@
 class Org < ApplicationRecord
+  include Events::Recordable
+
   validates :handle, presence: true,
     uniqueness: { case_sensitive: false },
     length: { within: 2..40 },
@@ -17,4 +19,8 @@ class Org < ApplicationRecord
 
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
+
+  after_create do
+    record_event!(Events::OrgEvent::CREATED, actor_id: owner.to_gid)
+  end
 end
