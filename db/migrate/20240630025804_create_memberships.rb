@@ -6,7 +6,7 @@ class CreateMemberships < ActiveRecord::Migration[7.1]
       t.timestamp :confirmed_at, default: nil
 
       t.timestamps
-      t.index [:user_id, :org_id], unique: true
+      t.index %i[user_id org_id], unique: true
     end
   end
 end
