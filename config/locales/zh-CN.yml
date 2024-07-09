@@ -89,6 +89,10 @@ zh-CN:
             user_id:
               already_confirmed:
               already_invited:
+        user:
+          attributes:
+            handle:
+              invalid:
         version:
           attributes:
             gem_full_name:

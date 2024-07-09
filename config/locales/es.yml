@@ -97,6 +97,10 @@ es:
             user_id:
               already_confirmed: ya es propietario de esta gema
               already_invited: ya ha sido invitado a esta gema
+        user:
+          attributes:
+            handle:
+              invalid:
         version:
           attributes:
             gem_full_name:

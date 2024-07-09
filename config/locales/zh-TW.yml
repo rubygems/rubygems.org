@@ -88,6 +88,10 @@ zh-TW:
             user_id:
               already_confirmed: 已是此 Gem 的擁有者
               already_invited: 已獲邀加入此 Gem
+        user:
+          attributes:
+            handle:
+              invalid:
         version:
           attributes:
             gem_full_name:
