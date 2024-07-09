@@ -1,13 +1,11 @@
 class MembershipResource < Avo::BaseResource
   self.title = :id
   self.includes = []
-  # self.search_query = -> do
-  #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
-  # end
+
+  class ConfirmedFilter < ScopeBooleanFilter; end
+  filter ConfirmedFilter, arguments: { default: { confirmed: true, unconfirmed: false } }
 
   field :id, as: :id
-  # Fields generated from the model
-  field :user, as: :text
-  field :org, as: :text
-  # add fields here
+  field :user, as: :belongs_to
+  field :org, as: :belongs_to
 end
