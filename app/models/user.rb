@@ -64,6 +64,9 @@ class User < ApplicationRecord
   has_many :oidc_pending_trusted_publishers, class_name: "OIDC::PendingTrustedPublisher", inverse_of: :user, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, through: :rubygems, class_name: "OIDC::RubygemTrustedPublisher"
 
+  has_many :memberships, dependent: :destroy
+  has_many :orgs, through: :memberships
+
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
 uniqueness: { case_sensitive: false }
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
