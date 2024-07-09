@@ -322,6 +322,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["org_id"], name: "index_memberships_on_org_id"
+    t.index ["user_id", "org_id"], name: "index_memberships_on_user_id_and_org_id", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
@@ -398,6 +399,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "lower((handle)::text)", name: "index_orgs_on_lower_handle", unique: true
   end
 
   create_table "ownership_calls", force: :cascade do |t|

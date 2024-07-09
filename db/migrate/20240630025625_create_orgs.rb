@@ -6,6 +6,8 @@ class CreateOrgs < ActiveRecord::Migration[7.1]
       t.timestamp :deleted_at
 
       t.timestamps
+
+      t.index "lower(handle)", unique: true
     end
   end
 end
