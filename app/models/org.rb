@@ -4,7 +4,7 @@ class Org < ApplicationRecord
   validates :handle, presence: true,
     uniqueness: { case_sensitive: false },
     length: { within: 2..40 },
-    format: { with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/ }
+    format: { with: Patterns::HANDLE_PATTERN }
   validates :name, presence: true, length: { within: 2..255 }
   validate :unique_with_user_handle
 

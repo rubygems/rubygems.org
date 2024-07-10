@@ -13,4 +13,5 @@ module Patterns
   VERSION_PATTERN       = /\A#{Gem::Version::VERSION_PATTERN}\z/o
   REQUIREMENT_PATTERN   = Gem::Requirement::PATTERN
   BASE64_SHA256_PATTERN = %r{\A[0-9a-zA-Z_+/-]{43}={0,2}\z}
+  HANDLE_PATTERN        = /\A[A-Za-z][A-Za-z_\-0-9]*\z/
 end

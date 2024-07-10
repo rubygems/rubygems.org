@@ -72,11 +72,7 @@ uniqueness: { case_sensitive: false }
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
-  validates :handle, format: {
-    with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/,
-    message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
-  }, allow_nil: true
-  validates :handle, length: { within: 2..40 }, allow_nil: true
+  validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
 
   validates :twitter_username, format: {
     with: /\A[a-zA-Z0-9_]*\z/,
