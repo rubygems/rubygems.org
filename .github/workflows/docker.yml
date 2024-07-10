@@ -12,7 +12,7 @@ permissions:
 jobs:
   build:
     name: Docker build (and optional push)
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       RUBYGEMS_VERSION: 3.5.14
       RUBY_VERSION: 3.3.3
