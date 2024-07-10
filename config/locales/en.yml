@@ -89,6 +89,10 @@ en:
           attributes:
             expires_at:
               inclusion: "must be in the future"
+        org:
+          attributes:
+            handle:
+              invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
         ownership:
           attributes:
             user_id:

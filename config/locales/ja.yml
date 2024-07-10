@@ -83,6 +83,10 @@ ja:
           attributes:
             expires_at:
               inclusion: 未来でなければなりません
+        org:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
