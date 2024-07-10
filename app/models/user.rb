@@ -73,6 +73,7 @@ uniqueness: { case_sensitive: false }
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
+  validate :unique_with_org_handle
 
   validates :twitter_username, format: {
     with: /\A[a-zA-Z0-9_]*\z/,
@@ -356,5 +357,9 @@ uniqueness: { case_sensitive: false }
 
   def record_password_update_event
     record_event!(Events::UserEvent::PASSWORD_CHANGED)
+  end
+
+  def unique_with_org_handle
+    errors.add(:handle, "has already been taken") if handle && Org.where("handle = lower(?)", handle.downcase).any?
   end
 end
