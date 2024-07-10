@@ -12,7 +12,6 @@ class Org < ApplicationRecord
     errors.add(:handle, "has already been taken") if handle && User.where("handle = lower(?)", handle.downcase).any?
   end
 
-  has_many :rubygems, through: :ownerships
   has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :org
   has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :org
   has_many :users, through: :memberships
