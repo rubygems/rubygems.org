@@ -10,7 +10,7 @@ permissions:
 jobs:
   rubocop:
     name: Rubocop
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: ruby/setup-ruby@3a77c29278ae80936b4cb030fefc7d21c96c786f # v1.185.0
@@ -20,7 +20,7 @@ jobs:
         run: bundle exec rubocop
   brakeman:
     name: Brakeman
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: ruby/setup-ruby@3a77c29278ae80936b4cb030fefc7d21c96c786f # v1.185.0
@@ -30,7 +30,7 @@ jobs:
         run: bundle exec brakeman
   importmap:
     name: Importmap Verify
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: ruby/setup-ruby@3a77c29278ae80936b4cb030fefc7d21c96c786f # v1.185.0
@@ -40,7 +40,7 @@ jobs:
         run: bundle exec rake importmap:verify
   kubeconform:
     name: Kubeconform
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         kubernetes_version: ["1.29.1"]

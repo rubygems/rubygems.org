@@ -15,7 +15,7 @@ jobs:
   status_check:
     name: All required tests passing check
     needs: [rails]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: always()
     steps:
       - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
