@@ -21,7 +21,10 @@ zh-CN:
   locale_name: 简体中文
   none: 无
   not_found: 未找到
+  api_gem_not_found:
   api_key_forbidden: API 密钥没有访问权限
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: 拒绝访问。请在 https://rubygems.org 上注册一个账号。
   please_sign_in: 请先登录以继续
   otp_incorrect: 您的 OTP 码不正确。请检查后重试。
@@ -436,6 +439,12 @@ zh-CN:
     strong_mfa_level_recommended: 为了保护您的帐户和您的 Gem，我们建议您将您的多因素验证级别更改为 "UI and gem signin"
       或 "UI and API"。在将来，您的帐户将被要求在其中某一个级别上启用多因素验证。
     setup_webauthn_html:
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied: "[ 已复制 ]"
       continue: 继续
