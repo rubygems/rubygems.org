@@ -2,7 +2,9 @@ class Api::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
   after_action :skip_session
 
-  rescue_from(Pundit::NotAuthorizedError) { |_| render_forbidden(t(:api_key_forbidden)) }
+  rescue_from(Pundit::NotAuthorizedError) do |e|
+    render_forbidden(e.policy.error)
+  end
 
   private
 
@@ -31,16 +33,6 @@ class Api::BaseController < ApplicationController
     return if @api_key.mfa_authorized?(otp)
     prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
     render plain: prompt_text, status: :unauthorized
-  end
-
-  def verify_mfa_requirement
-    if @rubygem && !@rubygem.mfa_requirement_satisfied_for?(@api_key.user)
-      render_forbidden t("multifactor_auths.api.mfa_required")
-    elsif @api_key.mfa_required_not_yet_enabled?
-      render_forbidden t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
-    elsif @api_key.mfa_required_weak_level_enabled?
-      render_forbidden t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
-    end
   end
 
   def response_with_mfa_warning(message)

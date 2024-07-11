@@ -5,7 +5,6 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
   before_action :find_rubygem
 
   before_action :verify_with_otp
-  before_action :verify_mfa_requirement
 
   before_action :find_rubygem_trusted_publisher, except: %i[index create]
   before_action :set_trusted_publisher_type, only: %i[create]

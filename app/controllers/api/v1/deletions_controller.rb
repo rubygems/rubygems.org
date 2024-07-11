@@ -6,7 +6,6 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :validate_gem_and_version
   before_action :verify_with_otp
   before_action :render_forbidden, if: :api_key_unauthorized?
-  before_action :verify_mfa_requirement
 
   def create
     authorize @rubygem, :yank?

@@ -16,12 +16,13 @@ class Api::ApplicationPolicy
     attr_reader :api_key, :scope
   end
 
-  attr_reader :api_key, :record
+  attr_reader :user, :record, :error, :api_key
 
   def initialize(api_key, record)
-    @api_key = api_key
     @user = api_key.user
     @record = record
+    @error = nil
+    @api_key = api_key
   end
 
   def index? = false
@@ -34,7 +35,48 @@ class Api::ApplicationPolicy
 
   private
 
-  def policy!(user, record) = Pundit.policy!(user, record)
-  def user_policy! = policy!(api_key.user, record)
-  def api_key_scope?(...) = api_key.scope?(...)
+  delegate :t, to: I18n
+
+  def deny(error)
+    @error = error
+    false
+  end
+
+  def user_policy!(record)
+    Pundit.policy!(api_key.user, record)
+  end
+
+  def user_authorized?(record, action)
+    policy = user_policy!(record)
+    policy.send(action) || deny(policy.error)
+  end
+
+  def api_key_scope?(scope, rubygem)
+    if api_key.scope?(scope, rubygem)
+      true
+    elsif api_key.rubygem && api_key.rubygem != rubygem
+      # this is clunky. we're redoing the check done in ApiKey#scope?
+      # existing behavior expects that rubygem mismatch gets a unique error
+      deny t(:api_key_insufficient_scope)
+    else
+      deny t(:api_key_forbidden)
+    end
+  end
+
+  def mfa_requirement_satisfied?(rubygem = nil)
+    if rubygem && !rubygem.mfa_requirement_satisfied_for?(user)
+      deny t("multifactor_auths.api.mfa_required")
+    elsif user&.mfa_required_not_yet_enabled?
+      deny t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
+    elsif user&.mfa_required_weak_level_enabled?
+      deny t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
+    else
+      true
+    end
+  end
+
+  def user_api_key?
+    deny t(:api_key_forbidden) unless user
+  end
+
 end

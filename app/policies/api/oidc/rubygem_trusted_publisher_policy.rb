@@ -5,15 +5,15 @@ class Api::OIDC::RubygemTrustedPublisherPolicy < Api::ApplicationPolicy
   delegate :rubygem, to: :record
 
   def show?
-    can_configure_trusted_publishers? && user_policy!.show?
+    can_configure_trusted_publishers? && user_authorized?(rubygem, :show?)
   end
 
   def create?
-    can_configure_trusted_publishers? && user_policy!.create?
+    can_configure_trusted_publishers? && user_authorized?(rubygem, :create?)
   end
 
   def destroy?
-    can_configure_trusted_publishers? && user_policy!.destroy?
+    can_configure_trusted_publishers? && user_authorized?(rubygem, :destroy?)
   end
 
   private

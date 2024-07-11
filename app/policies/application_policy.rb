@@ -18,11 +18,12 @@ class ApplicationPolicy
     attr_reader :user, :scope
   end
 
-  attr_reader :user, :record
+  attr_reader :user, :record, :error
 
   def initialize(user, record)
     @user = user
     @record = record
+    @error = nil
   end
 
   def index?

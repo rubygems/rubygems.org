@@ -4,7 +4,6 @@ class Api::V1::RubygemsController < Api::BaseController
   before_action :find_rubygem, only: %i[show reverse_dependencies]
   before_action :cors_preflight_check, only: :show
   before_action :verify_with_otp, only: %i[create]
-  before_action :verify_mfa_requirement, only: %i[create]
   after_action  :cors_set_access_control_headers, only: :show
 
   def index
@@ -40,6 +39,8 @@ class Api::V1::RubygemsController < Api::BaseController
     gemcutter = Pusher.new(@api_key, request.body, request:)
     gemcutter.process
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
+  rescue Pundit::NotAuthorizedError
+    raise # Let the BaseController exception handler render forbidden error
   rescue StandardError => e
     Rails.error.report(e, handled: true)
     render plain: "Server error. Please try again.", status: :internal_server_error
