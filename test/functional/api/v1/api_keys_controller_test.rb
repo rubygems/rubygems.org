@@ -469,12 +469,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
         should "deny access" do
           assert_response :forbidden
-          mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-            at https://rubygems.org/totp/new.
-
-            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-          ERROR
+          mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
           assert_match mfa_error, @response.body
         end
@@ -488,12 +483,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
         should "deny access" do
           assert_response :forbidden
-          mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-            at https://rubygems.org/settings/edit.
-
-            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-          ERROR
+          mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
           assert_match mfa_error, @response.body
         end

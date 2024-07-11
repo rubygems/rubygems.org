@@ -15,7 +15,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def create
-    return render_api_key_forbidden unless @api_key.can_add_owner?
+    return render_forbidden(t(:api_key_forbidden)) unless @api_key.can_add_owner?
 
     owner = User.find_by_name(email_param)
     if owner
@@ -34,7 +34,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def destroy
-    return render_api_key_forbidden unless @api_key.can_remove_owner?
+    return render_forbidden(t(:api_key_forbidden)) unless @api_key.can_remove_owner?
 
     owner = @rubygem.owners_including_unconfirmed.find_by_name(email_param)
     if owner
@@ -43,7 +43,7 @@ class Api::V1::OwnersController < Api::BaseController
         OwnersMailer.owner_removed(ownership.user_id, @api_key.user.id, ownership.rubygem_id).deliver_later
         render plain: response_with_mfa_warning("Owner removed successfully.")
       else
-        render plain: response_with_mfa_warning("Unable to remove owner."), status: :forbidden
+        render_forbidden response_with_mfa_warning("Unable to remove owner.")
       end
     else
       render plain: response_with_mfa_warning("Owner could not be found."), status: :not_found

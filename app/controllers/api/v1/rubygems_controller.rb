@@ -8,7 +8,7 @@ class Api::V1::RubygemsController < Api::BaseController
   after_action  :cors_set_access_control_headers, only: :show
 
   def index
-    return render_forbidden unless @api_key.can_index_rubygems?
+    return render_forbidden(t(:api_key_insufficient_scope)) unless @api_key.can_index_rubygems?
 
     @rubygems = @api_key.user.rubygems.with_versions
       .preload(:linkset, :gem_download, most_recent_version: { dependencies: :rubygem, gem_download: nil })
@@ -33,7 +33,7 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def create
-    return render_api_key_forbidden unless @api_key.can_push_rubygem?
+    return render_forbidden(t(:api_key_insufficient_scope)) unless @api_key.can_push_rubygem?
 
     gemcutter = Pusher.new(@api_key, request.body, request:)
     gemcutter.process

@@ -25,7 +25,10 @@ pt-BR:
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
+  api_gem_not_found:
   api_key_forbidden:
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Acesso Negado. Por favor se registre em https://rubygems.org
   please_sign_in: Por favor, faça login em sua conta para continuar.
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
@@ -443,6 +446,12 @@ pt-BR:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
     setup_webauthn_html:
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied:
       continue:

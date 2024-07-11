@@ -26,7 +26,10 @@ de:
   locale_name: Deutsch
   none: None
   not_found: Nicht gefunden
+  api_gem_not_found:
   api_key_forbidden:
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
@@ -511,6 +514,12 @@ de:
       die Sicherheit deines Kontos, indem du <a href=\"/settings/edit#security-device\">ein
       neues Gerät einrichtest</a>. <a href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">Erfahre
       mehr</a>!"
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied: "[ kopiert ]"
       continue: Weiter

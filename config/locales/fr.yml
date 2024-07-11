@@ -27,7 +27,10 @@ fr:
   locale_name: Français
   none:
   not_found: Introuvable
+  api_gem_not_found:
   api_key_forbidden:
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
   please_sign_in:
   otp_incorrect:
@@ -447,6 +450,12 @@ fr:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
     setup_webauthn_html:
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied:
       continue: Continuer

@@ -189,12 +189,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           should respond_with :forbidden
 
           should "show error message" do
-            mfa_error = <<~ERROR.chomp
-              [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-              at https://rubygems.org/totp/new.
-
-              Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-            ERROR
+            mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
             assert_includes @response.body, mfa_error
           end
@@ -209,12 +204,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           should respond_with :forbidden
 
           should "show error message" do
-            mfa_error = <<~ERROR.chomp
-              [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-              at https://rubygems.org/settings/edit.
-
-              Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-            ERROR
+            mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
             assert_includes @response.body, mfa_error
           end
@@ -290,12 +280,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
-                at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future.
-              WARN
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_not_yet_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -312,13 +297,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
-                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
-                Your account will be required to have MFA enabled on one of these levels in the future.
-              WARN
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_weak_level_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -336,9 +315,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]
-              mfa_warning = "[WARNING] For protection of your account and gems"
-
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -354,9 +332,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
               assert_response gem[:deletion_status]
-              mfa_warning = "[WARNING] For protection of your account and gems"
-
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end

@@ -20,7 +20,10 @@ ja:
   locale_name: 日本語
   none: なし
   not_found: 見つかりませんでした
+  api_gem_not_found:
   api_key_forbidden: APIキーにアクセス権がありません
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
   please_sign_in: サインインしてお進みください。
   otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
@@ -428,6 +431,12 @@ ja:
     strong_mfa_level_recommended: アカウントとgemの保護のため、MFAの水準を「UIとgemのサインイン」または「UIとAPI」に変更することをお勧めします。将来のアカウントはこれらの水準のどちらか1つにMFAが有効になっていることが必須になります。
     setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">詳細はこちら</a>！"
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied: "[ コピーしました ]"
       continue: 続ける

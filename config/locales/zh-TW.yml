@@ -20,7 +20,10 @@ zh-TW:
   locale_name: 正體中文
   none: 無
   not_found: 沒有找到
+  api_gem_not_found:
   api_key_forbidden: API 金鑰沒有存取權限
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: 存取遭拒。請先在 https://rubygems.org 上註冊帳號
   please_sign_in: 請登入以繼續。
   otp_incorrect: 您的 OTP 碼不正確。請檢查後再試一次。
@@ -431,6 +434,12 @@ zh-TW:
       或 "使用者介面和 API"。未來我們將強制要求所有帳號將設為上述 MFA 等級。
     setup_webauthn_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">了解詳情</a>！"
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied: "[ 已複製 ]"
       continue: 繼續

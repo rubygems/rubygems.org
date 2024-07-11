@@ -26,7 +26,10 @@ es:
   locale_name: Español
   none: Ninguno
   not_found: No encontrado
+  api_gem_not_found:
   api_key_forbidden: La clave API no tiene acceso
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
@@ -496,6 +499,12 @@ es:
     setup_webauthn_html: "\U0001F389 ¡Ahora soportamos dispositivos de seguridad!
       Aumenta la seguridad de tu cuenta <a href=\"/settings/edit#security-device\">configurando</a>
       un nuevo dispositivo."
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied: "[ copiado ]"
       continue: Continuar
@@ -670,7 +679,8 @@ es:
         %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
       optional_full_name: Opcional. Será mostrado en tu perfil público
-      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil público
+      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil
+        público
       twitter_username: Usuario
       title: Editar perfil
       delete:

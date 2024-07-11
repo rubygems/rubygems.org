@@ -27,15 +27,6 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
     assert_match mfa_level, @response.body
   end
 
-  def assert_warning_included(expected_warning)
-    assert response_body.key?("warning")
-    assert_match expected_warning, response_body["warning"].to_s
-  end
-
-  def refute_warning_included(expected_warning)
-    refute_match expected_warning, response_body["warning"].to_s
-  end
-
   def refute_mfa_info_included(mfa_level)
     refute response_body.key?("mfa")
     refute_match mfa_level, @response.body
@@ -101,11 +92,9 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
           context "when mfa is disabled" do
             should "include warning" do
-              expected_warning =
-                "For protection of your account and gems, we encourage you to set up multi-factor authentication " \
-                "at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future."
+              expected_warning = I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
 
-              assert_warning_included(expected_warning)
+              assert_includes response_body["warning"].to_s, expected_warning
             end
           end
 
@@ -117,12 +106,9 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
               end
 
               should "include warning" do
-                expected_warning =
-                  "For protection of your account and gems, we encourage you to change your multi-factor authentication " \
-                  "level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. " \
-                  "Your account will be required to have MFA enabled on one of these levels in the future."
+                expected_warning = I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
 
-                assert_warning_included(expected_warning)
+                assert_includes response_body["warning"].to_s, expected_warning
               end
             end
 
@@ -133,10 +119,9 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
               end
 
               should "not include warning in user json" do
-                unexpected_warning =
-                  "For protection of your account and gems"
+                unexpected_warning = "For protection of your account and gems"
 
-                refute_warning_included(unexpected_warning)
+                refute_includes response_body["warning"].to_s, unexpected_warning
               end
             end
 
@@ -147,10 +132,9 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
               end
 
               should "not include warning" do
-                unexpected_warning =
-                  "For protection of your account and gems"
+                unexpected_warning = "For protection of your account and gems"
 
-                refute_warning_included(unexpected_warning)
+                refute_includes response_body["warning"].to_s, unexpected_warning
               end
             end
           end
