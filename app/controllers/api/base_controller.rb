@@ -72,6 +72,7 @@ class Api::BaseController < ApplicationController
   end
 
   def authorize(record, query = nil)
+    return if record.nil? # not found is handled by the action
     super(Array.wrap(record).prepend(:api), query)
   end
 

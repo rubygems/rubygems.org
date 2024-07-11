@@ -8,6 +8,7 @@ class Api::V1::RubygemsController < Api::BaseController
   after_action  :cors_set_access_control_headers, only: :show
 
   def index
+    authorize Rubygem, :index?
     return render_forbidden(t(:api_key_insufficient_scope)) unless @api_key.can_index_rubygems?
 
     @rubygems = @api_key.user.rubygems.with_versions
@@ -33,6 +34,7 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def create
+    authorize Rubygem, :create?
     return render_forbidden(t(:api_key_insufficient_scope)) unless @api_key.can_push_rubygem?
 
     gemcutter = Pusher.new(@api_key, request.body, request:)

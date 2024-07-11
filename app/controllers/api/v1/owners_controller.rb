@@ -15,6 +15,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def create
+    authorize @rubygem, :add_owner?
     return render_forbidden(t(:api_key_forbidden)) unless @api_key.can_add_owner?
 
     owner = User.find_by_name(email_param)
@@ -34,6 +35,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def destroy
+    authorize @rubygem, :remove_owner?
     return render_forbidden(t(:api_key_forbidden)) unless @api_key.can_remove_owner?
 
     owner = @rubygem.owners_including_unconfirmed.find_by_name(email_param)

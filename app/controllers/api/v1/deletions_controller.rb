@@ -9,6 +9,7 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :verify_mfa_requirement
 
   def create
+    authorize @rubygem, :yank?
     @deletion = @api_key.user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment "yank.success"
