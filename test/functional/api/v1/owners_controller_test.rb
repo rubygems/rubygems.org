@@ -531,8 +531,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should respond_with :forbidden
 
-      should "return body that starts with denied access message" do
-        assert @response.body.start_with?("The API key doesn't have access")
+      should "return body with denied access message" do
+        assert_equal "This API key cannot perform the specified action on this gem.", @response.body
       end
     end
   end
@@ -895,8 +895,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should respond_with :forbidden
 
-      should "return body that starts with denied access message" do
-        assert @response.body.start_with?("The API key doesn't have access")
+      should "return body that has the denied access message" do
+        assert_equal "This API key cannot perform the specified action on this gem.", @response.body
       end
     end
   end
