@@ -1,7 +1,6 @@
 class Api::V1::WebHooksController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :verify_user_api_key
-  before_action :render_forbidden, if: :api_key_unauthorized?
   before_action :find_rubygem_by_name, :set_url, except: :index
 
   def index
@@ -55,9 +54,5 @@ class Api::V1::WebHooksController < Api::BaseController
   def set_url
     render_bad_request "URL was not provided" unless params[:url]
     @url = params[:url]
-  end
-
-  def api_key_unauthorized?
-    !@api_key.can_access_webhooks?
   end
 end

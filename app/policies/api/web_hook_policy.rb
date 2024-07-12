@@ -2,19 +2,27 @@ class Api::WebHookPolicy < Api::ApplicationPolicy
   class Scope < Api::ApplicationPolicy::Scope
   end
 
+  delegate :rubygem, to: :record
+
   def index?
-    true
+    can_access_webhooks?
   end
 
   def create?
-    true
+    can_access_webhooks?(rubygem)
   end
 
   def fire?
-    true
+    can_access_webhooks?(rubygem)
   end
 
   def remove?
-    true
+    can_access_webhooks?(rubygem)
+  end
+
+  private
+
+  def can_access_webhooks?(rubygem = nil)
+    api_key_scope?(:access_webhooks, rubygem)
   end
 end
