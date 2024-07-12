@@ -1,7 +1,6 @@
 require "test_helper"
 
 class OrgTest < ActiveSupport::TestCase
-  should belong_to(:created_by)
   should have_many(:memberships).dependent(:destroy)
   should have_many(:unconfirmed_memberships).dependent(:destroy)
   should have_many(:users).through(:memberships)
