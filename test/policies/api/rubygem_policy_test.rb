@@ -25,6 +25,21 @@ class Api::RubygemPolicyTest < ActiveSupport::TestCase
     create(:api_key, owner: @owner, scopes: [scope], rubygem:)
   end
 
+  context "#index?" do
+    setup do
+      @action = :index?
+      @scope = :index_rubygems
+    end
+
+    should "deny ApiKey without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "allow ApiKey with scope" do
+      assert_predicate policy!(key_with_scope(@scope)), @action
+    end
+  end
+
   context "#configure_trusted_publishers?" do
     setup do
       @action = :configure_trusted_publishers?
