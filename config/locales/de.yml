@@ -807,7 +807,7 @@ de:
       updated:
       yanked:
     show:
-      subtitle: für %{query}
+      subtitle_html: für <em>%{query}</em>
       month_update:
       week_update:
       filter:
