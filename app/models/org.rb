@@ -6,6 +6,7 @@ class Org < ApplicationRecord
     length: { within: 2..40 },
     format: { with: Patterns::HANDLE_PATTERN }
   validates :name, presence: true, length: { within: 2..255 }
+  validates :memberships, presence: true
   validate :unique_with_user_handle
 
   def unique_with_user_handle
