@@ -40,6 +40,33 @@ class Api::RubygemPolicyTest < ActiveSupport::TestCase
     end
   end
 
+  context "#yank?" do
+    setup do
+      @action = :yank?
+      @scope = :yank_rubygem
+    end
+
+    should "deny ApiKey without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "deny ApiKey with rubygem without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "deny ApiKey with scope wrong rubygem" do
+      refute_predicate policy!(key_with_scope(@scope, create(:rubygem, owners: [@owner]))), @action
+    end
+
+    should "allow ApiKey with scope" do
+      assert_predicate policy!(key_with_scope(@scope)), @action
+    end
+
+    should "allow ApiKey with scope and rubygem" do
+      assert_predicate policy!(key_with_scope(@scope, @rubygem)), @action
+    end
+  end
+
   context "#configure_trusted_publishers?" do
     setup do
       @action = :configure_trusted_publishers?
