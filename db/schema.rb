@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -92,6 +92,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
     t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id"
     t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name"
     t.index ["version_id"], name: "index_dependencies_on_version_id"
+  end
+
+  create_table "events_org_events", force: :cascade do |t|
+    t.string "tag", null: false
+    t.string "trace_id"
+    t.bigint "org_id", null: false
+    t.bigint "ip_address_id"
+    t.bigint "geoip_info_id"
+    t.jsonb "additional"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["geoip_info_id"], name: "index_events_org_events_on_geoip_info_id"
+    t.index ["ip_address_id"], name: "index_events_org_events_on_ip_address_id"
+    t.index ["org_id"], name: "index_events_org_events_on_org_id"
+    t.index ["tag"], name: "index_events_org_events_on_tag"
   end
 
   create_table "events_rubygem_events", force: :cascade do |t|
@@ -601,6 +616,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
 
   add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
   add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
+  add_foreign_key "events_org_events", "geoip_infos"
+  add_foreign_key "events_org_events", "ip_addresses"
+  add_foreign_key "events_org_events", "orgs"
   add_foreign_key "events_rubygem_events", "geoip_infos"
   add_foreign_key "events_rubygem_events", "ip_addresses"
   add_foreign_key "events_rubygem_events", "rubygems"
