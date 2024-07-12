@@ -5,7 +5,7 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
   alias rubygem record
 
   def index?
-    true
+    api_key_scope?(:index_rubygems)
   end
 
   def create?

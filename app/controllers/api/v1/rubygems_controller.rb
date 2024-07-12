@@ -9,7 +9,6 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def index
     authorize Rubygem, :index?
-    return render_forbidden(t(:api_key_insufficient_scope)) unless @api_key.can_index_rubygems?
 
     @rubygems = @api_key.user.rubygems.with_versions
       .preload(:linkset, :gem_download, most_recent_version: { dependencies: :rubygem, gem_download: nil })
