@@ -13,7 +13,7 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
   end
 
   def yank?
-    true
+    api_key_scope?(:yank_rubygem, rubygem)
   end
 
   def add_owner?
