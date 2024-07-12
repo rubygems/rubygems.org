@@ -706,7 +706,7 @@ en:
       updated: Updated
       yanked: Yanked
     show:
-      subtitle: for %{query}
+      subtitle_html: for <em>%{query}</em>
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})
       filter: "Filter:"

@@ -710,7 +710,7 @@ zh-CN:
       updated: 更新
       yanked: 撤回
     show:
-      subtitle: "%{query}"
+      subtitle_html: "<em>%{query}</em>"
       month_update: 上个月更新 (%{count})
       week_update: 上周更新 (%{count})
       filter: 过滤：

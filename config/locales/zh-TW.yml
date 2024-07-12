@@ -700,7 +700,7 @@ zh-TW:
       updated: 更新於
       yanked: 移除於
     show:
-      subtitle: "%{query}"
+      subtitle_html: "<em>%{query}</em>"
       month_update: 於最近一個月更新 (%{count})
       week_update: 於最近一週更新 (%{count})
       filter:

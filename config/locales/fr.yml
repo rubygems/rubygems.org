@@ -743,7 +743,7 @@ fr:
       updated: Mis à jour
       yanked:
     show:
-      subtitle: pour %{query}
+      subtitle_html: pour <em>%{query}</em>
       month_update:
       week_update:
       filter:

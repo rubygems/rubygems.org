@@ -704,7 +704,7 @@ ja:
       updated: 更新日
       yanked: ヤンク済み
     show:
-      subtitle: "%{query}の検索結果"
+      subtitle_html: "<em>%{query}</em>の検索結果"
       month_update: 先月更新（%{count}件）
       week_update: 先週更新（%{count}件）
       filter: 絞り込み：
