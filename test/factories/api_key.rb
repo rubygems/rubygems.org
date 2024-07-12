@@ -14,5 +14,9 @@ FactoryBot.define do
     after(:build) do |api_key, evaluator|
       api_key.rubygem_id = evaluator.rubygem.id if evaluator.rubygem
     end
+
+    trait :trusted_publisher do
+      owner factory: %i[oidc_trusted_publisher_github_action]
+    end
   end
 end

@@ -117,6 +117,11 @@ uniqueness: { case_sensitive: false }
     find_by(id: slug) || find_by(handle: slug)
   end
 
+  def self.find_by_name!(name)
+    raise ActiveRecord::RecordNotFound if name.blank?
+    find_by_email(name) || find_by!(handle: name)
+  end
+
   def self.find_by_name(name)
     return if name.blank?
     find_by_email(name) || find_by(handle: name)

@@ -50,4 +50,12 @@ class RubygemPolicy < ApplicationPolicy
   def show_unconfirmed_ownerships?
     rubygem_owned_by?(user)
   end
+
+  def add_owner?
+    rubygem_owned_by?(user)
+  end
+
+  def remove_owner?
+    rubygem_owned_by?(user)
+  end
 end

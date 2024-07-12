@@ -75,4 +75,8 @@ class ApplicationPolicy
     return true if rubygem.owned_by?(user)
     deny(t(:forbidden))
   end
+
+  def policy!(user, record)
+    Pundit.policy!(user, record)
+  end
 end

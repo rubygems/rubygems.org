@@ -5,10 +5,10 @@ class OwnershipPolicy < ApplicationPolicy
   delegate :rubygem, to: :record
 
   def create?
-    rubygem_owned_by?(user) && current_user?(record.authorizer)
+    policy!(user, rubygem).add_owner?
   end
 
   def destroy?
-    rubygem_owned_by?(user)
+    policy!(user, rubygem).remove_owner?
   end
 end
