@@ -394,8 +394,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_30_025804) do
   end
 
   create_table "orgs", force: :cascade do |t|
-    t.string "handle"
-    t.string "name"
+    t.string "handle", limit: 40
+    t.string "name", limit: 255
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

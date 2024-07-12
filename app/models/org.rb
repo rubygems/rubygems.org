@@ -20,6 +20,6 @@ class Org < ApplicationRecord
   scope :deleted, -> { where.not(deleted_at: nil) }
 
   after_create do
-    record_event!(Events::OrgEvent::CREATED, actor_id: owner.to_gid)
+    record_event!(Events::OrgEvent::CREATED, actor_gid: memberships.first.to_gid)
   end
 end
