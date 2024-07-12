@@ -17,11 +17,11 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
   end
 
   def add_owner?
-    true
+    api_key_scope?(:add_owner, rubygem)
   end
 
   def remove_owner?
-    true
+    api_key_scope?(:remove_owner, rubygem)
   end
 
   def configure_trusted_publishers?

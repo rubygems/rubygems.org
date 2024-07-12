@@ -93,4 +93,58 @@ class Api::RubygemPolicyTest < ActiveSupport::TestCase
       assert_predicate policy!(key_with_scope(@scope, @rubygem)), @action
     end
   end
+
+  context "#add_owner" do
+    setup do
+      @action = :add_owner?
+      @scope = :add_owner
+    end
+
+    should "deny ApiKey without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "deny ApiKey with rubygem without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "deny ApiKey with scope wrong rubygem" do
+      refute_predicate policy!(key_with_scope(@scope, create(:rubygem, owners: [@owner]))), @action
+    end
+
+    should "allow ApiKey with scope" do
+      assert_predicate policy!(key_with_scope(@scope)), @action
+    end
+
+    should "allow ApiKey with scope and rubygem" do
+      assert_predicate policy!(key_with_scope(@scope, @rubygem)), @action
+    end
+  end
+
+  context "#remove_owner" do
+    setup do
+      @action = :remove_owner?
+      @scope = :remove_owner
+    end
+
+    should "deny ApiKey without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "deny ApiKey with rubygem without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "deny ApiKey with scope wrong rubygem" do
+      refute_predicate policy!(key_with_scope(@scope, create(:rubygem, owners: [@owner]))), @action
+    end
+
+    should "allow ApiKey with scope" do
+      assert_predicate policy!(key_with_scope(@scope)), @action
+    end
+
+    should "allow ApiKey with scope and rubygem" do
+      assert_predicate policy!(key_with_scope(@scope, @rubygem)), @action
+    end
+  end
 end
