@@ -10,7 +10,9 @@ class Admin::UserPolicy < Admin::ApplicationPolicy
   has_association :audits
   has_association :deletions
   has_association :events
+  has_association :memberships
   has_association :oidc_api_key_roles
+  has_association :orgs
   has_association :ownership_calls
   has_association :ownership_requests
   has_association :ownerships
