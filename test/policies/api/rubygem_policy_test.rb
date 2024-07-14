@@ -2,53 +2,53 @@ require "test_helper"
 
 class Api::RubygemPolicyTest < ActiveSupport::TestCase
   setup do
-    @owner = create(:user)
+    @owner = create(:user, handle: "owner")
     @rubygem = create(:rubygem, owners: [@owner])
 
-    RubygemPolicy.any_instance.stubs(show_trusted_publishers?: true)
+    RubygemPolicy.any_instance.stubs(
+      configure_trusted_publishers?: true,
+      add_owner?: true,
+      remove_owner?: true
+    )
   end
 
   def policy!(api_key, rubygem = @rubygem)
     Pundit.policy!(api_key, [:api, rubygem])
   end
 
-  context "#show_trusted_publishers?" do
-    should "be false if the ApiKey scope does not include :configure_trusted_publishers" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[push_rubygem])
+  def key_without_scope(scope, rubygem = nil)
+    scopes = (ApiKey::APPLICABLE_GEM_API_SCOPES - [scope]).sample(2)
+    create(:api_key, owner: @owner, scopes: scopes, rubygem:)
+  end
 
-      refute_predicate policy!(api_key), :show_trusted_publishers?
+  def key_with_scope(scope, rubygem = nil)
+    create(:api_key, owner: @owner, scopes: [scope], rubygem:)
+  end
+
+  context "#configure_trusted_publishers?" do
+    setup do
+      @action = :configure_trusted_publishers?
+      @scope = :configure_trusted_publishers
     end
 
-    should "be false if the ApiKey scope includes the rubygem but does not include :configure_trusted_publishers" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[push_rubygem], rubygem: @rubygem)
-
-      refute_predicate policy!(api_key), :show_trusted_publishers?
+    should "deny ApiKey without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
     end
 
-    should "be false if the ApiKey specifies a different rubygem" do
-      other_gem = create(:rubygem, owners: [@owner])
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers], rubygem: other_gem)
-
-      refute_predicate policy!(api_key), :show_trusted_publishers?
+    should "deny ApiKey with rubygem without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
     end
 
-    should "be false if the user policy for the gem does not allow show_trusted_publishers?" do
-      RubygemPolicy.any_instance.stubs(show_trusted_publishers?: false)
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers])
-
-      refute_predicate policy!(api_key), :show_trusted_publishers?
+    should "deny ApiKey with scope wrong rubygem" do
+      refute_predicate policy!(key_with_scope(@scope, create(:rubygem, owners: [@owner]))), @action
     end
 
-    should "be true for ApiKey without rubygem" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers])
-
-      assert_predicate policy!(api_key), :show_trusted_publishers?
+    should "allow ApiKey with scope" do
+      assert_predicate policy!(key_with_scope(@scope)), @action
     end
 
-    should "be true for ApiKey with correct rubygem" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers], rubygem: @rubygem)
-
-      assert_predicate policy!(api_key), :show_trusted_publishers?
+    should "allow ApiKey with scope and rubygem" do
+      assert_predicate policy!(key_with_scope(@scope, @rubygem)), @action
     end
   end
 end

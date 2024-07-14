@@ -44,7 +44,7 @@ class Api::OIDC::RubygemTrustedPublisherPolicyTest < ActiveSupport::TestCase
     refute_authorized api_key
   end
 
-  should "be false if the user policy for the gem does not allow show_trusted_publishers?" do
+  should "be false if the user policy for the gem does not allow configure_trusted_publishers?" do
     OIDC::RubygemTrustedPublisherPolicy.any_instance.stubs(show?: false, create?: false, destroy?: false)
     api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers])
 

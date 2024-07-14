@@ -36,7 +36,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
 
   def find_rubygem
     super
-    authorize @rubygem, :show_trusted_publishers?
+    authorize @rubygem, :configure_trusted_publishers?
   end
 
   def find_rubygem_trusted_publisher

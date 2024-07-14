@@ -43,7 +43,7 @@ class RubygemPolicy < ApplicationPolicy
     rubygem_owned_by?(user)
   end
 
-  def show_trusted_publishers?
+  def configure_trusted_publishers?
     rubygem_owned_by?(user)
   end
 

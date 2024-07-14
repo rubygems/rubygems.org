@@ -64,11 +64,11 @@ class RubygemPolicyTest < ActiveSupport::TestCase
     end
   end
 
-  context "#show_trusted_publishers?" do
+  context "#configure_trusted_publishers?" do
     should "only allow the owner" do
-      assert_predicate Pundit.policy!(@owner, @rubygem), :show_trusted_publishers?
-      refute_predicate Pundit.policy!(@user, @rubygem), :show_trusted_publishers?
-      refute_predicate Pundit.policy!(nil, @rubygem), :show_trusted_publishers?
+      assert_predicate Pundit.policy!(@owner, @rubygem), :configure_trusted_publishers?
+      refute_predicate Pundit.policy!(@user, @rubygem), :configure_trusted_publishers?
+      refute_predicate Pundit.policy!(nil, @rubygem), :configure_trusted_publishers?
     end
   end
 
