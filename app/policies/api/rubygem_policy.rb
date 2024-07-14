@@ -9,7 +9,7 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
   end
 
   def create?
-    true
+    api_key_scope?(:push_rubygem, rubygem)
   end
 
   def yank?

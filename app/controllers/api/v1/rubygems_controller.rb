@@ -39,6 +39,8 @@ class Api::V1::RubygemsController < Api::BaseController
     gemcutter = Pusher.new(@api_key, request.body, request:)
     gemcutter.process
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
+  rescue Pundit::NotAuthorizedError
+    raise # allow rescue_from in base_controller to handle this
   rescue StandardError => e
     Rails.error.report(e, handled: true)
     render plain: "Server error. Please try again.", status: :internal_server_error
