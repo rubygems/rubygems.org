@@ -5,6 +5,9 @@ class Admin::OrgPolicy < Admin::ApplicationPolicy
     end
   end
 
+  has_association :memberships
+  has_association :users
+
   def avo_index?
     rubygems_org_admin?
   end
