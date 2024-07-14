@@ -40,6 +40,25 @@ class Api::RubygemPolicyTest < ActiveSupport::TestCase
     end
   end
 
+  context "#create?" do
+    setup do
+      @action = :create?
+      @scope = :push_rubygem
+    end
+
+    should "deny ApiKey without scope" do
+      refute_predicate policy!(key_without_scope(@scope)), @action
+    end
+
+    should "deny ApiKey with rubygem without scope" do
+      refute_predicate policy!(key_without_scope(@scope, @rubygem)), @action
+    end
+
+    should "allow ApiKey with scope" do
+      assert_predicate policy!(key_with_scope(@scope)), @action
+    end
+  end
+
   context "#yank?" do
     setup do
       @action = :yank?
