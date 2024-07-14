@@ -4,8 +4,8 @@ FactoryBot.define do
     name
     deleted_at { nil }
 
-    after(:build) do |org, _evaluator|
-      org.memberships << build(:membership, org: org)
+    trait :with_members do
+      memberships { build_list(:membership, 2) }
     end
   end
 end

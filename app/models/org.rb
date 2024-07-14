@@ -6,7 +6,6 @@ class Org < ApplicationRecord
     length: { within: 2..40 },
     format: { with: Patterns::HANDLE_PATTERN }
   validates :name, presence: true, length: { within: 2..255 }
-  validates :memberships, presence: true
   validate :unique_with_user_handle
 
   def unique_with_user_handle
@@ -21,6 +20,6 @@ class Org < ApplicationRecord
   scope :deleted, -> { where.not(deleted_at: nil) }
 
   after_create do
-    record_event!(Events::OrgEvent::CREATED, actor_gid: memberships.first.to_gid)
+    record_event!(Events::OrgEvent::CREATED, actor_gid: memberships.first&.to_gid)
   end
 end
