@@ -24,7 +24,7 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
     true
   end
 
-  def show_trusted_publishers?
-    api_key_scope?(:configure_trusted_publishers, rubygem) && user_authorized?(record, :show_trusted_publishers?)
+  def configure_trusted_publishers?
+    api_key_scope?(:configure_trusted_publishers, rubygem) && user_authorized?(rubygem, :configure_trusted_publishers?)
   end
 end

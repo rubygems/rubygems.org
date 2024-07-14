@@ -19,7 +19,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
   end
 
   def create
-    trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.build(create_params)
+    trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.build(create_params)
 
     if trusted_publisher.save
       render json: trusted_publisher, status: :created
@@ -36,11 +36,11 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
 
   def find_rubygem
     super
-    authorize @rubygem, :show_trusted_publishers?
+    authorize @rubygem, :configure_trusted_publishers?
   end
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
+    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
   end
 
   def set_trusted_publisher_type
