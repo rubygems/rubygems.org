@@ -2,7 +2,9 @@ class Api::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
   after_action :skip_session
 
-  rescue_from(Pundit::NotAuthorizedError) { |_| render_forbidden(t(:api_key_forbidden)) }
+  rescue_from(Pundit::NotAuthorizedError) do |e|
+    render_forbidden(e.policy.error)
+  end
 
   private
 

@@ -62,7 +62,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
 
     should "deny access" do
       assert_response :forbidden
-      assert_match "The API key doesn't have access", @response.body
+      assert_includes @response.body, "This API key cannot perform the specified action on this gem."
     end
   end
 

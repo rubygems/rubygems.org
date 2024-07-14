@@ -16,12 +16,13 @@ class Api::ApplicationPolicy
     attr_reader :api_key, :scope
   end
 
-  attr_reader :api_key, :record
+  attr_reader :api_key, :record, :error
 
   def initialize(api_key, record)
-    @api_key = api_key
     @user = api_key.user
     @record = record
+    @error = nil
+    @api_key = api_key
   end
 
   def index? = false
@@ -34,7 +35,24 @@ class Api::ApplicationPolicy
 
   private
 
-  def policy!(user, record) = Pundit.policy!(user, record)
-  def user_policy! = policy!(api_key.user, record)
-  def api_key_scope?(...) = api_key.scope?(...)
+  delegate :t, to: I18n
+
+  def deny(error)
+    @error = error
+    false
+  end
+
+  def user_policy!(record)
+    Pundit.policy!(api_key.user, record)
+  end
+
+  def user_authorized?(record, action)
+    policy = user_policy!(record)
+    policy.send(action) || deny(policy.error)
+  end
+
+  def api_key_scope?(scope, rubygem = nil)
+    rubygem = nil unless rubygem.is_a?(Rubygem)
+    api_key.scope?(scope, rubygem) || deny(t(:api_key_insufficient_scope))
+  end
 end

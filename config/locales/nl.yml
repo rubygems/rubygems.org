@@ -19,6 +19,7 @@ nl:
   locale_name: Nederlands
   none: Geen
   not_found: Niet gevonden
+  forbidden:
   api_gem_not_found:
   api_key_forbidden:
   api_key_soft_deleted:

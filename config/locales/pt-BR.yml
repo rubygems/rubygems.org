@@ -25,6 +25,7 @@ pt-BR:
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
+  forbidden:
   api_gem_not_found:
   api_key_forbidden:
   api_key_soft_deleted:

@@ -18,11 +18,12 @@ class ApplicationPolicy
     attr_reader :user, :scope
   end
 
-  attr_reader :user, :record
+  attr_reader :user, :record, :error
 
   def initialize(user, record)
     @user = user
     @record = record
+    @error = nil
   end
 
   def index?
@@ -59,7 +60,19 @@ class ApplicationPolicy
 
   private
 
+  delegate :t, to: I18n
+
+  def deny(error)
+    @error = error
+    false
+  end
+
   def current_user?(record_user)
     user && user == record_user
+  end
+
+  def rubygem_owned_by?(user)
+    return true if rubygem.owned_by?(user)
+    deny(t(:forbidden))
   end
 end

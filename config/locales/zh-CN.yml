@@ -21,6 +21,7 @@ zh-CN:
   locale_name: 简体中文
   none: 无
   not_found: 未找到
+  forbidden:
   api_gem_not_found:
   api_key_forbidden: API 密钥没有访问权限
   api_key_soft_deleted:

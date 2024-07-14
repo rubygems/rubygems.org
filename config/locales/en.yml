@@ -26,6 +26,7 @@ en:
   locale_name: English
   none: None
   not_found: Not Found
+  forbidden: Forbidden
   api_gem_not_found: This gem could not be found
   api_key_forbidden: The API key doesn't have access
   api_key_soft_deleted: An invalid API key cannot be used. Please delete it and create a new one.

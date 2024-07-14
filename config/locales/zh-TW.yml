@@ -20,6 +20,7 @@ zh-TW:
   locale_name: 正體中文
   none: 無
   not_found: 沒有找到
+  forbidden:
   api_gem_not_found:
   api_key_forbidden: API 金鑰沒有存取權限
   api_key_soft_deleted:

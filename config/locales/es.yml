@@ -26,6 +26,7 @@ es:
   locale_name: Español
   none: Ninguno
   not_found: No encontrado
+  forbidden:
   api_gem_not_found:
   api_key_forbidden: La clave API no tiene acceso
   api_key_soft_deleted:

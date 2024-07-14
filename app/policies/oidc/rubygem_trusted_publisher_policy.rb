@@ -5,14 +5,14 @@ class OIDC::RubygemTrustedPublisherPolicy < ApplicationPolicy
   delegate :rubygem, to: :record
 
   def show?
-    rubygem.owned_by?(user)
+    rubygem_owned_by?(user)
   end
 
   def create?
-    rubygem.owned_by?(user)
+    rubygem_owned_by?(user)
   end
 
   def destroy?
-    rubygem.owned_by?(user)
+    rubygem_owned_by?(user)
   end
 end
