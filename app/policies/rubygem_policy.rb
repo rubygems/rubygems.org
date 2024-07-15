@@ -34,7 +34,7 @@ class RubygemPolicy < ApplicationPolicy
   def request_ownership?
     return false if rubygem_owned_by?(user)
     return true if rubygem.ownership_calls.any?
-    return deny("above maximum downloads to be considered abandoned") if rubygem.downloads >= ABANDONED_DOWNLOADS_MAX
+    return false if rubygem.downloads >= ABANDONED_DOWNLOADS_MAX
     return false unless rubygem.latest_version&.created_at&.before?(ABANDONED_RELEASE_AGE.ago)
     true
   end
@@ -43,7 +43,7 @@ class RubygemPolicy < ApplicationPolicy
     rubygem_owned_by?(user)
   end
 
-  def show_trusted_publishers?
+  def configure_trusted_publishers?
     rubygem_owned_by?(user)
   end
 

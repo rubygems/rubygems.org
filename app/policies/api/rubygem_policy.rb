@@ -5,26 +5,26 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
   alias rubygem record
 
   def index?
-    true
+    api_key_scope?(:index_rubygems)
   end
 
   def create?
-    true
+    api_key_scope?(:push_rubygem, rubygem)
   end
 
   def yank?
-    true
+    api_key_scope?(:yank_rubygem, rubygem)
   end
 
   def add_owner?
-    true
+    api_key_scope?(:add_owner, rubygem)
   end
 
   def remove_owner?
-    true
+    api_key_scope?(:remove_owner, rubygem)
   end
 
-  def show_trusted_publishers?
-    api_key_scope?(:configure_trusted_publishers, rubygem) && user_authorized?(record, :show_trusted_publishers?)
+  def configure_trusted_publishers?
+    api_key_scope?(:configure_trusted_publishers, rubygem) && user_authorized?(rubygem, :configure_trusted_publishers?)
   end
 end
