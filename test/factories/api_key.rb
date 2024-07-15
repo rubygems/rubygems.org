@@ -17,6 +17,7 @@ FactoryBot.define do
 
     trait :trusted_publisher do
       owner factory: %i[oidc_trusted_publisher_github_action]
+      transient { key { SecureRandom.hex(4) } }
     end
   end
 end

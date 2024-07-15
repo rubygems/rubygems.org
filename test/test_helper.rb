@@ -273,6 +273,31 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
   end
 end
 
+class ApiPolicyTestCase < ActiveSupport::TestCase
+  def policy!(api_key, rec = nil)
+    rec ||= record
+    Pundit.policy!(api_key, [:api, rec])
+  end
+
+  def record
+    raise NotImplementedError, "You must define #record in #{self.class}"
+  end
+
+  def assert_authorized(actor, action)
+    policy = policy!(actor)
+
+    assert_predicate policy, action
+    assert_nil policy.error
+  end
+
+  def refute_authorized(actor, action, message = I18n.t(:api_key_insufficient_scope))
+    policy = policy!(actor)
+
+    refute_predicate policy, action
+    assert_equal message.chomp, policy.error&.chomp if message
+  end
+end
+
 class ComponentTest < ActiveSupport::TestCase
   include Phlex::Testing::Rails::ViewHelper
   include Capybara::Minitest::Assertions
