@@ -33,10 +33,10 @@ class RubygemPolicy < ApplicationPolicy
 
   def request_ownership?
     return false if rubygem_owned_by?(user)
-    return true if rubygem.ownership_calls.any?
+    return allow if rubygem.ownership_calls.any?
     return false if rubygem.downloads >= ABANDONED_DOWNLOADS_MAX
-    return false unless rubygem.latest_version&.created_at&.before?(ABANDONED_RELEASE_AGE.ago)
-    true
+    return false if rubygem.latest_version.nil? || rubygem.latest_version.created_at.after?(ABANDONED_RELEASE_AGE.ago)
+    allow
   end
 
   def close_ownership_requests?
