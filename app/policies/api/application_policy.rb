@@ -16,7 +16,7 @@ class Api::ApplicationPolicy
     attr_reader :api_key, :scope
   end
 
-  attr_reader :api_key, :record, :error
+  attr_reader :user, :record, :error, :api_key
 
   def initialize(api_key, record)
     @user = api_key.user
@@ -52,7 +52,23 @@ class Api::ApplicationPolicy
   end
 
   def api_key_scope?(scope, rubygem = nil)
-    rubygem = nil unless rubygem.is_a?(Rubygem)
     api_key.scope?(scope, rubygem) || deny(t(:api_key_insufficient_scope))
+  end
+
+  def mfa_requirement_satisfied?(rubygem = nil)
+    if rubygem && !rubygem.mfa_requirement_satisfied_for?(user)
+      deny t("multifactor_auths.api.mfa_required")
+    elsif user&.mfa_required_not_yet_enabled?
+      deny t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
+    elsif user&.mfa_required_weak_level_enabled?
+      deny t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
+    else
+      true
+    end
+  end
+
+  def user_api_key?
+    return true if user
+    deny t(:api_key_forbidden)
   end
 end

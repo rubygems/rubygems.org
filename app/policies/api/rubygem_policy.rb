@@ -9,22 +9,32 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
   end
 
   def create?
-    api_key_scope?(:push_rubygem, rubygem)
+    mfa_requirement_satisfied? &&
+      api_key_scope?(:push_rubygem)
   end
 
   def yank?
-    api_key_scope?(:yank_rubygem, rubygem)
+    user_api_key? &&
+      mfa_requirement_satisfied?(rubygem) &&
+      api_key_scope?(:yank_rubygem, rubygem)
   end
 
   def add_owner?
-    api_key_scope?(:add_owner, rubygem)
+    user_api_key? &&
+      mfa_requirement_satisfied?(rubygem) &&
+      api_key_scope?(:add_owner, rubygem)
   end
 
   def remove_owner?
-    api_key_scope?(:remove_owner, rubygem)
+    user_api_key? &&
+      mfa_requirement_satisfied?(rubygem) &&
+      api_key_scope?(:remove_owner, rubygem)
   end
 
   def configure_trusted_publishers?
-    api_key_scope?(:configure_trusted_publishers, rubygem) && user_authorized?(rubygem, :configure_trusted_publishers?)
+    user_api_key? &&
+      mfa_requirement_satisfied?(rubygem) &&
+      api_key_scope?(:configure_trusted_publishers, rubygem) &&
+      user_authorized?(rubygem, :configure_trusted_publishers?)
   end
 end
