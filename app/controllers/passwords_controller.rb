@@ -10,6 +10,7 @@ class PasswordsController < ApplicationController
   before_action :require_mfa, only: %i[edit]
   before_action :validate_otp, only: %i[otp_edit]
   before_action :validate_webauthn, only: %i[webauthn_edit]
+  before_action :password_reset_session_verified, only: %i[edit otp_edit webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
   before_action :validate_password_reset_session, only: :update
@@ -18,7 +19,6 @@ class PasswordsController < ApplicationController
   end
 
   def edit
-    password_reset_session_verified
     render :edit
   end
 
@@ -46,12 +46,10 @@ class PasswordsController < ApplicationController
   end
 
   def otp_edit
-    password_reset_session_verified
     render :edit
   end
 
   def webauthn_edit
-    password_reset_session_verified
     render :edit
   end
 
