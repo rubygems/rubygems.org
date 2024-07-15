@@ -42,27 +42,84 @@ class PasswordsControllerTest < ActionController::TestCase
     end
 
     context "with valid confirmation_token" do
-      setup do
-        get :edit, params: { token: @user.confirmation_token }
+      context "when not signed in" do
+        setup do
+          get :edit, params: { token: @user.confirmation_token }
+        end
+
+        should respond_with :success
+
+        should "not sign in the user" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "invalidate the confirmation_token" do
+          assert_nil @user.reload.confirmation_token
+        end
+
+        should "display edit form" do
+          page.assert_text("Reset password")
+          page.assert_selector("input[type=password][autocomplete=new-password]")
+        end
+
+        should "instruct the browser not to send referrer that contains the token" do
+          assert_equal "no-referrer", response.headers["Referrer-Policy"]
+        end
       end
 
-      should respond_with :success
+      context "when signed in as the user" do
+        setup do
+          sign_in_as @user
 
-      should "not sign in the user" do
-        refute_predicate @controller.request.env[:clearance], :signed_in?
+          get :edit, params: { token: @user.confirmation_token }
+        end
+
+        should respond_with :success
+
+        should "leave the user signed in" do
+          assert_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "invalidate the confirmation_token" do
+          assert_nil @user.reload.confirmation_token
+        end
+
+        should "display edit form" do
+          page.assert_text("Reset password")
+          page.assert_selector("input[type=password][autocomplete=new-password]")
+        end
+
+        should "instruct the browser not to send referrer that contains the token" do
+          assert_equal "no-referrer", response.headers["Referrer-Policy"]
+        end
       end
 
-      should "invalidate the confirmation_token" do
-        assert_nil @user.reload.confirmation_token
-      end
+      context "when signed in as another user" do
+        setup do
+          @other_user = create(:user, api_key: "otheruserkey")
+          sign_in_as @other_user
 
-      should "display edit form" do
-        page.assert_text("Reset password")
-        page.assert_selector("input[type=password][autocomplete=new-password]")
-      end
+          get :edit, params: { token: @user.confirmation_token }
+        end
 
-      should "instruct the browser not to send referrer that contains the token" do
-        assert_equal "no-referrer", response.headers["Referrer-Policy"]
+        should respond_with :success
+
+        should "sign the current user out" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "invalidate the confirmation_token" do
+          assert_nil @user.reload.confirmation_token
+        end
+
+        should "display edit form" do
+          page.assert_text("Reset password")
+          page.assert_selector("input[type=password][autocomplete=new-password]")
+        end
+
+        should "instruct the browser not to send referrer that contains the token" do
+          assert_equal "no-referrer", response.headers["Referrer-Policy"]
+        end
       end
     end
 
@@ -411,35 +468,6 @@ class PasswordsControllerTest < ActionController::TestCase
         refute_predicate @controller.request.env[:clearance], :signed_in?
       end
     end
-
-    # context "when signed in as another user" do
-    #   setup do
-    #     @other_user = create(:user, api_key: "otheruserkey")
-    #     @other_old_encrypted_password = @other_user.encrypted_password
-    #     sign_in_as @other_user
-
-    #     get :edit, params: { token: @user.confirmation_token }
-
-    #     put :update, params: {
-    #       password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
-    #     }
-    #   end
-
-    #   should redirect_to("the sign in page") { sign_in_path }
-
-    #   should "change the signed in user's api_key" do
-    #     refute_equal(@user.reload.api_key, @api_key)
-    #   end
-    #   should "change the sign in user's password" do
-    #     refute_equal(@other_user.reload.encrypted_password, @other_old_encrypted_password)
-    #   end
-    #   should "not sign in the user" do
-    #     refute_predicate @controller.request.env[:clearance], :signed_in?
-    #   end
-    #   should "not change the sign in user's password" do
-    #     assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
-    #   end
-    # end
 
     context "when not verified for password reset" do
       setup do

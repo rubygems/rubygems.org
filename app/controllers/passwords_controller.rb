@@ -70,11 +70,14 @@ class PasswordsController < ApplicationController
     sign_out if signed_in? && @user != current_user
   end
 
+  # The order of these methods intends to leave the session fully reset if we
+  # fail to invalidate the token for some reason, since this would indicate
+  # something is wrong with the user, necessitating help from an admin.
   def password_reset_session_verified
     reset_session
+    @user.update!(confirmation_token: nil)
     session[:password_reset_verified_user] = @user.id
     session[:password_reset_verified] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
-    @user.update!(confirmation_token: nil)
   end
 
   def validate_password_reset_session
