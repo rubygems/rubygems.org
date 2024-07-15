@@ -360,6 +360,6 @@ uniqueness: { case_sensitive: false }
   end
 
   def unique_with_org_handle
-    errors.add(:handle, "has already been taken") if handle && Organization.where("handle = lower(?)", handle.downcase).any?
+    errors.add(:handle, "has already been taken") if handle && Organization.where("lower(handle) = lower(?)", handle).any?
   end
 end
