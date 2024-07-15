@@ -52,7 +52,6 @@ class Api::ApplicationPolicy
   end
 
   def api_key_scope?(scope, rubygem = nil)
-    rubygem = nil unless rubygem.is_a?(Rubygem)
     api_key.scope?(scope, rubygem) || deny(t(:api_key_insufficient_scope))
   end
 

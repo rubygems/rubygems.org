@@ -10,7 +10,7 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
 
   def create?
     mfa_requirement_satisfied? &&
-      api_key_scope?(:push_rubygem, rubygem)
+      api_key_scope?(:push_rubygem)
   end
 
   def yank?
