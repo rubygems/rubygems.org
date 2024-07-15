@@ -95,11 +95,19 @@ de:
           attributes:
             expires_at:
               inclusion:
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed: ist bereits Eigentümer dieses Gems
               already_invited: wurde bereits zu diesem Gem eingeladen
+        user:
+          attributes:
+            handle:
+              invalid:
         version:
           attributes:
             gem_full_name:

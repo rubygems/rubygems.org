@@ -84,11 +84,19 @@ ja:
           attributes:
             expires_at:
               inclusion: 未来でなければなりません
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed: は既にこのgemの所有者です
               already_invited: は既にこのgemに招待されています
+        user:
+          attributes:
+            handle:
+              invalid:
         version:
           attributes:
             gem_full_name:

@@ -129,4 +129,6 @@ Rails.application.configure do
     config.active_record.verbose_query_logs = false
     config.action_view.cache_template_loading = true
   end
+
+  config.hosts << "rubygems.test"
 end

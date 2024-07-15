@@ -6,22 +6,24 @@ class Admin::UserPolicy < Admin::ApplicationPolicy
     end
   end
 
-  has_association :ownerships
-  has_association :rubygems
-  has_association :subscriptions
-  has_association :subscribed_gems
-  has_association :deletions
-  has_association :web_hooks
-  has_association :unconfirmed_ownerships
   has_association :api_keys
+  has_association :audits
+  has_association :deletions
+  has_association :events
+  has_association :memberships
+  has_association :oidc_api_key_roles
+  has_association :organizations
   has_association :ownership_calls
   has_association :ownership_requests
+  has_association :ownerships
   has_association :pushed_versions
-  has_association :audits
-  has_association :oidc_api_key_roles
+  has_association :rubygems
+  has_association :subscribed_gems
+  has_association :subscriptions
+  has_association :unconfirmed_ownerships
+  has_association :web_hooks
   has_association :webauthn_credentials
   has_association :webauthn_verification
-  has_association :events
 
   def avo_index?
     rubygems_org_admin?

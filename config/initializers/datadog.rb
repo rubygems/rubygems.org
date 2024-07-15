@@ -43,10 +43,12 @@ Datadog.configure do |c|
   c.tracing.instrument :opensearch, service_name: c.service
   c.tracing.instrument :pg
   c.tracing.instrument :rails, request_queuing: true
-  c.tracing.instrument :shoryuken
+  c.tracing.instrument :shoryuken if defined?(Shoryuken)
 end
 
 Datadog::Tracing.before_flush(
   # Remove spans for the /internal/ping endpoint
   Datadog::Tracing::Pipeline::SpanFilter.new { |span| span.resource == "Internal::PingController#index" }
 )
+
+require "datadog/auto_instrument"

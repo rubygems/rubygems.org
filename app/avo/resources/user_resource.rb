@@ -59,6 +59,8 @@ class UserResource < Avo::BaseResource
     end
     field :ownerships, as: :has_many
     field :rubygems, as: :has_many, through: :ownerships
+    field :memberships, as: :has_many
+    field :organizations, as: :has_many, through: :memberships
     field :subscriptions, as: :has_many
     field :subscribed_gems, as: :has_many, through: :subscriptions
     field :deletions, as: :has_many

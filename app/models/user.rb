@@ -64,16 +64,16 @@ class User < ApplicationRecord
   has_many :oidc_pending_trusted_publishers, class_name: "OIDC::PendingTrustedPublisher", inverse_of: :user, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, through: :rubygems, class_name: "OIDC::RubygemTrustedPublisher"
 
+  has_many :memberships, dependent: :destroy
+  has_many :organizations, through: :memberships
+
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
 uniqueness: { case_sensitive: false }
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
-  validates :handle, format: {
-    with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/,
-    message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
-  }, allow_nil: true
-  validates :handle, length: { within: 2..40 }, allow_nil: true
+  validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
+  validate :unique_with_org_handle
 
   validates :twitter_username, format: {
     with: /\A[a-zA-Z0-9_]*\z/,
@@ -357,5 +357,9 @@ uniqueness: { case_sensitive: false }
 
   def record_password_update_event
     record_event!(Events::UserEvent::PASSWORD_CHANGED)
+  end
+
+  def unique_with_org_handle
+    errors.add(:handle, "has already been taken") if handle && Organization.where("lower(handle) = lower(?)", handle).any?
   end
 end
