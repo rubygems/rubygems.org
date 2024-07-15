@@ -27,6 +27,7 @@ fr:
   locale_name: Français
   none:
   not_found: Introuvable
+  forbidden:
   api_gem_not_found:
   api_key_forbidden:
   api_key_soft_deleted:

@@ -9,10 +9,10 @@ class OwnershipRequestPolicy < ApplicationPolicy
   end
 
   def approve?
-    rubygem.owned_by?(user)
+    rubygem_owned_by?(user)
   end
 
   def close?
-    current_user?(record.user) || rubygem.owned_by?(user)
+    current_user?(record.user) || rubygem_owned_by?(user)
   end
 end

@@ -227,7 +227,7 @@ class OIDCTest < ApplicationSystemTestCase
     visit new_rubygem_trusted_publisher_path(rubygem.slug)
     verify_session
 
-    assert_text "forbidden"
+    assert_text "Forbidden"
 
     create(:ownership, rubygem: rubygem, user: @user)
 
