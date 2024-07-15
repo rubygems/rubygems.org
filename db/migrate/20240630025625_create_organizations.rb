@@ -1,6 +1,6 @@
-class CreateOrgs < ActiveRecord::Migration[7.1]
+class CreateOrganizations < ActiveRecord::Migration[7.1]
   def change
-    create_table :orgs do |t|
+    create_table :organizations do |t|
       t.string :handle, limit: 40
       t.string :name, limit: 255
       t.timestamp :deleted_at

@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :membership do
     user
-    org
+    organization
     confirmed_at { Time.zone.now }
   end
 end

@@ -1,15 +1,15 @@
 require "test_helper"
 
-class Admin::Events::OrgEventPolicyTest < AdminPolicyTestCase
+class Admin::Events::OrganizationEventPolicyTest < AdminPolicyTestCase
   setup do
-    @org = FactoryBot.create(:org)
-    @event = Events::OrgEvent.first
+    @organization = FactoryBot.create(:organization)
+    @event = Events::OrganizationEvent.first
     @admin = FactoryBot.create(:admin_github_user, :is_admin)
     @non_admin = FactoryBot.create(:admin_github_user)
   end
 
   def test_scope
-    assert_equal [@event], policy_scope!(@admin, Events::OrgEvent).to_a
+    assert_equal [@event], policy_scope!(@admin, Events::OrganizationEvent).to_a
   end
 
   def test_show

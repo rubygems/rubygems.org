@@ -7,5 +7,5 @@ class MembershipResource < Avo::BaseResource
 
   field :id, as: :id
   field :user, as: :belongs_to
-  field :org, as: :belongs_to
+  field :organization, as: :belongs_to
 end

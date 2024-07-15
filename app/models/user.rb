@@ -65,7 +65,7 @@ class User < ApplicationRecord
   has_many :oidc_rubygem_trusted_publishers, through: :rubygems, class_name: "OIDC::RubygemTrustedPublisher"
 
   has_many :memberships, dependent: :destroy
-  has_many :orgs, through: :memberships
+  has_many :organizations, through: :memberships
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
 uniqueness: { case_sensitive: false }
@@ -360,6 +360,6 @@ uniqueness: { case_sensitive: false }
   end
 
   def unique_with_org_handle
-    errors.add(:handle, "has already been taken") if handle && Org.where("handle = lower(?)", handle.downcase).any?
+    errors.add(:handle, "has already been taken") if handle && Organization.where("handle = lower(?)", handle.downcase).any?
   end
 end

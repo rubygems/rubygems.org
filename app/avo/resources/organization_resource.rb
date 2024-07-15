@@ -1,4 +1,4 @@
-class OrgResource < Avo::BaseResource
+class OrganizationResource < Avo::BaseResource
   self.title = :name
   self.includes = []
   self.search_query = lambda {

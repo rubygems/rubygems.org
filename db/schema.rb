@@ -94,19 +94,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
     t.index ["version_id"], name: "index_dependencies_on_version_id"
   end
 
-  create_table "events_org_events", force: :cascade do |t|
+  create_table "events_organization_events", force: :cascade do |t|
     t.string "tag", null: false
     t.string "trace_id"
-    t.bigint "org_id", null: false
+    t.bigint "organization_id", null: false
     t.bigint "ip_address_id"
     t.bigint "geoip_info_id"
     t.jsonb "additional"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["geoip_info_id"], name: "index_events_org_events_on_geoip_info_id"
-    t.index ["ip_address_id"], name: "index_events_org_events_on_ip_address_id"
-    t.index ["org_id"], name: "index_events_org_events_on_org_id"
-    t.index ["tag"], name: "index_events_org_events_on_tag"
+    t.index ["geoip_info_id"], name: "index_events_organization_events_on_geoip_info_id"
+    t.index ["ip_address_id"], name: "index_events_organization_events_on_ip_address_id"
+    t.index ["organization_id"], name: "index_events_organization_events_on_organization_id"
+    t.index ["tag"], name: "index_events_organization_events_on_tag"
   end
 
   create_table "events_rubygem_events", force: :cascade do |t|
@@ -332,12 +332,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
 
   create_table "memberships", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "org_id", null: false
+    t.bigint "organization_id", null: false
     t.datetime "confirmed_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["org_id"], name: "index_memberships_on_org_id"
-    t.index ["user_id", "org_id"], name: "index_memberships_on_user_id_and_org_id", unique: true
+    t.index ["organization_id"], name: "index_memberships_on_organization_id"
+    t.index ["user_id", "organization_id"], name: "index_memberships_on_user_id_and_organization_id", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
@@ -408,13 +408,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
-  create_table "orgs", force: :cascade do |t|
+  create_table "organizations", force: :cascade do |t|
     t.string "handle", limit: 40
     t.string "name", limit: 255
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index "lower((handle)::text)", name: "index_orgs_on_lower_handle", unique: true
+    t.index "lower((handle)::text)", name: "index_organizations_on_lower_handle", unique: true
   end
 
   create_table "ownership_calls", force: :cascade do |t|
@@ -616,9 +616,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
 
   add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
   add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
-  add_foreign_key "events_org_events", "geoip_infos"
-  add_foreign_key "events_org_events", "ip_addresses"
-  add_foreign_key "events_org_events", "orgs"
+  add_foreign_key "events_organization_events", "geoip_infos"
+  add_foreign_key "events_organization_events", "ip_addresses"
+  add_foreign_key "events_organization_events", "organizations"
   add_foreign_key "events_rubygem_events", "geoip_infos"
   add_foreign_key "events_rubygem_events", "ip_addresses"
   add_foreign_key "events_rubygem_events", "rubygems"
@@ -627,7 +627,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
   add_foreign_key "events_user_events", "users"
   add_foreign_key "ip_addresses", "geoip_infos"
   add_foreign_key "linksets", "rubygems", name: "linksets_rubygem_id_fk"
-  add_foreign_key "memberships", "orgs"
+  add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"

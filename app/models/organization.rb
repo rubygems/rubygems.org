@@ -1,4 +1,4 @@
-class Org < ApplicationRecord
+class Organization < ApplicationRecord
   include Events::Recordable
 
   validates :handle, presence: true,
@@ -12,14 +12,14 @@ class Org < ApplicationRecord
     errors.add(:handle, "has already been taken") if handle && User.where("handle = lower(?)", handle.downcase).any?
   end
 
-  has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :org
-  has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :org
+  has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :organization
+  has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :organization
   has_many :users, through: :memberships
 
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
 
   after_create do
-    record_event!(Events::OrgEvent::CREATED, actor_gid: memberships.first&.to_gid)
+    record_event!(Events::OrganizationEvent::CREATED, actor_gid: memberships.first&.to_gid)
   end
 end

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :org do
+  factory :organization do
     handle
     name
     deleted_at { nil }

@@ -1,6 +1,6 @@
 class Membership < ApplicationRecord
   belongs_to :user
-  belongs_to :org
+  belongs_to :organization
 
   scope :unconfirmed, -> { where(confirmed_at: nil) }
   scope :confirmed, -> { where.not(confirmed_at: nil) }

@@ -7,7 +7,7 @@ class Admin::IpAddressPolicy < Admin::ApplicationPolicy
 
   has_association :user_events
   has_association :rubygem_events
-  has_association :org_events
+  has_association :organization_events
 
   def avo_index? = rubygems_org_admin?
   def avo_show? = rubygems_org_admin?
