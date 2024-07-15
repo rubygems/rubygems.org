@@ -83,7 +83,7 @@ ja:
           attributes:
             expires_at:
               inclusion: 未来でなければなりません
-        org:
+        organization:
           attributes:
             handle:
               invalid:

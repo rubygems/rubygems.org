@@ -89,7 +89,7 @@ en:
           attributes:
             expires_at:
               inclusion: "must be in the future"
-        org:
+        organization:
           attributes:
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"

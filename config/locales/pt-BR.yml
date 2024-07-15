@@ -89,7 +89,7 @@ pt-BR:
           attributes:
             expires_at:
               inclusion:
-        org:
+        organization:
           attributes:
             handle:
               invalid:
