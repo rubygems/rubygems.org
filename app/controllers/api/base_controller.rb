@@ -36,9 +36,9 @@ class Api::BaseController < ApplicationController
   end
 
   def response_with_mfa_warning(message)
-    if @api_key.mfa_recommended_not_yet_enabled?
+    if @api_key&.mfa_recommended_not_yet_enabled?
       +message << "\n\n" << t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
-    elsif @api_key.mfa_recommended_weak_level_enabled?
+    elsif @api_key&.mfa_recommended_weak_level_enabled?
       +message << "\n\n" << t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
     else
       message
@@ -76,7 +76,9 @@ class Api::BaseController < ApplicationController
     render plain: t(:please_sign_up), status: :unauthorized
   end
 
-  def render_forbidden(error = t(:api_key_forbidden))
+  def render_forbidden(error = nil)
+    error = error.message if error.respond_to?(:message)
+    error ||= t(:api_key_forbidden)
     respond_to do |format|
       format.any(:all) { render plain: error, status: :forbidden }
       format.json { render json: { error: }, status: :forbidden }

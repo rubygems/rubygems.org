@@ -7,7 +7,7 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :verify_with_otp
 
   def create
-    authorize @rubygem, :yank?
+    authorize @rubygem, :yank? # TODO: change to @version
     @deletion = @api_key.user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment "yank.success"

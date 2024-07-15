@@ -8,7 +8,6 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def index
     authorize Rubygem, :index?
-
     @rubygems = @api_key.user.rubygems.with_versions
       .preload(:linkset, :gem_download, most_recent_version: { dependencies: :rubygem, gem_download: nil })
     respond_to do |format|

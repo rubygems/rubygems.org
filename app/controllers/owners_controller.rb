@@ -33,8 +33,9 @@ class OwnersController < ApplicationController
   end
 
   def create
+    authorize @rubygem, :add_owner?
     owner = User.find_by_name(handle_params)
-    ownership = authorize @rubygem.ownerships.new(user: owner, authorizer: current_user)
+    ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
@@ -44,7 +45,8 @@ class OwnersController < ApplicationController
   end
 
   def destroy
-    @ownership = authorize @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
+    authorize @rubygem, :remove_owner?
+    @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
     if @ownership.safe_destroy
       OwnersMailer.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id).deliver_later
       redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".removed_notice", owner_name: @ownership.owner_name)
