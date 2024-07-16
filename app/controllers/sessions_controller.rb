@@ -109,6 +109,10 @@ class SessionsController < Clearance::SessionsController
     render "sessions/new", status: :unauthorized
   end
 
+  def webauthn_failure
+    invalidate_mfa_session(@webauthn_error)
+  end
+
   def mfa_failure(message)
     login_failure(message)
   end
