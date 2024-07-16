@@ -25,10 +25,12 @@ require "webauthn/fake_client"
 require "shoulda/context"
 require "shoulda/matchers"
 require "helpers/admin_helpers"
+require "helpers/api_policy_helpers"
 require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
+require "helpers/policy_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "webmock/minitest"
@@ -274,28 +276,11 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
 end
 
 class ApiPolicyTestCase < ActiveSupport::TestCase
-  def policy!(api_key, rec = nil)
-    rec ||= record
-    Pundit.policy!(api_key, [:api, rec])
-  end
+  include ApiPolicyHelpers
+end
 
-  def record
-    raise NotImplementedError, "You must define #record in #{self.class}"
-  end
-
-  def assert_authorized(actor, action)
-    policy = policy!(actor)
-
-    assert_predicate policy, action
-    assert_nil policy.error
-  end
-
-  def refute_authorized(actor, action, message = I18n.t(:api_key_insufficient_scope))
-    policy = policy!(actor)
-
-    refute_predicate policy, action
-    assert_equal message.chomp, policy.error&.chomp if message
-  end
+class PolicyTestCase < ActiveSupport::TestCase
+  include PolicyHelpers
 end
 
 class ComponentTest < ActiveSupport::TestCase

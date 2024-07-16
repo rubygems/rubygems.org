@@ -62,9 +62,14 @@ class ApplicationPolicy
 
   delegate :t, to: I18n
 
-  def deny(error)
+  def deny(error = t(:forbidden))
     @error = error
     false
+  end
+
+  def allow
+    @error = nil
+    true
   end
 
   def current_user?(record_user)
@@ -75,7 +80,11 @@ class ApplicationPolicy
     rubygem.owned_by?(user) || deny(t(:forbidden))
   end
 
-  def policy!(user, record)
-    Pundit.policy!(user, record)
+  def policy!(user, record) = Pundit.policy!(user, record)
+  def user_policy!(record) = policy!(user, record)
+
+  def user_authorized?(record, action)
+    policy = user_policy!(record)
+    policy.send(action) || deny(policy.error)
   end
 end
