@@ -93,6 +93,11 @@ zh-TW:
             user_id:
               already_confirmed: 已是此 Gem 的擁有者
               already_invited: 已獲邀加入此 Gem
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
         user:
           attributes:
             handle:

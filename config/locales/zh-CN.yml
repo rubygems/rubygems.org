@@ -94,6 +94,11 @@ zh-CN:
             user_id:
               already_confirmed:
               already_invited:
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
         user:
           attributes:
             handle:

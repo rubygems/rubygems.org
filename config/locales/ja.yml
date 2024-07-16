@@ -93,6 +93,11 @@ ja:
             user_id:
               already_confirmed: は既にこのgemの所有者です
               already_invited: は既にこのgemに招待されています
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
         user:
           attributes:
             handle:

@@ -59,14 +59,17 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           @rubygem = create(:rubygem, downloads: 2_000)
           create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
         end
+
         context "when user is owner" do
           setup do
             create(:ownership, user: @user, rubygem: @rubygem)
             post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
           end
-          should respond_with :forbidden
 
-          should "not create ownership request" do
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
+          should set_flash[:alert].to("User is already an owner")
+
+          should "not create ownership call" do
             assert_nil @rubygem.ownership_requests.find_by(user: @user)
           end
         end
@@ -77,11 +80,8 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
             end
             should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
-            should "set success notice flash" do
-              expected_notice = "Your ownership request was submitted."
+            should set_flash[:notice].to("Your ownership request was submitted.")
 
-              assert_equal expected_notice, flash[:notice]
-            end
             should "create ownership request" do
               assert_not_nil @rubygem.ownership_requests.find_by(user: @user)
             end
@@ -91,11 +91,8 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               post :create, params: { rubygem_id: @rubygem.name }
             end
             should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
-            should "set error alert flash" do
-              expected_notice = "Note can't be blank"
+            should set_flash[:alert].to("Note can't be blank")
 
-              assert_equal expected_notice, flash[:alert]
-            end
             should "not create ownership call" do
               assert_nil @rubygem.ownership_requests.find_by(user: @user)
             end
@@ -106,11 +103,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
               post :create, params: { rubygem_id: @rubygem.name, note: "new note" }
             end
             should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
-            should "set error alert flash" do
-              expected_notice = "User has already been taken"
-
-              assert_equal expected_notice, flash[:alert]
-            end
+            should set_flash[:alert].to("User has already requested ownership")
           end
         end
       end

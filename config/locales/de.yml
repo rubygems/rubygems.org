@@ -104,6 +104,11 @@ de:
             user_id:
               already_confirmed: ist bereits Eigentümer dieses Gems
               already_invited: wurde bereits zu diesem Gem eingeladen
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
         user:
           attributes:
             handle:
