@@ -1,8 +1,11 @@
 class OwnershipRequestsController < ApplicationController
+  include SessionVerifiable
+
   before_action :find_rubygem
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
+  before_action :redirect_to_verify, only: %i[update close_all], if: -> { @rubygem.owned_by?(current_user) && !verified_session_active? }
 
   rescue_from ActiveRecord::RecordInvalid, with: :redirect_try_again
   rescue_from ActiveRecord::RecordNotSaved, with: :redirect_try_again
