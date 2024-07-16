@@ -12,10 +12,6 @@ class RubygemPolicyTest < PolicyTestCase
   end
 
   context "#request_ownership?" do
-    should "be false if the gem is owned by the user" do
-      refute_authorized @owner, :request_ownership?
-    end
-
     should "be true if the gem has ownership calls" do
       create(:ownership_call, rubygem: @rubygem, user: @owner)
 
@@ -56,7 +52,7 @@ class RubygemPolicyTest < PolicyTestCase
     should "be true if the rubygem is adoptable" do
       create(:version, rubygem: @rubygem, created_at: 2.years.ago)
 
-      assert_authorized @owner, :show_adoption?
+      assert_authorized @user, :show_adoption?
     end
   end
 

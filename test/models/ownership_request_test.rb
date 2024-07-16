@@ -57,7 +57,16 @@ class OwnershipRequestTest < ActiveSupport::TestCase
       ownership_request = build(:ownership_request, user: @user, rubygem: @rubygem)
 
       refute_predicate ownership_request, :valid?
-      assert_contains ownership_request.errors[:user_id], "has already been taken"
+      assert_contains ownership_request.errors[:user_id], "has already requested ownership"
+    end
+
+    should "not create a call when already an owner" do
+      owner = create(:user, handle: "owner")
+      create(:ownership, rubygem: @rubygem, user: owner)
+      ownership_request = build(:ownership_request, user: owner, rubygem: @rubygem)
+
+      refute_predicate ownership_request, :valid?
+      assert_contains ownership_request.errors[:user_id], "is already an owner"
     end
   end
 

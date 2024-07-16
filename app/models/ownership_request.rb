@@ -4,9 +4,10 @@ class OwnershipRequest < ApplicationRecord
   belongs_to :ownership_call, optional: true
   belongs_to :approver, class_name: "User", optional: true
 
-  validates :rubygem_id, :user_id, :status, :note, presence: true
+  validates :status, :note, presence: true
   validates :note, length: { maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH }
   validates :user_id, uniqueness: { scope: :rubygem_id, conditions: -> { opened } }
+  validate :not_already_owner, on: :create
 
   delegate :name, to: :user, prefix: true
   delegate :name, to: :rubygem, prefix: true
@@ -31,5 +32,12 @@ class OwnershipRequest < ApplicationRecord
     update!(status: :closed)
     return if closer && closer == user # Don't notify the requester if they closed their own request
     OwnersMailer.ownership_request_closed(id).deliver_later
+  end
+
+  private
+
+  def not_already_owner
+    return unless rubygem.owned_by?(user)
+    errors.add(:user_id, I18n.t("activerecord.errors.models.ownership_request.attributes.user_id.existing"))
   end
 end

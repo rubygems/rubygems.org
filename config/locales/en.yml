@@ -99,6 +99,11 @@ en:
             user_id:
               already_confirmed: "is already an owner of this gem"
               already_invited: "is already invited to this gem"
+        ownership_request:
+          attributes:
+            user_id:
+              taken: "has already requested ownership"
+              existing: "is already an owner"
         user:
           attributes:
             handle:
