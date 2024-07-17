@@ -344,6 +344,23 @@ class OwnersControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "on PATCH to update ownership" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, access_level: Access::MAINTAINER }
+      end
+
+      should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
+      should "set success notice flash" do
+        success_flash = "#{@maintainer.name} was succesfully updated."
+        assert_equal success_flash, flash[:notice]
+      end
+    end
   end
 
   context "when logged in and unverified" do

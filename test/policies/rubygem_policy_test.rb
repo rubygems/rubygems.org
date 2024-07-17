@@ -3,7 +3,8 @@ require "test_helper"
 class RubygemPolicyTest < PolicyTestCase
   setup do
     @owner = create(:user, handle: "owner")
-    @rubygem = create(:rubygem, owners: [@owner])
+    @maintainer = create(:user, handle: "maintainer")
+    @rubygem = create(:rubygem, owners: [@owner], maintainers: [@maintainer])
     @user = create(:user, handle: "user")
   end
 
@@ -16,14 +17,6 @@ class RubygemPolicyTest < PolicyTestCase
       assert_authorized @owner, :configure_oidc?
       refute_authorized @user, :configure_oidc?
       refute_authorized nil, :configure_oidc?
-    end
-  end
-
-  context "#configure_trusted_publishers?" do
-    should "only allow the owner" do
-      assert_authorized @owner, :configure_trusted_publishers?
-      refute_authorized @user, :configure_trusted_publishers?
-      refute_authorized nil, :configure_trusted_publishers?
     end
   end
 
@@ -71,6 +64,7 @@ class RubygemPolicyTest < PolicyTestCase
   context "#show_adoption?" do
     should "be true if the gem is owned by the user" do
       assert_authorized @owner, :show_adoption?
+      refute_authorized @maintainer, :show_adoption?
     end
 
     should "be true if the rubygem is adoptable" do
@@ -83,16 +77,54 @@ class RubygemPolicyTest < PolicyTestCase
   context "#show_events?" do
     should "only allow the owner" do
       assert_authorized @owner, :show_events?
+      assert_authorized @maintainer, :show_events?
       refute_authorized @user, :show_events?
       refute_authorized nil, :show_events?
+    end
+  end
+
+  context "#configure_trusted_publishers?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :configure_trusted_publishers?
+      assert_authorized @maintainer, :configure_trusted_publishers?
+      refute_authorized @user, :configure_trusted_publishers?
+      refute_authorized nil, :configure_trusted_publishers?
     end
   end
 
   context "#show_unconfirmed_ownerships?" do
     should "only allow the owner" do
       assert_authorized @owner, :show_unconfirmed_ownerships?
+      assert_authorized @maintainer, :show_unconfirmed_ownerships?
       refute_authorized @user, :show_unconfirmed_ownerships?
       refute_authorized nil, :show_unconfirmed_ownerships?
+    end
+  end
+
+  context "#add_owner?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :add_owner?
+      refute_authorized @maintainer, :add_owner?
+      refute_authorized @user, :add_owner?
+      refute_authorized nil, :add_owner?
+    end
+  end
+
+  context "#update_owner?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :update_owner?
+      refute_authorized @maintainer, :update_owner?
+      refute_authorized @user, :update_owner?
+      refute_authorized nil, :update_owner?
+    end
+  end
+
+  context "#remove_owner?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :remove_owner?
+      refute_authorized @maintainer, :remove_owner?
+      refute_authorized @user, :remove_owner?
+      refute_authorized nil, :remove_owner?
     end
   end
 end

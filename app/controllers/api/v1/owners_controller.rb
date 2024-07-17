@@ -12,6 +12,17 @@ class Api::V1::OwnersController < Api::BaseController
     end
   end
 
+  def update
+    authorize @rubygem, :update_owner?
+    ownership = @rubygem.ownerships.find_by!(user: User.find_by_name!(email_param))
+    if ownership.present?
+      ownership.update!(ownership_update_params)
+      render plain: response_with_mfa_warning("Owner updated successfully.")
+    else
+      render plain: response_with_mfa_warning("Unable to update owner."), status: :forbidden
+    end
+  end
+
   def create
     authorize @rubygem, :add_owner?
     owner = User.find_by_name!(email_param)
@@ -59,5 +70,9 @@ class Api::V1::OwnersController < Api::BaseController
 
   def email_param
     params.permit(:email).require(:email)
+  end
+
+  def ownership_update_params
+    params.permit(:access_level)
   end
 end

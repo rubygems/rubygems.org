@@ -927,4 +927,31 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
     assert_equal "This rubygem could not be found.", @response.body
   end
+
+  should "route PUT /api/v1/gems/rubygem/owners.yaml" do
+      route = { controller: "api/v1/owners",
+                action: "update",
+                rubygem_id: "rails",
+                format: "yaml" }
+
+      assert_recognizes(route, path: "/api/v1/gems/rails/owners.yaml", method: :put)
+  end
+
+  context "on PATCH to owner gem" do
+    setup do
+      @user = create(:user)
+      @maintainer = create(:user)
+      @rubygem = create(:rubygem, owners: [@user, @maintainer])
+
+      @api_key = create(:api_key, key: "12223", scopes: %i[update_owner], owner: @user, rubygem: @rubygem)
+      @request.env["HTTP_AUTHORIZATION"] = "12223"
+    end
+
+    should "set the maintainer to a lower access level" do
+      patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, access_level: Access::MAINTAINER }
+
+      assert_response :success
+      assert_equal Access::MAINTAINER, @maintainer.reload.ownerships.find_by(rubygem: @rubygem).access_level
+    end
+  end
 end
