@@ -188,6 +188,11 @@ class Rubygem < ApplicationRecord
     ownerships.exists?(user_id: user.id)
   end
 
+  def owned_by_with_access_level?(user, access_level)
+    return false unless user
+    ownerships.where("user_id = ? AND access_level >= ?", user.id, access_level).exists?
+  end
+
   def unconfirmed_ownerships
     ownerships_including_unconfirmed.unconfirmed
   end
