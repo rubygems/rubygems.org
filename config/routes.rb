@@ -87,7 +87,7 @@ Rails.application.routes.draw do
           delete :yank, to: "deletions#create"
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
-          resource :owners, only: %i[show create destroy]
+          resource :owners, only: %i[show create update destroy]
           resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy show]
         end
       end

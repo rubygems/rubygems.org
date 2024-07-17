@@ -3,7 +3,8 @@ require "test_helper"
 class RubygemPolicyTest < PolicyTestCase
   setup do
     @owner = create(:user, handle: "owner")
-    @rubygem = create(:rubygem, owners: [@owner])
+    @maintainer = create(:user, handle: "maintainer")
+    @rubygem = create(:rubygem, owners: [@owner], maintainers: [@maintainer])
     @user = create(:user, handle: "user")
   end
 
@@ -77,6 +78,33 @@ class RubygemPolicyTest < PolicyTestCase
       assert_authorized @owner, :show_unconfirmed_ownerships?
       refute_authorized @user, :show_unconfirmed_ownerships?
       refute_authorized nil, :show_unconfirmed_ownerships?
+    end
+  end
+
+  context "#add_owner?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :add_owner?
+      refute_authorized @maintainer, :add_owner?
+      refute_authorized @user, :add_owner?
+      refute_authorized nil, :add_owner?
+    end
+  end
+
+  context "#update_owner?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :update_owner?
+      refute_authorized @maintainer, :update_owner?
+      refute_authorized @user, :update_owner?
+      refute_authorized nil, :update_owner?
+    end
+  end
+
+  context "#remove_owner?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :remove_owner?
+      refute_authorized @maintainer, :remove_owner?
+      refute_authorized @user, :remove_owner?
+      refute_authorized nil, :remove_owner?
     end
   end
 end

@@ -1,9 +1,9 @@
 class ApiKey < ApplicationRecord
   class ScopeError < RuntimeError; end
 
-  API_SCOPES = %i[show_dashboard index_rubygems push_rubygem yank_rubygem add_owner remove_owner access_webhooks
+  API_SCOPES = %i[show_dashboard index_rubygems push_rubygem yank_rubygem add_owner update_owner remove_owner access_webhooks
                   configure_trusted_publishers].freeze
-  APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner remove_owner configure_trusted_publishers].freeze
+  APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner update_owner remove_owner configure_trusted_publishers].freeze
   EXCLUSIVE_SCOPES = %i[show_dashboard].freeze
 
   self.ignored_columns += API_SCOPES

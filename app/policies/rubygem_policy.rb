@@ -51,10 +51,14 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def add_owner?
-    rubygem_owned_by?(user)
+    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+  end
+
+  def update_owner?
+    rubygem_owned_by?(user, required_access_level: Access::OWNER)
   end
 
   def remove_owner?
-    rubygem_owned_by?(user)
+    rubygem_owned_by?(user, required_access_level: Access::OWNER)
   end
 end

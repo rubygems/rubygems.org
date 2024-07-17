@@ -76,8 +76,8 @@ class ApplicationPolicy
     user && user == record_user
   end
 
-  def rubygem_owned_by?(user)
-    rubygem.owned_by?(user) || deny(t(:forbidden))
+  def rubygem_owned_by?(user, required_access_level: Access::MAINTAINER)
+    rubygem.owned_by_with_access_level?(user, required_access_level) || deny(t(:forbidden))
   end
 
   def policy!(user, record) = Pundit.policy!(user, record)

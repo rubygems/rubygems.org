@@ -7,5 +7,10 @@ FactoryBot.define do
     trait :unconfirmed do
       confirmed_at { nil }
     end
+    access_level { Access::OWNER }
+
+    trait :maintainer do
+      access_level { Access::MAINTAINER }
+    end
   end
 end
