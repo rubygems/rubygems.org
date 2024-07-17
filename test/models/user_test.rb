@@ -926,11 +926,29 @@ class UserTest < ActiveSupport::TestCase
 
   context ".normalize_email" do
     should "return the normalized email" do
-      assert_equal "UsEr@example.COM", User.normalize_email(:"UsEr@ example . COM")
+      assert_equal "UsEr@example.COM", User.normalize_email(:"UsEr@\texample . COM")
+    end
+
+    should "preserve valid characters so that the format error can be returned" do
+      # UTF-8 "香" character, which is valid UTF-8, but we reject utf-8 in email addresses
+      assert_equal "香@example.com", User.normalize_email("\u9999@example.com".force_encoding("utf-8"))
+
+      # ISO-8859-1 "Å" character (valid in ISO-8859-1)
+      encoded_email = "myem\xC5il@example.com".force_encoding("ISO-8859-1")
+
+      assert_equal encoded_email, User.normalize_email(encoded_email)
     end
 
     should "return an empty string on invalid inputs" do
-      assert_equal "", User.normalize_email("\u9999".force_encoding("ascii"))
+      # bad encoding when sent as ASCII-8BIT
+      assert_equal "", User.normalize_email("\u9999@example.com".force_encoding("ascii"))
+
+      # ISO-8859-1 "Å" character (invalid in UTF-8, which uses \xC385 for this character)
+      assert_equal "", User.normalize_email("myem\xC5il@example.com".force_encoding("UTF-8"))
+    end
+
+    should "return an empty string for nil" do
+      assert_equal "", User.normalize_email(nil)
     end
   end
 end
