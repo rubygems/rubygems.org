@@ -146,8 +146,7 @@ uniqueness: { case_sensitive: false }
 
   def self.normalize_email(email)
     email.to_s.gsub(/\s+/, "")
-  rescue ArgumentError => e
-    Rails.error.report(e, handled: true)
+  rescue ArgumentError
     ""
   end
 
