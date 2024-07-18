@@ -44,6 +44,17 @@ class OwnersController < ApplicationController
     end
   end
 
+  def update
+    authorize @rubygem, :update_owner?
+    owner = User.find_by_name(handle_params)
+    ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
+    if ownership.update(update_params)
+      redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".updated_notice", owner_name: owner.name)
+    else
+      index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_entity
+    end
+  end
+
   def destroy
     authorize @rubygem, :remove_owner?
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
@@ -63,6 +74,10 @@ class OwnersController < ApplicationController
 
   def token_params
     params.permit(:token).require(:token)
+  end
+
+  def update_params
+    params.permit(:access_level).require(:access_level)
   end
 
   def handle_params
