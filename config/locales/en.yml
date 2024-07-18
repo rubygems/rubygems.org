@@ -976,3 +976,8 @@ en:
         api_key_gem_html: "Gem: %{gem}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
+  access:
+    roles:
+      owner: Owner
+      maintainer: Maintainer
+      guest: Guest
