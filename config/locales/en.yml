@@ -553,6 +553,8 @@ en:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+    update:
+      success_notice: "%{handle} was succesfully updated."
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"
       failed_notice: Can't remove the only owner of the gem

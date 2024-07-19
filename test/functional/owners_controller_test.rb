@@ -346,20 +346,18 @@ class OwnersControllerTest < ActionController::TestCase
     end
 
     context "on PATCH to update ownership" do
-      def setup
+      setup do
         @owner = create(:user)
         @maintainer = create(:user)
         @rubygem = create(:rubygem, owners: [@owner, @maintainer])
 
         verified_sign_in_as(@owner)
-        patch :update, params: { rubygem_id: @rubygem.name, handle: @new_owner.display_id, access_level: Access::MAINTIANER }
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, access_level: Access::MAINTAINER }
       end
 
-      should respond_with :success
-
-      should redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
+      should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
       should "set success notice flash" do
-        success_flash = "A confirmation mail has been re-sent to your email"
+        success_flash = "#{@maintainer.name} was succesfully updated."
         assert_equal success_flash, flash[:notice]
       end
     end
