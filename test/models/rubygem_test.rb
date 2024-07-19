@@ -265,6 +265,18 @@ class RubygemTest < ActiveSupport::TestCase
       assert_nil dependency.rubygem_id
       assert_equal dependency.unresolved_name, @rubygem.name
     end
+
+    should "allow destroying a gem with versions" do
+      @rubygem.save!
+      create(:ownership, rubygem: @rubygem)
+      create(:version, rubygem: @rubygem)
+      v2 = create(:version, rubygem: @rubygem)
+      create(:deletion, version: v2)
+
+      @rubygem.destroy!
+
+      assert_predicate Rubygem.where(id: @rubygem.id), :none?
+    end
   end
 
   context "with reverse dependencies" do

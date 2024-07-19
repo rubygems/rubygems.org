@@ -1,7 +1,6 @@
 class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
-  include Events::Recordable
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
@@ -26,6 +25,10 @@ class Rubygem < ApplicationRecord
   has_many :reverse_dependencies, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
+
+  # needs to come last so its dependent: :destroy works, since yanking a version
+  # will create an event
+  include Events::Recordable
 
   has_one :most_recent_version,
     lambda {
