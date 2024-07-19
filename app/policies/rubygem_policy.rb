@@ -61,4 +61,8 @@ class RubygemPolicy < ApplicationPolicy
   def show_unconfirmed_ownerships?
     rubygem_owned_by?(user)
   end
+
+  def show_owner_mfa_status?
+    rubygem_owned_by?(user)
+  end
 end
