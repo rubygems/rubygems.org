@@ -18,7 +18,7 @@ class OwnershipCallPolicyTest < PolicyTestCase
     refute_authorized @user, :create?
   end
 
-  def test_destroy
+  def test_close
     assert_authorized @owner, :close?
     refute_authorized @user, :close?
   end

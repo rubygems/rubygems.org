@@ -23,11 +23,23 @@ class RubygemPolicy < ApplicationPolicy
     false
   end
 
-  def show_adoption?
-    rubygem_owned_by?(user) || request_ownership?
+  def add_owner?
+    rubygem_owned_by?(user)
   end
 
-  def show_events?
+  def configure_oidc?
+    rubygem_owned_by?(user)
+  end
+
+  def configure_trusted_publishers?
+    rubygem_owned_by?(user)
+  end
+
+  def manage_adoption?
+    rubygem_owned_by?(user)
+  end
+
+  def remove_owner?
     rubygem_owned_by?(user)
   end
 
@@ -38,23 +50,15 @@ class RubygemPolicy < ApplicationPolicy
     allow
   end
 
-  def close_ownership_requests?
-    rubygem_owned_by?(user)
+  def show_adoption?
+    manage_adoption? || request_ownership?
   end
 
-  def configure_trusted_publishers?
+  def show_events?
     rubygem_owned_by?(user)
   end
 
   def show_unconfirmed_ownerships?
-    rubygem_owned_by?(user)
-  end
-
-  def add_owner?
-    rubygem_owned_by?(user)
-  end
-
-  def remove_owner?
     rubygem_owned_by?(user)
   end
 end

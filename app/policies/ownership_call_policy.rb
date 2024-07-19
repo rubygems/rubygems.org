@@ -5,10 +5,10 @@ class OwnershipCallPolicy < ApplicationPolicy
   delegate :rubygem, to: :record
 
   def create?
-    rubygem_owned_by?(user) && current_user?(record.user)
+    user_authorized?(rubygem, :manage_adoption?)
   end
 
   def close?
-    rubygem_owned_by?(user)
+    user_authorized?(rubygem, :manage_adoption?)
   end
 end
