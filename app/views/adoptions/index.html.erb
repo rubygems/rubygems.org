@@ -3,7 +3,7 @@
 <% content_for :title do %>
   <h1 class="t-display page__heading page__heading--small">
     <%= t('.title') %>
-    <% if @rubygem.owned_by?(current_user) %>
+    <% if policy(@rubygem).manage_adoption? %>
       <i class="page__subheading page__subheading--block"><%= t(".subtitle_owner_html", gem: @rubygem.name) %></i>
     <% else %>
       <i class="page__subheading page__subheading--block"><%= t(".subtitle_user_html", gem: @rubygem.name) %></i>
@@ -24,12 +24,12 @@
       <strong><%= t("ownership_calls.created_by") %>:</strong>
       <%= link_to @ownership_call.user_display_handle, profile_path(@ownership_call.user), class: "t-text t-link" %>
     </p>
-    <% if @ownership_call.rubygem.owned_by?(current_user) %>
+    <% if policy(@ownership_call).close? %>
       <%= button_to t("ownership_calls.close"), close_rubygem_ownership_calls_path(@ownership_call.rubygem.slug), method: :patch, class: "form__submit form__submit--medium" %>
     <% end %>
   </div>
 
-<% elsif @rubygem.owned_by?(current_user) %>
+<% elsif policy(@rubygem).manage_adoption? %>
   <%= render partial: "ownership_calls/form", locals: { gem: @rubygem.name } %>
 <% else %>
   <div class="t-list__item">

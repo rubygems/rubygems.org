@@ -5,7 +5,7 @@ class OwnershipRequestsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
-  before_action :redirect_to_verify, only: %i[update close_all], if: -> { @rubygem.owned_by?(current_user) && !verified_session_active? }
+  before_action :redirect_to_verify, only: %i[update close_all], if: -> { policy(@rubygem).manage_adoption? && !verified_session_active? }
 
   rescue_from ActiveRecord::RecordInvalid, with: :redirect_try_again
   rescue_from ActiveRecord::RecordNotSaved, with: :redirect_try_again
@@ -34,7 +34,7 @@ class OwnershipRequestsController < ApplicationController
   end
 
   def close_all
-    authorize(@rubygem, :close_ownership_requests?).ownership_requests.each(&:close!)
+    authorize(@rubygem, :manage_adoption?).ownership_requests.each(&:close!)
     redirect_to rubygem_adoptions_path(@rubygem.slug), notice: t("ownership_requests.close.success_notice", gem: @rubygem.name)
   end
 

@@ -11,6 +11,30 @@ class RubygemPolicyTest < PolicyTestCase
     Pundit.policy!(user, @rubygem)
   end
 
+  context "#configure_oidc?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :configure_oidc?
+      refute_authorized @user, :configure_oidc?
+      refute_authorized nil, :configure_oidc?
+    end
+  end
+
+  context "#configure_trusted_publishers?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :configure_trusted_publishers?
+      refute_authorized @user, :configure_trusted_publishers?
+      refute_authorized nil, :configure_trusted_publishers?
+    end
+  end
+
+  context "#manage_adoption?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :manage_adoption?
+      refute_authorized @user, :manage_adoption?
+      refute_authorized nil, :manage_adoption?
+    end
+  end
+
   context "#request_ownership?" do
     should "be true if the gem has ownership calls" do
       create(:ownership_call, rubygem: @rubygem, user: @owner)
@@ -61,14 +85,6 @@ class RubygemPolicyTest < PolicyTestCase
       assert_authorized @owner, :show_events?
       refute_authorized @user, :show_events?
       refute_authorized nil, :show_events?
-    end
-  end
-
-  context "#configure_trusted_publishers?" do
-    should "only allow the owner" do
-      assert_authorized @owner, :configure_trusted_publishers?
-      refute_authorized @user, :configure_trusted_publishers?
-      refute_authorized nil, :configure_trusted_publishers?
     end
   end
 
