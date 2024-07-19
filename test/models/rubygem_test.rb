@@ -21,11 +21,15 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("factory_girl").for(:name)
     should allow_value("rack-test").for(:name)
     should allow_value("perftools.rb").for(:name)
+    should allow_value("s3-4-2").for(:name)
+    should allow_value("its.a.gem.ok").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
     should_not allow_value(".omghi").for(:name)
     should_not allow_value("-omghi").for(:name)
     should_not allow_value("_omghi").for(:name)
+    should_not allow_value("omg-").for(:name)
+    should_not allow_value("omg.gem").for(:name)
 
     context "with reserved Ruby gem" do
       setup do
