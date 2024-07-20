@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_20_201622) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -518,6 +518,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_003336) do
     t.string "mfa_hashed_recovery_codes", default: [], array: true
     t.boolean "public_email", default: false, null: false
     t.datetime "deleted_at"
+    t.datetime "last_totp_at", precision: nil
     t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
