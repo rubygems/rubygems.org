@@ -46,9 +46,10 @@ module UserTotpMethods
     return false if seed.blank?
 
     totp = ROTP::TOTP.new(seed)
-    return false unless totp.verify(otp, drift_behind: 30, drift_ahead: 30, after: last_totp_at)
+    totp_at = totp.verify(otp, drift_behind: 30, drift_ahead: 30, after: last_totp_at)
+    return false if totp_at.blank?
 
-    self.last_totp_at = Time.now.utc
+    self.last_totp_at = Time.at(totp_at).utc
     save!(validate: false)
   end
 end

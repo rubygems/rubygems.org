@@ -672,6 +672,8 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         should "redirect user back to mfa_redirect_uri after successful mfa setup" do
           @redirect_paths.each do |path|
+            travel_to 30.seconds.from_now
+
             session[:mfa_redirect_uri] = path
             put :update, params: { level: "ui_and_api" }
             put :otp_update, params: { otp: ROTP::TOTP.new(@seed).now, level: "ui_and_api" }
@@ -694,6 +696,8 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         should "redirect user back to mfa_redirect_uri after a failed setup + successful setup" do
           @redirect_paths.each do |path|
+            travel_to 30.seconds.from_now
+
             session[:mfa_redirect_uri] = path
             put :update, params: { level: "ui_and_api" }
             put :otp_update, params: { otp: "12345", level: "ui_and_api" }
