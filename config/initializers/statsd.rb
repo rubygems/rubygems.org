@@ -57,8 +57,10 @@ end
 
 ActiveSupport::Notifications.subscribe("perform_job.good_job") do |event|
   execution = event.payload[:execution]
+  # TODO: remove || execution after GoodJob 4 upgrade
+  job = event.payload[:job] || execution
 
-  result = if event.payload[:retried] || execution.retried_good_job_id.present?
+  result = if event.payload[:retried] || job.retried_good_job_id.present?
              :retried
            elsif event.payload[:unhandled_error]
              :unhandled_error
@@ -72,7 +74,7 @@ ActiveSupport::Notifications.subscribe("perform_job.good_job") do |event|
     job_class: execution.serialized_params['job_class'],
     exception: event.payload.dig(:exception, 0),
     queue: execution.queue_name,
-    priority: execution.priority,
+    priority: job.priority,
     result:
   }
 
