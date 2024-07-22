@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 class CreateGoodJobs < ActiveRecord::Migration[7.0]
   def change
-    enable_extension 'pgcrypto'
+    enable_extension "pgcrypto"
 
     create_table :good_jobs, id: :uuid do |t|
       t.text :queue_name
@@ -51,14 +52,14 @@ class CreateGoodJobs < ActiveRecord::Migration[7.0]
     end
 
     add_index :good_jobs, :scheduled_at, where: "(finished_at IS NULL)", name: "index_good_jobs_on_scheduled_at"
-    add_index :good_jobs, [:queue_name, :scheduled_at], where: "(finished_at IS NULL)", name: :index_good_jobs_on_queue_name_and_scheduled_at
-    add_index :good_jobs, [:active_job_id, :created_at], name: :index_good_jobs_on_active_job_id_and_created_at
+    add_index :good_jobs, %i[queue_name scheduled_at], where: "(finished_at IS NULL)", name: :index_good_jobs_on_queue_name_and_scheduled_at
+    add_index :good_jobs, %i[active_job_id created_at], name: :index_good_jobs_on_active_job_id_and_created_at
     add_index :good_jobs, :concurrency_key, where: "(finished_at IS NULL)", name: :index_good_jobs_on_concurrency_key_when_unfinished
-    add_index :good_jobs, [:cron_key, :created_at], name: :index_good_jobs_on_cron_key_and_created_at
-    add_index :good_jobs, [:cron_key, :cron_at], name: :index_good_jobs_on_cron_key_and_cron_at, unique: true
+    add_index :good_jobs, %i[cron_key created_at], name: :index_good_jobs_on_cron_key_and_created_at
+    add_index :good_jobs, %i[cron_key cron_at], name: :index_good_jobs_on_cron_key_and_cron_at, unique: true
     add_index :good_jobs, [:active_job_id], name: :index_good_jobs_on_active_job_id
     add_index :good_jobs, [:finished_at], where: "retried_good_job_id IS NULL AND finished_at IS NOT NULL", name: :index_good_jobs_jobs_on_finished_at
-    add_index :good_jobs, [:priority, :created_at], order: { priority: "DESC NULLS LAST", created_at: :asc },
+    add_index :good_jobs, %i[priority created_at], order: { priority: "DESC NULLS LAST", created_at: :asc },
       where: "finished_at IS NULL", name: :index_good_jobs_jobs_on_priority_created_at_when_unfinished
     add_index :good_jobs, [:batch_id], where: "batch_id IS NOT NULL"
     add_index :good_jobs, [:batch_callback_id], where: "batch_callback_id IS NOT NULL"

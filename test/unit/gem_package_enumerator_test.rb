@@ -9,6 +9,10 @@ class GemPackageEnumeratorTest < ActiveSupport::TestCase
     @gem_package.extract_files(@destination_dir.to_s) unless @destination_dir.join(@gem_package.spec.full_name).exist?
   end
 
+  teardown do
+    @gem&.close
+  end
+
   context "#map" do
     should "enumerate all the same files as Gem::Package#contents" do
       contents = @enum.map(&:full_name).to_a

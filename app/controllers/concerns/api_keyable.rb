@@ -19,7 +19,7 @@ module ApiKeyable
   end
 
   def legacy_key_defaults
-    legacy_scopes = ApiKey::API_SCOPES.each_with_object({}) { |k, h| h[k] = true unless k == :show_dashboard }
-    legacy_scopes.merge(name: "legacy-key")
+    legacy_scopes = ApiKey::API_SCOPES - ApiKey::EXCLUSIVE_SCOPES
+    { scopes: legacy_scopes, name: "legacy-key" }
   end
 end

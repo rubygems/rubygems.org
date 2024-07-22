@@ -41,8 +41,8 @@ class VersionsControllerTest < ActionController::TestCase
     should "render information about versions" do
       @versions.each do |v|
         assert_select "entry > title", count: 1, text: v.to_title
-        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", count: 1
-        assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem, v.slug)
+        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem.slug, v.slug)}']", count: 1
+        assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem.slug, v.slug)
         # assert_select "entry > updated", :count => @versions.count, :text => v.created_at.iso8601
       end
     end
@@ -61,6 +61,33 @@ class VersionsControllerTest < ActionController::TestCase
     end
     should "not show checksum" do
       assert page.has_no_content?("Sha 256 checksum")
+    end
+  end
+
+  context "on GET to index - pluralization" do
+    context "with one version" do
+      setup do
+        rubygem = create(:rubygem)
+        create(:version, number: "1.1.2", rubygem: rubygem)
+        get :index, params: { rubygem_id: rubygem.name }
+      end
+
+      should "use the singular version" do
+        assert_select ".t-list__heading", text: /1 version\b/, count: 1
+      end
+    end
+
+    context "with two versions" do
+      setup do
+        rubygem = create(:rubygem)
+        create(:version, number: "1.1.2", rubygem: rubygem)
+        create(:version, number: "1.1.3", rubygem: rubygem)
+        get :index, params: { rubygem_id: rubygem.name }
+      end
+
+      should "use the plural version" do
+        assert_select ".t-list__heading", text: /2 versions\b/, count: 1
+      end
     end
   end
 
@@ -136,7 +163,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should "render the checksum version" do
-      assert page.has_content?(@latest_version.sha256_hex)
+      assert page.has_field?("gem_sha_256_checksum", with: @latest_version.sha256_hex)
     end
   end
 

@@ -11,6 +11,7 @@ metadata:
     alb.ingress.kubernetes.io/target-group-attributes: load_balancing.algorithm.type=least_outstanding_requests
     alb.ingress.kubernetes.io/tags: Env=<%= environment %>,Service=rubygems.org
     alb.ingress.kubernetes.io/healthcheck-path: /internal/ping
+    alb.ingress.kubernetes.io/load-balancer-name: <%= environment %>-rubygems-org
 spec:
   tls:
   - hosts:

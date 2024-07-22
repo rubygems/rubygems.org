@@ -159,6 +159,40 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
       end
     end
 
+    context "#otp_expired?" do
+      context "when otp is expired" do
+        setup do
+          @expires_at = @current_time - 1.minute
+          @verification = create(:webauthn_verification, user: @user, otp_expires_at: @expires_at)
+        end
+
+        should "return true" do
+          assert_predicate @verification, :otp_expired?
+        end
+      end
+
+      context "when otp is not expired" do
+        setup do
+          @expires_at = @current_time + 1.minute
+          @verification = create(:webauthn_verification, user: @user, otp_expires_at: @expires_at)
+        end
+
+        should "return false" do
+          refute_predicate @verification, :otp_expired?
+        end
+      end
+
+      context "when otp has not been generated" do
+        setup do
+          @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
+        end
+
+        should "return false" do
+          refute_predicate @verification, :otp_expired?
+        end
+      end
+    end
+
     teardown do
       travel_back
     end

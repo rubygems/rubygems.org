@@ -1,0 +1,10 @@
+<div class="">
+  <dl class="api_key_permissions">
+    <dt><%= api_key_permissions.class.human_attribute_name :scopes %></dt>
+    <dd><%= to_sentence api_key_permissions.scopes %></dd>
+    <dt><%= api_key_permissions.class.human_attribute_name :valid_for %></dt>
+    <dd><%= duration_string api_key_permissions.valid_for %></dd>
+    <dt><%= api_key_permissions.class.human_attribute_name :gems %></dt>
+    <dd><%= to_sentence(api_key_permissions.gems.presence&.map { |gem| link_to(gem, rubygem_path(gem)) } || [t("api_keys.all_gems")])  %></dd>
+  </dl>
+</div>

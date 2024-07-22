@@ -25,14 +25,15 @@ class WebauthnVerification < ApplicationRecord
     expire_otp
   end
 
+  def otp_expired?
+    return false if otp_expires_at.nil?
+    otp_expires_at < Time.now.utc
+  end
+
   private
 
   def expire_otp
     self.otp_expires_at = 1.second.ago
     save!
-  end
-
-  def otp_expired?
-    otp_expires_at < Time.now.utc
   end
 end

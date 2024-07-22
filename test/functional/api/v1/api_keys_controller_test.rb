@@ -36,21 +36,21 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   def self.should_deny_access
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match "HTTP Basic: Access denied.", @response.body
     end
   end
 
   def self.should_deny_access_incorrect_otp
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match I18n.t("otp_incorrect"), @response.body
     end
   end
 
   def self.should_deny_access_missing_otp
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match I18n.t("otp_missing"), @response.body
     end
 
@@ -103,7 +103,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "with correct OTP" do
       setup do
-        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
           get :show
         end
@@ -132,7 +132,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "with correct OTP" do
       setup do
-        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
         post :create, params: { name: "test", index_rubygems: "true" }
       end
 
@@ -157,8 +157,8 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "with correct OTP" do
       setup do
-        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-        @api_key = create(:api_key, user: @user, key: "12345", push_rubygem: true)
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
+        @api_key = create(:api_key, owner: @user, key: "12345", scopes: %i[push_rubygem])
 
         put :update, params: { api_key: "12345", index_rubygems: "true" }
         @api_key.reload
@@ -179,7 +179,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       get :show
     end
     should "deny access" do
-      assert_response 401
+      assert_response :unauthorized
       assert_match "HTTP Basic: Access denied.", @response.body
     end
   end
@@ -207,6 +207,15 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       should_deny_access
     end
 
+    context "with credentials with invalid encoding" do
+      setup do
+        @user = create(:user)
+        authorize_with("\x12\xff\x12:creds".force_encoding(Encoding::UTF_8))
+        get :show
+      end
+      should_deny_access
+    end
+
     context "with correct credentials" do
       setup do
         @user = create(:user)
@@ -224,7 +233,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "when user has enabled MFA for UI and API" do
       setup do
         @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -234,7 +243,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "when user has enabled MFA for UI and gem signin" do
       setup do
         @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -250,7 +259,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         authorize_with("#{@user.handle}:pass")
         get :show
 
-        assert_response 401
+        assert_response :unauthorized
         assert_match "HTTP Basic: Access denied.", @response.body
       end
     end
@@ -302,7 +311,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           post :create, params: { name: "test-key", index_rubygems: "true", show_dashboard: "true" }, format: "text"
         end
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
 
         should "not create api key" do
           assert_empty @user.reload.api_keys
@@ -356,7 +365,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
                 format: "text"
             end
 
-            should respond_with :unprocessable_entity
+            should respond_with :unprocessable_content
 
             should "respond with an error" do
               assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", response.body
@@ -371,7 +380,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
               format: "text"
           end
 
-          should respond_with :unprocessable_entity
+          should respond_with :unprocessable_content
 
           should "respond with an error" do
             assert_equal "Rubygem could not be found", response.body
@@ -383,9 +392,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "when a user provides an OTP code" do
       setup do
         @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
-        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
         post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
       end
 
@@ -431,7 +440,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "when user has enabled MFA for UI and API" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -440,7 +449,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "when user has enabled MFA for UI and gem signin" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -459,13 +468,8 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
 
         should "deny access" do
-          assert_response 403
-          mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-            at https://rubygems.org/multifactor_auth/new.
-
-            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-          ERROR
+          assert_response :forbidden
+          mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
           assert_match mfa_error, @response.body
         end
@@ -473,18 +477,13 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       context "by user on `ui_only` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
         end
 
         should "deny access" do
-          assert_response 403
-          mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-            at https://rubygems.org/settings/edit.
-
-            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-          ERROR
+          assert_response :forbidden
+          mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
           assert_match mfa_error, @response.body
         end
@@ -492,7 +491,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_gem_signin` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
         end
 
@@ -505,7 +504,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       context "by user on `ui_and_api` level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
         end
 
@@ -514,6 +513,29 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         should "not show error message" do
           refute_includes @response.body, "For protection of your account and your gems"
         end
+      end
+    end
+
+    context "expiration" do
+      setup do
+        authorize_with("#{@user.email}:#{@user.password}")
+      end
+
+      should "not allow setting expiration in the past" do
+        assert_no_difference -> { @user.api_keys.count } do
+          post :create, params: { name: "test-key", index_rubygems: "true", expires_at: 1.day.ago }, format: "text"
+
+          assert_response :unprocessable_content
+        end
+      end
+
+      should "allow setting expiration in the future" do
+        expires_at = 1.day.from_now
+        post :create, params: { name: "test-key", index_rubygems: "true", expires_at: }, format: "text"
+
+        assert_response :success
+
+        assert_equal expires_at.change(usec: 0), @user.api_keys.last.expires_at
       end
     end
   end
@@ -536,7 +558,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "with correct credentials" do
       setup do
-        @api_key = create(:api_key, user: @user, key: "12345", push_rubygem: true)
+        @api_key = create(:api_key, owner: @user, key: "12345", scopes: %i[push_rubygem])
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -563,7 +585,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           @api_key.reload
         end
 
-        should respond_with :unprocessable_entity
+        should respond_with :unprocessable_content
 
         should "not update api key" do
           refute_predicate @api_key, :can_show_dashboard?
@@ -575,11 +597,26 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           assert_equal @response.body, error
         end
       end
+
+      context "expiration" do
+        should "not allow updating expiration" do
+          @api_key.update!(expires_at: 1.month.from_now)
+          assert_no_changes -> { @api_key.expires_at } do
+            put :update, params: { api_key: "12345", expires_at: 1.day.from_now }
+          end
+        end
+
+        should "not allow adding expiration" do
+          assert_no_changes -> { @api_key.expires_at } do
+            put :update, params: { api_key: "12345", expires_at: 1.day.from_now }
+          end
+        end
+      end
     end
 
     context "when user has enabled MFA for UI and API" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
@@ -588,7 +625,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     context "when user has enabled MFA for UI and gem signin" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 

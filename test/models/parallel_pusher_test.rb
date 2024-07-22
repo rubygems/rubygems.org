@@ -8,32 +8,31 @@ class ParallelPusherTest < ActiveSupport::TestCase
     setup do
       @fs = RubygemFs.mock!
       @user = create(:user, email: "user@example.com")
+      @api_key = create(:api_key, owner: @user)
     end
 
     teardown do
-      @user.destroy
-      @rubygem = Rubygem.find_by(name: "hola")
-      @rubygem.versions.destroy_all
-      @rubygem.destroy
+      @user.destroy!
+      Rubygem.find_by(name: "hola").destroy!
       GemDownload.delete_all
       RubygemFs.mock!
     end
 
     should "not lead to sha mismatch between gem file and db" do
-      @gem1 = gem_file("hola-0.0.0.gem")
-      @gem2 = gem_file("hola/hola-0.0.0.gem")
-      @cutter1 = Pusher.new(@user, @gem1)
-      @cutter2 = Pusher.new(@user, @gem2)
       latch = Concurrent::CountDownLatch.new(2)
 
       Thread.new do
-        @cutter1.process
+        gem_file("hola-0.0.0.gem") do |gem1|
+          Pusher.new(@api_key, gem1).process
+        end
         ActiveRecord::Base.connection.close
         latch.count_down
       end
 
       Thread.new do
-        @cutter2.process
+        gem_file("hola/hola-0.0.0.gem") do |gem2|
+          Pusher.new(@api_key, gem2).process
+        end
         ActiveRecord::Base.connection.close
         latch.count_down
       end

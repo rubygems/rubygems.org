@@ -12,7 +12,7 @@ class ResetUser2fa < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(user)
-      user.disable_mfa!
+      user.disable_totp!
       user.password = SecureRandom.hex(20).encode("UTF-8")
       user.save!
     end

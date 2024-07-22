@@ -5,7 +5,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
-  config.cache_classes = true
+  config.enable_reloading = false
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
@@ -65,6 +65,7 @@ Rails.application.configure do
   config.log_level = ENV['RAILS_LOG_LEVEL'].present? ? ENV['RAILS_LOG_LEVEL'].to_sym : :info
   config.rails_semantic_logger.format = :json
   config.rails_semantic_logger.semantic = true
+  config.rails_semantic_logger.add_file_appender = false
   SemanticLogger.add_appender(io: $stdout, formatter: :json)
 
   # Prepend all log lines with the following tags.

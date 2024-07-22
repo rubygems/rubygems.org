@@ -12,7 +12,12 @@ Rails.application.routes.draw do
       resources :rubygems, param: :name, only: [], constraints: { name: Patterns::ROUTE_PATTERN } do
         resources :versions, param: :number, only: :show, constraints: {
           number: /#{Gem::Version::VERSION_PATTERN}(?=\.(json|yaml|sha256)\z)|#{Gem::Version::VERSION_PATTERN}/o
-        }
+        } do
+          resources :contents, only: :index, constraints: {
+            version_number: /#{Gem::Version::VERSION_PATTERN}/o,
+            format: /json|yaml|sha256/
+          }
+        end
       end
     end
 
@@ -23,7 +28,9 @@ Rails.application.routes.draw do
         end
       end
       resource :multifactor_auth, only: :show
-      resource :webauthn_verification, only: :create
+      resource :webauthn_verification, only: :create do
+        get ':webauthn_token/status', action: :status, as: :status, constraints: { format: :json }
+      end
       resources :profiles, only: :show
       get "profile/me", to: "profiles#me"
       resources :downloads, only: :index do
@@ -81,6 +88,7 @@ Rails.application.routes.draw do
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
           resource :owners, only: %i[show create destroy]
+          resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy show]
         end
       end
 
@@ -104,6 +112,19 @@ Rails.application.routes.draw do
       end
 
       resources :timeframe_versions, only: :index
+
+      namespace :oidc do
+        post 'trusted_publisher/exchange_token'
+        resources :api_key_roles, only: %i[index show], param: :token, format: 'json', defaults: { format: :json } do
+          member do
+            post :assume_role
+          end
+        end
+
+        resources :providers, only: %i[index show], format: 'json', defaults: { format: :json }
+
+        resources :id_tokens, only: %i[index show], format: 'json', defaults: { format: :json }
+      end
     end
   end
 
@@ -137,10 +158,17 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
-    resource :multifactor_auth, only: %i[new create update]
+    get "profile/me", to: "profiles#me", as: :my_profile
+    resource :multifactor_auth, only: %i[update] do
+      get 'recovery'
+      post 'otp_update', to: 'multifactor_auths#otp_update', as: :otp_update
+      post 'webauthn_update', to: 'multifactor_auths#webauthn_update', as: :webauthn_update
+    end
+    resource :totp, only: %i[new create destroy]
     resource :settings, only: :edit
     resource :profile, only: %i[edit update] do
       get :adoptions
+      get :security_events
       member do
         get :delete
         delete :destroy, as: :destroy
@@ -148,6 +176,18 @@ Rails.application.routes.draw do
 
       resources :api_keys do
         delete :reset, on: :collection
+      end
+
+      namespace :oidc do
+        resources :api_key_roles, param: :token do
+          member do
+            get 'github_actions_workflow'
+          end
+        end
+        resources :api_key_roles, param: :token, only: %i[show], constraints: { format: :json }
+        resources :id_tokens, only: %i[index show]
+        resources :providers, only: %i[index show]
+        resources :pending_trusted_publishers, except: %i[show edit update]
       end
     end
     resources :stats, only: :index
@@ -161,6 +201,8 @@ Rails.application.routes.draw do
       only: %i[index show],
       path: 'gems',
       constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
+      get :security_events, on: :member
+
       resource :subscription,
         only: %i[create destroy],
         constraints: { format: :js },
@@ -180,6 +222,7 @@ Rails.application.routes.draw do
         patch 'close_all', to: 'ownership_requests#close_all', as: :close_all, on: :collection
       end
       resources :adoptions, only: %i[index]
+      resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
     end
 
     resources :ownership_calls, only: :index
@@ -195,29 +238,29 @@ Rails.application.routes.draw do
 
     resource :email_confirmations, only: %i[new create] do
       get 'confirm', to: 'email_confirmations#update', as: :update
-      post 'mfa_update', to: 'email_confirmations#mfa_update', as: :mfa_update
+      post 'otp_update', to: 'email_confirmations#otp_update', as: :otp_update
       post 'webauthn_update', to: 'email_confirmations#webauthn_update', as: :webauthn_update
       patch 'unconfirmed'
     end
 
-    resources :passwords, only: %i[new create]
+    resource :password, only: %i[new create edit update] do
+      post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
+      post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
+    end
 
     resource :session, only: %i[create destroy] do
-      post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+      post 'otp_create', to: 'sessions#otp_create', as: :otp_create
       post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
+      post 'webauthn_full_create', to: 'sessions#webauthn_full_create', as: :webauthn_full_create
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
+      post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
     end
 
-    resources :users, only: %i[new create] do
-      resource :password, only: %i[create edit update] do
-        post 'mfa_edit', to: 'passwords#mfa_edit', as: :mfa_edit
-        post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
-      end
-    end
+    resources :users, only: %i[new create]
 
-    get '/sign_in' => 'clearance/sessions#new', as: 'sign_in'
-    delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
+    get '/sign_in' => 'sessions#new', as: 'sign_in'
+    delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
   end
@@ -238,8 +281,17 @@ Rails.application.routes.draw do
   end
 
   ################################################################################
-  # high_voltage static routes
-  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: /(#{HighVoltage.page_ids.join("|")})/ }, as: :page
+  # UI Images
+
+  scope constraints: { format: /jpe?g/ }, defaults: { format: :jpeg } do
+    resources :users, only: [] do
+      get 'avatar', on: :member, to: 'avatars#show', format: true
+    end
+  end
+
+  ################################################################################
+  # static pages routes
+  get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
   ################################################################################
   # Internal Routes
@@ -251,7 +303,10 @@ Rails.application.routes.draw do
 
   ################################################################################
   # Incoming Webhook Endpoint
-  resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
+
+  if Rails.env.local? || (ENV['SENDGRID_WEBHOOK_USERNAME'].present? && ENV['SENDGRID_WEBHOOK_PASSWORD'].present?)
+    resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
+  end
 
   ################################################################################
   # Admin routes
@@ -264,6 +319,8 @@ Rails.application.routes.draw do
     constraints(Constraints::Admin) do
       namespace :admin, constraints: Constraints::Admin::RubygemsOrgAdmin do
         mount GoodJob::Engine, at: 'good_job'
+        mount MaintenanceTasks::Engine, at: "maintenance_tasks"
+        mount PgHero::Engine, at: "pghero"
       end
 
       mount Avo::Engine, at: Avo.configuration.root_path
@@ -280,5 +337,8 @@ Rails.application.routes.draw do
   ################################################################################
   # Development routes
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+    mount Lookbook::Engine, at: "/lookbook"
+  end
 end

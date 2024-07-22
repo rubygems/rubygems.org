@@ -8,9 +8,7 @@ class OwnersControllerTest < ActionController::TestCase
       @user = create(:user)
       @rubygem = create(:rubygem)
       create(:ownership, user: @user, rubygem: @rubygem)
-      sign_in_as(@user)
-      session[:verification] = 10.minutes.from_now
-      session[:verified_user] = @user.id
+      verified_sign_in_as(@user)
     end
 
     teardown do
@@ -37,11 +35,15 @@ class OwnersControllerTest < ActionController::TestCase
       context "when user does not own the gem" do
         setup do
           @other_user = create(:user)
-          sign_in_as(@other_user)
+          verified_sign_in_as(@other_user)
           get :index, params: { rubygem_id: @rubygem.name }
         end
 
         should respond_with :forbidden
+
+        should "render forbidden message" do
+          assert page.has_content?("Forbidden")
+        end
       end
     end
 
@@ -54,7 +56,7 @@ class OwnersControllerTest < ActionController::TestCase
             end
           end
 
-          should respond_with :unprocessable_entity
+          should respond_with :unprocessable_content
 
           should "show error message" do
             expected_alert = "User must exist"
@@ -73,7 +75,7 @@ class OwnersControllerTest < ActionController::TestCase
             post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
           end
 
-          should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+          should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
           should "add unconfirmed ownership record" do
             assert_includes @rubygem.owners_including_unconfirmed, @new_owner
             assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
@@ -129,11 +131,11 @@ class OwnersControllerTest < ActionController::TestCase
 
           context "owner has enabled mfa" do
             setup do
-              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
               post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
             end
 
-            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
 
             should "set success notice flash" do
               expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. " \
@@ -148,7 +150,7 @@ class OwnersControllerTest < ActionController::TestCase
       context "when user does not own the gem" do
         setup do
           @other_user = create(:user)
-          sign_in_as(@other_user)
+          verified_sign_in_as(@other_user)
           post :create, params: { handle: @other_user.display_id, rubygem_id: @rubygem.name }
         end
 
@@ -177,7 +179,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
             end
           end
-          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should redirect_to("ownership index") { rubygem_owners_path(@rubygem.slug) }
 
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
@@ -197,7 +199,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
             end
           end
-          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should redirect_to("ownership index") { rubygem_owners_path(@rubygem.slug) }
 
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
@@ -254,11 +256,11 @@ class OwnersControllerTest < ActionController::TestCase
 
           context "owner has enabled mfa" do
             setup do
-              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
               delete :destroy, params: { handle: @second_user.display_id, rubygem_id: @rubygem.name }
             end
 
-            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
 
             should "set success notice flash" do
               expected_notice = "#{@second_user.handle} was removed from the owners successfully"
@@ -272,7 +274,7 @@ class OwnersControllerTest < ActionController::TestCase
       context "when user does not own the gem" do
         setup do
           @other_user = create(:user)
-          sign_in_as(@other_user)
+          verified_sign_in_as(@other_user)
 
           @last_owner = @rubygem.owners.last
           delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
@@ -289,7 +291,7 @@ class OwnersControllerTest < ActionController::TestCase
     context "on GET to resend confirmation" do
       setup do
         @new_owner = create(:user)
-        sign_in_as(@new_owner)
+        verified_sign_in_as(@new_owner)
       end
 
       context "when unconfirmed ownership exists" do
@@ -300,7 +302,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
         end
 
-        should redirect_to("rubygem show") { rubygem_path(@rubygem) }
+        should redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
         should "set success notice flash" do
           success_flash = "A confirmation mail has been re-sent to your email"
 
@@ -412,7 +414,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should "confirm ownership" do
           assert_predicate @ownership, :confirmed?
-          assert redirect_to("rubygem show") { rubygem_path(@rubygem) }
+          assert redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
           assert_equal "You were added as an owner to #{@rubygem.name} gem", flash[:notice]
         end
 

@@ -6,6 +6,7 @@ metadata:
     name: web
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+    service.beta.kubernetes.io/aws-load-balancer-name: <%= environment %>-rubygems-org
 spec:
   type: LoadBalancer
   ports:

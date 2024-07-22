@@ -1,6 +1,6 @@
 class ClearanceCreateUsers < ActiveRecord::Migration[4.2]
   def self.up
-    create_table(:users) do |t|
+    create_table(:users) do |t| # rubocop:disable Rails/CreateTableWithTimestamps
       t.string :email
       t.string :encrypted_password, limit: 128
       t.string :salt,               limit: 128
@@ -9,7 +9,7 @@ class ClearanceCreateUsers < ActiveRecord::Migration[4.2]
       t.boolean :email_confirmed, default: false, null: false
     end
 
-    add_index :users, [:id, :token]
+    add_index :users, %i[id token]
     add_index :users, :email
     add_index :users, :token
   end

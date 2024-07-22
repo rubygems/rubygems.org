@@ -16,12 +16,22 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
       end
 
-      context "user is owner of rubygem" do
+      context "user is owner of rubygem and verified" do
+        setup do
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         context "with correct params" do
           setup do
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
           should "set success notice flash" do
             expected_notice = "Created ownership call for #{@rubygem.name}."
 
@@ -36,7 +46,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           setup do
             post :create, params: { rubygem_id: @rubygem.name }
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
           should "set alert flash" do
             expected_alert = "Note can't be blank"
 
@@ -52,7 +62,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             create(:ownership_call, rubygem: @rubygem)
             post :create, params: { rubygem_id: @rubygem.name, note: "other small note" }
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
           should "set alert flash" do
             expected_alert = "Rubygem can have only one open ownership call"
 
@@ -64,12 +74,28 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         end
       end
 
-      context "user is not owner of rubygem" do
+      context "user is owner and not verified" do
         setup do
-          user = create(:user)
-          sign_in_as(user)
           post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
         end
+
+        should redirect_to("verify page") { verify_session_path }
+      end
+
+      context "user is not owner of rubygem" do
+        setup do
+          @user = create(:user)
+          sign_in_as(@user)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+          post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         should respond_with :forbidden
 
         should "not create a call" do
@@ -83,13 +109,23 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
       end
 
-      context "user is owner of rubygem" do
+      context "user is owner of rubygem and verified" do
+        setup do
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         context "ownership call exists" do
           setup do
             create(:ownership_call, rubygem: @rubygem, user: @user, status: "opened")
             patch :close, params: { rubygem_id: @rubygem.name }
           end
-          should redirect_to("rubygems show") { rubygem_path(@rubygem) }
+          should redirect_to("rubygems show") { rubygem_path(@rubygem.slug) }
           should "set success notice flash" do
             expected_notice = "The ownership call for #{@rubygem.name} was closed."
 
@@ -104,7 +140,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           setup do
             patch :close, params: { rubygem_id: @rubygem.name }
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
 
           should "set try again notice flash" do
             assert_equal "Something went wrong. Please try again.", flash[:alert]
@@ -112,13 +148,31 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         end
       end
 
-      context "user is not owner of rubygem" do
+      context "user is owner and not verified" do
         setup do
-          user = create(:user)
-          sign_in_as(user)
           create(:ownership_call, rubygem: @rubygem, user: @user)
           patch :close, params: { rubygem_id: @rubygem.name }
         end
+
+        should redirect_to("verify page") { verify_session_path }
+      end
+
+      context "user is not owner of rubygem" do
+        setup do
+          @user = create(:user)
+          sign_in_as(@user)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+
+          create(:ownership_call, rubygem: @rubygem, user: @user)
+          patch :close, params: { rubygem_id: @rubygem.name }
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
+        end
+
         should respond_with :forbidden
 
         should "not update status to close" do
@@ -153,7 +207,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           setup do
             patch :close, params: { rubygem_id: @rubygem.name }
           end
-          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should redirect_to("the edit settings page") { edit_settings_path }
 
           should "set mfa_redirect_uri" do
             assert_equal close_rubygem_ownership_calls_path, session[:mfa_redirect_uri]
@@ -164,7 +218,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
           setup do
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
           end
-          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should redirect_to("the edit settings page") { edit_settings_path }
 
           should "set mfa_redirect_uri" do
             assert_equal rubygem_ownership_calls_path, session[:mfa_redirect_uri]
@@ -174,7 +228,7 @@ class OwnershipCallsControllerTest < ActionController::TestCase
 
       context "user has mfa set to weak level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
         end
 
         context "on GET to index" do
@@ -213,7 +267,14 @@ class OwnershipCallsControllerTest < ActionController::TestCase
 
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          session[:verification] = 10.minutes.from_now
+          session[:verified_user] = @user.id
+        end
+
+        teardown do
+          session[:verification] = nil
+          session[:verified_user] = nil
         end
 
         context "on GET to index" do
@@ -232,14 +293,14 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             create(:ownership_call, rubygem: @rubygem, user: @user, status: "opened")
             patch :close, params: { rubygem_id: @rubygem.name }
           end
-          should redirect_to("rubygems show") { rubygem_path(@rubygem) }
+          should redirect_to("rubygems show") { rubygem_path(@rubygem.slug) }
         end
 
         context "on POST to create" do
           setup do
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
           end
-          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem.slug) }
         end
       end
     end

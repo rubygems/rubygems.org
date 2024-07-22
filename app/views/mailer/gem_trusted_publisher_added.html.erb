@@ -1,0 +1,53 @@
+<% @title = t(".title") %>
+<% @sub_title = @rubygem_trusted_publisher.rubygem.name %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <p>
+          A gem you have push access to has recently added a new trusted publisher.
+        </p>
+        <p>
+          Gem: <strong><%= link_to @rubygem_trusted_publisher.rubygem.name, rubygem_url(@rubygem_trusted_publisher.rubygem.slug), target: "_blank" %></strong>
+          <br/>
+          Trusted publisher: <strong><%= link_to @rubygem_trusted_publisher.trusted_publisher.name, rubygem_trusted_publishers_url(@rubygem_trusted_publisher.rubygem.slug), target: "_blank" %></strong>
+          <br/>
+          Added by:
+          <strong>
+            <%= link_to @created_by_user.display_handle, profile_url(@created_by_user.display_id), target: "_blank" %> <%= mail_to(@created_by_user.email) if @created_by_user.public_email? %>
+          </strong>
+          <br/>
+          Added at: <strong><%= @rubygem_trusted_publisher.created_at.to_formatted_s(:rfc822) %></strong>
+        </p>
+        <br/>
+        <p>If this new trusted publisher is expected, you do not need to take further action.</p>
+        <p>
+          <strong>Only if this change is unexpected</strong>
+          please take immediate steps to secure your account and gems:
+        </p>
+
+        <%= render "compromised_instructions" do %>
+          <li>Remove the trusted publisher reported in this email</li>
+        <% end %>
+
+        <p>
+          <em>
+            To stop receiving these messages, update your <%= link_to("email notification settings", notifier_url) %>.
+          </em>
+        </p>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>
+<!-- END Body -->

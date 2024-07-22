@@ -12,7 +12,7 @@ fi
 
 # make repository lower-case, since it is used in docker image tag
 # and must be lowercase
-GITHUB_REPOSITORY=$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')
+GITHUB_REPOSITORY=$(echo "${GITHUB_REPOSITORY:-rubygems/rubygems.org}" | tr '[:upper:]' '[:lower:]')
 
 DOCKER_TAG="048268392960.dkr.ecr.us-west-2.amazonaws.com/$GITHUB_REPOSITORY:$GITHUB_SHA"
 
@@ -24,10 +24,18 @@ docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
   --build-arg REVISION="$GITHUB_SHA" \
   .
 
-docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
+# This is a ruby script we run to ensure that all dependencies are configured properly in
+# the docker container, even if they are not used in the the few requests made to the application.
+docker run -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=postgresql://localhost \
+  --net host "$DOCKER_TAG" \
+  -- bin/rails runner - <<-EOS
+Magic.buffer('')
+EOS
+
+docker run -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=postgresql://localhost \
   --net host "$DOCKER_TAG" \
   -- bin/rails db:create db:migrate
-docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
+docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=postgresql://localhost \
   --net host "$DOCKER_TAG" \
   -- puma --environment production --config /app/config/puma.rb
 

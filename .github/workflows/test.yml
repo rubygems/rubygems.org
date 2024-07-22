@@ -8,49 +8,62 @@ permissions:
   contents: read
 
 jobs:
+  # This is umbrella job for all tests needed to pass to make it simpler
+  # to maintain GitHub Actions status required checks since job names and
+  # amount change over the time and it is easier to maintian having just
+  # this umbrella check set as required.
+  status_check:
+    name: All required tests passing check
+    needs: [rails]
+    runs-on: ubuntu-24.04
+    if: always()
+    steps:
+      - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
+
   rails:
     strategy:
       fail-fast: false
       matrix:
         rubygems:
           - name: locked
-            version: '3.4.9'
+            version: "3.5.14"
           - name: latest
             version: latest
-        ruby_version: ['3.2.1']
-    name: Rails tests (RubyGems ${{ matrix.rubygems.name }})
+        ruby_version: ["3.3.4"]
+        tests:
+          - name: general
+            command: test
+          - name: system
+            command: test:system
+    name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-22.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
-    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-    - name: Install and start services
-      run: |
-        docker-compose up -d
-    - name: Wait for ES to boot
-      run: |
-        timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
-    - uses: ruby/setup-ruby@6cecb48364174b0952995175c55f9bf5527e6682 # v1.147.0
-      with:
-        ruby-version: ${{ matrix.ruby_version }}
-        bundler-cache: true
-    - name: set rubygems version
-      run: |
-        if [ "$RUBYGEMS_VERSION" != "latest" ]; then
-          gem update --system $RUBYGEMS_VERSION;
-        else
-          gem update --system
-        fi
-        gem --version
-        bundle --version
-    - name: Prepare environment
-      run: |
-        cp config/database.yml.sample config/database.yml
-        bundle exec rake db:setup
-    - name: Tests
-      run: bin/rails test:all
-    - name: Upload coverage to Codecov
-      if: matrix.rubygems.name == 'locked' && (success() || failure())
-      uses: codecov/codecov-action@894ff025c7b54547a9a2a1e9f228beae737ad3c2 # v3.1.3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Setup rubygems.org
+        uses: ./.github/actions/setup-rubygems.org
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+          rubygems-version: ${{ matrix.rubygems.version }}
+
+      - name: Tests ${{ matrix.tests.name }}
+        id: test-all
+        run: bin/rails ${{ matrix.tests.command }}
+
+      - name: Save capybara screenshots
+        if: ${{ failure() && steps.test-all.outcome == 'failure' }}
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
+          path: tmp/capybara
+          if-no-files-found: ignore
+
+      - name: Upload coverage to Codecov
+        if: matrix.rubygems.name == 'locked' && (success() || failure())
+        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -1,7 +1,7 @@
 Rails.application.configure do
   config.good_job.preserve_job_records = true
   config.good_job.retry_on_unhandled_error = false
-  config.good_job.on_thread_error = ->(exception) { Rails.error.report(exception) }
+  config.good_job.on_thread_error = ->(exception) { Rails.error.report(exception, handled: false) }
   config.good_job.queues = '*'
   config.good_job.shutdown_timeout = 25 # seconds
   config.good_job.logger = SemanticLogger[GoodJob]
@@ -19,6 +19,12 @@ Rails.application.configure do
       class: "MfaUsageStatsJob",
       set: { priority: 10 },
       description: "Sending MFA usage metrics to statsd every hour"
+    },
+    refresh_oidc_providers: {
+      cron: "every 30m",
+      class: "RefreshOIDCProvidersJob",
+      set: { priority: 10 },
+      description: "Refreshing all OIDC provider configurations every 30m"
     }
   }
 
@@ -40,6 +46,6 @@ Rails.application.configure do
 
     ActiveRecord::Base.logger = nil
     GoodJob.logger = Rails.logger
-    StatsD.backend = StatsD::Instrument::Backends::NullBackend.new
+    StatsD.singleton_client = StatsD::Instrument::Client.new
   end
 end

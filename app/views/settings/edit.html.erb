@@ -3,32 +3,26 @@
 <div class="t-body">
   <h2 class="page__subheading"><%= t ".mfa.multifactor_auth" %></h2>
   <% if @user.mfa_enabled? %>
-    <h2><%= t(".mfa.otp")%></h2>
-    <p><%= t(".mfa.enabled_html") %></p>
+    <div class="mfa__header-wrapper">
+      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.level.title")%></h2>
+    </div>
+    <p><%= t(".mfa.level_html") %></p>
+
     <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit" do %>
-      <%= label_tag :level, t(".mfa.level.title"), class: "form__label" %>
-
-
       <%= select_tag :level, options_for_select(@mfa_options, @user.mfa_level), class: "form__input form__select" %>
 
-      <div class="text_field">
-        <%= label_tag :otp, t(".otp_code"), class: "form__label" %>
-        <%= text_field_tag :otp, "", class: "form__input", autocomplete: :off %>
-      </div>
       <%= submit_tag t(".mfa.update"), class: "form__submit" %>
     <% end %>
-  <% else %>
-    <div class="t-body">
-      <h2><%= t(".mfa.otp")%></h2>
-
-      <p>
-      <%= t(".mfa.disabled_html") %>
-      <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
-      </p>
-    </div>
   <% end %>
 
-  <h2><%= t(".webauthn_credentials") %></h2>
+  <div class="mfa__header-wrapper">
+    <h2 class="mfa__header mfa__header--compact"><%= t(".webauthn_credentials") %></h2>
+    <% if @user.webauthn_enabled? %>
+      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
+    <% else %>
+      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
+    <% end %>
+  </div>
 
   <p><%= t(".webauthn_credential_note")%></p>
 
@@ -41,6 +35,30 @@
   <% end %>
 
   <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
+
+  <% if @user.totp_enabled? %>
+    <div class="mfa__header-wrapper">
+      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.otp") %></h2>
+      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
+    </div>
+    <p><%= t(".mfa.enabled_note") %></p>
+    <%= form_tag totp_path, method: :delete, id: "mfa-delete" do %>
+      <div class="text_field">
+        <%= label_tag :otp, t(".otp_code"), class: "form__label" %>
+        <%= text_field_tag :otp, "", class: "form__input", autocomplete: :off %>
+      </div>
+      <%= submit_tag t(".mfa.disable"), class: "form__submit" %>
+    <% end %>
+  <% else %>
+    <div class="mfa__header-wrapper">
+      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.otp") %></h2>
+      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
+    </div>
+    <p>
+      <%= t(".mfa.disabled_html") %>
+      <%= button_to t(".mfa.go_settings"), new_totp_path, method: "get", class: "form__submit" %>
+    </p>
+  <% end %>
 </div>
 
 <div class="t-body">
@@ -50,6 +68,17 @@
 <div class="t-body">
   <h2><%= link_to t('api_keys.index.api_keys'), profile_api_keys_path %></h2>
 </div>
+
+<div class="t-body">
+  <h2><%= link_to t('oidc.pending_trusted_publishers.index.title'), profile_oidc_pending_trusted_publishers_path %></h2>
+  <span>Pending trusted publishers allow you to configure trusted publishing before you have pushed the first version of a gem. For more information about how to set up trusted publishing, see <a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/">the trusted publishing documentation</a>.</span>
+</div>
+
+<% if @user.oidc_api_key_roles.any? %>
+  <div class="t-body">
+    <h2><%= link_to t('oidc.api_key_roles.index.api_key_roles'), profile_oidc_api_key_roles_path %></h2>
+  </div>
+<% end %>
 
 <% if @user.ownerships.any? %>
   <div class="t-body">

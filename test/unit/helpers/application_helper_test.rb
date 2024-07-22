@@ -32,8 +32,8 @@ class ApplicationHelperTest < ActionView::TestCase
     create(:version, rubygem: rubygem, number: "3.0.0", platform: "ruby", description: text)
 
     assert_equal "alert(&quot;foo&quot;);Rails authentication &amp; authorization",
-      short_info(rubygem.versions.most_recent)
-    assert_predicate short_info(rubygem.versions.most_recent), :html_safe?
+      short_info(rubygem.most_recent_version)
+    assert_predicate short_info(rubygem.most_recent_version), :html_safe?
   end
 
   should "use gem summary before gem description" do
@@ -42,7 +42,7 @@ class ApplicationHelperTest < ActionView::TestCase
     rubygem = create(:rubygem, name: "SomeGem")
     create(:version, rubygem: rubygem, number: "3.0.0", platform: "ruby", description: desc, summary: summary)
 
-    assert_equal "an awesome gem", short_info(rubygem.versions.most_recent)
+    assert_equal "an awesome gem", short_info(rubygem.most_recent_version)
   end
 
   context "rubygem" do
@@ -73,6 +73,53 @@ class ApplicationHelperTest < ActionView::TestCase
 
     should "not sanitize with :notice" do
       assert_instance_of String, flash_message(:notice, @message)
+    end
+  end
+
+  context "avatar" do
+    setup do
+      @user = create(:user, email: "email@example.com")
+    end
+
+    should "raise when invalid theme is requested" do
+      assert_raises(StandardError) { avatar(160, "id", @user, theme: :unknown) }
+    end
+
+    context "with publicly available email" do
+      setup do
+        @user.public_email = true
+      end
+
+      should "return gravatar" do
+        url = avatar(160, "id", @user)
+        expected_uri = "/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light"
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"#{expected_uri}\" />", url
+      end
+    end
+
+    context "with publicly hidden email" do
+      setup do
+        @user.public_email = false
+      end
+
+      should "return light themed default avatar" do
+        url = avatar(160, "id", @user, theme: :light)
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light\" />", url
+      end
+
+      should "return light themed default avatar by default" do
+        url = avatar(160, "id", @user)
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light\" />", url
+      end
+
+      should "return dark themed default avatar" do
+        url = avatar(160, "id", @user, theme: :dark)
+
+        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=dark\" />", url
+      end
     end
   end
 end

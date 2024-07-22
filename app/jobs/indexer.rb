@@ -28,9 +28,9 @@ class Indexer < ApplicationJob
   private
 
   def stringify(value)
-    final = StringIO.new
+    final = ActiveSupport::Gzip::Stream.new
     gzip = Zlib::GzipWriter.new(final)
-    gzip.write(Marshal.dump(value))
+    Marshal.dump(value, gzip)
     gzip.close
 
     final.string

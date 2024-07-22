@@ -1,89 +1,117 @@
-class PasswordsController < Clearance::PasswordsController
+class PasswordsController < ApplicationController
   include MfaExpiryMethods
+  include RequireMfa
   include WebauthnVerifiable
 
-  before_action :validate_confirmation_token, only: %i[edit mfa_edit webauthn_edit]
-  after_action :delete_mfa_expiry_session, only: %i[mfa_edit webauthn_edit]
+  before_action :ensure_email_present, only: %i[create]
+
+  before_action :no_referrer, only: %i[edit otp_edit webauthn_edit]
+  before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
+  before_action :require_mfa, only: %i[edit]
+  before_action :validate_otp, only: %i[otp_edit]
+  before_action :validate_webauthn, only: %i[webauthn_edit]
+  before_action :password_reset_session_verified, only: %i[edit otp_edit webauthn_edit]
+  after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
+
+  before_action :validate_password_reset_session, only: :update
+
+  def new
+  end
 
   def edit
-    if @user.mfa_enabled? || @user.webauthn_credentials.any?
-      setup_mfa_authentication
-      setup_webauthn_authentication(form_url: webauthn_edit_user_password_url(token: @user.confirmation_token))
+    render :edit
+  end
 
-      create_new_mfa_expiry
+  def create
+    user = User.find_by_normalized_email(@email)
 
-      render template: "multifactor_auths/mfa_prompt"
-    else
-      render template: "passwords/edit"
+    if user
+      user.forgot_password!
+      ::PasswordMailer.change_password(user).deliver_later
     end
+
+    render :create, status: :accepted
   end
 
   def update
-    @user = find_user_for_update
-
-    if @user.update_password password_from_password_reset_params
-      @user.reset_api_key! if reset_params[:reset_api_key] == "true"
-      @user.api_keys.delete_all if reset_params[:reset_api_keys] == "true"
-      sign_in @user
-      redirect_to url_after_update
-      session[:password_reset_token] = nil
+    if @user.update_password reset_params[:password]
+      @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
+      @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
+      delete_password_reset_session
+      redirect_to signed_in? ? dashboard_path : sign_in_path
     else
-      flash_failure_after_update
-      render template: "passwords/edit"
+      flash.now[:alert] = t(".failure")
+      render :edit
     end
   end
 
-  def mfa_edit
-    if mfa_edit_conditions_met?
-      render template: "passwords/edit"
-    elsif !session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-    else
-      login_failure(t("multifactor_auths.incorrect_otp"))
-    end
+  def otp_edit
+    render :edit
   end
 
   def webauthn_edit
-    unless session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-      return
-    end
-
-    return login_failure(@webauthn_error) unless webauthn_credential_verified?
-
-    render template: "passwords/edit"
+    render :edit
   end
 
   private
 
-  def url_after_update
-    dashboard_path
-  end
+  def ensure_email_present
+    @email = params.dig(:password, :email)
+    return if @email.present?
 
-  def reset_params
-    params.fetch(:password_reset, {}).permit(:reset_api_key, :reset_api_keys)
+    flash.now[:alert] = t(".failure_on_missing_email")
+    render template: "passwords/new", status: :unprocessable_entity
   end
 
   def validate_confirmation_token
-    @user = find_user_for_edit
-    redirect_to root_path, alert: t("failure_when_forbidden") unless @user&.valid_confirmation_token?
+    confirmation_token = params.permit(:token).fetch(:token, "").to_s
+    @user = User.find_by(confirmation_token:)
+    return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
+    sign_out if signed_in? && @user != current_user
   end
 
-  def deliver_email(user)
-    ::ClearanceMailer.change_password(user).deliver_later
+  # The order of these methods intends to leave the session fully reset if we
+  # fail to invalidate the token for some reason, since this would indicate
+  # something is wrong with the user, necessitating help from an admin.
+  def password_reset_session_verified
+    reset_session
+    @user.update!(confirmation_token: nil)
+    session[:password_reset_verified_user] = @user.id
+    session[:password_reset_verified] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
   end
 
-  def setup_mfa_authentication
-    return if @user.mfa_disabled?
-    @form_mfa_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
+  def validate_password_reset_session
+    return login_failure(t("passwords.edit.token_failure")) if session[:password_reset_verified].nil?
+    return login_failure(t("verification_expired")) if session[:password_reset_verified] < Time.current
+    @user = User.find_by(id: session[:password_reset_verified_user])
+    login_failure(t("verification_expired")) unless @user
   end
 
-  def mfa_edit_conditions_met?
-    @user.mfa_enabled? && @user.ui_otp_verified?(params[:otp]) && session_active?
+  def delete_password_reset_session
+    delete_mfa_session
+    session.delete(:password_reset_verified_user)
+    session.delete(:password_reset_verified)
   end
 
-  def login_failure(message)
+  def reset_params
+    params.permit(password_reset: %i[password reset_api_key reset_api_keys]).require(:password_reset)
+  end
+
+  def mfa_failure(message)
     flash.now.alert = message
-    render template: "multifactor_auths/mfa_prompt", status: :unauthorized
+    render template: "multifactor_auths/prompt", status: :unauthorized
+  end
+
+  def login_failure(alert)
+    reset_session
+    redirect_to sign_in_path, alert:
+  end
+
+  def otp_verification_url
+    otp_edit_password_url(token: @user.confirmation_token)
+  end
+
+  def webauthn_verification_url
+    webauthn_edit_password_url(token: @user.confirmation_token)
   end
 end

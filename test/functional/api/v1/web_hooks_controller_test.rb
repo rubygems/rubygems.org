@@ -70,7 +70,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
   context "with webhook actions api key scope" do
     setup do
       @url = "http://example.org"
-      @user = create(:api_key, key: "12342", access_webhooks: true).user
+      @user = create(:api_key, key: "12342", scopes: %i[access_webhooks]).user
 
       @request.env["HTTP_AUTHORIZATION"] = "12342"
     end

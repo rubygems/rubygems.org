@@ -1,5 +1,5 @@
-class Admin::GitHubUserPolicy < ApplicationPolicy
-  class Scope < Scope
+class Admin::GitHubUserPolicy < Admin::ApplicationPolicy
+  class Scope < Admin::ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
       if rubygems_org_admin?

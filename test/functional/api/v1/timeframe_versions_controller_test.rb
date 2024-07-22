@@ -52,6 +52,16 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         assert_includes response.body, "iso8601"
       end
 
+      should 'return a bad request with message when "to" is not primitive' do
+        get :index, format: :json, params: {
+          from: Time.zone.parse("2017-11-09").iso8601,
+          to: ["2017-11-12"]
+        }
+
+        assert_equal 400, response.status
+        assert_includes response.body, "iso8601"
+      end
+
       should 'return a bad request with message when "from" is invalid' do
         get :index, format: :json, params: {
           from: "2017-11-09",

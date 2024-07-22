@@ -7,6 +7,16 @@
   flex: 1;
 }
 
+.mfa__header-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.mfa__header.mfa__header--compact {
+  padding: 0;
+}
+
 @media (min-width: 780px) {
   .mfa__container {
     flex-direction: row;

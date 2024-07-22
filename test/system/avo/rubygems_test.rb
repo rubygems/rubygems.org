@@ -3,6 +3,8 @@ require "application_system_test_case"
 class Avo::RubygemsSystemTest < ApplicationSystemTestCase
   make_my_diffs_pretty!
 
+  include ActiveJob::TestHelper
+
   def sign_in_as(user)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
       provider: "github",
@@ -15,6 +17,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
         name: user.login
       }
     )
+
+    create(:ip_address, ip_address: "127.0.0.1")
 
     stub_github_info_request(user.info_data)
 
@@ -89,6 +93,11 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     security_user = create(:user, email: "security@rubygems.org")
     rubygem = create(:rubygem)
     version = create(:version, rubygem: rubygem)
+    GemDownload.increment(
+      100_001,
+      rubygem_id: rubygem.id,
+      version_id: version.id
+    )
 
     visit avo.resources_rubygem_path(rubygem)
 
@@ -140,6 +149,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
           audit.audited_changes["records"].select do |k, _|
             k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
           end
+        ).merge(
+          audit.audited_changes["records"].select do |k, _|
+            k =~ %r{gid://gemcutter/Events::RubygemEvent/\d+}
+          end
         )
       },
       audit.audited_changes
@@ -156,6 +169,11 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     rubygem = create(:rubygem)
     version1 = create(:version, rubygem: rubygem)
     version2 = create(:version, rubygem: rubygem)
+    GemDownload.increment(
+      100_001,
+      rubygem_id: rubygem.id,
+      version_id: version1.id
+    )
 
     visit avo.resources_rubygem_path(rubygem)
 
@@ -220,6 +238,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
           audit.audited_changes["records"].select do |k, _|
             k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
           end
+        ).merge(
+          audit.audited_changes["records"].select do |k, _|
+            k =~ %r{gid://gemcutter/Events::RubygemEvent/\d+}
+          end
         )
       },
       audit.audited_changes
@@ -266,6 +288,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_equal security_user, ownership.authorizer
 
     audit = rubygem.audits.sole
+    event = rubygem.events.where(tag: Events::RubygemEvent::OWNER_ADDED).sole
 
     page.assert_text audit.id
     assert_equal "Rubygem", audit.auditable_type
@@ -294,6 +317,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
                 "ownership_request_notifier" => [nil, true]
               },
               "unchanged" => {}
+            },
+            "gid://gemcutter/Events::RubygemEvent/#{event.id}" => {
+              "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+              "unchanged" => {}
             }
           }
       },
@@ -301,5 +328,67 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     )
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
+  end
+
+  test "upload versions file" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    visit avo.resources_rubygems_path
+
+    _ = create(:version)
+
+    click_button "Actions"
+    click_on "Upload Versions File"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 1, only: UploadVersionsFileJob do
+      click_button "Upload"
+
+      page.assert_text "Upload job scheduled"
+    end
+
+    assert_not_nil Audit.last
+  end
+
+  test "upload names file" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    visit avo.resources_rubygems_path
+
+    _ = create(:version)
+
+    click_button "Actions"
+    click_on "Upload Names File"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 1, only: UploadNamesFileJob do
+      click_button "Upload"
+
+      page.assert_text "Upload job scheduled"
+    end
+
+    assert_not_nil Audit.last
+  end
+
+  test "upload info file" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    version = create(:version)
+    visit avo.resources_rubygem_path(version.rubygem)
+
+    click_button "Actions"
+    click_on "Upload Info File"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 1, only: UploadInfoFileJob do
+      click_button "Upload"
+
+      page.assert_text "Upload job scheduled"
+    end
+
+    assert_not_nil Audit.last
   end
 end

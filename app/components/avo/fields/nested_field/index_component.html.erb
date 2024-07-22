@@ -1,0 +1,13 @@
+<%= index_field_wrapper **field_wrapper_args do %>
+  <% if @field.value.present? %>
+    <% resource = field_wrapper_args.fetch(:resource) or raise "missing resource for #{self}" %>
+    <table><tbody>
+    <% field.get_fields.each do |f| %>
+      <tr class="!tw-py-0" >
+        <td><%= f.name %></td>
+        <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f, resource:, flush: true) %>
+      </tr>
+    <% end %>
+    </tbody></table>
+  <% end %>
+<% end %>

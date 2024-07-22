@@ -1,0 +1,10 @@
+<div>
+  <dl class="oidc_access_policy">
+    <dt><%= statement.class.human_attribute_name(:effect) %></dt>
+    <dd><code><%= statement.effect %></code></dd>
+    <dt><%= statement.class.human_attribute_name(:principal) %></dt>
+    <dd><%= link_to statement.principal.oidc, statement.principal.oidc %></dd>
+    <dt><%= statement.class.human_attribute_name(:conditions) %></dt>
+    <dd><%= render statement.conditions %></dd>
+  </dl>
+</div>

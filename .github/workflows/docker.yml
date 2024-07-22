@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - webauthn-cli
+      - oidc-api-tokens
 permissions:
   contents: read
   id-token: write
@@ -12,33 +12,33 @@ permissions:
 jobs:
   build:
     name: Docker build (and optional push)
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
-      RUBYGEMS_VERSION: 3.4.9
-      RUBY_VERSION: 3.2.1
+      RUBYGEMS_VERSION: 3.5.14
+      RUBY_VERSION: 3.3.4
     steps:
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@4b4e9c3e2d4531116a6f8ba8e71fc6e2cb6e6c8c # master
+        uses: docker/setup-buildx-action@aa33708b10e362ff993539393ff100fa93ed6a27 # master
       - name: Cache Docker layers
-        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-rubygems-org
       - name: Install and start services (needed for image test)
-        run: docker-compose up -d
+        run: docker compose up -d
       - name: Configure AWS credentials from Production account
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         if: github.secret_source != 'None'
         with:
           role-to-assume: arn:aws:iam::048268392960:role/rubygems-ecr-pusher
           aws-region: us-west-2
       - name: Login to Amazon ECR
         if: github.secret_source != 'None'
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
       - name: build, test and optionally push docker image
         run: ./script/build_docker.sh
       # Temp fix

@@ -36,14 +36,12 @@ class GemDownload < ApplicationRecord
     def increment(count, rubygem_id:, version_id: 0)
       scope = GemDownload.where(rubygem_id: rubygem_id).select("id")
       scope = scope.where(version_id: version_id)
-      sql = scope.to_sql
-
-      update = "UPDATE #{quoted_table_name} SET count = count + ? WHERE id = (#{sql}) RETURNING *"
+      return scope.first if count.zero?
 
       # TODO: Remove this comments, once we move to GemDownload only.
       # insert = "INSERT INTO #{quoted_table_name} (rubygem_id, version_id, count) SELECT ?, ?, ?"
       # find_by_sql(["WITH upsert AS (#{update}) #{insert} WHERE NOT EXISTS (SELECT * FROM upsert)", count, rubygem_id, version_id, count]).first
-      find_by_sql([update, count]).first
+      scope.update_all(["count = count + ?", count])
     end
 
     # Takes an array where members have the form
@@ -97,11 +95,10 @@ class GemDownload < ApplicationRecord
     # updates the downloads field of rubygems in DB and ES index
     # input: { rubygem_id => download_count_to_increment }
     def update_gem_downloads(updates_by_gem)
-      bulk_update_query = []
       updates_by_version = most_recent_version_downloads(updates_by_gem.keys)
 
-      downloads_by_gem(updates_by_gem.keys).each do |id, downloads|
-        bulk_update_query << update_query(id, downloads + updates_by_gem[id], updates_by_version[id])
+      bulk_update_query = downloads_by_gem(updates_by_gem.keys).map do |id, downloads|
+        update_query(id, downloads + updates_by_gem[id], updates_by_version[id])
       end
       increment_rubygems(updates_by_gem.keys, updates_by_gem.values)
 

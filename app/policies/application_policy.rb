@@ -1,58 +1,9 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
-  include AdminUser
-
-  attr_reader :user, :record
-
-  def initialize(user, record)
-    @user = user
-    @record = record
-  end
-
-  def avo_index?
-    false
-  end
-
-  def avo_show?
-    false
-  end
-
-  def avo_create?
-    false
-  end
-
-  def avo_new?
-    avo_create?
-  end
-
-  def avo_update?
-    false
-  end
-
-  def avo_edit?
-    avo_update?
-  end
-
-  def avo_destroy?
-    false
-  end
-
-  def avo_search?
-    avo_index?
-  end
-
-  def self.has_association(assocation) # rubocop:disable Naming/PredicateName
-    %w[create attach detach destroy edit].each do |action|
-      define_method(:"#{action}_#{assocation}?") { false }
-    end
-    define_method(:"show_#{assocation}?") { Pundit.policy!(user, record).avo_show? }
-    alias_method :"view_#{assocation}?", :avo_show?
-  end
+  include SemanticLogger::Loggable
 
   class Scope
-    include AdminUser
-
     def initialize(user, scope)
       @user = user
       @scope = scope
@@ -65,5 +16,75 @@ class ApplicationPolicy
     private
 
     attr_reader :user, :scope
+  end
+
+  attr_reader :user, :record, :error
+
+  def initialize(user, record)
+    @user = user
+    @record = record
+    @error = nil
+  end
+
+  def index?
+    false
+  end
+
+  def show?
+    false
+  end
+
+  def create?
+    false
+  end
+
+  def new?
+    create?
+  end
+
+  def update?
+    false
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    false
+  end
+
+  def search?
+    index?
+  end
+
+  private
+
+  delegate :t, to: I18n
+
+  def deny(error = t(:forbidden))
+    @error = error
+    false
+  end
+
+  def allow
+    @error = nil
+    true
+  end
+
+  def current_user?(record_user)
+    user && user == record_user
+  end
+
+  def rubygem_owned_by?(user)
+    rubygem.owned_by?(user) || deny(t(:forbidden))
+  end
+
+  def policy!(user, record) = Pundit.policy!(user, record)
+  def user_policy!(record) = policy!(user, record)
+
+  def user_authorized?(record, action)
+    policy = user_policy!(record)
+    policy.send(action) || deny(policy.error)
   end
 end

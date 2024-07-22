@@ -104,15 +104,21 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       fill_in "Nickname", with: @credential_nickname
       click_on "Register device"
 
-      assert page.has_content? @credential_nickname
+      assert page.has_content? "Recovery codes"
     end
+
+    assert_equal recovery_multifactor_auth_path, current_path
+    click_on "[ copy ]"
+    check "ack"
+    click_on "Continue"
+
+    assert_equal edit_settings_path, current_path
 
     webauthn_credential_creation_email = ActionMailer::Base.deliveries.find do |email|
       email.to.include?(@user.email)
     end
 
     assert_equal "New security device added on RubyGems.org", webauthn_credential_creation_email.subject
-    assert_equal edit_settings_path, current_path
 
     # Cleanup test data
     authenticator.remove!

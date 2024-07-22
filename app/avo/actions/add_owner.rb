@@ -32,7 +32,7 @@ class AddOwner < BaseAction
     end
 
     def handle_model(rubygem)
-      authorizer = User.find_by_email!("security@rubygems.org")
+      authorizer = User.security_user
       rubygem.ownerships.create!(user: @owner, authorizer: authorizer, confirmed_at: Time.current)
       succeed "Added #{@owner.name} to #{@rubygem.name}"
     end

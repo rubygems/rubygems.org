@@ -14,13 +14,13 @@ class VersionTest < ActiveSupport::TestCase
 
       fields = %w[number built_at summary description authors pusher_id platform
                   ruby_version rubygems_version prerelease downloads_count licenses
-                  requirements sha metadata created_at]
+                  requirements sha spec_sha metadata created_at]
 
-      assert_equal fields.map(&:to_s).sort, json.keys.sort
+      assert_equal fields.sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.pusher_id, json["pusher_id"]
-      assert_equal @version.built_at, json["built_at"]
-      assert_equal @version.created_at, json["created_at"]
+      assert_equal @version.built_at.as_json, json["built_at"]
+      assert_equal @version.created_at.as_json, json["created_at"]
       assert_equal @version.description, json["description"]
       assert_equal @version.downloads_count, json["downloads_count"]
       assert_equal @version.metadata, json["metadata"]
@@ -44,7 +44,7 @@ class VersionTest < ActiveSupport::TestCase
       xml = Nokogiri.parse(@version.to_xml)
       fields = %w[number built-at summary description authors pusher-id platform
                   ruby-version rubygems-version prerelease downloads-count licenses
-                  requirements sha metadata created-at]
+                  requirements sha spec-sha metadata created-at]
 
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
@@ -79,7 +79,7 @@ class VersionTest < ActiveSupport::TestCase
       @most_recent = create(:version, rubygem: @gem, number: "0.2", platform: "universal-rubinius")
       create(:version, rubygem: @gem, number: "0.1", platform: "mswin32")
 
-      assert_equal @most_recent, Version.most_recent
+      assert_equal @most_recent, @gem.most_recent_version
     end
   end
 
@@ -252,10 +252,11 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "limit the character length" do
-      @version.required_rubygems_version = format(">=%s", "0" * 2 * 1024 * 1024 * 100)
+      @version.required_rubygems_version = format(">=%s", "0" * 1024)
       @version.validate
 
-      assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:required_rubygems_version])
+      assert_equal(["is too long (maximum is 255 characters)", "must be list of valid requirements"],
+                   @version.errors.messages[:required_rubygems_version])
     end
   end
 
@@ -407,15 +408,21 @@ class VersionTest < ActiveSupport::TestCase
     end
     subject { @version }
 
+    should allow_value("1.2.3.pre").for(:number)
     should_not allow_value("#YAML<CEREALIZATION-FAIL>").for(:number)
     should_not allow_value("1.2.3-\"[javalol]\"").for(:number)
     should_not allow_value("0.8.45::Gem::PLATFORM::FAILBOAT").for(:number)
     should_not allow_value("1.2.3\n<bad>").for(:number)
+    should_not allow_value("1.2.3-bad").for(:number)
+    should_not allow_value("1.2.3.").for(:number)
+    should_not allow_value("1.2.3.gem").for(:number)
 
     should allow_value("ruby").for(:platform)
     should allow_value("mswin32").for(:platform)
     should allow_value("x86_64-linux").for(:platform)
+    should allow_value("it.is.fine").for(:platform)
     should_not allow_value("Gem::Platform::Ruby").for(:platform)
+    should_not allow_value("ruby.gem").for(:platform)
 
     should "be invalid with platform longer than maximum field length" do
       @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
@@ -451,6 +458,12 @@ class VersionTest < ActiveSupport::TestCase
 
       assert_equal "#{@version.rubygem.name}-#{@version.number}", @version.full_name
       assert_equal @version.number, @version.slug
+    end
+
+    should "compose gem_file_name" do
+      @version.full_name = "abc-1.1.1"
+
+      assert_equal "abc-1.1.1.gem", @version.gem_file_name
     end
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
@@ -709,7 +722,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "show last pushed as latest version" do
-      assert_equal @three, @rubygem.versions.most_recent
+      assert_equal @three, @rubygem.most_recent_version
     end
   end
 
@@ -728,7 +741,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "know its latest version" do
-      assert_equal "0.7", @gem.versions.most_recent.number
+      assert_equal "0.7", @gem.most_recent_version.number
     end
 
     context "with multiple rubygems and versions created out of order" do
@@ -762,9 +775,9 @@ class VersionTest < ActiveSupport::TestCase
 
     should "get the latest versions" do
       assert_equal [@dust, @haml, @rack, @thor, @json].map(&:authors),
-        Version.published(5).map(&:authors)
+        Version.published.limit(5).map(&:authors)
       assert_equal [@dust, @haml, @rack, @thor, @json, @rake].map(&:authors),
-        Version.published(6).map(&:authors)
+        Version.published.limit(6).map(&:authors)
     end
   end
 
@@ -960,7 +973,7 @@ class VersionTest < ActiveSupport::TestCase
 
   should "validate authors the same twice" do
     g = Rubygem.new(name: "test-gem")
-    v = Version.new(authors: %w[arthurnn dwradcliffe], number: 1, platform: "ruby", rubygem: g)
+    v = Version.new(authors: %w[arthurnn dwradcliffe], number: 1, platform: "ruby", gem_platform: "ruby", rubygem: g)
 
     assert_equal "arthurnn, dwradcliffe", v.authors
     assert_predicate v, :valid?
@@ -970,12 +983,12 @@ class VersionTest < ActiveSupport::TestCase
 
   should "not allow full name collision" do
     g1 = Rubygem.create(name: "test-gem-733.t")
-    Version.create(authors: %w[arthurnn dwradcliffe], number: "0.0.1", platform: "ruby", rubygem: g1)
+    Version.create(authors: %w[arthurnn dwradcliffe], number: "0.0.1", platform: "ruby", gem_platform: "ruby", rubygem: g1)
     g2 = Rubygem.create(name: "test-gem")
-    v2 = Version.new(authors: %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", rubygem: g2)
+    v2 = Version.new(authors: %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", gem_platform: "ruby", rubygem: g2)
 
     refute_predicate v2, :valid?
-    assert_equal [:full_name], v2.errors.attribute_names
+    assert_equal %i[full_name gem_full_name number], v2.errors.attribute_names
   end
 
   context "checksums" do
@@ -1038,11 +1051,13 @@ class VersionTest < ActiveSupport::TestCase
       @end_time = Time.zone.parse("2017-11-10")
     end
 
-    should "return versions created in the given range" do
-      @version.created_at = Time.zone.parse("2017-10-20")
+    should "return versions created in the given range ordered by date and id" do
+      created_at = Time.zone.parse("2017-10-20")
+      other_version = create(:version, created_at: created_at)
+      @version.created_at = created_at
       @version.save!
 
-      assert_contains Version.created_between(@start_time, @end_time), @version
+      assert_equal [other_version.id, @version.id], Version.created_between(@start_time, @end_time).map(&:id)
     end
 
     should "NOT return versions created before the range begins" do

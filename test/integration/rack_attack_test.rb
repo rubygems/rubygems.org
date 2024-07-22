@@ -41,7 +41,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       stay_under_limit_for("clearance/ip")
       stay_under_email_limit_for("password/email")
 
-      post "/passwords",
+      post "/password",
         params: { password: { email: @user.email } },
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -54,6 +54,17 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       post "/email_confirmations",
         params: { email_confirmation: { email: @user.email } },
+        headers: { REMOTE_ADDR: @ip_address }
+      follow_redirect!
+
+      assert_response :success
+    end
+
+    should "allow email confirmation resend via unconfirmed" do
+      stay_under_limit_for("clearance/ip/1")
+      stay_under_email_limit_for("email_confirmations/email")
+
+      patch "/email_confirmations/unconfirmed",
         headers: { REMOTE_ADDR: @ip_address }
       follow_redirect!
 
@@ -87,14 +98,14 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
         create(:ownership, user: @user, rubygem: @rubygem)
-        create(:api_key, key: "12334", push_rubygem: true, user: @user)
+        create(:api_key, key: "12334", scopes: %i[push_rubygem], owner: @user)
       end
 
       should "allow gem push by ip" do
         stay_under_push_limit_for("api/push/ip")
 
         post "/api/v1/gems",
-          params: gem_file("test-1.0.0.gem").read,
+          params: gem_file("test-1.0.0.gem", &:read),
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
 
         assert_response :success
@@ -109,7 +120,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "return 401 for unauthorized request" do
-        post "/session", params: { session: { password: @user.password } }
+        post "/session", params: { session: { who: "no@example.com", password: @user.password } }
 
         assert_response :unauthorized
       end
@@ -123,13 +134,13 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             @push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
             under_backoff_limit.times { Rack::Attack.cache.count(@push_exp_throttle_level_key, exp_base_limit_period**level) }
 
-            @push_throttle_per_user_key = "#{Rack::Attack::PUSH_THROTTLE_PER_USER_KEY}/#{level}:#{@user.display_id}"
+            @push_throttle_per_user_key = "#{Rack::Attack::PUSH_THROTTLE_PER_USER_KEY}/#{level}:#{@user.to_gid}"
             under_backoff_limit.times { Rack::Attack.cache.count(@push_throttle_per_user_key, exp_base_limit_period**level) }
           end
 
-          create(:api_key, key: "12334", push_rubygem: true, user: @user)
+          create(:api_key, key: "12334", scopes: %i[push_rubygem], owner: @user)
           post "/api/v1/gems",
-            params: gem_file("test-0.0.0.gem").read,
+            params: gem_file("test-0.0.0.gem", &:read),
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
         end
 
@@ -149,7 +160,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "not rate limit successive requests" do
           post "/api/v1/gems",
-            params: gem_file("test-1.0.0.gem").read,
+            params: gem_file("test-1.0.0.gem", &:read),
             headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
 
           assert_response :ok
@@ -158,15 +169,15 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       context "ui requests" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           stay_under_exponential_limit("clearance/ip")
         end
 
         should "allow for mfa sign in" do
           post "/session", params: { session: { who: @user.handle, password: @user.password } } # sets session[:mfa_user]
 
-          post "/session/mfa_create",
-            params: { otp: ROTP::TOTP.new(@user.mfa_seed).now },
+          post "/session/otp_create",
+            params: { otp: ROTP::TOTP.new(@user.totp_seed).now },
             headers: { REMOTE_ADDR: @ip_address }
 
           assert_redirected_to "/dashboard"
@@ -174,10 +185,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "allow mfa forgot password" do
           @user.forgot_password!
-          get "/users/#{@user.id}/password/edit",
+          get "/password/edit",
             params: { token: @user.confirmation_token, user_id: @user.id }
-          post "/users/#{@user.id}/password/mfa_edit",
-            params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now },
+          post "/password/otp_edit",
+            params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now },
             headers: { REMOTE_ADDR: @ip_address }
 
           assert_response :ok
@@ -194,18 +205,18 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       context "api requests" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           stay_under_exponential_limit("api/ip")
 
-          create(:api_key, key: "12334", add_owner: true, yank_rubygem: true, remove_owner: true, user: @user)
+          create(:api_key, key: "12334", scopes: %i[add_owner yank_rubygem remove_owner], owner: @user)
           @rubygem = create(:rubygem, name: "test", number: "0.0.1")
           create(:ownership, user: @user, rubygem: @rubygem)
         end
 
         should "allow gem yank by ip" do
           delete "/api/v1/gems/yank",
-            params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
+            params: { gem_name: @rubygem.slug, version: @rubygem.latest_version.number },
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
         end
@@ -214,8 +225,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           second_user = create(:user)
 
           post "/api/v1/gems/#{@rubygem.name}/owners",
-            params: { rubygem_id: @rubygem.to_param, email: second_user.email },
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
+            params: { rubygem_id: @rubygem.slug, email: second_user.email },
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
         end
@@ -225,8 +236,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           create(:ownership, user: second_user, rubygem: @rubygem)
 
           delete "/api/v1/gems/#{@rubygem.name}/owners",
-            params: { rubygem_id: @rubygem.to_param, email: second_user.email },
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
+            params: { rubygem_id: @rubygem.slug, email: second_user.email },
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.totp_seed).now }
 
           assert_response :success
         end
@@ -274,7 +285,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle forgot password" do
       exceed_limit_for("clearance/ip")
 
-      post "/passwords",
+      post "/password",
         params: { password: { email: @user.email } },
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -395,7 +406,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       should "throttle by ip" do
         exceed_limit_for("clearance/ip")
 
-        post "/passwords",
+        post "/password",
           params: { password: { email: @user.email } },
           headers: { REMOTE_ADDR: @ip_address }
 
@@ -405,7 +416,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       should "throttle by email" do
         exceed_email_limit_for("password/email")
 
-        post "/passwords", params: { password: { email: @user.email } }
+        post "/password", params: { password: { email: @user.email } }
 
         assert_response :too_many_requests
       end
@@ -419,10 +430,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "throttle gem push by ip" do
         exceed_push_limit_for("api/push/ip")
-        create(:api_key, key: "12334", push_rubygem: true, user: @user)
+        create(:api_key, key: "12334", scopes: %i[push_rubygem], owner: @user)
 
         post "/api/v1/gems",
-          params: gem_file("test-1.0.0.gem").read,
+          params: gem_file("test-1.0.0.gem", &:read),
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
 
         assert_response :too_many_requests
@@ -432,16 +443,16 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "exponential backoff" do
       setup do
         @mfa_max_period = { 1 => 300, 2 => 90_000 }
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
         @api_key = "12345"
-        create(:api_key, key: @api_key, user: @user)
+        create(:api_key, key: @api_key, owner: @user)
       end
 
       Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
         should "throttle for mfa sign in at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
-            post "/session/mfa_create", headers: { REMOTE_ADDR: @ip_address }
+            post "/session/otp_create", headers: { REMOTE_ADDR: @ip_address }
 
             assert_throttle_at(level)
           end
@@ -452,7 +463,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             # sign page sets mfa_user in session
             post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
             exceed_exponential_user_limit_for("clearance/user/#{level}", @user.id, level)
-            post "/session/mfa_create"
+            post "/session/otp_create"
 
             assert_throttle_at(level)
           end
@@ -463,27 +474,46 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             exceed_exponential_limit_for("#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}", level)
 
             post "/api/v1/gems",
-              params: gem_file("test-0.0.0.gem").read,
+              params: gem_file("test-0.0.0.gem", &:read),
               headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
 
             assert_throttle_at(level)
           end
         end
 
-        should "throttle mfa create at level #{level}" do
+        should "throttle totp create at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
-            post "/multifactor_auth", headers: { REMOTE_ADDR: @ip_address }
+            post "/totp", headers: { REMOTE_ADDR: @ip_address }
 
             assert_throttle_at(level)
           end
         end
 
-        should "throttle mfa create per user at level #{level}" do
+        should "throttle totp create per user at level #{level}" do
           freeze_time do
             sign_in_as(@user)
             exceed_exponential_user_limit_for("clearance/user/#{level}", @user.email, level)
-            post "/multifactor_auth"
+            post "/totp"
+
+            assert_throttle_at(level)
+          end
+        end
+
+        should "throttle totp destroy at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
+            post "/totp", headers: { REMOTE_ADDR: @ip_address }
+
+            assert_throttle_at(level)
+          end
+        end
+
+        should "throttle totp destroy per user at level #{level}" do
+          freeze_time do
+            sign_in_as(@user)
+            exceed_exponential_user_limit_for("clearance/user/#{level}", @user.email, level)
+            post "/totp"
 
             assert_throttle_at(level)
           end
@@ -519,7 +549,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle api key show by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.to_gid, level)
             get "/api/v1/api_key.json", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -537,7 +567,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle api key create by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.to_gid, level)
             post "/api/v1/api_key.json", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -547,7 +577,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "throttle mfa forgot password at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
-            post "/users/#{@user.id}/password/mfa_edit", headers: { REMOTE_ADDR: @ip_address }
+            post "/password/otp_edit", headers: { REMOTE_ADDR: @ip_address }
 
             assert_throttle_at(level)
           end
@@ -558,8 +588,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             @user.forgot_password!
             exceed_exponential_user_limit_for("clearance/user/#{level}", @user.confirmation_token, level)
 
-            post "/users/#{@user.id}/password/mfa_edit",
-              params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            post "/password/otp_edit",
+              params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
 
             assert_throttle_at(level)
           end
@@ -576,7 +606,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle gem yank by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.to_gid, level)
             delete "/api/v1/gems/yank", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -594,7 +624,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle owner add by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.to_gid, level)
             post "/api/v1/gems/somegem/owners", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -612,7 +642,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle owner remove by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.to_gid, level)
             delete "/api/v1/gems/somegem/owners", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -626,14 +656,14 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         setup { update_limit_for("password/email:#{@user.email}", exceeding_limit) }
 
         should "throttle for sign in ignoring case" do
-          post "/passwords",
+          post "/password",
                params: { password: { email: "Nick@example.com" } }
 
           assert_response :too_many_requests
         end
 
         should "throttle for sign in ignoring spaces" do
-          post "/passwords",
+          post "/password",
                params: { password: { email: "n ick@example.com" } }
 
           assert_response :too_many_requests
@@ -699,7 +729,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   def sign_in_as(user)
     post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
-    post "/session/mfa_create", params: { otp: ROTP::TOTP.new(@user.mfa_seed).now } if user.mfa_enabled?
+    post "/session/otp_create", params: { otp: ROTP::TOTP.new(@user.totp_seed).now } if user.mfa_enabled?
   end
 
   def set_owners_session(_rubygem, user)

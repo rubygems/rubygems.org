@@ -35,6 +35,6 @@ class GemTypo
 
   def not_protected?(rubygem)
     return true unless rubygem
-    rubygem.downloads < DOWNLOADS_THRESHOLD && rubygem.versions.most_recent.created_at < LAST_RELEASE_TIME
+    rubygem.downloads < DOWNLOADS_THRESHOLD && rubygem.most_recent_version.created_at < LAST_RELEASE_TIME
   end
 end

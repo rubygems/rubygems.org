@@ -11,7 +11,6 @@ class GemCachePurgerTest < ActiveSupport::TestCase
     should "expire API memcached" do
       Rails.cache.expects(:delete).with("info/#{@gem_name}")
       Rails.cache.expects(:delete).with("names")
-      Rails.cache.expects(:delete).with("deps/v1/#{@gem_name}")
 
       GemCachePurger.call(@gem_name)
     end

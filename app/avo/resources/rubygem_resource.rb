@@ -5,18 +5,12 @@ class RubygemResource < Avo::BaseResource
     scope.where("name LIKE ?", "%#{params[:q]}%")
   }
 
-  self.find_record_method = lambda { |model_class:, id:, params:| # rubocop:disable Lint/UnusedBlockArgument
-    # In case of perfoming action `id` becomes an array of `ids`
-    if id.is_a?(Array)
-      model_class.where(id: id)
-    else
-      model_class.find_by!(name: id)
-    end
-  }
-
   action ReleaseReservedNamespace
   action AddOwner
   action YankRubygem
+  action UploadInfoFile
+  action UploadNamesFile
+  action UploadVersionsFile
 
   class IndexedFilter < ScopeBooleanFilter; end
   filter IndexedFilter, arguments: { default: { with_versions: true, without_versions: true } }
@@ -44,6 +38,10 @@ class RubygemResource < Avo::BaseResource
     field :linkset, as: :has_one
     field :gem_download, as: :has_one
 
+    field :link_verifications, as: :has_many
+    field :oidc_rubygem_trusted_publishers, as: :has_many
+
+    field :events, as: :has_many
     field :audits, as: :has_many
   end
 end

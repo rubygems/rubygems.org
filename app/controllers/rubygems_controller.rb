@@ -1,10 +1,11 @@
 class RubygemsController < ApplicationController
   include LatestVersion
-  before_action :set_reserved_gem, only: :show, if: :reserved?
-  before_action :find_rubygem, only: :show, unless: :reserved?
-  before_action :latest_version, only: :show, unless: :reserved?
-  before_action :find_versioned_links, only: :show, unless: :reserved?
+  before_action :set_reserved_gem, only: %i[show security_events], if: :reserved?
+  before_action :find_rubygem, only: %i[show security_events], unless: :reserved?
+  before_action :latest_version, only: %i[show], unless: :reserved?
+  before_action :find_versioned_links, only: %i[show], unless: :reserved?
   before_action :set_page, only: :index
+  before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
 
   def index
     respond_to do |format|
@@ -13,7 +14,7 @@ class RubygemsController < ApplicationController
         @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
       end
       format.atom do
-        @versions = Version.published(Gemcutter::DEFAULT_PAGINATION)
+        @versions = Version.published.limit(Gemcutter::DEFAULT_PAGINATION)
         render "versions/feed"
       end
     end
@@ -23,7 +24,7 @@ class RubygemsController < ApplicationController
     if @reserved_gem
       render "reserved"
     else
-      @versions = @rubygem.public_versions(5)
+      @versions = @rubygem.public_versions.limit(5)
       @adoption = @rubygem.ownership_call
       if @versions.to_a.any?
         render "show"
@@ -33,10 +34,16 @@ class RubygemsController < ApplicationController
     end
   end
 
+  def security_events
+    authorize @rubygem, :show_events?
+    @security_events = @rubygem.events.order(id: :desc).page(params[:page]).per(50)
+    render Rubygems::SecurityEventsView.new(rubygem: @rubygem, security_events: @security_events)
+  end
+
   private
 
   def reserved?
-    (Patterns::GEM_NAME_RESERVED_LIST.include? params[:id].downcase)
+    GemNameReservation.reserved?(params[:id])
   end
 
   def set_reserved_gem

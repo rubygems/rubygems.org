@@ -1,5 +1,4 @@
 begin
-  require "rubocop"
   require "rubocop/rake_task"
 rescue LoadError # rubocop:disable Lint/SuppressedException
 else

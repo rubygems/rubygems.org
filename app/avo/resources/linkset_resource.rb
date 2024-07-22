@@ -7,6 +7,6 @@ class LinksetResource < Avo::BaseResource
   field :rubygem, as: :belongs_to
 
   Linkset::LINKS.each do |link|
-    field link, as: :text, format_using: ->(value) { link_to value, value if value.present? }
+    field link, as: :text, format_using: -> { link_to value, value if value.present? }
   end
 end

@@ -10,12 +10,13 @@ class GemDownloadTest < ActiveSupport::TestCase
 
   context ".increment" do
     should "not update if download doesnt exist" do
-      assert_nil GemDownload.increment(1, rubygem_id: 1)
+      assert_equal 0, GemDownload.increment(1, rubygem_id: 1)
     end
 
     should "not update if download count is nil" do
-      create(:gem_download, rubygem_id: 1, version_id: 0, count: nil)
-      download = GemDownload.increment(1, rubygem_id: 1)
+      download = create(:gem_download, rubygem_id: 1, version_id: 0, count: nil)
+      GemDownload.increment(1, rubygem_id: 1)
+      download.reload
 
       assert_nil download.count
     end
@@ -57,7 +58,7 @@ class GemDownloadTest < ActiveSupport::TestCase
   context ".bulk_update" do
     context "with multiple versions of same gem" do
       setup do
-        @versions = Array.new(2) { create(:version) }
+        @versions = create_list(:version, 2)
         @gems     = @versions.map(&:rubygem)
         @versions << create(:version, rubygem: @gems[0])
         @counts   = Array.new(3) { rand(100) }
@@ -116,7 +117,7 @@ class GemDownloadTest < ActiveSupport::TestCase
 
       should "set version_downloads of ES record with most_recent version downloads" do
         2.times.each do |i|
-          most_recent_version = @gems[i].versions.most_recent
+          most_recent_version = @gems[i].most_recent_version
 
           assert_equal most_recent_version.downloads_count, es_version_downloads(@gems[i].id)
         end
@@ -127,7 +128,7 @@ class GemDownloadTest < ActiveSupport::TestCase
       setup do
         @rubygem = create(:rubygem, number: "0.0.1.rc")
         import_and_refresh
-        most_recent_version = @rubygem.versions.most_recent
+        most_recent_version = @rubygem.most_recent_version
         version_downloads = [most_recent_version.full_name, 40]
         GemDownload.bulk_update([version_downloads])
       end
@@ -153,7 +154,7 @@ class GemDownloadTest < ActiveSupport::TestCase
 
   context ".most_downloaded_gem_count" do
     setup do
-      versions = Array.new(20) { create(:version) }
+      versions = create_list(:version, 20) # rubocop:disable FactoryBot/ExcessiveCreateList
       @counts  = Array.new(20) { rand(100) }
       data     = versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
 

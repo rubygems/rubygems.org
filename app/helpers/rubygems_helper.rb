@@ -11,8 +11,10 @@ module RubygemsHelper
     end
   end
 
-  def link_to_page(id, url)
-    link_to(t("rubygems.aside.links.#{id}"), url, rel: "nofollow", class: %w[gem__link t-list__item], id: id) if url.present?
+  def link_to_page(id, url, verified: false)
+    classes = %w[gem__link t-list__item]
+    classes << "gem__link__verified" if verified
+    link_to(t("rubygems.aside.links.#{id}"), url, rel: "nofollow", class: classes, id: id) if url.present?
   end
 
   def link_to_directory
@@ -34,11 +36,11 @@ module RubygemsHelper
   def subscribe_link(rubygem)
     if signed_in?
       if rubygem.subscribers.find_by_id(current_user.id)
-        link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem),
+        link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
           class: [:toggler, "gem__link", "t-list__item"], id: "unsubscribe",
           method: :delete
       else
-        link_to t(".links.subscribe"), rubygem_subscription_path(rubygem),
+        link_to t(".links.subscribe"), rubygem_subscription_path(rubygem.slug),
           class: %w[toggler gem__link t-list__item], id: "subscribe",
           method: :post
       end
@@ -52,7 +54,7 @@ module RubygemsHelper
     return unless signed_in?
     style = "t-item--hidden" unless rubygem.subscribers.find_by_id(current_user.id)
 
-    link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem),
+    link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
       class: [:toggler, "gem__link", "t-list__item", style], id: "unsubscribe",
       method: :delete, remote: true
   end
@@ -67,12 +69,12 @@ module RubygemsHelper
   end
 
   def atom_link(rubygem)
-    link_to t(".links.rss"), rubygem_versions_path(rubygem, format: "atom"),
+    link_to t(".links.rss"), rubygem_versions_path(rubygem.slug, format: "atom"),
       class: "gem__link t-list__item", id: :rss
   end
 
   def reverse_dependencies_link(rubygem)
-    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem)
+    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem.slug)
   end
 
   def badge_link(rubygem)
@@ -88,17 +90,45 @@ module RubygemsHelper
   end
 
   def ownership_link(rubygem)
-    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem), class: "gem__link t-list__item"
+    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
+  end
+
+  def rubygem_trusted_publishers_link(rubygem)
+    link_to t("rubygems.aside.links.trusted_publishers"), rubygem_trusted_publishers_path(rubygem.slug), class: "gem__link t-list__item"
+  end
+
+  def oidc_api_key_role_links(rubygem)
+    roles = current_user.oidc_api_key_roles.for_rubygem(rubygem)
+
+    links = roles.map do |role|
+      link_to(
+        t("rubygems.aside.links.oidc.api_key_role.name", name: role.name),
+        profile_oidc_api_key_role_path(role.token),
+        class: "gem__link t-list__item"
+      )
+    end
+    links << link_to(
+      t("rubygems.aside.links.oidc.api_key_role.new"),
+      new_profile_oidc_api_key_role_path(rubygem: rubygem.name, scopes: ["push_rubygem"]),
+      class: "gem__link t-list__item"
+    )
+
+    safe_join(links)
   end
 
   def resend_owner_confirmation_link(rubygem)
     link_to I18n.t("rubygems.aside.links.resend_ownership_confirmation"),
-            resend_confirmation_rubygem_owners_path(rubygem), class: "gem__link t-list__item"
+            resend_confirmation_rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
   def rubygem_adoptions_link(rubygem)
     link_to "Adoption",
-      rubygem_adoptions_path(rubygem), class: "gem__link t-list__item"
+      rubygem_adoptions_path(rubygem.slug), class: "gem__link t-list__item"
+  end
+
+  def rubygem_security_events_link(rubygem)
+    link_to "Security Events",
+      security_events_rubygem_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)
@@ -110,8 +140,17 @@ module RubygemsHelper
   end
 
   def link_to_user(user)
-    link_to gravatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
+    link_to avatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
       alt: user.display_handle, title: user.display_handle
+  end
+
+  def link_to_pusher(api_key_owner)
+    case api_key_owner
+    when OIDC::TrustedPublisher::GitHubAction
+      image_tag "github_icon.png", width: 48, height: 48, theme: :light, alt: "GitHub", title: api_key_owner.name
+    else
+      raise ArgumentError, "unknown api_key_owner type #{api_key_owner.class}"
+    end
   end
 
   def nice_date_for(time)

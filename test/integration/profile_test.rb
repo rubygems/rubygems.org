@@ -14,6 +14,11 @@ class ProfileTest < SystemTest
     click_button "Sign in"
   end
 
+  def sign_out
+    page.driver.browser.clear_cookies # rack-test specific
+    visit "/"
+  end
+
   test "changing handle" do
     sign_in
 
@@ -22,7 +27,7 @@ class ProfileTest < SystemTest
     assert page.has_content? "nick1"
 
     click_link "Edit Profile"
-    fill_in "Username", with: "nick2"
+    fill_in "user_handle", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -36,7 +41,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Username", with: "nick2"
+    fill_in "user_handle", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -48,7 +53,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Username", with: "nick1" * 10
+    fill_in "user_handle", with: "nick1" * 10
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -73,6 +78,9 @@ class ProfileTest < SystemTest
                                                      "an email within the next few minutes. It contains instructions " \
                                                      "for confirming your new email address."
 
+    assert_event Events::UserEvent::EMAIL_ADDED, { email: "nick2@example.com" },
+      @user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+
     link = last_email_link
 
     assert_not_nil link
@@ -85,28 +93,37 @@ class ProfileTest < SystemTest
 
       assert page.has_selector? "input[value='nick2@example.com']"
     end
+
+    assert_event Events::UserEvent::EMAIL_VERIFIED, { email: "nick2@example.com" },
+      @user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
   end
 
-  test "disabling email on profile" do
+  test "enabling email on profile" do
+    # email is hidden at public profile by default
+    visit profile_path("nick1")
+
+    refute page.has_content?("Email Me")
+
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    check "Hide email in public profile"
+    check "Show email in public profile"
     click_button "Update"
+    sign_out
 
     visit profile_path("nick1")
 
-    refute page.has_content?("Email Me")
+    assert page.has_content?("Email Me")
   end
 
-  test "adding Twitter username" do
+  test "adding X(formerly Twitter) username" do
     sign_in
     visit profile_path("nick1")
 
     click_link "Edit Profile"
-    fill_in "Twitter username", with: "nick1"
+    fill_in "user_twitter_username", with: "nick1"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
@@ -149,8 +166,9 @@ class ProfileTest < SystemTest
 
   test "seeing ownership calls and requests" do
     rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
+    requested_gem = create(:rubygem, number: "2.0.0")
     create(:ownership_call, rubygem: rubygem, user: @user, note: "special note")
-    create(:ownership_request, rubygem: rubygem, user: @user, note: "request note")
+    create(:ownership_request, rubygem: requested_gem, user: @user, note: "request note")
 
     sign_in
     visit profile_path("nick1")
@@ -159,5 +177,32 @@ class ProfileTest < SystemTest
     assert page.has_link?(rubygem.name, href: "/gems/#{rubygem.name}")
     assert page.has_content? "special note"
     assert page.has_content? "request note"
+  end
+
+  test "seeing the gems ordered by downloads" do
+    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 5)
+    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 2)
+    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 7)
+
+    sign_in
+    visit profile_path("nick1")
+
+    downloads = page.all(".gems__gem__downloads__count")
+
+    assert_equal("7 Downloads", downloads[0].text)
+    assert_equal("5 Downloads", downloads[1].text)
+    assert_equal("2 Downloads", downloads[2].text)
+  end
+
+  test "seeing the latest version when there is a newer previous version" do
+    create(:rubygem, owners: [@user], number: "1.0.1")
+    create(:version, rubygem: Rubygem.first, number: "0.0.2")
+
+    sign_in
+    visit profile_path("nick1")
+
+    version = page.find(".gems__gem__version").text
+
+    assert_equal("1.0.1", version)
   end
 end

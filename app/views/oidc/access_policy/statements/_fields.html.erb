@@ -1,0 +1,32 @@
+<div class="form__nested_fields" id="<%= f.field_id :wrapper %>">
+  <div class="form__group">
+    <%= f.label :effect, class: "form__label" %>
+    <p/>
+    <%= f.collection_select :effect, f.object.class::EFFECTS, :to_s, :to_s, selected: :effect, class: "form__input form__select" %>
+  </div>
+  <div class="form__group t-item--hidden">
+    <%= f.label :principal, class: "form__label" %>
+    <%= f.fields_for :principal, f.object.principal do |f| %>
+      <div class="form__nested_fields" id="<%= f.field_id :wrapper %>">
+        <%= f.label :oidc, class: "form__label" %>
+        <%= f.text_field :oidc, class: "form__input", autocomplete: :off, list: f.field_id(:issuers) %>
+        <%= content_tag(:datalist, id: f.field_id(:issuers)) do %>
+          <%= options_from_collection_for_select(OIDC::Provider.limit(50).pluck(:issuer), :to_s, :to_s) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="form__group">
+    <%= f.label :conditions, class: "form__label" %>
+    <%= f.button t("oidc.api_key_roles.form.add_condition"), class: "form__submit form__add_nested_button" %>
+    <%= f.fields_for :conditions, [OIDC::AccessPolicy::Statement::Condition.new], child_index: 'NEW_OBJECT' do |f| %>
+      <template class="form__nested_fields">
+        <%= render(partial: "oidc/access_policy/statement/conditions/fields", locals: { f: }) %>
+      </template>
+    <% end %>
+    <%= f.fields_for :conditions do |f| %>
+      <%= render(partial: "oidc/access_policy/statement/conditions/fields", locals: { f: }) %>
+    <%end%>
+  </div>
+  <%= f.button t("oidc.api_key_roles.form.remove_statement"), class: "form__submit form__remove_nested_button" %>
+</div>

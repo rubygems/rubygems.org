@@ -3,18 +3,13 @@ SimpleCov.start "rails" do
   add_filter "lib/tasks"
   add_filter "lib/rails_development_log_formatter.rb"
 
-  # Will be deleted after all the delayed jobs have run
-  add_filter "app/jobs/*_mailer.rb"
-  add_filter "app/jobs/delete_user.rb"
-
-  # to be deleted after initial deploy of mailer migration to AM/AJ
-  add_filter "app/jobs/email_confirmation_mailer.rb"
-  add_filter "app/jobs/email_reset_mailer.rb"
-  add_filter "app/jobs/ownership_confirmation_mailer.rb"
-
   if ENV["CI"]
     require "simplecov-cobertura"
     formatter SimpleCov::Formatter::CoberturaFormatter
+
+    # Avo tests are super fragile :'(
+    require "minitest/retry"
+    Minitest::Retry.use!
   end
 end
 
@@ -27,28 +22,47 @@ require "capybara/rails"
 require "capybara/minitest"
 require "clearance/test_unit"
 require "webauthn/fake_client"
-require "shoulda"
+require "shoulda/context"
+require "shoulda/matchers"
 require "helpers/admin_helpers"
+require "helpers/api_policy_helpers"
 require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
+require "helpers/policy_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "webmock/minitest"
+require "phlex/testing/rails/view_helper"
+
+# setup license early since some tests are testing Avo outside of requests
+# and license is set with first request
+Avo::App.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new.response).license
 
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    "chromedriver.storage.googleapis.com",
-    "avohq.io"
+    "chromedriver.storage.googleapis.com"
   ]
 )
+WebMock.globally_stub_request(:after_local_stubs) do |request|
+  avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
+  if avo_request_pattern.matches?(request)
+    { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
+      headers: { "Content-Type" => "application/json" } }
+  end
+
+  if WebMock::RequestPattern.new(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s={size}")).matches?(request)
+    { status: 404, body: "", headers: {} }
+  end
+end
 
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
-Capybara.server = :puma
+Capybara.server_port = 31_337
+Capybara.server = :puma, { Silent: true }
 
 GoodJob::Execution.delete_all
 
@@ -114,6 +128,14 @@ class ActiveSupport::TestCase
     end
   end
 
+  def assert_event(tag, expected_additional, actual)
+    refute_nil actual, "Expected event with tag #{tag} but none found"
+    assert_equal tag, actual.tag
+    user_agent_info = actual.additional.user_agent_info
+
+    assert_equal actual.additional_type.new(user_agent_info:, **expected_additional), actual.additional
+  end
+
   def headless_chrome_driver
     Capybara.current_driver = :selenium_chrome_headless
     Capybara.default_max_wait_time = 2
@@ -135,20 +157,65 @@ class ActiveSupport::TestCase
     fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
+
+    @authenticator = create_webauthn_credential_while_signed_in
+
+    find(:css, ".header__popup-link").click
+    click_on "Sign out"
+
+    @authenticator
+  end
+
+  def create_webauthn_credential_while_signed_in
     visit edit_settings_path
 
-    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
+    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
+      resident_key: true,
+      user_verification: true,
+      user_verified: true
+    )
     @authenticator = page.driver.browser.add_virtual_authenticator(options)
-    WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
 
     credential_nickname = "new cred"
     fill_in "Nickname", with: credential_nickname
     click_on "Register device"
 
+    click_on "[ copy ]"
+    @mfa_recovery_codes = find_all(:css, ".recovery-code-list__item").map(&:text)
+    check "ack"
+    click_on "Continue"
+
+    visit edit_settings_path
     find("div", text: credential_nickname, match: :first)
 
-    find(:css, ".header__popup-link").click
-    click_on "Sign out"
+    @user.reload
+    @authenticator
+  end
+
+  def setup_rstuf
+    @original_rstuf_enabled = Rstuf.enabled
+    @original_base_url = Rstuf.base_url
+    Rstuf.base_url = "https://rstuf.example.com"
+    Rstuf.enabled = true
+  end
+
+  def teardown_rstuf
+    Rstuf.enabled = @original_rstuf_enabled
+    Rstuf.base_url = @original_base_url
+  end
+end
+
+class ActionController::TestCase
+  def process(...)
+    Prosopite.scan do
+      super
+    end
+  end
+
+  def verified_sign_in_as(user)
+    sign_in_as(user)
+    session[:verification] = 10.minutes.from_now
+    session[:verified_user] = user.id
   end
 end
 
@@ -159,14 +226,90 @@ end
 
 Gemcutter::Application.load_tasks
 
+# Force loading of ActionDispatch::SystemTesting::* helpers
+_ = ActionDispatch::SystemTestCase
+
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
+  include Capybara::Minitest::Assertions
+  include ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
+  include ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
 
   setup do
     Capybara.current_driver = :rack_test
   end
+end
 
-  teardown { reset_session! }
+class AdminPolicyTestCase < ActiveSupport::TestCase
+  def setup
+    @authorization_client = Admin::AuthorizationClient.new
+  end
+
+  def assert_authorizes(user, record, action)
+    assert @authorization_client.authorize(user, record, action, policy_class: policy_class)
+  rescue Avo::NotAuthorizedError
+    policy_class ||= policy!(user, record).class
+
+    flunk("Expected #{policy_class} to authorize #{action} on #{record} for #{user}")
+  end
+
+  def refute_authorizes(user, record, action)
+    @authorization_client.authorize(user, record, action, policy_class: policy_class)
+    policy_class ||= policy!(user, record).class
+
+    flunk("Expected #{policy_class} not to authorize #{action} on #{record} for #{user}")
+  rescue Avo::NotAuthorizedError
+    # Expected
+  end
+
+  def policy_class
+    nil
+  end
+
+  def policy!(user, record)
+    @authorization_client.policy!(user, record)
+  end
+
+  def policy_scope!(user, record)
+    @authorization_client.apply_policy(user, record, policy_class: policy_class)
+  end
+end
+
+class ApiPolicyTestCase < ActiveSupport::TestCase
+  include ApiPolicyHelpers
+end
+
+class PolicyTestCase < ActiveSupport::TestCase
+  include PolicyHelpers
+end
+
+class ComponentTest < ActiveSupport::TestCase
+  include Phlex::Testing::Rails::ViewHelper
+  include Capybara::Minitest::Assertions
+
+  attr_reader :page
+
+  def render(...)
+    response = super
+    app = ->(_env) { [200, { "Content-Type" => "text/html" }, [response]] }
+    session = Capybara::Session.new(:rack_test, app)
+    session.visit("/")
+    @page = session.document
+  end
+
+  def preview(path = preview_path, scenario: :default, **params)
+    preview = Lookbook::Engine.previews.find_by_path(path)
+
+    refute_nil preview, "Preview not found: #{path}"
+    render_args = preview.render_args(scenario, params:)
+    component = render_args.fetch(:component)
+    yield component if block_given?
+    render component
+  end
+
+  def preview_path
+    self.class.name.sub(/ComponentTest$/, "").underscore
+  end
 end
 
 Shoulda::Matchers.configure do |config|

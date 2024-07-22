@@ -5,7 +5,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
   context "on GET to update" do
-    setup { @user = create(:user) }
+    setup { @user = create(:user, :unconfirmed) }
 
     context "user exists and token has not expired" do
       setup do
@@ -13,9 +13,30 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "should confirm user account" do
-        assert @user.email_confirmed
+        assert @user.reload.email_confirmed
       end
-      should "sign in user" do
+      should "not sign in user" do
+        refute cookies[:remember_token]
+      end
+      should "instruct the browser not to send referrer that contains the token" do
+        assert_equal "no-referrer", response.headers["Referrer-Policy"]
+      end
+    end
+
+    context "successful confirmation while signed in" do
+      setup do
+        @user.confirm_email! # must be confirmed to sign in
+        sign_in_as(@user)
+        @user.update!(unconfirmed_email: "new@example.com")
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should redirect_to("the dashboard") { dashboard_url }
+
+      should "should confirm user account" do
+        assert @user.reload.email_confirmed
+      end
+      should "keep the user signed in" do
         assert cookies[:remember_token]
       end
     end
@@ -65,7 +86,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         get :update, params: { token: @user.confirmation_token }
       end
 
-      should redirect_to("the homepage") { root_url }
+      should redirect_to("the sign in page") { sign_in_url }
 
       should "confirm email for first user" do
         assert_equal @email, @user.reload.email
@@ -76,7 +97,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           get :update, params: { token: @second_user.confirmation_token }
         end
 
-        should "show error to second user on confirmation request and not " do
+        should "show error to second user on confirmation request" do
           assert_equal "Email address has already been taken", flash[:alert]
         end
 
@@ -87,9 +108,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
     end
 
-    context "user has mfa enabled" do
+    context "user has totp enabled" do
       setup do
-        @user.mfa_ui_only!
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         get :update, params: { token: @user.confirmation_token }
       end
 
@@ -97,37 +118,118 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should "display otp form" do
         assert page.has_content?("Multi-factor authentication")
+        assert page.has_content?("OTP or recovery code")
+      end
+    end
+
+    context "user has webauthn enabled but no recovery codes" do
+      setup do
+        create(:webauthn_credential, user: @user)
+        @user.new_mfa_recovery_codes = nil
+        @user.mfa_hashed_recovery_codes = []
+        @user.save!
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should respond_with :success
+
+      should "display webauthn form" do
+        assert page.has_content?("Multi-factor authentication")
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "not display recovery code prompt" do
+        refute page.has_content?("Recovery code")
+      end
+    end
+
+    context "user has webauthn enabled and recovery codes" do
+      setup do
+        create(:webauthn_credential, user: @user)
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should respond_with :success
+
+      should "display webauthn form" do
+        assert page.has_content?("Multi-factor authentication")
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "display recovery code prompt" do
+        assert page.has_content?("Recovery code")
+      end
+    end
+
+    context "when user has webauthn and totp" do
+      setup do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+        create(:webauthn_credential, user: @user)
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should respond_with :success
+
+      should "display webauthn prompt" do
+        assert page.has_button?("Authenticate with security device")
+      end
+
+      should "display otp prompt" do
+        assert page.has_content?("OTP or recovery code")
       end
     end
   end
 
-  context "on POST to mfa_update" do
+  context "on POST to otp_update" do
     context "user has mfa enabled" do
       setup do
-        @user = create(:user)
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        @user = create(:user, :unconfirmed)
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
       end
 
       context "when OTP is correct" do
         setup do
-          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          get :update, params: { token: @user.confirmation_token }
+          post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
-        should redirect_to("the homepage") { root_url }
+        should set_flash[:notice]
+        should redirect_to("the sign in page") { sign_in_url }
 
         should "should confirm user account" do
-          assert @user.email_confirmed
+          assert @user.reload.email_confirmed
         end
+
         should "clear mfa_expires_at" do
           assert_nil @controller.session[:mfa_expires_at]
         end
       end
 
+      context "user is already signed in and OTP is correct" do
+        setup do
+          @user.confirm_email!
+          sign_in_as(@user)
+          @user.update!(unconfirmed_email: "new@example.com")
+
+          assert @user.confirmation_token
+          get :update, params: { token: @user.confirmation_token }
+          post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+        end
+
+        should redirect_to("the dashboard") { dashboard_url }
+
+        should "should confirm user account" do
+          assert @user.reload.email_confirmed
+        end
+        should "keep the user signed in" do
+          assert cookies[:remember_token]
+        end
+      end
+
       context "when OTP is incorrect" do
         setup do
-          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-          post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+          get :update, params: { token: @user.confirmation_token }
+          post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
         end
 
         should respond_with :unauthorized
@@ -139,9 +241,9 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       context "when the OTP session is expired" do
         setup do
-          get :update, params: { token: @user.confirmation_token, user_id: @user.id }
+          get :update, params: { token: @user.confirmation_token }
           travel 16.minutes do
-            post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
         end
 
@@ -165,10 +267,10 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
   context "on POST to webauthn_update" do
     setup do
-      @user = create(:user)
+      @user = create(:user, :unconfirmed)
       @webauthn_credential = create(:webauthn_credential, user: @user)
-      get :update, params: { token: @user.confirmation_token, user_id: @user.id }
-      @origin = "http://localhost:3000"
+      get :update, params: { token: @user.confirmation_token }
+      @origin = WebAuthn.configuration.origin
       @rp_id = URI.parse(@origin).host
       @client = WebAuthn::FakeClient.new(@origin, encoding: false)
     end
@@ -183,7 +285,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         post(
           :webauthn_update,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
@@ -194,9 +295,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         )
       end
 
-      should "redirect to root" do
-        assert_redirected_to root_url
-      end
+      should redirect_to("the sign in page") { sign_in_url }
 
       should "change the user's email" do
         assert @user.reload.email_confirmed
@@ -205,6 +304,49 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       should "clear mfa_expires_at" do
         assert_nil @controller.session[:mfa_expires_at]
       end
+
+      should "set flash notice" do
+        assert_equal "Your email address has been verified.", flash[:notice]
+      end
+    end
+
+    context "while signed in with successful webauthn" do
+      setup do
+        @user.confirm_email!
+        sign_in_as(@user)
+        @user.update!(unconfirmed_email: "new@example.com")
+        @challenge = session[:webauthn_authentication]["challenge"]
+        WebauthnHelpers.create_credential(
+          webauthn_credential: @webauthn_credential,
+          client: @client
+        )
+        post(
+          :webauthn_update,
+          params: {
+            token: @user.confirmation_token,
+            credentials:
+            WebauthnHelpers.get_result(
+              client: @client,
+              challenge: @challenge
+            )
+          }
+        )
+      end
+
+      should redirect_to("the dashboard") { dashboard_url }
+
+      should "change the user's email" do
+        assert @user.reload.email_confirmed
+        assert_equal "new@example.com", @user.email
+      end
+
+      should "clear mfa_expires_at" do
+        assert_nil @controller.session[:mfa_expires_at]
+      end
+
+      should "set flash notice" do
+        assert_equal "Your email address has been verified.", flash[:notice]
+      end
     end
 
     context "when not providing credentials" do
@@ -212,7 +354,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         post(
           :webauthn_update,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token
           }
         )
@@ -235,7 +376,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         post(
           :webauthn_update,
           params: {
-            user_id: @user.id,
             token: @user.confirmation_token,
             credentials:
             WebauthnHelpers.get_result(
@@ -267,7 +407,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
           post(
             :webauthn_update,
             params: {
-              user_id: @user.id,
               token: @user.confirmation_token,
               credentials:
               WebauthnHelpers.get_result(
@@ -338,7 +477,13 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       should "fail friendly" do
         post :create, params: { email_confirmation: "ABC" }
 
-        assert_response 400 # bad status raised by strong params
+        assert_response :bad_request # bad status raised by strong params
+      end
+
+      should "handle non-scalar params" do
+        post :create, params: { email_confirmation: { email: { foo: "bar" } } }
+
+        assert_response :bad_request # bad status raised by strong params
       end
     end
 
@@ -429,13 +574,13 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
 
             should "should confirm user account" do
-              assert @user.email_confirmed
+              assert @user.reload.email_confirmed
             end
           end
 
-          context "on POST to mfa_update" do
+          context "on POST to otp_update" do
             setup do
-              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
             end
 
             should respond_with :unauthorized
@@ -443,7 +588,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
           context "on PATCH to unconfirmed" do
             setup { patch :unconfirmed }
-            should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+            should redirect_to("the edit settings page") { edit_settings_path }
 
             should "set mfa_redirect_uri" do
               assert_equal unconfirmed_email_confirmations_path, session[:mfa_redirect_uri]
@@ -473,7 +618,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
         context "user has mfa set to weak level" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           end
 
           context "on GET to update" do
@@ -482,13 +627,13 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
 
             should "should confirm user account" do
-              assert @user.email_confirmed
+              assert @user.reload.email_confirmed
             end
           end
 
-          context "on POST to mfa_update" do
+          context "on POST to otp_update" do
             setup do
-              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
             end
 
             should respond_with :unauthorized
@@ -526,7 +671,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
         context "user has MFA set to strong level, expect normal behaviour" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           end
 
           context "on GET to update" do
@@ -535,13 +680,13 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
             end
 
             should "should confirm user account" do
-              assert @user.email_confirmed
+              assert @user.reload.email_confirmed
             end
           end
 
-          context "on POST to mfa_update" do
+          context "on POST to otp_update" do
             setup do
-              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
             end
 
             should respond_with :unauthorized

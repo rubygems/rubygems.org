@@ -4,7 +4,7 @@
   <header class="profile__header">
     <div class="profile__header__name-wrap">
       <div id="avatar-frame">
-        <%= gravatar(300, 'profile_gravatar', @user, class: 'profile__header__avatar') %>
+        <%= avatar(300, 'profile_gravatar', @user, class: 'profile__header__avatar') %>
       </div>
 
       <% if @user.full_name.present? %>
@@ -63,7 +63,7 @@
           %>
         </div>
       <% else %>
-        <% unless @user.hide_email %>
+        <% if @user.public_email? %>
           <p id="profile-email">
             <%=
               mail_to(
@@ -80,8 +80,8 @@
         <% if @user.twitter_username.present? %>
           <%=
             image_tag(
-              "/images/twitter_icon.png",
-              alt: "Twitter icon",
+              "/images/x_icon.png",
+              alt: "X icon",
               class: "profile__header__icon"
             )
           %>
@@ -120,13 +120,7 @@
 <div id="profile">
   <div class="profile-list">
     <ul>
-      <%=
-        render(
-          partial: 'rubygem',
-          collection: @rubygems + @extra_rubygems,
-          locals: {graph: false}
-        )
-      %>
+      <%= render partial: 'rubygem', collection: @rubygems %>
     </ul>
   </div>
 </div>

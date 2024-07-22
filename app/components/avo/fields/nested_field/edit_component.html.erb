@@ -1,0 +1,21 @@
+<%= field_wrapper **field_wrapper_args, class: "nested-form-wrapper", data: {} do %>
+  <% form.fields_for field.id, field.value do |form| %>
+    <% field.get_fields.each do |f| %>
+      <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f, form:, view:) %>
+      <% if field.value && field.value.errors.include?(f.id) %>
+        <div class="text-red-600 mt-2 text-sm"><%= field.value.errors.messages_for(f.id).to_sentence %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% if field.value && field.value.errors.include?(:base) %>
+    <div class="text-red-600 mt-2 text-sm">
+    <% field.value.errors.messages_for(:base).each do |attr, messages| %>
+      <ul>
+        <% messages.each do |m|%>
+          <li><%= m %></li>
+        <% end %>
+      <ul>
+    <% end %>
+    </div>
+  <% end %>
+<% end %>

@@ -4,7 +4,7 @@ class SignInTest < SystemTest
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
     @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                  mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
+                  mfa_level: :ui_only, totp_seed: "thisisonetotpseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
   end
 
@@ -15,6 +15,10 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Sign out"
+    assert page.has_content? "We now support security devices!"
+
+    assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password" },
+      User.find_by(email: "nick@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with uppercase email" do
@@ -72,13 +76,14 @@ class SignInTest < SystemTest
     StatsD.expects(:distribution)
 
     assert page.has_content? "Multi-factor authentication"
-
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
+    click_button "Authenticate"
 
     assert page.has_content? "Sign out"
+    assert page.has_content? "We now support security devices!"
+
+    assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password", two_factor_method: "otp", two_factor_label: "OTP" },
+      User.find_by(email: "john@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with current valid otp when mfa enabled but 30 minutes has passed" do
@@ -90,10 +95,8 @@ class SignInTest < SystemTest
     assert page.has_content? "Multi-factor authentication"
 
     travel 30.minutes do
-      within(".mfa-form") do
-        fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
-        click_button "Verify code"
-      end
+      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
+      click_button "Authenticate"
 
       assert page.has_content? "Sign in"
       expected_notice = "Your login page session has expired."
@@ -109,11 +112,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: "11111"
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: "11111"
+    click_button "Authenticate"
 
     assert page.has_content? "Sign in"
   end
@@ -125,11 +125,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: "0123456789ab"
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: "0123456789ab"
+    click_button "Authenticate"
 
     assert page.has_content? "Sign out"
   end
@@ -141,11 +138,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: "ab0123456789"
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: "ab0123456789"
+    click_button "Authenticate"
 
     assert page.has_content? "Sign in"
   end
@@ -167,7 +161,7 @@ class SignInTest < SystemTest
                       "Your account will be required to have MFA enabled in the future."
 
     assert page.has_selector? "#flash_notice", text: expected_notice
-    assert_current_path(new_multifactor_auth_path)
+    assert_current_path(new_totp_path)
     assert page.has_content? "Sign out"
   end
 
@@ -185,11 +179,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: "0123456789ab"
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: "0123456789ab"
+    click_button "Authenticate"
 
     expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
                       "to \"UI and gem signin\" or \"UI and API\". Your account will be required to have MFA enabled " \
@@ -215,10 +206,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: "0123456789ab"
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: "0123456789ab"
+    click_button "Authenticate"
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
@@ -240,10 +229,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: "0123456789ab"
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: "0123456789ab"
+    click_button "Authenticate"
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
@@ -259,11 +246,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-
-    within(".mfa-form") do
-      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
-      click_button "Verify code"
-    end
+    fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
+    click_button "Authenticate"
 
     assert page.has_content? "john@example.com"
     assert page.has_content? "Sign out"
@@ -303,6 +287,18 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Sign in"
     assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+  end
+
+  test "sign in to deleted account" do
+    User.find_by!(email: "nick@example.com").update!(deleted_at: Time.zone.now)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    page.assert_text "Sign in"
+    page.assert_text "Bad email or password."
   end
 
   teardown do

@@ -4,14 +4,13 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   setup do
     @user = create(:user)
     create_webauthn_credential
-    @verification = create(:webauthn_verification, user: @user)
+    @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
     @port = 5678
     @mock_client = MockClientServer.new(@port)
   end
 
   test "when verifying webauthn credential" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -22,34 +21,30 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert redirect_to(successful_verification_webauthn_verification_path)
     assert page.has_content?("Success!")
     assert_link_is_expired
+    assert_successful_verification_not_found
   end
 
-  test "when verifying webauthn and not using safari" do
+  test "when verifying webauthn credential on safari" do
+    assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
-    refute_match "It looks like you are using Safari. Due to limitations within Safari, " \
-                 "you will be unable to authenticate using this browser. Please use a different browser. " \
-                 'Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">' \
-                 "WebAuthn MFA CLI guide</a> for more information on this limitation.",
-      page.html
-  end
+    assert_match "Authenticate with Security Device", page.html
+    assert_match "Authenticating as #{@user.handle}", page.html
 
-  test "when verifying webauthn and using safari" do
-    Capybara.current_driver = :fake_safari
-    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+    click_on "Authenticate"
 
-    assert_match "It looks like you are using Safari. Due to limitations within Safari, " \
-                 "you will be unable to authenticate using this browser. Please use a different browser. " \
-                 'Refer to the <a target="_blank" href="https://guides.rubygems.org/using-webauthn-mfa-in-command-line">' \
-                 "WebAuthn MFA CLI guide</a> for more information on this limitation.",
-      page.html
+    Browser::Chrome.any_instance.stubs(:safari?).returns true
+
+    assert page.has_content?("Success!")
+    assert_current_path(successful_verification_webauthn_verification_path)
+
+    assert_link_is_expired
+    assert_poll_status("success")
+    assert_successful_verification_not_found
   end
 
   test "when client closes connection during verification" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -62,12 +57,12 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
+    assert_failed_verification_not_found
   end
 
   test "when port given does not match the client port" do
     wrong_port = 1111
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: wrong_port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -79,12 +74,12 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
+    assert_failed_verification_not_found
   end
 
   test "when there is a client error" do
     @mock_client.response = @mock_client.bad_request_response
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     assert_match "Authenticate with Security Device", page.html
     assert_match "Authenticating as #{@user.handle}", page.html
@@ -95,11 +90,11 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert page.has_content?("Failed to fetch")
     assert page.has_content?("Please close this browser and try again.")
     assert_link_is_expired
+    assert_failed_verification_not_found
   end
 
   test "when webauthn verification is expired during verification" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
 
     travel 3.minutes do
       assert_match "Authenticate with Security Device", page.html
@@ -110,12 +105,15 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
       assert redirect_to(failed_verification_webauthn_verification_path)
       assert page.has_content?("The token in the link you used has either expired or been used already.")
       assert page.has_content?("Please close this browser and try again.")
+      assert_failed_verification_not_found
     end
   end
 
   def teardown
     @mock_client.kill_server
-    @authenticator.remove!
+    @authenticator&.remove!
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 
   private
@@ -124,6 +122,30 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert page.has_content?("The token in the link you used has either expired or been used already.")
+  end
+
+  def assert_poll_status(status)
+    @api_key ||= create(:api_key, key: "12345", scopes: %i[push_rubygem], owner: @user)
+
+    Capybara.current_driver = :rack_test
+    page.driver.header "AUTHORIZATION", "12345"
+
+    visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
+
+    assert_equal status, JSON.parse(page.text)["status"]
+    fullscreen_headless_chrome_driver
+  end
+
+  def assert_successful_verification_not_found
+    visit successful_verification_webauthn_verification_path
+
+    assert page.has_content?("Page not found.")
+  end
+
+  def assert_failed_verification_not_found
+    visit failed_verification_webauthn_verification_path
+
+    assert page.has_content?("Page not found.")
   end
 
   class MockClientServer

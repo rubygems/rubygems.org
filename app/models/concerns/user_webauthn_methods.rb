@@ -17,8 +17,20 @@ module UserWebauthnMethods
         name: display_id
       },
       exclude: webauthn_credentials.pluck(:external_id),
-      authenticator_selection: { user_verification: "discouraged" }
+      authenticator_selection: { user_verification: "discouraged", resident_key: "preferred" }
     )
+  end
+
+  def webauthn_enabled?
+    webauthn_credentials.present?
+  end
+
+  def webauthn_disabled?
+    webauthn_credentials.none?
+  end
+
+  def webauthn_only_with_recovery?
+    webauthn_enabled? && totp_disabled? && mfa_hashed_recovery_codes.present?
   end
 
   def webauthn_options_for_get
@@ -34,5 +46,11 @@ module UserWebauthnMethods
       path_token_expires_at: 2.minutes.from_now,
       user_id: id
     )
+  end
+
+  private
+
+  def verify_webauthn_otp(otp)
+    webauthn_verification&.verify_otp(otp)
   end
 end

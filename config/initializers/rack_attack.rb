@@ -38,14 +38,15 @@ class Rack::Attack
     { controller: "reverse_dependencies", action: "index" }
   ]
 
-  mfa_create_action        = { controller: "sessions", action: "mfa_create" }
-  mfa_password_edit_action = { controller: "passwords", action: "mfa_edit" }
+  otp_create_action        = { controller: "sessions", action: "otp_create" }
+  mfa_password_edit_action = { controller: "passwords", action: "otp_edit" }
 
   protected_ui_mfa_actions = [
-    mfa_create_action,
+    otp_create_action,
     mfa_password_edit_action,
-    { controller: "multifactor_auths",   action: "create" },
-    { controller: "multifactor_auths",   action: "update" }
+    { controller: "totps", action: "create" },
+    { controller: "totps", action: "destroy" },
+    { controller: "multifactor_auths", action: "update" }
   ]
 
   protected_api_key_actions = [
@@ -90,6 +91,14 @@ class Rack::Attack
     ApiKey.find_by_hashed_key(hashed_key)
   end
 
+  def self.api_key_owner_id(req)
+    api_key = api_hashed_key(req)
+    return unless api_key
+
+    URI::GID.build(app: GlobalID.app,
+                   model_name: api_key.association(:owner).klass.name, model_id: api_key.owner_id).to_s
+  end
+
   safelist("assets path") do |req|
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
@@ -114,10 +123,10 @@ class Rack::Attack
       if protected_route?(protected_ui_mfa_actions, req.path, req.request_method)
         action_dispatch_req = ActionDispatch::Request.new(req.env)
 
-        # mfa_create doesn't have remember_token set. use session[:mfa_user]
-        if protected_route?([mfa_create_action], req.path, req.request_method)
+        # otp_create doesn't have remember_token set. use session[:mfa_user]
+        if protected_route?([otp_create_action], req.path, req.request_method)
           action_dispatch_req.session.fetch("mfa_user", "").presence
-        # password#mfa_edit has unique confirmation token
+        # password#otp_edit has unique confirmation token
         elsif protected_route?([mfa_password_edit_action], req.path, req.request_method)
           req.params.fetch("token", "").presence
         else
@@ -128,7 +137,7 @@ class Rack::Attack
 
     ########################### rate limit per api key ###########################
     throttle("api/key/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      api_hashed_key(req)&.user&.display_id.presence if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
+      api_key_owner_id(req) if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 
@@ -144,7 +153,7 @@ class Rack::Attack
     end
 
     throttle("#{PUSH_THROTTLE_PER_USER_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      api_hashed_key(req)&.user&.display_id.presence if protected_route?(protected_push_action, req.path, req.request_method)
+      api_key_owner_id(req) if protected_route?(protected_push_action, req.path, req.request_method)
     end
   end
 
@@ -200,11 +209,19 @@ class Rack::Attack
     end
   end
 
-  protected_confirmation_action = [{ controller: "email_confirmations", action: "create" }]
+  protected_confirmation_action = [
+    { controller: "email_confirmations", action: "create" },
+    { controller: "email_confirmations", action: "unconfirmed" }
+  ]
 
   throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
-    if protected_route?(protected_confirmation_action, req.path, req.request_method) && req.params['email_confirmation']
-      User.normalize_email(req.params['email_confirmation']['email']).presence
+    if protected_route?(protected_confirmation_action, req.path, req.request_method)
+      if req.params['email_confirmation']
+        User.normalize_email(req.params['email_confirmation']['email']).presence
+      else
+        action_dispatch_req = ActionDispatch::Request.new(req.env)
+        User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
+      end
     end
   end
 
@@ -266,7 +283,7 @@ class Rack::Attack
         }
       }
     }
-    logger.info 'Rack::Attack Throttling', event.to_json
+    Rack::Attack.logger.info 'Rack::Attack Throttling', event.to_json
   end
 
   self.throttled_response_retry_after_header = true

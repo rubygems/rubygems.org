@@ -10,18 +10,29 @@ module Auditable
       end
     end
 
-    def in_audited_transaction(auditable:, admin_github_user:, action:, fields:, arguments:, models:, &) # rubocop:disable Metrics
+    def in_audited_transaction(auditable:, admin_github_user:, action:, fields:, arguments:, models:, &blk) # rubocop:disable Metrics Naming/BlockForwarding
       logger.debug { "Auditing changes to #{auditable}: #{fields}" }
 
       User.transaction do
         changed_records = {}
         value = ActiveSupport::Notifications.subscribed(proc do |_name, _started, _finished, _unique_id, data|
+          # need to rehash because ActiveRecord::Core#hash changes when a record is saved
+          # for the first time
+          changed_records.rehash
+
           records = data[:connection].transaction_manager.current_transaction.records || []
           records.uniq(&:__id__).each do |record|
             merge_changes!((changed_records[record] ||= {}), record.attributes.transform_values { [nil, _1] }) if record.new_record?
             merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
           end
-        end, "sql.active_record", &)
+        end, "sql.active_record", &blk)
+
+        case auditable
+        when :return
+          auditable = value
+        when Proc
+          auditable = auditable.call(changed_records:)
+        end
 
         audited_changed_records = changed_records.to_h do |record, changes|
           key = record.to_global_id.uri
@@ -40,7 +51,7 @@ module Auditable
             records: audited_changed_records,
             fields: fields.except(:comment),
             arguments: arguments,
-            models: models.map { _1.to_global_id.uri }
+            models: models&.map { _1.to_global_id.uri }
           }
         )
 

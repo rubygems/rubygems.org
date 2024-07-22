@@ -33,6 +33,9 @@
         <%= t(".last_access") %>
       </th>
       <th class="owners__cell">
+        <%= t(".expiration") %>
+      </th>
+      <th class="owners__cell">
       </th>
       <th class="owners__cell">
       </th>
@@ -44,7 +47,7 @@
           <%= api_key.name %>
         </td>
         <td class="owners__cell" data-title="Scopes">
-          <% api_key.enabled_scopes.each do |scope| %>
+          <% api_key.scopes.each do |scope| %>
             <ul class="scopes__list"><%= t(".#{scope}") %></ul>
           <% end %>
         </td>
@@ -61,6 +64,9 @@
         <% end %>
         <td class="owners__cell" data-title="Last access">
           <%= api_key.last_accessed_at&.strftime("%Y-%m-%d %H:%M %Z") %>
+        </td>
+        <td class="owners__cell" data-title="Expiration">
+          <%= api_key.expires_at&.strftime("%Y-%m-%d %H:%M %Z") %>
         </td>
         <td class="owners__cell">
           <% unless api_key.soft_deleted? %>
@@ -92,6 +98,8 @@
       </td>
       <td class="owners__cell">
       </td>
+      <td class="owners__cell">
+      </td>
       <% if current_user.mfa_enabled? %>
         <td class="owners__cell">
         </td>
@@ -107,4 +115,7 @@
   </table>
 
   <p><%= button_to t(".new_key"), new_profile_api_key_path, method: "get", class: "form__submit" %></p>
+  <% if current_user.oidc_api_key_roles.any? %>
+    <h2 class="t-display"><%= link_to t("oidc.api_key_roles.index.api_key_roles"), profile_oidc_api_key_roles_path, class: "t-link t-underline" %> →</h2>
+  <% end %>
 </div>

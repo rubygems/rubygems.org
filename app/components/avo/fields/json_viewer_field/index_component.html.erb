@@ -1,0 +1,5 @@
+<%= index_field_wrapper **field_wrapper_args do %>
+  <% if @field.value.present? %>
+    <pre><%= content_tag :code, YAML.dump(JSON.load(@field.value).compact).sub(/\A---(\R| {})/, "") %></pre>
+  <% end %>
+<% end %>

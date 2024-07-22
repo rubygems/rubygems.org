@@ -4,10 +4,15 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   include StatsD::Instrument::Assertions
 
   setup do
-    create(:user, mfa_level: :disabled) # non-mfa user
-    2.times { create(:user, mfa_level: :ui_and_api) } # otp-only users
-    3.times { create(:webauthn_credential, user: create(:user, mfa_level: :disabled)) } # webauthn-only users
-    4.times { create(:webauthn_credential, user: create(:user, mfa_level: :ui_and_api)) } # webauthn-and-otp users
+    create(:user) # non-mfa user
+    2.times { create(:user).enable_totp!(ROTP::Base32.random_base32, :ui_and_api) } # otp-only users
+    3.times { create(:webauthn_credential, user: create(:user)) } # webauthn-only users
+    # webauthn-and-otp users
+    4.times do
+      user = create(:user)
+      user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:webauthn_credential, user: user)
+    end
   end
 
   test "it sends the count of non-MFA users to statsd" do
@@ -17,7 +22,7 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   end
 
   test "it sends the count of OTP-only users to statsd" do
-    assert_statsd_gauge("mfa_usage_stats.otp_only_users", 2) do
+    assert_statsd_gauge("mfa_usage_stats.totp_only_users", 2) do
       MfaUsageStatsJob.perform_now
     end
   end
@@ -29,7 +34,7 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   end
 
   test "it sends the count of WebAuthn-and-OTP users to statsd" do
-    assert_statsd_gauge("mfa_usage_stats.webauthn_and_otp_users", 4) do
+    assert_statsd_gauge("mfa_usage_stats.webauthn_and_totp_users", 4) do
       MfaUsageStatsJob.perform_now
     end
   end

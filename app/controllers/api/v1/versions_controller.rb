@@ -7,10 +7,11 @@ class Api::V1::VersionsController < Api::BaseController
     cache_expiry_headers
     set_surrogate_key "gem/#{@rubygem.name}"
 
-    if @rubygem.public_versions.count.nonzero?
+    versions = @rubygem.public_versions.includes(:gem_download)
+    if versions.present?
       respond_to do |format|
-        format.json { render json: @rubygem.public_versions }
-        format.yaml { render yaml: @rubygem.public_versions }
+        format.json { render json: versions }
+        format.yaml { render yaml: versions }
       end
     else
       render plain: t(:this_rubygem_could_not_be_found), status: :not_found
@@ -24,7 +25,7 @@ class Api::V1::VersionsController < Api::BaseController
     set_surrogate_key "gem/#{params[:id]}"
 
     version = nil
-    version = rubygem.versions.most_recent if rubygem&.public_versions&.indexed&.count&.nonzero?
+    version = rubygem.most_recent_version if rubygem&.public_versions.present?
     number = version.number if version
     render json: { "version" => number || "unknown" }, callback: params["callback"]
   end

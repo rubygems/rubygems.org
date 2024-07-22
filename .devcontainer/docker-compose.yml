@@ -1,0 +1,12 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ../..:/workspaces:cached
+    environment:
+      - ELASTICSEARCH_URL=http://search:9200
+      - DATABASE_URL=postgres://postgres@db:5432

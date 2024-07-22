@@ -2,40 +2,24 @@ require "test_helper"
 
 class OwnershipPolicyTest < ActiveSupport::TestCase
   setup do
-    @ownership = FactoryBot.create(:ownership)
-    @admin = FactoryBot.create(:admin_github_user, :is_admin)
-    @non_admin = FactoryBot.create(:admin_github_user)
+    @authorizer = FactoryBot.create(:user)
+    @rubygem = FactoryBot.create(:rubygem, owners: [@authorizer])
+    @confirmed_ownership = @rubygem.ownerships.first
+    @unconfirmed_ownership = FactoryBot.build(:ownership, :unconfirmed, rubygem: @rubygem, authorizer: @authorizer)
+
+    @invited = @unconfirmed_ownership.user
+    @user = FactoryBot.create(:user)
   end
 
-  def test_scope
-    assert_equal [@ownership], Pundit.policy_scope!(
-      @admin,
-      Ownership
-    ).to_a
+  def test_create
+    assert_predicate Pundit.policy!(@authorizer, @unconfirmed_ownership), :create?
+    refute_predicate Pundit.policy!(@invited, @unconfirmed_ownership), :create?
+    refute_predicate Pundit.policy!(@user, @unconfirmed_ownership), :create?
   end
 
-  def test_avo_index
-    refute_predicate Pundit.policy!(@admin, Ownership), :avo_index?
-    refute_predicate Pundit.policy!(@non_admin, Ownership), :avo_index?
-  end
-
-  def test_avo_show
-    assert_predicate Pundit.policy!(@admin, @ownership), :avo_show?
-    refute_predicate Pundit.policy!(@non_admin, @ownership), :avo_show?
-  end
-
-  def test_avo_create
-    refute_predicate Pundit.policy!(@admin, Ownership), :avo_create?
-    refute_predicate Pundit.policy!(@non_admin, Ownership), :avo_create?
-  end
-
-  def test_avo_update
-    refute_predicate Pundit.policy!(@admin, @ownership), :avo_update?
-    refute_predicate Pundit.policy!(@non_admin, @ownership), :avo_update?
-  end
-
-  def test_avo_destroy
-    refute_predicate Pundit.policy!(@admin, @ownership), :avo_destroy?
-    refute_predicate Pundit.policy!(@non_admin, @ownership), :avo_destroy?
+  def test_destroy
+    assert_predicate Pundit.policy!(@authorizer, @confirmed_ownership), :destroy?
+    refute_predicate Pundit.policy!(@owner, @confirmed_ownership), :destroy?
+    refute_predicate Pundit.policy!(@user, @confirmed_ownership), :destroy?
   end
 end

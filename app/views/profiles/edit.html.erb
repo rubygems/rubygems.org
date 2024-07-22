@@ -6,8 +6,12 @@
   <div class="avatar_field">
     <%= form.label :avatar, :class => 'form__label'  %>
     <div class="l-overflow">
-      <%= gravatar(160) %>
-      <%= link_to t('.change_avatar'), 'https://www.gravatar.com', :class => 't-text t-link' %>
+      <%= avatar(160) %>
+      <% if @user.public_email? %>
+        <%= link_to t('.change_avatar'), 'https://www.gravatar.com', :class => 't-text t-link' %>
+      <% else %>
+        <%= content_tag 'i', t('.disabled_avatar_html'), :class => 't-text' %>
+      <% end %>
     </div>
   </div>
 
@@ -19,10 +23,10 @@
   <div class="text_field">
     <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
       <%=
-        image_tag("/images/twitter_icon.png", alt: 'Twitter icon', class: 'form__label__icon')
+        image_tag("/images/x_icon.png", alt: 'X icon', class: 'form__label__icon')
       %>
 
-      <span class='form__label__text'>Twitter username</span>
+      <span class='form__label__text'><%= t('.twitter_username') %></span>
     <% end %>
 
     <p class='form__field__instructions'>
@@ -62,13 +66,13 @@
     <p class='form__field__instructions'>
       <%= t('.enter_password') %>
     </p>
-    <%= form.password_field :password, :class => 'form__input' %>
+    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input' %>
   </div>
 
 
   <div class="profile-checkbox form__checkbox">
-    <%= form.check_box :hide_email, :class => 'form__checkbox__input' %>
-    <%= form.label :hide_email, t('.hide_email'), :class => 'form__checkbox__label' %>
+    <%= form.check_box :public_email, :class => 'form__checkbox__input' %>
+    <%= form.label :public_email, t('profiles.public_email'), :class => 'form__checkbox__label' %>
   </div>
 
   <div class="submit_field">

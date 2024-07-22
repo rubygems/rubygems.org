@@ -1,13 +1,14 @@
 class OwnershipPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
+  class Scope < ApplicationPolicy::Scope
   end
 
-  def avo_show?
-    rubygems_org_admin?
+  delegate :rubygem, to: :record
+
+  def create?
+    policy!(user, rubygem).add_owner?
   end
 
-  has_association :api_key_rubygem_scopes
+  def destroy?
+    policy!(user, rubygem).remove_owner?
+  end
 end

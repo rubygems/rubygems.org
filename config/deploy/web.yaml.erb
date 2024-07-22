@@ -8,8 +8,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 100%
-      maxUnavailable: 0%
+      maxSurge: 25%
+      maxUnavailable: 25%
   selector:
     matchLabels:
       name: web
@@ -61,6 +61,10 @@ spec:
             value: "<%= environment %>"
           - name: ENV
             value: "<%= environment %>"
+          - name: WEB_CONCURRENCY
+            value: "<%= environment == 'production' ? 8 : 2 %>"
+          - name: RAILS_MAX_THREADS
+            value: "5"
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
@@ -131,6 +135,8 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: elasticsearch_url
+          - name: SEARCH_NUM_REPLICAS
+            value: "<%= environment == 'production' ? 2 : 1 %>"
           - name: MEMCACHED_ENDPOINT
             valueFrom:
               secretKeyRef:
@@ -191,6 +197,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: launch_darkly_sdk_key
+          - name: RUBYGEMS_PROXY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: rubygems_proxy_token
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
@@ -209,12 +220,8 @@ spec:
             exec:
               command: ["sleep", "25"]
       - name: nginx
-        image: nginx:1.19.7
+        image: nginx:1.25.2
         imagePullPolicy: IfNotPresent
-        lifecycle:
-          preStop:
-            exec:
-              command: ["sleep", "20"]
         ports:
         - containerPort: 8080
           name: http-nginx
@@ -269,7 +276,7 @@ spec:
                 # Introduce a delay to the shutdown sequence to wait for the
                 # pod eviction event to propagate. Then, gracefully shutdown
                 # nginx.
-                "sleep 26 && /usr/sbin/nginx -s quit",
+                "sleep 20 && /usr/sbin/nginx -s quit",
               ]
       volumes:
         - name: nginxconfig

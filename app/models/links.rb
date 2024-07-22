@@ -1,4 +1,6 @@
 class Links
+  include Enumerable
+
   # Links available for indexed gems
   LINKS = {
     "home"      => "homepage_uri",
@@ -17,12 +19,13 @@ class Links
     "docs"      => "documentation_uri"
   }.freeze
 
-  attr_accessor :rubygem, :version, :linkset
+  attr_accessor :rubygem, :version, :linkset, :link_verifications
 
   def initialize(rubygem, version)
     self.rubygem = rubygem
     self.version = version
     self.linkset = rubygem.linkset
+    self.link_verifications = rubygem.link_verifications.verified.for_uri(version ? each.map { |_, url| url } : []).strict_loading
   end
 
   def links
@@ -31,12 +34,23 @@ class Links
 
   delegate :keys, to: :links
 
+  def unique_links
+    links.uniq do |_short, long|
+      send(long)
+    end
+  end
+
   def each
     return enum_for(:each) unless block_given?
-    links.each do |short, long|
+    unique_links.each do |short, long|
       value = send(long)
       yield short, value if value
     end
+  end
+
+  def verified?(uri)
+    # intentionally using #any? here because we want to ensure the query is materialized only once to avoid an N+1
+    link_verifications.any? { |lv| lv.uri == uri }
   end
 
   # documentation uri:
@@ -45,12 +59,12 @@ class Links
   # else, generate one from gem name and version number
   def documentation_uri
     return version.metadata["documentation_uri"].presence if version.metadata_uri_set?
-    linkset&.docs&.presence || "https://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
+    linkset&.docs.presence || "https://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
   end
 
   # technically this is a path
   def download_uri
-    "/downloads/#{version.full_name}.gem" if version.indexed
+    "/downloads/#{version.gem_file_name}" if version.indexed
   end
 
   # excluded from metadata_uri_set? check

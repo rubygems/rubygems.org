@@ -110,11 +110,11 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create links to owners gem overviews" do
-      users = Array.new(2) { create(:user) }
+      users = create_list(:user, 2)
       @rubygem = create(:rubygem, owners: users)
 
       expected_links = users.sort_by(&:id).map do |u|
-        link_to gravatar(48, "gravatar-#{u.id}", u),
+        link_to avatar(48, "gravatar-#{u.id}", u),
           profile_path(u.display_id),
           alt: u.display_handle,
           title: u.display_handle
@@ -125,12 +125,13 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create links to gem owners without mfa" do
-      with_mfa = create(:user, mfa_level: "ui_and_api")
-      without_mfa = create_list(:user, 2, mfa_level: "disabled")
+      with_mfa = create(:user)
+      with_mfa.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      without_mfa = create_list(:user, 2)
       rubygem = create(:rubygem, owners: [*without_mfa, with_mfa])
 
       expected_links = without_mfa.sort_by(&:id).map do |u|
-        link_to gravatar(48, "gravatar-#{u.id}", u),
+        link_to avatar(48, "gravatar-#{u.id}", u),
           profile_path(u.display_id),
           alt: u.display_handle,
           title: u.display_handle
@@ -203,6 +204,21 @@ class RubygemsHelperTest < ActionView::TestCase
       should "return parsed uri" do
         assert_equal URI(@github_link), link_to_github(@rubygem)
       end
+    end
+  end
+
+  context "oidc_api_key_role_links" do
+    should "return joined links" do
+      user = create(:user)
+      rubygem = create(:rubygem, name: "my_gem", owners: [user])
+      role = create(:oidc_api_key_role, name: "Push my_gem", api_key_permissions: { gems: ["my_gem"], scopes: ["push_rubygem"] }, user: user)
+      stubs(:current_user).returns(user)
+
+      role_link = link_to "OIDC: #{role.name}", profile_oidc_api_key_role_path(role.token), class: "gem__link t-list__item"
+      create_link = link_to "OIDC: Create", new_profile_oidc_api_key_role_path(rubygem: rubygem.name, scopes: ["push_rubygem"]),
+        class: "gem__link t-list__item"
+
+      assert_equal safe_join([role_link, create_link]), oidc_api_key_role_links(rubygem)
     end
   end
 

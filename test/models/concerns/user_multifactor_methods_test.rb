@@ -1,92 +1,197 @@
 require "test_helper"
 
 class UserMultifactorMethodsTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   setup do
     @user = create(:user)
   end
 
+  context "validation" do
+    context "#mfa_level_for_enabled_devices" do
+      context "when mfa_level is disabled" do
+        should "be valid if there no mfa devices" do
+          assert_predicate @user, :valid?
+          assert_predicate @user, :no_mfa_devices?
+        end
+
+        should "be invalid if totp is enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.mfa_level = :disabled
+
+          refute_predicate @user, :valid?
+        end
+
+        should "be invalid if webauthn is enabled" do
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :disabled
+
+          refute_predicate @user, :valid?
+        end
+
+        should "be invalid if both totp and webauthn are enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :disabled
+
+          refute_predicate @user, :valid?
+        end
+      end
+
+      context "when mfa_level is ui_and_gem_signin" do
+        should "be invalid if there no mfa devices" do
+          @user.mfa_level = :ui_and_gem_signin
+
+          assert_predicate @user, :no_mfa_devices?
+          refute_predicate @user, :valid?
+        end
+
+        should "be valid if totp is enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.mfa_level = :ui_and_gem_signin
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if webauthn is enabled" do
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_gem_signin
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if both totp and webauthn are enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_gem_signin
+
+          assert_predicate @user, :valid?
+        end
+      end
+
+      context "when mfa_level is ui_and_api" do
+        should "be invalid if there no mfa devices" do
+          @user.mfa_level = :ui_and_api
+
+          assert_predicate @user, :no_mfa_devices?
+          refute_predicate @user, :valid?
+        end
+
+        should "be valid if totp is enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.mfa_level = :ui_and_api
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if webauthn is enabled" do
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_api
+
+          assert_predicate @user, :valid?
+        end
+
+        should "be valid if both totp and webauthn are enabled" do
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+          create(:webauthn_credential, user: @user)
+          @user.mfa_level = :ui_and_api
+
+          assert_predicate @user, :valid?
+        end
+      end
+    end
+  end
+
   context "#mfa_enabled" do
-    should "return true if multifactor auth is not disabled" do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    should "return true if multifactor auth is not disabled using totp" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       assert_predicate @user, :mfa_enabled?
     end
 
-    should "return true if multifactor auth is disabled" do
-      @user.disable_mfa!
+    should "return false if multifactor auth is disabled using totp" do
+      @user.disable_totp!
 
       refute_predicate @user, :mfa_enabled?
     end
-  end
 
-  context "#disable_mfa!" do
-    setup do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-      @user.disable_mfa!
-    end
-
-    should "disable mfa" do
-      assert_predicate @user, :mfa_disabled?
-      assert_empty @user.mfa_seed
-      assert_empty @user.mfa_recovery_codes
-    end
-  end
-
-  context "#verify_and_enable_mfa!" do
-    setup do
-      @seed = ROTP::Base32.random_base32
-      @expiry = 30.minutes.from_now
-    end
-
-    should "enable mfa" do
-      @user.verify_and_enable_mfa!(
-        @seed,
-        :ui_and_api,
-        ROTP::TOTP.new(@seed).now,
-        @expiry
-      )
+    should "return true if multifactor auth is not disabled using WebAuthn" do
+      create(:webauthn_credential, user: @user)
 
       assert_predicate @user, :mfa_enabled?
     end
 
-    should "add error if qr code expired" do
-      @user.verify_and_enable_mfa!(
-        @seed,
-        :ui_and_api,
-        ROTP::TOTP.new(@seed).now,
-        5.minutes.ago
-      )
+    should "return true if multifactor auth is disabled using WebAuthn" do
+      create(:webauthn_credential, user: @user)
+      @user.webauthn_credentials.first.destroy
 
       refute_predicate @user, :mfa_enabled?
-      expected_error = "The QR-code and key is expired. Please try registering a new device again."
-
-      assert_contains @user.errors[:base], expected_error
     end
 
-    should "add error if otp code is incorrect" do
-      @user.verify_and_enable_mfa!(
-        @seed,
-        :ui_and_api,
-        ROTP::TOTP.new(ROTP::Base32.random_base32).now,
-        @expiry
-      )
+    should "send totp enabled email" do
+      assert_emails 1 do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+      end
 
-      refute_predicate @user, :mfa_enabled?
-      assert_contains @user.errors[:base], "Your OTP code is incorrect."
+      assert_equal "Authentication app enabled on RubyGems.org", last_email.subject
+      assert_equal [@user.email], last_email.to
     end
   end
 
-  context "#enable_mfa!" do
-    setup do
-      @seed = ROTP::Base32.random_base32
-      @level = :ui_and_api
-      @user.enable_mfa!(@seed, @level)
+  context "#mfa_device_count_one?" do
+    should "return true if user has one webauthn credential and no totp" do
+      create(:webauthn_credential, user: @user)
+
+      assert_predicate @user, :mfa_device_count_one?
     end
 
-    should "enable mfa" do
-      assert_equal @seed, @user.mfa_seed
-      assert_predicate @user, :mfa_ui_and_api?
-      assert_equal 10, @user.mfa_recovery_codes.length
+    should "return true if user has totp enabled and no webauthn credential" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+
+      assert_predicate @user, :mfa_device_count_one?
+    end
+
+    should "return false if user has totp enabled and one webauthn credential" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :mfa_device_count_one?
+    end
+
+    should "return false if user has no totp and no webauthn credential" do
+      refute_predicate @user, :mfa_device_count_one?
+    end
+
+    should "return false if user has two webauthn credentials" do
+      create(:webauthn_credential, user: @user)
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :mfa_device_count_one?
+    end
+  end
+
+  context "#no_mfa_devices?" do
+    should "return true if user has no totp and no webauthn credential" do
+      assert_predicate @user, :no_mfa_devices?
+    end
+
+    should "return false if user has one webauthn credential" do
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :no_mfa_devices?
+    end
+
+    should "return false if user has totp enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+
+      refute_predicate @user, :no_mfa_devices?
+    end
+
+    should "return false if user has totp and webauthn enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :no_mfa_devices?
     end
   end
 
@@ -97,19 +202,19 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with totp" do
       should "return true when correct and if mfa is ui_and_api" do
-        @user.enable_mfa!(@seed, :ui_and_api)
+        @user.enable_totp!(@seed, :ui_and_api)
 
         assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
       end
 
       should "return true when correct and if mfa is ui_and_gem_signin" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
 
         assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
       end
 
       should "return false when incorrect" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
 
         refute @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
@@ -117,14 +222,14 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     context "with webauthn otp" do
       should "return true when correct and if mfa is ui_and_api" do
-        @user.enable_mfa!(@seed, :ui_and_api)
+        @user.enable_totp!(@seed, :ui_and_api)
         webauthn_verification = create(:webauthn_verification, user: @user)
 
         assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
       end
 
       should "return true when correct and if mfa is ui_and_gem_signin" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
         webauthn_verification = create(:webauthn_verification, user: @user)
 
         assert @user.mfa_gem_signin_authorized?(webauthn_verification.otp)
@@ -137,7 +242,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       end
 
       should "return false when incorrect" do
-        @user.enable_mfa!(@seed, :ui_and_gem_signin)
+        @user.enable_totp!(@seed, :ui_and_gem_signin)
         create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx7U1i")
         incorrect_otp = "Yxf57d1wEUSWyXrrLMRv"
 
@@ -150,7 +255,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
 
     should "return true if mfa is ui_only" do
-      @user.enable_mfa!(@seed, :ui_only)
+      @user.enable_totp!(@seed, :ui_only)
 
       assert @user.mfa_gem_signin_authorized?(ROTP::TOTP.new(@seed).now)
     end
@@ -173,7 +278,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "return false if instance owns a gem that exceeds recommended threshold and has mfa enabled" do
       create(:ownership, user: @user, rubygem: @popular_rubygem)
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       refute_predicate @user, :mfa_recommended_not_yet_enabled?
     end
@@ -192,7 +297,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
         rubygem_id: @popular_rubygem.id
       )
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     end
 
     should "return true if instance owns a gem that exceeds recommended threshold and has mfa ui_only" do
@@ -203,7 +308,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "return false if instance owns a gem that exceeds recommended threshold and has mfa disabled" do
       create(:ownership, user: @user, rubygem: @popular_rubygem)
-      @user.disable_mfa!
+      @user.disable_totp!
 
       refute_predicate @user, :mfa_recommended_weak_level_enabled?
     end
@@ -232,7 +337,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "return false if instance owns a gem that exceeds required threshold and has mfa enabled" do
       create(:ownership, user: @user, rubygem: @popular_rubygem)
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
       refute_predicate @user, :mfa_required_not_yet_enabled?
     end
@@ -251,7 +356,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         Rubygem::MFA_REQUIRED_THRESHOLD + 1,
         rubygem_id: @popular_rubygem.id
       )
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     end
 
     should "return true if instance owns a gem that exceeds required threshold and has mfa ui_only" do
@@ -262,7 +367,7 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
     should "return false if instance owns a gem that exceeds required threshold and has mfa disabled" do
       create(:ownership, user: @user, rubygem: @popular_rubygem)
-      @user.disable_mfa!
+      @user.disable_totp!
 
       refute_predicate @user, :mfa_required_weak_level_enabled?
     end
@@ -274,36 +379,36 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
   end
 
-  context "#ui_otp_verified?" do
+  context "#ui_mfa_verified?" do
     setup do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.ui_mfa_verified?(ROTP::TOTP.new(@user.totp_seed).now)
       end
 
       should "return true when correct in last interval" do
-        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        last_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current - 30)
 
-        assert @user.ui_otp_verified?(last_otp)
+        assert @user.ui_mfa_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
-        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        next_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current + 30)
 
-        assert @user.ui_otp_verified?(next_otp)
+        assert @user.ui_mfa_verified?(next_otp)
       end
 
       should "return false when incorrect" do
-        refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+        refute @user.ui_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
 
       should "return false if the mfa_seed is blank" do
-        @user.update!(mfa_seed: nil)
+        @user.disable_totp!
 
-        refute @user.ui_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+        refute @user.ui_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
     end
 
@@ -311,42 +416,42 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       should "return false" do
         webauthn_verification = create(:webauthn_verification, user: @user)
 
-        refute @user.ui_otp_verified?(webauthn_verification.otp)
+        refute @user.ui_mfa_verified?(webauthn_verification.otp)
       end
     end
 
     should "return true if recovery code is correct" do
-      recovery_code = @user.mfa_recovery_codes.first
+      recovery_code = @user.new_mfa_recovery_codes.first
 
-      assert @user.ui_otp_verified?(recovery_code)
-      refute_includes @user.mfa_recovery_codes, recovery_code
+      assert @user.ui_mfa_verified?(recovery_code)
+      refute(@user.mfa_hashed_recovery_codes.any? { |code| BCrypt::Password.new(code) == recovery_code })
     end
   end
 
-  context "#api_otp_verified?" do
+  context "#api_mfa_verified?" do
     setup do
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     context "with totp" do
       should "return true when correct" do
-        assert @user.api_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        assert @user.api_mfa_verified?(ROTP::TOTP.new(@user.totp_seed).now)
       end
 
       should "return true when correct in last interval" do
-        last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+        last_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current - 30)
 
-        assert @user.api_otp_verified?(last_otp)
+        assert @user.api_mfa_verified?(last_otp)
       end
 
       should "return true when correct in next interval" do
-        next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+        next_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current + 30)
 
-        assert @user.api_otp_verified?(next_otp)
+        assert @user.api_mfa_verified?(next_otp)
       end
 
       should "return false if otp is incorrect" do
-        refute @user.api_otp_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+        refute @user.api_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
     end
 
@@ -354,20 +459,20 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
       should "return true when correct" do
         webauthn_verification = create(:webauthn_verification, user: @user)
 
-        assert @user.api_otp_verified?(webauthn_verification.otp)
+        assert @user.api_mfa_verified?(webauthn_verification.otp)
       end
 
       should "return false when incorrect" do
         create(:webauthn_verification, user: @user, otp: "jiEm2mm2sJtRqAVx")
         incorrect_otp = "Yxf57d1wEUSWyXrr"
 
-        refute @user.api_otp_verified?(incorrect_otp)
+        refute @user.api_mfa_verified?(incorrect_otp)
       end
 
       should "return false when expired" do
         webauthn_verification = create(:webauthn_verification, user: @user, otp_expires_at: 2.minutes.ago)
 
-        refute @user.api_otp_verified?(webauthn_verification.otp)
+        refute @user.api_mfa_verified?(webauthn_verification.otp)
       end
 
       context "when webauthn otp has not been generated" do
@@ -376,26 +481,26 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
         end
 
         should "return false for an otp" do
-          refute @user.api_otp_verified?("Yxf57d1wEUSWyXrr")
+          refute @user.api_mfa_verified?("Yxf57d1wEUSWyXrr")
         end
 
         should "return false if otp is nil" do
-          refute @user.api_otp_verified?(nil)
+          refute @user.api_mfa_verified?(nil)
         end
       end
     end
 
     should "return true if recovery code is correct" do
-      recovery_code = @user.mfa_recovery_codes.first
+      recovery_code = @user.new_mfa_recovery_codes.first
 
-      assert @user.api_otp_verified?(recovery_code)
-      refute_includes @user.mfa_recovery_codes, recovery_code
+      assert @user.api_mfa_verified?(recovery_code)
+      refute(@user.mfa_hashed_recovery_codes.any? { |code| BCrypt::Password.new(code) == recovery_code })
     end
   end
 
   context ".without_mfa" do
     setup do
-      create(:user, mfa_level: :ui_and_api)
+      create(:user).enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     end
 
     should "return instances without mfa" do

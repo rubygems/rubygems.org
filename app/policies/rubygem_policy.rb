@@ -1,36 +1,60 @@
 class RubygemPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      if rubygems_org_admin?
-        scope.all
-      else
-        scope.with_versions
-      end
-    end
+  class Scope < ApplicationPolicy::Scope
   end
 
-  def avo_index?
-    rubygems_org_admin?
+  ABANDONED_RELEASE_AGE = 1.year
+  ABANDONED_DOWNLOADS_MAX = 10_000
+
+  alias rubygem record
+
+  def show?
+    true
   end
 
-  def avo_show?
-    rubygems_org_admin?
+  def create?
+    user.present?
   end
 
-  def act_on?
-    rubygems_org_admin?
+  def update?
+    false
   end
 
-  has_association :versions
-  has_association :latest_version
-  has_association :ownerships
-  has_association :ownerships_including_unconfirmed
-  has_association :ownership_calls
-  has_association :ownership_requests
-  has_association :subscriptions
-  has_association :subscribers
-  has_association :web_hooks
-  has_association :linkset
-  has_association :gem_download
-  has_association :audits
+  def destroy?
+    false
+  end
+
+  def show_adoption?
+    rubygem_owned_by?(user) || request_ownership?
+  end
+
+  def show_events?
+    rubygem_owned_by?(user)
+  end
+
+  def request_ownership?
+    return allow if rubygem.ownership_calls.any?
+    return false if rubygem.downloads >= ABANDONED_DOWNLOADS_MAX
+    return false if rubygem.latest_version.nil? || rubygem.latest_version.created_at.after?(ABANDONED_RELEASE_AGE.ago)
+    allow
+  end
+
+  def close_ownership_requests?
+    rubygem_owned_by?(user)
+  end
+
+  def configure_trusted_publishers?
+    rubygem_owned_by?(user)
+  end
+
+  def show_unconfirmed_ownerships?
+    rubygem_owned_by?(user)
+  end
+
+  def add_owner?
+    rubygem_owned_by?(user)
+  end
+
+  def remove_owner?
+    rubygem_owned_by?(user)
+  end
 end

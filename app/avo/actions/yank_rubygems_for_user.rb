@@ -14,7 +14,9 @@ class YankRubygemsForUser < BaseAction
 
   class ActionHandler < ActionHandler
     def handle_model(user)
-      user.rubygems.find_each(&:yank_versions!)
+      user.rubygems.find_each do |rubygem|
+        rubygem.yank_versions!(force: true)
+      end
     end
   end
 end

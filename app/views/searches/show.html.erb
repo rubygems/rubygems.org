@@ -7,10 +7,10 @@
 <% end %>
 <%= link_to t("advanced_search"), advanced_search_path, class: "t-link--gray t-link--has-arrow" %>
 <% if @yanked_filter %>
-  <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
+  <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
 
   <% if @yanked_gem.present? %>
-    <%= link_to rubygem_path(@yanked_gem.name), :class => 'gems__gem' do %>
+    <%= link_to rubygem_path(@yanked_gem.slug), :class => 'gems__gem' do %>
       <span class="gems__gem__info">
         <h2 class="gems__gem__name">
           <%= @yanked_gem.name %>
@@ -22,10 +22,10 @@
   <% end %>
 <% else %>
   <% if @gems %>
-    <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
+    <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
 
     <header class="gems__header push--s">
-      <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem').html_safe %></p>
+      <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem') %></p>
     </header>
 
     <%= render partial: 'aggregations', locals: { gems: @gems } %>
@@ -35,9 +35,9 @@
       <div class='search__suggestions'>
         <p>
           <%= t(".suggestion") %>
-          <%= suggestions.map do |term|
+          <%= to_sentence(suggestions.map do |term|
             link_to term, search_path(params: { query: term }), only_path: true
-          end.to_sentence(last_word_connector: ' or ').html_safe %>?
+          end, last_word_connector: ' or ') %>?
         </p>
       </div>
     <% end %>

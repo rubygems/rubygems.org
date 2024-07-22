@@ -4,7 +4,7 @@ class NotifiersController < ApplicationController
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
 
   def show
-    @ownerships = current_user.ownerships.by_indexed_gem_name
+    @ownerships = current_user.ownerships.by_indexed_gem_name.includes(:rubygem)
   end
 
   def update
@@ -25,7 +25,7 @@ class NotifiersController < ApplicationController
   private
 
   def notifier_params
-    params.require(:ownerships)
+    params.permit(ownerships: %i[push owner ownership_request]).require(:ownerships)
   end
 
   def notifier_options(param)

@@ -4,12 +4,16 @@ class Ownership < ApplicationRecord
   belongs_to :authorizer, class_name: "User"
   has_many :api_key_rubygem_scopes, dependent: :destroy
 
-  validates :user_id, uniqueness: { scope: :rubygem_id }
+  validate :validate_unique_user
 
   delegate :name, to: :user, prefix: :owner
   delegate :name, to: :authorizer, prefix: true, allow_nil: true
 
   before_create :generate_confirmation_token
+
+  after_create :record_create_event
+  after_update :record_confirmation_event, if: :saved_change_to_confirmed_at?
+  after_destroy :record_destroy_event
 
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
@@ -27,8 +31,7 @@ class Ownership < ApplicationRecord
   end
 
   def self.create_confirmed(rubygem, user, approver)
-    ownership = rubygem.ownerships.create(user: user, authorizer: approver)
-    ownership.confirm!
+    rubygem.ownerships.create!(user: user, authorizer: approver).tap(&:confirm!)
   end
 
   def self.update_notifier(to_enable, to_disable, notifer_attr)
@@ -58,7 +61,7 @@ class Ownership < ApplicationRecord
   end
 
   def confirm!
-    update(confirmed_at: Time.current, token: nil) if unconfirmed?
+    update!(confirmed_at: Time.current, token: nil) if unconfirmed?
   end
 
   def confirmed?
@@ -71,5 +74,44 @@ class Ownership < ApplicationRecord
 
   def safe_destroy
     destroy if unconfirmed? || rubygem.owners.many?
+  end
+
+  def validate_unique_user
+    return unless rubygem && user
+    ownerships = persisted? ? Ownership.where.not(id: id) : Ownership
+    other = ownerships.find_by(rubygem:, user:)
+    return unless other
+
+    if other.confirmed?
+      errors.add :user_id, I18n.t("activerecord.errors.models.ownership.attributes.user_id.already_confirmed")
+    else
+      errors.add :user_id, I18n.t("activerecord.errors.models.ownership.attributes.user_id.already_invited")
+    end
+  end
+
+  private
+
+  def record_create_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_ADDED,
+      owner: user.display_handle,
+      authorizer: authorizer.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid)
+  end
+
+  def record_confirmation_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_CONFIRMED,
+      owner: user.display_handle,
+      authorizer: authorizer.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid)
+  end
+
+  def record_destroy_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_REMOVED,
+      owner: user.display_handle,
+      removed_by: Current.user&.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid)
   end
 end

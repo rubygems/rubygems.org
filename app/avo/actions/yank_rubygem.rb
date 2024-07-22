@@ -25,7 +25,7 @@ class YankRubygem < BaseAction
       version_id = fields["version"]
       version_id_to_yank = version_id if version_id != OPTION_ALL
 
-      rubygem.yank_versions!(version_id: version_id_to_yank)
+      rubygem.yank_versions!(version_id: version_id_to_yank, force: true)
     end
   end
 end

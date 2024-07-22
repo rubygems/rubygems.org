@@ -7,7 +7,7 @@ class YankVersionContentsJob < ApplicationJob
 
   discard_on ActiveJob::DeserializationError
 
-  retry_on VersionNotYanked, wait: :exponentially_longer, attempts: 5
+  retry_on VersionNotYanked, wait: :polynomially_longer, attempts: 5
 
   def version_arg
     arguments.first[:version]

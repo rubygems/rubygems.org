@@ -8,7 +8,23 @@ class UsersControllerTest < ActionController::TestCase
       get :new
     end
 
-    render_template(:new)
+    should render_template(:new)
+
+    should "render the new user form" do
+      page.assert_text "Sign up"
+      page.assert_selector "input[type=password][autocomplete=new-password]"
+    end
+
+    context "when logged in" do
+      setup do
+        @user = create(:user)
+        sign_in_as(@user)
+
+        get :new
+      end
+
+      should redirect_to("root") { root_path }
+    end
   end
 
   context "on POST to create" do
@@ -21,9 +37,9 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "when missing a parameter" do
-      should "raises parameter missing" do
+      should "reports validation error" do
         assert_no_changes -> { User.count } do
-          post :create
+          post :create, params: { user: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
         assert_response :ok
         assert page.has_content?("Email address is not a valid email")
@@ -32,9 +48,12 @@ class UsersControllerTest < ActionController::TestCase
 
     context "when extra parameters given" do
       should "create a user if parameters are ok" do
-        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo", public_email: "true" } }
 
-        assert_equal "foo", User.where(email: "foo@bar.com").pick(:handle)
+        user = User.find_by!(email: "foo@bar.com")
+
+        assert_equal "foo", user.handle
+        assert_predicate user, :public_email?
       end
 
       should "create a user but dont assign not valid parameters" do

@@ -3,12 +3,14 @@ class LogTicket < ApplicationRecord
   enum status: %i[pending processing failed processed].index_with(&:to_s)
 
   def self.pop(key: nil, directory: nil)
-    scope = pending.limit(1).lock(true).select("id").order("id ASC")
+    scope = pending.limit(1).lock(true).order("id ASC")
     scope = scope.where(key: key) if key
     scope = scope.where(directory: directory) if directory
-    sql = scope.to_sql
-
-    find_by_sql(["UPDATE #{quoted_table_name} SET status = ? WHERE id IN (#{sql}) RETURNING *", "processing"]).first
+    scope.sole.tap do |ticket|
+      ticket.update_column(:status, "processing")
+    end
+  rescue ActiveRecord::RecordNotFound
+    nil # no ticket in queue found by `sole` call
   end
 
   def fs

@@ -15,12 +15,22 @@ module WebauthnVerifiable
   def webauthn_credential_verified?
     @credential = WebAuthn::Credential.from_get(credential_params)
 
+    unless user_webauthn_credential
+      @webauthn_error = t("credentials_required")
+      return false
+    end
+
     @credential.verify(
       challenge,
       public_key: user_webauthn_credential.public_key,
       sign_count: user_webauthn_credential.sign_count
     )
     user_webauthn_credential.update!(sign_count: @credential.sign_count)
+
+    if @credential.user_handle.present? && @credential.user_handle != user_webauthn_credential.user.webauthn_id
+      @webauthn_error = t("credentials_required")
+      return false
+    end
 
     true
   rescue WebAuthn::Error => e
@@ -35,8 +45,16 @@ module WebauthnVerifiable
 
   private
 
+  def webauthn_credential_scope
+    if @user.present?
+      @user.webauthn_credentials
+    else
+      User.find_by(webauthn_id: @credential.user_handle)&.webauthn_credentials || WebauthnCredential.none
+    end
+  end
+
   def user_webauthn_credential
-    @user_webauthn_credential ||= @user.webauthn_credentials.find_by(
+    @user_webauthn_credential ||= webauthn_credential_scope.find_by(
       external_id: @credential.id
     )
   end
@@ -46,11 +64,14 @@ module WebauthnVerifiable
   end
 
   def credential_params
-    params.require(:credentials).permit(
-      :id,
-      :type,
-      :rawId,
-      response: %i[authenticatorData attestationObject clientDataJSON signature]
-    )
+    params.permit(credentials: PERMITTED_CREDENTIALS).require(:credentials)
   end
+
+  PERMITTED_CREDENTIALS = [
+    :id,
+    :type,
+    :rawId,
+    :authenticatorAttachment,
+    { response: %i[authenticatorData attestationObject clientDataJSON signature userHandle] }
+  ].freeze
 end

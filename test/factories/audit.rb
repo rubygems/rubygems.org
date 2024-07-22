@@ -4,7 +4,7 @@ FactoryBot.define do
 
     comment { "A nice long comment" }
     action { "Admin Action" }
-    auditable { build(:web_hook) }
+    auditable { association(:web_hook) }
 
     transient do
       records do

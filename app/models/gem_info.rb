@@ -1,11 +1,11 @@
 class GemInfo
-  def initialize(rubygem_name)
+  def initialize(rubygem_name, cached: true)
     @rubygem_name = rubygem_name
+    @cached = cached
   end
 
   def compact_index_info
-    info = Rails.cache.read("info/#{@rubygem_name}")
-    if info
+    if @cached && (info = Rails.cache.read("info/#{@rubygem_name}"))
       StatsD.increment "compact_index.memcached.info.hit"
       info
     else
@@ -21,13 +21,12 @@ class GemInfo
     Digest::MD5.hexdigest(compact_index_info)
   end
 
-  def self.ordered_names
-    names = Rails.cache.read("names")
-    if names
+  def self.ordered_names(cached: true)
+    if cached && (names = Rails.cache.read("names"))
       StatsD.increment "compact_index.memcached.names.hit"
     else
       StatsD.increment "compact_index.memcached.names.miss"
-      names = Rubygem.order("name").pluck("name")
+      names = Rubygem.with_versions.order("name").pluck("name")
       Rails.cache.write("names", names)
     end
     names
@@ -59,7 +58,7 @@ class GemInfo
               ORDER BY r.name, stamp, v.number, v.platform", updated_at, updated_at]
 
     versions_by_gem = execute_raw_sql(query).group_by { |v| v["name"] }
-    versions_by_gem.each do |_, versions|
+    versions_by_gem.each_value do |versions|
       info_checksum = versions.last["info_checksum"]
       versions.select! { |v| v["indexed"] == true }
       # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
@@ -107,7 +106,8 @@ class GemInfo
         end
       end
 
-      CompactIndex::GemVersion.new(r[0], r[1], Version._sha256_hex(r[2]), r[3], deps, r[4], r[5])
+      name, platform, checksum, info_checksum, ruby_version, rubygems_version, = r
+      CompactIndex::GemVersion.new(name, platform, Version._sha256_hex(checksum), info_checksum, deps, ruby_version, rubygems_version)
     end
   end
 

@@ -1,12 +1,10 @@
 <% @title = t('.title') %>
 
-<%= form_for(:password_reset,
-             :url => user_password_path(@user, :token => @user.confirmation_token),
-             :html => { :method => :put }) do |form| %>
+<%= form_for(:password_reset, url: password_path, html: { method: :put }) do |form| %>
   <%= error_messages_for @user %>
   <div class="password_field">
     <%= form.label :password, "Password", :class => 'form__label' %>
-    <%= form.password_field :password, :class => 'form__input' %>
+    <%= form.password_field :password, autocomplete: 'new-password', class: 'form__input' %>
   </div>
   <div class="form__checkbox">
     <%= form.check_box :reset_api_key, { :class => 'form__checkbox__input' } , 'true', 'false' %>

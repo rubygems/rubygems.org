@@ -1,13 +1,18 @@
 class EmailConfirmationsController < ApplicationController
   include EmailResettable
+  include RequireMfa
   include MfaExpiryMethods
   include WebauthnVerifiable
 
   before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: :unconfirmed
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: :unconfirmed
-  before_action :validate_confirmation_token, only: %i[update mfa_update webauthn_update]
-  after_action :delete_mfa_expiry_session, only: %i[mfa_update webauthn_update]
+  before_action :no_referrer, only: %i[update otp_update webauthn_update]
+  before_action :validate_confirmation_token, only: %i[update otp_update webauthn_update]
+  before_action :require_mfa, only: :update
+  before_action :validate_otp, only: :otp_update
+  before_action :validate_webauthn, only: :webauthn_update
+  after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
 
   def new
   end
@@ -24,36 +29,14 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def update
-    if @user.mfa_enabled? || @user.webauthn_credentials.any?
-      setup_mfa_authentication
-      setup_webauthn_authentication(form_url: webauthn_update_email_confirmations_url(token: @user.confirmation_token))
-
-      create_new_mfa_expiry
-
-      render template: "multifactor_auths/mfa_prompt"
-    else
-      confirm_email
-    end
+    confirm_email
   end
 
-  def mfa_update
-    if mfa_update_conditions_met?
-      confirm_email
-    elsif !session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-    else
-      login_failure(t("multifactor_auths.incorrect_otp"))
-    end
+  def otp_update
+    confirm_email
   end
 
   def webauthn_update
-    unless session_active?
-      login_failure(t("multifactor_auths.session_expired"))
-      return
-    end
-
-    return login_failure(@webauthn_error) unless webauthn_credential_verified?
-
     confirm_email
   end
 
@@ -76,16 +59,16 @@ class EmailConfirmationsController < ApplicationController
 
   def validate_confirmation_token
     @user = User.find_by(confirmation_token: token_params)
-    redirect_to root_path, alert: t("failure_when_forbidden") unless @user&.valid_confirmation_token?
+    redirect_to root_path, alert: t("email_confirmations.update.token_failure") unless @user&.valid_confirmation_token?
   end
 
   def confirm_email
     if @user.confirm_email!
-      sign_in @user
-      redirect_to root_path, notice: t("email_confirmations.update.confirmed_email")
+      flash[:notice] = t("email_confirmations.update.confirmed_email")
     else
-      redirect_to root_path, alert: @user.errors.full_messages.to_sentence
+      flash[:alert] = @user.errors.full_messages.to_sentence
     end
+    redirect_to signed_in? ? dashboard_path : sign_in_path
   end
 
   def email_params
@@ -96,17 +79,20 @@ class EmailConfirmationsController < ApplicationController
     params.permit(:token).require(:token)
   end
 
-  def mfa_update_conditions_met?
-    @user.mfa_enabled? && @user.ui_otp_verified?(params[:otp]) && session_active?
-  end
-
-  def setup_mfa_authentication
-    return if @user.mfa_disabled?
-    @form_mfa_url = mfa_update_email_confirmations_url(token: @user.confirmation_token)
-  end
-
   def login_failure(message)
     flash.now.alert = message
-    render template: "multifactor_auths/mfa_prompt", status: :unauthorized
+    render template: "multifactor_auths/prompt", status: :unauthorized
+  end
+
+  def otp_verification_url
+    otp_update_email_confirmations_url(token: @user.confirmation_token)
+  end
+
+  def webauthn_verification_url
+    webauthn_update_email_confirmations_url(token: @user.confirmation_token)
+  end
+
+  def mfa_failure(alert)
+    login_failure(alert)
   end
 end

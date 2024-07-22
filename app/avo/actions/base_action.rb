@@ -1,11 +1,13 @@
 class BaseAction < Avo::BaseAction
+  include SemanticLogger::Loggable
+
   field :comment, as: :textarea, required: true,
     help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
 
   def self.inherited(base)
     super
     base.items_holder = Avo::ItemsHolder.new
-    base.items_holder.items.replace items_holder.items.deep_dup
+    base.items_holder.instance_variable_get(:@items).replace items_holder.instance_variable_get(:@items).deep_dup
     base.items_holder.invalid_fields.replace items_holder.invalid_fields.deep_dup
   end
 
@@ -19,6 +21,10 @@ class BaseAction < Avo::BaseAction
       target.errored?
     }
     define_callbacks :handle_model, terminator: lambda { |target, result_lambda|
+      result_lambda.call
+      target.errored?
+    }
+    define_callbacks :handle_standalone, terminator: lambda { |target, result_lambda|
       result_lambda.call
       target.errored?
     }
@@ -42,7 +48,7 @@ class BaseAction < Avo::BaseAction
 
     attr_reader :models, :fields, :current_user, :arguments, :resource
 
-    delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name, :succeed,
+    delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name, :succeed, :logger,
       to: :@action
 
     set_callback :handle, :before do
@@ -76,7 +82,24 @@ class BaseAction < Avo::BaseAction
       @action.response[:messages].any? { _1[:type] == :error }
     end
 
+    def do_handle_standalone
+      _, audit = in_audited_transaction(
+        auditable: :return,
+        admin_github_user: current_user,
+        action: action_name,
+        fields:,
+        arguments:,
+        models:
+      ) do
+        run_callbacks :handle_standalone do
+          handle_standalone
+        end
+      end
+      redirect_to avo.resources_audit_path(audit)
+    end
+
     def handle
+      return do_handle_standalone if models.nil?
       models.each do |model|
         _, audit = in_audited_transaction(
           auditable: model,

@@ -21,12 +21,22 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("factory_girl").for(:name)
     should allow_value("rack-test").for(:name)
     should allow_value("perftools.rb").for(:name)
+    should allow_value("s3-4-2").for(:name)
+    should allow_value("its.a.gem.ok").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
-    should_not allow_value("Ruby").for(:name)
     should_not allow_value(".omghi").for(:name)
     should_not allow_value("-omghi").for(:name)
     should_not allow_value("_omghi").for(:name)
+    should_not allow_value("omg-").for(:name)
+    should_not allow_value("omg.gem").for(:name)
+
+    context "with reserved Ruby gem" do
+      setup do
+        create(:gem_name_reservation, name: "ruby")
+      end
+      should_not allow_value("Ruby").for(:name)
+    end
 
     context "that has an invalid name already persisted" do
       setup do
@@ -64,7 +74,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_includes latest_versions, version3_ruby
       assert_includes latest_versions, version3_mswin
 
-      assert_equal version3_ruby, @rubygem.versions.most_recent
+      assert_equal version3_ruby, @rubygem.most_recent_version
     end
 
     should "order latest platform gems with latest uniquely" do
@@ -110,12 +120,12 @@ class RubygemTest < ActiveSupport::TestCase
 
       @rubygem.reorder_versions
 
-      assert_equal version2_ruby.reload, @rubygem.versions.most_recent
+      assert_equal version2_ruby.reload, @rubygem.most_recent_version
       assert version3_mswin.reload.latest
     end
 
     should "not have a most recent version if no versions exist" do
-      assert_nil @rubygem.versions.most_recent
+      assert_nil @rubygem.most_recent_version
     end
 
     should "return the ruby version for most_recent if one exists" do
@@ -128,33 +138,33 @@ class RubygemTest < ActiveSupport::TestCase
 
       @rubygem.reorder_versions
 
-      assert_equal version3_ruby, @rubygem.versions.most_recent
+      assert_equal version3_ruby, @rubygem.most_recent_version
     end
 
     should "have a most_recent version if only a platform version exists" do
       version1 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "linux")
 
-      assert_equal version1, @rubygem.reload.versions.most_recent
+      assert_equal version1, @rubygem.reload.most_recent_version
     end
 
     should "return the release version for most_recent if one exists" do
       create(:version, rubygem: @rubygem, number: "2.0.pre", platform: "ruby")
       version1 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
 
-      assert_equal version1, @rubygem.reload.versions.most_recent
+      assert_equal version1, @rubygem.reload.most_recent_version
     end
 
     should "have a most_recent version if only a prerelease version exists" do
       version1pre = create(:version, rubygem: @rubygem, number: "1.0.pre", platform: "ruby")
 
-      assert_equal version1pre, @rubygem.reload.versions.most_recent
+      assert_equal version1pre, @rubygem.reload.most_recent_version
     end
 
     should "return the most_recent indexed version when a more recent yanked version exists" do
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
       indexed_v1 = create(:version, rubygem: @rubygem, number: "0.1.0", indexed: true)
 
-      assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
+      assert_equal indexed_v1.reload, @rubygem.reload.most_recent_version
     end
 
     should "return latest version on the basis of version number" do
@@ -192,6 +202,59 @@ class RubygemTest < ActiveSupport::TestCase
         versions = @rubygem.public_versions_with_extra_version(@first_version)
 
         assert_equal versions.count, versions.uniq.count
+      end
+    end
+
+    context "#find_public_version" do
+      setup do
+        @version = FactoryBot.create(:version,
+          rubygem: @rubygem,
+          number: "1.0.0",
+          platform: "ruby",
+          licenses: "MIT",
+          info_checksum: "1234567890")
+        @jruby_version = FactoryBot.create(:version,
+          rubygem: @rubygem,
+          number: "1.0.0",
+          platform: "jruby",
+          licenses: "MIT",
+          info_checksum: "1234567890")
+      end
+
+      should "return the most recently created version without platform" do
+        assert_equal @jruby_version, @rubygem.find_public_version(@version.number)
+      end
+
+      should "return the ruby version with ruby platform" do
+        assert_equal @version, @rubygem.find_public_version(@version.number, "ruby")
+      end
+
+      should "return the jruby version with jruby platform" do
+        assert_equal @jruby_version, @rubygem.find_public_version(@version.number, "jruby")
+      end
+
+      should "return ruby if the jruby version is yanked" do
+        @jruby_version.update!(indexed: false)
+
+        assert_equal @version, @rubygem.find_public_version(@version.number)
+      end
+
+      should "return nil if all versions are yanked" do
+        @rubygem.versions.update_all(indexed: false)
+
+        assert_nil @rubygem.find_public_version(@version.number)
+      end
+
+      should "return nil if platform is not found" do
+        assert_nil @rubygem.find_public_version(@version.number, "fake")
+      end
+
+      should "return nil if number is not found" do
+        assert_nil @rubygem.find_public_version("42.42.42")
+      end
+
+      should "return nil if number is nil" do
+        assert_nil @rubygem.find_public_version(nil)
       end
     end
 
@@ -389,7 +452,7 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem.save
       create(:version, number: "0.0.0", rubygem: @rubygem)
 
-      assert_equal "#{@rubygem.name} (#{@rubygem.versions.most_recent})", @rubygem.to_s
+      assert_equal "#{@rubygem.name} (#{@rubygem.most_recent_version})", @rubygem.to_s
     end
 
     should "return name for #to_s if current version doesn't exist" do
@@ -399,7 +462,7 @@ class RubygemTest < ActiveSupport::TestCase
     should "return name as slug with only allowed characters" do
       @rubygem.name = "rails?!"
 
-      assert_equal "rails", @rubygem.to_param
+      assert_equal "rails", @rubygem.slug
     end
 
     should "return a bunch of json" do
@@ -411,17 +474,17 @@ class RubygemTest < ActiveSupport::TestCase
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
-      assert_equal @rubygem.versions.most_recent.number, hash["version"]
-      assert_equal @rubygem.versions.most_recent.created_at.as_json, hash["version_created_at"]
-      assert_equal @rubygem.versions.most_recent.downloads_count, hash["version_downloads"]
-      assert_equal @rubygem.versions.most_recent.platform, hash["platform"]
-      assert_equal @rubygem.versions.most_recent.authors, hash["authors"]
-      assert_equal @rubygem.versions.most_recent.info, hash["info"]
-      assert_equal @rubygem.versions.most_recent.metadata, hash["metadata"]
+      assert_equal @rubygem.most_recent_version.number, hash["version"]
+      assert_equal @rubygem.most_recent_version.created_at.as_json, hash["version_created_at"]
+      assert_equal @rubygem.most_recent_version.downloads_count, hash["version_downloads"]
+      assert_equal @rubygem.most_recent_version.platform, hash["platform"]
+      assert_equal @rubygem.most_recent_version.authors, hash["authors"]
+      assert_equal @rubygem.most_recent_version.info, hash["info"]
+      assert_equal @rubygem.most_recent_version.metadata, hash["metadata"]
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
         hash["project_uri"]
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/" \
-                   "#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
+                   "#{@rubygem.most_recent_version.full_name}.gem", hash["gem_uri"]
 
       assert_equal JSON.load(dev_dep.to_json), hash["dependencies"]["development"].first
       assert_equal JSON.load(run_dep.to_json), hash["dependencies"]["runtime"].first
@@ -440,22 +503,22 @@ class RubygemTest < ActiveSupport::TestCase
         doc.at_css("rubygem > name").content
       assert_equal @rubygem.downloads.to_s,
         doc.at_css("downloads").content
-      assert_equal @rubygem.versions.most_recent.number,
+      assert_equal @rubygem.most_recent_version.number,
         doc.at_css("version").content
-      assert_equal @rubygem.versions.most_recent.downloads_count.to_s,
+      assert_equal @rubygem.most_recent_version.downloads_count.to_s,
         doc.at_css("version-downloads").content
-      assert_equal @rubygem.versions.most_recent.authors,
+      assert_equal @rubygem.most_recent_version.authors,
         doc.at_css("authors").content
-      assert_equal @rubygem.versions.most_recent.info,
+      assert_equal @rubygem.most_recent_version.info,
         doc.at_css("info").content
-      assert_equal @rubygem.versions.most_recent.metadata["foo"],
+      assert_equal @rubygem.most_recent_version.metadata["foo"],
         doc.at_css("metadata foo").content
-      assert_equal @rubygem.versions.most_recent.sha256_hex,
+      assert_equal @rubygem.most_recent_version.sha256_hex,
         doc.at_css("sha").content
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
         doc.at_css("project-uri").content
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/" \
-                   "#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
+                   "#{@rubygem.most_recent_version.full_name}.gem", doc.at_css("gem-uri").content
 
       assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
@@ -547,7 +610,7 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem_with_versions = create(:rubygem)
 
       create(:version, rubygem: @rubygem_with_version)
-      3.times { create(:version, rubygem: @rubygem_with_versions) }
+      create_list(:version, 3, rubygem: @rubygem_with_versions)
 
       @owner = create(:user)
       create(:ownership, rubygem: @rubygem_with_version, user: @owner)
@@ -724,7 +787,7 @@ class RubygemTest < ActiveSupport::TestCase
         @specification = gem_specification_from_gem_fixture("test-0.0.0")
         @rubygem       = Rubygem.new(name: @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @version.sha256 = "dummy"
+        @version.sha256 = Digest::SHA256.base64digest("dummy")
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
@@ -738,12 +801,50 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    context "from a Gem::Specification with metadata with links" do
+      include ActiveJob::TestHelper
+
+      setup do
+        @specification = new_gemspec("test", "1.0.0", "A summary", "ruby") do |s|
+          s.homepage = "https://example.com/test"
+          s.metadata = {
+            "funding_uri" => "https://example.com/",
+            "documentation_uri" => "https://example.com/docs",
+            "source_code_uri" => "::",
+            "bug_tracker_uri" => "",
+            "mailing_list_uri" => "http://example.com/mailing_list",
+            "wiki_uri" => "https://example.com/"
+          }
+        end
+
+        @rubygem       = Rubygem.new(name: @specification.name)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @version.sha256 = Digest::SHA256.base64digest("dummy")
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+      end
+
+      should "create link verification records" do
+        assert_equal ["::", "http://example.com/mailing_list", "https://example.com/", "https://example.com/docs", "https://example.com/test"],
+                     @rubygem.link_verifications.pluck(:uri).sort
+      end
+
+      should "enqueue link verification jobs" do
+        assert_enqueued_with job: VerifyLinkJob,
+          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/docs").sole }]
+        assert_enqueued_with job: VerifyLinkJob,
+          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/test").sole }]
+        assert_enqueued_with job: VerifyLinkJob,
+          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/").sole }]
+        assert_enqueued_jobs 3, only: VerifyLinkJob
+      end
+    end
+
     context "from a Gem::Specification with dependencies on unknown gems" do
       setup do
         @specification = gem_specification_from_gem_fixture("with_dependencies-0.0.0")
         @rubygem       = Rubygem.new(name: @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @version.sha256 = "dummy"
+        @version.sha256 = Digest::SHA256.base64digest("dummy")
       end
 
       should "save the gem" do
@@ -763,7 +864,7 @@ class RubygemTest < ActiveSupport::TestCase
         @specification = gem_specification_from_gem_fixture("with_dependencies-0.0.0")
         @rubygem       = Rubygem.new(name: @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @version.sha256 = "dummy"
+        @version.sha256 = Digest::SHA256.base64digest("dummy")
 
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 
@@ -788,7 +889,7 @@ class RubygemTest < ActiveSupport::TestCase
 
         @rubygem       = Rubygem.new(name: @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @version.sha256 = "dummy"
+        @version.sha256 = Digest::SHA256.base64digest("dummy")
       end
 
       should "save the gem" do
@@ -992,7 +1093,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be satisfied if owner has enabled mfa" do
-        @owner.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @owner.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
 
         assert @rubygem.mfa_requirement_satisfied_for?(@owner)
       end
@@ -1016,41 +1117,6 @@ class RubygemTest < ActiveSupport::TestCase
         should "be satisfied" do
           assert @rubygem.mfa_requirement_satisfied_for?(@owner)
         end
-      end
-    end
-  end
-
-  context "#mfa_required_since_version" do
-    setup do
-      @rubygem = create(:rubygem)
-      metadata = { "rubygems_mfa_required" => "true" }
-      @version = create(:version, number: "1.0.0", rubygem: @rubygem, metadata: metadata)
-    end
-
-    context "rubygems_mfa_required is set on the latest version" do
-      should "return latest version number" do
-        assert_equal @version.number, @rubygem.mfa_required_since_version
-      end
-    end
-
-    context "rubygems_mfa_required was unset and set" do
-      setup do
-        create(:version, number: "1.0.1", rubygem: @rubygem)
-        create(:version, number: "1.0.2", rubygem: @rubygem, metadata: { "rubygems_mfa_required" => "true" })
-      end
-
-      should "return latest version number with mfa required" do
-        assert_equal "1.0.2", @rubygem.mfa_required_since_version
-      end
-    end
-
-    context "rubygems_mfa_required is not set on the latest version" do
-      setup do
-        create(:version, number: "1.0.1", rubygem: @rubygem)
-      end
-
-      should "return nil" do
-        assert_nil @rubygem.mfa_required_since_version
       end
     end
   end

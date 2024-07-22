@@ -11,6 +11,56 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
     end
   end
 
+  context "#webauthn_enabled?" do
+    should "return true if webauthn is enabled" do
+      create(:webauthn_credential, user: @user)
+
+      assert_predicate @user, :webauthn_enabled?
+    end
+
+    should "return false if webauthn is disabled" do
+      refute_predicate @user, :webauthn_enabled?
+    end
+  end
+
+  context "#webauthn_disabled?" do
+    should "return true if webauthn is disabled" do
+      assert_predicate @user, :webauthn_disabled?
+    end
+
+    should "return false if webauthn is enabled" do
+      create(:webauthn_credential, user: @user)
+
+      refute_predicate @user, :webauthn_disabled?
+    end
+  end
+
+  context "#webauthn_only_with_recovery?" do
+    should "return true if webauthn is enabled, totp is disabled, and recovery codes are present" do
+      create(:webauthn_credential, user: @user)
+
+      assert_predicate @user, :webauthn_only_with_recovery?
+    end
+
+    should "return false if webauthn is disabled" do
+      refute_predicate @user, :webauthn_only_with_recovery?
+    end
+
+    should "return false if totp is enabled" do
+      @user.enable_totp!(ROTP::Base32.random_base32, "ui_and_api")
+
+      refute_predicate @user, :webauthn_only_with_recovery?
+    end
+
+    should "return false if recovery codes are not present" do
+      create(:webauthn_credential, user: @user)
+      @user.new_mfa_recovery_codes = nil
+      @user.mfa_hashed_recovery_codes = []
+
+      refute_predicate @user, :webauthn_only_with_recovery?
+    end
+  end
+
   context "#webauthn_options_for_create" do
     should "returns options with id, and name" do
       user_create_options = @user.webauthn_options_for_create.user
@@ -69,6 +119,18 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
       @user.refresh_webauthn_verification
 
       refute_equal token_before, @user.webauthn_verification.path_token
+    end
+
+    should "reset the otp each time the method is called" do
+      @webauthn_verification.generate_otp
+
+      assert_not_nil @user.webauthn_verification.otp
+      assert_not_nil @user.webauthn_verification.otp_expires_at
+
+      @user.refresh_webauthn_verification
+
+      assert_nil @user.webauthn_verification.otp
+      assert_nil @user.webauthn_verification.otp_expires_at
     end
   end
 end

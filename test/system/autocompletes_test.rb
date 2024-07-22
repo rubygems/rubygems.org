@@ -11,18 +11,9 @@ class AutocompletesTest < ApplicationSystemTestCase
     import_and_refresh
 
     visit root_path
-    @fill_field = find_by_id "home_query"
+    @fill_field = find_by_id "query"
     @fill_field.set "rubo"
-    wait_for_ajax
-  end
-
-  def wait_for_ajax
-    Timeout.timeout(Capybara.default_max_wait_time) do
-      loop do
-        active = page.evaluate_script("jQuery.active")
-        break if active.zero?
-      end
-    end
+    page.find(".autocomplete-done", wait: Capybara.default_max_wait_time)
   end
 
   test "search field" do
@@ -34,7 +25,7 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   test "selected field is only one with cursor selecting" do
-    find(".suggest-list").all("li").each(&:hover)
+    find(".suggest-list").all("li").each(&:hover) # rubocop:disable Rails/FindEach
 
     assert_selector ".selected", count: 1
   end
@@ -62,25 +53,25 @@ class AutocompletesTest < ApplicationSystemTestCase
   test "down arrow key to choose suggestion" do
     @fill_field.native.send_keys :down
 
-    assert page.has_no_field? "home_query", with: "rubo"
+    assert page.has_no_field? "query", with: "rubo"
   end
 
   test "up arrow key to choose suggestion" do
     @fill_field.native.send_keys :up
 
-    assert page.has_no_field? "home_query", with: "rubo"
+    assert page.has_no_field? "query", with: "rubo"
   end
 
   test "down arrow key should loop" do
     @fill_field.native.send_keys :down, :down, :down, :down
 
-    assert find_by_id("suggest-home").all(".menu-item").last.matches_css?(".selected")
+    assert find(".suggest-list").all(".menu-item").last.matches_css?(".selected")
   end
 
   test "up arrow key should loop" do
     @fill_field.native.send_keys :up, :up, :up, :up
 
-    assert find_by_id("suggest-home").all(".menu-item").first.matches_css?(".selected")
+    assert find(".suggest-list").all(".menu-item").first.matches_css?(".selected")
   end
 
   test "mouse hover a suggest item to choose suggestion" do

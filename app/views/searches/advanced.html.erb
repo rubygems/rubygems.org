@@ -1,15 +1,15 @@
 <% @title = t("advanced_search") %>
 
-<div class="home__search-wrap">
+<div class="home__search-wrap" role="search">
   <%= form_tag search_url, id: "advanced-search", method: :get do %>
-    <%= search_field_tag :query, params[:query], placeholder: t("layouts.application.header.search_gem_html"), autofocus: current_page?(root_url), id: "home_query", class: "home__search" %>
-    <%= label_tag :home_query do %>
+    <%= search_field_tag :query, params[:query], placeholder: t("layouts.application.header.search_gem_html"), autofocus: current_page?(root_url), id: "query", class: "home__search" %>
+    <%= label_tag :query do %>
       <span class="t-hidden"><%= t("layouts.application.header.search_gem_html") %></span>
     <% end %>
     <%= submit_tag "⌕", id: "advanced_search_submit", name: nil, class: "home__search__icon" %>
   <% end %>
 
-  <dl id="search-fields">
+  <dl class="search-fields">
     <dt><%= label_tag :name, t(".name"), class: "form__label" %></dt>
     <dd><%= text_field_tag :name, "", placeholder: "active OR action", class: "form__input"%></dd>
 

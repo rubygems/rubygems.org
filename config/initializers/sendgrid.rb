@@ -1,4 +1,4 @@
-unless Rails.env.development? || Rails.env.test?
+unless Rails.env.local?
   ActionMailer::Base.smtp_settings = {
     address:              'smtp.sendgrid.net',
     port:                 587,

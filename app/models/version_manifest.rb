@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class VersionManifest
+  DEFAULT_DIGEST = "sha256"
+
   attr_reader :version, :contents
 
   delegate :gem, :fs, to: :contents
@@ -139,7 +141,7 @@ class VersionManifest
     format RubygemContents::CHECKSUMS_ROOT_FORMAT, gem: gem
   end
 
-  def checksums_key(format: :sha256)
+  def checksums_key(format: DEFAULT_DIGEST)
     format RubygemContents::CHECKSUMS_KEY_FORMAT, gem: gem, version: version, format:
   end
 

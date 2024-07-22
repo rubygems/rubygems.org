@@ -23,7 +23,8 @@ class DependencyTest < ActiveSupport::TestCase
       @dependency.gem_dependency = Gem::Dependency.new("holla", ["= 0#{long_requirement_suffix}"])
 
       refute_predicate @dependency, :valid?
-      assert_equal ["is too long (maximum is 255 characters)"], @dependency.errors.messages[:requirements]
+      assert_equal ["is too long (maximum is 255 characters)", "must be list of valid requirements"],
+                   @dependency.errors.messages[:requirements]
     end
 
     should "be invalid with unresolved_name longer than maximum field length" do
@@ -123,7 +124,7 @@ class DependencyTest < ActiveSupport::TestCase
         @specification = gem_specification_from_gem_fixture("with_dependencies-0.0.0")
         @rubygem       = Rubygem.new(name: @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @version.sha256 = "dummy"
+        @version.sha256 = Digest::SHA256.base64digest("dummy")
 
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 

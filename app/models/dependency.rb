@@ -1,13 +1,15 @@
 class Dependency < ApplicationRecord
   belongs_to :rubygem, optional: true
   belongs_to :version
+  has_one :version_rubygem, through: :version, source: :rubygem
 
   before_validation :use_gem_dependency,
     :use_existing_rubygem,
     :parse_gem_dependency
 
-  validates :requirements, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, presence: true
+  validates :requirements, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, gem_requirements: true, presence: true
   validates :unresolved_name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
+  validates :unresolved_name, name_format: true, allow_blank: true, on: :create
   validates :scope, inclusion: { in: %w[development runtime] }
 
   attr_accessor :gem_dependency
@@ -40,16 +42,10 @@ class Dependency < ApplicationRecord
     }
   end
 
-  def as_json(*)
-    payload
-  end
+  delegate :as_json, :to_yaml, to: :payload
 
   def to_xml(options = {})
     payload.to_xml(options.merge(root: "dependency"))
-  end
-
-  def to_yaml(*args)
-    payload.to_yaml(*args)
   end
 
   def encode_with(coder)

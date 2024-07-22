@@ -28,9 +28,9 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     admin_user = create(:admin_github_user, :is_admin)
     sign_in_as admin_user
 
-    LogTicketPolicy.any_instance.stubs(:avo_create?).returns(true)
-    LogTicketPolicy.any_instance.stubs(:avo_update?).returns(true)
-    LogTicketPolicy.any_instance.stubs(:avo_destroy?).returns(true)
+    Admin::LogTicketPolicy.any_instance.stubs(:avo_create?).returns(true)
+    Admin::LogTicketPolicy.any_instance.stubs(:avo_update?).returns(true)
+    Admin::LogTicketPolicy.any_instance.stubs(:avo_destroy?).returns(true)
 
     visit avo.resources_log_tickets_path
     click_on "Create new log ticket"
@@ -80,6 +80,8 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     find('div[data-field-id="auditable"]').click_on log_ticket.to_param
 
+    page.assert_title(/^#{log_ticket.to_param}/)
+
     click_on "Edit"
 
     fill_in "Key", with: "Other Key"
@@ -90,7 +92,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     page.assert_text "Another comment"
 
-    assert_equal 2, Audit.all.count
+    assert_equal 2, Audit.count
 
     audit = Audit.last
 
@@ -128,6 +130,8 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     find('div[data-field-id="auditable"]').click_on log_ticket.to_param
 
+    page.assert_title(/^#{log_ticket.to_param}/)
+
     accept_alert("Are you sure?") do
       click_on "Delete"
     end
@@ -136,7 +140,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     assert_raise(ActiveRecord::RecordNotFound) { log_ticket.reload }
 
-    assert_equal 3, Audit.all.count
+    assert_equal 3, Audit.count
     audit = Audit.last
     visit avo.resources_audit_path(audit)
 

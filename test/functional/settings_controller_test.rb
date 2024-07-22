@@ -27,16 +27,15 @@ class SettingsControllerTest < ActionController::TestCase
 
       context "user has mfa disabled" do
         setup { get :edit }
-        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
-
-        should "set mfa_redirect_uri" do
-          assert_equal edit_settings_path, session[:mfa_redirect_uri]
+        should "flash a warning message" do
+          assert_response :success
+          assert page.has_content? "For protection of your account and your gems, you are required to set up multi-factor authentication."
         end
       end
 
       context "user has mfa set to weak level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
           get :edit
         end
 
@@ -48,7 +47,7 @@ class SettingsControllerTest < ActionController::TestCase
 
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           get :edit
         end
 

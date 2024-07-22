@@ -21,7 +21,7 @@ class DropRequirementsTable < ActiveRecord::Migration[4.2]
   end
 
   def self.down
-    create_table :requirements do |t|
+    create_table :requirements do |t| # rubocop:disable Rails/CreateTableWithTimestamps
       t.integer :version_id
       t.integer :dependency_id
     end

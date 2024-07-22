@@ -66,7 +66,6 @@
     opacity: .5; }
 
 .gem__users__mfa-text {
-  font-size: 9px;
   color: #e9573f;
 }
 .gem__downloads-wrap {
@@ -129,6 +128,11 @@
   border: none;
   font-weight: bold; }
 
+.gem__code.multiline {
+  line-height: inherit;
+  white-space: pre-wrap;
+  border-radius: 0; }
+
   .gem__code::-webkit-scrollbar {
     display: none; }
 
@@ -156,6 +160,25 @@
     width: 10px;
     background-image: linear-gradient(to right, transparent 0%, white 100%); }
 
+.gem__code__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .5rem;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  border: #c1c4ca 1px solid;
+  border-bottom: 0; }
+
+.gem__code__header .gem__code__icon {
+  position: inherit;
+  padding: .125rem;
+  width: 40px; }
+
+.gem__code__icon.static {
+  position: static; }
+
 .gem__code__tooltip--copy,
 .gem__code__tooltip--copied {
   display: none; }
@@ -180,18 +203,18 @@
   .clipboard-is-active:before {
     content: "";
     position: absolute;
-    top: -4px;
+    top: -15px;
     right: 8px;
-    height: 15px;
-    width: 15px;
-    background-color: #141c22;
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-  }
+    border: 8px solid transparent;
+    border-bottom: 8px solid #141c22; }
 
 .gem__link:before {
   margin-right: 16px; }
+
+.gem__link__verified:after {
+  margin-left: 8px;
+  font-size: .75rem;
+  content: "✓"; }
 
 .gem__versions-wrap {
   margin-bottom: 70px;

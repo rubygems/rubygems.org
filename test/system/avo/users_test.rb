@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class Avo::UsersSystemTest < ApplicationSystemTestCase
+  make_my_diffs_pretty!
+
   include ActiveJob::TestHelper
 
   def sign_in_as(user)
@@ -15,6 +17,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
         name: user.login
       }
     )
+    @ip_address = create(:ip_address, ip_address: "127.0.0.1")
     stub_github_info_request(user.info_data)
 
     visit avo.root_path
@@ -29,7 +32,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     sign_in_as admin_user
 
     user = create(:user)
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     user_attributes = user.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
@@ -50,17 +53,18 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
-    page.assert_no_text user_attributes[:mfa_seed]
-    page.assert_no_text user_attributes[:mfa_recovery_codes].first
+    page.assert_no_text user_attributes[:totp_seed]
+    page.assert_no_text user_attributes[:mfa_hashed_recovery_codes].first
 
     user.reload
 
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
-    assert_empty user.mfa_seed
-    assert_empty user.mfa_recovery_codes
+    assert_nil user.totp_seed
+    assert_empty user.mfa_hashed_recovery_codes
 
     audit = user.audits.sole
+    event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
     assert_equal "User", audit.auditable_type
@@ -72,13 +76,17 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "changes" => {
               "mfa_level" => %w[ui_and_api disabled],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "mfa_seed" => [user_attributes[:mfa_seed], ""],
-              "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
+              "totp_seed" => [user_attributes[:totp_seed], nil],
+              "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password]
             },
             "unchanged" => user.attributes
-              .except("mfa_level", "updated_at", "mfa_seed", "mfa_recovery_codes", "encrypted_password")
+              .except("mfa_level", "updated_at", "totp_seed", "mfa_hashed_recovery_codes", "encrypted_password")
               .transform_values(&:as_json)
+          },
+          event.to_gid.as_json => {
+            "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
           }
         },
         "fields" => {},
@@ -97,7 +105,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     sign_in_as admin_user
 
     user = create(:user)
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     user_attributes = user.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
@@ -118,17 +126,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
-    page.assert_no_text user_attributes[:mfa_seed]
-    page.assert_no_text user_attributes[:mfa_recovery_codes].first
+    page.assert_no_text user_attributes[:totp_seed]
+    page.assert_no_text user_attributes[:mfa_hashed_recovery_codes].first
 
     user.reload
 
     assert_equal "disabled", user.mfa_level
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
-    assert_empty user.mfa_seed
-    assert_empty user.mfa_recovery_codes
+    assert_nil user.totp_seed
+    assert_empty user.mfa_hashed_recovery_codes
 
     audit = user.audits.sole
+    email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+    email_verified_event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
+    password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
     assert_equal "User", audit.auditable_type
@@ -142,8 +153,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "mfa_seed" => [user_attributes[:mfa_seed], ""],
-              "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
+              "totp_seed" => [user_attributes[:totp_seed], nil],
+              "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
               "remember_token" => [user_attributes[:remember_token], nil],
@@ -157,11 +168,23 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "email",
                 "encrypted_password",
                 "mfa_level",
-                "mfa_recovery_codes",
-                "mfa_seed",
+                "mfa_hashed_recovery_codes",
+                "totp_seed",
                 "remember_token",
                 "updated_at"
               ).transform_values(&:as_json)
+          },
+          email_added_event.to_gid.as_json => {
+            "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          email_verified_event.to_gid.as_json => {
+            "changes" => email_verified_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          password_changed_event.to_gid.as_json => {
+            "changes" => password_changed_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
           }
         },
         "fields" => {},
@@ -201,6 +224,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       user.reload
 
       audit = user.audits.sole
+      event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
       assert_equal "User", audit.auditable_type
@@ -218,6 +242,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                   "api_key",
                   "updated_at"
                 ).transform_values(&:as_json)
+            },
+            event.to_gid.as_json => {
+              "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+              "unchanged" => {}
             }
           },
           "fields" => { "template" => "public_gem_reset_api_key" },
@@ -246,8 +274,13 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     user = ownership.user
     rubygem = ownership.rubygem
     version = create(:version, rubygem: rubygem)
+    GemDownload.increment(
+      100_001,
+      rubygem_id: rubygem.id,
+      version_id: version.id
+    )
 
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     version_attributes = version.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
@@ -271,6 +304,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     audit = user.audits.sole
     deletion = security_user.deletions.first
+    version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
 
     page.assert_text audit.id
     assert_equal "User", audit.auditable_type
@@ -285,8 +319,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => {},
-              "unchanged" => deletion.attributes.transform_values(&:as_json)
+            "changes" => deletion.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
           },
           "gid://gemcutter/Version/#{version.id}" => {
             "changes" => {
@@ -313,6 +347,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "updated_at",
                 "indexed"
               ).transform_values(&:as_json)
+          },
+          version_yanked_event.to_gid.to_s => {
+            "changes" => version_yanked_event.attributes.transform_values { [nil, _1] }.as_json,
+            "unchanged" => {}
           }
         },
         "fields" => {},
@@ -332,7 +370,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     security_user = create(:user, email: "security@rubygems.org")
 
     user = create(:user)
-    user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
     user_attributes = user.attributes.with_indifferent_access
 
     rubygem = create(:rubygem)
@@ -358,8 +396,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     page.assert_no_text user.encrypted_password
     page.assert_no_text user_attributes[:encrypted_password]
-    page.assert_no_text user_attributes[:mfa_seed]
-    page.assert_no_text user_attributes[:mfa_recovery_codes].first
+    page.assert_no_text user_attributes[:totp_seed]
+    page.assert_no_text user_attributes[:mfa_hashed_recovery_codes].first
 
     user.reload
     rubygem.reload
@@ -376,13 +414,17 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
     end
     rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
+    email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+    email_verified_event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
+    password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
+    version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
 
     assert_equal(
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => {},
-              "unchanged" => deletion.attributes.transform_values(&:as_json)
+            "changes" => deletion.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
           },
           "gid://gemcutter/Version/#{version.id}" => {
             "changes" => {
@@ -416,8 +458,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
               "confirmation_token" => [user_attributes[:confirmation_token], nil],
               "mfa_level" => %w[ui_and_api disabled],
-              "mfa_seed" => [user_attributes[:mfa_seed], ""],
-              "mfa_recovery_codes" => [user_attributes[:mfa_recovery_codes], []],
+              "totp_seed" => [user_attributes[:totp_seed], nil],
+              "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
               "remember_token" => [user_attributes[:remember_token], nil],
@@ -431,11 +473,27 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "email",
                 "encrypted_password",
                 "mfa_level",
-                "mfa_recovery_codes",
-                "mfa_seed",
+                "mfa_hashed_recovery_codes",
+                "totp_seed",
                 "remember_token",
                 "updated_at"
               ).transform_values(&:as_json)
+          },
+          email_added_event.to_gid.as_json => {
+            "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          email_verified_event.to_gid.as_json => {
+            "changes" => email_verified_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          password_changed_event.to_gid.as_json => {
+            "changes" => password_changed_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          version_yanked_event.to_gid.as_json => {
+            "changes" => version_yanked_event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
           }
         },
         "fields" => {},
@@ -476,6 +534,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       user.reload
 
       audit = user.audits.sole
+      email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+      email_sent_event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
       assert_equal "User", audit.auditable_type
@@ -499,6 +559,14 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                   "confirmation_token",
                   "updated_at"
                 ).transform_values(&:as_json)
+            },
+            email_added_event.to_gid.as_json => {
+              "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+              "unchanged" => {}
+            },
+            email_sent_event.to_gid.as_json => {
+              "changes" => email_sent_event.attributes.transform_values { [nil, _1.as_json] },
+              "unchanged" => {}
             }
           },
           "fields" => { "from_email" => "gem-maintainer-001@example.com" },
@@ -516,5 +584,61 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
       assert_equal("Please confirm your email address with RubyGems.org", mailer.subject)
     end
+  end
+
+  test "create user" do
+    admin_user = create(:admin_github_user, :is_admin)
+    sign_in_as admin_user
+
+    visit avo.resources_users_path
+
+    click_button "Actions"
+    click_on "Create User"
+
+    assert_no_changes "User.count" do
+      click_button "Create User"
+    end
+    page.assert_text "Must supply a sufficiently detailed comment"
+
+    fill_in "Comment", with: "A nice long comment"
+    fill_in "Email", with: "gem-user-001@example.com"
+    click_button "Create User"
+
+    page.assert_text "Action ran successfully!"
+    perform_enqueued_jobs
+
+    user = User.sole
+    audit = user.audits.sole
+    event = user.events.where(tag: Events::UserEvent::CREATED).sole
+
+    page.assert_text audit.id
+    assert_equal "User", audit.auditable_type
+    assert_equal "Create User", audit.action
+    assert_equal(
+      {
+        "records" => {
+          "gid://gemcutter/User/#{user.id}" => {
+            "changes" =>   user.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          },
+          event.to_gid.as_json => {
+            "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+            "unchanged" => {}
+          }
+        },
+        "fields" => { "email" => "gem-user-001@example.com" },
+        "arguments" => {},
+        "models" => nil
+      },
+      audit.audited_changes
+    )
+    assert_equal admin_user, audit.admin_github_user
+    assert_equal "A nice long comment", audit.comment
+
+    mailers = ActionMailer::Base.deliveries.select do |mail|
+      mail.to.include?(user.email)
+    end
+
+    assert_equal(["Change your password"], mailers.map(&:subject))
   end
 end

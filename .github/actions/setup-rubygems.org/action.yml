@@ -1,0 +1,29 @@
+name: "Setup rubygems.org"
+description: "Setup steps for rubygems.org"
+inputs:
+  ruby-version:
+    description: "Ruby version to use"
+    required: true
+  rubygems-version:
+    description: "RubyGems version to use"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install and start services
+      shell: bash
+      run: |
+        docker compose up -d --wait
+    - uses: ruby/setup-ruby@161cd54b698f1fb3ea539faab2e036d409550e3c # v1.187.0
+      with:
+        ruby-version: ${{ inputs.ruby-version }}
+        bundler-cache: true
+        rubygems: ${{ inputs.rubygems-version }}
+    - name: Print bundle environment
+      shell: bash
+      run: bundle env
+    - name: Prepare environment
+      shell: bash
+      run: |
+        cp config/database.yml.sample config/database.yml
+        bundle exec rake db:setup assets:precompile

@@ -90,11 +90,11 @@ Follow the instructions below on how to install Bundler and setup the database.
 
   * Note that `-e "xpack.security.enabled=false"` disables authentication.
 
-* Install PostgreSQL (>= 11.13.x): `brew install postgres`
+* Install PostgreSQL (>= 13.x): `brew install postgres`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
   * Show all memcached options: `memcached -h`
-* Install Google-Chrome: `brew cask install google-chrome`
+* Install Google-Chrome: `brew install google-chrome --cask`
 
 #### Environment (Linux - Debian/Ubuntu)
 
@@ -114,10 +114,10 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 ### Installing ruby, gem dependencies, and setting up the database
 
-* Use Ruby 3.2.x
+* Use Ruby 3.3.x
   * See: [Ruby install instructions](https://www.ruby-lang.org/en/downloads/).
   * `.ruby-version` is present and can be used.
-* Use Rubygems 3.3.x
+* Use Rubygems 3.5.x
 * Install bundler:
   `gem install bundler`
 * Install dependencies and setup the database:
@@ -157,7 +157,7 @@ build will fail.
 If you'd like RuboCop to attempt to automatically fix your style offenses, you
 can try running:
 
-    bundle exec rake rubocop:auto_correct
+    bundle exec rake rubocop:autocorrect
 
 #### Importing gems into the database
 
@@ -205,17 +205,39 @@ and prefixing your commands with `script/dev`.
 For example, running `script/dev bin/rails s` will launch the development server with development secrets set in
 the environment.
 
+#### Running with local RSTUF
+
+There is experimental [RSTUF](https://repository-service-tuf.readthedocs.io/en/stable/) support in RubyGems.org. When `RSTUF_API_URL` environment variable is set, RSTUF functionality is enabled. Easiest way to setup RSTUF locally is to follow [official docker guide](https://repository-service-tuf.readthedocs.io/en/latest/guide/deployment/guide/docker.html). It starts RSTUF API available at `http://localhost:80` by default and app can be locally started using following command.
+
+```bash
+RSTUF_API_URL="http://localhost:80" bin/rails s
+```
+
 ---
 
 When everything is set up, start the web server with `rails server` and browse to
 [localhost:3000](http://localhost:3000)!
+
+#### Running with local Timescale
+
+There is early and experimental [TimescaleDB](https://docs.timescale.com/self-hosted/latest/) support in RubyGems.org for downloads statistics. When secondary `downloads` database is configured (using `database.yml` or by providing `DOWNLOADS_DATABASE_URL` environment variable), experimental features are automatically enabled.
+
+Localy, the easiest way is to run TimescaleDB using `docker-compose.yml` and configure using `database.yml.ts-sample`.
+
+```bash
+cp config/database.yml.ts-sample config/database.yml
+docker compose up -d db cache search # run required dependencies
+docker compose up -d downloads-db # run optional TimescaleDB dependency
+bin/rails db:setup # setup all databases, including optional Timescale one
+bin/rails s # start rails server as ususal
+```
 
 Database Layout
 ---------------
 
 Courtesy of [Rails ERD](https://voormedia.github.io/rails-erd/)
 
-![Rubygems.org Domain Model](https://cdn.rawgit.com/rubygems/rubygems.org/master/doc/erd.svg)
+    bin/rails gen_erd
 
 Locales
 -------

@@ -273,8 +273,8 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.handle, @user.name
     end
 
-    should "setup a field to toggle showing email with default true" do
-      assert @user.hide_email
+    should "setup a field to toggle showing email with default falsš" do
+      refute_predicate @user, :public_email?
     end
 
     should "only return rubygems" do
@@ -282,6 +282,46 @@ class UserTest < ActiveSupport::TestCase
       create(:ownership, user: @user, rubygem: my_rubygem)
 
       assert_equal [my_rubygem], @user.rubygems
+    end
+
+    context "generate_confirmation_token" do
+      should "set confirmation token and token_expires_at" do
+        assert_changed(@user, :confirmation_token, :token_expires_at) do
+          @user.generate_confirmation_token
+          @user.save!
+        end
+      end
+
+      context "when user has an unconfirmed email" do
+        setup do
+          @user.update(unconfirmed_email: "unconfirmed@example.com")
+        end
+
+        should "delete the unconfirmed email by default" do
+          assert_changed(@user, :unconfirmed_email, :confirmation_token, :token_expires_at) do
+            @user.generate_confirmation_token
+            @user.save!
+          end
+
+          assert_nil @user.unconfirmed_email
+        end
+
+        should "not delete unconfirmed email when reset_unconfirmed_email is false" do
+          assert_changed(@user, :confirmation_token, :token_expires_at) do
+            @user.generate_confirmation_token(reset_unconfirmed_email: false)
+            @user.save!
+          end
+
+          assert_equal "unconfirmed@example.com", @user.unconfirmed_email
+        end
+      end
+
+      should "generate a sufficiently long token" do
+        @user.generate_confirmation_token
+        @user.save!
+
+        assert_operator @user.confirmation_token.length, :>=, 24, "Token must be at least 24 characters long"
+      end
     end
 
     context "unconfirmed_email update" do
@@ -354,18 +394,26 @@ class UserTest < ActiveSupport::TestCase
 
       context "when enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
         end
 
         should "be able to use a recovery code only once" do
-          code = @user.mfa_recovery_codes.first
+          code = @user.new_mfa_recovery_codes.first
 
-          assert @user.ui_otp_verified?(code)
-          refute @user.ui_otp_verified?(code)
+          assert @user.ui_mfa_verified?(code)
+          refute @user.ui_mfa_verified?(code)
+        end
+
+        should "be able to use mfa recovery codes out of order" do
+          @user.new_mfa_recovery_codes.reverse_each do |code|
+            assert @user.ui_mfa_verified?(code)
+          end
+
+          assert_empty @user.reload.mfa_hashed_recovery_codes
         end
 
         should "be able to verify correct OTP" do
-          assert @user.ui_otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+          assert @user.ui_mfa_verified?(ROTP::TOTP.new(@user.totp_seed).now)
         end
 
         should "return true for mfa status check" do
@@ -374,28 +422,33 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "return true for otp in last interval" do
-          last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+          last_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current - 30)
 
-          assert @user.ui_otp_verified?(last_otp)
+          assert @user.ui_mfa_verified?(last_otp)
         end
 
         should "return true for otp in next interval" do
-          next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+          next_otp = ROTP::TOTP.new(@user.totp_seed).at(Time.current + 30)
 
-          assert @user.ui_otp_verified?(next_otp)
+          assert @user.ui_mfa_verified?(next_otp)
         end
 
         context "blocking user with api key" do
-          setup { create(:api_key, user: @user) }
+          setup do
+            api_key = create(:api_key, owner: @user)
+            # simulate gem pushed using api key to ensure
+            # user with pushed gems can be blocked
+            create(:version, pusher: @user, pusher_api_key: api_key)
+          end
 
           should "reset email and mfa" do
-            assert_changed(@user, :email, :password, :api_key, :mfa_seed, :remember_token) do
+            assert_changed(@user, :email, :password, :api_key, :totp_seed, :remember_token) do
               @user.block!
             end
 
             assert @user.email.start_with?("security+locked-")
             assert @user.email.end_with?("@rubygems.org")
-            assert_empty @user.mfa_recovery_codes
+            assert_empty @user.mfa_hashed_recovery_codes
             assert_predicate @user, :mfa_disabled?
           end
 
@@ -403,18 +456,21 @@ class UserTest < ActiveSupport::TestCase
             @user.block!
 
             assert_nil @user.api_key
-            assert_empty @user.api_keys
+            assert_predicate @user.api_keys, :any?
+            @user.api_keys.each do |api_key|
+              assert_predicate api_key, :expired?
+            end
           end
         end
       end
 
       context "when disabled" do
         setup do
-          @user.disable_mfa!
+          @user.disable_totp!
         end
 
         should "return false for verifying OTP" do
-          refute @user.ui_otp_verified?("")
+          refute @user.ui_mfa_verified?("")
         end
 
         should "return false for mfa status check" do
@@ -493,7 +549,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when mfa `ui_only` user owns a gem with more downloads than the recommended threshold but less than the required threshold" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
           GemDownload.increment(
             Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
@@ -516,7 +572,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when mfa `ui_only` user owns a gem with more downloads than the required threshold" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
           GemDownload.increment(
             Rubygem::MFA_REQUIRED_THRESHOLD + 1,
@@ -535,7 +591,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when strong user owns a gem with more downloads than the recommended threshold but less than the required threshold" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
 
           GemDownload.increment(
             Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
@@ -558,7 +614,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when strong user owns a gem with more downloads than the required threshold" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
 
           GemDownload.increment(
             Rubygem::MFA_REQUIRED_THRESHOLD + 1,
@@ -579,8 +635,8 @@ class UserTest < ActiveSupport::TestCase
 
   context ".without_mfa" do
     setup do
-      create(:user, handle: "has_mfa", mfa_level: "ui_and_api")
-      create(:user, handle: "no_mfa", mfa_level: "disabled")
+      create(:user, handle: "has_mfa").enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      create(:user, handle: "no_mfa")
     end
 
     should "return only users without mfa" do
@@ -644,7 +700,9 @@ class UserTest < ActiveSupport::TestCase
       @user = create(:user)
       @rubygem = create(:rubygem)
       create(:ownership, rubygem: @rubygem, user: @user)
-      @version = create(:version, rubygem: @rubygem)
+      @version1 = create(:version, rubygem: @rubygem)
+      @version2 = create(:version, rubygem: @rubygem)
+      GemDownload.increment(100_001, rubygem_id: @rubygem.id, version_id: @version1.id)
     end
 
     context "user is only owner of gem" do
@@ -652,6 +710,20 @@ class UserTest < ActiveSupport::TestCase
         assert_difference "Deletion.count", 1 do
           @user.destroy
         end
+      end
+      should "preserve ineligible deletion version" do
+        @user.destroy
+
+        assert_predicate @version1.reload, :indexed?
+
+        assert_event Events::RubygemEvent::VERSION_YANK_FORBIDDEN, {
+          number: @version1.number,
+          platform: "ruby",
+          yanked_by: @user.handle,
+          version_gid: @version1.to_gid_param,
+          actor_gid: @user.to_gid.to_s,
+          reason: "Versions with more than 100,000 downloads cannot be deleted."
+        }, @rubygem.reload.events.where(tag: Events::RubygemEvent::VERSION_YANK_FORBIDDEN).sole
       end
       should "mark rubygem unowned" do
         @user.destroy
@@ -828,7 +900,25 @@ class UserTest < ActiveSupport::TestCase
     setup { @user = create(:user, handle: "MikeJudge") }
 
     should "not raise ActiveRecord::RecordInvalid for email address already taken" do
-      assert_changed(@user, :email, :password, :api_key, :mfa_seed, :remember_token) do
+      assert_changed(@user, :email, :password, :api_key, :remember_token) do
+        @user.block!
+      end
+    end
+  end
+
+  context "block invalid legacy user" do
+    setup do
+      @user = create(:user, handle: "MikeJudge")
+      @api_key = create(:api_key, owner: @user)
+
+      # simulate legacy invalid api key
+      @api_key.update_columns(scopes: @api_key.scopes + %i[show_dashboard add_owner])
+
+      refute_predicate @api_key, :valid?
+    end
+
+    should "block user anyway" do
+      assert_changed(@user, :email, :password, :api_key, :remember_token) do
         @user.block!
       end
     end
@@ -836,11 +926,29 @@ class UserTest < ActiveSupport::TestCase
 
   context ".normalize_email" do
     should "return the normalized email" do
-      assert_equal "user@example.com", User.normalize_email(:"UsEr@ example . COM")
+      assert_equal "UsEr@example.COM", User.normalize_email(:"UsEr@\texample . COM")
+    end
+
+    should "preserve valid characters so that the format error can be returned" do
+      # UTF-8 "香" character, which is valid UTF-8, but we reject utf-8 in email addresses
+      assert_equal "香@example.com", User.normalize_email("\u9999@example.com".force_encoding("utf-8"))
+
+      # ISO-8859-1 "Å" character (valid in ISO-8859-1)
+      encoded_email = "myem\xC5il@example.com".force_encoding("ISO-8859-1")
+
+      assert_equal encoded_email, User.normalize_email(encoded_email)
     end
 
     should "return an empty string on invalid inputs" do
-      assert_equal "", User.normalize_email("\u9999".force_encoding("ascii"))
+      # bad encoding when sent as ASCII-8BIT
+      assert_equal "", User.normalize_email("\u9999@example.com".force_encoding("ascii"))
+
+      # ISO-8859-1 "Å" character (invalid in UTF-8, which uses \xC385 for this character)
+      assert_equal "", User.normalize_email("myem\xC5il@example.com".force_encoding("UTF-8"))
+    end
+
+    should "return an empty string for nil" do
+      assert_equal "", User.normalize_email(nil)
     end
   end
 end

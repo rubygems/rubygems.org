@@ -5,7 +5,7 @@ class RemoveRubyforger < ActiveRecord::Migration[4.2]
   end
 
   def down
-    create_table :rubyforgers do |t|
+    create_table :rubyforgers do |t| # rubocop:disable Rails/CreateTableWithTimestamps
       t.string :email
       t.string :encrypted_password, limit: 40
     end

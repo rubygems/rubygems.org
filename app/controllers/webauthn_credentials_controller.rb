@@ -13,7 +13,8 @@ class WebauthnCredentialsController < ApplicationController
     webauthn_credential = build_webauthn_credential
 
     if webauthn_credential.save
-      redirect_to edit_settings_path
+      flash[:notice] = t(".success")
+      render_callback_redirect
     else
       message = webauthn_credential.errors.full_messages.to_sentence
       render json: { message: message }, status: :unprocessable_entity
@@ -38,11 +39,11 @@ class WebauthnCredentialsController < ApplicationController
   private
 
   def webauthn_credential_params
-    params.require(:webauthn_credential).permit(:nickname)
+    params.permit(webauthn_credential: :nickname).require(:webauthn_credential)
   end
 
   def build_webauthn_credential
-    credential = WebAuthn::Credential.from_create(params.require(:credentials))
+    credential = WebAuthn::Credential.from_create(params.permit(credentials: {}).require(:credentials))
     credential.verify(session.dig(:webauthn_registration, "challenge").to_s)
 
     current_user.webauthn_credentials.build(
@@ -52,5 +53,14 @@ class WebauthnCredentialsController < ApplicationController
         sign_count: credential.sign_count
       )
     )
+  end
+
+  def render_callback_redirect
+    if current_user.mfa_device_count_one?
+      session[:show_recovery_codes] = current_user.new_mfa_recovery_codes
+      render json: { redirect_url: recovery_multifactor_auth_url }
+    else
+      render json: { redirect_url: edit_settings_url }
+    end
   end
 end

@@ -96,7 +96,7 @@ class RubygemContents::Entry
     media_type, sub_type = mime.split(";").first.split("/")
     return true if media_type == "text"
     return false if media_type != "application"
-    return true if MIME_TEXTUAL_SUBTYPES.include?(sub_type)
+    true if MIME_TEXTUAL_SUBTYPES.include?(sub_type)
   end
 
   def body

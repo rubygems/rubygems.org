@@ -47,7 +47,7 @@ class OwnershipRequestsTest < SystemTest
     create(:ownership_call, rubygem: rubygem)
     create(:ownership_request, user: user, rubygem: rubygem)
 
-    visit rubygem_adoptions_path(rubygem, as: user.id)
+    visit rubygem_adoptions_path(rubygem.slug, as: user.id)
 
     click_button "Close"
 
@@ -78,7 +78,7 @@ class OwnershipRequestsTest < SystemTest
     user = create(:user)
     create_list(:ownership_request, 3, rubygem: rubygem)
 
-    visit rubygem_adoptions_path(rubygem, as: user.id)
+    visit rubygem_adoptions_path(rubygem.slug, as: user.id)
 
     refute page.has_link? "Close all"
   end

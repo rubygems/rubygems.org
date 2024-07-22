@@ -62,7 +62,7 @@ class StatsControllerTest < ActionController::TestCase
         element.pluck(:style).each do |width|
           width =~ /width: (\d+[,.]\d+)%/
 
-          assert Regexp.last_match(1).to_f <= 100, "#{Regexp.last_match(1)} is greater than 100"
+          assert_operator Regexp.last_match(1).to_f, :<=, 100, "#{Regexp.last_match(1)} is greater than 100"
         end
       end
     end

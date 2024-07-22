@@ -8,7 +8,7 @@ class DependenciesControllerTest < ActionController::TestCase
     @dep_rubygem = create(:rubygem)
 
     ["1.0.2", "2.4.3", "4.5.6"].map do |ver_number|
-      create(:version, number: ver_number, rubygem: @dep_rubygem)
+      create(:version, number: ver_number, rubygem: @dep_rubygem, indexed: true)
     end
 
     create(:dependency,
@@ -24,7 +24,11 @@ class DependenciesControllerTest < ActionController::TestCase
 
   def render_str_call(scope, dependencies)
     local_var = { scope: scope, dependencies: dependencies, gem_name: @rubygem.name }
-    ActionController::Base.new.render_to_string(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
+    DependenciesController.renderer.new(
+      {
+        "HTTP_HOST" => "test.host"
+      }
+    ).render(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
   end
 
   context "GET to show in html" do

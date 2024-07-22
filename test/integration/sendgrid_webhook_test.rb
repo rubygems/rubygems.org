@@ -53,8 +53,8 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
     assert events.all?(&:pending?)
   end
 
-  def authorization_header(password: Rails.application.secrets.sendgrid_webhook_password)
-    username = Rails.application.secrets.sendgrid_webhook_username
+  def authorization_header(password: "password")
+    username = "test_sendgrid_webhook_user"
     encoded_credentials = Base64.encode64("#{username}:#{password}")
     { "Authorization" => "Basic #{encoded_credentials}" }
   end

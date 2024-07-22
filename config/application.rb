@@ -2,7 +2,7 @@ require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
-# require "active_model/railtie"
+require "active_model/railtie"
 require "active_job/railtie"
 require "active_record/railtie"
 # require "active_storage/engine"
@@ -14,6 +14,7 @@ require "action_view/railtie"
 # require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -21,7 +22,12 @@ Bundler.require(*Rails.groups)
 module Gemcutter
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.1
+    config.load_defaults 7.1
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks cops shoryuken])
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -51,12 +57,22 @@ module Gemcutter
       RubygemFs.s3! ENV["S3_PROXY"] if ENV["S3_PROXY"]
     end
 
-    config.plugins = [:dynamic_form]
-
-    config.eager_load_paths << Rails.root.join("lib")
     config.toxic_domains_filepath = Rails.root.join("vendor", "toxic_domains_whole.txt")
 
     config.active_job.queue_adapter = :good_job
+
+    config.add_autoload_paths_to_load_path = false
+    config.autoload_paths << "#{root}/app/views"
+    config.autoload_paths << "#{root}/app/views/layouts"
+    config.autoload_paths << "#{root}/app/views/components"
+
+    config.active_support.cache_format_version = 7.1
+
+    config.action_dispatch.rescue_responses["Rack::Multipart::EmptyContentError"] = :bad_request
+
+    config.action_dispatch.default_headers.merge!(
+      "Cross-Origin-Opener-Policy" => "same-origin"
+    )
   end
 
   def self.config
@@ -65,8 +81,9 @@ module Gemcutter
 
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
-  EMAIL_TOKEN_EXPRIES_AFTER = 3.hours
-  HOST = config["host"]
+  EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
+  HOST = config["host"].freeze
+  HOST_DISPLAY = Rails.env.production? || Rails.env.development? || Rails.env.test? ? "RubyGems.org" : "RubyGems.org #{Rails.env}"
   NEWS_DAYS_LIMIT = 7.days
   NEWS_MAX_PAGES = 10
   NEWS_PER_PAGE = 10
@@ -77,6 +94,7 @@ module Gemcutter
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
   SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze
+  SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 1).to_i
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
   STATS_PER_PAGE = 10
@@ -87,5 +105,9 @@ module Gemcutter
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
-  ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.development? || Rails.env.test?
+  ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.local?
+  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
+  PAGES = %w[
+    about data download faq migrate security sponsors
+  ].freeze
 end

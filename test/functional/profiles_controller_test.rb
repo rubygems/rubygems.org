@@ -25,9 +25,23 @@ class ProfilesControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to me" do
+      setup { get :me }
+
+      should respond_with :redirect
+      should redirect_to("the sign in path") { sign_in_path }
+    end
+
+    context "on GET to security_events" do
+      setup { get :security_events }
+
+      should respond_with :redirect
+      should redirect_to("the sign in path") { sign_in_path }
+    end
+
     context "on GET to show when hide email" do
       setup do
-        @user.update(hide_email: true)
+        @user.update(public_email: false)
         get :show, params: { id: @user.id }
       end
 
@@ -75,6 +89,28 @@ class ProfilesControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to me" do
+      setup do
+        get :me
+      end
+
+      should respond_with :redirect
+      should redirect_to("the user's profile page") { profile_path(@user.handle) }
+    end
+
+    context "on GET to delete" do
+      setup do
+        get :delete
+      end
+
+      should respond_with :success
+
+      should "render user delete page" do
+        page.assert_text "Delete profile"
+        page.assert_selector "input[type=password][autocomplete=current-password]"
+      end
+    end
+
     context "on GET to edit" do
       setup { get :edit }
 
@@ -82,6 +118,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should "render user edit page" do
         assert page.has_content? "Edit profile"
+        assert page.has_css? "input[type=password][autocomplete=current-password]"
       end
     end
 
@@ -106,11 +143,11 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating show email" do
         setup do
           @handle = "john_m_doe"
-          @hide_email = true
+          @public_email = true
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
           put :update,
-            params: { user: { handle: @handle, hide_email: @hide_email, password: @user.password } }
+            params: { user: { handle: @handle, public_email: @public_email, password: @user.password } }
         end
 
         should respond_with :redirect
@@ -118,15 +155,35 @@ class ProfilesControllerTest < ActionController::TestCase
         should set_flash.to("Your profile was updated.")
 
         should "update email toggle" do
-          assert_equal @hide_email, User.last.hide_email
+          assert_equal @public_email, User.last.public_email
         end
       end
 
-      context "updating without password" do
+      context "updating without params" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, params: {}
+        end
+
+        should respond_with :bad_request
+      end
+
+      context "updating with missing password params" do
         setup do
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
           put :update, params: { user: { handle: "doejohn" } }
+        end
+
+        should respond_with :bad_request
+      end
+
+      context "updating without inputting password" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, params: { user: { handle: "doejohn", password: "" } }
         end
 
         should set_flash.to("This request was denied. We could not verify your password.")
@@ -246,6 +303,28 @@ class ProfilesControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to security_events" do
+      setup do
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS)
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { authentication_method: "webauthn" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { two_factor_method: "webauthn" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::LOGIN_SUCCESS, additional: { two_factor_method: "OTP" })
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_SENT)
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_ADDED, additional: { email: "other@example.com" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_VERIFIED, additional: { email: "other@example.com" })
+
+        create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_CREATED, additional: { gem: create(:rubygem).name })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_DELETED)
+        create(:events_user_event, user: @user, tag: Events::UserEvent::PASSWORD_CHANGED)
+
+        get :security_events
+      end
+
+      should respond_with :success
+    end
+
     context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
       setup do
         @rubygem = create(:rubygem)
@@ -279,7 +358,7 @@ class ProfilesControllerTest < ActionController::TestCase
           context "on #{label}" do
             setup { process(request_params[:action], **request_params[:request]) }
 
-            should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+            should redirect_to("the edit settings page") { edit_settings_path }
 
             should "set mfa_redirect_uri" do
               assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
@@ -290,7 +369,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       context "user has mfa set to weak level" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
         end
 
         context "on GET to show" do
@@ -317,7 +396,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       context "user has MFA set to strong level, expect normal behaviour" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         end
 
         context "on GET to show" do
