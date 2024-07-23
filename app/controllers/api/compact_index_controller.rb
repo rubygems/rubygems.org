@@ -33,6 +33,7 @@ class Api::CompactIndexController < Api::BaseController
     headers["Digest"] = "sha-256=#{digest}"
     headers["Repr-Digest"] = "sha-256=:#{digest}:"
     headers["Accept-Ranges"] = "bytes"
+    headers["Content-Type"] = "text/plain; charset=utf-8"
 
     ranges = Rack::Utils.byte_ranges(request.env, response_body.bytesize)
     if ranges
