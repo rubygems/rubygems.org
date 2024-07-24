@@ -32,7 +32,7 @@
   <h3 class="t-list__heading"><%= OIDC::ApiKeyRole.human_attribute_name(:id_tokens) %></h3>
   <div class="push--s">
     <header class="gems__header push--s">
-      <p class="gems__meter l-mb-0"><%= page_entries_info(@id_tokens) %></p>
+      <p class="gems__meter l-mb-0"><%== pagy_info(@id_tokens_pagy, item_name: "ID Tokens") %></p>
     </header>
     <% if @id_tokens.present? %>
       <%= render OIDC::IdToken::TableComponent.new(id_tokens: @id_tokens) %>

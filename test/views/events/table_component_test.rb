@@ -41,7 +41,7 @@ class Events::TableComponentTest < ActiveSupport::TestCase
   end
 
   def page(array, page: 0, per: 10)
-    Kaminari.paginate_array(array).page(page).per(per)
+    Pagy::Backend.pagy(array, page: page, limit: per)
   end
 
   test "renders an empty view" do

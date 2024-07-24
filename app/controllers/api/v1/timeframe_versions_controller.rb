@@ -6,9 +6,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
   MAXIMUM_TIMEFRAME_QUERY_IN_DAYS = 7
 
   def index
-    render_rubygems(
-      Version.created_between(from_time, to_time).page(@page)
-    )
+    render_rubygems(*pagy(Version.created_between(from_time, to_time)))
   end
 
   private
@@ -35,12 +33,13 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
     raise InvalidTimeframeParameterError, 'the "to" parameter must be iso8601 formatted'
   end
 
-  def render_rubygems(versions)
+  def render_rubygems(pagy, versions)
     rubygems = versions.includes(:dependencies, :gem_download, rubygem: %i[linkset gem_download]).map do |version|
       payload = version.rubygem.payload(version)
       payload.merge(version.as_json)
     end
 
+    pagy_headers_merge(pagy)
     respond_to do |format|
       format.json { render json: rubygems }
       format.yaml { render yaml: rubygems }

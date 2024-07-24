@@ -8,6 +8,7 @@ class Profiles::SecurityEventsView < ApplicationView
   include Phlex::Rails::Helpers::LinkTo
   extend Dry::Initializer
 
+  option :security_events_pagy
   option :security_events
 
   def view_template
@@ -18,7 +19,7 @@ class Profiles::SecurityEventsView < ApplicationView
         t(".description_html")
       end
 
-      render Events::TableComponent.new(security_events: security_events)
+      render Events::TableComponent.new(security_events_pagy:, security_events:)
     end
   end
 
