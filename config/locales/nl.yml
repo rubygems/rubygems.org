@@ -368,6 +368,8 @@ nl:
       gem_html:
     gem_trusted_publisher_added:
       title:
+    admin_manual:
+      title:
   news:
     show:
       title:

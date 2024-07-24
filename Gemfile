@@ -141,4 +141,5 @@ group :test do
   gem "aggregate_assertions", "~> 0.2.0"
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.7"
+  gem "gem_server_conformance", "~> 0.1.4"
 end
