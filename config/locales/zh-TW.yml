@@ -374,6 +374,8 @@ zh-TW:
         被推送的時候被呼叫。
     gem_trusted_publisher_added:
       title:
+    admin_manual:
+      title:
   news:
     show:
       title: 最新發佈
