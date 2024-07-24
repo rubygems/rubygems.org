@@ -377,6 +377,8 @@ en:
       gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
     gem_trusted_publisher_added:
       title: TRUSTED PUBLISHER ADDED
+    admin_manual:
+      title: MESSAGE FROM RUBYGEMS.ORG ADMINS
   news:
     show:
       title: New Releases — All Gems

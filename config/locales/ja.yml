@@ -377,6 +377,8 @@ ja:
       gem_html: このwebhookは以前<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>がプッシュされたときに呼ばれました。
     gem_trusted_publisher_added:
       title: 信頼できる発行元が追加されました
+    admin_manual:
+      title:
   news:
     show:
       title: 新しいリリース - 全てのgem
