@@ -6,7 +6,8 @@ class SearchesController < ApplicationController
     @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
 
     return unless @gems
-    set_total_pages if @gems.total_count > Gemcutter::SEARCH_MAX_PAGES * Rubygem.default_per_page
+    @gems_pagy = Pagy.new_from_searchkick(@gems)
+    set_total_pages if @gems.total_count > 10_000
     exact_match = Rubygem.name_is(params[:query]).first
     @yanked_gem = exact_match unless exact_match&.indexed_versions?
     @yanked_filter = true if params[:yanked] == "true"

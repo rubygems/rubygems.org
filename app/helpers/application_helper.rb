@@ -1,5 +1,6 @@
 module ApplicationHelper
   include BetterHtml::Helpers
+  include Pagy::Frontend
 
   def page_title
     combo = "#{t :title} | #{t :subtitle}"
@@ -57,12 +58,6 @@ module ApplicationHelper
 
   def active?(path)
     "is-active" if request.path_info == path
-  end
-
-  # replacement for Kaminari::ActionViewExtension#paginate
-  # only shows `next` and `prev` links and not page numbers, saving a COUNT(DISTINCT ..) query
-  def plain_paginate(items)
-    render "layouts/plain_paginate", items: items
   end
 
   def content_for_title(title, title_url)

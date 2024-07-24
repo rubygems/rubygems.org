@@ -46,32 +46,27 @@
   margin-right: 8px;
   margin-left: 8px; }
 
-.pagination {
+nav.pagy {
   margin-top: 90px;
   position: relative;
   width: 100%;
   overflow: auto;
   text-align: center; }
-  .pagination a, .pagination em {
+  nav.pagy a, nav.pagy em {
     margin-right: 8px;
     margin-left: 8px;
     font-style: normal; }
-  .pagination a {
+  nav.pagy a {
     color: #9da2ab;
     transition-duration: 0.25s;
     transition-property: color;
     outline: none; }
-    .pagination a:hover, .pagination a:focus, .pagination a:active {
+    nav.pagy a:hover, nav.pagy a:focus, nav.pagy a:active {
       color: #141c22; }
-  .pagination .previous_page.disabled, .pagination .next_page.disabled {
+  nav.pagy a:first-child:not([href]), nav.pagy a:last-child:not([href]) {
     color: #9da2ab; }
-    .pagination .previous_page.disabled:hover, .pagination .previous_page.disabled:focus, .pagination .previous_page.disabled:active, .pagination .next_page.disabled:hover, .pagination .next_page.disabled:focus, .pagination .next_page.disabled:active {
+    nav.pagy a:first-child:not([href]):hover, nav.pagy a:first-child:not([href]):focus, nav.pagy a:first-child:not([href]):active, nav.pagy nav.pagy a:last-child:not([href]):hover, nav.pagy nav.pagy a:last-child:not([href]):focus, nav.pagy nav.pagy a:last-child:not([href]):active {
       color: #9da2ab; }
-  .pagination .previous_page {
-    position: absolute;
-    left: 0; }
-  .pagination .next_page {
-    position: absolute;
-    right: 0; }
-  .pagination .current {
+  nav.pagy .current {
+    color: #000;
     margin: 0 8px; }

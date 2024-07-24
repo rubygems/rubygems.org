@@ -11,15 +11,11 @@ class OIDC::ApiKeyRolesController < ApplicationController
   before_action :set_page, only: :index
 
   def index
-    @api_key_roles = current_user.oidc_api_key_roles.active.includes(:provider)
-      .page(@page)
-      .strict_loading
+    @api_key_roles_pagy, @api_key_roles = pagy(current_user.oidc_api_key_roles.active.includes(:provider).strict_loading)
   end
 
   def show
-    @id_tokens = @api_key_role.id_tokens.order(id: :desc).includes(:api_key)
-      .page(0).per(10)
-      .strict_loading
+    @id_tokens_pagy, @id_tokens = pagy(@api_key_role.id_tokens.order(id: :desc).includes(:api_key).strict_loading, limit: 10)
     respond_to do |format|
       format.json do
         render json: @api_key_role

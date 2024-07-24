@@ -8,8 +8,8 @@ class ApiKeysController < ApplicationController
   verify_session_before
 
   def index
-    @api_key  = session.delete(:api_key)
-    @api_keys = current_user.api_keys.unexpired.not_oidc.preload(ownership: :rubygem).page(@page)
+    @api_key = session.delete(:api_key)
+    @api_keys_pagy, @api_keys = pagy(current_user.api_keys.unexpired.not_oidc.preload(ownership: :rubygem))
     redirect_to new_profile_api_key_path if @api_keys.empty?
   end
 

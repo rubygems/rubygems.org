@@ -13,9 +13,10 @@ class OwnershipCallsController < ApplicationController
 
   def index
     set_page
-    @ownership_calls = OwnershipCall.opened.includes(:user, rubygem: %i[latest_version gem_download]).order(created_at: :desc)
-      .page(@page)
-      .per(Gemcutter::OWNERSHIP_CALLS_PER_PAGE)
+    @ownership_calls_pagy, @ownership_calls = pagy(
+      OwnershipCall.opened.includes(:user, rubygem: %i[latest_version gem_download]).order(created_at: :desc),
+      limit: Gemcutter::OWNERSHIP_CALLS_PER_PAGE
+    )
   end
 
   def create
