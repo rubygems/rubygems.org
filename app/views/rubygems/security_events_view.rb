@@ -7,6 +7,7 @@ class Rubygems::SecurityEventsView < ApplicationView
   extend Dry::Initializer
 
   option :rubygem
+  option :security_events_pagy
   option :security_events
 
   def view_template
@@ -17,7 +18,7 @@ class Rubygems::SecurityEventsView < ApplicationView
         t(".description_html", gem: helpers.link_to(rubygem.name, rubygem_path(rubygem.slug)))
       end
 
-      render Events::TableComponent.new(security_events: security_events)
+      render Events::TableComponent.new(security_events_pagy:, security_events:)
     end
   end
 

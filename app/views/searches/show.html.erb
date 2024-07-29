@@ -25,7 +25,7 @@
     <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
 
     <header class="gems__header push--s">
-      <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem') %></p>
+      <p class="gems__meter"><%== pagy_info(@gems_pagy, :item_name => 'gem') %></p>
     </header>
 
     <%= render partial: 'aggregations', locals: { gems: @gems } %>
@@ -44,7 +44,7 @@
 
     <% if @gems.present? %>
       <%= render partial: 'rubygems/rubygem', collection: @gems %>
-      <%= paginate @gems %>
+      <%== pagy_nav @gems_pagy if @gems_pagy.pages > 1 %>
     <% end %>
   <% end %>
 <% end %>

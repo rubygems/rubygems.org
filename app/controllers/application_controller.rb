@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include ApplicationMultifactorMethods
   include TraceTagger
+  include Pagy::Backend
 
   helper ActiveSupport::NumberHelper
 

@@ -4,12 +4,12 @@
     <p><%= t('.not_hosted_notice') %></p>
   </div>
 <% else %>
-  <h3 class="t-list__heading"><%= t('.versions_since', :count => @versions.total_count, :since => nice_date_for(@versions.map(&:authored_at).min)) %>:</h3>
+  <h3 class="t-list__heading"><%= t('.versions_since', :count => @versions_pagy.count, :since => nice_date_for(@versions.map(&:authored_at).min)) %>:</h3>
   <div class="versions">
     <ul class="t-list__items">
       <%= render @versions %>
     </ul>
 
-    <%= paginate @versions %>
+    <%== pagy_nav @versions_pagy if @versions_pagy.pages > 1 %>
   </div>
 <% end %>
