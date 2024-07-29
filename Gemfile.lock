@@ -339,13 +339,14 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
-    launchdarkly-server-sdk (8.6.0)
+    launchdarkly-server-sdk (8.7.0)
       concurrent-ruby (~> 1.1)
       http (>= 4.4.0, < 6.0.0)
       json (~> 2.3)
       ld-eventsource (= 2.2.2)
       observer (~> 0.1.2)
       semantic (~> 1.6)
+      zlib (~> 3.1)
     launchy (3.0.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
@@ -509,7 +510,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.1.2)
       stringio
-    public_suffix (6.0.0)
+    public_suffix (6.0.1)
     puma (6.4.2)
       nio4r (~> 2.0)
     pundit (2.3.2)
@@ -791,6 +792,7 @@ GEM
       nokogiri (~> 1.8)
     yard (0.9.36)
     zeitwerk (2.6.16)
+    zlib (3.1.1)
 
 PLATFORMS
   ruby
@@ -834,7 +836,7 @@ DEPENDENCIES
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.0)
   kaminari (~> 1.2)
-  launchdarkly-server-sdk (~> 8.6)
+  launchdarkly-server-sdk (~> 8.7)
   launchy (~> 3.0)
   letter_opener (~> 1.10)
   letter_opener_web (~> 3.0)
@@ -1035,7 +1037,7 @@ CHECKSUMS
   kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
-  launchdarkly-server-sdk (8.6.0) sha256=c18c62d08f90b795105e98f07a24997a5628126623fadbd3b80c0d23b9409b75
+  launchdarkly-server-sdk (8.7.0) sha256=062e7dc42c2884ed9deed42c49937917faa911128a659386e4bd45d1ad1506eb
   launchy (3.0.1) sha256=b7fa60bda0197cf57614e271a250a8ca1f6a34ab889a3c73f67ec5d57c8a7f2c
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
@@ -1100,7 +1102,7 @@ CHECKSUMS
   pry (0.14.1) sha256=99b6df0665875dd5a39d85e0150aa5a12e2bb4fef401b6c4f64d32ee502f8454
   pry-byebug (3.10.1) sha256=c8f975c32255bfdb29e151f5532130be64ff3d0042dc858d0907e849125581f8
   psych (5.1.2) sha256=337322f58fc2bf24827d2b9bd5ab595f6a72971867d151bb39980060ea40a368
-  public_suffix (6.0.0) sha256=d2c8e12e076813f8fca0307205c088c6903adc70b92c65ab22479dfa9bc0a89e
+  public_suffix (6.0.1) sha256=61d44e1cab5cbbbe5b31068481cf16976dd0dc1b6b07bd95617ef8c5e3e00c6f
   puma (6.4.2) sha256=3eb41999d00733280be3faeb00d610331b6965a537a8cd3d905f316c38575b44
   pundit (2.3.2) sha256=7ca09a5801ebaedad1966f7eb0b1c52ecb8c94b3b6ab70122cb22856ac187fa3
   pwned (2.3.0) sha256=63f5a9576f109203684e9dd053f815649fd5bc0a0348b7190568272641b22353
@@ -1211,6 +1213,7 @@ CHECKSUMS
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yard (0.9.36) sha256=5505736c1b00c926f71053a606ab75f02070c5960d0778b901fe9d8b0a470be4
   zeitwerk (2.6.16) sha256=17df48537f09a937804f79bd9a92817da3b199e268634972d0e98a21ca588e21
+  zlib (3.1.1) sha256=f61bb03139bbe256c36ba99ef9fece1fb223e9034ed9e5fa3ddb1588d99abc71
 
 RUBY VERSION
    ruby 3.3.4p94
