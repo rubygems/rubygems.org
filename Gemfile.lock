@@ -436,7 +436,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.16.6)
+    nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -723,7 +723,7 @@ GEM
       attr_required (>= 0.0.5)
       faraday (~> 2.0)
       faraday-follow_redirects
-    tailwindcss-rails (2.6.3)
+    tailwindcss-rails (2.6.4)
       railties (>= 7.0.0)
     terser (1.2.3)
       execjs (>= 0.3.0, < 3)
@@ -1073,7 +1073,7 @@ CHECKSUMS
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.0) sha256=5fc0415e6ea1cc0b3dfea7270438ec22b278ca8d524986a3ae4e5ae8d087b42a
   nio4r (2.7.0) sha256=9586a685eca8246d6406e712a525e705d15bb88f709d78fc3f141e864df97276
-  nokogiri (1.16.6) sha256=935fe4dd67d4377f4a05002acb1ffbadbcae265ea8e7869fc40e3a8121f3e1ef
+  nokogiri (1.16.7) sha256=f819cbfdfb0a7b19c9c52c6f2ca63df0e58a6125f4f139707b586b9511d7fe95
   oauth2 (2.0.9) sha256=b21f9defcf52dc1610e0dfab4c868342173dcd707fd15c777d9f4f04e153f7fb
   observer (0.1.2) sha256=d8a3107131ba661138d748e7be3dbafc0d82e732fffba9fccb3d7829880950ac
   octokit (9.1.0) sha256=7849a659d2722c629181f48d1d7e567c9539f1a85c9676144dbdbfc6ce288253
@@ -1181,7 +1181,7 @@ CHECKSUMS
   strong_migrations (2.0.0) sha256=88750f294403e18ec674eda6901f2fc195f553ed6a7928c52e8a3f5b57ff501d
   strscan (3.1.0) sha256=01b8a81d214fbf7b5308c6fb51b5972bbfc4a6aa1f166fd3618ba97e0fcd5555
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
-  tailwindcss-rails (2.6.3) sha256=63a5f3d6f92d0784024b352ab472f0bb85047081c2b51e2679fce558721bb6a6
+  tailwindcss-rails (2.6.4) sha256=175cd2009a6a27b10d16772c072c44974e03a6516e58beb37f185d6bfcd7ebe5
   terser (1.2.3) sha256=c03111b9b01a7e70cd456b5d9aedf0a56fb99314a19311c4278c01ccebe3da9c
   thor (1.3.1) sha256=fa7e3471d4f6a27138e3d9c9b0d4daac9c3d7383927667ae83e9ab42ae7401ef
   tilt (2.3.0) sha256=82dd903d61213c63679d28e404ee8e10d1b0fdf5270f1ad0898ec314cc3e745c
