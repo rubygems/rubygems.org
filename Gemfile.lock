@@ -531,12 +531,12 @@ GEM
     rack-protection (4.0.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0, < 4)
+    rack-sanitizer (2.0.2)
+      rack (>= 1.0, < 4.0)
     rack-session (2.0.0)
       rack (>= 3.0.0)
     rack-test (2.1.0)
       rack (>= 1.3)
-    rack-utf8_sanitizer (1.9.1)
-      rack (>= 1.0, < 4.0)
     rackup (2.1.0)
       rack (>= 3)
       webrick (~> 1.8)
@@ -868,8 +868,8 @@ DEPENDENCIES
   pundit (~> 2.3)
   rack (~> 3.1)
   rack-attack (~> 6.6)
+  rack-sanitizer (~> 2.0)
   rack-test (~> 2.1)
-  rack-utf8_sanitizer (~> 1.8)
   rackup (~> 2.1)
   rails (~> 7.1.0, >= 7.1.3.2)
   rails-controller-testing (~> 1.0)
@@ -1112,9 +1112,9 @@ CHECKSUMS
   rack-attack (6.7.0) sha256=3ca47e8f66cd33b2c96af53ea4754525cd928ed3fa8da10ee6dad0277791d77c
   rack-oauth2 (2.2.1) sha256=c73aa87c508043e2258f02b4fb110cacba9b37d2ccf884e22487d014a120d1a5
   rack-protection (4.0.0) sha256=d0db6185caa46a8c0d134c2c6b4803f4f392a67b2984da311409cb505f67bbf6
+  rack-sanitizer (2.0.2) sha256=a4881a8955d7671c9245c198895afb91114462b190462dc941c9a49a6858d039
   rack-session (2.0.0) sha256=db04b2063e180369192a9046b4559af311990af38c6a93d4c600cee4eb6d4e81
   rack-test (2.1.0) sha256=0c61fc61904049d691922ea4bb99e28004ed3f43aa5cfd495024cc345f125dfb
-  rack-utf8_sanitizer (1.9.1) sha256=6414b70172f5678e23044abf1d00f6a32e62a335507c9548bc5caf9e3bff6da0
   rackup (2.1.0) sha256=6ecb884a581990332e45ee17bdfdc14ccbee46c2f710ae1566019907869a6c4d
   rails (7.1.3.4) sha256=3a7fca9df74ee641dc1e89b8302ac6d03f22883de771e786a0e9f3094e5aa6ad
   rails-controller-testing (1.0.5) sha256=741448db59366073e86fc965ba403f881c636b79a2c39a48d0486f2607182e94
