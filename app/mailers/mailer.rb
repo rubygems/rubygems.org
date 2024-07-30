@@ -30,6 +30,17 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def admin_manual(user, subject, body)
+    @user = user
+    @body = body
+    @sub_title = subject
+    mail to: @user.email,
+         subject: subject do |format|
+           format.html
+           format.text
+         end
+  end
+
   def deletion_complete(email)
     mail to: email,
          subject: I18n.t("mailer.deletion_complete.subject")

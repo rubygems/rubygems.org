@@ -9,6 +9,12 @@
   </div>
 <% end %>
 
+<header class="gems__header">
+  <p class="gems__meter">
+    <%= page_entries_info @api_keys, entry_name: 'API keys' %>
+  </p>
+</header>
+
 <div class="t-body">
   <table class="owners__table">
     <tr class="owners__row owners__header">
@@ -85,6 +91,7 @@
         </td>
       </tr>
     <% end %>
+
     <tr class="owners__row">
       <td class="owners__cell">
       </td>
@@ -113,6 +120,8 @@
       </td>
     </tr>
   </table>
+
+  <%= paginate @api_keys %>
 
   <p><%= button_to t(".new_key"), new_profile_api_key_path, method: "get", class: "form__submit" %></p>
   <% if current_user.oidc_api_key_roles.any? %>

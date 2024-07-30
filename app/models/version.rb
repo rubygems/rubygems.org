@@ -47,6 +47,11 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     allow_blank: true
   validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
 
+  validates :number, :platform, :gem_platform, :full_name, :gem_full_name, :canonical_number,
+    name_format: { requires_letter: false },
+    if: -> { validation_context == :create || number_changed? || platform_changed? },
+    presence: true
+
   validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create
   validate :gem_platform_and_number_are_unique, on: :create

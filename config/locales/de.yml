@@ -427,6 +427,8 @@ de:
         gepusht wurde.
     gem_trusted_publisher_added:
       title: VERTRAUENSWÜRDIGER PUBLISHER HINZUGEFÜGT
+    admin_manual:
+      title:
   news:
     show:
       title: Neue Veröffentlichungen — Alle Gems

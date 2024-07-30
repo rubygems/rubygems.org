@@ -215,4 +215,14 @@ class MailerPreview < ActionMailer::Preview
 
     Mailer.totp_disabled(user_id, Time.now.utc)
   end
+
+  def admin_manual
+    Mailer.admin_manual(User.last, "A subject", <<~TEXT)
+      A body
+      with multiple lines
+      and a link to https://example.com
+      and an emoji 🎉
+      and a p tag <p foo="bar" style="color: yellow;">with html</p> and a <a href="https://example.com">link</a>
+    TEXT
+  end
 end

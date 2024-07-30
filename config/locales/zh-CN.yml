@@ -382,6 +382,8 @@ zh-CN:
         被推送时被调用。
     gem_trusted_publisher_added:
       title:
+    admin_manual:
+      title:
   news:
     show:
       title: 新的发布 — 所有 Gem

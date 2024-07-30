@@ -15,12 +15,12 @@ gem "dogstatsd-ruby", "~> 5.5"
 gem "google-protobuf", "~> 4.27"
 gem "faraday", "~> 2.10"
 gem "faraday-retry", "~> 2.2"
-gem "good_job", "~> 3.29"
+gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 5.5.1", require: false # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
-gem "launchdarkly-server-sdk", "~> 8.6"
+gem "launchdarkly-server-sdk", "~> 8.7"
 gem "mail", "~> 2.8"
 gem "octokit", "~> 9.1"
 gem "omniauth-github", "~> 2.0"
@@ -124,7 +124,7 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.2"
+  gem "datadog-ci", "~> 1.3"
   gem "minitest", "~> 5.24", require: false
   gem "minitest-retry", "~> 0.2.2"
   gem "capybara", "~> 3.40"
@@ -141,4 +141,5 @@ group :test do
   gem "aggregate_assertions", "~> 0.2.0"
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.7"
+  gem "gem_server_conformance", "~> 0.1.4"
 end
