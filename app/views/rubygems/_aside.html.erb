@@ -15,6 +15,14 @@
       <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
     </h2>
   </div>
+
+  <h2 class="gem__ruby-version__heading t-list__heading">
+    <%= t('.gem_version_age') %>:
+    <span class="gem__rubygem-version-age">
+      <p><%= local_time_ago(@latest_version.authored_at) %></p>
+    </span>
+  </h2>
+
   <h2 class="gem__ruby-version__heading t-list__heading">
     <%= pluralized_licenses_header @latest_version %>:
     <span class="gem__ruby-version">
