@@ -25,7 +25,11 @@ pt-BR:
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
+  forbidden:
+  api_gem_not_found:
   api_key_forbidden:
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Acesso Negado. Por favor se registre em https://rubygems.org
   please_sign_in: Por favor, faça login em sua conta para continuar.
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
@@ -86,11 +90,24 @@ pt-BR:
           attributes:
             expires_at:
               inclusion:
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed:
               already_invited:
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
+        user:
+          attributes:
+            handle:
+              invalid:
         version:
           attributes:
             gem_full_name:
@@ -363,6 +380,8 @@ pt-BR:
       gem_html:
     gem_trusted_publisher_added:
       title:
+    admin_manual:
+      title:
   news:
     show:
       title: Novos Releases - Todas as Gems
@@ -435,29 +454,20 @@ pt-BR:
     update:
       failure:
   multifactor_auths:
-    incorrect_otp:
     session_expired:
-    require_totp_disabled:
     require_mfa_enabled:
-    require_totp_enabled:
     require_webauthn_enabled:
     setup_required_html:
     setup_recommended:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
     setup_webauthn_html:
-    new:
-      title:
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
-      time_based:
-    create:
-      qrcode_expired:
-      success:
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied:
       continue:
@@ -466,8 +476,6 @@ pt-BR:
       saved:
       note_html:
       already_generated:
-    destroy:
-      success:
     update:
       invalid_level:
       success:
@@ -480,6 +488,24 @@ pt-BR:
       recovery_code_html:
       security_device:
       verify_code:
+  totps:
+    incorrect_otp:
+    require_totp_disabled:
+    require_totp_enabled:
+    new:
+      title:
+      scan_prompt:
+      otp_prompt:
+      confirm:
+      enable:
+      account:
+      key:
+      time_based:
+    create:
+      qrcode_expired:
+      success:
+    destroy:
+      success:
   notifiers:
     update:
       success:
@@ -712,7 +738,7 @@ pt-BR:
       updated:
       yanked:
     show:
-      subtitle: para %{query}
+      subtitle_html: para <em>%{query}</em>
       month_update:
       week_update:
       filter:

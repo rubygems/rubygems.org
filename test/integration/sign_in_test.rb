@@ -161,7 +161,7 @@ class SignInTest < SystemTest
                       "Your account will be required to have MFA enabled in the future."
 
     assert page.has_selector? "#flash_notice", text: expected_notice
-    assert_current_path(new_multifactor_auth_path)
+    assert_current_path(new_totp_path)
     assert page.has_content? "Sign out"
   end
 

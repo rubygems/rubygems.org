@@ -1,4 +1,6 @@
 class Links
+  include Enumerable
+
   # Links available for indexed gems
   LINKS = {
     "home"      => "homepage_uri",

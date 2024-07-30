@@ -159,11 +159,12 @@ Rails.application.routes.draw do
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
     get "profile/me", to: "profiles#me", as: :my_profile
-    resource :multifactor_auth, only: %i[new create update destroy] do
+    resource :multifactor_auth, only: %i[update] do
       get 'recovery'
       post 'otp_update', to: 'multifactor_auths#otp_update', as: :otp_update
       post 'webauthn_update', to: 'multifactor_auths#webauthn_update', as: :webauthn_update
     end
+    resource :totp, only: %i[new create destroy]
     resource :settings, only: :edit
     resource :profile, only: %i[edit update] do
       get :adoptions
@@ -289,8 +290,8 @@ Rails.application.routes.draw do
   end
 
   ################################################################################
-  # high_voltage static routes
-  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: Regexp.union(HighVoltage.page_ids) }, as: :page
+  # static pages routes
+  get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
   ################################################################################
   # Internal Routes

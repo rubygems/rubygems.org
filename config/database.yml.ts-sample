@@ -1,0 +1,60 @@
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  username: postgres
+  prepared_statements: false
+
+timescale: &timescale
+  adapter: postgresql
+  encoding: utf8
+  username: postgres
+  migrations_paths: db/downloads_migrate
+  port: 5434
+
+development:
+  primary:
+    <<: *default
+    database: rubygems_development
+    host: localhost
+    password: devpassword
+    pool: 5
+    timeout: 5000
+  downloads:
+    <<: *timescale
+    database: rubygems_tsdb_development
+    host: localhost
+    password: devpassword
+    pool: 5
+    timeout: 5000
+
+test:
+  primary:
+    <<: *default
+    database: rubygems_test
+    host: localhost
+    min_messages: warning
+    password: testpassword
+    pool: 5
+    timeout: 5000
+  downloads:
+    <<: *timescale
+    database: rubygems_tsdb_test
+    host: localhost
+    min_messages: warning
+    password: testpassword
+    pool: 5
+    timeout: 5000
+
+production:
+  primary:
+    <<: *default
+    database: rubygems_production
+    min_messages: error
+    pool: 30
+    reconnect: true
+  downloads:
+    <<: *timescale
+    database: rubygems_tsdb_production
+    min_messages: error
+    pool: 30
+    reconnect: true

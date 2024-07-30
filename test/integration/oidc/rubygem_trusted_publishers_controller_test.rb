@@ -211,4 +211,43 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       assert_redirected_to verify_session_path
     end
   end
+
+  context "when not authorized for rubygem trusted publishing" do
+    context "not owner" do
+      setup do
+        # must be verified before finding out if you have access to this action
+        post(authenticate_session_path(verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD }))
+        @rubygem.ownerships.destroy_all
+      end
+
+      should "render forbidden on show" do
+        get rubygem_trusted_publishers_url(@rubygem.slug)
+
+        assert_response :forbidden
+      end
+
+      should "render forbidden on new" do
+        get new_rubygem_trusted_publisher_url(@rubygem.slug)
+
+        assert_response :forbidden
+      end
+
+      should "render forbidden on create" do
+        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+          oidc_rubygem_trusted_publisher: { # avoid params permit error before authorization check
+            trusted_publisher_type: "OIDC::TrustedPublisher::GitHubAction",
+            trusted_publisher_attributes: {}
+          }
+        }
+
+        assert_response :forbidden
+      end
+
+      should "render forbidden on destroy" do
+        delete new_rubygem_trusted_publisher_url(@rubygem.slug)
+
+        assert_response :forbidden
+      end
+    end
+  end
 end

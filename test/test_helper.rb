@@ -25,10 +25,12 @@ require "webauthn/fake_client"
 require "shoulda/context"
 require "shoulda/matchers"
 require "helpers/admin_helpers"
+require "helpers/api_policy_helpers"
 require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
+require "helpers/policy_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "webmock/minitest"
@@ -271,6 +273,14 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
   def policy_scope!(user, record)
     @authorization_client.apply_policy(user, record, policy_class: policy_class)
   end
+end
+
+class ApiPolicyTestCase < ActiveSupport::TestCase
+  include ApiPolicyHelpers
+end
+
+class PolicyTestCase < ActiveSupport::TestCase
+  include PolicyHelpers
 end
 
 class ComponentTest < ActiveSupport::TestCase

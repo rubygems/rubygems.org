@@ -74,7 +74,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/names partial response" do
     get names_path, env: { range: "bytes=15-" }
 
-    assert_response 206
+    assert_response :partial_content
     full_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
     expected_digest = digest(full_body)
 
@@ -109,7 +109,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     get versions_path, env: { range: "bytes=229-" }
 
-    assert_response 206
+    assert_response :partial_content
     assert_equal partial_body, @response.body
     assert_equal etag(full_response_body), @response.headers["ETag"]
     assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
@@ -183,7 +183,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     get info_path(gem_name: "gemA"), env: { range: "bytes=159-" }
 
-    assert_response 206
+    assert_response :partial_content
     assert_equal expected[159..], @response.body
   end
 

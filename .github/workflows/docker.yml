@@ -12,15 +12,15 @@ permissions:
 jobs:
   build:
     name: Docker build (and optional push)
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
-      RUBYGEMS_VERSION: 3.5.12
-      RUBY_VERSION: 3.3.2
+      RUBYGEMS_VERSION: 3.5.14
+      RUBY_VERSION: 3.3.4
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # master
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # master
       - name: Cache Docker layers
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
@@ -29,7 +29,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-rubygems-org
       - name: Install and start services (needed for image test)
-        run: docker-compose up -d
+        run: docker compose up -d
       - name: Configure AWS credentials from Production account
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         if: github.secret_source != 'None'

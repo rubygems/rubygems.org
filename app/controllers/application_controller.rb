@@ -9,7 +9,9 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :render_forbidden
   rescue_from ActionController::UnpermittedParameters, with: :render_bad_request
-  rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
+  rescue_from(Pundit::NotAuthorizedError) do |e|
+    render_forbidden(e.policy.error)
+  end
 
   before_action :set_locale
   before_action :reject_null_char_param
@@ -105,10 +107,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def owner?
-    @rubygem.owned_by?(current_user)
-  end
-
   def find_versioned_links
     @versioned_links = @rubygem.links(@latest_version)
   end
@@ -138,8 +136,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def render_forbidden(error = "forbidden")
-    error = "forbidden" if error.is_a?(Pundit::NotAuthorizedError)
+  def render_forbidden(error = nil)
+    error ||= t(:forbidden)
     render plain: error, status: :forbidden
   end
 
@@ -182,6 +180,11 @@ class ApplicationController < ActionController::Base
     response.headers["Cache-Control"] = "no-cache, no-store"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
+  # Avoid leaking confirmation token in referrer header on certain pages
+  def no_referrer
+    headers["Referrer-Policy"] = "no-referrer"
   end
 
   def set_error_context_user

@@ -31,8 +31,7 @@ class Ownership < ApplicationRecord
   end
 
   def self.create_confirmed(rubygem, user, approver)
-    ownership = rubygem.ownerships.create(user: user, authorizer: approver)
-    ownership.confirm!
+    rubygem.ownerships.create!(user: user, authorizer: approver).tap(&:confirm!)
   end
 
   def self.update_notifier(to_enable, to_disable, notifer_attr)
@@ -62,7 +61,7 @@ class Ownership < ApplicationRecord
   end
 
   def confirm!
-    update(confirmed_at: Time.current, token: nil) if unconfirmed?
+    update!(confirmed_at: Time.current, token: nil) if unconfirmed?
   end
 
   def confirmed?

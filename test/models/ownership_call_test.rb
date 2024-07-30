@@ -62,7 +62,7 @@ class OwnershipCallTest < ActiveSupport::TestCase
 
     should "close all associated open requests and then call" do
       create_list(:ownership_request, 2, rubygem: @rubygem, ownership_call: @ownership_call)
-      @ownership_call.close
+      @ownership_call.close!
 
       assert_predicate @ownership_call, :closed?
       assert_empty @ownership_call.ownership_requests.opened
@@ -71,13 +71,13 @@ class OwnershipCallTest < ActiveSupport::TestCase
     should "not close approved request" do
       create_list(:ownership_request, 2, rubygem: @rubygem, ownership_call: @ownership_call)
       approved_request = create(:ownership_request, :approved, rubygem: @rubygem, ownership_call: @ownership_call)
-      @ownership_call.close
+      @ownership_call.close!
 
       assert_contains OwnershipRequest.where(ownership_call: @ownership_call, status: :approved), approved_request
     end
 
     should "close call if no requests exist" do
-      @ownership_call.close
+      @ownership_call.close!
 
       assert_predicate @ownership_call, :closed?
       assert_empty @ownership_call.ownership_requests.opened

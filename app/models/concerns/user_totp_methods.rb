@@ -23,11 +23,11 @@ module UserTotpMethods
 
   def verify_and_enable_totp!(seed, level, otp, expiry)
     if expiry < Time.now.utc
-      errors.add(:base, I18n.t("multifactor_auths.create.qrcode_expired"))
+      errors.add(:base, I18n.t("totps.create.qrcode_expired"))
     elsif verify_totp(seed, otp)
       enable_totp!(seed, level)
     else
-      errors.add(:base, I18n.t("multifactor_auths.incorrect_otp"))
+      errors.add(:base, I18n.t("totps.incorrect_otp"))
     end
   end
 

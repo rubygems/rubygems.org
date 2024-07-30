@@ -109,6 +109,10 @@ class SessionsController < Clearance::SessionsController
     render "sessions/new", status: :unauthorized
   end
 
+  def webauthn_failure
+    invalidate_mfa_session(@webauthn_error)
+  end
+
   def mfa_failure(message)
     login_failure(message)
   end
@@ -142,7 +146,7 @@ class SessionsController < Clearance::SessionsController
 
   def url_after_create
     if current_user.mfa_recommended_not_yet_enabled?
-      new_multifactor_auth_path
+      new_totp_path
     elsif current_user.mfa_recommended_weak_level_enabled?
       edit_settings_path
     else

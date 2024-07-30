@@ -14,7 +14,7 @@ runs:
       shell: bash
       run: |
         docker compose up -d --wait
-    - uses: ruby/setup-ruby@0cde4689ba33c09f1b890c1725572ad96751a3fc # v1.178.0
+    - uses: ruby/setup-ruby@161cd54b698f1fb3ea539faab2e036d409550e3c # v1.187.0
       with:
         ruby-version: ${{ inputs.ruby-version }}
         bundler-cache: true

@@ -44,7 +44,7 @@ module Gemcutter
     config.i18n.available_locales = [:en, :nl, "zh-CN", "zh-TW", "pt-BR", :fr, :es, :de, :ja]
     config.i18n.fallbacks = [:en]
 
-    config.middleware.insert 0, Rack::UTF8Sanitizer
+    config.middleware.insert 0, Rack::Sanitizer
     config.middleware.use Rack::Attack
     config.middleware.use Rack::Deflater
 
@@ -69,6 +69,10 @@ module Gemcutter
     config.active_support.cache_format_version = 7.1
 
     config.action_dispatch.rescue_responses["Rack::Multipart::EmptyContentError"] = :bad_request
+
+    config.action_dispatch.default_headers.merge!(
+      "Cross-Origin-Opener-Policy" => "same-origin"
+    )
   end
 
   def self.config
@@ -103,4 +107,7 @@ module Gemcutter
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
   ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.local?
   MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
+  PAGES = %w[
+    about data download faq migrate security sponsors
+  ].freeze
 end

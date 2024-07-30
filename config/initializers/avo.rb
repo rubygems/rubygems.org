@@ -146,7 +146,7 @@ Rails.configuration.to_prepare do
   Avo::Views::ResourceEditComponent.class_eval do
     def field_name(object_name, *, **)
       object_name = object_name.to_s.gsub(/\[(\w+)\[(\w+)\]\]/, '[\1][\2]')
-      super(object_name, *, **)
+      super
     end
   end
 

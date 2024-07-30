@@ -44,8 +44,9 @@ class Rack::Attack
   protected_ui_mfa_actions = [
     otp_create_action,
     mfa_password_edit_action,
-    { controller: "multifactor_auths",   action: "create" },
-    { controller: "multifactor_auths",   action: "update" }
+    { controller: "totps", action: "create" },
+    { controller: "totps", action: "destroy" },
+    { controller: "multifactor_auths", action: "update" }
   ]
 
   protected_api_key_actions = [

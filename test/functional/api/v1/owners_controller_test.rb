@@ -98,13 +98,30 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     should respond_with :not_found
   end
 
-  should "route POST" do
+  should "route POST /api/v1/gems/rubygem/owners.json" do
     route = { controller: "api/v1/owners",
               action: "create",
               rubygem_id: "rails",
               format: "json" }
 
     assert_recognizes(route, path: "/api/v1/gems/rails/owners.json", method: :post)
+  end
+
+  should "route POST /api/v1/gems/rubygem/owners.yaml" do
+    route = { controller: "api/v1/owners",
+              action: "create",
+              rubygem_id: "rails",
+              format: "yaml" }
+
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners.yaml", method: :post)
+  end
+
+  should "route POST /api/v1/gems/rubygem/owners" do
+    route = { controller: "api/v1/owners",
+              action: "create",
+              rubygem_id: "rails" }
+
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners", method: :post)
   end
 
   context "on POST to owner gem" do
@@ -128,7 +145,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           setup do
             @third_user = create(:user)
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-            post :create, params: { rubygem_id: @rubygem.slug, email: [@second_user.email, @third_user.email] }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: [@second_user.email, @third_user.email] }
           end
 
           should respond_with :bad_request
@@ -140,7 +157,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "adding other user as gem owner without OTP" do
           setup do
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :unauthorized
@@ -156,7 +173,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "adding other user as gem owner with incorrect OTP" do
           setup do
             @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.totp_seed).now.to_i.succ % 1_000_000).to_s
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :unauthorized
@@ -169,7 +186,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "adding other user as gem owner with correct OTP" do
           setup do
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :success
@@ -189,14 +206,14 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           setup do
             @api_key.mfa = true
             @api_key.save!
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
           should respond_with :unauthorized
         end
 
         context "api key does not have mfa enabled" do
           setup do
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
           should respond_with :success
         end
@@ -206,7 +223,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "add user with email" do
           setup do
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-              post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+              post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
             end
           end
 
@@ -224,7 +241,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "add user with handler" do
           setup do
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.handle }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.handle }
           end
 
           should "add other user as gem owner" do
@@ -279,7 +296,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should "add other user as gem owner" do
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
 
             assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
@@ -287,7 +304,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "api user has not enabled mfa" do
           setup do
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :forbidden
@@ -303,7 +320,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           metadata = { "rubygems_mfa_required" => "true" }
           create(:version, rubygem: @rubygem, number: "1.0.0", indexed: false, metadata: metadata)
 
-          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
         end
 
         should respond_with :success
@@ -319,7 +336,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             another_rubygem_ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "test"))
 
             @api_key.update(ownership: another_rubygem_ownership)
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :forbidden
@@ -332,7 +349,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "to the same gem" do
           setup do
             @api_key.update(rubygem_id: @rubygem.id)
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :success
@@ -347,7 +364,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @api_key.update(ownership: @ownership)
             @ownership.destroy!
 
-            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :forbidden
@@ -362,7 +379,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         setup do
           @api_key.soft_delete!
 
-          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
         end
 
         should respond_with :forbidden
@@ -381,15 +398,11 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user with mfa disabled" do
           should "block adding the owner" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, @response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-                at https://rubygems.org/multifactor_auth/new.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -402,15 +415,11 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "block adding the owner" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, @response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-                at https://rubygems.org/settings/edit.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -423,7 +432,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not show error message" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
               refute_includes @response.body, "For protection of your account and your gems"
             end
@@ -438,7 +447,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not show error message" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
               refute_includes @response.body, "For protection of your account and your gems"
             end
@@ -455,13 +464,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user with mfa disabled" do
           should "include mfa setup warning" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
-                at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
-              WARN
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_not_yet_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -475,14 +479,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "include change mfa level warning" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
-                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
-                Your account will be required to have MFA enabled on one of these levels in the future.
-              WARN
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_weak_level_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -496,10 +494,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not include MFA warnings" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = "[WARNING] For protection of your account and gems"
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -512,10 +510,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not include mfa warnings" do
             @emails.each do |email|
-              post :create, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = "[WARNING] For protection of your account and gems"
+              post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -533,19 +531,36 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should respond_with :forbidden
 
-      should "return body that starts with denied access message" do
-        assert @response.body.start_with?("The API key doesn't have access")
+      should "return body with denied access message" do
+        assert_equal "This API key cannot perform the specified action on this gem.", @response.body
       end
     end
   end
 
-  should "route DELETE" do
+  should "route DELETE /api/v1/gems/gemname/owners.json" do
     route = { controller: "api/v1/owners",
               action: "destroy",
               rubygem_id: "rails",
               format: "json" }
 
     assert_recognizes(route, path: "/api/v1/gems/rails/owners.json", method: :delete)
+  end
+
+  should "route DELETE /api/v1/gems/gemname/owners.yaml" do
+    route = { controller: "api/v1/owners",
+              action: "destroy",
+              rubygem_id: "rails",
+              format: "yaml" }
+
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners.yaml", method: :delete)
+  end
+
+  should "route DELETE /api/v1/gems/gemname/owners" do
+    route = { controller: "api/v1/owners",
+              action: "destroy",
+              rubygem_id: "rails" }
+
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners", method: :delete)
   end
 
   context "on DELETE to owner gem" do
@@ -568,7 +583,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "removing gem owner without OTP" do
           setup do
-            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email, format: :json }
+            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :unauthorized
@@ -584,7 +599,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "removing gem owner with incorrect OTP" do
           setup do
             @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.totp_seed).now.to_i.succ % 1_000_000).to_s
-            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email, format: :json }
+            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :unauthorized
@@ -597,7 +612,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "removing gem owner with correct OTP" do
           setup do
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email, format: :json }
+            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :success
@@ -612,7 +627,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "user is not the only confirmed owner" do
           setup do
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email, format: :json }
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
             end
           end
 
@@ -630,7 +645,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "user is the only confirmed owner" do
           setup do
             @ownership.destroy
-            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @user.email, format: :json }
+            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @user.email }
           end
 
           should "not remove last gem owner" do
@@ -648,7 +663,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         context "api user hasi not enabled mfa" do
           setup do
-            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email, format: :json }
+            delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :forbidden
@@ -667,7 +682,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           context "on delete to remove gem owner with correct OTP" do
             setup do
               @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email, format: :json }
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
             end
 
             should respond_with :success
@@ -685,7 +700,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             another_rubygem_ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "test"))
 
             @api_key.update(ownership: another_rubygem_ownership)
-            post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :forbidden
@@ -698,7 +713,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "to the same gem" do
           setup do
             @api_key.update(rubygem_id: @rubygem.id)
-            post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :success
@@ -713,7 +728,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @api_key.update(ownership: @ownership)
             @ownership.destroy!
 
-            post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+            post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
           end
 
           should respond_with :forbidden
@@ -728,7 +743,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         setup do
           @api_key.soft_delete!
 
-          post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }, format: :json
+          post :destroy, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
         end
 
         should respond_with :forbidden
@@ -747,15 +762,11 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user with mfa disabled" do
           should "block adding the owner" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-                at https://rubygems.org/multifactor_auth/new.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -768,15 +779,11 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "block adding the owner" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, @response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-                at https://rubygems.org/settings/edit.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -789,7 +796,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not show error message" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
               refute_includes @response.body, "For protection of your account and your gems"
             end
@@ -804,7 +811,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not show error message" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
               refute_includes @response.body, "For protection of your account and your gems"
             end
@@ -821,13 +828,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         context "by user with mfa disabled" do
           should "include mfa setup warning" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
-                at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
-              WARN
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_not_yet_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -841,14 +843,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "include change mfa level warning" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
-                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
-                Your account will be required to have MFA enabled on one of these levels in the future.
-              WARN
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_weak_level_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -862,10 +858,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not include mfa warnings" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = "[WARNING] For protection of your account and gems"
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -878,10 +874,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "not include mfa warnings" do
             @emails.each do |email|
-              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }, format: :json
-              mfa_warning = "[WARNING] For protection of your account and gems"
+              delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -899,19 +895,28 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should respond_with :forbidden
 
-      should "return body that starts with denied access message" do
-        assert @response.body.start_with?("The API key doesn't have access")
+      should "return body that has the denied access message" do
+        assert_equal "This API key cannot perform the specified action on this gem.", @response.body
       end
     end
   end
 
-  should "route GET gems" do
+  should "route GET /api/v1/owners/username/gems.json" do
     route = { controller: "api/v1/owners",
               action: "gems",
               handle: "example",
               format: "json" }
 
     assert_recognizes(route, path: "/api/v1/owners/example/gems.json", method: :get)
+  end
+
+  should "route GET /api/v1/owners/username/gems.yaml" do
+    route = { controller: "api/v1/owners",
+              action: "gems",
+              handle: "example",
+              format: "yaml" }
+
+    assert_recognizes(route, path: "/api/v1/owners/example/gems.yaml", method: :get)
   end
 
   should "return plain text 404 error" do

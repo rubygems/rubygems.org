@@ -2,8 +2,7 @@ class AdoptionsController < ApplicationController
   include SessionVerifiable
 
   before_action :find_rubygem
-  before_action :verify_ownership_requestable
-  before_action :redirect_to_verify, if: -> { current_user_is_owner? && !verified_session_active? }
+  before_action :redirect_to_verify, if: -> { @rubygem.owned_by?(current_user) && !verified_session_active? }
 
   def index
     @ownership_call     = @rubygem.ownership_call
@@ -13,11 +12,8 @@ class AdoptionsController < ApplicationController
 
   private
 
-  def verify_ownership_requestable
-    render_forbidden unless @rubygem.owned_by?(current_user) || @rubygem.ownership_requestable?
-  end
-
-  def current_user_is_owner?
-    @rubygem.owned_by?(current_user)
+  def find_rubygem
+    super
+    authorize @rubygem, :show_adoption? if @rubygem
   end
 end

@@ -2,7 +2,7 @@
 
 <div class="t-body l-overflow">
   <div class="l-half--l l-half--l--center">
-    <%= raw @qrcode_svg %>
+    <%= @qrcode_svg %>
   </div>
   <div>
     <p><%= t('.scan_prompt') %></p>
@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<%= form_tag multifactor_auth_path, method: :post do %>
+<%= form_tag totp_path, method: :post do %>
   <div class="text_field">
     <%= label_tag :otp, 'OTP code', class: 'form__label' %>
     <p class='form__field__instructions'><%= t '.otp_prompt' %></p>

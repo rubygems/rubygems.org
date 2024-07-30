@@ -15,7 +15,7 @@ jobs:
   status_check:
     name: All required tests passing check
     needs: [rails]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: always()
     steps:
       - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
@@ -26,10 +26,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.5.12"
+            version: "3.5.14"
           - name: latest
             version: latest
-        ruby_version: ["3.3.2"]
+        ruby_version: ["3.3.4"]
         tests:
           - name: general
             command: test
@@ -56,7 +56,7 @@ jobs:
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
           name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
           path: tmp/capybara

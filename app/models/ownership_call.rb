@@ -12,8 +12,8 @@ class OwnershipCall < ApplicationRecord
 
   enum status: { opened: true, closed: false }
 
-  def close
-    ownership_requests.close_all
-    update(status: :closed)
+  def close!
+    ownership_requests.each(&:close!)
+    update!(status: :closed)
   end
 end

@@ -406,16 +406,21 @@ class VersionTest < ActiveSupport::TestCase
     end
     subject { @version }
 
+    should allow_value("1.2.3.pre").for(:number)
     should_not allow_value("#YAML<CEREALIZATION-FAIL>").for(:number)
     should_not allow_value("1.2.3-\"[javalol]\"").for(:number)
     should_not allow_value("0.8.45::Gem::PLATFORM::FAILBOAT").for(:number)
     should_not allow_value("1.2.3\n<bad>").for(:number)
     should_not allow_value("1.2.3-bad").for(:number)
+    should_not allow_value("1.2.3.").for(:number)
+    should_not allow_value("1.2.3.gem").for(:number)
 
     should allow_value("ruby").for(:platform)
     should allow_value("mswin32").for(:platform)
     should allow_value("x86_64-linux").for(:platform)
+    should allow_value("it.is.fine").for(:platform)
     should_not allow_value("Gem::Platform::Ruby").for(:platform)
+    should_not allow_value("ruby.gem").for(:platform)
 
     should "be invalid with platform longer than maximum field length" do
       @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)

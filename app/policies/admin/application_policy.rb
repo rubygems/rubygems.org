@@ -52,7 +52,8 @@ class Admin::ApplicationPolicy
       define_method(:"#{action}_#{assocation}?") { false }
     end
     define_method(:"show_#{assocation}?") { policy!(user, record).avo_show? }
-    alias_method :"view_#{assocation}?", :avo_show?
+    # can't use `alias_method` in case `has_asssociation` is called before `avo_show?` is defined
+    define_method(:"view_#{assocation}?") { avo_show? }
   end
 
   class Scope

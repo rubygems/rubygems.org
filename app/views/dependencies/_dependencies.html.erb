@@ -5,7 +5,7 @@
     <ul class="deps">
       <li>
         <span>
-          <span class="deps_expanded deps_expanded-link" data-gem_id="<%= name %>" data-version="<%= version %>"></span>
+          <span class="deps_expanded deps_expanded-link" <%= html_attributes("data-gem-id" => name, "data-version" => version) %>></span>
         </span>
         <%= link_to "/gems/#{name}/versions/#{version}", target: :_blank do %>
           <span class="deps_item"><%= name %> <%= version %>

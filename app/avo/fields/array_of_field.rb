@@ -10,7 +10,7 @@ class ArrayOfField < Avo::Fields::BaseField
   end
 
   def value(...)
-    value = super(...)
+    value = super
     Array.wrap(value)
   end
 
@@ -22,7 +22,7 @@ class ArrayOfField < Avo::Fields::BaseField
     value = value.each_value.map do |v|
       template_member.fill_field(NestedField::Holder.new, :item, v, params).item
     end
-    super(model, key, value, params)
+    super
   end
 
   def members

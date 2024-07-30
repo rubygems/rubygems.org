@@ -42,7 +42,7 @@ class OwnersControllerTest < ActionController::TestCase
         should respond_with :forbidden
 
         should "render forbidden message" do
-          assert page.has_content?("forbidden")
+          assert page.has_content?("Forbidden")
         end
       end
     end

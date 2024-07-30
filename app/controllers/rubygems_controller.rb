@@ -6,7 +6,6 @@ class RubygemsController < ApplicationController
   before_action :find_versioned_links, only: %i[show], unless: :reserved?
   before_action :set_page, only: :index
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
-  before_action :render_forbidden, unless: :owner?, only: %i[security_events]
 
   def index
     respond_to do |format|
@@ -36,6 +35,7 @@ class RubygemsController < ApplicationController
   end
 
   def security_events
+    authorize @rubygem, :show_events?
     @security_events = @rubygem.events.order(id: :desc).page(params[:page]).per(50)
     render Rubygems::SecurityEventsView.new(rubygem: @rubygem, security_events: @security_events)
   end

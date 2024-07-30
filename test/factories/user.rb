@@ -13,6 +13,11 @@ FactoryBot.define do
     end
     mfa_hashed_recovery_codes { mfa_recovery_codes.map { |code| BCrypt::Password.create(code) } }
 
+    trait :unconfirmed do
+      email_confirmed { false }
+      unconfirmed_email { "#{SecureRandom.hex(8)}#{email}" }
+    end
+
     trait :mfa_enabled do
       totp_seed { "123abc" }
       mfa_level { User.mfa_levels["ui_and_api"] }

@@ -26,7 +26,11 @@ es:
   locale_name: Español
   none: Ninguno
   not_found: No encontrado
+  forbidden:
+  api_gem_not_found:
   api_key_forbidden: La clave API no tiene acceso
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
@@ -89,11 +93,24 @@ es:
           attributes:
             expires_at:
               inclusion:
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed: ya es propietario de esta gema
               already_invited: ya ha sido invitado a esta gema
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
+        user:
+          attributes:
+            handle:
+              invalid:
         version:
           attributes:
             gem_full_name:
@@ -401,6 +418,8 @@ es:
       gem_html: Este webhook se ejecutaba antes cuando se subía <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>.
     gem_trusted_publisher_added:
       title:
+    admin_manual:
+      title:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -474,14 +493,9 @@ es:
     update:
       failure:
   multifactor_auths:
-    incorrect_otp: Tu código OTP no es correcto.
     session_expired: Ha expirado tu sesión en la página de acceso.
-    require_totp_disabled: La autenticación de múltiples factores basada en OTP ya
-      está activa. Para reconfigurarla debes primero eliminarla.
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
-    require_totp_enabled: No tienes aplicación de autenticación activa. Debes activarla
-      primero.
     require_webauthn_enabled: No tienes ningún dispositivo de seguridad activado.
       Primero debes asociar un dispositivo a tu cuenta.
     setup_required_html: Por la seguridad de tu cuenta y de tus gemas se te requiere
@@ -501,21 +515,12 @@ es:
     setup_webauthn_html: "\U0001F389 ¡Ahora soportamos dispositivos de seguridad!
       Aumenta la seguridad de tu cuenta <a href=\"/settings/edit#security-device\">configurando</a>
       un nuevo dispositivo."
-    new:
-      title: Activando autenticación de múltiples factores
-      scan_prompt: Por favor escanea el código QR con tu aplicación de autenticación.
-        Si no puedes escanear el código, agrega manualmente la información siguiente
-        a tu aplicación.
-      otp_prompt: Escribe el código de la aplicación de autenticación para continuar.
-      confirm: He mantenido seguros mis códigos de recuperación.
-      enable: Activar
-      account: 'Cuenta: %{account}'
-      key: 'Clave: %{key}'
-      time_based: 'Basado en tiempo: Sí'
-    create:
-      qrcode_expired: El código QR y la clave han vencido. Por favor intenta otra
-        vez registrar un nuevo dispositivo.
-      success: Has activado con éxito la autenticación de múltiples factores.
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
       copied: "[ copiado ]"
       continue: Continuar
@@ -527,8 +532,6 @@ es:
         tu autenticación de múltiples factores si pierdes tu dispositivo. Cada código
         se puede usar una sola vez.
       already_generated: Ya deberías haber guardado tus códigos de recuperación.
-    destroy:
-      success: Has desactivado exitosamente la autenticación de múltiples factores.
     update:
       invalid_level: Nivel de AMF inválido.
       success: Has actualizado exitosamente la autenticación de múltiples factores.
@@ -544,6 +547,29 @@ es:
         a tu dispositivo de seguridad o de autenticación de múltiples factores.
       security_device: Dispositivo de seguridad
       verify_code: Verificar código
+  totps:
+    incorrect_otp: Tu código OTP no es correcto.
+    require_totp_disabled: La autenticación de múltiples factores basada en OTP ya
+      está activa. Para reconfigurarla debes primero eliminarla.
+    require_totp_enabled: No tienes aplicación de autenticación activa. Debes activarla
+      primero.
+    new:
+      title: Activando autenticación de múltiples factores
+      scan_prompt: Por favor escanea el código QR con tu aplicación de autenticación.
+        Si no puedes escanear el código, agrega manualmente la información siguiente
+        a tu aplicación.
+      otp_prompt: Escribe el código de la aplicación de autenticación para continuar.
+      confirm: He mantenido seguros mis códigos de recuperación.
+      enable: Activar
+      account: 'Cuenta: %{account}'
+      key: 'Clave: %{key}'
+      time_based: 'Basado en tiempo: Sí'
+    create:
+      qrcode_expired: El código QR y la clave han vencido. Por favor intenta otra
+        vez registrar un nuevo dispositivo.
+      success: Has activado con éxito la autenticación de múltiples factores.
+    destroy:
+      success: Has desactivado exitosamente la autenticación de múltiples factores.
   notifiers:
     update:
       success: Has actualizado exitosamente la configuración de tus notificaciones
@@ -669,7 +695,8 @@ es:
         %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
       optional_full_name: Opcional. Será mostrado en tu perfil público
-      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil público
+      optional_twitter_username: Usuario de X opcional. Será mostrado en tu perfil
+        público
       twitter_username: Usuario
       title: Editar perfil
       delete:
@@ -809,7 +836,7 @@ es:
       updated: Actualizada
       yanked: Borrada
     show:
-      subtitle: para %{query}
+      subtitle_html: para <em>%{query}</em>
       month_update: Actualizadas en el último mes (%{count})
       week_update: Actualizadas en la última semana (%{count})
       filter: 'Filtro:'
