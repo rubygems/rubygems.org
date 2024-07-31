@@ -114,27 +114,37 @@ class VersionsControllerTest < ActionController::TestCase
       end
 
       assert_select ".gem__version__date sup", text: "*", count: 1
+
+      assert_select ".t-list__heading", text: /1 version since January 01, 2000/, count: 1
     end
   end
 
   context "on GET to index" do
     setup do
       @rubygem = create(:rubygem)
-      create(:version, number: "1.1.2", rubygem: @rubygem)
+      @oldest_created_at = Date.parse("2010-01-01")
+      create(:version, number: "1.1.2", rubygem: @rubygem, position: 0)
+      create(:version, number: "1.1.1", rubygem: @rubygem, position: 1, created_at: @oldest_created_at)
     end
 
     should "get paginated result" do
-      # first page includes the only version
-      get :index, params: { rubygem_id: @rubygem.name }
+      stub_const(Gemcutter, :VERSIONS_PER_PAGE, 1) do
+        # first page only includes the version at position 0
+        get :index, params: { rubygem_id: @rubygem.name }
 
-      assert_response :success
-      assert page.has_content?("1.1.2")
+        assert_response :success
+        assert page.has_content?("1.1.2")
+        refute page.has_content?("1.1.1")
+        assert_select ".t-list__heading", text: /2 versions since January 01, 2010/, count: 1
 
-      # second page does not include the only version
-      get :index, params: { rubygem_id: @rubygem.name, page: 2 }
+        # second page only includes the version at position 1
+        get :index, params: { rubygem_id: @rubygem.name, page: 2 }
 
-      assert_response :success
-      refute page.has_content?("1.1.2")
+        assert_response :success
+        refute page.has_content?("1.1.2")
+        assert page.has_content?("1.1.1")
+        assert_select ".t-list__heading", text: /2 versions since January 01, 2010/, count: 1
+      end
     end
   end
 
