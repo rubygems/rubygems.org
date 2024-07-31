@@ -2,8 +2,8 @@ class OwnersController < ApplicationController
   include SessionVerifiable
 
   before_action :find_rubygem, except: :confirm
-  verify_session_before only: %i[index create destroy]
-  before_action :verify_mfa_requirement, only: %i[create destroy]
+  verify_session_before only: %i[index edit update create destroy]
+  before_action :verify_mfa_requirement, only: %i[create edit update destroy]
 
   def confirm
     ownership = Ownership.find_by!(token: token_params)
@@ -30,6 +30,9 @@ class OwnersController < ApplicationController
   def index
     authorize @rubygem, :show_unconfirmed_ownerships?
     @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
+  end
+
+  def edit
   end
 
   def create

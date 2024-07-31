@@ -358,6 +358,7 @@ class OwnersControllerTest < ActionController::TestCase
       should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
       should "set success notice flash" do
         success_flash = "#{@maintainer.name} was succesfully updated."
+
         assert_equal success_flash, flash[:notice]
       end
     end
@@ -405,6 +406,30 @@ class OwnersControllerTest < ActionController::TestCase
 
       should "remove the ownership record" do
         assert_includes @rubygem.owners_including_unconfirmed, @second_user
+      end
+    end
+
+    context "on EDIT to owners" do
+      setup do
+        @second_user = create(:user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
+        edit :edit, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
+
+        should "show the edit form" do
+          assert_template :edit
+        end
+      end
+    end
+
+    context "on UPDATE to owners" do
+      setup do
+        @second_user = create(:user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id, access_level: Access::MAINTAINER }
+
+        should "update the ownership record" do
+          assert_equal Access::MAINTAINER, @ownership.reload.access
+        end
       end
     end
   end
@@ -496,6 +521,28 @@ class OwnersControllerTest < ActionController::TestCase
       setup do
         create(:ownership, rubygem: @rubygem, user: @user)
         delete :destroy, params: { rubygem_id: @rubygem.name, handle: @user.display_id }
+      end
+
+      should "redirect to sign in path" do
+        assert redirect_to("sign in") { sign_in_path }
+      end
+    end
+
+    context "on EDIT to update owner" do
+      setup do
+        create(:ownership, rubygem: @rubygem, user: @user)
+        get :edit, params: { rubygem_id: @rubygem.name, handle: @user.display_id }
+      end
+
+      should "redirect to sign in path" do
+        assert redirect_to("sign in") { sign_in_path }
+      end
+    end
+
+    context "on PATCH to update owner" do
+      setup do
+        create(:ownership, rubygem: @rubygem, user: @user)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @user.display_id, access_level: Access::OWNER }
       end
 
       should "redirect to sign in path" do

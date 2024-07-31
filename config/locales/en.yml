@@ -543,6 +543,7 @@ en:
       confirmed_at: CONFIRMED AT
       added_by: ADDED BY
       action: ACTION
+      role: ROLE
       email_field: Email / Handle
       submit_button: Add Owner
       info: add or remove owners

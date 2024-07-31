@@ -24,7 +24,7 @@ module Access
 
   def self.options
     ROLES.map do |_, permission|
-      [self.label_for_role(role), permission]
+      [label_for_role_flag(permission), permission]
     end
   end
 end

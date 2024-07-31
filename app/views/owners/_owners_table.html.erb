@@ -14,6 +14,9 @@
       <%= t("owners.index.added_by") %>
     </th>
     <th class="owners__cell">
+      <%= t("owners.index.role") %>
+    </th>
+    <th class="owners__cell">
       <%= t("owners.index.confirmed_at") %>
     </th>
     <th class="owners__cell">
@@ -43,12 +46,16 @@
       <td class="owners__cell" data-title="Confirmed At">
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
       </td>
+      <td class="owners__cell" data-title="Role">
+        <%= Access.label_for_role_flag(ownership.access_level)  %>
+      </td>
       <td class="owners__cell" data-title="Action">
         <%= button_to "Remove",
           rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
+        <%= link_to "edit", rubygem_owners_path(ownership), class: "form__submit form__submit--small" %>
       </td>
     </tr>
   <% end %>
