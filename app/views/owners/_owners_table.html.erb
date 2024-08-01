@@ -55,7 +55,7 @@
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
-        <%= link_to "edit", rubygem_owners_path(ownership), class: "form__submit form__submit--small" %>
+        <%= link_to "Edit", edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id), class: "form__submit form__submit--small" %>
       </td>
     </tr>
   <% end %>

@@ -398,25 +398,28 @@ class OwnersControllerTest < ActionController::TestCase
     context "on DELETE to owners" do
       setup do
         @second_user = create(:user)
-        @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
+        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
         delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
       end
       should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
 
-      should "remove the ownership record" do
-        assert_includes @rubygem.owners_including_unconfirmed, @second_user
+      should "not remove the ownership record" do
+        assert_includes @rubygem.owners, @second_user
       end
     end
 
     context "on EDIT to owners" do
       setup do
         @second_user = create(:user)
-        @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
+        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
         edit :edit, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
 
+        should redirect_to("sessions#verify") { verify_session_path }
+        should use_before_action(:redirect_to_verify)
+
         should "show the edit form" do
-          assert_template :edit
+          assert_not_template :edit
         end
       end
     end
@@ -424,7 +427,7 @@ class OwnersControllerTest < ActionController::TestCase
     context "on UPDATE to owners" do
       setup do
         @second_user = create(:user)
-        @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
+        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
         patch :update, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id, access_level: Access::MAINTAINER }
 
         should "update the ownership record" do
