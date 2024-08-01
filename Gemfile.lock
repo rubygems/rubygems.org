@@ -709,7 +709,7 @@ GEM
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.1)
+    sprockets-rails (3.5.2)
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
@@ -1179,7 +1179,7 @@ CHECKSUMS
   smart_properties (1.17.0) sha256=f9323f8122e932341756ddec8e0ac9ec6e238408a7661508be99439ca6d6384b
   snaky_hash (2.0.1) sha256=1ac87ec157fcfe7a460e821e0cd48ae1e6f5e3e082ab520f03f31a9259dbdc31
   sprockets (4.2.1) sha256=951b13dd2f2fcae840a7184722689a803e0ff9d2702d902bd844b196da773f97
-  sprockets-rails (3.5.1) sha256=c44626cb3887a1a8b572ca258685db33b4ebd041aa73428a716eac444ee5ef48
+  sprockets-rails (3.5.2) sha256=a9e88e6ce9f8c912d349aa5401509165ec42326baf9e942a85de4b76dbc4119e
   statsd-instrument (3.8.0) sha256=122e294845d9a05a74fa53a859010424b455b44f1605abac3108fbbabb2aa7cd
   stimulus-rails (1.3.3) sha256=4d1f9ab1d64e605f4c9cdd4cc530a9538b510606d32d02249d106256845c562c
   stringio (3.1.1) sha256=53456e14175c594e0e8eb2206a1be33f3974d4fe21c131e628908b05c8c2ae1e
