@@ -532,6 +532,8 @@ en:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.
   owners:
+    edit:
+      title: Edit Owner
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem
       token_expired: The confirmation token has expired. Please try resending the token from the gem page.

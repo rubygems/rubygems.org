@@ -345,6 +345,21 @@ class OwnersControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET edit ownership" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+
+        get :edit, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id }
+      end
+
+      should respond_with :success
+      should render_template :edit
+    end
+
     context "on PATCH to update ownership" do
       setup do
         @owner = create(:user)
@@ -360,6 +375,26 @@ class OwnersControllerTest < ActionController::TestCase
         success_flash = "#{@maintainer.name} was succesfully updated."
 
         assert_equal success_flash, flash[:notice]
+      end
+
+      should "downgrade the maintainer" do
+        owner = @rubygem.ownerships.find_by(user_id: @owner.id)
+        assert_equal Access::OWNER, owner.access_level
+      end
+
+      context "when updating the current user" do
+        setup do
+          patch :update, params: { rubygem_id: @rubygem.name, handle: @owner.display_id, access_level: Access::OWNER }
+        end
+
+        should "not update the ownership of the current user" do
+          owner = @rubygem.ownerships.find_by(user_id: @owner.id)
+          assert_equal Access::OWNER, owner.access_level
+        end
+
+        should "set notice flash message" do
+          assert_equal "You can't update your own access level.", flash[:notice]
+        end
       end
     end
   end

@@ -15,6 +15,7 @@ class Api::V1::OwnersController < Api::BaseController
   def update
     authorize @rubygem, :update_owner?
     ownership = @rubygem.ownerships.find_by!(user: User.find_by_name!(email_param))
+
     if ownership.present?
       ownership.update!(ownership_update_params)
       render plain: response_with_mfa_warning("Owner updated successfully.")
