@@ -551,6 +551,7 @@ en:
       confirmed: Confirmed
       pending: Pending
       confirm_remove: Are you sure you want to remove this user from the owners?
+      access_level: Access Level
     resend_confirmation:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
