@@ -273,6 +273,19 @@ class OwnerTest < SystemTest
     assert_cell maintainer, "Role", "Maintainer"
   end
 
+  test "creating new owner with maintainer role" do
+    maintainer = create(:user)
+
+    visit_ownerships_page
+
+    fill_in "Handle", with: maintainer.handle
+    select "Maintainer", from: "access_level"
+
+    click_button "Add Owner"
+
+    assert_cell maintainer, "Role", "Maintainer"
+  end
+
   teardown do
     @authenticator&.remove!
     Capybara.reset_sessions!
