@@ -367,7 +367,7 @@ class OwnersControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@owner, @maintainer])
 
         verified_sign_in_as(@owner)
-        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, access_level: Access::MAINTAINER }
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, ownership: { access_level: Access::MAINTAINER } }
       end
 
       should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }

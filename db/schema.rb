@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_02_182907) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_02_151324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -455,7 +455,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_02_182907) do
     t.boolean "owner_notifier", default: true, null: false
     t.integer "authorizer_id"
     t.boolean "ownership_request_notifier", default: true, null: false
-    t.integer "access_level", default: 0, null: false
+    t.integer "access_level", default: 70, null: false
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
   end

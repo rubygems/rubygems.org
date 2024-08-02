@@ -86,7 +86,7 @@ class OwnersController < ApplicationController
   end
 
   def update_params
-    params.permit(:access_level)
+    params.require(:ownership).permit(:access_level)
   end
 
   def handle_params
