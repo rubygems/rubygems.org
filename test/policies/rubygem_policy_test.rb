@@ -48,6 +48,7 @@ class RubygemPolicyTest < PolicyTestCase
   context "#show_adoption?" do
     should "be true if the gem is owned by the user" do
       assert_authorized @owner, :show_adoption?
+      refute_authorized @maintainer, :show_adoption?
     end
 
     should "be true if the rubygem is adoptable" do
@@ -60,6 +61,7 @@ class RubygemPolicyTest < PolicyTestCase
   context "#show_events?" do
     should "only allow the owner" do
       assert_authorized @owner, :show_events?
+      assert_authorized @maintainer, :show_events?
       refute_authorized @user, :show_events?
       refute_authorized nil, :show_events?
     end
@@ -68,6 +70,7 @@ class RubygemPolicyTest < PolicyTestCase
   context "#configure_trusted_publishers?" do
     should "only allow the owner" do
       assert_authorized @owner, :configure_trusted_publishers?
+      assert_authorized @maintainer, :configure_trusted_publishers?
       refute_authorized @user, :configure_trusted_publishers?
       refute_authorized nil, :configure_trusted_publishers?
     end
@@ -76,6 +79,7 @@ class RubygemPolicyTest < PolicyTestCase
   context "#show_unconfirmed_ownerships?" do
     should "only allow the owner" do
       assert_authorized @owner, :show_unconfirmed_ownerships?
+      assert_authorized @maintainer, :show_unconfirmed_ownerships?
       refute_authorized @user, :show_unconfirmed_ownerships?
       refute_authorized nil, :show_unconfirmed_ownerships?
     end
