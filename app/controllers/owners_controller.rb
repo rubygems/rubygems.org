@@ -33,6 +33,8 @@ class OwnersController < ApplicationController
   end
 
   def edit
+    authorize @rubygem, :update_owner?
+    @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
   end
 
   def create
@@ -51,6 +53,10 @@ class OwnersController < ApplicationController
     authorize @rubygem, :update_owner?
     owner = User.find_by_name(handle_params)
     ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
+
+    # Don't allow the owner to change the access level of their own ownership
+    return redirect_to rubygem_owners_path(@rubygem.slug), alert: "You can't update your own access level" if ownership.user == current_user
+
     if ownership.update(update_params)
       redirect_to rubygem_owners_path(ownership.rubygem.slug), notice: t(".success_notice", handle: ownership.user.name)
     else
