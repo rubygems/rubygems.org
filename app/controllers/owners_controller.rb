@@ -40,7 +40,8 @@ class OwnersController < ApplicationController
   def create
     authorize @rubygem, :add_owner?
     owner = User.find_by_name(handle_params)
-    ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
+
+    ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user, access_level: params[:access_level].to_i)
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
