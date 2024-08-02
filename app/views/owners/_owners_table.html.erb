@@ -43,11 +43,11 @@
       <td class="owners__cell" data-title="Added By">
         <%= ownership.authorizer_name %>
       </td>
-      <td class="owners__cell" data-title="Confirmed At">
-        <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
-      </td>
       <td class="owners__cell" data-title="Role">
         <%= Access.label_for_role_flag(ownership.access_level)  %>
+      </td>
+      <td class="owners__cell" data-title="Confirmed At">
+        <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
       </td>
       <td class="owners__cell" data-title="Action">
         <%= button_to "Remove",
