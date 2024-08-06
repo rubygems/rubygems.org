@@ -1,7 +1,7 @@
 module Access
   AccessDeniedError = Class.new(StandardError)
 
-  MAINTAINER = 60
+  MAINTAINER = 50
   OWNER = 70
 
   ROLES = {
