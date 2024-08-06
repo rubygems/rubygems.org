@@ -314,7 +314,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
                 "token_expires_at" => [nil, ownership.token_expires_at.as_json],
                 "owner_notifier" => [nil, true],
                 "authorizer_id" => [nil, security_user.id],
-                "ownership_request_notifier" => [nil, true]
+                "ownership_request_notifier" => [nil, true],
+                "access_level" => [nil, 70]
               },
               "unchanged" => {}
             },
