@@ -59,8 +59,7 @@ class OwnersController < ApplicationController
     # Don't allow the owner to change the access level of their own ownership
     return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".update_current_user") if ownership.user == current_user
 
-    access_level = Access.permission_for_role(params[:access_level])
-
+    access_level = Access.permission_for_role(params[:role])
     if ownership.update({ access_level: access_level })
       redirect_to rubygem_owners_path(ownership.rubygem.slug), notice: t(".success_notice", handle: ownership.user.name)
     else
@@ -87,10 +86,6 @@ class OwnersController < ApplicationController
 
   def token_params
     params.permit(:token).require(:token)
-  end
-
-  def update_params
-    params.require(:ownership).permit(:access_level)
   end
 
   def handle_params

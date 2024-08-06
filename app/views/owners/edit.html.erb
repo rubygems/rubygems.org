@@ -1,6 +1,6 @@
 <% @title = t('.title') %>
 
-<%= form_tag edit_rubygem_owner_path(@rubygem, @ownership) do |form| %>
+<%= form_tag rubygem_owner_path(rubygem_id: @rubygem.slug, owner_id: @ownership.user.display_id), method: :patch do |form| %>
   <%= error_messages_for(@ownership) %>
 
   <div class="text_field">
