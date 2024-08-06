@@ -178,6 +178,7 @@ en:
       save_key: "Note that we won't be able to show the key to you again. New API key:"
       mfa: MFA
       expiration: Expiration
+      update_owner: Update Owner
     new:
       new_api_key: New API key
     reset:
