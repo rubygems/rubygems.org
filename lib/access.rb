@@ -23,7 +23,7 @@ module Access
   end
 
   def self.permission_for_role(role)
-    raise ArgumentError, "A role must be provided" unless role.present?
+    raise ArgumentError, "A role must be provided" if role.blank?
     ROLES.fetch(role&.to_sym, nil)
   end
 
