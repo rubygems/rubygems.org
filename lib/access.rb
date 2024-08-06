@@ -22,9 +22,17 @@ module Access
     I18n.t("access.roles.#{role}")
   end
 
+  def self.permission_for_role(role)
+    ROLES.fetch(role.to_sym) { nil }
+  end
+
+  def self.role_for_permission(permission)
+    ROLES.key(permission)
+  end
+
   def self.options
-    ROLES.map do |_, permission|
-      [label_for_role_flag(permission), permission]
+    ROLES.map do |role, permission|
+      [label_for_role_flag(permission), role]
     end
   end
 end

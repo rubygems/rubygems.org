@@ -15,6 +15,16 @@ class AccessTest < ActiveSupport::TestCase
     end
   end
 
+  context ".role_for_permission" do
+    should "return the role for a given permission flag" do
+      assert_equal :owner, Access.role_for_permission(Access::OWNER)
+    end
+
+    should "when the permission flag does not exist" do
+      assert_nil Access.role_for_permission(999)
+    end
+  end
+
   context ".label_for_role_flag" do
     should "return the label for the role flag" do
       assert_equal "Owner", Access.label_for_role_flag(Access::OWNER)
@@ -30,6 +40,12 @@ class AccessTest < ActiveSupport::TestCase
       should "raise an ArgumentError" do
         assert_raises(ArgumentError) { Access.label_for_role_flag("owner") }
       end
+    end
+  end
+
+  context ".options" do
+    should "return an array of options" do
+      assert_equal [["Maintainer", :maintainer], ["Owner", :owner]], Access.options
     end
   end
 end
