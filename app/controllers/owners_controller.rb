@@ -40,9 +40,8 @@ class OwnersController < ApplicationController
   def create
     authorize @rubygem, :add_owner?
     owner = User.find_by_name(handle_params)
-
-    access_level = Access.permission_for_role(params[:access_level])
-    return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".invalid_access_level") if access_level.present?
+    access_level = Access.permission_for_role(params[:role])
+    return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".invalid_access_level") if access_level.blank?
 
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user, access_level: access_level)
     if ownership.save
