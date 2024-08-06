@@ -559,7 +559,9 @@ en:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+      invalid_access_level: Incorrect access level. Please select from the dropdown.
     update:
+      update_current_user: You can't update your own access level.
       success_notice: "%{handle} was succesfully updated."
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"

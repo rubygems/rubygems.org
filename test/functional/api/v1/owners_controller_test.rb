@@ -929,12 +929,12 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "route PUT /api/v1/gems/rubygem/owners.yaml" do
-      route = { controller: "api/v1/owners",
-                action: "update",
-                rubygem_id: "rails",
-                format: "yaml" }
+    route = { controller: "api/v1/owners",
+              action: "update",
+              rubygem_id: "rails",
+              format: "yaml" }
 
-      assert_recognizes(route, path: "/api/v1/gems/rails/owners.yaml", method: :put)
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners.yaml", method: :put)
   end
 
   context "on PATCH to owner gem" do

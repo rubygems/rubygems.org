@@ -379,6 +379,7 @@ class OwnersControllerTest < ActionController::TestCase
 
       should "downgrade the maintainer" do
         owner = @rubygem.ownerships.find_by(user_id: @owner.id)
+
         assert_equal Access::OWNER, owner.access_level
       end
 
@@ -389,6 +390,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should "not update the ownership of the current user" do
           owner = @rubygem.ownerships.find_by(user_id: @owner.id)
+
           assert_equal Access::OWNER, owner.access_level
         end
 

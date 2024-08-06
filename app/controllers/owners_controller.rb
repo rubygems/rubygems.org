@@ -42,9 +42,7 @@ class OwnersController < ApplicationController
     owner = User.find_by_name(handle_params)
 
     access_level = Accesss.permission_for_role(params[:access_level])
-    unless access_level.present?
-      return redirect_to rubygem_owners_path(@rubygem.slug), alert: "Incorrect access level. Please select from the dropdown."
-    end
+    return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".invalid_access_level") if access_level.present?
 
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user, access_level: access_level)
     if ownership.save
@@ -57,15 +55,14 @@ class OwnersController < ApplicationController
 
   def update
     authorize @rubygem, :update_owner?
-    owner = User.find_by_name(handle_params)
     ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
 
     # Don't allow the owner to change the access level of their own ownership
-    return redirect_to rubygem_owners_path(@rubygem.slug), alert: "You can't update your own access level" if ownership.user == current_user
+    return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".update_current_user") if ownership.user == current_user
 
     access_level = Access.permission_for_role(params[:access_level])
 
-    if ownership.update({access_level: access_level})
+    if ownership.update({ access_level: access_level })
       redirect_to rubygem_owners_path(ownership.rubygem.slug), notice: t(".success_notice", handle: ownership.user.name)
     else
       index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_entity
