@@ -50,8 +50,12 @@ class RubygemPolicy < ApplicationPolicy
     rubygem_owned_by?(user)
   end
 
+  def close_ownership_requests?
+    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+  end
+
   def show_unconfirmed_ownerships?
-    rubygem_owned_by?(user)
+    rubygem_owned_by?(user, required_access_level: Access::OWNER)
   end
 
   def add_owner?

@@ -266,7 +266,7 @@ class OwnerTest < SystemTest
       click_link "Edit"
     end
 
-    select "Maintainer", from: "ownership_access_level"
+    select "Maintainer", from: "role"
 
     click_button "Update"
 
@@ -279,7 +279,7 @@ class OwnerTest < SystemTest
     visit_ownerships_page
 
     fill_in "Handle", with: maintainer.handle
-    select "Maintainer", from: "access_level"
+    select "Maintainer", from: "role"
 
     click_button "Add Owner"
 

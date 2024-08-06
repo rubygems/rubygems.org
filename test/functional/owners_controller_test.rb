@@ -52,7 +52,7 @@ class OwnersControllerTest < ActionController::TestCase
         context "with invalid handle" do
           setup do
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-              post :create, params: { handle: "no_user", rubygem_id: @rubygem.name }
+              post :create, params: { handle: "no_user", rubygem_id: @rubygem.name, role: :owner }
             end
           end
 
@@ -72,7 +72,7 @@ class OwnersControllerTest < ActionController::TestCase
         context "with valid handle" do
           setup do
             @new_owner = create(:user)
-            post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+            post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
           end
 
           should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
@@ -132,7 +132,7 @@ class OwnersControllerTest < ActionController::TestCase
           context "owner has enabled mfa" do
             setup do
               @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
             end
 
             should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
@@ -367,7 +367,7 @@ class OwnersControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@owner, @maintainer])
 
         verified_sign_in_as(@owner)
-        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, ownership: { access_level: Access::MAINTAINER } }
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, role: :maintainer }
       end
 
       should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
@@ -379,22 +379,27 @@ class OwnersControllerTest < ActionController::TestCase
 
       should "downgrade the maintainer" do
         owner = @rubygem.ownerships.find_by(user_id: @owner.id)
+
         assert_equal Access::OWNER, owner.access_level
       end
+    end
 
-      context "when updating the current user" do
-        setup do
-          patch :update, params: { rubygem_id: @rubygem.name, handle: @owner.display_id, access_level: Access::OWNER }
-        end
+    context "on PATCH to update ownership of currently signed in user" do
+      setup do
+        @owner = create(:user)
+        @rubygem = create(:rubygem)
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, access_level: Access::OWNER)
 
-        should "not update the ownership of the current user" do
-          owner = @rubygem.ownerships.find_by(user_id: @owner.id)
-          assert_equal Access::OWNER, owner.access_level
-        end
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @owner.display_id, role: :maintainer }
+      end
 
-        should "set notice flash message" do
-          assert_equal "You can't update your own access level.", flash[:notice]
-        end
+      should "not update the ownership of the current user" do
+        assert_equal Access::OWNER, @ownership.reload.access_level
+      end
+
+      should "set notice flash message" do
+        assert_equal "You can't update your own access level.", flash[:alert]
       end
     end
   end
@@ -419,7 +424,7 @@ class OwnersControllerTest < ActionController::TestCase
     context "on POST to create ownership" do
       setup do
         @new_owner = create(:user)
-        post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+        post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
       end
 
       should redirect_to("sessions#verify") { verify_session_path }
@@ -433,7 +438,7 @@ class OwnersControllerTest < ActionController::TestCase
     context "on DELETE to owners" do
       setup do
         @second_user = create(:user)
-        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
         delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
       end
       should redirect_to("sessions#verify") { verify_session_path }
@@ -463,7 +468,7 @@ class OwnersControllerTest < ActionController::TestCase
       setup do
         @second_user = create(:user)
         @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
-        patch :update, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id, access_level: Access::MAINTAINER }
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id, role: :owner }
 
         should "update the ownership record" do
           assert_equal Access::MAINTAINER, @ownership.reload.access
@@ -580,7 +585,7 @@ class OwnersControllerTest < ActionController::TestCase
     context "on PATCH to update owner" do
       setup do
         create(:ownership, rubygem: @rubygem, user: @user)
-        patch :update, params: { rubygem_id: @rubygem.name, handle: @user.display_id, access_level: Access::OWNER }
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @user.display_id, role: :owner }
       end
 
       should "redirect to sign in path" do

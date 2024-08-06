@@ -15,9 +15,9 @@
       <%= text_field_tag :handle, nil, class: "form__input", required: true %>
     </div>
     <div class="text_field">
-      <%= label_tag :access_level, t(".access_level"), class: "form__label" %>
+      <%= label_tag :role, t(".create_role"), class: "form__label" %>
       <br/>
-      <%= select_tag :access_level, options_for_select(Access.options.to_a.reverse) %>
+      <%= select_tag :role, options_for_select(Access.options.to_a.reverse) %>
     </div>
     <div class="submit_field">
       <%= submit_tag t(".submit_button"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>

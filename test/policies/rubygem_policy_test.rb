@@ -61,6 +61,14 @@ class RubygemPolicyTest < PolicyTestCase
     end
   end
 
+  context "#close_ownership_requests" do
+    should "only allow the owner to close ownership requests" do
+      assert_authorized @owner, :close_ownership_requests?
+      refute_authorized @maintainer, :close_ownership_requests?
+      refute_authorized @user, :close_ownership_requests?
+    end
+  end
+
   context "#show_adoption?" do
     should "be true if the gem is owned by the user" do
       assert_authorized @owner, :show_adoption?
@@ -86,7 +94,7 @@ class RubygemPolicyTest < PolicyTestCase
   context "#configure_trusted_publishers?" do
     should "only allow the owner" do
       assert_authorized @owner, :configure_trusted_publishers?
-      assert_authorized @maintainer, :configure_trusted_publishers?
+      refute_authorized @maintainer, :configure_trusted_publishers?
       refute_authorized @user, :configure_trusted_publishers?
       refute_authorized nil, :configure_trusted_publishers?
     end
@@ -95,7 +103,7 @@ class RubygemPolicyTest < PolicyTestCase
   context "#show_unconfirmed_ownerships?" do
     should "only allow the owner" do
       assert_authorized @owner, :show_unconfirmed_ownerships?
-      assert_authorized @maintainer, :show_unconfirmed_ownerships?
+      refute_authorized @maintainer, :show_unconfirmed_ownerships?
       refute_authorized @user, :show_unconfirmed_ownerships?
       refute_authorized nil, :show_unconfirmed_ownerships?
     end

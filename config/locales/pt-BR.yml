@@ -171,6 +171,7 @@ pt-BR:
       yank_rubygem:
       add_owner:
       remove_owner:
+      update_owner:
       access_webhooks:
       show_dashboard:
       configure_trusted_publishers:
@@ -551,13 +552,22 @@ pt-BR:
       confirmed:
       pending:
       confirm_remove:
+      role:
+      create_role:
     resend_confirmation:
       resent_notice:
     create:
+      invalid_role:
       success_notice:
     destroy:
       removed_notice:
       failed_notice:
+    edit:
+      title:
+      role:
+    update:
+      update_current_user:
+      success_notice:
     mfa_required:
   settings:
     edit:
@@ -980,3 +990,7 @@ pt-BR:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  access:
+    roles:
+      owner:
+      maintainer:

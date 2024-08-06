@@ -184,6 +184,7 @@ es:
         clave de API:'
       mfa: AMF
       expiration:
+      update_owner:
     new:
       new_api_key: Nueva clave de API
     reset:
@@ -621,9 +622,12 @@ es:
       confirmed: Confirmado
       pending: Pendiente
       confirm_remove: "¿Seguro que quieres eliminar a este usuario de los propietarios?"
+      role:
+      create_role:
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
+      invalid_role:
       success_notice: Se ha añadido a %{handle} como propietario sin confirmar. Su
         acceso como propietario se activará cuando haga click en el mensaje de confirmación
         que se le ha enviado a su correo
@@ -632,6 +636,12 @@ es:
       failed_notice: No se puede eliminar al único propietario de una gema
     mfa_required: La gema tiene activado el requerimiento de AMF, configura AMF en
       tu cuenta por favor.
+    edit:
+      role:
+      title:
+    update:
+      update_current_user:
+      success_notice:
   settings:
     edit:
       title: Editar configuración
@@ -1107,3 +1117,7 @@ es:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  access:
+    roles:
+      owner:
+      maintainer:
