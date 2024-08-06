@@ -533,6 +533,7 @@ en:
       close_browser: Please close this browser and try again.
   owners:
     edit:
+      role: Role
       title: Edit Owner
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem
@@ -546,6 +547,7 @@ en:
       added_by: ADDED BY
       action: ACTION
       role: ROLE
+      create_role: Role
       email_field: Email / Handle
       submit_button: Add Owner
       info: add or remove owners
