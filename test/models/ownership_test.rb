@@ -248,4 +248,14 @@ class OwnershipTest < ActiveSupport::TestCase
       refute_predicate @ownership, :unconfirmed?
     end
   end
+
+  context "#role" do
+    setup do
+      @ownership = create(:ownership)
+    end
+
+    should "maps the ownership permission level to the role" do
+      assert_predicate @ownership.role, :owner?
+    end
+  end
 end
