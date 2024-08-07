@@ -263,7 +263,7 @@ class OwnerTest < SystemTest
     visit_ownerships_page
 
     within_element owner_row(maintainer) do
-      click_link "Edit"
+      click_button "Edit"
     end
 
     select "Maintainer", from: "role"

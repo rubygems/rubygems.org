@@ -561,17 +561,16 @@ fr:
       pending:
       confirm_remove:
       role:
-      create_role:
+      role_field:
     resend_confirmation:
       resent_notice:
     create:
-      invalid_role:
       success_notice:
     destroy:
       removed_notice:
       failed_notice:
     update:
-      update_current_user:
+      update_current_user_role:
       success_notice:
     edit:
       role:

@@ -547,7 +547,7 @@ en:
       added_by: ADDED BY
       action: ACTION
       role: ROLE
-      create_role: Role
+      role_field: Role
       email_field: Email / Handle
       submit_button: Add Owner
       info: add or remove owners
@@ -558,9 +558,8 @@ en:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
-      invalid_role: "Incorrect role. Please select from the dropdown"
     update:
-      update_current_user: You can't update your own access level
+      update_current_user_role: Can't update your own Role
       success_notice: "%{handle} was succesfully updated."
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"

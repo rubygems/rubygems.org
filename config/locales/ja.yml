@@ -541,11 +541,10 @@ ja:
       pending: 保留
       confirm_remove: このユーザーを所有者から削除されたいとのことでよろしいですか。
       role:
-      create_role:
+      role_field:
     resend_confirmation:
       resent_notice: 確定メールがEメールに再送されました。
     create:
-      invalid_role:
       success_notice: "%{handle}が未確定の所有者として追加されました。当該ユーザーがEメールに送られた確定メールでクリックした後に所有権アクセスが有効になります。"
     destroy:
       removed_notice: "%{owner_name}は所有者から正常に削除されました"
@@ -554,7 +553,7 @@ ja:
       title:
       role:
     update:
-      update_current_user:
+      update_current_user_role:
       success_notice:
     mfa_required: gemでMFAの要件が有効化されているため、アカウントにMFAを設定してください。
   settings:

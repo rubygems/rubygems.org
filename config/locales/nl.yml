@@ -542,11 +542,10 @@ nl:
       pending:
       confirm_remove:
       role:
-      create_role:
+      role_field:
     resend_confirmation:
       resent_notice:
     create:
-      invalid_role:
       success_notice:
     destroy:
       removed_notice:
@@ -556,7 +555,7 @@ nl:
       title:
     update:
       success_notice:
-      update_current_user:
+      update_current_user_role:
     mfa_required:
   settings:
     edit:

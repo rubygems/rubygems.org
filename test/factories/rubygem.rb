@@ -19,11 +19,11 @@ FactoryBot.define do
 
     after(:create) do |rubygem, evaluator|
       evaluator.owners.each do |owner|
-        create(:ownership, rubygem: rubygem, user: owner, access_level: Access::OWNER)
+        create(:ownership, rubygem: rubygem, user: owner, role: :owner)
       end
 
       evaluator.maintainers.each do |maintainer|
-        create(:ownership, rubygem: rubygem, user: maintainer, access_level: Access::MAINTAINER)
+        create(:ownership, rubygem: rubygem, user: maintainer, role: :maintainer)
       end
 
       create(:version, rubygem: rubygem, number: evaluator.number) if evaluator.number

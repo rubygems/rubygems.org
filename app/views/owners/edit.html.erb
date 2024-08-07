@@ -11,7 +11,7 @@
   <div class="text_field">
     <%= label_tag :role, t(".role"), class: 'form__label' %>
     <br/>
-    <%= select_tag :role, options_for_select(Access.options.to_a.reverse, Access.role_for_permission(@ownership.access_level))  %>
+    <%= select_tag :role, options_for_select(Access.options.to_a.reverse, @ownership.role), class: "form__input form__select"  %>
   </div>
 
   <div class="submit_field">

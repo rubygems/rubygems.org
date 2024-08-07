@@ -292,7 +292,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
                 "owner_notifier" => [nil, true],
                 "authorizer_id" => [nil, security_user.id],
                 "ownership_request_notifier" => [nil, true],
-                "access_level" => [nil, 70]
+                "role" => [nil, ownership.role]
               },
               "unchanged" => {}
             },

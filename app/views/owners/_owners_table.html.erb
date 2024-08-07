@@ -44,7 +44,7 @@
         <%= ownership.authorizer_name %>
       </td>
       <td class="owners__cell" data-title="Role">
-        <%= Access.label_for_role_flag(ownership.access_level)  %>
+        <%= Access.label_for_role(ownership.role) %>
       </td>
       <td class="owners__cell" data-title="Confirmed At">
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
@@ -55,7 +55,11 @@
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
-        <%= link_to "Edit", edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id), class: "form__submit form__submit--small" %>
+        <br/>
+        <%= button_to "Edit",
+          edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
+          method: "get",
+          class: "form__submit form__submit--small" %>
       </td>
     </tr>
   <% end %>

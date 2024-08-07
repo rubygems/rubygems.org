@@ -623,11 +623,10 @@ es:
       pending: Pendiente
       confirm_remove: "¿Seguro que quieres eliminar a este usuario de los propietarios?"
       role:
-      create_role:
+      role_field:
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
-      invalid_role:
       success_notice: Se ha añadido a %{handle} como propietario sin confirmar. Su
         acceso como propietario se activará cuando haga click en el mensaje de confirmación
         que se le ha enviado a su correo
@@ -640,7 +639,7 @@ es:
       role:
       title:
     update:
-      update_current_user:
+      update_current_user_role:
       success_notice:
   settings:
     edit:
