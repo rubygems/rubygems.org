@@ -24,7 +24,7 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_adoption?
-    rubygem_owned_by?(user, required_role: Access::OWNER) || request_ownership?
+    rubygem_owned_by?(user, minimum_required_role: Access::OWNER) || request_ownership?
   end
 
   def show_events?
