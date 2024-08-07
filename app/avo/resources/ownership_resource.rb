@@ -26,7 +26,7 @@ class OwnershipResource < Avo::BaseResource
 
   field :authorizer, as: :belongs_to
   field :confirmed_at, as: :date_time
-  field :access_level, as: :text do |model, _resource, _view|
+  field :role, as: :text do |model, _resource, _view|
     Access.label_for_role_flag(model.access_level)
   end
 end

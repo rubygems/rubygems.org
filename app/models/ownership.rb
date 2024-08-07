@@ -89,6 +89,10 @@ class Ownership < ApplicationRecord
     end
   end
 
+  def role
+    Access.role_for_permission(access_level)
+  end
+
   private
 
   def record_create_event
