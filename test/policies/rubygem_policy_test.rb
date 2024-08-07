@@ -49,7 +49,7 @@ class RubygemPolicyTest < PolicyTestCase
     should "only allow the owner to close ownership requests" do
       assert_authorized @owner, :close_ownership_requests?
       refute_authorized @maintainer, :close_ownership_requests?
-      refute_authorized @user , :close_ownership_requests?
+      refute_authorized @user, :close_ownership_requests?
     end
   end
 
