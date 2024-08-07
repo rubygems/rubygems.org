@@ -16,6 +16,17 @@ class Api::V1::OwnersController < Api::BaseController
     authorize @rubygem, :add_owner?
     owner = User.find_by_name!(email_param)
     ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user)
+
+    if params[:role].present?
+      access_level = Access.permission_for_role(params[:role])
+      if access_level.blank?
+        return render plain: response_with_mfa_warning("Invalid role. Role must be: #{Access.roles.to_sentence(two_words_connector: ' or ')}"),
+status: :unprocessable_entity
+      else
+        ownership.access_level = access_level
+      end
+    end
+
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       render plain: response_with_mfa_warning("#{owner.display_handle} was added as an unconfirmed owner. " \
@@ -30,8 +41,16 @@ class Api::V1::OwnersController < Api::BaseController
     authorize @rubygem, :update_owner?
     ownership = @rubygem.ownerships.find_by!(user: User.find_by_name!(email_param))
 
+    if params[:role].present?
+      access_level = Access.permission_for_role(ownership_update_params[:role])
+      if access_level.blank?
+        return render plain: response_with_mfa_warning("Invalid role. Role must be: #{Access.roles.to_sentence(two_words_connector: ' or ')}"),
+status: :unprocessable_entity
+      end
+    end
+
     if ownership.present?
-      ownership.update!(ownership_update_params)
+      ownership.update!(access_level: access_level)
       render plain: response_with_mfa_warning("Owner updated successfully.")
     else
       render plain: response_with_mfa_warning("Unable to update owner."), status: :forbidden
@@ -74,6 +93,6 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def ownership_update_params
-    params.permit(:access_level)
+    params.permit(:role)
   end
 end

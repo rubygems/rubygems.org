@@ -5,9 +5,13 @@ module Access
   OWNER = 70
 
   ROLES = {
-    maintainer: MAINTAINER,
-    owner: OWNER
+    "maintainer" => MAINTAINER,
+    "owner" => OWNER
   }.freeze
+
+  def self.roles
+    ROLES.keys
+  end
 
   def self.label_for_role(role)
     key = ROLES.fetch(role.to_sym, nil)
@@ -24,11 +28,11 @@ module Access
 
   def self.permission_for_role(role)
     raise ArgumentError, "A role must be provided" if role.blank?
-    ROLES.fetch(role&.to_sym, nil)
+    ROLES.fetch(String(role), nil)
   end
 
   def self.role_for_permission(permission)
-    ROLES.key(permission)
+    ROLES.key(permission).inquiry
   end
 
   def self.options
