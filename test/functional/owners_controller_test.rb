@@ -144,6 +144,19 @@ class OwnersControllerTest < ActionController::TestCase
               assert_equal expected_notice, flash[:notice]
             end
           end
+
+          context "with invalid role" do
+            setup do
+              @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :invalid }
+            end
+
+            should render_template :index
+
+            should "set alert notice flash" do
+              assert_equal "Role is not included in the list", flash[:alert]
+            end
+          end
         end
       end
 
@@ -377,29 +390,63 @@ class OwnersControllerTest < ActionController::TestCase
         assert_equal success_flash, flash[:notice]
       end
 
-      should "downgrade the maintainer" do
-        owner = @rubygem.ownerships.find_by(user_id: @owner.id)
+      should "downgrade the ownership to a maintainer role" do
+        ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
 
-        assert_equal Access::OWNER, owner.access_level
+        assert_predicate ownership.role, :maintainer?
       end
     end
 
-    context "on PATCH to update ownership of currently signed in user" do
+    context "when updating ownership without role" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id }
+      end
+
+      should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
+
+      should "set error flash message" do
+        assert_equal "#{@maintainer.display_id} was succesfully updated.", flash[:notice]
+      end
+    end
+
+    context "when updating ownership with invalid role" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, role: :invalid }
+      end
+
+      should respond_with :unprocessable_content
+
+      should "set error flash message" do
+        assert_equal "Role is not included in the list", flash[:alert]
+      end
+    end
+
+    context "when updating ownership of currently signed in user" do
       setup do
         @owner = create(:user)
         @rubygem = create(:rubygem)
-        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, access_level: Access::OWNER)
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
 
         verified_sign_in_as(@owner)
         patch :update, params: { rubygem_id: @rubygem.name, handle: @owner.display_id, role: :maintainer }
       end
 
       should "not update the ownership of the current user" do
-        assert_equal Access::OWNER, @ownership.reload.access_level
+        assert_predicate @ownership.reload.role, :owner?
       end
 
       should "set notice flash message" do
-        assert_equal "You can't update your own access level.", flash[:alert]
+        assert_equal "You can't update your own access level", flash[:alert]
       end
     end
   end

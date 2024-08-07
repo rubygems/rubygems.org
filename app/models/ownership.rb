@@ -4,7 +4,9 @@ class Ownership < ApplicationRecord
   belongs_to :authorizer, class_name: "User"
   has_many :api_key_rubygem_scopes, dependent: :destroy
 
+  attribute :role, Types::Role.new, default: Access::DEFAULT_ROLE
   validate :validate_unique_user
+  validates :role, inclusion: { in: Access.roles }, allow_nil: true
 
   delegate :name, to: :user, prefix: :owner
   delegate :name, to: :authorizer, prefix: true, allow_nil: true
@@ -87,10 +89,6 @@ class Ownership < ApplicationRecord
     else
       errors.add :user_id, I18n.t("activerecord.errors.models.ownership.attributes.user_id.already_invited")
     end
-  end
-
-  def role
-    Access.role_for_permission(access_level)
   end
 
   private

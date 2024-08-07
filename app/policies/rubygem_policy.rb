@@ -24,7 +24,7 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_adoption?
-    rubygem_owned_by?(user, required_access_level: Access::OWNER) || request_ownership?
+    rubygem_owned_by?(user, required_role: Access::OWNER) || request_ownership?
   end
 
   def show_events?
@@ -39,26 +39,26 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def close_ownership_requests?
-    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+    rubygem_owned_by?(user, minimum_required_role: Access::OWNER)
   end
 
   def configure_trusted_publishers?
-    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+    rubygem_owned_by?(user, minimum_required_role: Access::OWNER)
   end
 
   def show_unconfirmed_ownerships?
-    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+    rubygem_owned_by?(user, minimum_required_role: Access::OWNER)
   end
 
   def add_owner?
-    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+    rubygem_owned_by?(user, minimum_required_role: Access::OWNER)
   end
 
   def update_owner?
-    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+    rubygem_owned_by?(user, minimum_required_role: Access::OWNER)
   end
 
   def remove_owner?
-    rubygem_owned_by?(user, required_access_level: Access::OWNER)
+    rubygem_owned_by?(user, minimum_required_role: Access::OWNER)
   end
 end

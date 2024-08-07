@@ -542,7 +542,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :invalid }
 
           assert_equal 422, @response.status
-          assert_equal "Invalid role. Role must be: maintainer or owner", @response.body
+          assert_equal "Role is not included in the list", @response.body
         end
 
         should "not create the ownership" do
@@ -976,8 +976,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @maintainer = create(:user)
       @rubygem = create(:rubygem)
 
-      @owner_gem_ownership = create(:ownership, user: @owner, rubygem: @rubygem, access_level: Access::OWNER)
-      @maintainer_gem_ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, access_level: Access::MAINTAINER)
+      @owner_gem_ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
+      @maintainer_gem_ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
 
       @api_key = create(:api_key, key: "12223", scopes: %i[update_owner], owner: @owner, rubygem: @rubygem)
       @request.env["HTTP_AUTHORIZATION"] = "12223"
@@ -987,7 +987,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :maintainer }
 
       assert_response :success
-      assert_equal Access::MAINTAINER, @maintainer_gem_ownership.reload.access_level
+      assert_predicate @maintainer_gem_ownership.reload.role, :maintainer?
     end
 
     context "when the role is invalid" do
@@ -996,13 +996,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         respond_with :bad_request
 
-        assert_equal "Invalid role. Role must be: maintainer or owner", @response.body
+        assert_equal "Role is not included in the list", @response.body
       end
 
       should "not update the user with the new role" do
         patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
 
-        assert_equal Access::MAINTAINER, @maintainer_gem_ownership.reload.access_level
+        assert_predicate @maintainer_gem_ownership.reload.role, :maintainer?
       end
     end
   end
