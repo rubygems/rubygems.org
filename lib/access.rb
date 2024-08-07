@@ -16,7 +16,7 @@ module Access
   end
 
   def self.label_for_role(role)
-    key = ROLES.fetch(role.to_sym, nil)
+    key = ROLES.fetch(role.to_s, nil)
     return nil if key.nil?
     I18n.t("access.roles.#{role}")
   end

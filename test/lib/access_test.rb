@@ -7,7 +7,7 @@ class AccessTest < ActiveSupport::TestCase
     end
 
     should "cast the given input into the correct type" do
-      assert_equal "Owner", Access.label_for_role("owner")
+      assert_equal "Owner", Access.label_for_role(:owner)
     end
 
     should "return nil when the role is unknown" do
@@ -17,7 +17,7 @@ class AccessTest < ActiveSupport::TestCase
 
   context ".role_for_permission" do
     should "return the role for a given permission flag" do
-      assert_equal :owner, Access.role_for_permission(Access::OWNER)
+      assert_equal "owner", Access.role_for_permission(Access::OWNER)
     end
 
     should "when the permission flag does not exist" do
@@ -45,7 +45,7 @@ class AccessTest < ActiveSupport::TestCase
 
   context ".options" do
     should "return an array of options" do
-      assert_equal [["Maintainer", :maintainer], ["Owner", :owner]], Access.options
+      assert_equal [%w[Maintainer maintainer], %w[Owner owner]], Access.options
     end
   end
 end
