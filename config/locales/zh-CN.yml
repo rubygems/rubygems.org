@@ -166,6 +166,7 @@ zh-CN:
       yank_rubygem: 撤回 Gem
       add_owner: 添加 Gem 业主
       remove_owner: 移除（某个）Gem 业主
+      update_owner:
       access_webhooks: 访问后 (Access) Webhook
       show_dashboard: 显示仪表盘
       configure_trusted_publishers:
@@ -546,13 +547,22 @@ zh-CN:
       confirmed: 已批准
       pending: 待定
       confirm_remove: 您确定您想要从业主中移除该用户吗？
+      role:
+      create_role:
     resend_confirmation:
       resent_notice: 一封确认邮件已被重新发送到您的邮箱中
     create:
+      invalid_role:
       success_notice: "%{handle} 已添加为还未经批准的业主。在用户点击发送到其邮箱的批准邮件后，所有权访问才将被启用。"
     destroy:
       removed_notice: "%{owner_name} 已成功从业主中移除"
       failed_notice: 不能删除该 Gem 的唯一业主
+    edit:
+      role:
+      title:
+    update:
+      success_notice:
+      update_current_user:
     mfa_required: 该 Gem 已启用多因素验证，请在您的帐户上设置多因素验证。
   settings:
     edit:
@@ -974,3 +984,7 @@ zh-CN:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  access:
+    roles:
+      owner:
+      maintainer:
