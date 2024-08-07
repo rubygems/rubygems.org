@@ -4,6 +4,8 @@ module Access
   MAINTAINER = 50
   OWNER = 70
 
+  DEFAULT_ROLE = "owner".freeze
+
   ROLES = {
     "maintainer" => MAINTAINER,
     "owner" => OWNER
@@ -27,12 +29,11 @@ module Access
   end
 
   def self.permission_for_role(role)
-    raise ArgumentError, "A role must be provided" if role.blank?
     ROLES.fetch(String(role), nil)
   end
 
   def self.role_for_permission(permission)
-    ROLES.key(permission).inquiry
+    ROLES.key(permission)&.inquiry
   end
 
   def self.options

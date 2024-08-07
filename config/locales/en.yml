@@ -561,6 +561,7 @@ en:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
       invalid_role: "Incorrect role. Please select from the dropdown"
     update:
+      invalid_role: "Incorrect role. Please select from the dropdown"
       update_current_user: You can't update your own access level
       success_notice: "%{handle} was succesfully updated."
     destroy:

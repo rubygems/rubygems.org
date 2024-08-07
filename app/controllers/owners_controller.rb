@@ -40,10 +40,8 @@ class OwnersController < ApplicationController
   def create
     authorize @rubygem, :add_owner?
     owner = User.find_by_name(handle_params)
-    access_level = Access.permission_for_role(params[:role])
-    return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".invalid_role") if access_level.blank?
 
-    ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user, access_level: access_level)
+    ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user, role: params[:role])
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
@@ -52,18 +50,22 @@ class OwnersController < ApplicationController
     end
   end
 
+  # This action is used to update a user's owenrship role. This endpoint currently asssumes
+  # the role is the only thing that can be updated. If more fields are added to the ownership
+  # this action will need to be tweaked a bit
   def update
     authorize @rubygem, :update_owner?
     ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
 
-    # Don't allow the owner to change the access level of their own ownership
-    return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".update_current_user") if ownership.user == current_user
+    if ownership.user == current_user
+      # Don't allow the owner to change the access level of their own ownership
+      return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".update_current_user")
+    end
 
-    access_level = Access.permission_for_role(params[:role])
-    if ownership.update({ access_level: access_level })
+    if ownership.update(update_params)
       redirect_to rubygem_owners_path(ownership.rubygem.slug), notice: t(".success_notice", handle: ownership.user.name)
     else
-      index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_entity
+      index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity
     end
   end
 
@@ -90,6 +92,10 @@ class OwnersController < ApplicationController
 
   def handle_params
     params.permit(:handle).require(:handle)
+  end
+
+  def update_params
+    params.permit(:role)
   end
 
   def notify_owner_added(ownership)

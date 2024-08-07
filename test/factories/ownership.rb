@@ -4,14 +4,14 @@ FactoryBot.define do
     user
     confirmed_at { Time.current }
     authorizer { association :user }
-    access_level { Access::OWNER }
+    role { :owner }
 
     trait :unconfirmed do
       confirmed_at { nil }
     end
 
     trait :maintainer do
-      access_level { Access::MAINTAINER }
+      role { :maintainer }
     end
   end
 end
