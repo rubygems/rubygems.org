@@ -186,6 +186,7 @@ de:
         können. Neuer API-Schlüssel:'
       mfa: MFA
       expiration:
+      update_owner:
     new:
       new_api_key: Neuer API-Schlüssel
     reset:
@@ -636,14 +637,23 @@ de:
       confirmed:
       pending:
       confirm_remove:
+      role:
+      create_role:
     resend_confirmation:
       resent_notice:
     create:
       success_notice:
+      invalid_role:
     destroy:
       removed_notice:
       failed_notice:
     mfa_required:
+    update:
+      success_notice:
+      update_current_user:
+    edit:
+      role:
+      title:
   settings:
     edit:
       title:
@@ -1055,3 +1065,7 @@ de:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  access:
+    roles:
+      owner:
+      maintainer:

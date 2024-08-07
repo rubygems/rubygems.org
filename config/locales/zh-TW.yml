@@ -165,6 +165,7 @@ zh-TW:
       yank_rubygem: 移除 rubygem
       add_owner: 新增擁有者
       remove_owner: 移除擁有者
+      update_owner:
       access_webhooks: 存取 Webhooks
       show_dashboard: 顯示儀表板
       configure_trusted_publishers:
@@ -541,13 +542,22 @@ zh-TW:
       confirmed: 已確認
       pending: 待確認
       confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
+      role:
+      create_role:
     resend_confirmation:
       resent_notice:
     create:
+      invalid_role:
       success_notice: "%{handle} 已以未確認擁有者的身分加入。所有權存取將在使用者點擊傳送到他們的電子郵件地址的確認信後啟用。"
     destroy:
       removed_notice:
       failed_notice: 無法移除 Gem 的唯一擁有者
+    edit:
+      role:
+      title:
+    update:
+      update_current_user:
+      success_notice:
     mfa_required: Gem 啟用了 MFA 要求，請設定您的帳號的 MFA。
   settings:
     edit:
@@ -965,3 +975,7 @@ zh-TW:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  access:
+    roles:
+      owner:
+      maintainer:
