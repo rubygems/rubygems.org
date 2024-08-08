@@ -145,18 +145,17 @@ class SettingsTest < ApplicationSystemTestCase
     click_button "Enable"
 
     check "ack"
-    confirm_text = dismiss_confirm do
-      visit root_path
+    dismiss_confirm("Leave without copying recovery codes?") do
+      click_on "Continue"
     end
 
-    assert_equal("", confirm_text)
     assert_equal recovery_multifactor_auth_path, page.current_path
 
-    accept_confirm do
-      visit root_path
+    accept_confirm("Leave without copying recovery codes?") do
+      click_on "Continue"
     end
 
-    assert_equal root_path, page.current_path
+    assert_equal edit_settings_path, page.current_path
   end
 
   test "shows 'ui only' if user's level is ui_only" do
