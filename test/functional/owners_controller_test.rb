@@ -409,8 +409,9 @@ class OwnersControllerTest < ActionController::TestCase
 
       should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
 
-      should "set error flash message" do
-        assert_equal "#{@maintainer.display_id} was succesfully updated.", flash[:notice]
+      should "not update the role" do
+        ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
+        assert_predicate ownership.role, :owner?
       end
     end
 
@@ -431,7 +432,7 @@ class OwnersControllerTest < ActionController::TestCase
       end
     end
 
-    context "when updating ownership of currently signed in user" do
+    context "when updating the role of currently signed in user" do
       setup do
         @owner = create(:user)
         @rubygem = create(:rubygem)
@@ -446,7 +447,7 @@ class OwnersControllerTest < ActionController::TestCase
       end
 
       should "set notice flash message" do
-        assert_equal "You can't update your own access level", flash[:alert]
+        assert_equal "Can't update your own Role", flash[:alert]
       end
     end
   end

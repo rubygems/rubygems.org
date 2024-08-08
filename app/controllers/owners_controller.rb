@@ -57,9 +57,9 @@ class OwnersController < ApplicationController
     authorize @rubygem, :update_owner?
     ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
 
-    if ownership.user == current_user
+    if ownership.user == current_user && update_params[:role] != ownership.role
       # Don't allow the owner to change the access level of their own ownership
-      return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".update_current_user")
+      return redirect_to rubygem_owners_path(@rubygem.slug), alert: t(".update_current_user_role")
     end
 
     if ownership.update(update_params)
