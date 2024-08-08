@@ -543,11 +543,10 @@ zh-TW:
       pending: 待確認
       confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
       role:
-      create_role:
+      role_field:
     resend_confirmation:
       resent_notice:
     create:
-      invalid_role:
       success_notice: "%{handle} 已以未確認擁有者的身分加入。所有權存取將在使用者點擊傳送到他們的電子郵件地址的確認信後啟用。"
     destroy:
       removed_notice:
@@ -556,7 +555,7 @@ zh-TW:
       role:
       title:
     update:
-      update_current_user:
+      update_current_user_role:
       success_notice:
     mfa_required: Gem 啟用了 MFA 要求，請設定您的帳號的 MFA。
   settings:
