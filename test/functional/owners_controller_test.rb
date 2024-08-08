@@ -411,6 +411,7 @@ class OwnersControllerTest < ActionController::TestCase
 
       should "not update the role" do
         ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
+
         assert_predicate ownership.role, :owner?
       end
     end
