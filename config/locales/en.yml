@@ -178,6 +178,7 @@ en:
       save_key: "Note that we won't be able to show the key to you again. New API key:"
       mfa: MFA
       expiration: Expiration
+      update_owner: Update Owner
     new:
       new_api_key: New API key
     reset:
@@ -532,6 +533,9 @@ en:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.
   owners:
+    edit:
+      role: Role
+      title: Edit Owner
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem
       token_expired: The confirmation token has expired. Please try resending the token from the gem page.
@@ -543,6 +547,8 @@ en:
       confirmed_at: CONFIRMED AT
       added_by: ADDED BY
       action: ACTION
+      role: ROLE
+      role_field: Role
       email_field: Email / Handle
       submit_button: Add Owner
       info: add or remove owners
@@ -553,6 +559,9 @@ en:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+    update:
+      update_current_user_role: Can't update your own Role
+      success_notice: "%{handle} was succesfully updated."
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"
       failed_notice: Can't remove the only owner of the gem
@@ -976,3 +985,7 @@ en:
         api_key_gem_html: "Gem: %{gem}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
+  access:
+    roles:
+      owner: Owner
+      maintainer: Maintainer

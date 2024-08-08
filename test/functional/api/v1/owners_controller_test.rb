@@ -518,6 +518,39 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
         end
       end
+
+      context "when not supplying a role" do
+        should "set a default role" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id }
+
+          assert_equal 200, @response.status
+          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem).role, :owner?
+        end
+      end
+
+      context "given a role" do
+        should "set the role for the given user" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :maintainer }
+
+          assert_equal 200, @response.status
+          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem).role, :maintainer?
+        end
+      end
+
+      context "when given an invalid role" do
+        should "raise an error" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :invalid }
+
+          assert_equal 422, @response.status
+          assert_equal "Role is not included in the list", @response.body
+        end
+
+        should "not create the ownership" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email, role: :invalid }
+
+          assert_nil @rubygem.ownerships.find_by(user: @second_user)
+        end
+      end
     end
 
     context "without add owner api key scope" do
@@ -926,5 +959,51 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     post :create, params: { rubygem_id: "bananas" }
 
     assert_equal "This rubygem could not be found.", @response.body
+  end
+
+  should "route PUT /api/v1/gems/rubygem/owners.yaml" do
+    route = { controller: "api/v1/owners",
+              action: "update",
+              rubygem_id: "rails",
+              format: "yaml" }
+
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners.yaml", method: :put)
+  end
+
+  context "on PATCH to owner gem" do
+    setup do
+      @owner = create(:user)
+      @maintainer = create(:user)
+      @rubygem = create(:rubygem)
+
+      @owner_gem_ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
+      @maintainer_gem_ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+
+      @api_key = create(:api_key, key: "12223", scopes: %i[update_owner], owner: @owner, rubygem: @rubygem)
+      @request.env["HTTP_AUTHORIZATION"] = "12223"
+    end
+
+    should "set the maintainer to a lower access level" do
+      patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :maintainer }
+
+      assert_response :success
+      assert_predicate @maintainer_gem_ownership.reload.role, :maintainer?
+    end
+
+    context "when the role is invalid" do
+      should "return a bad request response with the error message" do
+        patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
+
+        respond_with :bad_request
+
+        assert_equal "Role is not included in the list", @response.body
+      end
+
+      should "not update the user with the new role" do
+        patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
+
+        assert_predicate @maintainer_gem_ownership.reload.role, :maintainer?
+      end
+    end
   end
 end

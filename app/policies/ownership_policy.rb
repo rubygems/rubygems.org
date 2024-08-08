@@ -8,6 +8,10 @@ class OwnershipPolicy < ApplicationPolicy
     policy!(user, rubygem).add_owner?
   end
 
+  def update?
+    policy!(user, rubygem).update_owner?
+  end
+
   def destroy?
     policy!(user, rubygem).remove_owner?
   end

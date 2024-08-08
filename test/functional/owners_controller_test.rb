@@ -52,7 +52,7 @@ class OwnersControllerTest < ActionController::TestCase
         context "with invalid handle" do
           setup do
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-              post :create, params: { handle: "no_user", rubygem_id: @rubygem.name }
+              post :create, params: { handle: "no_user", rubygem_id: @rubygem.name, role: :owner }
             end
           end
 
@@ -72,7 +72,7 @@ class OwnersControllerTest < ActionController::TestCase
         context "with valid handle" do
           setup do
             @new_owner = create(:user)
-            post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+            post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
           end
 
           should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
@@ -132,7 +132,7 @@ class OwnersControllerTest < ActionController::TestCase
           context "owner has enabled mfa" do
             setup do
               @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
             end
 
             should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
@@ -142,6 +142,19 @@ class OwnersControllerTest < ActionController::TestCase
                                 "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
 
               assert_equal expected_notice, flash[:notice]
+            end
+          end
+
+          context "with invalid role" do
+            setup do
+              @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :invalid }
+            end
+
+            should render_template :index
+
+            should "set alert notice flash" do
+              assert_equal "Role is not included in the list", flash[:alert]
             end
           end
         end
@@ -344,6 +357,100 @@ class OwnersControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "on GET edit ownership" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+
+        get :edit, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id }
+      end
+
+      should respond_with :success
+      should render_template :edit
+    end
+
+    context "on PATCH to update ownership" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, role: :maintainer }
+      end
+
+      should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
+      should "set success notice flash" do
+        success_flash = "#{@maintainer.name} was succesfully updated."
+
+        assert_equal success_flash, flash[:notice]
+      end
+
+      should "downgrade the ownership to a maintainer role" do
+        ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
+
+        assert_predicate ownership.role, :maintainer?
+      end
+    end
+
+    context "when updating ownership without role" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id }
+      end
+
+      should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
+
+      should "not update the role" do
+        ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
+
+        assert_predicate ownership.role, :owner?
+      end
+    end
+
+    context "when updating ownership with invalid role" do
+      setup do
+        @owner = create(:user)
+        @maintainer = create(:user)
+        @rubygem = create(:rubygem, owners: [@owner, @maintainer])
+
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, role: :invalid }
+      end
+
+      should respond_with :unprocessable_content
+
+      should "set error flash message" do
+        assert_equal "Role is not included in the list", flash[:alert]
+      end
+    end
+
+    context "when updating the role of currently signed in user" do
+      setup do
+        @owner = create(:user)
+        @rubygem = create(:rubygem)
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
+
+        verified_sign_in_as(@owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @owner.display_id, role: :maintainer }
+      end
+
+      should "not update the ownership of the current user" do
+        assert_predicate @ownership.reload.role, :owner?
+      end
+
+      should "set notice flash message" do
+        assert_equal "Can't update your own Role", flash[:alert]
+      end
+    end
   end
 
   context "when logged in and unverified" do
@@ -366,7 +473,7 @@ class OwnersControllerTest < ActionController::TestCase
     context "on POST to create ownership" do
       setup do
         @new_owner = create(:user)
-        post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+        post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
       end
 
       should redirect_to("sessions#verify") { verify_session_path }
@@ -386,8 +493,35 @@ class OwnersControllerTest < ActionController::TestCase
       should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
 
-      should "remove the ownership record" do
-        assert_includes @rubygem.owners_including_unconfirmed, @second_user
+      should "not remove the ownership record" do
+        assert_includes @rubygem.owners, @second_user
+      end
+    end
+
+    context "on EDIT to owners" do
+      setup do
+        @second_user = create(:user)
+        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
+        edit :edit, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
+
+        should redirect_to("sessions#verify") { verify_session_path }
+        should use_before_action(:redirect_to_verify)
+
+        should "show the edit form" do
+          assert_not_template :edit
+        end
+      end
+    end
+
+    context "on UPDATE to owners" do
+      setup do
+        @second_user = create(:user)
+        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id, role: :owner }
+
+        should "update the ownership record" do
+          assert_equal Access::MAINTAINER, @ownership.reload.access
+        end
       end
     end
   end
@@ -479,6 +613,28 @@ class OwnersControllerTest < ActionController::TestCase
       setup do
         create(:ownership, rubygem: @rubygem, user: @user)
         delete :destroy, params: { rubygem_id: @rubygem.name, handle: @user.display_id }
+      end
+
+      should "redirect to sign in path" do
+        assert redirect_to("sign in") { sign_in_path }
+      end
+    end
+
+    context "on EDIT to update owner" do
+      setup do
+        create(:ownership, rubygem: @rubygem, user: @user)
+        get :edit, params: { rubygem_id: @rubygem.name, handle: @user.display_id }
+      end
+
+      should "redirect to sign in path" do
+        assert redirect_to("sign in") { sign_in_path }
+      end
+    end
+
+    context "on PATCH to update owner" do
+      setup do
+        create(:ownership, rubygem: @rubygem, user: @user)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @user.display_id, role: :owner }
       end
 
       should "redirect to sign in path" do

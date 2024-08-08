@@ -15,12 +15,27 @@ class Api::V1::OwnersController < Api::BaseController
   def create
     authorize @rubygem, :add_owner?
     owner = User.find_by_name!(email_param)
+    role = params[:role]
     ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user)
+    ownership.role = role if role.present?
+
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       render plain: response_with_mfa_warning("#{owner.display_handle} was added as an unconfirmed owner. " \
                                               "Ownership access will be enabled after the user clicks on the " \
                                               "confirmation mail sent to their email.")
+    else
+      render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_entity
+    end
+  end
+
+  def update
+    authorize @rubygem, :update_owner?
+    ownership = @rubygem.ownerships.find_by!(user: User.find_by_name!(email_param))
+    ownership.role = params[:role] if params[:role].present?
+
+    if ownership.save
+      render plain: response_with_mfa_warning("Owner updated successfully.")
     else
       render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_entity
     end
@@ -59,5 +74,9 @@ class Api::V1::OwnersController < Api::BaseController
 
   def email_param
     params.permit(:email).require(:email)
+  end
+
+  def ownership_update_params
+    params.permit(:role)
   end
 end

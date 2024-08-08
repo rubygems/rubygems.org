@@ -164,6 +164,7 @@ nl:
       yank_rubygem:
       add_owner:
       remove_owner:
+      update_owner:
       access_webhooks:
       show_dashboard:
       configure_trusted_publishers:
@@ -541,6 +542,8 @@ nl:
       confirmed:
       pending:
       confirm_remove:
+      role:
+      role_field:
     resend_confirmation:
       resent_notice:
     create:
@@ -548,6 +551,12 @@ nl:
     destroy:
       removed_notice:
       failed_notice:
+    edit:
+      role:
+      title:
+    update:
+      success_notice:
+      update_current_user_role:
     mfa_required:
   settings:
     edit:
@@ -960,3 +969,7 @@ nl:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  access:
+    roles:
+      owner:
+      maintainer:

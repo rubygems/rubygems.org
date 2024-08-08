@@ -188,6 +188,11 @@ class Rubygem < ApplicationRecord
     ownerships.exists?(user_id: user.id)
   end
 
+  def owned_by_with_role?(user, minimum_required_role)
+    return false if user.blank?
+    ownerships.exists?(["user_id = ? AND role >= ?", user.id, minimum_required_role])
+  end
+
   def unconfirmed_ownerships
     ownerships_including_unconfirmed.unconfirmed
   end
