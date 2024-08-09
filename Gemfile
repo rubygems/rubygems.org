@@ -84,7 +84,7 @@ gem "local_time", "~> 3.0"
 gem "better_html", "~> 2.1"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 2.6"
+  gem "tailwindcss-rails", "~> 2.7"
 end
 
 group :assets do
