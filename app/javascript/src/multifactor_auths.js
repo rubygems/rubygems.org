@@ -16,7 +16,7 @@ function confirmNoRecoveryCopy (e, from) {
   }
 }
 
-if($("#recovery-code-list").length){
+if (document.getElementById("recovery-code-list")) {
   new ClipboardJS(".recovery__copy__icon");
 
   $(".recovery__copy__icon").on("click", function(e){
