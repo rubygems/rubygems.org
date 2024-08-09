@@ -57,4 +57,8 @@ class RubygemPolicy < ApplicationPolicy
   def remove_owner?
     rubygem_owned_by?(user)
   end
+
+  def show_owner_mfa_status?
+    rubygem_owned_by?(user)
+  end
 end
