@@ -1,9 +1,9 @@
 class RubygemsController < ApplicationController
   include LatestVersion
-  before_action :set_reserved_gem, only: %i[show security_events], if: :reserved?
-  before_action :find_rubygem, only: %i[show security_events], unless: :reserved?
-  before_action :latest_version, only: %i[show], unless: :reserved?
-  before_action :find_versioned_links, only: %i[show], unless: :reserved?
+  before_action :show_reserved_gem, only: %i[show security_events]
+  before_action :find_rubygem, only: %i[show security_events]
+  before_action :latest_version, only: %i[show]
+  before_action :find_versioned_links, only: %i[show]
   before_action :set_page, only: :index
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
 
@@ -21,16 +21,12 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    if @reserved_gem
-      render "reserved"
+    @versions = @rubygem.public_versions.limit(5)
+    @adoption = @rubygem.ownership_call
+    if @versions.to_a.any?
+      render "show"
     else
-      @versions = @rubygem.public_versions.limit(5)
-      @adoption = @rubygem.ownership_call
-      if @versions.to_a.any?
-        render "show"
-      else
-        render "show_yanked"
-      end
+      render "show_yanked"
     end
   end
 
@@ -42,12 +38,10 @@ class RubygemsController < ApplicationController
 
   private
 
-  def reserved?
-    GemNameReservation.reserved?(params[:id])
-  end
-
-  def set_reserved_gem
+  def show_reserved_gem
+    return unless GemNameReservation.reserved?(params[:id])
     @reserved_gem = params[:id].downcase
+    render "reserved"
   end
 
   def gem_params
