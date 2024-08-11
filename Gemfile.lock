@@ -110,8 +110,8 @@ GEM
       zeitwerk (>= 2.6.2)
     awrence (1.2.1)
     aws-eventstream (1.3.0)
-    aws-partitions (1.950.0)
-    aws-sdk-core (3.201.0)
+    aws-partitions (1.963.0)
+    aws-sdk-core (3.201.4)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.8)
@@ -119,14 +119,14 @@ GEM
     aws-sdk-kms (1.88.0)
       aws-sdk-core (~> 3, >= 3.201.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.156.0)
+    aws-sdk-s3 (1.157.0)
       aws-sdk-core (~> 3, >= 3.201.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
     aws-sdk-sqs (1.80.0)
       aws-sdk-core (~> 3, >= 3.201.0)
       aws-sigv4 (~> 1.5)
-    aws-sigv4 (1.8.0)
+    aws-sigv4 (1.9.1)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
@@ -803,7 +803,7 @@ DEPENDENCIES
   amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
   avo (~> 2.51)
-  aws-sdk-s3 (~> 1.156)
+  aws-sdk-s3 (~> 1.157)
   aws-sdk-sqs (~> 1.80)
   bcrypt (~> 3.1)
   better_html (~> 2.1)
@@ -939,12 +939,12 @@ CHECKSUMS
   avo (2.51.0) sha256=0d5785cda01b5b0d2575e7419cda4dc7a5d7805068f160d48ecc7458ee74ec03
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
-  aws-partitions (1.950.0) sha256=b980ec8f8b014be08fe0f65182dee16afc06d04a2175177c17fa45eee44147ec
-  aws-sdk-core (3.201.0) sha256=18fda4d14362eea4cb0bff54bc68222bd46b5e705ec84468954aaf7cf9a8360c
+  aws-partitions (1.963.0) sha256=652945df9887bb9185fa36ac29eb63ab4e91622d3ceb79de21fea4bf425356ff
+  aws-sdk-core (3.201.4) sha256=5f1b8dd75abfe0694557471856cfcda97277a423b221fe9c286047e8ee60f82c
   aws-sdk-kms (1.88.0) sha256=13588d90df1eece81f6d79bd304b3857dc3168e7ea75c933b3b835cfe8a0e309
-  aws-sdk-s3 (1.156.0) sha256=9302da1d1a70363308854d5065035f6c72cf8b8af895d8789487cd5c6b076a46
+  aws-sdk-s3 (1.157.0) sha256=e1e0c7a268e710a7ccf4a0f9d2c33e3ca685b06968c3048d907e3a792580e990
   aws-sdk-sqs (1.80.0) sha256=ae0bdced7aa958ddd99d28f709abe244839d58fbf1f2a628bcd9a5629a7444c2
-  aws-sigv4 (1.8.0) sha256=84dd99768b91b93b63d1d8e53ee837cfd06ab402812772a7899a78f9f9117cbc
+  aws-sigv4 (1.9.1) sha256=7753e320c39f80f82f9e0883b30de0e7b99e756adbaedc80c50b6ad59d49c379
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
   bcrypt (3.1.20) sha256=8410f8c7b3ed54a3c00cd2456bf13917d695117f033218e2483b2e40b0784099
   benchmark-ips (2.12.0) sha256=09dd4d5be05db42470e7e7b01be7310564073a054e35d9d9ec7840c523f3dbcb
