@@ -17,7 +17,7 @@
     <div class="text_field">
       <%= label_tag :role, t(".role_field"), class: "form__label" %>
       <br/>
-      <%= select_tag :role, options_for_select(Access.options.to_a.reverse) %>
+      <%= select_tag :role, options_for_select(Access.options.to_a.reverse), class: "form__input form__select" %>
     </div>
     <div class="submit_field">
       <%= submit_tag t(".submit_button"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
