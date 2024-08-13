@@ -22,23 +22,22 @@ module Access
   end
 
   def self.label_for_role_flag(flag)
-    raise ArgumentError, "flag must be an integer" unless flag.is_a?(Integer)
     role = ROLES.key(flag) { nil }
     return nil if role.nil?
     I18n.t("access.roles.#{role}")
   end
 
-  def self.permission_for_role(role)
-    ROLES.fetch(String(role), nil)
+  def self.flag_for_role(role)
+    ROLES.fetch(role.to_s, nil)
   end
 
-  def self.role_for_permission(permission)
-    ROLES.key(permission)&.inquiry
+  def self.role_for_flag(flag)
+    ROLES.key(flag)&.inquiry
   end
 
   def self.options
-    ROLES.map do |role, permission|
-      [label_for_role_flag(permission), role]
+    ROLES.map do |role, flag|
+      [label_for_role_flag(flag), role]
     end
   end
 end

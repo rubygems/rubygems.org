@@ -10,18 +10,38 @@ class AccessTest < ActiveSupport::TestCase
       assert_equal "Owner", Access.label_for_role(:owner)
     end
 
-    should "return nil when the role is unknown" do
-      assert_nil Access.label_for_role(:unknown)
+    context "when the role is unknown" do
+      should "return nil" do
+        assert_nil Access.label_for_role(:unknown)
+      end
     end
   end
 
-  context ".role_for_permission" do
+  context ".role_for_flag" do
     should "return the role for a given permission flag" do
-      assert_equal "owner", Access.role_for_permission(Access::OWNER)
+      assert_equal "owner", Access.role_for_flag(Access::OWNER)
     end
 
-    should "when the permission flag does not exist" do
-      assert_nil Access.role_for_permission(999)
+    context "when the permission flag does not exist" do
+      should "reutrn nil" do
+        assert_nil Access.role_for_flag(999)
+      end
+    end
+  end
+
+  context ".flag_for_role" do
+    should "return the role for a given permission flag" do
+      assert_equal Access::OWNER, Access.flag_for_role("owner")
+    end
+
+    should "cast the given input into the correct type" do
+      assert_equal Access::OWNER, Access.flag_for_role(:owner)
+    end
+
+    context "when the role does not exist" do
+      should "return nil" do
+        assert_nil Access.flag_for_role(:unknown)
+      end
     end
   end
 
@@ -33,12 +53,6 @@ class AccessTest < ActiveSupport::TestCase
     context "when the role flag is invalid" do
       should "return nil" do
         assert_nil Access.label_for_role_flag(999)
-      end
-    end
-
-    context "when the input is not a string" do
-      should "raise an ArgumentError" do
-        assert_raises(ArgumentError) { Access.label_for_role_flag("owner") }
       end
     end
   end
