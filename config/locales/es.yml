@@ -369,6 +369,12 @@ es:
       subtitle: "¡Hola %{handle}!"
       body_html: Has sido eliminado como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         en %{host} por <b>%{remover}</b>.
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: CANDIDATURA A PROPIETARIO
       subtitle: "¡Hola %{handle}!"

@@ -338,6 +338,12 @@ zh-CN:
       subtitle: 你好啊，%{user_handle}！
       body_html: <b>您</b>在 RubyGems.org 上对 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         的业主身份已被 <b>%{remover}</b> 移除
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有权申请
       subtitle: 你好啊，%{hand}！

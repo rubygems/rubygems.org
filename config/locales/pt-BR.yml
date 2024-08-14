@@ -345,6 +345,12 @@ pt-BR:
       title:
       subtitle:
       body_html:
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title:
       subtitle:
