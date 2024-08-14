@@ -2,6 +2,7 @@ require "test_helper"
 
 class Api::V1::OwnersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
 
   def self.should_respond_to(format)
     should "route GET show with #{format.to_s.upcase}" do
@@ -988,6 +989,14 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       assert_response :success
       assert_predicate @maintainer_gem_ownership.reload.role, :maintainer?
+    end
+
+    should "schedule an email for the updated user" do
+      patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :maintainer }
+
+      ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
+
+      assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership, authorizer: @owner }
     end
 
     context "when the role is invalid" do

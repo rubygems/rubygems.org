@@ -333,6 +333,12 @@ zh-TW:
       title:
       subtitle: 嗨 %{user_handle}！
       body_html:
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有權請求
       subtitle: 嗨 %{handle}！

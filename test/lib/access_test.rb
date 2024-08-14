@@ -11,8 +11,8 @@ class AccessTest < ActiveSupport::TestCase
     end
 
     context "when the role is unknown" do
-      should "return nil" do
-        assert_nil Access.label_for_role(:unknown)
+      should "raise an error" do
+        assert_raises(KeyError) { Access.label_for_role(:unknown) }
       end
     end
   end
@@ -23,8 +23,8 @@ class AccessTest < ActiveSupport::TestCase
     end
 
     context "when the permission flag does not exist" do
-      should "reutrn nil" do
-        assert_nil Access.role_for_flag(999)
+      should "raise an error" do
+        assert_raises(ArgumentError) { Access.role_for_flag(999) }
       end
     end
   end
@@ -39,8 +39,8 @@ class AccessTest < ActiveSupport::TestCase
     end
 
     context "when the role does not exist" do
-      should "return nil" do
-        assert_nil Access.flag_for_role(:unknown)
+      should "raise an error" do
+        assert_raises(KeyError) { Access.flag_for_role("unknown") }
       end
     end
   end
@@ -51,8 +51,8 @@ class AccessTest < ActiveSupport::TestCase
     end
 
     context "when the role flag is invalid" do
-      should "return nil" do
-        assert_nil Access.label_for_role_flag(999)
+      should "raise an error" do
+        assert_raises(ArgumentError) { Access.label_for_role_flag(999) }
       end
     end
   end

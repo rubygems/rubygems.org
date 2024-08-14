@@ -1,6 +1,4 @@
 module Access
-  AccessDeniedError = Class.new(StandardError)
-
   MAINTAINER = 50
   OWNER = 70
 
@@ -9,30 +7,31 @@ module Access
   ROLES = {
     "maintainer" => MAINTAINER,
     "owner" => OWNER
-  }.freeze
+  }.with_indifferent_access.freeze
 
   def self.roles
     ROLES.keys
   end
 
   def self.label_for_role(role)
-    key = ROLES.fetch(role.to_s, nil)
-    return nil if key.nil?
+    ROLES.fetch(role)
     I18n.t("access.roles.#{role}")
   end
 
   def self.label_for_role_flag(flag)
-    role = ROLES.key(flag) { nil }
-    return nil if role.nil?
+    role = ROLES.key(flag)
+    raise ArgumentError, "Unknown role flag: #{flag}" if role.blank?
     I18n.t("access.roles.#{role}")
   end
 
   def self.flag_for_role(role)
-    ROLES.fetch(role.to_s, nil)
+    ROLES.fetch(role)
   end
 
   def self.role_for_flag(flag)
-    ROLES.key(flag)&.inquiry
+    ROLES.key(flag)&.inquiry.tap do |role|
+      raise ArgumentError, "Unknown role flag: #{flag}" if role.blank?
+    end
   end
 
   def self.options

@@ -370,6 +370,12 @@ de:
       subtitle: Hallo %{user_handle}!
       body_html: <b>Du</b> wurdest als Besitzer für das <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>-Gem
         auf %{host} von <b>%{remover}</b> entfernt.
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: ANFRAGE ZUR BESITZERRECHTIGUNG
       subtitle: Hallo %{handle}!

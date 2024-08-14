@@ -336,6 +336,12 @@ en:
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
       body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host} by <b>%{remover}</b>.
+    owner_updated:
+      subject: Your role was updated for %{gem} gem
+      title: OWNER ROLE UPDATED
+      subtitle: Hi %{user_handle}!
+      body_html: Your role was updated for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>.
+      body_text: Your role was updated for %{gem} gem by %{authorizer}.
     ownerhip_request_closed:
       title: OWNERSHIP REQUEST
       subtitle: Hi %{handle}!

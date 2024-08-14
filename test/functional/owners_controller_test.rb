@@ -384,16 +384,21 @@ class OwnersControllerTest < ActionController::TestCase
       end
 
       should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
-      should "set success notice flash" do
-        success_flash = "#{@maintainer.name} was succesfully updated."
 
-        assert_equal success_flash, flash[:notice]
+      should "set success notice flash" do
+        assert_equal "#{@maintainer.name} was succesfully updated.", flash[:notice]
       end
 
       should "downgrade the ownership to a maintainer role" do
         ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
 
         assert_predicate ownership.role, :maintainer?
+      end
+
+      should "schedule an email for the updated user" do
+        ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
+
+        assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership, authorizer: @owner }
       end
     end
 

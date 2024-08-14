@@ -336,6 +336,12 @@ ja:
       subtitle: こんにちは、%{user_handle}！
       body_html: <b>あなた</b>は<b>%{remover}</b>によって%{host}上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者から削除されました。
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有権の申請
       subtitle: こんにちは、%{handle}！

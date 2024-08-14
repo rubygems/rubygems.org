@@ -63,6 +63,7 @@ class OwnersController < ApplicationController
     end
 
     if ownership.update(update_params)
+      OwnersMailer.with(ownership: ownership, authorizer: current_user).owner_updated.deliver_later
       redirect_to rubygem_owners_path(ownership.rubygem.slug), notice: t(".success_notice", handle: ownership.user.name)
     else
       index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity

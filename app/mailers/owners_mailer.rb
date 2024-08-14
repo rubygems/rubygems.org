@@ -13,6 +13,18 @@ class OwnersMailer < ApplicationMailer
       end
   end
 
+  def owner_updated
+    @ownership = params[:ownership]
+    @authorizer = params[:authorizer]
+    @user = @ownership.user
+    @rubygem = @ownership.rubygem
+
+    mail(
+      to: @user.email,
+      subject: t("mailer.owner_updated.subject", gem: @rubygem.name, host: Gemcutter::HOST_DISPLAY, owner_handle: @authorizer.display_handle)
+    )
+  end
+
   def owner_removed(user_id, remover_id, gem_id)
     @user = User.find(user_id)
     @remover = User.find(remover_id)
