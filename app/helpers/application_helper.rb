@@ -75,7 +75,7 @@ module ApplicationHelper
     msg
   end
 
-  def search_field(home: false)
+  def rubygem_search_field(home: false)
     data = {
       autocomplete_target: "query",
       action: %w[
