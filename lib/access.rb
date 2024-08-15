@@ -1,13 +1,16 @@
 module Access
   AccessDeniedError = Class.new(StandardError)
 
+  GUEST = 0
   MAINTAINER = 50
+  ADMIN = 60
   OWNER = 70
 
   DEFAULT_ROLE = "owner".freeze
 
   ROLES = {
     "maintainer" => MAINTAINER,
+    "admin" => ADMIN,
     "owner" => OWNER
   }.freeze
 

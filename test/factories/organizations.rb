@@ -1,11 +1,20 @@
 FactoryBot.define do
   factory :organization do
-    handle
-    name
-    deleted_at { nil }
+    transient do
+      members { [] }
+    end
 
-    trait :with_members do
-      memberships { build_list(:membership, 2) }
+    sequence(:handle) { |n| "organization-#{n}" }
+    name { "My Organization" }
+
+    trait :deleted do
+      deleted_at { Time.zone.now }
+    end
+
+    after(:create) do |organization, evaluator|
+      evaluator.members.each do |member|
+        organization.users << member
+      end
     end
   end
 end
