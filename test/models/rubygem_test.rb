@@ -1180,4 +1180,29 @@ class RubygemTest < ActiveSupport::TestCase
       refute_predicate @version_three, :yanked?
     end
   end
+
+  context "#archive!" do
+    setup do
+      @user = create(:user)
+      @rubygem = create(:rubygem)
+    end
+
+    should "set the archived flag" do
+      @rubygem.archive!(@user)
+
+      assert @rubygem.archived?
+    end
+  end
+
+  context "#unarchive!" do
+    setup do
+      @rubygem = create(:rubygem)
+    end
+
+    should "unset the archived flag" do
+      @rubygem.unarchive!
+
+      refute @rubygem.archived?
+    end
+  end
 end
