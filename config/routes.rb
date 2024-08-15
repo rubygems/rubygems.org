@@ -223,6 +223,9 @@ Rails.application.routes.draw do
       end
       resources :adoptions, only: %i[index]
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
+
+      post 'archive', to: 'archive#create'
+      delete 'archive', to: 'archive#destroy'
     end
 
     resources :ownership_calls, only: :index

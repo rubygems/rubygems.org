@@ -1190,7 +1190,7 @@ class RubygemTest < ActiveSupport::TestCase
     should "set the archived flag" do
       @rubygem.archive!(@user)
 
-      assert @rubygem.archived?
+      assert_predicate @rubygem, :archived?
     end
   end
 
@@ -1202,7 +1202,7 @@ class RubygemTest < ActiveSupport::TestCase
     should "unset the archived flag" do
       @rubygem.unarchive!
 
-      refute @rubygem.archived?
+      refute_predicate @rubygem, :archived?
     end
   end
 end
