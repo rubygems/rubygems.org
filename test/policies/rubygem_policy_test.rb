@@ -79,4 +79,20 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized nil, :show_unconfirmed_ownerships?
     end
   end
+
+  context "#archive?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :archive?
+      refute_authorized @user, :archive?
+      refute_authorized nil, :archive?
+    end
+  end
+
+  context "#unarchive?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :unarchive?
+      refute_authorized @user, :unarchive?
+      refute_authorized nil, :unarchive?
+    end
+  end
 end
