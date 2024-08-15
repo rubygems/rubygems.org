@@ -704,6 +704,7 @@ pt-BR:
       show_all_versions: Mostrar todas as versões (%{count})
       versions_header: Versões
       yanked_notice: Esta gem foi removida, e não está mais disponível para download.
+      archived_notice:
     show_yanked:
       not_hosted_notice: Esta gem não está hospedada no Gemcutter.
       reserved_namespace_html:
@@ -983,3 +984,8 @@ pt-BR:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  archive:
+    create:
+      success:
+    destroy:
+      success:

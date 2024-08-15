@@ -1,4 +1,4 @@
-class Api::V1::ArchiveController <  Api::BaseController
+class Api::V1::ArchiveController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :verify_with_otp
   before_action :find_rubygem

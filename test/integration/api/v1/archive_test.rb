@@ -20,7 +20,7 @@ class Api::V1::ArchiveTest < ActionDispatch::IntegrationTest
       end
 
       should "not archive the gem" do
-        refute @rubygem.archived?
+        refute_predicate @rubygem, :archived?
       end
     end
 
@@ -66,7 +66,7 @@ class Api::V1::ArchiveTest < ActionDispatch::IntegrationTest
       end
 
       should "unarchive the gem" do
-        refute @rubygem.archived?
+        refute_predicate @rubygem, :archived?
       end
 
       should "render a success message" do

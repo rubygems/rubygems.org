@@ -691,6 +691,7 @@ nl:
       show_all_versions: Toon alle versies (%{count} totaal)
       versions_header: Versies
       yanked_notice:
+      archived_notice:
     show_yanked:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
       reserved_namespace_html:
@@ -960,3 +961,8 @@ nl:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  archive:
+    create:
+      success:
+    destroy:
+      success:

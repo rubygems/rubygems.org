@@ -801,6 +801,7 @@ es:
       versions_header: Versiones
       yanked_notice: Esta versión fue borrada, y no está disponible para su descarga
         directa ni por otras gemas que puedan haber dependido de la misma.
+      archived_notice:
     show_yanked:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org. Es
         posible que ya exista alguna versión borrada de esta gema.
@@ -1110,3 +1111,8 @@ es:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  archive:
+    create:
+      success:
+    destroy:
+      success:
