@@ -23,6 +23,9 @@ class RubygemsController < ApplicationController
   def show
     @versions = @rubygem.public_versions.limit(5)
     @adoption = @rubygem.ownership_call
+
+    flash[:notice] = t(".archived_notice") if @rubygem.archived?
+
     if @versions.to_a.any?
       render "show"
     else
