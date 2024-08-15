@@ -18,7 +18,7 @@ class Pusher
 
   def process
     trace("gemcutter.pusher.process", tags: { "gemcutter.api_key.owner" => owner.to_gid }) do
-      pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
+      pull_spec && find && authorize && verify_gem_scope && verify_not_archived && verify_mfa_requirement && validate && save
     end
   end
 
@@ -30,6 +30,12 @@ class Pusher
     return true unless @scoped_rubygem && rubygem != @scoped_rubygem
 
     notify("This API key cannot perform the specified action on this gem.", 403)
+  end
+
+  def verify_not_archived
+    return true unless rubygem.archived?
+
+    notify("This gem has been archived, and is in a read-only state.", 401)
   end
 
   def verify_mfa_requirement
