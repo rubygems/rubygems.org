@@ -41,6 +41,8 @@ class RubygemResource < Avo::BaseResource
     field :link_verifications, as: :has_many
     field :oidc_rubygem_trusted_publishers, as: :has_many
 
+    field :archived, as: :boolean
+
     field :events, as: :has_many
     field :audits, as: :has_many
   end
