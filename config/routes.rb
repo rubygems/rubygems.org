@@ -89,6 +89,9 @@ Rails.application.routes.draw do
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
           resource :owners, only: %i[show create destroy]
           resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy show]
+
+          post :archive, to: "archive#create"
+          delete :archive, to: "archive#destroy"
         end
       end
 
