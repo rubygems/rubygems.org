@@ -6,8 +6,6 @@ module Access
   ADMIN = 60
   OWNER = 70
 
-  DEFAULT_ROLE = "owner".freeze
-
   ROLES = {
     "maintainer" => MAINTAINER,
     "admin" => ADMIN,

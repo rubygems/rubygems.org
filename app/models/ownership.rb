@@ -4,7 +4,7 @@ class Ownership < ApplicationRecord
   belongs_to :authorizer, class_name: "User"
   has_many :api_key_rubygem_scopes, dependent: :destroy
 
-  attribute :role, Types::Role.new, default: Access::DEFAULT_ROLE
+  attribute :role, Types::Role.new, default: Access.role_for_flag(Access::OWNER)
   validate :validate_unique_user
   validates :role, inclusion: { in: Access.roles }, allow_nil: true
 
