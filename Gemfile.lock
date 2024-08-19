@@ -93,7 +93,7 @@ GEM
     attr_required (1.0.2)
     autoprefixer-rails (10.4.19.0)
       execjs (~> 2)
-    avo (2.51.0)
+    avo (2.52.0)
       actionview (>= 6.0)
       active_link_to
       activerecord (>= 6.0)
@@ -220,7 +220,7 @@ GEM
     diff-lcs (1.5.1)
     discard (1.3.0)
       activerecord (>= 4.2, < 8)
-    docile (1.4.0)
+    docile (1.4.1)
     dogstatsd-ruby (5.6.1)
     domain_name (0.6.20240107)
     dotenv (3.1.2)
@@ -402,8 +402,8 @@ GEM
     marcel (1.0.4)
     matrix (0.4.2)
     memory_profiler (1.0.2)
-    meta-tags (2.21.0)
-      actionpack (>= 6.0.0, < 7.2)
+    meta-tags (2.22.0)
+      actionpack (>= 6.0.0, < 8.1)
     method_source (1.1.0)
     mini_histogram (0.3.1)
     mini_mime (1.1.5)
@@ -485,7 +485,7 @@ GEM
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.1.0)
-    pagy (8.4.0)
+    pagy (9.0.5)
     parallel (1.25.1)
     parser (3.3.4.0)
       ast (~> 2.4.1)
@@ -802,7 +802,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
-  avo (~> 2.51)
+  avo (~> 2.52)
   aws-sdk-s3 (~> 1.158)
   aws-sdk-sqs (~> 1.80)
   bcrypt (~> 3.1)
@@ -936,7 +936,7 @@ CHECKSUMS
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   autoprefixer-rails (10.4.19.0) sha256=ccd21f47e5a07a581c7d239025e0d8d06a005825e96e06f72382d818fe665f4e
-  avo (2.51.0) sha256=0d5785cda01b5b0d2575e7419cda4dc7a5d7805068f160d48ecc7458ee74ec03
+  avo (2.52.0) sha256=223948642e7553c6d6cd87408c622b356e2602e60bd0c2ecb4d90a603fcac670
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.964.0) sha256=9a2cfc42fd49610703c5643bce75c37ec061eb32d0bf6de2a06f277082efee23
@@ -984,7 +984,7 @@ CHECKSUMS
   derailed_benchmarks (2.1.2) sha256=eaadc6206ceeb5538ff8f5e04a0023d54ebdd95d04f33e8960fb95a5f189a14f
   diff-lcs (1.5.1) sha256=273223dfb40685548436d32b4733aa67351769c7dea621da7d9dd4813e63ddfe
   discard (1.3.0) sha256=55218997ca4dc11f0594f1bb2d1196c4a959ceb562f1ab6490130233598dda67
-  docile (1.4.0) sha256=5f1734bde23721245c20c3d723e76c104208e1aa01277a69901ce770f0ebb8d3
+  docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   dogstatsd-ruby (5.6.1) sha256=615dd1328c57ab66fb48cbf83b38ce2060d8353707be0bc3deb0ae960a659982
   domain_name (0.6.20240107) sha256=5f693b2215708476517479bf2b3802e49068ad82167bcd2286f899536a17d933
   dotenv (3.1.2) sha256=08036c2aa1246590034a83df2adc85b72cb4944692c49da24d8e911f97924478
@@ -1057,7 +1057,7 @@ CHECKSUMS
   marcel (1.0.4) sha256=0d5649feb64b8f19f3d3468b96c680bae9746335d02194270287868a661516a4
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
   memory_profiler (1.0.2) sha256=0e7c5c2a1a7bea5b5a05b9df25b2d628afa0db37b9344ba42b42eb8a604762df
-  meta-tags (2.21.0) sha256=cfaa2ccd32b2700c3538c9eae647191295a06f47f0d8558e685a6a7158171cfb
+  meta-tags (2.22.0) sha256=c04df1f39cfbf7d48e2ae955124d89a2429ab508fc936b9a8f9a8ce4d326e6ec
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_histogram (0.3.1) sha256=6a114b504e4618b0e076cc672996036870f7cc6f16b8e5c25c0c637726d2dd94
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
@@ -1091,7 +1091,7 @@ CHECKSUMS
   openssl (3.2.0) sha256=3c4bb8760977b4becd2819c6c2569bcf5c6f48b32b9f7a4ce1fd37f996378d14
   openssl-signature_algorithm (1.3.0) sha256=a3b40b5e8276162d4a6e50c7c97cdaf1446f9b2c3946a6fa2c14628e0c957e80
   optimist (3.1.0) sha256=81886f53ee8919f330aa30076d320d88eef9bc85aae2275376b4afb007c69260
-  pagy (8.4.0) sha256=21dd68453d24e752a1bc81aef5b6f1346ff95e1c2e5b53448355f7856f3ef901
+  pagy (9.0.5) sha256=2aeb259d8744527cbe458a30f622acb4589110fc4dc45569bde7fc36a7848762
   parallel (1.25.1) sha256=12e089b9aa36ea2343f6e93f18cfcebd031798253db8260590d26a7f70b1ab90
   parser (3.3.4.0) sha256=8d247769c3873fe92201d591a7463384022a1a25e214853df5d6806623179e82
   pg (1.5.7) sha256=07a7d86e5aac8b964a0288076a7a7c699c27b25c9b40b001726f6eb03ed13427
