@@ -5,6 +5,9 @@ class ArchiveController < ApplicationController
   before_action :find_rubygem
   before_action :verify_mfa_requirement
 
+  def show
+  end
+
   def create
     authorize @rubygem, :archive?
     @rubygem.archive!(current_user)
