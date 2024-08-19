@@ -3,7 +3,7 @@ FactoryBot.define do
     association :user
     association :organization
     confirmed_at { Time.zone.now }
-    role { :member }
+    role { :maintainer }
 
     trait :admin do
       role { :admin }
