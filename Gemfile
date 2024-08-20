@@ -37,7 +37,7 @@ gem "rdoc", "~> 6.7"
 gem "roadie-rails", "~> 3.2"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 6.2", require: false
-gem "statsd-instrument", "~> 3.8"
+gem "statsd-instrument", "~> 3.9"
 gem "validates_formatting_of", "~> 0.9"
 gem "opensearch-ruby", "~> 3.4"
 gem "searchkick", "~> 5.3"
