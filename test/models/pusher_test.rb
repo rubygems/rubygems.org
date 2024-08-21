@@ -47,6 +47,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_not_archived).returns true
         @cutter.stubs(:validate).returns true
         @cutter.stubs(:save)
 
@@ -104,6 +105,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns false
+        @cutter.stubs(:verify_not_archived).returns true
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
 
@@ -116,6 +118,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
+        @cutter.stubs(:verify_not_archived).returns true
         @cutter.stubs(:validate).returns false
         @cutter.stubs(:save).never
 
@@ -842,6 +845,23 @@ class PusherTest < ActiveSupport::TestCase
 
     teardown do
       RubygemFs.mock!
+    end
+  end
+
+  context "the gem has been archived" do
+    setup do
+      @rubygem = create(:rubygem, :archived, name: "test")
+
+      Gem::Specification.any_instance.stubs(:authors).returns(["user@example.com"])
+
+      @gem = gem_file("test-1.0.0.gem")
+      @cutter = Pusher.new(@api_key, @gem)
+    end
+
+    should "not not process the gem" do
+      refute @cutter.process
+      assert_equal "This gem has been archived, and is in a read-only state.", @cutter.message
+      assert_equal 401, @cutter.code
     end
   end
 end

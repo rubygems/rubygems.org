@@ -123,6 +123,8 @@ class Rubygem < ApplicationRecord
     joins(:gem_download).order("MAX(gem_downloads.count) DESC").news(days)
   }
 
+  scope :unmaintained, -> { where(unmaintained: true) }
+
   def self.letterize(letter)
     /\A[A-Za-z]\z/.match?(letter) ? letter.upcase : "A"
   end
@@ -370,6 +372,22 @@ class Rubygem < ApplicationRecord
 
   def linkable_verification_uri
     URI.join("https://rubygems.org/gems/", name)
+  end
+
+  def archive!(actor)
+    update!(
+      archived: true,
+      archived_at: Time.current,
+      archived_by: actor.id
+    )
+  end
+
+  def unarchive!
+    update!(
+      archived: false,
+      archived_at: nil,
+      archived_by: nil
+    )
   end
 
   private

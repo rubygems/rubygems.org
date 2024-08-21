@@ -39,4 +39,18 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
       api_key_scope?(:configure_trusted_publishers, rubygem) &&
       user_authorized?(rubygem, :configure_trusted_publishers?)
   end
+
+  def archive?
+    user_api_key? &&
+      mfa_requirement_satisfied?(rubygem) &&
+      api_key_scope?(:archive_rubygem, rubygem) &&
+      user_authorized?(rubygem, :archive?)
+  end
+
+  def unarchive?
+    user_api_key? &&
+      mfa_requirement_satisfied?(rubygem) &&
+      api_key_scope?(:unarchive_rubygem, rubygem) &&
+      user_authorized?(rubygem, :unarchive?)
+  end
 end

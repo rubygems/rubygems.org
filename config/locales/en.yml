@@ -699,6 +699,7 @@ en:
       show_all_versions: Show all versions (%{count} total)
       versions_header: Versions
       yanked_notice: This version has been yanked, and it is not available for download directly or for other gems that may have depended on it.
+      archived_notice: This gem has been archived. It is now read-only and will not accept new versions.
     show_yanked:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org. Yanked versions of this gem may already exist.
       reserved_namespace_html:
@@ -976,3 +977,8 @@ en:
         api_key_gem_html: "Gem: %{gem}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
+  archive:
+    create:
+      success: "%{gem} was successfully archvied"
+    destroy:
+      success: "%{gem} was Successfully unarchived"

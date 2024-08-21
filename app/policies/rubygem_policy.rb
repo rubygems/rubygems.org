@@ -57,4 +57,12 @@ class RubygemPolicy < ApplicationPolicy
   def remove_owner?
     rubygem_owned_by?(user)
   end
+
+  def archive?
+    rubygem_owned_by?(user)
+  end
+
+  def unarchive?
+    rubygem_owned_by?(user)
+  end
 end

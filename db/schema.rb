@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_22_182907) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_15_014607) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -464,8 +464,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_182907) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.boolean "indexed", default: false, null: false
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_at"
+    t.integer "archived_by"
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
+    t.index ["archived"], name: "index_rubygems_on_archived"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
   end

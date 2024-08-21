@@ -724,6 +724,7 @@ fr:
       versions_header: Versions
       yanked_notice: 'Retrait de Gem : disponible ni directement, ni pour les gems
         qui en dépendraient.'
+      archived_notice:
     show_yanked:
       not_hosted_notice: Gem non hébergé sur Rubygems pour le moment.
       reserved_namespace_html:
@@ -1005,3 +1006,8 @@ fr:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  archive:
+    create:
+      success:
+    destroy:
+      success:

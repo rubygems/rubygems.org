@@ -414,6 +414,17 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show for an archived gem" do
+    setup do
+      @rubygem = create(:rubygem, :archived)
+      get :show, params: { id: @rubygem.slug }
+    end
+
+    should "render a notice indicating the gem has been archived" do
+      assert page.has_content? I18n.t("rubygems.show.archived_notice")
+    end
+  end
+
   context "When not logged in" do
     context "On GET to show for a gem" do
       setup do

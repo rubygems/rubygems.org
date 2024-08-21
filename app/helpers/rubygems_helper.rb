@@ -97,6 +97,14 @@ module RubygemsHelper
     link_to t("rubygems.aside.links.trusted_publishers"), rubygem_trusted_publishers_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
+  def rubygems_archive_link(rubygem)
+    link_to t("rubges.aside.links.archive"), rubygems_archive_path(rubygem.slug), class: "gem__link t-list__item", method: "post"
+  end
+
+  def rubygems_unarchive_link(rubygem)
+    link_to t("rubges.aside.links.unarchive"), rubygems_archive_path(rubygem.slug), class: "gem__link t-list__item", method: "delete"
+  end
+
   def oidc_api_key_role_links(rubygem)
     roles = current_user.oidc_api_key_roles.for_rubygem(rubygem)
 

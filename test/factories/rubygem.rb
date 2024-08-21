@@ -8,6 +8,12 @@ FactoryBot.define do
 
     name
 
+    trait :archived do
+      archived_at { Time.current }
+      archived { true }
+      archived_by { 1 }
+    end
+
     after(:build) do |rubygem, evaluator|
       if evaluator.linkset
         rubygem.linkset = evaluator.linkset

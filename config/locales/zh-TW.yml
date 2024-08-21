@@ -693,6 +693,7 @@ zh-TW:
       show_all_versions: 顯示所有版本（共 %{count}）
       versions_header: 版本列表
       yanked_notice: 這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。
+      archived_notice:
     show_yanked:
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上
       reserved_namespace_html:
@@ -965,3 +966,8 @@ zh-TW:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+  archive:
+    create:
+      success:
+    destroy:
+      success:
