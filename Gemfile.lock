@@ -485,7 +485,7 @@ GEM
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.1.0)
-    pagy (8.6.3)
+    pagy (9.0.5)
     parallel (1.25.1)
     parser (3.3.4.0)
       ast (~> 2.4.1)
@@ -859,7 +859,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection (~> 1.0)
   openid_connect (~> 2.3)
   opensearch-ruby (~> 3.4)
-  pagy (~> 8.4)
+  pagy (~> 9.0)
   pg (~> 1.5)
   pg_query (~> 5.1)
   pghero (~> 3.6)
@@ -1092,7 +1092,7 @@ CHECKSUMS
   openssl (3.2.0) sha256=3c4bb8760977b4becd2819c6c2569bcf5c6f48b32b9f7a4ce1fd37f996378d14
   openssl-signature_algorithm (1.3.0) sha256=a3b40b5e8276162d4a6e50c7c97cdaf1446f9b2c3946a6fa2c14628e0c957e80
   optimist (3.1.0) sha256=81886f53ee8919f330aa30076d320d88eef9bc85aae2275376b4afb007c69260
-  pagy (8.6.3) sha256=537b2ee3119f237dd6c4a0d0a35c67a77b9d91ebb9d4f85e31407c2686774fb2
+  pagy (9.0.5) sha256=2aeb259d8744527cbe458a30f622acb4589110fc4dc45569bde7fc36a7848762
   parallel (1.25.1) sha256=12e089b9aa36ea2343f6e93f18cfcebd031798253db8260590d26a7f70b1ab90
   parser (3.3.4.0) sha256=8d247769c3873fe92201d591a7463384022a1a25e214853df5d6806623179e82
   pg (1.5.7) sha256=07a7d86e5aac8b964a0288076a7a7c699c27b25c9b40b001726f6eb03ed13427
