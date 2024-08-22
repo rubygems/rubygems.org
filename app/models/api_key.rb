@@ -40,7 +40,7 @@ class ApiKey < ApplicationRecord
 
   def self.expire_all!
     transaction do
-      find_each.all?(&:expire!)
+      unexpired.find_each.all?(&:expire!)
     end
   end
 
