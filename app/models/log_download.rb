@@ -1,7 +1,7 @@
 # Mimic LogTicket model to store the log files but for the downloads database.
 # It will be backfilled with the log files from the main database to the downloads database.
 # There will be a background job to process the log files
-class LogDownload < DownloadsRecord
+class LogDownload < DownloadsDB
   enum backend: { s3: 0, local: 1 }
   enum status: %i[pending processing failed processed].index_with(&:to_s)
   
