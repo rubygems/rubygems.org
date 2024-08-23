@@ -20,7 +20,6 @@ class FastlyLogDownloadsProcessorJobTest < ActiveJob::TestCase
     }
     @processor = FastlyLogDownloadsProcessor.new("test-bucket", "fastly-fake.log")
     @job = FastlyLogDownloadsProcessorJob.new(bucket: "test-bucket", key: "fastly-fake.log")
-    refresh_all_caggs!
   end
 
   teardown do
@@ -28,124 +27,25 @@ class FastlyLogDownloadsProcessorJobTest < ActiveJob::TestCase
     Aws.config.delete(:s3)
   end
 
-  context "#download_counts" do
-    should "process file from s3" do
-      
-      require "pry";binding.pry 
-      assert_equal @sample_log_counts, @processor.download_counts(@log_ticket)
-    end
+  def perform_and_refresh
+    count = @processor.perform
+    refresh_all_caggs!
+    count
+  end
 
-    should "process file from local fs" do
-      @log_ticket.update(backend: "local", directory: "test/sample_logs")
-
-      assert_equal @sample_log_counts, @processor.download_counts(@log_ticket)
+  context "#perform" do
+    should "process file" do
+      assert_equal 10, perform_and_refresh
+      summary_counts = Download::VersionsPerHour.all.each_with_object({}){|e,summary|summary[e.gem_name+"-"+e.gem_version] = e.downloads}
+      assert_equal @sample_log_counts, summary_counts
     end
 
     should "fail if dont find the file" do
       @log_ticket.update(backend: "local", directory: "foobar")
       assert_raises FastlyLogDownloadsProcessor::LogFileNotFoundError do
-        @processor.download_counts(@log_ticket)
-      end
-    end
-  end
-
-  context "with gem data" do
-    setup do
-      # Create some gems to match the values in the sample log
-      bundler = create(:rubygem, name: "bundler")
-      json = create(:rubygem, name: "json")
-
-      create(:version, rubygem: bundler, number: "1.10.6")
-      create(:version, rubygem: json, number: "1.8.3", platform: "java")
-      create(:version, rubygem: json, number: "1.8.3")
-      create(:version, rubygem: json, number: "1.8.2")
-
-      import_and_refresh
-    end
-
-    context "#perform" do
-      should "not double count" do
-        json = Rubygem.find_by_name("json")
-
-        assert_equal 0, GemDownload.count_for_rubygem(json.id)
-        3.times { @job.perform_now }
-
-        assert_equal 7, es_downloads(json.id)
-        assert_equal 7, GemDownload.count_for_rubygem(json.id)
-      end
-
-      should "update download counts" do
-        @job.perform_now
-        @sample_log_counts
-          .each do |name, expected_count|
-          version = Version.find_by(full_name: name)
-          next unless version
-          count = GemDownload.find_by(rubygem_id: version.rubygem.id, version_id: version.id).count
-
-          assert_equal expected_count, count, "invalid value for #{name}"
-        end
-
-        json = Rubygem.find_by_name("json")
-
-        assert_equal 7, GemDownload.count_for_rubygem(json.id)
-        assert_equal 7, es_downloads(json.id)
-        assert_equal "processed", @log_ticket.reload.status
-      end
-
-      should "not run if already processed" do
-        json = Rubygem.find_by_name("json")
-
-        assert_equal 0, json.downloads
-        assert_equal 0, es_downloads(json.id)
-        @log_ticket.update(status: "processed")
-        @job.perform_now
-
-        assert_equal 0, es_downloads(json.id)
-        assert_equal 0, json.downloads
-      end
-
-      should "not mark as processed if anything fails" do
-        @processor.class.any_instance.stubs(:download_counts).raises("woops")
-
-        assert_kind_of RuntimeError, @job.perform_now
-
-        refute_equal "processed", @log_ticket.reload.status
-        assert_equal "failed", @log_ticket.reload.status
-      end
-
-      should "not re-process if it failed" do
-        @processor.class.any_instance.stubs(:download_counts).raises("woops")
-
-        assert_kind_of RuntimeError, @job.perform_now
-
-        @job.perform_now
-        json = Rubygem.find_by_name("json")
-
-        assert_equal 0, json.downloads
-        assert_equal 0, es_downloads(json.id)
-      end
-
-      should "only process the right file" do
-        ticket = LogTicket.create!(backend: "s3", directory: "test-bucket", key: "fastly-fake.2.log", status: "pending")
-
-        @job.perform_now
-
-        assert_equal "pending", ticket.reload.status
-        assert_equal "processed", @log_ticket.reload.status
-      end
-
-      should "update the processed count" do
-        @job.perform_now
-
-        assert_equal 10, @log_ticket.reload.processed_count
-      end
-
-      should "update the total gem count" do
-        assert_equal 0, GemDownload.total_count
-        @job.perform_now
-
-        assert_equal 9, GemDownload.total_count
+        perform_and_refresh
       end
     end
   end
 end
+
