@@ -31,8 +31,10 @@ class FastlyLogDownloadsProcessor
     downloads.each_slice(BATCH_SIZE) do |batch|
       Download.insert_all batch
     end
+    @processed_count = downloads.size
 
-    StatsD.gauge("fastly_log_downloads_processor.processed_count", downloads.size)
+    StatsD.gauge("fastly_log_downloads_processor.processed_count", @processed_count)
+    @processed_count
   end
 
   def body
@@ -50,11 +52,11 @@ class FastlyLogDownloadsProcessor
         m = path.match(PATH_PATTERN)
         gem_name = m[:gem_name] || path
         gem_version = m[:gem_version]
-        ts = Time.parse fragments[4..9].join(' ')
+        created_at = Time.parse fragments[4..9].join(' ')
         env = parse_env fragments[12..-1]
         payload = {env:}
 
-        {ts:, gem_name:, gem_version:, payload:}
+        {created_at:, gem_name:, gem_version:, payload:}
       end
     end.compact
   end
