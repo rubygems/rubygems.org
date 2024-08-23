@@ -24,6 +24,10 @@ class SqsWorker
         StatsD.increment("fastly_log_processor.duplicated")
       else
         FastlyLogProcessorJob.perform_later(bucket:, key:)
+        if ENV['DOWNLOADS_DB_ENABLED'] == 'true' && Download.table_exists?
+          StatsD.increment("fastly_log_downloads_processor.enqueued")
+          FastlyLogDownloadsProcessorJob.perform_later(bucket:, key:)
+        end
       end
     end
   end
