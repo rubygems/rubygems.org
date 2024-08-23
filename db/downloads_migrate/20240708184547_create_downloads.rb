@@ -26,14 +26,14 @@ class CreateDownloads < ActiveRecord::Migration[7.1]
       per_month: Download::PerDay.per_month(:sum_downloads).group(1),
 
       gems_per_minute: Download.gems_per_minute,
-      gems_per_hour: Download::GemsPerMinute.per_hour("gem_name, sum(downloads) as downloads").group(1,2),
-      gems_per_day: Download::GemsPerHour.per_day("gem_name, sum(downloads) as downloads").group(1,2),
-      gems_per_month: Download::GemsPerDay.per_month("gem_name, sum(downloads) as downloads").group(1,2),
+      gems_per_hour: Download::GemsPerMinute.per_hour("gem_name, sum(downloads)::bigint as downloads").group(1,2),
+      gems_per_day: Download::GemsPerHour.per_day("gem_name, sum(downloads)::bigint as downloads").group(1,2),
+      gems_per_month: Download::GemsPerDay.per_month("gem_name, sum(downloads)::bigint as downloads").group(1,2),
 
       versions_per_minute: Download.versions_per_minute,
-      versions_per_hour: Download::VersionsPerMinute.per_hour("gem_name, gem_version, sum(downloads) as downloads").group(1,2,3),
-      versions_per_day: Download::VersionsPerHour.per_day("gem_name, gem_version, sum(downloads) as downloads").group(1,2,3),
-      versions_per_month: Download::VersionsPerDay.per_month("gem_name, gem_version, sum(downloads) as downloads").group(1,2,3)
+      versions_per_hour: Download::VersionsPerMinute.per_hour("gem_name, gem_version, sum(downloads)::bigint as downloads").group(1,2,3),
+      versions_per_day: Download::VersionsPerHour.per_day("gem_name, gem_version, sum(downloads)::bigint as downloads").group(1,2,3),
+      versions_per_month: Download::VersionsPerDay.per_month("gem_name, gem_version, sum(downloads)::bigint as downloads").group(1,2,3)
     }.each do |name, scope|
       puts "Creating continuous aggregate #{name}", scope.to_sql
       frame = name.to_s.split('per_').last
