@@ -1,8 +1,6 @@
 require "test_helper"
 
 class FastlyLogDownloadsProcessorJobTest < ActiveJob::TestCase
-  include SearchKickHelper
-
   setup do
     @sample_log = Rails.root.join("test", "sample_logs", "fastly-fake.log").read
 
@@ -13,13 +11,15 @@ class FastlyLogDownloadsProcessorJobTest < ActiveJob::TestCase
       "json-1.8.2" => 4,
       "no-such-gem-1.2.3" => 1
     }
-    @log_ticket = LogTicket.create!(backend: "s3", directory: "test-bucket", key: "fastly-fake.log", status: "pending")
+
+    @log_download = LogDownload.create!(backend: "s3", directory: "test-bucket", key: "fastly-fake.log", status: "pending")
 
     Aws.config[:s3] = {
       stub_responses: { get_object: { body: @sample_log } }
     }
     @processor = FastlyLogDownloadsProcessor.new("test-bucket", "fastly-fake.log")
     @job = FastlyLogDownloadsProcessorJob.new(bucket: "test-bucket", key: "fastly-fake.log")
+    Download.connection.execute("truncate table downloads")
   end
 
   teardown do
@@ -41,7 +41,7 @@ class FastlyLogDownloadsProcessorJobTest < ActiveJob::TestCase
     end
 
     should "fail if dont find the file" do
-      @log_ticket.update(backend: "local", directory: "foobar")
+      @log_download.update(backend: "local", directory: "foobar")
       assert_raises FastlyLogDownloadsProcessor::LogFileNotFoundError do
         perform_and_refresh
       end
