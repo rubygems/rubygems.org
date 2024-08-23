@@ -1,5 +1,5 @@
-require 'timescaledb'
 class Download < DownloadRecord
+  extend Timescaledb::ActsAsHypertable
 
   acts_as_hypertable time_column: 'created_at'
 
