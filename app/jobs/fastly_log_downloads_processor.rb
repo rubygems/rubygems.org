@@ -15,30 +15,42 @@ class FastlyLogDownloadsProcessor
   BATCH_SIZE = 5000
 
   attr_accessor :bucket, :key
+  attr_reader :processed_count
 
   def initialize(bucket, key)
     @bucket = bucket
     @key = key
     @processed_count = 0
-    @batch = []
   end
 
   def perform
     StatsD.increment("fastly_log_downloads_processor.started")
     raise LogFileNotFoundError if body.nil?
 
-    downloads = parse_success_downloads
-    downloads.each_slice(BATCH_SIZE) do |batch|
+    count = 0
+    parse_success_downloads.each_slice(BATCH_SIZE) do |batch|
       Download.insert_all batch
+      count += batch.size
     end
-    @processed_count = downloads.size
 
-    StatsD.gauge("fastly_log_downloads_processor.processed_count", @processed_count)
-    @processed_count
+    if count > 0
+      element.update(status: "processed", processed_count: count)
+    else
+      element.update(status: "failed")
+    end
+
+    # This value may diverge from numbers from the fastly_log_processor as totals are 
+    # not aggregated with the number of downloads but each row represents a download.
+    StatsD.gauge("fastly_log_downloads_processor.processed_count", count)
+    count
   end
 
   def body
-    @body ||= LogTicket.find_by(key: key, directory: bucket)&.body
+    @body ||= element&.body
+  end
+
+  def element
+    @element ||= LogDownload.pop(directory: @bucket, key: @key)
   end
 
   def parse_success_downloads
