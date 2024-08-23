@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_23_181725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "timescaledb"
@@ -21,6 +21,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
     t.text "gem_version", null: false
     t.jsonb "payload"
     t.index ["created_at"], name: "downloads_created_at_idx", order: :desc
+  end
+
+  create_table "log_downloads", force: :cascade do |t|
+    t.string "key"
+    t.string "directory"
+    t.integer "backend"
+    t.string "status", default: "pending"
+    t.integer "processed_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key", "directory"], name: "index_log_downloads_on_key_and_directory", unique: true
   end
 
   create_hypertable "downloads", time_column: "created_at", chunk_time_interval: "1 day", compress_segmentby: "gem_name, gem_version", compress_orderby: "created_at DESC", compression_interval: "P7D"
