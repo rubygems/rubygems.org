@@ -65,7 +65,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
   create_continuous_aggregate("downloads_gems_per_hour", <<-SQL, refresh_policies: { start_offset: "INTERVAL 'PT3H'", end_offset: "INTERVAL 'PT1M'", schedule_interval: "INTERVAL '3600'"}, materialized_only: true, finalized: true)
     SELECT time_bucket('PT1H'::interval, created_at) AS created_at,
       gem_name,
-      sum(downloads) AS downloads
+      (sum(downloads))::bigint AS downloads
      FROM downloads_gems_per_minute
     GROUP BY (time_bucket('PT1H'::interval, created_at)), gem_name
   SQL
@@ -73,7 +73,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
   create_continuous_aggregate("downloads_gems_per_day", <<-SQL, refresh_policies: { start_offset: "INTERVAL 'P3D'", end_offset: "INTERVAL 'PT1M'", schedule_interval: "INTERVAL '86400'"}, materialized_only: true, finalized: true)
     SELECT time_bucket('P1D'::interval, created_at) AS created_at,
       gem_name,
-      sum(downloads) AS downloads
+      (sum(downloads))::bigint AS downloads
      FROM downloads_gems_per_hour
     GROUP BY (time_bucket('P1D'::interval, created_at)), gem_name
   SQL
@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
   create_continuous_aggregate("downloads_gems_per_month", <<-SQL, refresh_policies: { start_offset: "INTERVAL 'P3M'", end_offset: "INTERVAL 'PT1M'", schedule_interval: "INTERVAL '2629746'"}, materialized_only: true, finalized: true)
     SELECT time_bucket('P1M'::interval, created_at) AS created_at,
       gem_name,
-      sum(downloads) AS downloads
+      (sum(downloads))::bigint AS downloads
      FROM downloads_gems_per_day
     GROUP BY (time_bucket('P1M'::interval, created_at)), gem_name
   SQL
@@ -100,7 +100,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
     SELECT time_bucket('PT1H'::interval, created_at) AS created_at,
       gem_name,
       gem_version,
-      sum(downloads) AS downloads
+      (sum(downloads))::bigint AS downloads
      FROM downloads_versions_per_minute
     GROUP BY (time_bucket('PT1H'::interval, created_at)), gem_name, gem_version
   SQL
@@ -109,7 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
     SELECT time_bucket('P1D'::interval, created_at) AS created_at,
       gem_name,
       gem_version,
-      sum(downloads) AS downloads
+      (sum(downloads))::bigint AS downloads
      FROM downloads_versions_per_hour
     GROUP BY (time_bucket('P1D'::interval, created_at)), gem_name, gem_version
   SQL
@@ -118,7 +118,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184547) do
     SELECT time_bucket('P1M'::interval, created_at) AS created_at,
       gem_name,
       gem_version,
-      sum(downloads) AS downloads
+      (sum(downloads))::bigint AS downloads
      FROM downloads_versions_per_day
     GROUP BY (time_bucket('P1M'::interval, created_at)), gem_name, gem_version
   SQL
