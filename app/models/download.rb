@@ -1,4 +1,4 @@
-class Download < DownloadRecord
+class Download < DownloadsDB
   extend Timescaledb::ActsAsHypertable
 
   acts_as_hypertable time_column: 'created_at'
@@ -21,7 +21,7 @@ class Download < DownloadRecord
   end
 
   cagg = -> (view_name) do
-    Class.new(DownloadRecord) do
+    Class.new(DownloadsDB) do
       self.table_name = "downloads_#{view_name}"
 
       scope :sum_downloads, -> { select("sum(downloads)::bigint as downloads") }
