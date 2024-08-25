@@ -194,9 +194,9 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    datadog (2.2.0)
+    datadog (2.3.0)
       debase-ruby_core_source (= 3.3.1)
-      libdatadog (~> 10.0.0.1.0)
+      libdatadog (~> 11.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
       msgpack
     datadog-ci (1.3.0)
@@ -360,7 +360,7 @@ GEM
       letter_opener (~> 1.9)
       railties (>= 6.1)
       rexml
-    libdatadog (10.0.0.1.0)
+    libdatadog (11.0.0.1.0)
     libddwaf (1.14.0.0.0)
       ffi (~> 1.0)
     listen (3.9.0)
@@ -817,7 +817,7 @@ DEPENDENCIES
   csv (~> 3.3)
   dalli (~> 3.2)
   dartsass-sprockets (~> 3.1)
-  datadog (~> 2.2)
+  datadog (~> 2.3)
   datadog-ci (~> 1.3)
   derailed_benchmarks (~> 2.1)
   discard (~> 1.3)
@@ -977,7 +977,7 @@ CHECKSUMS
   csv (3.3.0) sha256=0bbd1defdc31134abefed027a639b3723c2753862150f4c3ee61cab71b20d67d
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
   dartsass-sprockets (3.1.0) sha256=c238ec9f7f496489ac5a7813cd1f83d1e077a1826921acefc7e290a521b7a20a
-  datadog (2.2.0) sha256=fa96d565e055593294706d7767c4d3213b5250f0ddd2b8697b868ae60dbdda4a
+  datadog (2.3.0) sha256=28e28a48dafa4c553ba32b9c4ffe0a9aa40a9795f024279e505b255b84908566
   datadog-ci (1.3.0) sha256=3c1c4721d14a1f7736330a0fdc6c5dc63c14235a53e9f07af10a34feef23eab7
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
   dead_end (4.0.0) sha256=695c8438993bb4c5415b1618a1b6e0afcae849ef2812fb8cb3846723904307eb
@@ -1045,7 +1045,7 @@ CHECKSUMS
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860
-  libdatadog (10.0.0.1.0) sha256=2e2c2000f1250cd3bb3721bdd0672dcdb584e60eee13d4a4089fbce1cf40dafc
+  libdatadog (11.0.0.1.0) sha256=44779762b21149be5e17ce599dc2e89f6a3c89a99262293dfafd96ddb110f7f1
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
