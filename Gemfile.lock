@@ -199,8 +199,8 @@ GEM
       libdatadog (~> 11.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
       msgpack
-    datadog-ci (1.3.0)
-      datadog (~> 2.2)
+    datadog-ci (1.4.0)
+      datadog (~> 2.3)
       msgpack
     date (3.3.4)
     dead_end (4.0.0)
@@ -818,7 +818,7 @@ DEPENDENCIES
   dalli (~> 3.2)
   dartsass-sprockets (~> 3.1)
   datadog (~> 2.3)
-  datadog-ci (~> 1.3)
+  datadog-ci (~> 1.4)
   derailed_benchmarks (~> 2.1)
   discard (~> 1.3)
   dogstatsd-ruby (~> 5.5)
@@ -978,7 +978,7 @@ CHECKSUMS
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
   dartsass-sprockets (3.1.0) sha256=c238ec9f7f496489ac5a7813cd1f83d1e077a1826921acefc7e290a521b7a20a
   datadog (2.3.0) sha256=28e28a48dafa4c553ba32b9c4ffe0a9aa40a9795f024279e505b255b84908566
-  datadog-ci (1.3.0) sha256=3c1c4721d14a1f7736330a0fdc6c5dc63c14235a53e9f07af10a34feef23eab7
+  datadog-ci (1.4.0) sha256=2f0e9fb22e7af583bf1984954919a8444b43984c72bbd2de6eac42f0464f8bc5
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
   dead_end (4.0.0) sha256=695c8438993bb4c5415b1618a1b6e0afcae849ef2812fb8cb3846723904307eb
   debase-ruby_core_source (3.3.1) sha256=ed904cae290edf0cf274ad707f8981bf1cefad8081e78d4bb71be2a483bc2c08
