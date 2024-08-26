@@ -240,14 +240,14 @@ GEM
     factory_bot_rails (6.4.3)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
-    faraday (2.10.1)
-      faraday-net_http (>= 2.0, < 3.2)
+    faraday (2.11.0)
+      faraday-net_http (>= 2.0, < 3.4)
       logger
     faraday-follow_redirects (0.3.0)
       faraday (>= 1, < 3)
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
-    faraday-net_http (3.1.1)
+    faraday-net_http (3.3.0)
       net-http
     faraday-retry (2.2.1)
       faraday (~> 2.0)
@@ -824,7 +824,7 @@ DEPENDENCIES
   dogstatsd-ruby (~> 5.5)
   dotenv-rails (~> 3.1)
   factory_bot_rails (~> 6.4)
-  faraday (~> 2.10)
+  faraday (~> 2.11)
   faraday-multipart (~> 1.0)
   faraday-retry (~> 2.2)
   faraday_middleware-aws-sigv4 (~> 1.0)
@@ -998,10 +998,10 @@ CHECKSUMS
   execjs (2.9.1) sha256=e8fd066f6df60c8e8fbebc32c6fb356b5212c77374e8416a9019ca4bb154dcfb
   factory_bot (6.4.5) sha256=d71dd29bc95f0ec2bf27e3dd9b1b4d557bd534caca744663cb7db4bacf3198be
   factory_bot_rails (6.4.3) sha256=ea73ceac1c0ff3dc11fff390bf2ea8a2604066525ed8ecd3b3bc2c267226dcc8
-  faraday (2.10.1) sha256=6bc9fba3f6191684449d94215195b2c43e2a07bd40b321d245881450923d9a80
+  faraday (2.11.0) sha256=e6ead2c9aa1304107d3bb342e9f930cf7e649a71e3ec1e782c3256672f19ed02
   faraday-follow_redirects (0.3.0) sha256=d92d975635e2c7fe525dd494fcd4b9bb7f0a4a0ec0d5f4c15c729530fdb807f9
   faraday-multipart (1.0.4) sha256=9012021ab57790f7d712f590b48d5f948b19b43cfa11ca83e6459f06090b0725
-  faraday-net_http (3.1.1) sha256=da93f0f426f4de2c09af0a9a95887726da7889b76eca2a2aff0ce5e66e768938
+  faraday-net_http (3.3.0) sha256=93e6b0f679b1e8e358bcb4e983a52328dfc47ebbe6a232e4f9e8aba9c924e565
   faraday-retry (2.2.1) sha256=4146fed14549c0580bf14591fca419a40717de0dd24f267a8ec2d9a728677608
   faraday_middleware-aws-sigv4 (1.0.1) sha256=a001ea4f687ca1c60bad8f2a627196905ce3dbf285e461dc153240e92eaabe8f
   ffi (1.17.0) sha256=51630e43425078311c056ca75f961bb3bda1641ab36e44ad4c455e0b0e4a231c
