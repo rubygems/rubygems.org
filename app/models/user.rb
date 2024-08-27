@@ -310,7 +310,7 @@ uniqueness: { case_sensitive: false }
   end
 
   def expire_all_api_keys
-    api_keys.unexpired.expire_all!
+    api_keys.expire_all!
   end
 
   def destroy_associations_for_discard
