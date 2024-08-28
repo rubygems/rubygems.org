@@ -12,7 +12,7 @@ class OwnershipRequest < ApplicationRecord
   delegate :name, to: :user, prefix: true
   delegate :name, to: :rubygem, prefix: true
 
-  enum status: { opened: 0, approved: 1, closed: 2 }
+  enum :status, { opened: 0, approved: 1, closed: 2 }
 
   def approve!(approver)
     return unless Pundit.policy!(approver, self).approve?
