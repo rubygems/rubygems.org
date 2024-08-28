@@ -254,12 +254,9 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
   end
 
   def refute_authorizes(user, record, action)
-    @authorization_client.authorize(user, record, action, policy_class: policy_class)
-    policy_class ||= policy!(user, record).class
-
-    flunk("Expected #{policy_class} not to authorize #{action} on #{record} for #{user}")
-  rescue Avo::NotAuthorizedError
-    # Expected
+    assert_raise(Avo::NotAuthorizedError) do
+      @authorization_client.authorize(user, record, action, policy_class: policy_class)
+    end
   end
 
   def policy_class
