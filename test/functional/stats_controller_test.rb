@@ -58,12 +58,13 @@ class StatsControllerTest < ActionController::TestCase
     end
 
     should "not have width greater than 100%" do
-      assert_select ".stats__graph__gem__meter" do |element|
-        element.pluck(:style).each do |width|
-          width =~ /width: (\d+[,.]\d+)%/
+      assert page.has_selector?(".stats__graph__gem__meter")
 
-          assert_operator Regexp.last_match(1).to_f, :<=, 100, "#{Regexp.last_match(1)} is greater than 100"
-        end
+      page.find_all(".stats__graph__gem__meter").each do |element|
+        assert element["data-bar-width"]
+        width = element["data-bar-width"].to_f
+
+        assert_operator width, :<=, 100, "#{width} is greater than 100"
       end
     end
   end
