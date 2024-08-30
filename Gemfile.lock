@@ -391,7 +391,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    maintenance_tasks (2.7.1)
+    maintenance_tasks (2.8.0)
       actionpack (>= 6.0)
       activejob (>= 6.0)
       activerecord (>= 6.0)
@@ -729,7 +729,7 @@ GEM
       railties (>= 7.0.0)
     terser (1.2.3)
       execjs (>= 0.3.0, < 3)
-    thor (1.3.1)
+    thor (1.3.2)
     tilt (2.3.0)
     timeout (0.4.1)
     timescaledb (0.2.9)
@@ -845,7 +845,7 @@ DEPENDENCIES
   local_time (~> 3.0)
   lookbook (~> 2.3)
   mail (~> 2.8)
-  maintenance_tasks (~> 2.7)
+  maintenance_tasks (~> 2.8)
   memory_profiler (~> 1.0)
   minitest (~> 5.25)
   minitest-gcstats (~> 1.3)
@@ -1054,7 +1054,7 @@ CHECKSUMS
   loofah (2.22.0) sha256=10d76e070c86b12fec74b6a9515fd1940f4459198b991342d0a7897d86c372fe
   lookbook (2.3.2) sha256=abcdefeb13d9150ab30ab8022a2f459db85cbd02e90a0e8e066b32f9048e160a
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
-  maintenance_tasks (2.7.1) sha256=2f1f42239a11f5b30ef34e821f1beb42010d08e81634d8945884aba8bdb982db
+  maintenance_tasks (2.8.0) sha256=7ee8aa37ab39c6c3a5f4637878c1a343cc296596742248112458b922968d4a16
   marcel (1.0.4) sha256=0d5649feb64b8f19f3d3468b96c680bae9746335d02194270287868a661516a4
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
   memory_profiler (1.0.2) sha256=0e7c5c2a1a7bea5b5a05b9df25b2d628afa0db37b9344ba42b42eb8a604762df
@@ -1189,7 +1189,7 @@ CHECKSUMS
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (2.7.3) sha256=5a4e400dd7463d45099972589402f43325e42ef4634a2f194178d5192794697b
   terser (1.2.3) sha256=c03111b9b01a7e70cd456b5d9aedf0a56fb99314a19311c4278c01ccebe3da9c
-  thor (1.3.1) sha256=fa7e3471d4f6a27138e3d9c9b0d4daac9c3d7383927667ae83e9ab42ae7401ef
+  thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
   tilt (2.3.0) sha256=82dd903d61213c63679d28e404ee8e10d1b0fdf5270f1ad0898ec314cc3e745c
   timeout (0.4.1) sha256=6f1f4edd4bca28cffa59501733a94215407c6960bd2107331f0280d4abdebb9a
   timescaledb (0.2.9) sha256=1d1382d5b889bf8ec6bcdcbf061c8e28234bc343911c81d48a9dfb22d9d5cfdc
