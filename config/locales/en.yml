@@ -673,11 +673,10 @@ en:
     gem_members:
       authors_header: Authors
       self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling multi-factor authentication (MFA)</a> to keep your account secure.
-      not_using_mfa_warning_show: "* Some owners are not using multi-factor authentication (MFA). Click for the complete list."
-      not_using_mfa_warning_hide: "* The following owners are not using multi-factor authentication (MFA). Click to hide."
+      not_using_mfa_warning: "* Some owners are not using multi-factor authentication (MFA)."
       owners_header: Owners
       pushed_by: Pushed by
-      using_mfa_info: "* All owners are using multi-factor authentication (MFA)."
+      using_mfa_info: "All owners are using multi-factor authentication (MFA)."
       yanked_by: Yanked by
       sha_256_checksum: SHA 256 checksum
       signature_period: Signature validity period

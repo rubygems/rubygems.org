@@ -12,7 +12,7 @@
     <% if show_mfa_status %>
       <% if rubygem.owners.without_mfa.present? %>
         <span class="tw-my-2 gem__users__mfa-text mfa-warn">
-          <%= current_user.mfa_disabled? ? t(".self_no_mfa_warning_html") : t(".not_using_mfa_warning_show") %>
+          <%= current_user.mfa_disabled? ? t(".self_no_mfa_warning_html") : t(".not_using_mfa_warning") %>
         </span>
       <% else %>
         <span class="gem__users__mfa-text mfa-info"><%= t '.using_mfa_info' %></span>

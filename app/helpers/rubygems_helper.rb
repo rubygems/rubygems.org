@@ -143,13 +143,7 @@ module RubygemsHelper
     link_text = avatar(32, "gravatar-#{owner.id}", owner, class: "tw-rounded-full tw-mr-1")
     link_text << " #{owner.display_handle}"
     link_text << " *" if show_mfa_status && owner.mfa_disabled?
-    link_to(
-      link_text.html_safe,
-      profile_path(owner.display_id),
-      alt: owner.display_handle,
-      title: owner.display_handle,
-      class: "t-link tw-flex tw-items-center"
-    )
+    link_to(link_text.html_safe, profile_path(owner.display_id), class: "t-link tw-flex tw-items-center")
   end
 
   def link_to_user(user)

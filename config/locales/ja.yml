@@ -667,8 +667,7 @@ ja:
       authors_header: 作者
       self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証 (MFA)
         の有効化</a>をご検討ください。
-      not_using_mfa_warning_show: 多要素認証 (MFA) を使っていない所有者がいます。完全な一覧を見るにはクリックしてください。
-      not_using_mfa_warning_hide: "* 以下の所有者は多要素認証 (MFA) を使っていません。クリックして隠します。"
+      not_using_mfa_warning: 多要素認証 (MFA) を使っていない所有者がいます。
       owners_header: 所有者
       pushed_by: プッシュ者
       using_mfa_info: "* 全ての所有者が多要素認証 (MFA) を使っています。"
