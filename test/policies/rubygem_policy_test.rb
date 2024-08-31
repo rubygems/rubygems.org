@@ -95,4 +95,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized nil, :show_unconfirmed_ownerships?
     end
   end
+
+  context "#show_owner_mfa_status?" do
+    should "only allow the owner" do
+      assert_authorized @owner, :show_owner_mfa_status?
+      refute_authorized @user, :show_owner_mfa_status?
+      refute_authorized nil, :show_owner_mfa_status?
+    end
+  end
 end
