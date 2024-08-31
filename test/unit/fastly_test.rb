@@ -21,7 +21,8 @@ class FastlyTest < ActiveSupport::TestCase
       stub_request(:purge, "https://domain2.example.com/some-url")
         .with(headers: { "Fastly-Key" => "api-key" })
         .to_return(status: 200, body: "{}")
-      Fastly.purge(path: "some-url")
+
+      assert Fastly.purge(path: "some-url")
     end
 
     should "soft purge for each domain" do
@@ -31,7 +32,8 @@ class FastlyTest < ActiveSupport::TestCase
       stub_request(:purge, "https://domain2.example.com/some-url")
         .with(headers: { "Fastly-Key" => "api-key", "Fastly-Soft-Purge" => "1" })
         .to_return(status: 200, body: "{}")
-      Fastly.purge(path: "some-url", soft: true)
+
+      assert Fastly.purge(path: "some-url", soft: true)
     end
   end
 
@@ -40,13 +42,15 @@ class FastlyTest < ActiveSupport::TestCase
       stub_request(:post, "https://api.fastly.com/service/service-id/purge/some-key")
         .with(headers: { "Fastly-Key" => "api-key" })
         .to_return(status: 200, body: "{}")
-      Fastly.purge_key("some-key")
+
+      assert Fastly.purge_key("some-key")
     end
     should "send a post request for soft purges" do
       stub_request(:post, "https://api.fastly.com/service/service-id/purge/some-key")
         .with(headers: { "Fastly-Key" => "api-key", "Fastly-Soft-Purge" => "1" })
         .to_return(status: 200, body: "{}")
-      Fastly.purge_key("some-key", soft: true)
+
+      assert Fastly.purge_key("some-key", soft: true)
     end
   end
 end
