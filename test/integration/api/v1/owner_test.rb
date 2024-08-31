@@ -29,8 +29,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
 
     get rubygem_path(@rubygem.slug)
 
-    assert page.has_selector?("a[alt='#{@user.handle}']")
-    assert page.has_selector?("a[alt='#{@other_user.handle}']")
+    page.assert_selector("div.gem__members a", text: @user.handle)
+    page.assert_selector("div.gem__members a", text: @other_user.handle)
   end
 
   test "removing an owner" do
@@ -41,8 +41,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
 
     get rubygem_path(@rubygem.slug)
 
-    assert page.has_selector?("a[alt='#{@user.handle}']")
-    refute page.has_selector?("a[alt='#{@other_user.handle}']")
+    page.assert_selector("div.gem__members a", text: @user.handle)
+    page.assert_no_selector("div.gem__members a", text: @other_user.handle)
   end
 
   test "transferring ownership" do
@@ -54,8 +54,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
 
     get rubygem_path(@rubygem.slug)
 
-    refute page.has_selector?("a[alt='#{@user.handle}']")
-    assert page.has_selector?("a[alt='#{@other_user.handle}']")
+    page.assert_no_selector("div.gem__members a", text: @user.handle)
+    page.assert_selector("div.gem__members a", text: @other_user.handle)
   end
 
   test "adding ownership without permission" do
