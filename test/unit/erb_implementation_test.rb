@@ -10,7 +10,7 @@ class ErbImplementationTest < ActiveSupport::TestCase
   Dir[ERB_GLOB, base: Rails.root].each do |filename|
     test "html errors in #{filename}" do
       data = Rails.root.join(filename).read
-      BetterHtml::BetterErb::ErubiImplementation.new(data, filename:).validate!
+      assert_nothing_raised { BetterHtml::BetterErb::ErubiImplementation.new(data, filename:).validate! }
     end
   end
 end
