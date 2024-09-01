@@ -48,9 +48,9 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:validate).returns true
-        @cutter.stubs(:save)
+        @cutter.stubs(:save).returns true
 
-        @cutter.process
+        assert @cutter.process
       end
 
       should "not attempt to find rubygem if spec can't be pulled" do
