@@ -86,9 +86,9 @@ class RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "include the security events" do
-        page.assert_text "Owner Added"
-        page.assert_text "Owner Confirmed"
-        page.assert_text "Owner Removed"
+        assert page.has_text? "Owner Added"
+        assert page.has_text? "Owner Confirmed"
+        assert page.has_text? "Owner Removed"
       end
     end
   end
