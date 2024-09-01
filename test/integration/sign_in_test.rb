@@ -297,8 +297,8 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    page.assert_text "Sign in"
-    page.assert_text "Bad email or password."
+    assert page.has_content? "Sign in"
+    assert page.has_content? "Bad email or password."
   end
 
   teardown do
