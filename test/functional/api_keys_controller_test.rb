@@ -223,7 +223,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         end
 
         should "show error to user" do
-          page.assert_text "Show dashboard scope must be enabled exclusively"
+          assert page.has_content? "Show dashboard scope must be enabled exclusively"
         end
 
         should "not update scope of test key" do
