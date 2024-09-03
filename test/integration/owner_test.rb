@@ -273,6 +273,14 @@ class OwnerTest < SystemTest
     assert_cell maintainer, "Role", "Maintainer"
   end
 
+  test "editing the ownership of the current user" do
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      assert_selector "button[disabled]", text: "Edit"
+    end
+  end
+
   test "creating new owner with maintainer role" do
     maintainer = create(:user)
 

@@ -58,6 +58,7 @@
         <br/>
         <%= button_to "Edit",
           edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
+          disabled: ownership.user == current_user,
           method: "get",
           class: "form__submit form__submit--small" %>
       </td>
