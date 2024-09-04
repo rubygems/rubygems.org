@@ -117,6 +117,16 @@ class ActiveSupport::TestCase
     skip("Toxiproxy is not running, but was required for this test.")
   end
 
+  def requires_avo_pro
+    return if Avo.configuration.license == "advanced" && defined?(Avo::Pro)
+
+    if ENV["REQUIRE_AVO_PRO"]
+      raise "REQUIRE_AVO_PRO is set but Avo::Pro is missing in #{Rails.env}." \
+            "\nRAILS_GROUPS=#{ENV['RAILS_GROUPS'].inspect}\nAvo.license=#{Avo.license.inspect}"
+    end
+    skip "avo pro is not present but was required for this test"
+  end
+
   def assert_changed(object, *attributes)
     original_attributes = attributes.index_with { |a| object.send(a) }
     yield if block_given?
@@ -261,7 +271,7 @@ end
 
 class AdminPolicyTestCase < ActiveSupport::TestCase
   def setup
-    skip "avo-pro needed to run this test" unless defined?(Avo::Pro)
+    requires_avo_pro
 
     @authorization_client = Admin::AuthorizationClient.new
   end

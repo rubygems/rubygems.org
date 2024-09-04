@@ -13,7 +13,7 @@ class Avo::GemNameReservationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "resource search_query scope" do
-    skip "avo-pro needed to run this test" unless defined?(Avo::Pro)
+    requires_avo_pro
 
     admin_sign_in_as create(:admin_github_user, :is_admin)
     create(:gem_name_reservation, name: "hello")
