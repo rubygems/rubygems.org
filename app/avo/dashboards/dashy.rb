@@ -6,16 +6,17 @@ class Avo::Dashboards::Dashy < Avo::Dashboards::BaseDashboard
     current_user.team_member?("rubygems-org")
   }
 
-  # cards go here
-  card Avo::Cards::DashboardWelcomeCard
+  def cards
+    card Avo::Cards::DashboardWelcomeCard
 
-  divider label: "Metrics"
+    divider label: "Metrics"
 
-  card Avo::Cards::UsersMetric
-  card Avo::Cards::VersionsMetric
-  card Avo::Cards::RubygemsMetric
+    card Avo::Cards::UsersMetric
+    card Avo::Cards::VersionsMetric
+    card Avo::Cards::RubygemsMetric
 
-  divider label: "Charts"
+    divider label: "Charts"
 
-  card Avo::Cards::PushesChart
+    card Avo::Cards::PushesChart
+  end
 end

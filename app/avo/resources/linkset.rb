@@ -1,5 +1,4 @@
 class Avo::Resources::Linkset < Avo::BaseResource
-  self.title = :id
   self.includes = [:rubygem]
   self.visible_on_sidebar = false
 

@@ -1,5 +1,4 @@
 class Avo::Resources::OIDCIdToken < Avo::BaseResource
-  self.title = :id
   self.includes = []
   self.model_class = ::OIDC::IdToken
 

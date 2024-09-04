@@ -1,5 +1,4 @@
 class Avo::Resources::Audit < Avo::BaseResource
-  self.title = :id
   self.includes = %i[
     admin_github_user
     auditable

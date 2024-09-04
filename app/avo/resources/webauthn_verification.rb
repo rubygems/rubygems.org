@@ -1,5 +1,4 @@
 class Avo::Resources::WebauthnVerification < Avo::BaseResource
-  self.title = :id
   self.includes = []
 
   def fields

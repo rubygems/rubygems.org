@@ -11,8 +11,9 @@ class Avo::Resources::OIDCProvider < Avo::BaseResource
     field :issuer, as: :text, link_to_resource: true
     field :configuration, as: :nested do
       visible_on = %i[edit new]
-      OIDC::Provider::Configuration.then { (_1.required_attributes + _1.optional_attributes) - fields.map(&:id) }.each do |k|
-        field k, as: (k.to_s.end_with?("s_supported") ? :tags : :text), visible: ->(_) { visible_on.include?(view) || value.send(k).present? }
+      OIDC::Provider::Configuration.then { _1.required_attributes + _1.optional_attributes }.each do |k|
+        field k, as: (k.to_s.end_with?("s_supported") ? :tags : :text),
+            visible: -> { visible_on.include?(resource.view) || resource.record.configuration.send(k).present? }
       end
     end
     field :jwks, as: :array_of, field: :json_viewer, hide_on: :index

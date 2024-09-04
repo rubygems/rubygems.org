@@ -1,5 +1,4 @@
 class Avo::Resources::Deletion < Avo::BaseResource
-  self.title = :id
   self.includes = [:version]
 
   def fields

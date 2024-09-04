@@ -1,5 +1,4 @@
 class Avo::Resources::Membership < Avo::BaseResource
-  self.title = :id
   self.includes = []
 
   class ConfirmedFilter < Avo::Filters::ScopeBooleanFilter; end

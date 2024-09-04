@@ -1,5 +1,4 @@
 class Avo::Resources::MaintenanceTasksRun < Avo::BaseResource
-  self.title = :id
   self.includes = []
   self.model_class = ::MaintenanceTasks::Run
 

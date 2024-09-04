@@ -103,7 +103,8 @@ Avo.configure do |config|
     end
 
     section "Resources", icon: "resources" do
-      Avo::App.resources_for_navigation.group_by { |r| r.model_class.module_parent_name }.sort_by { |k, _| k.to_s }.each do |namespace, reses|
+      Avo.resource_manager.resources_for_navigation(current_user).group_by { |r| r.model_class.module_parent_name }
+        .sort_by { |k, _| k.to_s }.each do |namespace, reses|
         if namespace.present?
           group namespace.titleize, icon: "folder" do
             reses.each do |res|
@@ -137,9 +138,9 @@ Rails.configuration.to_prepare do
   Avo::BaseController.prepend AvoAuditable
   Avo::BaseResource.include Avo::Resources::Concerns::AvoAuditableResource
 
-  Avo::ApplicationController.content_security_policy do |policy|
-    policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline
-  end
+  # Avo::ApplicationController.content_security_policy do |policy|
+  #   policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline
+  # end
 
   # Fix for https://github.com/rails/rails/issues/49783
   Avo::Views::ResourceEditComponent.class_eval do

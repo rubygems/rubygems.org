@@ -25,7 +25,8 @@ class Avo::Resources::GemDownload < Avo::BaseResource
 
     field :rubygem, as: :belongs_to
     field :version, as: :belongs_to
-    field :count, as: :number, sortable: true, index_text_align: :right, format_using: -> { value.to_fs(:delimited) }, default: 0
+    field :count, as: :number, sortable: true, html: { index: { wrapper: { classes: "text-right" } } },
+                  format_using: -> { value.to_fs(:delimited) }, default: 0
 
     field :id, as: :id, hide_on: :index
   end

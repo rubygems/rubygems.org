@@ -1,5 +1,4 @@
 class Avo::Resources::Dependency < Avo::BaseResource
-  self.title = :id
   self.includes = []
 
   def fields

@@ -1,5 +1,4 @@
 class Avo::Resources::WebauthnCredential < Avo::BaseResource
-  self.title = :id
   self.includes = []
 
   def fields

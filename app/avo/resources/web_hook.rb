@@ -1,5 +1,4 @@
 class Avo::Resources::WebHook < Avo::BaseResource
-  self.title = :id
   self.includes = %i[user rubygem]
 
   def actions
@@ -19,7 +18,7 @@ class Avo::Resources::WebHook < Avo::BaseResource
 
     field :url, as: :text
     field :enabled?, as: :boolean
-    field :failure_count, as: :number, sortable: true, index_text_align: :right
+    field :failure_count, as: :number, sortable: true, html: { index: { wrapper: { classes: "text-right" } } }
     field :user, as: :belongs_to
     field :rubygem, as: :belongs_to
     field :global?, as: :boolean

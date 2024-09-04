@@ -1,4 +1,4 @@
-<%= render Avo::PanelComponent.new(title: title_link, classes: %w[w-full]) do |c| %>
+<%= render Avo::PanelComponent.new(title: title_link, classes: "w-full") do |c| %>
   <% c.with_body do %>
     <% next unless authorized? %>
 

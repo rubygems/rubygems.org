@@ -1,4 +1,4 @@
-class Admin::GitHubUserPolicy < Admin::ApplicationPolicy
+class Admin::Admin::GitHubUserPolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve

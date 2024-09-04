@@ -1,13 +1,13 @@
-class EventAdditionalField < Avo::Fields::BaseField
+class Avo::Fields::EventAdditionalField < Avo::Fields::BaseField
   def nested_field
-    return unless @model
-    additional_type = @model.additional_type
+    return unless record
+    additional_type = record.additional_type
     if additional_type.nil?
       return JsonViewerField.new(id, **@args)
-          .hydrate(model:, resource:, action:, view:, panel_name:, user:)
+          .hydrate(record:, resource:, action:, view:, panel_name:, user:)
     end
 
-    NestedField.new(id, **@args) do
+    Avo::Fields::NestedField.new(id, **@args) do
       additional_type.attribute_types.each do |attribute_name, type|
         case type
         when Types::GlobalId
@@ -20,7 +20,7 @@ class EventAdditionalField < Avo::Fields::BaseField
           field attribute_name.to_sym, as: :json_viewer, hide_on: :index
         end
       end
-    end.hydrate(model:, resource:, action:, view:, panel_name:, user:)
+    end.hydrate(record:, resource:, action:, view:, panel_name:, user:)
   end
 
   methods = %i[fill_field value update_using to_permitted_param component_for_view visible get_fields]

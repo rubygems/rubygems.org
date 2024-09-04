@@ -1,5 +1,4 @@
 class Avo::Resources::OIDCRubygemTrustedPublisher < Avo::BaseResource
-  self.title = :id
   self.includes = [:trusted_publisher]
   self.model_class = ::OIDC::RubygemTrustedPublisher
 

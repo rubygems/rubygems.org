@@ -1,5 +1,4 @@
 class Avo::Resources::LogTicket < Avo::BaseResource
-  self.title = :id
   self.includes = []
 
   class BackendFilter < Avo::Filters::ScopeBooleanFilter; end
