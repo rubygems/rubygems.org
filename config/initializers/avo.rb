@@ -4,7 +4,7 @@ Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   config.root_path = '/admin'
 
   # Where should the user be redirected when visting the `/avo` url
-  config.home_path = "/admin/dashboards/dashy"
+  config.home_path = "/admin/dashboards/dashy" if defined?(Avo::Pro)
 
   ## == Licensing ==
   config.license_key = ENV['AVO_LICENSE_KEY']
