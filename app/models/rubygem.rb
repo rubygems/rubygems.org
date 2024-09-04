@@ -190,7 +190,7 @@ class Rubygem < ApplicationRecord
 
   def owned_by_with_role?(user, minimum_required_role)
     return false if user.blank?
-    ownerships.exists?(["user_id = ? AND role >= ?", user.id, minimum_required_role])
+    ownerships.exists?(["user_id = ? AND role >= ?", user.id, Access.flag_for_role(minimum_required_role)])
   rescue KeyError
     false
   end

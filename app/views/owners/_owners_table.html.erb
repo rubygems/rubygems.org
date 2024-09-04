@@ -44,7 +44,7 @@
         <%= ownership.authorizer_name %>
       </td>
       <td class="owners__cell" data-title="Role">
-        <%= Access.label_for_role(ownership.role) %>
+        <%= ownership.role %>
       </td>
       <td class="owners__cell" data-title="Confirmed At">
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>

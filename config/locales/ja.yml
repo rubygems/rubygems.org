@@ -993,7 +993,3 @@ ja:
         api_key_gem_html: 'gem: %{gem}'
         api_key_mfa: 'MFA: %{mfa}'
         not_required: 必要ではありません
-  access:
-    roles:
-      owner:
-      maintainer:

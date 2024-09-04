@@ -392,7 +392,7 @@ class OwnersControllerTest < ActionController::TestCase
       should "downgrade the ownership to a maintainer role" do
         ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
 
-        assert_predicate ownership.role, :maintainer?
+        assert_predicate ownership, :maintainer?
       end
 
       should "schedule an email for the updated user" do
@@ -417,7 +417,7 @@ class OwnersControllerTest < ActionController::TestCase
       should "not update the role" do
         ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
 
-        assert_predicate ownership.role, :owner?
+        assert_predicate ownership, :owner?
       end
     end
 
@@ -449,7 +449,7 @@ class OwnersControllerTest < ActionController::TestCase
       end
 
       should "not update the ownership of the current user" do
-        assert_predicate @ownership.reload.role, :owner?
+        assert_predicate @ownership.reload, :owner?
       end
 
       should "set notice flash message" do

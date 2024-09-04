@@ -525,7 +525,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id }
 
           assert_equal 200, @response.status
-          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem).role, :owner?
+          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem), :owner?
         end
       end
 
@@ -534,7 +534,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :maintainer }
 
           assert_equal 200, @response.status
-          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem).role, :maintainer?
+          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem), :maintainer?
         end
       end
 
@@ -988,7 +988,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :maintainer }
 
       assert_response :success
-      assert_predicate @maintainer_gem_ownership.reload.role, :maintainer?
+      assert_predicate @maintainer_gem_ownership.reload, :maintainer?
     end
 
     should "schedule an email for the updated user" do
@@ -1011,7 +1011,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       should "not update the user with the new role" do
         patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
 
-        assert_predicate @maintainer_gem_ownership.reload.role, :maintainer?
+        assert_predicate @maintainer_gem_ownership.reload, :maintainer?
       end
     end
   end

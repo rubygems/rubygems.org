@@ -255,14 +255,14 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "maps the ownership permission level to the role" do
-      assert_predicate @ownership.role, :owner?
+      assert_predicate @ownership, :owner?
       assert_equal Access::OWNER, @ownership.read_attribute_before_type_cast("role")
     end
 
     should "correctly serialize the value" do
       ownership = Ownership.find(@ownership.id)
 
-      assert_predicate ownership.role, :owner?
+      assert_predicate ownership, :owner?
     end
   end
 end

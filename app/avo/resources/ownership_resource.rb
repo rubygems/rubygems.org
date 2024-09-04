@@ -26,5 +26,5 @@ class OwnershipResource < Avo::BaseResource
 
   field :authorizer, as: :belongs_to
   field :confirmed_at, as: :date_time
-  field :role, as: :text
+  field :role, as: :select, enum: Ownership.roles
 end

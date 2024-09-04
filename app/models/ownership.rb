@@ -4,9 +4,7 @@ class Ownership < ApplicationRecord
   belongs_to :authorizer, class_name: "User"
   has_many :api_key_rubygem_scopes, dependent: :destroy
 
-  attribute :role, Types::Role.new, default: Access::DEFAULT_ROLE
   validate :validate_unique_user
-  validates :role, inclusion: { in: Access.roles }, allow_nil: true
 
   delegate :name, to: :user, prefix: :owner
   delegate :name, to: :authorizer, prefix: true, allow_nil: true
@@ -19,6 +17,8 @@ class Ownership < ApplicationRecord
 
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
+
+  enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER }, validate: true, _default: :owner
 
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")
