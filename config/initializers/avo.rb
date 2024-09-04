@@ -1,5 +1,5 @@
 # For more information regarding these settings check out our docs https://docs.avohq.io
-Avo.configure do |config|
+Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   ## == Routing ==
   config.root_path = '/admin'
 
@@ -12,6 +12,10 @@ Avo.configure do |config|
   ## == Set the context ==
   config.set_context do
     # Return a context object that gets evaluated in Avo::ApplicationController
+
+    if !Rails.env.local? && !(Avo.license.valid? && Avo.license.advanced?)
+      raise "Avo::Pro is missing in #{Rails.env}. RAILS_GROUPS=#{ENV['RAILS_GROUPS'].inspect} Avo.license=#{Avo.license.inspect}"
+    end
   end
 
   ## == Authentication ==
