@@ -55,18 +55,18 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_unconfirmed_ownerships?
-    rubygem_owned_by?(user, minimum_required_role: :owner)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def add_owner?
-    rubygem_owned_by?(user, minimum_required_role: :owner)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def update_owner?
-    rubygem_owned_by?(user, minimum_required_role: :owner)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def remove_owner?
-    rubygem_owned_by?(user, minimum_required_role: :owner)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 end

@@ -76,7 +76,11 @@ class ApplicationPolicy
     user && user == record_user
   end
 
-  def rubygem_owned_by?(user, minimum_required_role: :maintainer)
+  def rubygem_owned_by?(user)
+    rubygem.owned_by?(user) || deny(t(:forbidden))
+  end
+
+  def rubygem_owned_by_with_role?(user, minimum_required_role:)
     rubygem.owned_by_with_role?(user, minimum_required_role) || deny(t(:forbidden))
   end
 
