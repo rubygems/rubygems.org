@@ -65,6 +65,9 @@ zh-CN:
         full_name: 全名
         handle: 用户名
         password: 密码
+      ownership/role:
+        owner:
+        maintainer:
       api_key:
         oidc_api_key_role:
       oidc/id_token:

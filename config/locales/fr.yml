@@ -71,6 +71,9 @@ fr:
         full_name: Nom complet
         handle: Pseudonyme
         password: Mot de passe
+      ownership/role:
+        owner:
+        maintainer:
       api_key:
         oidc_api_key_role:
       oidc/id_token:

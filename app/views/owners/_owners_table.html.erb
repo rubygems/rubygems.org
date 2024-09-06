@@ -44,7 +44,7 @@
         <%= ownership.authorizer_name %>
       </td>
       <td class="owners__cell" data-title="Role">
-        <%= ownership.role %>
+        <%= Ownership.human_attribute_name("role.#{ownership.role}") %>
       </td>
       <td class="owners__cell" data-title="Confirmed At">
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>

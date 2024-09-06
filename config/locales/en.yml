@@ -70,6 +70,9 @@ en:
         full_name: Full name
         handle: Username
         password: Password
+      ownership/role:
+        owner: Owner
+        maintainer: Maintainer
       api_key:
         oidc_api_key_role: OIDC API Key Role
       oidc/id_token:

@@ -64,6 +64,9 @@ zh-TW:
         full_name: 全名
         handle: 帳號
         password: 密碼
+      ownership/role:
+        owner:
+        maintainer:
       api_key:
         oidc_api_key_role: OIDC API 金鑰角色
       oidc/id_token:

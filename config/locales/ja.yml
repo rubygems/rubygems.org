@@ -64,6 +64,9 @@ ja:
         full_name: フルネーム
         handle: ユーザー名
         password: パスワード
+      ownership/role:
+        owner:
+        maintainer:
       api_key:
         oidc_api_key_role: OIDC APIキーのロール
       oidc/id_token:

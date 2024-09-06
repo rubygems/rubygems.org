@@ -1,5 +1,6 @@
 <% @title = @rubygem.name %>
 <% @subtitle = t(".info", gem: @rubygem.name) %>
+<% @roles = Ownership.roles.transform_keys { |key| Ownership.human_attribute_name("role.#{key}") } %>
 
 <div class="t-body">
   <%= render "owners_table" %>
@@ -17,7 +18,7 @@
     <div class="text_field">
       <%= label_tag :role, t(".role_field"), class: "form__label" %>
       <br/>
-      <%= select_tag :role, options_for_select(Ownership.roles), class: "form__input form__select" %>
+      <%= select_tag :role, options_for_select(@roles), class: "form__input form__select" %>
     </div>
     <div class="submit_field">
       <%= submit_tag t(".submit_button"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>

@@ -63,6 +63,9 @@ nl:
         full_name: Voor-en achternaam
         handle: Gebruikersnaam
         password: Wachtwoord
+      ownership/role:
+        owner:
+        maintainer:
       api_key:
         oidc_api_key_role:
       oidc/id_token:

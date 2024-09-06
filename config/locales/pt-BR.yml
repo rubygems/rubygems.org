@@ -70,6 +70,9 @@ pt-BR:
         full_name: Nome completo
         handle: Usuário
         password: Senha
+      ownership/role:
+        owner:
+        maintainer:
       api_key:
         oidc_api_key_role:
       oidc/id_token:

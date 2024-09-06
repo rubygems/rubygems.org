@@ -1,4 +1,5 @@
 <% @title = t('.title') %>
+<% @roles = Ownership.roles.transform_keys { |key| Ownership.human_attribute_name("role.#{key}") } %>
 
 <%= form_tag rubygem_owner_path(rubygem_id: @rubygem.slug, owner_id: @ownership.user.display_id), method: :patch do |form| %>
   <%= error_messages_for(@ownership) %>
@@ -11,7 +12,7 @@
   <div class="text_field">
     <%= label_tag :role, t(".role"), class: 'form__label' %>
     <br/>
-    <%= select_tag :role, options_for_select(Ownership.roles, @ownership.role), class: "form__input form__select"  %>
+    <%= select_tag :role, options_for_select(@roles, @ownership.role), class: "form__input form__select"  %>
   </div>
 
   <div class="submit_field">
