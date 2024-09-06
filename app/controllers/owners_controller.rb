@@ -2,8 +2,8 @@ class OwnersController < ApplicationController
   include SessionVerifiable
 
   before_action :find_rubygem, except: :confirm
-  verify_session_before only: %i[index create destroy]
-  before_action :verify_mfa_requirement, only: %i[create destroy]
+  verify_session_before only: %i[index edit update create destroy]
+  before_action :verify_mfa_requirement, only: %i[create edit update destroy]
 
   def confirm
     ownership = Ownership.find_by!(token: token_params)
@@ -32,6 +32,11 @@ class OwnersController < ApplicationController
     @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
   end
 
+  def edit
+    authorize @rubygem, :update_owner?
+    @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
+  end
+
   def create
     authorize @rubygem, :add_owner?
     owner = User.find_by_name(handle_params)
@@ -48,6 +53,10 @@ class OwnersController < ApplicationController
     authorize @rubygem, :update_owner?
     owner = User.find_by_name(handle_params)
     ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
+
+    # Don't allow the owner to change the access level of their own ownership
+    return redirect_to rubygem_owners_path(@rubygem.slug), alert: "You can't update your own access level" if ownership.user == current_user
+
     if ownership.update(update_params)
       redirect_to rubygem_owners_path(ownership.rubygem.slug), notice: t(".success_notice", handle: ownership.user.name)
     else
@@ -77,7 +86,7 @@ class OwnersController < ApplicationController
   end
 
   def update_params
-    params.permit(:access_level)
+    params.require(:ownership).permit(:access_level)
   end
 
   def handle_params
