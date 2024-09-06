@@ -75,7 +75,7 @@ module ApplicationHelper
     msg
   end
 
-  def rubygem_search_field(home: false)
+  def rubygem_search_field(home: false, **kwargs)
     data = {
       autocomplete_target: "query",
       action: %w[
@@ -96,7 +96,7 @@ module ApplicationHelper
       params[:query],
       placeholder: t("layouts.application.header.search_gem_html"),
       autofocus: current_page?(root_url),
-      class: home ? "home__search" : "header__search",
+      class: kwargs[:class] || (home ? "home__search" : "header__search"),
       autocomplete: "off",
       aria: { autocomplete: "list" },
       data: data
