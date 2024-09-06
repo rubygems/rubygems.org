@@ -1,7 +1,10 @@
 <% home = current_page?(root_path) || current_page?(advanced_search_path) %>
 <div class="<%= home ? "home__search-wrap" : "header__search-wrap" %>" role="search">
   <%= form_tag search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "selected", } do %>
-    <%= rubygem_search_field(home: home) %>
+    <%= rubygem_search_field(
+      class: (home ? "home__search" : "header__search"),
+      data: (home ? nil : { nav_target: "search" }),
+    ) %>
 
     <ul class="suggest-list" role="listbox" data-autocomplete-target="suggestions"></ul>
 

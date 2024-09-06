@@ -230,6 +230,7 @@ zh-CN:
         blog: 博客
         contribute: 贡献
         data: 数据
+        docs: 文档
         designed_by: 设计
         discussion_forum: 讨论
         gems_served_by: 服务
@@ -244,6 +245,9 @@ zh-CN:
         statistics: 统计
         status: 状态
         supported_by: 支持
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> 由以下支持
         tested_by: 测试
         tracking_by: 追踪
         uptime: 服务运行时间
@@ -259,6 +263,11 @@ zh-CN:
         sign_out: 退出
         sign_up: 注册
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: 仪表盘
+    settings: 设置
+    org_name: 组织：%{name}
   mailer:
     confirm_your_email: 请在发送到您的邮件中点击链接，确认您的邮箱地址。
     confirmation_subject: 请确认您的邮箱地址
@@ -427,10 +436,6 @@ zh-CN:
       title: RubyGems.org 数据转储
     download:
       title: 下载 RubyGems
-    faq:
-      title: 常问问题
-    migrate:
-      title: 迁移 Gem
     security:
       title: 安全
     sponsors:

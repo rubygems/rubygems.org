@@ -247,6 +247,7 @@ es:
         blog: Blog
         contribute: Contribuye
         data: Datos
+        docs: Documentación
         designed_by: Diseñado por
         discussion_forum: Foro de Discusión
         gems_served_by: Distribuida por
@@ -261,6 +262,9 @@ es:
         statistics: Estadísticas
         status: Estado
         supported_by: Con el apoyo de
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          es respaldado por
         tested_by: Probado por
         tracking_by: Seguimiento con
         uptime: Uptime
@@ -276,6 +280,11 @@ es:
         sign_out: Salir
         sign_up: Registro
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: Dashboard
+    settings: Configuración
+    org_name: 'Org: %{name}'
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -474,10 +483,6 @@ es:
       title: Volcado de datos de RubyGems.org
     download:
       title: Descargar RubyGems
-    faq:
-      title: Preguntas Frecuentes
-    migrate:
-      title: Migrar Gemas
     security:
       title: Seguridad
     sponsors:

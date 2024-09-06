@@ -1,0 +1,25 @@
+<div class="clear-both w-full bg-neutral-050 dark:bg-neutral-950 px-8 py-1 text-neutral-800 dark:text-white">
+  <div class="max-w-screen-xl mx-auto flex items-center">
+    <nav class="flex justify-start items-center text-b2" aria-label="Breadcrumb">
+      <!-- Home breadcrumb -->
+      <%= link_to root_path, class: "inline-block p-1 -ml-1 hover:text-neutral-600 dark:hover:text-neutral-400", title: t("breadcrumbs.home"), aria: { label: t("breadcrumbs.home") } do %>
+        <svg class="fill-current" height="24" width="24" role="graphics-symbol">
+          <title><%= t('breadcrumbs.home') %></title>
+          <use href="/images/icons.svg#house-siding"/>
+        </svg>
+      <% end %>
+
+      <% breadcrumbs.each do |name, link| %>
+        <svg class="fill-neutral-600 dark:fill-neutral-700 h-6 w-6" height="24" width="24" role="graphics-symbol" aria-hidden="true">
+          <use href="/images/icons.svg#chevron-right"/>
+        </svg>
+        <% if link %>
+          <%= link_to name, link, class: "inline-block p-1 hover:text-neutral-600 dark:hover:text-neutral-400" %>
+        <% else %>
+          <!-- Current page -->
+          <span class="inline-block p-1 text-black dark:text-white font-semibold" aria-current="page"><%= name %></span>
+        <% end %>
+      <% end %>
+    </nav>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 //= link application.css
+//= link hammy.css
 //= link_tree ../../../vendor/assets/images
 //= link_tree ../builds
 //= link_tree ../../javascript .js

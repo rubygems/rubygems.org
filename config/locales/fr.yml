@@ -239,6 +239,7 @@ fr:
         blog: Blog
         contribute: Contribuer
         data: Données
+        docs: Documentation
         designed_by: Design par
         discussion_forum: Discussions
         gems_served_by: Gems mis à disposition par
@@ -253,6 +254,9 @@ fr:
         statistics: Stats
         status: Statut
         supported_by: Soutenu par
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> est soutenu par
         tested_by: Testé par
         tracking_by: Tracking par
         uptime: Uptime
@@ -268,6 +272,11 @@ fr:
         sign_out: Déconnexion
         sign_up: Inscription
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: Dashboard
+    settings: Paramètres
+    org_name: 'Org: %{name}'
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
@@ -438,10 +447,6 @@ fr:
     data:
       title:
     download:
-      title:
-    faq:
-      title:
-    migrate:
       title:
     security:
       title:
