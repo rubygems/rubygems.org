@@ -20,6 +20,8 @@ class Ownership < ApplicationRecord
 
   enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER }, validate: true, _default: :owner
 
+  scope :user_with_minimum_role, ->(user, role) { where(user: user, role: Access.flag_for_role(role)..) }
+
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")
       .left_joins(rubygem: :versions)
@@ -103,6 +105,14 @@ class Ownership < ApplicationRecord
 
   def record_confirmation_event
     rubygem.record_event!(Events::RubygemEvent::OWNER_CONFIRMED,
+      owner: user.display_handle,
+      authorizer: authorizer.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid)
+  end
+
+  def record_update_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_UPDATED,
       owner: user.display_handle,
       authorizer: authorizer.display_handle,
       owner_gid: user.to_gid,

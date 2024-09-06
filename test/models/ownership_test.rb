@@ -265,4 +265,16 @@ class OwnershipTest < ActiveSupport::TestCase
       assert_predicate ownership, :owner?
     end
   end
+
+  context "#user_with_minimum_role" do
+    setup do
+      @user = create(:user)
+      @ownership = create(:ownership, user: @user, role: :owner)
+    end
+
+    should "return the ownerships with a role less than or equal to the given role" do
+      assert_includes Ownership.user_with_minimum_role(@user, :owner), @ownership
+      assert_includes Ownership.user_with_minimum_role(@user, :maintainer), @ownership
+    end
+  end
 end
