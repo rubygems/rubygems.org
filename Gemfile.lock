@@ -674,7 +674,7 @@ GEM
     sawyer (0.9.2)
       addressable (>= 2.3.5)
       faraday (>= 0.17.3, < 3)
-    searchkick (5.3.1)
+    searchkick (5.4.0)
       activemodel (>= 6.1)
       hashie
     selenium-webdriver (4.24.0)
@@ -891,7 +891,7 @@ DEPENDENCIES
   rubocop-performance (~> 1.21)
   rubocop-rails (~> 2.25)
   ruby-magic (~> 0.6)
-  searchkick (~> 5.3)
+  searchkick (~> 5.4)
   selenium-webdriver (~> 4.24)
   shoryuken (~> 6.2)
   shoulda-context (~> 3.0.0.rc1)
@@ -1166,7 +1166,7 @@ CHECKSUMS
   sass-embedded (1.72.0) sha256=05d3e53092022a4b4eef5b76b9597c7f2af4e4efb06812e1a60e3601189a3d2e
   sassc-embedded (1.70.1) sha256=a95172c9c6725dfc412c702a0e705fb8a5bcb3aac2a32586b18e5432987103d3
   sawyer (0.9.2) sha256=fa3a72d62a4525517b18857ddb78926aab3424de0129be6772a8e2ba240e7aca
-  searchkick (5.3.1) sha256=dc1181543f6a68354e380651f235fa7f3df6a09e4cd67fc284dc293fa9860f57
+  searchkick (5.4.0) sha256=75d7256d3ec2af2dc11c2ba8160c86d80451f3f86447aae2ace1f79553de0bf3
   selenium-webdriver (4.24.0) sha256=00c878b8a9125a51a585e7ad8fdc9c2ef188b3f346e335c92005d9e0ccc53926
   semantic (1.6.1) sha256=3cdbb48f59198ebb782a3fdfb87b559e0822a311610db153bae22777a7d0c163
   semantic_logger (4.16.0) sha256=ffba0bd0e008ceaf6be26da588f610a61208b9a9f55676b32729e962904023d9
