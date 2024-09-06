@@ -59,6 +59,14 @@ class Events::RubygemEvent < ApplicationRecord
     attribute :owner_gid, :global_id
   end
 
+  OWNER_UPDATED = define_event "rubygem:owner:updated" do
+    attribute :owner, :string
+    attribute :updated_by, :string
+
+    attribute :actor_gid, :global_id
+    attribute :owner_gid, :global_id
+  end
+
   OWNER_REMOVED = define_event "rubygem:owner:removed" do
     attribute :owner, :string
     attribute :removed_by, :string

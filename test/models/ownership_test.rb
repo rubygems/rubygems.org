@@ -123,6 +123,33 @@ class OwnershipTest < ActiveSupport::TestCase
     end
   end
 
+  context "#update" do
+    context "when updating the role" do
+      setup do
+        @actor = create(:user)
+        @ownership = create(:ownership)
+
+        Current.user = @actor
+      end
+
+      should "record an event" do
+        @ownership.update!(role: :maintainer)
+
+        event = @ownership.rubygem.events.last
+        attributes = {
+          "user_agent_info" => nil,
+          "owner" => @ownership.user.display_handle,
+          "updated_by" => @actor.display_handle,
+          "actor_gid" => @actor.to_gid,
+          "owner_gid" => @ownership.user.to_gid
+        }
+
+        assert_equal "rubygem:owner:updated", event.tag
+        assert_equal attributes, event.additional.attributes
+      end
+    end
+  end
+
   context "#valid_confirmation_token?" do
     setup do
       @ownership = create(:ownership)
