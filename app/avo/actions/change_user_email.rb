@@ -1,6 +1,7 @@
 class Avo::Actions::ChangeUserEmail < Avo::Actions::ApplicationAction
   def fields
     field :from_email, name: "Email", as: :text, required: true
+    super
   end
 
   self.name = "Change User Email"

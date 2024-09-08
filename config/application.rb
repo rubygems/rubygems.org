@@ -5,7 +5,7 @@ require "rails"
 require "active_model/railtie"
 require "active_job/railtie"
 require "active_record/railtie"
-require "active_storage/engine" # TODO: comment out, needed for avo. https://github.com/avo-hq/avo/pull/3102#discussion_r1742420648
+require "active_storage/engine" # TODO: comment out, needed until https://github.com/avo-hq/avo/pull/3215 is released
 require "action_controller/railtie"
 require "action_mailer/railtie"
 # require "action_mailbox/engine"

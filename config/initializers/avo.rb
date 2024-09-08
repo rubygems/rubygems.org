@@ -101,34 +101,36 @@ Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   # end
 
   ## == Menus ==
-  config.main_menu = lambda {
-    section "Dashboards", icon: "dashboards" do
-      all_dashboards
-    end
+  if defined?(Avo::Pro)
+    config.main_menu = lambda {
+      section "Dashboards", icon: "dashboards" do
+        all_dashboards
+      end
 
-    section "Resources", icon: "resources" do
-      Avo.resource_manager.resources_for_navigation(current_user).group_by { |r| r.model_class.module_parent_name }
-        .sort_by { |k, _| k.to_s }.each do |namespace, reses|
-        if namespace.present?
-          group namespace.titleize, icon: "folder" do
+      section "Resources", icon: "resources" do
+        Avo.resource_manager.resources_for_navigation(current_user).group_by { |r| r.model_class.module_parent_name }
+          .sort_by { |k, _| k.to_s }.each do |namespace, reses|
+          if namespace.present?
+            group namespace.titleize, icon: "folder" do
+              reses.each do |res|
+                resource res.route_key
+              end
+            end
+          else
             reses.each do |res|
               resource res.route_key
             end
           end
-        else
-          reses.each do |res|
-            resource res.route_key
-          end
         end
       end
-    end
 
-    unless all_tools.empty?
-      section "Tools", icon: "tools" do
-        all_tools
+      unless all_tools.empty?
+        section "Tools", icon: "tools" do
+          all_tools
+        end
       end
-    end
-  }
+    }
+  end
 
   config.profile_menu = lambda {
     link_to "Admin Profile",
@@ -140,7 +142,7 @@ end
 Rails.configuration.to_prepare do
   Avo::ApplicationController.include GitHubOAuthable
   Avo::BaseController.prepend AvoAuditable
-  Avo::BaseResource.include Avo::Resources::Concerns::AvoAuditableResource
+  Avo::BaseResource.prepend Avo::Resources::Concerns::AvoAuditableResource
 
   # Avo::ApplicationController.content_security_policy do |policy|
   #   policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline

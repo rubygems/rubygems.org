@@ -6,6 +6,8 @@ class Avo::Actions::AddOwner < Avo::Actions::ApplicationAction
 
   def fields
     field :owner, as: :select_record, searchable: true, name: "New owner", use_resource: Avo::Resources::User
+
+    super
   end
 
   self.message = lambda {

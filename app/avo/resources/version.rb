@@ -9,6 +9,7 @@ class Avo::Resources::Version < Avo::BaseResource
 
   def actions
     action Avo::Actions::RestoreVersion
+    action Avo::Actions::VersionAfterWrite
   end
 
   class IndexedFilter < Avo::Filters::ScopeBooleanFilter; end

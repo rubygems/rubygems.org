@@ -15,6 +15,7 @@ class Avo::Actions::ResetApiKey < Avo::Actions::ApplicationAction
         Honeycomb: :honeycomb_reset_api_key
       },
       help: "Select mailer template"
+    super
   end
 
   class ActionHandler < Avo::Actions::ActionHandler

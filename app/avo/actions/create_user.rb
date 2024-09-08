@@ -9,6 +9,7 @@ class Avo::Actions::CreateUser < Avo::Actions::ApplicationAction
 
   def fields
     field :email, name: "Email", as: :text, required: true
+    super
   end
 
   class ActionHandler < Avo::Actions::ActionHandler

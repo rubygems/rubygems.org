@@ -6,13 +6,6 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
       help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
   end
 
-  # def self.inherited(base)
-  #   super
-  #   base.items_holder = Avo::Resources::Items::Holder.new
-  #   base.items_holder.instance_variable_get(:@items).replace items_holder.instance_variable_get(:@items).deep_dup
-  #   base.items_holder.invalid_fields.replace items_holder.invalid_fields.deep_dup
-  # end
-
   class Avo::Actions::ActionHandler
     include Auditable
     include SemanticLogger::Loggable
@@ -37,6 +30,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
       arguments:,
       resource:,
       action:,
+      query:,
       records: nil
     )
       @records = records
@@ -44,17 +38,18 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
       @current_user = current_user
       @arguments = arguments
       @resource = resource
+      @query = query
 
       @action = action
     end
 
-    attr_reader :records, :fields, :current_user, :arguments, :resource
+    attr_reader :records, :fields, :current_user, :arguments, :resource, :query
 
     delegate :error, :avo, :keep_modal_open, :redirect_to, :inform, :action_name, :succeed, :logger,
       to: :@action
 
     set_callback :handle, :before do
-      error "Must supply a sufficiently detailed comment" unless fields[:comment].presence&.then { _1.length >= 10 }
+      error "Must supply a sufficiently detailed comment: #{fields.inspect}" unless fields[:comment].presence&.then { _1.length >= 10 }
     end
 
     set_callback :handle, :around, lambda { |_, block|
@@ -74,6 +69,14 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
       keep_modal_open if errored?
     end
 
+    def handle_record(record)
+      raise NotImplementedError, "#{self.class}#handle_record is not implemented"
+    end
+
+    def handle_standalone
+      raise NotImplementedError, "#{self.class}#handle_standalone is not implemented"
+    end
+
     def do_handle_record(record)
       run_callbacks :handle_record do
         handle_record(record)
@@ -91,7 +94,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
         action: action_name,
         fields:,
         arguments:,
-        records:
+        models: records
       ) do
         run_callbacks :handle_standalone do
           handle_standalone
@@ -101,7 +104,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
     end
 
     def handle
-      return do_handle_standalone if records.nil?
+      return do_handle_standalone if @action.class.standalone
       records.each do |record|
         _, audit = in_audited_transaction(
           auditable: record,
@@ -109,7 +112,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
           action: action_name,
           fields:,
           arguments:,
-          records:
+          models: records
         ) do
           do_handle_record(record)
         end
@@ -119,9 +122,9 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
   end
 
   def handle(**args)
-    "#{self.class}::Avo::Actions::ActionHandler"
-      .constantize
+    action_handler = self.class.const_get(:ActionHandler)
       .new(**args, arguments:, action: self)
-      .do_handle
+
+    action_handler.do_handle
   end
 end

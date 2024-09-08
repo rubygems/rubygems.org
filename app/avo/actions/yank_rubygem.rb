@@ -3,10 +3,9 @@ class Avo::Actions::YankRubygem < Avo::Actions::ApplicationAction
 
   def fields
     field :version, as: :select,
-      options: lambda { |record:, resource:, view:, field:| # rubocop:disable Lint/UnusedBlockArgument
-        [OPTION_ALL] + record.versions.indexed.pluck(:number, :id)
-      },
+      options: -> { [OPTION_ALL] + record.versions.indexed.pluck(:number, :id) },
       help: "Select Version which needs to be yanked."
+    super
   end
 
   self.name = "Yank Rubygem"

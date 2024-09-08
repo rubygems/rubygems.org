@@ -31,8 +31,6 @@ class BaseActionTest < ActiveSupport::TestCase
     @avo = mock
     @view_context.stubs(:avo).returns(@avo)
     @avo.stubs(:resources_audit_path).returns("resources_audit_path")
-
-    ::Avo.init
   end
 
   test "handles errors" do
@@ -49,7 +47,8 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: create(:admin_github_user, :is_admin),
       resource: nil,
-      models: raises_on_each
+      records: raises_on_each,
+      query: nil
     }
 
     action.handle(**args)
@@ -69,7 +68,8 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: admin,
       resource: nil,
-      models: [webhook]
+      records: [webhook],
+      query: nil
     }
 
     action.handle(**args)
@@ -115,7 +115,8 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: admin,
       resource: nil,
-      models: [user]
+      records: [user],
+      query: nil
     }
 
     action.handle(**args)
@@ -152,7 +153,8 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: admin,
       resource: nil,
-      models: [user]
+      records: [user],
+      query: nil
     }
 
     action.handle(**args)

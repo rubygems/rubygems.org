@@ -49,11 +49,11 @@ WebMock.disable_net_connect!(
   ]
 )
 WebMock.globally_stub_request(:after_local_stubs) do |request|
-  avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
-  if avo_request_pattern.matches?(request)
-    { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
-      headers: { "Content-Type" => "application/json" } }
-  end
+  # avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
+  # if avo_request_pattern.matches?(request)
+  #   { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
+  #     headers: { "Content-Type" => "application/json" } }
+  # end
 
   if WebMock::RequestPattern.new(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s={size}")).matches?(request)
     { status: 404, body: "", headers: {} }
@@ -120,7 +120,7 @@ class ActiveSupport::TestCase
   def requires_avo_pro
     return if Avo.configuration.license == "advanced" && defined?(Avo::Pro)
 
-    if ENV["REQUIRE_AVO_PRO"]
+    if ENV["REQUIRE_AVO_PRO"].present?
       raise "REQUIRE_AVO_PRO is set but Avo::Pro is missing in #{Rails.env}." \
             "\nRAILS_GROUPS=#{ENV['RAILS_GROUPS'].inspect}\nAvo.license=#{Avo.license.inspect}"
     end
