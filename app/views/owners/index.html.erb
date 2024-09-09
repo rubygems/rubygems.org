@@ -1,6 +1,6 @@
 <% @title = @rubygem.name %>
 <% @subtitle = t(".info", gem: @rubygem.name) %>
-<% @roles = Ownership.roles.transform_keys { |key| Ownership.human_attribute_name("role.#{key}") } %>
+<% @roles = Ownership.roles.map { |k,_| [Ownership.human_attribute_name("role.#{k}"), k] } %>
 
 <div class="t-body">
   <%= render "owners_table" %>
