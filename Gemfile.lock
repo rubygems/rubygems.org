@@ -732,7 +732,7 @@ GEM
     thor (1.3.2)
     tilt (2.3.0)
     timeout (0.4.1)
-    timescaledb (0.2.9)
+    timescaledb (0.3.0)
       activerecord
       activesupport
       pg (~> 1.2)
@@ -904,7 +904,7 @@ DEPENDENCIES
   strong_migrations (~> 2.0)
   tailwindcss-rails (~> 2.7)
   terser (~> 1.2)
-  timescaledb (~> 0.2)
+  timescaledb (~> 0.3)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
   user_agent_parser (~> 2.18)
@@ -1192,7 +1192,7 @@ CHECKSUMS
   thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
   tilt (2.3.0) sha256=82dd903d61213c63679d28e404ee8e10d1b0fdf5270f1ad0898ec314cc3e745c
   timeout (0.4.1) sha256=6f1f4edd4bca28cffa59501733a94215407c6960bd2107331f0280d4abdebb9a
-  timescaledb (0.2.9) sha256=1d1382d5b889bf8ec6bcdcbf061c8e28234bc343911c81d48a9dfb22d9d5cfdc
+  timescaledb (0.3.0) sha256=9ce2b39417d30544054cb609fbd84e18e304c7b7952a793846b8f4489551a28f
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.12.0) sha256=e133d80cf24fef0e7a7dfad00fd6aeff01fc79875fbfc66cd8537bbd622b1e6d
   turbo-rails (1.5.0) sha256=b426cc762fb0940277729b3f1751a9f0bd269f5613c1d62ac73e5f0be7c7a83e
