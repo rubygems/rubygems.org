@@ -343,8 +343,8 @@ en:
       subject: Your role was updated for %{gem} gem
       title: OWNER ROLE UPDATED
       subtitle: Hi %{user_handle}!
-      body_html: Your role was updated for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>.
-      body_text: Your role was updated for %{gem} gem by %{authorizer}.
+      body_html: Your role was updated to %{role} for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>.
+      body_text: Your role was updated to %{role} for %{gem} gem by %{authorizer}.
     ownerhip_request_closed:
       title: OWNERSHIP REQUEST
       subtitle: Hi %{handle}!
