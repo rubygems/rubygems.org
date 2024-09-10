@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: segiddins/frizbee-action@segiddins/run-in-place
+      - uses: segiddins/frizbee-action@807363500e09f186d33b4805d25971aabaff6c1d # segiddins/run-in-place
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
