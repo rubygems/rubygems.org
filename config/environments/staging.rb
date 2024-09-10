@@ -103,7 +103,8 @@ Rails.application.configure do
     socket_failure_delay: 0.2,
     compress: true,
     compression_min_size: 524_288,
-    value_max_bytes: 2_097_152 # 2MB
+    value_max_bytes: 2_097_152, # 2MB
+    serializer: :json
   }
 
   config.middleware.use Gemcutter::Middleware::Redirector
