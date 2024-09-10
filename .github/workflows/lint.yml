@@ -82,9 +82,11 @@ jobs:
           dockerfiles: '["./Dockerfile", ".devcontainer/Dockerfile"]'
           docker_compose: '["./docker-compose.yml", ".devcontainer/docker-compose.yml"]'
           fail_on_unpinned: true
+          open_pr: false
       - uses: stacklok/frizbee-action@a0f3391cbe93a54e2a68cfaca2283f8cf3fd72ea # v0.0.2
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           actions: .github/actions
           fail_on_unpinned: true
+          open_pr: false
