@@ -142,4 +142,15 @@ class RefreshOIDCProviderJobTest < ActiveJob::TestCase
       assert_nil @provider.reload.configuration
     end
   end
+
+  context "when the config endpoint returns a different URI for jwks" do
+    setup do
+      stub_requests(config_body: { jwks_uri: "https://example.com/jwks" })
+    end
+
+    should "raise an error" do
+      assert_kind_of RefreshOIDCProviderJob::JWKSURIMismatchError, RefreshOIDCProviderJob.perform_now(provider: @provider)
+      assert_nil @provider.reload.configuration
+    end
+  end
 end
