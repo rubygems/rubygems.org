@@ -21,6 +21,7 @@ class RefreshOIDCProviderJob < ApplicationJob
       raise JWKSURIMismatchError, "Invalid JWKS URI in OpenID Connect configuration #{provider.configuration.jwks_uri.inspect}"
     end
     provider.jwks = connection.get(provider.configuration.jwks_uri).body
+    provider.configuration_updated_at = Time.current
 
     provider.save!
   end
