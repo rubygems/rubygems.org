@@ -108,6 +108,22 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_response :bad_request
     end
 
+    %w[nbf exp iat iss jti].each do |claim|
+      should "return bad request with missing/invalid #{claim}" do
+        @claims[claim] = ["a"]
+        post api_v1_oidc_trusted_publisher_exchange_token_path,
+          params: { jwt: jwt.to_s }
+
+        assert_response :bad_request
+
+        @claims.delete claim
+        post api_v1_oidc_trusted_publisher_exchange_token_path,
+          params: { jwt: jwt.to_s }
+
+        assert_response :bad_request
+      end
+    end
+
     should "return not found when time is before nbf" do
       @claims["nbf"] += 1_000_000
       trusted_publisher = build(:oidc_trusted_publisher_github_action,
