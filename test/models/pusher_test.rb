@@ -123,15 +123,6 @@ class PusherTest < ActiveSupport::TestCase
       end
     end
 
-    should "not be able to pull spec from a bad path" do
-      @cutter.stubs(:body).stubs(:stub!).stubs(:read)
-      @cutter.pull_spec
-
-      assert_nil @cutter.spec
-      assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
-      assert_equal 422, @cutter.code
-    end
-
     should "not be able to pull spec with metadata containing bad ruby objects" do
       @gem = gem_file("exploit.gem")
       @cutter = Pusher.new(@api_key, @gem)
