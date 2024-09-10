@@ -45,6 +45,19 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
   end
 
   context "POST exchange_token" do
+    should "return invalid request with no JWT" do
+      post api_v1_oidc_trusted_publisher_exchange_token_path
+
+      assert_response :bad_request
+    end
+
+    should "return invalid request with integer JWT" do
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: 1 }
+
+      assert_response :bad_request
+    end
+
     should "return not found with no matching trusted publisher" do
       post api_v1_oidc_trusted_publisher_exchange_token_path,
         params: { jwt: jwt.to_s }

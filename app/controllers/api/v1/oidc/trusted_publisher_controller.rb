@@ -40,9 +40,9 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
 
   def decode_jwt
     @jwt = JSON::JWT.decode_compact_serialized(params.permit(:jwt).require(:jwt), :skip_verification)
-  rescue JSON::JWT::InvalidFormat, JSON::ParserError, ArgumentError
+  rescue JSON::JWT::InvalidFormat, JSON::ParserError, ArgumentError => e
     # invalid base64 raises ArgumentError
-    render_bad_request
+    render_bad_request(e)
   end
 
   def find_provider
@@ -64,9 +64,5 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
 
   def validate_claims
     @trusted_publisher.to_access_policy(@jwt).verify_access!(@jwt)
-  end
-
-  def render_bad_request
-    render json: { error: "Bad Request" }, status: :bad_request
   end
 end
