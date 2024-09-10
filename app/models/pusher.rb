@@ -93,7 +93,7 @@ class Pusher
       Error:
       #{e.message}
     MSG
-  rescue StandardError => e
+  rescue StandardError
     # Ensure arbitrary exceptions are not leaked to the client
     notify <<~MSG, 422
       RubyGems.org cannot process this gem.
