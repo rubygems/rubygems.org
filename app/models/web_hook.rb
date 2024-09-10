@@ -21,12 +21,12 @@ class WebHook < ApplicationRecord
   scope :disabled, -> { where.not(disabled_at: nil) }
 
   def fire(protocol, host_with_port, version, delayed: true)
-    job = NotifyWebHookJob.new(webhook: self, protocol:, host_with_port:, version:)
+    job = NotifyWebHookJob.new(webhook: self, protocol:, host_with_port:, version:, poll_delivery: !delayed)
 
     if delayed
       job.enqueue
     else
-      job.perform_now
+      job.send(:_perform_job)
     end
   end
 

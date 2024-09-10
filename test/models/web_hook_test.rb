@@ -6,6 +6,19 @@ class WebHookTest < ActiveSupport::TestCase
   should belong_to :user
   should belong_to(:rubygem).optional(true)
 
+  def stub_hook_relay_request(url, webhook_id, authorization, max_attempts = 3)
+    stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-#{webhook_id}")
+      .with(
+        headers: {
+          "Accept" => "*/*",
+          "Authorization" => authorization,
+          "Content-Type" => "application/json",
+          "Hr-Max-Attempts" => max_attempts,
+          "Hr-Target-Url" => url
+        }.compact
+      )
+  end
+
   should "be valid for normal hook" do
     hook = create(:web_hook)
 
@@ -162,7 +175,7 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "include an Authorization header" do
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
-      stub_request(:post, @url).with(headers: { "Authorization" => authorization })
+      stub_hook_relay_request(@url, @hook.id, authorization).to_return_json(status: 200, body: { id: 1 })
 
       perform_enqueued_jobs only: NotifyWebHookJob do
         @hook.fire("https", "rubygems.org", @version)
@@ -172,7 +185,7 @@ class WebHookTest < ActiveSupport::TestCase
     should "include an Authorization header for a user with no API key" do
       @hook.user.update(api_key: nil)
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number)
-      stub_request(:post, @url).with(headers: { "Authorization" => authorization })
+      stub_hook_relay_request(@url, @hook.id, authorization).to_return_json(status: 200, body: { id: 1 })
 
       perform_enqueued_jobs only: NotifyWebHookJob do
         @hook.fire("https", "rubygems.org", @version)
@@ -183,7 +196,8 @@ class WebHookTest < ActiveSupport::TestCase
       @hook.user.update(api_key: nil)
       create(:api_key, owner: @hook.user)
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_keys.first.hashed_key)
-      stub_request(:post, @url).with(headers: { "Authorization" => authorization })
+      stub_hook_relay_request(@url, @hook.id, authorization).to_return(status: 200, body: { id: 1 }.to_json,
+                              headers: { "Content-Type" => "application/json" })
 
       perform_enqueued_jobs only: NotifyWebHookJob do
         @hook.fire("https", "rubygems.org", @version)
@@ -191,45 +205,13 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "not increment failure count for hook" do
-      stub_request(:post, @url).to_return(status: 200, body: "", headers: {})
+      stub_hook_relay_request(@url, @hook.id, nil).to_return_json(status: 200, body: { id: 1 })
 
       perform_enqueued_jobs only: NotifyWebHookJob do
         @hook.fire("https", "rubygems.org", @version)
       end
 
       assert_predicate @hook.failure_count, :zero?
-    end
-  end
-
-  context "with invalid URL" do
-    setup do
-      @url     = "http://someinvaliddomain.com"
-      @user    = create(:user)
-      @rubygem = create(:rubygem)
-      @version = create(:version, rubygem: @rubygem)
-      @hook    = create(:global_web_hook, url: @url, user: @user)
-    end
-
-    should "increment failure count for hook on errors" do
-      [
-        SocketError,
-        Timeout::Error,
-        Errno::EINVAL,
-        Errno::ECONNRESET,
-        EOFError,
-        Net::HTTPBadResponse,
-        Net::HTTPHeaderSyntaxError,
-        Net::ProtocolError
-      ].each_with_index do |exception, index|
-        stub_request(:post, @url).to_raise(exception)
-
-        perform_enqueued_jobs only: NotifyWebHookJob do
-          @hook.fire("https", "rubygems.org", @version)
-        end
-
-        assert_equal index + 1, @hook.reload.failure_count
-        assert_predicate @hook, :global?
-      end
     end
   end
 

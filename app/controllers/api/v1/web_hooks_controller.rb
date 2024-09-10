@@ -35,11 +35,13 @@ class Api::V1::WebHooksController < Api::BaseController
 
     authorize webhook
 
-    if webhook.fire(request.protocol.delete("://"), request.host_with_port,
-                    @rubygem.most_recent_version, delayed: false)
-      render plain: webhook.deployed_message(@rubygem)
+    response = webhook.fire(request.protocol.delete("://"), request.host_with_port,
+                            @rubygem.most_recent_version, delayed: false)
+
+    if response.fetch("status") == "success"
+      render plain: webhook.deployed_message(@rubygem) + hook_relay_message(response)
     else
-      render_bad_request webhook.failed_message(@rubygem)
+      render_bad_request webhook.failed_message(@rubygem) + hook_relay_message(response)
     end
   end
 
@@ -54,5 +56,22 @@ class Api::V1::WebHooksController < Api::BaseController
   def set_url
     render_bad_request "URL was not provided" unless params[:url]
     @url = params[:url]
+  end
+
+  def hook_relay_message(response)
+    status = response.fetch("status")
+    msg = +""
+    msg << "\nFailed with status #{status.inspect}: #{response['failure_reason']}" if status != "success"
+    if response.key?("responses") && response["responses"].any?
+      r = response.dig("responses", -1)
+      msg << "\nError: #{r['error']}" if r["error"]
+      msg << "\n\nResponse: #{r['code']}"
+      r.fetch("headers", []).each do |k, v|
+        msg << "\n#{k}: #{v}"
+      end
+      msg << "\n\n#{r['body']}"
+    end
+
+    msg
   end
 end
