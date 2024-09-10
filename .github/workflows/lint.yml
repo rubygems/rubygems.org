@@ -65,7 +65,7 @@ jobs:
           name: "${{ matrix.environment }}.rendered.yaml"
           path: "config/deploy/${{ matrix.environment }}.rendered.yaml"
       - name: kubeconform
-        uses: docker://ghcr.io/yannh/kubeconform:v0.6.3
+        uses: docker://ghcr.io/yannh/kubeconform@sha256:03f6b236ef64f20b4bc950209d6254b109e23b4b05e7811649f59eae5659fa58 # v0.6.3
         with:
           entrypoint: "/kubeconform"
           args: "-strict -summary -output json --kubernetes-version ${{ matrix.kubernetes_version }} config/deploy/${{ matrix.environment }}.rendered.yaml"

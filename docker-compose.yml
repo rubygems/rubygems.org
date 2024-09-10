@@ -1,22 +1,22 @@
 services:
   db:
-    image: postgres:13.14
+    image: index.docker.io/library/postgres@sha256:e0892b968fb80d181a96f18bfef0a8a1693c2430fb2bc7392e65a53057eaa303 # 13.14
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
   downloads-db:
-    image: timescale/timescaledb:2.15.1-pg16
+    image: index.docker.io/timescale/timescaledb@sha256:2e3a19fa4624addcb2bb8d37dfe2fee9e12597537b057a742c68aa226ed77da5 # 2.15.1-pg16
     ports:
       - "5434:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
   cache:
-    image: memcached:1.4.39
+    image: index.docker.io/library/memcached@sha256:f4504742a8fb03c3ac0cd172e1c1d2277117629f8d21d52f78307121ddc3de5f # 1.4.39
     ports:
       - "11211:11211"
   search:
-    image: opensearchproject/opensearch:2.13.0
+    image: index.docker.io/opensearchproject/opensearch@sha256:2e954ff0e8c9d0f4868b4818150b3aecc92fbb0cc4a24d00dace38ada227291d # 2.13.0
     environment:
       - discovery.type=single-node
       - DISABLE_SECURITY_PLUGIN=true
@@ -36,7 +36,7 @@ services:
       timeout: 5s
       retries: 6
   search-console:
-    image: opensearchproject/opensearch-dashboards:2.13.0
+    image: index.docker.io/opensearchproject/opensearch-dashboards@sha256:d8f4442da4d0cb44865a5eab01c9eb9f00769e2d5f053d21e3ff3c64a50fc6ec # 2.13.0
     ports:
       - "5601:5601"
     environment:
@@ -55,5 +55,5 @@ services:
       search:
         condition: service_healthy
   toxiproxy:
-    image: ghcr.io/shopify/toxiproxy:2.5.0
+    image: ghcr.io/shopify/toxiproxy@sha256:927c797a2115a193ae3a527e5a36782b938419904ac6706ca0efa029ebea58cb # 2.5.0
     network_mode: "host"
