@@ -1,25 +1,19 @@
 class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   include ApiKeyable
+  include JwtValidation
 
   before_action :authenticate_with_api_key, except: :assume_role
   before_action :verify_user_api_key, except: :assume_role
 
   with_options only: :assume_role do
     before_action :set_api_key_role
+    before_action :validate_provider
     before_action :decode_jwt
-    before_action :verify_jwt
+    before_action :validate_jwt_format
+    before_action :verify_jwt_time
+    before_action :verify_jwt_issuer
     before_action :verify_access
   end
-
-  class UnverifiedJWT < StandardError
-  end
-
-  rescue_from(
-    UnverifiedJWT,
-    JSON::JWT::VerificationFailed, JSON::JWK::Set::KidNotFound,
-    OIDC::AccessPolicy::AccessError,
-    with: :render_not_found
-  )
 
   rescue_from ActiveRecord::RecordInvalid do |err|
     render json: {
@@ -67,18 +61,15 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
 
   def set_api_key_role
     @api_key_role = OIDC::ApiKeyRole.active.find_by!(token: params.permit(:token).require(:token))
+    @provider = @api_key_role.provider
   end
 
-  def decode_jwt
-    raise UnverifiedJWT, "Provider missing JWKS" if @api_key_role.provider.jwks.blank?
-    @jwt = JSON::JWT.decode_compact_serialized(params.permit(:jwt).require(:jwt), @api_key_role.provider.jwks)
-  rescue JSON::ParserError
-    raise UnverifiedJWT, "Invalid JSON"
+  def jwt_key_or_secret
+    @provider.jwks
   end
 
-  def verify_jwt
-    raise UnverifiedJWT, "Issuer mismatch" unless @api_key_role.provider.issuer == @jwt["iss"]
-    raise UnverifiedJWT, "Invalid time" unless (@jwt["nbf"]..@jwt["exp"]).cover?(Time.now.to_i)
+  def verify_jwt_issuer
+    raise UnverifiedJWT, "Issuer mismatch" unless @provider.issuer == @jwt["iss"]
   end
 
   def verify_access
