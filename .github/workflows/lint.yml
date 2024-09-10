@@ -69,3 +69,22 @@ jobs:
         with:
           entrypoint: "/kubeconform"
           args: "-strict -summary -output json --kubernetes-version ${{ matrix.kubernetes_version }} config/deploy/${{ matrix.environment }}.rendered.yaml"
+  frizbee:
+    name: Frizbee
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: stacklok/frizbee-action@a0f3391cbe93a54e2a68cfaca2283f8cf3fd72ea # v0.0.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          actions: .github/workflows
+          dockerfiles: '["./Dockerfile", ".devcontainer/Dockerfile"]'
+          docker_compose: '["./docker-compose.yml", ".devcontainer/docker-compose.yml"]'
+          fail_on_unpinned: true
+      - uses: stacklok/frizbee-action@a0f3391cbe93a54e2a68cfaca2283f8cf3fd72ea # v0.0.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          actions: .github/actions
+          fail_on_unpinned: true
