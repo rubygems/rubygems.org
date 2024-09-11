@@ -2,11 +2,11 @@ class Avo::Resources::AdminGitHubUser < Avo::BaseResource
   self.title = :login
   self.includes = []
   self.model_class = ::Admin::GitHubUser
-  if Gem.loaded_specs["avo-pro"]
-    search[:query] = lambda {
-      query.where("login LIKE ?", "%#{params[:q]}%")
-    }
-  end
+  self.search = {
+    query: lambda {
+             query.where("login LIKE ?", "%#{params[:q]}%")
+           }
+  }
 
   self.description = "GitHub users that have authenticated via the admin OAuth flow."
 

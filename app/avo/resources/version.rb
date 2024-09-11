@@ -1,11 +1,11 @@
 class Avo::Resources::Version < Avo::BaseResource
   self.title = :full_name
   self.includes = [:rubygem]
-  if Gem.loaded_specs["avo-pro"]
-    search[:query] = lambda {
-      query.where("full_name LIKE ?", "#{params[:q]}%")
-    }
-  end
+  self.search = {
+    query: lambda {
+             query.where("full_name LIKE ?", "#{params[:q]}%")
+           }
+  }
 
   def actions
     action Avo::Actions::RestoreVersion

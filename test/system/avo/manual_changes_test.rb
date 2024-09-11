@@ -111,9 +111,8 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     page.assert_title(/^#{log_ticket.to_param}/)
 
-    accept_alert("Are you sure?") do
-      click_on "Delete"
-    end
+    click_on "Delete"
+    click_on "Yes, I'm sure"
 
     page.assert_text "Record destroyed"
 

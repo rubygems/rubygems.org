@@ -2,9 +2,11 @@ class Avo::Resources::IpAddress < Avo::BaseResource
   self.title = :ip_address
   self.includes = []
 
-  search[:hide_on_global] = true
-  search[:query] = lambda {
-    query.where("ip_address <<= inet ?", params[:q])
+  self.search = {
+    hide_on_global: true,
+      query: lambda {
+               query.where("ip_address <<= inet ?", params[:q])
+             }
   }
 
   def fields

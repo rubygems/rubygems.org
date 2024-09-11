@@ -11,7 +11,7 @@ if Rails.env.local?
       "app/mailers/",
 
       # avo auditing potentially loads things multiple times, but it will be bounded by the size of the audit
-      "app/avo/actions/base_action.rb",
+      "app/avo/actions/application_action.rb",
       "app/components/avo/fields/audited_changes_field/show_component.html.erb",
       "app/components/avo/views/resource_index_component.html.erb",
 

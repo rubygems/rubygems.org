@@ -57,7 +57,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
         block.call
       rescue StandardError => e
         Rails.error.report(e, handled: true)
-        error e.message.truncate(300)
+        error e.message
       end
     }
 

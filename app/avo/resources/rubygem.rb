@@ -1,11 +1,11 @@
 class Avo::Resources::Rubygem < Avo::BaseResource
   self.title = :name
   self.includes = []
-  if Gem.loaded_specs["avo-pro"]
-    search[:query] = lambda {
-      query.where("name LIKE ?", "%#{params[:q]}%")
-    }
-  end
+  self.search = {
+    query: lambda {
+             query.where("name LIKE ?", "%#{params[:q]}%")
+           }
+  }
 
   def actions
     action Avo::Actions::ReleaseReservedNamespace

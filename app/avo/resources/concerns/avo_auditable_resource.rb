@@ -1,22 +1,21 @@
 module Avo::Resources::Concerns::AvoAuditableResource
   extend ActiveSupport::Concern
 
-  class_methods do
-    def inherited(subclass)
-      super
+  def fetch_fields
+    super
+    return unless view.form?
 
-      subclass.concerning :AuditableFields, prepend: true do
-        def fields # rubocop:disable Lint/NestedMethodDefinition
-          raise "fields called"
-          super
+    field :comment, as: :textarea, required: true,
+          help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
+  end
 
-          panel "Auditable" do
-            field :comment, as: :textarea, required: true,
-              help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters.",
-              only_on: %i[new edit]
-          end
-        end
-      end
+  # Would be nice if there was a way to force a field to show up as visible
+  module HasItemsIncludeComment
+    def visible_items
+      items = super
+      return items unless view.form?
+
+      items << self.items.find { |item| item.id == :comment }
     end
   end
 end

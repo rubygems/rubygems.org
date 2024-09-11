@@ -1,11 +1,11 @@
 class Avo::Resources::User < Avo::BaseResource
   self.title = :name
   self.includes = []
-  if Gem.loaded_specs["avo-pro"]
-    search[:query] = lambda {
-      query.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
-    }
-  end
+  self.search = {
+    query: lambda {
+             query.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
+           }
+  }
 
   def actions
     action Avo::Actions::BlockUser

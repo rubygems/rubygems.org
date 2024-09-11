@@ -1,8 +1,10 @@
 class Avo::Resources::Organization < Avo::BaseResource
   self.title = :name
   self.includes = []
-  search[:query] = lambda {
-    query.where("name LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
+  self.search = {
+    query: lambda {
+             query.where("name LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
+           }
   }
 
   class DeletedFilter < Avo::Filters::ScopeBooleanFilter; end

@@ -4,6 +4,8 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
   make_my_diffs_pretty!
 
   test "manually changing roles" do
+    requires_avo_pro # uses search
+
     admin_user = create(:admin_github_user, :is_admin)
     avo_sign_in_as admin_user
 

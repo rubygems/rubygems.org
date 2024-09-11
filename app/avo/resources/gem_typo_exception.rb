@@ -1,11 +1,11 @@
 class Avo::Resources::GemTypoException < Avo::BaseResource
   self.title = :name
   self.includes = []
-  if Gem.loaded_specs["avo-pro"]
-    search[:query] = lambda {
-      query.where("name ILIKE ?", "%#{params[:q]}%")
-    }
-  end
+  self.search = {
+    query: lambda {
+             query.where("name ILIKE ?", "%#{params[:q]}%")
+           }
+  }
 
   def fields
     field :id, as: :id, hide_on: :index

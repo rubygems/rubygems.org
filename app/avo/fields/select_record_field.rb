@@ -7,4 +7,8 @@ class Avo::Fields::SelectRecordField < Avo::Fields::BelongsToField
     return if value.blank?
     target_resource.find_record value
   end
+
+  def id_input_foreign_key
+    "#{foreign_key}_id"
+  end
 end
