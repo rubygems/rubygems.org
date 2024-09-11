@@ -5,19 +5,19 @@ class Avo::Resources::Audit < Avo::BaseResource
   ]
 
   def fields
-    field :action, as: :text
+    main_panel do
+      field :action, as: :text
 
-    if defined?(Avo::Pro)
-      panel do
+      if defined?(Avo::Pro)
         sidebar do
           panel_sidebar_contents
         end
+      else
+        panel_sidebar_contents
       end
-    else
-      panel_sidebar_contents
-    end
 
-    field :audited_changes, as: :audited_changes, except_on: :index
+      field :audited_changes, as: :audited_changes, except_on: :index
+    end
   end
 
   def panel_sidebar_contents

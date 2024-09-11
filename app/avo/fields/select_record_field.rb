@@ -8,7 +8,7 @@ class Avo::Fields::SelectRecordField < Avo::Fields::BelongsToField
     target_resource.find_record value
   end
 
-  def id_input_foreign_key
-    "#{foreign_key}_id"
+  def form_field_label
+    is_searchable? ? id : super
   end
 end

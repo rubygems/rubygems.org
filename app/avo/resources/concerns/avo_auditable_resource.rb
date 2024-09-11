@@ -13,9 +13,11 @@ module Avo::Resources::Concerns::AvoAuditableResource
   module HasItemsIncludeComment
     def visible_items
       items = super
-      return items unless view.form?
+      return items unless view.form? && items.none? { |item| item.id == :comment }
 
-      items << self.items.find { |item| item.id == :comment }
+      comment = self.items.find { |item| item.id == :comment }
+      return items unless comment
+      items << comment
     end
   end
 end
