@@ -43,7 +43,8 @@ Avo::App.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new.res
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    "chromedriver.storage.googleapis.com"
+    "chromedriver.storage.googleapis.com",
+    "search" # Devcontainer OpenSearch container
   ]
 )
 WebMock.globally_stub_request(:after_local_stubs) do |request|
