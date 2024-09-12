@@ -1,12 +1,16 @@
-version: "3"
 services:
-  app:
+  rails-app:
     build:
       context: .
       dockerfile: Dockerfile
-    command: /bin/sh -c "while sleep 1000; do :; done"
+    command: sleep infinity
     volumes:
       - ../..:/workspaces:cached
-    environment:
-      - ELASTICSEARCH_URL=http://search:9200
-      - DATABASE_URL=postgres://postgres@db:5432
+    depends_on:
+      - search
+      - db
+      - selenium
+
+  selenium:
+    image: selenium/standalone-chromium
+    restart: unless-stopped
