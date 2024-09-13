@@ -264,6 +264,17 @@ uniqueness: { case_sensitive: false }
     end
   end
 
+  def unblock!
+    update!(
+      email: blocked_email,
+      blocked_email: nil
+    )
+  end
+
+  def blocked?
+    blocked_email.present?
+  end
+
   def owns_gem?(rubygem)
     rubygem.owned_by?(self)
   end
