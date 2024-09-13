@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       RUBYGEMS_VERSION: 3.5.14
-      RUBY_VERSION: 3.3.4
+      RUBY_VERSION: 3.3.5
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Set up Docker Buildx
