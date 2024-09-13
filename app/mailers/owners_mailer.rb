@@ -15,13 +15,12 @@ class OwnersMailer < ApplicationMailer
 
   def owner_updated
     @ownership = params[:ownership]
-    @authorizer = params[:authorizer]
     @user = @ownership.user
     @rubygem = @ownership.rubygem
 
     mail(
       to: @user.email,
-      subject: t("mailer.owner_updated.subject", gem: @rubygem.name, host: Gemcutter::HOST_DISPLAY, owner_handle: @authorizer.display_handle)
+      subject: t("mailer.owner_updated.subject", gem: @rubygem.name, host: Gemcutter::HOST_DISPLAY)
     )
   end
 

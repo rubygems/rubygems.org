@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OwnershipTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   should "be valid with factory" do
     assert_predicate build(:ownership), :valid?
   end
@@ -146,6 +148,12 @@ class OwnershipTest < ActiveSupport::TestCase
 
         assert_equal "rubygem:owner:updated", event.tag
         assert_equal attributes, event.additional.attributes
+      end
+
+      should "enqueue the owner updated email" do
+        assert_enqueued_emails 1 do
+          @ownership.update!(role: :maintainer)
+        end
       end
     end
   end

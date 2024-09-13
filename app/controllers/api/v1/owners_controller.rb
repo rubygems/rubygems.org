@@ -35,7 +35,6 @@ class Api::V1::OwnersController < Api::BaseController
     ownership = @rubygem.ownerships.find_by!(user: owner)
 
     if ownership.update(ownership_update_params)
-      OwnersMailer.with(ownership: ownership, authorizer: @api_key.user).owner_updated.deliver_later
       render plain: response_with_mfa_warning("Owner updated successfully.")
     else
       render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_entity

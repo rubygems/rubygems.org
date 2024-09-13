@@ -14,6 +14,7 @@ class Ownership < ApplicationRecord
   after_create :record_create_event
   after_update :record_confirmation_event, if: :saved_change_to_confirmed_at?
   after_update :record_role_updated_event, if: :saved_change_to_role?
+  after_update :notify_user_role_of_role_change, if: :saved_change_to_role?
   after_destroy :record_destroy_event
 
   scope :confirmed, -> { where.not(confirmed_at: nil) }
@@ -126,5 +127,9 @@ class Ownership < ApplicationRecord
       removed_by: Current.user&.display_handle,
       owner_gid: user.to_gid,
       actor_gid: Current.user&.to_gid)
+  end
+
+  def notify_user_role_of_role_change
+    OwnersMailer.with(ownership: self).owner_updated.deliver_later
   end
 end

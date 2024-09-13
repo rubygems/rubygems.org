@@ -11,7 +11,7 @@ class OwnersMailerTest < ActionMailer::TestCase
 
   context "#owner_updated" do
     should "include host in subject" do
-      email = OwnersMailer.with(ownership: @maintainer_ownership, authorizer: @owner).owner_updated
+      email = OwnersMailer.with(ownership: @maintainer_ownership).owner_updated
 
       assert_emails(1) { email.deliver_now }
       assert_equal email.subject, "Your role was updated for #{@rubygem.name} gem"
