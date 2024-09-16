@@ -73,7 +73,7 @@ module GitHubOAuthable
       cookies.encrypted[admin_cookie_name] = {
         value: user.id,
         expires: expires,
-        same_site: :lax
+        same_site: :strict
       }
     end
 

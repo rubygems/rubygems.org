@@ -6,7 +6,7 @@ unless Rails.env.local?
     password:             ENV['SENDGRID_PASSWORD'],
     domain:               'mailer.rubygems.org',
     authentication:       :plain,
-    enable_starttls_auto: true
+    enable_starttls:      true
   }
   ActionMailer::Base.delivery_method = :smtp
 end
