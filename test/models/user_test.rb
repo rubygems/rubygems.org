@@ -938,6 +938,18 @@ class UserTest < ActiveSupport::TestCase
     should "make the blocked email field nil" do
       assert_nil @user.blocked_email
     end
+
+    context "when the user is not currently blocked" do
+      setup do
+        @user = create(:user)
+      end
+
+      should "raise an error" do
+        assert_raises(ArgumentError) do
+          @user.unblock!
+        end
+      end
+    end
   end
 
   context "#blocked?" do

@@ -265,6 +265,8 @@ uniqueness: { case_sensitive: false }
   end
 
   def unblock!
+    raise ArgumentError, "User is not blocked" unless blocked?
+
     update!(
       email: blocked_email,
       blocked_email: nil

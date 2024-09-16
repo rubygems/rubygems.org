@@ -1,7 +1,7 @@
 class UnblockUser < BaseAction
-  self.name = "Block User"
+  self.name = "Unblock User"
   self.visible = lambda {
-    current_user.team_member?("rubygems-org") && view == :show
+    current_user.team_member?("rubygems-org") && view == :show && record.blocked?
   }
 
   self.message = lambda {
