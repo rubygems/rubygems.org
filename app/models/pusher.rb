@@ -73,7 +73,9 @@ class Pusher
   end
 
   def pull_spec
-    package = Gem::Package.new(body, gem_security_policy)
+    # ensure the body can't be treated as a file path
+    package_source = Gem::Package::IOSource.new(body)
+    package = Gem::Package.new(package_source, gem_security_policy)
     @spec = package.spec
     @files = package.files
     validate_spec && serialize_spec
@@ -84,12 +86,18 @@ class Pusher
       Ensure you are using a recent version of RubyGems to build the gem by running
       `gem update --system` and then try pushing again.
     MSG
-  rescue StandardError => e
+  rescue Gem::Exception, Psych::DisallowedClass, ArgumentError => e
     notify <<~MSG, 422
       RubyGems.org cannot process this gem.
       Please try rebuilding it and installing it locally to make sure it's valid.
       Error:
       #{e.message}
+    MSG
+  rescue StandardError
+    # Ensure arbitrary exceptions are not leaked to the client
+    notify <<~MSG, 422
+      RubyGems.org cannot process this gem.
+      Please try rebuilding it and installing it locally to make sure it's valid.
     MSG
   end
 
