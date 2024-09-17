@@ -47,5 +47,10 @@ FactoryBot.define do
       mfa_level { User.mfa_levels["ui_and_gem_signin"] }
       mfa_recovery_codes { %w[aaa bbb ccc] }
     end
+
+    trait :blocked do
+      email { "security+locked-#{SecureRandom.hex(4)}@rubygems.org" }
+      blocked_email { "test@example.com" }
+    end
   end
 end

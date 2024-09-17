@@ -264,6 +264,19 @@ uniqueness: { case_sensitive: false }
     end
   end
 
+  def unblock!
+    raise ArgumentError, "User is not blocked" unless blocked?
+
+    update!(
+      email: blocked_email,
+      blocked_email: nil
+    )
+  end
+
+  def blocked?
+    blocked_email.present?
+  end
+
   def owns_gem?(rubygem)
     rubygem.owned_by?(self)
   end

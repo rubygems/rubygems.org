@@ -924,6 +924,49 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#unblock!" do
+    setup do
+      @user = create(:user, :blocked)
+      @original_email = @user.blocked_email
+      @user.unblock!
+    end
+
+    should "restore the email field" do
+      assert_equal @original_email, @user.email
+    end
+
+    should "make the blocked email field nil" do
+      assert_nil @user.blocked_email
+    end
+
+    context "when the user is not currently blocked" do
+      setup do
+        @user = create(:user)
+      end
+
+      should "raise an error" do
+        assert_raises(ArgumentError) do
+          @user.unblock!
+        end
+      end
+    end
+  end
+
+  context "#blocked?" do
+    setup do
+      @blocked_user = build(:user, :blocked)
+      @unblocked_user = build(:user)
+    end
+
+    should "be true when the user has a blocked email" do
+      assert_predicate @blocked_user, :blocked?
+    end
+
+    should "be false when the user does not have a blocked email" do
+      refute_predicate @unblocked_user, :blocked?
+    end
+  end
+
   context ".normalize_email" do
     should "return the normalized email" do
       assert_equal "UsEr@example.COM", User.normalize_email(:"UsEr@\texample . COM")
