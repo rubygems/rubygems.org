@@ -2,6 +2,7 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   include ApiKeyable
 
   before_action :decode_jwt
+  before_action :validate_jwt_format
   before_action :find_provider
   before_action :verify_signature
   before_action :find_trusted_publisher
@@ -9,6 +10,9 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
 
   class UnsupportedIssuer < StandardError; end
   class UnverifiedJWT < StandardError; end
+  class InvalidJWT < StandardError; end
+
+  rescue_from InvalidJWT, with: :render_bad_request
 
   rescue_from(
     UnsupportedIssuer, UnverifiedJWT,
@@ -43,6 +47,15 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   rescue JSON::JWT::InvalidFormat, JSON::ParserError, ArgumentError
     # invalid base64 raises ArgumentError
     render_bad_request
+  end
+
+  def validate_jwt_format
+    %w[nbf iat exp].each do |claim|
+      raise InvalidJWT, "Missing/invalid #{claim}" unless @jwt[claim].is_a?(Integer)
+    end
+    %w[iss jti].each do |claim|
+      raise InvalidJWT, "Missing/invalid #{claim}" unless @jwt[claim].is_a?(String)
+    end
   end
 
   def find_provider
