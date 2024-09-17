@@ -1,12 +1,14 @@
 module Access
   MAINTAINER = 50
   OWNER = 70
+  ADMIN = 90
 
   DEFAULT_ROLE = "owner".freeze
 
   ROLES = {
     "maintainer" => MAINTAINER,
-    "owner" => OWNER
+    "owner" => OWNER,
+    "admin" => ADMIN
   }.with_indifferent_access.freeze
 
   def self.flag_for_role(role)

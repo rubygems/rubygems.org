@@ -66,6 +66,7 @@ zh-TW:
         password: 密碼
       ownership/role:
         owner:
+        admin:
         maintainer:
       api_key:
         oidc_api_key_role: OIDC API 金鑰角色

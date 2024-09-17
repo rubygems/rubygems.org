@@ -73,6 +73,7 @@ fr:
         password: Mot de passe
       ownership/role:
         owner:
+        admin:
         maintainer:
       api_key:
         oidc_api_key_role:

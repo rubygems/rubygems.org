@@ -72,6 +72,7 @@ en:
         password: Password
       ownership/role:
         owner: Owner
+        admin: Admin
         maintainer: Maintainer
       api_key:
         oidc_api_key_role: OIDC API Key Role
