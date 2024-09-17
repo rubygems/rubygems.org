@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+
+unless ARGV.empty?
+  puts "Usage: #{$PROGRAM_NAME}"
+  exit 1
+end
+
+require "bundler"
+require "yaml"
+
+return unless (bundler_version = Bundler.self_manager.send(:resolve_update_version_from, ">= 0")&.version)
+rubygems_version = Gem::Version.new(bundler_version.segments.tap { |s| s[0] += 1 }.join("."))
+
+def order_nodes(nodes)
+  methods = %i[start_line start_column end_line end_column]
+  nodes.sort_by { |node| methods.map { |k| node.send(k) } }.reverse
+end
+
+def find_nodes(node, path) # rubocop:disable Metrics
+  return [node] if path.empty?
+  head, *tail = path
+
+  raise "Expected to index #{path}, got #{node}" if node.scalar?
+
+  if head == "*"
+    if node.sequence?
+      return node.children.flat_map { |child| find_nodes(child, tail) }.compact
+    elsif node.mapping?
+      return node.children.each_slice(2).flat_map { |_, v| find_nodes(v, tail) }.compact
+    else
+      raise "Expected to index #{path}, got #{node}"
+    end
+  end
+
+  if node.document?
+    find_nodes(node.root, path)
+  elsif node.sequence?
+    head, expected_value = head.split("=", 2)
+    if expected_value
+      node.to_ruby.each_with_index.select { |h, _| h[head] == expected_value }.map(&:last).flat_map { |i| find_nodes(node.children[i], tail) }
+    else
+      find_nodes(node.children[head.to_i], tail)
+    end
+  elsif node.mapping?
+    node.children.each_slice(2).flat_map { |k, v| find_nodes(v, tail) if k.value == head && (!expected_value || expected_value == k.value) }.compact
+  else
+    raise "Expected to index #{path}, got #{node}"
+  end
+end
+
+def sub_yaml(file, path, value)
+  nodes = find_nodes YAML.parse_file(file), path
+  contents = File.read(file)
+  lines = contents.lines
+  order_nodes(nodes).each do |node|
+    raise "Expected single line node, got #{node}" if node.start_line != node.end_line
+    line = lines[node.start_line]
+    range = node.start_column..node.end_column.pred
+    raise "Expected range to be #{node.value.inspect}, is #{line[range].inspect}" unless YAML.load(line[range]) == node.value
+    line[range] = value
+  end
+  File.write(file, lines.join)
+end
+
+sub_yaml ".github/workflows/docker.yml", %w[jobs * env RUBYGEMS_VERSION], rubygems_version.to_s.inspect
+sub_yaml ".github/workflows/test.yml", %w[jobs * strategy matrix rubygems 0 version], rubygems_version.to_s.inspect
+
+ruby_version = File.read(".ruby-version").strip
+
+%w[Dockerfile .devcontainer/Dockerfile].each do |f|
+  File.write(f, File.read(f).sub(/(RUBY_VERSION=)[\d.]+/, "\\1#{ruby_version}"))
+end
+
+sub_yaml ".github/workflows/docker.yml", %w[jobs * env RUBY_VERSION], ruby_version.inspect
+sub_yaml ".github/workflows/test.yml", %w[jobs * strategy matrix ruby_version 0], ruby_version.inspect
+
+system("bundle", "update", "--bundler=#{bundler_version}", exception: true)
