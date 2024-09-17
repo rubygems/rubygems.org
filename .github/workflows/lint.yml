@@ -65,7 +65,22 @@ jobs:
           name: "${{ matrix.environment }}.rendered.yaml"
           path: "config/deploy/${{ matrix.environment }}.rendered.yaml"
       - name: kubeconform
-        uses: docker://ghcr.io/yannh/kubeconform:v0.6.3
+        uses: docker://ghcr.io/yannh/kubeconform@sha256:03f6b236ef64f20b4bc950209d6254b109e23b4b05e7811649f59eae5659fa58 # v0.6.3
         with:
           entrypoint: "/kubeconform"
           args: "-strict -summary -output json --kubernetes-version ${{ matrix.kubernetes_version }} config/deploy/${{ matrix.environment }}.rendered.yaml"
+  frizbee:
+    name: Frizbee
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: segiddins/frizbee-action@807363500e09f186d33b4805d25971aabaff6c1d # segiddins/run-in-place
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          actions: '[".github/workflows", ".github/actions"]'
+          dockerfiles: '["./Dockerfile", ".devcontainer/Dockerfile"]'
+          docker_compose: '["./docker-compose.yml", ".devcontainer/docker-compose.yml"]'
+          fail_on_unpinned: true
+          open_pr: false
+          in_place: true
