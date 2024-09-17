@@ -1,3 +1,5 @@
+return if Rails.env.local? # Don't enable Honeybadger in local Development & Test environments
+
 Rails.logger.silence(:error) do
   require "honeybadger"
 
@@ -7,10 +9,5 @@ Rails.logger.silence(:error) do
     end
 
     config.logger = SemanticLogger[Honeybadger]
-
-    if Rails.env.development?
-      config.report_data = false
-      config.logger.level = :error
-    end
   end
 end

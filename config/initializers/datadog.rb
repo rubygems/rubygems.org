@@ -1,5 +1,7 @@
 require "app_revision"
 
+return if Rails.env.local? # Don't enable Honeybadger in local Development & Test environments
+
 Datadog.configure do |c|
   # unified service tagging
 
@@ -9,7 +11,7 @@ Datadog.configure do |c|
 
   # Enabling datadog functionality
 
-  enabled = !Rails.env.local? && ENV["DD_AGENT_HOST"].present? && !defined?(Rails::Console)
+  enabled = ENV["DD_AGENT_HOST"].present? && !defined?(Rails::Console)
   c.runtime_metrics.enabled = enabled
   c.profiling.enabled = enabled
   c.tracing.enabled = enabled
