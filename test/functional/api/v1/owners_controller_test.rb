@@ -992,11 +992,11 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     should "schedule an email for the updated user" do
-      patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :maintainer }
+      patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :owner }
 
       ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
 
-      assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership, authorizer: @owner }
+      assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership }
     end
 
     context "when the role is invalid" do
