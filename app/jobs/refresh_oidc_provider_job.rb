@@ -4,6 +4,8 @@ class RefreshOIDCProviderJob < ApplicationJob
   ERRORS = (HTTP_ERRORS + [Faraday::Error, SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
   retry_on(*ERRORS)
 
+  class JWKSURIMismatchError < StandardError; end
+
   def perform(provider:)
     connection = Faraday.new(provider.issuer, request: { timeout: 2 }, headers: { "Accept" => "application/json" }) do |f|
       f.request :json
@@ -15,6 +17,9 @@ class RefreshOIDCProviderJob < ApplicationJob
 
     provider.configuration = resp.body
     provider.configuration.validate!
+    if provider.configuration.jwks_uri.blank? || URI.parse(provider.configuration.jwks_uri).host != URI.parse(provider.issuer).host
+      raise JWKSURIMismatchError, "Invalid JWKS URI in OpenID Connect configuration #{provider.configuration.jwks_uri.inspect}"
+    end
     provider.jwks = connection.get(provider.configuration.jwks_uri).body
 
     provider.save!
