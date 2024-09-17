@@ -11,5 +11,6 @@ Rails.autoloaders.main.ignore(Rails.root.join("lib/puma/plugin"))
 
 Rails.autoloaders.once.inflector.inflect(
   "http" => "HTTP",
-  "oidc" => "OIDC"
+  "oidc" => "OIDC",
+  "downloads_db" => "DownloadsDB"
 )
