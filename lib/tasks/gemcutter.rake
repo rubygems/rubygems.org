@@ -1,5 +1,3 @@
-require "tasks/helpers/gemcutter_tasks_helper"
-
 namespace :gemcutter do
   namespace :index do
     desc "Update the index"
@@ -23,84 +21,6 @@ namespace :gemcutter do
         cutter.process
         puts cutter.message unless cutter.code == 200
       end
-    end
-  end
-
-  namespace :checksums do
-    desc "Initialize missing checksums."
-    task init: :environment do
-      without_sha256 = Version.where(sha256: nil)
-      mod = ENV["shard"]
-      without_sha256.where("id % 4 = ?", mod.to_i) if mod
-
-      total = without_sha256.count
-      i = 0
-      without_sha256.find_each do |version|
-        GemcutterTaskshelper.recalculate_sha256!(version)
-        i += 1
-        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
-      end
-      puts
-      puts "Done."
-    end
-
-    desc "Check existing checksums."
-    task check: :environment do
-      failed = false
-      i = 0
-      total = Version.count
-      Version.find_each do |version|
-        actual_sha256 = GemcutterTaskshelper.recalculate_sha256(version.full_name)
-        if actual_sha256 && version.sha256 != actual_sha256
-          puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', " \
-               "but '#{version.sha256}' was expected."
-          failed = true
-        end
-        i += 1
-        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
-      end
-    end
-  end
-
-  namespace :metadata do
-    desc "Backfill old gem versions with metadata."
-    task backfill: :environment do
-      without_metadata = Version.where("metadata = ''")
-      mod = ENV["shard"]
-      without_metadata = without_metadata.where("id % 4 = ?", mod.to_i) if mod
-
-      total = without_metadata.count
-      i = 0
-      puts "Total: #{total}"
-      without_metadata.find_each do |version|
-        GemcutterTaskshelper.recalculate_metadata!(version)
-        i += 1
-        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
-      end
-      puts
-      puts "Done."
-    end
-  end
-
-  namespace :required_ruby_version do
-    desc "Backfill gem versions with rubygems_version."
-    task backfill: :environment do
-      ActiveRecord::Base.logger.level = 1 if Rails.env.development?
-
-      without_required_ruby_version = Version.where("created_at < '2014-03-21' and required_ruby_version is null and indexed = true")
-      mod = ENV["shard"]
-      without_required_ruby_version = without_required_ruby_version.where("id % 4 = ?", mod.to_i) if mod
-
-      total = without_required_ruby_version.count
-      i = 0
-      puts "Total: #{total}"
-      without_required_ruby_version.find_each do |version|
-        GemcutterTaskshelper.assign_required_ruby_version!(version)
-        i += 1
-        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
-      end
-      puts
-      puts "Done."
     end
   end
 
