@@ -24,7 +24,7 @@ module RubygemSearchable
           description: { type: "text", analyzer: "english", fields: { raw: { analyzer: "simple", type: "text" } } },
           suggest: { type: "completion", contexts: { name: "yanked", type: "category" } },
           yanked: { type: "boolean" },
-          downloads: { type: "integer" },
+          downloads: { type: "long" },
           updated: { type: "date" }
         }
       }
