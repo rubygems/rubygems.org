@@ -33,6 +33,7 @@ require "helpers/password_helpers"
 require "helpers/policy_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
+require "helpers/avo_helpers"
 require "webmock/minitest"
 require "phlex/testing/rails/view_helper"
 
