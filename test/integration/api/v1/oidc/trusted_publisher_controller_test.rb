@@ -49,6 +49,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       post api_v1_oidc_trusted_publisher_exchange_token_path
 
       assert_response :bad_request
+      assert_equal({ "error" => "Request is missing param 'jwt'" }, response.parsed_body)
     end
 
     should "return invalid request with integer JWT" do
