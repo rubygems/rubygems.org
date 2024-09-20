@@ -11,6 +11,8 @@ class Linkset < ApplicationRecord
       allow_nil: true,
       allow_blank: true,
       message: "does not appear to be a valid URL"
+
+    validates url, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   end
 
   def empty?

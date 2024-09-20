@@ -68,7 +68,7 @@ class User < ApplicationRecord
   has_many :organizations, through: :memberships
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
-uniqueness: { case_sensitive: false }
+    uniqueness: { case_sensitive: false }
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
@@ -78,9 +78,8 @@ uniqueness: { case_sensitive: false }
   validates :twitter_username, format: {
     with: /\A[a-zA-Z0-9_]*\z/,
     message: "can only contain letters, numbers, and underscores"
-  }, allow_nil: true
+  }, allow_nil: true, length: { within: 0..20 }
 
-  validates :twitter_username, length: { within: 0..20 }, allow_nil: true
   validates :password,
     length: { within: 10..200 },
     unpwn: true,

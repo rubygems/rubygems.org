@@ -8,11 +8,9 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   before_validation :find_github_repository_owner_id
 
-  validates :repository_owner, presence: true
-  validates :repository_name, presence: true
-  validates :workflow_filename, presence: true
-  validates :environment, presence: true, allow_nil: true
-  validates :repository_owner_id, presence: true
+  validates :repository_owner, :repository_name, :workflow_filename, :repository_owner_id,
+    presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :environment, presence: true, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   validate :unique_publisher
   validate :workflow_filename_format

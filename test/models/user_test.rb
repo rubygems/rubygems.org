@@ -17,6 +17,7 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("1abcde").for(:handle)
       should_not allow_value("abc^%def").for(:handle)
       should_not allow_value("abc\n<script>bad").for(:handle)
+      should validate_length_of(:handle).is_at_least(2).is_at_most(40)
 
       should "be between 2 and 40 characters" do
         user = build(:user, handle: "a")
@@ -162,7 +163,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context "twitter_username" do
-      should validate_length_of(:twitter_username)
+      should validate_length_of(:twitter_username).is_at_most(20)
       should allow_value("user123_32").for(:twitter_username)
       should_not allow_value("@user").for(:twitter_username)
       should_not allow_value("user 1").for(:twitter_username)
