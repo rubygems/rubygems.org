@@ -76,9 +76,6 @@ GEM
     active_link_to (1.0.5)
       actionpack
       addressable
-    active_record_extended (3.3.0)
-      activerecord (>= 5.2, < 8.0.0)
-      pg (< 3.0)
     activejob (7.2.1)
       activesupport (= 7.2.1)
       globalid (>= 0.3.6)
@@ -825,9 +822,8 @@ GEM
       bindata (~> 2.4)
       openssl (> 2.0)
       openssl-signature_algorithm (~> 1.0)
-    turbo-rails (2.0.6)
+    turbo-rails (2.0.9)
       actionpack (>= 6.0.0)
-      activejob (>= 6.0.0)
       railties (>= 6.0.0)
     turbo_power (0.6.2)
       turbo-rails (>= 1.3.0)
@@ -1017,7 +1013,6 @@ CHECKSUMS
   actiontext (7.2.1) sha256=1257a2384373188039fc35d46946e757014710361a4af4481e37b510ac7d7d79
   actionview (7.2.1) sha256=d1f8f4df2bff842a03e2a6e86275e4d73e70c654159617ad4abbe7c6b2aed4f4
   active_link_to (1.0.5) sha256=4830847b3d14589df1e9fc62038ceec015257fce975ec1c2a77836c461b139ba
-  active_record_extended (3.3.0) sha256=6e1ba9bd09faa0d90337938251c595263770b485b2dc7753b172727bb2bf0ce6
   activejob (7.2.1) sha256=eb145f5aaf8276f37b9e4e9f72f3d56b1733172b4be680e836c765f2e6a3c503
   activemodel (7.2.1) sha256=7b24e3927122b99c4623f07607a1d0f1cfd598f9dc5077e70178536dd6663348
   activerecord (7.2.1) sha256=b58a26b9337594f2639cafcc443f4d28d786289f5b5b07b810e8251eeace533c
@@ -1326,7 +1321,7 @@ CHECKSUMS
   timescaledb (0.3.0) sha256=9ce2b39417d30544054cb609fbd84e18e304c7b7952a793846b8f4489551a28f
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.12.0) sha256=e133d80cf24fef0e7a7dfad00fd6aeff01fc79875fbfc66cd8537bbd622b1e6d
-  turbo-rails (2.0.6) sha256=e5fd7b2fd11d24f202c5d33597d291767491b9938563d4edbd4a174166eba35b
+  turbo-rails (2.0.9) sha256=8d255171cf2a876c4d11c93bbe1d13ff6feee38d0b7cd2857cc10479293cea46
   turbo_power (0.6.2) sha256=c9080d0d1bb79deed67bee2a7654dd38f9c903b57ad52b98d19d000958fde2cc
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (2.6.0) sha256=12279874bba6d5e4d2728cef814b19197dbb10d7a7837a869bab65da943b7f5a
