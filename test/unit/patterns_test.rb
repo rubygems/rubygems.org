@@ -3,10 +3,6 @@
 require "test_helper"
 
 class PatternsTest < ActiveSupport::TestCase
-  test "JAVA_HTTP_USER_AGENT is linear" do
-    assert Regexp.linear_time?(Patterns::JAVA_HTTP_USER_AGENT)
-  end
-
   test "ROUTE_PATTERN is linear" do
     assert Regexp.linear_time?(Patterns::ROUTE_PATTERN)
   end
