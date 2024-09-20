@@ -45,14 +45,17 @@ RUN \
 WORKDIR /app
 
 ENV RAILS_ENV="production"
+ARG BUNDLE_WITH=""
 
 # Install application gems
 COPY Gemfile* .ruby-version /app/
-RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor <<BASH
+RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor \
+  --mount=type=secret,id=avo-packager-dev,env=BUNDLE_PACKAGER__DEV \
+  <<BASH
   set -ex
 
   bundle config set --local without 'development test'
-  bundle config set --local with 'avo'
+  bundle config set --local with ${BUNDLE_WITH:-}
   bundle config set --local path /srv/vendor
   bundle install --jobs 20 --retry 5
   bundle clean
