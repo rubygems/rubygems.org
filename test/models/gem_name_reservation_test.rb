@@ -13,6 +13,7 @@ class GemNameReservationTest < ActiveSupport::TestCase
     should_not allow_value("Abc").for(:name)
     should allow_value("abc").for(:name)
     should validate_uniqueness_of(:name).case_insensitive
+    should validate_length_of(:name).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
   end
 
   context "#reserved?" do

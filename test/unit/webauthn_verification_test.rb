@@ -8,6 +8,8 @@ class WebauthnVerificationTest < ActiveSupport::TestCase
   should validate_uniqueness_of(:user_id)
   should validate_presence_of(:path_token)
   should validate_uniqueness_of(:path_token)
+  should validate_presence_of(:path_token)
+  should validate_length_of(:path_token).is_at_most(128)
   should validate_presence_of(:path_token_expires_at)
 
   context "#expire_path_token" do
