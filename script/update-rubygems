@@ -73,5 +73,6 @@ end
 
 sub_yaml ".github/workflows/docker.yml", %w[jobs * env RUBY_VERSION], ruby_version.inspect
 sub_yaml ".github/workflows/test.yml", %w[jobs * strategy matrix ruby_version 0], ruby_version.inspect
+sub_yaml ".github/workflows/test.yml", %w[jobs * strategy matrix include * ruby_version], ruby_version.inspect
 
 system("bundle", "update", "--bundler=#{bundler_version}", exception: true)
