@@ -11,7 +11,7 @@ class Avo::Actions::UnblockUser < Avo::Actions::ApplicationAction
   self.confirm_button_label = "Unblock User"
 
   class ActionHandler < Avo::Actions::ActionHandler
-    def handle_model(user)
+    def handle_record(user)
       user.unblock!
     end
   end
