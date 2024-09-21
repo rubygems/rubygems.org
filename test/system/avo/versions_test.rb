@@ -5,31 +5,9 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
-  def sign_in_as(user)
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: "github",
-      uid: "1",
-      credentials: {
-        token: user.oauth_token,
-        expires: false
-      },
-      info: {
-        name: user.login
-      }
-    )
-
-    @ip_address = create(:ip_address, ip_address: "127.0.0.1")
-    stub_github_info_request(user.info_data)
-
-    visit avo.root_path
-    click_button "Log in with GitHub"
-
-    page.assert_text user.login
-  end
-
   test "restore a rubygem version" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     rubygem = create(:rubygem)
     version = create(:version, rubygem: rubygem)
@@ -139,7 +117,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
 
   test "run afer version write job" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     rubygem = create(:rubygem, owners: [create(:user)])
     version = create(:version, rubygem: rubygem)

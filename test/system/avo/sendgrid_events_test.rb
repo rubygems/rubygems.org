@@ -3,29 +3,9 @@ require "application_system_test_case"
 class Avo::SendgridEventsSystemTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
-  def sign_in_as(user)
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: "github",
-      uid: "1",
-      credentials: {
-        token: user.oauth_token,
-        expires: false
-      },
-      info: {
-        name: user.login
-      }
-    )
-    stub_github_info_request(user.info_data)
-
-    visit avo.root_path
-    click_button "Log in with GitHub"
-
-    page.assert_text user.login
-  end
-
   test "search for event" do
     user = FactoryBot.create(:admin_github_user, :is_admin)
-    sign_in_as(user)
+    avo_sign_in_as(user)
 
     visit avo.resources_sendgrid_events_path
 

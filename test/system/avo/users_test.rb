@@ -5,31 +5,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
-  def sign_in_as(user)
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: "github",
-      uid: "1",
-      credentials: {
-        token: user.oauth_token,
-        expires: false
-      },
-      info: {
-        name: user.login
-      }
-    )
-    @ip_address = create(:ip_address, ip_address: "127.0.0.1")
-    stub_github_info_request(user.info_data)
-
-    visit avo.root_path
-    click_button "Log in with GitHub"
-
-    page.assert_text user.login
-  end
-
   test "reset mfa" do
     Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     user = create(:user)
     user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
@@ -102,7 +81,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   test "block user" do
     Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     user = create(:user)
     user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
@@ -200,7 +179,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   test "reset api key" do
     perform_enqueued_jobs do
       admin_user = create(:admin_github_user, :is_admin)
-      sign_in_as admin_user
+      avo_sign_in_as admin_user
 
       user = create(:user)
       user_attributes = user.attributes.with_indifferent_access
@@ -267,7 +246,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   test "Yank rubygems" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
     security_user = create(:user, email: "security@rubygems.org")
 
     ownership = create(:ownership)
@@ -366,7 +345,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   test "yank user" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
     security_user = create(:user, email: "security@rubygems.org")
 
     user = create(:user)
@@ -510,7 +489,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   test "change user email" do
     perform_enqueued_jobs do
       admin_user = create(:admin_github_user, :is_admin)
-      sign_in_as admin_user
+      avo_sign_in_as admin_user
 
       user = create(:user)
       user_attributes = user.attributes.with_indifferent_access
@@ -588,7 +567,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   test "create user" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     visit avo.resources_users_path
 
