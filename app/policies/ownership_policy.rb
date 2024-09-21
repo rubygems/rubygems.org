@@ -9,8 +9,10 @@ class OwnershipPolicy < ApplicationPolicy
   end
 
   def update?
+    return deny(t("owners.update.update_current_user_role")) if current_user?(record.user)
     policy!(user, rubygem).update_owner?
   end
+  alias edit? update?
 
   def destroy?
     policy!(user, rubygem).remove_owner?

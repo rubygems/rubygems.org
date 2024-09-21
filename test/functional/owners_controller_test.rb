@@ -39,11 +39,8 @@ class OwnersControllerTest < ActionController::TestCase
           get :index, params: { rubygem_id: @rubygem.name }
         end
 
-        should respond_with :forbidden
-
-        should "render forbidden message" do
-          assert page.has_content?("Forbidden")
-        end
+        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should set_flash[:alert].to "Forbidden"
       end
     end
 
@@ -167,7 +164,8 @@ class OwnersControllerTest < ActionController::TestCase
           post :create, params: { handle: @other_user.display_id, rubygem_id: @rubygem.name }
         end
 
-        should respond_with :forbidden
+        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should set_flash[:alert].to "Forbidden"
 
         should "not add other user as owner" do
           refute_includes @rubygem.owners_including_unconfirmed, @other_user
@@ -192,6 +190,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
             end
           end
+
           should redirect_to("ownership index") { rubygem_owners_path(@rubygem.slug) }
 
           should "remove the ownership record" do
@@ -231,15 +230,10 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
             end
           end
-          should respond_with :forbidden
+          should set_flash.now[:alert].to "Can't remove the only owner of the gem"
 
           should "not remove the ownership record" do
             assert_includes @rubygem.owners_including_unconfirmed, @last_owner
-          end
-          should "should flash error" do
-            assert_equal "Can't remove the only owner of the gem", flash[:alert]
-          end
-          should "not send email notifications about owner removal" do
             assert_emails 0
           end
         end
@@ -293,7 +287,7 @@ class OwnersControllerTest < ActionController::TestCase
           delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
         end
 
-        should respond_with :forbidden
+        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
 
         should "not remove user as owner" do
           assert_includes @rubygem.owners, @last_owner
@@ -365,12 +359,25 @@ class OwnersControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@owner, @maintainer])
 
         verified_sign_in_as(@owner)
-
-        get :edit, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id }
       end
 
-      should respond_with :success
-      should render_template :edit
+      context "when editing another owner's role" do
+        setup do
+          get :edit, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id }
+        end
+
+        should respond_with :success
+        should render_template :edit
+      end
+
+      context "when editing your own role" do
+        setup do
+          get :edit, params: { rubygem_id: @rubygem.name, handle: @owner.display_id }
+        end
+
+        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should set_flash[:alert].to "Can't update your own Role"
+      end
     end
 
     context "on PATCH to update ownership" do
@@ -393,11 +400,6 @@ class OwnersControllerTest < ActionController::TestCase
         ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
 
         assert_predicate ownership, :maintainer?
-      end
-
-      should "schedule an email for the updated user" do
-        ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
-
         assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership, authorizer: @owner }
       end
     end
@@ -503,31 +505,26 @@ class OwnersControllerTest < ActionController::TestCase
       end
     end
 
-    context "on EDIT to owners" do
+    context "on GET to edit" do
       setup do
         @second_user = create(:user)
         @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
-        edit :edit, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
-
-        should redirect_to("sessions#verify") { verify_session_path }
-        should use_before_action(:redirect_to_verify)
-
-        should "show the edit form" do
-          assert_not_template :edit
-        end
+        get :edit, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
       end
+
+      should redirect_to("sessions#verify") { verify_session_path }
+      should use_before_action(:redirect_to_verify)
     end
 
-    context "on UPDATE to owners" do
+    context "on PATCH to update" do
       setup do
         @second_user = create(:user)
-        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
-        patch :update, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id, role: :owner }
-
-        should "update the ownership record" do
-          assert_equal Access::MAINTAINER, @ownership.reload.access
-        end
+        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user, role: :owner)
+        patch :update, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id, role: :maintainer }
       end
+
+      should redirect_to("sessions#verify") { verify_session_path }
+      should use_before_action(:redirect_to_verify)
     end
   end
 

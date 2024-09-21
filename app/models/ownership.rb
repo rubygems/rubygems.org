@@ -32,8 +32,8 @@ class Ownership < ApplicationRecord
       .order("rubygems.name ASC")
   end
 
-  def self.find_by_owner_handle!(handle)
-    joins(:user).find_by(users: { handle: handle }) || joins(:user).find_by!(users: { id: handle })
+  def self.find_by_owner_handle(handle)
+    joins(:user).find_by(users: { handle: handle }) || joins(:user).find_by(users: { id: handle })
   end
 
   def self.create_confirmed(rubygem, user, approver)

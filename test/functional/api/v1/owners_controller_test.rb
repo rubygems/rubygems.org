@@ -975,43 +975,65 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     setup do
       @owner = create(:user)
       @maintainer = create(:user)
-      @rubygem = create(:rubygem)
-
-      @owner_gem_ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
-      @maintainer_gem_ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+      @rubygem = create(:rubygem, owners: [@owner])
 
       @api_key = create(:api_key, key: "12223", scopes: %i[update_owner], owner: @owner, rubygem: @rubygem)
       @request.env["HTTP_AUTHORIZATION"] = "12223"
     end
 
     should "set the maintainer to a lower access level" do
+      ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, role: :owner)
+
       patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :maintainer }
 
       assert_response :success
-      assert_predicate @maintainer_gem_ownership.reload, :maintainer?
+      assert_predicate ownership.reload, :maintainer?
+      assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership }
     end
 
-    should "schedule an email for the updated user" do
-      patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :owner }
+    context "when the current user is changing their own role" do
+      should "forbid changing the role" do
+        patch :update, params: { rubygem_id: @rubygem.slug, email: @owner.email, role: :maintainer }
 
-      ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
+        ownership = @rubygem.ownerships.find_by(user: @owner)
 
-      assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership }
+        assert_response :forbidden
+        assert_predicate ownership.reload, :owner?
+      end
     end
 
     context "when the role is invalid" do
       should "return a bad request response with the error message" do
+        ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+
         patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
 
-        respond_with :bad_request
-
+        assert_response :unprocessable_entity
         assert_equal "Role is not included in the list", @response.body
+        assert_predicate ownership.reload, :maintainer?
+      end
+    end
+
+    context "when the owner is not found" do
+      context "when the update is authorized" do
+        should "return a not found response" do
+          patch :update, params: { rubygem_id: @rubygem.slug, email: "notauser", role: :owner }
+
+          assert_response :not_found
+          assert_equal "Owner could not be found.", @response.body
+        end
       end
 
-      should "not update the user with the new role" do
-        patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
+      context "when the update is not authorized" do
+        should "return a forbidden response" do
+          @api_key = create(:api_key, key: "99999", scopes: %i[push_rubygem], owner: @owner)
+          @request.env["HTTP_AUTHORIZATION"] = "99999"
 
-        assert_predicate @maintainer_gem_ownership.reload, :maintainer?
+          patch :update, params: { rubygem_id: @rubygem.slug, email: "notauser", role: :owner }
+
+          assert_response :forbidden
+          assert_equal "This API key cannot perform the specified action on this gem.", @response.body
+        end
       end
     end
   end

@@ -200,14 +200,12 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "find owner by matching handle/id" do
-      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle!(@user.handle)
-      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle!(@user)
+      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle(@user.handle)
+      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle(@user)
     end
 
-    should "raise not found" do
-      assert_raise ActiveRecord::RecordNotFound do
-        @rubygem.ownerships.find_by_owner_handle!("wrong user")
-      end
+    should "return nil" do
+      assert_nil @rubygem.ownerships.find_by_owner_handle("wronguser")
     end
   end
 
