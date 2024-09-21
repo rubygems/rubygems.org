@@ -22,7 +22,7 @@ class Ownership < ApplicationRecord
 
   enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER }, validate: true, _default: :owner
 
-  scope :user_with_minimum_role, ->(user, role) { where(user: user, role: Access.flag_for_role(role)..) }
+  scope :user_with_minimum_role, ->(user, role) { where(user: user, role: Access.with_minimum_role(role)) }
 
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")

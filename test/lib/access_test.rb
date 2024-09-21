@@ -28,4 +28,13 @@ class AccessTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context ".with_minimum_role" do
+    should "return the range of roles for a given permission flag" do
+      assert_equal Range.new(Access::OWNER, nil), Access.with_minimum_role("owner")
+      refute_includes Access.with_minimum_role("owner"), Access::MAINTAINER
+      assert_includes Access.with_minimum_role("owner"), Access::OWNER
+      assert_includes Access.with_minimum_role("owner"), Access::ADMIN
+    end
+  end
 end

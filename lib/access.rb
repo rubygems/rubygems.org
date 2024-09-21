@@ -15,6 +15,10 @@ module Access
     ROLES.fetch(role)
   end
 
+  def self.with_minimum_role(role)
+    Range.new(flag_for_role(role), nil)
+  end
+
   def self.role_for_flag(flag)
     ROLES.key(flag)&.inquiry.tap do |role|
       raise ArgumentError, "Unknown role flag: #{flag}" if role.blank?
