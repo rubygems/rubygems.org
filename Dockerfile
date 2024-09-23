@@ -71,7 +71,7 @@ RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor \
   rm /app/vendor/ruby/*/extensions/*/*/*/gem_make.out
 
   # Remove avo source maps (8+ MB!)
-  rm /app/vendor/ruby/*/gems/avo-*/public/avo-assets/*.js.map
+  find /app/vendor/ruby -type f -name '*.js.map' -exec rm {} \;
 
   # Remove ruby 2.x source code
   find /app/vendor/ruby/*/gems/debase-ruby_core_source-*/lib/debase/ruby_core_source -maxdepth 1 -type d -name 'ruby-2.*' -exec rm -r {} \;
