@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.4
+# syntax = docker/dockerfile:1.10
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
 ARG RUBY_VERSION=3.3.5
@@ -50,7 +50,7 @@ ARG BUNDLE_WITH=""
 # Install application gems
 COPY Gemfile* .ruby-version /app/
 RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor \
-  --mount=type=secret,id=avo-packager-dev,env=BUNDLE_PACKAGER__DEV \
+  --mount=type=secret,id=BUNDLE_PACKAGER__DEV,env=BUNDLE_PACKAGER__DEV \
   <<BASH
   set -ex
 
