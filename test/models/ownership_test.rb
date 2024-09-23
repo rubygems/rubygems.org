@@ -129,7 +129,7 @@ class OwnershipTest < ActiveSupport::TestCase
     context "when updating the role" do
       setup do
         @actor = create(:user)
-        @ownership = create(:ownership)
+        @ownership = create(:ownership, role: :owner)
 
         Current.user = @actor
       end
@@ -143,7 +143,9 @@ class OwnershipTest < ActiveSupport::TestCase
           "owner" => @ownership.user.display_handle,
           "updated_by" => @actor.display_handle,
           "actor_gid" => @actor.to_gid,
-          "owner_gid" => @ownership.user.to_gid
+          "owner_gid" => @ownership.user.to_gid,
+          "previous_role" => "owner",
+          "current_role" => "maintainer"
         }
 
         assert_equal "rubygem:owner:updated", event.tag

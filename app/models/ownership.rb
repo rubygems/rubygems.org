@@ -114,11 +114,13 @@ class Ownership < ApplicationRecord
   end
 
   def record_role_updated_event
-    rubygem.record_event!(Events::RubygemEvent::OWNER_UPDATED,
+    rubygem.record_event!(Events::RubygemEvent::OWNER_ROLE_UPDATED,
       owner: user.display_handle,
       updated_by: Current.user&.display_handle,
       owner_gid: user.to_gid,
-      actor_gid: Current.user&.to_gid)
+      actor_gid: Current.user&.to_gid,
+      previous_role: role_previously_was,
+      current_role: role)
   end
 
   def record_destroy_event
