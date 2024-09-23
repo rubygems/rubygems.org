@@ -120,7 +120,7 @@ class ActiveSupport::TestCase
   def requires_avo_pro
     return if Avo.configuration.license == "advanced" && defined?(Avo::Pro)
 
-    if ENV["REQUIRE_AVO_PRO"].present?
+    if ActiveRecord::Type::Boolean.new.cast(ENV["REQUIRE_AVO_PRO"])
       raise "REQUIRE_AVO_PRO is set but Avo::Pro is missing in #{Rails.env}." \
             "\nRAILS_GROUPS=#{ENV['RAILS_GROUPS'].inspect}\nAvo.license=#{Avo.license.inspect}"
     end
