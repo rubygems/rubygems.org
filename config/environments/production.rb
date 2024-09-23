@@ -1,5 +1,3 @@
-require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
-require_relative "../../lib/gemcutter/middleware/redirector"
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -22,8 +20,7 @@ Rails.application.configure do
   # key such as config/credentials/production.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
 
-  # Disable serving static files from the `/public` folder by default since
-  # Apache or NGINX already handles this.
+  # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
   config.public_file_server.headers = {
     'Cache-Control' => 'max-age=315360000, public',
@@ -36,7 +33,7 @@ Rails.application.configure do
   # Compress CSS using a preprocessor.
   config.assets.css_compressor = :sass
 
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  # Do not fall back to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
@@ -62,7 +59,6 @@ Rails.application.configure do
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
   $stdout.sync = true
-  config.log_level = :info
   config.rails_semantic_logger.format = :json
   config.rails_semantic_logger.semantic = true
   config.rails_semantic_logger.add_file_appender = false
@@ -71,13 +67,20 @@ Rails.application.configure do
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :request_id ]
 
+  # "info" includes generic and useful information about system operation, but avoids logging too much
+  # information to avoid inadvertent exposure of personally identifiable information (PII). If you
+  # want to log everything, set the level to "debug".
+  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter     = :resque
+  # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "gemcutter_production"
 
+  # Disable caching for Action Mailer templates even if Action Controller
+  # caching is enabled.
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -122,5 +125,6 @@ Rails.application.configure do
     value_max_bytes: 2_097_152 # 2MB
   }
 
+  require_relative "../../lib/gemcutter/middleware/redirector"
   config.middleware.use Gemcutter::Middleware::Redirector
 end
