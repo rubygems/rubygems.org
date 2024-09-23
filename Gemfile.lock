@@ -116,11 +116,11 @@ GEM
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.9)
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-kms (1.91.0)
-      aws-sdk-core (~> 3, >= 3.205.0)
+    aws-sdk-kms (1.92.0)
+      aws-sdk-core (~> 3, >= 3.207.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.163.0)
-      aws-sdk-core (~> 3, >= 3.205.0)
+    aws-sdk-s3 (1.164.0)
+      aws-sdk-core (~> 3, >= 3.207.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
     aws-sdk-sqs (1.84.0)
@@ -802,7 +802,7 @@ DEPENDENCIES
   amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
   avo (~> 2.53)
-  aws-sdk-s3 (~> 1.163)
+  aws-sdk-s3 (~> 1.164)
   aws-sdk-sqs (~> 1.84)
   bcrypt (~> 3.1)
   better_html (~> 2.1)
@@ -941,8 +941,8 @@ CHECKSUMS
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.977.0) sha256=fd9c6b7301b4f54bb810c1c511479700aa39167f7d9faa01bb22d1fd4b434042
   aws-sdk-core (3.207.0) sha256=45d378d8396f5c5ea25b55c5230a43acf39c619f40afdf76734638fb237406b4
-  aws-sdk-kms (1.91.0) sha256=b56d06e737541d71cec59f3c81d6ff35179da8ff63535208533c3ba99ea4d84f
-  aws-sdk-s3 (1.163.0) sha256=d46a3d67c69a73748a2e21a7d4ae7d2a6995920ae28c4ecf8b09c6829dbbcb1e
+  aws-sdk-kms (1.92.0) sha256=0819e57d70ead902ddea9ac1cbc1f114f6636f0f38454c1a9377380afe19aa5e
+  aws-sdk-s3 (1.164.0) sha256=31d578e28bc51675652db4d9dfc1b1a28745a86690ec74cd2266e48146dacdce
   aws-sdk-sqs (1.84.0) sha256=dd12f9254a493089f516b75fc2dcce9aac625123ffc370ed6efdcb276fb26e67
   aws-sigv4 (1.10.0) sha256=159b113dc93f9fa5a13603a8bd09eab54a9a0e8f98e606b47f1cee504780df9c
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
