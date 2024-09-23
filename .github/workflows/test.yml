@@ -56,6 +56,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby_version }}
           rubygems-version: ${{ matrix.rubygems.version }}
+          install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
