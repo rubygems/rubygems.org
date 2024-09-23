@@ -1,3 +1,23 @@
+GIT
+  remote: https://github.com/avo-hq/avo.git
+  revision: e8a41b1f78b6663f0b527fd81dbe2755a60df3ab
+  specs:
+    avo (3.12.0)
+      actionview (>= 6.1)
+      active_link_to
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
+      addressable
+      docile
+      inline_svg
+      literal (~> 0.2)
+      meta-tags
+      pagy (>= 7.0.0)
+      turbo-rails (>= 2.0.0)
+      turbo_power (>= 0.6.0)
+      view_component (>= 3.7.0)
+      zeitwerk (>= 2.6.12)
+
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
@@ -117,21 +137,6 @@ GEM
     attr_required (1.0.2)
     autoprefixer-rails (10.4.19.0)
       execjs (~> 2)
-    avo (3.12.0)
-      actionview (>= 6.1)
-      active_link_to
-      activerecord (>= 6.1)
-      activesupport (>= 6.1)
-      addressable
-      docile
-      inline_svg
-      literal (~> 0.2)
-      meta-tags
-      pagy (>= 7.0.0)
-      turbo-rails (>= 2.0.0)
-      turbo_power (>= 0.6.0)
-      view_component (>= 3.7.0)
-      zeitwerk (>= 2.6.12)
     avo_upgrade (0.1.1)
       rails (>= 6.0.0)
       zeitwerk
@@ -889,7 +894,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
-  avo (~> 3.12)
+  avo (~> 3.12)!
   avo-advanced (~> 3.12)!
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.167)
@@ -1028,7 +1033,7 @@ CHECKSUMS
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   autoprefixer-rails (10.4.19.0) sha256=ccd21f47e5a07a581c7d239025e0d8d06a005825e96e06f72382d818fe665f4e
-  avo (3.12.0) sha256=9e4c9ae31a6bf16cb331c0d45839c3690ebecdfaa9e232e05870d20fa8beb0ab
+  avo (3.12.0)
   avo-advanced (3.12.0) sha256=7e575506941f1d5894bcaa05002cc36ac2f72e1f0fd6e17c58e0a04931b5767f
   avo-dashboards (3.12.0) sha256=a59efa2db88274ab880ef9b44ce3d9216f4bfef9d4f865bb2929cc0335a25742
   avo-dynamic_filters (3.12.0) sha256=269c4bd90048b46ff1f36f97f851301e7b16aa953891057362501167f88779d4

@@ -62,7 +62,8 @@ gem "faraday-multipart", "~> 1.0"
 gem "timescaledb", "~> 0.3"
 
 # Admin dashboard
-gem "avo", "~> 3.12"
+# github needed until https://github.com/avo-hq/avo/pull/3215 is released
+gem "avo", "~> 3.12", github: "avo-hq/avo"
 gem "pagy", "~> 8.4"
 gem "view_component", "~> 3.14"
 gem "pundit", "~> 2.4"
