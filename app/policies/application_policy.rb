@@ -84,10 +84,6 @@ class ApplicationPolicy
     rubygem.owned_by_with_role?(user, minimum_required_role) || deny(t(:forbidden))
   end
 
-  def organization_member_with_role?(user, minimum_required_role:)
-    record.memberships.exists?(["user_id = ? AND role >= ?", user.id, minimum_required_role])
-  end
-
   def policy!(user, record) = Pundit.policy!(user, record)
   def user_policy!(record) = policy!(user, record)
 

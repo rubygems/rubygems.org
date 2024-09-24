@@ -45,4 +45,10 @@ class OrganizationPolicy < ApplicationPolicy
   def destroy?
     false # For now organizations cannot be deleted
   end
+
+  private
+
+  def organization_member_with_role?(user, minimum_required_role:)
+    record.memberships.exists?(["user_id = ? AND role >= ?", user.id, minimum_required_role])
+  end
 end
