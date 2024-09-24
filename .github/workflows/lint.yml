@@ -74,13 +74,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: segiddins/frizbee-action@850cb44d2b091a22d542a608191f477a243a647d # segiddins/run-in-place
+      - uses: segiddins/frizbee-action@c162fdaa6c73525a577d2d6eb193683dfc9ba2be # segiddins/run-in-place
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          actions: '[".github/workflows", ".github/actions"]'
+          action_paths: '[".github/workflows", ".github/actions"]'
           dockerfiles: '["./Dockerfile", ".devcontainer/Dockerfile"]'
           docker_compose: '["./docker-compose.yml", ".devcontainer/docker-compose.yml"]'
           fail_on_unpinned: true
           open_pr: false
-          in_place: true
+          repo_root: "."
