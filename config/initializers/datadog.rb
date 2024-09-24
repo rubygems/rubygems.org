@@ -1,6 +1,6 @@
 require "app_revision"
 
-return if Rails.env.local? # Don't enable Honeybadger in local Development & Test environments
+return if Rails.env.local? # Don't enable Datadog in local Development & Test environments
 
 Datadog.configure do |c|
   # unified service tagging
