@@ -29,7 +29,7 @@ ActiveSupport.on_load(:action_controller) do
       url: request.url
     }
 
-    method_and_path = [request.method, request.path].select(&:present?)
+    method_and_path = [request.method, request.path].compact_blank
     method_and_path_string = method_and_path.empty? ? ' ' : " #{method_and_path.join(' ')} "
 
     payload[:message] ||= "[#{response.status}]#{method_and_path_string}(#{payload.fetch(:controller)}##{payload.fetch(:action)})"
