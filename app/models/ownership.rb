@@ -20,7 +20,7 @@ class Ownership < ApplicationRecord
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
 
-  enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER }, validate: true, _default: :owner
+  enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER }, validate: true, default: :owner
 
   scope :user_with_minimum_role, ->(user, role) { where(user: user, role: Access.with_minimum_role(role)) }
 

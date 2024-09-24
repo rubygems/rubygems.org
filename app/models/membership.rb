@@ -5,7 +5,7 @@ class Membership < ApplicationRecord
   scope :unconfirmed, -> { where(confirmed_at: nil) }
   scope :confirmed, -> { where.not(confirmed_at: nil) }
 
-  enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER, admin: Access::ADMIN }, validate: true, _default: :maintainer
+  enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER, admin: Access::ADMIN }, validate: true, default: :maintainer
 
   def confirmed?
     !confirmed_at.nil?
