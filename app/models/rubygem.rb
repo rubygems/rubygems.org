@@ -26,6 +26,8 @@ class Rubygem < ApplicationRecord
   has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
 
+  belongs_to :organization, optional: true
+
   # needs to come last so its dependent: :destroy works, since yanking a version
   # will create an event
   include Events::Recordable
