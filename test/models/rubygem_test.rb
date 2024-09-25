@@ -15,6 +15,7 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
+    should belong_to(:organization).optional
     should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
     should allow_value("awesome42").for(:name)
