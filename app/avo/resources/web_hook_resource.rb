@@ -19,7 +19,7 @@ class WebHookResource < Avo::BaseResource
 
   field :hook_relay_stream, as: :text do
     stream_name = "webhook_id-#{model.id}"
-    link_to stream_name, "https://app.hookrelay.dev/hooks/#{ENV['HOOK_RELAY_STREAM_ID']}?started_at=P1W&stream=#{stream_name}"
+    link_to stream_name, "https://app.hookrelay.dev/hooks/#{ENV['HOOK_RELAY_HOOK_ID']}?started_at=P1W&stream=#{stream_name}"
   end
 
   field :disabled_reason, as: :text
