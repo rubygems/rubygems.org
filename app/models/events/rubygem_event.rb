@@ -59,7 +59,7 @@ class Events::RubygemEvent < ApplicationRecord
     attribute :owner_gid, :global_id
   end
 
-  OWNER_ROLE_UPDATED = define_event "rubygem:owner:updated" do
+  OWNER_ROLE_UPDATED = define_event "rubygem:owner:role_updated" do
     attribute :owner, :string
     attribute :updated_by, :string
 
