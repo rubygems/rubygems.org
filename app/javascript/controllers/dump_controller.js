@@ -2,14 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["list", "template"]
-  static values = { type: String }
 
   connect() {
-    this.getDumpData(this.typeValue);
+    this.getDumpData();
   }
 
-  getDumpData(type) {
-    fetch('https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_' + type)
+  getDumpData() {
+    fetch('https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_postgresql')
       .then(response => response.text())
       .then(data => {
         const parser = new DOMParser();
@@ -54,13 +53,10 @@ export default class extends Controller {
   }
 
   bytesToSize(bytes) {
-    var i, k, sizes;
-    if (bytes === 0) {
-      return '0 Bytes';
-    }
-    k = 1024;
-    sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    i = Math.floor(Math.log(bytes) / Math.log(k));
+    if (bytes === 0) { return '0 Bytes' }
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
     return (bytes / Math.pow(k, i)).toPrecision(3) + " " + sizes[i];
   }
 }
