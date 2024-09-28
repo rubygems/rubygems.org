@@ -697,8 +697,7 @@ fr:
     gem_members:
       authors_header: Auteurs
       self_no_mfa_warning_html:
-      not_using_mfa_warning_show:
-      not_using_mfa_warning_hide:
+      not_using_mfa_warning:
       owners_header: Propriétaires
       pushed_by:
       using_mfa_info:

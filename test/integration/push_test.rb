@@ -24,9 +24,7 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("1.0.0")
     assert page.has_content?("Pushed by")
 
-    css = %(div.gem__users a[alt=#{@user.handle}])
-
-    assert page.has_css?(css, count: 2)
+    assert_selector("div.gem__members a", text: @user.handle)
 
     assert_equal Digest::MD5.hexdigest(<<~INFO), Rubygem.find_by!(name: "sandworm").versions.sole.info_checksum
       ---

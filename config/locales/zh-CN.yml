@@ -673,8 +673,7 @@ zh-CN:
     gem_members:
       authors_header: 作者
       self_no_mfa_warning_html: 请考虑 <a href="/settings/edit">启用多因素身份验证（MFA）</a> 来保障您的帐户安全。
-      not_using_mfa_warning_show: "* 一些业主当前还没有使用多因素验证（MFA）。请点击查看完整列表。"
-      not_using_mfa_warning_hide: "* 以下业主还未使用多因素验证（MFA）。点击隐藏。"
+      not_using_mfa_warning: "* 一些业主当前还没有使用多因素验证（MFA）。"
       owners_header: 业主
       pushed_by: 推送
       using_mfa_info: "* 所有业主都已使用多因素验证（MFA）。"

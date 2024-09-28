@@ -139,6 +139,13 @@ module RubygemsHelper
     rubygem.owners.without_mfa.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
   end
 
+  def link_to_owner(owner, show_mfa_status: false)
+    link_text = avatar(32, "gravatar-#{owner.id}", owner, class: "tw-rounded-full tw-mr-1")
+    link_text << " #{owner.display_handle}"
+    link_text << " *" if show_mfa_status && owner.mfa_disabled?
+    link_to(link_text.html_safe, profile_path(owner.display_id), class: "t-link tw-flex tw-items-center")
+  end
+
   def link_to_user(user)
     link_to avatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
       alt: user.display_handle, title: user.display_handle

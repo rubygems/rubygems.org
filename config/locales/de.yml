@@ -760,8 +760,7 @@ de:
     gem_members:
       authors_header: Autoren
       self_no_mfa_warning_html:
-      not_using_mfa_warning_show:
-      not_using_mfa_warning_hide:
+      not_using_mfa_warning:
       owners_header: Besitzer
       pushed_by:
       using_mfa_info:

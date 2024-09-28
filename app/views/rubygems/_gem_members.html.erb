@@ -1,28 +1,21 @@
 <div class="gem__members">
   <% if rubygem.owners.present? %>
+    <% show_mfa_status = policy(rubygem).show_owner_mfa_status? %>
+
     <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
-    <div class="gem__users">
-      <%= links_to_owners(rubygem) %>
-    </div>
+    <ul class="tw-my-3">
+      <% rubygem.owners.sort_by(&:id).each do |owner| %>
+        <li><%= link_to_owner(owner, show_mfa_status:) %></li>
+      <% end %>
+    </ul>
 
-    <% if  rubygem.owned_by?(current_user) %>
+    <% if show_mfa_status %>
       <% if rubygem.owners.without_mfa.present? %>
-        <% if current_user.mfa_disabled? %>
-          <span class="gem__users__mfa-text mfa-warn">
-            <%= t '.self_no_mfa_warning_html' %>
-          </span>
-        <% else %>
-          <span class="gem__users__mfa-text mfa-warn"><%= t '.not_using_mfa_warning_show' %></span>
-        <% end %>
-
-        <div class="gem__users__mfa-disabled t-item--hidden">
-          <span class="gem__users__mfa-text mfa-warn t-item--hidden"><%= t '.not_using_mfa_warning_hide' %></span>
-          <div class="gem__users">
-            <%= links_to_owners_without_mfa(rubygem) %>
-          </div>
-        </div>
+        <span class="tw-my-2 gem__users__mfa-text mfa-warn">
+          <%= current_user.mfa_disabled? ? t(".self_no_mfa_warning_html") : t(".not_using_mfa_warning") %>
+        </span>
       <% else %>
-          <span class="gem__users__mfa-text mfa-info"><%= t '.using_mfa_info' %></span>
+        <span class="gem__users__mfa-text mfa-info"><%= t '.using_mfa_info' %></span>
       <% end %>
     <% end %>
   <% end %>

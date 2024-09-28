@@ -667,8 +667,7 @@ zh-TW:
     gem_members:
       authors_header: 作者
       self_no_mfa_warning_html:
-      not_using_mfa_warning_show: "* 某些擁有者未使用多重要素驗證 (MFA)。點擊此處以顯示完整名單。"
-      not_using_mfa_warning_hide: "* 下列擁有者未使用多重要素驗證 (MFA)。點擊此處以隱藏。"
+      not_using_mfa_warning: "* 某些擁有者未使用多重要素驗證 (MFA)。"
       owners_header: 擁有者
       pushed_by: 推送者
       using_mfa_info: "* 擁有者皆使用多重要素驗證 (MFA)。"

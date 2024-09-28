@@ -42,9 +42,7 @@ class YankTest < SystemTest
 
     assert page.has_content?("Yanked by")
 
-    css = %(div.gem__users a[alt=#{@user.handle}])
-
-    assert page.has_css?(css, count: 3)
+    assert_selector("div.gem__members a", text: @user.handle)
 
     assert_event Events::RubygemEvent::VERSION_YANKED, {
       number: "2.2.2",
