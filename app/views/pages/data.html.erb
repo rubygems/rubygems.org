@@ -3,8 +3,16 @@
 <div class="t-body" id="data-dump">
   <p>We provide weekly dumps of the RubyGems.org PostgreSQL data. This dump is sanitized, removing all user information.</p>
   <p>The <a href="https://github.com/rubygems/rubygems.org/tree/master/script/load-pg-dump">load-pg-dump</a> script is
-     available as an example of how to to download and load the most recent weekly dump.</p>
-  <ul class="rubygems-dump-listing-postgresql"></ul>
+    available as an example of how to to download and load the most recent weekly dump.</p>
+  <ul data-controller="dump" data-dump-type-value="postgresql">
+    <template data-dump-target="template">
+      <li><a href="#"></a></li>
+    </template>
+  </ul>
   <p>We also provide weekly dumps of the historial RubyGems.org Redis data. (We do not use redis anymore but these are here for historical purposes.)</p>
-  <ul class="rubygems-dump-listing-redis"></ul>
+  <ul data-controller="dump" data-dump-type-value="redis">
+    <template data-dump-target="template">
+      <li><a href="#"></a></li>
+    </template>
+  </ul>
 </div>
