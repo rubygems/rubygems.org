@@ -61,8 +61,8 @@ class StatsControllerTest < ActionController::TestCase
       assert page.has_selector?(".stats__graph__gem__meter")
 
       page.find_all(".stats__graph__gem__meter").each do |element|
-        assert element["data-bar-width"]
-        width = element["data-bar-width"].to_f
+        assert element["data-stats-width-value"]
+        width = element["data-stats-width-value"].to_f
 
         assert_operator width, :<=, 100, "#{width} is greater than 100"
       end
