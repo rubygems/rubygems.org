@@ -15,7 +15,7 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
 
     return if not_configured
 
-    div(class: "t-body") do
+    div(class: "t-body", data: { controller: "clipboard", clipboard_success_content_value: "✔" }) do
       p do
         t(".configured_for_html", link_html:
           single_gem_role? ? helpers.link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
@@ -30,12 +30,14 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
 
       header(class: "gem__code__header") do
         h3(class: "t-list__heading l-mb-0") { code { ".github/workflows/push_gem.yml" } }
-        button(class: "gem__code__icon", data: { "clipboard-target": "#workflow_yaml" }) { "=" }
-        span(class: "gem__code__tooltip--copy") { t("copy_to_clipboard") }
-        span(class: "gem__code__tooltip--copied") { t("copied") }
+        button(
+          class: "gem__code__icon",
+          title: t("copy_to_clipboard"),
+          data: { action: "click->clipboard#copy", clipboard_target: "button" }
+        ) { "=" }
       end
       pre(class: "gem__code multiline") do
-        code(class: "multiline", id: "workflow_yaml") do
+        code(class: "multiline", id: "workflow_yaml", data: { clipboard_target: "source" }) do
           plain workflow_yaml
         end
       end

@@ -182,8 +182,9 @@ class ActiveSupport::TestCase
     fill_in "Nickname", with: credential_nickname
     click_on "Register device"
 
-    click_on "[ copy ]"
-    @mfa_recovery_codes = find_all(:css, ".recovery-code-list__item").map(&:text)
+    click_on "Copy to clipboard"
+    @mfa_recovery_codes = find(:css, ".recovery-code-list").value.split
+
     check "ack"
     click_on "Continue"
 

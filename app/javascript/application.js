@@ -7,8 +7,6 @@ LocalTime.start()
 
 import "controllers"
 
-import "src/clipboard_buttons";
-import "src/multifactor_auths";
 import "src/oidc_api_key_role_form";
 import "src/pages";
 import "src/search";

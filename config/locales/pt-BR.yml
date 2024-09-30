@@ -1,8 +1,8 @@
 ---
 pt-BR:
   credentials_required:
-  copied:
-  copy_to_clipboard:
+  copied: Copiado
+  copy_to_clipboard: Copiar
   edit: Editar
   verification_expired:
   feed_latest: RubyGems.org | Últimas Gems
@@ -469,11 +469,10 @@ pt-BR:
       mfa_recommended_not_yet_enabled:
       mfa_recommended_weak_level_enabled:
     recovery:
-      copied:
       continue:
       title:
-      copy:
       saved:
+      confirm_dialog:
       note_html:
       already_generated:
     update:
@@ -824,8 +823,6 @@ pt-BR:
       continue:
       title:
       notice_html:
-      copied:
-      copy:
       saved:
     webauthn_credential:
       confirm_delete:

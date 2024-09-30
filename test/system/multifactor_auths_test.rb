@@ -35,7 +35,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
       register_otp_device
 
       assert page.has_content? "Recovery codes"
-      click_link "[ copy ]"
+      click_link "Copy to clipboard"
       check "ack"
       click_button "Continue"
 
@@ -174,7 +174,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     register_otp_device
 
     assert page.has_content? "Recovery codes"
-    click_link "[ copy ]"
+    click_link "Copy to clipboard"
     check "ack"
     click_button "Continue"
     yield if block_given?

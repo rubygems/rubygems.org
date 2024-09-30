@@ -40,7 +40,7 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert page.has_content? "Recovery codes"
 
-    click_link "[ copy ]"
+    click_link "Copy to clipboard"
     check "ack"
     click_button "Continue"
 
@@ -101,9 +101,9 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert page.has_content? "Recovery codes"
 
-    recoveries = page.find_by_id("recovery-code-list").text.split
+    recoveries = page.find(:css, ".recovery-code-list").value.split
 
-    click_link "[ copy ]"
+    click_link "Copy to clipboard"
     check "ack"
     click_button "Continue"
     page.fill_in "otp", with: recoveries.sample
