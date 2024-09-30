@@ -106,8 +106,8 @@ class ProfilesControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "render user delete page" do
-        assert page.has_text? "Delete profile"
-        assert page.has_selector? "input[type=password][autocomplete=current-password]"
+        assert_text "Delete profile"
+        assert_selector "input[type=password][autocomplete=current-password]"
       end
     end
 

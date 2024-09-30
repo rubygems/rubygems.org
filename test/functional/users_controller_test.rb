@@ -11,8 +11,8 @@ class UsersControllerTest < ActionController::TestCase
     should render_template(:new)
 
     should "render the new user form" do
-      assert page.has_text? "Sign up"
-      assert page.has_selector? "input[type=password][autocomplete=new-password]"
+      assert_text "Sign up"
+      assert_selector "input[type=password][autocomplete=new-password]"
     end
 
     context "when logged in" do
