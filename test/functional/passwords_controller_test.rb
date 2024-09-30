@@ -58,8 +58,8 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should "display edit form" do
-          assert page.has_text?("Reset password")
-          assert page.has_selector?("input[type=password][autocomplete=new-password]")
+          assert_text "Reset password"
+          assert_selector "input[type=password][autocomplete=new-password]"
         end
 
         should "instruct the browser not to send referrer that contains the token" do
@@ -85,8 +85,8 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should "display edit form" do
-          assert page.has_text?("Reset password")
-          assert page.has_selector?("input[type=password][autocomplete=new-password]")
+          assert_text "Reset password"
+          assert_selector "input[type=password][autocomplete=new-password]"
         end
 
         should "instruct the browser not to send referrer that contains the token" do
@@ -113,8 +113,8 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should "display edit form" do
-          assert page.has_text?("Reset password")
-          assert page.has_selector?("input[type=password][autocomplete=new-password]")
+          assert_text "Reset password"
+          assert_selector "input[type=password][autocomplete=new-password]"
         end
 
         should "instruct the browser not to send referrer that contains the token" do
@@ -250,7 +250,7 @@ class PasswordsControllerTest < ActionController::TestCase
         end
 
         should "display edit form" do
-          assert page.has_text?("Reset password")
+          assert_text "Reset password"
         end
 
         should "clear mfa_expires_at" do
@@ -334,7 +334,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should "display edit form" do
-        assert page.has_text?("Reset password")
+        assert_text "Reset password"
       end
 
       should "clear mfa_expires_at" do

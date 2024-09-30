@@ -219,6 +219,22 @@ class ActionController::TestCase
     session[:verification] = 10.minutes.from_now
     session[:verified_user] = user.id
   end
+
+  def assert_text(text, context = page)
+    assert context.has_content?(text), "page is missing content #{text}"
+  end
+
+  def refute_text(text)
+    refute page.has_content?(text), "page has unexpected content #{text}"
+  end
+
+  def assert_selector(selector)
+    assert page.has_selector?(selector), "page is missing selector #{selector}"
+  end
+
+  def refute_selector(selector)
+    refute page.has_selector?(selector), "page has unexpected selector #{selector}"
+  end
 end
 
 class ActionDispatch::IntegrationTest
