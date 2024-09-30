@@ -250,6 +250,8 @@ GEM
       multipart-post (~> 2)
     faraday-net_http (3.3.0)
       net-http
+    faraday-restrict-ip-addresses (0.3.0)
+      faraday (> 1.0, < 3.0)
     faraday-retry (2.2.1)
       faraday (~> 2.0)
     faraday_middleware-aws-sigv4 (1.0.1)
@@ -869,6 +871,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.4)
   faraday (~> 2.12)
   faraday-multipart (~> 1.0)
+  faraday-restrict-ip-addresses (~> 0.3.0)
   faraday-retry (~> 2.2)
   faraday_middleware-aws-sigv4 (~> 1.0)
   gem_server_conformance (~> 0.1.4)
@@ -1045,6 +1048,7 @@ CHECKSUMS
   faraday-follow_redirects (0.3.0) sha256=d92d975635e2c7fe525dd494fcd4b9bb7f0a4a0ec0d5f4c15c729530fdb807f9
   faraday-multipart (1.0.4) sha256=9012021ab57790f7d712f590b48d5f948b19b43cfa11ca83e6459f06090b0725
   faraday-net_http (3.3.0) sha256=93e6b0f679b1e8e358bcb4e983a52328dfc47ebbe6a232e4f9e8aba9c924e565
+  faraday-restrict-ip-addresses (0.3.0) sha256=2db7f6da6f59fa73a9d4ffe96b2b46a4b2b2c4d177e44a1962c1921d32ec7279
   faraday-retry (2.2.1) sha256=4146fed14549c0580bf14591fca419a40717de0dd24f267a8ec2d9a728677608
   faraday_middleware-aws-sigv4 (1.0.1) sha256=a001ea4f687ca1c60bad8f2a627196905ce3dbf285e461dc153240e92eaabe8f
   ffi (1.17.0) sha256=51630e43425078311c056ca75f961bb3bda1641ab36e44ad4c455e0b0e4a231c

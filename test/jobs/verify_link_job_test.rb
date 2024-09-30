@@ -199,4 +199,16 @@ class VerifyLinkJobTest < ActiveJob::TestCase
     assert_equal 1, @docs.failures_since_last_verification
     assert_enqueued_jobs 0, only: VerifyLinkJob
   end
+
+  test "does not retry link verification for localhost link" do
+    @home.update!(uri: "https://localhost")
+    freeze_time
+
+    VerifyLinkJob.perform_now(link_verification: @home)
+
+    refute_predicate @home.reload, :verified?
+    assert_nil @home.last_verified_at
+    assert_equal 1, @home.failures_since_last_verification
+    assert_enqueued_jobs 0, only: VerifyLinkJob
+  end
 end
