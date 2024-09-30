@@ -25,7 +25,7 @@ Rails.application.configure do
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :mem_cache_store,
-                         { compress: true, compression_min_size: 524_288 }
+                         { compress: true, compression_min_size: 524_288, serializer: :json }
     config.public_file_server.headers = {
       "Cache-Control" => "public, max-age=#{2.days.to_i}"
     }
