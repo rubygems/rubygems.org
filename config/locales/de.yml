@@ -537,11 +537,10 @@ de:
       mfa_recommended_not_yet_enabled:
       mfa_recommended_weak_level_enabled:
     recovery:
-      copied: "[ kopiert ]"
       continue: Weiter
       title: Wiederherstellungscodes
-      copy: "[ kopieren ]"
       saved: Ich bestätige, dass ich meine Wiederherstellungscodes gespeichert habe.
+      confirm_dialog:
       note_html: Bitte <strong class='recovery__bold'>kopieren und speichern</strong>
         Sie diese Wiederherstellungscodes. Sie können diese Codes verwenden, um sich
         anzumelden und Ihre MFA zurückzusetzen, wenn Sie Ihr Authentifizierungsgerät
@@ -896,8 +895,6 @@ de:
       continue:
       title:
       notice_html:
-      copied:
-      copy:
       saved:
     webauthn_credential:
       confirm_delete:

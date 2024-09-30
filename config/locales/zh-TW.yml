@@ -457,11 +457,10 @@ zh-TW:
       mfa_recommended_not_yet_enabled:
       mfa_recommended_weak_level_enabled:
     recovery:
-      copied: "[ 已複製 ]"
       continue: 繼續
       title: 復原碼
-      copy: "[ 複製 ]"
       saved:
+      confirm_dialog:
       note_html:
       already_generated:
     update:
@@ -806,8 +805,6 @@ zh-TW:
       continue: 繼續
       title: 您已成功新增安全裝置
       notice_html:
-      copied: "[ 已複製 ]"
-      copy: "[ 複製 ]"
       saved:
     webauthn_credential:
       confirm_delete: 已刪除認證

@@ -187,35 +187,6 @@
 .gem__code__icon.static {
   position: static; }
 
-.gem__code__tooltip--copy,
-.gem__code__tooltip--copied {
-  display: none; }
-
-.clipboard-is-hover,
-.clipboard-is-active {
-  display: block;
-  position: absolute;
-  top: 45px;
-  right: 0;
-  width: auto;
-  padding-left: 10px;
-  padding-right: 10px;
-  z-index: 1;
-  border-radius: 6px;
-  background-color: #141c22;
-  text-transform: none;
-  line-height: 30px;
-  text-align: center;
-  color: #ffffff; }
-  .clipboard-is-hover:before,
-  .clipboard-is-active:before {
-    content: "";
-    position: absolute;
-    top: -15px;
-    right: 8px;
-    border: 8px solid transparent;
-    border-bottom: 8px solid #141c22; }
-
 .gem__link:before {
   margin-right: 16px; }
 

@@ -522,11 +522,10 @@ es:
       mfa_recommended_not_yet_enabled:
       mfa_recommended_weak_level_enabled:
     recovery:
-      copied: "[ copiado ]"
       continue: Continuar
       title: Códigos de recuperación
-      copy: "[ copiar ]"
       saved: Declaro haber guardado mis códigos de recuperación.
+      confirm_dialog:
       note_html: Por favor <strong class='recovery__bold'>copia y guarda</strong>
         estos códigos de recuperación. Puedes usar estos códigos para acceder y restablecer
         tu autenticación de múltiples factores si pierdes tu dispositivo. Cada código
@@ -939,8 +938,6 @@ es:
         estos códigos de recuperación. Puedes utilizar estos códigos para acceder
         si pierdes tu dispositivo de seguridad. Cada código solo se puede usar una
         vez.
-      copied: "[ copiado ]"
-      copy: "[ copiar ]"
       saved: Declaro haber guardado mis códigos de recuperación.
     webauthn_credential:
       confirm_delete: Credencial borrada

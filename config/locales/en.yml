@@ -463,11 +463,10 @@ en:
         [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit.
         Your account will be required to have MFA enabled on one of these levels in the future.
     recovery:
-      copied: "[ copied ]"
       continue: Continue
       title: Recovery codes
-      copy: "[ copy ]"
       saved: I acknowledge that I have saved my recovery codes.
+      confirm_dialog: Leave without copying recovery codes?
       note_html: "Please <strong class='recovery__bold'>copy and save</strong> these recovery codes. You can use these codes to login and reset your MFA if your lose your authentication device. Each code can be used once."
       already_generated: You should have already saved your recovery codes.
     update:
@@ -809,8 +808,6 @@ en:
       continue: Continue
       title: You have successfully added a security device
       notice_html: 'Please <strong class="recovery__bold">copy and paste</strong> these recovery codes. You can use these codes to login if you lose your security device. Each code can be used once.'
-      copied: "[ copied ]"
-      copy: "[ copy ]"
       saved: I acknowledge that I have saved my recovery codes.
     webauthn_credential:
       confirm_delete: "Credential deleted"
