@@ -9,7 +9,6 @@ import "controllers"
 
 import "src/oidc_api_key_role_form";
 import "src/pages";
-import "src/search";
 import "src/transitive_dependencies";
 import "src/webauthn";
 import "github-buttons";
