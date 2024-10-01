@@ -63,9 +63,9 @@ gem "timescaledb", "~> 0.3"
 
 # Admin dashboard
 # github needed until https://github.com/avo-hq/avo/pull/3215 is released
-gem "avo", "~> 3.12", github: "avo-hq/avo"
+gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 3.14"
+gem "view_component", "~> 3.14.0"
 gem "pundit", "~> 2.4"
 gem "chartkick", "~> 5.1"
 gem "groupdate", "~> 6.5"
@@ -73,7 +73,7 @@ gem "dry-initializer", "~> 3.1"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.12"
+    gem "avo-advanced", "~> 3.13"
   end
 end
 
