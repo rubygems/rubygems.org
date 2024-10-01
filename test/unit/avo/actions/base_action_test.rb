@@ -1,24 +1,24 @@
 require "test_helper"
 
 class BaseActionTest < ActiveSupport::TestCase
-  class DestroyerAction < BaseAction
-    class ActionHandler < ActionHandler
-      def handle_model(model)
+  class DestroyerAction < Avo::Actions::ApplicationAction
+    class ActionHandler < Avo::Actions::ActionHandler
+      def handle_record(model)
         model.destroy!
       end
     end
   end
 
-  class EmptyAction < BaseAction
-    class ActionHandler < ActionHandler
-      def handle_model(model)
+  class EmptyAction < Avo::Actions::ApplicationAction
+    class ActionHandler < Avo::Actions::ActionHandler
+      def handle_record(model)
       end
     end
   end
 
-  class WebHookCreateAction < BaseAction
-    class ActionHandler < BaseAction::ActionHandler
-      def handle_model(user)
+  class WebHookCreateAction < Avo::Actions::ApplicationAction
+    class ActionHandler < Avo::Actions::ActionHandler
+      def handle_record(user)
         user.web_hooks.create(url: "https://example.com/path")
       end
     end
@@ -31,8 +31,7 @@ class BaseActionTest < ActiveSupport::TestCase
     @avo = mock
     @view_context.stubs(:avo).returns(@avo)
     @avo.stubs(:resources_audit_path).returns("resources_audit_path")
-
-    ::Avo::App.init request: nil, context: nil, current_user: nil, view_context: @view_context, params: {}
+    Avo::Current.stubs(:view_context).returns(@view_context)
   end
 
   test "handles errors" do
@@ -41,7 +40,7 @@ class BaseActionTest < ActiveSupport::TestCase
         raise "Cannot enumerate"
       end
     end.new
-    action = BaseAction.new
+    action = EmptyAction.new
 
     args = {
       fields: {
@@ -49,13 +48,14 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: create(:admin_github_user, :is_admin),
       resource: nil,
-      models: raises_on_each
+      records: raises_on_each,
+      query: nil
     }
 
     action.handle(**args)
 
     assert_equal [{ type: :error, body: "Cannot enumerate" }], action.response[:messages]
-    assert action.response[:keep_modal_open]
+    assert_equal :keep_modal_open, action.response[:type]
   end
 
   test "tracks deletions" do
@@ -69,7 +69,8 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: admin,
       resource: nil,
-      models: [webhook]
+      records: [webhook],
+      query: nil
     }
 
     action.handle(**args)
@@ -115,7 +116,8 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: admin,
       resource: nil,
-      models: [user]
+      records: [user],
+      query: nil
     }
 
     action.handle(**args)
@@ -152,7 +154,8 @@ class BaseActionTest < ActiveSupport::TestCase
       },
       current_user: admin,
       resource: nil,
-      models: [user]
+      records: [user],
+      query: nil
     }
 
     action.handle(**args)

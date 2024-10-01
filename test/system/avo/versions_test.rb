@@ -125,7 +125,6 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
     visit avo.resources_version_path(version)
 
     click_button "Actions"
-
     click_on "Run version post-write job"
 
     fill_in "Comment", with: "A nice long comment"

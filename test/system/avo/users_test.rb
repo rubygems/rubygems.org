@@ -607,7 +607,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
         },
         "fields" => { "email" => "gem-user-001@example.com" },
         "arguments" => {},
-        "models" => nil
+        "models" => []
       },
       audit.audited_changes
     )

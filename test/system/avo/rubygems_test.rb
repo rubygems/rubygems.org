@@ -228,6 +228,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
   end
 
   test "add owner" do
+    requires_avo_pro # for search
+
     admin_user = create(:admin_github_user, :is_admin)
     avo_sign_in_as admin_user
 
@@ -248,7 +250,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     page.assert_text "Must supply a sufficiently detailed comment"
 
     fill_in "Comment", with: "A nice long comment"
-    find_field("New owner").click
+    find_field("New owner").click(delay: 0.05)
+    find("form[role='search'] input").click
     send_keys new_owner.email
     find("li", text: new_owner.handle).click
 

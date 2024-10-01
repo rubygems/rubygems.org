@@ -1,5 +1,8 @@
-class ChangeUserEmail < BaseAction
-  field :from_email, name: "Email", as: :text, required: true
+class Avo::Actions::ChangeUserEmail < Avo::Actions::ApplicationAction
+  def fields
+    field :from_email, name: "Email", as: :text, required: true
+    super
+  end
 
   self.name = "Change User Email"
   self.visible = lambda {
@@ -8,8 +11,8 @@ class ChangeUserEmail < BaseAction
 
   self.confirm_button_label = "Change User Email"
 
-  class ActionHandler < ActionHandler
-    def handle_model(user)
+  class ActionHandler < Avo::Actions::ActionHandler
+    def handle_record(user)
       user.email = fields["from_email"]
       user.email_confirmed = false
       user.generate_confirmation_token
