@@ -67,7 +67,7 @@ gem "pagy", "~> 8.4"
 gem "view_component", "~> 3.14"
 gem "pundit", "~> 2.4"
 gem "chartkick", "~> 5.1"
-gem "groupdate", "~> 6.2"
+gem "groupdate", "~> 6.5"
 
 # Logging
 gem "amazing_print", "~> 1.6"
