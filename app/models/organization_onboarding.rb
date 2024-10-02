@@ -5,6 +5,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   validates :created_by, presence: true
   validate :user_gem_ownerships
+  validate :check_user_roles
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
@@ -40,6 +41,12 @@ class OrganizationOnboarding < ApplicationRecord
       name: title,
       handle: slug
     )
+  end
+
+  def check_user_roles
+    invitees.each do |user_id, role|
+      errors.add(:invitees, "Invalid Role '#{role}' for User #{user_id}") unless Access::ROLES.key?(role)
+    end
   end
 
   def user_gem_ownerships

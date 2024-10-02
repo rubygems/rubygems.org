@@ -5,8 +5,8 @@ class CreateOrganizationOnboardings < ActiveRecord::Migration[7.1]
       t.string :title, null: false
       t.string :slug, null: false
       t.text :error, null: true
-      t.integer :invites, array: true, default: []
-      t.integer :rubygems, array: true, default: []
+      t.jsonb :invitees, default: [], null: true
+      t.integer :rubygems, array: true, default: [], null: true
       t.datetime :onboarded_at, null: true
       t.integer :onboarded_by, null: true
       t.integer :created_by, null: false

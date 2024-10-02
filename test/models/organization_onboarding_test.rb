@@ -19,6 +19,17 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_equal ["can't be blank"], @onboarding.errors[:created_by]
     end
 
+    context "when onbaording a user with an invalid role" do
+      setup do
+        @onboarding.invitees = { @user.id => "invalid" }
+      end
+
+      should "raise an error" do
+        assert_predicate @onboarding, :invalid?
+        assert_equal ["Invalid Role 'invalid' for User #{@user.id}"], @onboarding.errors[:invitees]
+      end
+    end
+
     context "when the user does not have the required gem roles" do
       setup do
         @rubygem = create(:rubygem)
@@ -69,6 +80,9 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_equal @onboarding.title, @onboarding.organization.name
       assert_equal @onboarding.slug, @onboarding.organization.handle
     end
+
+    # should "create a membership for the onboarded users" do
+    # end
 
     context "when onboarding encounters an error" do
       setup do

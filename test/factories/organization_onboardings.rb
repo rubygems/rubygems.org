@@ -7,7 +7,12 @@ FactoryBot.define do
     title { "Rubygems" }
     slug { "rubygems" }
 
-    invites { [1, 2, 3] }
+    invitees do
+      {
+        ownership.user_id => "owner"
+      }
+    end
+
     rubygems do
       [
         ownership.rubygem_id
