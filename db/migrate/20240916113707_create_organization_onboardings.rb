@@ -10,6 +10,7 @@ class CreateOrganizationOnboardings < ActiveRecord::Migration[7.1]
       t.datetime :onboarded_at, null: true
       t.integer :onboarded_by, null: true
       t.integer :created_by, null: false
+      t.integer :onboarded_organization_id, null: true
       t.timestamps
     end
   end

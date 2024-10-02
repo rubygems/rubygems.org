@@ -33,7 +33,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       should "add an error to the rubygems attribute" do
         @onboarding.valid?
 
-        assert_equal ["User does not own gem #{@rubygem.name}"], @onboarding.errors[:rubygems]
+        assert_equal ["User does not have owner permissions for gem: #{@rubygem.name}"], @onboarding.errors[:rubygems]
       end
     end
 
@@ -50,7 +50,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       should "add an error to the rubygems attribute" do
         @onboarding.valid?
 
-        assert_equal ["User does not have owner permissions for gem: #{@rubygem.id}"], @onboarding.errors[:rubygems]
+        assert_equal ["User does not own gem: #{@rubygem.id}"], @onboarding.errors[:rubygems]
       end
     end
   end
@@ -64,22 +64,34 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_predicate @onboarding, :completed?
     end
 
-    # context "when onboarding encounters an error" do
-    #   should "mark the onboarding as failed" do
-    #     assert_predicate @onboarding, :failed?
-    #   end
+    should "create an organization with the specified title and slug" do
+      assert_not_nil @onboarding.organization
+      assert_equal @onboarding.title, @onboarding.organization.name
+      assert_equal @onboarding.slug, @onboarding.organization.handle
+    end
 
-    #   should "record the error message" do
-    #     assert_equal "actor id error", @onboarding.error
-    #   end
-    # end
+    context "when onboarding encounters an error" do
+      setup do
+        @onboarding = create(:organization_onboarding)
+        @onboarding.stubs(:create_organization!).raises(ActiveRecord::ActiveRecordError, "stubbed error")
+        @onboarding.onboard!
+      end
+
+      should "mark the onboarding as failed" do
+        assert_predicate @onboarding, :failed?
+      end
+
+      should "record the error message" do
+        assert_equal "stubbed error", @onboarding.error
+      end
+    end
 
     context "when the onboarding is already completed" do
       setup do
         @onboarding = create(:organization_onboarding, :completed)
       end
 
-      should "raise an ActiveRecord::RecordInvalid error" do
+      should "raise an error" do
         assert_raises StandardError, "onboard has already been completed" do
           @onboarding.onboard!
         end
