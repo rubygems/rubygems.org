@@ -47,7 +47,8 @@ class OrganizationOnboarding < ApplicationRecord
     Organization.create!(
       name: title,
       handle: slug,
-      memberships: memberships
+      memberships: memberships,
+      teams: [build_team]
     )
   end
 
@@ -64,6 +65,23 @@ class OrganizationOnboarding < ApplicationRecord
       role: :owner,
       confirmed_at: Time.zone.now
     )
+  end
+
+  def build_team
+    Team.build(
+      name: "Default",
+      slug: "default",
+      team_members: build_team_members
+    )
+  end
+
+  def build_team_members
+    users = invitees.keys + [created_by]
+    users.map do |user_id|
+      TeamMember.build(
+        user_id: user_id
+      )
+    end
   end
 
   def check_user_roles
