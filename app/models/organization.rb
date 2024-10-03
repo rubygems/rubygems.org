@@ -17,7 +17,6 @@ class Organization < ApplicationRecord
   has_many :users, through: :memberships
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
 
-  scope :not_deleted, -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
 
   after_create do

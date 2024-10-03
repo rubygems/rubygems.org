@@ -2,11 +2,11 @@ require "test_helper"
 
 class OrganizationOnboardingTest < ActiveSupport::TestCase
   setup do
-    @user = create(:user)
-    @organization = create(:organization)
-    @membership = create(:membership)
+    @owner = create(:user)
+    @maintainer = create(:user)
+    @rubygem = create(:rubygem, owners: [@owner], maintainers: [@maintainer])
 
-    @onboarding = create(:organization_onboarding)
+    @onboarding = create(:organization_onboarding, created_by: @owner.id, invitees: { @maintainer.id => "maintainer" }, rubygems: [@rubygem.id])
   end
 
   context "validations" do
@@ -21,20 +21,20 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when onbaording a user with an invalid role" do
       setup do
-        @onboarding.invitees = { @user.id => "invalid" }
+        @onboarding.invitees = { @maintainer.id => "invalid" }
       end
 
       should "raise an error" do
         assert_predicate @onboarding, :invalid?
-        assert_equal ["Invalid Role 'invalid' for User #{@user.id}"], @onboarding.errors[:invitees]
+        assert_equal ["Invalid Role 'invalid' for User #{@maintainer.id}"], @onboarding.errors[:invitees]
       end
     end
 
     context "when the user does not have the required gem roles" do
       setup do
-        @rubygem = create(:rubygem)
-        @ownership = create(:ownership, rubygem: @rubygem, role: :maintainer)
-        @onboarding = build(:organization_onboarding, ownership: @ownership, rubygems: [@rubygem.id])
+        @onboarding.rubygems = [@rubygem.id]
+        @onboarding.created_by = @maintainer.id
+        @onboarding.invitees = { @owner.id => "owner" }
       end
 
       should "be invalid" do
@@ -81,12 +81,23 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_equal @onboarding.slug, @onboarding.organization.handle
     end
 
-    # should "create a membership for the onboarded users" do
-    # end
+    should "create a confirmed owner membership for the person that onboarded the organization" do
+      membership = @onboarding.organization.memberships.find_by(user_id: @onboarding.created_by)
+
+      assert_predicate membership, :owner?
+      assert_predicate membership, :confirmed?
+    end
+
+    should "create unconfirmed memberships for each invitee" do
+      membership = @onboarding.organization.unconfirmed_memberships.find_by(user_id: @maintainer.id)
+
+      assert_predicate membership, :maintainer?
+      assert_not_predicate membership, :confirmed?
+    end
 
     context "when onboarding encounters an error" do
       setup do
-        @onboarding = create(:organization_onboarding)
+        @onboarding = create(:organization_onboarding, created_by: @owner.id)
         @onboarding.stubs(:create_organization!).raises(ActiveRecord::ActiveRecordError, "stubbed error")
         @onboarding.onboard!
       end
@@ -102,7 +113,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when the onboarding is already completed" do
       setup do
-        @onboarding = create(:organization_onboarding, :completed)
+        @onboarding = create(:organization_onboarding, :completed, created_by: @owner.id)
       end
 
       should "raise an error" do

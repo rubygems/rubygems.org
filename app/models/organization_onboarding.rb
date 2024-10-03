@@ -37,9 +37,32 @@ class OrganizationOnboarding < ApplicationRecord
   private
 
   def create_organization!
+    memberships = []
+    memberships << build_owner
+    invitees.each do |user_id, role|
+      next if user_id == created_by
+      memberships.push build_membership(user_id, role)
+    end
+
     Organization.create!(
       name: title,
-      handle: slug
+      handle: slug,
+      memberships: memberships
+    )
+  end
+
+  def build_membership(user_id, role)
+    Membership.build(
+      user_id: user_id,
+      role: role
+    )
+  end
+
+  def build_owner
+    Membership.build(
+      user_id: created_by,
+      role: :owner,
+      confirmed_at: Time.zone.now
     )
   end
 
