@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_17_042436) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_25_081740) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -410,6 +410,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_042436) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "organization_onboardings", force: :cascade do |t|
+    t.string "status", null: false
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.text "error"
+    t.jsonb "invitees", default: []
+    t.integer "rubygems", default: [], array: true
+    t.datetime "onboarded_at"
+    t.integer "onboarded_by"
+    t.integer "created_by", null: false
+    t.integer "onboarded_organization_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "handle", limit: 40
     t.string "name", limit: 255
@@ -492,6 +507,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_042436) do
     t.datetime "updated_at", precision: nil
     t.index ["rubygem_id"], name: "index_subscriptions_on_rubygem_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
+  create_table "team_members", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_id", "user_id"], name: "index_team_members_on_team_id_and_user_id", unique: true
+    t.index ["team_id"], name: "index_team_members_on_team_id"
+    t.index ["user_id"], name: "index_team_members_on_user_id"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.bigint "organization_id", null: false
+    t.string "name"
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_teams_on_organization_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -645,6 +679,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_042436) do
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "team_members", "teams"
+  add_foreign_key "team_members", "users"
+  add_foreign_key "teams", "organizations"
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"
   add_foreign_key "web_hooks", "users", name: "web_hooks_user_id_fk"
