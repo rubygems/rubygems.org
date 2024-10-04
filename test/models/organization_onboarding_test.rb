@@ -111,6 +111,10 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_not_nil maintainer_team_member
     end
 
+    should "set the organization_id for each specified rubygem" do
+      assert_equal @onboarding.organization.id, @rubygem.reload.organization_id
+    end
+
     context "when onboarding encounters an error" do
       setup do
         @onboarding = create(:organization_onboarding, created_by: @owner.id)

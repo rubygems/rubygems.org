@@ -21,6 +21,8 @@ class OrganizationOnboarding < ApplicationRecord
     transaction do
       onboarded_organization = create_organization!
 
+      onboard_rubygems!(onboarded_organization)
+
       update!(
         onboarded_at: Time.zone.now,
         status: :completed,
@@ -50,6 +52,13 @@ class OrganizationOnboarding < ApplicationRecord
       memberships: memberships,
       teams: [build_team]
     )
+  end
+
+  def onboard_rubygems!(onboarded_organization)
+    onboarding_gems = Rubygem.where(id: rubygems).all
+    onboarding_gems.each do |rubygem|
+      rubygem.update!(organization_id: onboarded_organization.id)
+    end
   end
 
   def build_membership(user_id, role)
