@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_25_081740) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_04_042338) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -481,10 +481,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_25_081740) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.boolean "indexed", default: false, null: false
+    t.bigint "organization_id"
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
+    t.index ["organization_id"], name: "index_rubygems_on_organization_id"
   end
 
   create_table "sendgrid_events", force: :cascade do |t|
@@ -679,6 +681,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_25_081740) do
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "rubygems", "organizations", on_delete: :nullify
   add_foreign_key "team_members", "teams"
   add_foreign_key "team_members", "users"
   add_foreign_key "teams", "organizations"

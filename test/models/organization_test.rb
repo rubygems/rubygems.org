@@ -4,6 +4,7 @@ class OrganizationTest < ActiveSupport::TestCase
   should have_many(:memberships).dependent(:destroy)
   should have_many(:unconfirmed_memberships).dependent(:destroy)
   should have_many(:users).through(:memberships)
+  should have_many(:rubygems).dependent(:nullify)
 
   # Waiting for Ownerships to be made polymorphic
   #
