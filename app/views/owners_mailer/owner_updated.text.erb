@@ -1,0 +1,5 @@
+<%= t("mailer.owner_updated.subtitle", user_handle: @user.handle) %>
+
+<%= t("mailer.owner_updated.body_text", gem: @rubygem.name, host: Gemcutter::HOST_DISPLAY, role: Ownership.human_attribute_name("role.#{@ownership.role}")) %>
+
+<%= rubygem_owners_url(@rubygem.slug) %>

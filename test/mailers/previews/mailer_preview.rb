@@ -96,6 +96,18 @@ class MailerPreview < ActionMailer::Preview
     OwnersMailer.owner_added(user.id, owner.id, authorizer.id, gem.id)
   end
 
+  def owner_updated
+    # owner = create(:user)
+    # maintainer = create(:user)
+    # rubygem = create(:rubygem, name: "test-gem")
+    # owner_ownership = create(:ownership, rubygem: rubygem, user: owner)
+    # maintainer_ownership = create(:ownership, rubygem: rubygem, user: maintainer)
+    ownership = Ownership.last
+    owner = User.last
+
+    OwnersMailer.with(ownership: ownership, authorizer: owner).owner_updated
+  end
+
   def api_key_created
     api_key = ApiKey.where(owner_type: "User").last
     Mailer.api_key_created(api_key.id)

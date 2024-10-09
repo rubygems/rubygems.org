@@ -13,10 +13,16 @@ class Ownership < ApplicationRecord
 
   after_create :record_create_event
   after_update :record_confirmation_event, if: :saved_change_to_confirmed_at?
+  after_update :record_role_updated_event, if: :saved_change_to_role?
+  after_update :notify_user_role_of_role_change, if: :saved_change_to_role?
   after_destroy :record_destroy_event
 
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
+
+  enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER }, validate: true, default: :owner
+
+  scope :user_with_minimum_role, ->(user, role) { where(user: user, role: Access.with_minimum_role(role)) }
 
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")
@@ -26,8 +32,8 @@ class Ownership < ApplicationRecord
       .order("rubygems.name ASC")
   end
 
-  def self.find_by_owner_handle!(handle)
-    joins(:user).find_by(users: { handle: handle }) || joins(:user).find_by!(users: { id: handle })
+  def self.find_by_owner_handle(handle)
+    joins(:user).find_by(users: { handle: handle }) || joins(:user).find_by(users: { id: handle })
   end
 
   def self.create_confirmed(rubygem, user, approver)
@@ -107,11 +113,25 @@ class Ownership < ApplicationRecord
       actor_gid: Current.user&.to_gid)
   end
 
+  def record_role_updated_event
+    rubygem.record_event!(Events::RubygemEvent::OWNER_ROLE_UPDATED,
+      owner: user.display_handle,
+      updated_by: Current.user&.display_handle,
+      owner_gid: user.to_gid,
+      actor_gid: Current.user&.to_gid,
+      previous_role: role_previously_was,
+      current_role: role)
+  end
+
   def record_destroy_event
     rubygem.record_event!(Events::RubygemEvent::OWNER_REMOVED,
       owner: user.display_handle,
       removed_by: Current.user&.display_handle,
       owner_gid: user.to_gid,
       actor_gid: Current.user&.to_gid)
+  end
+
+  def notify_user_role_of_role_change
+    OwnersMailer.with(ownership: self).owner_updated.deliver_later
   end
 end

@@ -256,6 +256,44 @@ class OwnerTest < SystemTest
     refute page.has_content? @other_user.handle
   end
 
+  test "updating user to maintainer role" do
+    maintainer = create(:user)
+    create(:ownership, user: maintainer, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(maintainer) do
+      click_button "Edit"
+    end
+
+    select "Maintainer", from: "role"
+
+    click_button "Update"
+
+    assert_cell maintainer, "Role", "Maintainer"
+  end
+
+  test "editing the ownership of the current user" do
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      assert_selector "button[disabled]", text: "Edit"
+    end
+  end
+
+  test "creating new owner with maintainer role" do
+    maintainer = create(:user)
+
+    visit_ownerships_page
+
+    fill_in "Handle", with: maintainer.handle
+    select "Maintainer", from: "role"
+
+    click_button "Add Owner"
+
+    assert_cell maintainer, "Role", "Maintainer"
+  end
+
   teardown do
     @authenticator&.remove!
     Capybara.reset_sessions!

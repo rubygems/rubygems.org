@@ -71,6 +71,10 @@ fr:
         full_name: Nom complet
         handle: Pseudonyme
         password: Mot de passe
+      ownership/role:
+        owner:
+        admin:
+        maintainer:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -172,6 +176,7 @@ fr:
       yank_rubygem:
       add_owner:
       remove_owner:
+      update_owner:
       access_webhooks:
       show_dashboard:
       configure_trusted_publishers:
@@ -347,6 +352,12 @@ fr:
       title:
       subtitle:
       body_html:
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title:
       subtitle:
@@ -559,6 +570,8 @@ fr:
       confirmed:
       pending:
       confirm_remove:
+      role:
+      role_field:
     resend_confirmation:
       resent_notice:
     create:
@@ -566,6 +579,12 @@ fr:
     destroy:
       removed_notice:
       failed_notice:
+    update:
+      update_current_user_role:
+      success_notice:
+    edit:
+      role:
+      title:
     mfa_required:
   settings:
     edit:

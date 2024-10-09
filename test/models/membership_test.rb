@@ -22,4 +22,10 @@ class MembershipTest < ActiveSupport::TestCase
     assert_predicate(membership, :confirmed?)
     assert_equal(Membership.confirmed, [membership])
   end
+
+  should "have a default role" do
+    membership = Membership.create!(organization: @organization, user: @user)
+
+    assert_predicate membership, :maintainer?
+  end
 end

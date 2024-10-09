@@ -64,6 +64,10 @@ zh-TW:
         full_name: 全名
         handle: 帳號
         password: 密碼
+      ownership/role:
+        owner:
+        admin:
+        maintainer:
       api_key:
         oidc_api_key_role: OIDC API 金鑰角色
       oidc/id_token:
@@ -165,6 +169,7 @@ zh-TW:
       yank_rubygem: 移除 rubygem
       add_owner: 新增擁有者
       remove_owner: 移除擁有者
+      update_owner:
       access_webhooks: 存取 Webhooks
       show_dashboard: 顯示儀表板
       configure_trusted_publishers:
@@ -332,6 +337,12 @@ zh-TW:
       title:
       subtitle: 嗨 %{user_handle}！
       body_html:
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有權請求
       subtitle: 嗨 %{handle}！
@@ -540,6 +551,8 @@ zh-TW:
       confirmed: 已確認
       pending: 待確認
       confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
+      role:
+      role_field:
     resend_confirmation:
       resent_notice:
     create:
@@ -547,6 +560,12 @@ zh-TW:
     destroy:
       removed_notice:
       failed_notice: 無法移除 Gem 的唯一擁有者
+    edit:
+      role:
+      title:
+    update:
+      update_current_user_role:
+      success_notice:
     mfa_required: Gem 啟用了 MFA 要求，請設定您的帳號的 MFA。
   settings:
     edit:

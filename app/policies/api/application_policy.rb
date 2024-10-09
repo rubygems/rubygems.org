@@ -42,8 +42,17 @@ class Api::ApplicationPolicy
     false
   end
 
+  def api_policy!(record)
+    Pundit.policy!(api_key, [:api, record])
+  end
+
   def user_policy!(record)
     Pundit.policy!(api_key.user, record)
+  end
+
+  def api_authorized?(record, action)
+    policy = api_policy!(record)
+    policy.send(action) || deny(policy.error)
   end
 
   def user_authorized?(record, action)

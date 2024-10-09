@@ -65,6 +65,10 @@ zh-CN:
         full_name: 全名
         handle: 用户名
         password: 密码
+      ownership/role:
+        owner:
+        admin:
+        maintainer:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -166,6 +170,7 @@ zh-CN:
       yank_rubygem: 撤回 Gem
       add_owner: 添加 Gem 业主
       remove_owner: 移除（某个）Gem 业主
+      update_owner:
       access_webhooks: 访问后 (Access) Webhook
       show_dashboard: 显示仪表盘
       configure_trusted_publishers:
@@ -337,6 +342,12 @@ zh-CN:
       subtitle: 你好啊，%{user_handle}！
       body_html: <b>您</b>在 RubyGems.org 上对 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         的业主身份已被 <b>%{remover}</b> 移除
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有权申请
       subtitle: 你好啊，%{hand}！
@@ -545,6 +556,8 @@ zh-CN:
       confirmed: 已批准
       pending: 待定
       confirm_remove: 您确定您想要从业主中移除该用户吗？
+      role:
+      role_field:
     resend_confirmation:
       resent_notice: 一封确认邮件已被重新发送到您的邮箱中
     create:
@@ -552,6 +565,12 @@ zh-CN:
     destroy:
       removed_notice: "%{owner_name} 已成功从业主中移除"
       failed_notice: 不能删除该 Gem 的唯一业主
+    edit:
+      role:
+      title:
+    update:
+      success_notice:
+      update_current_user_role:
     mfa_required: 该 Gem 已启用多因素验证，请在您的帐户上设置多因素验证。
   settings:
     edit:

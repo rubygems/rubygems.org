@@ -64,6 +64,10 @@ ja:
         full_name: フルネーム
         handle: ユーザー名
         password: パスワード
+      ownership/role:
+        owner:
+        admin:
+        maintainer:
       api_key:
         oidc_api_key_role: OIDC APIキーのロール
       oidc/id_token:
@@ -165,6 +169,7 @@ ja:
       yank_rubygem: rubygemをヤンクする
       add_owner: 所有者を追加する
       remove_owner: 所有者を削除する
+      update_owner:
       access_webhooks: webhookにアクセスする
       show_dashboard: ダッシュボードを表示
       configure_trusted_publishers: 信頼できる発行元を構成
@@ -335,6 +340,12 @@ ja:
       subtitle: こんにちは、%{user_handle}！
       body_html: <b>あなた</b>は<b>%{remover}</b>によって%{host}上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者から削除されました。
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有権の申請
       subtitle: こんにちは、%{handle}！
@@ -539,6 +550,8 @@ ja:
       confirmed: 確定
       pending: 保留
       confirm_remove: このユーザーを所有者から削除されたいとのことでよろしいですか。
+      role:
+      role_field:
     resend_confirmation:
       resent_notice: 確定メールがEメールに再送されました。
     create:
@@ -546,6 +559,12 @@ ja:
     destroy:
       removed_notice: "%{owner_name}は所有者から正常に削除されました"
       failed_notice: gemの唯一の所有者は削除できません。
+    edit:
+      title:
+      role:
+    update:
+      update_current_user_role:
+      success_notice:
     mfa_required: gemでMFAの要件が有効化されているため、アカウントにMFAを設定してください。
   settings:
     edit:

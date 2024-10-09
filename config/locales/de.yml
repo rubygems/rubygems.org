@@ -73,6 +73,10 @@ de:
         full_name: Vollständiger Name
         handle: Benutzername
         password: Passwort
+      ownership/role:
+        owner:
+        admin:
+        maintainer:
       api_key:
         oidc_api_key_role: OIDC-API-Schlüsselrolle
       oidc/id_token:
@@ -186,6 +190,7 @@ de:
         können. Neuer API-Schlüssel:'
       mfa: MFA
       expiration:
+      update_owner:
     new:
       new_api_key: Neuer API-Schlüssel
     reset:
@@ -369,6 +374,12 @@ de:
       subtitle: Hallo %{user_handle}!
       body_html: <b>Du</b> wurdest als Besitzer für das <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>-Gem
         auf %{host} von <b>%{remover}</b> entfernt.
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: ANFRAGE ZUR BESITZERRECHTIGUNG
       subtitle: Hallo %{handle}!
@@ -635,6 +646,8 @@ de:
       confirmed:
       pending:
       confirm_remove:
+      role:
+      role_field:
     resend_confirmation:
       resent_notice:
     create:
@@ -643,6 +656,12 @@ de:
       removed_notice:
       failed_notice:
     mfa_required:
+    update:
+      success_notice:
+      update_current_user_role:
+    edit:
+      role:
+      title:
   settings:
     edit:
       title:
