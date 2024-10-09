@@ -254,6 +254,7 @@ GEM
       aws-sigv4 (~> 1.0)
       faraday (>= 2.0, < 3)
     ffi (1.17.0)
+    ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
@@ -278,6 +279,9 @@ GEM
       railties (>= 6.0.0)
       thor (>= 0.14.1)
     google-protobuf (4.28.2)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.2-aarch64-linux)
       bigdecimal
       rake (>= 13)
     google-protobuf (4.28.2-arm64-darwin)
@@ -373,8 +377,11 @@ GEM
       railties (>= 6.1)
       rexml
     libdatadog (11.0.0.1.0)
+    libdatadog (11.0.0.1.0-aarch64-linux)
     libdatadog (11.0.0.1.0-x86_64-linux)
     libddwaf (1.14.0.0.0)
+      ffi (~> 1.0)
+    libddwaf (1.14.0.0.0-aarch64-linux)
       ffi (~> 1.0)
     libddwaf (1.14.0.0.0-arm64-darwin)
       ffi (~> 1.0)
@@ -458,6 +465,8 @@ GEM
     nio4r (2.7.3)
     nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
+    nokogiri (1.16.7-aarch64-linux)
       racc (~> 1.4)
     nokogiri (1.16.7-arm64-darwin)
       racc (~> 1.4)
@@ -691,6 +700,8 @@ GEM
     sass-embedded (1.72.0)
       google-protobuf (>= 3.25, < 5.0)
       rake (>= 13.0.0)
+    sass-embedded (1.72.0-aarch64-linux-gnu)
+      google-protobuf (>= 3.25, < 5.0)
     sass-embedded (1.72.0-arm64-darwin)
       google-protobuf (>= 3.25, < 5.0)
     sass-embedded (1.72.0-x86_64-darwin)
@@ -756,6 +767,8 @@ GEM
       faraday (~> 2.0)
       faraday-follow_redirects
     tailwindcss-rails (2.7.7)
+      railties (>= 7.0.0)
+    tailwindcss-rails (2.7.7-aarch64-linux)
       railties (>= 7.0.0)
     tailwindcss-rails (2.7.7-arm64-darwin)
       railties (>= 7.0.0)
@@ -833,6 +846,7 @@ GEM
     zlib (3.1.1)
 
 PLATFORMS
+  aarch64-linux
   arm64-darwin
   arm64-linux
   ruby
@@ -1049,6 +1063,7 @@ CHECKSUMS
   faraday-retry (2.2.1) sha256=4146fed14549c0580bf14591fca419a40717de0dd24f267a8ec2d9a728677608
   faraday_middleware-aws-sigv4 (1.0.1) sha256=a001ea4f687ca1c60bad8f2a627196905ce3dbf285e461dc153240e92eaabe8f
   ffi (1.17.0) sha256=51630e43425078311c056ca75f961bb3bda1641ab36e44ad4c455e0b0e4a231c
+  ffi (1.17.0-aarch64-linux-gnu) sha256=228c8fb79e6b018a31c75414115a75ca65f74e8138b2c9c97d22041e4e12f2c1
   ffi (1.17.0-arm64-darwin) sha256=609c874e76614542c6d485b0576e42a7a38ffcdf086612f9a300c4ec3fcd0d12
   ffi (1.17.0-x86_64-darwin) sha256=fdcd48c69db3303ef95aec5c64d6275fcf9878a02c0bec0afddc506ceca0f56b
   ffi (1.17.0-x86_64-linux-gnu) sha256=1015e59d5919dd6bbcb0704325b0bd639be664a79b1e2189943ceb18faa34198
@@ -1060,6 +1075,7 @@ CHECKSUMS
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
   google-protobuf (4.28.2) sha256=6841bb4566bc33fc2d59b4dd28bfd9308fc528545f21722e9f6e6fa566289c29
+  google-protobuf (4.28.2-aarch64-linux) sha256=a2ea5fc997adeed17a135a9fc46d05de69a6e4bf90c023c5ff1ab071c28bceea
   google-protobuf (4.28.2-arm64-darwin) sha256=fe43de80f4818900c734dfb9076251ef582d200d4a21985675fc6e1500364602
   google-protobuf (4.28.2-x86_64-darwin) sha256=e1247c97fd2fb882abc2b6aa2c25211dcf91769665d123358bff8177e9277f8e
   google-protobuf (4.28.2-x86_64-linux) sha256=c7bb3952d150cb1a0544cef3e3a01ac87fdd190dbf7c26b2ff9e58629bab08ea
@@ -1097,8 +1113,10 @@ CHECKSUMS
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860
   libdatadog (11.0.0.1.0) sha256=44779762b21149be5e17ce599dc2e89f6a3c89a99262293dfafd96ddb110f7f1
+  libdatadog (11.0.0.1.0-aarch64-linux) sha256=ff1e5870a44df49d056ebab9c544a4ad4a04ab541dbe3945d8be6981ff5b870f
   libdatadog (11.0.0.1.0-x86_64-linux) sha256=f03b510d5b4f85febf640139282b9c3aeb88eb876dcccebc15f704c91c3e73ad
   libddwaf (1.14.0.0.0) sha256=b91ea9675f7d79d1cd10dd6513e3706760ac442cb8902164fbcef79b7082a8fd
+  libddwaf (1.14.0.0.0-aarch64-linux) sha256=549f83ba339afb0e500bd9f4c43459e274d42f5736a18d347ba2007be026649c
   libddwaf (1.14.0.0.0-arm64-darwin) sha256=cd3c84d58b8f77f93ebb17e6ceb1cfd257c8d3a3a1ea558a7fc14d92f697cc2b
   libddwaf (1.14.0.0.0-x86_64-darwin) sha256=33017c057fd6b4948ef4577c4a13bc89d878541961b205309fac1e71516433ff
   libddwaf (1.14.0.0.0-x86_64-linux) sha256=030640a4158ae05f9276cc1e09bfe9d19dda5af26703235cf17cf3752f1985b1
@@ -1134,6 +1152,7 @@ CHECKSUMS
   net-smtp (0.5.0) sha256=5fc0415e6ea1cc0b3dfea7270438ec22b278ca8d524986a3ae4e5ae8d087b42a
   nio4r (2.7.3) sha256=54b94cdd4b8f9dc39aaad5f699e97afae13efb44f2b180a6e724df76105ff604
   nokogiri (1.16.7) sha256=f819cbfdfb0a7b19c9c52c6f2ca63df0e58a6125f4f139707b586b9511d7fe95
+  nokogiri (1.16.7-aarch64-linux) sha256=78778d35f165b59513be31c0fe232c63a82cf97626ffba695b5f822e5da1d74b
   nokogiri (1.16.7-arm64-darwin) sha256=276dcea1b988a5b22b5acc1ba901d24b8e908c40b71dccd5d54a2ae279480dad
   nokogiri (1.16.7-x86_64-darwin) sha256=630732b80fc572690eab50c73a1f18988f3ac401ed0b67ca9956ba2b1e2c3faa
   nokogiri (1.16.7-x86_64-linux) sha256=9e1e428641d5942af877c60b418c71163560e9feb4a5c4015f3230a8b86a40f6
@@ -1221,6 +1240,7 @@ CHECKSUMS
   rubyzip (2.3.2) sha256=3f57e3935dc2255c414484fbf8d673b4909d8a6a57007ed754dde39342d2373f
   safety_net_attestation (0.4.0) sha256=96be2d74e7ed26453a51894913449bea0e072f44490021545ac2d1c38b0718ce
   sass-embedded (1.72.0) sha256=05d3e53092022a4b4eef5b76b9597c7f2af4e4efb06812e1a60e3601189a3d2e
+  sass-embedded (1.72.0-aarch64-linux-gnu) sha256=cbe3b303bb2acf784a46e98cbb22b5218f1607524dc66c00f5bd3b32f029eae4
   sass-embedded (1.72.0-arm64-darwin) sha256=24bbb0fe3cb255070c0bd7d44ee330b1226bd02647a4390d6f50e706a3819a4a
   sass-embedded (1.72.0-x86_64-darwin) sha256=f8b4940847cda523b418b8d1354dfb22464ca1f108d05be3e0d2bab7643d8757
   sass-embedded (1.72.0-x86_64-linux-gnu) sha256=33ecf2737eb685dc61853652312b0395c645b30578fc0d853d4b15f67cab1f3c
@@ -1249,6 +1269,7 @@ CHECKSUMS
   strong_migrations (2.0.0) sha256=88750f294403e18ec674eda6901f2fc195f553ed6a7928c52e8a3f5b57ff501d
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (2.7.7) sha256=a74751bad9f956ab4c365de3abd10912ca2399f521c197d1e6025e0bbfc0c5ab
+  tailwindcss-rails (2.7.7-aarch64-linux) sha256=d9f30312e02ae8395a8e7dbf5bc03d9f39625ce1042800321db2edb1df8fcfbc
   tailwindcss-rails (2.7.7-arm64-darwin) sha256=90d0cc13753612579b63a67cd67f45a176f04fd7860a32bc3028dcd6ace94769
   tailwindcss-rails (2.7.7-x86_64-darwin) sha256=af952d88ea84c166905fba3a815c51040f2baecce52554304282c2d7ef400d8c
   tailwindcss-rails (2.7.7-x86_64-linux) sha256=01408afe03f3c61447126c2c33caf940c9729ac8fda2da500887268b5fd3c51c
@@ -1288,4 +1309,4 @@ RUBY VERSION
    ruby 3.3.5p100
 
 BUNDLED WITH
-   2.5.20
+   2.5.21
