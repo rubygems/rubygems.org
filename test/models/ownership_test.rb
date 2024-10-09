@@ -148,7 +148,7 @@ class OwnershipTest < ActiveSupport::TestCase
           "current_role" => "maintainer"
         }
 
-        assert_equal "rubygem:owner:updated", event.tag
+        assert_equal "rubygem:owner:role_updated", event.tag
         assert_equal attributes, event.additional.attributes
       end
 
