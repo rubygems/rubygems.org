@@ -6,4 +6,4 @@
 
 <%= render @gems %>
 
-<%= paginate @gems %>
+<%== pagy_nav(@gems_pagy) if @gems_pagy.pages > 1 %>

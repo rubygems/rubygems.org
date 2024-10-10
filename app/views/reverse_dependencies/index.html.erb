@@ -15,7 +15,7 @@
       <div class="reverse__dependencies">
         <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
       </div>
-      <%= plain_paginate @reverse_dependencies %>
+      <%== pagy_nav @reverse_dependencies_pagy if @reverse_dependencies_pagy.pages > 1 %>
     </div>
   <% else %>
     <div class="gem__desc">

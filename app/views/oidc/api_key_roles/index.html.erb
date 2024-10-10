@@ -4,7 +4,7 @@
     <%= button_to(t(".new_role"), new_profile_oidc_api_key_role_path, method: "get", class: "form__submit") %>
   </p>
   <header class="gems__header push--s">
-    <p class="gems__meter l-mb-0"><%= page_entries_info(@api_key_roles) %></p>
+    <p class="gems__meter l-mb-0"><%== pagy_info(@api_key_roles_pagy) %></p>
   </header>
   <table class="owners__table">
     <thead>
@@ -36,5 +36,5 @@
       <% end %>
     </tbody>
   </table>
-  <%= paginate @api_key_roles %>
+  <%== pagy_nav @api_key_roles_pagy if @api_key_roles_pagy.pages > 1 %>
 </div>

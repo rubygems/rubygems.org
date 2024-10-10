@@ -11,7 +11,7 @@ class RubygemsController < ApplicationController
     respond_to do |format|
       format.html do
         @letter = Rubygem.letterize(gem_params[:letter])
-        @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
+        @gems_pagy, @gems = pagy(Rubygem.letter(@letter).includes(:latest_version, :gem_download), limit: 2)
       end
       format.atom do
         @versions = Version.published.limit(Gemcutter::DEFAULT_PAGINATION)
@@ -32,8 +32,8 @@ class RubygemsController < ApplicationController
 
   def security_events
     authorize @rubygem, :show_events?
-    @security_events = @rubygem.events.order(id: :desc).page(params[:page]).per(50)
-    render Rubygems::SecurityEventsView.new(rubygem: @rubygem, security_events: @security_events)
+    @security_events_pagy, @security_events = pagy(@rubygem.events.order(id: :desc), limit: 50)
+    render Rubygems::SecurityEventsView.new(rubygem: @rubygem, security_events_pagy: @security_events_pagy, security_events: @security_events)
   end
 
   private

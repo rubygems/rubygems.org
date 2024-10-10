@@ -3,7 +3,7 @@ class VersionsController < ApplicationController
 
   def index
     set_page
-    @versions = @rubygem.versions.by_position.page(@page).per(Gemcutter::VERSIONS_PER_PAGE)
+    @versions_pagy, @versions = pagy(@rubygem.versions.by_position, limit: Gemcutter::VERSIONS_PER_PAGE)
   end
 
   def show
