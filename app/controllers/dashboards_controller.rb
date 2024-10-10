@@ -5,6 +5,8 @@ class DashboardsController < ApplicationController
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
 
   def show
+    add_breadcrumb t("breadcrumbs.dashboard"), dashboard_path
+
     respond_to do |format|
       format.html do
         @my_gems         = current_user.rubygems.with_versions.by_name.preload(:most_recent_version)

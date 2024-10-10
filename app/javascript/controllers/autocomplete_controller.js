@@ -17,6 +17,7 @@ export default class extends Controller {
     this.suggestionsTarget.innerHTML = ""
     this.suggestionsTarget.removeAttribute('tabindex');
     this.suggestionsTarget.removeAttribute('aria-activedescendant');
+    this.suggestionsTarget.classList.add('hidden');
   }
 
   hide(e) {
@@ -78,6 +79,7 @@ export default class extends Controller {
     items.forEach((item, idx) => this.appendItem(item, idx));
     this.suggestionsTarget.setAttribute('tabindex', 0);
     this.suggestionsTarget.setAttribute('role', 'listbox');
+    this.suggestionsTarget.classList.remove('hidden');
 
     this.suggestLength = items.length;
     this.indexNumber = -1;

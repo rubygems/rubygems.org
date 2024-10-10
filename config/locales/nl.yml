@@ -226,6 +226,7 @@ nl:
         blog: Blog
         contribute: Bijdragen
         data: Data
+        docs: Documentatie
         designed_by: Ontwerp
         discussion_forum: Forum
         gems_served_by:
@@ -240,6 +241,9 @@ nl:
         statistics: Statistieken
         status: Status
         supported_by: Ondersteuning
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> wordt ondersteund door
         tested_by: Getest door
         tracking_by: Tracking
         uptime: Uptime
@@ -255,6 +259,11 @@ nl:
         sign_out: Uitloggen
         sign_up: Registreren
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: Dashboard
+    settings:
+    org_name: 'Organisatie: %{name}'
   mailer:
     confirm_your_email:
     confirmation_subject:
