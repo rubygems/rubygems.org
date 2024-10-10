@@ -16,7 +16,7 @@ class ButtonComponent < ApplicationComponent
   end
 
   def view_template(&)
-    css = "text-nowrap text-b2 font-semibold tracking-tight " \
+    css = "text-nowrap text-b2 font-semibold " \
       "px-4 py-3 h-9 min-h-9 rounded inline-flex border-box " \
       "justify-content-center items-center hover:shadow-md " \
       "transition duration-200 ease-in-out focus:outline-none " \

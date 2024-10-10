@@ -1,6 +1,6 @@
 <% @title = t('.title') %>
 
-<div class="prose prose-neutral dark:prose-invert prose-lg lg:prose-xl max-w-prose mx-auto">
+<%= prose do %>
   <p>
     RubyGems.org is made possible by support from the Ruby community. These companies provide the servers and developers that create the public infrastructure of the Ruby programming language.
   </p>
@@ -30,4 +30,4 @@
     Avo is a custom Content Management System for Ruby on Rails that saves developers and teams months of development time. It's built on modern technologies and provides all the necessary hooks to ensure developers ship the best experiences to their customers.<br><br>
     Avo enables the RubyGems.org team to quickly build internal tools with limited resources.
   </p>
-</div>
+<% end %>

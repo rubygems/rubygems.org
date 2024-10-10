@@ -1,6 +1,6 @@
 <% @title = t('.title') %>
 
-<div class="prose prose-neutral dark:prose-invert prose-lg lg:prose-xl max-w-prose mx-auto">
+<%= prose do %>
   <p><%= t '.purpose.header', :site => t('title') %></p>
   <ol class="list-decimal">
     <li><%= t '.purpose.better_api' %></li>
@@ -35,4 +35,4 @@
       <%= t('rubygems.aside.links.download') %>
     </a>
   </div>
-</div>
+<% end %>

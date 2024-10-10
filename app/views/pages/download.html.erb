@@ -1,7 +1,7 @@
 <% @title = t('.title') %>
 <% @subtitle = subtitle %>
 
-<div class="prose prose-neutral dark:prose-invert prose-lg lg:prose-xl max-w-prose mx-auto">
+<%= prose do %>
   <h2><%= @title %></h2>
   <p>
     RubyGems is a package management framework for Ruby.
@@ -29,4 +29,4 @@
     <%= link_to "gem", "https://rubygems.org/gems/rubygems-update-#{version_number}.gem", class: "px-4 py-3 text-b2 rounded text-white no-underline bg-orange-500 hover:bg-orange-600 dark:hover:bg-orange-700" %>
     <%= link_to "git", "https://github.com/rubygems/rubygems", class: "px-4 py-3 text-b2 rounded text-white no-underline bg-orange-500 hover:bg-orange-600 dark:hover:bg-orange-700" %>
   </div>
-</div>
+<% end %>
