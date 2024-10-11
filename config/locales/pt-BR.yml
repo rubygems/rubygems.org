@@ -205,7 +205,7 @@ pt-BR:
       mine: Minhas Gems
       my_subscriptions: Observando
       no_owned_html: Você ainda não enviou nenhuma gem. Verifique os guias sobre %{creating_link}
-        uma gem ou %{migrating_link} uma gem do RubyForge.
+        uma gem.
       no_subscriptions_html: Você ainda não está observando nenhuma gem. Visite uma
         %{gem_link} para poder observá-la!
       title: Painel de Controle
@@ -261,6 +261,7 @@ pt-BR:
         secured_by:
         looking_for_maintainers:
       header:
+        profile: Perfil
         dashboard: Painel de Controle
         settings: Configurações da Conta
         edit_profile: Editar Perfil

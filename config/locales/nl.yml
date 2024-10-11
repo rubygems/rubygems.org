@@ -198,8 +198,7 @@ nl:
       mine: Mijn Gems
       my_subscriptions: Mijn abonnementen
       no_owned_html: Je hebt nog geen gems gepubliceerd. Bekijk de instructies voor
-        het %{creating_link} van een gem of het  %{migrating_link} van een gem vanaf
-        RubyForge.
+        het %{creating_link} van een gem.
       no_subscriptions_html: Je bent nog niet geabonneerd op een of meerdere gems.
         Bezoek een %{gem_link} en abonneer je erop.
       title: Dashboard
@@ -256,9 +255,10 @@ nl:
         secured_by:
         looking_for_maintainers:
       header:
+        profile: Profiel
         dashboard: Dashboard
-        settings:
-        edit_profile:
+        settings: Instellingen
+        edit_profile: Wijzig profiel
         search_gem_html: Gems Zoeken&hellip;
         sign_in: Inloggen
         sign_out: Uitloggen

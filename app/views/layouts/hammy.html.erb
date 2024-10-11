@@ -29,9 +29,9 @@
     <header>
       <!-- Header Nav -->
       <div class="py-4 px-8 border-b border-neutral-400 dark:border-neutral-800">
-        <div data-controller="reveal-search" data-reveal-search-toggle-class="bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border" class="flex flex-wrap justify-between max-w-screen-xl mx-auto">
+        <div class="flex flex-wrap justify-between max-w-screen-xl mx-auto" data-controller="reveal-search" data-reveal-search-toggle-class="bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border">
           <!-- Menu button, Logo, desktop nav, mobile nav dialog -->
-          <div class="flex flex-row items-center" data-controller="dialog">
+          <div class="flex flex-row items-center xl:mr-auto" data-controller="dialog">
             <!-- Mobile Menu Button -->
             <button data-action="dialog#open" aria-label="Open menu" class="px-2 py-1 w-10 h-9 mr-3 items-center rounded text-white bg-orange hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700 lg:hidden focus:outline-none">
               <svg width="24" height="24" class="fill-current" role="graphics-symbol"><use href="/images/icons.svg#menu"/></svg>
@@ -139,9 +139,9 @@
             </dialog>
           </div>
 
-          <div class="ml-auto flex flex-row items-center">
+          <div class="ml-auto flex flex-row items-center xl:ml-0 xl:order-3">
             <!-- Search button -->
-            <button type="button" data-action="reveal-search#toggle" data-reveal-search-target="toggle" aria-label="Open search" class="h-9 w-9 flex box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
+            <button type="button" data-action="reveal-search#toggle" data-reveal-search-target="toggle" aria-label="Open search" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
               <svg width="24" height="24" class="h-6 w-6 fill-current"><use href="/images/icons.svg#search"/></svg>
             </button>
 
@@ -150,9 +150,9 @@
           </div>
 
           <!-- Search Bar -->
-          <div data-reveal-search-target="item" class="hidden pt-4 w-full items-center" role="search">
+          <div data-reveal-search-target="item" class="hidden pt-4 w-full items-center xl:flex xl:pt-0 xl:w-72 xl:order-2" role="search">
             <%= form_tag(search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800", reveal_target: "item" }, class: "relative w-full items-center", role: "search") do %>
-              <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full md h-10 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>
+              <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full md h-9 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>
 
               <ul role="listbox" data-autocomplete-target="suggestions" class="hidden absolute z-40 start-0 mt-2 w-full bg-white dark:bg-black text-b2 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 rounded shadow-md divide-y divide-neutral-200 dark:divide-neutral-800"></ul>
 
@@ -164,7 +164,7 @@
                 <span class="hidden"><%= t('layouts.application.header.search_gem_html') %></span>
               <% end %>
 
-              <button type="submit" id="search_submit" aria-labelledby="querylabel" class="absolute end-[1px] top-[1px] p-[7px] text-neutral-900 dark:text-white focus:outline-none border-l border-neutral-300 dark:border-neutral-700 hover:text-neutral-600 dark:hover:text-neutral-400 rounded-r">
+              <button type="submit" id="search_submit" aria-labelledby="querylabel" class="absolute end-[1px] top-[1px] p-[5px] text-neutral-900 dark:text-white focus:outline-none border-l border-neutral-300 dark:border-neutral-700 hover:text-neutral-600 dark:hover:text-neutral-400 rounded-r">
                 <svg width="24" height="24" class="h-6 w-6 fill-current"><use href="/images/icons.svg#search"/></svg>
               </button>
             <% end %>
@@ -180,12 +180,12 @@
     <div class="flex-1 w-full px-8 py-6 flex-col bg-neutral-050 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center inline-flex">
       <div class="max-w-screen-xl w-full mx-auto mb-12 md:mb-16 lg:mb-28">
         <!-- New design notice -->
-        <p class="flex flex-row items-start bg-green-200 dark:bg-green-900 text-neutral-800 dark:text-neutral-200 p-4 mb-10 rounded border border-green-500 text-b2">
+        <p class="flex flex-row items-center bg-green-200 dark:bg-green-900 text-neutral-800 dark:text-neutral-200 p-4 mb-10 rounded border border-green-500 text-b2">
           <svg class="flex-none fill-green-500 mr-2 h-6 w-6" height="24" width="24">
             <use href="/images/icons.svg#toast"/>
           </svg>
           <span class="align-middle">
-            Design Under Construction!
+            Design Under Construction.
             <a href="https://blog.rubygems.org/2024/10/25/new-design-for-rubygems.html" class="text-green-500 dark:text-green-400 text-nowrap">Learn more</a>
           </span>
         </p>

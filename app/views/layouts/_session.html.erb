@@ -40,11 +40,11 @@
 
         <!-- Authenticated user content -->
         <nav class="flex flex-col py-6 text-left text-b2 text-neutral-900 dark:text-white border-b border-neutral-400 dark:border-neutral-800">
-          <%= link_to t('.header.profile'), dashboard_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-          <%= link_to t('.header.edit_profile'), edit_profile_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-          <%= link_to t('.header.settings'), edit_settings_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+          <%= link_to t('layouts.application.header.profile'), dashboard_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+          <%= link_to t('layouts.application.header.edit_profile'), edit_profile_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+          <%= link_to t('layouts.application.header.settings'), edit_settings_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
         </nav>
-        <%= link_to t('.header.sign_out'), sign_out_path, method: :delete, class: "w-full my-8 px-4 py-2 text-b2 rounded border border-black dark:border-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 text-black dark:text-white text-center" %>
+        <%= link_to t('layouts.application.header.sign_out'), sign_out_path, method: :delete, class: "w-full my-8 px-4 py-2 text-b2 rounded border border-black dark:border-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 text-black dark:text-white text-center" %>
       </div>
     </div>
   </dialog>

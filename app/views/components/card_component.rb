@@ -35,7 +35,7 @@ class CardComponent < ApplicationComponent
 
   private
 
-  def render_icon(name, width: 20, height: 20)
+  def render_icon(name, width: 32, height: 32)
     svg(class: "fill-orange", width:, height:) do
       "<use href=\"/images/icons.svg##{name}\"/>".html_safe # rubocop:disable Rails/OutputSafety
     end

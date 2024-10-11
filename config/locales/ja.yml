@@ -198,7 +198,7 @@ ja:
       migrating_link_text: 移行
       mine: 自分のgem
       my_subscriptions: 購読
-      no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}またはRubyForgeからの%{migrating_link}ガイドをご覧ください。
+      no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}ガイドをご覧ください。
       no_subscriptions_html: まだgemを購読していません。%{gem_link}から何か購読してみてください。
       title: ダッシュボード
   dependencies:
@@ -253,6 +253,7 @@ ja:
         secured_by: セキュリティ
         looking_for_maintainers: メンテナの募集
       header:
+        profile: プロフィール
         dashboard: ダッシュボード
         settings: 設定
         edit_profile: プロフィールを編集

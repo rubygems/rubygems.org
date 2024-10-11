@@ -91,8 +91,8 @@ module ApplicationHelper
     }
     aria = { autocomplete: "list" }
 
-    data.merge!(kwargs.delete(:data)) if kwargs[:data]
-    aria.merge!(kwargs.delete(:aria)) if kwargs[:aria]
+    data.merge!(kwargs.delete(:data) || {})
+    aria.merge!(kwargs.delete(:aria) || {})
 
     search_field_tag(
       :query,
