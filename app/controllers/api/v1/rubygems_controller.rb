@@ -34,14 +34,23 @@ class Api::V1::RubygemsController < Api::BaseController
     authorize Rubygem, :create?
     return render_forbidden(t(:api_key_insufficient_scope)) unless @api_key.can_push_rubygem?
 
-    gemcutter = Pusher.new(@api_key, request.body, request:)
+    gem_body = sigstore_json_body = nil
+    if request.media_type == "multipart/mixed"
+      gem_body, sigstore_json_body = params.permit([:gem, "sigstore.json"]).require([:gem, "sigstore.json"])
+      return render_bad_request("gem") unless gem_body.is_a?(ActionDispatch::Http::UploadedFile)
+      return render_bad_request("sigstore.json") unless sigstore_json_body.is_a?(ActionDispatch::Http::UploadedFile)
+    else
+      gem_body = request.body
+    end
+
+    gemcutter = Pusher.new(@api_key, gem_body, request:, sigstore_json_body:)
     gemcutter.process
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue Pundit::NotAuthorizedError
     raise # allow rescue_from in base_controller to handle this
   rescue StandardError => e
     Rails.error.report(e, handled: true)
-    render plain: "Server error. Please try again.", status: :internal_server_error
+    render plain: "Server error. Please try again.#{e.detailed_message}", status: :internal_server_error
   end
 
   def reverse_dependencies
