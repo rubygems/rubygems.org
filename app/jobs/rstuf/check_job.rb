@@ -14,7 +14,7 @@ class Rstuf::CheckJob < Rstuf::ApplicationJob
       raise FailureException, "RSTUF job failed, please check payload and retry"
     when "ERRORED", "REVOKED", "REJECTED"
       raise ErrorException, "RSTUF internal problem, please check RSTUF health"
-    when "PENDING", "RUNNING", "RECEIVED", "STARTED"
+    when "PENDING", "PRE_RUN", "RUNNING", "RECEIVED", "STARTED"
       raise RetryException
     else
       Rails.logger.info "RSTUF job returned unexpected state #{status}"
