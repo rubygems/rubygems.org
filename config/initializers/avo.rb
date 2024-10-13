@@ -145,10 +145,6 @@ Rails.configuration.to_prepare do
   Avo::BaseResource.prepend Avo::Resources::Concerns::AvoAuditableResource
   Avo::Concerns::HasItems.prepend Avo::Resources::Concerns::AvoAuditableResource::HasItemsIncludeComment
 
-  # Avo::ApplicationController.content_security_policy do |policy|
-  #   policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline
-  # end
-
   # Fix for https://github.com/rails/rails/issues/49783
   Avo::Views::ResourceEditComponent.class_eval do
     def field_name(object_name, *, **)
