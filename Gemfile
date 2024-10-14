@@ -62,12 +62,19 @@ gem "faraday-multipart", "~> 1.0"
 gem "timescaledb", "~> 0.3"
 
 # Admin dashboard
-gem "avo", "~> 2.53"
+gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 3.14"
+gem "view_component", "~> 3.14.0"
 gem "pundit", "~> 2.4"
 gem "chartkick", "~> 5.1"
 gem "groupdate", "~> 6.5"
+gem "dry-initializer", "~> 3.1"
+
+group :avo, optional: true do
+  source "https://packager.dev/avo-hq/" do
+    gem "avo-advanced", "~> 3.13"
+  end
+end
 
 # Logging
 gem "amazing_print", "~> 1.6"
@@ -146,3 +153,5 @@ group :test do
   gem "minitest-reporters", "~> 1.7"
   gem "gem_server_conformance", "~> 0.1.4"
 end
+
+gem "avo_upgrade", "~> 0.1.1", group: :development

@@ -1,4 +1,4 @@
-class UploadVersionsFile < BaseAction
+class Avo::Actions::UploadVersionsFile < Avo::Actions::ApplicationAction
   self.name = "Upload Versions File"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :index
@@ -6,7 +6,7 @@ class UploadVersionsFile < BaseAction
   self.standalone = true
   self.confirm_button_label = "Upload"
 
-  class ActionHandler < ActionHandler
+  class ActionHandler < Avo::Actions::ActionHandler
     def handle_standalone
       UploadVersionsFileJob.perform_later
 

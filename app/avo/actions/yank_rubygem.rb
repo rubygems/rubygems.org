@@ -1,17 +1,18 @@
-class YankRubygem < BaseAction
+class Avo::Actions::YankRubygem < Avo::Actions::ApplicationAction
   OPTION_ALL = "All".freeze
 
-  field :version, as: :select,
-    options: lambda { |model:, resource:, view:, field:| # rubocop:disable Lint/UnusedBlockArgument
-      [OPTION_ALL] + model.versions.indexed.pluck(:number, :id)
-    },
-    help: "Select Version which needs to be yanked."
+  def fields
+    field :version, as: :select,
+      options: -> { [OPTION_ALL] + record.versions.indexed.pluck(:number, :id) },
+      help: "Select Version which needs to be yanked."
+    super
+  end
 
   self.name = "Yank Rubygem"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") &&
       view == :show &&
-      resource.model.versions.indexed.present?
+      resource.record.versions.indexed.present?
   }
 
   self.message = lambda {
@@ -20,8 +21,8 @@ class YankRubygem < BaseAction
 
   self.confirm_button_label = "Yank Rubygem"
 
-  class ActionHandler < ActionHandler
-    def handle_model(rubygem)
+  class ActionHandler < Avo::Actions::ActionHandler
+    def handle_record(rubygem)
       version_id = fields["version"]
       version_id_to_yank = version_id if version_id != OPTION_ALL
 

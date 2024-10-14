@@ -2,7 +2,7 @@ require "test_helper"
 
 class Admin::GitHubUserPolicyTest < AdminPolicyTestCase
   def policy_class
-    Admin::GitHubUserPolicy
+    Admin::Admin::GitHubUserPolicy
   end
 
   setup do

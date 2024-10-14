@@ -1,9 +1,9 @@
-class VersionAfterWrite < BaseAction
+class Avo::Actions::VersionAfterWrite < Avo::Actions::ApplicationAction
   self.name = "Run version post-write job"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") &&
       view == :show &&
-      resource.model.deletion.blank?
+      resource.record.deletion.blank?
   }
 
   self.message = lambda {
@@ -12,8 +12,8 @@ class VersionAfterWrite < BaseAction
 
   self.confirm_button_label = "Run Job"
 
-  class ActionHandler < ActionHandler
-    def handle_model(version)
+  class ActionHandler < Avo::Actions::ActionHandler
+    def handle_record(version)
       AfterVersionWriteJob.new(version: version).perform(version: version)
     end
   end

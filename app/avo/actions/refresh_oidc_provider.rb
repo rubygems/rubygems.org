@@ -1,4 +1,4 @@
-class RefreshOIDCProvider < BaseAction
+class Avo::Actions::RefreshOIDCProvider < Avo::Actions::ApplicationAction
   self.name = "Refresh OIDC Provider"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
@@ -10,8 +10,8 @@ class RefreshOIDCProvider < BaseAction
 
   self.confirm_button_label = "Refresh"
 
-  class ActionHandler < ActionHandler
-    def handle_model(provider)
+  class ActionHandler < Avo::Actions::ActionHandler
+    def handle_record(provider)
       RefreshOIDCProviderJob.perform_now(provider:)
     end
   end

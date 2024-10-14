@@ -1,4 +1,32 @@
 GEM
+  remote: https://packager.dev/avo-hq/
+  specs:
+    avo-advanced (3.13.1)
+      avo (= 3.13.1)
+      avo-dynamic_filters (= 3.13.1)
+      avo-pro (= 3.13.1)
+      zeitwerk (>= 2.6.12)
+    avo-dashboards (3.13.1)
+      avo (= 3.13.1)
+      turbo-rails
+      view_component (>= 3.7.0)
+      zeitwerk (>= 2.6.12)
+    avo-dynamic_filters (3.13.1)
+      avo (= 3.13.1)
+      ransack (>= 4.2.0)
+      view_component (>= 3.7.0)
+      zeitwerk (>= 2.6.12)
+    avo-menu (3.13.1)
+      avo (= 3.13.1)
+      docile
+      zeitwerk (>= 2.6.12)
+    avo-pro (3.13.1)
+      avo (= 3.13.1)
+      avo-dashboards (= 3.13.1)
+      avo-menu (= 3.13.1)
+      zeitwerk (>= 2.6.12)
+
+GEM
   remote: https://rubygems.org/
   specs:
     actioncable (7.2.1)
@@ -89,21 +117,24 @@ GEM
     attr_required (1.0.2)
     autoprefixer-rails (10.4.19.0)
       execjs (~> 2)
-    avo (2.53.0)
-      actionview (>= 6.0)
+    avo (3.13.1)
+      actionview (>= 6.1)
       active_link_to
-      activerecord (>= 6.0)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
       addressable
       docile
-      dry-initializer
-      httparty
       inline_svg
+      literal (~> 0.2)
       meta-tags
-      pagy
-      turbo-rails
-      turbo_power (~> 0.5.0)
-      view_component (>= 2.54.0)
-      zeitwerk (>= 2.6.2)
+      pagy (>= 7.0.0)
+      turbo-rails (>= 2.0.0)
+      turbo_power (>= 0.6.0)
+      view_component (>= 3.7.0)
+      zeitwerk (>= 2.6.12)
+    avo_upgrade (0.1.1)
+      rails (>= 6.0.0)
+      zeitwerk
     awrence (1.2.1)
     aws-eventstream (1.3.0)
     aws-partitions (1.983.0)
@@ -318,10 +349,6 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     http_accept_language (2.1.1)
-    httparty (0.22.0)
-      csv
-      mini_mime (>= 1.0.0)
-      multi_xml (>= 0.5.2)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.1)
@@ -397,6 +424,7 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    literal (0.2.1)
     llhttp-ffi (0.5.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
@@ -433,7 +461,7 @@ GEM
     marcel (1.0.4)
     matrix (0.4.2)
     memory_profiler (1.1.0)
-    meta-tags (2.22.0)
+    meta-tags (2.22.1)
       actionpack (>= 6.0.0, < 8.1)
     method_source (1.1.0)
     mini_histogram (0.3.1)
@@ -628,6 +656,10 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.2.1)
+    ransack (4.2.1)
+      activerecord (>= 6.1.5)
+      activesupport (>= 6.1.5)
+      i18n
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -797,12 +829,11 @@ GEM
       bindata (~> 2.4)
       openssl (> 2.0)
       openssl-signature_algorithm (~> 1.0)
-    turbo-rails (1.5.0)
+    turbo-rails (2.0.10)
       actionpack (>= 6.0.0)
-      activejob (>= 6.0.0)
       railties (>= 6.0.0)
-    turbo_power (0.5.0)
-      turbo-rails (~> 1.3)
+    turbo_power (0.6.2)
+      turbo-rails (>= 1.3.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
@@ -865,7 +896,9 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.6)
   autoprefixer-rails (~> 10.4)
-  avo (~> 2.53)
+  avo (~> 3.13)
+  avo-advanced (~> 3.13)!
+  avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.167)
   aws-sdk-sqs (~> 1.86)
   bcrypt (~> 3.1)
@@ -886,6 +919,7 @@ DEPENDENCIES
   discard (~> 1.3)
   dogstatsd-ruby (~> 5.6)
   dotenv-rails (~> 3.1)
+  dry-initializer (~> 3.1)
   factory_bot_rails (~> 6.4)
   faraday (~> 2.12)
   faraday-multipart (~> 1.0)
@@ -973,7 +1007,7 @@ DEPENDENCIES
   unpwn (~> 1.0)
   user_agent_parser (~> 2.18)
   validates_formatting_of (~> 0.9)
-  view_component (~> 3.14)
+  view_component (~> 3.14.0)
   webauthn (~> 3.1)
   webmock (~> 3.24)
   xml-simple (~> 1.1)
@@ -1001,7 +1035,13 @@ CHECKSUMS
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   autoprefixer-rails (10.4.19.0) sha256=ccd21f47e5a07a581c7d239025e0d8d06a005825e96e06f72382d818fe665f4e
-  avo (2.53.0) sha256=e8f1fb9abaf6d874d898449d4db863586c16e60634a136d97ae436ded976d1a6
+  avo (3.13.1) sha256=6fd001bda35c4b307579fbc6f597de60d89846b04b96d2bc4cb06bcd54b5945b
+  avo-advanced (3.13.1) sha256=87d87a6e0837dbeab549428f3afbcb0e0c81e23e46de62dffd0a1270bffc1d0e
+  avo-dashboards (3.13.1) sha256=073cdbb7c7e9ad46693291d6d5976bdba1a900bf572376a88e02b793f9e4e528
+  avo-dynamic_filters (3.13.1) sha256=adb72eae45ca400c595e6999dcfcea7d28f3c2d513b0520599a3fe0d39538671
+  avo-menu (3.13.1) sha256=444fec35ccc1956bbbb6ff7489c48641d88350d8dfb55652681cadb03b87d901
+  avo-pro (3.13.1) sha256=c465c9886926f155dd9fd8d46bbb96018260cced9af8206bf64c428a25793f09
+  avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.983.0) sha256=eb3ab086749ca426e735a50bd1ea669a4b7bc52be3c119a772bd277cc906bb11
@@ -1097,7 +1137,6 @@ CHECKSUMS
   http-cookie (1.0.7) sha256=cb7a399f3344f720b8a0f3b0765f29b62608ebb9c3ce4abf4d6eeff2caf42253
   http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
-  httparty (0.22.0) sha256=78652a5c9471cf0093d3b2083c2295c9c8f12b44c65112f1846af2b71430fa6c
   i18n (1.14.6) sha256=dc229a74f5d181f09942dd60ab5d6e667f7392c4ee826f35096db36d1fe3614c
   importmap-rails (2.0.1) sha256=e739a6e70c09f797688c6983fa79567ec1edc9becc30d55b3f7cc897b1825586
   inline_svg (1.10.0) sha256=5b652934236fd9f8adc61f3fd6e208b7ca3282698b19f28659971da84bf9a10f
@@ -1127,6 +1166,7 @@ CHECKSUMS
   libddwaf (1.14.0.0.0-x86_64-darwin) sha256=33017c057fd6b4948ef4577c4a13bc89d878541961b205309fac1e71516433ff
   libddwaf (1.14.0.0.0-x86_64-linux) sha256=030640a4158ae05f9276cc1e09bfe9d19dda5af26703235cf17cf3752f1985b1
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
+  literal (0.2.1) sha256=7544725886486ce6ae701fea1ea23bb7955ef218ef109f91ad4414f3b7921261
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
   local_time (3.0.2) sha256=cb8abb2d56726ae285d00b0bd7f4c34bafc38c0c1cbc70ddc28f3a5661168d9d
   logger (1.6.1) sha256=3ad9587ed3940bf7897ea64a673971415523f4f7d6b22c5e3af5219705669653
@@ -1137,7 +1177,7 @@ CHECKSUMS
   marcel (1.0.4) sha256=0d5649feb64b8f19f3d3468b96c680bae9746335d02194270287868a661516a4
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
-  meta-tags (2.22.0) sha256=c04df1f39cfbf7d48e2ae955124d89a2429ab508fc936b9a8f9a8ce4d326e6ec
+  meta-tags (2.22.1) sha256=e5ae1febbd320d396c7226d7edb868e5d63466c14b9c8b06622a1a74e6dce354
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_histogram (0.3.1) sha256=6a114b504e4618b0e076cc672996036870f7cc6f16b8e5c25c0c637726d2dd94
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
@@ -1214,6 +1254,7 @@ CHECKSUMS
   railties (7.2.1) sha256=4b6ad279bbfb9228d7e7fbc8df562a8f5d4910e179b957d801fcec176d548463
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.2.1) sha256=46cb38dae65d7d74b6020a4ac9d48afed8eb8149c040eccf0523bec91907059d
+  ransack (4.2.1) sha256=e0f688c6ef35abe0bad3cf5afc1b050f36a819bdd56eb454c955c63cdd1bef40
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.10.1) sha256=050062d4f31d307cca52c3f6a7f4b946df8de25fc4bd373e1a5142e41034a7ca
   rbtrace (0.5.1) sha256=e8cba64d462bfb8ba102d7be2ecaacc789247d52ac587d8003549d909cb9c5dc
@@ -1288,8 +1329,8 @@ CHECKSUMS
   timescaledb (0.3.0) sha256=9ce2b39417d30544054cb609fbd84e18e304c7b7952a793846b8f4489551a28f
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.12.0) sha256=e133d80cf24fef0e7a7dfad00fd6aeff01fc79875fbfc66cd8537bbd622b1e6d
-  turbo-rails (1.5.0) sha256=b426cc762fb0940277729b3f1751a9f0bd269f5613c1d62ac73e5f0be7c7a83e
-  turbo_power (0.5.0) sha256=869726c3a4308b038d6244f7a80eb1331bdd3171fa320dddcff71899fcae24fb
+  turbo-rails (2.0.10) sha256=11cde241f9335ef6962322642dfd764178de192d0ba45101963da0f10f8e5738
+  turbo_power (0.6.2) sha256=c9080d0d1bb79deed67bee2a7654dd38f9c903b57ad52b98d19d000958fde2cc
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (2.6.0) sha256=12279874bba6d5e4d2728cef814b19197dbb10d7a7837a869bab65da943b7f5a
   unpwn (1.0.0) sha256=6239d17d46a882b3719b24fb79c78a34caff89d57ab0f5e546be5b5c882bc7d3

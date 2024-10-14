@@ -35,12 +35,19 @@ jobs:
             command: test
           - name: system
             command: test:system
+        include:
+          - rubygems: { name: latest, version: latest }
+            ruby_version: "3.3.5"
+            tests: { name: "avo without pro", command: "test test/*/avo" }
     name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-22.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
+      REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.name != 'avo without pro' }}
+      AVO_LICENSE_KEY: ${{ secrets.AVO_LICENSE_KEY }}
+      BUNDLE_PACKAGER__DEV: ${{ secrets.BUNDLE_PACKAGER__DEV }}
     steps:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
 
@@ -49,6 +56,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby_version }}
           rubygems-version: ${{ matrix.rubygems.version }}
+          install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all

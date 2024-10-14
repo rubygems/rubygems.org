@@ -9,6 +9,12 @@ Rails.autoloaders.main.ignore(Rails.root.join("lib/cops"))
 
 Rails.autoloaders.main.ignore(Rails.root.join("lib/puma/plugin"))
 
+unless defined?(Avo::Pro)
+  Rails.autoloaders.main.ignore(Rails.root.join("app/avo/cards"))
+  Rails.autoloaders.main.ignore(Rails.root.join("app/avo/dashboards"))
+  Rails.autoloaders.main.ignore(Rails.root.join("lib/admin/authorization_client.rb"))
+end
+
 Rails.autoloaders.once.inflector.inflect(
   "http" => "HTTP",
   "oidc" => "OIDC"

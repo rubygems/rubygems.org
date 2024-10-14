@@ -19,6 +19,12 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# allow dotenv to specify RAILS_GROUPS
+if defined?(Dotenv::Rails)
+  Dotenv::Rails.load
+  Bundler.require(*Rails.groups)
+end
+
 module Gemcutter
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

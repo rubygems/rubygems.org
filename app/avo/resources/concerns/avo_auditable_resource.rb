@@ -1,20 +1,24 @@
-module Concerns::AvoAuditableResource
+module Avo::Resources::Concerns::AvoAuditableResource
   extend ActiveSupport::Concern
 
-  class_methods do
-    def inherited(base)
-      super
-      base.items_holder = Avo::ItemsHolder.new
-      base.items_holder.instance_variable_get(:@items).replace items_holder.instance_variable_get(:@items).deep_dup
-      base.items_holder.invalid_fields.replace items_holder.invalid_fields.deep_dup
-    end
+  def fetch_fields
+    super
+    return unless view.form?
+
+    field :comment, as: :textarea, required: true,
+          help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."
   end
 
-  included do
-    panel "Auditable" do
-      field :comment, as: :textarea, required: true,
-        help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters.",
-        only_on: %i[new edit]
+  # Would be nice if there was a way to force a field to show up as visible
+  module HasItemsIncludeComment
+    def visible_items
+      items = super
+
+      if view.form?
+        comment = self.items.find { |item| item.respond_to?(:id) && item.id == :comment }
+        items << comment if comment
+      end
+      items
     end
   end
 end

@@ -1,5 +1,6 @@
 <%= field_wrapper **field_wrapper_args, full_width: true do %>
   <% records&.each do |gid, changes, unchanged| %>
+    <h3><%= gid %></h3>
     <%= render Avo::AuditedChangesRecordDiff::ShowComponent.new(
       gid:,
       changes:,

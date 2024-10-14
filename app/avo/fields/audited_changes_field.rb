@@ -1,2 +1,2 @@
-class AuditedChangesField < Avo::Fields::BaseField
+class Avo::Fields::AuditedChangesField < Avo::Fields::BaseField
 end

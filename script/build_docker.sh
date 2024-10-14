@@ -22,6 +22,8 @@ docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
   --tag "$DOCKER_TAG" \
   --build-arg RUBYGEMS_VERSION="$RUBYGEMS_VERSION" \
   --build-arg REVISION="$GITHUB_SHA" \
+  --build-arg BUNDLE_WITH="$([ -n "${BUNDLE_PACKAGER__DEV}" ] && echo "avo")" \
+  --secret id=BUNDLE_PACKAGER__DEV \
   .
 
 # This is a ruby script we run to ensure that all dependencies are configured properly in

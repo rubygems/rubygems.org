@@ -10,16 +10,23 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
     @view = view
 
     global_id = GlobalID.parse(gid)
-    model = begin
+    resource_class = Avo.resource_manager.get_resource_by_model_class(global_id.model_class)
+    unless resource_class
+      logger.info "No avo resource class for #{global_id} found"
+      return
+    end
+
+    record = begin
       global_id.find
     rescue ActiveRecord::RecordNotFound
       global_id.model_class.new(id: global_id.model_id)
     end
-    return unless (@resource = Avo::App.get_resource_by_model_name(global_id.model_class))
-    @resource.hydrate(model:, user:, view:)
+    @resource = resource_class.new(record:, view:, user:).detect_fields
 
-    @old_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:first)), view:)
-    @new_resource = resource.dup.hydrate(model: resource.model_class.new(**unchanged, **changes.transform_values(&:last)), view:)
+    @old_resource = resource_class
+      .new(record: resource.model_class.new(**unchanged, **changes.transform_values(&:first)), view:, user:).detect_fields
+    @new_resource = resource_class
+      .new(record: resource.model_class.new(**unchanged, **changes.transform_values(&:last)), view:, user:).detect_fields
   end
 
   def render?
@@ -29,7 +36,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
   attr_reader :gid, :changes, :unchanged, :user, :resource, :old_resource, :new_resource, :view
 
   def sorted_fields
-    @resource.fields
+    @resource.only_fields
       .reject { _1.is_a?(Avo::Fields::HasBaseField) }
       .sort_by.with_index { |f, i| [changes.key?(f.id.to_s) ? -1 : 1, i] }
   end
@@ -59,16 +66,16 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
   end
 
   def component_for_field(field, resource)
-    field = field.hydrate(model: resource.model, view:)
+    field = field.hydrate(resource:, record: resource.record, view:, user:)
     field.component_for_view(view).new(field:, resource:)
   end
 
   def authorized?
-    Pundit.policy!(user, [:admin, resource.model]).avo_show?
+    Pundit.policy!(user, [:admin, resource.record]).avo_show?
   end
 
   def title_link
-    link_to(resource.model_title, resource.record_path)
+    link_to(resource.record_title, resource.record_path)
   end
 
   def change_type_icon(type)

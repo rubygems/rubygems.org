@@ -39,7 +39,7 @@ require "phlex/testing/rails/view_helper"
 
 # setup license early since some tests are testing Avo outside of requests
 # and license is set with first request
-Avo::App.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new.response).license
+Avo::Current.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new.response).license
 
 WebMock.disable_net_connect!(
   allow_localhost: true,
@@ -49,12 +49,6 @@ WebMock.disable_net_connect!(
   ]
 )
 WebMock.globally_stub_request(:after_local_stubs) do |request|
-  avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
-  if avo_request_pattern.matches?(request)
-    { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
-      headers: { "Content-Type" => "application/json" } }
-  end
-
   if WebMock::RequestPattern.new(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s={size}")).matches?(request)
     { status: 404, body: "", headers: {} }
   end
@@ -115,6 +109,16 @@ class ActiveSupport::TestCase
     return if Toxiproxy.running?
     raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]
     skip("Toxiproxy is not running, but was required for this test.")
+  end
+
+  def requires_avo_pro
+    return if Avo.configuration.license == "advanced" && defined?(Avo::Pro)
+
+    if ActiveRecord::Type::Boolean.new.cast(ENV["REQUIRE_AVO_PRO"])
+      raise "REQUIRE_AVO_PRO is set but Avo::Pro is missing in #{Rails.env}." \
+            "\nRAILS_GROUPS=#{ENV['RAILS_GROUPS'].inspect}\nAvo.license=#{Avo.license.inspect}"
+    end
+    skip "avo pro is not present but was required for this test"
   end
 
   def assert_changed(object, *attributes)
@@ -261,6 +265,8 @@ end
 
 class AdminPolicyTestCase < ActiveSupport::TestCase
   def setup
+    requires_avo_pro
+
     @authorization_client = Admin::AuthorizationClient.new
   end
 
