@@ -9,11 +9,11 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponentPreview < Lookbook::Pre
   class Wrapper < Phlex::HTML
     include Phlex::Rails::Helpers::FormWith
 
-    extend Dry::Initializer
-    option :form_object
+    extend Literal::Properties
+    prop :form_object, _Any
 
     def view_template
-      form_with(model: form_object, url: "/") do |github_action_form|
+      form_with(model: @form_object, url: "/") do |github_action_form|
         render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form:)
         github_action_form.submit class: "form__submit", disabled: true
       end
