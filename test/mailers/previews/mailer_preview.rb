@@ -97,11 +97,6 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def owner_updated
-    # owner = create(:user)
-    # maintainer = create(:user)
-    # rubygem = create(:rubygem, name: "test-gem")
-    # owner_ownership = create(:ownership, rubygem: rubygem, user: owner)
-    # maintainer_ownership = create(:ownership, rubygem: rubygem, user: maintainer)
     ownership = Ownership.last
     owner = User.last
 
