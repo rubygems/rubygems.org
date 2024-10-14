@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
-  extend Dry::Initializer
+  extend Literal::Properties
 
-  option :github_action_form
+  prop :github_action_form, _Any, reader: :private
 
   def view_template
     github_action_form.fields_for :trusted_publisher do |trusted_publisher_form|
