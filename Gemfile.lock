@@ -126,7 +126,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
-    benchmark-ips (2.12.0)
+    benchmark-ips (2.14.0)
     better_html (2.1.1)
       actionview (>= 6.0)
       activesupport (>= 6.0)
@@ -199,19 +199,24 @@ GEM
       datadog (~> 2.3)
       msgpack
     date (3.3.4)
-    dead_end (4.0.0)
     debase-ruby_core_source (3.3.1)
-    derailed_benchmarks (2.1.2)
+    derailed_benchmarks (2.2.0)
+      base64
       benchmark-ips (~> 2)
-      dead_end
+      bigdecimal
+      drb
       get_process_mem (~> 0)
       heapy (~> 0)
+      logger
       memory_profiler (>= 0, < 2)
       mini_histogram (>= 0.3.0)
+      mutex_m
+      ostruct
       rack (>= 1)
       rack-test
       rake (> 10, < 14)
-      ruby-statistics (>= 2.1)
+      ruby-statistics (>= 4.0.1)
+      ruby2_keywords
       thor (>= 0.19, < 2)
     diff-lcs (1.5.1)
     discard (1.3.0)
@@ -451,6 +456,7 @@ GEM
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.15)
@@ -518,6 +524,7 @@ GEM
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.1.0)
+    ostruct (0.6.0)
     pagy (8.6.3)
     parallel (1.26.3)
     parser (3.3.5.0)
@@ -692,7 +699,7 @@ GEM
     ruby-magic (0.6.0)
       mini_portile2 (~> 2.8)
     ruby-progressbar (1.13.0)
-    ruby-statistics (3.0.2)
+    ruby-statistics (4.0.1)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     safety_net_attestation (0.4.0)
@@ -875,7 +882,7 @@ DEPENDENCIES
   dartsass-sprockets (~> 3.1)
   datadog (~> 2.3)
   datadog-ci (~> 1.7)
-  derailed_benchmarks (~> 2.1)
+  derailed_benchmarks (~> 2.2)
   discard (~> 1.3)
   dogstatsd-ruby (~> 5.6)
   dotenv-rails (~> 3.1)
@@ -1005,7 +1012,7 @@ CHECKSUMS
   aws-sigv4 (1.10.0) sha256=159b113dc93f9fa5a13603a8bd09eab54a9a0e8f98e606b47f1cee504780df9c
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
   bcrypt (3.1.20) sha256=8410f8c7b3ed54a3c00cd2456bf13917d695117f033218e2483b2e40b0784099
-  benchmark-ips (2.12.0) sha256=09dd4d5be05db42470e7e7b01be7310564073a054e35d9d9ec7840c523f3dbcb
+  benchmark-ips (2.14.0) sha256=b72bc8a65d525d5906f8cd94270dccf73452ee3257a32b89fbd6684d3e8a9b1d
   better_html (2.1.1) sha256=046c3551d1488a3f2939a7cac6fabf2bde08c32e135c91fcd683380118e5af55
   bigdecimal (3.1.8) sha256=a89467ed5a44f8ae01824af49cbc575871fa078332e8f77ea425725c1ffe27be
   bindata (2.5.0) sha256=29dccb8ba1cc9de148f24bb88930840c62db56715f0f80eccadd624d9f3d2623
@@ -1037,9 +1044,8 @@ CHECKSUMS
   datadog (2.3.0) sha256=28e28a48dafa4c553ba32b9c4ffe0a9aa40a9795f024279e505b255b84908566
   datadog-ci (1.7.0) sha256=41c064e2c26cfc63fb6767522e5a99fa43ec017be4b2fddfce1ff9073bb6c385
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
-  dead_end (4.0.0) sha256=695c8438993bb4c5415b1618a1b6e0afcae849ef2812fb8cb3846723904307eb
   debase-ruby_core_source (3.3.1) sha256=ed904cae290edf0cf274ad707f8981bf1cefad8081e78d4bb71be2a483bc2c08
-  derailed_benchmarks (2.1.2) sha256=eaadc6206ceeb5538ff8f5e04a0023d54ebdd95d04f33e8960fb95a5f189a14f
+  derailed_benchmarks (2.2.0) sha256=3e1a117c4366414faa909dc4276fae05a7e85b208302492d92da779c171d493d
   diff-lcs (1.5.1) sha256=273223dfb40685548436d32b4733aa67351769c7dea621da7d9dd4813e63ddfe
   discard (1.3.0) sha256=55218997ca4dc11f0594f1bb2d1196c4a959ceb562f1ab6490130233598dda67
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
@@ -1145,6 +1151,7 @@ CHECKSUMS
   multi_json (1.15.0) sha256=1fd04138b6e4a90017e8d1b804c039031399866ff3fbabb7822aea367c78615d
   multi_xml (0.7.1) sha256=4fce100c68af588ff91b8ba90a0bb3f0466f06c909f21a32f4962059140ba61b
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
+  mutex_m (0.2.0) sha256=b6ef0c6c842ede846f2ec0ade9e266b1a9dac0bc151682b04835e8ebd54840d5
   net-http (0.4.1) sha256=a96efc5ea18bcb9715e24dda4159d10f67ff0345c8a980d04630028055b2c282
   net-imap (0.4.15) sha256=e468121d50cfcf82b7bbcee823d352bbb62ba8add963daa0c08d21680d83b53d
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
@@ -1168,6 +1175,7 @@ CHECKSUMS
   openssl (3.2.0) sha256=3c4bb8760977b4becd2819c6c2569bcf5c6f48b32b9f7a4ce1fd37f996378d14
   openssl-signature_algorithm (1.3.0) sha256=a3b40b5e8276162d4a6e50c7c97cdaf1446f9b2c3946a6fa2c14628e0c957e80
   optimist (3.1.0) sha256=81886f53ee8919f330aa30076d320d88eef9bc85aae2275376b4afb007c69260
+  ostruct (0.6.0) sha256=3b1736c99f4d985de36bde1155be5e22aaf6e564b30ff9bd481e2ef7c2d9ba85
   pagy (8.6.3) sha256=537b2ee3119f237dd6c4a0d0a35c67a77b9d91ebb9d4f85e31407c2686774fb2
   parallel (1.26.3) sha256=d86babb7a2b814be9f4b81587bf0b6ce2da7d45969fab24d8ae4bf2bb4d4c7ef
   parser (3.3.5.0) sha256=f30ebb71b7830c2e7cdc4b2b0e0ec2234900e3fca3fe2fba47f78be759181ab3
@@ -1235,7 +1243,7 @@ CHECKSUMS
   ruby-graphviz (1.2.5) sha256=1c2bb44e3f6da9e2b829f5e7fd8d75a521485fb6b4d1fc66ff0f93f906121504
   ruby-magic (0.6.0) sha256=7b2138877b7d23aff812c95564eba6473b74b815ef85beb0eb792e729a2b6101
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  ruby-statistics (3.0.2) sha256=fb53e7a9f9681dac144c02539d3535fb2e8fae626f78b907219b0586ff53ec20
+  ruby-statistics (4.0.1) sha256=aede68e6261b979431b31ba39aa661844c18f97a89966768cb60edf2a56b6782
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
   rubyzip (2.3.2) sha256=3f57e3935dc2255c414484fbf8d673b4909d8a6a57007ed754dde39342d2373f
   safety_net_attestation (0.4.0) sha256=96be2d74e7ed26453a51894913449bea0e072f44490021545ac2d1c38b0718ce

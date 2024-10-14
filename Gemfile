@@ -122,7 +122,7 @@ group :development do
   gem "listen", "~> 3.9"
   gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 3.0"
-  gem "derailed_benchmarks", "~> 2.1"
+  gem "derailed_benchmarks", "~> 2.2"
   gem "memory_profiler", "~> 1.1"
 end
 
