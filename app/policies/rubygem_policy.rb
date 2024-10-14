@@ -23,24 +23,16 @@ class RubygemPolicy < ApplicationPolicy
     false
   end
 
-  def add_owner?
-    rubygem_owned_by?(user)
-  end
-
   def configure_oidc?
-    rubygem_owned_by?(user)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def configure_trusted_publishers?
-    rubygem_owned_by?(user)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def manage_adoption?
-    rubygem_owned_by?(user)
-  end
-
-  def remove_owner?
-    rubygem_owned_by?(user)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def request_ownership?
@@ -58,7 +50,23 @@ class RubygemPolicy < ApplicationPolicy
     rubygem_owned_by?(user)
   end
 
+  def close_ownership_requests?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+  end
+
   def show_unconfirmed_ownerships?
-    rubygem_owned_by?(user)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+  end
+
+  def add_owner?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+  end
+
+  def update_owner?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+  end
+
+  def remove_owner?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 end

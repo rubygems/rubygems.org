@@ -1180,4 +1180,63 @@ class RubygemTest < ActiveSupport::TestCase
       refute_predicate @version_three, :yanked?
     end
   end
+
+  context "#owned_by_with_role?" do
+    setup do
+      @rubygem = create(:rubygem)
+      @owner = create(:user)
+    end
+
+    context "when the user is not an owner of a gem" do
+      should "return false" do
+        refute @rubygem.owned_by_with_role?(@owner, :maintainer)
+      end
+    end
+
+    context "when the user is an owner of a gem" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem)
+      end
+
+      should "return true" do
+        assert @rubygem.owned_by_with_role?(@owner, :maintainer)
+      end
+    end
+
+    context "when the role is less than the given value" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :maintainer)
+      end
+
+      should "return false" do
+        refute @rubygem.owned_by_with_role?(@owner, :owner)
+      end
+    end
+
+    context "when the role is more than the given value" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
+      end
+
+      should "return true" do
+        assert @rubygem.owned_by_with_role?(@owner, :maintainer)
+      end
+    end
+
+    context "when the role is equal to the given role" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
+      end
+
+      should "return true" do
+        assert @rubygem.owned_by_with_role?(@owner, :owner)
+      end
+    end
+
+    context "when the given role does not exist" do
+      should "not raise an argument" do
+        refute @rubygem.owned_by_with_role?(@owner, :nonexistent_role)
+      end
+    end
+  end
 end

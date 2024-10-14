@@ -70,6 +70,10 @@ en:
         full_name: Full name
         handle: Username
         password: Password
+      ownership/role:
+        owner: Owner
+        admin: Admin
+        maintainer: Maintainer
       api_key:
         oidc_api_key_role: OIDC API Key Role
       oidc/id_token:
@@ -178,6 +182,7 @@ en:
       save_key: "Note that we won't be able to show the key to you again. New API key:"
       mfa: MFA
       expiration: Expiration
+      update_owner: Update Owner
     new:
       new_api_key: New API key
     reset:
@@ -335,6 +340,12 @@ en:
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
       body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host} by <b>%{remover}</b>.
+    owner_updated:
+      subject: Your role was updated for %{gem} gem
+      title: OWNER ROLE UPDATED
+      subtitle: Hi %{user_handle}!
+      body_html: Your role was updated to %{role} for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem.
+      body_text: Your role was updated to %{role} for %{gem} gem.
     ownerhip_request_closed:
       title: OWNERSHIP REQUEST
       subtitle: Hi %{handle}!
@@ -531,6 +542,9 @@ en:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.
   owners:
+    edit:
+      role: Role
+      title: Edit Owner
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem
       token_expired: The confirmation token has expired. Please try resending the token from the gem page.
@@ -542,6 +556,8 @@ en:
       confirmed_at: CONFIRMED AT
       added_by: ADDED BY
       action: ACTION
+      role: ROLE
+      role_field: Role
       email_field: Email / Handle
       submit_button: Add Owner
       info: add or remove owners
@@ -552,6 +568,9 @@ en:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+    update:
+      update_current_user_role: Can't update your own Role
+      success_notice: "%{handle} was succesfully updated."
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"
       failed_notice: Can't remove the only owner of the gem

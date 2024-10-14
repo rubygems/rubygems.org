@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :rubygem do
     transient do
       owners { [] }
+      maintainers { [] }
       number { nil }
       downloads { 0 }
     end
@@ -18,7 +19,11 @@ FactoryBot.define do
 
     after(:create) do |rubygem, evaluator|
       evaluator.owners.each do |owner|
-        create(:ownership, rubygem: rubygem, user: owner)
+        create(:ownership, rubygem: rubygem, user: owner, role: :owner)
+      end
+
+      evaluator.maintainers.each do |maintainer|
+        create(:ownership, rubygem: rubygem, user: maintainer, role: :maintainer)
       end
 
       create(:version, rubygem: rubygem, number: evaluator.number) if evaluator.number

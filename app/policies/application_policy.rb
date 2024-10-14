@@ -80,6 +80,10 @@ class ApplicationPolicy
     rubygem.owned_by?(user) || deny(t(:forbidden))
   end
 
+  def rubygem_owned_by_with_role?(user, minimum_required_role:)
+    rubygem.owned_by_with_role?(user, minimum_required_role) || deny(t(:forbidden))
+  end
+
   def policy!(user, record) = Pundit.policy!(user, record)
   def user_policy!(record) = policy!(user, record)
 

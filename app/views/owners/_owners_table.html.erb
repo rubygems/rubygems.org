@@ -14,6 +14,9 @@
       <%= t("owners.index.added_by") %>
     </th>
     <th class="owners__cell">
+      <%= t("owners.index.role") %>
+    </th>
+    <th class="owners__cell">
       <%= t("owners.index.confirmed_at") %>
     </th>
     <th class="owners__cell">
@@ -40,6 +43,9 @@
       <td class="owners__cell" data-title="Added By">
         <%= ownership.authorizer_name %>
       </td>
+      <td class="owners__cell" data-title="Role">
+        <%= Ownership.human_attribute_name("role.#{ownership.role}") %>
+      </td>
       <td class="owners__cell" data-title="Confirmed At">
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
       </td>
@@ -48,6 +54,12 @@
           rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
+          class: "form__submit form__submit--small" %>
+        <br/>
+        <%= button_to "Edit",
+          edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
+          disabled: ownership.user == current_user,
+          method: "get",
           class: "form__submit form__submit--small" %>
       </td>
     </tr>

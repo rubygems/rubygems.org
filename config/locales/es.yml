@@ -71,6 +71,10 @@ es:
         full_name: Nombre completo
         handle: Usuario
         password: Contraseña
+      ownership/role:
+        owner:
+        admin:
+        maintainer:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -184,6 +188,7 @@ es:
         clave de API:'
       mfa: AMF
       expiration:
+      update_owner:
     new:
       new_api_key: Nueva clave de API
     reset:
@@ -368,6 +373,12 @@ es:
       subtitle: "¡Hola %{handle}!"
       body_html: Has sido eliminado como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         en %{host} por <b>%{remover}</b>.
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: CANDIDATURA A PROPIETARIO
       subtitle: "¡Hola %{handle}!"
@@ -621,6 +632,8 @@ es:
       confirmed: Confirmado
       pending: Pendiente
       confirm_remove: "¿Seguro que quieres eliminar a este usuario de los propietarios?"
+      role:
+      role_field:
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
@@ -632,6 +645,12 @@ es:
       failed_notice: No se puede eliminar al único propietario de una gema
     mfa_required: La gema tiene activado el requerimiento de AMF, configura AMF en
       tu cuenta por favor.
+    edit:
+      role:
+      title:
+    update:
+      update_current_user_role:
+      success_notice:
   settings:
     edit:
       title: Editar configuración

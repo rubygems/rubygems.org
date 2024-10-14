@@ -26,6 +26,13 @@ class Api::RubygemPolicy < Api::ApplicationPolicy
       user_authorized?(rubygem, :add_owner?)
   end
 
+  def update_owner?
+    user_api_key? &&
+      mfa_requirement_satisfied?(rubygem) &&
+      api_key_scope?(:update_owner, rubygem) &&
+      user_authorized?(rubygem, :update_owner?)
+  end
+
   def remove_owner?
     user_api_key? &&
       mfa_requirement_satisfied?(rubygem) &&
