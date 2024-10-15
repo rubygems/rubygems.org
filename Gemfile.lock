@@ -561,7 +561,7 @@ GEM
     pg (1.5.8)
     pg_query (5.1.0)
       google-protobuf (>= 3.22.3)
-    pghero (3.6.0)
+    pghero (3.6.1)
       activerecord (>= 6.1)
     phlex (1.10.2)
     phlex-rails (1.2.1)
@@ -1221,7 +1221,7 @@ CHECKSUMS
   parser (3.3.5.0) sha256=f30ebb71b7830c2e7cdc4b2b0e0ec2234900e3fca3fe2fba47f78be759181ab3
   pg (1.5.8) sha256=efd71939dd1d6d9f0b434dc61dee6ef64f1d2bfcd3c177598a8797c27e654f37
   pg_query (5.1.0) sha256=b7f7f47c864f08ccbed46a8244906fb6ee77ee344fd27250717963928c93145d
-  pghero (3.6.0) sha256=cad9cb865f99ff40bb5ba47d3dae20d06be06ac8ea6b01172f6a8ccc85671109
+  pghero (3.6.1) sha256=e6d4f6ec3979d4828dafcd1eaa4214e70279fe2502b9fe5bd632d8333aa79cd4
   phlex (1.10.2) sha256=49dca7df081258f937be5e4ee0a81b11743f2b4fea25ac7537912b9c9344b1e6
   phlex-rails (1.2.1) sha256=1d80709c02114cda869951d22bfca189b5f208d1eb89f2e6fafbe3c0240a822f
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
