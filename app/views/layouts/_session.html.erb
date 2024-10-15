@@ -1,6 +1,6 @@
 <div class="ml-3 flex text-neutral-900 dark:text-white hover:text-black dark:hover:text-neutral-400" data-controller="dialog">
   <% if signed_in? %>
-    <button data-action="dialog#open" aria-expanded="false">
+    <button data-action="dialog#open" data-dialog-target="button">
       <%= avatar 64, "user_gravatar", theme: :dark, class: "h-9 w-9 rounded" %>
     </button>
   <% else %>

@@ -5,19 +5,22 @@ export default class extends Dialog {
 
   connect() {
     super.connect()
+    this.setAriaExpanded('false')
   }
 
   open() {
     super.open()
-    if (this.hasButtonTarget) {
-      this.buttonTarget.ariaExpanded = true
-    }
+    this.setAriaExpanded('true')
   }
 
   close() {
-    if (this.hasButtonTarget) {
-      this.buttonTarget.ariaExpanded = false
-    }
     super.close()
+    this.setAriaExpanded('false')
+  }
+
+  setAriaExpanded(expanded) {
+    if (this.hasButtonTarget) {
+      this.buttonTarget.setAttribute('aria-expanded', expanded)
+    }
   }
 }

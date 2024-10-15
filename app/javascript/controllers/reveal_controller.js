@@ -10,10 +10,11 @@ export default class extends Reveal {
       this.buttonTarget.ariaExpanded = false
     }
   }
+
   toggle() {
     super.toggle()
     if (this.hasButtonTarget) {
-      this.buttonTarget.ariaExpanded = this.buttonTarget.ariaExpanded !== "true"
+      this.setAriaExpanded(this.buttonTarget.ariaExpanded === "true" ? "false" : "true")
     }
     if (this.hasToggleTarget && this.hasToggleClass) {
       this.toggleClasses.forEach((className) => {
@@ -24,9 +25,6 @@ export default class extends Reveal {
 
   show() {
     super.show()
-    if (this.hasButtonTarget) {
-      this.buttonTarget.ariaExpanded = true
-    }
     if (this.hasToggleTarget && this.hasToggleClass) {
       this.toggleTarget.classList.add(...this.toggleClasses)
     }
@@ -34,11 +32,15 @@ export default class extends Reveal {
 
   hide() {
     super.hide()
-    if (this.hasToggleTarget) {
-      this.buttonTarget.ariaExpanded = false
-    }
+    this.setAriaExpanded('false')
     if (this.hasToggleTarget && this.hasToggleClass) {
       this.toggleTarget.classList.add(...this.toggleClasses)
+    }
+  }
+
+  setAriaExpanded(expanded) {
+    if (this.hasButtonTarget) {
+      this.buttonTarget.setAttribute('aria-expanded', expanded)
     }
   }
 }
