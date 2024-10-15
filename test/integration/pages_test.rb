@@ -8,6 +8,12 @@ class PagesTest < SystemTest
     assert page.has_content? "Welcome to RubyGems.org"
   end
 
+  test "renders existing about page" do
+    visit "/pages/about"
+
+    assert page.has_content? "Welcome to RubyGems.org"
+  end
+
   test "gracefully fails on unknown page" do
     assert_raises(ActionController::RoutingError) do
       visit "/pages/not-existing-one"
