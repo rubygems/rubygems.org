@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.13.1)
-      avo (= 3.13.1)
-      avo-dynamic_filters (= 3.13.1)
-      avo-pro (= 3.13.1)
+    avo-advanced (3.13.6)
+      avo (= 3.13.6)
+      avo-dynamic_filters (= 3.13.6)
+      avo-pro (= 3.13.6)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.13.1)
-      avo (= 3.13.1)
+    avo-dashboards (3.13.6)
+      avo (= 3.13.6)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.13.1)
-      avo (= 3.13.1)
+    avo-dynamic_filters (3.13.6)
+      avo (= 3.13.6)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.13.1)
-      avo (= 3.13.1)
+    avo-menu (3.13.6)
+      avo (= 3.13.6)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.13.1)
-      avo (= 3.13.1)
-      avo-dashboards (= 3.13.1)
-      avo-menu (= 3.13.1)
+    avo-pro (3.13.6)
+      avo (= 3.13.6)
+      avo-dashboards (= 3.13.6)
+      avo-menu (= 3.13.6)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -117,7 +117,7 @@ GEM
     attr_required (1.0.2)
     autoprefixer-rails (10.4.19.0)
       execjs (~> 2)
-    avo (3.13.1)
+    avo (3.13.6)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -125,9 +125,9 @@ GEM
       addressable
       docile
       inline_svg
-      literal (~> 0.2)
       meta-tags
       pagy (>= 7.0.0)
+      prop_initializer (>= 0.2.0)
       turbo-rails (>= 2.0.0)
       turbo_power (>= 0.6.0)
       view_component (>= 3.7.0)
@@ -424,7 +424,6 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    literal (0.2.1)
     llhttp-ffi (0.5.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
@@ -570,6 +569,8 @@ GEM
     pp (0.5.0)
       prettyprint
     prettyprint (0.2.0)
+    prop_initializer (0.2.0)
+      zeitwerk (>= 2.6.18)
     prosopite (1.4.2)
     pry (0.14.1)
       coderay (~> 1.1)
@@ -829,7 +830,7 @@ GEM
       bindata (~> 2.4)
       openssl (> 2.0)
       openssl-signature_algorithm (~> 1.0)
-    turbo-rails (2.0.10)
+    turbo-rails (2.0.11)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
     turbo_power (0.6.2)
@@ -1035,12 +1036,12 @@ CHECKSUMS
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   autoprefixer-rails (10.4.19.0) sha256=ccd21f47e5a07a581c7d239025e0d8d06a005825e96e06f72382d818fe665f4e
-  avo (3.13.1) sha256=6fd001bda35c4b307579fbc6f597de60d89846b04b96d2bc4cb06bcd54b5945b
-  avo-advanced (3.13.1) sha256=87d87a6e0837dbeab549428f3afbcb0e0c81e23e46de62dffd0a1270bffc1d0e
-  avo-dashboards (3.13.1) sha256=073cdbb7c7e9ad46693291d6d5976bdba1a900bf572376a88e02b793f9e4e528
-  avo-dynamic_filters (3.13.1) sha256=adb72eae45ca400c595e6999dcfcea7d28f3c2d513b0520599a3fe0d39538671
-  avo-menu (3.13.1) sha256=444fec35ccc1956bbbb6ff7489c48641d88350d8dfb55652681cadb03b87d901
-  avo-pro (3.13.1) sha256=c465c9886926f155dd9fd8d46bbb96018260cced9af8206bf64c428a25793f09
+  avo (3.13.6) sha256=cc54d03a297fe2058b5380af8702071bec71db0edd2301496af7c99a87fac715
+  avo-advanced (3.13.6) sha256=82b05d25550a9ff9c7533ff5a5d458b3b117bb946e688dadd50a5f5bf87f80b8
+  avo-dashboards (3.13.6) sha256=75e942b0e85990ccb0d1220afcd236f2ac0f4f9ba01b58be14a5ada9d6c999f0
+  avo-dynamic_filters (3.13.6) sha256=434474d2ba3f1a7b7ff7e6b4507310095c5ddaf249f502e56c45b8108575f0c2
+  avo-menu (3.13.6) sha256=58f86c56d20993528020faa3e327e15a562622129185f263dfa354d693238ca5
+  avo-pro (3.13.6) sha256=57b3b69188400df9204844089600809514e77a64098dcb878880f106936b62d5
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
@@ -1166,7 +1167,6 @@ CHECKSUMS
   libddwaf (1.14.0.0.0-x86_64-darwin) sha256=33017c057fd6b4948ef4577c4a13bc89d878541961b205309fac1e71516433ff
   libddwaf (1.14.0.0.0-x86_64-linux) sha256=030640a4158ae05f9276cc1e09bfe9d19dda5af26703235cf17cf3752f1985b1
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
-  literal (0.2.1) sha256=7544725886486ce6ae701fea1ea23bb7955ef218ef109f91ad4414f3b7921261
   llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
   local_time (3.0.2) sha256=cb8abb2d56726ae285d00b0bd7f4c34bafc38c0c1cbc70ddc28f3a5661168d9d
   logger (1.6.1) sha256=3ad9587ed3940bf7897ea64a673971415523f4f7d6b22c5e3af5219705669653
@@ -1226,6 +1226,7 @@ CHECKSUMS
   phlex-rails (1.2.1) sha256=1d80709c02114cda869951d22bfca189b5f208d1eb89f2e6fafbe3c0240a822f
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
+  prop_initializer (0.2.0) sha256=bd27704d0df8c59c3baf0df5cf448eba2b140fb9934fb31b2e379b5c842d8820
   prosopite (1.4.2) sha256=b2e422e2d9dbf3ce20130ded3252fe14adb3833555eacd451f5015d8c9177e79
   pry (0.14.1) sha256=99b6df0665875dd5a39d85e0150aa5a12e2bb4fef401b6c4f64d32ee502f8454
   pry-byebug (3.10.1) sha256=c8f975c32255bfdb29e151f5532130be64ff3d0042dc858d0907e849125581f8
@@ -1329,7 +1330,7 @@ CHECKSUMS
   timescaledb (0.3.0) sha256=9ce2b39417d30544054cb609fbd84e18e304c7b7952a793846b8f4489551a28f
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.12.0) sha256=e133d80cf24fef0e7a7dfad00fd6aeff01fc79875fbfc66cd8537bbd622b1e6d
-  turbo-rails (2.0.10) sha256=11cde241f9335ef6962322642dfd764178de192d0ba45101963da0f10f8e5738
+  turbo-rails (2.0.11) sha256=fc47674736372780abd2a4dc0d84bef242f5ca156a457cd7fa6308291e397fcf
   turbo_power (0.6.2) sha256=c9080d0d1bb79deed67bee2a7654dd38f9c903b57ad52b98d19d000958fde2cc
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (2.6.0) sha256=12279874bba6d5e4d2728cef814b19197dbb10d7a7837a869bab65da943b7f5a
