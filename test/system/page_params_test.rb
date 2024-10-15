@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class PageParamsTest < SystemTest
+class PageParamsTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   test "stats with page param more than 10" do

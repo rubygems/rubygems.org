@@ -254,17 +254,6 @@ Gemcutter::Application.load_tasks
 # Force loading of ActionDispatch::SystemTesting::* helpers
 _ = ActionDispatch::SystemTestCase
 
-class SystemTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
-  include Capybara::Minitest::Assertions
-  include ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
-  include ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
-
-  setup do
-    Capybara.current_driver = :rack_test
-  end
-end
-
 class AdminPolicyTestCase < ActiveSupport::TestCase
   def setup
     requires_avo_pro

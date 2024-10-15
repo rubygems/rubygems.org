@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class SignInTest < SystemTest
+class SignInTest < ApplicationSystemTestCase
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
     @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,

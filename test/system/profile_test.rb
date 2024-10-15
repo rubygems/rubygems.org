@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class ProfileTest < SystemTest
+class ProfileTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
   setup do
