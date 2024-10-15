@@ -1,6 +1,6 @@
 <% @title = t('.title') %>
 
-<div class="l-colspan t-body">
+<%= prose do %>
   <p>
     Found a security issue with RubyGems or RubyGems.org?
     Please follow these steps to report it.
@@ -131,4 +131,4 @@
       security@rubygems.org</a> or <a href="https://github.com/rubygems/rubygems.org/issues">
       open an issue on GitHub</a>. Thanks!
   </p>
-</div>
+<% end %>

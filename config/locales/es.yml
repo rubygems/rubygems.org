@@ -213,8 +213,8 @@ es:
       migrating_link_text: migrar
       mine: Mis Gemas
       my_subscriptions: Suscripciones
-      no_owned_html: Todavía no publicaste ninguna gema. Prueba a ver las guías sobre
-        cómo %{creating_link} o %{migrating_link} una gema en rubygems.org.
+      no_owned_html: Todavía no publicaste ninguna gema. Prueba a ver la guía sobre
+        cómo %{creating_link}.
       no_subscriptions_html: Aún no te suscribiste a ninguna gema. ¡Visita la %{gem_link}
         para suscribirte!
       title: Dashboard
@@ -247,6 +247,7 @@ es:
         blog: Blog
         contribute: Contribuye
         data: Datos
+        docs: Documentación
         designed_by: Diseñado por
         discussion_forum: Foro de Discusión
         gems_served_by: Distribuida por
@@ -261,6 +262,9 @@ es:
         statistics: Estadísticas
         status: Estado
         supported_by: Con el apoyo de
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          es respaldado por
         tested_by: Probado por
         tracking_by: Seguimiento con
         uptime: Uptime
@@ -268,14 +272,20 @@ es:
         secured_by: Protegido por
         looking_for_maintainers: Se buscan mantenedores/as
       header:
+        profile: Perfil
         dashboard: Dashboard
         settings: Configuración
-        edit_profile: Editar perfil
+        edit_profile: Editar
         search_gem_html: Buscar gemas&hellip;
         sign_in: Acceso
         sign_out: Salir
         sign_up: Registro
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: Dashboard
+    settings: Configuración
+    org_name: 'Org: %{name}'
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -474,10 +484,6 @@ es:
       title: Volcado de datos de RubyGems.org
     download:
       title: Descargar RubyGems
-    faq:
-      title: Preguntas Frecuentes
-    migrate:
-      title: Migrar Gemas
     security:
       title: Seguridad
     sponsors:

@@ -198,7 +198,7 @@ ja:
       migrating_link_text: 移行
       mine: 自分のgem
       my_subscriptions: 購読
-      no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}またはRubyForgeからの%{migrating_link}ガイドをご覧ください。
+      no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}ガイドをご覧ください。
       no_subscriptions_html: まだgemを購読していません。%{gem_link}から何か購読してみてください。
       title: ダッシュボード
   dependencies:
@@ -228,6 +228,7 @@ ja:
         blog: ブログ
         contribute: 貢献
         data: データ
+        docs: ドキュメント
         designed_by: 設計
         discussion_forum: 議論
         gems_served_by: gemの提供
@@ -242,6 +243,9 @@ ja:
         statistics: 統計
         status: 状態
         supported_by: 協賛
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          は以下から支援を受けています
         tested_by: テスト
         tracking_by: 追跡
         uptime: 稼働時間
@@ -249,6 +253,7 @@ ja:
         secured_by: セキュリティ
         looking_for_maintainers: メンテナの募集
       header:
+        profile: プロフィール
         dashboard: ダッシュボード
         settings: 設定
         edit_profile: プロフィールを編集
@@ -258,6 +263,11 @@ ja:
         sign_up: 新規登録
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
         to blog post)！"
+  breadcrumbs:
+    home:
+    dashboard: ダッシュボード
+    settings: 設定
+    org_name: 組織：%{name}
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -419,10 +429,6 @@ ja:
       title: RubyGems.orgのデータのダンプ
     download:
       title: RubyGemsをダウンロード
-    faq:
-      title: FAQ
-    migrate:
-      title: gemを移行する
     security:
       title: セキュリティ
     sponsors:

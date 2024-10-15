@@ -48,10 +48,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized @user, :request_ownership?
     end
 
-    should "be false if the gem has a version newer than 1 year" do
-      create(:version, rubygem: @rubygem, created_at: 11.months.ago)
+    context "when the gem has a version newer than 1 year" do
+      should "be false" do
+        create(:version, rubygem: @rubygem, created_at: 11.months.ago)
 
-      refute_authorized @user, :request_ownership?
+        refute_authorized @user, :request_ownership?
+      end
     end
 
     should "be true if the gem's latest version is older than 1 year and less than 10,000 downloads" do

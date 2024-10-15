@@ -1,7 +1,10 @@
 class PagesController < ApplicationController
   before_action :find_page
 
+  layout "hammy"
+
   def show
+    add_breadcrumb t("pages.#{@page}.title")
     render @page
   end
 

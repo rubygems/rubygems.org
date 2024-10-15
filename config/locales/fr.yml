@@ -205,8 +205,7 @@ fr:
       migrating_link_text: migration
       mine: Mes Gems
       my_subscriptions: Abonnements
-      no_owned_html: Vous n'avez pas encore publié de gem. Vous pouvez vérifier les
-        guides de %{creating_link} ou de %{migrating_link} de gems depuis RubyForge.
+      no_owned_html: Vous n'avez pas encore publié de gem. Vous pouvez vérifier le guide de %{creating_link}.
       no_subscriptions_html: Vous n'avez pas encore d'abonnements. Visitez %{gem_link}
         pour vous y abonner !
       title: Dashboard
@@ -239,6 +238,7 @@ fr:
         blog: Blog
         contribute: Contribuer
         data: Données
+        docs: Documentation
         designed_by: Design par
         discussion_forum: Discussions
         gems_served_by: Gems mis à disposition par
@@ -253,6 +253,9 @@ fr:
         statistics: Stats
         status: Statut
         supported_by: Soutenu par
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> est soutenu par
         tested_by: Testé par
         tracking_by: Tracking par
         uptime: Uptime
@@ -260,14 +263,20 @@ fr:
         secured_by:
         looking_for_maintainers:
       header:
+        profile: Profil
         dashboard: Dashboard
-        settings:
-        edit_profile:
+        settings: Paramètres
+        edit_profile: Modifier le profil
         search_gem_html: Recherche de Gems&hellip;
         sign_in: Connexion
         sign_out: Déconnexion
         sign_up: Inscription
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: Dashboard
+    settings: Paramètres
+    org_name: 'Org: %{name}'
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
@@ -438,10 +447,6 @@ fr:
     data:
       title:
     download:
-      title:
-    faq:
-      title:
-    migrate:
       title:
     security:
       title:

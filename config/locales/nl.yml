@@ -198,8 +198,7 @@ nl:
       mine: Mijn Gems
       my_subscriptions: Mijn abonnementen
       no_owned_html: Je hebt nog geen gems gepubliceerd. Bekijk de instructies voor
-        het %{creating_link} van een gem of het  %{migrating_link} van een gem vanaf
-        RubyForge.
+        het %{creating_link} van een gem.
       no_subscriptions_html: Je bent nog niet geabonneerd op een of meerdere gems.
         Bezoek een %{gem_link} en abonneer je erop.
       title: Dashboard
@@ -231,6 +230,7 @@ nl:
         blog: Blog
         contribute: Bijdragen
         data: Data
+        docs: Documentatie
         designed_by: Ontwerp
         discussion_forum: Forum
         gems_served_by:
@@ -245,6 +245,9 @@ nl:
         statistics: Statistieken
         status: Status
         supported_by: Ondersteuning
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> wordt ondersteund door
         tested_by: Getest door
         tracking_by: Tracking
         uptime: Uptime
@@ -252,14 +255,20 @@ nl:
         secured_by:
         looking_for_maintainers:
       header:
+        profile: Profiel
         dashboard: Dashboard
-        settings:
-        edit_profile:
+        settings: Instellingen
+        edit_profile: Wijzig profiel
         search_gem_html: Gems Zoeken&hellip;
         sign_in: Inloggen
         sign_out: Uitloggen
         sign_up: Registreren
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: Dashboard
+    settings:
+    org_name: 'Organisatie: %{name}'
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -424,10 +433,6 @@ nl:
     data:
       title:
     download:
-      title:
-    faq:
-      title:
-    migrate:
       title:
     security:
       title:

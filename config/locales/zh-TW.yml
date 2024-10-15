@@ -198,8 +198,7 @@ zh-TW:
       migrating_link_text: Gem 轉移
       mine: 我的 Gems
       my_subscriptions: 我的訂閱
-      no_owned_html: 您尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學，或參考 %{migrating_link} 教學來將您的
-        Gem 從 RubyForge 遷移過來。
+      no_owned_html: 您尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學。
       no_subscriptions_html: 您還沒有訂閱過 Gem，前往 %{gem_link} 來訂閱！
       title: 控制台
   dependencies:
@@ -229,6 +228,7 @@ zh-TW:
         blog: 部落格
         contribute: 貢獻
         data: 資料
+        docs: 文件
         designed_by: 設計
         discussion_forum: 討論群組
         gems_served_by: 服務
@@ -243,6 +243,9 @@ zh-TW:
         statistics: 統計
         status: 狀態
         supported_by: 支持
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> 由以下支持
         tested_by: 測試
         tracking_by: 追蹤
         uptime: 上線時間
@@ -250,6 +253,7 @@ zh-TW:
         secured_by:
         looking_for_maintainers: 徵求維護者
       header:
+        profile: 個人檔案
         dashboard: 儀表板
         settings: 設定
         edit_profile: 編輯個人檔案
@@ -258,6 +262,11 @@ zh-TW:
         sign_out: 登出
         sign_up: 註冊
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
+  breadcrumbs:
+    home:
+    dashboard:
+    settings:
+    org_name: 組織：%{name}
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -421,10 +430,6 @@ zh-TW:
       title:
     download:
       title: 下載 RubyGems
-    faq:
-      title: 常見問題
-    migrate:
-      title: 轉移 Gems
     security:
       title: 安全性
     sponsors:

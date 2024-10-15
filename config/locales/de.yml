@@ -215,7 +215,7 @@ de:
       mine: Meine Gems
       my_subscriptions: Abonnements
       no_owned_html: Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation
-        auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge.
+        auf %{creating_link}.
       no_subscriptions_html: Du hast noch keine Gems abonniert. Besuche %{gem_link}
         um das Gem zu abonnieren!
       title: Dashboard
@@ -248,6 +248,7 @@ de:
         blog: Blog
         contribute: Beitragen
         data: Daten
+        docs: Dokumentation
         designed_by: Design von
         discussion_forum: Diskussion
         gems_served_by: Gems angeboten von
@@ -262,6 +263,9 @@ de:
         statistics: Statistiken
         status: Status
         supported_by: Unterstützt von
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          wird unterstützt von
         tested_by:
         tracking_by: Getrackt von
         uptime: Betriebszeit
@@ -269,14 +273,20 @@ de:
         secured_by:
         looking_for_maintainers:
       header:
+        profile: Profil
         dashboard: Dashboard
-        settings:
-        edit_profile:
+        settings: Einstellungen
+        edit_profile: Profil bearbeiten
         search_gem_html: Suche Gems&hellip;
         sign_in: Anmelden
         sign_out: Abmelden
         sign_up: Registrieren
       mfa_banner_html:
+  breadcrumbs:
+    home:
+    dashboard: Dashboard
+    settings:
+    org_name: 'Organisation: %{name}'
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -486,10 +496,6 @@ de:
       title: RubyGems.org Data Dumps
     download:
       title: Download RubyGems
-    faq:
-      title: FAQ
-    migrate:
-      title: Migrate gems
     security:
       title: Security
     sponsors:

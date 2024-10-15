@@ -204,7 +204,7 @@ en:
       migrating_link_text: migrating
       mine: My Gems
       my_subscriptions: Subscriptions
-      no_owned_html: You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge.
+      no_owned_html: You haven't pushed any gems yet. Perhaps check out the guide on %{creating_link} a gem.
       no_subscriptions_html: You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!
       title: Dashboard
   dependencies:
@@ -234,6 +234,7 @@ en:
         blog: Blog
         contribute: Contribute
         data: Data
+        docs: Docs
         designed_by: Designed by
         discussion_forum: Discuss
         gems_served_by: Gems served by
@@ -248,6 +249,9 @@ en:
         statistics: Stats
         status: Status
         supported_by: Supported by
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          is supported by
         tested_by: Tested by
         tracking_by: Tracking by
         uptime: Uptime
@@ -255,6 +259,7 @@ en:
         secured_by: Secured by
         looking_for_maintainers: maintainers wanted
       header:
+        profile: Profile
         dashboard: Dashboard
         settings: Settings
         edit_profile: Edit profile
@@ -263,6 +268,11 @@ en:
         sign_out: Sign out
         sign_up: Sign up
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
+  breadcrumbs:
+    home: Home
+    dashboard: Dashboard
+    settings: Settings
+    org_name: "Org: %{name}"
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
@@ -418,10 +428,6 @@ en:
       title: RubyGems.org Data Dumps
     download:
       title: Download RubyGems
-    faq:
-      title: FAQ
-    migrate:
-      title: Migrate gems
     security:
       title: Security
     sponsors:
