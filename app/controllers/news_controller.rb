@@ -2,19 +2,20 @@ class NewsController < ApplicationController
   before_action -> { set_page Gemcutter::NEWS_MAX_PAGES }
 
   def show
-    @rubygems = Rubygem.preload(:latest_version, :gem_download)
-      .news(Gemcutter::NEWS_DAYS_LIMIT)
-      .page(@page)
-      .per(Gemcutter::NEWS_PER_PAGE)
+    @rubygems_pagy, @rubygems = pagy(
+      Rubygem.preload(:latest_version, :gem_download)
+      .news(Gemcutter::NEWS_DAYS_LIMIT),
+      limit: Gemcutter::NEWS_MAX_PAGES
+    )
+
     limit_total_count
   end
 
   def popular
     @title = t(".title")
-    @rubygems = Rubygem.preload(:latest_version, :gem_download)
-      .popular(Gemcutter::POPULAR_DAYS_LIMIT)
-      .page(@page)
-      .per(Gemcutter::NEWS_PER_PAGE)
+    @rubygems_pagy, @rubygems = pagy(Rubygem.preload(:latest_version, :gem_download)
+      .popular(Gemcutter::POPULAR_DAYS_LIMIT),
+      limit: Gemcutter::NEWS_MAX_PAGES)
     limit_total_count
 
     render :show

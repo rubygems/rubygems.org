@@ -9,16 +9,17 @@ class Events::TableComponent < ApplicationComponent
   extend Phlex::Rails::HelperMacros
 
   register_value_helper :current_user
-  register_value_helper :page_entries_info
-  register_value_helper :paginate
+  register_value_helper :pagy_info
+  register_value_helper :pagy_nav
 
   extend Dry::Initializer
 
+  option :security_events_pagy
   option :security_events
 
   def view_template
     header(class: "gems__header push--s") do
-      p(class: "gems__meter l-mb-0") { plain page_entries_info(security_events) }
+      p(class: "gems__meter l-mb-0") { plain pagy_info(security_events_pagy, item_name: "security events") }
     end
 
     if security_events.any?
@@ -39,7 +40,7 @@ class Events::TableComponent < ApplicationComponent
       end
     end
 
-    plain paginate(security_events)
+    plain pagy_nav(security_events_pagy) if security_events_pagy.pages > 1
   end
 
   private

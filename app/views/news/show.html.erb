@@ -6,8 +6,8 @@
 </div>
 
 <header class="gems__header">
-  <p class="gems__meter"><%= page_entries_info @rubygems %></p>
+  <p class="gems__meter"><%== pagy_info @rubygems_pagy, item_name: 'gems' %></p>
 </header>
 
 <%= render partial: "news/rubygem", collection: @rubygems %>
-<%= paginate @rubygems %>
+<%== pagy_nav @rubygems_pagy if @rubygems_pagy.pages > 1 %>

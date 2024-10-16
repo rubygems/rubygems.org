@@ -107,7 +107,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should "render links" do
       @gems.each do |g|
-        assert page.has_content?(g.name)
+        page.assert_content(g.name)
         page.assert_selector("a[href='#{rubygem_path(g.slug)}']")
       end
     end
@@ -173,7 +173,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should "render links" do
       @gems.each do |g|
-        assert page.has_content?(g.name)
+        page.assert_content(g.name)
         assert page.has_selector?("a[href='#{rubygem_path(g.slug)}']")
       end
     end

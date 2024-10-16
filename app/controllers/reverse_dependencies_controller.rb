@@ -11,6 +11,6 @@ class ReverseDependenciesController < ApplicationController
       .preload(:gem_download, :latest_version)
 
     @reverse_dependencies = @reverse_dependencies.legacy_search(params[:rdeps_query]) if params[:rdeps_query].is_a?(String)
-    @reverse_dependencies = @reverse_dependencies.page(@page).without_count
+    @reverse_dependencies_pagy, @reverse_dependencies = pagy_countless(@reverse_dependencies)
   end
 end

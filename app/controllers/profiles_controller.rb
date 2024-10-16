@@ -53,8 +53,8 @@ class ProfilesController < ApplicationController
   end
 
   def security_events
-    @security_events = current_user.events.order(id: :desc).page(params[:page]).per(50)
-    render Profiles::SecurityEventsView.new(security_events: @security_events)
+    @security_events_pagy, @security_events = pagy(current_user.events.order(id: :desc), limit: 50)
+    render Profiles::SecurityEventsView.new(security_events_pagy: @security_events_pagy, security_events: @security_events)
   end
 
   private

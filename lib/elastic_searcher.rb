@@ -19,7 +19,7 @@ class ElasticSearcher
     result = Rubygem.searchkick_search(
       body: search_definition.to_hash,
       page: @page,
-      per_page: Kaminari.config.default_per_page,
+      per_page: Pagy::DEFAULT[:limit],
       load: false
     )
     result.response # ES query is triggered here to allow fallback. avoids lazy loading done in the view
@@ -29,7 +29,7 @@ class ElasticSearcher
   end
 
   def api_search
-    result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash, page: @page, per_page: Kaminari.config.default_per_page,
+    result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash, page: @page, per_page: Pagy::DEFAULT[:limit],
 load: false)
     result.response["hits"]["hits"].pluck("_source")
   rescue Searchkick::InvalidQueryError => e
@@ -39,7 +39,7 @@ load: false)
   end
 
   def suggestions
-    result = Rubygem.searchkick_search(body: suggestions_definition.to_hash, page: @page, per_page: Kaminari.config.default_per_page, load: false)
+    result = Rubygem.searchkick_search(body: suggestions_definition.to_hash, page: @page, per_page: Pagy::DEFAULT[:limit], load: false)
     result = result.response["suggest"]["completion_suggestion"][0]["options"]
     result.map { |gem| gem["_source"]["name"] }
   rescue *CONNECTION_ERRORS => e
