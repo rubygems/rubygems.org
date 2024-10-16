@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class SignUpTest < SystemTest
+class SignUpTest < ApplicationSystemTestCase
   test "sign up" do
     visit sign_up_path
 

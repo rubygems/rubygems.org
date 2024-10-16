@@ -1,7 +1,7 @@
-require "test_helper"
+require "application_system_test_case"
 require "helpers/email_helpers"
 
-class EmailConfirmationTest < SystemTest
+class EmailConfirmationTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
   setup do

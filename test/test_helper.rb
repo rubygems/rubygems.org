@@ -68,8 +68,6 @@ Mocha.configure do |c|
   c.strict_keyword_argument_matching = true
 end
 
-Rubygem.searchkick_reindex(import: false)
-
 OmniAuth.config.test_mode = true
 
 class ActiveSupport::TestCase
@@ -78,8 +76,15 @@ class ActiveSupport::TestCase
   include EmailHelpers
   include PasswordHelpers
 
-  parallelize_setup do |_worker|
+  parallelize(workers: :number_of_processors)
+
+  parallelize_setup do |worker|
+    Version.reset_column_information # TODO: Remove once https://github.com/rails/rails/pull/52703 is released
+
     SemanticLogger.reopen
+    Searchkick.index_suffix = "_#{worker}"
+    Rubygem.reindex
+    Searchkick.disable_callbacks
   end
 
   setup do
@@ -89,6 +94,9 @@ class ActiveSupport::TestCase
 
     Unpwn.offline = true
     OmniAuth.config.mock_auth.clear
+
+    Rubygem.reindex
+    Searchkick.disable_callbacks
 
     @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
     config = LaunchDarkly::Config.new(data_source: @launch_darkly, send_events: false)
@@ -251,17 +259,6 @@ Gemcutter::Application.load_tasks
 
 # Force loading of ActionDispatch::SystemTesting::* helpers
 _ = ActionDispatch::SystemTestCase
-
-class SystemTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
-  include Capybara::Minitest::Assertions
-  include ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
-  include ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
-
-  setup do
-    Capybara.current_driver = :rack_test
-  end
-end
 
 class AdminPolicyTestCase < ActiveSupport::TestCase
   def setup

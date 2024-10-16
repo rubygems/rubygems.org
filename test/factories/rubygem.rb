@@ -9,6 +9,12 @@ FactoryBot.define do
 
     name
 
+    trait :reindex do
+      after(:create) do |rubygem, _evaluator|
+        rubygem.reindex(refresh: true)
+      end
+    end
+
     after(:build) do |rubygem, evaluator|
       if evaluator.linkset
         rubygem.linkset = evaluator.linkset
