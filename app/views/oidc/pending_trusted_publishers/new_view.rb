@@ -6,9 +6,9 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
   include Phlex::Rails::Helpers::OptionsForSelect
   include Phlex::Rails::Helpers::FormWith
 
-  extend Dry::Initializer
+  extend Literal::Properties
 
-  option :pending_trusted_publisher
+  prop :pending_trusted_publisher, OIDC::PendingTrustedPublisher, reader: :private
 
   def view_template
     self.title = t(".title")

@@ -12,9 +12,10 @@ class Events::TableComponent < ApplicationComponent
   register_value_helper :page_entries_info
   register_value_helper :paginate
 
-  extend Dry::Initializer
+  extend Literal::Properties
 
-  option :security_events
+  prop :security_events_pagy, Pagy, reader: :private
+  prop :security_events, ActiveRecord::Relation, reader: :private
 
   def view_template
     header(class: "gems__header push--s") do
