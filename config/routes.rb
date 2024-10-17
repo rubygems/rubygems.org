@@ -233,6 +233,15 @@ Rails.application.routes.draw do
       get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
     end
 
+    namespace :onboarding do
+      root to: 'name#new'
+
+      resource :name, only: %i[new create], controller: 'name'
+      resource :gems, only: %i[edit update]
+      resource :users, only: %i[edit update]
+      resource :confirm, only: %i[edit update], controller: 'confirm'
+    end
+
     ################################################################################
     # Clearance Overrides and Additions
 
