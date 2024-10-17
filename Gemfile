@@ -21,7 +21,7 @@ gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 5.5.1", require: false # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
-gem "launchdarkly-server-sdk", "~> 8.7"
+gem "launchdarkly-server-sdk", "~> 8.8"
 gem "mail", "~> 2.8"
 gem "octokit", "~> 9.1"
 gem "omniauth-github", "~> 2.0"
