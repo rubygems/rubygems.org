@@ -1,7 +1,7 @@
 class Events::TableDetailsComponent < ApplicationComponent
-  extend Dry::Initializer
+  extend Literal::Properties
 
-  option :event
+  prop :event, _Any, reader: :private
   delegate :additional, :rubygem, to: :event
 
   def view_template
