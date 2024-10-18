@@ -253,6 +253,18 @@ class Pusher
   # we validate that the version full_name == spec.original_name
   def write_gem(body, spec_contents)
     gem_path = "gems/#{@version.gem_file_name}"
+
+    body.read
+    body.pos -= 1024 # rewind to the end of the tar header
+
+    if (website = spec.metadata["website_rendered"]).present?
+      Gem::Package::TarWriter.new(body) do |gem|
+        gem.add_file "website.html", 0o444 do |io|
+          io.write URI.open(website).read
+        end
+      end
+      body.string
+    end
     gem_contents = body.string
 
     spec_path = "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"

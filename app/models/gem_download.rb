@@ -95,6 +95,7 @@ class GemDownload < ApplicationRecord
     # updates the downloads field of rubygems in DB and ES index
     # input: { rubygem_id => download_count_to_increment }
     def update_gem_downloads(updates_by_gem)
+      return if Rails.env.development?
       updates_by_version = most_recent_version_downloads(updates_by_gem.keys)
 
       bulk_update_query = downloads_by_gem(updates_by_gem.keys).map do |id, downloads|
