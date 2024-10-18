@@ -143,4 +143,16 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#avaliable_rubygems" do
+    should "return the rubygems that the user owns" do
+      assert_equal [@rubygem], @onboarding.avaliable_rubygems
+    end
+  end 
+
+  context "#avaliable_users" do
+    should "return the users that share ownership with the set of avaliable rubygems" do
+      assert_equal [@maintainer], @onboarding.avaliable_users
+    end
+  end
 end

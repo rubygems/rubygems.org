@@ -36,6 +36,18 @@ class OrganizationOnboarding < ApplicationRecord
     )
   end
 
+  def avaliable_rubygems
+    User.find(created_by).rubygems # TODO: Make created_by a relation to User
+  end
+
+  def avaliable_users 
+    User # TODO: Move this to a scope, verify performance
+      .joins(:ownerships)
+      .where(ownerships: { rubygem_id: avaliable_rubygems.pluck(:id) })
+      .where.not(ownerships: { user_id: created_by })
+      .distinct(:id)
+  end
+
   private
 
   def create_organization!
