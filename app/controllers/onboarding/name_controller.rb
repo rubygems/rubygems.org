@@ -1,14 +1,16 @@
-class Onboarding::NameController < BaseController
-  def new
-  end
+module Onboarding
+  class NameController < BaseController
+    def new
+    end
 
-  def create
-    redirect_to edit_onboarding_gems_path
-  end
+    def create
+      redirect_to edit_onboarding_gems_path
+    end
 
-  private
+    private
 
-  def onboarding_params
-    params.require(:organization_onboarding).permit(:name, :description, :industry)
+    def onboarding_params
+      params.require(:organization_onboarding).permit(:name, :description, :industry)
+    end
   end
 end
