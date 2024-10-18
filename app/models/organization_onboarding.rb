@@ -1,5 +1,5 @@
 class OrganizationOnboarding < ApplicationRecord
-  enum status: { pending: "pending", completed: "completed", failed: "failed" }, _default: "pending"
+  enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
 
