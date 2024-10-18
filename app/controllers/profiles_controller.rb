@@ -9,7 +9,15 @@ class ProfilesController < ApplicationController
 
   def show
     @user = User.find_by_slug!(params[:id])
-    @rubygems = @user.rubygems_downloaded.includes(%i[latest_version gem_download]).strict_loading
+    return @rubygems = @user.rubygems_downloaded.includes(%i[latest_version gem_download]).strict_loading if @user.email_confirmed?
+    respond_to do |format|
+      format.any do
+        render plain: t(:this_rubygem_could_not_be_found), status: :not_found
+      end
+      format.html do
+        render file: Rails.public_path.join("404.html"), status: :not_found, layout: false, formats: [:html]
+      end
+    end
   end
 
   def me

@@ -12,6 +12,19 @@ class ProfilesControllerTest < ActionController::TestCase
     end
   end
 
+  context "for a user whose email is not confirmed" do
+    setup do
+      @user = create(:user)
+      @user.update(email_confirmed: false)
+    end
+
+    should "render not found page" do
+      get :show, params: { id: @user.handle }
+
+      assert_response :not_found
+    end
+  end
+
   context "when not logged in" do
     setup { @user = create(:user) }
 
