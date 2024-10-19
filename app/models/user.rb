@@ -27,6 +27,7 @@ class User < ApplicationRecord
   scope :not_deleted, -> { kept }
   scope :deleted, -> { with_discarded.discarded }
   scope :with_deleted, -> { with_discarded }
+  scope :confirmed, -> { where(email_confirmed: true) }
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
 
