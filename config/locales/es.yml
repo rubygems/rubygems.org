@@ -4,6 +4,7 @@ es:
   copied: "¡Copiado!"
   copy_to_clipboard: Copiar al portapapeles
   edit: Editar
+  hide: Ocultar
   verification_expired:
   feed_latest: RubyGems.org | Gemas más recientes
   feed_subscribed: RubyGems.org | Suscripciones a gemas
@@ -37,6 +38,7 @@ es:
   otp_missing: Activaste autenticación con múltiples factores, pero no suministraste
     un código OTP. Por favor ingrésalo y prueba nuevamente.
   sign_in: Ingresa
+  sign_out: Salir
   sign_up: Regístrate
   dependency_list: Mostrar toda la cadena de dependencias
   multifactor_authentication: Autenticación de múltiples factores
@@ -44,8 +46,10 @@ es:
   this_rubygem_could_not_be_found: Esta gema no pudo encontrarse.
   time_ago: hace %{duration}
   title: RubyGems.org
-  update: Actualizar
+  total_downloads: Total de descargas
   try_again: Algo salió mal. Por favor inténtalo nuevamente.
+  update: Actualizar
+  view_all: Ver todo
   advanced_search: Búsqueda avanzada
   authenticate: Autenticar
   helpers:
@@ -277,15 +281,13 @@ es:
         settings: Configuración
         edit_profile: Editar
         search_gem_html: Buscar gemas&hellip;
-        sign_in: Acceso
-        sign_out: Salir
-        sign_up: Registro
       mfa_banner_html:
   breadcrumbs:
-    home:
+    home: Inicio
     dashboard: Dashboard
     settings: Configuración
     org_name: 'Org: %{name}'
+    subscriptions: Suscripciones
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -620,6 +622,9 @@ es:
       title: Error - Falló la verification
       close_browser: Por favor cierra este navegador e inténtalo de nuevo.
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email: Has sido añadido/a como propietario de la gema %{gem}
       token_expired: El token de confirmación ha expirado. Por favor intenta reenviar
@@ -632,31 +637,28 @@ es:
       confirmed_at: CONFIRMADO
       added_by: AÑADIDO POR
       action: ACCIÓN
+      role:
+      role_field:
       email_field: Correo / Usuario
       submit_button: Añadir a propietarios
       info: añadir o eliminar propietarios
       confirmed: Confirmado
       pending: Pendiente
       confirm_remove: "¿Seguro que quieres eliminar a este usuario de los propietarios?"
-      role:
-      role_field:
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
       success_notice: Se ha añadido a %{handle} como propietario sin confirmar. Su
         acceso como propietario se activará cuando haga click en el mensaje de confirmación
         que se le ha enviado a su correo
+    update:
+      update_current_user_role:
+      success_notice:
     destroy:
       removed_notice: "%{owner_name} eliminado con éxito de la lista de propietarios"
       failed_notice: No se puede eliminar al único propietario de una gema
     mfa_required: La gema tiene activado el requerimiento de AMF, configura AMF en
       tu cuenta por favor.
-    edit:
-      role:
-      title:
-    update:
-      update_current_user_role:
-      success_notice:
   settings:
     edit:
       title: Editar configuración
@@ -881,7 +883,6 @@ es:
     index:
       title: Estadísticas
       all_time_most_downloaded: Más descargadas
-      total_downloads: Total de descargas
       total_gems: Gemas totales
       total_users: Usuarios totales
   users:

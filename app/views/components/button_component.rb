@@ -6,7 +6,7 @@ class ButtonComponent < ApplicationComponent
 
   attr_reader :text, :href, :type, :options, :color_css, :size_css
 
-  def initialize(text = nil, href: nil, type: :button, color: :primary, outline: false, size: :large, **options) # rubocop:disable Metrics/ParameterLists
+  def initialize(text = nil, href = nil, type: :button, color: :primary, outline: false, size: :large, **options) # rubocop:disable Metrics/ParameterLists
     super()
     @text = text
     @href = href

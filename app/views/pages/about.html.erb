@@ -31,6 +31,6 @@
   <h2 class="about__assets__heading"><%= t('.logo_header') %></h2>
   <p><%= t('.logo_details') %></p>
   <div class="about__assets-wrap">
-    <%= render ButtonComponent.new t('rubygems.aside.links.download'), type: :link, href: "/logos.zip" %>
+    <%= render ButtonComponent.new t('rubygems.aside.links.download'), "/logos.zip", type: :link %>
   </div>
 <% end %>

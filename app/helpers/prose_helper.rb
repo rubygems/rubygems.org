@@ -1,7 +1,8 @@
 module ProseHelper
-  def prose(&)
-    base = "prose prose-neutral dark:prose-invert prose-lg lg:prose-xl max-w-prose mx-auto"
+  def prose(**options, &)
+    base = "prose prose-neutral dark:prose-invert prose-lg md:prose-xl max-w-prose mx-auto"
     styles = "prose-headings:font-semibold"
-    tag.div class: "#{base} #{styles}", &
+    options[:class] = "#{options[:class]} #{base} #{styles}"
+    tag.div(**options, &)
   end
 end

@@ -1,19 +1,20 @@
-<div class="ml-3 flex text-neutral-900 dark:text-white hover:text-black dark:hover:text-neutral-400" data-controller="dialog">
+<div class="ml-3 flex text-neutral-900 dark:text-white hover:text-black dark:hover:text-neutral-400 items-center" data-controller="dialog">
   <% if signed_in? %>
-    <button data-action="dialog#open" data-dialog-target="button">
+    <%# This class is used in the tests :( I need it to be the same class until the old design is gone. %>
+    <%= link_to(dashboard_path, data: { action: "dialog#open", dialog_target: "button" }, class: "header__popup-link") do %>
       <%= avatar 64, "user_gravatar", theme: :dark, class: "h-9 w-9 rounded" %>
-    </button>
+    <% end %>
   <% else %>
     <div class="hidden md:flex text-nowrap">
-      <%= render ButtonComponent.new t('sign_in'), type: :link, href: sign_in_path, color: :secondary, size: :small %>
+      <%= render ButtonComponent.new t('sign_in'), sign_in_path, type: :link, color: :secondary, size: :small %>
       <% if Clearance.configuration.allow_sign_up? %>
-        <%= render ButtonComponent.new t('sign_up'), type: :link, href: sign_up_path, color: :primary, size: :small, class: "ml-3" %>
+        <%= render ButtonComponent.new t('sign_up'), sign_up_path, type: :link, color: :primary, size: :small, class: "ml-3" %>
       <% end %>
     </div>
 
     <% sign_in_sign_up_path = Clearance.configuration.allow_sign_up? ? sign_up_path : sign_in_path %>
-    <%= link_to sign_in_sign_up_path, class: "-mr-1 p-1 md:hidden" do %>
-      <svg width="28" height="28" class="h-7 w-7 fill-current"><use href="/images/icons.svg#profile"/></svg>
+    <%= link_to sign_in_sign_up_path, class: "-mr-1 p-1 md:hidden text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 " do %>
+      <%= icon_tag "profile", size: 7 %>
     <% end %>
   <% end %>
 
@@ -30,12 +31,12 @@
         <!-- Dialog header -->
         <div class="flex justify-between items-center">
           <h2 class="flex h-7 lg:h-8 lg:mb-0 items-center space-x-1 text-orange text-b1">
-            <svg class="w-6 h-6 fill-current" width="32" height="32" role="graphics-symbol" aria-label="RubyGems Home"><use href="/images/icons.svg#logo"/></svg>
+            <%= icon_tag "logo", size: 8, class: "w-6 h-6" %>
             <span class="text-h5 text-orange">RubyGems</span>
           <h2>
 
           <button data-action="dialog#close" class="h-8 w-8 items-center justify-center outline-none">
-            <svg class="w-6 h-6 fill-current" width="24" height="24" role="graphics-symbol" aria-label="Close profile modal"><use href="/images/icons.svg#close"/></svg>
+            <%= icon_tag "close", class: "w-6 h-6", aria: { label: "Close profile modal" } %>
           </button>
         </div>
 
@@ -45,7 +46,7 @@
           <%= link_to t('layouts.application.header.edit_profile'), edit_profile_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
           <%= link_to t('layouts.application.header.settings'), edit_settings_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
         </nav>
-        <%= link_to t('layouts.application.header.sign_out'), sign_out_path, method: :delete, class: "w-full my-8 px-4 py-2 text-b2 rounded border border-black dark:border-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 text-black dark:text-white text-center" %>
+        <%= link_to t('sign_out'), sign_out_path, method: :delete, class: "w-full my-8 px-4 py-2 text-b2 rounded border border-black dark:border-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 text-black dark:text-white text-center" %>
       </div>
     </div>
   </dialog>

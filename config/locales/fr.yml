@@ -4,6 +4,7 @@ fr:
   copied: Copié!
   copy_to_clipboard: Copier
   edit: Modification
+  hide: Cacher
   verification_expired:
   feed_latest: RubyGems.org | Derniers Gems
   feed_subscribed: RubyGems.org | Gems abonnés
@@ -37,6 +38,7 @@ fr:
   otp_incorrect:
   otp_missing:
   sign_in: Connexion
+  sign_out: Déconnexion
   sign_up: Inscription
   dependency_list:
   multifactor_authentication: Authentification Multifacteur
@@ -44,8 +46,10 @@ fr:
   this_rubygem_could_not_be_found: Rubygem introuvable.
   time_ago: il y a %{duration}
   title: RubyGems.org
-  update: Mise à jour
+  total_downloads: Total de téléchargements
   try_again: Une erreur est survenue. Veuillez réessayer.
+  update: Mise à jour
+  view_all: Voir tout
   advanced_search: Recherche avancée
   authenticate:
   helpers:
@@ -176,7 +180,6 @@ fr:
       yank_rubygem:
       add_owner:
       remove_owner:
-      update_owner:
       access_webhooks:
       show_dashboard:
       configure_trusted_publishers:
@@ -184,6 +187,7 @@ fr:
       save_key:
       mfa:
       expiration:
+      update_owner:
     new:
       new_api_key:
     reset:
@@ -205,7 +209,8 @@ fr:
       migrating_link_text: migration
       mine: Mes Gems
       my_subscriptions: Abonnements
-      no_owned_html: Vous n'avez pas encore publié de gem. Vous pouvez vérifier le guide de %{creating_link}.
+      no_owned_html: Vous n'avez pas encore publié de gem. Vous pouvez vérifier le
+        guide de %{creating_link}.
       no_subscriptions_html: Vous n'avez pas encore d'abonnements. Visitez %{gem_link}
         pour vous y abonner !
       title: Dashboard
@@ -268,15 +273,13 @@ fr:
         settings: Paramètres
         edit_profile: Modifier le profil
         search_gem_html: Recherche de Gems&hellip;
-        sign_in: Connexion
-        sign_out: Déconnexion
-        sign_up: Inscription
       mfa_banner_html:
   breadcrumbs:
-    home:
+    home: Accueil
     dashboard: Dashboard
     settings: Paramètres
     org_name: 'Org: %{name}'
+    subscriptions: Abonnements
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
@@ -558,6 +561,9 @@ fr:
       title:
       close_browser:
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email:
       token_expired:
@@ -569,27 +575,24 @@ fr:
       confirmed_at:
       added_by:
       action:
+      role:
+      role_field:
       email_field:
       submit_button:
       info:
       confirmed:
       pending:
       confirm_remove:
-      role:
-      role_field:
     resend_confirmation:
       resent_notice:
     create:
       success_notice:
-    destroy:
-      removed_notice:
-      failed_notice:
     update:
       update_current_user_role:
       success_notice:
-    edit:
-      role:
-      title:
+    destroy:
+      removed_notice:
+      failed_notice:
     mfa_required:
   settings:
     edit:
@@ -803,7 +806,6 @@ fr:
     index:
       title:
       all_time_most_downloaded: Gems les plus téléchargés
-      total_downloads: Total de téléchargements
       total_gems: Total de gems
       total_users: Total d'utilisateurs
   users:

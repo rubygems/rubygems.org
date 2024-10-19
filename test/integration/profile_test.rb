@@ -88,7 +88,7 @@ class ProfileTest < SystemTest
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
       visit link
 
-      assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
+      assert page.has_content?("Your email address has been verified")
       visit edit_profile_path
 
       assert page.has_selector? "input[value='nick2@example.com']"

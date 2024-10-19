@@ -3,17 +3,17 @@
 <div class="flex flex-col space-y-10 max-w-3xl mx-auto" id="data-dump">
   <%= render CardComponent.new do |c| %>
     <%= c.head("PostgreSQL Data", icon: :history) %>
-    <%= c.with_content do |user| %>
-      <%= prose do %>
-        <p>We provide weekly dumps of the RubyGems.org PostgreSQL data. This dump is sanitized, removing all user information.</p>
-        <p>The <a href="https://github.com/rubygems/rubygems.org/tree/master/script/load-pg-dump" class="text-orange">load-pg-dump</a> script is
-          available as an example of how to to download and load the most recent weekly dump.</p>
-      <% end %>
-      <ul data-controller="dump">
-        <template data-dump-target="template">
-          <li><a href="#" class="flex -mx-4 p-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 lg:rounded"></a></li>
-        </template>
-      </ul>
+    <%= prose do |user| %>
+      <p>We provide weekly dumps of the RubyGems.org PostgreSQL data. This dump is sanitized, removing all user information.</p>
+      <p>The <a href="https://github.com/rubygems/rubygems.org/tree/master/script/load-pg-dump" class="text-orange">load-pg-dump</a> script is
+        available as an example of how to to download and load the most recent weekly dump.</p>
+    <% end %>
+    <%= c.list(data: { controller: "dump" }) do %>
+      <template data-dump-target="template">
+        <%= c.list_item_to "#" do %>
+          <span></span>
+        <% end %>
+      </template>
     <% end %>
   <% end %>
 </div>
