@@ -233,15 +233,6 @@ Rails.application.routes.draw do
       get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
     end
 
-    namespace :onboarding do
-      root to: 'name#new'
-
-      resource :name, only: %i[new create], controller: 'name'
-      resource :gems, only: %i[edit update]
-      resource :users, only: %i[edit update]
-      resource :confirm, only: %i[edit update], controller: 'confirm'
-    end
-
     ################################################################################
     # Clearance Overrides and Additions
 
@@ -272,6 +263,14 @@ Rails.application.routes.draw do
     delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+
+    namespace :onboarding do
+      get "name", to: "name#new"
+      post "name", to: "name#create"
+
+      get "gems", to: "gems#edit"
+      patch "gems", to: "gems#update"
+    end
   end
 
   ################################################################################
