@@ -54,7 +54,11 @@ class OrganizationOnboarding < ApplicationRecord
   def create_organization!
     memberships = []
     memberships << build_owner
-    invitees.each do |user_id, role|
+
+    invitees.each do |invitee|
+      user_id = invitee["id"]
+      role = invitee["role"]
+
       next if user_id == created_by
       memberships.push build_membership(user_id, role)
     end
@@ -98,7 +102,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def build_team_members
-    users = invitees.keys + [created_by]
+    users = invitees.pluck(&:id).append({ id: created_by.id })
     users.map do |user_id|
       TeamMember.build(
         user_id: user_id
