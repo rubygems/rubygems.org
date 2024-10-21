@@ -61,6 +61,8 @@ spec:
             value: "<%= environment %>"
           - name: ENV
             value: "<%= environment %>"
+          - name: RAILS_GROUPS
+            value: "avo"
           - name: WEB_CONCURRENCY
             value: "<%= environment == 'production' ? 8 : 2 %>"
           - name: RAILS_MAX_THREADS
