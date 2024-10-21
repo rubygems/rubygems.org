@@ -51,12 +51,6 @@ module ImportmapHelper
       end
     end
 
-    # The built in version matcher doesn't handle pre-release versions.
-    # This causes mismatches and downloads the wrong version on refetch.
-    def extract_package_version_from(url)
-      url.match(/@(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?/)&.to_a&.first
-    end
-
     def verbose_diff(remote_body, vendored_body)
       require "diff/lcs"
       diffs = Diff::LCS.sdiff(remote_body.split("\n"), vendored_body.split("\n"))
