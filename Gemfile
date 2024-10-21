@@ -5,8 +5,8 @@ ruby file: ".ruby-version"
 gem "rails", "~> 7.2.1"
 gem "rails-i18n", "~> 7.0"
 
-gem "aws-sdk-s3", "~> 1.167"
-gem "aws-sdk-sqs", "~> 1.86"
+gem "aws-sdk-s3", "~> 1.169"
+gem "aws-sdk-sqs", "~> 1.87"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.8"
 gem "dalli", "~> 3.2"
@@ -21,9 +21,9 @@ gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 5.5.1", require: false # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
-gem "launchdarkly-server-sdk", "~> 8.7"
+gem "launchdarkly-server-sdk", "~> 8.8"
 gem "mail", "~> 2.8"
-gem "octokit", "~> 9.1"
+gem "octokit", "~> 9.2"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth", "~> 2.1"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
@@ -68,7 +68,6 @@ gem "view_component", "~> 3.14.0"
 gem "pundit", "~> 2.4"
 gem "chartkick", "~> 5.1"
 gem "groupdate", "~> 6.5"
-gem "dry-initializer", "~> 3.1"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
@@ -93,7 +92,7 @@ gem "local_time", "~> 3.0"
 gem "better_html", "~> 2.1"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 2.7"
+  gem "tailwindcss-rails", "~> 3.0"
 end
 
 group :assets do
@@ -134,7 +133,7 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.7"
+  gem "datadog-ci", "~> 1.8"
   gem "minitest", "~> 5.25", require: false
   gem "minitest-retry", "~> 0.2.3"
   gem "capybara", "~> 3.40"

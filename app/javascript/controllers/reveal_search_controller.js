@@ -1,4 +1,4 @@
-import Reveal from './reveal_controller'
+import Reveal from 'controllers/reveal_controller'
 
 export default class extends Reveal {
   static targets = ["item", "toggle", "button", "input"]

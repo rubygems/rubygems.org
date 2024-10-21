@@ -8,9 +8,9 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
   include Phlex::Rails::Helpers::SelectTag
   include OIDC::RubygemTrustedPublishers::Concerns::Title
 
-  extend Dry::Initializer
+  extend Literal::Properties
 
-  option :rubygem_trusted_publisher
+  prop :rubygem_trusted_publisher, OIDC::RubygemTrustedPublisher, reader: :private
 
   def view_template
     title_content
