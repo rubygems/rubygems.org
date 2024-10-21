@@ -1,16 +1,18 @@
-module Onboarding
-  class NameController < BaseController
-    def new
-    end
+class Onboarding::NameController < Onboarding::BaseController
+  def new
+  end
 
-    def create
-      redirect_to edit_onboarding_gems_path
+  def create
+    if @organization_onboarding.update(onboarding_params)
+      redirect_to onboarding_gems_path
+    else
+      render :new, status: :unprocessable_entity
     end
+  end
 
-    private
+  private
 
-    def onboarding_params
-      params.require(:organization_onboarding).permit(:name, :description, :industry)
-    end
+  def onboarding_params
+    params.require(:organization_onboarding).permit(:title)
   end
 end
