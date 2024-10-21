@@ -6,7 +6,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     @maintainer = create(:user)
     @rubygem = create(:rubygem, owners: [@owner], maintainers: [@maintainer])
 
-    @onboarding = create(:organization_onboarding, created_by: @owner.id, invitees: { @maintainer.id => "maintainer" }, rubygems: [@rubygem.id])
+    @onboarding = create(:organization_onboarding, created_by: @owner, invitees: { @maintainer.id => "maintainer" }, rubygems: [@rubygem.id])
   end
 
   context "validations" do
@@ -16,7 +16,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     should "require a onboarded by user" do
       assert_predicate @onboarding, :invalid?
-      assert_equal ["can't be blank"], @onboarding.errors[:created_by]
+      assert_equal ["must exist"], @onboarding.errors[:created_by]
     end
 
     context "when onbaording a user with an invalid role" do
@@ -33,7 +33,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     context "when the user does not have the required gem roles" do
       setup do
         @onboarding.rubygems = [@rubygem.id]
-        @onboarding.created_by = @maintainer.id
+        @onboarding.created_by = @maintainer
         @onboarding.invitees = { @owner.id => "owner" }
       end
 
@@ -117,7 +117,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when onboarding encounters an error" do
       setup do
-        @onboarding = create(:organization_onboarding, created_by: @owner.id)
+        @onboarding = create(:organization_onboarding, created_by: @owner)
         @onboarding.stubs(:create_organization!).raises(ActiveRecord::ActiveRecordError, "stubbed error")
         @onboarding.onboard!
       end
@@ -133,7 +133,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when the onboarding is already completed" do
       setup do
-        @onboarding = create(:organization_onboarding, :completed, created_by: @owner.id)
+        @onboarding = create(:organization_onboarding, :completed, created_by: @owner)
       end
 
       should "raise an error" do
@@ -148,7 +148,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     should "return the rubygems that the user owns" do
       assert_equal [@rubygem], @onboarding.avaliable_rubygems
     end
-  end 
+  end
 
   context "#avaliable_users" do
     should "return the users that share ownership with the set of avaliable rubygems" do
