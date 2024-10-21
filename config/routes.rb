@@ -270,6 +270,9 @@ Rails.application.routes.draw do
 
       get "gems", to: "gems#edit"
       patch "gems", to: "gems#update"
+
+      get "users", to: "users#edit"
+      patch "users", to: "users#update"
     end
   end
 
