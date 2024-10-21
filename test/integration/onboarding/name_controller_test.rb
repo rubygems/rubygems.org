@@ -1,8 +1,6 @@
 require "test_helper"
 
 class Onboarding::NameControllerTest < ActionController::TestCase
-  tests Onboarding::NameController
-
   setup do
     @user = create(:user, :mfa_enabled)
     @gem = create(:rubygem, owners: [@user])

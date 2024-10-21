@@ -107,7 +107,9 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def check_user_roles
-    invitees.each do |user_id, role|
+    invitees.each do |invitee|
+      user_id = invitee["id"]
+      role = invitee["role"]
       errors.add(:invitees, "Invalid Role '#{role}' for User #{user_id}") unless Access::ROLES.key?(role)
     end
   end
