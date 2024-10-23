@@ -87,7 +87,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   def build_owner
     Membership.build(
-      user_id: created_by,
+      user: created_by,
       role: :owner,
       confirmed_at: Time.zone.now
     )
@@ -102,7 +102,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def build_team_members
-    users = invitees.pluck(&:id).append({ id: created_by.id })
+    users = invitees.pluck("id").append(created_by.id)
     users.map do |user_id|
       TeamMember.build(
         user_id: user_id
