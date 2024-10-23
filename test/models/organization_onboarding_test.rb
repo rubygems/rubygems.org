@@ -80,10 +80,10 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_predicate @onboarding, :completed?
     end
 
-    should "create an organization with the specified title and slug" do
+    should "create an organization with the specified name and handle" do
       assert_not_nil @onboarding.organization
-      assert_equal @onboarding.title, @onboarding.organization.name
-      assert_equal @onboarding.slug, @onboarding.organization.handle
+      assert_equal @onboarding.organization_name, @onboarding.organization.name
+      assert_equal @onboarding.organization_handle, @onboarding.organization.handle
     end
 
     should "create a confirmed owner membership for the person that onboarded the organization" do
@@ -101,14 +101,14 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
 
     should "create a default team" do
-      team = @onboarding.organization.teams.find_by(slug: "default")
+      team = @onboarding.organization.teams.find_by(handle: "default")
 
       assert_not_nil team
       assert_equal "Default", team.name
     end
 
     should "create team members for each invitee" do
-      team = @onboarding.organization.teams.find_by(slug: "default")
+      team = @onboarding.organization.teams.find_by(handle: "default")
       owner_team_members = team.team_members.find_by(user_id: @owner.id)
       maintainer_team_member = team.team_members.find_by(user_id: @maintainer.id)
 

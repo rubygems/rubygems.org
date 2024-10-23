@@ -1,5 +1,6 @@
 <%= form_with(model: @organization_onboarding, url: onboarding_name_path, method: :post) do |form| %>
   <h1>New Organization</h1>
-  <%= form.text_field :title  %>
+  <%= form.text_field :organization_name  %>
+  <%= form.text_field :organization_handle %>
   <%= form.submit %>
 <% end %>

@@ -2,10 +2,12 @@ class OrganizationOnboarding < ApplicationRecord
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
-  belongs_to :created_by, class_name: "User", foreign_key: :created_by, inverse_of: :organization_onboardings
+  belongs_to :created_by, class_name: "User", inverse_of: :organization_onboardings
 
   validate :user_gem_ownerships
   validate :check_user_roles
+
+  validates :organization_name, :organization_handle, presence: true
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
@@ -63,8 +65,8 @@ class OrganizationOnboarding < ApplicationRecord
     end
 
     Organization.create!(
-      name: title,
-      handle: slug,
+      name: organization_name,
+      handle: organization_handle,
       memberships: memberships,
       teams: [build_team]
     )
@@ -95,7 +97,7 @@ class OrganizationOnboarding < ApplicationRecord
   def build_team
     Team.build(
       name: "Default",
-      slug: "default",
+      handle: "default",
       team_members: build_team_members
     )
   end

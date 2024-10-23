@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :organization_onboarding do
-    title { "Rubygems" }
-    slug { "rubygems" }
+    organization_name { "Rubygems" }
+    organization_handle { "rubygems" }
 
     invitees do
       []

@@ -13,6 +13,6 @@ class Onboarding::NameController < Onboarding::BaseController
   private
 
   def onboarding_params
-    params.require(:organization_onboarding).permit(:title)
+    params.require(:organization_onboarding).permit(:organization_name, :organization_handle)
   end
 end

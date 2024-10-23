@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_04_042338) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_23_053210) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -412,14 +412,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_04_042338) do
 
   create_table "organization_onboardings", force: :cascade do |t|
     t.string "status", null: false
-    t.string "title", null: false
-    t.string "slug", null: false
+    t.string "organization_name", null: false
+    t.string "organization_handle", null: false
     t.text "error"
     t.jsonb "invitees", default: []
     t.integer "rubygems", default: [], array: true
     t.datetime "onboarded_at"
     t.integer "onboarded_by"
-    t.integer "created_by", null: false
+    t.integer "created_by_id", null: false
     t.integer "onboarded_organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -523,10 +523,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_04_042338) do
 
   create_table "teams", force: :cascade do |t|
     t.bigint "organization_id", null: false
-    t.string "name"
-    t.string "slug"
+    t.string "name", null: false
+    t.string "handle", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["organization_id", "handle"], name: "index_teams_on_organization_id_and_handle", unique: true
     t.index ["organization_id"], name: "index_teams_on_organization_id"
   end
 
