@@ -4,7 +4,6 @@ class OrganizationOnboarding < ApplicationRecord
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
   belongs_to :created_by, class_name: "User", foreign_key: :created_by, inverse_of: :organization_onboardings
 
-  validates :created_by, presence: true
   validate :user_gem_ownerships
   validate :check_user_roles
 

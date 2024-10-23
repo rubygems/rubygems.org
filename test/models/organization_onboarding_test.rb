@@ -6,7 +6,12 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     @maintainer = create(:user)
     @rubygem = create(:rubygem, owners: [@owner], maintainers: [@maintainer])
 
-    @onboarding = create(:organization_onboarding, created_by: @owner, invitees: { @maintainer.id => "maintainer" }, rubygems: [@rubygem.id])
+    @onboarding = create(
+      :organization_onboarding,
+      created_by: @owner,
+      invitees: [{ "id" => @maintainer.id, "role" => "maintainer" }],
+      rubygems: [@rubygem.id]
+    )
   end
 
   context "validations" do
@@ -21,7 +26,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when onbaording a user with an invalid role" do
       setup do
-        @onboarding.invitees = { @maintainer.id => "invalid" }
+        @onboarding.invitees = [{ "id" => @maintainer.id, "role" => "invalid" }]
       end
 
       should "raise an error" do
@@ -34,7 +39,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       setup do
         @onboarding.rubygems = [@rubygem.id]
         @onboarding.created_by = @maintainer
-        @onboarding.invitees = { @owner.id => "owner" }
+        @onboarding.invitees = [{ "id" => @owner.id, "role" => "owner" }]
       end
 
       should "be invalid" do
