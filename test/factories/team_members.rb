@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :team_member do
-    user
     team
+    user
   end
 end

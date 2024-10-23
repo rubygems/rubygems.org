@@ -1,4 +1,11 @@
-<%= form_with(model: @organization_onboarding, url: onboarding_users_path, method: :put) do |form| %>
+<%= form_with(model: @organization_onboarding, url: onboarding_users_path, method: :patch) do |form| %>
   <h1>Edit Users</h1>
+  <% @users.each do |user| %>
+  <div>
+    <%= form.text_field :handle, value: user.handle, disabled: true, name: 'organization_onboarding[invitees][][handle]' %>
+    <%= form.text_field :id, value: user.id, hidden: true, name: 'organization_onboarding[invitees][][id]' %>
+    <%= select_tag :role, options_for_select(@roles), name: 'organization_onboarding[invitees][][role]' %>
+  </div>
+  <% end %>
   <%= form.submit %>
 <% end %>

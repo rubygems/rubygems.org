@@ -4,7 +4,7 @@ class Onboarding::GemsControllerTest < ActionController::TestCase
   setup do
     @user = create(:user, :mfa_enabled)
     @gem = create(:rubygem, owners: [@user])
-    @organization_onboarding = create(:organization_onboarding, created_by: @user, status: :pending, title: "Existing Name")
+    @organization_onboarding = create(:organization_onboarding, created_by: @user, status: :pending, organization_name: "Existing Name")
 
     sign_in_as(@user)
   end

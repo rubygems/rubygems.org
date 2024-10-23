@@ -1,6 +1,5 @@
 class Onboarding::GemsController < Onboarding::BaseController
   def edit
-    @avaliable_rubygems = @organization_onboarding.avaliable_rubygems
   end
 
   def update
