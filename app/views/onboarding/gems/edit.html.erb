@@ -1,5 +1,6 @@
-<%= form_with(model: @organization_onboarding, url: onboarding_gems_path, method: :put) do |form| %>
+<%= form_with(model: @organization_onboarding, url: onboarding_gems_path, method: :patch) do |form| %>
   <h1>Edit Gems</h1>
-  <%= form.select :rubygems, @avaliable_rubygems, multiple: true %>
+  <%= form.select :rubygems, options_from_collection_for_select(@organization_onboarding.avaliable_rubygems, :id, :name), multiple: true, include_hidden: false %>
+  <br/>
   <%= form.submit %>
 <% end %>

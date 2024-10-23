@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :team do
     name { "Maintainers" }
-    slug { "maintainers" }
+    handle { "maintainers" }
 
     organization
   end

@@ -1,5 +1,7 @@
 class Onboarding::UsersController < Onboarding::BaseController
   def edit
+    @users = @organization_onboarding.avaliable_users
+    @roles = Membership.roles.map { |k, _| [Membership.human_attribute_name("role.#{k}"), k] }
   end
 
   def update

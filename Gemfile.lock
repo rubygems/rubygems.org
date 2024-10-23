@@ -223,6 +223,9 @@ GEM
       msgpack
     datadog-ruby_core_source (3.3.6)
     date (3.3.4)
+    debug (1.9.2)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
     derailed_benchmarks (2.2.1)
       base64
       benchmark-ips (~> 2)
@@ -895,6 +898,7 @@ DEPENDENCIES
   dalli (~> 3.2)
   datadog (~> 2.4)
   datadog-ci (~> 1.8)
+  debug
   derailed_benchmarks (~> 2.2)
   discard (~> 1.4)
   dogstatsd-ruby (~> 5.6)
@@ -1063,6 +1067,7 @@ CHECKSUMS
   datadog-ci (1.8.1) sha256=c461acd83d36b5894716ea7b1c207fd4b7fa103994c0773e3936a68da4dfa594
   datadog-ruby_core_source (3.3.6) sha256=007c72450d3f5838c6d0ae4a6a77e5008bb29dd97d10ea3bf367f978d7c02f36
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
+  debug (1.9.2) sha256=48e026c0852c7a10c60263e2e527968308958e266231e36d64e3efcabec7e7fc
   derailed_benchmarks (2.2.1) sha256=654280664fded41c9cd8fc27fc0fcfaf096023afab90eb4ac1185ba70c5d4439
   diff-lcs (1.5.1) sha256=273223dfb40685548436d32b4733aa67351769c7dea621da7d9dd4813e63ddfe
   discard (1.4.0) sha256=6efcd2a53ddf96781f81b825d398f1c88ab88c0faa84e131bea6e16ef95d65d0
