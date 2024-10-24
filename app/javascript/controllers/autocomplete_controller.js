@@ -11,7 +11,7 @@ export default class extends Controller {
     this.suggestLength = 0;
   }
 
-  disconnect() { clear() }
+  disconnect() { this.clear() }
 
   clear() {
     this.suggestionsTarget.classList.add('hidden');

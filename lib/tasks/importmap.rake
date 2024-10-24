@@ -7,11 +7,17 @@ namespace :importmap do
   desc "Verify downloaded packages in vendor/javascript"
   task :verify do # rubocop:disable Rails/RakeEnvironment
     options = { env: "production", from: "jspm.io" }
-    all_files = Rails.root.glob("vendor/javascript/*.js").map { |p| p.relative_path_from(Rails.root) }
-    all_files.delete(Pathname.new("vendor/javascript/github-buttons.js")) || raise("importmap:verify expected github-buttons.js not found")
-    all_files.delete(Pathname.new("vendor/javascript/webauthn-json.js")) || raise("importmap:verify expected webauthn-json.js not found")
+    importmap_path = "config/importmap.rb"
+    vendor_pathname = Rails.root.join("vendor/javascript")
+    all_files = vendor_pathname.glob("*.js").map { |p| p.relative_path_from(Rails.root) }
+    manually_vendored_files = ["github-buttons.js", "webauthn-json.js"]
 
-    npm = Importmap::Npm.new(Rails.root.join("config/importmap.rb"))
+    manually_vendored_files.each do |filename|
+      path = vendor_pathname.join(filename).relative_path_from(Rails.root)
+      all_files.delete(path) || raise("importmap:verify expected #{path} not found")
+    end
+
+    npm = Importmap::Npm.new(importmap_path)
 
     packages = npm.packages_with_versions.map do |p, v|
       v.blank? ? p : [p, v].join("@")
@@ -19,9 +25,12 @@ namespace :importmap do
 
     puts "Verifying packages in vendor/javascript"
 
-    packager = ImportmapHelper::Packager.new
+    packager = ImportmapHelper::Packager.new(
+      importmap_path,
+      vendor_path: vendor_pathname.relative_path_from(Rails.root)
+    )
 
-    if (imports = packager.import(*packages, env: options[:env], from: options[:from]))
+    if (imports = packager.import(*packages, **options))
       imports.each do |package, url|
         puts %(Verifying "#{package}" download from #{url})
         packager.verify(package, url, verbose: ENV["VERBOSE"])

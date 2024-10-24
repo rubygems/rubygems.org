@@ -14,7 +14,12 @@ Rails.application.configure do
     # NOTE: This scirpt_src is overridden for all requests in ApplicationController
     # This is the baseline in case the override is ever skipped
     policy.script_src :self, "https://secure.gaug.es", "https://www.fastly-insights.com"
-    policy.style_src :self, "https://fonts.googleapis.com"
+    policy.style_src :self, "https://fonts.googleapis.com",
+      # This hardcoded value is the SHA256 of the style tag injected by turbo-rails ProgressBar.
+      # We don't want to rely on the nonce because it gets cached and then turbo can't reliably navigate.
+      # This is because new turbo responses and old cached responses will have different nonces, making CSP fail.
+      # You can regenerate this value by looking at script/turbo_rails_hash in this repo.
+      "'sha256-WAyOw4V+FqDc35lQPyRADLBWbuNK8ahvYEaQIYF1+Ps='"
     policy.connect_src :self, "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://fastly-insights.com",
       "https://api.github.com", "http://localhost:*"
     policy.form_action :self, "https://github.com/login/oauth/authorize"
