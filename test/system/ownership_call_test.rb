@@ -1,7 +1,7 @@
-require "test_helper"
+require "application_system_test_case"
 require "helpers/adoption_helpers"
 
-class OwnershipCallsTest < SystemTest
+class OwnershipCallsTest < ApplicationSystemTestCase
   include ActionMailer::TestHelper
   include AdoptionHelpers
 

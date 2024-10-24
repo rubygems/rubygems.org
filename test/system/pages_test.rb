@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class PagesTest < SystemTest
+class PagesTest < ApplicationSystemTestCase
   test "renders existing page" do
     visit "/"
     click_link "About"
