@@ -101,7 +101,6 @@
     <%= render CardComponent.new do |c| %>
       <%= c.head do %>
         <%= c.title t(".mine"), icon: :gems, count: @my_gems_count %>
-        <%= link_to t("view_all"), subscriptions_path, class: "text-sm text-orange-500" %>
       <% end %>
       <% if @my_gems.empty? %>
         <%= prose do %>
