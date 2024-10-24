@@ -11,7 +11,12 @@ class SubscriptionsController < ApplicationController
     add_breadcrumb t("breadcrumbs.dashboard"), dashboard_path
     add_breadcrumb t("breadcrumbs.subscriptions")
 
-    @subscribed_gems = current_user.subscribed_gems.with_versions.by_name.preload(:most_recent_version).load_async
+    @subscribed_gems = current_user
+      .subscribed_gems
+      .with_versions
+      .by_name
+      .preload(:most_recent_version)
+      .load_async
   end
 
   def create

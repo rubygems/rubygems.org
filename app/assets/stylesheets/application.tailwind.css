@@ -1,15 +1,4 @@
 @config "../../../config/tailwind.config.js";
 @tailwind base;
-
-@layer base {
-  @font-face {
-    font-family: "Titillium Web";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-  }
-
-}
-
 @tailwind components;
 @tailwind utilities;
