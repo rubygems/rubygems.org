@@ -4,6 +4,7 @@ nl:
   copied: Gekopieerd
   copy_to_clipboard: Kopieer naar klembord
   edit: Wijzig
+  hide: Verberg
   verification_expired:
   feed_latest: RubyGems.org | Nieuwste Gems
   feed_subscribed: RubyGems.org | Geabonneerde Gems
@@ -29,6 +30,7 @@ nl:
   otp_incorrect:
   otp_missing:
   sign_in: Inloggen
+  sign_out: Uitloggen
   sign_up: Registreren
   dependency_list:
   multifactor_authentication: Multifactor authenticatie
@@ -36,8 +38,10 @@ nl:
   this_rubygem_could_not_be_found: De gem kon niet gevonden worden.
   time_ago: "%{duration} geleden"
   title: RubyGems.org
-  update: Wijzig
+  total_downloads:
   try_again: Er is iets fout gegaan, probeer het opnieuw.
+  update: Wijzig
+  view_all: Bekijk alles
   advanced_search: Uitgebreid zoeken
   authenticate:
   helpers:
@@ -168,7 +172,6 @@ nl:
       yank_rubygem:
       add_owner:
       remove_owner:
-      update_owner:
       access_webhooks:
       show_dashboard:
       configure_trusted_publishers:
@@ -176,6 +179,7 @@ nl:
       save_key:
       mfa:
       expiration:
+      update_owner:
     new:
       new_api_key:
     reset:
@@ -260,15 +264,13 @@ nl:
         settings: Instellingen
         edit_profile: Wijzig profiel
         search_gem_html: Gems Zoeken&hellip;
-        sign_in: Inloggen
-        sign_out: Uitloggen
-        sign_up: Registreren
       mfa_banner_html:
   breadcrumbs:
-    home:
+    home: Startpagina
     dashboard: Dashboard
-    settings:
+    settings: Instellingen
     org_name: 'Organisatie: %{name}'
+    subscriptions: Abonnementen
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -539,6 +541,9 @@ nl:
       title:
       close_browser:
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email:
       token_expired:
@@ -550,27 +555,24 @@ nl:
       confirmed_at:
       added_by:
       action:
+      role:
+      role_field:
       email_field:
       submit_button:
       info:
       confirmed:
       pending:
       confirm_remove:
-      role:
-      role_field:
     resend_confirmation:
       resent_notice:
     create:
       success_notice:
+    update:
+      update_current_user_role:
+      success_notice:
     destroy:
       removed_notice:
       failed_notice:
-    edit:
-      role:
-      title:
-    update:
-      success_notice:
-      update_current_user_role:
     mfa_required:
   settings:
     edit:
@@ -758,7 +760,6 @@ nl:
     index:
       title:
       all_time_most_downloaded:
-      total_downloads:
       total_gems:
       total_users:
   users:

@@ -12,7 +12,7 @@ class RubygemsTest < ActionDispatch::IntegrationTest
     assert page.has_content? "arrakis"
   end
 
-  test "gems list doesn't fall pray to path_params query param" do
+  test "gems list doesn't fall prey to path_params query param" do
     get "/gems?path_params=string"
 
     assert page.has_content? "arrakis"

@@ -8,13 +8,15 @@ export default class extends Dialog {
     this.setAriaExpanded('false')
   }
 
-  open() {
+  open(e) {
     super.open()
+    e.preventDefault()
     this.setAriaExpanded('true')
   }
 
-  close() {
+  close(e) {
     super.close()
+    e.preventDefault()
     this.setAriaExpanded('false')
   }
 

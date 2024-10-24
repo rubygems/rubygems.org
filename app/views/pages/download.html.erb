@@ -24,9 +24,9 @@
   </ol>
   <h4>Download the latest version</h4>
   <div id="formats" class="flex flex-row space-x-6">
-    <%= render ButtonComponent.new "tgz", type: :link, href: "https://rubygems.org/rubygems/rubygems-#{version_number}.tgz" %>
-    <%= render ButtonComponent.new "zip", type: :link, href: "https://rubygems.org/rubygems/rubygems-#{version_number}.zip" %>
-    <%= render ButtonComponent.new "gem", type: :link, href: "https://rubygems.org/gems/rubygems-update-#{version_number}.gem" %>
-    <%= render ButtonComponent.new "git", type: :link, href: "https://github.com/rubygems/rubygems" %>
+    <%= render ButtonComponent.new "tgz", "https://rubygems.org/rubygems/rubygems-#{version_number}.tgz", type: :link %>
+    <%= render ButtonComponent.new "zip", "https://rubygems.org/rubygems/rubygems-#{version_number}.zip", type: :link %>
+    <%= render ButtonComponent.new "gem", "https://rubygems.org/gems/rubygems-update-#{version_number}.gem", type: :link %>
+    <%= render ButtonComponent.new "git", "https://github.com/rubygems/rubygems", type: :link %>
   </div>
 <% end %>

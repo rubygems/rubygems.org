@@ -4,6 +4,7 @@ pt-BR:
   copied: Copiado
   copy_to_clipboard: Copiar
   edit: Editar
+  hide: Esconder
   verification_expired:
   feed_latest: RubyGems.org | Últimas Gems
   feed_subscribed: RubyGems.org | Gems do seu Feed
@@ -36,6 +37,7 @@ pt-BR:
   otp_missing: Você habilitou a autenticação multifator mas nenhum código OTP foi
     fornecido. Por favor, preencha-o e tente novamente.
   sign_in: Fazer Login
+  sign_out: Sair
   sign_up: Cadastrar
   dependency_list: Mostrar todas as dependências
   multifactor_authentication: Autenticação Multifator
@@ -43,8 +45,10 @@ pt-BR:
   this_rubygem_could_not_be_found: Não foi possível localizar esta rubygem
   time_ago: "%{duration} atrás"
   title: RubyGems.org
-  update: Atualizar
+  total_downloads: Total de downloads
   try_again: Algo deu errado. Por favor, tente novamente.
+  update: Atualizar
+  view_all: Ver tudo
   advanced_search: Busca avançada
   authenticate:
   helpers:
@@ -175,7 +179,6 @@ pt-BR:
       yank_rubygem:
       add_owner:
       remove_owner:
-      update_owner:
       access_webhooks:
       show_dashboard:
       configure_trusted_publishers:
@@ -183,6 +186,7 @@ pt-BR:
       save_key:
       mfa:
       expiration:
+      update_owner:
     new:
       new_api_key:
     reset:
@@ -266,15 +270,13 @@ pt-BR:
         settings: Configurações da Conta
         edit_profile: Editar Perfil
         search_gem_html: Buscar Gems&hellip;
-        sign_in: Fazer Login
-        sign_out: Sair
-        sign_up: Cadastrar
       mfa_banner_html:
   breadcrumbs:
-    home:
+    home: Início
     dashboard: Painel de Controle
     settings: Configurações da Conta
     org_name: 'Org: %{name}'
+    subscriptions: Observando
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
@@ -551,6 +553,9 @@ pt-BR:
       title:
       close_browser:
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email:
       token_expired:
@@ -562,27 +567,24 @@ pt-BR:
       confirmed_at:
       added_by:
       action:
+      role:
+      role_field:
       email_field:
       submit_button:
       info:
       confirmed:
       pending:
       confirm_remove:
-      role:
-      role_field:
     resend_confirmation:
       resent_notice:
     create:
       success_notice:
-    destroy:
-      removed_notice:
-      failed_notice:
-    edit:
-      title:
-      role:
     update:
       update_current_user_role:
       success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:
     mfa_required:
   settings:
     edit:
@@ -782,7 +784,6 @@ pt-BR:
     index:
       title: Estatísticas
       all_time_most_downloaded: Mais baixadas de todos os tempos
-      total_downloads: Total de downloads
       total_gems: Total de gems
       total_users: Total de usuários
   users:

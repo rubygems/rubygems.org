@@ -4,6 +4,7 @@ zh-TW:
   copied: 已複製
   copy_to_clipboard: 複製
   edit: 編輯
+  hide: 隱藏
   verification_expired:
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 訂閱 Gems
@@ -30,6 +31,7 @@ zh-TW:
   otp_incorrect: 您的 OTP 碼不正確。請檢查後再試一次。
   otp_missing: 您已啟用多重要素驗證，但是沒有輸入 OTP 碼。請輸入後再試一次。
   sign_in: 登入
+  sign_out: 登出
   sign_up: 註冊
   dependency_list:
   multifactor_authentication: 多重要素驗證
@@ -37,8 +39,10 @@ zh-TW:
   this_rubygem_could_not_be_found: 找不到此 rubygem。
   time_ago: "%{duration} 前"
   title: RubyGems.org
-  update: 更新
+  total_downloads: 總下載次數
   try_again: 發生錯誤。請再試一次。
+  update: 更新
+  view_all: 查看全部
   advanced_search: 進階搜尋
   authenticate: 驗證
   helpers:
@@ -169,7 +173,6 @@ zh-TW:
       yank_rubygem: 移除 rubygem
       add_owner: 新增擁有者
       remove_owner: 移除擁有者
-      update_owner:
       access_webhooks: 存取 Webhooks
       show_dashboard: 顯示儀表板
       configure_trusted_publishers:
@@ -177,6 +180,7 @@ zh-TW:
       save_key: 請注意，我們無法再次顯示您的 API 金鑰。新 API 金鑰：
       mfa: MFA
       expiration:
+      update_owner:
     new:
       new_api_key: 新 API 金鑰
     reset:
@@ -258,15 +262,13 @@ zh-TW:
         settings: 設定
         edit_profile: 編輯個人檔案
         search_gem_html: 搜尋 Gems&hellip;
-        sign_in: 登入
-        sign_out: 登出
-        sign_up: 註冊
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
   breadcrumbs:
-    home:
-    dashboard:
-    settings:
+    home: 首頁
+    dashboard: 控制台
+    settings: 設定
     org_name: 組織：%{name}
+    subscriptions: 訂閱
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -539,6 +541,9 @@ zh-TW:
       title: 錯誤 - 驗證失敗
       close_browser: 請關閉此瀏覽器並重試。
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email:
       token_expired: 確認權杖已過期。請從 Gem 頁面嘗試重新傳送權杖。
@@ -550,27 +555,24 @@ zh-TW:
       confirmed_at: 確認於
       added_by: 新增者
       action: 操作
+      role:
+      role_field:
       email_field:
       submit_button: 新增擁有者
       info: 新增或移除擁有者
       confirmed: 已確認
       pending: 待確認
       confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
-      role:
-      role_field:
     resend_confirmation:
       resent_notice:
     create:
       success_notice: "%{handle} 已以未確認擁有者的身分加入。所有權存取將在使用者點擊傳送到他們的電子郵件地址的確認信後啟用。"
-    destroy:
-      removed_notice:
-      failed_notice: 無法移除 Gem 的唯一擁有者
-    edit:
-      role:
-      title:
     update:
       update_current_user_role:
       success_notice:
+    destroy:
+      removed_notice:
+      failed_notice: 無法移除 Gem 的唯一擁有者
     mfa_required: Gem 啟用了 MFA 要求，請設定您的帳號的 MFA。
   settings:
     edit:
@@ -760,7 +762,6 @@ zh-TW:
     index:
       title: 統計資料
       all_time_most_downloaded: 歷史下載次數排行
-      total_downloads: 總下載次數
       total_gems: Gems 總數
       total_users: 總使用者數量
   users:
