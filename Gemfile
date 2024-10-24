@@ -64,7 +64,7 @@ gem "timescaledb", "~> 0.3"
 # Admin dashboard
 gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 3.14.0"
+gem "view_component", "~> 3.19.0"
 gem "pundit", "~> 2.4"
 gem "chartkick", "~> 5.1"
 gem "groupdate", "~> 6.5"
