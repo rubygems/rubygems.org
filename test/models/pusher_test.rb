@@ -48,6 +48,8 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:validate).returns true
+        @cutter.stubs(:verify_sigstore).returns true
+        @cutter.stubs(:sign_sigstore).returns true
         @cutter.stubs(:save).returns true
 
         assert @cutter.process
