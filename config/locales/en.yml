@@ -116,6 +116,8 @@ en:
           attributes:
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+            password:
+              bcrypt_length: cannot be longer than 72 bytes due to bcrypt limitations
         version:
           attributes:
             gem_full_name:
