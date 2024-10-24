@@ -110,7 +110,7 @@ module Gemcutter
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
-  ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.local?
+  ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
   MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
   PAGES = %w[
     about data download security sponsors
