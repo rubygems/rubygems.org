@@ -73,6 +73,12 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
+  def development_log_in_as
+    user = User.find(params[:user_id])
+    sign_in(user)
+    redirect_back_or_to dashboard_path
+  end
+
   private
 
   def mark_verified

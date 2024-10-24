@@ -26,6 +26,7 @@ requester = User.create_with(
 ).find_or_create_by!(email: "gem-requester@example.com")
 
 User.create_with(
+  handle: "gem-security",
   email_confirmed: true,
   password:
 ).find_or_create_by!(email: "security@rubygems.org")

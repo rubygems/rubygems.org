@@ -22,7 +22,7 @@
           </button>
         <% end %>
 
-        <% if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN %>
+        <% if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN %>
           <p>Since this is development mode, you can choose any admin from the list below to log in as that admin.</p>
           <% if Admin::GitHubUser.any? %>
             <ul class="admin-list">

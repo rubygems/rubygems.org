@@ -11,6 +11,13 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
     @organization_onboarding = create(:organization_onboarding, created_by: @user, status: :pending)
   end
 
+  test "render the list of users to invite" do
+    get :edit
+
+    assert_response :ok
+    assert_select "input[type=checkbox][name='organization_onboarding[invitees][][id]']"
+  end
+
   test "should update user" do
     patch :update, params: { organization_onboarding: { invitees: [{ id: @user.id, role: "owner" }] } }
 
