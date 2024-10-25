@@ -2,11 +2,11 @@ class Download < DownloadsDB
   extend Timescaledb::ActsAsHypertable
   include Timescaledb::ContinuousAggregatesHelper
 
-  acts_as_hypertable time_column: 'created_at'
+  acts_as_hypertable time_column: 'created_at', segment_by: [:gem_name, :gem_version]
 
-  scope :total_downloads, -> { select("count(*) as total") }
-  scope :downloads_by_gem, -> { select("gem_name, count(*) as total").group(:gem_name) }
-  scope :downloads_by_version, -> { select("gem_name, gem_version, count(*) as total").group(:gem_name, :gem_version) }
+  scope :total_downloads, -> { select("count(*) as downloads").order(:created_at) }
+  scope :downloads_by_gem, -> { select("gem_name, count(*) as downloads").group(:gem_name).order(:created_at) }
+  scope :downloads_by_version, -> { select("gem_name, gem_version, count(*) as downloads").group(:gem_name, :gem_version).order(:created_at) }
 
   continuous_aggregates(
     timeframes: [:minute, :hour, :day, :month],
