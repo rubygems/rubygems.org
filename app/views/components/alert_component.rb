@@ -48,7 +48,7 @@ class AlertComponent < ApplicationComponent
     blue:    "fill-blue-500",
     green:   "fill-green-500",
     red:     "fill-red-400",
-    neutral: "fill-neutral-800"
+    neutral: "fill-neutral-800 dark:fill-neutral-500"
   }.freeze
 
   STYLES = {
