@@ -4,9 +4,11 @@
 class LogDownload < DownloadsDB
   enum backend: { s3: 0, local: 1 }
   enum status: %i[pending processing failed processed].index_with(&:to_s)
-  
+
+  scope :latest_created_at, -> { order(created_at: :desc).select(:created_at).pluck(:created_at).first }
+
   def self.pop(key: nil, directory: nil)
-    scope = pending.limit(1).order("id ASC")
+    scope = pending.limit(1).order("created_at ASC")
     scope = scope.where(key: key) if key
     scope = scope.where(directory: directory) if directory
     scope.lock(true).sole.tap do |log_download|

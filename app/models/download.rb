@@ -1,4 +1,6 @@
 class Download < DownloadsDB
+  extend Timescaledb::ActsAsHypertable
+  include Timescaledb::ContinuousAggregatesHelper
 
   acts_as_hypertable time_column: 'created_at'
 
