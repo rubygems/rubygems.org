@@ -182,7 +182,7 @@ class UserTest < ActiveSupport::TestCase
         user.password = "#{'a8b5d2d451' * 20}a"
 
         refute_predicate user, :valid?
-        assert_contains user.errors[:password], "is too long (maximum is 72 bytes because of bcrypt limitations)"
+        assert_contains user.errors[:password], "is too long (maximum is 72 bytes)"
 
         user.password = "633!cdf7b3426c9%f6dd1a0b62d4ce44c4f544e%"
         user.valid?
