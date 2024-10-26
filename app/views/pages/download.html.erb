@@ -1,8 +1,10 @@
 <% @title = t('.title') %>
-<% @subtitle = subtitle %>
 
 <%= prose do %>
   <h2><%= @title %></h2>
+  <% if (rubygems_version = Rubygem.current_rubygems_release) %>
+    <h4><%= "v#{rubygems_version.number} - #{nice_date_for(rubygems_version.authored_at)}" %></h4>
+  <% end %>
   <p>
     RubyGems is a package management framework for Ruby.
     <br>
@@ -24,9 +26,9 @@
   </ol>
   <h4>Download the latest version</h4>
   <div id="formats" class="flex flex-row space-x-6">
-    <%= render ButtonComponent.new "tgz", "https://rubygems.org/rubygems/rubygems-#{version_number}.tgz", type: :link %>
-    <%= render ButtonComponent.new "zip", "https://rubygems.org/rubygems/rubygems-#{version_number}.zip", type: :link %>
-    <%= render ButtonComponent.new "gem", "https://rubygems.org/gems/rubygems-update-#{version_number}.gem", type: :link %>
+    <%= render ButtonComponent.new "tgz", "https://rubygems.org/rubygems/rubygems-#{rubygems_version}.tgz", type: :link %>
+    <%= render ButtonComponent.new "zip", "https://rubygems.org/rubygems/rubygems-#{rubygems_version}.zip", type: :link %>
+    <%= render ButtonComponent.new "gem", "https://rubygems.org/gems/rubygems-update-#{rubygems_version}.gem", type: :link %>
     <%= render ButtonComponent.new "git", "https://github.com/rubygems/rubygems", type: :link %>
   </div>
 <% end %>
