@@ -95,11 +95,6 @@ group :assets, :development do
   gem "tailwindcss-rails", "~> 3.0"
 end
 
-group :assets do
-  gem "terser", "~> 1.2"
-  gem "autoprefixer-rails", "~> 10.4"
-end
-
 group :development, :test do
   gem "pry-byebug", "~> 3.10"
   gem "toxiproxy", "~> 2.0"

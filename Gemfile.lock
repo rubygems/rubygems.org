@@ -115,8 +115,6 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    autoprefixer-rails (10.4.19.0)
-      execjs (~> 2)
     avo (3.13.1)
       actionview (>= 6.1)
       active_link_to
@@ -259,7 +257,6 @@ GEM
     erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
-    execjs (2.9.1)
     factory_bot (6.4.5)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.3)
@@ -790,8 +787,6 @@ GEM
     tailwindcss-ruby (3.4.14-arm64-darwin)
     tailwindcss-ruby (3.4.14-x86_64-darwin)
     tailwindcss-ruby (3.4.14-x86_64-linux)
-    terser (1.2.4)
-      execjs (>= 0.3.0, < 3)
     thor (1.3.2)
     timeout (0.4.1)
     timescaledb (0.3.0)
@@ -869,7 +864,6 @@ PLATFORMS
 DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.6)
-  autoprefixer-rails (~> 10.4)
   avo (~> 3.13)
   avo-advanced (~> 3.13)!
   avo_upgrade (~> 0.1.1)
@@ -973,7 +967,6 @@ DEPENDENCIES
   stimulus-rails (~> 1.3)
   strong_migrations (~> 2.0)
   tailwindcss-rails (~> 3.0)
-  terser (~> 1.2)
   timescaledb (~> 0.3)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
@@ -1006,7 +999,6 @@ CHECKSUMS
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  autoprefixer-rails (10.4.19.0) sha256=ccd21f47e5a07a581c7d239025e0d8d06a005825e96e06f72382d818fe665f4e
   avo (3.13.1) sha256=6fd001bda35c4b307579fbc6f597de60d89846b04b96d2bc4cb06bcd54b5945b
   avo-advanced (3.13.1) sha256=87d87a6e0837dbeab549428f3afbcb0e0c81e23e46de62dffd0a1270bffc1d0e
   avo-dashboards (3.13.1) sha256=073cdbb7c7e9ad46693291d6d5976bdba1a900bf572376a88e02b793f9e4e528
@@ -1068,7 +1060,6 @@ CHECKSUMS
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
   erubi (1.13.0) sha256=fca61b47daefd865d0fb50d168634f27ad40181867445badf6427c459c33cd62
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
-  execjs (2.9.1) sha256=e8fd066f6df60c8e8fbebc32c6fb356b5212c77374e8416a9019ca4bb154dcfb
   factory_bot (6.4.5) sha256=d71dd29bc95f0ec2bf27e3dd9b1b4d557bd534caca744663cb7db4bacf3198be
   factory_bot_rails (6.4.3) sha256=ea73ceac1c0ff3dc11fff390bf2ea8a2604066525ed8ecd3b3bc2c267226dcc8
   faraday (2.12.0) sha256=d106d0b1bc2548a8c0c34619a657a5e4aeae2780f951b0e095c8f803bbbf4517
@@ -1285,7 +1276,6 @@ CHECKSUMS
   tailwindcss-ruby (3.4.14-arm64-darwin) sha256=439ea278878d42b40f775db3783b8fd7d25fa969fd8c11f42436ba064752ae3a
   tailwindcss-ruby (3.4.14-x86_64-darwin) sha256=add1f6c63cfb7851557323ef7bc7ed49d927ba610b4b363d1066389232ade3ef
   tailwindcss-ruby (3.4.14-x86_64-linux) sha256=c23dec24cb855d748750e8f4bca1b048a1e617f381e81336c8ab65ede7e84d5c
-  terser (1.2.4) sha256=c85f46e0fcdeef4a52639cbb6dd6b359bf0151d035206b072366e7dac379cc83
   thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
   timeout (0.4.1) sha256=6f1f4edd4bca28cffa59501733a94215407c6960bd2107331f0280d4abdebb9a
   timescaledb (0.3.0) sha256=9ce2b39417d30544054cb609fbd84e18e304c7b7952a793846b8f4489551a28f
