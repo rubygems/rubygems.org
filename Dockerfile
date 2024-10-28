@@ -91,7 +91,7 @@ COPY --link config/database.yml.sample /app/config/database.yml
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN <<BASH
   set -ex
-  SECRET_KEY_BASE_DUMMY=1 bin/rails assets:precompile
+  RAILS_GROUPS=assets SECRET_KEY_BASE_DUMMY=1 bin/rails assets:precompile
   rm -fr /app/tmp/cache/assets/
 BASH
 
