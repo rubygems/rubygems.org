@@ -463,37 +463,37 @@ de:
     about:
       contributors_amount: "%{count} Rubyists"
       downloads_amount: Millionen von Gem-Downloads
-      checkout_code: bitte prüfe den Code
-      mit_licensed: MIT-lizenziert
+      checkout_code: sieh dir einfach den Code an
+      mit_licensed: MIT Lizenz
       logo_header: Auf der Suche nach unserem Logo?
-      logo_details: Wähle einfach den Download-Button, um drei .PNGs und eine .SVG
-        des RubyGems-Logos für dich zu erhalten.
+      logo_details: Klick einfach auf den Download-Button, um drei PNGs und eine SVG
+        des RubyGems-Logos zu erhalten.
       founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und
-        hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems
-        1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale
-        Rolle in der Ruby-Community zu verfestigen.
-      support_html: Obwohl RubyGems.org nicht von einem bestimmten Unternehmen ausgeführt
+        ist seitdem dank %{contributors} und %{downloads} gewachsen. Mit dem Release von RubyGems
+        1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um ihre zentrale
+        Rolle in der Ruby-Community zu verdeutlichen.
+      support_html: Obwohl RubyGems.org nicht von einem zentralen Unternehmen geführt
         wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design,
-        die Illustrationen und die Front-End-Entwicklung für dieser Webseite wurden
-        von %{dockyard} erstellt. %{github} hat auch von unschätzbarem Wert uns geholfen
-        den Code mit anderen Entwicklern zuteilen, um an dem Code leichter zusammenarbeiten.
-        Die Website wurde mit %{heroku} gestartet, dessen großen Dienst uns geholfen,
-        RubyGems als eine praktikable Lösung zu erweisen, wo die ganze Gemeinschaft
-        darauf verlassen kann. Our infrastructure is currently hosted on %{aws}.
+        die Illustrationen und die Frontend-Entwicklung wurden
+        von %{dockyard} erstellt. %{github} war auch von unschätzbarem Wert und hat uns sehr geholfen,
+        zusammenzuarbeiten und Code zu teilen.
+        Die Website wurde mit %{heroku} gestartet, großartiger Service dazu beitrug, RubyGems
+        als eine praktikable Lösung zu beweisen, auf die sich die gesamte Community verlassen kann.
+        Unsere Infrastruktur wird derzeit auf %{aws} gehostet.
       technical_html: 'Einige Einblicke in die technischen Aspekte dieser Webseite:
-        Es ist 100% in Ruby geschrieben. Die Hauptseite ist verwendet die %{rails}-Software.
-        Die Gems werden in %{s3}, served by %{fastly}, gehostet und die Zeit zwischen
-        der Veröffentlichung eines neuen Gems und nachdem er bereit zur Installation
-        freigegeben ist, ist minimal. Für mehr Informationen siehe %{source_code}
-        (%{license}) auf GitHub.'
+        Sie ist zu 100% in Ruby geschrieben. Die Hauptseite ist eine %{rails} App.
+        Die Gems werden auf %{s3} gehostet und über %{fastly} ausgeliefert, und die Zeit nach
+        der Veröffentlichung eines neuen Gems, bis es zur Installation bereit seht, beträgt
+        meistens nur einige wenige Sekunden. Für mehr Informationen %{source_code}, der mit der
+        %{license} auf GitHub bereitseht.'
       title: Über uns
       purpose:
-        better_api: Bereitstellen eines besseren APIs für den Umgang mit Gems
-        enable_community: Der Gemeinschaft ermöglichen, die Webseite zu verbessern
+        better_api: Eine bessere API bereitzustellen, um mit Gems zu arbeiten
+        enable_community: Es der Community zu ermöglichen, diese Webseite zu verbessern
           und zu erweitern
-        header: 'Willkommen in %{site}, die Community für Ruby Gem-Hostingservice.
-          Die Gründe sind vielfältig:'
-        transparent_pages: Erstellen transparenter und zugänglicher Projektseiten
+        header: 'Willkommen bei RubyGems.org, dem Gem-Hosting-Srrvice der Ruby-Community.
+          Dieses Projekt hat drei Ziele:'
+        transparent_pages: Mehr transparente und barrierefreie Projektseiten zu erstellen
     data:
       title: RubyGems.org Data Dumps
     download:
