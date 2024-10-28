@@ -14,6 +14,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     visit avo.resources_log_tickets_path
     click_on "Create new log ticket"
 
+    page.find_by_id("log_ticket_key", wait: Capybara.default_max_wait_time) # Wait for input to be available.
     fill_in "Key", with: "key"
     fill_in "Directory", with: "dir"
     fill_in "Processed count", with: "0"
