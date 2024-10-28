@@ -124,15 +124,17 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
 
     %w[nbf exp iat iss jti].each do |claim|
       should "return bad request with missing/invalid #{claim}" do
-        @claims[claim] = ["a"]
+        payload = jwt # generates jwt hash
+        payload[claim] = ["a"]
+
         post api_v1_oidc_trusted_publisher_exchange_token_path,
-          params: { jwt: jwt.to_s }
+          params: { jwt: payload.to_s }
 
         assert_response :bad_request
 
-        @claims.delete claim
+        payload.delete claim
         post api_v1_oidc_trusted_publisher_exchange_token_path,
-          params: { jwt: jwt.to_s }
+          params: { jwt: payload.to_s }
 
         assert_response :bad_request
       end
