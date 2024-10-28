@@ -3,16 +3,11 @@
     <nav class="flex justify-start items-center text-b2" aria-label="Breadcrumb">
       <!-- Home breadcrumb -->
       <%= link_to root_path, class: "inline-block p-1 -ml-1 hover:text-neutral-600 dark:hover:text-neutral-400", title: t("breadcrumbs.home"), aria: { label: t("breadcrumbs.home") } do %>
-        <svg class="fill-current" height="24" width="24" role="graphics-symbol">
-          <title><%= t('breadcrumbs.home') %></title>
-          <use href="/images/icons.svg#house-siding"/>
-        </svg>
+        <%= icon_tag "house-siding", size: 6 %>
       <% end %>
 
       <% breadcrumbs.each do |name, link| %>
-        <svg class="text-neutral-600 dark:text-neutral-700 fill-neutral-600 dark:fill-neutral-700 h-6 w-6" height="24" width="24" role="graphics-symbol" aria-hidden="true">
-          <use href="/images/icons.svg#chevron-right"/>
-        </svg>
+        <%= icon_tag "chevron-right", size: 6, class: "text-neutral-600 dark:text-neutral-700 fill-neutral-600 dark:fill-neutral-700", size: 6, aria: { hidden: "true" } %>
         <% if link %>
           <%= link_to name, link, class: "inline-block p-1 hover:text-neutral-600 dark:hover:text-neutral-400" %>
         <% else %>

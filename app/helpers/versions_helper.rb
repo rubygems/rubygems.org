@@ -45,7 +45,7 @@ module VersionsHelper
     options[:title] = "#{t('total_downloads')}: #{downloads}"
 
     tag.span(**options) do
-      concat tag.svg(tag.use(href: "/images/icons.svg#arrow-circle-down"), height: "20", width: "20", class: "fill-current")
+      concat icon_tag("arrow-circle-down", size: 5)
       concat tag.span(downloads)
     end
   end

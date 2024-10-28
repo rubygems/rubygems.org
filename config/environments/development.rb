@@ -123,8 +123,6 @@ Rails.application.configure do
       'Cache-Control' => 'max-age=315360000, public',
       'Expires' => 'Thu, 31 Dec 2037 23:55:55 GMT'
     }
-    config.assets.js_compressor = :terser
-    config.assets.css_compressor = :sass
     config.assets.compile = false
     config.assets.digest = true
     config.assets.debug = false

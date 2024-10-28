@@ -115,8 +115,6 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    autoprefixer-rails (10.4.19.0)
-      execjs (~> 2)
     avo (3.13.1)
       actionview (>= 6.1)
       active_link_to
@@ -215,12 +213,6 @@ GEM
       addressable
     csv (3.3.0)
     dalli (3.2.8)
-    dartsass-sprockets (3.1.0)
-      railties (>= 4.0.0)
-      sassc-embedded (~> 1.69)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     datadog (2.4.0)
       debase-ruby_core_source (= 3.3.1)
       libdatadog (~> 12.0.0.1.0)
@@ -265,7 +257,6 @@ GEM
     erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
-    execjs (2.9.1)
     factory_bot (6.4.5)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.3)
@@ -570,6 +561,11 @@ GEM
     pp (0.5.0)
       prettyprint
     prettyprint (0.2.0)
+    propshaft (1.1.0)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
+      railties (>= 7.0.0)
     prosopite (1.4.2)
     pry (0.14.1)
       coderay (~> 1.1)
@@ -736,21 +732,6 @@ GEM
     rubyzip (2.3.2)
     safety_net_attestation (0.4.0)
       jwt (~> 2.0)
-    sass-embedded (1.72.0)
-      google-protobuf (>= 3.25, < 5.0)
-      rake (>= 13.0.0)
-    sass-embedded (1.72.0-aarch64-linux-gnu)
-      google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.72.0-arm64-darwin)
-      google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.72.0-x86_64-darwin)
-      google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.72.0-x86_64-linux-gnu)
-      google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.72.0-x86_64-linux-musl)
-      google-protobuf (>= 3.25, < 5.0)
-    sassc-embedded (1.70.1)
-      sass-embedded (~> 1.70)
     sawyer (0.9.2)
       addressable (>= 2.3.5)
       faraday (>= 0.17.3, < 3)
@@ -787,13 +768,6 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
-    sprockets (4.2.1)
-      concurrent-ruby (~> 1.0)
-      rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.2)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      sprockets (>= 3.0.0)
     statsd-instrument (3.9.3)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
@@ -813,10 +787,7 @@ GEM
     tailwindcss-ruby (3.4.14-arm64-darwin)
     tailwindcss-ruby (3.4.14-x86_64-darwin)
     tailwindcss-ruby (3.4.14-x86_64-linux)
-    terser (1.2.4)
-      execjs (>= 0.3.0, < 3)
     thor (1.3.2)
-    tilt (2.3.0)
     timeout (0.4.1)
     timescaledb (0.3.0)
       activerecord
@@ -893,7 +864,6 @@ PLATFORMS
 DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.6)
-  autoprefixer-rails (~> 10.4)
   avo (~> 3.13)
   avo-advanced (~> 3.13)!
   avo_upgrade (~> 0.1.1)
@@ -910,7 +880,6 @@ DEPENDENCIES
   compact_index (~> 0.15.0)
   csv (~> 3.3)
   dalli (~> 3.2)
-  dartsass-sprockets (~> 3.1)
   datadog (~> 2.4)
   datadog-ci (~> 1.8)
   derailed_benchmarks (~> 2.2)
@@ -960,6 +929,7 @@ DEPENDENCIES
   pghero (~> 3.6)
   phlex-rails (~> 1.2)
   pp (= 0.5.0)
+  propshaft (~> 1.1.0)
   prosopite (~> 1.4)
   pry-byebug (~> 3.10)
   puma (~> 6.4)
@@ -993,12 +963,10 @@ DEPENDENCIES
   shoulda-matchers (~> 6.4)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
-  sprockets-rails (~> 3.5)
   statsd-instrument (~> 3.9)
   stimulus-rails (~> 1.3)
   strong_migrations (~> 2.0)
   tailwindcss-rails (~> 3.0)
-  terser (~> 1.2)
   timescaledb (~> 0.3)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
@@ -1031,7 +999,6 @@ CHECKSUMS
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  autoprefixer-rails (10.4.19.0) sha256=ccd21f47e5a07a581c7d239025e0d8d06a005825e96e06f72382d818fe665f4e
   avo (3.13.1) sha256=6fd001bda35c4b307579fbc6f597de60d89846b04b96d2bc4cb06bcd54b5945b
   avo-advanced (3.13.1) sha256=87d87a6e0837dbeab549428f3afbcb0e0c81e23e46de62dffd0a1270bffc1d0e
   avo-dashboards (3.13.1) sha256=073cdbb7c7e9ad46693291d6d5976bdba1a900bf572376a88e02b793f9e4e528
@@ -1077,7 +1044,6 @@ CHECKSUMS
   css_parser (1.19.1) sha256=1940dce01e3b9be18d6880e6d65162d984cc04ff28998cf4759beb999275209e
   csv (3.3.0) sha256=0bbd1defdc31134abefed027a639b3723c2753862150f4c3ee61cab71b20d67d
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
-  dartsass-sprockets (3.1.0) sha256=c238ec9f7f496489ac5a7813cd1f83d1e077a1826921acefc7e290a521b7a20a
   datadog (2.4.0) sha256=3d30038eecb59cb7960cbb9e5eb32ee029b6516203698b4d4454b01688ca0aab
   datadog-ci (1.8.1) sha256=c461acd83d36b5894716ea7b1c207fd4b7fa103994c0773e3936a68da4dfa594
   date (3.3.4) sha256=971f2cb66b945bcbea4ddd9c7908c9400b31a71bc316833cb42fa584b59d3291
@@ -1094,7 +1060,6 @@ CHECKSUMS
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
   erubi (1.13.0) sha256=fca61b47daefd865d0fb50d168634f27ad40181867445badf6427c459c33cd62
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
-  execjs (2.9.1) sha256=e8fd066f6df60c8e8fbebc32c6fb356b5212c77374e8416a9019ca4bb154dcfb
   factory_bot (6.4.5) sha256=d71dd29bc95f0ec2bf27e3dd9b1b4d557bd534caca744663cb7db4bacf3198be
   factory_bot_rails (6.4.3) sha256=ea73ceac1c0ff3dc11fff390bf2ea8a2604066525ed8ecd3b3bc2c267226dcc8
   faraday (2.12.0) sha256=d106d0b1bc2548a8c0c34619a657a5e4aeae2780f951b0e095c8f803bbbf4517
@@ -1222,6 +1187,7 @@ CHECKSUMS
   phlex-rails (1.2.1) sha256=1d80709c02114cda869951d22bfca189b5f208d1eb89f2e6fafbe3c0240a822f
   pp (0.5.0) sha256=f8f40bc2ba9e1ab351b9458151da3a89f46034f7f599a8e0a06abb9b9f4411dd
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
+  propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
   prosopite (1.4.2) sha256=b2e422e2d9dbf3ce20130ded3252fe14adb3833555eacd451f5015d8c9177e79
   pry (0.14.1) sha256=99b6df0665875dd5a39d85e0150aa5a12e2bb4fef401b6c4f64d32ee502f8454
   pry-byebug (3.10.1) sha256=c8f975c32255bfdb29e151f5532130be64ff3d0042dc858d0907e849125581f8
@@ -1284,13 +1250,6 @@ CHECKSUMS
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
   rubyzip (2.3.2) sha256=3f57e3935dc2255c414484fbf8d673b4909d8a6a57007ed754dde39342d2373f
   safety_net_attestation (0.4.0) sha256=96be2d74e7ed26453a51894913449bea0e072f44490021545ac2d1c38b0718ce
-  sass-embedded (1.72.0) sha256=05d3e53092022a4b4eef5b76b9597c7f2af4e4efb06812e1a60e3601189a3d2e
-  sass-embedded (1.72.0-aarch64-linux-gnu) sha256=cbe3b303bb2acf784a46e98cbb22b5218f1607524dc66c00f5bd3b32f029eae4
-  sass-embedded (1.72.0-arm64-darwin) sha256=24bbb0fe3cb255070c0bd7d44ee330b1226bd02647a4390d6f50e706a3819a4a
-  sass-embedded (1.72.0-x86_64-darwin) sha256=f8b4940847cda523b418b8d1354dfb22464ca1f108d05be3e0d2bab7643d8757
-  sass-embedded (1.72.0-x86_64-linux-gnu) sha256=33ecf2737eb685dc61853652312b0395c645b30578fc0d853d4b15f67cab1f3c
-  sass-embedded (1.72.0-x86_64-linux-musl) sha256=52161ecf9927251a463f8f9d34364940cfe881b47c10b57fdcb6f8e813c91995
-  sassc-embedded (1.70.1) sha256=a95172c9c6725dfc412c702a0e705fb8a5bcb3aac2a32586b18e5432987103d3
   sawyer (0.9.2) sha256=fa3a72d62a4525517b18857ddb78926aab3424de0129be6772a8e2ba240e7aca
   searchkick (5.4.0) sha256=75d7256d3ec2af2dc11c2ba8160c86d80451f3f86447aae2ace1f79553de0bf3
   securerandom (0.3.1) sha256=98f0450c0ea46d2f9a4b6db4f391dbd83dc08049592eada155739f40e0341bde
@@ -1306,8 +1265,6 @@ CHECKSUMS
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   smart_properties (1.17.0) sha256=f9323f8122e932341756ddec8e0ac9ec6e238408a7661508be99439ca6d6384b
   snaky_hash (2.0.1) sha256=1ac87ec157fcfe7a460e821e0cd48ae1e6f5e3e082ab520f03f31a9259dbdc31
-  sprockets (4.2.1) sha256=951b13dd2f2fcae840a7184722689a803e0ff9d2702d902bd844b196da773f97
-  sprockets-rails (3.5.2) sha256=a9e88e6ce9f8c912d349aa5401509165ec42326baf9e942a85de4b76dbc4119e
   statsd-instrument (3.9.3) sha256=b23508e3565b61129fe4464a52b155e5761b2612ec052d50cde16af8ea0e2e30
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
   stringio (3.1.1) sha256=53456e14175c594e0e8eb2206a1be33f3974d4fe21c131e628908b05c8c2ae1e
@@ -1319,9 +1276,7 @@ CHECKSUMS
   tailwindcss-ruby (3.4.14-arm64-darwin) sha256=439ea278878d42b40f775db3783b8fd7d25fa969fd8c11f42436ba064752ae3a
   tailwindcss-ruby (3.4.14-x86_64-darwin) sha256=add1f6c63cfb7851557323ef7bc7ed49d927ba610b4b363d1066389232ade3ef
   tailwindcss-ruby (3.4.14-x86_64-linux) sha256=c23dec24cb855d748750e8f4bca1b048a1e617f381e81336c8ab65ede7e84d5c
-  terser (1.2.4) sha256=c85f46e0fcdeef4a52639cbb6dd6b359bf0151d035206b072366e7dac379cc83
   thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
-  tilt (2.3.0) sha256=82dd903d61213c63679d28e404ee8e10d1b0fdf5270f1ad0898ec314cc3e745c
   timeout (0.4.1) sha256=6f1f4edd4bca28cffa59501733a94215407c6960bd2107331f0280d4abdebb9a
   timescaledb (0.3.0) sha256=9ce2b39417d30544054cb609fbd84e18e304c7b7952a793846b8f4489551a28f
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
