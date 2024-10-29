@@ -235,7 +235,7 @@ pt-BR:
   layouts:
     application:
       footer:
-        about: Sobre o Rubygems
+        about: Sobre
         api: API
         blog: Blog
         contribute: Como Contribuir
