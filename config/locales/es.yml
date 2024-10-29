@@ -221,6 +221,7 @@ es:
         cómo %{creating_link}.
       no_subscriptions_html: Aún no te suscribiste a ninguna gema. ¡Visita la %{gem_link}
         para suscribirte!
+      organizations:
       title: Dashboard
   dependencies:
     show:
