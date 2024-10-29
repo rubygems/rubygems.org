@@ -8,7 +8,7 @@ module IconHelper
     options[:role] ||= "graphics-symbol"
 
     tag.svg(**options) do
-      concat tag.use(href: "#{asset_path('/images/icons.svg')}##{name}")
+      concat tag.use(href: "#{image_path('icons.svg')}##{name}")
     end
   end
 end
