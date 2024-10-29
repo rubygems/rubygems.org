@@ -205,6 +205,7 @@ zh-CN:
       my_subscriptions: 订阅
       no_owned_html: 您还没有发布过任何 Gem。可以看看 %{creating_link} 指南。
       no_subscriptions_html: 您没有订阅任何 Gem，访问 %{gem_link} 订阅一个！
+      organizations:
       title: 仪表盘
   dependencies:
     show:

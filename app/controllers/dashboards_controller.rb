@@ -4,14 +4,13 @@ class DashboardsController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
 
-  layout "hammy"
+  layout "subject"
 
   def show
     add_breadcrumb t("breadcrumbs.dashboard")
 
     respond_to do |format|
       format.html do
-        @user = current_user
         find_my_gems
         find_subscribed_gems
         find_latest_updates

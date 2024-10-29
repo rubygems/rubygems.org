@@ -1,149 +1,111 @@
 <% @title = t('.title') %>
 
-<!-- Subscriptions -->
+<% content_for :subject do %>
+  <% render "dashboards/subject", user: current_user %>
+<% end %>
 
-<div class="flex flex-wrap space-y-4 lg:space-y-0 lg:space-x-20">
-  <aside class="w-full lg:w-96 lg:mb-32">
-    <%= render CardComponent.new do |c| %>
-      <!-- Profile Header -->
-      <div class="flex flex-wrap items-center mb-4">
-        <!-- Profile Picture -->
-        <%# <img src="https://via.placeholder.com/100" alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mr-4"> %>
-        <%= avatar 328, "user_gravatar", theme: :dark, class: "h-24 w-24 lg:h-40 lg:w-40 rounded-lg object-cover mr-4" %>
+<!-- Main Content -->
+<h1 class="text-h2 mb-10"><%= t(".title") %></h1>
 
-        <!-- Name and Title -->
-        <div class="lg:w-full lg:mt-2">
-          <h2 class="text-lg font-bold"><%= @user.display_handle %></h2>
-          <% if @user.full_name.present? %>
-            <p class="text-neutral-500"><%= @user.full_name %></p>
+<%= render CardComponent.new do |c| %>
+  <%= c.head(divide: true) do %>
+    <%= c.title t(".latest"), icon: :history %>
+    <div class="flex space-x-2 items-center">
+      <%= link_to dashboard_path(api_key: current_user.api_key, format: :atom), id: 'feed', title: t('.latest_title'), class: 'items-center' do %>
+        <%= icon_tag("rss-feed", size: 6, class: "w-6 h-6 fill-orange") %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @latest_updates.empty? %>
+    <%= prose do %>
+      <i><%= t('.no_subscriptions_html', :gem_link => link_to(t('.gem_link_text'), rubygem_path("rake"))) %></i>
+    <% end %>
+  <% else %>
+    <%= c.scrollable do %>
+      <%= render Card::TimelineComponent.new do |t| %>
+        <% @latest_updates.each do |version| %>
+          <%
+            pusher_link = if version.pusher.present?
+              link_to_user(version.pusher)
+            elsif version.pusher_api_key&.owner.present?
+              link_to_pusher(version.pusher_api_key.owner)
+            end
+          %>
+          <%= t.timeline_item(version.authored_at, pusher_link) do %>
+              <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(version.rubygem.slug) %></div>
+              <%= version_number(version) %>
           <% end %>
-        </div>
-      </div>
-
-      <!-- Contact Info -->
-      <div class="my-6">
-        <% if @user.public_email? || @user == current_user %>
-          <div class="flex items-center mb-2">
-            <%= icon_tag("mail", color: :primary, class: "h-6 w-6 text-orange mr-3") %>
-            <p class="text-neutral-800 dark:text-white"><%=
-              mail_to(
-                @user.email,
-                encode: "hex",
-                class: "profile__header__attribute t-link--black"
-              )
-            %></p>
-          </div>
         <% end %>
-        <% if @user.twitter_username.present? %>
-          <div class="flex items-center mb-2">
-            <%= icon_tag("x-twitter", color: :primary, class: "w-6 text-orange mr-3") %>
-            <p class="text-neutral-800 dark:text-white"><%=
-              link_to(
-                twitter_username(@user),
-                twitter_url(@user)
-              )
-            %></p>
-          </div>
-        <% end %>
-      </div>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
 
-      <% if @user.memberships.any? %>
-      <!-- Organizations -->
-        <div class="max-w-96 mb-2 space-y-2">
-          <h3 class="text-neutral-800 dark:text-white font-semibold text-b3 uppercase mb-2">Organizations</h3>
-          <% @user.memberships.preload(:organization).each do |membership| %>
-            <div class="flex justify-between">
-              <p class="text-neutral-800 dark:text-white"><%= membership.organization.name %></p>
-              <p class="text-neutral-500 capitalize"><%= membership.role %></p>
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".mine"), icon: "gems", count: @my_gems_count %>
+  <% end %>
+  <% if @my_gems.empty? %>
+    <%= prose do %>
+      <i><%= t('.no_owned_html', :creating_link => link_to(t('.creating_link_text'), "https://guides.rubygems.org/make-your-own-gem/")) %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @my_gems.each do |rubygem| %>
+        <%= c.list_item_to(
+          rubygem_path(rubygem.slug),
+          title: short_info(rubygem.most_recent_version),
+        ) do %>
+          <div class="flex flex-col w-full justify-between">
+            <div class="flex flex-row w-full items-center justify-between">
+              <h4 class="text-b1 flex"><%= rubygem.name %></h4>
+              <%= version_number(rubygem.most_recent_version) %>
             </div>
-          <% end %>
-        </div>
-      <% end %>
-    <% end %>
-  </aside>
-
-  <div class="flex-1">
-    <%= render CardComponent.new do |c| %>
-      <%= c.head(divide: true) do %>
-        <%= c.title t(".latest"), icon: :history %>
-        <div class="flex space-x-2 items-center">
-          <%= link_to dashboard_path(api_key: current_user.api_key, format: :atom), id: 'feed', title: t('.latest_title'), class: 'items-center' do %>
-            <%= icon_tag("rss-feed", size: 6, class: "w-6 h-6 fill-orange") %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <% if @latest_updates.empty? %>
-        <%= prose do %>
-          <i><%= t('.no_subscriptions_html', :gem_link => link_to(t('.gem_link_text'), rubygem_path("rake"))) %></i>
-        <% end %>
-      <% else %>
-        <%= c.scrollable do %>
-          <%= render Card::TimelineComponent.new do |t| %>
-            <% @latest_updates.each do |version| %>
-              <%
-                pusher_link = if version.pusher.present?
-                  link_to_user(version.pusher)
-                elsif version.pusher_api_key&.owner.present?
-                  link_to_pusher(version.pusher_api_key.owner)
-                end
-              %>
-              <%= t.timeline_item(version.authored_at, pusher_link) do %>
-                  <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(version.rubygem.slug) %></div>
-                  <%= version_number(version) %>
-              <% end %>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
-    <% end %>
-
-    <%= render CardComponent.new do |c| %>
-      <%= c.head do %>
-        <%= c.title t(".mine"), icon: :gems, count: @my_gems_count %>
-      <% end %>
-      <% if @my_gems.empty? %>
-        <%= prose do %>
-          <i><%= t('.no_owned_html', :creating_link => link_to(t('.creating_link_text'), "https://guides.rubygems.org/make-your-own-gem/")) %></i>
-        <% end %>
-      <% else %>
-        <%= c.divided_list do %>
-          <% @my_gems.each do |rubygem| %>
-            <%= c.list_item_to(
-              rubygem_path(rubygem.slug),
-              title: short_info(rubygem.most_recent_version),
-            ) do %>
-              <div class="flex flex-col w-full justify-between">
-                <div class="flex flex-row w-full items-center justify-between">
-                  <h4 class="text-b1 flex"><%= rubygem.name %></h4>
-                  <%= version_number(rubygem.most_recent_version) %>
-                </div>
-                <div class="flex flex-row w-full items-center justify-between">
-                  <%= download_count_component(rubygem, class: "flex") %>
-                  <div class="flex text-neutral-600"><%= version_date_component(rubygem.most_recent_version) %></div>
-                </div>
-              </div>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
-    <% end %>
-
-    <% if @subscribed_gems.present? %>
-      <%= render CardComponent.new do |c| %>
-        <%= c.head do %>
-          <%= c.title t(".my_subscriptions"), icon: :gems, count: @subscribed_gems_count %>
-          <%= link_to t("view_all"), subscriptions_path, class: "text-sm text-orange-500" %>
-        <% end %>
-        <%= c.with_list(@subscribed_gems) do |gem| %>
-          <div class="flex flex-row w-full items-center justify-between">
-            <%= link_to rubygem_path(gem.slug), title: short_info(gem.most_recent_version) do %>
-              <h3 class="text-b1"><%= gem.name %></h3>
-              <p class="text-b3 text-neutral-600"><%= short_info(gem.most_recent_version) %></p>
-            <% end %>
+            <div class="flex flex-row w-full items-center justify-between">
+              <%= download_count_component(rubygem, class: "flex") %>
+              <div class="flex text-neutral-600"><%= version_date_component(rubygem.most_recent_version) %></div>
+            </div>
           </div>
         <% end %>
       <% end %>
     <% end %>
-  </div>
-</div>
+  <% end %>
+<% end %>
+
+<% if @subscribed_gems.present? %>
+  <%= render CardComponent.new do |c| %>
+    <%= c.head do %>
+      <%= c.title t(".my_subscriptions"), icon: "notifications", count: @subscribed_gems_count %>
+      <%= link_to t("view_all"), subscriptions_path, class: "text-sm text-orange-500" %>
+    <% end %>
+    <%= c.list do %>
+      <% @subscribed_gems.each do |gem| %>
+        <%= c.list_item_to(rubygem_path(gem.slug), title: short_info(gem.most_recent_version)) do %>
+          <h3 class="text-b1"><%= gem.name %></h3>
+          <p class="text-b3 text-neutral-600"><%= short_info(gem.most_recent_version) %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if current_user.memberships.any? %>
+  <!-- Organizations -->
+  <%= render CardComponent.new do |c| %>
+    <%= c.head do %>
+      <%= c.title t(".organizations"), icon: "organizations", count: current_user.memberships.count %>
+      <%= link_to t("view_all"), "#", class: "text-sm text-orange-500" %>
+    <% end %>
+    <%= c.divided_list do %>
+      <% current_user.memberships.preload(:organization).each do |membership| %>
+        <%= c.list_item_to("#") do %>
+          <div class="flex justify-between">
+            <p class="text-neutral-800 dark:text-white"><%= membership.organization.name %></p>
+            <p class="text-neutral-500 capitalize"><%= membership.role %></p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

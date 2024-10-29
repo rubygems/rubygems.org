@@ -57,7 +57,7 @@ class CardComponent < ApplicationComponent
     li do
       link_to(url, **options) do
         span(class: "flex-1", &)
-        render_icon("chevron-forward", class: "w-8 h-8 ml-2 text-neutral-800 dark:text-white fill-current")
+        render_icon("arrow-forward-ios", class: "w-8 h-8 ml-2 -mr-2 text-neutral-800 dark:text-white fill-current")
       end
     end
   end

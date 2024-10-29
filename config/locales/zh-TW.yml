@@ -204,6 +204,7 @@ zh-TW:
       my_subscriptions: 我的訂閱
       no_owned_html: 您尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學。
       no_subscriptions_html: 您還沒有訂閱過 Gem，前往 %{gem_link} 來訂閱！
+      organizations:
       title: 控制台
   dependencies:
     show:

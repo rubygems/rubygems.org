@@ -205,6 +205,7 @@ nl:
         het %{creating_link} van een gem.
       no_subscriptions_html: Je bent nog niet geabonneerd op een of meerdere gems.
         Bezoek een %{gem_link} en abonneer je erop.
+      organizations:
       title: Dashboard
   dependencies:
     show:

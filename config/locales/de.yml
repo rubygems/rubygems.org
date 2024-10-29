@@ -222,6 +222,7 @@ de:
         auf %{creating_link}.
       no_subscriptions_html: Du hast noch keine Gems abonniert. Besuche %{gem_link}
         um das Gem zu abonnieren!
+      organizations:
       title: Dashboard
   dependencies:
     show:
@@ -469,23 +470,23 @@ de:
       logo_details: Klick einfach auf den Download-Button, um drei PNGs und eine SVG
         des RubyGems-Logos zu erhalten.
       founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und
-        ist seitdem dank %{contributors} und %{downloads} gewachsen. Mit dem Release von RubyGems
-        1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um ihre zentrale
-        Rolle in der Ruby-Community zu verdeutlichen.
+        ist seitdem dank %{contributors} und %{downloads} gewachsen. Mit dem Release
+        von RubyGems 1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt,
+        um ihre zentrale Rolle in der Ruby-Community zu verdeutlichen.
       support_html: Obwohl RubyGems.org nicht von einem zentralen Unternehmen geführt
         wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design,
-        die Illustrationen und die Frontend-Entwicklung wurden
-        von %{dockyard} erstellt. %{github} war auch von unschätzbarem Wert und hat uns sehr geholfen,
-        zusammenzuarbeiten und Code zu teilen.
-        Die Website wurde mit %{heroku} gestartet, großartiger Service dazu beitrug, RubyGems
-        als eine praktikable Lösung zu beweisen, auf die sich die gesamte Community verlassen kann.
-        Unsere Infrastruktur wird derzeit auf %{aws} gehostet.
+        die Illustrationen und die Frontend-Entwicklung wurden von %{dockyard} erstellt.
+        %{github} war auch von unschätzbarem Wert und hat uns sehr geholfen, zusammenzuarbeiten
+        und Code zu teilen. Die Website wurde mit %{heroku} gestartet, großartiger
+        Service dazu beitrug, RubyGems als eine praktikable Lösung zu beweisen, auf
+        die sich die gesamte Community verlassen kann. Unsere Infrastruktur wird derzeit
+        auf %{aws} gehostet.
       technical_html: 'Einige Einblicke in die technischen Aspekte dieser Webseite:
         Sie ist zu 100% in Ruby geschrieben. Die Hauptseite ist eine %{rails} App.
-        Die Gems werden auf %{s3} gehostet und über %{fastly} ausgeliefert, und die Zeit nach
-        der Veröffentlichung eines neuen Gems, bis es zur Installation bereit seht, beträgt
-        meistens nur einige wenige Sekunden. Für mehr Informationen %{source_code}, der mit der
-        %{license} auf GitHub bereitseht.'
+        Die Gems werden auf %{s3} gehostet und über %{fastly} ausgeliefert, und die
+        Zeit nach der Veröffentlichung eines neuen Gems, bis es zur Installation bereit
+        seht, beträgt meistens nur einige wenige Sekunden. Für mehr Informationen
+        %{source_code}, der mit der %{license} auf GitHub bereitseht.'
       title: Über uns
       purpose:
         better_api: Eine bessere API bereitzustellen, um mit Gems zu arbeiten
