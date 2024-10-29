@@ -5,6 +5,11 @@ pin "@rails/ujs", to: "@rails--ujs.js" # @7.1.3-4
 pin "application"
 pin_all_from "app/javascript/src", under: "src"
 
+# If the version of turbo-rails changes, check that the CSP hash of the ProgressBar stylesheet didn't change.
+# Look for an error in the browser console indicating that a stylesheet was skipped.
+# 'turbo.min.js' is embedded in the turbo-rails gem.
+pin "@hotwired/turbo-rails", to: "turbo.min.js"
+
 pin "@hotwired/stimulus", to: "@hotwired--stimulus.js" # @3.2.2
 # stimulus-loading.js is a compiled asset only available from stimulus-rails gem
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
