@@ -6,9 +6,8 @@ class Profiles::SecurityEventsView < ApplicationView
   include Phlex::Rails::Helpers::DistanceOfTimeInWordsToNow
   include Phlex::Rails::Helpers::TimeTag
   include Phlex::Rails::Helpers::LinkTo
-  extend Literal::Properties
 
-  prop :security_events, _Any, reader: :private
+  prop :security_events, reader: :public
 
   def view_template
     title_content

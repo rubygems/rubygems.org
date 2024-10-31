@@ -4,10 +4,9 @@ class Rubygems::SecurityEventsView < ApplicationView
   include Phlex::Rails::Helpers::ButtonTo
   include Phlex::Rails::Helpers::ContentFor
   include Phlex::Rails::Helpers::LinkTo
-  extend Literal::Properties
 
-  prop :rubygem, Rubygem, reader: :private
-  prop :security_events, _Any, reader: :private
+  prop :rubygem, reader: :public
+  prop :security_events, reader: :public
 
   def view_template
     title_content

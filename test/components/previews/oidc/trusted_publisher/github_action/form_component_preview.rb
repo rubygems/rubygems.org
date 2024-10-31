@@ -9,8 +9,8 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponentPreview < Lookbook::Pre
   class Wrapper < Phlex::HTML
     include Phlex::Rails::Helpers::FormWith
 
-    extend Literal::Properties
-    prop :form_object, _Any
+    extend PropInitializer::Properties
+    prop :form_object
 
     def view_template
       form_with(model: @form_object, url: "/") do |github_action_form|
