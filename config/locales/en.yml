@@ -428,6 +428,16 @@ en:
       members: Members
       no_history: No events yet
       no_gems: No gems yet
+    members:
+      create:
+        failure: "Failed to add member: %{error}"
+        success: "Member added!"
+        user_not_found: "User not found"
+      destroy:
+        success: "User was removed from the organization"
+      update:
+        failure: "Failed to update member: %{error}"
+        success: "User was updated"
   pages:
     about:
       contributors_amount: "%{count} Rubyists"

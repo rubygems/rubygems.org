@@ -1,0 +1,32 @@
+<%
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.members")
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :members %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("organizations.show.members") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t("organizations.show.members"), icon: :organizations %>
+  <% end %>
+  <% if @memberships.empty? %>
+    <%= prose do %>
+      <i><%= t('organizations.show.no_members') %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @memberships.each do |membership| %>
+        <%= c.list_item_to(profile_path(membership.user.handle)) do %>
+          <div class="flex justify-between">
+            <p class="text-neutral-800 dark:text-white"><%= membership.user.name %></p>
+            <p class="text-neutral-500 capitalize"><%= membership.role %></p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
