@@ -215,6 +215,7 @@ fr:
         guide de %{creating_link}.
       no_subscriptions_html: Vous n'avez pas encore d'abonnements. Visitez %{gem_link}
         pour vous y abonner !
+      organizations:
       title: Dashboard
   dependencies:
     show:

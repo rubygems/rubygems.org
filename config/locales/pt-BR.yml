@@ -214,6 +214,7 @@ pt-BR:
         uma gem.
       no_subscriptions_html: Você ainda não está observando nenhuma gem. Visite uma
         %{gem_link} para poder observá-la!
+      organizations:
       title: Painel de Controle
   dependencies:
     show:

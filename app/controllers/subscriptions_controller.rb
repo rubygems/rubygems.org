@@ -5,7 +5,7 @@ class SubscriptionsController < ApplicationController
 
   before_action :find_rubygem, only: %i[create destroy]
 
-  layout "hammy"
+  layout "subject"
 
   def index
     add_breadcrumb t("breadcrumbs.dashboard"), dashboard_path

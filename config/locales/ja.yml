@@ -206,6 +206,7 @@ ja:
       my_subscriptions: 購読
       no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}ガイドをご覧ください。
       no_subscriptions_html: まだgemを購読していません。%{gem_link}から何か購読してみてください。
+      organizations:
       title: ダッシュボード
   dependencies:
     show:

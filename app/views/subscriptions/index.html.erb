@@ -1,7 +1,17 @@
 <% @title = t("dashboards.show.my_subscriptions") %>
 
+<% content_for :subject do %>
+  <% render "dashboards/subject", user: current_user, current: :subscriptions %>
+<% end %>
+
+<h1 class="text-h2 mb-10 space-x-2">
+  <span><%= t("dashboards.show.my_subscriptions") %></span>
+  <% unless @subscribed_gems.size.zero? %>
+    <span class="font-light text-neutral-600"><%= @subscribed_gems.size %></span>
+  <% end %>
+</h1>
+
 <%= render CardComponent.new do |c| %>
-  <%= c.head(t("dashboards.show.my_subscriptions"), icon: :gems, count: @subscribed_gems.size) %>
   <% if @subscribed_gems.empty? %>
     <%= prose do %>
       <i><%= t("dashboards.show.no_subscriptions_html", :gem_link => link_to(t('dashboards.show.gem_link_text'), rubygem_path("rake"))) %></i>
@@ -17,7 +27,7 @@
           rubygem_subscription_path(gem.slug),
           method: :delete,
           title: t("rubygems.aside.links.unsubscribe"),
-          class: "h-8 w-8 ml-6 items-center justify-center outline-none",
+          class: "h-8 w-8 ml-6 items-center justify-center outline-none -mr-2",
           aria: { label: t("rubygems.aside.links.unsubscribe") }
         ) do %>
           <%= icon_tag "close", class: "w-6 h-6" %>

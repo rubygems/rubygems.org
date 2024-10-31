@@ -212,6 +212,7 @@ en:
       my_subscriptions: Subscriptions
       no_owned_html: You haven't pushed any gems yet. Perhaps check out the guide on %{creating_link} a gem.
       no_subscriptions_html: You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!
+      organizations: Organizations
       title: Dashboard
   dependencies:
     show:
