@@ -109,6 +109,8 @@ nl:
           attributes:
             handle:
               invalid:
+            password:
+              bcrypt_length:
         version:
           attributes:
             gem_full_name:

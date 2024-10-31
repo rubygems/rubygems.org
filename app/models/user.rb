@@ -81,7 +81,7 @@ class User < ApplicationRecord
   }, allow_nil: true, length: { within: 0..20 }
 
   validates :password,
-    length: { within: 10..200 },
+    length: { minimum: 10 },
     unpwn: true,
     allow_blank: true, # avoid double errors with can't be blank
     unless: :skip_password_validation?
@@ -90,6 +90,7 @@ class User < ApplicationRecord
 
   validate :unconfirmed_email_uniqueness
   validate :toxic_email_domain, on: :create
+  validate :password_byte_length
 
   def self.authenticate(who, password)
     # Avoid exceptions when string is invalid in the given encoding, _or_ cannot be converted
@@ -319,6 +320,11 @@ class User < ApplicationRecord
     toxic = toxic_domains_path.exist? && toxic_domains_path.readlines.grep(/^#{Regexp.escape(domain)}$/).any?
 
     errors.add(:email, I18n.t("activerecord.errors.messages.blocked", domain: domain)) if toxic
+  end
+
+  def password_byte_length
+    return if skip_password_validation? || password.blank?
+    errors.add(:password, :bcrypt_length) if password.bytesize > 72
   end
 
   def expire_all_api_keys
