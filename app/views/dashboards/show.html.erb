@@ -25,14 +25,7 @@
     <%= c.scrollable do %>
       <%= render Card::TimelineComponent.new do |t| %>
         <% @latest_updates.each do |version| %>
-          <%
-            pusher_link = if version.pusher.present?
-              link_to_user(version.pusher)
-            elsif version.pusher_api_key&.owner.present?
-              link_to_pusher(version.pusher_api_key.owner)
-            end
-          %>
-          <%= t.timeline_item(version.authored_at, pusher_link) do %>
+          <%= t.timeline_item(version.authored_at, t.link_to_pusher(version)) do %>
               <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(version.rubygem.slug) %></div>
               <%= version_number(version) %>
           <% end %>
