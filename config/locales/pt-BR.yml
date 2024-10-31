@@ -419,6 +419,16 @@ pt-BR:
       popular_gems: Gems Populares
     popular:
       title: Novos Releases - Gems Populares
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount:

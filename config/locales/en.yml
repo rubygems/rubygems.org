@@ -416,6 +416,16 @@ en:
       popular_gems: Popular Gems
     popular:
       title: New Releases — Popular Gems
+  organizations:
+    index:
+      title: Organizations
+    show:
+      organization: Organization
+      gems: Gems
+      history: History
+      members: Members
+      no_history: No events yet
+      no_gems: No gems yet
   pages:
     about:
       contributors_amount: "%{count} Rubyists"

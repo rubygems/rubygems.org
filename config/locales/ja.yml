@@ -416,6 +416,16 @@ ja:
       popular_gems: 人気のgem
     popular:
       title: 新しいリリース - 人気のgem
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"

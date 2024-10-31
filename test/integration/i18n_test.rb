@@ -30,10 +30,12 @@ class I18nTest < ActionDispatch::IntegrationTest
 
     assert_predicate reference, :present?
 
+    suggestion = "\nRun bin/fill-locales to add missing keys."
+
     locale_keys.each do |locale, keys|
       missing = reference - keys
 
-      assert_predicate missing, :blank?, "#{locale} locale is missing: #{missing.join(', ')}"
+      assert_predicate missing, :blank?, "#{locale} locale is missing: #{missing.join(', ')}#{suggestion}"
       extra = keys - reference
 
       assert_predicate extra, :blank?, "#{locale} locale has extra: #{extra.join(', ')}"

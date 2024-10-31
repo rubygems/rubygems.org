@@ -412,6 +412,16 @@ zh-TW:
       popular_gems: 熱門
     popular:
       title: 熱門新發佈
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count} 位 Ruby 愛好者"

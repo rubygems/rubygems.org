@@ -422,6 +422,16 @@ fr:
       popular_gems: Gems populaires
     popular:
       title: Nouvelles Versions - Gems populaires
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount:

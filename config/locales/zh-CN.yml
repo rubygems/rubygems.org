@@ -420,6 +420,16 @@ zh-CN:
       popular_gems: 热门 Gem
     popular:
       title: 新的发布 — 热门 Gem
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount:

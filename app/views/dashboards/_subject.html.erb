@@ -3,40 +3,47 @@
   current ||= :dashboard
 %>
 
-<div class="flex flex-wrap lg:flex-col items-start mb-6 lg:mb-10">
-  <%= avatar 328, "user_gravatar", theme: :dark, class: "h-24 w-24 lg:h-40 lg:w-40 rounded-lg object-cover mr-4" %>
+<div class="mb-8 space-y-4">
+  <div class="flex flex-wrap lg:flex-col items-start mb-6 lg:mb-10">
+    <%= avatar 328, "user_gravatar", theme: :dark, class: "h-24 w-24 lg:h-40 lg:w-40 rounded-lg object-cover mr-4" %>
 
-  <div class="lg:w-full lg:mt-2">
-    <h2 class="font-bold text-h4"><%= user.display_handle %></h2>
-    <% if user.full_name.present? %>
-      <p class="text-neutral-500 text-b3"><%= user.full_name %></p>
-    <% end %>
+    <div class="lg:w-full lg:mt-2">
+      <h2 class="font-bold text-h4"><%= user.display_handle %></h2>
+      <% if user.full_name.present? %>
+        <p class="text-neutral-500 text-b3"><%= user.full_name %></p>
+      <% end %>
+    </div>
   </div>
+
+  <% if user.public_email? || user == current_user %>
+    <div class="flex items-center mb-4 text-b3 lg:text-b2">
+      <%= icon_tag("mail", color: :primary, class: "h-6 w-6 text-orange mr-3") %>
+      <p class="text-neutral-800 dark:text-white"><%=
+        mail_to(user.email, encode: "hex")
+      %></p>
+    </div>
+  <% end %>
+
+  <% if user.twitter_username.present? %>
+    <div class="flex items-center mb-4 text-b3 lg:text-b2">
+      <%= icon_tag("x-twitter", color: :primary, class: "w-6 text-orange mr-3") %>
+      <p class="text-neutral-800 dark:text-white"><%=
+        link_to(
+          twitter_username(user),
+          twitter_url(user)
+        )
+      %></p>
+    </div>
+  <% end %>
 </div>
 
-<% if user.public_email? || user == current_user %>
-  <div class="flex items-center mb-4 text-b3 lg:text-b2">
-    <%= icon_tag("mail", color: :primary, class: "h-6 w-6 text-orange mr-3") %>
-    <p class="text-neutral-800 dark:text-white"><%=
-      mail_to(user.email, encode: "hex")
-    %></p>
-  </div>
-<% end %>
-
-<% if user.twitter_username.present? %>
-  <div class="flex items-center mb-4 text-b3 lg:text-b2">
-    <%= icon_tag("x-twitter", color: :primary, class: "w-6 text-orange mr-3") %>
-    <p class="text-neutral-800 dark:text-white"><%=
-      link_to(
-        twitter_username(user),
-        twitter_url(user)
-      )
-    %></p>
-  </div>
-<% end %>
+<hr class="hidden lg:block lg:mb-6 border-neutral-400 dark:border-neutral-600" />
 
 <%= render Subject::NavComponent.new(current:) do |nav| %>
   <%= nav.link t("layouts.application.header.dashboard"), dashboard_path, name: :dashboard, icon: "space-dashboard" %>
   <%= nav.link t("dashboards.show.my_subscriptions"), subscriptions_path, name: :subscriptions, icon: "notifications" %>
+  <% if current_user.memberships.any? %>
+    <%= nav.link t("dashboards.show.organizations"), organizations_path, name: :organizations, icon: "organizations" %>
+  <% end %>
   <%= nav.link t("layouts.application.header.settings"), edit_settings_path, name: :settings, icon: "settings" %>
 <% end %>
