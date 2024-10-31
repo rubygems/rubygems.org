@@ -1,7 +1,5 @@
 class OIDC::TrustedPublisher::GitHubAction::TableComponent < ApplicationComponent
-  extend Literal::Properties
-
-  prop :github_action, _Any, reader: :private
+  prop :github_action, reader: :public
 
   def view_template
     dl(class: "tw-flex tw-flex-col sm:tw-grid sm:tw-grid-cols-2 tw-items-baseline tw-gap-4 full-width overflow-wrap") do

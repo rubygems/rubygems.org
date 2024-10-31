@@ -5,9 +5,8 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
   include Phlex::Rails::Helpers::ContentFor
   include Phlex::Rails::Helpers::DistanceOfTimeInWordsToNow
   include Phlex::Rails::Helpers::LinkTo
-  extend Literal::Properties
 
-  prop :trusted_publishers, _Any, reader: :private
+  prop :trusted_publishers, reader: :public
 
   def view_template
     title_content

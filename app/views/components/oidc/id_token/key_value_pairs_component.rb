@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class OIDC::IdToken::KeyValuePairsComponent < ApplicationComponent
-  extend Literal::Properties
-  prop :pairs, _Any, reader: :private
+  prop :pairs, reader: :public
 
   def view_template
     dl(class: "t-body provider_attributes full-width overflow-wrap") do

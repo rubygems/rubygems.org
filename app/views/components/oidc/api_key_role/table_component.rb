@@ -2,9 +2,8 @@
 
 class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
   include Phlex::Rails::Helpers::LinkTo
-  extend Literal::Properties
 
-  prop :api_key_roles, _Any, reader: :private
+  prop :api_key_roles, reader: :public
 
   def view_template
     table(class: "t-body") do
