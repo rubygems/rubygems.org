@@ -56,7 +56,7 @@ RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor \
   set -ex
 
   bundle config set --local without 'development test'
-  bundle config set --local with ${BUNDLE_WITH:-}
+  [ -z ${BUNDLE_WITH:-} ] || bundle config set --local with ${BUNDLE_WITH}
   bundle config set --local path /srv/vendor
   bundle install --jobs 20 --retry 5
   bundle clean
