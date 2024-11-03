@@ -1,5 +1,5 @@
 class OrganizationOnboarding < ApplicationRecord
-  enum :name_type, { gem: "gem", user: "user" }, default: "user", prefix: true
+  enum :name_type, { gem: "gem", user: "user" }, prefix: true
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   has_many :invites, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
@@ -8,7 +8,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   validate :user_gem_ownerships
 
-  validates :organization_name, :organization_handle, :organization_name, presence: true
+  validates :organization_name, :organization_handle, :name_type, presence: true
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
@@ -19,7 +19,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   with_options if: :name_type_user? do
-    validate :organization_handle_matches_created_by_handle
+    before_validation :set_user_handle
   end
 
   with_options if: :name_type_gem? do
@@ -132,18 +132,15 @@ class OrganizationOnboarding < ApplicationRecord
     end
   end
 
-  def organization_handle_matches_created_by_handle
-    return if organization_handle.blank?
-    return if created_by.handle == organization_handle
-
-    errors.add(:organization_name, "must match your user handle")
+  def set_user_handle
+    self.organization_handle = created_by.handle
   end
 
   def organization_handle_matches_rubygem_name
     return if organization_handle.blank?
-    rubygem = Rubygem.where(id: rubygems, name: organization_name)
+    rubygem = available_rubygems.find_by(name: organization_handle)
     return if rubygem.present?
 
-    errors.add(:organization_name, "must match a rubygem you own")
+    errors.add(:organization_handle, "must match a rubygem you own")
   end
 end

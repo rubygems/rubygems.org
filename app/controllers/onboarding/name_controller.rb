@@ -1,4 +1,6 @@
 class Onboarding::NameController < Onboarding::BaseController
+  layout "onboarding"
+
   def new
   end
 
@@ -13,6 +15,6 @@ class Onboarding::NameController < Onboarding::BaseController
   private
 
   def onboarding_params
-    params.require(:organization_onboarding).permit(:organization_name, :organization_handle)
+    params.require(:organization_onboarding).permit(:organization_name, :organization_handle, :name_type)
   end
 end

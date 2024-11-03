@@ -268,6 +268,7 @@ Rails.application.routes.draw do
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
 
     if Rails.env.local?
+      resource :onboarding, only: %i[index destroy], controller: 'onboarding'
       namespace :onboarding do
         get "name", to: "name#new"
         post "name", to: "name#create"
