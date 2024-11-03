@@ -1,0 +1,30 @@
+<% content_for :main do %>
+  <div class="w-full px-8 pt-10 lg:pt-0 flex-col bg-white dark:bg-black text-neutral-950 dark:text-neutral-050 text-b2 items-center">
+    <div class="max-w-screen-xl w-full mx-auto">
+      <% flash.each do |name, msg| %>
+        <%= render AlertComponent.new(style: name, closeable: true) do %>
+          <%= flash_message(name, msg) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# At desktop width, these outer 2 divs make the full content background with 2 columns of content %>
+  <div class="flex-1 lg:w-full lg:px-8 bg-white dark:bg-black text-neutral-950 dark:text-neutral-050 text-b2 items-center">
+    <div class="lg:max-w-screen-xl lg:w-full lg:mx-auto lg:flex lg:flex-row">
+      <%# At mobile width, the inner aside and main make two stacked full width sections %>
+      <main class="flex-1 w-full px-8 pt-10 lg:p-0 mb-20 bg-white dark:bg-black">
+        <div class="flex flex-col max-w-screen-xl w-full mx-auto">
+          <%= yield %>
+        </div>
+      </main>
+
+      <aside class="w-full px-8 lg:px-0 pb-6 lg:w-72 lg:ml-20 lg:mb-32 bg-white dark:bg-black border-b border-neutral-400 dark:border-neutral-800 lg:border-none">
+        <div class="flex flex-col max-w-screen-xl mx-auto w-full">
+          <%= yield :aside %>
+        </div>
+      </aside>
+    </div>
+  </div>
+<% end %>
+<%= render template: "layouts/hammy" %>

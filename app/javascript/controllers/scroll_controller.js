@@ -12,4 +12,8 @@ export default class extends Controller {
   scrollTargetConnected() {
     this.scrollTarget.scrollIntoView({ behavior: "smooth" })
   }
+
+  scroll(e) {
+    e.currentTarget.scrollIntoView({ behavior: "smooth" })
+  }
 }
