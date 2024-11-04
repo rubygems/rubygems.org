@@ -15,11 +15,12 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
     get :edit
 
     assert_response :ok
-    assert_select "input[type=checkbox][name='organization_onboarding[invitees][][id]']"
+    # assert a text field has has the handle
+    assert_select "input[name='organization_onboarding[invites][id]'][value='#{@other_user.id}']"
   end
 
   test "should update user" do
-    patch :update, params: { organization_onboarding: { invitees: [{ id: @user.id, role: "owner" }] } }
+    patch :update, params: { organization_onboarding: { invites: [{ id: @user.id, handle: @user.handle, role: "owner" }] } }
 
     assert_redirected_to onboarding_confirm_path
   end

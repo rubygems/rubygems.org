@@ -12,7 +12,9 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       organization_name: "Test Organization",
       organization_handle: @owner.handle,
       created_by: @owner,
-      invitees: [{ "id" => @maintainer.id, "role" => "maintainer" }],
+      invites: [
+        OrganizationOnboardingInvite.new(user: @maintainer, role: "maintainer")
+      ],
       rubygems: [@rubygem.id]
     )
   end
@@ -27,22 +29,10 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_equal ["must exist"], @onboarding.errors[:created_by]
     end
 
-    context "when onbaording a user with an invalid role" do
-      setup do
-        @onboarding.invitees = [{ "id" => @maintainer.id, "role" => "invalid" }]
-      end
-
-      should "raise an error" do
-        assert_predicate @onboarding, :invalid?
-        assert_equal ["Invalid Role 'invalid' for User #{@maintainer.id}"], @onboarding.errors[:invitees]
-      end
-    end
-
     context "when the user does not have the required gem roles" do
       setup do
         @onboarding.rubygems = [@rubygem.id]
         @onboarding.created_by = @maintainer
-        @onboarding.invitees = [{ "id" => @owner.id, "role" => "owner" }]
       end
 
       should "be invalid" do
@@ -196,15 +186,15 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
   end
 
-  context "#avaliable_rubygems" do
+  context "#available_rubygems" do
     should "return the rubygems that the user owns" do
-      assert_equal [@rubygem], @onboarding.avaliable_rubygems
+      assert_equal [@rubygem], @onboarding.available_rubygems
     end
   end
 
-  context "#avaliable_users" do
-    should "return the users that share ownership with the set of avaliable rubygems" do
-      assert_equal [@maintainer], @onboarding.avaliable_users
+  context "#available_users" do
+    should "return the users that share ownership with the set of available rubygems" do
+      assert_equal [@maintainer], @onboarding.available_users
     end
   end
 end

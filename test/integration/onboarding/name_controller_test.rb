@@ -30,7 +30,7 @@ class Onboarding::NameControllerTest < ActionController::TestCase
 
   context "POST create" do
     should "create a new onboarding and redirect to the next step" do
-      post :create, params: { organization_onboarding: { organization_name: "New Name", organization_handle: "new-name" } }
+      post :create, params: { organization_onboarding: { organization_name: "New Name", organization_handle: @user.handle } }
 
       assert_redirected_to onboarding_gems_path
     end

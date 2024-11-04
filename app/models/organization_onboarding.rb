@@ -2,11 +2,11 @@ class OrganizationOnboarding < ApplicationRecord
   enum :name_type, { gem: "gem", user: "user" }, default: "user", prefix: true
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
+  has_many :invites, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
   belongs_to :created_by, class_name: "User", inverse_of: :organization_onboardings
 
   validate :user_gem_ownerships
-  validate :check_user_roles
 
   validates :organization_name, :organization_handle, :organization_name, presence: true
 
@@ -47,32 +47,30 @@ class OrganizationOnboarding < ApplicationRecord
     )
   end
 
-  def avaliable_rubygems
-    @avaliable_rubygems ||= created_by.rubygems
+  def available_rubygems
+    @available_rubygems ||= created_by.rubygems
   end
 
-  def avaliable_users
+  def user_invites
+    users_for_selected_gems.map do |user|
+      OrganizationOnboardingInvite.new(user: user)
+    end
+  end
+
+  private
+
+  def users_for_selected_gems
     User # TODO: Move this to a scope, verify performance
       .joins(:ownerships)
-      .where(ownerships: { rubygem_id: avaliable_rubygems.pluck(:id) })
+      .where(ownerships: { rubygem_id: available_rubygems.pluck(:id) })
       .where.not(ownerships: { user_id: created_by })
       .order(Arel.sql("COUNT (ownerships.id) DESC"))
       .group(users: [:id])
   end
 
-  private
-
   def create_organization!
-    memberships = []
+    memberships = invites.map(&:to_membership)
     memberships << build_owner
-
-    invitees.each do |invitee|
-      user_id = invitee["id"]
-      role = invitee["role"]
-
-      next if user_id == created_by
-      memberships.push build_membership(user_id, role)
-    end
 
     Organization.create!(
       name: organization_name,
@@ -89,10 +87,10 @@ class OrganizationOnboarding < ApplicationRecord
     end
   end
 
-  def build_membership(user_id, role)
+  def build_membership(invite)
     Membership.build(
-      user_id: user_id,
-      role: role
+      user_id: invite.user_id,
+      role: invite.role
     )
   end
 
@@ -113,19 +111,11 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def build_team_members
-    users = invitees.pluck("id").append(created_by.id)
-    users.map do |user_id|
+    users = invites.map(&:user).append(created_by)
+    users.map do |user|
       TeamMember.build(
-        user_id: user_id
+        user_id: user.id
       )
-    end
-  end
-
-  def check_user_roles
-    invitees.each do |invitee|
-      user_id = invitee["id"]
-      role = invitee["role"]
-      errors.add(:invitees, "Invalid Role '#{role}' for User #{user_id}") unless Access::ROLES.key?(role)
     end
   end
 

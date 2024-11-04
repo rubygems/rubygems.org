@@ -1,15 +1,15 @@
 <%= form_with(model: @organization_onboarding, url: onboarding_name_path, method: :post) do |form| %>
   <h1>New Organization</h1>
   <p>
-    <%= form.label :organziation_name %>
+    <%= form.label :organization_name, "Name" %>
     <br/>
     <%= form.text_field :organization_name  %>
   </p>
   <p>
-    <%= form.label :organization_handle %>
+    <%= form.label :organization_handle, "Handle" %>
     <br/>
     <%= form.text_field :organization_handle %>
   </p>
   <br/>
-  <%= form.submit %>
+  <%= form.submit "Save" %>
 <% end %>
