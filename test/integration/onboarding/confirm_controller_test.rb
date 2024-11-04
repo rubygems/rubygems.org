@@ -9,7 +9,9 @@ class Onboarding::ConfirmControllerTest < ActionController::TestCase
     @organization_onboarding = create(
       :organization_onboarding,
       created_by: @user,
-      invitees: [{ id: @collaborator.id, role: :owner }],
+      invites: [
+        OrganizationOnboardingInvite.new(user: @collaborator, role: "maintainer")
+      ],
       rubygems: [@rubygem.id]
     )
 

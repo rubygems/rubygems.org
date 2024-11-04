@@ -5,10 +5,6 @@ FactoryBot.define do
     organization_name { "Rubygems" }
     organization_handle { created_by.handle }
 
-    invitees do
-      []
-    end
-
     rubygems do
       []
     end

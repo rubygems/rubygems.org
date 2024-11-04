@@ -47,7 +47,7 @@ WebMock.disable_net_connect!(
     "chromedriver.storage.googleapis.com",
     "search", # DevContainer services
     "selenium",
-    "rails-app",
+    "rails-app"
   ]
 )
 WebMock.globally_stub_request(:after_local_stubs) do |request|

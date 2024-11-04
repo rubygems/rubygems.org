@@ -1,11 +1,22 @@
 <%= form_with(model: @organization_onboarding, url: onboarding_users_path, method: :patch) do |form| %>
   <h1>Edit Users</h1>
-  <% @users.each do |user| %>
-  <div>
-    <%= form.text_field :handle, value: user.handle, disabled: true, name: 'organization_onboarding[invitees][][handle]' %>
-    <%= form.text_field :id, value: user.id, hidden: true, name: 'organization_onboarding[invitees][][id]' %>
-    <%= select_tag :role, options_for_select(@roles), name: 'organization_onboarding[invitees][][role]' %>
-  </div>
+  <br/>
+  <%= form.fields_for :invites, @invites do |invite_fields| %>
+    <div data-user-handle="<%= invite_fields.object.user.handle %>">
+      <%= invite_fields.text_field :id, value: invite_fields.object.user.id, hidden: true %>
+      <p>
+        <%= invite_fields.label :handle %>
+        <br/>
+        <%= invite_fields.text_field :handle, value: invite_fields.object.user.handle, disabled: true %>
+      </p>
+      <br/>
+      <p>
+        <%= invite_fields.label :role %>
+        <br/>
+        <%= invite_fields.select :role, @roles %>
+      </p>
+    </div>
   <% end %>
-  <%= form.submit %>
+  <br/>
+  <%= form.submit "Save" %>
 <% end %>

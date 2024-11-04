@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_23_053210) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_04_065953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -419,13 +419,22 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_053210) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "organization_onboarding_invites", force: :cascade do |t|
+    t.bigint "organization_onboarding_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_onboarding_id"], name: "idx_on_organization_onboarding_id_e5b08868fb"
+    t.index ["user_id"], name: "index_organization_onboarding_invites_on_user_id"
+  end
+
   create_table "organization_onboardings", force: :cascade do |t|
     t.string "status", null: false
     t.string "name_type", null: false
     t.string "organization_name", null: false
     t.string "organization_handle", null: false
     t.text "error"
-    t.jsonb "invitees", default: []
     t.integer "rubygems", default: [], array: true
     t.datetime "onboarded_at"
     t.integer "onboarded_by"
@@ -686,6 +695,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_053210) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "organization_onboarding_invites", "organization_onboardings"
+  add_foreign_key "organization_onboarding_invites", "users"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
   add_foreign_key "ownership_calls", "users", name: "ownership_calls_user_id_fk"
   add_foreign_key "ownership_requests", "ownership_calls", name: "ownership_requests_ownership_call_id_fk"
