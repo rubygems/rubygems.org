@@ -1,7 +1,9 @@
 FactoryBot.define do
   factory :organization_onboarding do
+    name_type { "user" }
+
     organization_name { "Rubygems" }
-    organization_handle { "rubygems" }
+    organization_handle { created_by.handle }
 
     invitees do
       []
@@ -11,7 +13,7 @@ FactoryBot.define do
       []
     end
 
-    created_by { 1 }
+    created_by { association(:user) }
 
     trait :completed do
       status { :completed }

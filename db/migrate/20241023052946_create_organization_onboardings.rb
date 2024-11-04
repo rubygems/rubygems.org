@@ -2,6 +2,7 @@ class CreateOrganizationOnboardings < ActiveRecord::Migration[7.1]
   def change
     create_table :organization_onboardings do |t|
       t.string :status, null: false
+      t.string :name_type, null: false
       t.string :organization_name, null: false
       t.string :organization_handle, null: false
       t.text :error, null: true

@@ -6,11 +6,6 @@ class Organization < ApplicationRecord
     length: { within: 2..40 },
     format: { with: Patterns::HANDLE_PATTERN }
   validates :name, presence: true, length: { within: 2..255 }
-  validate :unique_with_user_handle
-
-  def unique_with_user_handle
-    errors.add(:handle, "has already been taken") if handle && User.where("lower(handle) = lower(?)", handle).any?
-  end
 
   has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :organization
   has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :organization

@@ -421,6 +421,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_053210) do
 
   create_table "organization_onboardings", force: :cascade do |t|
     t.string "status", null: false
+    t.string "name_type", null: false
     t.string "organization_name", null: false
     t.string "organization_handle", null: false
     t.text "error"
