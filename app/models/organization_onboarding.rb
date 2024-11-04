@@ -1,4 +1,5 @@
 class OrganizationOnboarding < ApplicationRecord
+  enum :name_type, { gem: "gem", user: "user" }, default: "user", prefix: true
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
@@ -7,7 +8,7 @@ class OrganizationOnboarding < ApplicationRecord
   validate :user_gem_ownerships
   validate :check_user_roles
 
-  validates :organization_name, :organization_handle, presence: true
+  validates :organization_name, :organization_handle, :organization_name, presence: true
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
@@ -15,6 +16,14 @@ class OrganizationOnboarding < ApplicationRecord
 
   with_options if: :failed? do
     validates :error, presence: true
+  end
+
+  with_options if: :name_type_user? do
+    validate :organization_handle_matches_created_by_handle
+  end
+
+  with_options if: :name_type_gem? do
+    validate :organization_handle_matches_rubygem_name
   end
 
   def onboard!
@@ -121,15 +130,30 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def user_gem_ownerships
-    # rubygems.each do |id|
-    #   ownership = Ownership.includes(:rubygem).find_by(rubygem_id: id, user_id: created_by)
+    rubygems.each do |id|
+      ownership = Ownership.includes(:rubygem).find_by(rubygem_id: id, user_id: created_by)
 
-    #   if ownership.blank?
-    #     errors.add(:rubygems, "User does not own gem: #{id}")
-    #     next
-    #   end
+      if ownership.blank?
+        errors.add(:rubygems, "User does not own gem: #{id}")
+        next
+      end
 
-    #   errors.add(:rubygems, "User does not have owner permissions for gem: #{ownership.rubygem.name}") unless ownership.owner?
-    # end
+      errors.add(:rubygems, "User does not have owner permissions for gem: #{ownership.rubygem.name}") unless ownership.owner?
+    end
+  end
+
+  def organization_handle_matches_created_by_handle
+    return if organization_handle.blank?
+    return if created_by.handle == organization_handle
+
+    errors.add(:organization_name, "must match your user handle")
+  end
+
+  def organization_handle_matches_rubygem_name
+    return if organization_handle.blank?
+    rubygem = Rubygem.where(id: rubygems, name: organization_name)
+    return if rubygem.present?
+
+    errors.add(:organization_name, "must match a rubygem you own")
   end
 end

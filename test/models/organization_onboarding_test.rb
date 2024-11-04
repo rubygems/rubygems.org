@@ -8,6 +8,9 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     @onboarding = create(
       :organization_onboarding,
+      name_type: :user,
+      organization_name: "Test Organization",
+      organization_handle: @owner.handle,
       created_by: @owner,
       invitees: [{ "id" => @maintainer.id, "role" => "maintainer" }],
       rubygems: [@rubygem.id]
@@ -67,6 +70,50 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         @onboarding.valid?
 
         assert_equal ["User does not own gem: #{@rubygem.id}"], @onboarding.errors[:rubygems]
+      end
+    end
+
+    context "when the user specifices a user as the name of the organization" do
+      setup do
+        @onboarding.name_type = :user
+      end
+
+      context "when the name is a valid user" do
+        setup do
+          @onboarding.organization_handle = @owner.handle
+        end
+
+        should :be_valid
+      end
+
+      context "when the name is not valid" do
+        setup do
+          @onboarding.organization_handle = "invalid"
+        end
+
+        should :be_invalid
+      end
+    end
+
+    context "when the user specifies a gem as the name of the organization" do
+      setup do
+        @onboarding.name_type = :gem
+      end
+
+      context "when the name is a valid gem that the user owns" do
+        setup do
+          @onboarding.organization_name = @rubygem.name
+        end
+
+        should :be_valid
+      end
+
+      context "when the name is not valid" do
+        setup do
+          @onboarding.organization_name = "invalid"
+        end
+
+        should :be_invalid
       end
     end
   end
