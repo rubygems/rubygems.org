@@ -24,6 +24,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   with_options if: :name_type_gem? do
     validate :organization_handle_matches_rubygem_name
+    after_validation :add_namesake_rubygem
   end
 
   def onboard!
@@ -48,7 +49,16 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def available_rubygems
-    @available_rubygems ||= created_by.rubygems
+    @available_rubygems ||= created_by.rubygems.order(:name)
+  end
+
+  def selected_rubygems
+    @selected_rubygems ||= Rubygem.where(id: rubygems).all
+  end
+
+  def namesake_rubygem
+    return unless name_type_gem?
+    @namesake_rubygem ||= created_by.rubygems.find_by(name: organization_handle)
   end
 
   def user_invites
@@ -120,14 +130,18 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def set_user_handle
-    return if created_by.blank?
+    return if created_by.blank? || !name_type_user?
     self.organization_handle = created_by.handle
+  end
+
+  def add_namesake_rubygem
+    return unless namesake_rubygem && rubygems.exclude?(namesake_rubygem.id)
+    rubygems.unshift(namesake_rubygem.id)
   end
 
   def organization_handle_matches_rubygem_name
     return if organization_handle.blank?
-    rubygem = available_rubygems.find_by(name: organization_handle)
-    return if rubygem.present?
+    return if namesake_rubygem.present?
 
     errors.add(:organization_handle, "must match a rubygem you own")
   end

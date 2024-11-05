@@ -1,4 +1,6 @@
 class Onboarding::GemsController < Onboarding::BaseController
+  layout "onboarding"
+
   def edit
   end
 

@@ -1,37 +1,8 @@
-<nav class="mb-10">
-  <ol class="flex items-start space-x-4 text-start text-neutral-800">
-    <!-- Step 1 -->
-    <li class="flex flex-col items-center space-y-2 max-w-20">
-      <span class="w-8 h-8 flex items-center justify-center rounded bg-orange text-white font-bold text-b3"
-            aria-current="step">1</span>
-      <span class="text-b3">Name org</span>
-    </li>
+<h1 class="text-b1 lg:text-h1 font-semibold lg:font-normal mb-10">Create an Organization</h1>
 
-    <!-- Connector -->
-    <span class="flex-grow mt-4 border-t-2 border-neutral-400"></span>
-
-    <!-- Step 2 -->
-    <li class="flex flex-col items-center space-y-2 max-w-20 text-center">
-      <span class="w-8 h-8 flex items-center justify-center rounded bg-neutral-300 text-neutral-700 font-bold text-b3">2</span>
-      <span class="text-b3">Add gems</span>
-    </li>
-
-    <!-- Connector -->
-    <span class="flex-grow mt-4 border-t-2 border-neutral-400"></span>
-
-    <!-- Step 3 -->
-    <li class="flex flex-col items-center space-y-2 max-w-20 text-center">
-      <span class="w-8 h-8 flex items-center justify-center rounded bg-neutral-300 text-neutral-700 font-bold text-b3">3</span>
-      <span class="text-b3">Manage members</span>
-    </li>
-
-    <!-- Connector -->
-    <span class="flex-grow mt-4 border-t-2 border-neutral-400"></span>
-
-    <!-- Step 4 -->
-    <li class="flex flex-col items-center space-y-2 max-w-20 text-center">
-      <span class="w-8 h-8 flex items-center justify-center rounded bg-neutral-300 text-neutral-700 font-bold text-b3">4</span>
-      <span class="text-b3">Finalize</span>
-    </li>
-  </ol>
-</nav>
+<%= render Onboarding::StepsComponent.new(current_step) do |s| %>
+  <%= s.step "Name", onboarding_name_path %>
+  <%= s.step "Gems", onboarding_gems_path %>
+  <%= s.step "Members", onboarding_users_path %>
+  <%= s.step "Finalize", onboarding_confirm_path %>
+<% end %>

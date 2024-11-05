@@ -1,6 +1,3 @@
-<h1 class="text-b1 font-semibold mb-10">Create an Organization</h1>
-
-<!-- Progress -->
 <%= render "onboarding/progress", current_step: 1 %>
 
 <h2 class="text-h4 mb-10">Name your Organization</h2>
@@ -15,20 +12,20 @@
   <h3 class="text-b2 font-semibold mb-2">Name your org using:</h3>
 
   <div class="flex w-full space-x-4 mb-10" data-controller="scroll">
-    <label class="flex-1 border-2 rounded-lg p-4 text-center has-[:checked]:border-orange-500 peer-checked:bg-white">
+    <label class="flex-1 border-2 rounded-lg p-4 text-center dark:border-neutral-600 has-[:checked]:border-orange-500">
       <%= form.radio_button(:name_type, "gem", class: "hidden peer", data: { onboarding_name_target: "radio", action: "onboarding-name#gemname scroll#scroll" }, required: true) %>
-      <div class="text-neutral-800 peer-checked:text-orange-500">
+      <div class="text-neutral-800 dark:text-neutral-600 peer-checked:text-orange-500">
         <%= icon_tag "gems", size: 10, class: "mx-auto mb-2" %>
       </div>
-      <span class="peer-checked:font-semibold">a gem you own</span>
+      <span class="peer-checked:font-semibold dark:peer-checked:text-white">a gem you own</span>
     </label>
 
-    <label class="flex-1 border-2 rounded-lg p-4 text-center has-[:checked]:border-orange-500 peer-checked:bg-white">
+    <label class="flex-1 border-2 rounded-lg p-4 text-center dark:border-neutral-600 has-[:checked]:border-orange-500">
       <%= form.radio_button(:name_type, "user", class: "hidden peer", data: { onboarding_name_target: "radio", action: "onboarding-name#username scroll#scroll" }, required: true) %>
-      <div class="text-neutral-800 peer-checked:text-orange-500">
+      <div class="text-neutral-800 dark:text-neutral-600 peer-checked:text-orange-500">
         <%= icon_tag "account-box", size: 10, class: "mx-auto mb-2" %>
       </div>
-      <span class="peer-checked:font-semibold">your username</span>
+      <span class="dark:text-neutral-600 peer-checked:font-semibold dark:peer-checked:text-white">your username</span>
     </label>
   </div>
 
@@ -38,15 +35,15 @@
       <br>
       Changing this later may require help from RubyGems.org support.
     </p>
-    <label class="flex overflow-hidden items-center">
-      <span class="flex px-4 text-neutral-700 rounded-l-lg border-t border-l border-b rounded-lg-l box-border h-11 items-center bg-neutral-050">rubygems.org/organizations/</span>
+    <label class="flex items-center">
+      <span class="flex h-11 px-4 text-neutral-700 rounded-l-lg border-t border-l border-b rounded-lg-l border-neutral-400 dark:border-neutral-600 items-center bg-neutral-050 dark:text-neutral-300 dark:bg-neutral-950">rubygems.org/organizations/</span>
       <%= form.select(
         :organization_handle,
-        @organization_onboarding.available_rubygems.pluck(:name),
+        available_rubygems.map(&:name),
         { prompt: "select..." },
         {
           required: true,
-          class: "parent:flex-1 flex-1 h-full px-2 bg-white rounded-r-lg outline-none appearance-none",
+          class: "flex-1 h-11 px-2 bg-white dark:bg-neutral-900 rounded-r-lg outline-none appearance-none focus:ring-inset focus:ring-1 focus:ring-orange-500",
           data: { action: "onboarding-name#updateDisplayname" }
         }
       ) %>
@@ -60,12 +57,12 @@
       Changing this later may require help from RubyGems.org support.
     </p>
     <label class="flex overflow-hidden items-center">
-      <span class="flex px-4 text-neutral-700 rounded-l-lg border-t border-l border-b rounded-lg-l box-border h-11 items-center bg-neutral-050">rubygems.org/organizations/</span>
+      <span class="flex h-11 px-4 text-neutral-700 rounded-l-lg border-t border-l border-b rounded-lg-l border-neutral-400 dark:border-neutral-600 items-center bg-neutral-050 dark:text-neutral-300 dark:bg-neutral-900">rubygems.org/organizations/</span>
       <%= text_field_tag(
         :disabled_username,
         current_user.name,
         disabled: true,
-        class: "flex-1 h-full px-2 bg-white rounded-r-lg outline-none appearance-none placeholder:italic placeholder:text-neutral-400",
+        class: "flex-1 h-11 px-2 bg-white dark:bg-neutral-950 rounded-r-lg outline-none appearance-none placeholder:italic placeholder:text-neutral-400 focus:ring-inset focus:ring-1 focus:ring-orange-500",
       ) %>
     </label>
   </div>
@@ -76,15 +73,15 @@
     <%= form.text_field(
       :organization_name,
       placeholder: "Select a gem name first",
-      class: "w-full rounded",
+      class: "w-full rounded dark:bg-neutral-900 focus:ring-inset focus:ring-1 focus:ring-orange-500",
       required: true,
       autocomplete: "organization",
       data: { onboarding_name_target: "displayname", action: "onboarding-name#validate" },
     ) %>
 
     <div class="flex border-t border-neutral-400 pt-10 my-10 justify-between">
-      <%= render ButtonComponent.new("Cancel", onboarding_path, type: :link, color: :neutral, outline: true, method: :delete) %>
-      <%= render ButtonComponent.new("Continue", type: :submit, outline: true, data: { onboarding_name_target: "submit" }) %>
+      <%= render ButtonComponent.new("Cancel", onboarding_path, type: :link, color: :neutral, style: :outline, method: :delete) %>
+      <%= render ButtonComponent.new("Continue", type: :submit, style: :outline, data: { onboarding_name_target: "submit" }) %>
     </div>
   </div>
 
