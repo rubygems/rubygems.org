@@ -1,6 +1,7 @@
 class Onboarding::UsersController < Onboarding::BaseController
+  layout "onboarding"
+
   def edit
-    @invites = @organization_onboarding.user_invites
     @roles = Membership.roles.map { |k, _| [Membership.human_attribute_name("role.#{k}"), k] }
   end
 
@@ -13,6 +14,11 @@ class Onboarding::UsersController < Onboarding::BaseController
   end
 
   private
+
+  def invites
+    @invites = @organization_onboarding.user_invites
+  end
+  helper_method :invites
 
   def onboarding_user_params
     params.require(:organization_onboarding).permit(invitees: %i[id role])

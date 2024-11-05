@@ -6,4 +6,13 @@ class Onboarding::BaseController < ApplicationController
   def find_or_initialize_onboarding
     @organization_onboarding = OrganizationOnboarding.find_or_initialize_by(created_by: Current.user, status: :pending)
   end
+
+  def available_rubygems
+    @available_rubygems ||= begin
+      gems = @organization_onboarding.available_rubygems.to_a
+      gems.unshift gems.delete(@organization_onboarding.namesake_rubygem) if @organization_onboarding.namesake_rubygem
+      gems
+    end
+  end
+  helper_method :available_rubygems
 end

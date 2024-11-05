@@ -1,4 +1,6 @@
 class Onboarding::ConfirmController < Onboarding::BaseController
+  layout "onboarding"
+
   def edit
   end
 
