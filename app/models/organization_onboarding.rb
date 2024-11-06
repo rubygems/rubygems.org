@@ -1,5 +1,5 @@
 class OrganizationOnboarding < ApplicationRecord
-  enum :name_type, { gem: "gem", user: "user" }, prefix: true
+  enum :name_type, { gem: "gem", user: "user" }, prefix: true, default: "gem"
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   has_many :invites, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
