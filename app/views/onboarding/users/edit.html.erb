@@ -1,9 +1,15 @@
+<% content_for :aside do %>
+  <%= render "onboarding/summary", current_step: 3 %>
+<% end %>
+
 <%= render "onboarding/progress", current_step: 3 %>
 
 <h2 class="text-h4 mb-10">Manage Members</h2>
 
 <p class="mb-10">
-  The existing owners of the selected gems will remain owners of those gems, but have not been added to this org yet. You can complete the org and add members later, or manage and invite members now.
+  The existing owners of the selected gems will remain owners of those gems.
+  You can invite any of the existing owners to join this organization.
+  You may also add members later after the organization is created.
 </p>
 
 <div data-controller="reveal" data-reveal-toggle-class="rotate-180" class="mb-10">
@@ -14,28 +20,28 @@
     <% end %>
   </p>
 
-  <div class="hidden border border-orange-500 rounded-lg overflow-hidden mt-2" data-reveal-target="item">
+  <div class="border border-orange-500 rounded-lg overflow-hidden mt-2" data-reveal-target="item">
     <div class="bg-orange-100 text-orange-800 font-semibold text-center py-2">
       Outside Contributor
     </div>
-    <div class="px-4 py-3 text-b3 text-neutral-700">
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
       Outside contributors are non-members that still maintain access
       <p class="text-b4 text-neutral-500 mt-1 italic">
-        *If you make no changes, users retain access to the same gems they previously had access to.
+        *If you make no changes, gem ownership will remain unaltered for existing gem owners.
       </p>
     </div>
 
     <div class="bg-orange-200 text-orange-800 font-semibold text-center py-2">
       Maintainer
     </div>
-    <div class="px-4 py-3 text-b3 text-neutral-700">
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
       Publish / manage any gem owned by the organization
     </div>
 
     <div class="bg-orange-300 text-orange-800 font-semibold text-center py-2">
       Admin
     </div>
-    <div class="px-4 py-3 text-b3 text-neutral-700">
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
       <p>Publish / manage any gem owned by the organization</p>
       <p>Add or remove outside contributor maintainers, owners of individual gems</p>
       <p class="text-b4 text-neutral-500 mt-1 italic">
@@ -46,41 +52,42 @@
     <div class="bg-orange-400 text-orange-800 font-semibold text-center py-2">
       Owner
     </div>
-    <div class="px-4 py-3 text-b3 text-neutral-700">
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
       Owners can add other owners to the organization and remove gems from the organization.
     </div>
   </div>
 </div>
 
 <%= form_with(model: @organization_onboarding, url: onboarding_users_path, method: :patch) do |form| %>
-  <li class="flex w-full py-3 pl-3 pr-12 justify-between box-border border border-neutral-400 rounded ">
-    <span class="flex flex-row items-center">
-      <%= avatar 48, "gravatar-#{@organization_onboarding.created_by.id}", theme: :dark, class: "h-6 w-6 rounded mr-2" %>
-      <span class="text-b2"><%= @organization_onboarding.created_by.handle %></span>
-    </span>
-    <span class="text-b3">Owner</span>
-  </li>
   <ul>
+    <li class="flex w-full py-3 pl-[11px] pr-10 justify-between box-border border border-neutral-400 rounded-lg">
+      <span class="flex flex-row items-center">
+        <%= avatar 48, "gravatar-#{@organization_onboarding.created_by.id}", theme: :dark, class: "h-6 w-6 rounded mr-2" %>
+        <span><%= @organization_onboarding.created_by.handle %></span>
+      </span>
+      <span>Owner</span>
+    </li>
     <%= form.fields_for :invites do |invite_fields| %>
       <% user = invite_fields.object.user %>
-      <li class="flex w-full py-3 pl-3 pr-2 justify-between" data-user-handle="<%= user.handle %>">
-        <%= invite_fields.hidden_field :id, value: invite_fields.object.id %>
-        <%= invite_fields.hidden_field :user_id, value: user.id %>
-        <span class="flex flex-row items-center">
+      <li class="flex w-full py-3 pl-3 justify-between items-center" data-user-handle="<%= user.handle %>">
+        <span class="flex flex-row items-center h-11">
           <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2" %>
-          <span class="text-b2"><%= invite_fields.object.user.handle %></span>
+          <span class="text-b2"><%= user.handle %></span>
         </span>
-        <%= invite_fields.select(
-          :role,
-          @roles,
-          { include_blank: "select role" },
-          { class: "appearance-none bg-white dark:bg-black border-none h-10 text-right focus:outline-none focus:ring-none" }
+        <%= invite_fields.label :role, class: "sr-only" %>
+        <%= select_tag(
+organization_onboarding[invites_attributes][#{idx}][user_id]
+          options_for_select([["select role", ""], *@roles],
+          style: "text-align-last: right;",
+          class: "text-b2 rounded-lg appearance-none outline-none bg-white dark:bg-black border-none h-11 text-right focus:ring-2 focus:ring-inset focus:ring-orange"
         ) %>
+        <%= invite_fields.hidden_field :id %>
+        <%= invite_fields.hidden_field :user_id %>
       </li>
     <% end %>
   </ul>
 
-  <div class="flex border-t border-neutral-400 pt-10 my-10 justify-between">
+  <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
     <%= render ButtonComponent.new("Back", onboarding_gems_path, type: :link, color: :neutral, style: :outline) %>
     <span class="space-x-2">
       <%= render ButtonComponent.new("Skip for now", onboarding_confirm_path, type: :link, color: :neutral, style: :plain) %>

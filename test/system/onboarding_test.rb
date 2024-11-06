@@ -33,5 +33,12 @@ class OnboardingTest < ApplicationSystemTestCase
     assert_text "Confirm Organization"
 
     click_button "Confirm"
+
+    @organization = Organization.find_by(name: "Test Organization")
+
+    assert_includes @user.organizations, @organization
+    assert_includes @other_user.organizations, @organization
+    assert_predicate @other_user.memberships.find_by(organization: @organization), :admin?
+    assert_equal @user.organizations.find_by(name: "Test Organization")
   end
 end

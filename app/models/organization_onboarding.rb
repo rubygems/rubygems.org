@@ -67,7 +67,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def actionable_invites
-    invites.select { |invite| invite.role.present? }
+    @actionable_invites ||= invites.select { |invite| invite.role.present? }
   end
 
   private
