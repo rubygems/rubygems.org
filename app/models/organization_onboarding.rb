@@ -6,7 +6,7 @@ class OrganizationOnboarding < ApplicationRecord
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
   belongs_to :created_by, class_name: "User", inverse_of: :organization_onboardings
 
-  validate :user_gem_ownerships
+  validate :created_by_gem_ownerships
 
   validates :organization_name, :organization_handle, :name_type, presence: true
 
@@ -119,20 +119,8 @@ class OrganizationOnboarding < ApplicationRecord
     end
   end
 
-  def user_gem_ownerships
-    rubygems.each do |id|
-      ownership = Ownership.includes(:rubygem).find_by(rubygem_id: id, user_id: created_by)
-
-      if ownership.blank?
-        errors.add(:rubygems, "User does not own gem: #{id}")
-        next
-      end
-
-      errors.add(:rubygems, "User does not have owner permissions for gem: #{ownership.rubygem.name}") unless ownership.owner?
-    end
-  end
-
   def set_user_handle
+    return if created_by.blank?
     self.organization_handle = created_by.handle
   end
 
@@ -142,5 +130,19 @@ class OrganizationOnboarding < ApplicationRecord
     return if rubygem.present?
 
     errors.add(:organization_handle, "must match a rubygem you own")
+  end
+
+  def created_by_gem_ownerships
+    return if created_by.blank? || rubygems.blank?
+
+    ownerships = Ownership.where(user: created_by, rubygem: rubygems).index_by(&:rubygem_id)
+    selected_rubygems = Rubygem.where(id: rubygems)
+
+    selected_rubygems.each do |rubygem|
+      ownership = ownerships[rubygem.id]
+      next if ownership.present? && ownership.owner?
+
+      errors.add(:created_by, "must be an owner of the #{rubygem.name} gem")
+    end
   end
 end

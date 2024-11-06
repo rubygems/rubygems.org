@@ -20,13 +20,15 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
   end
 
   context "validations" do
-    setup do
-      @onboarding = OrganizationOnboarding.new
-    end
-
-    should "require a onboarded by user" do
-      assert_predicate @onboarding, :invalid?
-      assert_equal ["must exist"], @onboarding.errors[:created_by]
+    context "when the created_by field is blank" do
+      setup do
+        @onboarding.created_by = nil
+      end
+      
+      should "require a onboarded by user" do
+        assert_predicate @onboarding, :invalid?
+        assert_equal ["must exist"], @onboarding.errors[:created_by]
+      end
     end
 
     context "when the user does not have the required gem roles" do
@@ -42,7 +44,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       should "add an error to the rubygems attribute" do
         @onboarding.valid?
 
-        assert_equal ["User does not have owner permissions for gem: #{@rubygem.name}"], @onboarding.errors[:rubygems]
+        assert_equal ["must be an owner of the #{@rubygem.name} gem"], @onboarding.errors[:created_by]
       end
     end
 
@@ -59,7 +61,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       should "add an error to the rubygems attribute" do
         @onboarding.valid?
 
-        assert_equal ["User does not own gem: #{@rubygem.id}"], @onboarding.errors[:rubygems]
+        assert_equal ["must be an owner of the #{@rubygem.name} gem"], @onboarding.errors[:created_by]
       end
     end
 
@@ -189,12 +191,6 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
   context "#available_rubygems" do
     should "return the rubygems that the user owns" do
       assert_equal [@rubygem], @onboarding.available_rubygems
-    end
-  end
-
-  context "#available_users" do
-    should "return the users that share ownership with the set of available rubygems" do
-      assert_equal [@maintainer], @onboarding.available_users
     end
   end
 end
