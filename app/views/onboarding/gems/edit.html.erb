@@ -1,3 +1,7 @@
+<% content_for :aside do %>
+  <%= render "onboarding/summary", current_step: 2 %>
+<% end %>
+
 <%= render "onboarding/progress", current_step: 2 %>
 
 <h2 class="text-h4 mb-10">Add gems to your Org</h2>
@@ -6,8 +10,8 @@
   <div class="border border-neutral-700 dark:border-neutral-300 rounded-lg" data-controller="checkbox-select-all">
     <div class="flex flex-row p-4 w-full border-b border-neutral-700 dark:border-neutral-300 justify-between items-center">
       <h3 class="text-b2 font-semibold">Gems<span data-counter-target="counter" class="ml-2 font-light text-neutral-600"><%= @organization_onboarding.rubygems.size %></span></h3>
-      <label>
-        <span class="mr-1">Select all</span>
+      <label class="flex items-center">
+        <span class="mr-3">Select all</span>
         <input
           type="checkbox"
           data-checkbox-select-all-target="checkboxAll"
@@ -24,11 +28,11 @@
             <span class="flex">
               <span class="text-neutral-800 dark:text-white"><%= gem.name %></span>
               <% if required %>
-                <span class="text-xs text-neutral-900 bg-orange-100 dark:text-white dark:bg-orange-900 px-2 py-0.5 rounded ml-2">Required <i class="fas fa-info-circle"></i></span>
+                <span class="flex flex-row text-xs text-neutral-900 bg-orange-100 dark:text-white dark:bg-orange-900 px-2 py-0.5 rounded ml-2">Required</span>
               <% end %>
             </span>
             <%
-              data = { counter_target: "checkbox" }
+              data = { counter_target: "checked" }
               data[:checkbox_select_all_target] = "checkbox" unless required
             %>
             <%= check_box_tag(
@@ -45,7 +49,7 @@
     </ul>
   </div>
 
-  <div class="flex border-t border-neutral-400 pt-10 my-10 justify-between">
+  <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
     <%= render ButtonComponent.new("Back", onboarding_name_path, type: :link, color: :neutral, style: :outline) %>
     <%= render ButtonComponent.new("Continue", type: :submit, style: :outline, data: { onboarding_gems_target: "submit" }) %>
   </div>

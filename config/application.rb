@@ -113,6 +113,6 @@ module Gemcutter
   ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
   MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
   PAGES = %w[
-    about data download security sponsors
+    about data download security sponsors components
   ].freeze
 end

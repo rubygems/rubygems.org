@@ -1,5 +1,3 @@
-<h1 class="text-b1 lg:text-h1 font-semibold lg:font-normal mb-10">Create an Organization</h1>
-
 <%= render Onboarding::StepsComponent.new(current_step) do |s| %>
   <%= s.step "Name", onboarding_name_path %>
   <%= s.step "Gems", onboarding_gems_path %>
