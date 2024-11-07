@@ -25,7 +25,7 @@ class OnboardingTest < ApplicationSystemTestCase
 
     # within the div that contains the data-user-handle div
     within "[data-user-handle='#{@other_user.handle}']" do
-      select "Owner", from: "Role"
+      select "Admin", from: "Role"
     end
 
     click_button "Save"
