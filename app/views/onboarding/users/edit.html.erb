@@ -60,24 +60,22 @@
     </span>
     <span class="text-b3">Owner</span>
   </li>
-  <ul class="">
-    <% invites.each do |invite| %>
-      <%= form.fields_for :invites, invite do |invite_fields| %>
-        <% user = invite_fields.object.user %>
-        <li class="flex w-full py-3 pl-3 pr-2 justify-between" data-user-handle="<%= user.handle %>">
-          <%= invite_fields.text_field :id, value: user.id, hidden: true %>
-          <span class="flex flex-row items-center">
-            <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2" %>
-            <span class="text-b2"><%= invite_fields.object.user.handle %></span>
-          </span>
-          <%= invite_fields.select(
-            :role,
-            @roles,
-            { prompt: "select role" },
-            { class: "appearance-none bg-white dark:bg-black border-none h-10 text-right focus:outline-none focus:ring-none" }
-          ) %>
-        </li>
-      <% end %>
+  <ul>
+    <%= form.fields_for :invites do |invite_fields| %>
+      <% user = invite_fields.object.user %>
+      <li class="flex w-full py-3 pl-3 pr-2 justify-between" data-user-handle="<%= user.handle %>">
+        <%= invite_fields.text_field :id, value: user.id, hidden: true %>
+        <span class="flex flex-row items-center">
+          <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2" %>
+          <span class="text-b2"><%= invite_fields.object.user.handle %></span>
+        </span>
+        <%= invite_fields.select(
+          :role,
+          @roles,
+          { prompt: "select role" },
+          { class: "appearance-none bg-white dark:bg-black border-none h-10 text-right focus:outline-none focus:ring-none" }
+        ) %>
+      </li>
     <% end %>
   </ul>
 
