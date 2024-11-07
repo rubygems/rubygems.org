@@ -24,7 +24,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       setup do
         @onboarding.created_by = nil
       end
-      
+
       should "require a onboarded by user" do
         assert_predicate @onboarding, :invalid?
         assert_equal ["must exist"], @onboarding.errors[:created_by]
