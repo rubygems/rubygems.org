@@ -2,7 +2,7 @@ class OrganizationOnboarding < ApplicationRecord
   enum :name_type, { gem: "gem", user: "user" }, prefix: true
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
-  has_many :invites, ->{ preload(:user) }, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
+  has_many :invites, -> { preload(:user) }, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
   has_many :users, through: :invites
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
   belongs_to :created_by, class_name: "User", inverse_of: :organization_onboardings
@@ -71,7 +71,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def rubygems=(value)
-    super(value.reject(&:blank?))
+    super(value.compact_blank)
   end
 
   private
@@ -86,9 +86,8 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def sync_invites
-    self.invites = users_for_selected_gems.map do |user|
-      invites.find_or_initialize_by(user: user)
-    end
+    existing_invites = invites.index_by(&:user_id)
+    self.invites = users_for_selected_gems.map { existing_invites[_1.id] || OrganizationOnboardingInvite.new(user: _1) }
   end
 
   def create_organization!
@@ -134,12 +133,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def build_team_members
-    users = invites.map(&:user).append(created_by)
-    users.map do |user|
-      TeamMember.build(
-        user_id: user.id
-      )
-    end
+    users.append(created_by).map { TeamMember.build(user: _1) }
   end
 
   def set_user_handle

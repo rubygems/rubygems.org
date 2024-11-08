@@ -70,11 +70,10 @@
     <%= form.fields_for :invites do |invite_fields| %>
       <% user = invite_fields.object.user %>
       <li class="flex w-full py-3 pl-3 justify-between items-center" data-user-handle="<%= user.handle %>">
-        <span class="flex flex-row items-center h-11">
+        <%= invite_fields.label :role, class: "flex flex-row items-center h-11" do %>
           <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2" %>
           <span class="text-b2"><%= user.handle %></span>
-        </span>
-        <%= invite_fields.label :role, class: "sr-only" %>
+        <% end %>
         <%= invite_fields.select(
           :role,
           role_options,
