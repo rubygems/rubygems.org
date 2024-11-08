@@ -75,15 +75,14 @@
           <span class="text-b2"><%= user.handle %></span>
         </span>
         <%= invite_fields.label :role, class: "sr-only" %>
-        <%= form.select(
+        <%= invite_fields.select(
           :role,
           @roles,
-          { allow_blank: "select role" },
+          { include_blank: "select role" },
           style: "text-align-last: right;",
           class: "text-b2 rounded-lg appearance-none outline-none bg-white dark:bg-black border-none h-11 text-right focus:ring-2 focus:ring-inset focus:ring-orange"
         ) %>
         <%= invite_fields.hidden_field :id %>
-        <%= invite_fields.hidden_field :user_id %>
       </li>
     <% end %>
   </ul>
