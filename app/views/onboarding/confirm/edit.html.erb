@@ -53,7 +53,7 @@
       <%= link_to "edit", onboarding_users_path, class: "text-orange-500" %>
     </div>
     <ul class="mt-2 items-center space-y-4">
-      <% @organization_onboarding.invites.each do |invite| %>
+      <% @organization_onboarding.actionable_invites.each do |invite| %>
         <% user = invite.user %>
         <li class="flex flex-row w-full justify-between">
           <span class="flex flex-row items-center">
