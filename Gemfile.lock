@@ -356,7 +356,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.5.1)
       activejob (>= 5.2)
-    json (2.7.5)
+    json (2.8.1)
     json-jwt (1.16.7)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -378,7 +378,7 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
-    launchdarkly-server-sdk (8.8.1)
+    launchdarkly-server-sdk (8.8.2)
       concurrent-ruby (~> 1.1)
       http (>= 4.4.0, < 6.0.0)
       json (~> 2.3)
@@ -1105,7 +1105,7 @@ CHECKSUMS
   irb (1.14.1) sha256=5975003b58d36efaf492380baa982ceedf5aed36967a4d5b40996bc5c66e80f8
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.5.1) sha256=1428ad5b308adbaae8776c16b7792a846eb1ad7f4ab3c6e0f9668dd2ab1179e5
-  json (2.7.5) sha256=eb3448f3884cb7c6d5a550db47fca9153dfbb2a941d1ac0ff245ffacf6df6c5e
+  json (2.8.1) sha256=404e8ca4c2ef6c7a6fa15bb9e2e280f3523334b78a83f22268297fe7939ee22a
   json-jwt (1.16.7) sha256=ccabff4c6d1a14276b23178e8bebe513ef236399b72a0b886d7ed94800d172a5
   jwt (2.7.1) sha256=07357cd2f180739b2f8184eda969e252d850ac996ed0a23f616e8ff0a90ae19b
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
@@ -1113,7 +1113,7 @@ CHECKSUMS
   kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
-  launchdarkly-server-sdk (8.8.1) sha256=e344f6faac19233c89a7f976ea1b41619e73e560952802b86e6754e66c0c1494
+  launchdarkly-server-sdk (8.8.2) sha256=7a65646751b7e37389d8b0a2717eef1584b0d5829ba2c3efbc09d0e80047ac49
   launchy (3.0.1) sha256=b7fa60bda0197cf57614e271a250a8ca1f6a34ab889a3c73f67ec5d57c8a7f2c
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
