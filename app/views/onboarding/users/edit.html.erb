@@ -7,9 +7,9 @@
 <h2 class="text-h4 mb-10">Manage Members</h2>
 
 <p class="mb-10">
-  The existing owners of the selected gems will remain owners of those gems.
-  You can invite any of the existing owners to join this organization.
-  You may also add members later after the organization is created.
+  Below we have listed all the owners of the gems you selected.
+  If you do nothing, these existing owners will remain owners of their gems.
+  You can invite them to join the organization now or you can add members later.
 </p>
 
 <div data-controller="reveal" data-reveal-toggle-class="rotate-180" class="mb-10">
@@ -25,9 +25,9 @@
       Outside Contributor
     </div>
     <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
-      Outside contributors are non-members that still maintain access
+      <p><b>Outside Contributors</b> are non-members that maintain ownership of their gems in this org.</p>
       <p class="text-b4 text-neutral-500 mt-1 italic">
-        *If you make no changes, gem ownership will remain unaltered for existing gem owners.
+        * If you make no changes, gem ownership will remain unaltered for everyone else.
       </p>
     </div>
 
@@ -35,17 +35,17 @@
       Maintainer
     </div>
     <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
-      Publish / manage any gem owned by the organization
+      <p><b>Maintainers</b> can publish and manage any gem owned by the organization</p>
     </div>
 
     <div class="bg-orange-300 text-orange-800 font-semibold text-center py-2">
       Admin
     </div>
     <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
-      <p>Publish / manage any gem owned by the organization</p>
-      <p>Add or remove outside contributor maintainers, owners of individual gems</p>
+      <p><b>Admins</b> can publish and manage any gem owned by the organization and:</p>
+      <p>Manage organization teams, outside contributors and individual gems.</p>
       <p class="text-b4 text-neutral-500 mt-1 italic">
-        *An admin cannot remove a gem from an organization
+        * An admin cannot remove a gem from the organization or manage organization settings.
       </p>
     </div>
 
@@ -53,7 +53,7 @@
       Owner
     </div>
     <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
-      Owners can add other owners to the organization and remove gems from the organization.
+      <b>Owners</b> can add other owners to the organization and remove gems from the organization.
     </div>
   </div>
 </div>
@@ -77,7 +77,7 @@
         <%= invite_fields.label :role, class: "sr-only" %>
         <%= invite_fields.select(
           :role,
-          @roles,
+          role_options,
           { include_blank: "select role" },
           style: "text-align-last: right;",
           class: "text-b2 rounded-lg appearance-none outline-none bg-white dark:bg-black border-none h-11 text-right focus:ring-2 focus:ring-inset focus:ring-orange"
