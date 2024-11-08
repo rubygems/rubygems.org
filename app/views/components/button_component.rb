@@ -4,18 +4,17 @@ class ButtonComponent < ApplicationComponent
   include Phlex::Rails::Helpers::LinkTo
   include Phlex::Rails::Helpers::ButtonTo
 
-  attr_reader :text, :href, :type, :options, :color, :size, :style
+  attr_reader :args, :type, :options, :color, :size, :style
 
-  def initialize(text = nil, href = nil, type: :button, color: :primary, style: :fill, size: :large, **options) # rubocop:disable Metrics/ParameterLists
+  def initialize(*args, type: :button, size: :large, color: :primary, style: :fill, **options) # rubocop:disable Metrics/ParameterLists
     super()
-    @text = text
-    @href = href
+    @args = args
     @type = type
+    @size = size
+    @color = color
+    @style = style
     @options = options
     @options[:name] ||= nil
-    @color = color
-    @size = size
-    @style = style
   end
 
   def view_template(&block)
@@ -27,11 +26,11 @@ class ButtonComponent < ApplicationComponent
           "#{button_color(color, style)} #{button_size(size)} #{options.delete(:class)}"
 
     if type == :link
-      link_to text, href, class: css, **options, &block
-    elsif href
-      button_to text, href, class: css, **options, &block
+      link_to *args, class: css, **options, &block
+    elsif (args.size == 1 && block_given?) || args.size == 2
+      button_to *args, class: css, method: :get, **options, &block
     else
-      block ||= proc { text }
+      block ||= proc { args.first }
       button(class: css, type:, **options, &block)
     end
   end
