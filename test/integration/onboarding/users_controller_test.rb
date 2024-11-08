@@ -14,7 +14,7 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
       rubygems: [@rubygem.id]
     )
 
-    @other_invites = @organization_onboarding.invites.where(user: @other_users)
+    @invites = @organization_onboarding.invites.to_a
   end
 
   test "render the list of users to invite" do
@@ -22,8 +22,8 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
 
     assert_response :ok
     # assert a text field has has the handle
-    @other_users.each_with_index do |user, idx|
-      assert_select "input[name='organization_onboarding[invites_attributes][#{idx}][user_id]'][value='#{user.id}']"
+    @invites.each_with_index do |invite, idx|
+      assert_select "input[name='organization_onboarding[invites_attributes][#{idx}][id]'][value='#{invite.id}']"
       assert_select "select[name='organization_onboarding[invites_attributes][#{idx}][role]']"
     end
   end
@@ -32,8 +32,8 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
     patch :update, params: {
       organization_onboarding: {
         invites_attributes: {
-          "0" => { id: @other_invites[0].id, user_id: @other_users[0].id, role: "maintainer" },
-          "1" => { id: @other_invites[1].id, user_id: @other_users[1].id, role: "" }
+          "0" => { id: @invites[0].id, role: "maintainer" },
+          "1" => { id: @invites[1].id, role: "" }
         }
       }
     }
@@ -50,8 +50,8 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
     patch :update, params: {
       organization_onboarding: {
         invites_attributes: {
-          "0" => { id: @other_invites[0].id, user_id: @other_users[0].id, role: "maintainer" },
-          "1" => { id: @other_invites[1].id, user_id: @other_users[1].id, role: "admin" }
+          "0" => { id: @invites[0].id, role: "maintainer" },
+          "1" => { id: @invites[1].id, role: "admin" }
         }
       }
     }
@@ -68,8 +68,8 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
     patch :update, params: {
       organization_onboarding: {
         invites_attributes: {
-          "0" => { id: @other_invites[0].id, user_id: @other_users[0].id, role: "admin" },
-          "1" => { id: @other_invites[1].id, user_id: @other_users[1].id, role: "maintainer" }
+          "0" => { id: @invites[0].id, role: "admin" },
+          "1" => { id: @invites[1].id, role: "maintainer" }
         }
       }
     }
@@ -82,18 +82,16 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
 
     get :edit
 
-    assert_select "input[name='organization_onboarding[invites_attributes][0][id]'][value='#{@other_invites[0].id}']"
-    assert_select "input[name='organization_onboarding[invites_attributes][0][user_id]'][value='#{@other_users[0].id}']"
+    assert_select "input[name='organization_onboarding[invites_attributes][0][id]'][value='#{@invites[0].id}']"
     assert_select "select[name='organization_onboarding[invites_attributes][0][role]'] option[selected][value='admin']"
-    assert_select "input[name='organization_onboarding[invites_attributes][1][id]'][value='#{@other_invites[1].id}']"
-    assert_select "input[name='organization_onboarding[invites_attributes][1][user_id]'][value='#{@other_users[1].id}']"
+    assert_select "input[name='organization_onboarding[invites_attributes][1][id]'][value='#{@invites[1].id}']"
     assert_select "select[name='organization_onboarding[invites_attributes][1][role]'] option[selected][value='maintainer']"
 
     patch :update, params: {
       organization_onboarding: {
         invites_attributes: {
-          "0" => { id: @other_invites[0].id, user_id: @other_users[0].id, role: "maintainer" },
-          "1" => { id: @other_invites[1].id, user_id: @other_users[1].id, role: "" }
+          "0" => { id: @invites[0].id, role: "maintainer" },
+          "1" => { id: @invites[1].id, role: "" }
         }
       }
     }

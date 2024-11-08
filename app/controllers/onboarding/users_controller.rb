@@ -21,6 +21,6 @@ class Onboarding::UsersController < Onboarding::BaseController
   end
 
   def onboarding_user_params
-    params.require(:organization_onboarding).permit(invites_attributes: %i[id user_id role])
+    params.require(:organization_onboarding).permit(invites_attributes: %i[id role])
   end
 end
