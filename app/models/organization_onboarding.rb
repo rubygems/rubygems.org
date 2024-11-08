@@ -1,10 +1,13 @@
 class OrganizationOnboarding < ApplicationRecord
-  enum :name_type, { gem: "gem", user: "user" }, prefix: true, default: "gem"
+  enum :name_type, { gem: "gem", user: "user" }, prefix: true
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
-  has_many :invites, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
+  has_many :invites, ->{ preload(:user) }, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
+  has_many :users, through: :invites
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
   belongs_to :created_by, class_name: "User", inverse_of: :organization_onboardings
+
+  accepts_nested_attributes_for :invites
 
   validate :created_by_gem_ownerships
 
@@ -26,6 +29,8 @@ class OrganizationOnboarding < ApplicationRecord
     validate :organization_handle_matches_rubygem_name
     after_validation :add_namesake_rubygem
   end
+
+  before_save :sync_invites, if: :rubygems_changed?
 
   def onboard!
     raise StandardError, "onboard has already been completed" if completed?
@@ -61,10 +66,8 @@ class OrganizationOnboarding < ApplicationRecord
     @namesake_rubygem ||= created_by.rubygems.find_by(name: organization_handle)
   end
 
-  def user_invites
-    users_for_selected_gems.map do |user|
-      OrganizationOnboardingInvite.new(user: user)
-    end
+  def actionable_invites
+    invites.select { |invite| invite.role.present? }
   end
 
   private
@@ -78,8 +81,14 @@ class OrganizationOnboarding < ApplicationRecord
       .group(users: [:id])
   end
 
+  def sync_invites
+    self.invites = users_for_selected_gems.map do |user|
+      invites.find_or_initialize_by(user: user)
+    end
+  end
+
   def create_organization!
-    memberships = invites.map(&:to_membership)
+    memberships = invites.filter_map(&:to_membership)
     memberships << build_owner
 
     Organization.create!(

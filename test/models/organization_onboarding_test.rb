@@ -12,11 +12,10 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       organization_name: "Test Organization",
       organization_handle: @owner.handle,
       created_by: @owner,
-      invites: [
-        OrganizationOnboardingInvite.new(user: @maintainer, role: "maintainer")
-      ],
       rubygems: [@rubygem.id]
     )
+    maintainer_invite = @onboarding.invites.first
+    maintainer_invite.update(role: :maintainer)
   end
 
   context "validations" do
@@ -50,7 +49,8 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when the user specifies a gem they do not own" do
       setup do
-        @rubygem = create(:rubygem)
+        @other_user = create(:user)
+        @rubygem = create(:rubygem, owners: [@other_user])
         @onboarding.rubygems = [@rubygem.id]
       end
 
@@ -62,6 +62,13 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         @onboarding.valid?
 
         assert_equal ["must be an owner of the #{@rubygem.name} gem"], @onboarding.errors[:created_by]
+      end
+
+      should "not add an invite for the users on the gem" do
+        @onboarding.save
+        @onboarding.reload
+
+        assert @onboarding.invites.find_by(user_id: @other_user.id).nil?
       end
     end
 
@@ -107,6 +114,18 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
         should :be_invalid
       end
+    end
+  end
+
+  context "when assigning rubygems" do
+    should "adds invites for the owners and maintainers of the specified rubygems" do
+      @other_user = create(:user)
+      @rubygem = create(:rubygem, owners: [@owner, @other_user])
+      @onboarding.rubygems = [@rubygem.id]
+      @onboarding.save
+      @onboarding.reload
+
+      assert_equal [@maintainer, @other_user].map(&:handle).sort, @onboarding.users.map(&:handle).sort
     end
   end
 
