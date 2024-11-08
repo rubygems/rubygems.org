@@ -14,8 +14,8 @@ class OnboardingTest < ApplicationSystemTestCase
 
     visit onboarding_name_path
 
-    fill_in "Name", with: "Test Organization"
-    fill_in "Handle", with: @user.handle
+    select @rubygem.name, from: "organization_onboarding_organization_handle"
+    fill_in "Display Name", with: "Test Organization"
 
     click_button "Save"
 
