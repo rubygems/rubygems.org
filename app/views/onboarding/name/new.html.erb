@@ -84,11 +84,11 @@
       autocomplete: "organization",
       data: { onboarding_name_target: "displayname", action: "onboarding-name#validate" },
     ) %>
-
-    <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-      <%= render ButtonComponent.new("Cancel", onboarding_path, type: :link, color: :neutral, style: :outline, method: :delete) %>
-      <%= render ButtonComponent.new("Continue", type: :submit, style: :outline, data: { onboarding_name_target: "submit" }) %>
-    </div>
   </div>
 
+
+  <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
+    <%= render ButtonComponent.new("Cancel", onboarding_path, type: :link, color: :neutral, style: :outline, method: :delete) %>
+    <%= render ButtonComponent.new("Continue", type: :submit, style: :outline, data: { onboarding_name_target: "submit" }) %>
+  </div>
 <% end %>

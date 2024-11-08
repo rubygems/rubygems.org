@@ -51,6 +51,6 @@
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
     <%= render ButtonComponent.new("Back", onboarding_name_path, type: :link, color: :neutral, style: :outline) %>
-    <%= render ButtonComponent.new("Continue", type: :submit, style: :outline, data: { onboarding_gems_target: "submit" }) %>
+    <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
   </div>
 <% end %>
