@@ -75,9 +75,10 @@
           <span class="text-b2"><%= user.handle %></span>
         </span>
         <%= invite_fields.label :role, class: "sr-only" %>
-        <%= select_tag(
-organization_onboarding[invites_attributes][#{idx}][user_id]
-          options_for_select([["select role", ""], *@roles],
+        <%= form.select(
+          :role,
+          @roles,
+          { allow_blank: "select role" },
           style: "text-align-last: right;",
           class: "text-b2 rounded-lg appearance-none outline-none bg-white dark:bg-black border-none h-11 text-right focus:ring-2 focus:ring-inset focus:ring-orange"
         ) %>
