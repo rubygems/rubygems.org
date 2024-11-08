@@ -70,6 +70,10 @@ class OrganizationOnboarding < ApplicationRecord
     @actionable_invites ||= invites.select { |invite| invite.role.present? }
   end
 
+  def rubygems=(value)
+    super(value.reject(&:blank?))
+  end
+
   private
 
   def users_for_selected_gems
