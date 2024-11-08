@@ -15,6 +15,6 @@ class Onboarding::GemsController < Onboarding::BaseController
   private
 
   def onboarding_gems_params
-    params.require(:organization_onboarding).permit(rubygems: [])
+    params.permit(organization_onboarding: { rubygems: [] }).fetch(:organization_onboarding, {})
   end
 end
