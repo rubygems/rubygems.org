@@ -9,9 +9,9 @@
   <%= render "organizations/onboarding/summary", current_step: 4 %>
 </div>
 
-<%= form_with(model: @organization_onboarding, url: organizations_onboarding_confirm_path, method: :patch) do |form| %>
+<%= form_with(model: @organization_onboarding, url: organization_onboarding_confirm_path, method: :patch) do |form| %>
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Back", organizations_onboarding_users_path, type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Back", organization_onboarding_users_path, type: :link, color: :neutral, style: :outline) %>
     <%= render ButtonComponent.new("Create Org", type: :submit, style: :fill) %>
   </div>
 <% end %>

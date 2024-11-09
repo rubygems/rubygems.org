@@ -1,8 +1,6 @@
-class OnboardingController < Onboarding::BaseController
+class Organizations::OnboardingController < Onboarding::BaseController
   def index
-  end
-
-  def create
+    redirect_to organization_onboarding_name_path
   end
 
   def destroy
