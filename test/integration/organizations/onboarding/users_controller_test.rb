@@ -38,7 +38,7 @@ class Organizations::Onboarding::UsersControllerTest < ActionController::TestCas
       }
     }
 
-    assert_redirected_to organizations_onboarding_confirm_path
+    assert_redirected_to organization_onboarding_confirm_path
 
     @organization_onboarding.reload
 
@@ -56,7 +56,7 @@ class Organizations::Onboarding::UsersControllerTest < ActionController::TestCas
       }
     }
 
-    assert_redirected_to organizations_onboarding_confirm_path
+    assert_redirected_to organization_onboarding_confirm_path
 
     @organization_onboarding.reload
 
@@ -76,7 +76,7 @@ class Organizations::Onboarding::UsersControllerTest < ActionController::TestCas
 
     @organization_onboarding.reload
 
-    assert_redirected_to organizations_onboarding_confirm_path
+    assert_redirected_to organization_onboarding_confirm_path
     assert_equal "admin", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
     assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
 

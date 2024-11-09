@@ -32,7 +32,7 @@ class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
     should "create a new onboarding and redirect to the next step" do
       post :create, params: { organization_onboarding: { organization_name: "New Name", organization_handle: @gem.name, name_type: "gem" } }
 
-      assert_redirected_to organizations_onboarding_gems_path
+      assert_redirected_to organization_onboarding_gems_path
     end
 
     context "when the user has an existing onboarding" do
@@ -43,7 +43,7 @@ class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
       should "update the existing onboarding and redirect to the next step" do
         post :create, params: { organization_onboarding: { organization_name: "Updated Name" } }
 
-        assert_redirected_to organizations_onboarding_gems_path
+        assert_redirected_to organization_onboarding_gems_path
         assert_equal "Updated Name", @organization_onboarding.reload.organization_name
       end
     end

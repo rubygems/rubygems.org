@@ -21,21 +21,21 @@ class Organizations::Onboarding::GemsControllerTest < ActionController::TestCase
     should "save the selected gems and redirect to the next step" do
       patch :update, params: { organization_onboarding: { rubygems: [@gem.id] } }
 
-      assert_redirected_to organizations_onboarding_users_path
+      assert_redirected_to organization_onboarding_users_path
       assert_equal [@namesake_gem.id, @gem.id], @organization_onboarding.reload.rubygems
     end
 
     should "allow selecting no additional gems" do
       patch :update
 
-      assert_redirected_to organizations_onboarding_users_path
+      assert_redirected_to organization_onboarding_users_path
       assert_equal [@namesake_gem.id], @organization_onboarding.reload.rubygems
     end
 
     should "ignore empty params" do
       patch :update, params: { organization_onboarding: { rubygems: [""] } }
 
-      assert_redirected_to organizations_onboarding_users_path
+      assert_redirected_to organization_onboarding_users_path
       assert_equal [@namesake_gem.id], @organization_onboarding.reload.rubygems
     end
 

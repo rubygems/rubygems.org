@@ -6,7 +6,7 @@ class Organizations::Onboarding::GemsController < Organizations::Onboarding::Bas
 
   def update
     if @organization_onboarding.update(onboarding_gems_params)
-      redirect_to organizations_onboarding_users_path
+      redirect_to organization_onboarding_users_path
     else
       render :edit, status: :unprocessable_entity
     end
