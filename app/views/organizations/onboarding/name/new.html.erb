@@ -1,8 +1,8 @@
 <% content_for :aside do %>
-  <%= render "onboarding/summary", current_step: 1 %>
+  <%= render "organizations/onboarding/summary", current_step: 1 %>
 <% end %>
 
-<%= render "onboarding/progress", current_step: 1 %>
+<%= render "organizations/onboarding/progress", current_step: 1 %>
 
 <h2 class="text-h4 mb-10">Name your Organization</h2>
 
@@ -12,7 +12,7 @@
   This name will be used as the URL for your Organization's page and will eventually become its namespace.
 </p>
 
-<%= form_with(model: @organization_onboarding, url: onboarding_name_path, method: :post, data: { controller: "onboarding-name" }) do |form| %>
+<%= form_with(model: @organization_onboarding, url: organizations_onboarding_name_path, method: :post, data: { controller: "onboarding-name" }) do |form| %>
   <h3 class="text-b2 font-semibold mb-2">Name your org using:</h3>
 
   <div class="flex w-full space-x-4 mb-10" data-controller="scroll">
@@ -88,7 +88,7 @@
 
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Cancel", onboarding_path, type: :link, color: :neutral, style: :outline, method: :delete) %>
+    <%= render ButtonComponent.new("Cancel", organizations_onboarding_path, type: :link, color: :neutral, style: :outline, method: :delete) %>
     <%= render ButtonComponent.new("Continue", type: :submit, style: :outline, data: { onboarding_name_target: "submit" }) %>
   </div>
 <% end %>

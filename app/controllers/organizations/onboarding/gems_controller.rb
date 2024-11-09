@@ -1,4 +1,4 @@
-class Onboarding::GemsController < Onboarding::BaseController
+class Organizations::Onboarding::GemsController < Organizations::Onboarding::BaseController
   layout "onboarding"
 
   def edit
@@ -6,7 +6,7 @@ class Onboarding::GemsController < Onboarding::BaseController
 
   def update
     if @organization_onboarding.update(onboarding_gems_params)
-      redirect_to onboarding_users_path
+      redirect_to organizations_onboarding_users_path
     else
       render :edit, status: :unprocessable_entity
     end
