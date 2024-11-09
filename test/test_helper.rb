@@ -36,6 +36,9 @@ require "helpers/oauth_helpers"
 require "helpers/avo_helpers"
 require "webmock/minitest"
 require "phlex/testing/rails/view_helper"
+require 'database_cleaner/active_record'
+DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.clean
 
 # setup license early since some tests are testing Avo outside of requests
 # and license is set with first request
@@ -99,6 +102,7 @@ class ActiveSupport::TestCase
 
   teardown do
     Rails.configuration.launch_darkly_client.close
+    DatabaseCleaner.clean
   end
 
   def page
