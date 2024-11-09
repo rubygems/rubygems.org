@@ -1,12 +1,12 @@
 <% content_for :aside do %>
-  <%= render "onboarding/summary", current_step: 2 %>
+  <%= render "organizations/onboarding/summary", current_step: 2 %>
 <% end %>
 
-<%= render "onboarding/progress", current_step: 2 %>
+<%= render "organizations/onboarding/progress", current_step: 2 %>
 
 <h2 class="text-h4 mb-10">Add gems to your Org</h2>
 
-<%= form_with(model: @organization_onboarding, url: onboarding_gems_path, method: :patch, data: { controller: "onboarding-gems counter" }) do |form| %>
+<%= form_with(model: @organization_onboarding, url: organizations_onboarding_gems_path, method: :patch, data: { controller: "onboarding-gems counter" }) do |form| %>
   <div class="border border-neutral-700 dark:border-neutral-300 rounded-lg" data-controller="checkbox-select-all">
     <div class="flex flex-row p-4 w-full border-b border-neutral-700 dark:border-neutral-300 justify-between items-center">
       <h3 class="text-b2 font-semibold">Gems<span data-counter-target="counter" class="ml-2 font-light text-neutral-600"><%= @organization_onboarding.rubygems.size %></span></h3>
@@ -50,7 +50,7 @@
   </div>
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Back", onboarding_name_path, type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Back", organizations_onboarding_name_path, type: :link, color: :neutral, style: :outline) %>
     <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
   </div>
 <% end %>

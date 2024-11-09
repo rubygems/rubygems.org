@@ -1,4 +1,4 @@
-class Onboarding::NameController < Onboarding::BaseController
+class Organizations::Onboarding::NameController < Organizations::Onboarding::BaseController
   layout "onboarding"
 
   def new
@@ -6,7 +6,7 @@ class Onboarding::NameController < Onboarding::BaseController
 
   def create
     if @organization_onboarding.update(onboarding_params)
-      redirect_to onboarding_gems_path
+      redirect_to organizations_onboarding_gems_path
     else
       render :new, status: :unprocessable_entity
     end

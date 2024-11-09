@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Onboarding::ConfirmControllerTest < ActionController::TestCase
+class Organizations::Onboarding::ConfirmControllerTest < ActionController::TestCase
   setup do
     @user = create(:user, :mfa_enabled)
     @collaborator = create(:user, :mfa_enabled)
@@ -16,6 +16,14 @@ class Onboarding::ConfirmControllerTest < ActionController::TestCase
     )
 
     sign_in_as(@user)
+  end
+
+  context "GET #show" do
+    should "to render the show template" do
+      get :edit
+
+      assert_template :edit
+    end
   end
 
   context "PATCH #update" do

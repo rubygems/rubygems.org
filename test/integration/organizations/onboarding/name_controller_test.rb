@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Onboarding::NameControllerTest < ActionController::TestCase
+class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
   setup do
     @user = create(:user, :mfa_enabled)
     @gem = create(:rubygem, owners: [@user])
@@ -32,7 +32,7 @@ class Onboarding::NameControllerTest < ActionController::TestCase
     should "create a new onboarding and redirect to the next step" do
       post :create, params: { organization_onboarding: { organization_name: "New Name", organization_handle: @gem.name, name_type: "gem" } }
 
-      assert_redirected_to onboarding_gems_path
+      assert_redirected_to organizations_onboarding_gems_path
     end
 
     context "when the user has an existing onboarding" do
@@ -43,7 +43,7 @@ class Onboarding::NameControllerTest < ActionController::TestCase
       should "update the existing onboarding and redirect to the next step" do
         post :create, params: { organization_onboarding: { organization_name: "Updated Name" } }
 
-        assert_redirected_to onboarding_gems_path
+        assert_redirected_to organizations_onboarding_gems_path
         assert_equal "Updated Name", @organization_onboarding.reload.organization_name
       end
     end

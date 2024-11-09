@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Onboarding::UsersControllerTest < ActionController::TestCase
+class Organizations::Onboarding::UsersControllerTest < ActionController::TestCase
   setup do
     @user = create(:user, :mfa_enabled)
     @other_users = create_list(:user, 2)
@@ -38,7 +38,7 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
       }
     }
 
-    assert_redirected_to onboarding_confirm_path
+    assert_redirected_to organizations_onboarding_confirm_path
 
     @organization_onboarding.reload
 
@@ -56,7 +56,7 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
       }
     }
 
-    assert_redirected_to onboarding_confirm_path
+    assert_redirected_to organizations_onboarding_confirm_path
 
     @organization_onboarding.reload
 
@@ -76,7 +76,7 @@ class Onboarding::UsersControllerTest < ActionController::TestCase
 
     @organization_onboarding.reload
 
-    assert_redirected_to onboarding_confirm_path
+    assert_redirected_to organizations_onboarding_confirm_path
     assert_equal "admin", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
     assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
 

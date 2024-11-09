@@ -270,7 +270,8 @@ Rails.application.routes.draw do
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
 
-    if Rails.env.local?
+    resources :organizations, only: [:show], param: :handle, constraints: { handle: Patterns::ROUTE_PATTERN }
+    namespace :organizations do
       resource :onboarding, only: %i[index destroy], controller: 'onboarding'
       namespace :onboarding do
         get "name", to: "name#new"

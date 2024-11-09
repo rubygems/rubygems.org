@@ -10,7 +10,7 @@
   <div class="flex justify-between items-center">
     <h3 class="text-b1 text-neutral-900 dark:text-white">Name</h3>
     <% if current_step > 1 %>
-      <%= link_to "edit", onboarding_name_path, class: "text-orange-500" %>
+      <%= link_to "edit", organizations_onboarding_name_path, class: "text-orange-500" %>
     <% end %>
   </div>
   <div class="mt-4">
@@ -34,7 +34,7 @@
       <span class="text-neutral-600 font-light ml-1"><%= @organization_onboarding.selected_rubygems.size %></span>
     </h3>
     <% if current_step > 2 %>
-      <%= link_to "edit", onboarding_gems_path, class: "text-orange-500" %>
+      <%= link_to "edit", organizations_onboarding_gems_path, class: "text-orange-500" %>
     <% end %>
   </div>
   <ul class="mt-4">
@@ -53,7 +53,7 @@
       <span class="text-neutral-600 font-light ml-1"><%= @organization_onboarding.actionable_invites.size %></span>
     </h3>
     <% if current_step > 3 %>
-      <%= link_to "edit", onboarding_users_path, class: "text-orange-500" %>
+      <%= link_to "edit", organizations_onboarding_users_path, class: "text-orange-500" %>
     <% end %>
   </div>
   <ul class="mt-2 items-center space-y-4">

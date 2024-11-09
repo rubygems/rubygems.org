@@ -15,7 +15,7 @@ class OnboardingTest < ApplicationSystemTestCase
 
     click_link "login as #{@user[:handle]}"
 
-    visit onboarding_name_path
+    visit organizations_onboarding_name_path
 
     find("label", text: "a gem you own").click
 
@@ -41,7 +41,7 @@ class OnboardingTest < ApplicationSystemTestCase
 
     click_link "login as #{@user[:handle]}"
 
-    visit onboarding_name_path
+    visit organizations_onboarding_name_path
 
     find("label", text: "a gem you own").click
 
@@ -71,7 +71,7 @@ class OnboardingTest < ApplicationSystemTestCase
 
     click_link "login as #{@user[:handle]}"
 
-    visit onboarding_name_path
+    visit organizations_onboarding_name_path
 
     find("label", text: "a gem you own").click
 

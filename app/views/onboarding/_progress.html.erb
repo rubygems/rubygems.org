@@ -1,6 +1,0 @@
-<%= render Onboarding::StepsComponent.new(current_step) do |s| %>
-  <%= s.step "Name", onboarding_name_path %>
-  <%= s.step "Gems", onboarding_gems_path %>
-  <%= s.step "Members", onboarding_users_path %>
-  <%= s.step "Finalize", onboarding_confirm_path %>
-<% end %>
