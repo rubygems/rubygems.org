@@ -1,4 +1,4 @@
-class Organizations::OnboardingController < Onboarding::BaseController
+class Organizations::OnboardingController < Organizations::Onboarding::BaseController
   def index
     redirect_to organization_onboarding_name_path
   end
