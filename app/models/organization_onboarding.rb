@@ -51,6 +51,7 @@ class OrganizationOnboarding < ApplicationRecord
       error: e.message,
       status: :failed
     )
+    false
   end
 
   def available_rubygems
