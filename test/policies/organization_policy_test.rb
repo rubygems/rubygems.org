@@ -30,6 +30,15 @@ class OrganizationPolicyTest < PolicyTestCase
     end
   end
 
+  context "#destroy?" do
+    should "be disallowed for all users" do
+      refute_authorized @owner, :destroy?
+      refute_authorized @admin, :destroy?
+      refute_authorized @maintainer, :destroy?
+      refute_authorized @guest, :destroy?
+    end
+  end
+
   context "#update?" do
     should "only be authorized if the user is an owner" do
       assert_authorized @owner, :update?
