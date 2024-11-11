@@ -149,6 +149,7 @@ class OrganizationOnboarding < ApplicationRecord
   def organization_handle_matches_rubygem_name
     return if organization_handle.blank?
     return if namesake_rubygem.present?
+    return if selected_rubygems.any? { _1.name == organization_handle }
 
     errors.add(:organization_handle, "must match a rubygem you own")
   end
@@ -157,7 +158,6 @@ class OrganizationOnboarding < ApplicationRecord
     return if created_by.blank? || rubygems.blank?
 
     ownerships = Ownership.where(user: created_by, rubygem: rubygems).index_by(&:rubygem_id)
-    selected_rubygems = Rubygem.where(id: rubygems)
 
     selected_rubygems.each do |rubygem|
       ownership = ownerships[rubygem.id]
