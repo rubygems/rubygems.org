@@ -26,9 +26,9 @@ class ButtonComponent < ApplicationComponent
           "#{button_color(color, style)} #{button_size(size)} #{options.delete(:class)}"
 
     if type == :link
-      link_to *args, class: css, **options, &block
+      link_to(*args, class: css, **options, &block)
     elsif (args.size == 1 && block_given?) || args.size == 2
-      button_to *args, class: css, method: :get, **options, &block
+      button_to(*args, class: css, method: :get, **options, &block)
     else
       block ||= proc { args.first }
       button(class: css, type:, **options, &block)
