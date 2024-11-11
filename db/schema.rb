@@ -521,26 +521,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_08_002409) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
-  create_table "team_members", force: :cascade do |t|
-    t.bigint "team_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["team_id", "user_id"], name: "index_team_members_on_team_id_and_user_id", unique: true
-    t.index ["team_id"], name: "index_team_members_on_team_id"
-    t.index ["user_id"], name: "index_team_members_on_user_id"
-  end
-
-  create_table "teams", force: :cascade do |t|
-    t.bigint "organization_id", null: false
-    t.string "name", null: false
-    t.string "handle", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["organization_id", "handle"], name: "index_teams_on_organization_id_and_handle", unique: true
-    t.index ["organization_id"], name: "index_teams_on_organization_id"
-  end
-
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password", limit: 128
@@ -693,9 +673,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_08_002409) do
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "rubygems", "organizations", on_delete: :nullify
-  add_foreign_key "team_members", "teams"
-  add_foreign_key "team_members", "users"
-  add_foreign_key "teams", "organizations"
   add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"
   add_foreign_key "web_hooks", "users", name: "web_hooks_user_id_fk"
   add_foreign_key "webauthn_credentials", "users"
