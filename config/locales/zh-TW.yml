@@ -72,6 +72,7 @@ zh-TW:
         owner:
         admin:
         maintainer:
+        contributor:
       api_key:
         oidc_api_key_role: OIDC API 金鑰角色
       oidc/id_token:
