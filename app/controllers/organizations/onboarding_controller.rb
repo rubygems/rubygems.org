@@ -3,7 +3,7 @@ class Organizations::OnboardingController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
 
   def destroy
-    OrganizationOnboarding.destroy_by(created_by: Current.user, status: :pending)
+    OrganizationOnboarding.destroy_by(created_by: Current.user, status: %i[pending failed])
 
     redirect_to dashboard_path
   end

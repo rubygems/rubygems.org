@@ -35,5 +35,16 @@ class Organizations::Onboarding::ConfirmControllerTest < ActionController::TestC
       assert_predicate @organization_onboarding.reload, :completed?
       assert_predicate @organization_onboarding.organization, :present?
     end
+
+    should "fail to onboard the organization and render an error message" do
+      @conflicting_org = create(:organization, handle: @organization_onboarding.organization_handle)
+
+      patch :update
+
+      assert_equal "Organization could not be onboarded.", response.body
+
+      assert_predicate @organization_onboarding.reload, :failed?
+      assert_nil @organization_onboarding.organization
+    end
   end
 end

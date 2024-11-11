@@ -24,8 +24,17 @@ class Organizations::OnboardingControllerTest < ActionDispatch::IntegrationTest
       assert OrganizationOnboarding.find_by(id: organization_onboarding.id)
     end
 
-    should "destroy an existing OrganizationOnboarding created by the current user" do
+    should "destroy a pending OrganizationOnboarding created by the current user" do
       organization_onboarding = create(:organization_onboarding, created_by: @user)
+
+      delete "/organizations/onboarding"
+
+      assert_redirected_to dashboard_path
+      assert_nil OrganizationOnboarding.find_by(id: organization_onboarding.id)
+    end
+
+    should "destroy a failed OrganizationOnboarding created by the current user" do
+      organization_onboarding = create(:organization_onboarding, :failed, created_by: @user)
 
       delete "/organizations/onboarding"
 
