@@ -105,6 +105,14 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
   end
 
+  context "#available_rubygems" do
+    should "exclude gems that already have an organization" do
+      create(:rubygem, owners: [@owner], organization: create(:organization))
+
+      assert_equal [@rubygem], @onboarding.available_rubygems
+    end
+  end
+
   context "#rubygems=" do
     should "exclude gems that already have an organization" do
       other_rubygem = create(:rubygem, owners: [@owner], organization: create(:organization))
