@@ -106,14 +106,49 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
   end
 
   context "#rubygems=" do
+    should "exclude gems that already have an organization" do
+      other_rubygem = create(:rubygem, owners: [@owner], organization: create(:organization))
+      @onboarding.rubygems = [@rubygem.id, other_rubygem.id]
+
+      assert_equal [@rubygem.id], @onboarding.rubygems
+    end
+
     should "add invites for the owners and maintainers of the specified rubygems" do
-      @other_user = create(:user)
-      @rubygem = create(:rubygem, owners: [@owner, @other_user])
-      @onboarding.rubygems = [@rubygem.id]
+      other_user = create(:user)
+      rubygem = create(:rubygem, owners: [@owner, other_user])
+      @onboarding.rubygems = [rubygem.id]
       @onboarding.save
       @onboarding.reload
 
-      assert_equal [@maintainer, @other_user].map(&:handle).sort, @onboarding.users.map(&:handle).sort
+      assert_equal [@maintainer, other_user].map(&:handle).sort, @onboarding.users.map(&:handle).sort
+    end
+  end
+
+  context "#invites_attributes=" do
+    should "allow upding the role of an existing invite" do
+      invite = @onboarding.invites.find_by(user_id: @maintainer.id)
+
+      assert_equal "maintainer", invite.role
+
+      @onboarding.invites_attributes = {
+        "0" => { id: invite.id, role: "admin" }
+      }
+
+      @onboarding.save
+
+      invite.reload
+
+      assert_equal "admin", invite.role
+    end
+
+    should "prevent adding users that are not already invited" do
+      other_user = create(:user)
+      @onboarding.invites_attributes = {
+        "0" => { user_id: other_user.id, role: "maintainer" }
+      }
+
+      assert_equal 1, @onboarding.invites.count
+      assert_nil @onboarding.invites.find_by(user_id: other_user.id)
     end
   end
 
