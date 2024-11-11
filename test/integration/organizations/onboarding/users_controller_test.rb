@@ -43,7 +43,7 @@ class Organizations::Onboarding::UsersControllerTest < ActionController::TestCas
     @organization_onboarding.reload
 
     assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
-    assert_equal "", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
+    assert_nil @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
   end
 
   test "should update multiple users" do
@@ -99,6 +99,6 @@ class Organizations::Onboarding::UsersControllerTest < ActionController::TestCas
     @organization_onboarding.reload
 
     assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
-    assert_equal "", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
+    assert_nil @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
   end
 end
