@@ -5,8 +5,8 @@ class OrganizationOnboardingInvite < ApplicationRecord
   validates :role, inclusion: { in: Membership.roles.keys, allow_blank: true }
   validates :user_id, presence: true, uniqueness: { scope: :organization_onboarding_id }
 
-  Membership.roles.keys.each do |role|
-    define_method("#{role}?") do
+  Membership.roles.each_key do |role|
+    define_method(:"#{role}?") do
       self.role == role
     end
   end

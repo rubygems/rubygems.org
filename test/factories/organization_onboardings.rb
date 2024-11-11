@@ -23,8 +23,8 @@ FactoryBot.define do
 
     trait :gem do
       transient do
-        authorizer { create(:user) }
-        rubygem { create(:rubygem) }
+        authorizer { create(:user) } # rubocop:disable FactoryBot/FactoryAssociationWithStrategy
+        rubygem { create(:rubygem) } # rubocop:disable FactoryBot/FactoryAssociationWithStrategy
       end
 
       name_type { "gem" }
