@@ -1,6 +1,6 @@
 class OrganizationsController < ApplicationController
   def show
-    @organization = Organization.find_by(handle: params[:handle])
+    render_not_found
   end
 
   private
