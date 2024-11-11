@@ -15,7 +15,7 @@ class Organizations::Onboarding::UsersController < Organizations::Onboarding::Ba
   private
 
   def role_options
-    @role_options ||= Membership.roles.map { |k, _| [Membership.human_attribute_name("role.#{k}"), k] }
+    @role_options ||= OrganizationOnboardingInvite.roles.map { |k, _| [OrganizationOnboardingInvite.human_attribute_name("role.#{k}"), k] }
   end
   helper_method :role_options
 

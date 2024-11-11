@@ -1,19 +1,13 @@
 class OrganizationOnboardingInvite < ApplicationRecord
   belongs_to :organization_onboarding, inverse_of: :invites
-  belongs_to :user, optional: true
+  belongs_to :user
 
-  validates :role, inclusion: { in: Membership.roles.keys, allow_blank: true }
-  validates :user_id, presence: true, uniqueness: { scope: :organization_onboarding_id }
+  validates :user_id, uniqueness: { scope: :organization_onboarding_id }
 
-  Membership.roles.each_key do |role|
-    define_method(:"#{role}?") do
-      self.role == role
-    end
-  end
-  # delegate oid,  attributes to user
+  enum :role, { owner: "owner", admin: "admin", maintainer: "maintainer", outside_contributor: "outside_contributor" },
+    validate: { allow_nil: true }
 
   def to_membership
-    return if role.blank?
     Membership.new(
       user: user,
       role: role

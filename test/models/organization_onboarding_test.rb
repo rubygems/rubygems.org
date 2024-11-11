@@ -105,8 +105,8 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
   end
 
-  context "when assigning rubygems" do
-    should "adds invites for the owners and maintainers of the specified rubygems" do
+  context "#rubygems=" do
+    should "add invites for the owners and maintainers of the specified rubygems" do
       @other_user = create(:user)
       @rubygem = create(:rubygem, owners: [@owner, @other_user])
       @onboarding.rubygems = [@rubygem.id]
@@ -164,6 +164,23 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     should "set the organization_id for each specified rubygem" do
       assert_equal @onboarding.organization.id, @rubygem.reload.organization_id
+    end
+
+    should "remove Ownership records that have been migrated to Memberships" do
+      assert_nil Ownership.find_by(user: @owner, rubygem: @rubygem)
+      assert_nil Ownership.find_by(user: @maintainer, rubygem: @rubygem)
+    end
+
+    context "when a user is marked as an Outside Contributor" do
+      setup do
+        @contributor = create(:user)
+        @ownership = create(:ownership, user: @contributor, rubygem: @rubygem, role: "owner")
+        @onboarding.invites << create(:organization_onboarding_invite, user: @contributor, role: :outside_contributor)
+      end
+
+      should "not remove the Ownership record" do
+        assert_not_nil Ownership.find_by(user: @contributor, rubygem: @rubygem)
+      end
     end
 
     context "when onboarding encounters an error" do

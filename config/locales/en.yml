@@ -78,6 +78,7 @@ en:
         owner: Owner
         admin: Admin
         maintainer: Maintainer
+        contributor: Outside Contributor
       api_key:
         oidc_api_key_role: OIDC API Key Role
       oidc/id_token:

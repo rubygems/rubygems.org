@@ -37,7 +37,6 @@ class OrganizationOnboarding < ApplicationRecord
 
     transaction do
       onboarded_organization = create_organization!
-
       onboard_rubygems!(onboarded_organization)
 
       update!(
@@ -46,6 +45,8 @@ class OrganizationOnboarding < ApplicationRecord
         onboarded_organization_id: onboarded_organization.id
       )
     end
+
+    remove_ownerships
   rescue ActiveRecord::ActiveRecordError => e
     update!(
       error: e.message,
@@ -78,7 +79,7 @@ class OrganizationOnboarding < ApplicationRecord
   private
 
   def users_for_selected_gems
-    User # TODO: Move this to a scope, verify performance
+    User
       .joins(:ownerships)
       .where(ownerships: { rubygem_id: available_rubygems.pluck(:id) })
       .where.not(ownerships: { user_id: created_by })
@@ -110,13 +111,6 @@ class OrganizationOnboarding < ApplicationRecord
     end
   end
 
-  def build_membership(invite)
-    Membership.build(
-      user_id: invite.user_id,
-      role: invite.role
-    )
-  end
-
   def build_owner
     Membership.build(
       user: created_by,
@@ -134,12 +128,20 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def build_team_members
-    users.append(created_by).map { TeamMember.build(user: _1) }
+    team_members = users.map { TeamMember.build(user: _1) }
+    team_members << TeamMember.build(user: created_by)
   end
 
   def set_user_handle
     return if created_by.blank? || !name_type_user?
     self.organization_handle = created_by.handle
+  end
+
+  def remove_ownerships
+    onboarded_users = invites.reject { _1.role.nil? || _1.outside_contributor? }.map(&:user)
+    onboarded_users << created_by
+
+    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: onboarded_users, rubygem: selected_rubygems).destroy_all
   end
 
   def add_namesake_rubygem
