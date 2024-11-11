@@ -67,8 +67,8 @@ class OrganizationOnboarding < ApplicationRecord
     @namesake_rubygem ||= created_by.rubygems.find_by(name: organization_handle)
   end
 
-  def actionable_invites
-    @actionable_invites ||= invites.select { |invite| invite.role.present? }
+  def approved_invites
+    @approved_invites ||= invites.select { |invite| invite.role.present? }
   end
 
   def rubygems=(value)
