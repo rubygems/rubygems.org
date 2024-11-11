@@ -30,6 +30,7 @@ class OrganizationOnboarding < ApplicationRecord
     after_validation :add_namesake_rubygem
   end
 
+  before_validation :remove_invalid_invites
   before_save :sync_invites, if: :rubygems_changed?
 
   def onboard!
@@ -56,7 +57,8 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def available_rubygems
-    created_by.rubygems.order(:name)
+    return Rubygem.none if created_by.blank?
+    created_by.rubygems.where(organization_id: nil).order(:name)
   end
 
   def selected_rubygems
@@ -69,16 +71,17 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def approved_invites
-    @approved_invites ||= invites.select { |invite| invite.role.present? }
+    @approved_invites ||= invites.select { |invite| invite.user.present? && invite.role.present? }
   end
 
   def rubygems=(value)
-    super(value.compact_blank)
+    super(Rubygem.where(id: value.compact_blank, organization_id: nil).pluck(:id))
   end
 
   private
 
   def users_for_selected_gems
+    return User.none if available_rubygems.blank? || created_by.blank?
     User
       .joins(:ownerships)
       .where(ownerships: { rubygem_id: available_rubygems.pluck(:id) })
@@ -90,6 +93,10 @@ class OrganizationOnboarding < ApplicationRecord
   def sync_invites
     existing_invites = invites.index_by(&:user_id)
     self.invites = users_for_selected_gems.map { existing_invites[_1.id] || OrganizationOnboardingInvite.new(user: _1) }
+  end
+
+  def remove_invalid_invites
+    self.invites = invites.select(&:valid?)
   end
 
   def create_organization!

@@ -31,7 +31,7 @@ class OrganizationPolicyTest < PolicyTestCase
   end
 
   context "#destroy?" do
-    should "be disallowed for all users" do
+    should "be disallowed for all users until further development" do
       refute_authorized @owner, :destroy?
       refute_authorized @admin, :destroy?
       refute_authorized @maintainer, :destroy?

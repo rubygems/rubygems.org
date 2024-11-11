@@ -46,6 +46,25 @@ class Organizations::Onboarding::UsersControllerTest < ActionController::TestCas
     assert_nil @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
   end
 
+  test "should update invites ignoring user_id in invites_attributes" do
+    patch :update, params: {
+      organization_onboarding: {
+        invites_attributes: {
+          "0" => { id: @invites[0].id, role: "maintainer" },
+          "1" => { user_id: @invites[1].user.id, role: "owner" }
+        }
+      }
+    }
+
+    assert_redirected_to organization_onboarding_confirm_path
+
+    @organization_onboarding.reload
+
+    assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
+    assert_nil @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
+    assert_equal 1, @organization_onboarding.approved_invites.count
+  end
+
   test "should update multiple users" do
     patch :update, params: {
       organization_onboarding: {
