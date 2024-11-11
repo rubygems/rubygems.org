@@ -15,5 +15,35 @@ FactoryBot.define do
       status { :completed }
       onboarded_at { Time.zone.now }
     end
+
+    trait :failed do
+      error { "Failed to onboard" }
+      status { :failed }
+    end
+
+    trait :gem do
+      transient do
+        authorizer { create(:user) }
+        rubygem { create(:rubygem) }
+      end
+
+      name_type { "gem" }
+
+      organization_name { rubygem.name }
+      organization_handle { rubygem.name }
+
+      rubygems do
+        [rubygem.id]
+      end
+
+      after(:build) do |organization_onboarding, evaluator|
+        Ownership.create(
+          user: organization_onboarding.created_by,
+          rubygem: evaluator.rubygem,
+          authorizer: evaluator.authorizer,
+          role: "owner"
+        )
+      end
+    end
   end
 end
