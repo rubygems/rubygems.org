@@ -1,4 +1,4 @@
-class Avo::Resources::OrganizationOnboardingResource < Avo::BaseResource
+class Avo::Resources::Team < Avo::BaseResource
   self.title = :id
   self.includes = []
   # self.search_query = -> do
@@ -7,6 +7,9 @@ class Avo::Resources::OrganizationOnboardingResource < Avo::BaseResource
 
   def fields
     field :id, as: :id
+    field :handle, as: :string
+    field :name, as: :string
   end
+
   # add fields here
 end
