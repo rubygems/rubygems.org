@@ -1,5 +1,5 @@
 require "test_helper"
-class OrganisationPolicyTest < PolicyTestCase
+class OrganizationPolicyTest < PolicyTestCase
   setup do
     @owner = create(:user)
     @admin = create(:user)
@@ -10,6 +10,24 @@ class OrganisationPolicyTest < PolicyTestCase
 
   def policy!(user)
     Pundit.policy!(user, @organization)
+  end
+
+  context "#show?" do
+    should "be authorized for all users" do
+      assert_authorized @owner, :show?
+      assert_authorized @admin, :show?
+      assert_authorized @maintainer, :show?
+      assert_authorized @guest, :show?
+    end
+  end
+
+  context "#create?" do
+    should "be authorized for all users" do
+      assert_authorized @owner, :create?
+      assert_authorized @admin, :create?
+      assert_authorized @maintainer, :create?
+      assert_authorized @guest, :create?
+    end
   end
 
   context "#update?" do
