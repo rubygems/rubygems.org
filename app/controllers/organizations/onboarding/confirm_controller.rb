@@ -6,9 +6,11 @@ class Organizations::Onboarding::ConfirmController < Organizations::Onboarding::
 
   def update
     if @organization_onboarding.onboard!
-      render plain: "Organization succesfully onboarded!", status: :ok, location: root_path
+      flash[:notice] = "Organization onboarded successfully!"
+      redirect_to organization_path(@organization_onboarding.organization)
     else
-      render plain: "Organization could not be onboarded.", status: :unprocessable_entity
+      flash.now[:error] = "Onboarding error: #{@organization_onboarding.error}"
+      render :edit, status: :unprocessable_entity
     end
   end
 end

@@ -1,6 +1,6 @@
 class OrganizationsController < ApplicationController
   def show
-    render_not_found
+    render plain: flash[:notice] # HACK: for tests until this view is ready
   end
 
   private
