@@ -55,11 +55,11 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def available_rubygems
-    @available_rubygems ||= created_by.rubygems.order(:name)
+    created_by.rubygems.order(:name)
   end
 
   def selected_rubygems
-    @selected_rubygems ||= Rubygem.where(id: rubygems).all
+    Rubygem.where(id: rubygems).all
   end
 
   def namesake_rubygem
