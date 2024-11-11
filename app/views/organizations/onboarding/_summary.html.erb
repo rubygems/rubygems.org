@@ -50,14 +50,14 @@
   <div class="flex justify-between items-center">
     <h3 class="text-b1 text-neutral-900 dark:text-white">
       People
-      <span class="text-neutral-600 font-light ml-1"><%= @organization_onboarding.approved_invites.size %></span>
+      <span class="text-neutral-600 font-light ml-1"><%= approved_invites.size %></span>
     </h3>
     <% if current_step > 3 %>
       <%= link_to "edit", organization_onboarding_users_path, class: "text-orange-500" %>
     <% end %>
   </div>
   <ul class="mt-2 items-center space-y-4">
-    <% @organization_onboarding.approved_invites.each do |invite| %>
+    <% approved_invites.each do |invite| %>
       <% user = invite.user %>
       <li class="flex flex-row w-full justify-between">
         <span class="flex flex-row items-center">

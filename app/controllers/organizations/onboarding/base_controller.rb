@@ -20,4 +20,9 @@ class Organizations::Onboarding::BaseController < ApplicationController
     end
   end
   helper_method :available_rubygems
+
+  def approved_invites
+    @approved_invites ||= @organization_onboarding.approved_invites
+  end
+  helper_method :approved_invites
 end
