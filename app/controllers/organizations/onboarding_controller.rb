@@ -1,14 +1,9 @@
-class Organizations::OnboardingController < Organizations::Onboarding::BaseController
-  def index
-    redirect_to organization_onboarding_name_path
-  end
+class Organizations::OnboardingController < ApplicationController
+  before_action :redirect_to_signin, unless: :signed_in?
+  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
 
   def destroy
-    if @organization_onboarding.completed?
-      flash[:error] = "Cannot destroy a completed onboarding"
-    elsif @organization_onboarding.persisted?
-      @organization_onboarding.destroy
-    end
+    OrganizationOnboarding.destroy_by(created_by: Current.user, status: :pending)
 
     redirect_to dashboard_path
   end

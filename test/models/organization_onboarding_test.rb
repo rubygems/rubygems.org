@@ -68,7 +68,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         @onboarding.save
         @onboarding.reload
 
-        assert @onboarding.invites.find_by(user_id: @other_user.id).nil?
+        assert_nil @onboarding.invites.find_by(user_id: @other_user.id)
       end
     end
 
@@ -78,19 +78,19 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
 
       context "when the name is a valid user" do
-        setup do
+        should "be valid" do
           @onboarding.organization_handle = @owner.handle
-        end
 
-        should :be_valid
+          assert_predicate @onboarding, :valid?
+        end
       end
 
       context "when the name is not valid" do
-        setup do
+        should "be invalid" do
           @onboarding.organization_handle = "invalid"
-        end
 
-        should :be_invalid
+          assert_predicate @onboarding, :invalid?
+        end
       end
     end
 
@@ -100,19 +100,19 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
 
       context "when the name is a valid gem that the user owns" do
-        setup do
-          @onboarding.organization_name = @rubygem.name
-        end
+        should "be valid" do
+          @onboarding.organization_handle = @rubygem.name
 
-        should :be_valid
+          assert_predicate @onboarding, :valid?
+        end
       end
 
       context "when the name is not valid" do
-        setup do
-          @onboarding.organization_name = "invalid"
-        end
+        should "be invalid" do
+          @onboarding.organization_handle = "invalid"
 
-        should :be_invalid
+          assert_predicate @onboarding, :invalid?
+        end
       end
     end
   end

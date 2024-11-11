@@ -268,7 +268,9 @@ Rails.application.routes.draw do
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
 
     namespace :organizations, as: :organization do
-      resource :onboarding, only: %i[index destroy], controller: "onboarding"
+      get "onboarding", to: redirect("/organizations/onboarding/name")
+      delete "onboarding", to: "onboarding#destroy"
+
       namespace :onboarding do
         get "name", to: "name#new"
         post "name", to: "name#create"
