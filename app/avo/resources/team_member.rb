@@ -1,4 +1,4 @@
-class Avo::Resources::TeamMemberResource < Avo::BaseResource
+class Avo::Resources::TeamMember < Avo::BaseResource
   self.title = :id
   self.includes = []
   # self.search_query = -> do
