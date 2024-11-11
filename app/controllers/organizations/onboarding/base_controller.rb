@@ -14,10 +14,9 @@ class Organizations::Onboarding::BaseController < ApplicationController
   end
 
   def available_rubygems
-    @available_rubygems ||= begin
-      gems = @organization_onboarding.available_rubygems.to_a
-      gems.unshift gems.delete(@organization_onboarding.namesake_rubygem) if @organization_onboarding.namesake_rubygem
-      gems
+    @available_rubygems ||= @organization_onboarding.available_rubygems.to_a.tap do |gems|
+      namesake_rubygem = @organization_onboarding.namesake_rubygem
+      gems.unshift gems.delete(namesake_rubygem) if namesake_rubygem
     end
   end
   helper_method :available_rubygems

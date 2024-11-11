@@ -11,7 +11,7 @@ class Organizations::Onboarding::UsersControllerTest < ActionController::TestCas
     @organization_onboarding = create(
       :organization_onboarding,
       created_by: @user,
-      rubygems: [@rubygem.id]
+      namesake_rubygem: @rubygem
     )
 
     @invites = @organization_onboarding.invites.to_a

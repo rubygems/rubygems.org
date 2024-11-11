@@ -1,5 +1,5 @@
 class OrganizationOnboarding < ApplicationRecord
-  enum :name_type, { gem: "gem", user: "user" }, prefix: true
+  enum :name_type, { gem: "gem", user: "user" }, prefix: true, default: "gem"
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   has_many :invites, -> { preload(:user) }, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
@@ -12,6 +12,7 @@ class OrganizationOnboarding < ApplicationRecord
   validate :created_by_gem_ownerships
 
   validates :organization_name, :organization_handle, :name_type, presence: true
+  validates :name_type, inclusion: { in: ["gem"] } # user type is disabled at launch due to name dispute concerns
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
@@ -67,11 +68,11 @@ class OrganizationOnboarding < ApplicationRecord
 
   def namesake_rubygem
     return unless name_type_gem?
-    @namesake_rubygem ||= created_by.rubygems.find_by(name: organization_handle)
+    created_by&.rubygems&.find_by(name: organization_handle)
   end
 
   def approved_invites
-    @approved_invites ||= invites.select { |invite| invite.user.present? && invite.role.present? }
+    invites.select { |invite| invite.user.present? && invite.role.present? }
   end
 
   def rubygems=(value)
@@ -138,8 +139,9 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def add_namesake_rubygem
-    return unless namesake_rubygem && rubygems.exclude?(namesake_rubygem.id)
-    rubygems.unshift(namesake_rubygem.id)
+    namesake = namesake_rubygem
+    return unless namesake && rubygems.exclude?(namesake.id)
+    rubygems.unshift(namesake.id)
   end
 
   def organization_handle_matches_rubygem_name
