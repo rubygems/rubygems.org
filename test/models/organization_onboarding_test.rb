@@ -77,20 +77,8 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         @onboarding.name_type = :user
       end
 
-      context "when the name is a valid user" do
-        should "be valid" do
-          @onboarding.organization_handle = @owner.handle
-
-          assert_predicate @onboarding, :valid?
-        end
-      end
-
-      context "when the name is not valid" do
-        should "be invalid" do
-          @onboarding.organization_handle = "invalid"
-
-          assert_predicate @onboarding, :invalid?
-        end
+      should "set the Organization Onboarding handle to the handle of the User" do
+        assert_equal @owner.handle, @onboarding.organization_handle
       end
     end
 
