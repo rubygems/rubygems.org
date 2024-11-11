@@ -73,6 +73,7 @@ zh-CN:
         owner:
         admin:
         maintainer:
+        contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:

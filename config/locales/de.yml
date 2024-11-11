@@ -81,6 +81,7 @@ de:
         owner:
         admin:
         maintainer:
+        contributor:
       api_key:
         oidc_api_key_role: OIDC-API-Schlüsselrolle
       oidc/id_token:

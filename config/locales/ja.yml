@@ -72,6 +72,7 @@ ja:
         owner:
         admin:
         maintainer:
+        contributor:
       api_key:
         oidc_api_key_role: OIDC APIキーのロール
       oidc/id_token:
