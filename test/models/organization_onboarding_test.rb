@@ -146,22 +146,6 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       assert_not_predicate membership, :confirmed?
     end
 
-    should "create a default team" do
-      team = @onboarding.organization.teams.find_by(handle: "default")
-
-      assert_not_nil team
-      assert_equal "Default", team.name
-    end
-
-    should "create team members for each invitee" do
-      team = @onboarding.organization.teams.find_by(handle: "default")
-      owner_team_members = team.team_members.find_by(user_id: @owner.id)
-      maintainer_team_member = team.team_members.find_by(user_id: @maintainer.id)
-
-      assert_not_nil owner_team_members
-      assert_not_nil maintainer_team_member
-    end
-
     should "set the organization_id for each specified rubygem" do
       assert_equal @onboarding.organization.id, @rubygem.reload.organization_id
     end

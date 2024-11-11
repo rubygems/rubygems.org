@@ -99,8 +99,7 @@ class OrganizationOnboarding < ApplicationRecord
     Organization.create!(
       name: organization_name,
       handle: organization_handle,
-      memberships: memberships,
-      teams: [build_team]
+      memberships: memberships
     )
   end
 
@@ -117,19 +116,6 @@ class OrganizationOnboarding < ApplicationRecord
       role: :owner,
       confirmed_at: Time.zone.now
     )
-  end
-
-  def build_team
-    Team.build(
-      name: "Default",
-      handle: "default",
-      team_members: build_team_members
-    )
-  end
-
-  def build_team_members
-    team_members = users.map { TeamMember.build(user: _1) }
-    team_members << TeamMember.build(user: created_by)
   end
 
   def set_user_handle
