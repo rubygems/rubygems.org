@@ -8,11 +8,11 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     @onboarding = create(
       :organization_onboarding,
-      name_type: :user,
+      name_type: "gem",
       organization_name: "Test Organization",
-      organization_handle: @owner.handle,
+      organization_handle: @rubygem.name,
       created_by: @owner,
-      rubygems: [@rubygem.id]
+      namesake_rubygem: @rubygem
     )
     maintainer_invite = @onboarding.invites.first
     maintainer_invite.update(role: :maintainer)
@@ -32,7 +32,6 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when the user does not have the required gem roles" do
       setup do
-        @onboarding.rubygems = [@rubygem.id]
         @onboarding.created_by = @maintainer
       end
 
@@ -50,8 +49,8 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     context "when the user specifies a gem they do not own" do
       setup do
         @other_user = create(:user)
-        @rubygem = create(:rubygem, owners: [@other_user])
-        @onboarding.rubygems = [@rubygem.id]
+        @other_rubygem = create(:rubygem, owners: [@other_user])
+        @onboarding.rubygems = [@other_rubygem.id]
       end
 
       should "be invalid" do
@@ -61,7 +60,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       should "add an error to the rubygems attribute" do
         @onboarding.valid?
 
-        assert_equal ["must be an owner of the #{@rubygem.name} gem"], @onboarding.errors[:created_by]
+        assert_equal ["must be an owner of the #{@other_rubygem.name} gem"], @onboarding.errors[:created_by]
       end
 
       should "not add an invite for the users on the gem" do
@@ -78,7 +77,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
 
       should "set the Organization Onboarding handle to the handle of the User" do
-        assert_equal @owner.handle, @onboarding.organization_handle
+        assert_equal @rubygem.name, @onboarding.organization_handle
       end
     end
 
@@ -96,7 +95,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
 
       context "when the name is not valid" do
-        should "be invalid" do
+        should "it is ignored and set to the gem name" do
           @onboarding.organization_handle = "invalid"
 
           assert_predicate @onboarding, :invalid?
