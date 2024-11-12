@@ -2,13 +2,11 @@ FactoryBot.define do
   factory :organization_onboarding do
     transient do
       approved_invites { [] }
-      authorizer { association(:user) }
+      authorizer { create(:user) } # rubocop:disable FactoryBot/FactoryAssociationWithStrategy
       namesake_rubygem { create(:rubygem) } # rubocop:disable FactoryBot/FactoryAssociationWithStrategy
     end
 
     created_by { association(:user) }
-
-    name_type { "gem" }
 
     organization_name { namesake_rubygem.name }
     organization_handle { namesake_rubygem.name }
@@ -39,15 +37,15 @@ FactoryBot.define do
       status { :failed }
     end
 
-    # trait :username do
-    #   name_type { "user" }
+    trait :user do
+      name_type { "gem" } # temporarily set to gem during release when username is disabled
 
-    #   organization_name { "Rubygems" }
-    #   organization_handle { created_by.handle }
+      # organization_name { "Rubygems" }
+      # organization_handle { created_by.handle }
 
-    #   rubygems do
-    #     []
-    #   end
-    # end
+      # rubygems do
+      #   []
+      # end
+    end
   end
 end
