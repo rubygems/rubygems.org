@@ -1,12 +1,6 @@
 <% content_for :main do %>
   <div class="w-full px-8 pt-10 lg:pt-0 flex-col bg-white dark:bg-black lg:bg-neutral-050 lg:dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center">
     <div class="max-w-screen-xl w-full mx-auto">
-      <!-- New design notice -->
-      <%= render AlertComponent.new(style: :neutral, closeable: true) do %>
-        Design Under Construction.
-        <a href="https://blog.rubygems.org/2024/10/15/our-new-design.html" class="text-blue-500 dark:text-blue-400 text-nowrap">Learn more</a>
-      <% end %>
-
       <% flash.each do |name, msg| %>
         <%= render AlertComponent.new(style: name, closeable: true) do %>
           <%= flash_message(name, msg) %>
