@@ -74,7 +74,7 @@ RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor \
   find /app/vendor/ruby -type f -name '*.js.map' -exec rm {} \;
 
   # Remove ruby 2.x source code
-  find /app/vendor/ruby/*/gems/debase-ruby_core_source-*/lib/debase/ruby_core_source -maxdepth 1 -type d -name 'ruby-2.*' -exec rm -r {} \;
+  find /app/vendor/ruby/*/gems/datadog-ruby_core_source-*/lib/datadog/ruby_core_source -maxdepth 1 -type d -name 'ruby-2.*' -exec rm -r {} \;
 
   # Remove datadog precompiled binaries for other platforms
   find /app/vendor/ruby/*/gems/libdatadog-*/vendor/libdatadog-*/ -mindepth 1 -maxdepth 1 -not -name "$(ruby -e 'puts RbConfig::CONFIG["arch"]')" -exec rm -r {} \;
