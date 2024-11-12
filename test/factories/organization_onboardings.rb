@@ -39,24 +39,15 @@ FactoryBot.define do
       status { :failed }
     end
 
-    trait :username do
-      name_type { "user" }
+    # trait :username do
+    #   name_type { "user" }
 
-      organization_name { "Rubygems" }
-      organization_handle { created_by.handle }
+    #   organization_name { "Rubygems" }
+    #   organization_handle { created_by.handle }
 
-      rubygems do
-        []
-      end
-
-      after(:build) do |organization_onboarding, evaluator|
-        Ownership.find_or_create_by(
-          user: organization_onboarding.created_by,
-          rubygem: evaluator.namesake_rubygem,
-          authorizer: evaluator.authorizer,
-          role: "owner"
-        )
-      end
-    end
+    #   rubygems do
+    #     []
+    #   end
+    # end
   end
 end
