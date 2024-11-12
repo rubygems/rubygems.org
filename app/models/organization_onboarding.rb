@@ -12,7 +12,6 @@ class OrganizationOnboarding < ApplicationRecord
   validate :created_by_gem_ownerships
 
   validates :organization_name, :organization_handle, :name_type, presence: true
-  validates :name_type, inclusion: { in: ["gem"] } # user type is disabled at launch due to name dispute concerns
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
