@@ -448,6 +448,26 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    context "with a user that belongs to an organization" do
+      setup do
+        @owner = create(:user)
+        @admin = create(:user)
+        @maintainer = create(:user)
+        @guest = create(:user)
+
+        @organization = create(:organization, admins: [@admin], owners: [@owner], maintainers: [@maintainer], rubygems: [@rubygem])
+      end
+
+      should "be owned by organization user" do
+        assert @rubygem.owned_by?(@owner)
+        assert @rubygem.owned_by?(@admin)
+        assert @rubygem.owned_by?(@maintainer)
+        refute @rubygem.owned_by?(@guest)
+
+        refute_predicate @rubygem, :unowned?
+      end
+    end
+
     context "with subscribed users" do
       setup do
         @subscribed_user   = create(:user)

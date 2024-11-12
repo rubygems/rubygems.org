@@ -178,7 +178,7 @@ class Rubygem < ApplicationRecord
   end
 
   def unowned?
-    ownerships.blank?
+    ownerships.none? && !owned_by_organization?
   end
 
   def indexed_versions?
@@ -187,7 +187,7 @@ class Rubygem < ApplicationRecord
 
   def owned_by?(user)
     return false unless user
-    ownerships.exists?(user_id: user.id)
+    ownerships.exists?(user_id: user.id) || (owned_by_organization? && user_authorized_for_organization?(user))
   end
 
   def owned_by_with_role?(user, minimum_required_role)
@@ -431,5 +431,13 @@ class Rubygem < ApplicationRecord
 
     sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, update_query)
     ActiveRecord::Base.connection.execute(sanitized_query)
+  end
+
+  def owned_by_organization?
+    organization.present?
+  end
+
+  def user_authorized_for_organization?(user)
+    organization.memberships.exists?(user: user)
   end
 end
