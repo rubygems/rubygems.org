@@ -10,7 +10,6 @@ class Organization < ApplicationRecord
   has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :organization
   has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :organization
   has_many :users, through: :memberships
-  has_many :teams, dependent: :destroy
   has_many :rubygems, dependent: :nullify
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
 
