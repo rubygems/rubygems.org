@@ -49,11 +49,11 @@ class OrganizationOnboarding < ApplicationRecord
 
     remove_ownerships
   rescue ActiveRecord::ActiveRecordError => e
-    update!(
-      error: e.message,
-      status: :failed
-    )
-    false
+    self.status = :failed
+    self.error = e.message
+    save(validate: false)
+
+    raise e
   end
 
   def available_rubygems

@@ -213,14 +213,21 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       setup do
         @onboarding = create(:organization_onboarding, created_by: @owner)
         @onboarding.stubs(:create_organization!).raises(ActiveRecord::ActiveRecordError, "stubbed error")
-        @onboarding.onboard!
       end
 
       should "mark the onboarding as failed" do
+        assert_raises ActiveRecord::ActiveRecordError, "stubbed error" do
+          @onboarding.onboard!
+        end
+
         assert_predicate @onboarding, :failed?
       end
 
       should "record the error message" do
+        assert_raises ActiveRecord::ActiveRecordError, "stubbed error" do
+          @onboarding.onboard!
+        end
+
         assert_equal "stubbed error", @onboarding.error
       end
     end
