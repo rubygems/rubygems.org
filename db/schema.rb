@@ -437,7 +437,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_08_002409) do
     t.text "error"
     t.integer "rubygems", default: [], array: true
     t.datetime "onboarded_at"
-    t.integer "onboarded_by"
     t.integer "created_by_id", null: false
     t.integer "onboarded_organization_id"
     t.datetime "created_at", null: false
