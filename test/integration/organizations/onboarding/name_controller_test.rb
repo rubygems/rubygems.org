@@ -32,6 +32,7 @@ class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
     should "create a new onboarding and redirect to the next step" do
       post :create, params: { organization_onboarding: { organization_name: "New Name", organization_handle: @gem.name, name_type: "gem" } }
 
+      assert OrganizationOnboarding.exists?(organization_name: "New Name", organization_handle: @gem.name, name_type: "gem")
       assert_redirected_to organization_onboarding_gems_path
     end
 

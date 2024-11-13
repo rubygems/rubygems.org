@@ -21,7 +21,7 @@ class Organizations::OnboardingControllerTest < ActionDispatch::IntegrationTest
       delete "/organizations/onboarding"
 
       assert_redirected_to dashboard_path
-      assert OrganizationOnboarding.find_by(id: organization_onboarding.id)
+      assert OrganizationOnboarding.exists?(id: organization_onboarding.id)
     end
 
     should "destroy a pending OrganizationOnboarding created by the current user" do
@@ -30,7 +30,7 @@ class Organizations::OnboardingControllerTest < ActionDispatch::IntegrationTest
       delete "/organizations/onboarding"
 
       assert_redirected_to dashboard_path
-      assert_nil OrganizationOnboarding.find_by(id: organization_onboarding.id)
+      refute OrganizationOnboarding.exists?(id: organization_onboarding.id)
     end
 
     should "destroy a failed OrganizationOnboarding created by the current user" do
@@ -39,7 +39,7 @@ class Organizations::OnboardingControllerTest < ActionDispatch::IntegrationTest
       delete "/organizations/onboarding"
 
       assert_redirected_to dashboard_path
-      assert_nil OrganizationOnboarding.find_by(id: organization_onboarding.id)
+      refute OrganizationOnboarding.exists?(id: organization_onboarding.id)
     end
 
     should "redirect to the dashboarding if the current user has not started organization onboarding" do
