@@ -1,0 +1,20 @@
+<h2 class="text-h1 mb-10">Components</h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title "Buttons" %>
+  <% end %>
+  <div class="space-y-4">
+    <% [:primary, :secondary, :red, :yellow, :green, :blue, :neutral].each do |color| %>
+      <div class="flex flex-wrap items-center">
+        <h3 class="text-b3 text-neutral-700 dark:text-neutral-300 w-32"><%= color.to_s.capitalize %></h3>
+        <div class="flex flex-wrap items-center space-x-4">
+          <%= render ButtonComponent.new("Fill Button", "#", type: :button, color: color, style: :fill) %>
+          <%= render ButtonComponent.new("Outline", "#", type: :button, color: color, style: :outline) %>
+          <%= render ButtonComponent.new("Plain", "#", type: :link, color: color, style: :plain) %>
+          <%= render ButtonComponent.new("Disabled", "#", type: :button, color: color, style: :fill, disabled: true) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
