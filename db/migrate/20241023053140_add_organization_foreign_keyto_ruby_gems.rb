@@ -1,4 +1,4 @@
-class AddOrganizationForeignKeytoRubyGems < ActiveRecord::Migration[7.1]
+class AddOrganizationForeignKeytoRubyGems < ActiveRecord::Migration[7.2]
   disable_ddl_transaction!
 
   def change

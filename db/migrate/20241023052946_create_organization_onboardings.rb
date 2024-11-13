@@ -1,4 +1,4 @@
-class CreateOrganizationOnboardings < ActiveRecord::Migration[7.1]
+class CreateOrganizationOnboardings < ActiveRecord::Migration[7.2]
   def change
     create_table :organization_onboardings do |t|
       t.string :status, null: false
