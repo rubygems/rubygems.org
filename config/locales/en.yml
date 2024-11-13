@@ -76,9 +76,12 @@ en:
         password: Password
       ownership/role:
         owner: Owner
+        maintainer: Maintainer
+      membership/role:
+        owner: Owner
         admin: Admin
         maintainer: Maintainer
-        contributor: Outside Contributor
+        outside_contributor: Outside Contributor
       api_key:
         oidc_api_key_role: OIDC API Key Role
       oidc/id_token:
