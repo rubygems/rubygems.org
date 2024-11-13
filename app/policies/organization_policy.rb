@@ -7,7 +7,7 @@ class OrganizationPolicy < ApplicationPolicy
   end
 
   def update?
-    organization_member_with_role?(user, minimum_required_role: Access::OWNER)
+    organization_member_with_role?(user, minimum_required_role: Access::ADMIN)
   end
 
   def create?
@@ -15,7 +15,7 @@ class OrganizationPolicy < ApplicationPolicy
   end
 
   def add_gem?
-    organization_member_with_role?(user, minimum_required_role: Access::OWNER)
+    organization_member_with_role?(user, minimum_required_role: Access::ADMIN)
   end
 
   def remove_gem?
@@ -23,15 +23,15 @@ class OrganizationPolicy < ApplicationPolicy
   end
 
   def add_membership?
-    organization_member_with_role?(user, minimum_required_role: Access::OWNER)
+    organization_member_with_role?(user, minimum_required_role: Access::ADMIN)
   end
 
   def update_membership?
-    organization_member_with_role?(user, minimum_required_role: Access::OWNER)
+    organization_member_with_role?(user, minimum_required_role: Access::ADMIN)
   end
 
   def remove_membership?
-    organization_member_with_role?(user, minimum_required_role: Access::OWNER)
+    organization_member_with_role?(user, minimum_required_role: Access::ADMIN)
   end
 
   def show_membership?

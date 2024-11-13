@@ -60,7 +60,7 @@ class OrganizationPolicyTest < PolicyTestCase
   context "#remove_gem?" do
     should "only be authorized if the user is an owner" do
       assert_authorized @owner, :remove_gem?
-      assert_authorized @admin, :remove_gem?
+      refute_authorized @admin, :remove_gem?
       refute_authorized @maintainer, :remove_gem?
       refute_authorized @guest, :remove_gem?
     end
