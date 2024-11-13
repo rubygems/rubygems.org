@@ -5,7 +5,7 @@ class Organizations::Onboarding::NameController < Organizations::Onboarding::Bas
   end
 
   def create
-    if @organization_onboarding.update(onboarding_params)
+    if @organization_onboarding.update(onboarding_name_params)
       redirect_to organization_onboarding_gems_path
     else
       render :new, status: :unprocessable_entity
@@ -14,7 +14,7 @@ class Organizations::Onboarding::NameController < Organizations::Onboarding::Bas
 
   private
 
-  def onboarding_params
+  def onboarding_name_params
     params.require(:organization_onboarding).permit(:organization_name, :organization_handle)
   end
 end
