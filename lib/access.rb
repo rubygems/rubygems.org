@@ -1,5 +1,4 @@
 module Access
-  NONE = 0
   MAINTAINER = 50
   ADMIN = 60
   OWNER = 70
@@ -17,7 +16,7 @@ module Access
   end
 
   def self.with_minimum_role(role)
-    Range.new(flag_for_role(role), NONE)
+    Range.new(flag_for_role(role), nil)
   end
 
   def self.role_for_flag(flag)
