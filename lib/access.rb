@@ -1,7 +1,7 @@
 module Access
   MAINTAINER = 50
-  OWNER = 70
   ADMIN = 90
+  OWNER = 100
 
   DEFAULT_ROLE = "owner".freeze
 
