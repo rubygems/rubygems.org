@@ -21,7 +21,7 @@ class Organizations::Onboarding::ConfirmControllerTest < ActionDispatch::Integra
     should "to render the show template" do
       get "/organizations/onboarding/confirm"
 
-      assert :success
+      assert_response :ok
     end
   end
 

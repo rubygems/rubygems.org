@@ -556,6 +556,9 @@ en:
     failed_verification:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.
+  organization_onboardings:
+    confirm:
+      success: Organization onboarded successfully!
   owners:
     edit:
       role: Role
