@@ -1,7 +1,8 @@
 module Access
+  NONE = 0
   MAINTAINER = 50
-  ADMIN = 90
-  OWNER = 100
+  ADMIN = 60
+  OWNER = 70
 
   DEFAULT_ROLE = "owner".freeze
 
@@ -16,7 +17,7 @@ module Access
   end
 
   def self.with_minimum_role(role)
-    Range.new(flag_for_role(role), nil)
+    Range.new(flag_for_role(role), NONE)
   end
 
   def self.role_for_flag(flag)
