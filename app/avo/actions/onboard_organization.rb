@@ -10,9 +10,7 @@ class Avo::Actions::OnboardOrganization < Avo::Actions::ApplicationAction
 
   self.confirm_button_label = "Onboard"
 
-  class ActionHandler < Avo::Actions::ActionHandler
-    def handle_record(organization)
-      organization.onboard!
-    end
+  def handle(query:, fields:, **_)
+    query.each(&:onboard!)
   end
 end

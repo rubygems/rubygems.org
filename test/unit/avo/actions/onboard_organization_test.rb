@@ -5,23 +5,22 @@ class OnboardOrganizationTest < ActiveSupport::TestCase
     @onboarding = create(:organization_onboarding)
     @current_user = create(:admin_github_user, :is_admin)
     @resource = Avo::Resources::OrganizationOnboarding.new.hydrate(record: @onboarding)
-    @action = Avo::Actions::UnblockUser.new(record: @onboarding, resource: @resource, user: @current_user, view: :edit)
+    @action = Avo::Actions::OnboardOrganization.new(resource: @resource, user: @current_user, view: :edit)
   end
 
   should "onboard an organization" do
     args = {
       current_user: @current_user,
       resource: @resource,
-      records: [@onboarding],
       fields: {
-        comment: "Onboarding a new organization"
+        comment: "Onboarding a new organization 1234567"
       },
-      query: nil
+      query: [@onboarding]
     }
 
     @action.handle(**args)
 
-    refute_predicate @onboarding.reload, :completed?
+    assert_predicate @onboarding.reload, :completed?
   end
 
   # Avo does not have an easy and direct way to test the message & visible class attributes.
