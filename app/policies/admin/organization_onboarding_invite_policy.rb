@@ -1,11 +1,9 @@
-class Admin::OrganizationOnboardingPolicy < Admin::ApplicationPolicy
+class Admin::OrganizationOnboardingInvitePolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     def resolve
       scope.all
     end
   end
-
-  has_association :organization_onboarding_invites
 
   def avo_index?
     rubygems_org_admin?
