@@ -79,9 +79,12 @@ de:
         password: Passwort
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
-        contributor:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC-API-Schlüsselrolle
       oidc/id_token:
@@ -640,6 +643,9 @@ de:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:

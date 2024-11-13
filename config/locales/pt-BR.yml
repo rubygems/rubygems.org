@@ -76,9 +76,12 @@ pt-BR:
         password: Senha
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
-        contributor:
+        outside_contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -556,6 +559,9 @@ pt-BR:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
