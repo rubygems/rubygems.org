@@ -31,7 +31,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "nick2"
+    assert_content "nick2"
   end
 
   test "changing to an existing handle" do
@@ -138,14 +138,14 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
 
     click_link "Edit Profile"
-    fill_in "user_homepage_url", with: "www.nickisawesome.com"
+    fill_in "user_homepage_url", with: "https://nickisawesome.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
     click_link "Sign out"
     visit profile_path("nick1")
 
-    assert page.has_link?("www.nickisawesome.com")
+    assert page.has_link?("https://nickisawesome.com")
   end
 
   test "deleting profile" do
