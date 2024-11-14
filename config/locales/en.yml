@@ -76,8 +76,12 @@ en:
         password: Password
       ownership/role:
         owner: Owner
+        maintainer: Maintainer
+      membership/role:
+        owner: Owner
         admin: Admin
         maintainer: Maintainer
+        outside_contributor: Outside Contributor
       api_key:
         oidc_api_key_role: OIDC API Key Role
       oidc/id_token:
@@ -552,6 +556,9 @@ en:
     failed_verification:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.
+  organization_onboardings:
+    confirm:
+      success: Organization onboarded successfully!
   owners:
     edit:
       role: Role

@@ -70,6 +70,7 @@ class ApplicationController < ActionController::Base
   def add_breadcrumb(name, link = nil)
     breadcrumbs << [name, link]
   end
+  helper_method :add_breadcrumb
 
   protected
 

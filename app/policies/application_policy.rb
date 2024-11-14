@@ -77,11 +77,20 @@ class ApplicationPolicy
   end
 
   def rubygem_owned_by?(user)
-    rubygem.owned_by?(user) || deny(t(:forbidden))
+    rubygem.owned_by?(user) ||
+      organization_member_with_role?(user, :maintainer) ||
+      deny(t(:forbidden))
   end
 
-  def rubygem_owned_by_with_role?(user, minimum_required_role:)
-    rubygem.owned_by_with_role?(user, minimum_required_role) || deny(t(:forbidden))
+  def rubygem_owned_by_with_role?(user, minimum_required_role:, minimum_required_org_role: :owner)
+    organization_member_with_role?(user, minimum_required_org_role) ||
+      rubygem.owned_by_with_role?(user, minimum_required_role) ||
+      deny(t(:forbidden))
+  end
+
+  def organization_member_with_role?(user, minimum_role)
+    return false unless respond_to?(:organization) && organization.present?
+    organization.memberships.where(user: user).with_minimum_role(minimum_role).exists?
   end
 
   def policy!(user, record) = Pundit.policy!(user, record)

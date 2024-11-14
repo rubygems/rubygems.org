@@ -4,6 +4,7 @@ FactoryBot.define do
       owners { [] }
       admins { [] }
       maintainers { [] }
+      rubygems { [] }
     end
 
     handle
@@ -21,6 +22,10 @@ FactoryBot.define do
 
       evaluator.maintainers.each do |user|
         create(:membership, user: user, organization: organization, role: :maintainer)
+      end
+
+      evaluator.rubygems.each do |rubygem|
+        rubygem.update(organization: organization)
       end
     end
 

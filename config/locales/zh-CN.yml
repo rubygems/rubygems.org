@@ -71,8 +71,12 @@ zh-CN:
         password: 密码
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -548,6 +552,9 @@ zh-CN:
     failed_verification:
       title: 错误 — 验证失败
       close_browser: 请关闭该浏览器并重试。
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:

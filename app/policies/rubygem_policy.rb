@@ -6,6 +6,7 @@ class RubygemPolicy < ApplicationPolicy
   ABANDONED_DOWNLOADS_MAX = 10_000
 
   alias rubygem record
+  delegate :organization, to: :rubygem
 
   def show?
     true
@@ -24,11 +25,11 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def configure_oidc?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
   end
 
   def configure_trusted_publishers?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
   end
 
   def manage_adoption?
@@ -55,7 +56,7 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_unconfirmed_ownerships?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
   end
 
   def add_owner?

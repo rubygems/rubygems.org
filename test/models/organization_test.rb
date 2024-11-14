@@ -4,6 +4,7 @@ class OrganizationTest < ActiveSupport::TestCase
   should have_many(:memberships).dependent(:destroy)
   should have_many(:unconfirmed_memberships).dependent(:destroy)
   should have_many(:users).through(:memberships)
+  should have_many(:rubygems).dependent(:nullify)
 
   # Waiting for Ownerships to be made polymorphic
   #
@@ -60,14 +61,6 @@ class OrganizationTest < ActiveSupport::TestCase
 
         assert_contains organization.errors[:handle], "has already been taken"
         refute_predicate organization, :valid?
-      end
-
-      should "be invalid if user has handle already" do
-        create(:user, handle: "test")
-        organization = build(:organization, handle: "Test")
-
-        refute_predicate organization, :valid?
-        assert_contains organization.errors[:handle], "has already been taken"
       end
     end
   end

@@ -77,8 +77,12 @@ es:
         password: Contraseña
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -624,6 +628,9 @@ es:
     failed_verification:
       title: Error - Falló la verification
       close_browser: Por favor cierra este navegador e inténtalo de nuevo.
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:

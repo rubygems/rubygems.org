@@ -8,7 +8,7 @@ Rails.application.configure do
   config.content_security_policy do |policy|
     policy.default_src :self
     policy.font_src    :self, "https://fonts.gstatic.com"
-    policy.img_src     :self, "https://secure.gaug.es", "https://gravatar.com", "https://www.gravatar.com", "https://secure.gravatar.com",
+    policy.img_src     :self, "data:", "https://secure.gaug.es", "https://gravatar.com", "https://www.gravatar.com", "https://secure.gravatar.com",
       "https://*.fastly-insights.com", "https://avatars.githubusercontent.com"
     policy.object_src  :none
     # NOTE: This scirpt_src is overridden for all requests in ApplicationController
