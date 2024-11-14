@@ -284,6 +284,7 @@ pt-BR:
     settings: Configurações da Conta
     org_name: 'Org: %{name}'
     subscriptions: Observando
+    gems:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.

@@ -277,6 +277,7 @@ zh-CN:
     settings: 设置
     org_name: 组织：%{name}
     subscriptions: 订阅
+    gems:
   mailer:
     confirm_your_email: 请在发送到您的邮件中点击链接，确认您的邮箱地址。
     confirmation_subject: 请确认您的邮箱地址

@@ -277,6 +277,7 @@ ja:
     settings: 設定
     org_name: 組織：%{name}
     subscriptions: 購読
+    gems:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"

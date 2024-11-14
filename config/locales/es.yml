@@ -295,6 +295,7 @@ es:
     settings: Configuración
     org_name: 'Org: %{name}'
     subscriptions: Suscripciones
+    gems:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}

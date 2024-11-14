@@ -278,6 +278,7 @@ nl:
     settings: Instellingen
     org_name: 'Organisatie: %{name}'
     subscriptions: Abonnementen
+    gems:
   mailer:
     confirm_your_email:
     confirmation_subject:
