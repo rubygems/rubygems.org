@@ -31,7 +31,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert_content "nick2"
+    assert page.has_content? "nick2"
   end
 
   test "changing to an existing handle" do
@@ -130,6 +130,7 @@ class ProfileTest < SystemTest
     click_link "Sign out"
     visit profile_path("nick1")
 
+    assert_content("test")
     assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
   end
 
