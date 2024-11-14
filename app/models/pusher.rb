@@ -4,21 +4,30 @@ class Pusher
   include TraceTagger
   include SemanticLogger::Loggable
 
-  attr_reader :api_key, :owner, :spec, :spec_contents, :message, :code, :rubygem, :body, :version, :version_id, :size
+  attr_reader :api_key, :spec, :spec_contents, :message, :code, :rubygem, :body, :version, :version_id, :size, :attestations
 
-  def initialize(api_key, body, request: nil)
+  delegate :owner, to: :api_key
+
+  def initialize(api_key, body, request: nil, attestations: nil)
     @api_key = api_key
-    @owner = api_key.owner
     @scoped_rubygem = api_key.rubygem
 
     @body = StringIO.new(body.read)
+    @attestations = attestations
+
     @size = @body.size
     @request = request
   end
 
   def process
     trace("gemcutter.pusher.process", tags: { "gemcutter.api_key.owner" => owner.to_gid }) do
-      pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
+      pull_spec &&
+        find &&
+        authorize &&
+        verify_gem_scope &&
+        verify_mfa_requirement &&
+        validate &&
+        save
     end
   end
 
@@ -48,13 +57,18 @@ class Pusher
       return notify("There was a problem saving your gem: the uploaded spec has malformed platform attributes", 409)
     end
 
+    return unless verify_sigstore
+
     true
   end
 
   def save
     # Restructured so that if we fail to write the gem (ie, s3 is down)
     # can clean things up well.
-    return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
+    unless update
+      return false if message
+      return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+    end
     trace("gemcutter.pusher.write_gem") do
       write_gem @body, @spec_contents
     end
@@ -151,10 +165,45 @@ class Pusher
 
   # Overridden so we don't get megabytes of the raw data printing out
   def inspect
-    attrs = %i[@rubygem @owner @message @code].map do |attr|
-      "#{attr}=#{instance_variable_get(attr).inspect}"
+    attrs = { :@rubygem => @rubygem, :@owner => owner, :@message => @message, :@code => @code }.map do |attr, value|
+      "#{attr}=#{value.inspect}"
     end
     "<Pusher #{attrs.join(' ')}>"
+  end
+
+  def verify_sigstore
+    return true if attestations.blank?
+    return notify("Pushing with an attestation requires trusted publishing", 400) unless api_key.trusted_publisher?
+
+    policy = api_key.owner.to_sigstore_identity_policy(api_key.oidc_id_token.jwt.dig("claims", "ref"))
+
+    artifact = Sigstore::Verification::V1::Artifact.new
+    artifact.artifact = body.string
+
+    attestations.each do |attestation|
+      bundle = Sigstore::Bundle::V1::Bundle.decode_json_hash(attestation, registry: Sigstore::REGISTRY)
+
+      verification_input = Sigstore::Verification::V1::Input.new
+      verification_input.artifact = artifact
+      verification_input.bundle = bundle
+      input = Sigstore::VerificationInput.new(verification_input)
+      sigstore_verification = sigstore_verifier.verify(input:, policy:, offline: true)
+      logger.info do
+        { message: "verifying sigstore bundles", sigstore_verification: sigstore_verification, policy: policy }
+      end
+
+      return notify("Attestation verification failed:\n#{sigstore_verification.reason}", 422) unless sigstore_verification.verified?
+      return notify("Must provide at least v0.3 bundles", 422) unless input.sbundle.bundle_type >= Sigstore::BundleType::BUNDLE_0_3
+
+      @version.attestations << Attestation.new(body: bundle, media_type: bundle.media_type)
+    end
+
+    true
+  rescue Sigstore::Error => e
+    notify <<~MSG, 422
+      Error verifying sigstore attestation:
+      #{e.message}
+    MSG
   end
 
   private
@@ -180,18 +229,19 @@ class Pusher
     rubygem.update_attributes_from_gem_specification!(version, spec)
 
     if rubygem.unowned?
-      case owner
-      when User
+      if api_key.user?
         rubygem.create_ownership(owner)
-      else
+      elsif api_key.trusted_publisher?
         pending_publisher = find_pending_trusted_publisher
-        return notify_unauthorized if pending_publisher.blank?
+        return notify("No pending publisher found", 404) if pending_publisher.blank?
 
         rubygem.transaction do
           logger.info { "Reifying pending publisher" }
           rubygem.create_ownership(pending_publisher.user)
           owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
         end
+      else
+        return notify_unauthorized
       end
     end
 
@@ -311,7 +361,11 @@ class Pusher
   end
 
   def find_pending_trusted_publisher
-    return unless owner.class.module_parent_name == "OIDC::TrustedPublisher"
+    return unless api_key.trusted_publisher?
     owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
+  end
+
+  def sigstore_verifier
+    @sigstore_verifier ||= Sigstore::Verifier.production
   end
 end

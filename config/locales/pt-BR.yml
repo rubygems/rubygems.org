@@ -716,6 +716,7 @@ pt-BR:
       sha_256_checksum: SHA 256 checksum
       signature_period:
       expired:
+      provenance_header:
     version_navigation:
       previous_version:
       next_version:

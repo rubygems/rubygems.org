@@ -60,6 +60,7 @@ gem "user_agent_parser", "~> 2.18"
 gem "pghero", "~> 3.6"
 gem "faraday-multipart", "~> 1.0"
 gem "timescaledb", "~> 0.3"
+gem "sigstore", "~> 0.1.1"
 
 # Admin dashboard
 gem "avo", "~> 3.13"

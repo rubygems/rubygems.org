@@ -704,6 +704,7 @@ zh-TW:
       sha_256_checksum: SHA 256 總和檢查碼
       signature_period: 簽名有效期
       expired: 已過期
+      provenance_header:
     version_navigation:
       previous_version: "← 上一版本"
       next_version: 下一版本 →

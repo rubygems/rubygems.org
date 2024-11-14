@@ -52,7 +52,7 @@ class GemServerConformanceTest < ApplicationSystemTestCase
   end
 
   test "is a conformant gem server" do
-    create(:api_key, scopes: %w[push_rubygem yank_rubygem])
+    create(:api_key, scopes: %w[push_rubygem yank_rubygem], key: "12345")
 
     output, status = Open3.capture2e(
       {

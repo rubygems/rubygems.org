@@ -92,6 +92,9 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :attestations, only: :show, format: /json/,
+        constraints: { id: Patterns::ROUTE_PATTERN }
+
       resource :activity, only: [], format: /json|yaml/ do
         collection do
           get :latest

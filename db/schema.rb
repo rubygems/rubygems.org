@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_17_042436) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_07_193740) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -54,6 +54,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_042436) do
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
     t.check_constraint "owner_type IS NOT NULL", name: "api_keys_owner_type_null"
     t.check_constraint "scopes IS NOT NULL", name: "api_keys_scopes_null"
+  end
+
+  create_table "attestations", force: :cascade do |t|
+    t.bigint "version_id", null: false
+    t.jsonb "body"
+    t.string "media_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["version_id"], name: "index_attestations_on_version_id"
   end
 
   create_table "audits", force: :cascade do |t|
@@ -618,6 +627,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_042436) do
   end
 
   add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
+  add_foreign_key "attestations", "versions"
   add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
   add_foreign_key "events_organization_events", "geoip_infos"
   add_foreign_key "events_organization_events", "ip_addresses"
