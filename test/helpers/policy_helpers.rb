@@ -17,7 +17,7 @@ module PolicyHelpers
     policy ||= policy!(policy_or_actor)
 
     result = policy.send(action)
-    flunk "Expected #{policy.class} to refuse #{action.inspect}\n#{pretty_print_policy(policy)}" if result
+    flunk "Expected #{policy.class} to deny #{action.inspect}\n#{pretty_print_policy(policy)}" if result
     assert_equal message.chomp, policy.error&.chomp if message
 
     refute result
@@ -25,11 +25,7 @@ module PolicyHelpers
 
   def pretty_print_policy(policy)
     user = policy.user.respond_to?(:handle) ? "#<User id: #{policy.user.id}, handle: #{policy.user.handle.inspect}>" : policy.user.inspect
-    error = policy.error ? "\nError: #{policy.error}" : nil
-    <<~POLICY
-      Policy: #{policy.class}#{error}
-      User: #{user}
-      Record: #{policy.record.inspect}
-    POLICY
+    error = policy.error ? "  Error: #{policy.error}\n" : nil
+    "#{error}  User: #{user}\n  Record: #{policy.record.inspect}"
   end
 end

@@ -42,8 +42,8 @@ class OrganizationPolicyTest < PolicyTestCase
   context "#update?" do
     should "only be authorized if the user is an owner" do
       assert_authorized @owner, :update?
-      assert_authorized @admin, :update?
 
+      refute_authorized @admin, :update?
       refute_authorized @maintainer, :update?
       refute_authorized @guest, :update?
     end
@@ -69,23 +69,13 @@ class OrganizationPolicyTest < PolicyTestCase
     end
   end
 
-  context "#manage_membership?" do
+  context "#manage_memberships?" do
     should "only be authorized if the user is an owner" do
-      assert_authorized @owner, :manage_membership?
-      assert_authorized @admin, :manage_membership?
+      assert_authorized @owner, :manage_memberships?
+      assert_authorized @admin, :manage_memberships?
 
-      refute_authorized @maintainer, :manage_membership?
-      refute_authorized @guest, :manage_membership?
-    end
-  end
-
-  context "#show_membership?" do
-    should "only be authorized if the user is an owner or maintainer" do
-      assert_authorized @owner, :show_membership?
-      assert_authorized @admin, :show_membership?
-      assert_authorized @maintainer, :show_membership?
-
-      refute_authorized @guest, :show_membership?
+      refute_authorized @maintainer, :manage_memberships?
+      refute_authorized @guest, :manage_memberships?
     end
   end
 

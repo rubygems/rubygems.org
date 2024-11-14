@@ -24,12 +24,8 @@ class OrganizationPolicy < ApplicationPolicy
     organization_member_with_role?(user, :owner) || deny(t(:forbidden))
   end
 
-  def manage_membership?
+  def manage_memberships?
     organization_member_with_role?(user, :admin) || deny(t(:forbidden))
-  end
-
-  def show_membership?
-    organization_member_with_role?(user, :maintainer) || deny(t(:forbidden))
   end
 
   def list_memberships?
