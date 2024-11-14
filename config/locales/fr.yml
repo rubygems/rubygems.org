@@ -288,6 +288,7 @@ fr:
     org_name: 'Org: %{name}'
     subscriptions: Abonnements
     gems:
+    members:
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.

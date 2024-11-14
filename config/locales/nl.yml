@@ -279,6 +279,7 @@ nl:
     org_name: 'Organisatie: %{name}'
     subscriptions: Abonnementen
     gems:
+    members:
   mailer:
     confirm_your_email:
     confirmation_subject:

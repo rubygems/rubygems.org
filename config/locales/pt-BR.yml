@@ -285,6 +285,7 @@ pt-BR:
     org_name: 'Org: %{name}'
     subscriptions: Observando
     gems:
+    members:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.

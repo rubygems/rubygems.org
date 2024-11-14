@@ -277,6 +277,7 @@ zh-TW:
     org_name: 組織：%{name}
     subscriptions: 訂閱
     gems:
+    members:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"

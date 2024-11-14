@@ -297,6 +297,7 @@ de:
     org_name: 'Organisation: %{name}'
     subscriptions: Abonnements
     gems:
+    members:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.

@@ -283,6 +283,7 @@ en:
     org_name: "Org: %{name}"
     subscriptions: Subscriptions
     gems: Gems
+    members: Members
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
