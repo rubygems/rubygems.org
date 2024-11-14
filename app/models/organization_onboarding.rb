@@ -156,10 +156,7 @@ class OrganizationOnboarding < ApplicationRecord
 
     ownerships = Ownership.where(user: created_by, rubygem: rubygems).index_by(&:rubygem_id)
 
-    selected_rubygems.each do |rubygem|
-      ownership = ownerships[rubygem.id]
-      next if ownership.present? && ownership.owner?
-
+    selected_rubygems.reject { ownerships[_1.id].present? && ownerships[_1.id].owner? }.each do |rubygem|
       errors.add(:created_by, "must be an owner of the #{rubygem.name} gem")
     end
   end
