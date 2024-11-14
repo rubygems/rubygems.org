@@ -302,7 +302,7 @@ OIDC::TrustedPublisher::GitHubAction.find_or_create_by!(
 
 rubygem0.versions.find_by(full_name: "rubygem0-1.0.0").attestations.find_or_create_by!(
   media_type: Sigstore::BundleType::BUNDLE_0_3.media_type,
-  body: { media_type: Sigstore::BundleType::BUNDLE_0_3.media_type }
+  body: JSON.parse(Rails.root.join("test", "gems", "sigstore-1.0.0.gem.sigstore.json").read)
 )
 
 author.oidc_pending_trusted_publishers.create_with(
