@@ -25,8 +25,7 @@ class PushTest < ActionDispatch::IntegrationTest
     )
 
     @key = "543321"
-    api_key = create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
-    create(:oidc_id_token, api_key: api_key, jwt: { claims: { "ref" => "refs/heads/main" } })
+    create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
     signing_jwt = ["", {
       aud: "sigstore",

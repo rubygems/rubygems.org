@@ -175,7 +175,7 @@ class Pusher
     return true if attestations.blank?
     return notify("Pushing with an attestation requires trusted publishing", 400) unless api_key.trusted_publisher?
 
-    policy = api_key.owner.to_sigstore_identity_policy(api_key.oidc_id_token.jwt.dig("claims", "ref"))
+    policy = api_key.owner.to_sigstore_identity_policy
 
     artifact = Sigstore::Verification::V1::Artifact.new
     artifact.artifact = body.string
