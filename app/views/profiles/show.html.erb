@@ -94,6 +94,14 @@
             )
           %>
         <% end %>
+        <% if @user.homepage_url.present? %>
+          <%=
+            link_to(
+              @user.homepage_url,
+              class: "profile__header__attribute t-link--black"
+            )
+          %>
+        <% end %>
       <% end %>
     </div>
 
