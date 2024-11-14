@@ -8,7 +8,7 @@ class Admin::OrganizationOnboardingInvitePolicyTest < AdminPolicyTestCase
   end
 
   def test_scope
-    assert_equal [@onboarding], policy_scope!(@admin, OrganizationOnboardingInvite).to_a
+    assert_equal [@onboarding_invite], policy_scope!(@admin, OrganizationOnboardingInvite).to_a
   end
 
   def test_avo_index
