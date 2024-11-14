@@ -12,7 +12,7 @@ class Admin::OrganizationOnboardingPolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_index
-    refute_authorizes @admin, OrganizationOnboarding, :avo_index?
+    assert_authorizes @admin, OrganizationOnboarding, :avo_index?
     refute_authorizes @non_admin, OrganizationOnboarding, :avo_index?
   end
 

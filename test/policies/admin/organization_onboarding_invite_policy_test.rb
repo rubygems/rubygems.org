@@ -8,11 +8,11 @@ class Admin::OrganizationOnboardingInvitePolicyTest < AdminPolicyTestCase
   end
 
   def test_scope
-    assert_equal [@onboarding], policy_scope!(@admin, OrganizationOnboarding).to_a
+    assert_equal [@onboarding], policy_scope!(@admin, OrganizationOnboardingInvite).to_a
   end
 
   def test_avo_index
-    refute_authorizes @admin, OrganizationOnboardingInvite, :avo_index?
+    assert_authorizes @admin, OrganizationOnboardingInvite, :avo_index?
     refute_authorizes @non_admin, OrganizationOnboardingInvite, :avo_index?
   end
 
@@ -22,8 +22,8 @@ class Admin::OrganizationOnboardingInvitePolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_create
-    refute_authorizes @admin, OrganizationOnboarding, :avo_create?
-    refute_authorizes @non_admin, OrganizationOnboarding, :avo_create?
+    refute_authorizes @admin, OrganizationOnboardingInvite, :avo_create?
+    refute_authorizes @non_admin, OrganizationOnboardingInvite, :avo_create?
   end
 
   def test_avo_update
