@@ -104,6 +104,20 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
   end
 
+  context "#set_user_handle" do
+    context "when the gem name is set to user" do
+      setup do
+        @onboarding.name_type = :user
+      end
+
+      should "automatically set the organization handle to the handle of the user" do
+        @onboarding.valid?
+
+        assert_equal @owner.handle, @onboarding.organization_handle
+      end
+    end
+  end
+
   context "#available_rubygems" do
     should "exclude gems that already have an organization" do
       create(:rubygem, owners: [@owner], organization: create(:organization))
