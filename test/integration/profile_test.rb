@@ -133,19 +133,19 @@ class ProfileTest < SystemTest
     assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
   end
 
-    test "adding homepage url" do
+  test "adding homepage url" do
     sign_in
     visit profile_path("nick1")
 
     click_link "Edit Profile"
-    fill_in "user_homepage_url", with: "https://nickisawesome.com"
+    fill_in "user_homepage_url", with: "www.nickisawesome.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
     click_link "Sign out"
     visit profile_path("nick1")
 
-    assert page.has_link?("https://nickisawesome.com")
+    assert page.has_link?("www.nickisawesome.com")
   end
 
   test "deleting profile" do
