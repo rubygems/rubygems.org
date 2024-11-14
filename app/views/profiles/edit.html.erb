@@ -21,12 +21,8 @@
   </div>
 
   <div class="text_field">
-   <%= form.label :homepage_url, class: 'form__label' do %>
-
-     <span class='form__label__text'><%= t('.homepage_url') %></span>
-   <% end %>
-
-     <%= form.text_field(:homepage_url, class: 'form__input') %>
+   <%= form.label :homepage_url, class: 'form__label' %>
+   <%= form.text_field(:homepage_url, class: 'form__input') %>
   </div>
 
   <div class="text_field">
@@ -75,7 +71,7 @@
     <p class='form__field__instructions'>
       <%= t('.enter_password') %>
     </p>
-    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input', required: true %>
+    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input' %>
   </div>
 
 
