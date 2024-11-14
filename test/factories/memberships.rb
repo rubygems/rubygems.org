@@ -5,7 +5,9 @@ FactoryBot.define do
     confirmed_at { Time.zone.now }
     role { :maintainer }
 
-    trait :maintainer
+    trait :maintainer do
+      role { :maintainer }
+    end
 
     trait :owner do
       role { :owner }
