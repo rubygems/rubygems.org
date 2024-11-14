@@ -262,16 +262,16 @@ GEM
     factory_bot_rails (6.4.4)
       factory_bot (~> 6.5)
       railties (>= 5.0.0)
-    faraday (2.12.0)
-      faraday-net_http (>= 2.0, < 3.4)
+    faraday (2.12.1)
+      faraday-net_http (>= 2.0, < 3.5)
       json
       logger
     faraday-follow_redirects (0.3.0)
       faraday (>= 1, < 3)
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
-    faraday-net_http (3.3.0)
-      net-http
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
     faraday-restrict-ip-addresses (0.3.0)
       faraday (> 1.0, < 3.0)
     faraday-retry (2.2.1)
@@ -356,7 +356,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.5.1)
       activejob (>= 5.2)
-    json (2.8.1)
+    json (2.8.2)
     json-jwt (1.16.7)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -475,7 +475,7 @@ GEM
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
     mutex_m (0.2.0)
-    net-http (0.4.1)
+    net-http (0.5.0)
       uri
     net-imap (0.5.0)
       date
@@ -823,7 +823,7 @@ GEM
     unpwn (1.0.0)
       bloomer (~> 1.0)
       pwned (~> 2.0)
-    uri (0.13.1)
+    uri (1.0.2)
     user_agent_parser (2.18.0)
     useragent (0.16.10)
     validate_url (1.0.15)
@@ -1077,10 +1077,10 @@ CHECKSUMS
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
   factory_bot (6.5.0) sha256=6374b3a3593b8077ee9856d553d2e84d75b47b912cc24eafea4062f9363d2261
   factory_bot_rails (6.4.4) sha256=139e17caa2c50f098fddf5e5e1f29e8067352024e91ca1186d018b36589e5c88
-  faraday (2.12.0) sha256=d106d0b1bc2548a8c0c34619a657a5e4aeae2780f951b0e095c8f803bbbf4517
+  faraday (2.12.1) sha256=23f2128bf5d40533806b3a3f0444cca218d76d0af25320db8e782bf42ae0aa6f
   faraday-follow_redirects (0.3.0) sha256=d92d975635e2c7fe525dd494fcd4b9bb7f0a4a0ec0d5f4c15c729530fdb807f9
   faraday-multipart (1.0.4) sha256=9012021ab57790f7d712f590b48d5f948b19b43cfa11ca83e6459f06090b0725
-  faraday-net_http (3.3.0) sha256=93e6b0f679b1e8e358bcb4e983a52328dfc47ebbe6a232e4f9e8aba9c924e565
+  faraday-net_http (3.4.0) sha256=a1f1e4cd6a2cf21599c8221595e27582d9936819977bbd4089a601f24c64e54a
   faraday-restrict-ip-addresses (0.3.0) sha256=2db7f6da6f59fa73a9d4ffe96b2b46a4b2b2c4d177e44a1962c1921d32ec7279
   faraday-retry (2.2.1) sha256=4146fed14549c0580bf14591fca419a40717de0dd24f267a8ec2d9a728677608
   faraday_middleware-aws-sigv4 (1.0.1) sha256=a001ea4f687ca1c60bad8f2a627196905ce3dbf285e461dc153240e92eaabe8f
@@ -1120,7 +1120,7 @@ CHECKSUMS
   irb (1.14.1) sha256=5975003b58d36efaf492380baa982ceedf5aed36967a4d5b40996bc5c66e80f8
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.5.1) sha256=1428ad5b308adbaae8776c16b7792a846eb1ad7f4ab3c6e0f9668dd2ab1179e5
-  json (2.8.1) sha256=404e8ca4c2ef6c7a6fa15bb9e2e280f3523334b78a83f22268297fe7939ee22a
+  json (2.8.2) sha256=dd4fa6c9c81daecf72b86ea36e56ed8955fdbb4d4dc379c93d313a59344486cf
   json-jwt (1.16.7) sha256=ccabff4c6d1a14276b23178e8bebe513ef236399b72a0b886d7ed94800d172a5
   jwt (2.7.1) sha256=07357cd2f180739b2f8184eda969e252d850ac996ed0a23f616e8ff0a90ae19b
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
@@ -1167,7 +1167,7 @@ CHECKSUMS
   multi_xml (0.7.1) sha256=4fce100c68af588ff91b8ba90a0bb3f0466f06c909f21a32f4962059140ba61b
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
   mutex_m (0.2.0) sha256=b6ef0c6c842ede846f2ec0ade9e266b1a9dac0bc151682b04835e8ebd54840d5
-  net-http (0.4.1) sha256=a96efc5ea18bcb9715e24dda4159d10f67ff0345c8a980d04630028055b2c282
+  net-http (0.5.0) sha256=ed7f88205afe03bf53142a4b81ded91f2c01522dcf03089cb6ad4acb476ce1da
   net-imap (0.5.0) sha256=b8281598f3c1860679a88de19287673c6835bed6cf0fe1710fb96a5ffcb94aa0
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
@@ -1306,7 +1306,7 @@ CHECKSUMS
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (2.6.0) sha256=12279874bba6d5e4d2728cef814b19197dbb10d7a7837a869bab65da943b7f5a
   unpwn (1.0.0) sha256=6239d17d46a882b3719b24fb79c78a34caff89d57ab0f5e546be5b5c882bc7d3
-  uri (0.13.1) sha256=df2d8b13e3e8c8a43432637e2ace4f9de7b42674361b4dd26302b40f7d7fcd1e
+  uri (1.0.2) sha256=b303504ceb7e5905771fa7fa14b649652fa949df18b5880d69cfb12494791e27
   user_agent_parser (2.18.0) sha256=aa943b91da8906cace7d3fe16b450c9d77b68f571485c11e577af97aecb25584
   useragent (0.16.10) sha256=1794380d9ea5c087d687bbfe14752f81839293f238c1132ef05c9344f09e65bb
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
