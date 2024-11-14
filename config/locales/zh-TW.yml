@@ -754,6 +754,7 @@ zh-TW:
       summary: 摘要
       description: 描述
       downloads: 下載數
+      trusted_publisher:
       updated: 更新於
       yanked: 移除於
     show:

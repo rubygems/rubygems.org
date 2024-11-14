@@ -28,6 +28,14 @@ FactoryBot.define do
       metadata { { "rubygems_mfa_required" => "true" } }
     end
 
+    trait :has_trusted_publisher do
+      pusher_api_key { association(:api_key, :trusted_publisher, key: SecureRandom.hex(24)) }
+    end
+
+    trait :has_untrusted_publisher do
+      pusher_api_key { association(:api_key, key: SecureRandom.hex(24)) }
+    end
+
     after(:create) do |version|
       if version.info_checksum.blank?
         checksum = GemInfo.new(version.rubygem.name).info_checksum
