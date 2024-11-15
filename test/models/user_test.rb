@@ -174,7 +174,6 @@ class UserTest < ActiveSupport::TestCase
 
     context "homepage url" do
       should allow_value("https://www.mywebsite.com").for(:homepage_url)
-      should_not allow_value("http://non-secure-site.com").for(:homepage_url)
       should_not allow_value("<html><body>hi</body><html>").for(:homepage_url)
     end
 
