@@ -95,13 +95,15 @@
           %>
         <% end %>
         <% if @user.homepage_url.present? %>
-          <%=
-            link_to(
-              @user.homepage_url,
-              rel: "nofollow",
-              class: "profile__header__attribute t-link--black"
-            )
-          %>
+          <p id="homepage-url">
+            <%=
+              link_to(
+                @user.homepage_url,
+                rel: "nofollow",
+                class: "profile__header__attribute t-link--black"
+              )
+            %>
+          </p>
         <% end %>
       <% end %>
     </div>
