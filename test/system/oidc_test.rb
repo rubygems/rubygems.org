@@ -16,7 +16,7 @@ class OIDCTest < ApplicationSystemTestCase
   end
 
   def verify_session # rubocop:disable Minitest/TestMethodName
-    page.assert_title(/^Confirm Password/)
+    assert_title(/^Confirm Password/)
     fill_in "Password", with: @user.password
     click_button "Confirm"
   end
@@ -26,14 +26,14 @@ class OIDCTest < ApplicationSystemTestCase
     visit profile_oidc_providers_path
     verify_session
 
-    page.assert_selector "h1", text: "OIDC Providers"
-    page.assert_text(/displaying 1 provider/i)
-    page.click_link "https://token.actions.githubusercontent.com"
+    assert_selector "h1", text: "OIDC Providers"
+    assert_text(/displaying 1 provider/i)
+    click_link "https://token.actions.githubusercontent.com"
 
-    page.assert_selector "h1", text: "OIDC Provider"
-    page.assert_text "https://token.actions.githubusercontent.com"
-    page.assert_text "https://token.actions.githubusercontent.com/.well-known/jwks"
-    page.assert_text(/Displaying 1 api key role/i)
+    assert_selector "h1", text: "OIDC Provider"
+    assert_text "https://token.actions.githubusercontent.com"
+    assert_text "https://token.actions.githubusercontent.com/.well-known/jwks"
+    assert_text(/Displaying 1 api key role/i)
     assert_link @id_token.api_key_role.name, href: profile_oidc_api_key_role_path(@id_token.api_key_role.token)
   end
 
@@ -42,19 +42,19 @@ class OIDCTest < ApplicationSystemTestCase
     visit profile_oidc_api_key_roles_path
     verify_session
 
-    page.assert_selector "h1", text: "OIDC API Key Roles"
-    page.assert_text(/displaying 1 api key role/i)
-    page.click_link @id_token.api_key_role.name
+    assert_selector "h1", text: "OIDC API Key Roles"
+    assert_text(/displaying 1 api key role/i)
+    click_link @id_token.api_key_role.name
 
-    page.assert_selector "h1", text: "API Key Role #{@id_token.api_key_role.name}"
-    page.assert_text @id_token.api_key_role.token
-    page.assert_text "Scopes\npush_rubygem"
-    page.assert_text "Gems\nAll Gems"
-    page.assert_text "Valid for\n30 minutes"
-    page.assert_text "Effect\nallow"
-    page.assert_text "Principal\nhttps://token.actions.githubusercontent.com"
-    page.assert_text "Conditions\nsub string_equals repo:segiddins/oidc-test:ref:refs/heads/main"
-    page.assert_text(/Displaying 1 id token/i)
+    assert_selector "h1", text: "API Key Role #{@id_token.api_key_role.name}"
+    assert_text @id_token.api_key_role.token
+    assert_text "Scopes\npush_rubygem"
+    assert_text "Gems\nAll Gems"
+    assert_text "Valid for\n30 minutes"
+    assert_text "Effect\nallow"
+    assert_text "Principal\nhttps://token.actions.githubusercontent.com"
+    assert_text "Conditions\nsub string_equals repo:segiddins/oidc-test:ref:refs/heads/main"
+    assert_text(/Displaying 1 id token/i)
     assert_link "View provider https://token.actions.githubusercontent.com", href: profile_oidc_provider_path(@provider)
     assert_link @id_token.jti, href: profile_oidc_id_token_path(@id_token)
   end
@@ -64,20 +64,20 @@ class OIDCTest < ApplicationSystemTestCase
     visit profile_oidc_id_tokens_path
     verify_session
 
-    page.assert_selector "h1", text: "OIDC ID Tokens"
-    page.assert_text(/displaying 1 id token/i)
-    page.click_link @id_token.jti
+    assert_selector "h1", text: "OIDC ID Tokens"
+    assert_text(/displaying 1 id token/i)
+    click_link @id_token.jti
 
-    page.assert_selector "h1", text: "OIDC ID Token"
-    page.assert_text "CREATED AT\n#{@id_token.created_at.to_fs(:long)}"
-    page.assert_text "EXPIRES AT\n#{@id_token.api_key.expires_at.to_fs(:long)}"
-    page.assert_text "JWT ID\n#{@id_token.jti}"
+    assert_selector "h1", text: "OIDC ID Token"
+    assert_text "CREATED AT\n#{@id_token.created_at.to_fs(:long)}"
+    assert_text "EXPIRES AT\n#{@id_token.api_key.expires_at.to_fs(:long)}"
+    assert_text "JWT ID\n#{@id_token.jti}"
     assert_link @api_key_role.name, href: profile_oidc_api_key_role_path(@api_key_role.token)
     assert_link "https://token.actions.githubusercontent.com", href: profile_oidc_provider_path(@provider)
-    page.assert_text "jti\n#{@id_token.jti}"
-    page.assert_text "claim1\nvalue1"
-    page.assert_text "claim2\nvalue2"
-    page.assert_text "typ\nJWT"
+    assert_text "jti\n#{@id_token.jti}"
+    assert_text "claim1\nvalue1"
+    assert_text "claim2\nvalue2"
+    assert_text "typ\nJWT"
   end
 
   test "creating an api key role" do
@@ -89,7 +89,7 @@ class OIDCTest < ApplicationSystemTestCase
     click_link "OIDC: Create"
     verify_session
 
-    page.assert_selector "h1", text: "New OIDC API Key Role"
+    assert_selector "h1", text: "New OIDC API Key Role"
     assert_field "Name", with: "Push #{rubygem.name}"
     assert_select "OIDC provider", options: ["https://token.actions.githubusercontent.com"], selected: "https://token.actions.githubusercontent.com"
     assert_checked_field "Push rubygem"
@@ -111,11 +111,11 @@ class OIDCTest < ApplicationSystemTestCase
     assert_field "Value", with: "example/repo",
       id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_value"
 
-    page.scroll_to page.find(id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_claim")
+    scroll_to find(id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_claim")
 
     click_button "Create Api key role"
 
-    page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
+    assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
 
     role = OIDC::ApiKeyRole.where(name: "Push #{rubygem.name}", user: @user, provider: @provider).sole
 
@@ -145,17 +145,17 @@ class OIDCTest < ApplicationSystemTestCase
     assert_equal(expected, role.as_json.slice(*expected.keys))
 
     click_button "Edit API Key Role"
-    page.scroll_to :bottom
+    scroll_to :bottom
     click_button "Update Api key role"
 
-    page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
+    assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
     assert_equal(expected, role.reload.as_json.slice(*expected.keys))
 
     click_button "Edit API Key Role"
 
     click_button "Add statement"
 
-    statements = page.find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_wrapper/)
+    statements = find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_wrapper/)
 
     assert_equal 2, statements.size
 
@@ -171,23 +171,23 @@ class OIDCTest < ApplicationSystemTestCase
 
     statements.first.find_all("button", text: "Remove condition").last.click
 
-    page.assert_selector("button.form__remove_nested_button", text: "Remove condition", count: 3)
+    assert_selector("button.form__remove_nested_button", text: "Remove condition", count: 3)
 
     click_button "Update Api key role"
 
-    page.assert_text "Access policy statements[1] conditions[1] claim unknown for the provider"
+    assert_text "Access policy statements[1] conditions[1] claim unknown for the provider"
     assert_equal(expected, role.reload.as_json.slice(*expected.keys))
 
-    page.find_field("Claim", with: "fudge").fill_in with: "event_name"
+    find_field("Claim", with: "fudge").fill_in with: "event_name"
 
-    page.find_field("Name").fill_in with: "Push gems"
-    page.select "All Gems", from: "Gem Scope"
-    page.unselect rubygem.name, from: "Gem Scope"
-    page.check "Yank rubygem"
+    find_field("Name").fill_in with: "Push gems"
+    select "All Gems", from: "Gem Scope"
+    unselect rubygem.name, from: "Gem Scope"
+    check "Yank rubygem"
 
     click_button "Update Api key role"
 
-    page.assert_selector "h1", text: "API Key Role Push gems"
+    assert_selector "h1", text: "API Key Role Push gems"
     assert_equal(expected.merge(
                    "name" => "Push gems",
                    "api_key_permissions" => {
@@ -233,9 +233,9 @@ class OIDCTest < ApplicationSystemTestCase
 
     visit rubygem_trusted_publishers_path(rubygem.slug)
 
-    page.assert_selector "h1", text: "Trusted Publishers"
-    page.assert_text("Trusted publishers for rubygem0")
-    page.assert_text "NO RUBYGEM TRUSTED PUBLISHERS FOUND"
+    assert_selector "h1", text: "Trusted Publishers"
+    assert_text("Trusted publishers for rubygem0")
+    assert_text "NO RUBYGEM TRUSTED PUBLISHERS FOUND"
 
     stub_request(:get, "https://api.github.com/repos/example/rubygem0/contents/.github/workflows")
       .to_return(status: 200, body: [
@@ -247,7 +247,7 @@ class OIDCTest < ApplicationSystemTestCase
 
     click_button "Create"
 
-    page.assert_selector "h1", text: "New Trusted Publisher"
+    assert_selector "h1", text: "New Trusted Publisher"
 
     assert_field "Repository owner", with: "example"
     assert_field "Repository name", with: "rubygem0"
@@ -259,10 +259,10 @@ class OIDCTest < ApplicationSystemTestCase
 
     click_button "Create Rubygem trusted publisher"
 
-    page.assert_text "Trusted Publisher created"
-    page.assert_selector "h1", text: "Trusted Publishers"
-    page.assert_text("Trusted publishers for rubygem0")
-    page.assert_text "GitHub Actions\nDelete\nGitHub Repository\nexample/rubygem0\nWorkflow Filename\npush_rubygem.yml"
+    assert_text "Trusted Publisher created"
+    assert_selector "h1", text: "Trusted Publishers"
+    assert_text("Trusted publishers for rubygem0")
+    assert_text "GitHub Actions\nDelete\nGitHub Repository\nexample/rubygem0\nWorkflow Filename\npush_rubygem.yml"
   end
 
   test "deleting rubygem trusted publishers" do
@@ -293,26 +293,26 @@ class OIDCTest < ApplicationSystemTestCase
     verify_session
     click_button "Create"
 
-    page.assert_selector "h1", text: "New Pending Trusted Publisher"
+    assert_selector "h1", text: "New Pending Trusted Publisher"
 
     click_button "Create"
 
-    page.assert_text "can't be blank"
-    page.assert_selector "h1", text: "New Pending Trusted Publisher"
+    assert_text "can't be blank"
+    assert_selector "h1", text: "New Pending Trusted Publisher"
 
-    page.fill_in "RubyGem name", with: "rubygem0"
-    page.fill_in "Repository owner", with: "example"
-    page.fill_in "Repository name", with: "rubygem1"
-    page.fill_in "Workflow filename", with: "push_rubygem.yml"
-    page.fill_in "Environment", with: "prod"
+    fill_in "RubyGem name", with: "rubygem0"
+    fill_in "Repository owner", with: "example"
+    fill_in "Repository name", with: "rubygem1"
+    fill_in "Workflow filename", with: "push_rubygem.yml"
+    fill_in "Environment", with: "prod"
 
     stub_request(:get, "https://api.github.com/users/example")
       .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
 
     click_button "Create"
 
-    page.assert_text "RubyGem name is already in use"
-    page.assert_selector "h1", text: "New Pending Trusted Publisher"
+    assert_text "RubyGem name is already in use"
+    assert_selector "h1", text: "New Pending Trusted Publisher"
 
     assert_field "RubyGem name", with: "rubygem0"
     assert_field "Repository owner", with: "example"
@@ -320,13 +320,13 @@ class OIDCTest < ApplicationSystemTestCase
     assert_field "Workflow filename", with: "push_rubygem.yml"
     assert_field "Environment", with: "prod"
 
-    page.fill_in "RubyGem name", with: "rubygem1"
+    fill_in "RubyGem name", with: "rubygem1"
 
     click_button "Create Pending trusted publisher"
 
-    page.assert_text "Pending Trusted Publisher created"
-    page.assert_selector "h1", text: "Pending Trusted Publishers"
-    page.assert_text <<~TEXT
+    assert_text "Pending Trusted Publisher created"
+    assert_selector "h1", text: "Pending Trusted Publishers"
+    assert_text <<~TEXT
       rubygem1
       Delete
       GitHub Actions

@@ -24,14 +24,14 @@ class ProfileTest < ApplicationSystemTestCase
 
     visit profile_path("nick1")
 
-    assert page.has_content? "nick1"
+    assert_text "nick1"
 
     click_link "Edit Profile"
     fill_in "user_handle", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "nick2"
+    assert_text "nick2"
   end
 
   test "changing to an existing handle" do
@@ -45,7 +45,7 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "Username has already been taken"
+    assert_text "Username has already been taken"
   end
 
   test "changing to invalid handle does not affect rendering" do
@@ -57,8 +57,8 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "Username is too long (maximum is 40 characters)"
-    assert page.has_link?("nick1", href: "/profiles/nick1")
+    assert_text "Username is too long (maximum is 40 characters)"
+    assert has_link?("nick1", href: "/profiles/nick1")
   end
 
   test "changing email does not change email and asks to confirm email" do
@@ -73,8 +73,8 @@ class ProfileTest < ApplicationSystemTestCase
       click_button "Update"
     end
 
-    assert page.has_selector? "input[value='nick@example.com']"
-    assert page.has_selector? "#flash_notice", text: "You will receive " \
+    assert_selector "input[value='nick@example.com']"
+    assert_selector "#flash_notice", text: "You will receive " \
                                                      "an email within the next few minutes. It contains instructions " \
                                                      "for confirming your new email address."
 
@@ -88,10 +88,10 @@ class ProfileTest < ApplicationSystemTestCase
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
       visit link
 
-      assert page.has_content?("Your email address has been verified")
+      assert_text("Your email address has been verified")
       visit edit_profile_path
 
-      assert page.has_selector? "input[value='nick2@example.com']"
+      assert_selector "input[value='nick2@example.com']"
     end
 
     assert_event Events::UserEvent::EMAIL_VERIFIED, { email: "nick2@example.com" },
@@ -102,7 +102,7 @@ class ProfileTest < ApplicationSystemTestCase
     # email is hidden at public profile by default
     visit profile_path("nick1")
 
-    refute page.has_content?("Email Me")
+    refute_text("Email Me")
 
     sign_in
     visit profile_path("nick1")
@@ -115,7 +115,7 @@ class ProfileTest < ApplicationSystemTestCase
 
     visit profile_path("nick1")
 
-    assert page.has_content?("Email Me")
+    assert_text("Email Me")
   end
 
   test "adding X(formerly Twitter) username" do
@@ -130,7 +130,7 @@ class ProfileTest < ApplicationSystemTestCase
     click_link "Sign out"
     visit profile_path("nick1")
 
-    assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
+    assert has_link?("@nick1", href: "https://twitter.com/nick1")
   end
 
   test "deleting profile" do
@@ -142,7 +142,7 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert page.has_content? "Your account deletion request has been enqueued. " \
+    assert_text "Your account deletion request has been enqueued. " \
                              "We will send you a confirmation mail when your request has been processed."
   end
 
@@ -174,9 +174,9 @@ class ProfileTest < ApplicationSystemTestCase
     visit profile_path("nick1")
     click_link "Adoptions"
 
-    assert page.has_link?(rubygem.name, href: "/gems/#{rubygem.name}")
-    assert page.has_content? "special note"
-    assert page.has_content? "request note"
+    assert has_link?(rubygem.name, href: "/gems/#{rubygem.name}")
+    assert_text "special note"
+    assert_text "request note"
   end
 
   test "seeing the gems ordered by downloads" do
@@ -201,7 +201,7 @@ class ProfileTest < ApplicationSystemTestCase
     sign_in
     visit profile_path("nick1")
 
-    version = page.find(".gems__gem__version").text
+    version = find(".gems__gem__version").text
 
     assert_equal("1.0.1", version)
   end

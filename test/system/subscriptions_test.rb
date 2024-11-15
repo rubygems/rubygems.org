@@ -10,27 +10,27 @@ class SubscriptionsTest < ApplicationSystemTestCase
   test "subscribe to a gem" do
     visit subscriptions_path(as: @user.id)
 
-    assert page.has_content? "You're not subscribed to any gems yet."
+    assert_text "You're not subscribed to any gems yet."
 
     visit rubygem_path(@rubygem.slug)
 
     click_link "Subscribe"
 
-    assert page.has_content? "Unsubscribe"
+    assert_text "Unsubscribe"
 
     visit dashboard_path
 
-    assert page.has_content? @rubygem.name
-    assert page.has_content? @version.number
+    assert_text @rubygem.name
+    assert_text @version.number
 
     visit subscriptions_path
 
-    assert page.has_content? @rubygem.name
+    assert_text @rubygem.name
 
-    page.find("button[title='Unsubscribe']").click # rubocop:disable Capybara/SpecificActions
+    find("button[title='Unsubscribe']").click # rubocop:disable Capybara/SpecificActions
 
     visit subscriptions_path
 
-    assert page.has_content? "You're not subscribed to any gems yet."
+    assert_text "You're not subscribed to any gems yet."
   end
 end

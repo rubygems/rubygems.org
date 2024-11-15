@@ -17,7 +17,7 @@ class AdvancedSearchTest < ApplicationSystemTestCase
     click_button "advanced_search_submit"
 
     assert_current_path(search_path, ignore_query: true)
-    assert has_content? "LDAP"
+    assert_text "LDAP"
   end
 
   test "enter inside any field will submit form" do

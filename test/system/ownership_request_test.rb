@@ -20,11 +20,11 @@ class OwnershipRequestsTest < ApplicationSystemTestCase
     click_button "Create ownership request"
 
     within all("div.ownership__details")[1] do
-      assert page.has_css? "em", text: "italics"
-      assert page.has_css? "strong", text: "bold"
+      assert has_css? "em", text: "italics"
+      assert has_css? "strong", text: "bold"
     end
-    assert page.has_button? "Close"
-    refute page.has_button? "Approve"
+    assert has_button? "Close"
+    refute has_button? "Approve"
   end
 
   test "approve ownership request by owner" do
@@ -64,7 +64,7 @@ class OwnershipRequestsTest < ApplicationSystemTestCase
     visit_rubygem_adoptions_path(rubygem, @owner)
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-      page.find_by_id("owner_close_request").click
+      find_by_id("owner_close_request").click
     end
 
     assert_empty rubygem.ownership_requests
@@ -80,7 +80,7 @@ class OwnershipRequestsTest < ApplicationSystemTestCase
 
     visit rubygem_adoptions_path(rubygem.slug, as: user.id)
 
-    refute page.has_link? "Close all"
+    refute has_link? "Close all"
   end
 
   test "close all requests as owner" do

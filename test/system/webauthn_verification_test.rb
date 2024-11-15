@@ -19,7 +19,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(successful_verification_webauthn_verification_path)
-    assert page.has_content?("Success!")
+    assert_text("Success!")
     assert_link_is_expired
     assert_successful_verification_not_found
   end
@@ -35,7 +35,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     Browser::Chrome.any_instance.stubs(:safari?).returns true
 
-    assert page.has_content?("Success!")
+    assert_text("Success!")
     assert_current_path(successful_verification_webauthn_verification_path)
 
     assert_link_is_expired
@@ -54,8 +54,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text("Failed to fetch")
+    assert_text("Please close this browser and try again.")
     assert_link_is_expired
     assert_failed_verification_not_found
   end
@@ -71,8 +71,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert redirect_to("http://localhost:#{wrong_port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text("Failed to fetch")
+    assert_text("Please close this browser and try again.")
     assert_link_is_expired
     assert_failed_verification_not_found
   end
@@ -87,8 +87,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     click_on "Authenticate"
 
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text("Failed to fetch")
+    assert_text("Please close this browser and try again.")
     assert_link_is_expired
     assert_failed_verification_not_found
   end
@@ -103,8 +103,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
       click_on "Authenticate"
 
       assert redirect_to(failed_verification_webauthn_verification_path)
-      assert page.has_content?("The token in the link you used has either expired or been used already.")
-      assert page.has_content?("Please close this browser and try again.")
+      assert_text("The token in the link you used has either expired or been used already.")
+      assert_text("Please close this browser and try again.")
       assert_failed_verification_not_found
     end
   end
@@ -121,7 +121,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def assert_link_is_expired
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert page.has_content?("The token in the link you used has either expired or been used already.")
+    assert_text("The token in the link you used has either expired or been used already.")
   end
 
   def assert_poll_status(status)
@@ -139,13 +139,13 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def assert_successful_verification_not_found
     visit successful_verification_webauthn_verification_path
 
-    assert page.has_content?("Page not found.")
+    assert_text("Page not found.")
   end
 
   def assert_failed_verification_not_found
     visit failed_verification_webauthn_verification_path
 
-    assert page.has_content?("Page not found.")
+    assert_text("Page not found.")
   end
 
   class MockClientServer

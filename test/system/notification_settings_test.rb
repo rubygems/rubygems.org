@@ -3,6 +3,8 @@ require "capybara/minitest"
 
 class NotificationSettingsTest < ApplicationSystemTestCase
   include Capybara::Minitest::Assertions
+  include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
 
   test "changing email notification settings" do
     user = create(:user)

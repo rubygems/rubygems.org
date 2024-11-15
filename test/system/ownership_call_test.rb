@@ -16,7 +16,7 @@ class OwnershipCallsTest < ApplicationSystemTestCase
     end
     visit ownership_calls_path
 
-    assert_selector :css, ".gems__meter", text: "Displaying ownership calls 1 - 10 of 15 in total"
+    assert_selector :css, ".gems__meter", text: "DISPLAYING OWNERSHIP CALLS 1 - 10 OF 15 IN TOTAL"
     assert_selector :css, ".gems__gem", count: 10
   end
 
@@ -26,7 +26,7 @@ class OwnershipCallsTest < ApplicationSystemTestCase
     user = create(:user)
     visit rubygem_adoptions_path(rubygem.slug, as: user)
 
-    assert page.has_content? "There are no ownership calls for #{rubygem.name}"
+    assert_text "There are no ownership calls for #{rubygem.name}"
   end
 
   test "create ownership call as owner" do
@@ -34,7 +34,7 @@ class OwnershipCallsTest < ApplicationSystemTestCase
     create(:version, rubygem: rubygem, created_at: 2.years.ago)
     visit_rubygem_adoptions_path(rubygem, @owner)
 
-    assert page.has_field? "Note"
+    assert has_field? "Note"
     create_call("call about _note_ by *owner*.")
 
     assert_selector :css, "div.ownership__details > p", text: "call about note by owner."
@@ -46,10 +46,10 @@ class OwnershipCallsTest < ApplicationSystemTestCase
     user = create(:user)
     visit rubygem_adoptions_path(rubygem.slug, as: user)
 
-    assert page.has_link? @owner.handle, href: profile_path(@owner)
+    assert has_link? @owner.handle, href: profile_path(@owner)
     within "div.ownership__details" do
-      assert page.has_css? "em", text: "italics"
-      assert page.has_css? "strong", text: "bold"
+      assert has_css? "em", text: "italics"
+      assert has_css? "strong", text: "bold"
     end
   end
 
@@ -63,9 +63,9 @@ class OwnershipCallsTest < ApplicationSystemTestCase
       click_link "Adoption"
     end
 
-    assert page.has_content? "There are no ownership calls for #{rubygem.name}"
-    assert page.has_field? "Note"
-    assert page.has_button? "Create ownership request"
+    assert_text "There are no ownership calls for #{rubygem.name}"
+    assert has_field? "Note"
+    assert has_button? "Create ownership request"
   end
 
   test "hide adoptions link if popular gem" do
@@ -73,7 +73,7 @@ class OwnershipCallsTest < ApplicationSystemTestCase
     user = create(:user)
     visit rubygem_path(rubygem.slug, as: user)
 
-    refute page.has_selector? "a[href='#{rubygem_adoptions_path(rubygem.slug)}']"
+    refute has_selector? "a[href='#{rubygem_adoptions_path(rubygem.slug)}']"
   end
 
   test "show adoptions link if less popular gem" do

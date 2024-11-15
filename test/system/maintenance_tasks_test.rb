@@ -16,7 +16,7 @@ class MaintenanceTasksTest < ApplicationSystemTestCase
       assert_enqueued_jobs 1, only: MaintenanceTasks::TaskJob do
         click_on "Run"
 
-        page.assert_text "Enqueued"
+        assert_text "Enqueued"
       end
     end
 
@@ -28,7 +28,7 @@ class MaintenanceTasksTest < ApplicationSystemTestCase
 
     visit avo.resources_audit_path(audit)
 
-    page.assert_text "Manual create of Maintenance::UserTotpSeedEmptyToNilTask"
-    page.assert_text MaintenanceTasks::Run.sole.job_id
+    assert_text "Manual create of Maintenance::UserTotpSeedEmptyToNilTask"
+    assert_text MaintenanceTasks::Run.sole.job_id
   end
 end

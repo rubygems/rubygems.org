@@ -18,7 +18,7 @@ class PagesTest < ApplicationSystemTestCase
       visit "/?locale=#{locale}"
       click_link I18n.t("layouts.application.footer.about")
 
-      assert page.has_content? I18n.t("pages.about.title")
+      assert_text I18n.t("pages.about.title")
     end
   end
 
@@ -32,24 +32,24 @@ class PagesTest < ApplicationSystemTestCase
 
     visit "/pages/download"
 
-    assert page.has_content?("v3.5.22 - October 16, 2024")
+    assert_text("v3.5.22 - October 16, 2024")
   end
 
   test "renders /pages/data" do
     visit "/pages/data"
 
-    assert page.has_content?("PostgreSQL Data")
+    assert_text("PostgreSQL Data")
   end
 
   test "renders /pages/security" do
     visit "/pages/security"
 
-    assert page.has_content?("Security")
+    assert_text("Security")
   end
 
   test "renders /pages/sponsors" do
     visit "/pages/sponsors"
 
-    assert page.has_content?("Sponsors")
+    assert_text("Sponsors")
   end
 end

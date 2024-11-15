@@ -21,8 +21,8 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     assert_text "Register a new security device"
     assert_text "SECURITY DEVICE"
     assert_text "You don't have any security devices"
-    assert page.has_field?("Nickname")
-    assert page.has_button?("Register device")
+    assert has_field?("Nickname")
+    assert has_button?("Register device")
   end
 
   should "show the security device" do
@@ -36,9 +36,9 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     assert_text "Register a new security device"
     assert_text @primary.nickname
     assert_text @backup.nickname
-    assert page.has_button?("Delete")
-    assert page.has_field?("Nickname")
-    assert page.has_button?("Register device")
+    assert has_button?("Delete")
+    assert has_field?("Nickname")
+    assert has_button?("Register device")
   end
 
   should "be able to delete security devices" do
@@ -52,7 +52,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       assert_text @webauthn_credential.nickname
 
       click_on "Delete"
-      page.accept_alert
+      accept_alert
 
       assert_text "You don't have any security devices"
       assert_no_text @webauthn_credential.nickname
@@ -76,7 +76,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       assert_text @webauthn_credential.nickname
 
       click_on "Delete"
-      page.dismiss_confirm
+      dismiss_confirm
 
       assert_no_text "You don't have any security devices"
       assert_text @webauthn_credential.nickname
@@ -96,7 +96,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     assert_text "You don't have any security devices"
 
     options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
-    authenticator = page.driver.browser.add_virtual_authenticator(options)
+    authenticator = driver.browser.add_virtual_authenticator(options)
     WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -104,7 +104,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       fill_in "Nickname", with: @credential_nickname
       click_on "Register device"
 
-      assert page.has_content? "Recovery codes"
+      assert has_content? "Recovery codes"
     end
 
     assert_equal recovery_multifactor_auth_path, current_path
