@@ -82,7 +82,7 @@ class User < ApplicationRecord
     message: "can only contain letters, numbers, and underscores"
   }, allow_nil: true, length: { within: 0..20 }
 
-  validates_formatting_of :homepage_url, using: :url, allow_nil: true
+  validates_formatting_of :homepage_url, using: :url, allow_blank: true
 
   validates :password,
     length: { minimum: 10 },
