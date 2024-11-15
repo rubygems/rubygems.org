@@ -172,6 +172,12 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("012345678901234567890").for(:twitter_username)
     end
 
+    context "homepage url" do
+      should allow_value("https://www.mywebsite.com").for(:homepage_url)
+      should_not allow_value("http://non-secure-site.com").for(:homepage_url)
+      should_not allow_value("<html><body>hi</body><html>").for(:homepage_url)
+    end
+
     context "password" do
       should "be between 10 characters and 72 bytes" do
         user = build(:user, password: "%5a&12ed/")
