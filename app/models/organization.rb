@@ -13,7 +13,9 @@ class Organization < ApplicationRecord
   has_many :rubygems, dependent: :nullify
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
 
-  scope :deleted, -> { where.not(deleted_at: nil) }
+  default_scope { not_deleted }
+  scope :not_deleted, -> { where(deleted_at: nil) }
+  scope :deleted, -> { unscoped.where.not(deleted_at: nil) }
 
   after_create do
     record_event!(Events::OrganizationEvent::CREATED, actor_gid: memberships.first&.to_gid)
