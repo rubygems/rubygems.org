@@ -2,6 +2,7 @@ require "application_system_test_case"
 
 class OwnerTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
   include RubygemsHelper
 
   setup do
@@ -90,6 +91,8 @@ class OwnerTest < ApplicationSystemTestCase
       end
     end
 
+    accept_confirm
+
     refute has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
@@ -106,6 +109,8 @@ class OwnerTest < ApplicationSystemTestCase
       click_button "Remove"
     end
 
+    accept_confirm
+
     assert has_selector?("a[href='#{profile_path(@user.display_id)}']")
     assert has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
 
@@ -115,7 +120,11 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "verify using webauthn" do
-    create_webauthn_credential
+    create_webauthn_credential_while_signed_in
+
+    visit dashboard_path
+    click_on "User Dropdown Menu"
+    click_link(nil, href: "/sign_out")
 
     visit sign_in_path
     click_button "Authenticate with security device"
@@ -132,7 +141,11 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "verify failure using webauthn shows error" do
-    create_webauthn_credential
+    create_webauthn_credential_while_signed_in
+
+    visit dashboard_path
+    click_on "User Dropdown Menu"
+    click_link(nil, href: "/sign_out")
 
     visit sign_in_path
     click_button "Authenticate with security device"
@@ -224,6 +237,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "hides ownership link when not owner" do
+    click_on "User Dropdown Menu"
     click_link(nil, href: "/sign_out")
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem.slug)
@@ -232,6 +246,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "hides ownership link when not signed in" do
+    click_on "User Dropdown Menu"
     click_link(nil, href: "/sign_out")
     visit rubygem_path(@rubygem.slug)
 
@@ -239,6 +254,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "shows resend confirmation link when unconfirmed" do
+    click_on "User Dropdown Menu"
     click_link(nil, href: "/sign_out")
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
     sign_in_as(@other_user)
@@ -297,7 +313,6 @@ class OwnerTest < ApplicationSystemTestCase
   teardown do
     @authenticator&.remove!
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 
   private

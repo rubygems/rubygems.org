@@ -243,6 +243,5 @@ class PasswordResetTest < ApplicationSystemTestCase
   teardown do
     @authenticator&.remove!
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end

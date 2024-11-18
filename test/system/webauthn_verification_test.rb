@@ -113,7 +113,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @mock_client.kill_server
     @authenticator&.remove!
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 
   private
@@ -133,7 +132,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
 
     assert_equal status, JSON.parse(page.text)["status"]
-    fullscreen_headless_chrome_driver
   end
 
   def assert_successful_verification_not_found

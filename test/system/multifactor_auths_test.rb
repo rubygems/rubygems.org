@@ -11,7 +11,6 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     @user.disable_totp!
     @authenticator&.remove!
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 
   context "cache-control" do
@@ -144,8 +143,6 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     end
 
     should "user with webauthn can change mfa level" do
-      fullscreen_headless_chrome_driver
-
       sign_in
       visit edit_settings_path
 
