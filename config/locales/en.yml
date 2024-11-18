@@ -4,6 +4,7 @@ en:
   copied: Copied!
   copy_to_clipboard: Copy to clipboard
   edit: Edit
+  hide: Hide
   verification_expired: The verification has expired. Please verify again.
   feed_latest: RubyGems.org | Latest Gems
   feed_subscribed: RubyGems.org | Subscribed Gems
@@ -26,12 +27,17 @@ en:
   locale_name: English
   none: None
   not_found: Not Found
+  forbidden: Forbidden
+  api_gem_not_found: This gem could not be found
   api_key_forbidden: The API key doesn't have access
+  api_key_soft_deleted: An invalid API key cannot be used. Please delete it and create a new one.
+  api_key_insufficient_scope: This API key cannot perform the specified action on this gem.
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
   please_sign_in: Please sign in to continue.
   otp_incorrect: Your OTP code is incorrect. Please check it and retry.
   otp_missing: You have enabled multifactor authentication but no OTP code provided. Please fill it and retry.
   sign_in: Sign in
+  sign_out: Sign out
   sign_up: Sign up
   dependency_list: Show all transitive dependencies
   multifactor_authentication: Multi-factor authentication
@@ -39,8 +45,10 @@ en:
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} ago"
   title: RubyGems.org
-  update: Update
+  total_downloads: Total downloads
   try_again: Something went wrong. Please try again.
+  update: Update
+  view_all: View all
   advanced_search: Advanced Search
   authenticate: Authenticate
   helpers:
@@ -66,6 +74,14 @@ en:
         full_name: Full name
         handle: Username
         password: Password
+      ownership/role:
+        owner: Owner
+        maintainer: Maintainer
+      membership/role:
+        owner: Owner
+        admin: Admin
+        maintainer: Maintainer
+        outside_contributor: Outside Contributor
       api_key:
         oidc_api_key_role: OIDC API Key Role
       oidc/id_token:
@@ -86,11 +102,26 @@ en:
           attributes:
             expires_at:
               inclusion: "must be in the future"
+        organization:
+          attributes:
+            handle:
+              invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
         ownership:
           attributes:
             user_id:
               already_confirmed: "is already an owner of this gem"
               already_invited: "is already invited to this gem"
+        ownership_request:
+          attributes:
+            user_id:
+              taken: "has already requested ownership"
+              existing: "is already an owner"
+        user:
+          attributes:
+            handle:
+              invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+            password:
+              bcrypt_length: is too long (maximum is 72 bytes)
         version:
           attributes:
             gem_full_name:
@@ -161,6 +192,7 @@ en:
       save_key: "Note that we won't be able to show the key to you again. New API key:"
       mfa: MFA
       expiration: Expiration
+      update_owner: Update Owner
     new:
       new_api_key: New API key
     reset:
@@ -182,8 +214,9 @@ en:
       migrating_link_text: migrating
       mine: My Gems
       my_subscriptions: Subscriptions
-      no_owned_html: You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge.
+      no_owned_html: You haven't pushed any gems yet. Perhaps check out the guide on %{creating_link} a gem.
       no_subscriptions_html: You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!
+      organizations: Organizations
       title: Dashboard
   dependencies:
     show:
@@ -212,6 +245,7 @@ en:
         blog: Blog
         contribute: Contribute
         data: Data
+        docs: Docs
         designed_by: Designed by
         discussion_forum: Discuss
         gems_served_by: Gems served by
@@ -226,6 +260,9 @@ en:
         statistics: Stats
         status: Status
         supported_by: Supported by
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          is supported by
         tested_by: Tested by
         tracking_by: Tracking by
         uptime: Uptime
@@ -233,14 +270,18 @@ en:
         secured_by: Secured by
         looking_for_maintainers: maintainers wanted
       header:
+        profile: Profile
         dashboard: Dashboard
         settings: Settings
         edit_profile: Edit profile
         search_gem_html: Search Gems&hellip;
-        sign_in: Sign in
-        sign_out: Sign out
-        sign_up: Sign up
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
+  breadcrumbs:
+    home: Home
+    dashboard: Dashboard
+    settings: Settings
+    org_name: "Org: %{name}"
+    subscriptions: Subscriptions
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
@@ -318,6 +359,12 @@ en:
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
       body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host} by <b>%{remover}</b>.
+    owner_updated:
+      subject: Your role was updated for %{gem} gem
+      title: OWNER ROLE UPDATED
+      subtitle: Hi %{user_handle}!
+      body_html: Your role was updated to %{role} for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem.
+      body_text: Your role was updated to %{role} for %{gem} gem.
     ownerhip_request_closed:
       title: OWNERSHIP REQUEST
       subtitle: Hi %{handle}!
@@ -360,6 +407,8 @@ en:
       gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
     gem_trusted_publisher_added:
       title: TRUSTED PUBLISHER ADDED
+    admin_manual:
+      title: MESSAGE FROM RUBYGEMS.ORG ADMINS
   news:
     show:
       title: New Releases — All Gems
@@ -388,10 +437,6 @@ en:
       title: RubyGems.org Data Dumps
     download:
       title: Download RubyGems
-    faq:
-      title: FAQ
-    migrate:
-      title: Migrate gems
     security:
       title: Security
     sponsors:
@@ -427,12 +472,27 @@ en:
     strong_mfa_level_required_html: For protection of your account and your gems, you are required to change your MFA level to "UI and gem signin" or "UI and API". Please read our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">blog post</a> for more details.
     strong_mfa_level_recommended: For protection of your account and your gems, we encourage you to change your MFA level to "UI and gem signin" or "UI and API". Your account will be required to have MFA enabled on one of these levels in the future.
     setup_webauthn_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. <a href="https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html">Learn more</a>!
+    api:
+      mfa_required: Gem requires MFA enabled; You do not have MFA enabled yet.
+      mfa_required_not_yet_enabled: |
+        [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication at https://rubygems.org/totp/new.
+
+        Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+      mfa_required_weak_level_enabled: |
+        [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit.
+
+        Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+      mfa_recommended_not_yet_enabled: |
+        [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication at https://rubygems.org/totp/new.
+        Your account will be required to have MFA enabled in the future.
+      mfa_recommended_weak_level_enabled: |
+        [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit.
+        Your account will be required to have MFA enabled on one of these levels in the future.
     recovery:
-      copied: "[ copied ]"
       continue: Continue
       title: Recovery codes
-      copy: "[ copy ]"
       saved: I acknowledge that I have saved my recovery codes.
+      confirm_dialog: Leave without copying recovery codes?
       note_html: "Please <strong class='recovery__bold'>copy and save</strong> these recovery codes. You can use these codes to login and reset your MFA if your lose your authentication device. Each code can be used once."
       already_generated: You should have already saved your recovery codes.
     update:
@@ -496,7 +556,13 @@ en:
     failed_verification:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.
+  organization_onboardings:
+    confirm:
+      success: Organization onboarded successfully!
   owners:
+    edit:
+      role: Role
+      title: Edit Owner
     confirm:
       confirmed_email: You were added as an owner to %{gem} gem
       token_expired: The confirmation token has expired. Please try resending the token from the gem page.
@@ -508,6 +574,8 @@ en:
       confirmed_at: CONFIRMED AT
       added_by: ADDED BY
       action: ACTION
+      role: ROLE
+      role_field: Role
       email_field: Email / Handle
       submit_button: Add Owner
       info: add or remove owners
@@ -518,6 +586,9 @@ en:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+    update:
+      update_current_user_role: Can't update your own Role
+      success_notice: "%{handle} was succesfully updated."
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"
       failed_notice: Can't remove the only owner of the gem
@@ -601,6 +672,7 @@ en:
   rubygems:
     aside:
       downloads_for_this_version: For this version
+      gem_version_age: Version Released
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa: New versions require MFA
@@ -646,6 +718,7 @@ en:
       sha_256_checksum: SHA 256 checksum
       signature_period: Signature validity period
       expired: expired
+      provenance_header: Provenance
     version_navigation:
       previous_version: ← Previous version
       next_version: Next version →
@@ -687,7 +760,7 @@ en:
       updated: Updated
       yanked: Yanked
     show:
-      subtitle: for %{query}
+      subtitle_html: for <em>%{query}</em>
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})
       filter: "Filter:"
@@ -707,7 +780,6 @@ en:
     index:
       title: Stats
       all_time_most_downloaded: All Time Most Downloaded
-      total_downloads: Total downloads
       total_gems: Total gems
       total_users: Total users
   users:
@@ -773,8 +845,6 @@ en:
       continue: Continue
       title: You have successfully added a security device
       notice_html: 'Please <strong class="recovery__bold">copy and paste</strong> these recovery codes. You can use these codes to login if you lose your security device. Each code can be used once.'
-      copied: "[ copied ]"
-      copy: "[ copy ]"
       saved: I acknowledge that I have saved my recovery codes.
     webauthn_credential:
       confirm_delete: "Credential deleted"

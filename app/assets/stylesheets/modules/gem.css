@@ -96,6 +96,14 @@
   font-size: 18px;
   color: #141c22; }
 
+.gem__rubygem-version-age {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  display: block;
+  font-weight: 800;
+  font-size: 14px;
+  color: #141c22; }
+
 .gem__code-wrap {
   margin-top: 12px;
   position: relative;
@@ -179,35 +187,6 @@
 .gem__code__icon.static {
   position: static; }
 
-.gem__code__tooltip--copy,
-.gem__code__tooltip--copied {
-  display: none; }
-
-.clipboard-is-hover,
-.clipboard-is-active {
-  display: block;
-  position: absolute;
-  top: 45px;
-  right: 0;
-  width: auto;
-  padding-left: 10px;
-  padding-right: 10px;
-  z-index: 1;
-  border-radius: 6px;
-  background-color: #141c22;
-  text-transform: none;
-  line-height: 30px;
-  text-align: center;
-  color: #ffffff; }
-  .clipboard-is-hover:before,
-  .clipboard-is-active:before {
-    content: "";
-    position: absolute;
-    top: -15px;
-    right: 8px;
-    border: 8px solid transparent;
-    border-bottom: 8px solid #141c22; }
-
 .gem__link:before {
   margin-right: 16px; }
 
@@ -286,3 +265,23 @@
 .gem__dependencies:not(:first-of-type) {
   margin-top: 36px;
 }
+
+.gem__attestation {
+  display: flex;
+  flex-direction: row;
+  margin-top: 16px; }
+  .gem__attestation__built_on {
+    flex-grow: 1; }
+  .gem__attestation__grid {
+    display: grid;
+    grid-template-rows: repeat(3, 1rem);
+    grid-row-gap: 18px;
+    grid-column-gap: 16px; }
+    .gem__attestation__grid p {
+      height: 100%;
+      display: block; }
+    .gem__attestation__grid__left {
+      grid-template-columns: 24px max-content; }
+    .gem__attestation__grid__right {
+      grid-template-columns: max-content 1fr; }
+

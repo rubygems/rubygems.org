@@ -22,7 +22,7 @@ class OIDC::ApiKeyRole < ApplicationRecord
   scope :deleted, -> { where.not(deleted_at: nil) }
   scope :active, -> { where(deleted_at: nil) }
 
-  validates :name, presence: true, length: { maximum: 255 }, uniqueness: { scope: :user_id }
+  validates :name, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, uniqueness: { scope: :user_id }
 
   attribute :api_key_permissions, Types::JsonDeserializable.new(OIDC::ApiKeyPermissions)
   validates :api_key_permissions, presence: true, nested: true

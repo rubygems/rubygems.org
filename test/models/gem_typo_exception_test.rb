@@ -3,6 +3,7 @@ require "test_helper"
 class GemTypoExceptionTest < ActiveSupport::TestCase
   context "name validations" do
     should validate_uniqueness_of(:name).case_insensitive
+    should validate_length_of(:name).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
 
     should "be a valid factory" do
       assert_predicate build(:gem_typo_exception), :valid?

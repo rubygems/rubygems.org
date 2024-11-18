@@ -15,7 +15,7 @@ jobs:
   status_check:
     name: All required tests passing check
     needs: [rails]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: always()
     steps:
       - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
@@ -26,29 +26,37 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.5.14"
+            version: "3.5.20"
           - name: latest
             version: latest
-        ruby_version: ["3.3.3"]
+        ruby_version: ["3.3.5"]
         tests:
           - name: general
             command: test
           - name: system
             command: test:system
+        include:
+          - rubygems: { name: latest, version: latest }
+            ruby_version: "3.3.5"
+            tests: { name: "avo without pro", command: "test test/*/avo" }
     name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-22.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
+      REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.name != 'avo without pro' }}
+      AVO_LICENSE_KEY: ${{ secrets.AVO_LICENSE_KEY }}
+      BUNDLE_PACKAGER__DEV: ${{ secrets.BUNDLE_PACKAGER__DEV }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org
         with:
           ruby-version: ${{ matrix.ruby_version }}
           rubygems-version: ${{ matrix.rubygems.version }}
+          install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
@@ -56,7 +64,7 @@ jobs:
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
           path: tmp/capybara
@@ -64,6 +72,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.rubygems.name == 'locked' && (success() || failure())
-        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        uses: codecov/codecov-action@3b1354a6c45db9f1008891f4eafc1a7e94ce1d18 # v5.0.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -6,8 +6,12 @@ class WebauthnCredentialTest < ActiveSupport::TestCase
   should belong_to :user
   should validate_presence_of(:external_id)
   should validate_uniqueness_of(:external_id)
+  should validate_length_of(:external_id).is_at_most(512)
   should validate_presence_of(:public_key)
+  should validate_length_of(:public_key).is_at_most(512)
   should validate_presence_of(:nickname)
+  should validate_uniqueness_of(:nickname).scoped_to(:user_id)
+  should validate_length_of(:nickname).is_at_most(64)
   should validate_presence_of(:sign_count)
   should validate_numericality_of(:sign_count).is_greater_than_or_equal_to(0)
 

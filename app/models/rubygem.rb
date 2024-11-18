@@ -1,7 +1,6 @@
 class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
-  include Events::Recordable
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
@@ -26,6 +25,12 @@ class Rubygem < ApplicationRecord
   has_many :reverse_dependencies, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
+
+  belongs_to :organization, optional: true
+
+  # needs to come last so its dependent: :destroy works, since yanking a version
+  # will create an event
+  include Events::Recordable
 
   has_one :most_recent_version,
     lambda {
@@ -173,7 +178,7 @@ class Rubygem < ApplicationRecord
   end
 
   def unowned?
-    ownerships.blank?
+    ownerships.none? && !owned_by_organization?
   end
 
   def indexed_versions?
@@ -182,7 +187,14 @@ class Rubygem < ApplicationRecord
 
   def owned_by?(user)
     return false unless user
-    ownerships.exists?(user_id: user.id)
+    ownerships.exists?(user_id: user.id) || (owned_by_organization? && user_authorized_for_organization?(user))
+  end
+
+  def owned_by_with_role?(user, minimum_required_role)
+    return false if user.blank?
+    ownerships.user_with_minimum_role(user, minimum_required_role).exists?
+  rescue KeyError
+    false
   end
 
   def unconfirmed_ownerships
@@ -419,5 +431,13 @@ class Rubygem < ApplicationRecord
 
     sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, update_query)
     ActiveRecord::Base.connection.execute(sanitized_query)
+  end
+
+  def owned_by_organization?
+    organization.present?
+  end
+
+  def user_authorized_for_organization?(user)
+    organization.memberships.exists?(user: user)
   end
 end

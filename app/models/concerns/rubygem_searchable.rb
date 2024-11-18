@@ -24,7 +24,7 @@ module RubygemSearchable
           description: { type: "text", analyzer: "english", fields: { raw: { analyzer: "simple", type: "text" } } },
           suggest: { type: "completion", contexts: { name: "yanked", type: "category" } },
           yanked: { type: "boolean" },
-          downloads: { type: "integer" },
+          downloads: { type: "long" },
           updated: { type: "date" }
         }
       }
@@ -88,12 +88,16 @@ module RubygemSearchable
       {
         suggest: {
           input: name,
-          weight: downloads,
+          weight: suggest_weight_scale(downloads),
           contexts: {
             yanked: versions.none?(&:indexed?)
           }
         }
       }
+    end
+
+    def suggest_weight_scale(downloads)
+      Math.log10(downloads + 1).to_i
     end
   end
 end

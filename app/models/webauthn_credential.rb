@@ -1,9 +1,9 @@
 class WebauthnCredential < ApplicationRecord
   belongs_to :user
 
-  validates :external_id, uniqueness: true, presence: true
-  validates :public_key, presence: true
-  validates :nickname, presence: true, uniqueness: { scope: :user_id }
+  validates :external_id, uniqueness: true, presence: true, length: { maximum: 512 }
+  validates :public_key, presence: true, length: { maximum: 512 }
+  validates :nickname, presence: true, uniqueness: { scope: :user_id }, length: { maximum: 64 }
   validates :sign_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   after_create :send_creation_email

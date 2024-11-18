@@ -24,7 +24,7 @@ latest_dump
 coverage
 REVISION
 /.env*
+/.pumaenv.local
 /doc/erd.*
-
 /app/assets/builds/*
 !/app/assets/builds/.keep

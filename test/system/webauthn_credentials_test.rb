@@ -108,7 +108,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     end
 
     assert_equal recovery_multifactor_auth_path, current_path
-    click_on "[ copy ]"
+    click_on "Copy to clipboard"
     check "ack"
     click_on "Continue"
 

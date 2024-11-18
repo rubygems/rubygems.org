@@ -5,32 +5,9 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
-  def sign_in_as(user)
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: "github",
-      uid: "1",
-      credentials: {
-        token: user.oauth_token,
-        expires: false
-      },
-      info: {
-        name: user.login
-      }
-    )
-
-    create(:ip_address, ip_address: "127.0.0.1")
-
-    stub_github_info_request(user.info_data)
-
-    visit avo.root_path
-    click_button "Log in with GitHub"
-
-    page.assert_text user.login
-  end
-
   test "release reserved namespace" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     rubygem = create(:rubygem, created_at: 40.days.ago)
     rubygem_attributes = rubygem.attributes.with_indifferent_access
@@ -88,7 +65,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
   test "Yank a rubygem" do
     Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     security_user = create(:user, email: "security@rubygems.org")
     rubygem = create(:rubygem)
@@ -163,7 +140,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
   test "Yank all version of rubygem" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     security_user = create(:user, email: "security@rubygems.org")
     rubygem = create(:rubygem)
@@ -251,8 +228,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
   end
 
   test "add owner" do
+    requires_avo_pro # for search
+
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     security_user = create(:user, email: "security@rubygems.org")
     rubygem = create(:rubygem)
@@ -271,7 +250,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     page.assert_text "Must supply a sufficiently detailed comment"
 
     fill_in "Comment", with: "A nice long comment"
-    find_field("New owner").click
+    find_field("New owner").click(delay: 0.05)
+    find("form[role='search'] input").click
     send_keys new_owner.email
     find("li", text: new_owner.handle).click
 
@@ -314,7 +294,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
                 "token_expires_at" => [nil, ownership.token_expires_at.as_json],
                 "owner_notifier" => [nil, true],
                 "authorizer_id" => [nil, security_user.id],
-                "ownership_request_notifier" => [nil, true]
+                "ownership_request_notifier" => [nil, true],
+                "role" => [nil, ownership.role]
               },
               "unchanged" => {}
             },
@@ -332,7 +313,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
   test "upload versions file" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     visit avo.resources_rubygems_path
 
@@ -353,7 +334,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
   test "upload names file" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     visit avo.resources_rubygems_path
 
@@ -374,7 +355,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
   test "upload info file" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     version = create(:version)
     visit avo.resources_rubygem_path(version.rubygem)

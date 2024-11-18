@@ -25,33 +25,33 @@ require "webauthn/fake_client"
 require "shoulda/context"
 require "shoulda/matchers"
 require "helpers/admin_helpers"
+require "helpers/api_policy_helpers"
 require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
+require "helpers/policy_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require 'helpers/timescaledb_helpers'
+require "helpers/avo_helpers"
 require "webmock/minitest"
 require "phlex/testing/rails/view_helper"
 
 # setup license early since some tests are testing Avo outside of requests
 # and license is set with first request
-Avo::App.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new.response).license
+Avo::Current.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new.response).license
 
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    "chromedriver.storage.googleapis.com"
+    "chromedriver.storage.googleapis.com",
+    "search", # DevContainer services
+    "selenium",
+    "rails-app"
   ]
 )
 WebMock.globally_stub_request(:after_local_stubs) do |request|
-  avo_request_pattern = WebMock::RequestPattern.new(:post, "https://avohq.io/api/v1/licenses/check")
-  if avo_request_pattern.matches?(request)
-    { status: 200, body: { id: :pro, valid: true, payload: {} }.to_json,
-      headers: { "Content-Type" => "application/json" } }
-  end
-
   if WebMock::RequestPattern.new(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s={size}")).matches?(request)
     { status: 404, body: "", headers: {} }
   end
@@ -113,6 +113,16 @@ class ActiveSupport::TestCase
     return if Toxiproxy.running?
     raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]
     skip("Toxiproxy is not running, but was required for this test.")
+  end
+
+  def requires_avo_pro
+    return if Avo.configuration.license == "advanced" && defined?(Avo::Pro)
+
+    if ActiveRecord::Type::Boolean.new.cast(ENV["REQUIRE_AVO_PRO"])
+      raise "REQUIRE_AVO_PRO is set but Avo::Pro is missing in #{Rails.env}." \
+            "\nRAILS_GROUPS=#{ENV['RAILS_GROUPS'].inspect}\nAvo.license=#{Avo.license.inspect}"
+    end
+    skip "avo pro is not present but was required for this test"
   end
 
   def assert_changed(object, *attributes)
@@ -180,8 +190,9 @@ class ActiveSupport::TestCase
     fill_in "Nickname", with: credential_nickname
     click_on "Register device"
 
-    click_on "[ copy ]"
-    @mfa_recovery_codes = find_all(:css, ".recovery-code-list__item").map(&:text)
+    click_on "Copy to clipboard"
+    @mfa_recovery_codes = find(:css, ".recovery-code-list").value.split
+
     check "ack"
     click_on "Continue"
 
@@ -217,6 +228,22 @@ class ActionController::TestCase
     session[:verification] = 10.minutes.from_now
     session[:verified_user] = user.id
   end
+
+  def assert_text(text, context = page)
+    assert context.has_content?(text), "page is missing content #{text}"
+  end
+
+  def refute_text(text)
+    refute page.has_content?(text), "page has unexpected content #{text}"
+  end
+
+  def assert_selector(selector)
+    assert page.has_selector?(selector), "page is missing selector #{selector}"
+  end
+
+  def refute_selector(selector)
+    refute page.has_selector?(selector), "page has unexpected selector #{selector}"
+  end
 end
 
 class ActionDispatch::IntegrationTest
@@ -242,6 +269,8 @@ end
 
 class AdminPolicyTestCase < ActiveSupport::TestCase
   def setup
+    requires_avo_pro
+
     @authorization_client = Admin::AuthorizationClient.new
   end
 
@@ -254,12 +283,9 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
   end
 
   def refute_authorizes(user, record, action)
-    @authorization_client.authorize(user, record, action, policy_class: policy_class)
-    policy_class ||= policy!(user, record).class
-
-    flunk("Expected #{policy_class} not to authorize #{action} on #{record} for #{user}")
-  rescue Avo::NotAuthorizedError
-    # Expected
+    assert_raise(Avo::NotAuthorizedError) do
+      @authorization_client.authorize(user, record, action, policy_class: policy_class)
+    end
   end
 
   def policy_class
@@ -273,6 +299,14 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
   def policy_scope!(user, record)
     @authorization_client.apply_policy(user, record, policy_class: policy_class)
   end
+end
+
+class ApiPolicyTestCase < ActiveSupport::TestCase
+  include ApiPolicyHelpers
+end
+
+class PolicyTestCase < ActiveSupport::TestCase
+  include PolicyHelpers
 end
 
 class ComponentTest < ActiveSupport::TestCase

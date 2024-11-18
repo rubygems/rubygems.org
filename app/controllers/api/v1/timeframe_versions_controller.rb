@@ -31,7 +31,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
 
   def to_time
     @to_time ||= params[:to].blank? ? Time.zone.now : Time.iso8601(params[:to])
-  rescue ArgumentError
+  rescue ArgumentError, TypeError
     raise InvalidTimeframeParameterError, 'the "to" parameter must be iso8601 formatted'
   end
 

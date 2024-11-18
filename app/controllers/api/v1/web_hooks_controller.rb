@@ -1,10 +1,10 @@
 class Api::V1::WebHooksController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :verify_user_api_key
-  before_action :render_api_key_forbidden, if: :api_key_unauthorized?
   before_action :find_rubygem_by_name, :set_url, except: :index
 
   def index
+    authorize WebHook
     respond_to do |format|
       format.json { render json: @api_key.user.all_hooks }
       format.yaml { render yaml: @api_key.user.all_hooks }
@@ -12,7 +12,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def create
-    webhook = @api_key.user.web_hooks.build(url: @url, rubygem: @rubygem)
+    webhook = authorize @api_key.user.web_hooks.build(url: @url, rubygem: @rubygem)
     if webhook.save
       render(plain: webhook.success_message, status: :created)
     else
@@ -21,7 +21,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def remove
-    webhook = @api_key.user.web_hooks.find_by_rubygem_id_and_url(@rubygem&.id, @url)
+    webhook = authorize @api_key.user.web_hooks.find_by_rubygem_id_and_url(@rubygem&.id, @url)
     if webhook&.destroy
       render(plain: webhook.removed_message)
     else
@@ -33,11 +33,15 @@ class Api::V1::WebHooksController < Api::BaseController
     webhook = @api_key.user.web_hooks.new(url: @url)
     @rubygem ||= Rubygem.find_by_name("gemcutter")
 
-    if webhook.fire(request.protocol.delete("://"), request.host_with_port,
-                    @rubygem.most_recent_version, delayed: false)
-      render plain: webhook.deployed_message(@rubygem)
+    authorize webhook
+
+    response = webhook.fire(request.protocol.delete("://"), request.host_with_port,
+                            @rubygem.most_recent_version, delayed: false)
+
+    if response.fetch("status") == "success"
+      render plain: webhook.deployed_message(@rubygem) + hook_relay_message(response)
     else
-      render_bad_request webhook.failed_message(@rubygem)
+      render_bad_request webhook.failed_message(@rubygem) + hook_relay_message(response)
     end
   end
 
@@ -54,7 +58,20 @@ class Api::V1::WebHooksController < Api::BaseController
     @url = params[:url]
   end
 
-  def api_key_unauthorized?
-    !@api_key.can_access_webhooks?
+  def hook_relay_message(response)
+    status = response.fetch("status")
+    msg = +""
+    msg << "\nFailed with status #{status.inspect}: #{response['failure_reason']}" if status != "success"
+    if response.key?("responses") && response["responses"].any?
+      r = response.dig("responses", -1)
+      msg << "\nError: #{r['error']}" if r["error"]
+      msg << "\n\nResponse: #{r['code']}"
+      r.fetch("headers", []).each do |k, v|
+        msg << "\n#{k}: #{v}"
+      end
+      msg << "\n\n#{r['body']}"
+    end
+
+    msg
   end
 end

@@ -36,4 +36,11 @@ class LinksetTest < ActiveSupport::TestCase
       assert_equal @spec.homepage, @linkset.home
     end
   end
+
+  context "validations" do
+    %w[home code docs wiki mail bugs].each do |link|
+      should allow_value("http://example.com").for(link.to_sym)
+      should validate_length_of(link).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+    end
+  end
 end

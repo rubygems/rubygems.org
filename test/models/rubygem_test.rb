@@ -15,17 +15,22 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
+    should belong_to(:organization).optional
     should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
     should allow_value("awesome42").for(:name)
     should allow_value("factory_girl").for(:name)
     should allow_value("rack-test").for(:name)
     should allow_value("perftools.rb").for(:name)
+    should allow_value("s3-4-2").for(:name)
+    should allow_value("its.a.gem.ok").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
     should_not allow_value(".omghi").for(:name)
     should_not allow_value("-omghi").for(:name)
     should_not allow_value("_omghi").for(:name)
+    should_not allow_value("omg-").for(:name)
+    should_not allow_value("omg.gem").for(:name)
 
     context "with reserved Ruby gem" do
       setup do
@@ -265,6 +270,18 @@ class RubygemTest < ActiveSupport::TestCase
       assert_nil dependency.rubygem_id
       assert_equal dependency.unresolved_name, @rubygem.name
     end
+
+    should "allow destroying a gem with versions" do
+      @rubygem.save!
+      create(:ownership, rubygem: @rubygem)
+      create(:version, rubygem: @rubygem)
+      v2 = create(:version, rubygem: @rubygem)
+      create(:deletion, version: v2)
+
+      @rubygem.destroy!
+
+      assert_predicate Rubygem.where(id: @rubygem.id), :none?
+    end
   end
 
   context "with reverse dependencies" do
@@ -428,6 +445,26 @@ class RubygemTest < ActiveSupport::TestCase
       should "be not owned if no user" do
         refute @rubygem.owned_by?(nil)
         assert_predicate @rubygem, :unowned?
+      end
+    end
+
+    context "with a user that belongs to an organization" do
+      setup do
+        @owner = create(:user)
+        @admin = create(:user)
+        @maintainer = create(:user)
+        @guest = create(:user)
+
+        @organization = create(:organization, admins: [@admin], owners: [@owner], maintainers: [@maintainer], rubygems: [@rubygem])
+      end
+
+      should "be owned by organization user" do
+        assert @rubygem.owned_by?(@owner)
+        assert @rubygem.owned_by?(@admin)
+        assert @rubygem.owned_by?(@maintainer)
+        refute @rubygem.owned_by?(@guest)
+
+        refute_predicate @rubygem, :unowned?
       end
     end
 
@@ -1162,6 +1199,65 @@ class RubygemTest < ActiveSupport::TestCase
       assert_predicate @version_one, :yanked?
       refute_predicate @version_two, :yanked?
       refute_predicate @version_three, :yanked?
+    end
+  end
+
+  context "#owned_by_with_role?" do
+    setup do
+      @rubygem = create(:rubygem)
+      @owner = create(:user)
+    end
+
+    context "when the user is not an owner of a gem" do
+      should "return false" do
+        refute @rubygem.owned_by_with_role?(@owner, :maintainer)
+      end
+    end
+
+    context "when the user is an owner of a gem" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem)
+      end
+
+      should "return true" do
+        assert @rubygem.owned_by_with_role?(@owner, :maintainer)
+      end
+    end
+
+    context "when the role is less than the given value" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :maintainer)
+      end
+
+      should "return false" do
+        refute @rubygem.owned_by_with_role?(@owner, :owner)
+      end
+    end
+
+    context "when the role is more than the given value" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
+      end
+
+      should "return true" do
+        assert @rubygem.owned_by_with_role?(@owner, :maintainer)
+      end
+    end
+
+    context "when the role is equal to the given role" do
+      setup do
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
+      end
+
+      should "return true" do
+        assert @rubygem.owned_by_with_role?(@owner, :owner)
+      end
+    end
+
+    context "when the given role does not exist" do
+      should "not raise an argument" do
+        refute @rubygem.owned_by_with_role?(@owner, :nonexistent_role)
+      end
     end
   end
 end

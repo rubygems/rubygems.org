@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class OIDC::IdToken::TableComponent < ApplicationComponent
-  extend Dry::Initializer
-  option :id_tokens
+  prop :id_tokens, reader: :public
 
   include Phlex::Rails::Helpers::TimeTag
   include Phlex::Rails::Helpers::LinkToUnlessCurrent

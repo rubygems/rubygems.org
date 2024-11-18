@@ -7,10 +7,22 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
   should have_many(:rubygem_trusted_publishers)
   should have_many(:api_keys).inverse_of(:owner)
 
-  should validate_presence_of(:repository_owner)
-  should validate_presence_of(:repository_name)
-  should validate_presence_of(:workflow_filename)
-  should validate_presence_of(:repository_owner_id)
+  context "validations" do
+    setup do
+      stub_request(:get, Addressable::Template.new("https://api.github.com/users/{user}"))
+        .to_return(status: 404, body: "", headers: {})
+    end
+    should validate_presence_of(:repository_owner)
+    should validate_length_of(:repository_owner).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+    should validate_presence_of(:repository_name)
+    should validate_length_of(:repository_name).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+    should validate_presence_of(:workflow_filename)
+    should validate_length_of(:workflow_filename).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+    should validate_presence_of(:repository_owner_id)
+    should validate_length_of(:repository_owner_id).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+
+    should validate_length_of(:environment).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+  end
 
   test "validates publisher uniqueness" do
     publisher = create(:oidc_trusted_publisher_github_action)

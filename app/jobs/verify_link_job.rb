@@ -9,10 +9,6 @@ class VerifyLinkJob < ApplicationJob
   class LinkNotPresentError < StandardError; end
   class HTTPResponseError < StandardError; end
 
-  rescue_from NotHTTPSError do |_error|
-    record_failure
-  end
-
   rescue_from LinkNotPresentError, HTTPResponseError, *ERRORS do |error|
     logger.info "Linkback verification failed with error: #{error.message}", error: error, uri: link_verification.uri,
       linkable: link_verification.linkable.to_gid
@@ -21,6 +17,10 @@ class VerifyLinkJob < ApplicationJob
       record_failure
       retry_job(wait: 5.seconds * (3.5**link_verification.failures_since_last_verification.pred), error:) if should_retry?
     end
+  end
+
+  rescue_from NotHTTPSError, Faraday::RestrictIPAddresses::AddressNotAllowed do |_error|
+    record_failure
   end
 
   TIMEOUT_SEC = 5
@@ -68,6 +68,9 @@ class VerifyLinkJob < ApplicationJob
 
   def get(url)
     Faraday.new(nil, request: { timeout: TIMEOUT_SEC }) do |f|
+      # prevent SSRF attacks
+      f.request :restrict_ip_addresses, deny_rfc6890: true
+
       f.response :logger, logger, headers: false, errors: true
       f.response :raise_error
     end.get(

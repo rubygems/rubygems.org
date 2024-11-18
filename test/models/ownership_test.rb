@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OwnershipTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   should "be valid with factory" do
     assert_predicate build(:ownership), :valid?
   end
@@ -123,6 +125,41 @@ class OwnershipTest < ActiveSupport::TestCase
     end
   end
 
+  context "#update" do
+    context "when updating the role" do
+      setup do
+        @actor = create(:user)
+        @ownership = create(:ownership, role: :owner)
+
+        Current.user = @actor
+      end
+
+      should "record an event" do
+        @ownership.update!(role: :maintainer)
+
+        event = @ownership.rubygem.events.last
+        attributes = {
+          "user_agent_info" => nil,
+          "owner" => @ownership.user.display_handle,
+          "updated_by" => @actor.display_handle,
+          "actor_gid" => @actor.to_gid,
+          "owner_gid" => @ownership.user.to_gid,
+          "previous_role" => "owner",
+          "current_role" => "maintainer"
+        }
+
+        assert_equal "rubygem:owner:role_updated", event.tag
+        assert_equal attributes, event.additional.attributes
+      end
+
+      should "enqueue the owner updated email" do
+        assert_enqueued_emails 1 do
+          @ownership.update!(role: :maintainer)
+        end
+      end
+    end
+  end
+
   context "#valid_confirmation_token?" do
     setup do
       @ownership = create(:ownership)
@@ -165,14 +202,12 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "find owner by matching handle/id" do
-      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle!(@user.handle)
-      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle!(@user)
+      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle(@user.handle)
+      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle(@user)
     end
 
-    should "raise not found" do
-      assert_raise ActiveRecord::RecordNotFound do
-        @rubygem.ownerships.find_by_owner_handle!("wrong user")
-      end
+    should "return nil" do
+      assert_nil @rubygem.ownerships.find_by_owner_handle("wronguser")
     end
   end
 
@@ -246,6 +281,28 @@ class OwnershipTest < ActiveSupport::TestCase
       @ownership.confirm!
 
       refute_predicate @ownership, :unconfirmed?
+    end
+  end
+
+  context "#role" do
+    setup do
+      @ownership = create(:ownership)
+    end
+
+    should "set a default role" do
+      assert_predicate @ownership, :owner?
+    end
+  end
+
+  context "#user_with_minimum_role" do
+    setup do
+      @user = create(:user)
+      @ownership = create(:ownership, user: @user, role: :owner)
+    end
+
+    should "return the ownerships with a role less than or equal to the given role" do
+      assert_includes Ownership.user_with_minimum_role(@user, :owner), @ownership
+      assert_includes Ownership.user_with_minimum_role(@user, :maintainer), @ownership
     end
   end
 end

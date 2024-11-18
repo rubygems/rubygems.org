@@ -79,6 +79,48 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         assert_equal v, json[k], "value doesn't match for key: #{k}"
       end
     end
+
+    should "set the suggest json" do
+      json = @rubygem.search_data
+
+      assert_equal "example_gem", json[:suggest][:input]
+    end
+
+    should "calculate the suggestion weight based on the number of downloads" do
+      weights = [
+        [0, 0],
+        [10, 1],
+        [100, 2],
+        [1_000, 3],
+        [10_000, 4],
+        [100_000, 5],
+        [1_000_000, 6],
+        [10_000_000, 7],
+        [100_000_000, 8],
+        [1_000_000_000, 9]
+      ]
+
+      weights.each do |downloads, weight|
+        @rubygem.gem_download.update(count: downloads)
+        json = @rubygem.search_data
+
+        assert_equal weight, json[:suggest][:weight]
+      end
+    end
+
+    context "when the number of downloads exceeds a 32 bit integer" do
+      setup do
+        @rubygem = create(:rubygem, name: "large_downloads_example_gem", downloads: 10_000_000_000) # 10 Billion downloads
+        @version = create(:version, number: "1.0.0", rubygem: @rubygem)
+        import_and_refresh
+      end
+
+      should "allow the number of downloads to be stored as a 64 bit integer" do
+        json = @rubygem.search_data
+
+        assert_equal 10_000_000_000, json[:downloads]
+      end
+    end
   end
 
   context "rubygems analyzer" do

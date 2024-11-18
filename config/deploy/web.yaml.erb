@@ -61,6 +61,8 @@ spec:
             value: "<%= environment %>"
           - name: ENV
             value: "<%= environment %>"
+          - name: RAILS_GROUPS
+            value: "avo"
           - name: WEB_CONCURRENCY
             value: "<%= environment == 'production' ? 8 : 2 %>"
           - name: RAILS_MAX_THREADS
@@ -219,6 +221,10 @@ spec:
           preStop:
             exec:
               command: ["sleep", "25"]
+        volumeMounts:
+        - name: sigstore-signing-token
+          mountPath: /var/run/secrets/sigstore
+          readOnly: true
       - name: nginx
         image: nginx:1.25.2
         imagePullPolicy: IfNotPresent
@@ -298,3 +304,10 @@ spec:
           secret:
             secretName: nginx-basic-auth
         <% end %>
+        - name: sigstore-signing-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: sigstore-signing-token
+                expirationSeconds: 600
+                audience: sigstore

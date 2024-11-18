@@ -13,6 +13,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true
   has_one :deletion, dependent: :delete, inverse_of: :version, required: false
   has_one :yanker, through: :deletion, source: :user, inverse_of: :yanked_versions, required: false
+  has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
@@ -46,6 +47,11 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
   validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
+
+  validates :number, :platform, :gem_platform, :full_name, :gem_full_name, :canonical_number,
+    name_format: { requires_letter: false },
+    if: -> { validation_context == :create || number_changed? || platform_changed? },
+    presence: true
 
   validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create

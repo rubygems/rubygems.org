@@ -1,0 +1,52 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "85e397bacae5462238e8ce59c0fcd1045a414e603588ae313c5156c09a623fed",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/owners_controller.rb",
+      "line": 101,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.permit(:role)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OwnersController",
+        "method": "update_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "b57c75e671196846b60667930fc3c1a4d02122b7ec3ae5ae0cf8cecc6c1d0b63",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/api/v1/owners_controller.rb",
+      "line": 84,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.permit(:role)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::OwnersController",
+        "method": "ownership_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": ""
+    }
+  ],
+  "updated": "2024-09-21 16:16:50 -0700",
+  "brakeman_version": "6.2.1"
+}

@@ -9,6 +9,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     end
   end
 
+  setup do
+    NotifyWebHookJob.any_instance.stubs(:sleep)
+  end
+
   context "with incorrect api key" do
     context "no api key" do
       should "forbid access when creating a web hook" do
@@ -83,7 +87,18 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for all gems" do
         setup do
-          stub_request(:post, @url)
+          stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-fire")
+            .with(headers: {
+                    "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @url,
+                "HR_MAX_ATTEMPTS" => "1"
+                  }).to_return(status: 200, body: '{"id":"delivery-id"}', headers: { "Content-Type" => "application/json" })
+
+          stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
+            .to_return(status: 200, body: { "status" => "success", "responses" => [
+              { "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" } }
+            ] }.to_json, headers: { "Content-Type" => "application/json" })
+
           post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN,
                                 url: @url }
         end
@@ -98,7 +113,17 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for all gems that fails" do
         setup do
-          stub_request(:post, @url).to_timeout
+          stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-fire")
+            .with(headers: {
+                    "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @url,
+                "HR_MAX_ATTEMPTS" => "1"
+                  }).to_return(status: 200, body: '{"id":"delivery-id"}', headers: { "Content-Type" => "application/json" })
+
+          stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
+            .to_return(status: 200, body: { "status" => "failure",
+"failure_reason" => "timed out" }.to_json, headers: { "Content-Type" => "application/json" })
+
           post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN,
                                 url: @url }
         end
@@ -132,7 +157,18 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for a specific gem" do
         setup do
-          stub_request(:post, @url)
+          stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-fire")
+            .with(headers: {
+                    "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @url,
+                "HR_MAX_ATTEMPTS" => "1"
+                  }).to_return(status: 200, body: '{"id":"delivery-id"}', headers: { "Content-Type" => "application/json" })
+
+          stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
+            .to_return(status: 200, body: { "status" => "success", "responses" => [
+              { "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" } }
+            ] }.to_json, headers: { "Content-Type" => "application/json" })
+
           post :fire, params: { gem_name: @rubygem.name,
                                 url: @url }
         end
@@ -145,7 +181,17 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for a specific gem that fails" do
         setup do
-          stub_request(:post, @url).to_return(status: 404)
+          stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-fire")
+            .with(headers: {
+                    "Content-Type" => "application/json",
+                "HR_TARGET_URL" => @url,
+                "HR_MAX_ATTEMPTS" => "1"
+                  }).to_return(status: 200, body: '{"id":"delivery-id"}', headers: { "Content-Type" => "application/json" })
+
+          stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
+            .to_return(status: 200, body: { "status" => "failure",
+"failure_reason" => "exceeded", "responses" => [{ "code" => 404 }] }.to_json, headers: { "Content-Type" => "application/json" })
+
           post :fire, params: { gem_name: @rubygem.name,
                                 url: @url }
         end

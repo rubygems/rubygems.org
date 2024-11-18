@@ -64,25 +64,26 @@ class User < ApplicationRecord
   has_many :oidc_pending_trusted_publishers, class_name: "OIDC::PendingTrustedPublisher", inverse_of: :user, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, through: :rubygems, class_name: "OIDC::RubygemTrustedPublisher"
 
+  has_many :memberships, dependent: :destroy
+  has_many :organizations, through: :memberships
+
+  has_many :organization_onboardings, foreign_key: :created_by_id, dependent: :nullify, inverse_of: :created_by
+
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
-uniqueness: { case_sensitive: false }
+    uniqueness: { case_sensitive: false }
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
-  validates :handle, format: {
-    with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/,
-    message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
-  }, allow_nil: true
-  validates :handle, length: { within: 2..40 }, allow_nil: true
+  validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
+  validate :unique_with_org_handle
 
   validates :twitter_username, format: {
     with: /\A[a-zA-Z0-9_]*\z/,
     message: "can only contain letters, numbers, and underscores"
-  }, allow_nil: true
+  }, allow_nil: true, length: { within: 0..20 }
 
-  validates :twitter_username, length: { within: 0..20 }, allow_nil: true
   validates :password,
-    length: { within: 10..200 },
+    length: { minimum: 10 },
     unpwn: true,
     allow_blank: true, # avoid double errors with can't be blank
     unless: :skip_password_validation?
@@ -91,6 +92,7 @@ uniqueness: { case_sensitive: false }
 
   validate :unconfirmed_email_uniqueness
   validate :toxic_email_domain, on: :create
+  validate :password_byte_length
 
   def self.authenticate(who, password)
     # Avoid exceptions when string is invalid in the given encoding, _or_ cannot be converted
@@ -117,6 +119,11 @@ uniqueness: { case_sensitive: false }
     find_by(id: slug) || find_by(handle: slug)
   end
 
+  def self.find_by_name!(name)
+    raise ActiveRecord::RecordNotFound if name.blank?
+    find_by_email(name) || find_by!(handle: name)
+  end
+
   def self.find_by_name(name)
     return if name.blank?
     find_by_email(name) || find_by(handle: name)
@@ -141,8 +148,7 @@ uniqueness: { case_sensitive: false }
 
   def self.normalize_email(email)
     email.to_s.gsub(/\s+/, "")
-  rescue ArgumentError => e
-    Rails.error.report(e, handled: true)
+  rescue ArgumentError
     ""
   end
 
@@ -260,6 +266,19 @@ uniqueness: { case_sensitive: false }
     end
   end
 
+  def unblock!
+    raise ArgumentError, "User is not blocked" unless blocked?
+
+    update!(
+      email: blocked_email,
+      blocked_email: nil
+    )
+  end
+
+  def blocked?
+    blocked_email.present?
+  end
+
   def owns_gem?(rubygem)
     rubygem.owned_by?(self)
   end
@@ -305,8 +324,13 @@ uniqueness: { case_sensitive: false }
     errors.add(:email, I18n.t("activerecord.errors.messages.blocked", domain: domain)) if toxic
   end
 
+  def password_byte_length
+    return if skip_password_validation? || password.blank?
+    errors.add(:password, :bcrypt_length) if password.bytesize > 72
+  end
+
   def expire_all_api_keys
-    api_keys.unexpired.expire_all!
+    api_keys.expire_all!
   end
 
   def destroy_associations_for_discard
@@ -357,5 +381,9 @@ uniqueness: { case_sensitive: false }
 
   def record_password_update_event
     record_event!(Events::UserEvent::PASSWORD_CHANGED)
+  end
+
+  def unique_with_org_handle
+    errors.add(:handle, "has already been taken") if handle && Organization.where("lower(handle) = lower(?)", handle).any?
   end
 end

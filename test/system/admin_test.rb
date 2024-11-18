@@ -2,6 +2,8 @@ require "application_system_test_case"
 
 class AdminTest < ApplicationSystemTestCase
   test "development login as an admin" do
+    requires_avo_pro
+
     @admin_user = create(:admin_github_user, :is_admin)
 
     visit "/admin"

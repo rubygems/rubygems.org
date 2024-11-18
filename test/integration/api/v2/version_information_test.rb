@@ -29,9 +29,10 @@ class VersionInformationTest < ActionDispatch::IntegrationTest
   test "has required fields" do
     request_endpoint(@rubygem, "2.0.0")
     json_response = JSON.load(@response.body)
-    json_response["sha"]
-    json_response["platform"]
-    json_response["ruby_version"]
+
+    assert json_response.key?("sha")
+    assert json_response.key?("platform")
+    assert json_response.key?("ruby_version")
   end
 
   test "version does not exist" do

@@ -1,7 +1,9 @@
 FactoryBot.define do
   factory :api_key do
-    transient { key { "12345" } }
-    transient { rubygem { nil } }
+    transient do
+      sequence(:key, &:to_s)
+      rubygem { nil }
+    end
 
     owner factory: %i[user]
     name { "ci-key" }
@@ -13,6 +15,11 @@ FactoryBot.define do
 
     after(:build) do |api_key, evaluator|
       api_key.rubygem_id = evaluator.rubygem.id if evaluator.rubygem
+    end
+
+    trait :trusted_publisher do
+      owner factory: %i[oidc_trusted_publisher_github_action]
+      transient { key { SecureRandom.hex(4) } }
     end
   end
 end

@@ -54,12 +54,12 @@ module RequireMfa
   end
 
   def webauthn_failure
-    invalidate_mfa_session(@webauthn_error)
+    mfa_failure(@webauthn_error)
   end
 
   def invalidate_mfa_session(message)
     delete_mfa_session
-    mfa_failure(message)
+    login_failure(message)
   end
 
   def delete_mfa_session

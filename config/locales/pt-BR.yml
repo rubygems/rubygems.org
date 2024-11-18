@@ -1,9 +1,10 @@
 ---
 pt-BR:
   credentials_required:
-  copied:
-  copy_to_clipboard:
+  copied: Copiado
+  copy_to_clipboard: Copiar
   edit: Editar
+  hide: Esconder
   verification_expired:
   feed_latest: RubyGems.org | Últimas Gems
   feed_subscribed: RubyGems.org | Gems do seu Feed
@@ -25,13 +26,18 @@ pt-BR:
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
+  forbidden:
+  api_gem_not_found:
   api_key_forbidden:
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Acesso Negado. Por favor se registre em https://rubygems.org
   please_sign_in: Por favor, faça login em sua conta para continuar.
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
   otp_missing: Você habilitou a autenticação multifator mas nenhum código OTP foi
     fornecido. Por favor, preencha-o e tente novamente.
   sign_in: Fazer Login
+  sign_out: Sair
   sign_up: Cadastrar
   dependency_list: Mostrar todas as dependências
   multifactor_authentication: Autenticação Multifator
@@ -39,8 +45,10 @@ pt-BR:
   this_rubygem_could_not_be_found: Não foi possível localizar esta rubygem
   time_ago: "%{duration} atrás"
   title: RubyGems.org
-  update: Atualizar
+  total_downloads: Total de downloads
   try_again: Algo deu errado. Por favor, tente novamente.
+  update: Atualizar
+  view_all: Ver tudo
   advanced_search: Busca avançada
   authenticate:
   helpers:
@@ -66,6 +74,14 @@ pt-BR:
         full_name: Nome completo
         handle: Usuário
         password: Senha
+      ownership/role:
+        owner:
+        maintainer:
+      membership/role:
+        owner:
+        admin:
+        maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -86,11 +102,26 @@ pt-BR:
           attributes:
             expires_at:
               inclusion:
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed:
               already_invited:
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
+        user:
+          attributes:
+            handle:
+              invalid:
+            password:
+              bcrypt_length:
         version:
           attributes:
             gem_full_name:
@@ -161,6 +192,7 @@ pt-BR:
       save_key:
       mfa:
       expiration:
+      update_owner:
     new:
       new_api_key:
     reset:
@@ -183,9 +215,10 @@ pt-BR:
       mine: Minhas Gems
       my_subscriptions: Observando
       no_owned_html: Você ainda não enviou nenhuma gem. Verifique os guias sobre %{creating_link}
-        uma gem ou %{migrating_link} uma gem do RubyForge.
+        uma gem.
       no_subscriptions_html: Você ainda não está observando nenhuma gem. Visite uma
         %{gem_link} para poder observá-la!
+      organizations:
       title: Painel de Controle
   dependencies:
     show:
@@ -209,11 +242,12 @@ pt-BR:
   layouts:
     application:
       footer:
-        about: Sobre o Rubygems
+        about: Sobre
         api: API
         blog: Blog
         contribute: Como Contribuir
         data: Dump de Dados
+        docs: Documentação
         designed_by: Design
         discussion_forum: Fóruns
         gems_served_by: Provisionamento
@@ -228,6 +262,9 @@ pt-BR:
         statistics: Estatísticas
         status: Status
         supported_by: Patrocínio
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> é apoiado por
         tested_by: Testado por
         tracking_by: Coleta de Dados
         uptime: Uptime
@@ -235,14 +272,18 @@ pt-BR:
         secured_by:
         looking_for_maintainers:
       header:
+        profile: Perfil
         dashboard: Painel de Controle
         settings: Configurações da Conta
         edit_profile: Editar Perfil
         search_gem_html: Buscar Gems&hellip;
-        sign_in: Fazer Login
-        sign_out: Sair
-        sign_up: Cadastrar
       mfa_banner_html:
+  breadcrumbs:
+    home: Início
+    dashboard: Painel de Controle
+    settings: Configurações da Conta
+    org_name: 'Org: %{name}'
+    subscriptions: Observando
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
@@ -327,6 +368,12 @@ pt-BR:
       title:
       subtitle:
       body_html:
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title:
       subtitle:
@@ -362,6 +409,8 @@ pt-BR:
       gem_text:
       gem_html:
     gem_trusted_publisher_added:
+      title:
+    admin_manual:
       title:
   news:
     show:
@@ -406,10 +455,6 @@ pt-BR:
       title:
     download:
       title:
-    faq:
-      title:
-    migrate:
-      title:
     security:
       title:
     sponsors:
@@ -443,12 +488,17 @@ pt-BR:
     strong_mfa_level_required_html:
     strong_mfa_level_recommended:
     setup_webauthn_html:
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
-      copied:
       continue:
       title:
-      copy:
       saved:
+      confirm_dialog:
       note_html:
       already_generated:
     update:
@@ -509,7 +559,13 @@ pt-BR:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email:
       token_expired:
@@ -521,6 +577,8 @@ pt-BR:
       confirmed_at:
       added_by:
       action:
+      role:
+      role_field:
       email_field:
       submit_button:
       info:
@@ -530,6 +588,9 @@ pt-BR:
     resend_confirmation:
       resent_notice:
     create:
+      success_notice:
+    update:
+      update_current_user_role:
       success_notice:
     destroy:
       removed_notice:
@@ -614,6 +675,7 @@ pt-BR:
   rubygems:
     aside:
       downloads_for_this_version: Desta versão
+      gem_version_age: Versão lançada
       required_ruby_version: Versão Requerida do Ruby
       required_rubygems_version: Versão Requerida do RubyGems
       requires_mfa:
@@ -661,6 +723,7 @@ pt-BR:
       sha_256_checksum: SHA 256 checksum
       signature_period:
       expired:
+      provenance_header:
     version_navigation:
       previous_version:
       next_version:
@@ -712,7 +775,7 @@ pt-BR:
       updated:
       yanked:
     show:
-      subtitle: para %{query}
+      subtitle_html: para <em>%{query}</em>
       month_update:
       week_update:
       filter:
@@ -732,7 +795,6 @@ pt-BR:
     index:
       title: Estatísticas
       all_time_most_downloaded: Mais baixadas de todos os tempos
-      total_downloads: Total de downloads
       total_gems: Total de gems
       total_users: Total de usuários
   users:
@@ -798,8 +860,6 @@ pt-BR:
       continue:
       title:
       notice_html:
-      copied:
-      copy:
       saved:
     webauthn_credential:
       confirm_delete:

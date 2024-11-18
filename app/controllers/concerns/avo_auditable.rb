@@ -12,17 +12,17 @@ module AvoAuditable
       action = params.fetch(:action)
       fields = action == "destroy" ? {} : cast_nullable(model_params)
 
-      @model.errors.add :comment, "must supply a sufficiently detailed comment" if fields[:comment]&.then { _1.length < 10 }
-      raise ActiveRecord::RecordInvalid, @model if @model.errors.present?
-      action_name = "Manual #{action} of #{@model.class}"
+      @record.errors.add :comment, "must supply a sufficiently detailed comment" if fields[:comment]&.then { _1.length < 10 }
+      raise ActiveRecord::RecordInvalid, @record if @record.errors.present?
+      action_name = "Manual #{action} of #{@record.class}"
 
       value, @audit = in_audited_transaction(
-        auditable: @model,
+        auditable: @record,
         admin_github_user: _current_user,
         action: action_name,
         fields: fields.reverse_merge(comment: action_name),
         arguments: {},
-        models: [@model],
+        models: [@record],
         &blk
       )
       value

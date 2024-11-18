@@ -107,7 +107,7 @@ class VersionsControllerTest < ActionController::TestCase
         The date displayed was specified by the author in the gemspec.
       NOTICE
 
-      assert_select ".gem__version__date", text: "- January 01, 2000*", count: 1 do |elements|
+      assert_select ".gem__version__date", text: "January 01, 2000*", count: 1 do |elements|
         version = elements.first
 
         assert_equal(tooltip_text, version["data-tooltip"])

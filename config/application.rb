@@ -12,12 +12,17 @@ require "action_mailer/railtie"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
-require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
+
+# allow dotenv to specify RAILS_GROUPS
+if defined?(Dotenv::Rails)
+  Dotenv::Rails.load
+  Bundler.require(*Rails.groups)
+end
 
 module Gemcutter
   class Application < Rails::Application
@@ -44,7 +49,7 @@ module Gemcutter
     config.i18n.available_locales = [:en, :nl, "zh-CN", "zh-TW", "pt-BR", :fr, :es, :de, :ja]
     config.i18n.fallbacks = [:en]
 
-    config.middleware.insert 0, Rack::UTF8Sanitizer
+    config.middleware.insert 0, Rack::Sanitizer
     config.middleware.use Rack::Attack
     config.middleware.use Rack::Deflater
 
@@ -69,6 +74,10 @@ module Gemcutter
     config.active_support.cache_format_version = 7.1
 
     config.action_dispatch.rescue_responses["Rack::Multipart::EmptyContentError"] = :bad_request
+
+    config.action_dispatch.default_headers.merge!(
+      "Cross-Origin-Opener-Policy" => "same-origin"
+    )
   end
 
   def self.config
@@ -101,9 +110,9 @@ module Gemcutter
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
-  ENABLE_DEVELOPMENT_ADMIN_LOG_IN = Rails.env.local?
+  ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
   MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
   PAGES = %w[
-    about data download faq migrate security sponsors
+    about data download security sponsors
   ].freeze
 end

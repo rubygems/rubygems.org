@@ -2,6 +2,7 @@
 
 class ApplicationComponent < Phlex::HTML
   include Phlex::Rails::Helpers::Routes
+  extend PropInitializer::Properties
 
   class TranslationHelper
     include ActionView::Helpers::TranslationHelper

@@ -84,12 +84,13 @@ class MultifactorAuthsController < ApplicationController
     delete_mfa_session
     redirect_to edit_settings_path, flash: { error: message }
   end
+  alias login_failure mfa_failure
 
   def otp_verification_url
-    otp_update_multifactor_auth_url(token: current_user.confirmation_token, level: level_param)
+    otp_update_multifactor_auth_url(level: level_param)
   end
 
   def webauthn_verification_url
-    webauthn_update_multifactor_auth_url(token: current_user.confirmation_token, level: level_param)
+    webauthn_update_multifactor_auth_url(level: level_param)
   end
 end

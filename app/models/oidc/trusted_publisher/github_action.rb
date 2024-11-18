@@ -8,11 +8,9 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   before_validation :find_github_repository_owner_id
 
-  validates :repository_owner, presence: true
-  validates :repository_name, presence: true
-  validates :workflow_filename, presence: true
-  validates :environment, presence: true, allow_nil: true
-  validates :repository_owner_id, presence: true
+  validates :repository_owner, :repository_name, :workflow_filename, :repository_owner_id,
+    presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :environment, presence: true, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   validate :unique_publisher
   validate :workflow_filename_format
@@ -119,6 +117,24 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
         )
       end
     )
+  end
+
+  class SigstorePolicy
+    def initialize(trusted_publisher)
+      @trusted_publisher = trusted_publisher
+    end
+
+    def verify(cert)
+      ref = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.14")&.value_der&.then { OpenSSL::ASN1.decode(_1).value }
+      Sigstore::Policy::Identity.new(
+        identity: "https://github.com/#{@trusted_publisher.repository}/#{@trusted_publisher.workflow_slug}@#{ref}",
+        issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER
+      ).verify(cert)
+    end
+  end
+
+  def to_sigstore_identity_policy
+    SigstorePolicy.new(self)
   end
 
   def name

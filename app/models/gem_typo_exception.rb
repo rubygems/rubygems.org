@@ -1,5 +1,5 @@
 class GemTypoException < ApplicationRecord
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validate :rubygems_name
 
   private

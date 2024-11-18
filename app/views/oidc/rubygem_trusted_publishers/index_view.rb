@@ -5,10 +5,9 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
   include Phlex::Rails::Helpers::LinkTo
   include Phlex::Rails::Helpers::ContentFor
   include OIDC::RubygemTrustedPublishers::Concerns::Title
-  extend Dry::Initializer
 
-  option :rubygem
-  option :trusted_publishers
+  prop :rubygem, reader: :public
+  prop :trusted_publishers, reader: :public
 
   def view_template
     title_content

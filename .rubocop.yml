@@ -148,9 +148,6 @@ Style/StringLiterals:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Security/MarshalLoad:
-  Enabled: false
-
 Style/EmptyMethod:
   EnforcedStyle: expanded
 

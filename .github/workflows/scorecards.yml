@@ -20,7 +20,7 @@ permissions: read-all
 jobs:
   analysis:
     name: Scorecards analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       # Needed to upload the results to code-scanning dashboard.
       security-events: write
@@ -32,12 +32,12 @@ jobs:
 
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v3.1.0
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v3.1.0
         with:
           persist-credentials: false
 
       - name: "Run analysis"
-        uses: ossf/scorecard-action@dc50aa9510b46c811795eb24b2f1ba02a914e534 # v2.3.3
+        uses: ossf/scorecard-action@62b2cac7ed8198b15735ed49ab1e5cf35480ba46 # v2.4.0
         with:
           results_file: results.sarif
           results_format: sarif
@@ -67,6 +67,6 @@ jobs:
 
       # Upload the results to GitHub's code scanning dashboard.
       - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.11
+        uses: github/codeql-action/upload-sarif@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f # v3.27.4
         with:
           sarif_file: results.sarif

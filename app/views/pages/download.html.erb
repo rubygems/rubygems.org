@@ -1,30 +1,34 @@
 <% @title = t('.title') %>
-<% @subtitle = subtitle %>
 
-<div class="l-colspan t-body">
+<%= prose do %>
+  <h2><%= @title %></h2>
+  <% if (rubygems_version = Rubygem.current_rubygems_release) %>
+    <h4><%= "v#{rubygems_version.number} - #{nice_date_for(rubygems_version.authored_at)}" %></h4>
+  <% end %>
   <p>
-    RubyGems is a package management framework for Ruby. Download the latest version here:
-  </p>
-  <div id="formats" class="download__formats">
-    <%= link_to "tgz", "https://rubygems.org/rubygems/rubygems-#{version_number}.tgz", class: "download__format" %>
-    <%= link_to "zip", "https://rubygems.org/rubygems/rubygems-#{version_number}.zip", class: "download__format" %>
-    <%= link_to "gem", "https://rubygems.org/gems/rubygems-update-#{version_number}.gem", class: "download__format" %>
-    <%= link_to "git", "https://github.com/rubygems/rubygems", class: "download__format" %>
-  </div>
-  <p>
-  Or, to upgrade to the latest RubyGems:
+    RubyGems is a package management framework for Ruby.
+    <br>
+    Upgrade to the latest RubyGems at the command line:
   </p>
   <pre><code>$ gem update --system</code></pre>
   <p>
-    You might be running into some bug that prevents you from upgrading rubygems the standard way. In that case, you can try upgrading manually:
+    If you run into problems that prevent you from upgrading rubygems the standard way, you can try upgrading manually:
   </p>
   <ol class="manual">
-    <li><%=link_to "Download from above", "#formats" %></li>
-    <li>Unpack into a directory and <code>cd</code> there</li>
-    <li>Install with: <code>ruby setup.rb</code></li>
+    <li>Download the latest version</li>
+    <li>Unpack and <code>cd</code> into the unpacked directory</li>
+    <li>Install with:
+    <pre><code>ruby setup.rb</code></pre>
+    </li>
+    <li>
+      For more details and other options, run: <code>ruby setup.rb --help</code>
+    </li>
   </ol>
-  <p>
-  For more details and other options, see:
-  </p>
-  <pre><code>ruby setup.rb --help</code></pre>
-</div>
+  <h4>Download the latest version</h4>
+  <div id="formats" class="flex flex-row space-x-6">
+    <%= render ButtonComponent.new "tgz", "https://rubygems.org/rubygems/rubygems-#{rubygems_version}.tgz", type: :link %>
+    <%= render ButtonComponent.new "zip", "https://rubygems.org/rubygems/rubygems-#{rubygems_version}.zip", type: :link %>
+    <%= render ButtonComponent.new "gem", "https://rubygems.org/gems/rubygems-update-#{rubygems_version}.gem", type: :link %>
+    <%= render ButtonComponent.new "git", "https://github.com/rubygems/rubygems", type: :link %>
+  </div>
+<% end %>

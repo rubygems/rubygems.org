@@ -1,0 +1,56 @@
+<% content_for :aside do %>
+  <%= render "organizations/onboarding/summary", current_step: 2 %>
+<% end %>
+
+<%= render "organizations/onboarding/progress", current_step: 2 %>
+
+<h2 class="text-h4 mb-10">Add gems to your Org</h2>
+
+<%= form_with(model: @organization_onboarding, url: organization_onboarding_gems_path, method: :patch, data: { controller: "onboarding-gems counter" }) do |form| %>
+  <div class="border border-neutral-700 dark:border-neutral-300 rounded-lg" data-controller="checkbox-select-all">
+    <div class="flex flex-row p-4 w-full border-b border-neutral-700 dark:border-neutral-300 justify-between items-center">
+      <h3 class="text-b2 font-semibold">Gems<span data-counter-target="counter" class="ml-2 font-light text-neutral-600"><%= @organization_onboarding.rubygems.size %></span></h3>
+      <label class="flex items-center">
+        <span class="mr-3">Select all</span>
+        <input
+          type="checkbox"
+          data-checkbox-select-all-target="checkboxAll"
+          class="h-5 w-5 fill-white text-orange-500 bg-white dark:bg-black border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 rounded disabled:text-neutral-700 dark:disabled:text-neutral-700"
+        />
+      </label>
+    </div>
+    <ul class="divide-y divide-neutral-300 dark:divide-neutral-700">
+      <% available_rubygems.each do |gem| %>
+        <% required = @organization_onboarding.namesake_rubygem == gem %>
+
+        <li class="flex items-center">
+          <label class="flex w-full px-4 py-2 items-center justify-between space-x-2">
+            <span class="flex">
+              <span class="text-neutral-800 dark:text-white"><%= gem.name %></span>
+              <% if required %>
+                <span class="flex flex-row text-xs text-neutral-900 bg-orange-100 dark:text-white dark:bg-orange-900 px-2 py-0.5 rounded ml-2">Required</span>
+              <% end %>
+            </span>
+            <%
+              data = { counter_target: "checked" }
+              data[:checkbox_select_all_target] = "checkbox" unless required
+            %>
+            <%= check_box_tag(
+              "organization_onboarding[rubygems][]",
+              gem.id,
+              @organization_onboarding.rubygems.include?(gem.id),
+              class: "h-5 w-5 fill-white text-orange-500 bg-white dark:bg-black border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 rounded disabled:text-neutral-700 dark:disabled:text-neutral-700",
+              disabled: required,
+              data: data,
+            ) %>
+          </label>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
+    <%= render ButtonComponent.new("Back", organization_onboarding_name_path, type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
+  </div>
+<% end %>

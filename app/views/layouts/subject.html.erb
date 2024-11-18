@@ -1,0 +1,42 @@
+<%#
+  This is a subject focused layout, like a profile or organization where
+  the user or organization stays on the left side while the main content changes.
+  On mobile, the subject connects to the header in color and spacing, making
+  it clear that the subject content is part of the page context.
+%>
+<% content_for :main do %>
+  <div class="w-full px-8 pt-10 lg:pt-0 flex-col bg-white dark:bg-black lg:bg-neutral-050 lg:dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center">
+    <div class="max-w-screen-xl w-full mx-auto">
+      <!-- New design notice -->
+      <%= render AlertComponent.new(style: :neutral, closeable: true) do %>
+        Design Under Construction.
+        <a href="https://blog.rubygems.org/2024/10/15/our-new-design.html" class="text-blue-500 dark:text-blue-400 text-nowrap">Learn more</a>
+      <% end %>
+
+      <% flash.each do |name, msg| %>
+        <%= render AlertComponent.new(style: name, closeable: true) do %>
+          <%= flash_message(name, msg) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# At desktop width, these outer 2 divs make the full content background with 2 columns of content %>
+  <div class="flex-1 lg:w-full lg:px-8 bg-white dark:bg-black lg:bg-neutral-050 lg:dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center">
+    <div class="lg:max-w-screen-xl lg:w-full lg:mx-auto lg:flex lg:flex-row">
+      <%# At mobile width, the inner aside and main make two stacked full width sections %>
+      <aside class="w-full px-8 lg:px-0 pb-6 lg:w-72 lg:mx-0 lg:mb-32 bg-white dark:bg-black lg:bg-neutral-050 lg:dark:bg-neutral-950 border-b border-neutral-400 dark:border-neutral-800 lg:border-none">
+        <div class="flex flex-col max-w-screen-xl mx-auto w-full">
+          <%= yield :subject %>
+        </div>
+      </aside>
+
+      <main class="flex-1 w-full px-8 pt-10 lg:p-0 lg:ml-20 bg-neutral-050 dark:bg-neutral-950">
+        <div class="flex flex-col max-w-screen-xl w-full mx-auto">
+          <%= yield %>
+        </div>
+      </main>
+    </div>
+  </div>
+<% end %>
+<%= render template: "layouts/hammy" %>

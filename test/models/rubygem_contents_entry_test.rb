@@ -226,7 +226,7 @@ class RubygemContentsEntryTest < ActiveSupport::TestCase
     end
 
     should "not evaluate the reader when setting the body with a block" do
-      create_persisted_entry(file_entry.metadata) { raise }
+      assert_nothing_raised { create_persisted_entry(file_entry.metadata) { raise } }
     end
   end
 

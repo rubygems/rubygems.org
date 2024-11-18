@@ -28,13 +28,13 @@ class Admin::OIDC::ApiKeyRolePolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_create
-    assert_authorizes @admin, OIDC::ApiKeyRole, :avo_create?
+    refute_authorizes @admin, OIDC::ApiKeyRole, :avo_create?
 
     refute_authorizes @non_admin, OIDC::ApiKeyRole, :avo_create?
   end
 
   def test_avo_update
-    assert_authorizes @admin, @api_key_role, :avo_update?
+    refute_authorizes @admin, @api_key_role, :avo_update?
 
     refute_authorizes @non_admin, @api_key_role, :avo_update?
   end

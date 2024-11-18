@@ -188,4 +188,34 @@ module RubygemsHelper
       size: "large"
     }
   end
+
+  def copy_field_tag(name, value)
+    field = text_field_tag(
+      name,
+      value,
+      id: name,
+      class: "gem__code",
+      readonly: "readonly",
+      data: { clipboard_target: "source" }
+    )
+
+    button = tag.span(
+      "=",
+      class: "gem__code__icon",
+      title: t("copy_to_clipboard"),
+      data: {
+        action: "click->clipboard#copy",
+        clipboard_target: "button"
+      }
+    )
+
+    tag.div(
+      field + button,
+      class: "gem__code-wrap",
+      data: {
+        controller: "clipboard",
+        clipboard_success_content_value: "✔"
+      }
+    )
+  end
 end

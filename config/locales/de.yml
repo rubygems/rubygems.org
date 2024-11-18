@@ -4,6 +4,7 @@ de:
   copied: Kopiert!
   copy_to_clipboard: In die Zwischenablage kopieren
   edit: Bearbeiten
+  hide: Verbergen
   verification_expired:
   feed_latest: RubyGems.org | Neueste Gems
   feed_subscribed: RubyGems.org | Abonnierte Gems
@@ -26,7 +27,11 @@ de:
   locale_name: Deutsch
   none: None
   not_found: Nicht gefunden
+  forbidden:
+  api_gem_not_found:
   api_key_forbidden:
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
@@ -35,6 +40,7 @@ de:
   otp_missing: Sie haben die Mehrfaktor-Authentifizierung aktiviert, aber keinen OTP-Code
     angegeben. Bitte füllen Sie diesen aus und versuchen Sie es erneut.
   sign_in: Anmelden
+  sign_out: Abmelden
   sign_up: Registrieren
   dependency_list: Alle transitiven Abhängigkeiten anzeigen
   multifactor_authentication: Mehrfaktorauthentifizierung
@@ -42,8 +48,10 @@ de:
   this_rubygem_could_not_be_found: Dieses Ruby Gem konnte nicht gefunden werden.
   time_ago: seit %{duration}
   title: RubyGems.org
-  update: Aktualisieren
+  total_downloads: Downloads insgesamt
   try_again: Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
+  update: Aktualisieren
+  view_all: Alle anzeigen
   advanced_search: Erweiterte Suche
   authenticate: Authentifizieren
   helpers:
@@ -69,6 +77,14 @@ de:
         full_name: Vollständiger Name
         handle: Benutzername
         password: Passwort
+      ownership/role:
+        owner:
+        maintainer:
+      membership/role:
+        owner:
+        admin:
+        maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC-API-Schlüsselrolle
       oidc/id_token:
@@ -91,11 +107,26 @@ de:
           attributes:
             expires_at:
               inclusion:
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed: ist bereits Eigentümer dieses Gems
               already_invited: wurde bereits zu diesem Gem eingeladen
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
+        user:
+          attributes:
+            handle:
+              invalid:
+            password:
+              bcrypt_length:
         version:
           attributes:
             gem_full_name:
@@ -169,6 +200,7 @@ de:
         können. Neuer API-Schlüssel:'
       mfa: MFA
       expiration:
+      update_owner:
     new:
       new_api_key: Neuer API-Schlüssel
     reset:
@@ -193,9 +225,10 @@ de:
       mine: Meine Gems
       my_subscriptions: Abonnements
       no_owned_html: Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation
-        auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge.
+        auf %{creating_link}.
       no_subscriptions_html: Du hast noch keine Gems abonniert. Besuche %{gem_link}
         um das Gem zu abonnieren!
+      organizations:
       title: Dashboard
   dependencies:
     show:
@@ -226,6 +259,7 @@ de:
         blog: Blog
         contribute: Beitragen
         data: Daten
+        docs: Dokumentation
         designed_by: Design von
         discussion_forum: Diskussion
         gems_served_by: Gems angeboten von
@@ -240,6 +274,9 @@ de:
         statistics: Statistiken
         status: Status
         supported_by: Unterstützt von
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          wird unterstützt von
         tested_by:
         tracking_by: Getrackt von
         uptime: Betriebszeit
@@ -247,14 +284,18 @@ de:
         secured_by:
         looking_for_maintainers:
       header:
+        profile: Profil
         dashboard: Dashboard
-        settings:
-        edit_profile:
+        settings: Einstellungen
+        edit_profile: Profil bearbeiten
         search_gem_html: Suche Gems&hellip;
-        sign_in: Anmelden
-        sign_out: Abmelden
-        sign_up: Registrieren
       mfa_banner_html:
+  breadcrumbs:
+    home: Startseite
+    dashboard: Dashboard
+    settings: Einstellungen
+    org_name: 'Organisation: %{name}'
+    subscriptions: Abonnements
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -352,6 +393,12 @@ de:
       subtitle: Hallo %{user_handle}!
       body_html: <b>Du</b> wurdest als Besitzer für das <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>-Gem
         auf %{host} von <b>%{remover}</b> entfernt.
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: ANFRAGE ZUR BESITZERRECHTIGUNG
       subtitle: Hallo %{handle}!
@@ -410,6 +457,8 @@ de:
         gepusht wurde.
     gem_trusted_publisher_added:
       title: VERTRAUENSWÜRDIGER PUBLISHER HINZUGEFÜGT
+    admin_manual:
+      title:
   news:
     show:
       title: Neue Veröffentlichungen — Alle Gems
@@ -421,45 +470,41 @@ de:
     about:
       contributors_amount: "%{count} Rubyists"
       downloads_amount: Millionen von Gem-Downloads
-      checkout_code: bitte prüfe den Code
-      mit_licensed: MIT-lizenziert
+      checkout_code: sieh dir einfach den Code an
+      mit_licensed: MIT Lizenz
       logo_header: Auf der Suche nach unserem Logo?
-      logo_details: Wähle einfach den Download-Button, um drei .PNGs und eine .SVG
-        des RubyGems-Logos für dich zu erhalten.
+      logo_details: Klick einfach auf den Download-Button, um drei PNGs und eine SVG
+        des RubyGems-Logos zu erhalten.
       founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und
-        hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems
-        1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale
-        Rolle in der Ruby-Community zu verfestigen.
-      support_html: Obwohl RubyGems.org nicht von einem bestimmten Unternehmen ausgeführt
+        ist seitdem dank %{contributors} und %{downloads} gewachsen. Mit dem Release
+        von RubyGems 1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt,
+        um ihre zentrale Rolle in der Ruby-Community zu verdeutlichen.
+      support_html: Obwohl RubyGems.org nicht von einem zentralen Unternehmen geführt
         wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design,
-        die Illustrationen und die Front-End-Entwicklung für dieser Webseite wurden
-        von %{dockyard} erstellt. %{github} hat auch von unschätzbarem Wert uns geholfen
-        den Code mit anderen Entwicklern zuteilen, um an dem Code leichter zusammenarbeiten.
-        Die Website wurde mit %{heroku} gestartet, dessen großen Dienst uns geholfen,
-        RubyGems als eine praktikable Lösung zu erweisen, wo die ganze Gemeinschaft
-        darauf verlassen kann. Our infrastructure is currently hosted on %{aws}.
+        die Illustrationen und die Frontend-Entwicklung wurden von %{dockyard} erstellt.
+        %{github} war auch von unschätzbarem Wert und hat uns sehr geholfen, zusammenzuarbeiten
+        und Code zu teilen. Die Website wurde mit %{heroku} gestartet, großartiger
+        Service dazu beitrug, RubyGems als eine praktikable Lösung zu beweisen, auf
+        die sich die gesamte Community verlassen kann. Unsere Infrastruktur wird derzeit
+        auf %{aws} gehostet.
       technical_html: 'Einige Einblicke in die technischen Aspekte dieser Webseite:
-        Es ist 100% in Ruby geschrieben. Die Hauptseite ist verwendet die %{rails}-Software.
-        Die Gems werden in %{s3}, served by %{fastly}, gehostet und die Zeit zwischen
-        der Veröffentlichung eines neuen Gems und nachdem er bereit zur Installation
-        freigegeben ist, ist minimal. Für mehr Informationen siehe %{source_code}
-        (%{license}) auf GitHub.'
+        Sie ist zu 100% in Ruby geschrieben. Die Hauptseite ist eine %{rails} App.
+        Die Gems werden auf %{s3} gehostet und über %{fastly} ausgeliefert, und die
+        Zeit nach der Veröffentlichung eines neuen Gems, bis es zur Installation bereit
+        seht, beträgt meistens nur einige wenige Sekunden. Für mehr Informationen
+        %{source_code}, der mit der %{license} auf GitHub bereitseht.'
       title: Über uns
       purpose:
-        better_api: Bereitstellen eines besseren APIs für den Umgang mit Gems
-        enable_community: Der Gemeinschaft ermöglichen, die Webseite zu verbessern
+        better_api: Eine bessere API bereitzustellen, um mit Gems zu arbeiten
+        enable_community: Es der Community zu ermöglichen, diese Webseite zu verbessern
           und zu erweitern
-        header: 'Willkommen in %{site}, die Community für Ruby Gem-Hostingservice.
-          Die Gründe sind vielfältig:'
-        transparent_pages: Erstellen transparenter und zugänglicher Projektseiten
+        header: 'Willkommen bei RubyGems.org, dem Gem-Hosting-Srrvice der Ruby-Community.
+          Dieses Projekt hat drei Ziele:'
+        transparent_pages: Mehr transparente und barrierefreie Projektseiten zu erstellen
     data:
       title: RubyGems.org Data Dumps
     download:
       title: Download RubyGems
-    faq:
-      title: FAQ
-    migrate:
-      title: Migrate gems
     security:
       title: Security
     sponsors:
@@ -511,12 +556,17 @@ de:
       die Sicherheit deines Kontos, indem du <a href=\"/settings/edit#security-device\">ein
       neues Gerät einrichtest</a>. <a href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">Erfahre
       mehr</a>!"
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
-      copied: "[ kopiert ]"
       continue: Weiter
       title: Wiederherstellungscodes
-      copy: "[ kopieren ]"
       saved: Ich bestätige, dass ich meine Wiederherstellungscodes gespeichert habe.
+      confirm_dialog:
       note_html: Bitte <strong class='recovery__bold'>kopieren und speichern</strong>
         Sie diese Wiederherstellungscodes. Sie können diese Codes verwenden, um sich
         anzumelden und Ihre MFA zurückzusetzen, wenn Sie Ihr Authentifizierungsgerät
@@ -593,7 +643,13 @@ de:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email:
       token_expired:
@@ -605,6 +661,8 @@ de:
       confirmed_at:
       added_by:
       action:
+      role:
+      role_field:
       email_field:
       submit_button:
       info:
@@ -614,6 +672,9 @@ de:
     resend_confirmation:
       resent_notice:
     create:
+      success_notice:
+    update:
+      update_current_user_role:
       success_notice:
     destroy:
       removed_notice:
@@ -698,6 +759,7 @@ de:
   rubygems:
     aside:
       downloads_for_this_version: Für diese Version
+      gem_version_age: Version veröffentlicht
       required_ruby_version: Erforderliche Ruby-Version
       required_rubygems_version:
       requires_mfa:
@@ -743,6 +805,7 @@ de:
       sha_256_checksum: SHA 256-Prüfsumme
       signature_period:
       expired:
+      provenance_header:
     version_navigation:
       previous_version:
       next_version:
@@ -784,7 +847,7 @@ de:
       updated:
       yanked:
     show:
-      subtitle: für %{query}
+      subtitle_html: für <em>%{query}</em>
       month_update:
       week_update:
       filter:
@@ -804,7 +867,6 @@ de:
     index:
       title:
       all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
-      total_downloads: Downloads insgesamt
       total_gems: Gems insgesamt
       total_users: Benutzer insgesamt
   users:
@@ -870,8 +932,6 @@ de:
       continue:
       title:
       notice_html:
-      copied:
-      copy:
       saved:
     webauthn_credential:
       confirm_delete:

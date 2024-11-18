@@ -1,0 +1,17 @@
+<%= render "organizations/onboarding/progress", current_step: 4 %>
+
+<h2 class="text-h4 mb-10">Finalize</h2>
+
+<p class="mb-10">Review the summary and confirm everything looks good.</p>
+<p>Your Org handle is permanent, and will require support to update beyond this point. Everything else can be updated any time.</p>
+
+<div class="mt-10">
+  <%= render "organizations/onboarding/summary", current_step: 4 %>
+</div>
+
+<%= form_with(model: @organization_onboarding, url: organization_onboarding_confirm_path, method: :patch) do |form| %>
+  <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
+    <%= render ButtonComponent.new("Back", organization_onboarding_users_path, type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Create Org", type: :submit, style: :fill) %>
+  </div>
+<% end %>

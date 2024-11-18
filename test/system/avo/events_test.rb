@@ -5,29 +5,8 @@ class Avo::EventsSystemTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
-  def sign_in_as(user)
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: "github",
-      uid: "1",
-      credentials: {
-        token: user.oauth_token,
-        expires: false
-      },
-      info: {
-        name: user.login
-      }
-    )
-    @ip_address = create(:ip_address, ip_address: "127.0.0.1")
-    stub_github_info_request(user.info_data)
-
-    visit avo.root_path
-    click_button "Log in with GitHub"
-
-    page.assert_text user.login
-  end
-
   test "user events" do
-    sign_in_as(create(:admin_github_user, :is_admin))
+    avo_sign_in_as(create(:admin_github_user, :is_admin))
 
     visit avo.root_path
     click_link "Events user events"
@@ -46,7 +25,7 @@ class Avo::EventsSystemTest < ApplicationSystemTestCase
   end
 
   test "rubygem events" do
-    sign_in_as(create(:admin_github_user, :is_admin))
+    avo_sign_in_as(create(:admin_github_user, :is_admin))
 
     visit avo.root_path
     click_link "Events rubygem events"

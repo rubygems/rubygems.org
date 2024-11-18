@@ -12,8 +12,10 @@ class LogTicketTest < ActiveSupport::TestCase
   end
 
   should "allow different keys for the same directory" do
-    LogTicket.create!(directory: "test", key: "bar")
-    LogTicket.create!(directory: "test", key: "baz")
+    assert_nothing_raised do
+      LogTicket.create!(directory: "test", key: "bar")
+      LogTicket.create!(directory: "test", key: "baz")
+    end
   end
 
   context "#pop" do

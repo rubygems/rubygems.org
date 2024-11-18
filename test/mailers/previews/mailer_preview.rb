@@ -96,6 +96,13 @@ class MailerPreview < ActionMailer::Preview
     OwnersMailer.owner_added(user.id, owner.id, authorizer.id, gem.id)
   end
 
+  def owner_updated
+    ownership = Ownership.last
+    owner = User.last
+
+    OwnersMailer.with(ownership: ownership, authorizer: owner).owner_updated
+  end
+
   def api_key_created
     api_key = ApiKey.where(owner_type: "User").last
     Mailer.api_key_created(api_key.id)
@@ -214,5 +221,15 @@ class MailerPreview < ActionMailer::Preview
     user_id = User.last.id
 
     Mailer.totp_disabled(user_id, Time.now.utc)
+  end
+
+  def admin_manual
+    Mailer.admin_manual(User.last, "A subject", <<~TEXT)
+      A body
+      with multiple lines
+      and a link to https://example.com
+      and an emoji 🎉
+      and a p tag <p foo="bar" style="color: yellow;">with html</p> and a <a href="https://example.com">link</a>
+    TEXT
   end
 end

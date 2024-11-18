@@ -2,7 +2,7 @@ class WebauthnVerification < ApplicationRecord
   belongs_to :user
 
   validates :user_id, uniqueness: true
-  validates :path_token, presence: true, uniqueness: true
+  validates :path_token, presence: true, uniqueness: true, length: { maximum: 128 }
   validates :path_token_expires_at, presence: true
 
   def expire_path_token

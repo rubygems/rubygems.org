@@ -10,8 +10,14 @@ class Avo::GemNameReservationsControllerTest < ActionDispatch::IntegrationTest
     get avo.resources_gem_name_reservations_path
 
     assert_response :success
+  end
 
-    # test resource search_query scope
+  test "resource search_query scope" do
+    requires_avo_pro
+
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    create(:gem_name_reservation, name: "hello")
+
     get avo.avo_api_search_path(q: "hello")
 
     assert_response :success

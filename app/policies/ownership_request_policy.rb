@@ -5,14 +5,14 @@ class OwnershipRequestPolicy < ApplicationPolicy
   delegate :rubygem, to: :record
 
   def create?
-    current_user?(record.user) && Pundit.policy!(user, rubygem).request_ownership?
+    current_user?(record.user) && user_authorized?(rubygem, :request_ownership?)
   end
 
   def approve?
-    rubygem.owned_by?(user)
+    rubygem_owned_by?(user)
   end
 
   def close?
-    current_user?(record.user) || rubygem.owned_by?(user)
+    current_user?(record.user) || rubygem_owned_by?(user)
   end
 end

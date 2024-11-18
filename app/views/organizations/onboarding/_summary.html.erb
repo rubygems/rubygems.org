@@ -1,0 +1,71 @@
+<% current_step ||= 1 %>
+
+<!-- Summary Header -->
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-h4">Summary</h2>
+</div>
+
+<%# Name Section %>
+<div class="mb-6">
+  <div class="flex justify-between items-center">
+    <h3 class="text-b1 text-neutral-900 dark:text-white">Name</h3>
+    <% if current_step > 1 %>
+      <%= link_to "edit", organization_onboarding_name_path, class: "text-orange-500" %>
+    <% end %>
+  </div>
+  <div class="mt-4">
+    <p class="flex justify-between">
+      <span class="font-semibold">Org handle</span>
+      <span class="text-neutral-700 dark:text-neutral-300 ml-2"><%= @organization_onboarding.organization_handle %></span>
+    </p>
+    <p class="flex justify-between mt-2">
+      <span class="font-semibold">Org name</span>
+      <span class="text-neutral-700 dark:text-neutral-300 ml-2"><%= @organization_onboarding.organization_name %></span>
+    </p>
+  </div>
+</div>
+<hr class="border-neutral-400 my-6">
+
+<%# Gems Section %>
+<div class="mb-6">
+  <div class="flex justify-between items-center">
+    <h3 class="text-b1 text-neutral-900 dark:text-white">
+      Gems
+      <span class="text-neutral-600 font-light ml-1"><%= @organization_onboarding.selected_rubygems.size %></span>
+    </h3>
+    <% if current_step > 2 %>
+      <%= link_to "edit", organization_onboarding_gems_path, class: "text-orange-500" %>
+    <% end %>
+  </div>
+  <ul class="mt-4">
+    <% @organization_onboarding.selected_rubygems.each do |gem| %>
+      <li class="mt-2 text-neutral-800 dark:text-neutral-200"><%= gem.name %></li>
+    <% end %>
+  </ul>
+</div>
+<hr class="border-neutral-400 my-6">
+
+<%# People Section %>
+<div class="mb-6">
+  <div class="flex justify-between items-center">
+    <h3 class="text-b1 text-neutral-900 dark:text-white">
+      People
+      <span class="text-neutral-600 font-light ml-1"><%= approved_invites.size %></span>
+    </h3>
+    <% if current_step > 3 %>
+      <%= link_to "edit", organization_onboarding_users_path, class: "text-orange-500" %>
+    <% end %>
+  </div>
+  <ul class="mt-2 items-center space-y-4">
+    <% approved_invites.each do |invite| %>
+      <% user = invite.user %>
+      <li class="flex flex-row w-full justify-between">
+        <span class="flex flex-row items-center">
+          <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2 inline-block" %>
+          <span class="text-neutral-800 dark:text-white"><%= user.handle %></span>
+        </span>
+        <span class="text-neutral-500"><%= invite.role %></span>
+      </li>
+    <% end %>
+  </ul>
+</div>

@@ -7,5 +7,5 @@
 :output_files:
 - reports/brakeman/brakeman.json
 - reports/brakeman/brakeman.html
-:rails5: true
+:rails7: true
 :github_repo: rubygems/rubygems.org

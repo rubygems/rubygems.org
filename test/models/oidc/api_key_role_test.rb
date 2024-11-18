@@ -8,6 +8,8 @@ class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
   should have_many :id_tokens
   should validate_presence_of :api_key_permissions
   should validate_presence_of :access_policy
+  should validate_presence_of :name
+  should validate_length_of(:name).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
 
   setup do
     @role = build(:oidc_api_key_role)

@@ -560,12 +560,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should respond_with :forbidden
 
         should "show error message" do
-          mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-            at https://rubygems.org/totp/new.
-
-            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-          ERROR
+          mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
           assert_includes @response.body, mfa_error
         end
@@ -580,12 +575,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should respond_with :forbidden
 
         should "show error message" do
-          mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-            at https://rubygems.org/settings/edit.
-
-            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-          ERROR
+          mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
           assert_includes @response.body, mfa_error
         end
@@ -600,7 +590,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should respond_with :success
 
         should "not show error message" do
-          refute_includes @response.body, "For protection of your account and your gems"
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
         end
       end
 
@@ -614,7 +605,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should respond_with :success
 
         should "not show error message" do
-          refute_includes @response.body, "For protection of your account and your gems"
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
         end
       end
     end
@@ -630,14 +622,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
 
         should "include mfa setup warning" do
-          mfa_warning = <<~WARN.chomp
-
-
-            [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
-            at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future.
-          WARN
-
-          assert_includes @response.body, mfa_warning
+          assert_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
         end
       end
 
@@ -648,15 +633,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
 
         should "include change mfa level warning" do
-          mfa_warning = <<~WARN.chomp
-
-
-            [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
-            level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
-            Your account will be required to have MFA enabled on one of these levels in the future.
-          WARN
-
-          assert_includes @response.body, mfa_warning
+          assert_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
         end
       end
 
@@ -669,9 +646,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "not include mfa warning" do
-          mfa_warning = "[WARNING] For protection of your account and gems"
-
-          refute_includes @response.body, mfa_warning
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
         end
       end
 
@@ -684,9 +660,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "not include mfa warning" do
-          mfa_warning = "[WARNING] For protection of your account and gems"
-
-          refute_includes @response.body, mfa_warning
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+          refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
         end
       end
     end
@@ -786,8 +761,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should respond_with :forbidden
 
-      should "return body that starts with denied access message" do
-        assert @response.body.start_with?("The API key doesn't have access")
+      should "return body that includes the denied access message" do
+        assert_includes @response.body, "This API key cannot perform the specified action on this gem."
       end
     end
   end

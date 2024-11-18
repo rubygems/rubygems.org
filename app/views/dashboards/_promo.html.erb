@@ -1,0 +1,43 @@
+<% return unless current_user.memberships.any? %>
+<div class="flex flex-col px-4 py-6 md:p-10 mb-10 border border-orange rounded-lg bg-orange-050 dark:bg-orange-950">
+  <h2 class="flex text-h3 mb-10">
+    <%= icon_tag "organizations", size: 8, class: "mr-2 inline-block" %>
+    Introducing Organizations!
+  </h2>
+  <div class="flex flex-col md:flex-row-reverse">
+    <div class="flex mx-auto mb-10 md:mb-0 md:ml-10 w-64">
+      <div role="graphics-symbol" title="A diagram showing the layers of roles in an organization">
+        <div class="border-orange-600 border-2 border-dashed text-b3 text-orange-800 dark:text-white pl-8 rounded-md justify-end content-end shadow-lg">
+          <p class="-ml-8 px-2 pt-1 h-8">Organization</p>
+          <div class="bg-orange-400 dark:bg-orange-600 relative -bottom-0.5 -right-0.5 pl-8 rounded-md border border-orange-600">
+            <p class="-ml-8 px-2 pt-1 h-8">Owner</p>
+            <div class="bg-orange-300 dark:bg-orange-700 pl-8 rounded-md border-t border-l border-orange-600">
+              <p class="-ml-8 px-2 pt-1 h-8">Admin</p>
+              <div class="bg-orange-200 dark:bg-orange-800 pl-8 rounded-md box-border border-t border-l border-orange-600">
+                <p class="-ml-8 px-2 pt-1 h-8">Maintainer</p>
+                <div class="bg-orange-100 dark:bg-orange-950 w-32 h-32 rounded-md box-border border-t border-l border-orange-600">
+                  <p class="px-2 pt-1">Outside contributor</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col w-full md:w-2/3 items-start">
+      <p class="text-b1 text-neutral-800 dark:text-white mt-2 mb-10">
+        RubyGems is making ownership and permissions easier with organizations. Name your org then add your gems. It’s that easy!
+      </p>
+
+      <div>
+        <%= render ButtonComponent.new(organization_onboarding_name_path, type: :link, style: :outline, color: :primary) do %>
+          <span class="px-10 flex items-center">
+            Begin
+            <%= icon_tag "arrow-forward", size: 6, class: "ml-2 inline-block" %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

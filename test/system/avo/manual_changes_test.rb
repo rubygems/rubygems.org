@@ -3,30 +3,9 @@ require "application_system_test_case"
 class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
   make_my_diffs_pretty!
 
-  def sign_in_as(user)
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: "github",
-      uid: "1",
-      credentials: {
-        token: user.oauth_token,
-        expires: false
-      },
-      info: {
-        name: user.login
-      }
-    )
-
-    stub_github_info_request(user.info_data)
-
-    visit avo.root_path
-    click_button "Log in with GitHub"
-
-    page.assert_text user.login
-  end
-
   test "auditing changes" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     Admin::LogTicketPolicy.any_instance.stubs(:avo_create?).returns(true)
     Admin::LogTicketPolicy.any_instance.stubs(:avo_update?).returns(true)
@@ -35,6 +14,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     visit avo.resources_log_tickets_path
     click_on "Create new log ticket"
 
+    page.find_by_id("log_ticket_key", wait: Capybara.default_max_wait_time) # Wait for input to be available.
     fill_in "Key", with: "key"
     fill_in "Directory", with: "dir"
     fill_in "Processed count", with: "0"
@@ -132,9 +112,8 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     page.assert_title(/^#{log_ticket.to_param}/)
 
-    accept_alert("Are you sure?") do
-      click_on "Delete"
-    end
+    click_on "Delete"
+    click_on "Yes, I'm sure"
 
     page.assert_text "Record destroyed"
 

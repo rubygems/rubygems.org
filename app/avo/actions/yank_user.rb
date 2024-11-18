@@ -1,4 +1,4 @@
-class YankUser < BaseAction
+class Avo::Actions::YankUser < Avo::Actions::ApplicationAction
   self.name = "Yank User"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :show
@@ -8,8 +8,8 @@ class YankUser < BaseAction
   }
   self.confirm_button_label = "Yank User"
 
-  class ActionHandler < ActionHandler
-    def handle_model(user)
+  class ActionHandler < Avo::Actions::ActionHandler
+    def handle_record(user)
       user.rubygems.find_each do |rubygem|
         rubygem.yank_versions!(force: true)
       end

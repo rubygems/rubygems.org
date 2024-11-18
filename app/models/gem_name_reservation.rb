@@ -1,5 +1,5 @@
 class GemNameReservation < ApplicationRecord
-  validates :name, uniqueness: { case_sensitive: false }, presence: true
+  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validate :downcase_name_check
 
   def self.reserved?(name)

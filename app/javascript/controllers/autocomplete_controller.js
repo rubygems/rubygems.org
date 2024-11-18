@@ -11,9 +11,10 @@ export default class extends Controller {
     this.suggestLength = 0;
   }
 
-  disconnect() { clear() }
+  disconnect() { this.clear() }
 
   clear() {
+    this.suggestionsTarget.classList.add('hidden');
     this.suggestionsTarget.innerHTML = ""
     this.suggestionsTarget.removeAttribute('tabindex');
     this.suggestionsTarget.removeAttribute('aria-activedescendant');
@@ -25,12 +26,14 @@ export default class extends Controller {
   }
 
   next() {
+    if (this.suggestLength === 0) return;
     this.indexNumber++;
     if (this.indexNumber >= this.suggestLength) this.indexNumber = 0;
     this.focusItem(this.itemTargets[this.indexNumber]);
   }
 
   prev() {
+    if (this.suggestLength === 0) return;
     this.indexNumber--;
     if (this.indexNumber < 0) this.indexNumber = this.suggestLength - 1;
     this.focusItem(this.itemTargets[this.indexNumber]);
@@ -78,6 +81,7 @@ export default class extends Controller {
     items.forEach((item, idx) => this.appendItem(item, idx));
     this.suggestionsTarget.setAttribute('tabindex', 0);
     this.suggestionsTarget.setAttribute('role', 'listbox');
+    this.suggestionsTarget.classList.remove('hidden');
 
     this.suggestLength = items.length;
     this.indexNumber = -1;
@@ -92,8 +96,9 @@ export default class extends Controller {
   }
 
   focusItem(el, change = true) {
-    this.itemTargets.forEach(el => el.classList.remove(this.selectedClass))
-    el.classList.add(this.selectedClass);
+    if (!el) { return; }
+    this.itemTargets.forEach(el => el.classList.remove(...this.selectedClasses))
+    el.classList.add(...this.selectedClasses);
     this.suggestionsTarget.setAttribute('aria-activedescendant', el.id);
     if (change) {
       this.queryTarget.value = el.textContent;

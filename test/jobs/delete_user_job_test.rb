@@ -134,9 +134,9 @@ class DeleteUserJobTest < ActiveJob::TestCase
     open_call = create(:ownership_call, rubygem: rubygem, user: user)
 
     other_call = create(:ownership_call, rubygem: other_rubygem, user: other_user)
-    closed_request = create(:ownership_request, ownership_call: other_call, rubygem: rubygem, user: user, status: :closed)
-    approved_request = create(:ownership_request, ownership_call: other_call, rubygem: rubygem, user: user, status: :approved)
-    open_request = create(:ownership_request, ownership_call: other_call, rubygem: rubygem, user: user)
+    closed_request = create(:ownership_request, ownership_call: other_call, rubygem: other_rubygem, user: user, status: :closed)
+    approved_request = create(:ownership_request, ownership_call: other_call, rubygem: other_rubygem, user: user, status: :approved)
+    open_request = create(:ownership_request, ownership_call: other_call, rubygem: other_rubygem, user: user)
     other_request = create(:ownership_request, ownership_call: open_call, rubygem: rubygem, user: other_user)
 
     assert_delete user

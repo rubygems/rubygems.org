@@ -4,12 +4,16 @@ class DashboardsController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
 
+  layout "subject"
+
   def show
+    add_breadcrumb t("breadcrumbs.dashboard")
+
     respond_to do |format|
       format.html do
-        @my_gems         = current_user.rubygems.with_versions.by_name.preload(:most_recent_version)
-        @latest_updates  = Version.subscribed_to_by(current_user).published.limit(Gemcutter::DEFAULT_PAGINATION)
-        @subscribed_gems = current_user.subscribed_gems.with_versions
+        find_my_gems
+        find_subscribed_gems
+        find_latest_updates
       end
       format.atom do
         @versions = Version.subscribed_to_by(api_or_logged_in_user).published.limit(Gemcutter::DEFAULT_PAGINATION)
@@ -31,5 +35,34 @@ class DashboardsController < ApplicationController
 
   def api_or_logged_in_user
     current_user || @api_key.user
+  end
+
+  def find_my_gems
+    @my_gems_count = current_user.rubygems.with_versions.count
+    @my_gems = current_user
+      .rubygems
+      .with_versions
+      .by_downloads
+      .preload(:most_recent_version, :gem_download)
+      .load_async
+  end
+
+  def find_subscribed_gems
+    @subscribed_gems_count = current_user.subscribed_gems.with_versions.count
+    @subscribed_gems = current_user
+      .subscribed_gems
+      .with_versions
+      .limit(5)
+      .preload(:most_recent_version)
+      .load_async
+  end
+
+  def find_latest_updates
+    @latest_updates = Version
+      .subscribed_to_by(current_user)
+      .published
+      .limit(Gemcutter::DEFAULT_PAGINATION)
+      .preload(:rubygem, :pusher, pusher_api_key: :owner)
+      .load_async
   end
 end

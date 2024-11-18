@@ -3,7 +3,7 @@
 class RubygemContents::Entry
   class InvalidMetadata < RuntimeError; end
 
-  SIZE_LIMIT = 500.megabyte
+  SIZE_LIMIT = 500.megabytes
   MIME_TEXTUAL_SUBTYPES = %w[json ld+json x-csh x-sh x-httpd-php xhtml+xml xml].freeze
 
   class << self

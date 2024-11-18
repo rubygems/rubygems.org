@@ -1,11 +1,11 @@
 <% @title = t('.title') %>
 
-<div class="l-colspan t-body">
+<%= prose do %>
   <p><%= t '.purpose.header', :site => t('title') %></p>
-  <ol class="t-numbered-items">
-    <li class="t-numbered-item"><%= t '.purpose.better_api' %></li>
-    <li class="t-numbered-item"><%= t '.purpose.transparent_pages' %></li>
-    <li class="t-numbered-item"><%= t '.purpose.enable_community' %></li>
+  <ol class="list-decimal">
+    <li><%= t '.purpose.better_api' %></li>
+    <li><%= t '.purpose.transparent_pages' %></li>
+    <li><%= t '.purpose.enable_community' %></li>
   </ol>
   <p>
     <%= t('.founding_html', :founder => link_to('Nick Quaranto', 'https://twitter.com/qrush'),
@@ -28,16 +28,9 @@
                              ) %>
   </p>
 
-  <div class="hide-assets">
-    <h2 class="about__assets__heading"><%= t('.logo_header') %></h2>
-    <p><%= t('.logo_details') %></p>
-    <div class="about__assets-wrap">
-      <div class="about__assets">
-        <svg class="about__asset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" enable-background="new 0 0 200 200"><g fill="#ffffff"><path d="M68.8 69.9l-.1-.1-22.2 22.2 53.9 53.8 22.2-22.1 31.7-31.7-22.2-22.2v-.1h-63.4zM100.2 10.6l-78.5 45v90l78.5 45 78.5-45v-90l-78.5-45zm63.5 126.4l-63.5 36.6-63.5-36.6v-73l63.5-36.6 63.5 36.6v73z"/></g></svg>
-        <svg class="about__asset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" enable-background="new 0 0 200 200"><g fill="#141c22"><path d="M68.8 69.9l-.1-.1-22.2 22.2 53.9 53.8 22.2-22.1 31.7-31.7-22.2-22.2v-.1h-63.4zM100.2 10.6l-78.5 45v90l78.5 45 78.5-45v-90l-78.5-45zm63.5 126.4l-63.5 36.6-63.5-36.6v-73l63.5-36.6 63.5 36.6v73z"/></g></svg>
-        <svg class="about__asset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" enable-background="new 0 0 200 200"><g fill="#e9573f"><path d="M68.8 69.9l-.1-.1-22.2 22.2 53.9 53.8 22.2-22.1 31.7-31.7-22.2-22.2v-.1h-63.4zM100.2 10.6l-78.5 45v90l78.5 45 78.5-45v-90l-78.5-45zm63.5 126.4l-63.5 36.6-63.5-36.6v-73l63.5-36.6 63.5 36.6v73z"/></g></svg>
-      </div>
-      <a href="/logos.zip" download="RubyGems Assets.zip" class="about__assets__download" data-icon=">"><%= t('rubygems.aside.links.download') %></a>
-    </div>
+  <h2 class="about__assets__heading"><%= t('.logo_header') %></h2>
+  <p><%= t('.logo_details') %></p>
+  <div class="about__assets-wrap">
+    <%= render ButtonComponent.new t('rubygems.aside.links.download'), "/logos.zip", type: :link %>
   </div>
-</div>
+<% end %>

@@ -1,5 +1,6 @@
 class ApiKeysController < ApplicationController
   before_action :disable_cache, only: :index
+  before_action :set_page, only: :index
 
   include ApiKeyable
 
@@ -8,7 +9,7 @@ class ApiKeysController < ApplicationController
 
   def index
     @api_key  = session.delete(:api_key)
-    @api_keys = current_user.api_keys.unexpired.not_oidc.preload(ownership: :rubygem)
+    @api_keys = current_user.api_keys.unexpired.not_oidc.preload(ownership: :rubygem).page(@page)
     redirect_to new_profile_api_key_path if @api_keys.empty?
   end
 

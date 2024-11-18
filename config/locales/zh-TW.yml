@@ -4,6 +4,7 @@ zh-TW:
   copied: 已複製
   copy_to_clipboard: 複製
   edit: 編輯
+  hide: 隱藏
   verification_expired:
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 訂閱 Gems
@@ -20,12 +21,17 @@ zh-TW:
   locale_name: 正體中文
   none: 無
   not_found: 沒有找到
+  forbidden:
+  api_gem_not_found:
   api_key_forbidden: API 金鑰沒有存取權限
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: 存取遭拒。請先在 https://rubygems.org 上註冊帳號
   please_sign_in: 請登入以繼續。
   otp_incorrect: 您的 OTP 碼不正確。請檢查後再試一次。
   otp_missing: 您已啟用多重要素驗證，但是沒有輸入 OTP 碼。請輸入後再試一次。
   sign_in: 登入
+  sign_out: 登出
   sign_up: 註冊
   dependency_list:
   multifactor_authentication: 多重要素驗證
@@ -33,8 +39,10 @@ zh-TW:
   this_rubygem_could_not_be_found: 找不到此 rubygem。
   time_ago: "%{duration} 前"
   title: RubyGems.org
-  update: 更新
+  total_downloads: 總下載次數
   try_again: 發生錯誤。請再試一次。
+  update: 更新
+  view_all: 查看全部
   advanced_search: 進階搜尋
   authenticate: 驗證
   helpers:
@@ -60,6 +68,14 @@ zh-TW:
         full_name: 全名
         handle: 帳號
         password: 密碼
+      ownership/role:
+        owner:
+        maintainer:
+      membership/role:
+        owner:
+        admin:
+        maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC API 金鑰角色
       oidc/id_token:
@@ -80,11 +96,26 @@ zh-TW:
           attributes:
             expires_at:
               inclusion:
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed: 已是此 Gem 的擁有者
               already_invited: 已獲邀加入此 Gem
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
+        user:
+          attributes:
+            handle:
+              invalid:
+            password:
+              bcrypt_length:
         version:
           attributes:
             gem_full_name:
@@ -155,6 +186,7 @@ zh-TW:
       save_key: 請注意，我們無法再次顯示您的 API 金鑰。新 API 金鑰：
       mfa: MFA
       expiration:
+      update_owner:
     new:
       new_api_key: 新 API 金鑰
     reset:
@@ -176,9 +208,9 @@ zh-TW:
       migrating_link_text: Gem 轉移
       mine: 我的 Gems
       my_subscriptions: 我的訂閱
-      no_owned_html: 您尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學，或參考 %{migrating_link} 教學來將您的
-        Gem 從 RubyForge 遷移過來。
+      no_owned_html: 您尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學。
       no_subscriptions_html: 您還沒有訂閱過 Gem，前往 %{gem_link} 來訂閱！
+      organizations:
       title: 控制台
   dependencies:
     show:
@@ -207,6 +239,7 @@ zh-TW:
         blog: 部落格
         contribute: 貢獻
         data: 資料
+        docs: 文件
         designed_by: 設計
         discussion_forum: 討論群組
         gems_served_by: 服務
@@ -221,6 +254,9 @@ zh-TW:
         statistics: 統計
         status: 狀態
         supported_by: 支持
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          <br class="hidden lg:block"> 由以下支持
         tested_by: 測試
         tracking_by: 追蹤
         uptime: 上線時間
@@ -228,14 +264,18 @@ zh-TW:
         secured_by:
         looking_for_maintainers: 徵求維護者
       header:
+        profile: 個人檔案
         dashboard: 儀表板
         settings: 設定
         edit_profile: 編輯個人檔案
         search_gem_html: 搜尋 Gems&hellip;
-        sign_in: 登入
-        sign_out: 登出
-        sign_up: 註冊
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
+  breadcrumbs:
+    home: 首頁
+    dashboard: 控制台
+    settings: 設定
+    org_name: 組織：%{name}
+    subscriptions: 訂閱
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -315,6 +355,12 @@ zh-TW:
       title:
       subtitle: 嗨 %{user_handle}！
       body_html:
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有權請求
       subtitle: 嗨 %{handle}！
@@ -357,6 +403,8 @@ zh-TW:
         被推送的時候被呼叫。
     gem_trusted_publisher_added:
       title:
+    admin_manual:
+      title:
   news:
     show:
       title: 最新發佈
@@ -391,10 +439,6 @@ zh-TW:
       title:
     download:
       title: 下載 RubyGems
-    faq:
-      title: 常見問題
-    migrate:
-      title: 轉移 Gems
     security:
       title: 安全性
     sponsors:
@@ -431,12 +475,17 @@ zh-TW:
       或 "使用者介面和 API"。未來我們將強制要求所有帳號將設為上述 MFA 等級。
     setup_webauthn_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">了解詳情</a>！"
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
-      copied: "[ 已複製 ]"
       continue: 繼續
       title: 復原碼
-      copy: "[ 複製 ]"
       saved:
+      confirm_dialog:
       note_html:
       already_generated:
     update:
@@ -498,7 +547,13 @@ zh-TW:
     failed_verification:
       title: 錯誤 - 驗證失敗
       close_browser: 請關閉此瀏覽器並重試。
+  organization_onboardings:
+    confirm:
+      success:
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email:
       token_expired: 確認權杖已過期。請從 Gem 頁面嘗試重新傳送權杖。
@@ -510,6 +565,8 @@ zh-TW:
       confirmed_at: 確認於
       added_by: 新增者
       action: 操作
+      role:
+      role_field:
       email_field:
       submit_button: 新增擁有者
       info: 新增或移除擁有者
@@ -520,6 +577,9 @@ zh-TW:
       resent_notice:
     create:
       success_notice: "%{handle} 已以未確認擁有者的身分加入。所有權存取將在使用者點擊傳送到他們的電子郵件地址的確認信後啟用。"
+    update:
+      update_current_user_role:
+      success_notice:
     destroy:
       removed_notice:
       failed_notice: 無法移除 Gem 的唯一擁有者
@@ -605,6 +665,7 @@ zh-TW:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      gem_version_age: 版本发布
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
       requires_mfa: 新版本需要 MFA
@@ -650,6 +711,7 @@ zh-TW:
       sha_256_checksum: SHA 256 總和檢查碼
       signature_period: 簽名有效期
       expired: 已過期
+      provenance_header:
     version_navigation:
       previous_version: "← 上一版本"
       next_version: 下一版本 →
@@ -691,7 +753,7 @@ zh-TW:
       updated: 更新於
       yanked: 移除於
     show:
-      subtitle: "%{query}"
+      subtitle_html: "<em>%{query}</em>"
       month_update: 於最近一個月更新 (%{count})
       week_update: 於最近一週更新 (%{count})
       filter:
@@ -711,7 +773,6 @@ zh-TW:
     index:
       title: 統計資料
       all_time_most_downloaded: 歷史下載次數排行
-      total_downloads: 總下載次數
       total_gems: Gems 總數
       total_users: 總使用者數量
   users:
@@ -780,8 +841,6 @@ zh-TW:
       continue: 繼續
       title: 您已成功新增安全裝置
       notice_html:
-      copied: "[ 已複製 ]"
-      copy: "[ 複製 ]"
       saved:
     webauthn_credential:
       confirm_delete: 已刪除認證

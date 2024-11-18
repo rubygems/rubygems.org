@@ -5,6 +5,9 @@ class RubygemPolicy < ApplicationPolicy
   ABANDONED_RELEASE_AGE = 1.year
   ABANDONED_DOWNLOADS_MAX = 10_000
 
+  alias rubygem record
+  delegate :organization, to: :rubygem
+
   def show?
     true
   end
@@ -21,31 +24,50 @@ class RubygemPolicy < ApplicationPolicy
     false
   end
 
-  def show_adoption?
-    record.owned_by?(user) || request_ownership?
+  def configure_oidc?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
   end
 
-  def show_events?
-    record.owned_by?(user)
+  def configure_trusted_publishers?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
+  end
+
+  def manage_adoption?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def request_ownership?
-    return false if record.owned_by?(user)
-    return true if record.ownership_calls.any?
-    return false if record.downloads >= ABANDONED_DOWNLOADS_MAX
-    return false unless record.latest_version&.created_at&.before?(ABANDONED_RELEASE_AGE.ago)
-    true
+    return allow if rubygem.ownership_calls.any?
+    return false if rubygem.downloads >= ABANDONED_DOWNLOADS_MAX
+    return false if rubygem.latest_version.nil? || rubygem.latest_version.created_at.after?(ABANDONED_RELEASE_AGE.ago)
+    allow
+  end
+
+  def show_adoption?
+    manage_adoption? || request_ownership?
+  end
+
+  def show_events?
+    rubygem_owned_by?(user)
   end
 
   def close_ownership_requests?
-    record.owned_by?(user)
-  end
-
-  def show_trusted_publishers?
-    record.owned_by?(user)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 
   def show_unconfirmed_ownerships?
-    record.owned_by?(user)
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
+  end
+
+  def add_owner?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+  end
+
+  def update_owner?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+  end
+
+  def remove_owner?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
 end

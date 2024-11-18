@@ -22,6 +22,8 @@ docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
   --tag "$DOCKER_TAG" \
   --build-arg RUBYGEMS_VERSION="$RUBYGEMS_VERSION" \
   --build-arg REVISION="$GITHUB_SHA" \
+  --build-arg BUNDLE_WITH="$([ -n "${BUNDLE_PACKAGER__DEV}" ] && echo "avo")" \
+  --secret id=BUNDLE_PACKAGER__DEV \
   .
 
 # This is a ruby script we run to ensure that all dependencies are configured properly in
@@ -66,6 +68,7 @@ fi
 pusher_arn="arn:aws:iam::048268392960:role/rubygems-ecr-pusher"
 caller_arn="$(aws sts get-caller-identity --output text --query Arn || true)"
 
+set +x
 [[ "$caller_arn" == "$pusher_arn" ]] ||
   [[ "$caller_arn" == "arn:aws:sts::048268392960:assumed-role/rubygems-ecr-pusher/GitHubActions" ]] ||
   export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
@@ -75,6 +78,7 @@ caller_arn="$(aws sts get-caller-identity --output text --query Arn || true)"
       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
       --output text)) ||
   true
+set -x
 
 if [[ -z "${AWS_SESSION_TOKEN}" ]]; then
   echo "Skipping push since no AWS session token was found"

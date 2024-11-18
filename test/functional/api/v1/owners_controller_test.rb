@@ -2,6 +2,7 @@ require "test_helper"
 
 class Api::V1::OwnersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
 
   def self.should_respond_to(format)
     should "route GET show with #{format.to_s.upcase}" do
@@ -401,12 +402,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, @response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-                at https://rubygems.org/totp/new.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -422,12 +419,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, @response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-                at https://rubygems.org/settings/edit.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -473,12 +466,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "include mfa setup warning" do
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
-                at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future.
-              WARN
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_not_yet_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -493,13 +481,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "include change mfa level warning" do
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
-                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
-                Your account will be required to have MFA enabled on one of these levels in the future.
-              WARN
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_weak_level_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -514,9 +496,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "not include MFA warnings" do
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = "[WARNING] For protection of your account and gems"
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -530,11 +512,44 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "not include mfa warnings" do
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = "[WARNING] For protection of your account and gems"
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
+        end
+      end
+
+      context "when not supplying a role" do
+        should "set a default role" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id }
+
+          assert_equal 200, @response.status
+          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem), :owner?
+        end
+      end
+
+      context "given a role" do
+        should "set the role for the given user" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :maintainer }
+
+          assert_equal 200, @response.status
+          assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem), :maintainer?
+        end
+      end
+
+      context "when given an invalid role" do
+        should "raise an error" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :invalid }
+
+          assert_equal 422, @response.status
+          assert_equal "Role is not included in the list", @response.body
+        end
+
+        should "not create the ownership" do
+          post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email, role: :invalid }
+
+          assert_nil @rubygem.ownerships.find_by(user: @second_user)
         end
       end
     end
@@ -550,8 +565,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should respond_with :forbidden
 
-      should "return body that starts with denied access message" do
-        assert @response.body.start_with?("The API key doesn't have access")
+      should "return body with denied access message" do
+        assert_equal "This API key cannot perform the specified action on this gem.", @response.body
       end
     end
   end
@@ -784,12 +799,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-                at https://rubygems.org/totp/new.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -805,12 +816,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
               assert_equal 403, @response.status
-              mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-                at https://rubygems.org/settings/edit.
+              mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
-                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-              ERROR
               assert_includes @response.body, mfa_error
             end
           end
@@ -856,12 +863,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "include mfa setup warning" do
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
-                at https://rubygems.org/totp/new. Your account will be required to have MFA enabled in the future.
-              WARN
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_not_yet_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -876,13 +878,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "include change mfa level warning" do
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = <<~WARN.chomp
-
-
-                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
-                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
-                Your account will be required to have MFA enabled on one of these levels in the future.
-              WARN
+              mfa_warning = "\n\n#{I18n.t('multifactor_auths.api.mfa_recommended_weak_level_enabled')}".chomp
 
               assert_includes @response.body, mfa_warning
             end
@@ -897,9 +893,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "not include mfa warnings" do
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = "[WARNING] For protection of your account and gems"
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -913,9 +909,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "not include mfa warnings" do
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
-              mfa_warning = "[WARNING] For protection of your account and gems"
 
-              refute_includes @response.body, mfa_warning
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_not_yet_enabled").chomp
+              refute_includes @response.body, I18n.t("multifactor_auths.api.mfa_recommended_weak_level_enabled").chomp
             end
           end
         end
@@ -933,8 +929,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should respond_with :forbidden
 
-      should "return body that starts with denied access message" do
-        assert @response.body.start_with?("The API key doesn't have access")
+      should "return body that has the denied access message" do
+        assert_equal "This API key cannot perform the specified action on this gem.", @response.body
       end
     end
   end
@@ -964,5 +960,81 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     post :create, params: { rubygem_id: "bananas" }
 
     assert_equal "This rubygem could not be found.", @response.body
+  end
+
+  should "route PUT /api/v1/gems/rubygem/owners.yaml" do
+    route = { controller: "api/v1/owners",
+              action: "update",
+              rubygem_id: "rails",
+              format: "yaml" }
+
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners.yaml", method: :put)
+  end
+
+  context "on PATCH to owner gem" do
+    setup do
+      @owner = create(:user)
+      @maintainer = create(:user)
+      @rubygem = create(:rubygem, owners: [@owner])
+
+      @api_key = create(:api_key, key: "12223", scopes: %i[update_owner], owner: @owner, rubygem: @rubygem)
+      @request.env["HTTP_AUTHORIZATION"] = "12223"
+    end
+
+    should "set the maintainer to a lower access level" do
+      ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, role: :owner)
+
+      patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :maintainer }
+
+      assert_response :success
+      assert_predicate ownership.reload, :maintainer?
+      assert_enqueued_email_with OwnersMailer, :owner_updated, params: { ownership: ownership }
+    end
+
+    context "when the current user is changing their own role" do
+      should "forbid changing the role" do
+        patch :update, params: { rubygem_id: @rubygem.slug, email: @owner.email, role: :maintainer }
+
+        ownership = @rubygem.ownerships.find_by(user: @owner)
+
+        assert_response :forbidden
+        assert_predicate ownership.reload, :owner?
+      end
+    end
+
+    context "when the role is invalid" do
+      should "return a bad request response with the error message" do
+        ownership = create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+
+        patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
+
+        assert_response :unprocessable_entity
+        assert_equal "Role is not included in the list", @response.body
+        assert_predicate ownership.reload, :maintainer?
+      end
+    end
+
+    context "when the owner is not found" do
+      context "when the update is authorized" do
+        should "return a not found response" do
+          patch :update, params: { rubygem_id: @rubygem.slug, email: "notauser", role: :owner }
+
+          assert_response :not_found
+          assert_equal "Owner could not be found.", @response.body
+        end
+      end
+
+      context "when the update is not authorized" do
+        should "return a forbidden response" do
+          @api_key = create(:api_key, key: "99999", scopes: %i[push_rubygem], owner: @owner)
+          @request.env["HTTP_AUTHORIZATION"] = "99999"
+
+          patch :update, params: { rubygem_id: @rubygem.slug, email: "notauser", role: :owner }
+
+          assert_response :forbidden
+          assert_equal "This API key cannot perform the specified action on this gem.", @response.body
+        end
+      end
+    end
   end
 end

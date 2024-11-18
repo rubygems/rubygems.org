@@ -9,7 +9,9 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :render_forbidden
   rescue_from ActionController::UnpermittedParameters, with: :render_bad_request
-  rescue_from(Pundit::NotAuthorizedError) { |_| render_forbidden } # don't pass pundit error message
+  rescue_from(Pundit::NotAuthorizedError) do |e|
+    render_forbidden(e.policy.error)
+  end
 
   before_action :set_locale
   before_action :reject_null_char_param
@@ -60,6 +62,16 @@ class ApplicationController < ActionController::Base
     super
   end
 
+  def breadcrumbs
+    @breadcrumbs ||= []
+  end
+  helper_method :breadcrumbs
+
+  def add_breadcrumb(name, link = nil)
+    breadcrumbs << [name, link]
+  end
+  helper_method :add_breadcrumb
+
   protected
 
   def http_basic_authentication_options_valid?(**options)
@@ -105,10 +117,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def owner?
-    @rubygem.owned_by?(current_user)
-  end
-
   def find_versioned_links
     @versioned_links = @rubygem.links(@latest_version)
   end
@@ -138,7 +146,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def render_forbidden(error = "forbidden")
+  def render_forbidden(error = nil)
+    error ||= t(:forbidden)
     render plain: error, status: :forbidden
   end
 

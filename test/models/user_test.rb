@@ -17,6 +17,7 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("1abcde").for(:handle)
       should_not allow_value("abc^%def").for(:handle)
       should_not allow_value("abc\n<script>bad").for(:handle)
+      should validate_length_of(:handle).is_at_least(2).is_at_most(40)
 
       should "be between 2 and 40 characters" do
         user = build(:user, handle: "a")
@@ -162,7 +163,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context "twitter_username" do
-      should validate_length_of(:twitter_username)
+      should validate_length_of(:twitter_username).is_at_most(20)
       should allow_value("user123_32").for(:twitter_username)
       should_not allow_value("@user").for(:twitter_username)
       should_not allow_value("user 1").for(:twitter_username)
@@ -172,7 +173,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context "password" do
-      should "be between 10 and 200 characters" do
+      should "be between 10 characters and 72 bytes" do
         user = build(:user, password: "%5a&12ed/")
 
         refute_predicate user, :valid?
@@ -181,7 +182,7 @@ class UserTest < ActiveSupport::TestCase
         user.password = "#{'a8b5d2d451' * 20}a"
 
         refute_predicate user, :valid?
-        assert_contains user.errors[:password], "is too long (maximum is 200 characters)"
+        assert_contains user.errors[:password], "is too long (maximum is 72 bytes)"
 
         user.password = "633!cdf7b3426c9%f6dd1a0b62d4ce44c4f544e%"
         user.valid?
@@ -924,13 +925,74 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#unblock!" do
+    setup do
+      @user = create(:user, :blocked)
+      @original_email = @user.blocked_email
+      @user.unblock!
+    end
+
+    should "restore the email field" do
+      assert_equal @original_email, @user.email
+    end
+
+    should "make the blocked email field nil" do
+      assert_nil @user.blocked_email
+    end
+
+    context "when the user is not currently blocked" do
+      setup do
+        @user = create(:user)
+      end
+
+      should "raise an error" do
+        assert_raises(ArgumentError) do
+          @user.unblock!
+        end
+      end
+    end
+  end
+
+  context "#blocked?" do
+    setup do
+      @blocked_user = build(:user, :blocked)
+      @unblocked_user = build(:user)
+    end
+
+    should "be true when the user has a blocked email" do
+      assert_predicate @blocked_user, :blocked?
+    end
+
+    should "be false when the user does not have a blocked email" do
+      refute_predicate @unblocked_user, :blocked?
+    end
+  end
+
   context ".normalize_email" do
     should "return the normalized email" do
-      assert_equal "UsEr@example.COM", User.normalize_email(:"UsEr@ example . COM")
+      assert_equal "UsEr@example.COM", User.normalize_email(:"UsEr@\texample . COM")
+    end
+
+    should "preserve valid characters so that the format error can be returned" do
+      # UTF-8 "香" character, which is valid UTF-8, but we reject utf-8 in email addresses
+      assert_equal "香@example.com", User.normalize_email("\u9999@example.com".force_encoding("utf-8"))
+
+      # ISO-8859-1 "Å" character (valid in ISO-8859-1)
+      encoded_email = "myem\xC5il@example.com".force_encoding("ISO-8859-1")
+
+      assert_equal encoded_email, User.normalize_email(encoded_email)
     end
 
     should "return an empty string on invalid inputs" do
-      assert_equal "", User.normalize_email("\u9999".force_encoding("ascii"))
+      # bad encoding when sent as ASCII-8BIT
+      assert_equal "", User.normalize_email("\u9999@example.com".force_encoding("ascii"))
+
+      # ISO-8859-1 "Å" character (invalid in UTF-8, which uses \xC385 for this character)
+      assert_equal "", User.normalize_email("myem\xC5il@example.com".force_encoding("UTF-8"))
+    end
+
+    should "return an empty string for nil" do
+      assert_equal "", User.normalize_email(nil)
     end
   end
 end

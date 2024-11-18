@@ -1,0 +1,20 @@
+<div class="hidden lg:block w-full px-8 py-1 lg:pb-8 bg-neutral-050 dark:bg-neutral-950 text-neutral-800 dark:text-white">
+  <div class="max-w-screen-xl mx-auto flex items-center">
+    <nav class="flex justify-start items-center text-b2" aria-label="Breadcrumb">
+      <!-- Home breadcrumb -->
+      <%= link_to root_path, class: "inline-block p-1 -ml-1 hover:text-neutral-600 dark:hover:text-neutral-400", title: t("breadcrumbs.home"), aria: { label: t("breadcrumbs.home") } do %>
+        <%= icon_tag "house-siding", size: 6 %>
+      <% end %>
+
+      <% breadcrumbs.each do |name, link| %>
+        <%= icon_tag "chevron-right", size: 6, class: "text-neutral-600 dark:text-neutral-700 fill-neutral-600 dark:fill-neutral-700", aria: { hidden: "true" } %>
+        <% if link %>
+          <%= link_to name, link, class: "inline-block p-1 hover:text-neutral-600 dark:hover:text-neutral-400" %>
+        <% else %>
+          <!-- Current page -->
+          <span class="inline-block p-1 text-black dark:text-white font-semibold" aria-current="page"><%= name %></span>
+        <% end %>
+      <% end %>
+    </nav>
+  </div>
+</div>

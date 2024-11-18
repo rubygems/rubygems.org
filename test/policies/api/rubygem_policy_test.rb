@@ -1,54 +1,85 @@
 require "test_helper"
 
-class Api::RubygemPolicyTest < ActiveSupport::TestCase
+class Api::RubygemPolicyTest < ApiPolicyTestCase
   setup do
-    @owner = create(:user)
+    @owner = create(:user, handle: "owner")
     @rubygem = create(:rubygem, owners: [@owner])
 
-    RubygemPolicy.any_instance.stubs(show_trusted_publishers?: true)
+    RubygemPolicy.any_instance.stubs(
+      configure_trusted_publishers?: true,
+      add_owner?: true,
+      remove_owner?: true
+    )
   end
 
-  def policy!(api_key, rubygem = @rubygem)
-    Pundit.policy!(api_key, [:api, rubygem])
+  def policy!(api_key)
+    Pundit.policy!(api_key, [:api, @rubygem])
   end
 
-  context "#show_trusted_publishers?" do
-    should "be false if the ApiKey scope does not include :configure_trusted_publishers" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[push_rubygem])
+  context "#index?" do
+    scope = :index_rubygems
+    action = :index?
 
-      refute_predicate policy!(api_key), :show_trusted_publishers?
+    should_require_scope scope, action
+
+    should "allow ApiKey with scope and any rubygem" do
+      api_key = key_with_scope([:push_rubygem, scope], rubygem: create(:rubygem, owners: [@owner]))
+
+      assert_authorized api_key, action
     end
+  end
 
-    should "be false if the ApiKey scope includes the rubygem but does not include :configure_trusted_publishers" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[push_rubygem], rubygem: @rubygem)
+  context "#create?" do
+    scope = :push_rubygem
+    action = :create?
 
-      refute_predicate policy!(api_key), :show_trusted_publishers?
+    should_require_scope scope, action
+    should_require_mfa scope, action
+
+    should "deny ApiKey without scope but with rubygem" do
+      refute_authorized key_without_scope(:push_rubygem, rubygem: @rubygem), :create?
     end
+  end
 
-    should "be false if the ApiKey specifies a different rubygem" do
-      other_gem = create(:rubygem, owners: [@owner])
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers], rubygem: other_gem)
+  context "#yank?" do
+    scope = :yank_rubygem
+    action = :yank?
 
-      refute_predicate policy!(api_key), :show_trusted_publishers?
-    end
+    should_require_user_key scope, action
+    should_require_scope scope, action
+    should_require_rubygem_scope scope, action
+  end
 
-    should "be false if the user policy for the gem does not allow show_trusted_publishers?" do
-      RubygemPolicy.any_instance.stubs(show_trusted_publishers?: false)
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers])
+  context "#configure_trusted_publishers?" do
+    scope = :configure_trusted_publishers
+    action = :configure_trusted_publishers?
 
-      refute_predicate policy!(api_key), :show_trusted_publishers?
-    end
+    should_require_user_key scope, action
+    should_require_mfa scope, action
+    should_require_scope scope, action
+    should_require_rubygem_scope scope, action
+    should_delegate_to_policy scope, action, RubygemPolicy
+  end
 
-    should "be true for ApiKey without rubygem" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers])
+  context "#add_owner" do
+    scope = :add_owner
+    action = :add_owner?
 
-      assert_predicate policy!(api_key), :show_trusted_publishers?
-    end
+    should_require_user_key scope, action
+    should_require_mfa scope, action
+    should_require_scope scope, action
+    should_require_rubygem_scope scope, action
+    should_delegate_to_policy scope, action, RubygemPolicy
+  end
 
-    should "be true for ApiKey with correct rubygem" do
-      api_key = create(:api_key, owner: @owner, scopes: %w[configure_trusted_publishers], rubygem: @rubygem)
+  context "#remove_owner" do
+    scope = :remove_owner
+    action = :remove_owner?
 
-      assert_predicate policy!(api_key), :show_trusted_publishers?
-    end
+    should_require_user_key scope, action
+    should_require_mfa scope, action
+    should_require_scope scope, action
+    should_require_rubygem_scope scope, action
+    should_delegate_to_policy scope, action, RubygemPolicy
   end
 end

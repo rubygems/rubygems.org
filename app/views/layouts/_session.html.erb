@@ -1,0 +1,53 @@
+<div class="ml-3 flex text-neutral-900 dark:text-white hover:text-black dark:hover:text-neutral-400 items-center" data-controller="dialog">
+  <% if signed_in? %>
+    <%# This class is used in the tests :( I need it to be the same class until the old design is gone. %>
+    <%= link_to(dashboard_path, data: { action: "dialog#open", dialog_target: "button" }, class: "header__popup-link") do %>
+      <%= avatar 64, "user_gravatar", theme: :dark, class: "h-9 w-9 rounded" %>
+    <% end %>
+  <% else %>
+    <div class="hidden md:flex text-nowrap">
+      <%= render ButtonComponent.new t('sign_in'), sign_in_path, type: :link, color: :secondary, size: :small %>
+      <% if Clearance.configuration.allow_sign_up? %>
+        <%= render ButtonComponent.new t('sign_up'), sign_up_path, type: :link, color: :primary, size: :small, class: "ml-3" %>
+      <% end %>
+    </div>
+
+    <% sign_in_sign_up_path = Clearance.configuration.allow_sign_up? ? sign_up_path : sign_in_path %>
+    <%= link_to sign_in_sign_up_path, class: "-mr-1 p-1 md:hidden text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 " do %>
+      <%= icon_tag "account-box", size: 7 %>
+    <% end %>
+  <% end %>
+
+  <dialog
+    data-dialog-target="dialog" data-action="click->dialog#backdropClose"
+    class="fixed m-0 inset-0 py-16 px-8 z-50 w-full h-full max-w-screen max-h-screen bg-white bg-opacity-20 p-0 ems-start justify-center sm:justify-right"
+  >
+    <div class="max-w-screen-xl mx-auto flex items-center relative">
+      <!-- Dialog content -->
+      <div
+        class="w-full sm:absolute sm:top-0 sm:right-0 sm:max-w-sm bg-white dark:bg-black rounded-lg shadow-xl shadow-black/10 max-h-[90vh] overflow-y-auto dark:border dark:border-neutral-800
+        flex flex-col px-4 py-4 text-b2 text-left text-neutral-900 dark:text-white"
+      >
+        <!-- Dialog header -->
+        <div class="flex justify-between items-center">
+          <h2 class="flex h-7 lg:h-8 lg:mb-0 items-center space-x-1 text-orange text-b1">
+            <%= icon_tag "logo", size: 8, class: "w-6 h-6" %>
+            <span class="text-h5 text-orange">RubyGems</span>
+          <h2>
+
+          <button data-action="dialog#close" class="h-8 w-8 items-center justify-center outline-none">
+            <%= icon_tag "close", class: "w-6 h-6", aria: { label: "Close profile modal" } %>
+          </button>
+        </div>
+
+        <!-- Authenticated user content -->
+        <nav class="flex flex-col py-6 text-left text-b2 text-neutral-900 dark:text-white border-b border-neutral-400 dark:border-neutral-800">
+          <%= link_to t('layouts.application.header.profile'), dashboard_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+          <%= link_to t('layouts.application.header.edit_profile'), edit_profile_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+          <%= link_to t('layouts.application.header.settings'), edit_settings_path, class: "px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+        </nav>
+        <%= link_to t('sign_out'), sign_out_path, method: :delete, class: "w-full my-8 px-4 py-2 text-b2 rounded border border-black dark:border-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 text-black dark:text-white text-center" %>
+      </div>
+    </div>
+  </dialog>
+</div>

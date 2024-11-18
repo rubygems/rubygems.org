@@ -227,7 +227,7 @@ class OIDCTest < ApplicationSystemTestCase
     visit new_rubygem_trusted_publisher_path(rubygem.slug)
     verify_session
 
-    assert_text "forbidden"
+    assert_text "Forbidden"
 
     create(:ownership, rubygem: rubygem, user: @user)
 
@@ -276,8 +276,8 @@ class OIDCTest < ApplicationSystemTestCase
 
     click_button "Delete"
 
-    page.assert_text "Trusted Publisher deleted"
-    page.assert_text "NO RUBYGEM TRUSTED PUBLISHERS FOUND"
+    assert_content "Trusted Publisher deleted"
+    assert_content "NO RUBYGEM TRUSTED PUBLISHERS FOUND"
   end
 
   test "creating pending trusted publishers" do
@@ -349,7 +349,7 @@ class OIDCTest < ApplicationSystemTestCase
 
     click_button "Delete"
 
-    page.assert_text "Pending Trusted Publisher deleted"
-    page.assert_text "NO PENDING TRUSTED PUBLISHERS FOUND"
+    assert_content "Pending Trusted Publisher deleted"
+    assert_content "NO PENDING TRUSTED PUBLISHERS FOUND"
   end
 end

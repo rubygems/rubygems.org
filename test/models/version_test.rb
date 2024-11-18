@@ -406,16 +406,21 @@ class VersionTest < ActiveSupport::TestCase
     end
     subject { @version }
 
+    should allow_value("1.2.3.pre").for(:number)
     should_not allow_value("#YAML<CEREALIZATION-FAIL>").for(:number)
     should_not allow_value("1.2.3-\"[javalol]\"").for(:number)
     should_not allow_value("0.8.45::Gem::PLATFORM::FAILBOAT").for(:number)
     should_not allow_value("1.2.3\n<bad>").for(:number)
     should_not allow_value("1.2.3-bad").for(:number)
+    should_not allow_value("1.2.3.").for(:number)
+    should_not allow_value("1.2.3.gem").for(:number)
 
     should allow_value("ruby").for(:platform)
     should allow_value("mswin32").for(:platform)
     should allow_value("x86_64-linux").for(:platform)
+    should allow_value("it.is.fine").for(:platform)
     should_not allow_value("Gem::Platform::Ruby").for(:platform)
+    should_not allow_value("ruby.gem").for(:platform)
 
     should "be invalid with platform longer than maximum field length" do
       @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
@@ -632,29 +637,31 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a very long authors string." do
     should "create without error" do
-      create(:version,
-        authors: [
-          "Fbdoorman: David Pelaez",
-          "MiniFB:Appoxy",
-          "Dan Croak",
-          "Mike Burns",
-          "Jason Morrison",
-          "Joe Ferris",
-          "Eugene Bolshakov",
-          "Nick Quaranto",
-          "Josh Nichols",
-          "Mike Breen",
-          "Marcel G\303\266rner",
-          "Bence Nagy",
-          "Ben Mabey",
-          "Eloy Duran",
-          "Tim Pope",
-          "Mihai Anca",
-          "Mark Cornick",
-          "Shay Arnett",
-          "Jon Yurek",
-          "Chad Pytel"
-        ])
+      assert_nothing_raised do
+        create(:version,
+          authors: [
+            "Fbdoorman: David Pelaez",
+            "MiniFB:Appoxy",
+            "Dan Croak",
+            "Mike Burns",
+            "Jason Morrison",
+            "Joe Ferris",
+            "Eugene Bolshakov",
+            "Nick Quaranto",
+            "Josh Nichols",
+            "Mike Breen",
+            "Marcel G\303\266rner",
+            "Bence Nagy",
+            "Ben Mabey",
+            "Eloy Duran",
+            "Tim Pope",
+            "Mihai Anca",
+            "Mark Cornick",
+            "Shay Arnett",
+            "Jon Yurek",
+            "Chad Pytel"
+          ])
+      end
     end
   end
 

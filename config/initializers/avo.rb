@@ -1,13 +1,12 @@
 # For more information regarding these settings check out our docs https://docs.avohq.io
-Avo.configure do |config|
+Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   ## == Routing ==
   config.root_path = '/admin'
 
   # Where should the user be redirected when visting the `/avo` url
-  config.home_path = "/admin/dashboards/dashy"
+  config.home_path = "/admin/dashboards/dashy" if defined?(Avo::Pro)
 
   ## == Licensing ==
-  config.license = 'pro' # change this to 'pro' when you add the license key
   config.license_key = ENV['AVO_LICENSE_KEY']
 
   ## == Set the context ==
@@ -18,6 +17,13 @@ Avo.configure do |config|
   ## == Authentication ==
   config.current_user_method = :admin_user
   config.authenticate_with do
+    if !Rails.env.local? && !(Avo.license.valid? && Avo.license.advanced?)
+      raise "Avo::Pro is missing in #{Rails.env}." \
+            "\nRails.groups=#{Rails.groups.inspect}" \
+            "\nAvo.license=#{Avo.license.inspect}" \
+            "\nAvo.configuration.license=#{Avo.configuration.license.inspect}"
+    end
+
     redirect_to '/' unless _current_user&.valid?
     Current.user = begin
       User.security_user
@@ -98,33 +104,36 @@ Avo.configure do |config|
   # end
 
   ## == Menus ==
-  config.main_menu = lambda {
-    section "Dashboards", icon: "dashboards" do
-      all_dashboards
-    end
+  if defined?(Avo::Pro)
+    config.main_menu = lambda {
+      section "Dashboards", icon: "dashboards" do
+        all_dashboards
+      end
 
-    section "Resources", icon: "resources" do
-      Avo::App.resources_for_navigation.group_by { |r| r.model_class.module_parent_name }.sort_by { |k, _| k.to_s }.each do |namespace, reses|
-        if namespace.present?
-          group namespace.titleize, icon: "folder" do
+      section "Resources", icon: "resources" do
+        Avo.resource_manager.resources_for_navigation(current_user).group_by { |r| r.model_class.module_parent_name }
+          .sort_by { |k, _| k.to_s }.each do |namespace, reses|
+          if namespace.present?
+            group namespace.titleize, icon: "folder" do
+              reses.each do |res|
+                resource res.route_key
+              end
+            end
+          else
             reses.each do |res|
               resource res.route_key
             end
           end
-        else
-          reses.each do |res|
-            resource res.route_key
-          end
         end
       end
-    end
 
-    unless all_tools.empty?
-      section "Tools", icon: "tools" do
-        all_tools
+      unless all_tools.empty?
+        section "Tools", icon: "tools" do
+          all_tools
+        end
       end
-    end
-  }
+    }
+  end
 
   config.profile_menu = lambda {
     link_to "Admin Profile",
@@ -136,11 +145,8 @@ end
 Rails.configuration.to_prepare do
   Avo::ApplicationController.include GitHubOAuthable
   Avo::BaseController.prepend AvoAuditable
-  Avo::BaseResource.include Concerns::AvoAuditableResource
-
-  Avo::ApplicationController.content_security_policy do |policy|
-    policy.style_src :self, "https://fonts.googleapis.com", :unsafe_inline
-  end
+  Avo::BaseResource.prepend Avo::Resources::Concerns::AvoAuditableResource
+  Avo::Concerns::HasItems.prepend Avo::Resources::Concerns::AvoAuditableResource::HasItemsIncludeComment
 
   # Fix for https://github.com/rails/rails/issues/49783
   Avo::Views::ResourceEditComponent.class_eval do

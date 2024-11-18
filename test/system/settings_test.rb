@@ -40,7 +40,7 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert page.has_content? "Recovery codes"
 
-    click_link "[ copy ]"
+    click_link "Copy to clipboard"
     check "ack"
     click_button "Continue"
 
@@ -101,9 +101,9 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert page.has_content? "Recovery codes"
 
-    recoveries = page.find_by_id("recovery-code-list").text.split
+    recoveries = page.find(:css, ".recovery-code-list").value.split
 
-    click_link "[ copy ]"
+    click_link "Copy to clipboard"
     check "ack"
     click_button "Continue"
     page.fill_in "otp", with: recoveries.sample
@@ -145,18 +145,17 @@ class SettingsTest < ApplicationSystemTestCase
     click_button "Enable"
 
     check "ack"
-    confirm_text = dismiss_confirm do
-      visit root_path
+    dismiss_confirm("Leave without copying recovery codes?") do
+      click_on "Continue"
     end
 
-    assert_equal("", confirm_text)
     assert_equal recovery_multifactor_auth_path, page.current_path
 
-    accept_confirm do
-      visit root_path
+    accept_confirm("Leave without copying recovery codes?") do
+      click_on "Continue"
     end
 
-    assert_equal root_path, page.current_path
+    assert_equal edit_settings_path, page.current_path
   end
 
   test "shows 'ui only' if user's level is ui_only" do

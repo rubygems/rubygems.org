@@ -1,6 +1,6 @@
 <% @title = t('.title') %>
 
-<div class="l-colspan t-body">
+<%= prose do %>
   <p>
     RubyGems.org is made possible by support from the Ruby community. These companies provide the servers and developers that create the public infrastructure of the Ruby programming language.
   </p>
@@ -8,10 +8,11 @@
   <h2><a href="https://rubycentral.org">Ruby Central</a></h2>
   <p>
     Ruby Central, Inc. is a nonprofit 501(c)3 organization dedicated to the support and advocacy of the worldwide Ruby community. They organize the annual RubyConf and RailsConf as opportunities for Rubyists to collaborate and network. As part of those conferences, Ruby Central also operates the Opportunity Scholarship program to consistently bring new people into the tech community and to provide them with a comfortable, welcoming environment to explore our community and its events.
-    <br><br>
+  </p>
+  <p>
     They also fund and operate the Ruby Central Community Grant, underwriting events or open source projects that benefit the Ruby community, and they fund the ongoing server costs associated with running RubyGems.org.
 
-    You can support Ruby Central by attending or [sponsoring](sponsors@rubycentral.org) a conference, or by [joining as a supporting member](https://rubycentral.org/#/portal/signup).
+    You can support Ruby Central by attending or <a href="mailto:sponsors@rubycentral.org">contacting Ruby Central</a> about sponsoring a conference, or by <a href="https://rubycentral.org/#/portal/signup">joining as a supporting member</a>.
   </p>
 
   <h2><a href="https://fastly.com">Fastly</a></h2>
@@ -21,16 +22,12 @@
     Fastly provides the RubyGems.org content delivery network, allowing Ruby developers all over the world to download gems from nearby servers around the world.
   </p>
 
-  <hr>
-
   <h3><a href="https://1password.com">1Password</a></h3>
   <p>A password manager, digital vault, form filler and secure digital wallet. 1Password remembers all your passwords for you to help keep account information safe.</p>
-
-  <hr>
 
   <h3><a href="https://avohq.io">Avo</a></h3>
   <p>
     Avo is a custom Content Management System for Ruby on Rails that saves developers and teams months of development time. It's built on modern technologies and provides all the necessary hooks to ensure developers ship the best experiences to their customers.<br><br>
     Avo enables the RubyGems.org team to quickly build internal tools with limited resources.
   </p>
-</div>
+<% end %>

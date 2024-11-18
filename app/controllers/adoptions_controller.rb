@@ -2,7 +2,7 @@ class AdoptionsController < ApplicationController
   include SessionVerifiable
 
   before_action :find_rubygem
-  before_action :redirect_to_verify, if: -> { @rubygem.owned_by?(current_user) && !verified_session_active? }
+  before_action :redirect_to_verify, if: -> { policy(@rubygem).manage_adoption? && !verified_session_active? }
 
   def index
     @ownership_call     = @rubygem.ownership_call

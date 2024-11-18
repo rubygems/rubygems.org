@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_04_065953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -56,6 +56,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.check_constraint "scopes IS NOT NULL", name: "api_keys_scopes_null"
   end
 
+  create_table "attestations", force: :cascade do |t|
+    t.bigint "version_id", null: false
+    t.jsonb "body"
+    t.string "media_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["version_id"], name: "index_attestations_on_version_id"
+  end
+
   create_table "audits", force: :cascade do |t|
     t.string "auditable_type", null: false
     t.bigint "auditable_id", null: false
@@ -92,6 +101,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id"
     t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name"
     t.index ["version_id"], name: "index_dependencies_on_version_id"
+  end
+
+  create_table "events_organization_events", force: :cascade do |t|
+    t.string "tag", null: false
+    t.string "trace_id"
+    t.bigint "organization_id", null: false
+    t.bigint "ip_address_id"
+    t.bigint "geoip_info_id"
+    t.jsonb "additional"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["geoip_info_id"], name: "index_events_organization_events_on_geoip_info_id"
+    t.index ["ip_address_id"], name: "index_events_organization_events_on_ip_address_id"
+    t.index ["organization_id"], name: "index_events_organization_events_on_organization_id"
+    t.index ["tag"], name: "index_events_organization_events_on_tag"
   end
 
   create_table "events_rubygem_events", force: :cascade do |t|
@@ -187,6 +211,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.integer "error_event", limit: 2
     t.text "error_backtrace", array: true
     t.uuid "process_id"
+    t.interval "duration"
     t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
     t.index ["process_id", "created_at"], name: "index_good_job_executions_on_process_id_and_created_at"
   end
@@ -315,6 +340,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.index ["task_name", "status", "created_at"], name: "index_maintenance_tasks_runs", order: { created_at: :desc }
   end
 
+  create_table "memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "role", default: 50, null: false
+    t.index ["organization_id"], name: "index_memberships_on_organization_id"
+    t.index ["user_id", "organization_id"], name: "index_memberships_on_user_id_and_organization_id", unique: true
+    t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
   create_table "oidc_api_key_roles", force: :cascade do |t|
     t.bigint "oidc_provider_id", null: false
     t.bigint "user_id", null: false
@@ -382,6 +419,39 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "organization_onboarding_invites", force: :cascade do |t|
+    t.bigint "organization_onboarding_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_onboarding_id"], name: "idx_on_organization_onboarding_id_e5b08868fb"
+    t.index ["user_id"], name: "index_organization_onboarding_invites_on_user_id"
+  end
+
+  create_table "organization_onboardings", force: :cascade do |t|
+    t.string "status", null: false
+    t.string "name_type", null: false
+    t.string "organization_name", null: false
+    t.string "organization_handle", null: false
+    t.text "error"
+    t.integer "rubygems", default: [], array: true
+    t.datetime "onboarded_at"
+    t.integer "created_by_id", null: false
+    t.integer "onboarded_organization_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.string "handle", limit: 40
+    t.string "name", limit: 255
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "lower((handle)::text)", name: "index_organizations_on_lower_handle", unique: true
+  end
+
   create_table "ownership_calls", force: :cascade do |t|
     t.bigint "rubygem_id"
     t.bigint "user_id"
@@ -419,6 +489,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.boolean "owner_notifier", default: true, null: false
     t.integer "authorizer_id"
     t.boolean "ownership_request_notifier", default: true, null: false
+    t.integer "role", default: 70, null: false
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
   end
@@ -428,10 +499,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.boolean "indexed", default: false, null: false
+    t.bigint "organization_id"
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
+    t.index ["organization_id"], name: "index_rubygems_on_organization_id"
   end
 
   create_table "sendgrid_events", force: :cascade do |t|
@@ -580,7 +653,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
   end
 
   add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
+  add_foreign_key "attestations", "versions"
   add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
+  add_foreign_key "events_organization_events", "geoip_infos"
+  add_foreign_key "events_organization_events", "ip_addresses"
+  add_foreign_key "events_organization_events", "organizations"
   add_foreign_key "events_rubygem_events", "geoip_infos"
   add_foreign_key "events_rubygem_events", "ip_addresses"
   add_foreign_key "events_rubygem_events", "rubygems"
@@ -589,12 +666,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
   add_foreign_key "events_user_events", "users"
   add_foreign_key "ip_addresses", "geoip_infos"
   add_foreign_key "linksets", "rubygems", name: "linksets_rubygem_id_fk"
+  add_foreign_key "memberships", "organizations"
+  add_foreign_key "memberships", "users"
   add_foreign_key "oidc_api_key_roles", "oidc_providers"
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "organization_onboarding_invites", "organization_onboardings"
+  add_foreign_key "organization_onboarding_invites", "users"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
   add_foreign_key "ownership_calls", "users", name: "ownership_calls_user_id_fk"
   add_foreign_key "ownership_requests", "ownership_calls", name: "ownership_requests_ownership_call_id_fk"
@@ -602,6 +683,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_185717) do
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "rubygems", "organizations", on_delete: :nullify
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"
   add_foreign_key "web_hooks", "users", name: "web_hooks_user_id_fk"

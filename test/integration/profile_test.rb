@@ -88,7 +88,7 @@ class ProfileTest < SystemTest
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
       visit link
 
-      assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
+      assert page.has_content?("Your email address has been verified")
       visit edit_profile_path
 
       assert page.has_selector? "input[value='nick2@example.com']"
@@ -166,8 +166,9 @@ class ProfileTest < SystemTest
 
   test "seeing ownership calls and requests" do
     rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
+    requested_gem = create(:rubygem, number: "2.0.0")
     create(:ownership_call, rubygem: rubygem, user: @user, note: "special note")
-    create(:ownership_request, rubygem: rubygem, user: @user, note: "request note")
+    create(:ownership_request, rubygem: requested_gem, user: @user, note: "request note")
 
     sign_in
     visit profile_path("nick1")

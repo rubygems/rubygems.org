@@ -4,6 +4,7 @@ ja:
   copied: コピー完了!
   copy_to_clipboard: クリップボードにコピー
   edit: 編集
+  hide: 非表示
   verification_expired: 検証が期限切れです。もう一度検証してください。
   feed_latest: RubyGems.org | 最新のgemの一覧
   feed_subscribed: RubyGems.org | 購読したgemの一覧
@@ -20,12 +21,17 @@ ja:
   locale_name: 日本語
   none: なし
   not_found: 見つかりませんでした
+  forbidden:
+  api_gem_not_found:
   api_key_forbidden: APIキーにアクセス権がありません
+  api_key_soft_deleted:
+  api_key_insufficient_scope:
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
   please_sign_in: サインインしてお進みください。
   otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
   otp_missing: 多要素認証が有効化済みですがOTPのコードが与えられませんでした。入力の上再試行してください。
   sign_in: サインイン
+  sign_out: サインアウト
   sign_up: 新規登録
   dependency_list: 全ての推移的な依存関係を表示
   multifactor_authentication: 多要素認証
@@ -33,8 +39,10 @@ ja:
   this_rubygem_could_not_be_found: お探しのrubygemは見つかりませんでした。
   time_ago: "%{duration}前"
   title: RubyGems.org
-  update: 更新
+  total_downloads: 累計ダウンロード数
   try_again: エラーが発生しました。再試行してください。
+  update: 更新
+  view_all: 全て表示
   advanced_search: 高度な検索
   authenticate: 認証
   helpers:
@@ -60,6 +68,14 @@ ja:
         full_name: フルネーム
         handle: ユーザー名
         password: パスワード
+      ownership/role:
+        owner:
+        maintainer:
+      membership/role:
+        owner:
+        admin:
+        maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC APIキーのロール
       oidc/id_token:
@@ -80,11 +96,26 @@ ja:
           attributes:
             expires_at:
               inclusion: 未来でなければなりません
+        organization:
+          attributes:
+            handle:
+              invalid:
         ownership:
           attributes:
             user_id:
               already_confirmed: は既にこのgemの所有者です
               already_invited: は既にこのgemに招待されています
+        ownership_request:
+          attributes:
+            user_id:
+              taken:
+              existing:
+        user:
+          attributes:
+            handle:
+              invalid:
+            password:
+              bcrypt_length:
         version:
           attributes:
             gem_full_name:
@@ -155,6 +186,7 @@ ja:
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA
       expiration: 期限
+      update_owner:
     new:
       new_api_key: 新しいAPIキー
     reset:
@@ -176,8 +208,9 @@ ja:
       migrating_link_text: 移行
       mine: 自分のgem
       my_subscriptions: 購読
-      no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}またはRubyForgeからの%{migrating_link}ガイドをご覧ください。
+      no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}ガイドをご覧ください。
       no_subscriptions_html: まだgemを購読していません。%{gem_link}から何か購読してみてください。
+      organizations:
       title: ダッシュボード
   dependencies:
     show:
@@ -206,6 +239,7 @@ ja:
         blog: ブログ
         contribute: 貢献
         data: データ
+        docs: ドキュメント
         designed_by: 設計
         discussion_forum: 議論
         gems_served_by: gemの提供
@@ -220,6 +254,9 @@ ja:
         statistics: 統計
         status: 状態
         supported_by: 協賛
+        supported_by_html: |
+          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
+          は以下から支援を受けています
         tested_by: テスト
         tracking_by: 追跡
         uptime: 稼働時間
@@ -227,15 +264,19 @@ ja:
         secured_by: セキュリティ
         looking_for_maintainers: メンテナの募集
       header:
+        profile: プロフィール
         dashboard: ダッシュボード
         settings: 設定
         edit_profile: プロフィールを編集
         search_gem_html: gemを検索...
-        sign_in: サインイン
-        sign_out: サインアウト
-        sign_up: 新規登録
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
         to blog post)！"
+  breadcrumbs:
+    home: ホーム
+    dashboard: ダッシュボード
+    settings: 設定
+    org_name: 組織：%{name}
+    subscriptions: 購読
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -318,6 +359,12 @@ ja:
       subtitle: こんにちは、%{user_handle}！
       body_html: <b>あなた</b>は<b>%{remover}</b>によって%{host}上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者から削除されました。
+    owner_updated:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      body_text:
     ownerhip_request_closed:
       title: 所有権の申請
       subtitle: こんにちは、%{handle}！
@@ -360,6 +407,8 @@ ja:
       gem_html: このwebhookは以前<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>がプッシュされたときに呼ばれました。
     gem_trusted_publisher_added:
       title: 信頼できる発行元が追加されました
+    admin_manual:
+      title:
   news:
     show:
       title: 新しいリリース - 全てのgem
@@ -389,10 +438,6 @@ ja:
       title: RubyGems.orgのデータのダンプ
     download:
       title: RubyGemsをダウンロード
-    faq:
-      title: FAQ
-    migrate:
-      title: gemを移行する
     security:
       title: セキュリティ
     sponsors:
@@ -428,12 +473,17 @@ ja:
     strong_mfa_level_recommended: アカウントとgemの保護のため、MFAの水準を「UIとgemのサインイン」または「UIとAPI」に変更することをお勧めします。将来のアカウントはこれらの水準のどちらか1つにMFAが有効になっていることが必須になります。
     setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">詳細はこちら</a>！"
+    api:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
     recovery:
-      copied: "[ コピーしました ]"
       continue: 続ける
       title: 復旧コード
-      copy: "[ コピーする ]"
       saved: 復旧コードを保存したことを確認しました。
+      confirm_dialog:
       note_html: これらの復旧コードを<strong class='recovery__bold'>コピー及び保存</strong>してください。認証機器を紛失した場合にこれらのコードを使ってログインしMFAをリセットできます。各コードは1回使えます。
       already_generated: 既に復旧コードを保存したはずです。
     update:
@@ -497,7 +547,13 @@ ja:
     failed_verification:
       title: エラー - 検証が失敗しました
       close_browser: このブラウザを閉じて再試行してください。
+  organization_onboardings:
+    confirm:
+      success:
   owners:
+    edit:
+      role:
+      title:
     confirm:
       confirmed_email: "%{gem} gemの所有者として追加されました"
       token_expired: 確認トークンが期限切れです。gemのページからトークンを再送してみてください。
@@ -509,6 +565,8 @@ ja:
       confirmed_at: 確定日時
       added_by: 追加者
       action: 操作
+      role:
+      role_field:
       email_field: Eメール / ハンドル名
       submit_button: 所有者を追加
       info: 所有者を追加または削除する
@@ -519,6 +577,9 @@ ja:
       resent_notice: 確定メールがEメールに再送されました。
     create:
       success_notice: "%{handle}が未確定の所有者として追加されました。当該ユーザーがEメールに送られた確定メールでクリックした後に所有権アクセスが有効になります。"
+    update:
+      update_current_user_role:
+      success_notice:
     destroy:
       removed_notice: "%{owner_name}は所有者から正常に削除されました"
       failed_notice: gemの唯一の所有者は削除できません。
@@ -604,6 +665,7 @@ ja:
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
+      gem_version_age: このバージョンがリリースされたのは
       required_ruby_version: 必要なRubyのバージョン
       required_rubygems_version: 必要なRubyGemsのバージョン
       requires_mfa: 新しいバージョンはMFAを必要とします
@@ -650,6 +712,7 @@ ja:
       sha_256_checksum: SHA 256チェックサム
       signature_period: シグネチャの有効期限
       expired: 期限切れ
+      provenance_header:
     version_navigation:
       previous_version: "←前のバージョン"
       next_version: 次のバージョン→
@@ -695,7 +758,7 @@ ja:
       updated: 更新日
       yanked: ヤンク済み
     show:
-      subtitle: "%{query}の検索結果"
+      subtitle_html: "<em>%{query}</em>の検索結果"
       month_update: 先月更新（%{count}件）
       week_update: 先週更新（%{count}件）
       filter: 絞り込み：
@@ -715,7 +778,6 @@ ja:
     index:
       title: 統計
       all_time_most_downloaded: 累計最多ダウンロード数
-      total_downloads: 累計ダウンロード数
       total_gems: gem総数
       total_users: ユーザー総数
   users:
@@ -782,8 +844,6 @@ ja:
       continue: 続ける
       title: セキュリティ機器を正常に追加しました。
       notice_html: これらの復旧コードを<strong class="recovery__bold">コピー&amp;ペースト</strong>してください。セキュリティ機器を紛失した場合にこれらのコードを使ってログインできます。各コードは1度使えます。
-      copied: "[ コピーしました ]"
-      copy: "[ コピーする ]"
       saved: 復旧コードを保存したことを確認しました。
     webauthn_credential:
       confirm_delete: 認証情報が削除されました

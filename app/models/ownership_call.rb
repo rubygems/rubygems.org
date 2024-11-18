@@ -10,7 +10,7 @@ class OwnershipCall < ApplicationRecord
   delegate :name, to: :rubygem, prefix: true
   delegate :display_handle, to: :user, prefix: true
 
-  enum status: { opened: true, closed: false }
+  enum :status, { opened: true, closed: false }
 
   def close!
     ownership_requests.each(&:close!)

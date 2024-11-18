@@ -73,6 +73,12 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
+  def development_log_in_as
+    user = User.find(params[:user_id])
+    sign_in(user)
+    redirect_back_or_to dashboard_path
+  end
+
   private
 
   def mark_verified
@@ -107,6 +113,10 @@ class SessionsController < Clearance::SessionsController
     flash.now.notice = message
     webauthn_new_setup
     render "sessions/new", status: :unauthorized
+  end
+
+  def webauthn_failure
+    invalidate_mfa_session(@webauthn_error)
   end
 
   def mfa_failure(message)

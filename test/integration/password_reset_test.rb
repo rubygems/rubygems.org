@@ -38,11 +38,8 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
-    assert_equal dashboard_path, page.current_path
+    assert_equal sign_in_path, page.current_path
 
-    click_link "Sign out"
-
-    visit sign_in_path
     fill_in "Email or Username", with: @user.email
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
@@ -54,8 +51,6 @@ class PasswordResetTest < SystemTest
     forgot_password_with @user.email
 
     visit password_reset_link
-
-    assert page.has_content?("Sign out")
 
     fill_in "Password", with: ""
     click_button "Save this password"
@@ -75,6 +70,7 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
+    assert_equal sign_in_path, page.current_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
@@ -113,6 +109,7 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
+    assert_equal sign_in_path, page.current_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
 
     assert_event Events::UserEvent::PASSWORD_CHANGED, {},
@@ -130,10 +127,13 @@ class PasswordResetTest < SystemTest
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
 
-    assert page.has_content?("Sign out")
+    refute page.has_content?("Sign out")
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
+
+    assert_equal sign_in_path, page.current_path
+    assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
   test "resetting a password when mfa is enabled but mfa session is expired" do
@@ -166,9 +166,9 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
-    find(:css, ".header__popup-link").click
-
-    assert page.has_content?("SIGN OUT")
+    assert page.has_content?("Sign in")
+    assert_equal sign_in_path, page.current_path
+    assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
   test "resetting password when webauthn is enabled using recovery codes" do
@@ -190,9 +190,9 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
-    find(:css, ".header__popup-link").click
-
-    assert page.has_content?("SIGN OUT")
+    assert page.has_content?("Sign in")
+    assert_equal sign_in_path, page.current_path
+    assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
   test "resetting password with pending email change" do

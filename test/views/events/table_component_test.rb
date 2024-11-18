@@ -1,9 +1,7 @@
 require "test_helper"
 require "phlex/testing/rails/view_helper"
 
-class Events::TableComponentTest < ActiveSupport::TestCase
-  include Phlex::Testing::Rails::ViewHelper
-
+class Events::TableComponentTest < ComponentTest
   class TestEvent
     include ActiveModel::Model
     include ActiveModel::Attributes
@@ -47,14 +45,14 @@ class Events::TableComponentTest < ActiveSupport::TestCase
   test "renders an empty view" do
     page = render table
 
-    page.assert_text "No entries found"
+    assert_text page, "No entries found"
   end
 
   test "renders an unknown event" do
     page = render table(page([TestEvent.new(tag: "unknown:other")]))
 
-    page.assert_text "Displaying 1 entry"
-    page.assert_text "unknown:other"
+    assert_text page, "Displaying 1 entry"
+    assert_text page, "unknown:other"
   end
 
   test "renders redacted additional info when user_id does not match" do
@@ -68,11 +66,11 @@ class Events::TableComponentTest < ActiveSupport::TestCase
                                                  })
                              ]), stubs: { current_user: user })
 
-    page.assert_text "Displaying 1 entry"
-    page.assert_text "user2:created"
-    page.assert_text "Redacted"
-    page.assert_no_text "Buffalo, NY, US"
-    page.assert_no_text "installer (implementation on system)"
+    assert_text page, "Displaying 1 entry"
+    assert_text page, "user2:created"
+    assert_text page, "Redacted"
+    assert_no_text page, "Buffalo, NY, US"
+    assert_no_text page, "installer (implementation on system)"
   end
 
   test "renders additional info when user_id matches" do
@@ -86,9 +84,9 @@ class Events::TableComponentTest < ActiveSupport::TestCase
                                                  })
                              ]), stubs: { current_user: user })
 
-    page.assert_text "Displaying 1 entry"
-    page.assert_text "user:created"
-    page.assert_text "Buffalo, NY, US"
-    page.assert_text "installer (implementation on system)"
+    assert_text page, "Displaying 1 entry"
+    assert_text page, "user:created"
+    assert_text page, "Buffalo, NY, US"
+    assert_text page, "installer (implementation on system)"
   end
 end

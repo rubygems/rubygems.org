@@ -48,9 +48,11 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:validate).returns true
-        @cutter.stubs(:save)
+        @cutter.stubs(:verify_sigstore).returns true
+        @cutter.stubs(:sign_sigstore).returns true
+        @cutter.stubs(:save).returns true
 
-        @cutter.process
+        assert @cutter.process
       end
 
       should "not attempt to find rubygem if spec can't be pulled" do
@@ -121,15 +123,6 @@ class PusherTest < ActiveSupport::TestCase
 
         @cutter.process
       end
-    end
-
-    should "not be able to pull spec from a bad path" do
-      @cutter.stubs(:body).stubs(:stub!).stubs(:read)
-      @cutter.pull_spec
-
-      assert_nil @cutter.spec
-      assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
-      assert_equal 422, @cutter.code
     end
 
     should "not be able to pull spec with metadata containing bad ruby objects" do
@@ -822,6 +815,103 @@ class PusherTest < ActiveSupport::TestCase
       cutter.stubs(:rubygem).returns @rubygem
 
       refute cutter.verify_gem_scope
+    end
+  end
+
+  context "with attestations" do
+    should "not push gem if api key owner is not a trusted publisher" do
+      @cutter.stubs(:attestations).returns([{}])
+
+      refute @cutter.verify_sigstore
+      assert_equal "Pushing with an attestation requires trusted publishing", @cutter.message
+    end
+
+    should "not push gem if attestation fails to validate" do
+      @cutter.stubs(:attestations).returns(
+        [
+          { "media_type" => Sigstore::BundleType::BUNDLE_0_3.media_type,
+            "verification_material" => {
+              "certificate" => {
+                "rawBytes" => [build(:x509_certificate, :key_usage).to_der].pack("m0")
+              },
+              "tlogEntries" => [
+                {
+                  "inclusionProof" => {
+                    "checkpoint" => { "envelope" => "" }
+                  },
+                  "canonicalizedBody" => [
+                    JSON.dump(
+                      spec: {
+                        signature: {
+                          content: {
+                            publicKey: { content: [""].pack("m0") }
+                          }
+                        },
+                        kind: "hashedrekord",
+                        apiVersion: "0.0.1"
+                      }
+                    )
+                  ].pack("m0")
+                }
+              ]
+            },
+            "message_signature" => {} }
+        ]
+      )
+      @api_key.owner = create(:oidc_trusted_publisher_github_action)
+      @api_key.oidc_id_token = create(:oidc_id_token)
+
+      @cutter.send(:sigstore_verifier).expects(:verify).with(input: anything, policy: anything, offline: true)
+        .returns Sigstore::VerificationFailure.new("Attestation failed to validate")
+
+      refute @cutter.verify_sigstore
+      assert_equal "Attestation verification failed:\nAttestation failed to validate", @cutter.message
+    end
+
+    context "with attestations and trusted publisher" do
+      setup do
+        attestations = build_list(:sigstore_bundle, 2)
+        rubygem = create(:rubygem, name: "test", owners: [@user])
+        create(:version, rubygem: rubygem, number: "0.1.1", indexed: true)
+        rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+        rubygem_trusted_publisher.trusted_publisher.update!(
+          repository_owner: "sigstore-conformance",
+          repository_name: "extremely-dangerous-public-oidc-beacon",
+          workflow_filename: "extremely-dangerous-oidc-beacon.yml"
+        )
+
+        @api_key = create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: "54321", scopes: %i[push_rubygem])
+        create(:oidc_id_token, api_key: @api_key, jwt: { claims: { "ref" => "refs/heads/main" } })
+        @cutter = Pusher.new(@api_key, gem_file("test-1.0.0.gem"), attestations: attestations.map(&:as_json))
+      end
+
+      should "add valid attestations to version" do
+        @cutter.send(:sigstore_verifier).expects(:verify).twice
+          .returns Sigstore::VerificationSuccess.new
+
+        assert @cutter.process, @cutter.message # rubocop:disable Minitest/AssertWithExpectedArgument
+        assert_equal 2, @cutter.version.attestations.size
+      end
+
+      should "fail when first attestation fails to validate" do
+        @cutter.send(:sigstore_verifier).expects(:verify).once
+          .returns Sigstore::VerificationFailure.new("abc")
+
+        refute @cutter.process
+        assert_equal "Attestation verification failed:\nabc", @cutter.message
+        assert_equal 422, @cutter.code
+      end
+
+      should "fail when second attestation fails to validate" do
+        @cutter.send(:sigstore_verifier).expects(:verify).once
+          .returns Sigstore::VerificationFailure.new("abc")
+        @cutter.send(:sigstore_verifier).expects(:verify).once
+          .returns Sigstore::VerificationSuccess.new
+
+        refute @cutter.process
+        assert_equal "Attestation verification failed:\nabc", @cutter.message
+        assert_equal 422, @cutter.code
+      end
     end
   end
 

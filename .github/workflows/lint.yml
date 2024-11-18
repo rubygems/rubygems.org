@@ -10,37 +10,37 @@ permissions:
 jobs:
   rubocop:
     name: Rubocop
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: ruby/setup-ruby@97e35c5302afcf3f5ac1df3fca9343d32536b286 # v1.184.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc # v1.202.0
         with:
           bundler-cache: true
       - name: Rubocop
         run: bundle exec rubocop
   brakeman:
     name: Brakeman
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: ruby/setup-ruby@97e35c5302afcf3f5ac1df3fca9343d32536b286 # v1.184.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc # v1.202.0
         with:
           bundler-cache: true
       - name: Brakeman
         run: bundle exec brakeman
   importmap:
     name: Importmap Verify
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: ruby/setup-ruby@97e35c5302afcf3f5ac1df3fca9343d32536b286 # v1.184.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc # v1.202.0
         with:
           bundler-cache: true
       - name: Importmap Verify
         run: bundle exec rake importmap:verify
   kubeconform:
     name: Kubeconform
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         kubernetes_version: ["1.29.1"]
@@ -50,8 +50,8 @@ jobs:
     steps:
       - name: login to Github Packages
         run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: ruby/setup-ruby@97e35c5302afcf3f5ac1df3fca9343d32536b286 # v1.184.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc # v1.202.0
         with:
           bundler-cache: true
       - name: krane render
@@ -60,12 +60,27 @@ jobs:
         env:
           ENVIRONMENT: "${{ matrix.environment }}"
           REVISION: "${{ github.sha }}"
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: "${{ matrix.environment }}.rendered.yaml"
           path: "config/deploy/${{ matrix.environment }}.rendered.yaml"
       - name: kubeconform
-        uses: docker://ghcr.io/yannh/kubeconform:v0.6.3
+        uses: docker://ghcr.io/yannh/kubeconform@sha256:03f6b236ef64f20b4bc950209d6254b109e23b4b05e7811649f59eae5659fa58 # v0.6.3
         with:
           entrypoint: "/kubeconform"
           args: "-strict -summary -output json --kubernetes-version ${{ matrix.kubernetes_version }} config/deploy/${{ matrix.environment }}.rendered.yaml"
+  frizbee:
+    name: Frizbee
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: segiddins/frizbee-action@c162fdaa6c73525a577d2d6eb193683dfc9ba2be # segiddins/run-in-place
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          action_paths: '[".github/workflows", ".github/actions"]'
+          dockerfiles: '["./Dockerfile", ".devcontainer/Dockerfile"]'
+          docker_compose: '["./docker-compose.yml", ".devcontainer/docker-compose.yml"]'
+          fail_on_unpinned: true
+          open_pr: false
+          repo_root: "."

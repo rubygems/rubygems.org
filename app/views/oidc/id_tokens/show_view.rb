@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class OIDC::IdTokens::ShowView < ApplicationView
-  extend Dry::Initializer
   include Phlex::Rails::Helpers::TimeTag
   include Phlex::Rails::Helpers::LinkTo
 
-  option :id_token
+  prop :id_token, reader: :public
 
   def view_template # rubocop:disable Metrics/AbcSize
     self.title = t(".title")

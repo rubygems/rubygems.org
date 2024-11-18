@@ -1,4 +1,4 @@
-class GlobalIdField < Avo::Fields::BelongsToField
+class Avo::Fields::GlobalIdField < Avo::Fields::BelongsToField
   include SemanticLogger::Loggable
 
   delegate(*%i[values_for_type custom?], to: :@nil)

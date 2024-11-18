@@ -287,9 +287,9 @@ class VersionsManifestTest < ActiveSupport::TestCase
     end
 
     should "gracefully no-op when there's nothing to delete" do
-      @manifest.yank
+      assert @manifest.yank
 
-      @manifest.yank
+      assert @manifest.yank
     end
   end
 

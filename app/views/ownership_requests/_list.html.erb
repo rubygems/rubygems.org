@@ -4,7 +4,7 @@
   </h2>
 </div>
 
-<% if @rubygem.owned_by?(current_user) %>
+<% if policy(@rubygem).manage_adoption? %>
   <div class="t-list__items">
     <%= render(partial: "ownership_requests/owner", layout: "ownership_requests/ownership_request", collection: @ownership_requests, as: :ownership_request, locals: { show_user: true, show_gem: false }) || t("ownership_requests.no_ownership_requests", gem: @rubygem.name) %>
   </div>

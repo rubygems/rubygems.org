@@ -63,13 +63,13 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
       params: { email: @other_user.email },
       headers: { "HTTP_AUTHORIZATION" => @other_user_api_key }
 
-    assert_response :unauthorized
+    assert_response :forbidden
 
     delete api_v1_rubygem_owners_path(@rubygem.slug),
       params: { email: @other_user.email },
       headers: { "HTTP_AUTHORIZATION" => @other_user_api_key }
 
-    assert_response :unauthorized
+    assert_response :forbidden
 
     post api_v1_rubygem_owners_path(@rubygem.slug),
       params: { email: @other_user.email },

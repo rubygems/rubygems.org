@@ -5,30 +5,9 @@ class MaintenanceTasksTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
-  def sign_in_as(user)
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: "github",
-      uid: "1",
-      credentials: {
-        token: user.oauth_token,
-        expires: false
-      },
-      info: {
-        name: user.login
-      }
-    )
-
-    stub_github_info_request(user.info_data)
-
-    visit admin_maintenance_tasks.root_path
-    click_button "Log in with GitHub"
-
-    page.assert_text "Maintenance Tasks"
-  end
-
   test "auditing create run" do
     admin_user = create(:admin_github_user, :is_admin)
-    sign_in_as admin_user
+    avo_sign_in_as admin_user
 
     visit admin_maintenance_tasks.root_path
     click_on "Maintenance::UserTotpSeedEmptyToNilTask"
