@@ -246,7 +246,8 @@ class Pusher
     end
 
     true
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique => e
+    logger.info { { message: "Error updating rubygem", exception: e } }
     false
   end
 
