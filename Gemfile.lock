@@ -133,7 +133,6 @@ GEM
     avo_upgrade (0.1.1)
       rails (>= 6.0.0)
       zeitwerk
-    awrence (1.2.1)
     aws-eventstream (1.3.0)
     aws-partitions (1.1008.0)
     aws-sdk-core (3.213.0)
@@ -202,7 +201,7 @@ GEM
     compact_index (0.15.0)
     concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
-    cose (1.3.0)
+    cose (1.3.1)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
     crack (1.0.0)
@@ -364,7 +363,8 @@ GEM
       bindata
       faraday (~> 2.0)
       faraday-follow_redirects
-    jwt (2.7.1)
+    jwt (2.9.3)
+      base64
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -808,7 +808,7 @@ GEM
       activesupport
       pg (~> 1.2)
     toxiproxy (2.0.2)
-    tpm-key_attestation (0.12.0)
+    tpm-key_attestation (0.12.1)
       bindata (~> 2.4)
       openssl (> 2.0)
       openssl-signature_algorithm (~> 1.0)
@@ -836,9 +836,8 @@ GEM
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
-    webauthn (3.1.0)
+    webauthn (3.2.2)
       android_key_attestation (~> 0.3.0)
-      awrence (~> 1.1)
       bindata (~> 2.4)
       cbor (~> 0.5.9)
       cose (~> 1.1)
@@ -988,7 +987,7 @@ DEPENDENCIES
   user_agent_parser (~> 2.18)
   validates_formatting_of (~> 0.9)
   view_component (~> 3.14.0)
-  webauthn (~> 3.1)
+  webauthn (~> 3.2)
   webmock (~> 3.24)
   xml-simple (~> 1.1)
 
@@ -1021,7 +1020,6 @@ CHECKSUMS
   avo-menu (3.14.0) sha256=f07243d2a52921d28718d7d9bdddb11eaebdc0dd5b07deed7a7fb767550be554
   avo-pro (3.14.0) sha256=0a20743f5c5e685a9088c9b753bc8419a68aac57f7fa2966485e9ceb61a82c5f
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
-  awrence (1.2.1) sha256=dd1d214c12a91f449d1ef81d7ee3babc2816944e450752e7522c65521872483e
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.1008.0) sha256=6fb5e6b843ea1169480c804fc861a5de7407762097de75cf4734fbcd35466227
   aws-sdk-core (3.213.0) sha256=6ca685be1d72d61776fdaaddf3c293e45a472ff0dd0b624880e7813d0c82db19
@@ -1053,7 +1051,7 @@ CHECKSUMS
   compact_index (0.15.0) sha256=5c6c404afca8928a7d9f4dde9524f6e1610db17e675330803055db282da84a8b
   concurrent-ruby (1.3.4) sha256=d4aa926339b0a86b5b5054a0a8c580163e6f5dcbdfd0f4bb916b1a2570731c32
   connection_pool (2.4.1) sha256=0f40cf997091f1f04ff66da67eabd61a9fe0d4928b9a3645228532512fab62f4
-  cose (1.3.0) sha256=63247c66a5bc76e53926756574fe3724cc0a88707e358c90532ae2a320e98601
+  cose (1.3.1) sha256=d5d4dbcd6b035d513edc4e1ab9bc10e9ce13b4011c96e3d1b8fe5e6413fd6de5
   crack (1.0.0) sha256=c83aefdb428cdc7b66c7f287e488c796f055c0839e6e545fec2c7047743c4a49
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   css_parser (1.19.1) sha256=1940dce01e3b9be18d6880e6d65162d984cc04ff28998cf4759beb999275209e
@@ -1122,7 +1120,7 @@ CHECKSUMS
   job-iteration (1.7.0) sha256=7e9db935ce021280a030414995047f370b458597405b316a0bf59ecc9c9cad5d
   json (2.8.2) sha256=dd4fa6c9c81daecf72b86ea36e56ed8955fdbb4d4dc379c93d313a59344486cf
   json-jwt (1.16.7) sha256=ccabff4c6d1a14276b23178e8bebe513ef236399b72a0b886d7ed94800d172a5
-  jwt (2.7.1) sha256=07357cd2f180739b2f8184eda969e252d850ac996ed0a23f616e8ff0a90ae19b
+  jwt (2.9.3) sha256=55fd07ccdd64c622d36859748f2290fb9c119ce30b482867504e9f12654d6a65
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
   kaminari-actionview (1.2.2) sha256=1330f6fc8b59a4a4ef6a549ff8a224797289ebf7a3a503e8c1652535287cc909
   kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
@@ -1300,7 +1298,7 @@ CHECKSUMS
   timeout (0.4.2) sha256=8aca2d5ff98eb2f7a501c03f8c3622065932cc58bc58f725cd50a09e63b4cc19
   timescaledb (0.3.0) sha256=9ce2b39417d30544054cb609fbd84e18e304c7b7952a793846b8f4489551a28f
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
-  tpm-key_attestation (0.12.0) sha256=e133d80cf24fef0e7a7dfad00fd6aeff01fc79875fbfc66cd8537bbd622b1e6d
+  tpm-key_attestation (0.12.1) sha256=3c1315bed06ba3563aee98ff69c270d9b45b586a43ac2da250b23cad3c3caca3
   turbo-rails (2.0.11) sha256=fc47674736372780abd2a4dc0d84bef242f5ca156a457cd7fa6308291e397fcf
   turbo_power (0.6.2) sha256=c9080d0d1bb79deed67bee2a7654dd38f9c903b57ad52b98d19d000958fde2cc
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
@@ -1313,7 +1311,7 @@ CHECKSUMS
   validates_formatting_of (0.9.0) sha256=139590a4b87596dbfb04d93e897bd2e6d30fb849d04fab0343e71ed2ca856e7e
   version_gem (1.1.1) sha256=3c2da6ded29045ddcc0387e152dc634e1f0c490b7128dce0697ccc1cf0915b6c
   view_component (3.14.0) sha256=96816de1c40d276d9fac49316ee4d196de90b1ce6eb39373b887c639749e630c
-  webauthn (3.1.0) sha256=e545fcf17d8a6b821161a37c1c4bc8c3d2ead0ff6ff3b098f57f417e731790b7
+  webauthn (3.2.2) sha256=46e70b234963c85bbf8ea8febc9a3cbf04569e34a73a570d86f68556f3f36a38
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
   webmock (3.24.0) sha256=be01357f6fc773606337ca79f3ba332b7d52cbe5c27587671abc0572dbec7122
   websocket (1.2.11) sha256=b7e7a74e2410b5e85c25858b26b3322f29161e300935f70a0e0d3c35e0462737
