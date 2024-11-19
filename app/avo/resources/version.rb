@@ -13,9 +13,13 @@ class Avo::Resources::Version < Avo::BaseResource
   end
 
   class IndexedFilter < Avo::Filters::ScopeBooleanFilter; end
+  class TrustedPublisherFilter < Avo::Filters::ScopeBooleanFilter; end
+  class AttestationFilter < Avo::Filters::ScopeBooleanFilter; end
 
   def filters
     filter IndexedFilter, arguments: { default: { indexed: true, yanked: true } }
+    filter TrustedPublisherFilter, arguments: { default: { pushed_with_trusted_publishing: true, pushed_without_trusted_publishing: true } }
+    filter AttestationFilter, arguments: { default: { with_attestations: true, without_attestations: true } }
   end
 
   def fields # rubocop:disable Metrics
@@ -74,6 +78,7 @@ class Avo::Resources::Version < Avo::BaseResource
       field :dependencies, as: :has_many
       field :gem_download, as: :has_one, name: "Downloads"
       field :deletion, as: :has_one
+      field :attestations, as: :has_many
     end
   end
 end

@@ -38,6 +38,9 @@ class ApiKey < ApplicationRecord
   scope :oidc, -> { joins(:oidc_id_token) }
   scope :not_oidc, -> { where.missing(:oidc_id_token) }
 
+  scope :trusted_publisher, -> { where("owner_type like ?", "OIDC::TrustedPublisher::%") }
+  scope :not_trusted_publisher, -> { where("owner_type not like ?", "OIDC::TrustedPublisher::%") }
+
   def self.expire_all!
     transaction do
       unexpired.find_each.all?(&:expire!)
