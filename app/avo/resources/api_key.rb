@@ -3,9 +3,11 @@ class Avo::Resources::ApiKey < Avo::BaseResource
   self.includes = []
 
   class ExpiredFilter < Avo::Filters::ScopeBooleanFilter; end
+  class TrustedPublisherFilter < Avo::Filters::ScopeBooleanFilter; end
 
   def filters
     filter ExpiredFilter, arguments: { default: { expired: false, unexpired: true } }
+    filter TrustedPublisherFilter, arguments: { default: { trusted_publisher: true, not_trusted_publisher: true } }
   end
 
   def fields
