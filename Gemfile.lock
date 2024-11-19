@@ -765,7 +765,7 @@ GEM
     shoulda-context (3.0.0.rc1)
     shoulda-matchers (6.4.0)
       activesupport (>= 5.2.0)
-    sigstore (0.1.1)
+    sigstore (0.2.0)
       net-http
       protobug_sigstore_protos (~> 0.1.0)
       uri
@@ -974,7 +974,7 @@ DEPENDENCIES
   shoryuken (~> 6.2)
   shoulda-context (~> 3.0.0.rc1)
   shoulda-matchers (~> 6.4)
-  sigstore (~> 0.1.1)
+  sigstore (~> 0.2.0)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
   statsd-instrument (~> 3.9)
@@ -1276,7 +1276,7 @@ CHECKSUMS
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
   shoulda-matchers (6.4.0) sha256=9055bb7f4bb342125fb860809798855c630e05ef5e75837b3168b8e6ee1608b0
-  sigstore (0.1.1) sha256=0c2c3c5d175b204252eeb1507bfb79e330009188d160525d2871b5272f958897
+  sigstore (0.2.0) sha256=328c35767e09e35ec796fe3155d634bf26e096e70eb1a3c09828f6262a4f3466
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-cobertura (2.1.0) sha256=2c6532e34df2e38a379d72cef9a05c3b16c64ce90566beebc6887801c4ad3f02
   simplecov-html (0.12.3) sha256=4b1aad33259ffba8b29c6876c12db70e5750cb9df829486e4c6e5da4fa0aa07b
