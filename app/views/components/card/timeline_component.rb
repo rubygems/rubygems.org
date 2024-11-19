@@ -6,7 +6,7 @@ class Card::TimelineComponent < ApplicationComponent
   include Phlex::Rails::Helpers::TimeAgoInWords
 
   def view_template(&)
-    div(class: "flex grow ml-2 md:-ml-2 border-l-2 border-neutral-300") do
+    div(class: "flex grow ml-2 border-l-2 border-neutral-300") do
       div(class: "flex flex-col grow -mt-2", &)
     end
   end

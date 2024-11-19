@@ -27,16 +27,6 @@ class CardComponent < ApplicationComponent
     end
   end
 
-  def with_list(items, &)
-    list do
-      items.each do |item|
-        list_item do
-          yield(item)
-        end
-      end
-    end
-  end
-
   def list(**options, &)
     options[:class] = "#{options[:class]} -mx-4"
     ul(**options, &)
