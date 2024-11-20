@@ -33,6 +33,14 @@ class RubygemPolicyTest < PolicyTestCase
     Pundit.policy!(user, @org_rubygem)
   end
 
+  context "#create?" do
+    should "allow users" do
+      assert_authorized policy!(@owner), :create?
+      assert_authorized policy!(@user), :create?
+      refute_authorized policy!(nil), :create?
+    end
+  end
+
   context "#configure_oidc?" do
     should "only allow the owner" do
       assert_authorized policy!(@owner), :configure_oidc?
