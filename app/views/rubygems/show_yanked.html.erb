@@ -19,4 +19,6 @@
       <%= render partial: "rubygems/gem_members", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
     <% end %>
   </div>
+
+  <%= render "rubygems/aside_yanked" %>
 </div>
