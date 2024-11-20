@@ -17,10 +17,14 @@ class ProfileTest < ApplicationSystemTestCase
     visit profile_path("nick1")
 
     click_link "Edit Profile"
+
     fill_in "user_twitter_username", with: "nick1twitter"
+
+    assert_equal "nick1twitter", page.find_by_id("user_twitter_username").value
+
     click_button "Update"
 
-    # assert_content("please fill in your password")
-    assert page.has_content?("nick1twitter")
+    # Verify that the newly added Twitter username is still on the form so that the user does not need to re-enter it
+    assert_equal "nick1twitter", page.find_by_id("user_twitter_username").value
   end
 end

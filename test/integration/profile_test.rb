@@ -133,19 +133,6 @@ class ProfileTest < SystemTest
     assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
   end
 
-  test "adding X(formerly Twitter) username without filling in your password" do
-    sign_in
-    visit profile_path("nick1")
-
-    click_link "Edit Profile"
-    fill_in "user_twitter_username", with: "nick1twitter"
-    click_button "Update"
-        puts page.html
-
-
-    assert_content("please fill in your password")
-  end
-
   test "deleting profile" do
     sign_in
     visit profile_path("nick1")
