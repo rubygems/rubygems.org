@@ -12,6 +12,11 @@ class ProfileTest < ApplicationSystemTestCase
     click_button "Sign in"
   end
 
+  def sign_out
+    page.driver.browser.clear_cookies # rack-test specific
+    visit "/"
+  end
+
   test "adding X(formerly Twitter) username without filling in your password" do
     twitter_username = "nick1twitter"
 
@@ -32,6 +37,12 @@ class ProfileTest < ApplicationSystemTestCase
     click_button "Update"
 
     assert page.has_content? "Your profile was updated."
+    assert_equal twitter_username, page.find_by_id("user_twitter_username").value
+
+    sign_out
+
+    visit profile_path("nick1")
+
     assert_equal twitter_username, page.find_by_id("user_twitter_username").value
   end
 end
