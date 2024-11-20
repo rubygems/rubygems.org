@@ -197,6 +197,22 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     where(created_at: start_time..end_time).order(:created_at, :id)
   end
 
+  def self.pushed_with_trusted_publishing
+    joins(:pusher_api_key).merge(ApiKey.trusted_publisher)
+  end
+
+  def self.pushed_without_trusted_publishing
+    left_joins(:pusher_api_key).merge(ApiKey.not_trusted_publisher.or(where(pusher_api_key: nil).only(:where)))
+  end
+
+  def self.with_attestations
+    where.associated(:attestations)
+  end
+
+  def self.without_attestations
+    where.missing(:attestations)
+  end
+
   def platformed?
     platform != "ruby"
   end

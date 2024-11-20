@@ -8,20 +8,8 @@ class RubygemPolicy < ApplicationPolicy
   alias rubygem record
   delegate :organization, to: :rubygem
 
-  def show?
-    true
-  end
-
   def create?
     user.present?
-  end
-
-  def update?
-    false
-  end
-
-  def destroy?
-    false
   end
 
   def configure_oidc?

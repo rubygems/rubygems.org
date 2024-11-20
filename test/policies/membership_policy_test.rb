@@ -96,26 +96,24 @@ class MembershipPolicyTest < PolicyTestCase
     context "removing owner" do
       should "be authorized for org owners only" do
         membership = create(:membership, :owner, organization: @organization)
-        membership.role = :admin
 
-        assert_authorized policy!(@owner, membership), :update?
+        assert_authorized policy!(@owner, membership), :destroy?
 
-        refute_authorized policy!(@admin, membership), :update?
-        refute_authorized policy!(@maintainer, membership), :update?
-        refute_authorized policy!(@guest, membership), :update?
+        refute_authorized policy!(@admin, membership), :destroy?
+        refute_authorized policy!(@maintainer, membership), :destroy?
+        refute_authorized policy!(@guest, membership), :destroy?
       end
     end
 
     context "removing admin" do
       should "be authorized for org admins and owners" do
         membership = create(:membership, :admin, organization: @organization)
-        membership.role = :maintainer
 
-        assert_authorized policy!(@owner, membership), :update?
-        assert_authorized policy!(@admin, membership), :update?
+        assert_authorized policy!(@owner, membership), :destroy?
+        assert_authorized policy!(@admin, membership), :destroy?
 
-        refute_authorized policy!(@maintainer, membership), :update?
-        refute_authorized policy!(@guest, membership), :update?
+        refute_authorized policy!(@maintainer, membership), :destroy?
+        refute_authorized policy!(@guest, membership), :destroy?
       end
     end
   end
