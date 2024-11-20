@@ -21,16 +21,18 @@
     </div>
   <% end %>
 
-  <% if user.homepage_url.present? %>
-    <div class="flex items-center mb-4 text-b3 lg:text-b2">
-      <%= icon_tag("link", color: :primary, class: "w-6 text-orange mr-3") %>
-      <p class="text-neutral-800 dark:text-white"><%=
-        link_to(
-          user.homepage_url
-        )
-      %></p>
-    </div>
-  <% end %>
+<% if user.homepage_url.present? %>
+  <div class="flex items-center mb-4 text-b3 lg:text-b2">
+    <%= icon_tag("link", color: :primary, class: "w-6 text-orange mr-3") %>
+    <p class="text-neutral-800 dark:text-white"><%=
+      link_to(
+        user.homepage_url,
+        user.homepage_url,
+        rel: "nofollow"
+      )
+    %></p>
+  </div>
+<% end %>
 
   <% if user.twitter_username.present? %>
     <div class="flex items-center mb-4 text-b3 lg:text-b2">
