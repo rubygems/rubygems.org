@@ -12,6 +12,8 @@ class OrganizationPolicy < ApplicationPolicy
     organization_member_with_role?(user, :owner) || deny(t(:forbidden))
   end
 
+  alias edit? update?
+
   def create?
     true
   end

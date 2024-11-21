@@ -287,6 +287,8 @@ fr:
     settings: Paramètres
     org_name: 'Org: %{name}'
     subscriptions: Abonnements
+    gems:
+    members:
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
@@ -422,6 +424,16 @@ fr:
       popular_gems: Gems populaires
     popular:
       title: Nouvelles Versions - Gems populaires
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount:
