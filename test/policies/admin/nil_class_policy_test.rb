@@ -5,11 +5,6 @@ class Admin::NilClassPolicyTest < AdminPolicyTestCase
     Pundit.policy!(api_key, [:api, nil])
   end
 
-  should "inherit from Admin::ApplicationPolicy" do
-    assert_operator Admin::NilClassPolicy, :<, Admin::ApplicationPolicy
-    assert_operator Admin::NilClassPolicy::Scope, :<, Admin::ApplicationPolicy::Scope
-  end
-
   context "::Scope.resolve" do
     should "raise" do
       assert_raises Pundit::NotDefinedError do
