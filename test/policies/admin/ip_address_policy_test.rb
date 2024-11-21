@@ -7,6 +7,12 @@ class Admin::IpAddressPolicyTest < AdminPolicyTestCase
     @non_admin = create(:admin_github_user)
   end
 
+  def test_associations
+    assert_association @admin, @ip_address, :user_events, Admin::Events::UserEventPolicy
+    assert_association @admin, @ip_address, :rubygem_events, Admin::Events::RubygemEventPolicy
+    assert_association @admin, @ip_address, :organization_events, Admin::Events::OrganizationEventPolicy
+  end
+
   def test_scope
     assert_equal [@ip_address], policy_scope!(
       @admin,

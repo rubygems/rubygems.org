@@ -14,6 +14,12 @@ class Admin::ApiKeyPolicyTest < AdminPolicyTestCase
     ).to_a
   end
 
+  def test_associations
+    assert_association @admin, @api_key, :api_key_rubygem_scope, Admin::ApiKeyPolicy
+    assert_association @admin, @api_key, :ownership, Admin::OwnershipPolicy
+    assert_association @admin, @api_key, :oidc_id_token, Admin::OIDC::IdTokenPolicy
+  end
+
   def test_avo_index
     refute_authorizes @admin, ApiKey, :avo_index?
     refute_authorizes @non_admin, ApiKey, :avo_index?

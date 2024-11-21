@@ -12,6 +12,11 @@ class Admin::RubygemPolicyTest < AdminPolicyTestCase
       @admin,
       Rubygem
     ).to_a
+
+    assert_empty policy_scope!(
+      @non_admin,
+      Rubygem
+    ).to_a
   end
 
   def test_avo_index
