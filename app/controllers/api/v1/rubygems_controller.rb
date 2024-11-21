@@ -34,7 +34,19 @@ class Api::V1::RubygemsController < Api::BaseController
     authorize Rubygem, :create?
     return render_forbidden(t(:api_key_insufficient_scope)) unless @api_key.can_push_rubygem?
 
-    gemcutter = Pusher.new(@api_key, request.body, request:)
+    gem_body = attestations = nil
+    if %w[multipart/form-data multipart/mixed].include?(request.media_type)
+      gem_body = params.permit(:gem).require(:gem)
+      return render_bad_request("gem is not a file upload") unless gem_body.is_a?(ActionDispatch::Http::UploadedFile)
+      return render_bad_request("missing attestations") unless (attestations = params[:attestations]).is_a?(String)
+      attestations = ActiveSupport::JSON.decode(attestations)
+      return render_bad_request("attestations must be an array, is #{attestations.class}") unless attestations.is_a?(Array)
+      attestations = attestations&.as_json
+    else
+      gem_body = request.body
+    end
+
+    gemcutter = Pusher.new(@api_key, gem_body, request:, attestations:)
     gemcutter.process
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue Pundit::NotAuthorizedError

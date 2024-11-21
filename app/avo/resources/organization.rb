@@ -7,6 +7,10 @@ class Avo::Resources::Organization < Avo::BaseResource
            }
   }
 
+  self.find_record_method = lambda {
+    query.find_by_handle!(id)
+  }
+
   class DeletedFilter < Avo::Filters::ScopeBooleanFilter; end
 
   def filters
@@ -20,5 +24,12 @@ class Avo::Resources::Organization < Avo::BaseResource
     field :name, as: :text
     field :deleted_at, as: :date_time
     # add fields here
+    tabs style: :pills do
+      field :memberships, as: :has_many
+      field :unconfirmed_memberships, as: :has_many
+      field :users, as: :has_many
+      field :rubygems, as: :has_many
+      field :organization_onboarding, as: :belongs_to
+    end
   end
 end

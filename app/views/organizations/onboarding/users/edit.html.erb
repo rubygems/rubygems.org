@@ -1,0 +1,96 @@
+<% content_for :aside do %>
+  <%= render "organizations/onboarding/summary", current_step: 3 %>
+<% end %>
+
+<%= render "organizations/onboarding/progress", current_step: 3 %>
+
+<h2 class="text-h4 mb-10">Manage Members</h2>
+
+<p class="mb-10">
+  Below we have listed all the owners of the gems you selected.
+  If you do nothing, these existing owners will remain owners of their gems.
+  You can invite them to join the organization now or you can add members later.
+</p>
+
+<div data-controller="reveal" data-reveal-toggle-class="rotate-180" class="mb-10">
+  <p class="text-b2 font-neutral-600">
+    <%= render ButtonComponent.new(type: :button, color: :neutral, style: :plain, data: { action: "reveal#toggle" }) do %>
+      <%= icon_tag "keyboard-arrow-down", class:"transition-transform transform mr-1", data: { reveal_target: "toggle" } %>
+      <%= "Permission Details" %>
+    <% end %>
+  </p>
+
+  <div class="border border-orange-500 rounded-lg overflow-hidden mt-2" data-reveal-target="item">
+    <div class="bg-orange-100 text-orange-800 font-semibold text-center py-2">
+      Outside Contributor
+    </div>
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
+      <p><b>Outside Contributors</b> are non-members that maintain ownership of their gems in this org.</p>
+      <p class="text-b4 text-neutral-500 mt-1 italic">
+        * If you make no changes, gem ownership will remain unaltered for everyone else.
+      </p>
+    </div>
+
+    <div class="bg-orange-200 text-orange-800 font-semibold text-center py-2">
+      Maintainer
+    </div>
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
+      <p><b>Maintainers</b> can publish and manage any gem owned by the organization</p>
+    </div>
+
+    <div class="bg-orange-300 text-orange-800 font-semibold text-center py-2">
+      Admin
+    </div>
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
+      <p><b>Admins</b> can publish and manage any gem owned by the organization and:</p>
+      <p>Manage organization teams, outside contributors and individual gems.</p>
+      <p class="text-b4 text-neutral-500 mt-1 italic">
+        * An admin cannot remove a gem from the organization or manage organization settings.
+      </p>
+    </div>
+
+    <div class="bg-orange-400 text-orange-800 font-semibold text-center py-2">
+      Owner
+    </div>
+    <div class="px-4 py-3 text-b3 text-neutral-800 dark:text-white">
+      <b>Owners</b> can add other owners to the organization and remove gems from the organization.
+    </div>
+  </div>
+</div>
+
+<%= form_with(model: @organization_onboarding, url: organization_onboarding_users_path, method: :patch) do |form| %>
+  <ul>
+    <li class="flex w-full py-3 pl-[11px] pr-10 justify-between box-border border border-neutral-400 rounded-lg">
+      <span class="flex flex-row items-center">
+        <%= avatar 48, "gravatar-#{@organization_onboarding.created_by.id}", theme: :dark, class: "h-6 w-6 rounded mr-2" %>
+        <span><%= @organization_onboarding.created_by.handle %></span>
+      </span>
+      <span>Owner</span>
+    </li>
+    <%= form.fields_for :invites do |invite_fields| %>
+      <% user = invite_fields.object.user %>
+      <li class="flex w-full py-3 pl-3 justify-between items-center" data-user-handle="<%= user.handle %>">
+        <%= invite_fields.label :role, class: "flex flex-row items-center h-11" do %>
+          <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2" %>
+          <span class="text-b2"><%= user.handle %></span>
+        <% end %>
+        <%= invite_fields.select(
+          :role,
+          role_options,
+          { include_blank: "select role" },
+          style: "text-align-last: right;",
+          class: "text-b2 rounded-lg appearance-none outline-none bg-white dark:bg-black border-none h-11 text-right focus:ring-2 focus:ring-inset focus:ring-orange"
+        ) %>
+        <%= invite_fields.hidden_field :id %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
+    <%= render ButtonComponent.new("Back", organization_onboarding_gems_path, type: :link, color: :neutral, style: :outline) %>
+    <span class="space-x-2">
+      <%= render ButtonComponent.new("Skip for now", organization_onboarding_confirm_path, type: :link, color: :neutral, style: :plain) %>
+      <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
+    </span>
+  </div>
+<% end %>

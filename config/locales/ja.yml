@@ -70,8 +70,12 @@ ja:
         password: パスワード
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC APIキーのロール
       oidc/id_token:
@@ -543,6 +547,9 @@ ja:
     failed_verification:
       title: エラー - 検証が失敗しました
       close_browser: このブラウザを閉じて再試行してください。
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -705,6 +712,7 @@ ja:
       sha_256_checksum: SHA 256チェックサム
       signature_period: シグネチャの有効期限
       expired: 期限切れ
+      provenance_header:
     version_navigation:
       previous_version: "←前のバージョン"
       next_version: 次のバージョン→

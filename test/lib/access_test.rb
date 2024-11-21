@@ -1,6 +1,13 @@
 require "test_helper"
 
 class AccessTest < ActiveSupport::TestCase
+  context "roles are correctly sequenced" do
+    should "be in the correct order" do
+      assert_operator Access::OWNER, :>, Access::ADMIN
+      assert_operator Access::ADMIN, :>, Access::MAINTAINER
+    end
+  end
+
   context ".role_for_flag" do
     should "return the role for a given permission flag" do
       assert_equal "owner", Access.role_for_flag(Access::OWNER)
@@ -31,10 +38,9 @@ class AccessTest < ActiveSupport::TestCase
 
   context ".with_minimum_role" do
     should "return the range of roles for a given permission flag" do
-      assert_equal Range.new(Access::OWNER, nil), Access.with_minimum_role("owner")
-      refute_includes Access.with_minimum_role("owner"), Access::MAINTAINER
-      assert_includes Access.with_minimum_role("owner"), Access::OWNER
-      assert_includes Access.with_minimum_role("owner"), Access::ADMIN
+      assert_equal (Access::OWNER..), Access.with_minimum_role("owner")
+      assert_equal (Access::ADMIN..), Access.with_minimum_role("admin")
+      assert_equal (Access::MAINTAINER..), Access.with_minimum_role("maintainer")
     end
   end
 end

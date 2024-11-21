@@ -13,6 +13,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   belongs_to :pusher_api_key, class_name: "ApiKey", inverse_of: :pushed_versions, optional: true
   has_one :deletion, dependent: :delete, inverse_of: :version, required: false
   has_one :yanker, through: :deletion, source: :user, inverse_of: :yanked_versions, required: false
+  has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
@@ -194,6 +195,22 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # id is added to ORDER to return stable results for gems pushed at the same time
   def self.created_between(start_time, end_time)
     where(created_at: start_time..end_time).order(:created_at, :id)
+  end
+
+  def self.pushed_with_trusted_publishing
+    joins(:pusher_api_key).merge(ApiKey.trusted_publisher)
+  end
+
+  def self.pushed_without_trusted_publishing
+    left_joins(:pusher_api_key).merge(ApiKey.not_trusted_publisher.or(where(pusher_api_key: nil).only(:where)))
+  end
+
+  def self.with_attestations
+    where.associated(:attestations)
+  end
+
+  def self.without_attestations
+    where.missing(:attestations)
   end
 
   def platformed?

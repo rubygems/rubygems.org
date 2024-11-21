@@ -5,12 +5,12 @@ ruby file: ".ruby-version"
 gem "rails", "~> 7.2.1"
 gem "rails-i18n", "~> 7.0"
 
-gem "aws-sdk-s3", "~> 1.169"
-gem "aws-sdk-sqs", "~> 1.87"
+gem "aws-sdk-s3", "~> 1.172"
+gem "aws-sdk-sqs", "~> 1.89"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.9"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.4"
+gem "datadog", "~> 2.7"
 gem "dogstatsd-ruby", "~> 5.6"
 gem "google-protobuf", "~> 4.28"
 gem "faraday", "~> 2.12"
@@ -31,11 +31,11 @@ gem "openid_connect", "~> 2.3"
 gem "pg", "~> 1.5"
 gem "puma", "~> 6.4"
 gem "rack", "~> 3.1"
-gem "rackup", "~> 2.1"
+gem "rackup", "~> 2.2"
 gem "rack-sanitizer", "~> 2.0"
 gem "rbtrace", "~> 0.5.1"
-gem "rdoc", "~> 6.7"
-gem "roadie-rails", "~> 3.2"
+gem "rdoc", "~> 6.8"
+gem "roadie-rails", "~> 3.3"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 6.2", require: false
 gem "statsd-instrument", "~> 3.9"
@@ -49,17 +49,18 @@ gem "rack-attack", "~> 6.6"
 gem "rqrcode", "~> 2.1"
 gem "rotp", "~> 6.2"
 gem "unpwn", "~> 1.0"
-gem "webauthn", "~> 3.1"
-gem "browser", "~> 6.0"
+gem "webauthn", "~> 3.2"
+gem "browser", "~> 6.1"
 gem "bcrypt", "~> 3.1"
-gem "maintenance_tasks", "~> 2.8"
-gem "strong_migrations", "~> 2.0"
+gem "maintenance_tasks", "~> 2.9"
+gem "strong_migrations", "~> 2.1"
 gem "phlex-rails", "~> 1.2"
-gem "discard", "~> 1.3"
+gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.18"
 gem "pghero", "~> 3.6"
 gem "faraday-multipart", "~> 1.0"
 gem "timescaledb", "~> 0.3"
+gem "sigstore", "~> 0.2.1"
 
 # Admin dashboard
 gem "avo", "~> 3.13"
@@ -72,14 +73,14 @@ gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.13"
+    gem "avo-advanced", "~> 3.14"
   end
 end
 
 # Logging
 gem "amazing_print", "~> 1.6"
 gem "rails_semantic_logger", "~> 4.17"
-gem "pp", "0.5.0"
+gem "pp", "0.6.1"
 
 # Former default gems
 gem "csv", "~> 3.3" # zeitwerk-2.6.12

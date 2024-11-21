@@ -92,6 +92,9 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :attestations, only: :show, format: /json/,
+        constraints: { id: Patterns::ROUTE_PATTERN }
+
       resource :activity, only: [], format: /json|yaml/ do
         collection do
           get :latest
@@ -256,6 +259,8 @@ Rails.application.routes.draw do
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
       post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
+
+      get 'development_log_in_as/:user_id', to: 'sessions#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
     end
 
     resources :users, only: %i[new create]
@@ -264,6 +269,26 @@ Rails.application.routes.draw do
     delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+
+    namespace :organizations, as: :organization do
+      get "onboarding", to: redirect("/organizations/onboarding/name")
+      delete "onboarding", to: "onboarding#destroy"
+
+      namespace :onboarding do
+        get "name", to: "name#new"
+        post "name", to: "name#create"
+
+        get "gems", to: "gems#edit"
+        patch "gems", to: "gems#update"
+
+        get "users", to: "users#edit"
+        patch "users", to: "users#update"
+
+        get "confirm", to: "confirm#edit"
+        patch "confirm", to: "confirm#update"
+      end
+    end
+    resources :organizations, only: %i[show], constraints: { id: Patterns::ROUTE_PATTERN }
   end
 
   ################################################################################
@@ -332,7 +357,7 @@ Rails.application.routes.draw do
     get ':provider/callback', to: 'oauth#create'
     get 'failure', to: 'oauth#failure'
 
-    get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN
+    get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
   end
 
   ################################################################################

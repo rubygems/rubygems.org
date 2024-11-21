@@ -265,3 +265,23 @@
 .gem__dependencies:not(:first-of-type) {
   margin-top: 36px;
 }
+
+.gem__attestation {
+  display: flex;
+  flex-direction: row;
+  margin-top: 16px; }
+  .gem__attestation__built_on {
+    flex-grow: 1; }
+  .gem__attestation__grid {
+    display: grid;
+    grid-template-rows: repeat(3, 1rem);
+    grid-row-gap: 18px;
+    grid-column-gap: 16px; }
+    .gem__attestation__grid p {
+      height: 100%;
+      display: block; }
+    .gem__attestation__grid__left {
+      grid-template-columns: 24px max-content; }
+    .gem__attestation__grid__right {
+      grid-template-columns: max-content 1fr; }
+

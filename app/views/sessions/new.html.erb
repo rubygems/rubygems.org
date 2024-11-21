@@ -1,5 +1,19 @@
 <% @title = t('sign_in') %>
 
+<% if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN %>
+<div class="t-body">
+  <h2 class="page__subheading--block">Development Login</h2>
+  <ul>
+    <% User.all.order(id: :asc).each do |user| %>
+    <li>
+      <%= link_to "login as #{user.handle}", controller: :sessions, action: "development_log_in_as", user_id: user.id %>
+    </li>
+    <% end %>
+  </ul>
+  <hr/>
+</div>
+<% end %>
+
 <div class="t-body">
   <p>
     <%= link_to t('.forgot_password'), new_password_path, class: 't-list__item' %>

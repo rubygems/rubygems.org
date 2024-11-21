@@ -79,8 +79,12 @@ de:
         password: Passwort
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC-API-Schlüsselrolle
       oidc/id_token:
@@ -639,6 +643,9 @@ de:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -798,6 +805,7 @@ de:
       sha_256_checksum: SHA 256-Prüfsumme
       signature_period:
       expired:
+      provenance_header:
     version_navigation:
       previous_version:
       next_version:

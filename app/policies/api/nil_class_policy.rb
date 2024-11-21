@@ -6,6 +6,6 @@ class Api::NilClassPolicy < ApplicationPolicy
   end
 
   def destroy?
-    false
+    deny t(:forbidden)
   end
 end

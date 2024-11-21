@@ -69,8 +69,12 @@ nl:
         password: Wachtwoord
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -543,6 +547,9 @@ nl:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -702,6 +709,7 @@ nl:
       sha_256_checksum: SHA 256 checksum
       signature_period:
       expired:
+      provenance_header:
     version_navigation:
       previous_version:
       next_version:

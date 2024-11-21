@@ -70,8 +70,12 @@ zh-TW:
         password: 密碼
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC API 金鑰角色
       oidc/id_token:
@@ -543,6 +547,9 @@ zh-TW:
     failed_verification:
       title: 錯誤 - 驗證失敗
       close_browser: 請關閉此瀏覽器並重試。
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -704,6 +711,7 @@ zh-TW:
       sha_256_checksum: SHA 256 總和檢查碼
       signature_period: 簽名有效期
       expired: 已過期
+      provenance_header:
     version_navigation:
       previous_version: "← 上一版本"
       next_version: 下一版本 →

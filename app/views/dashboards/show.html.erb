@@ -7,6 +7,8 @@
 <!-- Main Content -->
 <h1 class="text-h2 mb-10"><%= t(".title") %></h1>
 
+<%= render "dashboards/promo" %>
+
 <%= render CardComponent.new do |c| %>
   <%= c.head(divide: true) do %>
     <%= c.title t(".latest"), icon: :history %>

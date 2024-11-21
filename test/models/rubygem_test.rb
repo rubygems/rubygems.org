@@ -15,6 +15,7 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
+    should belong_to(:organization).optional
     should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
     should allow_value("awesome42").for(:name)
@@ -444,6 +445,26 @@ class RubygemTest < ActiveSupport::TestCase
       should "be not owned if no user" do
         refute @rubygem.owned_by?(nil)
         assert_predicate @rubygem, :unowned?
+      end
+    end
+
+    context "with a user that belongs to an organization" do
+      setup do
+        @owner = create(:user)
+        @admin = create(:user)
+        @maintainer = create(:user)
+        @guest = create(:user)
+
+        @organization = create(:organization, admins: [@admin], owners: [@owner], maintainers: [@maintainer], rubygems: [@rubygem])
+      end
+
+      should "be owned by organization user" do
+        assert @rubygem.owned_by?(@owner)
+        assert @rubygem.owned_by?(@admin)
+        assert @rubygem.owned_by?(@maintainer)
+        refute @rubygem.owned_by?(@guest)
+
+        refute_predicate @rubygem, :unowned?
       end
     end
 

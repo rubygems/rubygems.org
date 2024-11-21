@@ -20,10 +20,10 @@ class ApiKey < ApplicationRecord
   after_create :record_create_event
   after_update :record_expire_event, if: :saved_change_to_expires_at?
 
-  validates :name, :hashed_key, presence: true
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
   validate :scope_presence
-  validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :name, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :hashed_key, presence: true, uniqueness: true
   validates :expires_at, inclusion: { in: -> { 1.minute.from_now.. } }, allow_nil: true, on: :create
   validate :rubygem_scope_definition, if: :ownership
   validate :known_scopes
@@ -37,6 +37,9 @@ class ApiKey < ApplicationRecord
 
   scope :oidc, -> { joins(:oidc_id_token) }
   scope :not_oidc, -> { where.missing(:oidc_id_token) }
+
+  scope :trusted_publisher, -> { where("owner_type like ?", "OIDC::TrustedPublisher::%") }
+  scope :not_trusted_publisher, -> { where("owner_type not like ?", "OIDC::TrustedPublisher::%") }
 
   def self.expire_all!
     transaction do
@@ -68,6 +71,10 @@ class ApiKey < ApplicationRecord
 
   def user?
     owner_type == "User"
+  end
+
+  def trusted_publisher?
+    owner_type.deconstantize == "OIDC::TrustedPublisher"
   end
 
   delegate :mfa_required_not_yet_enabled?, :mfa_required_weak_level_enabled?,

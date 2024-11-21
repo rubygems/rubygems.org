@@ -59,6 +59,7 @@ module.exports = {
           900: '#58000A',
         },
         'orange': { // Primary
+          '050': '#FFF8F1',
           100: '#FFF0EC',
           200: '#FFC6AD',
           300: '#FFA983',

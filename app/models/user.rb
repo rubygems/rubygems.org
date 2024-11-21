@@ -27,6 +27,7 @@ class User < ApplicationRecord
   scope :not_deleted, -> { kept }
   scope :deleted, -> { with_discarded.discarded }
   scope :with_deleted, -> { with_discarded }
+  scope :confirmed, -> { where(email_confirmed: true) }
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
 
@@ -66,6 +67,8 @@ class User < ApplicationRecord
 
   has_many :memberships, dependent: :destroy
   has_many :organizations, through: :memberships
+
+  has_many :organization_onboardings, foreign_key: :created_by_id, dependent: :nullify, inverse_of: :created_by
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
     uniqueness: { case_sensitive: false }

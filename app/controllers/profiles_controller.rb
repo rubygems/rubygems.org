@@ -8,7 +8,8 @@ class ProfilesController < ApplicationController
   before_action :disable_cache, only: :edit
 
   def show
-    @user = User.find_by_slug!(params[:id])
+    @user = User.confirmed.find_by_slug!(params[:id])
+    return render_not_found unless @user
     @rubygems = @user.rubygems_downloaded.includes(%i[latest_version gem_download]).strict_loading
   end
 
