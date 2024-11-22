@@ -1,7 +1,7 @@
 <div class="ml-3 flex text-neutral-900 dark:text-white hover:text-black dark:hover:text-neutral-400 items-center" data-controller="dialog">
   <% if signed_in? %>
     <%# This class is used in the tests :( I need it to be the same class until the old design is gone. %>
-    <%= link_to(dashboard_path, data: { action: "dialog#open", dialog_target: "button" }, class: "header__popup-link") do %>
+    <%= link_to(dashboard_path, data: { action: "dialog#open", dialog_target: "button" }, class: "header__popup-link", title: "User Dropdown Menu") do %>
       <%= avatar 64, "user_gravatar", theme: :dark, class: "h-9 w-9 rounded" %>
     <% end %>
   <% else %>

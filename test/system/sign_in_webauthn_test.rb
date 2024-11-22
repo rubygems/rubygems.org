@@ -24,12 +24,12 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
-    assert page.has_content? "Security Device"
+    assert_text "Multi-factor authentication"
+    assert_text "Security Device"
 
     click_on "Authenticate with security device"
 
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
     refute page.has_content? "We now support security devices!"
   end
 
@@ -40,14 +40,14 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
-    assert page.has_content? "Security Device"
+    assert_text "Multi-factor authentication"
+    assert_text "Security Device"
 
     travel 30.minutes do
       click_on "Authenticate with security device"
 
-      assert page.has_content? "Your login page session has expired."
-      assert page.has_content? "Sign in"
+      assert_text "Your login page session has expired."
+      assert_text "Sign in"
     end
   end
 
@@ -58,15 +58,15 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
-    assert page.has_content? "Security Device"
+    assert_text "Multi-factor authentication"
+    assert_text "Security Device"
 
     @user.update!(webauthn_id: "a")
 
     click_on "Authenticate with security device"
 
     refute page.has_content? "Dashboard"
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "sign in with webauthn mfa using recovery codes" do
@@ -76,13 +76,13 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
-    assert page.has_content? "Security Device"
+    assert_text "Multi-factor authentication"
+    assert_text "Security Device"
 
     fill_in "otp", with: @mfa_recovery_codes.first
     click_button "Authenticate"
 
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
   end
 
   test "sign in with webauthn" do
@@ -90,7 +90,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
     click_on "Authenticate with security device"
 
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
     refute page.has_content? "We now support security devices!"
   end
 
@@ -112,7 +112,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     click_on "Authenticate with security device"
 
     refute page.has_content? "Dashboard"
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "sign in with webauthn does not expire" do
@@ -121,7 +121,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     travel 30.minutes do
       click_on "Authenticate with security device"
 
-      assert page.has_content? "Dashboard"
+      assert_text "Dashboard"
     end
   end
 
@@ -132,8 +132,8 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     click_on "Authenticate with security device"
 
     refute page.has_content? "Dashboard"
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+    assert_text "Sign in"
+    assert_text "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
 
   test "sign in with webauthn to deleted account" do
@@ -143,6 +143,6 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     click_on "Authenticate with security device"
 
     refute page.has_content? "Dashboard"
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 end

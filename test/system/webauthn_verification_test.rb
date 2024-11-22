@@ -10,6 +10,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   end
 
   test "when verifying webauthn credential" do
+    skip "Test cannot be run on the current environment" if devcontainer?
+
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_match "Authenticate with Security Device", page.html
@@ -25,6 +27,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   end
 
   test "when verifying webauthn credential on safari" do
+    skip "Test cannot be run on the current environment" if devcontainer?
+
     assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
@@ -81,8 +85,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @mock_client.response = @mock_client.bad_request_response
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert_match "Authenticate with Security Device", page.html
-    assert_match "Authenticating as #{@user.handle}", page.html
+    assert_text "Authenticate with Security Device"
+    assert_text "AUTHENTICATING AS #{@user.handle.upcase}"
 
     click_on "Authenticate"
 
@@ -97,14 +101,14 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     travel 3.minutes do
-      assert_match "Authenticate with Security Device", page.html
-      assert_match "Authenticating as #{@user.handle}", page.html
+      assert_text "Authenticate with Security Device"
+      assert_text "AUTHENTICATING AS #{@user.handle.upcase}"
 
       click_on "Authenticate"
 
       assert redirect_to(failed_verification_webauthn_verification_path)
-      assert page.has_content?("The token in the link you used has either expired or been used already.")
-      assert page.has_content?("Please close this browser and try again.")
+      assert_text("The token in the link you used has either expired or been used already.")
+      assert_text("Please close this browser and try again.")
       assert_failed_verification_not_found
     end
   end
@@ -113,7 +117,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @mock_client.kill_server
     @authenticator&.remove!
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 
   private
@@ -121,7 +124,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def assert_link_is_expired
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert page.has_content?("The token in the link you used has either expired or been used already.")
+    assert_text("The token in the link you used has either expired or been used already.")
   end
 
   def assert_poll_status(status)
@@ -133,19 +136,18 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
 
     assert_equal status, JSON.parse(page.text)["status"]
-    fullscreen_headless_chrome_driver
   end
 
   def assert_successful_verification_not_found
     visit successful_verification_webauthn_verification_path
 
-    assert page.has_content?("Page not found.")
+    assert_text("Page not found.")
   end
 
   def assert_failed_verification_not_found
     visit failed_verification_webauthn_verification_path
 
-    assert page.has_content?("Page not found.")
+    assert_text("Page not found.")
   end
 
   class MockClientServer

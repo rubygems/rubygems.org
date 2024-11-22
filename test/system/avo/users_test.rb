@@ -5,6 +5,12 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
+  setup do
+    # Avo records the IP Address and other IP related information when not using `localhost`, which is
+    # not something easily to calculate.
+    skip "This test cannot run in the current environment" if devcontainer?
+  end
+
   test "reset mfa" do
     Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
