@@ -113,7 +113,7 @@ ja:
         user:
           attributes:
             handle:
-              invalid:
+              invalid: は英字から始まり、英字、数字、下線文字、ダッシュのみが含まれていなければなりません
             password:
               bcrypt_length:
         version:
