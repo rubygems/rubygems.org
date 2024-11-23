@@ -391,7 +391,7 @@ ja:
     gem_trusted_publisher_added:
       title: 信頼できる発行元が追加されました
     admin_manual:
-      title:
+      title: RubyGems.orgの管理者からのお知らせ
   news:
     show:
       title: 新しいリリース - 全てのgem
