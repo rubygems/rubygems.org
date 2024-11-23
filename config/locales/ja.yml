@@ -108,7 +108,7 @@ ja:
         user:
           attributes:
             handle:
-              invalid:
+              invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
             password:
               bcrypt_length:
         version:
