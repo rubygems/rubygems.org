@@ -108,8 +108,8 @@ ja:
         ownership_request:
           attributes:
             user_id:
-              taken:
-              existing:
+              taken: 所有権は申請済みです
+              existing: 既に所有者です
         user:
           attributes:
             handle:
