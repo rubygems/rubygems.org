@@ -115,7 +115,7 @@ ja:
             handle:
               invalid: 英字から始まり、英字、数字、下線文字、ダッシュのみが含まれていなければなりません
             password:
-              bcrypt_length:
+              bcrypt_length: は長すぎます（最大72バイト）
         version:
           attributes:
             gem_full_name:
