@@ -733,11 +733,11 @@ ja:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。このgemのヤンクされたバージョンはまだ存在する可能性があります。
       reserved_namespace_html:
         one: このgemは以前存在していましたが、所有者が削除しました。RubyGems.orgチームはこの名前を1日間だけ予約しています。期間終了後、誰でもgem
-          pushによりこの名前を要求できます。<br/>もしあなたが以前の所有者ならば、gem ownerコマンドを用いて所有者を変更できる他、新しいバージョンをgem
-          pushを用いて公開できます。
+          pushによりこの名前を要求できます。<br/><br/>もしあなたが以前の所有者ならば、gem ownerコマンドを用いてこのgemの所有者を変更したり、gem
+          pushコマンドを用いて新しいバージョンを作成できます。
         other: このgemは以前存在していましたが、所有者が削除しました。RubyGems.orgチームはこの名前を%{count}日間予約しています。期間終了後、誰でもgem
-          pushによりこの名前を要求できます。<br/>もしあなたがこのgemの以前の所有者ならば、gem ownerコマンドを用いて所有者を変更できる他、新しいバージョンをgem
-          pushを用いて公開できます。
+          pushによりこの名前を要求できます。<br/><br/>もしあなたがこのgemの以前の所有者ならば、gem ownerコマンドを用いてこのgemの所有者を変更したり、gem
+          pushコマンドを用いて新しいバージョンを作成できます。
     security_events:
       title: セキュリティ事象
       description_html: このページには%{gem}に起こったセキュリティ事象が表示されます。何か疑わしい活動が見られたときは、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
