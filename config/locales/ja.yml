@@ -556,8 +556,8 @@ ja:
       success:
   owners:
     edit:
-      role:
-      title:
+      role: ロール
+      title: 所有者を編集
     confirm:
       confirmed_email: "%{gem} gemの所有者として追加されました"
       token_expired: 確認トークンが期限切れです。gemのページからトークンを再送してみてください。
