@@ -99,7 +99,7 @@ ja:
         organization:
           attributes:
             handle:
-              invalid:
+              invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
         ownership:
           attributes:
             user_id:
