@@ -711,7 +711,7 @@ ja:
       sha_256_checksum: SHA 256チェックサム
       signature_period: シグネチャの有効期限
       expired: 期限切れ
-      provenance_header:
+      provenance_header: 来歴
     version_navigation:
       previous_version: "←前のバージョン"
       next_version: 次のバージョン→
