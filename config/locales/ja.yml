@@ -21,7 +21,7 @@ ja:
   locale_name: 日本語
   none: なし
   not_found: 見つかりませんでした
-  forbidden:
+  forbidden: 禁止されています
   api_gem_not_found: このgemは見つかりませんでした
   api_key_forbidden: APIキーにアクセス権がありません
   api_key_soft_deleted: 正しくないAPIキーは使えません。削除して新規作成してください。
