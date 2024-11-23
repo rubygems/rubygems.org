@@ -22,10 +22,10 @@ ja:
   none: なし
   not_found: 見つかりませんでした
   forbidden:
-  api_gem_not_found:
+  api_gem_not_found: このgemは見つかりませんでした
   api_key_forbidden: APIキーにアクセス権がありません
-  api_key_soft_deleted:
-  api_key_insufficient_scope:
+  api_key_soft_deleted: 正しくないAPIキーは使えません。削除して新規作成してください。
+  api_key_insufficient_scope: このAPIキーはこのgemに対して指定された動作を実行できません。
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
   please_sign_in: サインインしてお進みください。
   otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
@@ -468,11 +468,21 @@ ja:
     setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">詳細はこちら</a>！"
     api:
-      mfa_required:
-      mfa_required_not_yet_enabled:
-      mfa_required_weak_level_enabled:
-      mfa_recommended_not_yet_enabled:
-      mfa_recommended_weak_level_enabled:
+      mfa_required: このgemにはMFAの有効化が必要です。まだMFAを有効にしていません。
+      mfa_required_not_yet_enabled: |
+        ［エラー］アカウントとgemの保護のため、 https://rubygems.org/totp/new で多要素認証の設定が必要です。
+
+        詳しくはブログ記事をお読みください (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html)。
+      mfa_required_weak_level_enabled: |
+        ［エラー］アカウントとgemの保護のため、 https://rubygems.org/settings/edit でMFAの水準を「UIとgemのサインイン」または「UIとAPI」に変える必要があります。
+
+        詳しくはブログ記事をお読みください (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html)。
+      mfa_recommended_not_yet_enabled: |
+        ［警告］アカウントとgemの保護のため、 https://rubygems.org/totp/new で多要素認証を設定することを推奨します。
+        今後アカウントにはMFAの有効化が必須になります。
+      mfa_recommended_weak_level_enabled: |
+        ［警告］アカウントとgemの保護のため、 https://rubygems.org/settings/edit で多要素認証の水準を「UIとgemのサインイン」または「UIとAPI」に変えることをお勧めします。
+        将来的に、アカウントはこれらの水準の何れかでMFAが有効にしていることが必要となります。
     recovery:
       continue: 続ける
       title: 復旧コード
