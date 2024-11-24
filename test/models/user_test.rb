@@ -183,11 +183,6 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("data:text/html;base64,SGVsbG8sIFdvcmxkIQ==").for(:homepage_url)
       should_not allow_value("data:text/html,<img src='x' onerror='alert(1)'>").for(:homepage_url)
       should_not allow_value("data:text/html,<iframe src='javascript:alert(1)'></iframe>").for(:homepage_url)
-      # should_not allow_value("http://www.site.site?#redirect=www.fake-target.site").for(:homepage_url)
-      # should_not allow_value("http://www.site.com/redirect?url=http://www.malicious-site.com").for(:homepage_url)
-      # should_not allow_value("http://www.site.com/?next=http://www.malicious-site.com").for(:homepage_url)
-      # should_not allow_value("http://www.site.com/?url=http://www.malicious-site.com").for(:homepage_url)
-      # should_not allow_value("http://www.site.com/?redirect=http://www.malicious-site.com").for(:homepage_url)
     end
 
     context "password" do
