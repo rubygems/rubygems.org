@@ -174,6 +174,7 @@ class UserTest < ActiveSupport::TestCase
 
     context "homepage url" do
       should allow_value("https://www.mywebsite.com").for(:homepage_url)
+      should allow_value("http://www.mywebsite.com").for(:homepage_url)
       should_not allow_value("<html><body>hi</body><html>").for(:homepage_url)
       should_not allow_value("javascript:alert('hello');").for(:homepage_url)
       should_not allow_value("file:///etc/passwd").for(:homepage_url)
