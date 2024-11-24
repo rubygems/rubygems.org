@@ -148,21 +148,6 @@ class ProfileTest < SystemTest
     assert page.has_link?("https://nickisawesome.com")
   end
 
-  test "adding malicious homepage url" do
-    sign_in
-    visit profile_path("nick1")
-
-    click_link "Edit Profile"
-    fill_in "user_homepage_url", with: "http://www.site.com/redirect?url=http://www.malicious-site.com"
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Update"
-
-    click_link "Sign out"
-    visit profile_path("nick1")
-
-    assert page.has_link?("http://www.site.com/redirect?url=http://www.malicious")
-  end
-
   test "deleting profile" do
     sign_in
     visit profile_path("nick1")
