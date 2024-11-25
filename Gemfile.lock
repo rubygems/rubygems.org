@@ -486,7 +486,7 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    nio4r (2.7.3)
+    nio4r (2.7.4)
     nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -587,7 +587,7 @@ GEM
     psych (5.2.0)
       stringio
     public_suffix (6.0.1)
-    puma (6.4.3)
+    puma (6.5.0)
       nio4r (~> 2.0)
     pundit (2.4.0)
       activesupport (>= 3.0.0)
@@ -945,7 +945,7 @@ DEPENDENCIES
   propshaft (~> 1.1.0)
   prosopite (~> 1.4)
   pry-byebug (~> 3.10)
-  puma (~> 6.4)
+  puma (~> 6.5)
   pundit (~> 2.4)
   rack (~> 3.1)
   rack-attack (~> 6.6)
@@ -1170,7 +1170,7 @@ CHECKSUMS
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.0) sha256=5fc0415e6ea1cc0b3dfea7270438ec22b278ca8d524986a3ae4e5ae8d087b42a
-  nio4r (2.7.3) sha256=54b94cdd4b8f9dc39aaad5f699e97afae13efb44f2b180a6e724df76105ff604
+  nio4r (2.7.4) sha256=d95dee68e0bb251b8ff90ac3423a511e3b784124e5db7ff5f4813a220ae73ca9
   nokogiri (1.16.7) sha256=f819cbfdfb0a7b19c9c52c6f2ca63df0e58a6125f4f139707b586b9511d7fe95
   nokogiri (1.16.7-aarch64-linux) sha256=78778d35f165b59513be31c0fe232c63a82cf97626ffba695b5f822e5da1d74b
   nokogiri (1.16.7-arm64-darwin) sha256=276dcea1b988a5b22b5acc1ba901d24b8e908c40b71dccd5d54a2ae279480dad
@@ -1210,7 +1210,7 @@ CHECKSUMS
   pry-byebug (3.10.1) sha256=c8f975c32255bfdb29e151f5532130be64ff3d0042dc858d0907e849125581f8
   psych (5.2.0) sha256=6603fe756bcaf14daa25bc17625f36c90931dcf70452ac1e8da19760dc310573
   public_suffix (6.0.1) sha256=61d44e1cab5cbbbe5b31068481cf16976dd0dc1b6b07bd95617ef8c5e3e00c6f
-  puma (6.4.3) sha256=24a4645c006811d83f2480057d1f54a96e7627b6b90e1c99b260b9dc630eb43e
+  puma (6.5.0) sha256=94d1b75cab7f356d52e4f1b17b9040a090889b341dbeee6ee3703f441dc189f2
   pundit (2.4.0) sha256=43e6d27a9df082c04f0020999ce4dcf6742ecc5775d102ef2bfe9df041417572
   pwned (2.3.0) sha256=63f5a9576f109203684e9dd053f815649fd5bc0a0348b7190568272641b22353
   raabro (1.4.0) sha256=d4fa9ff5172391edb92b242eed8be802d1934b1464061ae5e70d80962c5da882
