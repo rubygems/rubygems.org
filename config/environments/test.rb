@@ -23,12 +23,14 @@ Rails.application.configure do
     "Cache-Control" => "public, max-age=#{1.hour.to_i}"
   }
 
-  # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  # Show full error reports.
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
   config.cache_store = :mem_cache_store
 
-  # Raise exceptions instead of rendering exception templates.
+  # Render exception templates for rescuable exceptions and raise for other exceptions.
+  # config.action_dispatch.show_exceptions = :rescuable
+  # Using this setting seems broken in rails 8.0, causing the debug template to render in system tests.
   config.action_dispatch.show_exceptions = :none
 
   # Disable request forgery protection in test environment.
