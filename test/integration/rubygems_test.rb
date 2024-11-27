@@ -28,4 +28,29 @@ class RubygemsTest < ActionDispatch::IntegrationTest
 
     assert page.has_content? "Provenance"
   end
+
+  test "GET to show for a fully yanked gem as owner" do
+    user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
+    rubygem = create(:rubygem, owners: [user], number: "1.0.0", created_at: 2.months.ago)
+    version = rubygem.versions.sole
+    user.deletions.create!(version:)
+    rubygem.reload
+
+    assert_predicate rubygem.public_versions.to_a, :empty?
+
+    get "/gems/#{rubygem.name}"
+
+    assert page.has_content? "This gem previously existed, but has been removed by its owner."
+    refute page.has_link? "Owners"
+    refute page.has_link? "Trusted publishers"
+    refute page.has_link? "Security Events"
+
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    get "/gems/#{rubygem.name}"
+
+    assert page.has_link? "Owners"
+    assert page.has_link? "Trusted publishers"
+    assert page.has_link? "Security Events"
+  end
 end

@@ -56,7 +56,7 @@ module RubygemsHelper
 
     link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
       class: [:toggler, "gem__link", "t-list__item", style], id: "unsubscribe",
-      method: :delete, remote: true
+      method: :delete
   end
 
   def change_diff_link(rubygem, latest_version)

@@ -296,6 +296,8 @@ de:
     settings: Einstellungen
     org_name: 'Organisation: %{name}'
     subscriptions: Abonnements
+    gems:
+    members:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -466,6 +468,16 @@ de:
       popular_gems: Beliebte Gems
     popular:
       title: Neue Veröffentlichungen — Beliebte Gems
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count} Rubyists"

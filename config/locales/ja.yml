@@ -277,6 +277,8 @@ ja:
     settings: 設定
     org_name: 組織：%{name}
     subscriptions: 購読
+    gems:
+    members:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -416,6 +418,16 @@ ja:
       popular_gems: 人気のgem
     popular:
       title: 新しいリリース - 人気のgem
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"
