@@ -537,6 +537,7 @@ class PasswordsControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the dashboard") { dashboard_path }
+          should set_flash[:notice].to "Your password has been changed."
 
           should "not change api_key" do
             assert_equal(@user.reload.api_key, @api_key)
@@ -554,6 +555,7 @@ class PasswordsControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the dashboard") { dashboard_path }
+          should set_flash[:notice].to "Your password has been changed."
 
           should "not change api_key" do
             assert_equal(@user.reload.api_key, @api_key)
@@ -571,6 +573,7 @@ class PasswordsControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the dashboard") { dashboard_path }
+          should set_flash[:notice].to "Your password has been changed."
 
           should "change api_key" do
             refute_equal(@user.reload.api_key, @api_key)
@@ -592,6 +595,7 @@ class PasswordsControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the dashboard") { dashboard_path }
+          should set_flash[:notice].to "Your password has been changed."
 
           should "change api_key" do
             refute_equal(@user.reload.api_key, @api_key)

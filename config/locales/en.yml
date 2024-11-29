@@ -474,6 +474,7 @@ en:
       success: You will receive an email within the next few minutes. It contains instructions for changing your password.
       failure_on_missing_email: Email can't be blank.
     update:
+      success: Your password has been changed.
       failure: Your password could not be changed. Please try again.
   multifactor_auths:
     session_expired: Your login page session has expired.

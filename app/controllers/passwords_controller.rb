@@ -38,6 +38,7 @@ class PasswordsController < ApplicationController
       @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
       @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
       delete_password_reset_session
+      flash[:notice] = t(".success")
       redirect_to signed_in? ? dashboard_path : sign_in_path
     else
       flash.now[:alert] = t(".failure")
