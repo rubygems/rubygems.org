@@ -467,7 +467,7 @@ GEM
       ruby-progressbar
     minitest-retry (0.2.3)
       minitest (>= 5.0)
-    mocha (2.6.0)
+    mocha (2.6.1)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.5)
     multi_json (1.15.0)
@@ -1159,7 +1159,7 @@ CHECKSUMS
   minitest-gcstats (1.3.1) sha256=cb25490f93aac02e3a5ff307e560d41afcdcafa7952c1c32efdeb9886b1f4711
   minitest-reporters (1.7.1) sha256=5060413a0c95b8c32fe73e0606f3631c173a884d7900e50013e15094eb50562c
   minitest-retry (0.2.3) sha256=7b7f4896efb9b931a1acb442a40e5273c441f44946cf4c6a8eb8895838e7bf29
-  mocha (2.6.0) sha256=76ac4f4702d7c86be602e61a957f719e7e9df48ac3799b1a892655ca416a5638
+  mocha (2.6.1) sha256=195036135e28b0cb7aad555bfda4b53b3b2fa27064425369c8544597a93cc602
   msgpack (1.7.5) sha256=ffb04979f51e6406823c03abe50e1da2c825c55a37dee138518cdd09d9d3aea8
   multi_json (1.15.0) sha256=1fd04138b6e4a90017e8d1b804c039031399866ff3fbabb7822aea367c78615d
   multi_xml (0.7.1) sha256=4fce100c68af588ff91b8ba90a0bb3f0466f06c909f21a32f4962059140ba61b
