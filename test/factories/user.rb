@@ -13,6 +13,10 @@ FactoryBot.define do
     end
     mfa_hashed_recovery_codes { mfa_recovery_codes.map { |code| BCrypt::Password.create(code) } }
 
+    after :create do |user, evaluator|
+      user.confirm_email! if evaluator.email_confirmed != false && evaluator.unconfirmed_email.blank?
+    end
+
     trait :unconfirmed do
       email_confirmed { false }
       unconfirmed_email { "#{SecureRandom.hex(8)}#{email}" }

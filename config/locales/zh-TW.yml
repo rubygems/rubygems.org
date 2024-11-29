@@ -474,6 +474,7 @@ zh-TW:
       success:
       failure_on_missing_email:
     update:
+      success:
       failure:
   multifactor_auths:
     session_expired: 您的登入頁面工作階段已過期。

@@ -246,7 +246,36 @@ end
 
 class ActionDispatch::IntegrationTest
   include OauthHelpers
+
   setup { host! Gemcutter::HOST }
+
+  def sign_in_as(user)
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+  end
+
+  def sign_out
+    delete sign_out_path
+  end
+
+  def assert_signed_in_as(user)
+    if !@controller.request.env[:clearance].signed_in?
+      flunk "Expected to be signed in as User #{user.handle.inspect}, but was not signed in." \
+    end
+    if @controller.request.env[:clearance].current_user != user
+      current_user = @controller.request.env[:clearance].current_user
+      flunk "Expected to be signed in as User: #{user.handle.inspect}\n" \
+            "Actually signed in as User: #{current_user.handle.inspect}"
+    end
+    assert_equal user, @controller.request.env[:clearance].current_user
+  end
+
+  def refute_signed_in
+    if @controller.request.env[:clearance].signed_in?
+      current_user = @controller.request.env[:clearance].current_user
+      flunk "Expected not to be signed in, but was signed in as User #{current_user.handle.inspect}"
+    end
+    assert_nil @controller.request.env[:clearance].current_user
+  end
 end
 
 Gemcutter::Application.load_tasks

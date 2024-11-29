@@ -474,6 +474,7 @@ en:
       success: You will receive an email within the next few minutes. It contains instructions for changing your password.
       failure_on_missing_email: Email can't be blank.
     update:
+      success: Your password has been changed.
       failure: Your password could not be changed. Please try again.
   multifactor_auths:
     session_expired: Your login page session has expired.
@@ -516,7 +517,7 @@ en:
       otp_code: OTP code
       otp_or_recovery: OTP or recovery code
       recovery_code: Recovery code
-      recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
+      recovery_code_html: 'You can use a valid <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
       security_device: Security Device
       verify_code: Verify code
   totps:
