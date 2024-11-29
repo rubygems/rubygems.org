@@ -493,6 +493,7 @@ fr:
       success:
       failure_on_missing_email:
     update:
+      success:
       failure:
   multifactor_auths:
     session_expired:

@@ -212,12 +212,12 @@ class User < ApplicationRecord
 
   def confirm_email!
     return false if unconfirmed_email && !update_email
-    update!(email_confirmed: true, confirmation_token: nil)
+    update!(email_confirmed: true, confirmation_token: nil, token_expires_at: Time.zone.now)
   end
 
-  # confirmation token expires after 15 minutes
+  # confirmation token expires after 3 hours
   def valid_confirmation_token?
-    token_expires_at > Time.zone.now
+    confirmation_token.present? && Time.zone.now.before?(token_expires_at)
   end
 
   def generate_confirmation_token(reset_unconfirmed_email: true)
