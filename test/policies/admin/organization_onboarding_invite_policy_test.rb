@@ -35,4 +35,9 @@ class Admin::OrganizationOnboardingInvitePolicyTest < AdminPolicyTestCase
     refute_authorizes @admin, @onboarding_invite, :avo_destroy?
     refute_authorizes @non_admin, @onboarding_invite, :avo_destroy?
   end
+
+  def test_act_on
+    assert_authorizes @admin, @onboarding_invite, :act_on?
+    refute_authorizes @non_admin, @onboarding_invite, :act_on?
+  end
 end

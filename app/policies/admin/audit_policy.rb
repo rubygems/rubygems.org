@@ -5,16 +5,16 @@ class Admin::AuditPolicy < Admin::ApplicationPolicy
       if rubygems_org_admin?
         scope.all
       else
-        scope.where(admin_github_user: current_user)
+        scope.none
       end
     end
   end
 
   def avo_index?
-    true
+    rubygems_org_admin?
   end
 
   def avo_show?
-    true
+    rubygems_org_admin?
   end
 end
