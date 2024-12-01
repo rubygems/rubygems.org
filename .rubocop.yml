@@ -1,6 +1,5 @@
 inherit_from: .rubocop_todo.yml
 require:
-  - ./lib/cops/safe_navigation_cop.rb
   - rubocop-performance
   - rubocop-rails
   - rubocop-minitest
@@ -130,9 +129,9 @@ Naming/AccessorMethodName:
   Exclude:
     - app/controllers/application_controller.rb
 
-Style/CustomSafeNavigationCop:
-  Exclude:
-    - app/models/links.rb
+Rails/SafeNavigation:
+  Enabled: true
+  ConvertTry: true
 
 Style/Documentation:
   Enabled: false
