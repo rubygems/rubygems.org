@@ -43,7 +43,7 @@ class Deletion < ApplicationRecord
   end
 
   def record_yank_forbidden_event!
-    return unless user && version && version.indexed? && ineligible?
+    return unless user && version&.indexed? && ineligible?
     version.rubygem.record_event!(
       Events::RubygemEvent::VERSION_YANK_FORBIDDEN,
       reason: ineligible_reason,
