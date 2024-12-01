@@ -304,19 +304,19 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-protobuf (4.28.3)
+    google-protobuf (4.29.0)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.3-aarch64-linux)
+    google-protobuf (4.29.0-aarch64-linux)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.3-arm64-darwin)
+    google-protobuf (4.29.0-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.3-x86_64-darwin)
+    google-protobuf (4.29.0-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.3-x86_64-linux)
+    google-protobuf (4.29.0-x86_64-linux)
       bigdecimal
       rake (>= 13)
     gravtastic (3.2.6)
@@ -906,7 +906,7 @@ DEPENDENCIES
   faraday_middleware-aws-sigv4 (~> 1.0)
   gem_server_conformance (~> 0.1.4)
   good_job (~> 3.99)
-  google-protobuf (~> 4.28)
+  google-protobuf (~> 4.29)
   gravtastic (~> 3.2)
   groupdate (~> 6.5)
   honeybadger (~> 5.5.1)
@@ -1094,11 +1094,11 @@ CHECKSUMS
   get_process_mem (1.0.0) sha256=d54024f3bcbf776a4d6e0155ec2b21bc3ba44e2fd158c4c00c80aa8a36e0b4aa
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
-  google-protobuf (4.28.3) sha256=c0ed86d6595257123ea9806dceed6ae158b6f8afde550cda2f565c5fa1df29b5
-  google-protobuf (4.28.3-aarch64-linux) sha256=7715ac58bad92f3297d02ed302879f03b6994fedcc63d20ec9bfd16b793c95ee
-  google-protobuf (4.28.3-arm64-darwin) sha256=cde7fa6b63349c79b1e9d815e6b4e3090bd98b7ac460bb282de3af03c4b9c0d5
-  google-protobuf (4.28.3-x86_64-darwin) sha256=f2c3aa765d43bd6aa62f5cb48f7c59e6b49a38dc65332b61625f26f7cb4c37f9
-  google-protobuf (4.28.3-x86_64-linux) sha256=2e4a2558b863024b296ac1dbceebb707c95f057a0ae1b5023a16440f209ba05a
+  google-protobuf (4.29.0) sha256=2ff7dad8803dab85f6e2e3d953c7831fa1c3ea0d91b68adf71acd21c28aa6fd4
+  google-protobuf (4.29.0-aarch64-linux) sha256=503912ebd9e2569c0bb602cb8a1a3eaa70bac44481f01dd77de58f6d834a0b90
+  google-protobuf (4.29.0-arm64-darwin) sha256=ca6dc74c781e7edc16e68812591225c7d1bf08d75c670c0c42154371f2afddc1
+  google-protobuf (4.29.0-x86_64-darwin) sha256=9406d19f7119b762022bd59ff9a0e6f780c530152007f892eba95767b166d504
+  google-protobuf (4.29.0-x86_64-linux) sha256=2e13afd53ed52c32b68a08344e8f4b1486d64a2e9c117e301c39b2020608947a
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.5.1) sha256=a0a78d051a510d61864fe987f00089d8f03739741eadc41e6ad4ea6f786da110
   hashdiff (1.1.1) sha256=c7966316726e0ceefe9f5c6aef107ebc3ccfef8b6db55fe3934f046b2cf0936a
