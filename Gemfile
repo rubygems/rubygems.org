@@ -80,7 +80,7 @@ end
 # Logging
 gem "amazing_print", "~> 1.6"
 gem "rails_semantic_logger", "~> 4.17"
-gem "pp", "0.6.1"
+gem "pp", "0.6.2"
 
 # Former default gems
 gem "csv", "~> 3.3" # zeitwerk-2.6.12

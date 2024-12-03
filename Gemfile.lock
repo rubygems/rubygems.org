@@ -557,7 +557,7 @@ GEM
     phlex-rails (1.2.2)
       phlex (>= 1.10, < 2)
       railties (>= 6.1, < 9)
-    pp (0.6.1)
+    pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
     prop_initializer (0.2.0)
@@ -943,7 +943,7 @@ DEPENDENCIES
   pg_query (~> 6.0)
   pghero (~> 3.6)
   phlex-rails (~> 1.2)
-  pp (= 0.6.1)
+  pp (= 0.6.2)
   prop_initializer (~> 0.2)
   propshaft (~> 1.1.0)
   prosopite (~> 1.4)
@@ -1200,7 +1200,7 @@ CHECKSUMS
   pghero (3.6.1) sha256=e6d4f6ec3979d4828dafcd1eaa4214e70279fe2502b9fe5bd632d8333aa79cd4
   phlex (1.11.0) sha256=979548e79a205c981612f1ab613addc8fa128c8092694d02f41aad4cea905e73
   phlex-rails (1.2.2) sha256=a20218449e71bc9fa5a71b672fbede8a654c6b32a58f1c4ea83ddc1682307a4c
-  pp (0.6.1) sha256=16d45bd9972616e81090ba08e119161131eb5b6348e85e43c4efffc8c5fe9fea
+  pp (0.6.2) sha256=947ec3120c6f92195f8ee8aa25a7b2c5297bb106d83b41baa02983686577b6ff
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prop_initializer (0.2.0) sha256=bd27704d0df8c59c3baf0df5cf448eba2b140fb9934fb31b2e379b5c842d8820
   propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
