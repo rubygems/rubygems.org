@@ -28,7 +28,8 @@
       link_to(
         truncate(user.homepage_url, length: 20),
         user.homepage_url,
-        rel: "nofollow"
+        rel: "nofollow",
+        data: { confirm: "Are you sure?" }
       )
     %></p>
   </div>
