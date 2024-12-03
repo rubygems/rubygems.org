@@ -18,9 +18,8 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
 
     assert_equal content, RubygemFs.compact_index.get("versions")
 
-    assert_equal(
-      {
-        metadata: {
+    assert_equal_hash(
+      { metadata: {
           "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
           "surrogate-key" => "versions s3-compact-index s3-versions",
           "sha256" => Digest::SHA256.base64digest(content),
@@ -30,8 +29,8 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
         content_type: "text/plain; charset=utf-8",
         checksum_sha256: Digest::SHA256.base64digest(content),
         content_md5: Digest::MD5.base64digest(content),
-        key: "versions"
-      }, RubygemFs.compact_index.head("versions")
+        key: "versions" },
+      RubygemFs.compact_index.head("versions")
     )
 
     assert_enqueued_with(job: FastlyPurgeJob, args: [{ key: "s3-versions", soft: true }])

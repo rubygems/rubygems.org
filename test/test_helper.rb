@@ -144,6 +144,29 @@ class ActiveSupport::TestCase
     assert_equal actual.additional_type.new(user_agent_info:, **expected_additional), actual.additional
   end
 
+  # Hashes with different orders will still be equal according to assert_equal.
+  # However, when they are not equal, the output diff will print them in their
+  # original order which makes it hard to see what is actually different.
+  #
+  # Improve diff output by sorting any nested hashes within enumerables,
+  # leaving array order untouched.
+  def assert_equal_hash(expected, actual, context = "expected")
+    assert_equal deep_sort_hashes(expected), deep_sort_hashes(actual), "Expected equal elements in #{context}"
+  end
+
+  # sort the hash keys and recursively sort nested hashes within enumberables
+  def deep_sort_hashes(obj)
+    if obj.is_a?(Hash)
+      obj.map do |k, v|
+        [k, deep_sort_hashes(v)]
+      end.sort!.to_h
+    elsif obj.respond_to?(:map)
+      obj.map { |v| deep_sort_hashes(v) }
+    else
+      obj
+    end
+  end
+
   def headless_chrome_driver
     Capybara.current_driver = :selenium_chrome_headless
     Capybara.default_max_wait_time = 2

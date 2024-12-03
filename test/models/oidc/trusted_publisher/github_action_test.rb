@@ -79,11 +79,10 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
   test "#to_access_policy" do
     publisher = create(:oidc_trusted_publisher_github_action, repository_name: "rubygem1")
 
-    assert_equal(
+    assert_equal_hash(
       {
         statements: [
-          {
-            effect: "allow",
+          { effect: "allow",
             principal: {
               oidc: "https://token.actions.githubusercontent.com"
             },
@@ -92,10 +91,8 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
               { operator: "string_equals", claim: "repository_owner_id", value: "123456" },
               { operator: "string_equals", claim: "aud", value: Gemcutter::HOST },
               { operator: "string_equals", claim: "job_workflow_ref", value: "example/rubygem1/.github/workflows/push_gem.yml@ref" }
-            ]
-          },
-          {
-            effect: "allow",
+            ] },
+          { effect: "allow",
             principal: {
               oidc: "https://token.actions.githubusercontent.com"
             },
@@ -104,8 +101,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
               { operator: "string_equals", claim: "repository_owner_id", value: "123456" },
               { operator: "string_equals", claim: "aud", value: Gemcutter::HOST },
               { operator: "string_equals", claim: "job_workflow_ref", value: "example/rubygem1/.github/workflows/push_gem.yml@sha" }
-            ]
-          }
+            ] }
         ]
       }.deep_stringify_keys,
       publisher.to_access_policy({ ref: "ref", sha: "sha" }).as_json
@@ -113,7 +109,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
 
     publisher.update!(environment: "test")
 
-    assert_equal(
+    assert_equal_hash(
       {
         statements: [
           {

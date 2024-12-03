@@ -31,7 +31,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
     page.assert_text audit.id
     assert_equal "WebHook", audit.auditable_type
     assert_equal "Delete Webhook", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/WebHook/#{web_hook.id}" => {

@@ -142,14 +142,14 @@ class OIDCTest < ApplicationSystemTestCase
       }
     }
 
-    assert_equal(expected, role.as_json.slice(*expected.keys))
+    assert_equal_hash(expected, role.as_json.slice(*expected.keys))
 
     click_button "Edit API Key Role"
     page.scroll_to :bottom
     click_button "Update Api key role"
 
     page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
-    assert_equal(expected, role.reload.as_json.slice(*expected.keys))
+    assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
 
     click_button "Edit API Key Role"
 
@@ -176,7 +176,7 @@ class OIDCTest < ApplicationSystemTestCase
     click_button "Update Api key role"
 
     page.assert_text "Access policy statements[1] conditions[1] claim unknown for the provider"
-    assert_equal(expected, role.reload.as_json.slice(*expected.keys))
+    assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
 
     page.find_field("Claim", with: "fudge").fill_in with: "event_name"
 
@@ -188,31 +188,34 @@ class OIDCTest < ApplicationSystemTestCase
     click_button "Update Api key role"
 
     page.assert_selector "h1", text: "API Key Role Push gems"
-    assert_equal(expected.merge(
-                   "name" => "Push gems",
-                   "api_key_permissions" => {
-                     "scopes" => %w[push_rubygem yank_rubygem], "valid_for" => 1800, "gems" => nil
-                   },
-                   "access_policy" => {
-                     "statements" => [
-                       {
-                         "effect" => "allow",
-                         "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
-                         "conditions" => [
-                           { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" }
-                         ]
-                       },
-                       {
-                         "effect" => "allow",
-                         "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
-                         "conditions" => [
-                           { "operator" => "string_matches", "claim" => "sub", "value" => "repo:example/repo:ref:refs/tags/.*" },
-                           { "operator" => "string_equals", "claim" => "event_name", "value" => "" }
-                         ]
-                       }
-                     ]
-                   }
-                 ), role.reload.as_json.slice(*expected.keys))
+
+    expected.merge!(
+      "name" => "Push gems",
+      "api_key_permissions" => {
+        "scopes" => %w[push_rubygem yank_rubygem], "valid_for" => 1800, "gems" => nil
+      },
+      "access_policy" => {
+        "statements" => [
+          {
+            "effect" => "allow",
+            "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
+            "conditions" => [
+              { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" }
+            ]
+          },
+          {
+            "effect" => "allow",
+            "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
+            "conditions" => [
+              { "operator" => "string_matches", "claim" => "sub", "value" => "repo:example/repo:ref:refs/tags/.*" },
+              { "operator" => "string_equals", "claim" => "event_name", "value" => "" }
+            ]
+          }
+        ]
+      }
+    )
+
+    assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
   end
 
   test "creating rubygem trusted publishers" do

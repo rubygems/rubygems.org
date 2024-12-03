@@ -35,7 +35,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     assert_equal log_ticket, audit.auditable
     assert_equal "LogTicket", audit.auditable_type
     assert_equal "Manual create of LogTicket", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/LogTicket/#{log_ticket.id}" => {
@@ -80,7 +80,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     assert_equal log_ticket, audit.auditable
     assert_equal "LogTicket", audit.auditable_type
     assert_equal "Manual update of LogTicket", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/LogTicket/#{log_ticket.id}" => {
@@ -129,7 +129,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     assert_equal log_ticket.id, audit.auditable_id
     assert_equal "LogTicket", audit.auditable_type
     assert_equal "Manual destroy of LogTicket", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/LogTicket/#{log_ticket.id}" => {
