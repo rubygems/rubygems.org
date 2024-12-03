@@ -26,7 +26,7 @@
     <%= icon_tag("link", color: :primary, class: "w-6 text-orange mr-3") %>
     <p class="text-neutral-800 dark:text-white"><%=
       link_to(
-        user.homepage_url,
+        truncate(user.homepage_url, length: 20),
         user.homepage_url,
         rel: "nofollow"
       )

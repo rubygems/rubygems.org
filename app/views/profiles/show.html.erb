@@ -98,7 +98,7 @@
           <p id="homepage-url">
             <%=
                link_to(
-                @user.homepage_url,
+                truncate(@user.homepage_url,length: 20),
                 @user.homepage_url,
                 rel: "nofollow",
                 class: "profile__header__attribute t-link--black"
