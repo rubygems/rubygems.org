@@ -35,4 +35,9 @@ class Admin::OrganizationPolicyTest < AdminPolicyTestCase
     assert_authorizes @admin, @organization, :avo_search?
     refute_authorizes @non_admin, @organization, :avo_search?
   end
+
+  def test_act_on
+    assert_authorizes @admin, @organization, :act_on?
+    refute_authorizes @non_admin, @organization, :act_on?
+  end
 end

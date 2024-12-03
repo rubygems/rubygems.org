@@ -27,16 +27,6 @@ class CardComponent < ApplicationComponent
     end
   end
 
-  def with_list(items, &)
-    list do
-      items.each do |item|
-        list_item do
-          yield(item)
-        end
-      end
-    end
-  end
-
   def list(**options, &)
     options[:class] = "#{options[:class]} -mx-4"
     ul(**options, &)
@@ -49,7 +39,9 @@ class CardComponent < ApplicationComponent
 
   def list_item(**options, &)
     options[:class] = "#{options[:class]} #{LIST_ITEM_CLASSES}"
-    li(**options, &)
+    li do
+      div(**options, &)
+    end
   end
 
   def list_item_to(url = nil, **options, &)
@@ -65,9 +57,9 @@ class CardComponent < ApplicationComponent
   # removes padding inside the "content" area of the card so scroll bar and overflaw appear correctly
   # adds a border to the top of the scrollable area to explain the content being hidden on scroll
   def scrollable(**options, &)
-    options[:class] = "#{options[:class]} lg:max-h-96 lg:overflow-y-auto"
-    options[:class] << " -mx-4 -mb-6 md:-mx-10 md:-mb-10"
-    options[:class] << " border-t border-neutral-200 dark:border-neutral-800"
+    options[:class] = "#{options[:class]} lg:max-h-96 lg:overflow-y-auto " \
+                      "-mx-4 -mb-6 md:-mx-10 md:-mb-10 " \
+                      "border-t border-neutral-200 dark:border-neutral-800"
     div(**options) do
       div(class: "px-4 pt-6 md:px-10 md:pt-10", &)
     end

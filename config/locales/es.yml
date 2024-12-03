@@ -295,6 +295,8 @@ es:
     settings: Configuración
     org_name: 'Org: %{name}'
     subscriptions: Suscripciones
+    gems:
+    members:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -457,6 +459,16 @@ es:
       popular_gems: Gemas más populares
     popular:
       title: Nuevos lanzamientos — Gemas más populares
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count} Rubystas"

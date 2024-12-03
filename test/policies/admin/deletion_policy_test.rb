@@ -8,6 +8,10 @@ class Admin::DeletionPolicyTest < AdminPolicyTestCase
     @non_admin = create(:admin_github_user)
   end
 
+  def test_associations
+    assert_association @admin, @deletion, :version, Admin::VersionPolicy
+  end
+
   def test_scope
     assert_equal [@deletion], policy_scope!(
       @admin,

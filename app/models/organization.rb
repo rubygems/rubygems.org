@@ -20,4 +20,16 @@ class Organization < ApplicationRecord
   after_create do
     record_event!(Events::OrganizationEvent::CREATED, actor_gid: memberships.first&.to_gid)
   end
+
+  def self.find_by_handle(handle)
+    find_by("lower(handle) = lower(?)", handle)
+  end
+
+  def self.find_by_handle!(handle)
+    find_by_handle(handle) || raise(ActiveRecord::RecordNotFound)
+  end
+
+  def to_param
+    handle
+  end
 end

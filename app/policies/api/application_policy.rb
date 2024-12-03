@@ -2,11 +2,6 @@
 
 class Api::ApplicationPolicy
   class Scope
-    def initialize(api_key, scope)
-      @api_key = api_key
-      @scope = scope
-    end
-
     private
 
     attr_reader :api_key, :scope

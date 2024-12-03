@@ -12,7 +12,7 @@ class RubygemContents
   attr_reader :gem
 
   def initialize(gem:)
-    raise ArgumentError, "gem must be Rubygem#name" unless gem.try(:match?, Rubygem::NAME_PATTERN)
+    raise ArgumentError, "gem must be Rubygem#name" unless gem&.match?(Rubygem::NAME_PATTERN)
     @gem = gem
   end
 

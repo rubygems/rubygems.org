@@ -8,6 +8,10 @@ class Admin::GeoipInfoPolicyTest < AdminPolicyTestCase
     @non_admin = create(:admin_github_user)
   end
 
+  def test_associations
+    assert_association @admin, @geoip_info, :ip_addresses, Admin::IpAddressPolicy
+  end
+
   def test_scope
     assert_equal [@geoip_info], policy_scope!(
       @admin,

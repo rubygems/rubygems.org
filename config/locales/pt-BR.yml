@@ -284,6 +284,8 @@ pt-BR:
     settings: Configurações da Conta
     org_name: 'Org: %{name}'
     subscriptions: Observando
+    gems:
+    members:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
@@ -419,6 +421,16 @@ pt-BR:
       popular_gems: Gems Populares
     popular:
       title: Novos Releases - Gems Populares
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount:

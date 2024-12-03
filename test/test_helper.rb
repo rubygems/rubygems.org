@@ -286,6 +286,23 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
     end
   end
 
+  def assert_association(user, record, association, _policy_class)
+    %w[create attach detach destroy edit].each do |action|
+      refute_authorizes(user, record, :"#{action}_#{association}?")
+    end
+
+    begin
+      @authorization_client.authorize(user, record, :avo_show?, policy_class: policy_class)
+
+      assert_authorizes(user, record, :"view_#{association}?")
+    rescue Avo::NotAuthorizedError
+      refute_authorizes(user, record, :"view_#{association}?")
+    end
+
+    # TODO: I'm not clear on what `record` is used in show_association?
+    # assert_authorizes(user, record, :"show_#{association}?")
+  end
+
   def policy_class
     nil
   end

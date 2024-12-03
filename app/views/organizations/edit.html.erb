@@ -1,0 +1,26 @@
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :settings %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("layouts.application.header.settings") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t("layouts.application.header.settings"), icon: "settings" %>
+  <% end %>
+  <%= form_with model: @organization, url: organization_path(@organization), method: :patch do |form| %>
+    <div>
+      <%= form.label :name, "Display Name", class: "block text-b2 font-semibold mb-2" %>
+      <%= form.text_field(
+        :name,
+        class: "w-full text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500",
+        required: true,
+        autocomplete: "organization",
+      ) %>
+    </div>
+
+    <div class="flex mt-10">
+      <%= render ButtonComponent.new("Update", type: :submit, style: :outline) %>
+    </div>
+  <% end %>
+<% end %>

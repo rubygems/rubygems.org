@@ -288,7 +288,9 @@ Rails.application.routes.draw do
         patch "confirm", to: "confirm#update"
       end
     end
-    resources :organizations, only: %i[show], constraints: { id: Patterns::ROUTE_PATTERN }
+    resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
+      resources :gems, only: :index, controller: 'organizations/gems'
+    end
   end
 
   ################################################################################
