@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.14.5)
-      avo (= 3.14.5)
-      avo-dynamic_filters (= 3.14.5)
-      avo-pro (= 3.14.5)
+    avo-advanced (3.15.0)
+      avo (= 3.15.0)
+      avo-dynamic_filters (= 3.15.0)
+      avo-pro (= 3.15.0)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.14.5)
-      avo (= 3.14.5)
+    avo-dashboards (3.15.0)
+      avo (= 3.15.0)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.14.5)
-      avo (= 3.14.5)
+    avo-dynamic_filters (3.15.0)
+      avo (= 3.15.0)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.14.5)
-      avo (= 3.14.5)
+    avo-menu (3.15.0)
+      avo (= 3.15.0)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.14.5)
-      avo (= 3.14.5)
-      avo-dashboards (= 3.14.5)
-      avo-menu (= 3.14.5)
+    avo-pro (3.15.0)
+      avo (= 3.15.0)
+      avo-dashboards (= 3.15.0)
+      avo-menu (= 3.15.0)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -115,7 +115,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    avo (3.14.5)
+    avo (3.15.0)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -221,7 +221,7 @@ GEM
       datadog (~> 2.4)
       msgpack
     datadog-ruby_core_source (3.3.6)
-    date (3.4.0)
+    date (3.4.1)
     derailed_benchmarks (2.2.1)
       base64
       benchmark-ips (~> 2)
@@ -880,7 +880,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.6)
   avo (~> 3.13)
-  avo-advanced (~> 3.14)!
+  avo-advanced (~> 3.15)!
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.175)
   aws-sdk-sqs (~> 1.89)
@@ -1016,12 +1016,12 @@ CHECKSUMS
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.14.5) sha256=4928bdb2d885955223eb1f8f61815eed5384d517059a20b298b09951fc284fbe
-  avo-advanced (3.14.5) sha256=d3bed8f4f7e8927037f11bcc470a2dfaae6a7a8f203c6dbae6d94cecd17f4098
-  avo-dashboards (3.14.5) sha256=28829cceb4c0497003dfd0063179757531fe5de434cd4e33871efe4f004d0723
-  avo-dynamic_filters (3.14.5) sha256=a337cd0c08c95fe281a91f7694c5d8735fb41cdf97e762283a54f1a6d67ca9c0
-  avo-menu (3.14.5) sha256=368d61720825131ee4ea2e89c6adbf37845b490321d9aca911dca90f5299f502
-  avo-pro (3.14.5) sha256=0de6e59242ce174f1469d8497ffea4df2ed1d94d91f79b6db43fe54e09989b99
+  avo (3.15.0) sha256=4cd35b37c333bdc9f95be1146bbe7a1d051647f784997b0759ad7c64449a5568
+  avo-advanced (3.15.0) sha256=20e51bcd24db6b12aeba99e813a66eee146a892331754cf6af3b9d433ef1efdf
+  avo-dashboards (3.15.0) sha256=d5a5c5e4b9ec9efe872d83f1cd068b24fd9c6a6f7c85b8daa52710281e1eac04
+  avo-dynamic_filters (3.15.0) sha256=27e99101b78dd433d189caff6e3bd2d1f2c324edaf87128838bb5c78976587c5
+  avo-menu (3.15.0) sha256=c4bc90e72270998da3af4a9a7a4d4d59b2e45c9055eff9ba9721fc1502f68f68
+  avo-pro (3.15.0) sha256=002250a2e7c92d05019a04bc99976e52286d6166b6639718b3615eb97f5dd541
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.1016.0) sha256=e9bb53e42b75cc9e2655b45b8f4d9f0fa6b5c26a0946aa2c2f261705d50e6650
@@ -1063,7 +1063,7 @@ CHECKSUMS
   datadog (2.7.1) sha256=5b672e2c559801c827dc94e670a5dc1b2e1acdf65a038a3880c41cd8afd02e16
   datadog-ci (1.9.0) sha256=f48a2ec91961b65ada1e13b964a42ed1e3ae6ee586736e3ee5690d0ceb302069
   datadog-ruby_core_source (3.3.6) sha256=007c72450d3f5838c6d0ae4a6a77e5008bb29dd97d10ea3bf367f978d7c02f36
-  date (3.4.0) sha256=2e7fadaded625c9b3e35e254e42068d4bd8b8646ceab0744cbcbcfdafaa0a711
+  date (3.4.1) sha256=bf268e14ef7158009bfeaec40b5fa3c7271906e88b196d958a89d4b408abe64f
   derailed_benchmarks (2.2.1) sha256=654280664fded41c9cd8fc27fc0fcfaf096023afab90eb4ac1185ba70c5d4439
   diff-lcs (1.5.1) sha256=273223dfb40685548436d32b4733aa67351769c7dea621da7d9dd4813e63ddfe
   discard (1.4.0) sha256=6efcd2a53ddf96781f81b825d398f1c88ab88c0faa84e131bea6e16ef95d65d0
