@@ -39,7 +39,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     Browser::Chrome.any_instance.stubs(:safari?).returns true
 
-    assert page.has_content?("Success!")
+    assert_text "Success!"
     assert_current_path(successful_verification_webauthn_verification_path)
 
     assert_link_is_expired
@@ -58,8 +58,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text "Failed to fetch"
+    assert_text "Please close this browser and try again."
     assert_link_is_expired
     assert_failed_verification_not_found
   end
@@ -91,8 +91,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     click_on "Authenticate"
 
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text "Failed to fetch"
+    assert_text "Please close this browser and try again."
     assert_link_is_expired
     assert_failed_verification_not_found
   end
