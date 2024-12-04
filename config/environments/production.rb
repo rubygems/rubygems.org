@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require_relative "../../lib/gemcutter/middleware/redirector"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -115,6 +116,5 @@ Rails.application.configure do
     value_max_bytes: 2_097_152 # 2MB
   }
 
-  require_relative "../../lib/gemcutter/middleware/redirector"
   config.middleware.use Gemcutter::Middleware::Redirector
 end
