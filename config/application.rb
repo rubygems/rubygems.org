@@ -88,7 +88,7 @@ module Gemcutter
   DEFAULT_PAGINATION = 20
   EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
   HOST = config["host"].freeze
-  HOST_DISPLAY = Rails.env.production? || Rails.env.development? || Rails.env.test? ? "RubyGems.org" : "RubyGems.org #{Rails.env}"
+  HOST_DISPLAY = Gemcutter.config[:host_display].freeze
   NEWS_DAYS_LIMIT = 7.days
   NEWS_MAX_PAGES = 10
   NEWS_PER_PAGE = 10
