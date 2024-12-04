@@ -13,8 +13,6 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
   teardown do
     @authenticator&.remove!
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 
   test "sign in with webauthn mfa" do
@@ -30,7 +28,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     click_on "Authenticate with security device"
 
     assert_text "Dashboard"
-    refute page.has_content? "We now support security devices!"
+    refute_text "We now support security devices!"
   end
 
   test "sign in with webauthn mfa but it expired" do
@@ -65,8 +63,8 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
     click_on "Authenticate with security device"
 
-    refute page.has_content? "Dashboard"
-    assert_text "Sign in"
+    assert_text "Credentials required"
+    assert_current_path session_path
   end
 
   test "sign in with webauthn mfa using recovery codes" do
@@ -91,7 +89,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     click_on "Authenticate with security device"
 
     assert_text "Dashboard"
-    refute page.has_content? "We now support security devices!"
+    refute_text "We now support security devices!"
   end
 
   test "sign in with webauthn failure" do
@@ -101,7 +99,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
     click_on "Authenticate with security device"
 
-    refute page.has_content? "Dashboard"
+    refute_text "Dashboard"
   end
 
   test "sign in with webauthn user_handle changed failure" do
@@ -111,7 +109,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
     click_on "Authenticate with security device"
 
-    refute page.has_content? "Dashboard"
+    refute_text "Dashboard"
     assert_text "Sign in"
   end
 
@@ -131,7 +129,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     visit sign_in_path
     click_on "Authenticate with security device"
 
-    refute page.has_content? "Dashboard"
+    refute_text "Dashboard"
     assert_text "Sign in"
     assert_text "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
@@ -142,7 +140,7 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     visit sign_in_path
     click_on "Authenticate with security device"
 
-    refute page.has_content? "Dashboard"
+    refute_text "Dashboard"
     assert_text "Sign in"
   end
 end
