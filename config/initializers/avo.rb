@@ -18,7 +18,7 @@ Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   config.current_user_method = :admin_user
   config.authenticate_with do
     if !Rails.env.local? && !(Avo.license.valid? && Avo.license.advanced?)
-      raise "Avo::Pro is missing in #{Rails.env}." \
+      raise "Avo::Pro is missing on #{Gemcutter::HOST} (env:#{Rails.env})." \
             "\nRails.groups=#{Rails.groups.inspect}" \
             "\nAvo.license=#{Avo.license.inspect}" \
             "\nAvo.configuration.license=#{Avo.configuration.license.inspect}"
@@ -66,7 +66,7 @@ Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   # config.cache_resource_filters = ->(current_user:, resource:) { current_user.cache_resource_filters?}
 
   ## == Customization ==
-  config.app_name = "RubyGems.org (#{Rails.env})"
+  config.app_name = Gemcutter::HOST_DISPLAY
   # config.timezone = 'UTC'
   # config.currency = 'USD'
   # config.hide_layout_when_printing = false

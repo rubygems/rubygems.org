@@ -35,7 +35,7 @@ Rails.application.configure do
           ddtags: {
             service: "rubygems.org",
             version: AppRevision.version,
-            env: Rails.env,
+            env: Gemcutter::DEPLOYMENT_ENV_NAME,
             trace_id: Datadog::Tracing.correlation&.trace_id,
             "gemcutter.user.id": (current_user.id if respond_to?(:signed_in?) && signed_in?)
           }.compact.map { |k, v| "#{k}:#{v}" }.join(',')

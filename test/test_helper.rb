@@ -117,7 +117,7 @@ class ActiveSupport::TestCase
     return if Avo.configuration.license == "advanced" && defined?(Avo::Pro)
 
     if ActiveRecord::Type::Boolean.new.cast(ENV["REQUIRE_AVO_PRO"])
-      raise "REQUIRE_AVO_PRO is set but Avo::Pro is missing in #{Rails.env}." \
+      raise "REQUIRE_AVO_PRO is set but Avo::Pro is missing on #{Gemcutter::HOST} (env:#{Rails.env})." \
             "\nRAILS_GROUPS=#{ENV['RAILS_GROUPS'].inspect}\nAvo.license=#{Avo.license.inspect}"
     end
     skip "avo pro is not present but was required for this test"

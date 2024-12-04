@@ -88,7 +88,8 @@ module Gemcutter
   DEFAULT_PAGINATION = 20
   EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
   HOST = config["host"].freeze
-  HOST_DISPLAY = Rails.env.production? || Rails.env.development? || Rails.env.test? ? "RubyGems.org" : "RubyGems.org #{Rails.env}"
+  DEPLOYMENT_ENV_NAME = ENV.fetch("ENV", Rails.env.to_s)
+  HOST_DISPLAY = ENV.fetch("HOST_DISPLAY", "RubyGems.org")
   NEWS_DAYS_LIMIT = 7.days
   NEWS_MAX_PAGES = 10
   NEWS_PER_PAGE = 10
@@ -98,7 +99,7 @@ module Gemcutter
   POPULAR_DAYS_LIMIT = 70.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
-  SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze
+  SEARCH_INDEX_NAME = ENV.fetch("SEARCH_INDEX_NAME", "rubygems-#{Rails.env}")
   SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 1).to_i
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10

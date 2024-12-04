@@ -7,7 +7,7 @@ Datadog.configure do |c|
 
   c.service = "rubygems.org"
   c.version = AppRevision.version
-  c.env = Rails.env
+  c.env = Gemcutter::DEPLOYMENT_ENV_NAME
 
   # Enabling datadog functionality
 

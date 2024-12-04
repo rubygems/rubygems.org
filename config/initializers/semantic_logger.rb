@@ -4,7 +4,7 @@ ActiveSupport.on_load(:action_controller) do
   def append_info_to_payload(payload)
     payload.merge!(
       timestamp: Time.now.utc,
-      env: Rails.env,
+      env: Gemcutter::DEPLOYMENT_ENV_NAME,
       network: {
         client: {
           ip: request.ip

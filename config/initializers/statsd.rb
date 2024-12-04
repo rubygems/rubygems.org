@@ -1,7 +1,7 @@
 StatsD.logger = SemanticLogger[StatsD]
 
 StatsD.singleton_client = StatsD.singleton_client.clone_with_options(
-  default_tags: ["env:#{Rails.env}"]
+  default_tags: ["env:#{Gemcutter::DEPLOYMENT_ENV_NAME}"]
 )
 
 ActiveSupport::Notifications.subscribe(/process_action.action_controller/) do |event|

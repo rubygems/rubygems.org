@@ -263,7 +263,7 @@ class Rack::Attack
 
     event = {
       timestamp: ::Time.now.utc,
-      env: Rails.env,
+      env: Gemcutter::DEPLOYMENT_ENV_NAME,
       message: "[429] #{method} #{request.env['REQUEST_PATH']}",
       http: {
         request_id: request.env["action_dispatch.request_id"],

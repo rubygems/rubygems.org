@@ -58,7 +58,7 @@ spec:
           <% end %>
         env:
           - name: RAILS_ENV
-            value: "<%= environment %>"
+            value: "production"
           - name: ENV
             value: "<%= environment %>"
           - name: RAILS_GROUPS
@@ -67,6 +67,8 @@ spec:
             value: "<%= environment == 'production' ? 8 : 2 %>"
           - name: RAILS_MAX_THREADS
             value: "5"
+          - name: HOST_DISPLAY
+            value: "RubyGems.org<%= environment == 'production' ? '' : " #{environment.capitalize}" %>"
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
@@ -139,6 +141,8 @@ spec:
                 key: elasticsearch_url
           - name: SEARCH_NUM_REPLICAS
             value: "<%= environment == 'production' ? 2 : 1 %>"
+          - name: SEARCH_INDEX_NAME
+            value: "rubygems-<%= environment %>"
           - name: MEMCACHED_ENDPOINT
             valueFrom:
               secretKeyRef:
