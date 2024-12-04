@@ -139,6 +139,8 @@ spec:
                 key: elasticsearch_url
           - name: SEARCH_NUM_REPLICAS
             value: "<%= environment == 'production' ? 2 : 1 %>"
+          - name: SEARCH_INDEX_NAME
+            value: "rubygems-<%= environment %>"
           - name: MEMCACHED_ENDPOINT
             valueFrom:
               secretKeyRef:
