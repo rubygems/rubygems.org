@@ -128,14 +128,17 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   end
 
   def assert_poll_status(status)
+    current_driver = Capybara.current_driver
+    Capybara.current_driver = :rack_test
     @api_key ||= create(:api_key, key: "12345", scopes: %i[push_rubygem], owner: @user)
 
-    Capybara.current_driver = :rack_test
     page.driver.header "AUTHORIZATION", "12345"
 
     visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
 
     assert_equal status, JSON.parse(page.text)["status"]
+
+    Capybara.current_driver = current_driver
   end
 
   def assert_successful_verification_not_found
