@@ -457,7 +457,7 @@ GEM
     mini_histogram (0.3.1)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.2)
+    minitest (5.25.4)
     minitest-gcstats (1.3.1)
       minitest (~> 5.0)
     minitest-reporters (1.7.1)
@@ -1158,7 +1158,7 @@ CHECKSUMS
   mini_histogram (0.3.1) sha256=6a114b504e4618b0e076cc672996036870f7cc6f16b8e5c25c0c637726d2dd94
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_portile2 (2.8.8) sha256=8e47136cdac04ce81750bb6c09733b37895bf06962554e4b4056d78168d70a75
-  minitest (5.25.2) sha256=59b379d63e0058159127b545c4725d3106624c9be2b3e030ddaee825d59e83eb
+  minitest (5.25.4) sha256=9cf2cae25ac4dfc90c988ebc3b917f53c054978b673273da1bd20bcb0778f947
   minitest-gcstats (1.3.1) sha256=cb25490f93aac02e3a5ff307e560d41afcdcafa7952c1c32efdeb9886b1f4711
   minitest-reporters (1.7.1) sha256=5060413a0c95b8c32fe73e0606f3631c173a884d7900e50013e15094eb50562c
   minitest-retry (0.2.3) sha256=7b7f4896efb9b931a1acb442a40e5273c441f44946cf4c6a8eb8895838e7bf29
