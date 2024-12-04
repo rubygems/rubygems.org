@@ -134,7 +134,7 @@ GEM
       rails (>= 6.0.0)
       zeitwerk
     aws-eventstream (1.3.0)
-    aws-partitions (1.1016.0)
+    aws-partitions (1.1017.0)
     aws-sdk-core (3.214.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -143,7 +143,7 @@ GEM
     aws-sdk-kms (1.96.0)
       aws-sdk-core (~> 3, >= 3.210.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.175.0)
+    aws-sdk-s3 (1.176.0)
       aws-sdk-core (~> 3, >= 3.210.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -882,7 +882,7 @@ DEPENDENCIES
   avo (~> 3.13)
   avo-advanced (~> 3.15)!
   avo_upgrade (~> 0.1.1)
-  aws-sdk-s3 (~> 1.175)
+  aws-sdk-s3 (~> 1.176)
   aws-sdk-sqs (~> 1.89)
   bcrypt (~> 3.1)
   better_html (~> 2.1)
@@ -1024,10 +1024,10 @@ CHECKSUMS
   avo-pro (3.15.0) sha256=002250a2e7c92d05019a04bc99976e52286d6166b6639718b3615eb97f5dd541
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
-  aws-partitions (1.1016.0) sha256=e9bb53e42b75cc9e2655b45b8f4d9f0fa6b5c26a0946aa2c2f261705d50e6650
+  aws-partitions (1.1017.0) sha256=d52205fd20e9929315c8d2d5c3d87b46ba98d7ac532c1478b88dd482a1167dc5
   aws-sdk-core (3.214.0) sha256=24f2a0f29dc3b5d9ee38d6ff8341a66fba48a4ebca2424688f7bac9952d8488b
   aws-sdk-kms (1.96.0) sha256=b1818e140b4d1b3cbe154e6b2df1d157f8c65aa297d488f69b5745995a6ba375
-  aws-sdk-s3 (1.175.0) sha256=7b7e3b4dd8879dd622308447d948e7d0c3c45dddf96e815259d1c37b22a482c2
+  aws-sdk-s3 (1.176.0) sha256=c1c00dd35e8896042dce589889051291d2080aa3d938cb6b9cc60496bbc6e9c1
   aws-sdk-sqs (1.89.0) sha256=1db1e8a1dcf1a83a6328fe12a034fe89e1c7a73c6305b8cad089656e3a5389ba
   aws-sigv4 (1.10.1) sha256=8a140753f34de18125686b11e7adaed4ca3db06dfb50a478993bd437f7a203bb
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
