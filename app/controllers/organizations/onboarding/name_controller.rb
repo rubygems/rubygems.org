@@ -1,6 +1,4 @@
 class Organizations::Onboarding::NameController < Organizations::Onboarding::BaseController
-  layout "onboarding"
-
   def new
   end
 

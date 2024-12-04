@@ -1,6 +1,4 @@
 class Organizations::Onboarding::UsersController < Organizations::Onboarding::BaseController
-  layout "onboarding"
-
   def edit
   end
 
