@@ -107,7 +107,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
         repository_name = @trusted_publisher.trusted_publisher.repository_name
 
         assert_response :success
-        assert_equal(
+        assert_equal_hash(
           { "id" => @trusted_publisher.id,
             "trusted_publisher_type" => "OIDC::TrustedPublisher::GitHubAction",
             "trusted_publisher" => {
@@ -117,7 +117,8 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
               "repository_owner_id" => "123456",
               "workflow_filename" => "push_gem.yml",
               "environment" => nil
-            } }, @response.parsed_body
+            } },
+          @response.parsed_body
         )
       end
     end
@@ -142,7 +143,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
         trusted_publisher = OIDC::RubygemTrustedPublisher.find(response.parsed_body["id"])
 
         assert_equal @rubygem, trusted_publisher.rubygem
-        assert_equal(
+        assert_equal_hash(
           { "id" => response.parsed_body["id"],
             "trusted_publisher_type" => "OIDC::TrustedPublisher::GitHubAction",
             "trusted_publisher" => {
@@ -152,7 +153,8 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
               "repository_owner_id" => "123456",
               "workflow_filename" => "push_gem.yml",
               "environment" => nil
-            } }, response.parsed_body
+            } },
+          response.parsed_body
         )
       end
 
@@ -180,9 +182,11 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
              headers: { "HTTP_AUTHORIZATION" => "12345" }
 
         assert_response :unprocessable_content
-        assert_equal({ "trusted_publisher.repository_name" => ["can't be blank"],
-                       "trusted_publisher.workflow_filename" => ["can't be blank"] },
-                     response.parsed_body["errors"])
+        assert_equal_hash(
+          { "trusted_publisher.repository_name" => ["can't be blank"],
+            "trusted_publisher.workflow_filename" => ["can't be blank"] },
+          response.parsed_body["errors"]
+        )
       end
     end
 

@@ -241,12 +241,13 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       resp = response.parsed_body
 
       assert_match(/^rubygems_/, resp["rubygems_api_key"])
-      assert_equal({
-                     "rubygems_api_key" => resp["rubygems_api_key"],
-                      "name" => "GitHub Actions segiddins/oidc-test @ .github/workflows/token.yml 2023-03-28T16:22:17Z",
-                      "scopes" => ["push_rubygem"],
-                      "expires_at" => 15.minutes.from_now
-                   }, resp)
+      assert_equal_hash(
+        { "rubygems_api_key" => resp["rubygems_api_key"],
+          "name" => "GitHub Actions segiddins/oidc-test @ .github/workflows/token.yml 2023-03-28T16:22:17Z",
+          "scopes" => ["push_rubygem"],
+          "expires_at" => 15.minutes.from_now },
+        resp
+      )
 
       api_key = trusted_publisher.api_keys.sole
 

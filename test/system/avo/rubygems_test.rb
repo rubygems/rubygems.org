@@ -40,7 +40,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     page.assert_text audit.id
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Release reserved namespace", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/Rubygem/#{rubygem.id}" => {
@@ -106,7 +106,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     page.assert_text audit.id
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Yank Rubygem", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "fields" => { "version" => version.id.to_s },
         "arguments" => {},
@@ -187,7 +187,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Yank Rubygem", audit.action
 
-    assert_equal(
+    assert_equal_hash(
       {
         "fields" => { "version" => "All" },
         "arguments" => {},
@@ -274,7 +274,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Add owner", audit.action
 
-    assert_equal(
+    assert_equal_hash(
       {
         "fields" => { "owner" => { "id" => new_owner.id, "handle" => new_owner.handle } },
         "arguments" => {},

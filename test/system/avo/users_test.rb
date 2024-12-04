@@ -48,7 +48,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_text audit.id
     assert_equal "User", audit.auditable_type
     assert_equal "Reset User 2FA", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/User/#{user.id}" => {
@@ -123,7 +123,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_text audit.id
     assert_equal "User", audit.auditable_type
     assert_equal "Block User", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/User/#{user.id}" => {
@@ -208,7 +208,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       page.assert_text audit.id
       assert_equal "User", audit.auditable_type
       assert_equal "Reset Api Key", audit.action
-      assert_equal(
+      assert_equal_hash(
         {
           "records" => {
             "gid://gemcutter/User/#{user.id}" => {
@@ -294,7 +294,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     end
     rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
 
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
@@ -398,7 +398,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
     version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
 
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
@@ -519,7 +519,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       page.assert_text audit.id
       assert_equal "User", audit.auditable_type
       assert_equal "Change User Email", audit.action
-      assert_equal(
+      assert_equal_hash(
         {
           "records" => {
             "gid://gemcutter/User/#{user.id}" => {
@@ -593,7 +593,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_text audit.id
     assert_equal "User", audit.auditable_type
     assert_equal "Create User", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/User/#{user.id}" => {
