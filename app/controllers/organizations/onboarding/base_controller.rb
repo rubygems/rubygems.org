@@ -4,6 +4,8 @@ class Organizations::Onboarding::BaseController < ApplicationController
   before_action :find_or_initialize_onboarding
   before_action :set_breadcrumbs
 
+  layout "onboarding"
+
   def find_or_initialize_onboarding
     @organization_onboarding = OrganizationOnboarding.find_or_initialize_by(created_by: Current.user, status: :pending)
   end
