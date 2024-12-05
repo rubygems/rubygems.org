@@ -16,7 +16,7 @@ class CardComponentTest < ComponentTest
       end
     end
 
-    assert_selector "article"
+    assert_selector "section"
     assert_selector "h3", text: "Gems"
     assert_selector "svg.fill-orange"
     assert_selector "span", text: "3"
@@ -36,7 +36,7 @@ class CardComponentTest < ComponentTest
       end
     end
 
-    assert_selector "article"
+    assert_selector "section"
     assert_selector "h3", text: "History"
     assert_text "content"
     refute_text "View all"
