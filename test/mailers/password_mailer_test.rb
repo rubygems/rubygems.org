@@ -3,6 +3,7 @@ require "test_helper"
 class PasswordMailerTest < ActionMailer::TestCase
   test "change password with handle" do
     user = create(:user)
+    user.forgot_password!
     email = PasswordMailer.change_password(user)
 
     assert_emails 1 do
@@ -16,6 +17,7 @@ class PasswordMailerTest < ActionMailer::TestCase
 
   test "change password without handle should show email" do
     user = create(:user, handle: nil)
+    user.forgot_password!
     email = PasswordMailer.change_password(user)
 
     assert_emails 1 do
