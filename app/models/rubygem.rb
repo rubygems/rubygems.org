@@ -14,7 +14,7 @@ class Rubygem < ApplicationRecord
   has_many :versions, dependent: :destroy, validate: false
   has_one :latest_version, -> { latest.order(:position) }, class_name: "Version", inverse_of: :rubygem
   has_many :web_hooks, dependent: :destroy
-  has_one :linkset, dependent: :destroy
+  has_one :linkset, dependent: :destroy, inverse_of: :rubygem
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
   has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
@@ -273,34 +273,11 @@ class Rubygem < ApplicationRecord
     ownership_calls.find_by(status: "opened")
   end
 
-  def update_versions!(version, spec)
-    version.update_attributes_from_gem_specification!(spec)
-  end
-
-  def update_dependencies!(version, spec)
-    spec.dependencies.each do |dependency|
-      version.dependencies.create!(gem_dependency: dependency)
-    rescue ActiveRecord::RecordInvalid => e
-      # ActiveRecord can't chain a nested error here, so we have to add and reraise
-      e.record.errors.errors.each do |error|
-        errors.import(error, attribute: "dependency.#{error.attribute}")
-      end
-      raise
-    end
-  end
-
-  def update_linkset!(spec)
-    self.linkset ||= Linkset.new
-    self.linkset.update_attributes_from_gem_specification!(spec)
-    self.linkset.save!
-  end
-
   def update_attributes_from_gem_specification!(version, spec)
     Rubygem.transaction do
       save!
-      update_versions! version, spec
-      update_dependencies! version, spec
-      update_linkset! spec if version.reload.latest?
+      version.update_attributes_from_gem_specification!(spec)
+      version.update_dependencies!(spec)
     end
   end
 
