@@ -1,4 +1,4 @@
 Hi <%= @user.handle %>
 
-<%= t("mailer.email_confirmation.welcome_message") %>
+<%= t("mailer.email_confirmation.welcome_message", host: Gemcutter::HOST_DISPLAY) %>
 <%= update_email_confirmations_url(token: @user.confirmation_token.html_safe) %>

@@ -42,7 +42,7 @@ class NotificationSettingsTest < SystemTest
 
     assert_emails 1
 
-    assert_equal I18n.t("mailer.notifiers_changed.subject"), last_email.subject
+    assert_equal I18n.t("mailer.notifiers_changed.subject", host: Gemcutter::HOST_DISPLAY), last_email.subject
 
     assert_selector "#flash_notice", text: I18n.t("notifiers.update.success")
 
