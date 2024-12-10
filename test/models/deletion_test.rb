@@ -160,8 +160,7 @@ class DeletionTest < ActiveSupport::TestCase
 
     perform_enqueued_jobs
 
-    response = Searchkick.client.get index: "rubygems-#{Rails.env}",
-                                                    id: @version.rubygem_id
+    response = Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: @version.rubygem_id
 
     assert response["_source"]["yanked"]
   end
