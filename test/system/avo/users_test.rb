@@ -130,7 +130,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "changes" => {
               "email" => [user_attributes[:email], user.email],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "confirmation_token" => [user_attributes[:confirmation_token], nil],
+              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
               "mfa_level" => %w[ui_and_api disabled],
               "totp_seed" => [user_attributes[:totp_seed], nil],
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
@@ -143,11 +143,11 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               .except(
                 "api_key",
                 "blocked_email",
-                "confirmation_token",
                 "email",
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
+                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
@@ -433,26 +433,26 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
           },
           "gid://gemcutter/User/#{user.id}" => {
             "changes" => {
-              "email" => [user_attributes[:email], user.email],
-              "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "confirmation_token" => [user_attributes[:confirmation_token], nil],
-              "mfa_level" => %w[ui_and_api disabled],
-              "totp_seed" => [user_attributes[:totp_seed], nil],
-              "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
-              "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
               "api_key" => ["secret123", nil],
+              "blocked_email" => [nil, user_attributes[:email]],
+              "email" => [user_attributes[:email], user.email],
+              "encrypted_password" => [user_attributes[:encrypted_password], user.encrypted_password],
+              "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
+              "mfa_level" => %w[ui_and_api disabled],
               "remember_token" => [user_attributes[:remember_token], nil],
-              "blocked_email" => [nil, user_attributes[:email]]
+              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
+              "totp_seed" => [user_attributes[:totp_seed], nil],
+              "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json]
             },
             "unchanged" => user.attributes
               .except(
                 "api_key",
                 "blocked_email",
-                "confirmation_token",
                 "email",
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
+                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
