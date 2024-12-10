@@ -135,7 +135,7 @@ class GemDownload < ApplicationRecord
     end
 
     def update_query(id, downloads, version_downloads)
-      { update: { _index: "rubygems-#{Rails.env}",
+      { update: { _index: Gemcutter::SEARCH_INDEX_NAME,
                   _id: id,
                   data: { doc: { downloads: downloads, version_downloads: version_downloads } } } }
     end
