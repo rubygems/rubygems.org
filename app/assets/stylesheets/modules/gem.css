@@ -267,21 +267,147 @@
 }
 
 .gem__attestation {
+  align-items: center;
   display: flex;
   flex-direction: row;
-  margin-top: 16px; }
-  .gem__attestation__built_on {
-    flex-grow: 1; }
-  .gem__attestation__grid {
-    display: grid;
-    grid-template-rows: repeat(3, 1rem);
-    grid-row-gap: 18px;
-    grid-column-gap: 16px; }
-    .gem__attestation__grid p {
-      height: 100%;
-      display: block; }
-    .gem__attestation__grid__left {
-      grid-template-columns: 24px max-content; }
-    .gem__attestation__grid__right {
-      grid-template-columns: max-content 1fr; }
+  gap: 10px;
+  padding: 0;
+}
 
+.gem__attestation:not(:first-child) {
+  margin-top: 16px;
+}
+
+.gem__attestation__built_on {
+  border: 1px solid #d7dee3;
+  border-radius: 8px;
+  box-shadow: 2px 2px 7px 0 #00000008;
+  display: flex;
+  flex-shrink: 0;
+  gap: 16px;
+  padding: 20px;
+}
+
+.gem__attestation__built_on__github_actions {
+  align-items: center;
+  aspect-ratio: 1/1;
+  background: #ffeedd;
+  background-color: #f0f2f5;
+  border: 1px solid #f74c27;
+  border-radius: 7px;
+  box-sizing: border-box;
+  display: flex;
+  flex: none;
+  flex-direction: row;
+  flex-grow: 0;
+  gap: 10px;
+  min-width: 72px;
+  order: 0;
+  padding: 12px;
+}
+
+.gem__attestation__built_on__info {
+  align-items: flex-start;
+
+  /* Frame 1197136313 */
+
+  /* Auto layout */
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 400;
+  gap: 4px;
+  height: fit-content;
+  line-height: 24px;
+  padding: 0;
+  text-align: left;
+  text-decoration-skip-ink: none;
+  text-underline-position: from-font;
+}
+
+.gem__attestation__built_on__info em {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  color: #333a45;
+}
+
+.gem__attestation__built_on__info a {
+  color: #f74c27;
+  text-decoration: underline;
+}
+
+.gem__attestation__grid {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  width: 100%;
+}
+
+.gem__attestation__grid > div {
+  align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  place-content: space-between;
+}
+
+.gem__attestation__grid p {
+  font-size: 14px;
+  font-weight: 600;
+  height: 100%;
+}
+
+.gem__attestation__grid a {
+  align-items: center;
+  color: var(--gem-version-color);
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 400;
+  height: 100%;
+  text-align: end;
+  text-decoration: none;
+  width: 100%;
+}
+
+.gem__attestation__grid a::after {
+  content: url('data:image/svg+xml;utf8,<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.8074 2.5574C5.86545 2.49919 5.93442 2.45301 6.01035 2.42151C6.08629 2.39 6.16769 2.37378 6.2499 2.37378C6.33211 2.37378 6.41351 2.39 6.48944 2.42151C6.56537 2.45301 6.63434 2.49919 6.6924 2.5574L14.1924 10.0574C14.2506 10.1155 14.2968 10.1844 14.3283 10.2604C14.3598 10.3363 14.376 10.4177 14.376 10.4999C14.376 10.5821 14.3598 10.6635 14.3283 10.7394C14.2968 10.8154 14.2506 10.8843 14.1924 10.9424L6.6924 18.4424C6.57504 18.5598 6.41587 18.6257 6.2499 18.6257C6.08393 18.6257 5.92475 18.5598 5.8074 18.4424C5.69004 18.325 5.62411 18.1659 5.62411 17.9999C5.62411 17.8339 5.69004 17.6748 5.8074 17.5574L12.8661 10.4999L5.8074 3.4424C5.74919 3.38434 5.70301 3.31537 5.67151 3.23944C5.64 3.16351 5.62378 3.08211 5.62378 2.9999C5.62378 2.91769 5.64 2.83629 5.67151 2.76035C5.70301 2.68442 5.74919 2.61545 5.8074 2.5574Z" fill="%23333A45"/></svg>');
+  display: inline-block;
+  height: 1rem;
+  vertical-align: middle;
+}
+
+@media (width <= 929px) {
+  .gem__attestation__grid {
+    padding: 10px;
+  }
+
+  .gem__attestation__grid > div {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .gem__attestation {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .gem__attestation__grid a {
+    justify-content: space-between;
+  }
+
+  .gem__attestation__grid p {
+    width: 100%;
+  }
+
+  .gem__attestation__built_on {
+    box-sizing: border-box;
+    width: 100%;
+  }
+}
