@@ -168,6 +168,20 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_response :not_found
     end
 
+    should "return not found when provider configuration is too old" do
+      OIDC::Provider.github_actions.update!(configuration_updated_at: 2.days.ago)
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :not_found
+    end
+
     should "return not found when signature validation fails" do
       @claims["exp"] -= 1_000_000
       trusted_publisher = build(:oidc_trusted_publisher_github_action,
