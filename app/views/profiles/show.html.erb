@@ -94,6 +94,19 @@
             )
           %>
         <% end %>
+        <% if @user.homepage_url.present? %>
+          <p id="homepage-url">
+            <%=
+               link_to(
+                truncate(@user.homepage_url,length: 20),
+                @user.homepage_url,
+                rel: "nofollow",
+                class: "profile__header__attribute t-link--black",
+                data: { confirm: "Are you sure?" }
+              )
+            %>
+          </p>
+        <% end %>
       <% end %>
     </div>
 
