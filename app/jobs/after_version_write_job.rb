@@ -16,6 +16,7 @@ class AfterVersionWriteJob < ApplicationJob
       version.update!(indexed: true)
       checksum = GemInfo.new(rubygem.name, cached: false).info_checksum
       version.update_attribute :info_checksum, checksum
+      SetLinksetHomeJob.perform_later(version:)
     end
   end
 
