@@ -43,12 +43,12 @@ class Mailer < ApplicationMailer
 
   def deletion_complete(email)
     mail to: email,
-         subject: I18n.t("mailer.deletion_complete.subject")
+         subject: I18n.t("mailer.deletion_complete.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
   def deletion_failed(email)
     mail to: email,
-         subject: I18n.t("mailer.deletion_failed.subject")
+         subject: I18n.t("mailer.deletion_failed.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
   def notifiers_changed(user_id)
@@ -56,7 +56,7 @@ class Mailer < ApplicationMailer
     @ownerships = @user.ownerships.by_indexed_gem_name
 
     mail to: @user.email,
-         subject: I18n.t("mailer.notifiers_changed.subject",
+         subject: I18n.t("mailer.notifiers_changed.subject", host: Gemcutter::HOST_DISPLAY,
            default: "You changed your RubyGems.org email notification settings")
   end
 

@@ -65,6 +65,6 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
-    assert_equal I18n.t("mailer.web_hook_deleted.subject"), last_email.subject
+    assert_equal I18n.t("mailer.web_hook_deleted.subject", host: Gemcutter::HOST_DISPLAY), last_email.subject
   end
 end
