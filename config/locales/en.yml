@@ -431,7 +431,7 @@ en:
   pages:
     about:
       contributors_amount: "%{count} Rubyists"
-      downloads_amount: "millions of gem downloads"
+      downloads_amount: "billions of gem downloads"
       checkout_code: "please check out the code"
       mit_licensed: "MIT licensed"
       logo_header: Looking for our logo?
