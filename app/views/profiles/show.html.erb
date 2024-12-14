@@ -99,7 +99,7 @@
             <%=
                link_to(
                 truncate(@user.homepage_url,length: 20),
-                @user.homepage_url,
+                h(@user.homepage_url),
                 rel: "nofollow",
                 class: "profile__header__attribute t-link--black",
                 data: { confirm: "Are you sure?" }
