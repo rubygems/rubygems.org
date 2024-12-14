@@ -27,7 +27,7 @@
       <p class="text-neutral-800 dark:text-white"><%=
         link_to(
           truncate(user.homepage_url, length: 20),
-          user.homepage_url,
+          h(user.homepage_url),
           rel: "nofollow",
           data: { confirm: "Are you sure?" }
         )
