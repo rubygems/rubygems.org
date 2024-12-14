@@ -37,9 +37,10 @@ class Attestation < ApplicationRecord
       build_file_string = ::Regexp.last_match(1)
       {
         ci_platform: "GitHub Actions",
-        source_commit_string: "github.com/#{repo}@#{commit[0, 7]}",
+        source_commit_string: "#{repo}@#{commit[0, 7]}",
         source_commit_url: "https://github.com/#{repo}/tree/#{commit}",
-        build_file_string:, build_file_url:
+        build_file_string:, build_file_url:,
+        build_summary_url: "https://github.com/#{repo}/actions/runs/#{build_file_string}"
       }
     else
       raise "Unhandled issuer: #{issuer.inspect}"

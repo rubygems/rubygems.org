@@ -75,7 +75,7 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
       geoip_info = @request.ip_address.geoip_info
 
       refute_nil geoip_info
-      assert_equal(
+      assert_equal_hash(
         { "continent_code" => "NA", "country_code" => "US", "country_code3" => "USA",
           "country_name" => "United States of America", "region" => "NY",
           "city" => "Buffalo" },

@@ -97,11 +97,10 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "show limited attributes for to_json" do
-      assert_equal(
-        {
-          "url"           => @url,
-          "failure_count" => @webhook.failure_count
-        }, JSON.load(@webhook.to_json)
+      assert_equal_hash(
+        { "url"           => @url,
+          "failure_count" => @webhook.failure_count },
+        JSON.load(@webhook.to_json)
       )
     end
 
@@ -115,11 +114,10 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "show limited attributes for to_yaml" do
-      assert_equal(
-        {
-          "url"           => @url,
-          "failure_count" => @webhook.failure_count
-        }, YAML.safe_load(@webhook.to_yaml)
+      assert_equal_hash(
+        { "url"           => @url,
+          "failure_count" => @webhook.failure_count },
+        YAML.safe_load(@webhook.to_yaml)
       )
     end
 

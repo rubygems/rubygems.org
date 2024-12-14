@@ -31,7 +31,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
     page.assert_text audit.id
     assert_equal "WebHook", audit.auditable_type
     assert_equal "Delete Webhook", audit.action
-    assert_equal(
+    assert_equal_hash(
       {
         "records" => {
           "gid://gemcutter/WebHook/#{web_hook.id}" => {
@@ -65,6 +65,6 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
-    assert_equal I18n.t("mailer.web_hook_deleted.subject"), last_email.subject
+    assert_equal I18n.t("mailer.web_hook_deleted.subject", host: Gemcutter::HOST_DISPLAY), last_email.subject
   end
 end

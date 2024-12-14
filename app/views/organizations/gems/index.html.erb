@@ -1,0 +1,41 @@
+<%
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.gems")
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :gems %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("organizations.show.gems") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t("organizations.show.gems"), icon: "gems", count: @gems_count %>
+  <% end %>
+  <% if @gems.empty? %>
+    <%= prose do %>
+      <i><%= t('organizations.show.no_gems') %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @gems.each do |rubygem| %>
+        <%= c.list_item_to(
+          rubygem_path(rubygem.slug),
+          title: short_info(rubygem.most_recent_version),
+        ) do %>
+          <div class="flex flex-col w-full justify-between">
+            <div class="flex flex-row w-full items-center justify-between">
+              <h4 class="text-b1 flex"><%= rubygem.name %></h4>
+              <%= version_number(rubygem.most_recent_version) %>
+            </div>
+            <div class="flex flex-row w-full items-center justify-between">
+              <%= download_count_component(rubygem, class: "flex") %>
+              <div class="flex text-neutral-600"><%= version_date_component(rubygem.most_recent_version) %></div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

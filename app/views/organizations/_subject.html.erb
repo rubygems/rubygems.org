@@ -1,0 +1,25 @@
+<% current ||= :dashboard %>
+
+<div class="flex flex-wrap lg:flex-col items-start mb-6 lg:mb-10">
+  <div class="lg:w-full lg:mt-2">
+    <h2 class="font-bold text-h4"><%= organization.name %></h2>
+    <p class="text-neutral-600 dark:text-neutral-500 text-b3"><%= organization.handle %></p>
+    <p class="my-1">
+      <span class="shrink px-3 py-1 rounded-full border border-orange text-orange items-center text-b3 uppercase font-semibold">
+        <%= icon_tag("organizations", size: 6, class: "-mt-1 -ml-1 mr-1 inline-block") -%><%= t("organizations.show.organization") %>
+      </span>
+    </p>
+  </div>
+</div>
+
+<hr class="hidden lg:block lg:mb-6 border-neutral-400 dark:border-neutral-600" />
+
+<%= render Subject::NavComponent.new(current:) do |nav| %>
+  <%= nav.link t("layouts.application.header.dashboard"), organization_path(@organization), name: :dashboard, icon: "space-dashboard" %>
+  <%= nav.link t("organizations.show.history"), organization_path(@organization), name: :subscriptions, icon: "notifications" %>
+  <%= nav.link t("organizations.show.gems"), organization_gems_path(@organization), name: :gems, icon: "gems" %>
+  <%= nav.link t("organizations.show.members"), organization_path(@organization), name: :organizations, icon: "organizations" %>
+  <% if policy(@organization).edit? %>
+    <%= nav.link t("layouts.application.header.settings"), edit_organization_path(@organization), name: :settings, icon: "settings" %>
+  <% end %>
+<% end %>

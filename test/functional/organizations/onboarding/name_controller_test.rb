@@ -1,16 +1,14 @@
 require "test_helper"
 
-class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
+class Organizations::Onboarding::NameControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user, :mfa_enabled)
     @gem = create(:rubygem, owners: [@user])
-
-    sign_in_as(@user)
   end
 
   context "GET new" do
     should "ask the user to start creating a new organization" do
-      get :new
+      get organization_onboarding_name_path(as: @user)
 
       assert_select "input[name=?]", "organization_onboarding[organization_name]"
     end
@@ -21,7 +19,7 @@ class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
       end
 
       should "render with the in-progress onboarding" do
-        get :new
+        get organization_onboarding_name_path(as: @user)
 
         assert_select "input[name=?][value=?]", "organization_onboarding[organization_name]", @organization_onboarding.organization_name
       end
@@ -30,7 +28,9 @@ class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
 
   context "POST create" do
     should "create a new onboarding and redirect to the next step" do
-      post :create, params: { organization_onboarding: { organization_name: "New Name", organization_handle: @gem.name, name_type: "gem" } }
+      post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
+        organization_name: "New Name", organization_handle: @gem.name, name_type: "gem"
+      } }
 
       assert OrganizationOnboarding.exists?(organization_name: "New Name", organization_handle: @gem.name, name_type: "gem")
       assert_redirected_to organization_onboarding_gems_path
@@ -42,7 +42,9 @@ class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
       end
 
       should "update the existing onboarding and redirect to the next step" do
-        post :create, params: { organization_onboarding: { organization_name: "Updated Name" } }
+        post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
+          organization_name: "Updated Name"
+        } }
 
         assert_redirected_to organization_onboarding_gems_path
         assert_equal "Updated Name", @organization_onboarding.reload.organization_name
@@ -51,7 +53,9 @@ class Organizations::Onboarding::NameControllerTest < ActionController::TestCase
 
     context "when the onboarding is invalid" do
       should "render the form with an error" do
-        post :create, params: { organization_onboarding: { organization_name: "" } }
+        post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
+          organization_name: ""
+        } }
 
         assert_response :unprocessable_entity
       end

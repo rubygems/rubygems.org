@@ -78,13 +78,11 @@ class SendgridEventTest < ActiveSupport::TestCase
       assert_equal("bounce", event.event_type)
       assert_equal(occurred_at, event.occurred_at)
       assert_predicate event, :pending?
-      assert_equal(
-        {
-          "email" => "user@example.com",
+      assert_equal_hash(
+        { "email" => "user@example.com",
           "sg_event_id" => "t61hI0Xpmk8XSR1YX4s0Kg==",
           "event" => "bounce",
-          "timestamp" => occurred_at.to_i
-        },
+          "timestamp" => occurred_at.to_i },
         event.payload
       )
     end

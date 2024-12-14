@@ -5,14 +5,14 @@ ruby file: ".ruby-version"
 gem "rails", "~> 7.2.1"
 gem "rails-i18n", "~> 7.0"
 
-gem "aws-sdk-s3", "~> 1.172"
+gem "aws-sdk-s3", "~> 1.176"
 gem "aws-sdk-sqs", "~> 1.89"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.9"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.7"
+gem "datadog", "~> 2.8"
 gem "dogstatsd-ruby", "~> 5.6"
-gem "google-protobuf", "~> 4.28"
+gem "google-protobuf", "~> 4.29"
 gem "faraday", "~> 2.12"
 gem "faraday-retry", "~> 2.2"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
@@ -29,7 +29,7 @@ gem "omniauth", "~> 2.1"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
 gem "openid_connect", "~> 2.3"
 gem "pg", "~> 1.5"
-gem "puma", "~> 6.4"
+gem "puma", "~> 6.5"
 gem "rack", "~> 3.1"
 gem "rackup", "~> 2.2"
 gem "rack-sanitizer", "~> 2.0"
@@ -50,9 +50,9 @@ gem "rqrcode", "~> 2.1"
 gem "rotp", "~> 6.2"
 gem "unpwn", "~> 1.0"
 gem "webauthn", "~> 3.2"
-gem "browser", "~> 6.1"
+gem "browser", "~> 6.2"
 gem "bcrypt", "~> 3.1"
-gem "maintenance_tasks", "~> 2.9"
+gem "maintenance_tasks", "~> 2.10"
 gem "strong_migrations", "~> 2.1"
 gem "phlex-rails", "~> 1.2"
 gem "discard", "~> 1.4"
@@ -65,7 +65,7 @@ gem "sigstore", "~> 0.2.1"
 # Admin dashboard
 gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 3.14.0"
+gem "view_component", "~> 3.20.0"
 gem "pundit", "~> 2.4"
 gem "chartkick", "~> 5.1"
 gem "groupdate", "~> 6.5"
@@ -73,14 +73,14 @@ gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.14"
+    gem "avo-advanced", "~> 3.15"
   end
 end
 
 # Logging
 gem "amazing_print", "~> 1.6"
 gem "rails_semantic_logger", "~> 4.17"
-gem "pp", "0.6.1"
+gem "pp", "0.6.2"
 
 # Former default gems
 gem "csv", "~> 3.3" # zeitwerk-2.6.12
@@ -108,7 +108,7 @@ group :development, :test do
 
   # used to find n+1 queries
   gem "prosopite", "~> 1.4"
-  gem "pg_query", "~> 5.1"
+  gem "pg_query", "~> 6.0"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.64", require: false
@@ -129,17 +129,17 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.8"
+  gem "datadog-ci", "~> 1.10"
   gem "minitest", "~> 5.25", require: false
   gem "minitest-retry", "~> 0.2.3"
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.0"
   gem "rack-test", "~> 2.1", require: "rack/test"
   gem "rails-controller-testing", "~> 1.0"
-  gem "mocha", "~> 2.5", require: false
+  gem "mocha", "~> 2.7", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 6.4"
-  gem "selenium-webdriver", "~> 4.26"
+  gem "selenium-webdriver", "~> 4.27"
   gem "webmock", "~> 3.24"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false

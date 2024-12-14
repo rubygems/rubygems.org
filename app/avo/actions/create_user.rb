@@ -1,7 +1,7 @@
 class Avo::Actions::CreateUser < Avo::Actions::ApplicationAction
   self.name = "Create User"
   self.visible = lambda {
-    current_user.team_member?("rubygems-org") && view == :index && !Rails.env.production?
+    current_user.team_member?("rubygems-org") && view == :index && (Rails.env.local? || !Clearance.configuration.allow_sign_up?)
   }
   self.standalone = true
 

@@ -42,12 +42,13 @@ class Maintenance::BackfillLinksetLinksToVersionMetadataTaskTest < ActiveSupport
       should "only update the home uri" do
         Maintenance::BackfillLinksetLinksToVersionMetadataTask.process(@version)
 
-        assert_equal({
-                       "source_code_uri" => "https://example.com/source",
-                       "documentation_uri" => "https://example.com/docs",
-                       "foo" => "bar",
-                       "homepage_uri" => "https://example.com/home"
-                     }, @version.reload.metadata)
+        assert_equal_hash(
+          { "source_code_uri" => "https://example.com/source",
+            "documentation_uri" => "https://example.com/docs",
+            "foo" => "bar",
+            "homepage_uri" => "https://example.com/home" },
+          @version.reload.metadata
+        )
       end
 
       should "not update the home uri when present in metadata" do
@@ -56,12 +57,13 @@ class Maintenance::BackfillLinksetLinksToVersionMetadataTaskTest < ActiveSupport
 
         Maintenance::BackfillLinksetLinksToVersionMetadataTask.process(@version)
 
-        assert_equal({
-                       "source_code_uri" => "https://example.com/source",
-                       "documentation_uri" => "https://example.com/docs",
-                       "foo" => "bar",
-                       "homepage_uri" => "https://example.com/home/custom"
-                     }, @version.reload.metadata)
+        assert_equal_hash(
+          { "source_code_uri" => "https://example.com/source",
+            "documentation_uri" => "https://example.com/docs",
+            "foo" => "bar",
+            "homepage_uri" => "https://example.com/home/custom" },
+          @version.reload.metadata
+        )
       end
     end
 
@@ -76,15 +78,16 @@ class Maintenance::BackfillLinksetLinksToVersionMetadataTaskTest < ActiveSupport
       should "update the version metadata" do
         Maintenance::BackfillLinksetLinksToVersionMetadataTask.process(@version)
 
-        assert_equal({
-                       "wiki_uri" => "https://example.com/wiki",
-                       "foo" => "bar",
-                       "homepage_uri" => "https://example.com/home",
-                       "bug_tracker_uri" => "http://example.com",
-                       "source_code_uri" => "http://example.com",
-                       "mailing_list_uri" => "http://example.com",
-                       "documentation_uri" => "http://example.com"
-                     }, @version.reload.metadata)
+        assert_equal_hash(
+          { "wiki_uri" => "https://example.com/wiki",
+            "foo" => "bar",
+            "homepage_uri" => "https://example.com/home",
+            "bug_tracker_uri" => "http://example.com",
+            "source_code_uri" => "http://example.com",
+            "mailing_list_uri" => "http://example.com",
+            "documentation_uri" => "http://example.com" },
+          @version.reload.metadata
+        )
       end
     end
   end

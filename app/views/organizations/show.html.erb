@@ -1,0 +1,90 @@
+<% add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle) %>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :dashboard %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("dashboards.show.title") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head(divide: true) do %>
+    <%= c.title t(".history"), icon: :history %>
+  <% end %>
+
+  <% if @latest_events.empty? %>
+    <%= prose do %>
+      <i><%= t('.no_history') %></i>
+    <% end %>
+  <% else %>
+    <%= c.scrollable do %>
+      <%= render Card::TimelineComponent.new do |t| %>
+        <% @latest_events.each do |version| %>
+          <%
+            pusher_link = if version.pusher.present?
+              link_to_user(version.pusher)
+            elsif version.pusher_api_key&.owner.present?
+              link_to_pusher(version.pusher_api_key.owner)
+            end
+          %>
+          <%= t.timeline_item(version.authored_at, pusher_link) do %>
+            <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(version.rubygem.slug) %></div>
+            <%= version_number(version) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".gems"), icon: "gems", count: @gems_count %>
+  <% end %>
+  <% if @gems.empty? %>
+    <%= prose do %>
+      <i><%= t('.no_gems') %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @gems.each do |rubygem| %>
+        <%= c.list_item_to(
+          rubygem_path(rubygem.slug),
+          title: short_info(rubygem.most_recent_version),
+        ) do %>
+          <div class="flex flex-col w-full justify-between">
+            <div class="flex flex-row w-full items-center justify-between">
+              <h4 class="text-b1 flex"><%= rubygem.name %></h4>
+              <%= version_number(rubygem.most_recent_version) %>
+            </div>
+            <div class="flex flex-row w-full items-center justify-between">
+              <%= download_count_component(rubygem, class: "flex") %>
+              <div class="flex text-neutral-600"><%= version_date_component(rubygem.most_recent_version) %></div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".members"), icon: "organizations", count: @memberships_count %>
+  <% end %>
+  <% if @memberships.empty? %>
+    <%= prose do %>
+      <i><%= t('.no_members') %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @memberships.each do |membership| %>
+        <%= c.list_item_to(profile_path(membership.user.handle)) do %>
+          <div class="flex justify-between">
+            <p class="text-neutral-800 dark:text-white"><%= membership.user.name %></p>
+            <p class="text-neutral-500 capitalize"><%= membership.role %></p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

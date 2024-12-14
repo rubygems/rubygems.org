@@ -276,6 +276,8 @@ zh-TW:
     settings: 設定
     org_name: 組織：%{name}
     subscriptions: 訂閱
+    gems:
+    members:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -412,6 +414,16 @@ zh-TW:
       popular_gems: 熱門
     popular:
       title: 熱門新發佈
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count} 位 Ruby 愛好者"
