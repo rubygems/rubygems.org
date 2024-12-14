@@ -1,7 +1,7 @@
 require "application_system_test_case"
 require "test_helper"
 
-class ProfileTest < ApplicationSystemTestCase
+class AuthorizingProfileUpdateTest < ApplicationSystemTestCase
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
