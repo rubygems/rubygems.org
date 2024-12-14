@@ -144,6 +144,7 @@ class ProfileTest < SystemTest
 
     click_link "Sign out"
     visit profile_path("nick1")
+
     assert page.has_link?("https://nickisawe...")
   end
 
