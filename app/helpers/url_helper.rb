@@ -1,7 +1,7 @@
 module UrlHelper
-  def prepend_https(url)
+  def display_safe_url(url)
     return "" if url.blank?
-    return url if url.start_with?("https://")
-    "https://#{url}"
+    return h(url) if url.start_with?("https://") ||  url.start_with?("http://")
+    return "https://#{h(url)}"
   end
 end
