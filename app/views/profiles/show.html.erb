@@ -98,11 +98,11 @@
           <p id="homepage-url">
             <%=
                link_to(
-                truncate(@user.homepage_url,length: 20),
-                h(@user.homepage_url),
+                truncate(h(append_https(@user.homepage_url)),length: 20),
+                h(append_https(@user.homepage_url)),
                 rel: "nofollow",
                 class: "profile__header__attribute t-link--black",
-                data: { confirm: "You are about to be redirected #{@user.homepage_url}" }
+                data: { confirm: "You are about to be redirected #{{h(append_https(user.homepage_url))}}" }
               )
             %>
           </p>
