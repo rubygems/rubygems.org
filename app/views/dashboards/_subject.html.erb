@@ -26,10 +26,10 @@
       <%= icon_tag("link", color: :primary, class: "w-6 text-orange mr-3") %>
       <p class="text-neutral-800 dark:text-white"><%=
         link_to(
-          truncate(append_https(user.homepage_url), length: 20),
-          h(append_https(user.homepage_url)),
+          truncate(prepend_https(user.homepage_url), length: 20),
+          h(prepend_https(user.homepage_url)),
           rel: "nofollow",
-          data: { confirm: "You are about to be redirected #{h(append_https(user.homepage_url))}" }
+          data: { confirm: "You are about to be redirected #{h(prepend_https(user.homepage_url))}" }
         )
       %></p>
     </div>
