@@ -102,7 +102,7 @@
                 h(prepend_https(@user.homepage_url)),
                 rel: "nofollow",
                 class: "profile__header__attribute t-link--black",
-                data: { confirm: "You are about to be redirected #{{h(prepend_https(user.homepage_url))}}" }
+                data: { confirm: "You are about to be redirected #{h(prepend_https(@user.homepage_url))} " }
               )
             %>
           </p>
