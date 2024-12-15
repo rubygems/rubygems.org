@@ -1,7 +1,7 @@
 require "test_helper"
 
 class UrlHelperTest < ActionView::TestCase
-  context"append_https" do
+  context "append_https" do
     should "return url if it begins with https" do
       assert_equal "https://www.awesomesite.com", append_https("https://www.awesomesite.com")
     end
@@ -16,5 +16,5 @@ class UrlHelperTest < ActionView::TestCase
     should "return empty string if url is nil" do
       assert_equal "", append_https(nil)
     end
-  end 
-end 
+  end
+end
