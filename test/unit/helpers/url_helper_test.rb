@@ -18,13 +18,13 @@ class UrlHelperTest < ActionView::TestCase
       assert_equal "https://javascript:alert(&#39;hello&#39;);", display_safe_url("javascript:alert('hello');")
     end
 
-    should "escape html" do 
+    should "escape html" do
       assert_equal "https://&lt;script&gt;alert(&#39;hello&#39;);&lt;/script&gt;https://www", display_safe_url("<script>alert('hello');</script>https://www")
-    end 
+    end
 
-    should "prepend https if url does not begin with http or https" do 
+    should "prepend https if url does not begin with http or https" do
       assert_equal "https://www.awesomesite.com/https://javascript:alert(&#39;hello&#39;);", display_safe_url("www.awesomesite.com/https://javascript:alert('hello');")
-    end 
+    end
 
     should "return empty string if url is nil" do
       assert_equal "", display_safe_url(nil)
