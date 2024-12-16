@@ -21,7 +21,7 @@ user = User.security_user
 puts "Yanking #{rubygem.name}"
 to_yank.each do |v|
   puts "  #{v}"
-  user.deletions.create!(version: v) unless v.yanked?
+  user.deletions.create!(version: v, force: true) unless v.yanked?
 end
 
 puts "Done."
