@@ -34,7 +34,7 @@ gem "rack", "~> 3.1"
 gem "rackup", "~> 2.2"
 gem "rack-sanitizer", "~> 2.0"
 gem "rbtrace", "~> 0.5.1"
-gem "rdoc", "~> 6.8"
+gem "rdoc", "~> 6.9"
 gem "roadie-rails", "~> 3.3"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 6.2", require: false
