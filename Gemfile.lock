@@ -212,7 +212,7 @@ GEM
     crass (1.0.6)
     css_parser (1.19.1)
       addressable
-    csv (3.3.0)
+    csv (3.3.1)
     dalli (3.2.8)
     datadog (2.8.0)
       datadog-ruby_core_source (~> 3.3)
@@ -1061,7 +1061,7 @@ CHECKSUMS
   crack (1.0.0) sha256=c83aefdb428cdc7b66c7f287e488c796f055c0839e6e545fec2c7047743c4a49
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   css_parser (1.19.1) sha256=1940dce01e3b9be18d6880e6d65162d984cc04ff28998cf4759beb999275209e
-  csv (3.3.0) sha256=0bbd1defdc31134abefed027a639b3723c2753862150f4c3ee61cab71b20d67d
+  csv (3.3.1) sha256=e5133b9005fd2ca61547509cd8b7eefa94663d5d36c0e73297b0ae0a35e3e767
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
   datadog (2.8.0) sha256=5cd1f65a9aaef270ec8a37c394e4504afbf86d57e805cbb9ab974dc7848524ba
   datadog-ci (1.10.0) sha256=b21054163e239f663f19eff3bb12e91d0cae8418268fb46131fe0c9dacf82254
