@@ -1,6 +1,7 @@
+require "application_system_test_case"
 require "test_helper"
 
-class ProfileTest < SystemTest
+class ProfileTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
   setup do
@@ -15,7 +16,7 @@ class ProfileTest < SystemTest
   end
 
   def sign_out
-    page.driver.browser.clear_cookies # rack-test specific
+    reset_session!
     visit "/"
   end
 
@@ -31,7 +32,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "nick2"
+    assert_equal "nick2", page.find_field("user_handle").value
   end
 
   test "changing to an existing handle" do
@@ -127,10 +128,33 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    click_link "Sign out"
+    sign_out
     visit profile_path("nick1")
 
     assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
+  end
+
+  test "adding X(formerly Twitter) username without filling in your password" do
+    twitter_username = "nick1twitter"
+
+    sign_in
+    visit profile_path("nick1")
+
+    click_link "Edit Profile"
+    fill_in "user_twitter_username", with: twitter_username
+
+    assert_equal twitter_username, page.find_by_id("user_twitter_username").value
+
+    click_button "Update"
+
+    # Verify that the newly added Twitter username is still on the form so that the user does not need to re-enter it
+    assert_equal twitter_username, page.find_by_id("user_twitter_username").value
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Update"
+
+    assert page.has_content? "Your profile was updated."
+    assert_equal twitter_username, page.find_by_id("user_twitter_username").value
   end
 
   test "deleting profile" do
@@ -139,8 +163,10 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     click_button "Delete"
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Confirm"
+    accept_confirm do
+      fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+      click_button "Confirm"
+    end
 
     assert page.has_content? "Your account deletion request has been enqueued. " \
                              "We will send you a confirmation mail when your request has been processed."
@@ -150,16 +176,20 @@ class ProfileTest < SystemTest
     sign_in
     visit delete_profile_path
 
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Confirm"
+    accept_confirm do
+      fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+      click_button "Confirm"
+    end
 
     sign_in
     visit delete_profile_path
 
     2.times { perform_enqueued_jobs }
 
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Confirm"
+    accept_confirm do
+      fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+      click_button "Confirm"
+    end
 
     assert_no_enqueued_jobs
   end
@@ -189,9 +219,9 @@ class ProfileTest < SystemTest
 
     downloads = page.all(".gems__gem__downloads__count")
 
-    assert_equal("7 Downloads", downloads[0].text)
-    assert_equal("5 Downloads", downloads[1].text)
-    assert_equal("2 Downloads", downloads[2].text)
+    assert_equal("7\nDOWNLOADS", downloads[0].text)
+    assert_equal("5\nDOWNLOADS", downloads[1].text)
+    assert_equal("2\nDOWNLOADS", downloads[2].text)
   end
 
   test "seeing the latest version when there is a newer previous version" do
