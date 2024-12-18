@@ -39,7 +39,8 @@ class AdvancedSearchTest < ApplicationSystemTestCase
     fill_in "description", with: "foo"
     fill_in "downloads", with: ">69"
     fill_in "updated", with: ">2021-05-05"
+    fill_in "trusted_publisher", with: "true"
 
-    assert has_field? "Search Gems…", with: "name: hello summary: world description: foo downloads: >69 updated: >2021-05-05"
+    assert has_field? "Search Gems…", with: "name: hello summary: world description: foo downloads: >69 updated: >2021-05-05 trusted_publisher: true"
   end
 end
