@@ -676,7 +676,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
-    rdoc (6.9.1)
+    rdoc (6.10.0)
       psych (>= 4.0.0)
     redcarpet (3.6.0)
     regexp_parser (2.9.3)
@@ -963,7 +963,7 @@ DEPENDENCIES
   rails-i18n (~> 7.0)
   rails_semantic_logger (~> 4.17)
   rbtrace (~> 0.5.1)
-  rdoc (~> 6.9)
+  rdoc (~> 6.10)
   roadie-rails (~> 3.3)
   rotp (~> 6.2)
   rqrcode (~> 2.1)
@@ -1243,7 +1243,7 @@ CHECKSUMS
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.10.1) sha256=050062d4f31d307cca52c3f6a7f4b946df8de25fc4bd373e1a5142e41034a7ca
   rbtrace (0.5.1) sha256=e8cba64d462bfb8ba102d7be2ecaacc789247d52ac587d8003549d909cb9c5dc
-  rdoc (6.9.1) sha256=3344bf498a46b701aba70ccdd5cdfa8be37e68493984c1bf8c579f06c3442c9f
+  rdoc (6.10.0) sha256=db665021883ac9df3ba29cdf71aece960749888db1bf9615b4a584cfa3fa3eda
   redcarpet (3.6.0) sha256=8ad1889c0355ff4c47174af14edd06d62f45a326da1da6e8a121d59bdcd2e9e9
   regexp_parser (2.9.3) sha256=4b620657ed8349d82e1331a076415c79b9dd714a5546162ddd790ea9988f6379
   reline (0.6.0) sha256=57620375dcbe56ec09bac7192bfb7460c716bbf0054dc94345ecaa5438e539d2
