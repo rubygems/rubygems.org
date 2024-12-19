@@ -7,7 +7,6 @@ on:
       - oidc-api-tokens
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   build:
@@ -16,8 +15,12 @@ jobs:
     env:
       RUBYGEMS_VERSION: "3.6.1"
       RUBY_VERSION: "3.3.6"
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # master
