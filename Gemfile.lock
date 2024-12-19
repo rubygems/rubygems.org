@@ -798,7 +798,10 @@ GEM
       faraday-follow_redirects
     tailwindcss-rails (3.0.0)
       railties (>= 7.0.0)
-      tailwindcss-ruby
+    terser (1.2.3)
+      execjs (>= 0.3.0, < 3)
+    tilt (2.3.0)
+         tailwindcss-ruby
     tailwindcss-ruby (3.4.14)
     tailwindcss-ruby (3.4.14-aarch64-linux)
     tailwindcss-ruby (3.4.14-arm64-darwin)
