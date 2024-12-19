@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       - uses: ruby/setup-ruby@401c19e14f474b54450cd3905bb8b86e2c8509cf # v1.204.0
         with:
           bundler-cache: true
@@ -23,6 +25,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       - uses: ruby/setup-ruby@401c19e14f474b54450cd3905bb8b86e2c8509cf # v1.204.0
         with:
           bundler-cache: true
@@ -33,6 +37,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       - uses: ruby/setup-ruby@401c19e14f474b54450cd3905bb8b86e2c8509cf # v1.204.0
         with:
           bundler-cache: true
@@ -51,6 +57,8 @@ jobs:
       - name: login to Github Packages
         run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       - uses: ruby/setup-ruby@401c19e14f474b54450cd3905bb8b86e2c8509cf # v1.204.0
         with:
           bundler-cache: true
@@ -74,7 +82,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: segiddins/frizbee-action@c162fdaa6c73525a577d2d6eb193683dfc9ba2be # segiddins/run-in-place
+        with:
+          persist-credentials: false
+      - uses: stacklok/frizbee-action@71e8bd2bfd0063f7175e66837157087c713cd785 # main
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
