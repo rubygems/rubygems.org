@@ -395,6 +395,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_04_065953) do
     t.jsonb "jwks"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "configuration_updated_at", precision: nil
     t.index ["issuer"], name: "index_oidc_providers_on_issuer", unique: true
   end
 

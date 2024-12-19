@@ -1,25 +1,15 @@
 class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   include ApiKeyable
+  include JwtValidation
 
   before_action :decode_jwt
   before_action :validate_jwt_format
+  before_action :verify_jwt_time
   before_action :find_provider
+  before_action :validate_provider
   before_action :verify_signature
   before_action :find_trusted_publisher
   before_action :validate_claims
-
-  class UnsupportedIssuer < StandardError; end
-  class UnverifiedJWT < StandardError; end
-  class InvalidJWT < StandardError; end
-
-  rescue_from InvalidJWT, with: :render_bad_request
-
-  rescue_from(
-    UnsupportedIssuer, UnverifiedJWT,
-    JSON::JWT::VerificationFailed, JSON::JWK::Set::KidNotFound,
-    OIDC::AccessPolicy::AccessError,
-    with: :render_not_found
-  )
 
   def exchange_token
     key = generate_unique_rubygems_key
@@ -42,20 +32,8 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
 
   private
 
-  def decode_jwt
-    @jwt = JSON::JWT.decode_compact_serialized(params.permit(:jwt).require(:jwt), :skip_verification)
-  rescue JSON::JWT::InvalidFormat, JSON::ParserError, ArgumentError => e
-    # invalid base64 raises ArgumentError
-    render_bad_request(e)
-  end
-
-  def validate_jwt_format
-    %w[nbf iat exp].each do |claim|
-      raise InvalidJWT, "Missing/invalid #{claim}" unless @jwt[claim].is_a?(Integer)
-    end
-    %w[iss jti].each do |claim|
-      raise InvalidJWT, "Missing/invalid #{claim}" unless @jwt[claim].is_a?(String)
-    end
+  def jwt_key_or_secret
+    :skip_verification
   end
 
   def find_provider
@@ -63,8 +41,6 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   end
 
   def verify_signature
-    raise UnsupportedIssuer, "Provider is missing jwks" if @provider.jwks.blank?
-    raise UnverifiedJWT, "Invalid time" unless (@jwt["nbf"]..@jwt["exp"]).cover?(Time.now.to_i)
     @jwt.verify!(@provider.jwks)
   end
 
