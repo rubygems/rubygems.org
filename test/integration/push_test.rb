@@ -76,6 +76,7 @@ class PushTest < ActionDispatch::IntegrationTest
     push_gem "sandworm-1.0.0.gem"
 
     assert_response :success
+    perform_enqueued_jobs
 
     get rubygem_path("sandworm")
 
@@ -83,6 +84,7 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("sandworm")
     assert page.has_content?("1.0.0")
     assert page.has_content?("Pushed by")
+    assert page.has_link? "Homepage", href: "http://example.com/sandworm"
 
     css = %(div.gem__users a[alt=#{@user.handle}])
 

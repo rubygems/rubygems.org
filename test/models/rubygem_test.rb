@@ -376,7 +376,7 @@ class RubygemTest < ActiveSupport::TestCase
       @specification.authors = [3]
 
       assert_raise ActiveRecord::RecordInvalid do
-        @rubygem.update_versions!(@version, @specification)
+        @version.update_attributes_from_gem_specification!(@specification)
       end
 
       assert_equal "Authors must be an Array of Strings", @rubygem.all_errors(@version)
