@@ -25,7 +25,7 @@ class NotifiersController < ApplicationController
   private
 
   def notifier_params
-    params.expect(ownerships: %i[push owner ownership_request])
+    params.expect(ownerships: [%i[push owner ownership_request]])
   end
 
   def notifier_options(param)
