@@ -103,7 +103,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
   def find_api_key_role
     @api_key_role = current_user.oidc_api_key_roles
       .includes(:provider)
-      .find_by!(token: params.permit(:token).require(:token))
+      .find_by!(token: params.expect(:token))
   end
 
   def redirect_for_deleted
@@ -125,7 +125,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
   ].freeze
 
   def api_key_role_params
-    params.permit(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS).require(:oidc_api_key_role)
+    params.expect(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS)
   end
 
   def add_default_params(rubygem, statement, condition)

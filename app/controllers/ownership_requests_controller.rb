@@ -26,7 +26,7 @@ class OwnershipRequestsController < ApplicationController
   def update
     @ownership_request = OwnershipRequest.find(params[:id])
 
-    case params.permit(:status).require(:status)
+    case params.expect(:status)
     when "close" then close
     when "approve" then approve
     else redirect_try_again

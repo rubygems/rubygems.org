@@ -42,7 +42,7 @@ class MultifactorAuthsController < ApplicationController
   private
 
   def level_param
-    params.permit(:level).require(:level)
+    params.expect(:level)
   end
 
   def issuer

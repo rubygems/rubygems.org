@@ -36,7 +36,7 @@ class Api::V1::DeletionsController < Api::BaseController
       render_forbidden response_with_mfa_warning("You do not have permission to delete this gem.")
     else
       begin
-        version = params.permit(:version).require(:version)
+        version = params.expect(:version)
         platform = params.permit(:platform).fetch(:platform, nil)
         @version = @rubygem.find_version!(number: version, platform: platform)
       rescue ActiveRecord::RecordNotFound

@@ -57,7 +57,7 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
+    @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params[:id])
   end
 
   def gh_actions_trusted_publisher

@@ -29,6 +29,6 @@ class Api::V1::SearchesController < Api::BaseController
   end
 
   def query_params
-    params.permit(:query).require(:query)
+    params.expect(:query)
   end
 end

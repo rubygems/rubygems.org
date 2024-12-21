@@ -7,6 +7,6 @@ class Api::V1::OIDC::ProvidersController < Api::BaseController
   end
 
   def show
-    render json: OIDC::Provider.find(params.permit(:id).require(:id))
+    render json: OIDC::Provider.find(params[:id])
   end
 end

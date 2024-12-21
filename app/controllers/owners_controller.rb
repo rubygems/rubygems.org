@@ -90,11 +90,11 @@ class OwnersController < ApplicationController
   end
 
   def token_params
-    params.permit(:token).require(:token)
+    params.expect(:token)
   end
 
   def handle_params
-    params.permit(:handle).require(:handle)
+    params.expect(:handle)
   end
 
   def update_params

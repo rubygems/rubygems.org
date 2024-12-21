@@ -21,7 +21,7 @@ module JwtValidation
   end
 
   def decode_jwt
-    @jwt = JSON::JWT.decode_compact_serialized(params.permit(:jwt).require(:jwt), jwt_key_or_secret)
+    @jwt = JSON::JWT.decode_compact_serialized(params.expect(:jwt), jwt_key_or_secret)
   rescue JSON::JWT::InvalidFormat, JSON::ParserError, ArgumentError => e
     # invalid base64 raises ArgumentError
     render_bad_request(e)
