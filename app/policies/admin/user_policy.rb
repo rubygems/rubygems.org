@@ -13,8 +13,6 @@ class Admin::UserPolicy < Admin::ApplicationPolicy
   has_association :memberships
   has_association :oidc_api_key_roles
   has_association :organizations
-  has_association :ownership_calls
-  has_association :ownership_requests
   has_association :ownerships
   has_association :pushed_versions
   has_association :rubygems

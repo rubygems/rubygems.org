@@ -13,10 +13,7 @@ if Rails.env.local?
       # avo auditing potentially loads things multiple times, but it will be bounded by the size of the audit
       "app/avo/actions/application_action.rb",
       "app/components/avo/fields/audited_changes_field/show_component.html.erb",
-      "app/components/avo/views/resource_index_component.html.erb",
-
-      # calls count for each owner, AR doesn't yet allow preloading aggregates
-      "app/views/ownership_requests/_ownership_request.html.erb"
+      "app/components/avo/views/resource_index_component.html.erb"
     ]
   end
 end

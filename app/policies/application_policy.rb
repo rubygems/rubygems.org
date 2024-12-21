@@ -31,11 +31,6 @@ class ApplicationPolicy
     false
   end
 
-  def allow
-    @error = nil
-    true
-  end
-
   def current_user?(record_user)
     user && user == record_user
   end
@@ -59,9 +54,4 @@ class ApplicationPolicy
 
   def policy!(user, record) = Pundit.policy!(user, record)
   def user_policy!(record) = policy!(user, record)
-
-  def user_authorized?(record, action)
-    policy = user_policy!(record)
-    policy.send(action) || deny(policy.error)
-  end
 end
