@@ -105,7 +105,7 @@ class ApiKeysController < ApplicationController
 
   def api_key_update_params(existing_api_key = nil)
     ApiKeysHelper.api_key_params(
-      params.expect(api_key: [*ApiKey::API_SCOPES, :mfa, :rubygem_id, { scopes: [ApiKey::API_SCOPES] }]), existing_api_key
+      params.expect(api_key: [*ApiKey::API_SCOPES, :mfa, :rubygem_id, scopes: ApiKey::API_SCOPES]), existing_api_key
     )
   end
 end

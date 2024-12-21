@@ -48,13 +48,13 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
   private
 
   def create_params
-    params.permit(
+    params.expect(
       create_params_key => [
         :rubygem_name,
         :trusted_publisher_type,
-        { trusted_publisher_attributes: @trusted_publisher_type.permitted_attributes }
+        trusted_publisher_attributes: @trusted_publisher_type.permitted_attributes
       ]
-    ).require(create_params_key)
+    )
   end
 
   def create_params_key = :oidc_pending_trusted_publisher

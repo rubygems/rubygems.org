@@ -271,7 +271,7 @@ Style/CaseLikeIf:
   Enabled: true
 
 Style/HashAsLastArrayItem:
-  Enabled: true
+  Enabled: false # Enabling makes some code worse and some better no matter the setting.
 
 Style/HashLikeCase:
   Enabled: true

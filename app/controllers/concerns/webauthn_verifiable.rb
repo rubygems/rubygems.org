@@ -72,6 +72,6 @@ module WebauthnVerifiable
     :type,
     :rawId,
     :authenticatorAttachment,
-    { response: %i[authenticatorData attestationObject clientDataJSON signature userHandle] }
+    response: %i[authenticatorData attestationObject clientDataJSON signature userHandle]
   ].freeze
 end

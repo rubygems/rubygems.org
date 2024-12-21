@@ -50,6 +50,6 @@ class OrganizationsController < ApplicationController
   end
 
   def organization_params
-    params.expect(organization: [:name])
+    params.expect(organization: %i[name])
   end
 end
