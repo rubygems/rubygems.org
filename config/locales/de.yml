@@ -543,6 +543,7 @@ de:
         Ändern deines Passworts.
       failure_on_missing_email: Die E-Mail darf nicht leer sein.
     update:
+      success:
       failure: Dein Passwort konnte nicht geändert werden. Bitte versuche es erneut.
   multifactor_auths:
     session_expired: Deine Sitzung auf der Anmeldeseite ist abgelaufen.

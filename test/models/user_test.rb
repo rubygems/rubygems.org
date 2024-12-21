@@ -375,14 +375,20 @@ class UserTest < ActiveSupport::TestCase
 
     context "#valid_confirmation_token?" do
       should "return false when email confirmation token has expired" do
-        @user.update_attribute(:token_expires_at, 2.minutes.ago)
+        @user.update(confirmation_token: SecureRandom.hex(24), token_expires_at: 2.minutes.ago)
+
+        refute_predicate @user, :valid_confirmation_token?
+      end
+
+      should "return false when confirmation token is nil" do
+        @user.update(confirmation_token: nil, token_expires_at: 2.minutes.from_now)
 
         refute_predicate @user, :valid_confirmation_token?
       end
 
       should "reutrn true when email confirmation token has not expired" do
         two_minutes_in_future = 2.minutes.from_now
-        @user.update_attribute(:token_expires_at, two_minutes_in_future)
+        @user.update(confirmation_token: SecureRandom.hex(24), token_expires_at: two_minutes_in_future)
 
         assert_predicate @user, :valid_confirmation_token?
       end
