@@ -118,7 +118,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
       statements_attributes: [[
         :effect,
         principal: :oidc,
-        conditions_attributes: %i[operator claim value]
+        conditions_attributes: [%i[operator claim value]]
       ]]
     }
   ].freeze
