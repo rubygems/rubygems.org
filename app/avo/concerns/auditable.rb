@@ -39,7 +39,7 @@ module Auditable
           changes = merge_changes!(changes, record.attributes.slice("id").transform_values { [_1, _1] }) if changes.key?("id")
           changes = merge_changes!(changes, record.attributes.compact.transform_values { [_1, nil] }) if record.destroyed?
 
-          [key, { changes:, unchanged: record.attributes.except(*changes.keys) }]
+          [key, changes:, unchanged: record.attributes.except(*changes.keys)]
         end
 
         audit = Audit.create!(

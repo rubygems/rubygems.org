@@ -272,6 +272,7 @@ Style/CaseLikeIf:
 
 Style/HashAsLastArrayItem:
   Enabled: true
+  EnforcedStyle: no_braces
 
 Style/HashLikeCase:
   Enabled: true

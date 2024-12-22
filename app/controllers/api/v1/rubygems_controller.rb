@@ -36,7 +36,7 @@ class Api::V1::RubygemsController < Api::BaseController
 
     gem_body = attestations = nil
     if %w[multipart/form-data multipart/mixed].include?(request.media_type)
-      gem_body = params.permit(:gem).require(:gem)
+      gem_body = params.expect(:gem)
       return render_bad_request("gem is not a file upload") unless gem_body.is_a?(ActionDispatch::Http::UploadedFile)
       return render_bad_request("missing attestations") unless (attestations = params[:attestations]).is_a?(String)
       attestations = ActiveSupport::JSON.decode(attestations)

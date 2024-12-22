@@ -3,11 +3,11 @@
 class SendgridEventsController < ApplicationController
   # Safelist documented SendGrid Event attributes
   # https://sendgrid.com/docs/API_Reference/Event_Webhook/event.html#-Event-objects
-  SENDGRID_EVENT_ATTRIBUTES = %i[
+  SENDGRID_EVENT_ATTRIBUTES = [%i[
     email timestamp smtp-id event category sg_event_id sg_message_id reason
     status response attempt useragent ip url asm_group_id tls unique_args
     marketing_campaign_id marketing_campaign_name pool type
-  ].freeze
+  ]].freeze
 
   skip_before_action :verify_authenticity_token, only: :create
 
@@ -31,6 +31,6 @@ class SendgridEventsController < ApplicationController
   def events_params
     # SendGrid send a JSON array of 1+ events. Each event is a JSON object, see docs:
     # https://sendgrid.com/docs/for-developers/tracking-events/event/
-    params.permit(_json: SENDGRID_EVENT_ATTRIBUTES).require(:_json)
+    params.expect(_json: SENDGRID_EVENT_ATTRIBUTES)
   end
 end

@@ -39,11 +39,11 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
   end
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params.permit(:id).require(:id))
+    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params[:id])
   end
 
   def set_trusted_publisher_type
-    trusted_publisher_type = params.permit(:trusted_publisher_type).require(:trusted_publisher_type)
+    trusted_publisher_type = params.expect(:trusted_publisher_type)
 
     @trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.polymorphic_name == trusted_publisher_type }
 

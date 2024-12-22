@@ -72,11 +72,11 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def email_params
-    params.permit(email_confirmation: :email).require(:email_confirmation).require(:email)
+    params.expect(email_confirmation: :email).require(:email)
   end
 
   def token_params
-    params.permit(:token).require(:token)
+    params.expect(:token)
   end
 
   def login_failure(message)

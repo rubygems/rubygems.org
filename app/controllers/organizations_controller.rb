@@ -46,10 +46,10 @@ class OrganizationsController < ApplicationController
   private
 
   def find_organization
-    @organization = Organization.find_by_handle!(params.permit(:id).require(:id))
+    @organization = Organization.find_by_handle!(params[:id])
   end
 
   def organization_params
-    params.permit(organization: [:name]).require(:organization)
+    params.expect(organization: %i[name])
   end
 end

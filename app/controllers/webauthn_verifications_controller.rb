@@ -58,7 +58,7 @@ class WebauthnVerificationsController < ApplicationController
   end
 
   def webauthn_token_param
-    params.permit(:webauthn_token).require(:webauthn_token)
+    params.expect(:webauthn_token)
   end
 
   def render_expired

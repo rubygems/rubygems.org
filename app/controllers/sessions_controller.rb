@@ -91,7 +91,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def verify_password_params
-    params.permit(verify_password: :password).require(:verify_password)
+    params.expect(verify_password: :password)
   end
 
   def do_login(two_factor_label:, two_factor_method:, authentication_method:)
@@ -124,7 +124,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def find_user
-    password = params.permit(session: :password).require(:session).fetch(:password, nil)
+    password = params.expect(session: :password).fetch(:password, nil)
     @user = User.authenticate(who, password) if password.is_a?(String) && who
   end
 
@@ -136,7 +136,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def who
-    who_param = params.permit(session: :who).require(:session).fetch(:who, nil)
+    who_param = params.expect(session: :who).fetch(:who, nil)
     who_param if who_param.is_a?(String)
   end
 

@@ -94,7 +94,7 @@ class PasswordsController < ApplicationController
   end
 
   def reset_params
-    params.permit(password_reset: %i[password reset_api_key reset_api_keys]).require(:password_reset)
+    params.expect(password_reset: %i[password reset_api_key reset_api_keys])
   end
 
   def mfa_failure(message)
