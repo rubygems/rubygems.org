@@ -115,4 +115,20 @@ class SearchTest < SystemTest
     refute page.has_content? "Search reverse dependencies Gems…"
     assert page.has_content? "This gem has no reverse dependencies"
   end
+
+  test "filtering by trusted publishers" do
+    rubygem1 = create(:rubygem, name: "LDAP", number: "1.0.0")
+    rubygem2 = create(:rubygem, name: "LDAP-Shady-Gem", number: "1.0.0")
+    create(:version, :has_trusted_publisher, rubygem: rubygem1, indexed: false)
+    create(:version, :has_untrusted_publisher, rubygem: rubygem2, indexed: false)
+    import_and_refresh
+
+    visit search_path
+
+    fill_in "query", with: "LDAP&trusted_publisher=true"
+    click_button "search_submit"
+
+    assert page.has_content? "LDAP"
+    assert page.has_no_content? "LDAP-Shady-Gem"
+  end
 end
