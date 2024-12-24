@@ -105,11 +105,6 @@ ja:
             user_id:
               already_confirmed: は既にこのgemの所有者です
               already_invited: は既にこのgemに招待されています
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -367,20 +362,6 @@ ja:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title: 所有権の申請
-      subtitle: こんにちは、%{handle}！
-      body_html: "<strong>%{gem}</strong>の所有権を申請いただきありがとうございます。心苦しいのですが所有権の申請はgemの所有者により却下されました。"
-    ownerhip_request_approved:
-      body_html: おめでとうございます！<strong>%{gem}</strong>の所有権の申請が許諾されました。gemの所有者として追加されました。
-    new_ownership_requests:
-      body_html:
-        zero: "<strong>%{gem}</strong>には新しい所有権の申請が<em>ありません</em>。"
-        one: "<strong>%{gem}</strong>には<em>1</em>件の新しい所有権の申請があります。申請を見るには以下のボタンをクリックしてください。"
-        other: "<strong>%{gem}</strong>には<em>%{count}</em>件の新しい所有権の申請があります。全ての申請を見るには以下のボタンをクリックしてください。"
-      button: 所有権の申請
-      disable_notifications: これらのメッセージの受け取りを停止するには、こちらを更新してください：
-      owners_page: 所有権
     web_hook_deleted:
       title: webhookが削除されました
       subject: "%{host}のwebhookが削除されました"
@@ -542,7 +523,6 @@ ja:
       title: Eメール通知
       update: 更新
       owner_heading: 所有権の通知
-      owner_request_heading: 所有権の申請の通知
       push_heading: プッシュ通知
   webauthn_verifications:
     expired_or_already_used: 使用されたリンク中のトークンは期限切れか既に使われています。
@@ -633,11 +613,6 @@ ja:
           ui_and_api: UIとAPI（推奨）
           ui_and_gem_signin: UIとgemのサインイン
   profiles:
-    adoptions:
-      no_ownership_calls: 所有者の募集を作成しているgemがありません。
-      no_ownership_requests: 所有権の申請をしていません。
-      title: 引き継ぎ
-      subtitle_html: 新しい貢献者を募るか所有権を申請してください<a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>
     edit:
       change_avatar: アバターを変更
       disabled_avatar_html: プライベートEメール設定のため、既定のアバターが使われています。パーソナライズされた<a href='https://gravatar.com'>Gravatar</a>を有効にするには「公開プロフィールにEメールを表示」を有効にしてください。なおこのようにするとEメールが公開されます。
@@ -807,48 +782,6 @@ ja:
       imported_gem_version_notice: このgemのバージョンは%{import_date}にRubyGems.orgにインポートされました。表示されている日付は作者によってgemspec中で指定されました。
     version:
       yanked: ヤンク済み
-  adoptions:
-    index:
-      title: 引き継ぎ
-      subtitle_owner_html: '%{gem} に新しく参加するメンテナを呼び掛ける <a class="adoption__blog__link"
-        href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>'
-      subtitle_user_html: '%{gem}の所有権を申請する <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>'
-      ownership_calls: メンテナの募集
-      no_ownership_calls: "%{gem}の所有権の募集はありません。gemの所有者は新しいメンテナを探していません。"
-  ownership_calls:
-    update:
-      success_notice: "%{gem}の所有権の募集は修了しました。"
-    create:
-      success_notice: "%{gem}への所有権の募集を作成します。"
-    index:
-      title: メンテナの募集
-      subtitle_html: RubyGemsは新しく参加するメンテナを求めています<a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（詳細）</a>
-    share_requirements: 手を借りたい領域を共有してください
-    note_for_applicants: 応募者への補足：
-    created_by: 作成者
-    details: 詳細
-    apply: 申請
-    close: 却下
-    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">Rdocのマークアップに対応しています</a>
-    create_call: 所有者の募集を作成
-  ownership_requests:
-    create:
-      success_notice: 所有権の申請が提出されました。
-    update:
-      approved_notice: 所有権の申請が承認されました。%{name}は所有者として追加されました。
-      closed_notice: 所有権の申請が却下されました。
-    close:
-      success_notice: "%{gem}への全ての未完了の所有権の申請は却下されました。"
-    ownership_requests: 所有権の申請
-    note_for_owners: 所有者への補足：
-    your_ownership_requests: 所有権の申請
-    close_all: 全て却下
-    approve: 承認
-    gems_published: gemが公開されました
-    created_at: 作成日
-    no_ownership_requests: プロジェクトへの参加申請はこちらに表示されます。まだ%{gem}への所有権の申請はありません。
-    create_req: 所有権の申請を作成
-    signin_to_create_html: 所有権の申請を作成するには<a href="https://rubygems.org/sign_in">サインイン</a>してください。
   webauthn_credentials:
     callback:
       success: セキュリティ機器が正常に登録されました。

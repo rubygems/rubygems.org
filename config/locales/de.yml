@@ -116,11 +116,6 @@ de:
             user_id:
               already_confirmed: ist bereits Eigentümer dieses Gems
               already_invited: wurde bereits zu diesem Gem eingeladen
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -401,28 +396,6 @@ de:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title: ANFRAGE ZUR BESITZERRECHTIGUNG
-      subtitle: Hallo %{handle}!
-      body_html: Vielen Dank, dass du dich um die Besitzerrechte für das <strong>%{gem}</strong>-Gem
-        beworben hast. Leider müssen wir dir mitteilen, dass deine Anfrage vom Gem-Besitzer
-        geschlossen wurde.
-    ownerhip_request_approved:
-      body_html: Herzlichen Glückwunsch! Deine Anfrage zur Besitzerrechte für das
-        <strong>%{gem}</strong>-Gem wurde genehmigt. Du wurdest als Besitzer zum Gem
-        hinzugefügt.
-    new_ownership_requests:
-      body_html:
-        zero: Es gibt <em>keine</em> neuen Anfragen zur Besitzerrechte für das <strong>%{gem}</strong>-Gem.
-        one: Es gibt <em>eine</em> neue Anfrage zur Besitzerrechte für das <strong>%{gem}</strong>-Gem.
-          Bitte klicke auf den unten stehenden Button, um sie anzuzeigen.
-        other: Es gibt <em>%{count}</em> neue Anfragen zur Besitzerrechte für das
-          <strong>%{gem}</strong>-Gem. Bitte klicke auf den unten stehenden Button,
-          um alle Anfragen anzuzeigen.
-      button: BESITZERRECHTE
-      disable_notifications: Um diese Nachrichten nicht mehr zu erhalten, aktualisiere
-        deine
-      owners_page: BESITZERRECHTE
     web_hook_deleted:
       title: WEBHOOK GELÖSCHT
       subject: Dein %{host}-Webhook wurde gelöscht
@@ -638,7 +611,6 @@ de:
       title:
       update:
       owner_heading:
-      owner_request_heading:
       push_heading:
   webauthn_verifications:
     expired_or_already_used:
@@ -729,11 +701,6 @@ de:
           ui_and_api:
           ui_and_gem_signin:
   profiles:
-    adoptions:
-      no_ownership_calls:
-      no_ownership_requests:
-      title:
-      subtitle_html:
     edit:
       change_avatar:
       disabled_avatar_html:
@@ -896,47 +863,6 @@ de:
       imported_gem_version_notice:
     version:
       yanked:
-  adoptions:
-    index:
-      title:
-      subtitle_owner_html:
-      subtitle_user_html:
-      ownership_calls:
-      no_ownership_calls:
-  ownership_calls:
-    update:
-      success_notice:
-    create:
-      success_notice:
-    index:
-      title:
-      subtitle_html:
-    share_requirements:
-    note_for_applicants:
-    created_by:
-    details:
-    apply:
-    close:
-    markup_supported_html:
-    create_call:
-  ownership_requests:
-    create:
-      success_notice:
-    update:
-      approved_notice:
-      closed_notice:
-    close:
-      success_notice:
-    ownership_requests:
-    note_for_owners:
-    your_ownership_requests:
-    close_all:
-    approve:
-    gems_published:
-    created_at:
-    no_ownership_requests:
-    create_req:
-    signin_to_create_html:
   webauthn_credentials:
     callback:
       success:

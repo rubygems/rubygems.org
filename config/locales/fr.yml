@@ -112,11 +112,6 @@ fr:
             user_id:
               already_confirmed:
               already_invited:
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -379,20 +374,6 @@ fr:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title:
-      subtitle:
-      body_html:
-    ownerhip_request_approved:
-      body_html:
-    new_ownership_requests:
-      body_html:
-        zero:
-        one:
-        other:
-      button:
-      disable_notifications:
-      owners_page:
     web_hook_deleted:
       title:
       subject:
@@ -562,7 +543,6 @@ fr:
       title:
       update:
       owner_heading:
-      owner_request_heading:
       push_heading:
   webauthn_verifications:
     expired_or_already_used:
@@ -653,11 +633,6 @@ fr:
           ui_and_api:
           ui_and_gem_signin:
   profiles:
-    adoptions:
-      no_ownership_calls:
-      no_ownership_requests:
-      title:
-      subtitle_html:
     edit:
       change_avatar:
       disabled_avatar_html:
@@ -846,47 +821,6 @@ fr:
       imported_gem_version_notice:
     version:
       yanked: retiré
-  adoptions:
-    index:
-      title:
-      subtitle_owner_html:
-      subtitle_user_html:
-      ownership_calls:
-      no_ownership_calls:
-  ownership_calls:
-    update:
-      success_notice:
-    create:
-      success_notice:
-    index:
-      title:
-      subtitle_html:
-    share_requirements:
-    note_for_applicants:
-    created_by:
-    details:
-    apply:
-    close:
-    markup_supported_html:
-    create_call:
-  ownership_requests:
-    create:
-      success_notice:
-    update:
-      approved_notice:
-      closed_notice:
-    close:
-      success_notice:
-    ownership_requests:
-    note_for_owners:
-    your_ownership_requests:
-    close_all:
-    approve:
-    gems_published:
-    created_at:
-    no_ownership_requests:
-    create_req:
-    signin_to_create_html:
   webauthn_credentials:
     callback:
       success:

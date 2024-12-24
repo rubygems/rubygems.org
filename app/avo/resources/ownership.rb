@@ -26,7 +26,6 @@ class Avo::Resources::Ownership < Avo::BaseResource
 
     field :push_notifier, as: :boolean
     field :owner_notifier, as: :boolean
-    field :ownership_request_notifier, as: :boolean
 
     field :authorization, as: :heading
 

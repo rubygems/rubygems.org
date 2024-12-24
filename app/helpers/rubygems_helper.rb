@@ -121,11 +121,6 @@ module RubygemsHelper
             resend_confirmation_rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
-  def rubygem_adoptions_link(rubygem)
-    link_to "Adoption",
-      rubygem_adoptions_path(rubygem.slug), class: "gem__link t-list__item"
-  end
-
   def rubygem_security_events_link(rubygem)
     link_to "Security Events",
       security_events_rubygem_path(rubygem.slug), class: "gem__link t-list__item"
