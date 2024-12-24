@@ -480,6 +480,7 @@ zh-CN:
       success:
       failure_on_missing_email:
     update:
+      success:
       failure:
   multifactor_auths:
     session_expired: 您的登录页面会话已过期。
