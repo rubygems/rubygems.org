@@ -1,7 +1,7 @@
 require "application_system_test_case"
 require "test_helper"
 
-class ProfileTest < ApplicationSystemTestCase
+class AuthorizingProfileUpdateTest < ApplicationSystemTestCase
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
@@ -29,7 +29,7 @@ class ProfileTest < ApplicationSystemTestCase
     # Verify that the newly added Twitter username is still on the form so that the user does not need to re-enter it
     assert_equal twitter_username, page.find_by_id("user_twitter_username").value
 
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    fill_in "Password", with: @user.password
     click_button "Update"
 
     assert page.has_content? "Your profile was updated."
