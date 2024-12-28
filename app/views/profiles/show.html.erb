@@ -94,6 +94,19 @@
             )
           %>
         <% end %>
+        <% if @user.homepage_url.present? %>
+          <p id="homepage-url">
+            <%=
+               link_to(
+                truncate(display_safe_url(@user.homepage_url),length: 20),
+                display_safe_url(@user.homepage_url),
+                rel: "nofollow",
+                class: "profile__header__attribute t-link--black",
+                data: { confirm: "You are about to be redirected #{display_safe_url(@user.homepage_url)} " }
+              )
+            %>
+          </p>
+        <% end %>
       <% end %>
     </div>
 

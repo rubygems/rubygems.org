@@ -21,6 +21,11 @@
   </div>
 
   <div class="text_field">
+   <%= form.label :homepage_url, class: 'form__label' %>
+   <%= form.text_field(:homepage_url, class: 'form__input') %>
+  </div>
+
+  <div class="text_field">
     <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
       <%=
         image_tag("/images/x_icon.png", alt: 'X icon', class: 'form__label__icon')

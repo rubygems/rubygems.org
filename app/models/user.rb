@@ -83,6 +83,8 @@ class User < ApplicationRecord
     message: "can only contain letters, numbers, and underscores"
   }, allow_nil: true, length: { within: 0..20 }
 
+  validates :homepage_url, http_url: true, allow_blank: true
+
   validates :password,
     length: { minimum: 10 },
     unpwn: true,
@@ -352,7 +354,7 @@ class User < ApplicationRecord
       handle: nil, email_confirmed: false,
       unconfirmed_email: nil, blocked_email: nil,
       api_key: nil, confirmation_token: nil, remember_token: nil,
-      twitter_username: nil, webauthn_id: nil, full_name: nil,
+      twitter_username: nil, webauthn_id: nil, full_name: nil, homepage_url: nil,
       totp_seed: nil, mfa_hashed_recovery_codes: nil,
       mfa_level: :disabled,
       password: SecureRandom.hex(20).encode("UTF-8")
