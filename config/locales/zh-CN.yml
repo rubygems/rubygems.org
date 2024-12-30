@@ -8,11 +8,11 @@ zh-CN:
   verification_expired:
   feed_latest: RubyGems.org | 最新的 Gem
   feed_subscribed: RubyGems.org | 订阅的 Gem
-  footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。 立即 <a href="%{publish_docs}">发布您的
+  footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。立即 <a href="%{publish_docs}">发布您的
     Gem</a> 并 <a href="%{install_docs}">安装它们</a>。 使用 <a href="%{api_docs}">API</a>
     来查找更多 <a href="%{gem_list}">可用的 Gem</a>。 <a href="%{contributing_docs}">快来成为一名贡献者吧！</a>
     由您自己改善我们的网站。
-  footer_sponsors_html: RubyGems.org 是通过与更大的Ruby社区的合作得以实现的。 <a href="https://www.fastly.com/">Fastly</a>
+  footer_sponsors_html: RubyGems.org 是通过与更大的 Ruby 社区的合作得以实现的。<a href="https://www.fastly.com/">Fastly</a>
     提供带宽和 CDN 支持， <a href="https://www.rubycentral.org/">Ruby Central</a> 涵盖基础设施成本，并且
     资助正在进行的开发和运营工作。 <a href="%{sponsors_page}">了解更多关于我们的赞助商以及他们是如何合作的</a>。
   footer_join_rt_html: 我们需要您的帮助 —— 通过资助开发人员，来保持 RubyGems.org 的稳定运行，为每个人顺利地服务。 <a href="https://rubycentral.org/#/portal/signup">今天就加入
@@ -27,21 +27,21 @@ zh-CN:
   api_key_forbidden: API 密钥没有访问权限
   api_key_soft_deleted:
   api_key_insufficient_scope:
-  please_sign_up: 拒绝访问。请在 https://rubygems.org 上注册一个账号。
+  please_sign_up: 拒绝访问，请在 https://rubygems.org 上注册一个账号。
   please_sign_in: 请先登录以继续
-  otp_incorrect: 您的 OTP 码不正确。请检查后重试。
-  otp_missing: 您已启用多因素验证，但是没有提供 OTP 码。请输入后重试。
+  otp_incorrect: 您的 OTP 码不正确，请检查后重试。
+  otp_missing: 您已启用多因素验证（MFA），但是没有提供 OTP 码。请输入后重试。
   sign_in: 登录
   sign_out: 退出
   sign_up: 注册
   dependency_list: 显示所有传递性依赖
-  multifactor_authentication: 多因素验证
+  multifactor_authentication: 多因素验证（MFA）
   subtitle: 您的社区 Gem 托管中心
   this_rubygem_could_not_be_found: 未找到这个 Gem
   time_ago: "%{duration} 前"
   title: RubyGems.org
   total_downloads: 下载总量
-  try_again: 出了点儿问题。请重试。
+  try_again: 出了点儿问题，请重试。
   update: 更新
   view_all: 查看全部
   advanced_search: 高级搜索
@@ -91,7 +91,7 @@ zh-CN:
     errors:
       messages:
         unpwn: 曾出现过数据泄露，不应该再使用
-        blocked: 域名 '%{domain}' 因发送垃圾邮件已被禁用。请使用另外有效的个人邮箱。
+        blocked: 域名 '%{domain}' 因发送垃圾邮件已被禁用，请使用另外有效的个人邮箱。
       models:
         api_key:
           attributes:
@@ -154,9 +154,9 @@ zh-CN:
     form:
       exclusive_scopes:
       rubygem_scope: Gem 作用范围
-      rubygem_scope_info: 该作用范围仅允许对一个 Gem 进行 推送/撤回 以及 对业主的 添加/移除
-      multifactor_auth: 多因素验证——身份认证
-      enable_mfa: 启用多因素验证
+      rubygem_scope_info: 该作用范围仅允许对一个 Gem 进行 [推送/撤回] 以及对所有者的 [添加/移除]
+      multifactor_auth: 多因素验证（MFA）——身份认证
+      enable_mfa: 启用多因素验证（MFA）
       expiration:
     create:
       success: 新的 API 密钥已创建
@@ -172,20 +172,20 @@ zh-CN:
       last_access: 上一次访问
       action: 行为
       delete: 删除
-      confirm: 该 API 密钥 将作废。您确定吗？
-      confirm_all: 所有 API 密钥 均将作废。您确定吗？
+      confirm: 该 API 密钥将作废，您确定吗？
+      confirm_all: 所有 API 密钥均将作废，您确定吗？
       new_key: 新的 API 密钥
       index_rubygems: 为 Gem 编入索引
       push_rubygem: 推送 Gem
       yank_rubygem: 撤回 Gem
-      add_owner: 添加 Gem 业主
-      remove_owner: 移除（某个）Gem 业主
+      add_owner: 添加 Gem 所有者
+      remove_owner: 移除（某个）Gem 所有者
       access_webhooks: 访问后 (Access) Webhook
       show_dashboard: 显示仪表盘
       configure_trusted_publishers:
       reset: 重置
-      save_key: 请注意在此之后我们不会再次向您显示该密钥。新的 API 密钥为：
-      mfa: 多因素验证
+      save_key: 请注意在此之后我们不会再次向您显示该密钥，新的 API 密钥为：
+      mfa: 多因素验证（MFA）
       expiration:
       update_owner:
     new:
@@ -197,7 +197,7 @@ zh-CN:
       invalid_gem: 该 Gem 未被此 API 密钥所允许的作用范围包含
     edit:
       edit_api_key: 编辑 API 密钥
-      invalid_key: 已作废的 API 密钥不能被编辑。请删除它并创建一个新的 API 密钥。
+      invalid_key: 已作废的 API 密钥不能被编辑，请删除它并创建一个新的 API 密钥。
     all_gems: 所有 Gem
     gem_ownership_removed: 对 %{rubygem_name} 的所有权已经被移除（在使用此 API 密钥决定作用范围后）
   dashboards:
@@ -209,7 +209,7 @@ zh-CN:
       migrating_link_text: 迁移
       mine: 我的 Gem
       my_subscriptions: 订阅
-      no_owned_html: 您还没有发布过任何 Gem。可以看看 %{creating_link} 指南。
+      no_owned_html: 您还没有发布过任何 Gem，可以看看 %{creating_link} 指南。
       no_subscriptions_html: 您没有订阅任何 Gem，访问 %{gem_link} 订阅一个！
       organizations:
       title: 仪表盘
@@ -301,7 +301,7 @@ zh-CN:
       title: 删除失败
       subtitle: 抱歉！
       subject: 您在 RubyGems.org 上关于删除账户的请求失败了
-      body_html: 您已请求在 RubyGems.org 中删除账户。很遗憾，我们无法处理您的请求。请稍后重试。如果问题依然存在，请 %{contact}
+      body_html: 您已请求在 RubyGems.org 中删除账户。很遗憾，我们无法处理您的请求，请稍后重试。如果问题依然存在，请 %{contact}
         我们。
     notifiers_changed:
       subject: 您改变了您在 RubyGems.org 上的邮件通知设置
@@ -318,15 +318,15 @@ zh-CN:
     reset_api_key:
       subject: RubyGems.org API 密钥已重置
       title: API 密钥重置
-      subtitle: 你好啊，%{handle}！
+      subtitle: 你好，%{handle}！
     webauthn_credential_created:
       subject: 新的安全设备已添加至 RubyGems.org
-      title: 安全设备添加
+      title: 安全设备已添加
       subtitle: 你好啊，%{handle}！
     webauthn_credential_removed:
       subject: 某个安全设备已从 RubyGems.org 中移除
-      title: 安全设备移除
-      subtitle: 你好啊，%{handle}！
+      title: 安全设备已移除
+      subtitle: 你好，%{handle}！
     totp_enabled:
       subject: 认证 App 已在 RubyGems.org 上启用
       title: 认证 App 已启用
@@ -334,34 +334,34 @@ zh-CN:
     totp_disabled:
       subject: 认证 App 已在 RubyGems.org 上禁用
       title: 认证 App 已禁用
-      subtitle: 你好啊，%{handle}！
+      subtitle: 你好，%{handle}！
     email_reset_update:
       subject: 您已请求在 RubyGems.org 上进行邮箱地址变更
       title: 邮箱更新请求已发送
     ownership_confirmation:
       subject: 请确认在 RubyGems.org 上对 Gem %{gem} 的所有权
       title: 所有权确认
-      subtitle: 你好啊，%{handle}！
-      body_text: 您已被 %{authorizer} 添加为 Gem %{gem} 的业主之一。请点击下方的链接来确认您的所有权。
-      body_html: 您已被 <strong>%{authorizer}</strong> 添加为 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>  by的业主之一。请点击下方的链接来确认您的所有权。
+      subtitle: 你好，%{handle}！
+      body_text: 您已被 %{authorizer} 添加为 Gem %{gem} 的所有者之一。请点击下方的链接来确认您的所有权。
+      body_html: 您已被 <strong>%{authorizer}</strong> 添加为 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 的所有者之一。请点击下方的链接来确认您的所有权。
       link_expiration_explanation_html: 请注意，此链接仅在 %{expiry_hours} 内有效。您可以在登录后从 Gem
         <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 页面重新发送确认邮件。
     owner_added:
-      subject_self: 您已被添加为 Gem %{gem} 的业主之一
-      subject_others: 用户 %{owner_handle} 已被添加为 Gem %{gem} 的业主之一
-      title: 新增业主
+      subject_self: 您已被添加为 Gem %{gem} 的所有者之一
+      subject_others: 用户 %{owner_handle} 已被添加为 Gem %{gem} 的所有者之一
+      title: 新增所有者
       subtitle: 你好啊，%{user_handle}！
       body_self_html: <b>您</b> 被添加为 RubyGems.org 上 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
-        的业主之一。
+        的所有者之一。
       body_others_html: <b>%{owner_handle}</b> 由 <b>%{authorizer}</b> 添加为 Gem <strong><a
-        href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 的业主之一。您收到此通知是因为您是
-        %{gem} 的业主之一。
+        href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 的所有者之一。您收到此通知是因为您是
+        %{gem} 的所有者之一。
     owner_removed:
-      subject: 您对 Gem %{gem} 的业主身份已被移除
-      title: 业主移除
-      subtitle: 你好啊，%{user_handle}！
+      subject: 您对 Gem %{gem} 的所有者身份已被移除
+      title: 所有权已被移除
+      subtitle: 你好，%{user_handle}！
       body_html: <b>您</b>在 RubyGems.org 上对 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
-        的业主身份已被 <b>%{remover}</b> 移除
+        的所有者身份已被 <b>%{remover}</b> 移除。
     owner_updated:
       subject:
       title:
@@ -369,11 +369,11 @@ zh-CN:
       body_html:
       body_text:
     ownerhip_request_closed:
-      title: 所有权申请
-      subtitle: 你好啊，%{hand}！
-      body_html: 感谢您申请对 <strong>%{gem}</strong> 的所有权。我们很遗憾地通知您，您的所有权申请已被该 Gem 的业主驳回。
+      title: 所有权申请驳回
+      subtitle: 你好，%{hand}！
+      body_html: 感谢您申请对 <strong>%{gem}</strong> 的所有权。我们很遗憾地通知您，您的所有权申请已被该 Gem 的所有者驳回。
     ownerhip_request_approved:
-      body_html: 恭喜您！您对 <strong>%{gem}</strong> 的所有权申请已被批准。您已被添加为该 Gem 的业主之一。
+      body_html: 恭喜您！您对 <strong>%{gem}</strong> 的所有权申请已被批准。您已被添加为该 Gem 的所有者之一。
     new_ownership_requests:
       body_html:
         zero:
@@ -383,33 +383,33 @@ zh-CN:
       disable_notifications: 要停止接收这些信息，请更新您的
       owners_page: 所有权
     web_hook_deleted:
-      title: 删除 webhook
-      subject: 您的 RubyGems.org webhook 已被删除
-      subtitle: 你好啊，%{handle}！
-      body_text: 您 POST 到 ${url} 的 webhook 在经过 %{failures} 次失败后已被删除。
-      body_html: 您 <code>POST<code> 到 <a href="%{url}"><code>%{url}</code></a> 的 webhook
+      title: 删除 Webhook
+      subject: 您的 RubyGems.org Webhook 已被删除
+      subtitle: 你好，%{handle}！
+      body_text: 您 POST 到 ${url} 的 Webhook 在经过 %{failures} 次失败后已被删除。
+      body_html: 您 <code>POST<code> 到 <a href="%{url}"><code>%{url}</code></a> 的 Webhook
         在经过 %{failures} 次失败后已被删除。
-      global_text: 这个 webhook 曾在任何 Gem 被推送时被调用。
-      global_html: 这个 webhook 曾在<em>任何</em> Gem 被推送时被调用。
-      gem_text: 这个 webhook 在 %{gem} 被推送时被调用。
-      gem_html: 这个 webhook 在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+      global_text: 这个 Webhook 曾在任何 Gem 被推送时被调用。
+      global_html: 这个 Webhook 曾在<em>任何</em> Gem 被推送时被调用。
+      gem_text: 这个 Webhook 在 %{gem} 被推送时被调用。
+      gem_html: 这个 Webhook 在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         被推送时被调用。
     web_hook_disabled:
-      title: 停用 webhook
-      subject: 您的 RubyGems.org webhook 已被停用
+      title: 停用 Webhook
+      subject: 您的 RubyGems.org Webhook 已被停用
       subtitle: 你好啊，%{handle}！
       body_text: |
-        由于 %{disabled_reason} 的原因，POST 到 %{url} 的 webhook 已被停用。
+        由于 %{disabled_reason} 的原因，POST 到 %{url} 的 Webhook 已被停用。
         它最后一次成功是在 %{last_success}，从那以后失败了 %{failures_since_last_success} 次。
-        您可以通过运行 `% %{delete_command}` 删除此 webhook。
+        您可以通过运行 `% %{delete_command}` 删除此 Webhook。
       body_html: |
-        <p>由于 %{disabled_reason} 的原因，POST 到 <a href="%{url}"><code>%{url}</code></a> 的 webhook 已被停用。</p>
+        <p>由于 %{disabled_reason} 的原因，POST 到 <a href="%{url}"><code>%{url}</code></a> 的 Webhook 已被停用。</p>
         <p>它最后一次成功是在 <code>%{last_success}</code>，从那以后失败了 %{failures_since_last_success} 次。</p>
-        <p>您可以通过运行 <code>`% %{delete_command}`<code> 删除此 webhook。</p>
-      global_text: 这个 webhook 曾在任何 Gem 被推送时被调用。
-      global_html: 这个 webhook 曾在<em>任何</em> Gem 被推送时被调用。
-      gem_text: 这个 webhook 在 %{gem} 被推送时被调用。
-      gem_html: 这个 webhook 在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        <p>您可以通过运行 <code>`% %{delete_command}`<code> 删除此 Webhook。</p>
+      global_text: 这个 Webhook 曾在任何 Gem 被推送时被调用。
+      global_html: 这个 Webhook 曾在<em>任何</em> Gem 被推送时被调用。
+      gem_text: 这个 Webhook 在 %{gem} 被推送时被调用。
+      gem_html: 这个 Webhook 在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         被推送时被调用。
     gem_trusted_publisher_added:
       title:
@@ -466,7 +466,7 @@ zh-CN:
       closing:
       opening:
       title: 修改密码
-      subtitle: 你好啊，%{handle}！
+      subtitle: 你好，%{handle}！
   passwords:
     edit:
       submit: 保存该密码
@@ -483,14 +483,14 @@ zh-CN:
       failure:
   multifactor_auths:
     session_expired: 您的登录页面会话已过期。
-    require_mfa_enabled: 您的多因素验证已停用，请先启用。
+    require_mfa_enabled: 您的多因素验证（MFA）已停用，请先启用。
     require_webauthn_enabled: 您还没有启用任何安全设备。您必须首先关联一个设备到您的账户。
-    setup_required_html: 为了保护您的帐户和您的 Gem，您需要设置多因素验证。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">博客文章</a>了解详情。
-    setup_recommended: 为了保护您的帐户和您的 Gem，我们鼓励您设置多因素验证。在将来，您的帐户将被要求启用多因素验证。
-    strong_mfa_level_required_html: 为了保护您的帐户和您的 Gem，您需要将您的多因素验证级别更改为 "UI and gem signin"
+    setup_required_html: 为了保护您的帐户和您的 Gem，您需要设置多因素验证（MFA）。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">博客文章</a>了解详情。
+    setup_recommended: 为了保护您的帐户和您的 Gem，我们鼓励您设置多因素验证（MFA）。在将来，您的帐户将被要求启用多因素验证（MFA）。
+    strong_mfa_level_required_html: 为了保护您的帐户和您的 Gem，您需要将您的多因素验证（MFA）级别更改为 "UI and gem signin"
       或 "UI and API"。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html"">博客文章</a>了解详情。
-    strong_mfa_level_recommended: 为了保护您的帐户和您的 Gem，我们建议您将您的多因素验证级别更改为 "UI and gem signin"
-      或 "UI and API"。在将来，您的帐户将被要求在其中某一个级别上启用多因素验证。
+    strong_mfa_level_recommended: 为了保护您的帐户和您的 Gem，我们建议您将您的多因素验证（MFA）级别更改为 "UI and gem signin"
+      或 "UI and API"。在将来，您的帐户将被要求在其中某一个级别上启用多因素验证（MFA）。
     setup_webauthn_html:
     api:
       mfa_required:
@@ -503,26 +503,26 @@ zh-CN:
       title: 恢复码
       saved: 我声明我已经保存了我的恢复码。
       confirm_dialog:
-      note_html: 请 <strong class='recovery__bold'>复制并保存</strong> 这些恢复码。如果您丢失了身份验证设备，您可以使用这些恢复码登录并重置您的多因素验证配置。每个恢复码只能使用一次。
+      note_html: 请 <strong class='recovery__bold'>复制并保存</strong> 这些恢复码。如果您丢失了身份验证设备，您可以使用这些恢复码登录并重置您的多因素验证（MFA）配置。每个恢复码只能使用一次。
       already_generated: 您应该已经保存了您的恢复码。
     update:
       invalid_level: 无效的 MFA 级别。
-      success: 您已成功修改多因素验证级别。
+      success: 您已成功修改多因素验证（MFA）级别。
     prompt:
       webauthn_credential_note: 使用如 Touch ID, YubiKey 等安全设备来认证身份。
       sign_in_with_webauthn_credential: 通过安全设备认证人身
       otp_code: 一次性密码
       otp_or_recovery: OTP 或 恢复码
       recovery_code: 恢复码
-      recovery_code_html: 如果您无法访问用于多因素验证的设备或安全设备，您可以使用一个有效的 <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa"，class="t-link">恢复码</a>。
+      recovery_code_html: 如果您无法访问用于多因素验证（MFA）的设备或安全设备，您可以使用一个有效的 <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa"，class="t-link">恢复码</a>。
       security_device: 安全设备
       verify_code: 验证码
   totps:
     incorrect_otp: 你的 OTP 码 不正确。
-    require_totp_disabled: 您的多因素验证已启用。要重新配置多因素验证，您必须首先停用它。
+    require_totp_disabled: 您的多因素验证（MFA）已启用。要重新配置多因素验证（MFA），您必须首先停用它。
     require_totp_enabled: 您还没有启用一个身份验证器应用。您必须先启用它。
     new:
-      title: 启用多因素验证
+      title: 启用多因素验证（MFA）
       scan_prompt: 请用您的身份验证程序扫描二维码。如果您没办法扫描，请在您的程序中手动输入下面的内容。
       otp_prompt: 输入身份验证程序上的数字代码以继续。
       confirm: 我已把复原码存放在安全的地方。
@@ -532,14 +532,14 @@ zh-CN:
       time_based: 基于时间的：是
     create:
       qrcode_expired: 二维码和密钥已过期。请尝试重新注册一个新的设备。
-      success: 您已成功启用多因素验证。
+      success: 您已成功启用多因素验证（MFA）。
     destroy:
-      success: 您已成功停用多因素验证。
+      success: 您已成功停用多因素验证（MFA）。
   notifiers:
     update:
       success: 您已成功更新邮件通知设置。
     show:
-      info: 为了帮助检测未经授权的 Gem 或所有权变更，当您拥有的 Gem 的每一个新版本被推送、撤回时，或添加了新业主时，我们每次都会向您发送一封邮件。通过接收和阅读这些电子邮件，您帮助大家一起保护了
+      info: 为了帮助检测未经授权的 Gem 或所有权变更，当您拥有的 Gem 的每一个新版本被推送、撤回时，或添加了新所有者时，我们每次都会向您发送一封邮件。通过接收和阅读这些电子邮件，您帮助大家一起保护了
         Ruby 的生态系统。
       'on': 开启
       'off': 关闭
@@ -572,12 +572,12 @@ zh-CN:
       role:
       title:
     confirm:
-      confirmed_email: 您已被添加为 Gem %{gem} 的业主之一
+      confirmed_email: 您已被添加为 Gem %{gem} 的所有者之一
       token_expired: 确认令牌已过期。请尝试从该 Gem 页面重新发送令牌。
     index:
-      add_owner: 添加业主
-      name: 业主
-      mfa: 多因素验证状态
+      add_owner: 添加所有者
+      name: 所有者
+      mfa: 多因素验证（MFA）状态
       status: 状态
       confirmed_at: 批准于
       added_by: 添加
@@ -585,22 +585,22 @@ zh-CN:
       role:
       role_field:
       email_field: Email / Handle
-      submit_button: 添加业主
-      info: 添加或移除业主
+      submit_button: 添加所有者
+      info: 添加或移除所有者
       confirmed: 已批准
       pending: 待定
-      confirm_remove: 您确定您想要从业主中移除该用户吗？
+      confirm_remove: 您确定您想要从所有者中移除该用户吗？
     resend_confirmation:
       resent_notice: 一封确认邮件已被重新发送到您的邮箱中
     create:
-      success_notice: "%{handle} 已添加为还未经批准的业主。在用户点击发送到其邮箱的批准邮件后，所有权访问才将被启用。"
+      success_notice: "%{handle} 已添加为还未经批准的所有者。在用户点击发送到其邮箱的批准邮件后，所有权访问才将被启用。"
     update:
       update_current_user_role:
       success_notice:
     destroy:
-      removed_notice: "%{owner_name} 已成功从业主中移除"
-      failed_notice: 不能删除该 Gem 的唯一业主
-    mfa_required: 该 Gem 已启用多因素验证，请在您的帐户上设置多因素验证。
+      removed_notice: "%{owner_name} 已成功从所有者中移除"
+      failed_notice: 不能删除该 Gem 的唯一所有者
+    mfa_required: 该 Gem 已启用多因素验证（MFA），请在您的帐户上设置多因素验证（MFA）。
   settings:
     edit:
       title: 编辑设置
@@ -620,21 +620,21 @@ zh-CN:
       reset_password:
         title: 重置密码
       mfa:
-        multifactor_auth: 多因素验证
+        multifactor_auth: 多因素验证（MFA）
         otp: 身份认证应用
-        disabled_html: 您尚未启用基于 OTP 的多因素身份验证。请参考<a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
-          多因素验证指南</a> 来了解更多关于多因素验证级别的信息。
+        disabled_html: 您尚未启用基于 OTP 的多因素身份验证。请参考 <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+          多因素验证（MFA）指南</a> 来了解更多关于多因素验证（MFA）级别的信息。
         go_settings: 注册新设备
-        level_html: 您已启用多因素身份验证。请点击 “更新” 来改变您的 MFA 级别。请参考 <a target="_blank" rel="noopener"
-          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
-          多重身份验证指南 来了解更多 MFA 级别的信息。
+        level_html: 您已启用多因素身份验证，请点击“更新”来改变您的 MFA 级别。请参考 <a target="_blank" rel="noopener"
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems</a> 多重身份验证指南
+          来了解更多 MFA 级别的信息。
         enabled_note: 您已启用多因素身份验证。请输入您从身份验证器上获得的 OTP 码，或使用您已生效的恢复码来禁用。
         update: 更新
         disable:
         enabled:
         disabled:
         level:
-          title: 多因素验证级别
+          title: 多因素验证（MFA）级别
           disabled: 停用
           ui_only: 仅 UI
           ui_and_api: UI 和 API（推荐使用）
@@ -650,7 +650,7 @@ zh-CN:
       disabled_avatar_html:
       email_awaiting_confirmation: 请确认您新的邮箱地址 %{unconfirmed_email}
       enter_password: 请输入您账户的密码
-      optional_full_name: 可填。将公开显示
+      optional_full_name: 将公开显示（可选）
       optional_twitter_username: 可选 X 用户名。这将会被公开显示
       twitter_username: 用户名
       title: 修改个人资料
@@ -662,12 +662,12 @@ zh-CN:
       title: 删除个人资料
       confirm: 确认
       instructions: 我们很遗憾您要离开。请在下面的对话框中输入您的密码并确认。
-      list_only_owner_html: 当您删除您的个人资料时，这些 Gem 也将被撤回。如果您想在删除个人资料之前添加业主，您可以使用 %{command_link}
+      list_only_owner_html: 当您删除您的个人资料时，这些 Gem 也将被撤回。如果您想在删除个人资料之前添加所有者，您可以使用 %{command_link}
         命令。
-      list_multi_owner: 您将失去访问这些 Gem 的权限，但这些 Gem 的其他业主将仍然可以访问。
-      warning: 删除个人资料是不可逆的操作。即使与支持人员联系也无法撤销。请确定无误！
+      list_multi_owner: 您将失去访问这些 Gem 的权限，但这些 Gem 的其他所有者将仍然可以访问。
+      warning: 删除个人资料是不可逆的操作，即使与支持人员联系也无法撤销。请确定无误！
     rubygem:
-      owners_header: 业主
+      owners_header: 所有者
     destroy:
       request_queued: 您的帐户删除请求已被置于处理队列中。当您的申请被处理后，我们会给您发一封确认邮件。
     update:
@@ -686,8 +686,8 @@ zh-CN:
       gem_version_age: 版本发布
       required_ruby_version: 需要的 Ruby 版本
       required_rubygems_version: 需要的 RubyGems 版本
-      requires_mfa: 新的版本需要开启多因素验证
-      released_with_mfa: 使用多因素验证发布的版本
+      requires_mfa: 新的版本需要开启多因素验证（MFA）
+      released_with_mfa: 使用多因素验证（MFA）发布的版本
       links:
         badge: 徽章
         bugs: Bug 追踪
@@ -720,11 +720,11 @@ zh-CN:
     gem_members:
       authors_header: 作者
       self_no_mfa_warning_html: 请考虑 <a href="/settings/edit">启用多因素身份验证（MFA）</a> 来保障您的帐户安全。
-      not_using_mfa_warning_show: "* 一些业主当前还没有使用多因素验证（MFA）。请点击查看完整列表。"
-      not_using_mfa_warning_hide: "* 以下业主还未使用多因素验证（MFA）。点击隐藏。"
-      owners_header: 业主
+      not_using_mfa_warning_show: "* 一些所有者当前还没有使用多因素验证（MFA）。请点击查看完整列表。"
+      not_using_mfa_warning_hide: "* 以下所有者还未使用多因素验证（MFA）。点击隐藏。"
+      owners_header: 所有者
       pushed_by: 推送
-      using_mfa_info: "* 所有业主都已使用多因素验证（MFA）。"
+      using_mfa_info: "* 所有所有者都已使用多因素验证（MFA）。"
       yanked_by: 撤回
       sha_256_checksum: SHA 256 校验和
       signature_period: 签名有效期
@@ -750,12 +750,12 @@ zh-CN:
     show_yanked:
       not_hosted_notice: 这个 Gem 目前没有被托管在 RubyGems.org 中。这个 Gem 撤回的版本可能已经存在了。
       reserved_namespace_html:
-        one: 这个 Gem 以前存在过，但被它的业主移除了。RubyGems.org 团队将会把这个 Gem 的名称多保留 1 天。在此之后，任何人都可以使用
-          <code>gem push</code> 申请此 Gem 名称。<br/> 如果您是该 Gem 的前业主，您可以使用 <code>gem owner</code>
-          命令更改该 Gem 的业主。您也可以使用 <code>gem push</code> 创建这个 gem 的新版本。
-        other: 这个 Gem 以前存在过，但被它的业主移除了。RubyGems.org 团队将会把这个 Gem 的名称多保留 %{count} 天。在此之后，任何人都可以使用
-          <code>gem push</code> 申请此 Gem 名称。<br/> 如果您是该 Gem 的前业主，您可以使用 <code>gem owner</code>
-          命令更改该 Gem 的业主。您也可以使用 <code>gem push</code> 创建这个 gem 的新版本。
+        one: 这个 Gem 以前存在过，但被它的所有者移除了。RubyGems.org 团队将会把这个 Gem 的名称多保留 1 天。在此之后，任何人都可以使用
+          <code>gem push</code> 申请此 Gem 名称。<br/> 如果您是该 Gem 的前所有者，您可以使用 <code>gem owner</code>
+          命令更改该 Gem 的所有者。您也可以使用 <code>gem push</code> 创建这个 gem 的新版本。
+        other: 这个 Gem 以前存在过，但被它的所有者移除了。RubyGems.org 团队将会把这个 Gem 的名称多保留 %{count} 天。在此之后，任何人都可以使用
+          <code>gem push</code> 申请此 Gem 名称。<br/> 如果您是该 Gem 的前所有者，您可以使用 <code>gem owner</code>
+          命令更改该 Gem 的所有者。您也可以使用 <code>gem push</code> 创建这个 gem 的新版本。
     security_events:
       title:
       description_html:
@@ -819,7 +819,7 @@ zh-CN:
       subtitle_owner_html: 请新的维护者加入 %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（了解更多）</a>
       subtitle_user_html: 申请对 %{gem} 的所有权 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（了解更多）</a>
       ownership_calls: 所有权调用
-      no_ownership_calls: 没有对 %{gem} 的所有权调用。该 Gem 的业主并没有在寻求新的维护者。
+      no_ownership_calls: 没有对 %{gem} 的所有权调用。该 Gem 的所有者并没有在寻求新的维护者。
   ownership_calls:
     update:
       success_notice: 对 %{gem} 的所有权调用已关闭。
@@ -841,12 +841,12 @@ zh-CN:
     create:
       success_notice: 您的所有权申请已经被提交
     update:
-      approved_notice: 所有权申请已被批准。%{name} 已被添加为新的业主之一。
+      approved_notice: 所有权申请已被批准。%{name} 已被添加为新的所有者之一。
       closed_notice: 所有权申请已经被关闭。
     close:
       success_notice: 对 %{gem} 的所有开放所有权申请都已被关闭。
     ownership_requests: 所有权申请
-    note_for_owners: 业主须知：
+    note_for_owners: 所有者须知：
     your_ownership_requests: 您的所有权申请
     close_all: 关闭所有
     approve: 批准
