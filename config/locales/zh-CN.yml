@@ -723,7 +723,7 @@ zh-CN:
       not_using_mfa_warning_show: "* 一些所有者当前还没有使用多因素验证（MFA）。请点击查看完整列表。"
       not_using_mfa_warning_hide: "* 以下所有者还未使用多因素验证（MFA）。点击隐藏。"
       owners_header: 所有者
-      pushed_by: 推送
+      pushed_by: 推送者
       using_mfa_info: "* 所有所有者都已使用多因素验证（MFA）。"
       yanked_by: 撤回
       sha_256_checksum: SHA 256 校验和
