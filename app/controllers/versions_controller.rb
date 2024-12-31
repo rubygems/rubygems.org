@@ -3,6 +3,7 @@ class VersionsController < ApplicationController
 
   def index
     set_page
+    @oldest_version_date = @rubygem.versions.oldest_authored_at
     @versions = @rubygem.versions.by_position.page(@page).per(Gemcutter::VERSIONS_PER_PAGE)
   end
 
