@@ -51,6 +51,7 @@ de:
   total_downloads: Downloads insgesamt
   try_again: Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
   update: Aktualisieren
+  remove:
   view_all: Alle anzeigen
   advanced_search: Erweiterte Suche
   authenticate: Authentifizieren

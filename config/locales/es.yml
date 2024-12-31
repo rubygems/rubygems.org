@@ -49,6 +49,7 @@ es:
   total_downloads: Total de descargas
   try_again: Algo salió mal. Por favor inténtalo nuevamente.
   update: Actualizar
+  remove:
   view_all: Ver todo
   advanced_search: Búsqueda avanzada
   authenticate: Autenticar

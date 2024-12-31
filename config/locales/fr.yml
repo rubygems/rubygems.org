@@ -49,6 +49,7 @@ fr:
   total_downloads: Total de téléchargements
   try_again: Une erreur est survenue. Veuillez réessayer.
   update: Mise à jour
+  remove:
   view_all: Voir tout
   advanced_search: Recherche avancée
   authenticate:
