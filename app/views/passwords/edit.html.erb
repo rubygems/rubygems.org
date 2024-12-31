@@ -3,7 +3,7 @@
 <%= form_for(:password_reset, url: password_path, html: { method: :put }) do |form| %>
   <%= error_messages_for @user %>
   <div class="password_field">
-    <%= form.label :password, "Password", :class => 'form__label' %>
+    <%= form.label :password, t("activerecord.attributes.user.password"), :class => 'form__label' %>
     <%= form.password_field :password, autocomplete: 'new-password', class: 'form__input' %>
   </div>
   <div class="form__checkbox">
