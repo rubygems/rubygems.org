@@ -1,13 +1,13 @@
-<% @title = t('.title') %>
+<% @title = t(".title") %>
 
 <% if @only_owner_gems.any? %>
   <div class="t-body">
-    <p class="page__subheading"><%= (t '.list_only_owner_html', command_link: link_to('gem owner', 'https://guides.rubygems.org/command-reference/#gem-owner')) %></p>
+    <p class="page__subheading"><%= (t(".list_only_owner_html", command_link: link_to("gem owner", "https://guides.rubygems.org/command-reference/#gem-owner"))) %></p>
   </div>
   <div id="profile">
     <div class="profile-list">
       <ul>
-        <%= render partial: 'rubygem', collection: @only_owner_gems, locals: {owners: true}  %>
+        <%= render partial: "rubygem", collection: @only_owner_gems, locals: {owners: true} %>
       </ul>
     </div>
   </div>
@@ -15,24 +15,24 @@
 
 <% if @multi_owner_gems.any? %>
   <div class="t-body">
-    <p class="page__subheading push--s"><%= t '.list_multi_owner' %></p>
+    <p class="page__subheading push--s"><%= t(".list_multi_owner") %></p>
   </div>
   <div id="profile">
     <div class="profile-list">
       <ul>
-        <%= render partial: 'rubygem', collection: @multi_owner_gems, locals: {owners: true}  %>
+        <%= render partial: "rubygem", collection: @multi_owner_gems, locals: {owners: true} %>
       </ul>
     </div>
   </div>
 <% end %>
 
 <div class="t-body push--s">
-  <p><%= t '.instructions' %></p>
+  <p><%= t(".instructions") %></p>
   <%= form_for current_user, url: destroy_profile_path, method: :delete do |form| %>
     <div class="password_field">
-      <%= form.label :password, t("activerecord.attributes.user.password"), class: 'form__label' %>
-      <%= form.password_field :password, placeholder: t("activerecord.attributes.user.password"), autocomplete: 'current-password', class: 'form__input' %>
+      <%= form.label :password, t("activerecord.attributes.user.password"), class: "form__label" %>
+      <%= form.password_field :password, autocomplete: "current-password", class: "form__input" %>
     </div>
-    <%= form.submit t('.confirm'), data: { confirm: "This action can't be UNDONE! Are you sure?" }, class: 'form__submit' %>
+    <%= form.submit t(".confirm"), data: { confirm: "This action can't be UNDONE! Are you sure?" }, class: "form__submit" %>
   <% end %>
 </div>

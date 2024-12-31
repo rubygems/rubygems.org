@@ -1,7 +1,7 @@
 <% @title = t(".title") %>
 
 <div class="t-body">
-  <h2 class="page__subheading"><%= t ".mfa.multifactor_auth" %></h2>
+  <h2 class="page__subheading"><%= t(".mfa.multifactor_auth") %></h2>
   <% if @user.mfa_enabled? %>
     <div class="mfa__header-wrapper">
       <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.level.title")%></h2>
@@ -62,21 +62,21 @@
 </div>
 
 <div class="t-body">
-  <h2><%= link_to t('.reset_password.title'), new_password_path %></h2>
+  <h2><%= link_to t(".reset_password.title"), new_password_path %></h2>
 </div>
 
 <div class="t-body">
-  <h2><%= link_to t('api_keys.index.api_keys'), profile_api_keys_path %></h2>
+  <h2><%= link_to t("api_keys.index.api_keys"), profile_api_keys_path %></h2>
 </div>
 
 <div class="t-body">
-  <h2><%= link_to t('oidc.pending_trusted_publishers.index.title'), profile_oidc_pending_trusted_publishers_path %></h2>
+  <h2><%= link_to t("oidc.pending_trusted_publishers.index.title"), profile_oidc_pending_trusted_publishers_path %></h2>
   <span><%= t("oidc.pending_trusted_publishers.index.description_html") %></span>
 </div>
 
 <% if @user.oidc_api_key_roles.any? %>
   <div class="t-body">
-    <h2><%= link_to t('oidc.api_key_roles.index.api_key_roles'), profile_oidc_api_key_roles_path %></h2>
+    <h2><%= link_to t("oidc.api_key_roles.index.api_key_roles"), profile_oidc_api_key_roles_path %></h2>
   </div>
 <% end %>
 
