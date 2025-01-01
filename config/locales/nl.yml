@@ -251,6 +251,7 @@ nl:
         hosted_by: Hosting
         monitored_by: Monitoring
         optimized_by: Optimalisatie
+        releases:
         resolved_with: DNS
         security: Security
         source_code: Code

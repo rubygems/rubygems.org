@@ -249,6 +249,7 @@ ja:
         hosted_by: ホスト
         monitored_by: 監視
         optimized_by: 最適化
+        releases: リリース
         resolved_with: DNS
         security: セキュリティ
         source_code: コード

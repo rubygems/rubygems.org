@@ -255,6 +255,7 @@ en:
         hosted_by: Hosted by
         monitored_by: Monitored by
         optimized_by: Optimized by
+        releases: Releases
         resolved_with: Resolved with
         security: Security
         source_code: Code

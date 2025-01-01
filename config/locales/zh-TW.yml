@@ -249,6 +249,7 @@ zh-TW:
         hosted_by: 托管
         monitored_by: 監控
         optimized_by: 最佳化
+        releases:
         resolved_with: 解析
         security: 安全
         source_code: 原始碼

@@ -268,6 +268,7 @@ es:
         hosted_by: Alojado por
         monitored_by: Monitoreado por
         optimized_by: Optimizado por
+        releases:
         resolved_with: DNS
         security: Seguridad
         source_code: Código fuente

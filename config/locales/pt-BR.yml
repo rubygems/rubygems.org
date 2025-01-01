@@ -257,6 +257,7 @@ pt-BR:
         hosted_by: Hospedagem
         monitored_by: Monitoramento
         optimized_by: Otimizações
+        releases:
         resolved_with: DNS
         security: Segurança
         source_code: Código Fonte

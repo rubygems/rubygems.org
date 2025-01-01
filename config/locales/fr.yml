@@ -260,6 +260,7 @@ fr:
         hosted_by: Hébergé par
         monitored_by: Monitoring par
         optimized_by: Optimisé par
+        releases:
         resolved_with: Résolu par
         security: Security
         source_code: Code

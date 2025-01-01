@@ -269,6 +269,7 @@ de:
         hosted_by: Gehostet von
         monitored_by: Überwacht von
         optimized_by: Optimiert mit
+        releases:
         resolved_with: Aufgelöst mit
         security: Security
         source_code: Code
