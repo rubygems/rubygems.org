@@ -46,8 +46,9 @@ export default class extends Controller {
 
   appendItem(text, uri) {
     const clone = this.templateTarget.content.cloneNode(true);
-    const a = clone.querySelector('a > span')
-    a.textContent = text;
+    const span = clone.querySelector("a > span");
+    const a = clone.querySelector("a");
+    span.textContent = text;
     a.href = uri;
     this.element.appendChild(clone)
   }
