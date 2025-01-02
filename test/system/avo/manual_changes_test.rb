@@ -16,7 +16,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     page.find_by_id("log_ticket_key", wait: Capybara.default_max_wait_time) # Wait for input to be available.
     fill_in "Key", with: "key"
-    fill_in "Directory", with: "dir"
+    fill_in "Directory", with: "directory"
     fill_in "Processed count", with: "0"
     fill_in "Comment", with: "A nice long comment"
     click_on "Save"
@@ -45,7 +45,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
         },
         "fields" => {
           "key" => "key",
-          "directory" => "dir",
+          "directory" => "directory",
           "backend" => "s3",
           "status" => "pending",
           "processed_count" => "0"
@@ -95,7 +95,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
         },
         "fields" => {
           "key" => "Other Key",
-          "directory" => "dir",
+          "directory" => "directory",
           "backend" => "s3",
           "status" => "failed",
           "processed_count" => "2"
