@@ -71,6 +71,12 @@ Version.create_with(
   dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))],
   sha256: Digest::SHA2.base64digest("rubygem1-1.1.0.pre.2.gem")
 ).find_or_create_by!(rubygem: rubygem1, number: "1.1.0.pre.2", platform: "ruby", gem_platform: "ruby")
+Version.create_with(
+  indexed: false,
+  pusher: author,
+  yanked_at: Time.utc(2020, 3, 3),
+  sha256: Digest::SHA2.base64digest("rubygem_requestable-1.0.0.gem")
+).find_or_create_by!(rubygem: rubygem1, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
