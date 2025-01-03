@@ -58,7 +58,8 @@
     opacity: .7; }
 
 .form__submit:disabled {
-  opacity: .7; }
+  opacity: .7;
+  cursor: not-allowed; }
 
 .form__submit--no-hover:enabled:hover {
   opacity: 1;
