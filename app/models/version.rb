@@ -427,6 +427,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     "#{full_name}.gem"
   end
 
+  def pushed_by_trusted_publisher?
+    pusher_api_key&.trusted_publisher? ? true : false
+  end
+
   private
 
   def update_prerelease
