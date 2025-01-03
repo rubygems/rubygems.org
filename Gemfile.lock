@@ -135,8 +135,8 @@ GEM
       rails (>= 6.0.0)
       zeitwerk
     aws-eventstream (1.3.0)
-    aws-partitions (1.1022.0)
-    aws-sdk-core (3.214.0)
+    aws-partitions (1.1030.0)
+    aws-sdk-core (3.214.1)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -148,7 +148,7 @@ GEM
       aws-sdk-core (~> 3, >= 3.210.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
-    aws-sdk-sqs (1.89.0)
+    aws-sdk-sqs (1.90.0)
       aws-sdk-core (~> 3, >= 3.210.0)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.10.1)
@@ -888,7 +888,7 @@ DEPENDENCIES
   avo-advanced (~> 3.15)!
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.176)
-  aws-sdk-sqs (~> 1.89)
+  aws-sdk-sqs (~> 1.90)
   bcrypt (~> 3.1)
   better_html (~> 2.1)
   bootsnap (~> 1.18)
@@ -1029,11 +1029,11 @@ CHECKSUMS
   avo-pro (3.15.5) sha256=97e6547bb574925d2378b53d6577f7efad665a967d48d613682e463f810542b1
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
-  aws-partitions (1.1022.0) sha256=64d5038b95d42ba27d4badf4cfaae8ca38e1c0b37cfb13f40ee0168f020be0c0
-  aws-sdk-core (3.214.0) sha256=24f2a0f29dc3b5d9ee38d6ff8341a66fba48a4ebca2424688f7bac9952d8488b
+  aws-partitions (1.1030.0) sha256=bfb1aeeaebfa0741710adddd6fc7b77dea5e7f9a552dacf1df3c4db2204936c7
+  aws-sdk-core (3.214.1) sha256=419b317407d736a19f8b7c422ec134630dc283766a0f9171ceaa2704e82d49fd
   aws-sdk-kms (1.96.0) sha256=b1818e140b4d1b3cbe154e6b2df1d157f8c65aa297d488f69b5745995a6ba375
   aws-sdk-s3 (1.176.1) sha256=6480176d547dbd7516c59f2ca8abdc396acf32895dd3ac44b191f5e93ef4b5ea
-  aws-sdk-sqs (1.89.0) sha256=1db1e8a1dcf1a83a6328fe12a034fe89e1c7a73c6305b8cad089656e3a5389ba
+  aws-sdk-sqs (1.90.0) sha256=122ad5d5bd71fa004f29ab86d77bd8f3e1746581bfcfca14b74367f7c2af5352
   aws-sigv4 (1.10.1) sha256=8a140753f34de18125686b11e7adaed4ca3db06dfb50a478993bd437f7a203bb
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
   bcrypt (3.1.20) sha256=8410f8c7b3ed54a3c00cd2456bf13917d695117f033218e2483b2e40b0784099
