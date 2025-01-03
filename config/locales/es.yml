@@ -114,11 +114,6 @@ es:
             user_id:
               already_confirmed: ya es propietario de esta gema
               already_invited: ya ha sido invitado a esta gema
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -400,24 +395,6 @@ es:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title: CANDIDATURA A PROPIETARIO
-      subtitle: "¡Hola %{handle}!"
-      body_html: Gracias por proponerte como propietario para <strong>%{gem}</strong>.
-        Lamentamos informarte de que el dueño de la gema ha cerrado tu solicitud.
-    ownerhip_request_approved:
-      body_html: "¡Enhorabuena! Tu candidatura a propietario de <strong>%{gem}</strong>
-        ha sido aprobada. Se te ha añadido a la lista de propietarios de la gema."
-    new_ownership_requests:
-      body_html:
-        zero: No hay nuevas candidaturas a propietario para <strong>%{gem}</strong>.
-        one: Hay <em>una</em> nueva candidatura a propietario para <strong>%{gem}</strong>.
-          Por favor haz click en el botón siguiente para verla.
-        other: Hay <em>%{count}</em> nuevas candidaturas a propietario para <strong>%{gem}</strong>.
-          Por favor haz click en el botón siguiente para ver todas las candidaturas.
-      button: CANDIDATURAS A PROPIETARIO
-      disable_notifications: Para dejar de recibir estos mensajes actualiza tus
-      owners_page: PROPIETARIOS
     web_hook_deleted:
       title: WEBHOOK ELIMINADO
       subject: Se ha borrado tu webhook en %{host}
@@ -622,7 +599,6 @@ es:
       title: Notificación de email
       update: Actualizar
       owner_heading: Notificaciones de propietarios
-      owner_request_heading: Notificaciones de solicitud de propietarios
       push_heading: Notificaciones Push
   webauthn_verifications:
     expired_or_already_used: El token del enlace utilizado ha expirado o ya ha sido
@@ -725,14 +701,6 @@ es:
           ui_and_api: Interfaz de Usuario y API
           ui_and_gem_signin: Interfaz de Usuario y firma de gemas
   profiles:
-    adoptions:
-      no_ownership_calls: No has creado llamadas a ser propietario para ninguna de
-        tus gemas
-      no_ownership_requests: No has creado ninguna petición para ser propietario
-      title: Adopción
-      subtitle_html: Pide nuevos responsables de mantenimiento o solicita propietarios
-        <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
-        más)</a>
     edit:
       change_avatar: Cambiar avatar
       disabled_avatar_html: Se usa un avatar por defecto debido a la configuración
@@ -926,57 +894,6 @@ es:
         el archivo gemspec.
     version:
       yanked: borrada
-  adoptions:
-    index:
-      title: Adopciones
-      subtitle_owner_html: Solicita nuevos responsables de mantenimiento para %{gem}
-        <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
-        más)</a>
-      subtitle_user_html: Solicita ser propietario de %{gem} <a class="adoption__blog__link"
-        href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
-        más)</a>
-      ownership_calls: Solicitud de propietarios
-      no_ownership_calls: No hay convocatorias de propietarios para %{gem}. Los dueños
-        de la gema no están buscando nuevos responsables de mantenimiento.
-  ownership_calls:
-    update:
-      success_notice: Convocatoria para propietarios de %{gem} cerrada.
-    create:
-      success_notice: Creada convocatoria para propietarios de %{gem}.
-    index:
-      title: Se buscan responsables de mantenimiento
-      subtitle_html: Gemas que buscan nuevos responsables de mantenimiento <a class="adoption__blog__link"
-        href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(leer
-        más)</a>
-    share_requirements: Por favor especifica en que areas necesitas ayuda
-    note_for_applicants: 'Nota para candidatos:'
-    created_by: Creado por
-    details: Detalles
-    apply: Proponte
-    close: Cerrar
-    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">Etiquetas
-      Rdoc soportadas</a>
-    create_call: Crear convocatoria para propietarios
-  ownership_requests:
-    create:
-      success_notice: Se ha enviado tu candidatura a propietario.
-    update:
-      approved_notice: Candidatura a propietario aprobada. %{name} añadido a propietarios.
-      closed_notice: Se ha cerrado la candidatura a propietario.
-    close:
-      success_notice: Se han cerrado todas las candidaturas a propietario de %{gem}.
-    ownership_requests: Candidaturas a propietario
-    note_for_owners: 'Nota para propietarios:'
-    your_ownership_requests: Tus candidaturas a propietario
-    close_all: Cerrar todas
-    approve: Aprobar
-    gems_published: Gemas publicadas
-    created_at: Creado el
-    no_ownership_requests: Las peticiones para unirse a tu proyecto aparecerán aquí.
-      Todavia no hay candidaturas a propietario para %{gem}.
-    create_req: Crea una candidatura a propietario
-    signin_to_create_html: Por favor <a href="https://rubygems.org/sign_in">accede</a>
-      para crear una candidatura a propietario.
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.

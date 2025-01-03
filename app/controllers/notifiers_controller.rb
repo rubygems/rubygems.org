@@ -10,12 +10,10 @@ class NotifiersController < ApplicationController
   def update
     to_enable_push, to_disable_push = notifier_options("push")
     to_enable_owner, to_disable_owner = notifier_options("owner")
-    to_enable_ownership_request, to_disable_ownership_request = notifier_options("ownership_request")
 
     current_user.transaction do
       current_user.ownerships.update_push_notifier(to_enable_push, to_disable_push)
       current_user.ownerships.update_owner_notifier(to_enable_owner, to_disable_owner)
-      current_user.ownerships.update_ownership_request_notifier(to_enable_ownership_request, to_disable_ownership_request)
       Mailer.notifiers_changed(current_user.id).deliver_later
     end
 
@@ -25,7 +23,7 @@ class NotifiersController < ApplicationController
   private
 
   def notifier_params
-    params.expect(ownerships: [%i[push owner ownership_request]])
+    params.expect(ownerships: [%i[push owner]])
   end
 
   def notifier_options(param)

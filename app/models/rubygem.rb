@@ -8,7 +8,6 @@ class Rubygem < ApplicationRecord
   has_many :owners_including_unconfirmed, through: :ownerships_including_unconfirmed, source: :user
   has_many :push_notifiable_owners, ->(gem) { gem.owners.push_notifiable_owners }, through: :ownerships, source: :user
   has_many :ownership_notifiable_owners, ->(gem) { gem.owners.ownership_notifiable_owners }, through: :ownerships, source: :user
-  has_many :ownership_request_notifiable_owners, ->(gem) { gem.owners.ownership_request_notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
@@ -16,8 +15,6 @@ class Rubygem < ApplicationRecord
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
-  has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :rubygem
-  has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :audits, as: :auditable, inverse_of: :auditable
   has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", inverse_of: :rubygem, dependent: :destroy
@@ -267,10 +264,6 @@ class Rubygem < ApplicationRecord
 
   def create_ownership(user)
     Ownership.create_confirmed(self, user, user) if unowned?
-  end
-
-  def ownership_call
-    ownership_calls.find_by(status: "opened")
   end
 
   def update_versions!(version, spec)

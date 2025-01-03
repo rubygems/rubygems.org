@@ -56,10 +56,6 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     end
 
     context "with mfa disabled" do
-      should "user with mfa disabled gets redirected back to adoptions after setting up mfa" do
-        redirect_test_mfa_disabled(adoptions_profile_path)
-      end
-
       should "user with mfa disabled gets redirected back to dashboard pages after setting up mfa" do
         redirect_test_mfa_disabled(dashboard_path)
       end
@@ -91,10 +87,6 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     end
 
     context "with weak level mfa" do
-      should "user gets redirected back to adoptions after setting up mfa" do
-        redirect_test_mfa_weak_level(adoptions_profile_path)
-      end
-
       should "user gets redirected back to dashboard pages after setting up mfa" do
         redirect_test_mfa_weak_level(dashboard_path)
       end

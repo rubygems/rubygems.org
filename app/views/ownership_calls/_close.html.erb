@@ -1,3 +1,0 @@
-<% if policy(ownership_call).close? %>
-  <div><%= button_to t("ownership_calls.close"), close_rubygem_ownership_calls_path(ownership_call.rubygem.slug), method: :patch, class: "form__submit form__submit--medium" %></div>
-<% end %>

@@ -171,7 +171,6 @@ Rails.application.routes.draw do
     resource :totp, only: %i[new create destroy]
     resource :settings, only: :edit
     resource :profile, only: %i[edit update] do
-      get :adoptions
       get :security_events
       member do
         get :delete
@@ -219,17 +218,9 @@ Rails.application.routes.draw do
         get 'confirm', to: 'owners#confirm', as: :confirm, on: :collection
         get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
       end
-      resource :ownership_calls, only: %i[update create] do
-        patch 'close', to: 'ownership_calls#close', as: :close, on: :collection
-      end
-      resources :ownership_requests, only: %i[create update] do
-        patch 'close_all', to: 'ownership_requests#close_all', as: :close_all, on: :collection
-      end
-      resources :adoptions, only: %i[index]
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
     end
 
-    resources :ownership_calls, only: :index
     resources :webauthn_credentials, only: :destroy
     resource :webauthn_verification, only: [] do
       get 'successful_verification'

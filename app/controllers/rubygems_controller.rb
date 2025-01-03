@@ -22,7 +22,6 @@ class RubygemsController < ApplicationController
 
   def show
     @versions = @rubygem.public_versions.limit(5)
-    @adoption = @rubygem.ownership_call
     if @versions.to_a.any?
       render "show"
     else

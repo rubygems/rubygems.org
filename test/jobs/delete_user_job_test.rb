@@ -124,31 +124,6 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_deleted subscription
   end
 
-  test "succeeds with ownership calls and requests" do
-    user = create(:user)
-    rubygem = create(:rubygem, owners: [user])
-    other_user = create(:user)
-    other_rubygem = create(:rubygem, owners: [other_user])
-
-    closed_call = create(:ownership_call, rubygem: rubygem, user: user, status: :closed)
-    open_call = create(:ownership_call, rubygem: rubygem, user: user)
-
-    other_call = create(:ownership_call, rubygem: other_rubygem, user: other_user)
-    closed_request = create(:ownership_request, ownership_call: other_call, rubygem: other_rubygem, user: user, status: :closed)
-    approved_request = create(:ownership_request, ownership_call: other_call, rubygem: other_rubygem, user: user, status: :approved)
-    open_request = create(:ownership_request, ownership_call: other_call, rubygem: other_rubygem, user: user)
-    other_request = create(:ownership_request, ownership_call: open_call, rubygem: rubygem, user: other_user)
-
-    assert_delete user
-    assert_deleted open_call
-    assert_deleted closed_call
-    assert_deleted other_request
-    assert_predicate approved_request.reload, :approved?
-    assert_predicate open_request.reload, :closed?
-    assert_predicate closed_request.reload, :closed?
-    assert_equal other_call.reload.user, other_user
-  end
-
   def assert_delete(user)
     Mailer.expects(:deletion_complete).with(user.email).returns(mock(deliver_later: nil))
     Mailer.expects(:deletion_failed).never

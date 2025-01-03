@@ -194,21 +194,6 @@ class ProfileTest < ApplicationSystemTestCase
     assert_no_enqueued_jobs
   end
 
-  test "seeing ownership calls and requests" do
-    rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-    requested_gem = create(:rubygem, number: "2.0.0")
-    create(:ownership_call, rubygem: rubygem, user: @user, note: "special note")
-    create(:ownership_request, rubygem: requested_gem, user: @user, note: "request note")
-
-    sign_in
-    visit profile_path("nick1")
-    click_link "Adoptions"
-
-    assert page.has_link?(rubygem.name, href: "/gems/#{rubygem.name}")
-    assert page.has_content? "special note"
-    assert page.has_content? "request note"
-  end
-
   test "seeing the gems ordered by downloads" do
     create(:rubygem, owners: [@user], number: "1.0.0", downloads: 5)
     create(:rubygem, owners: [@user], number: "1.0.0", downloads: 2)

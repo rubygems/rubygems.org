@@ -106,11 +106,6 @@ zh-CN:
             user_id:
               already_confirmed:
               already_invited:
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -368,20 +363,6 @@ zh-CN:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title: 所有权申请
-      subtitle: 你好啊，%{hand}！
-      body_html: 感谢您申请对 <strong>%{gem}</strong> 的所有权。我们很遗憾地通知您，您的所有权申请已被该 Gem 的业主驳回。
-    ownerhip_request_approved:
-      body_html: 恭喜您！您对 <strong>%{gem}</strong> 的所有权申请已被批准。您已被添加为该 Gem 的业主之一。
-    new_ownership_requests:
-      body_html:
-        zero:
-        one:
-        other: "<strong>%{gem}</strong> 有 <em>%{count}</em> 个新的所有权申请。请点击下面的按钮查看所有请求。"
-      button: 所有权申请
-      disable_notifications: 要停止接收这些信息，请更新您的
-      owners_page: 所有权
     web_hook_deleted:
       title: 删除 webhook
       subject: 您的 RubyGems.org webhook 已被删除
@@ -547,7 +528,6 @@ zh-CN:
       title: 邮件通知
       update: 更新
       owner_heading: 所有权通知
-      owner_request_heading: 所有权申请通知
       push_heading: 推送通知
   webauthn_verifications:
     expired_or_already_used: 您链接中使用的的令牌已过期或已被使用。
@@ -640,11 +620,6 @@ zh-CN:
           ui_and_api: UI 和 API（推荐使用）
           ui_and_gem_signin: UI 和 Gem 签署
   profiles:
-    adoptions:
-      no_ownership_calls: 您没有为您的任何 Gem 创建任何所有权的调用。
-      no_ownership_requests: 您没有创建任何所有权申请。
-      title: 领养
-      subtitle_html: 寻求新的维护者或申请所有权 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(了解更多)</a>
     edit:
       change_avatar: 修改头像
       disabled_avatar_html:
@@ -813,48 +788,6 @@ zh-CN:
         gemspec 中指定。
     version:
       yanked: 已撤回
-  adoptions:
-    index:
-      title: 领养
-      subtitle_owner_html: 请新的维护者加入 %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（了解更多）</a>
-      subtitle_user_html: 申请对 %{gem} 的所有权 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（了解更多）</a>
-      ownership_calls: 所有权调用
-      no_ownership_calls: 没有对 %{gem} 的所有权调用。该 Gem 的业主并没有在寻求新的维护者。
-  ownership_calls:
-    update:
-      success_notice: 对 %{gem} 的所有权调用已关闭。
-    create:
-      success_notice: 已创建对 %{gem} 的所有权调用。
-    index:
-      title: 维护者招募
-      subtitle_html: RubyGems 正在寻找新的维护者加入 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（了解更多）</a>
-    share_requirements: 请分享您在哪些方面需要帮助
-    note_for_applicants: 申请人须知：
-    created_by: 创建
-    details: 详情
-    apply: 申请
-    close: 关闭
-    markup_supported_html: 支持 <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/Markup.html#class-RDoc::Markup-label-RDoc+Markup+Reference">Rdoc
-      标记语法</a>
-    create_call: 创建所有权调用
-  ownership_requests:
-    create:
-      success_notice: 您的所有权申请已经被提交
-    update:
-      approved_notice: 所有权申请已被批准。%{name} 已被添加为新的业主之一。
-      closed_notice: 所有权申请已经被关闭。
-    close:
-      success_notice: 对 %{gem} 的所有开放所有权申请都已被关闭。
-    ownership_requests: 所有权申请
-    note_for_owners: 业主须知：
-    your_ownership_requests: 您的所有权申请
-    close_all: 关闭所有
-    approve: 批准
-    gems_published: 已发布的 Gem
-    created_at: 创建于
-    no_ownership_requests: 加入您项目的申请将显示在这里。还没有对 %{gem} 的所有权申请。
-    create_req: 创建所有权申请
-    signin_to_create_html: 请 <a href="https://rubygems.org/sign_in">登录</a> 来新建一个所有权申请。
   webauthn_credentials:
     callback:
       success: 您已成功注册一个安全设备。

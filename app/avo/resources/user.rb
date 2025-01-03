@@ -64,8 +64,6 @@ class Avo::Resources::User < Avo::BaseResource
       field :web_hooks, as: :has_many
       field :unconfirmed_ownerships, as: :has_many
       field :api_keys, as: :has_many, name: "API Keys"
-      field :ownership_calls, as: :has_many
-      field :ownership_requests, as: :has_many
       field :pushed_versions, as: :has_many
       field :oidc_api_key_roles, as: :has_many
       field :webauthn_credentials, as: :has_many

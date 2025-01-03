@@ -243,21 +243,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         end
       end
     end
-
-    context "ownership requests" do
-      setup do
-        sign_in_as(@user)
-        @rubygem = create(:rubygem, name: "test", downloads: 2_000)
-        create(:version, rubygem: @rubygem, created_at: 2.years.ago)
-        stay_under_ownership_request_limit_for("ownership_requests/email")
-        post "/gems/#{@rubygem.name}/ownership_requests", params: { rubygem_id: @rubygem.name, note: "small note" }
-      end
-
-      should "allow creating new requests" do
-        assert_redirected_to "/gems/test/adoptions"
-        assert_equal "small note", @rubygem.ownership_requests.last.note
-      end
-    end
   end
 
   context "requests is higher than limit" do
@@ -706,21 +691,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
           assert_response :too_many_requests
         end
-      end
-    end
-
-    context "ownership requests" do
-      setup do
-        sign_in_as(@user)
-        @rubygem = create(:rubygem, name: "test", downloads: 2_000)
-        create(:version, rubygem: @rubygem, created_at: 2.years.ago)
-        exceed_ownership_request_limit_for("ownership_requests/email")
-        post "/gems/#{@rubygem.name}/ownership_requests", params: { rubygem_id: @rubygem.name, note: "small note" }
-      end
-
-      should "throttle creating new requests" do
-        assert_response :too_many_requests
-        assert_empty @rubygem.ownership_requests
       end
     end
   end

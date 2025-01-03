@@ -1,4 +1,6 @@
 class Ownership < ApplicationRecord
+  self.ignored_columns += %w[ownership_request_notifier]
+
   belongs_to :rubygem
   belongs_to :user
   belongs_to :authorizer, class_name: "User"
@@ -51,10 +53,6 @@ class Ownership < ApplicationRecord
 
   def self.update_owner_notifier(to_enable_owner, to_disable_owner)
     update_notifier(to_enable_owner, to_disable_owner, "owner_notifier")
-  end
-
-  def self.update_ownership_request_notifier(to_enable_ownership_request, to_disable_ownership_request)
-    update_notifier(to_enable_ownership_request, to_disable_ownership_request, "ownership_request_notifier")
   end
 
   def valid_confirmation_token?
