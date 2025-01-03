@@ -40,7 +40,7 @@ class Attestation < ApplicationRecord
         source_commit_string: "#{repo}@#{commit[0, 7]}",
         source_commit_url: "https://github.com/#{repo}/tree/#{commit}",
         build_file_string:, build_file_url:,
-        build_summary_url: "https://github.com/#{repo}/actions/runs/#{build_file_string}"
+        build_summary_url: "https://github.com/#{repo}/actions/#{build_file_string.delete_prefix('.github/')}"
       }
     else
       raise "Unhandled issuer: #{issuer.inspect}"
