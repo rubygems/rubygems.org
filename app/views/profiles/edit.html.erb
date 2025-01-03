@@ -1,87 +1,86 @@
-<% @title = t('.title') %>
+<% @title = t(".title") %>
 
-<%= form_for @user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
+<%= form_for @user, :url => { :controller => "profiles", :action => "update" } do |form| %>
   <%= error_messages_for(@user) %>
 
   <div class="avatar_field">
-    <%= form.label :avatar, :class => 'form__label'  %>
+    <%= form.label :avatar, :class => "form__label" %>
     <div class="l-overflow">
       <%= avatar(160) %>
       <% if @user.public_email? %>
-        <%= link_to t('.change_avatar'), 'https://www.gravatar.com', :class => 't-text t-link' %>
+        <%= link_to t(".change_avatar"), "https://www.gravatar.com", :class => "t-text t-link" %>
       <% else %>
-        <%= content_tag 'i', t('.disabled_avatar_html'), :class => 't-text' %>
+        <%= content_tag "i", t(".disabled_avatar_html"), :class => "t-text" %>
       <% end %>
     </div>
   </div>
 
   <div class="text_field">
-    <%= form.label :handle, :class => 'form__label' %>
-    <%= form.text_field :handle, :class => 'form__input' %>
+    <%= form.label :handle, :class => "form__label" %>
+    <%= form.text_field :handle, :class => "form__input" %>
   </div>
 
   <div class="text_field">
-    <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
+    <%= form.label :twitter_username, class: "form__label form__label__icon-container" do %>
       <%=
-        image_tag("/images/x_icon.png", alt: 'X icon', class: 'form__label__icon')
+        image_tag("/images/x_icon.png", alt: "X icon", class: "form__label__icon")
       %>
 
-      <span class='form__label__text'><%= t('.twitter_username') %></span>
+      <span class="form__label__text"><%= t(".twitter_username") %></span>
     <% end %>
 
-    <p class='form__field__instructions'>
-      <%= t('.optional_twitter_username') %>
+    <p class="form__field__instructions">
+      <%= t(".optional_twitter_username") %>
     </p>
 
     <div class="form__input__addon-container form__input__addon-left">
       <span class="form__input__addon">@</span>
-      <%= form.text_field(:twitter_username, class: 'form__input') %>
+      <%= form.text_field(:twitter_username, class: "form__input") %>
     </div>
   </div>
 
   <% if current_user.unconfirmed_email %>
     <div class="push--bottom-s">
-      <p class='form__field__instructions'>
-        <%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %>
+      <p class="form__field__instructions">
+        <%= t(".email_awaiting_confirmation", unconfirmed_email: current_user.unconfirmed_email) %>
       </p>
-      <%= link_to "Resend confirmation", unconfirmed_email_confirmations_path, method: :patch, class: 'form__field__instructions t-link' %>
+      <%= link_to "Resend confirmation", unconfirmed_email_confirmations_path, method: :patch, class: "form__field__instructions t-link" %>
     </div>
   <% end %>
 
   <div class="text_field">
-    <%= form.label :email, :class => 'form__label' %>
-    <%= form.email_field :email, name: 'user[unconfirmed_email]', class: 'form__input' %>
+    <%= form.label :email, :class => "form__label" %>
+    <%= form.email_field :email, name: "user[unconfirmed_email]", class: "form__input" %>
   </div>
 
   <div class="text_field">
-    <%= form.label :full_name, :class => 'form__label' %>
-    <p class='form__field__instructions'>
-      <%= t('.optional_full_name') %>
+    <%= form.label :full_name, :class => "form__label" %>
+    <p class="form__field__instructions">
+      <%= t(".optional_full_name") %>
     </p>
-    <%= form.text_field :full_name, :class => 'form__input' %>
+    <%= form.text_field :full_name, :class => "form__input" %>
   </div>
 
   <div class="password_field">
-    <%= form.label :password, :class => 'form__label' %>
-    <p class='form__field__instructions'>
-      <%= t('.enter_password') %>
+    <%= form.label :password, t("activerecord.attributes.user.password"), :class => "form__label" %>
+    <p class="form__field__instructions">
+      <%= t(".enter_password") %>
     </p>
-    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input', required: true %>
+    <%= form.password_field :password, autocomplete: "current-password", class: "form__input", required: true %>
   </div>
 
-
   <div class="profile-checkbox form__checkbox">
-    <%= form.check_box :public_email, :class => 'form__checkbox__input' %>
-    <%= form.label :public_email, t('profiles.public_email'), :class => 'form__checkbox__label' %>
+    <%= form.check_box :public_email, :class => "form__checkbox__input" %>
+    <%= form.label :public_email, t("profiles.public_email"), :class => "form__checkbox__label" %>
   </div>
 
   <div class="submit_field">
-    <%= form.submit 'Update', :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= form.submit t("update"), :data => { :disable_with => t("form_disable_with") }, :class => "form__submit" %>
   </div>
 <% end %>
 
 <div class="t-body">
-  <h2><%= t '.delete.delete_profile' %></h2>
-  <p><%= t '.delete.warning' %></p>
-  <%= button_to t('.delete.delete'), delete_profile_path, method: 'get', class: 'form__submit' %>
+  <h2><%= t(".delete.delete_profile") %></h2>
+  <p><%= t(".delete.warning") %></p>
+  <%= button_to t(".delete.delete"), delete_profile_path, method: "get", class: "form__submit" %>
 </div>

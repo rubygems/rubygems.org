@@ -1,21 +1,21 @@
-<% @title = t('.title') %>
+<% @title = t(".title") %>
 
 <%= form_for(:password_reset, url: password_path, html: { method: :put }) do |form| %>
   <%= error_messages_for @user %>
   <div class="password_field">
-    <%= form.label :password, "Password", :class => 'form__label' %>
-    <%= form.password_field :password, autocomplete: 'new-password', class: 'form__input' %>
+    <%= form.label :password, t("activerecord.attributes.user.password"), :class => "form__label" %>
+    <%= form.password_field :password, autocomplete: "new-password", class: "form__input" %>
   </div>
   <div class="form__checkbox">
-    <%= form.check_box :reset_api_key, { :class => 'form__checkbox__input' } , 'true', 'false' %>
-    <%= form.label :reset_api_key, t('settings.edit.api_access.reset'), :class => 'form__checkbox__label' %>
+    <%= form.check_box :reset_api_key, { :class => "form__checkbox__input" } , "true", "false" %>
+    <%= form.label :reset_api_key, t("settings.edit.api_access.reset"), :class => "form__checkbox__label" %>
   </div>
   <div class="form__checkbox">
-    <%= form.check_box :reset_api_keys, { :class => 'form__checkbox__input' } , 'true', 'false' %>
-    <%= form.label :reset_api_keys, t('settings.edit.api_access.reset_all'), :class => 'form__checkbox__label' %>
+    <%= form.check_box :reset_api_keys, { :class => "form__checkbox__input" } , "true", "false" %>
+    <%= form.label :reset_api_keys, t("settings.edit.api_access.reset_all"), :class => "form__checkbox__label" %>
   </div>
 
   <div class="form_bottom">
-    <%= form.submit t('.submit'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= form.submit t(".submit"), :data => { :disable_with => t("form_disable_with") }, :class => "form__submit" %>
   </div>
 <% end %>
