@@ -88,7 +88,7 @@ gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 
 # Assets
 gem "propshaft", "~> 1.1.0"
-gem "importmap-rails", "~> 2.0"
+gem "importmap-rails", "~> 2.1"
 gem "stimulus-rails", "~> 1.3" # this adds stimulus-loading.js so it must be available at runtime
 gem "local_time", "~> 3.0"
 gem "better_html", "~> 2.1"
