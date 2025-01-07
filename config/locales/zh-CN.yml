@@ -720,11 +720,11 @@ zh-CN:
     gem_members:
       authors_header: 作者
       self_no_mfa_warning_html: 请考虑 <a href="/settings/edit">启用多因素身份验证（MFA）</a> 来保障您的帐户安全。
-      not_using_mfa_warning_show: "* 一些所有者当前还没有使用多因素验证（MFA）。请点击查看完整列表。"
+      not_using_mfa_warning_show: "* 某些所有者当前还没有启用多因素验证（MFA）。请点击查看完整列表。"
       not_using_mfa_warning_hide: "* 以下所有者还未使用多因素验证（MFA）。点击隐藏。"
       owners_header: 所有者
       pushed_by: 推送者
-      using_mfa_info: "* 所有所有者都已使用多因素验证（MFA）。"
+      using_mfa_info: "* 全部所有者都已启用多因素验证（MFA）。"
       yanked_by: 撤回
       sha_256_checksum: SHA 256 校验和
       signature_period: 签名有效期
@@ -819,7 +819,7 @@ zh-CN:
       subtitle_owner_html: 请新的维护者加入 %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（了解更多）</a>
       subtitle_user_html: 申请对 %{gem} 的所有权 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">（了解更多）</a>
       ownership_calls: 所有权调用
-      no_ownership_calls: 没有对 %{gem} 的所有权调用。该 Gem 的所有者并没有在寻求新的维护者。
+      no_ownership_calls: 没有对 %{gem} 的所有权调用。该 Gem 并没有在寻求新的维护者。
   ownership_calls:
     update:
       success_notice: 对 %{gem} 的所有权调用已关闭。
