@@ -1336,7 +1336,7 @@ CHECKSUMS
   zlib (3.1.1) sha256=f61bb03139bbe256c36ba99ef9fece1fb223e9034ed9e5fa3ddb1588d99abc71
 
 RUBY VERSION
-   ruby 3.3.6p108
+   ruby 3.4.1p0
 
 BUNDLED WITH
-   2.6.1
+   2.6.2

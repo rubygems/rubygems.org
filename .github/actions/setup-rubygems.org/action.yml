@@ -23,7 +23,7 @@ runs:
       if: github.secret_source != 'None' && inputs.install-avo-pro == 'true'
       run: |
         printf "BUNDLE_WITH=avo\nRAILS_GROUPS=avo\n" >> $GITHUB_ENV
-    - uses: ruby/setup-ruby@217c988b8c2bf2bacb2d5c78a7e7b18f8c34daed # v1.200.0
+    - uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4 # v1.207.0
       with:
         ruby-version: ${{ inputs.ruby-version }}
         bundler-cache: true
