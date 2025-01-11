@@ -92,7 +92,6 @@ Rails/I18nLocaleTexts:
   Exclude:
     - 'app/mailers/mailer.rb'
     - 'app/mailers/owners_mailer.rb'
-    - 'app/models/ownership_call.rb'
     - 'app/models/user.rb'
 
 # Offense count: 5
@@ -107,8 +106,6 @@ Rails/RedundantPresenceValidationOnBelongsTo:
   Exclude:
     - 'app/models/api_key_rubygem_scope.rb'
     - 'app/models/deletion.rb'
-    - 'app/models/ownership_call.rb'
-    - 'app/models/ownership_request.rb'
     - 'app/models/subscription.rb'
     - 'app/models/version.rb'
 

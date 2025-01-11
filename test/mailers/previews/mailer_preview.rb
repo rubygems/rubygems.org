@@ -118,22 +118,6 @@ class MailerPreview < ActionMailer::Preview
     Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.scopes.to_sentence, "https://example.com")
   end
 
-  def new_ownership_requests
-    gem = Rubygem.order(updated_at: :desc).last
-    user = gem.owners.last
-    OwnersMailer.new_ownership_requests(gem.id, user.id)
-  end
-
-  def ownership_request_closed
-    ownership_request = OwnershipRequest.last
-    OwnersMailer.ownership_request_closed(ownership_request.id)
-  end
-
-  def ownership_request_approved
-    ownership_request = OwnershipRequest.last
-    OwnersMailer.ownership_request_approved(ownership_request.id)
-  end
-
   def webhook_deleted_global
     user = User.last
     url = "https://example.com/webhook"

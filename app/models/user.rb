@@ -50,12 +50,6 @@ class User < ApplicationRecord
   has_many :unconfirmed_ownerships, -> { unconfirmed }, dependent: :destroy, inverse_of: :user, class_name: "Ownership"
   has_many :api_keys, dependent: :destroy, inverse_of: :owner, as: :owner
 
-  has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :user
-  has_many :closed_ownership_calls, -> { closed }, dependent: :destroy, inverse_of: :user, class_name: "OwnershipCall"
-  has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :user
-  has_many :closed_ownership_requests, -> { closed }, dependent: :destroy, inverse_of: :user, class_name: "OwnershipRequest"
-  has_many :approved_ownership_requests, -> { approved }, dependent: :destroy, inverse_of: :user, class_name: "OwnershipRequest"
-
   has_many :audits, as: :auditable, dependent: :nullify
   has_many :rubygem_events, through: :rubygems, source: :events
 
@@ -141,10 +135,6 @@ class User < ApplicationRecord
 
   def self.ownership_notifiable_owners
     where(ownerships: { owner_notifier: true })
-  end
-
-  def self.ownership_request_notifiable_owners
-    where(ownerships: { ownership_request_notifier: true })
   end
 
   def self.normalize_email(email)
@@ -336,8 +326,6 @@ class User < ApplicationRecord
 
   def destroy_associations_for_discard
     ownerships.unscope(where: :confirmed_at).destroy_all
-    ownership_requests.update_all(status: :closed)
-    ownership_calls.unscope(where: :status).destroy_all
     oidc_pending_trusted_publishers.destroy_all
     subscriptions.destroy_all
     web_hooks.destroy_all

@@ -48,11 +48,6 @@ class ProfilesController < ApplicationController
     redirect_to root_path, notice: t(".request_queued")
   end
 
-  def adoptions
-    @ownership_calls = current_user.ownership_calls.includes(:user, rubygem: %i[latest_version gem_download])
-    @ownership_requests = current_user.ownership_requests.includes(:rubygem)
-  end
-
   def security_events
     @security_events = current_user.events.order(id: :desc).page(params[:page]).per(50)
     render Profiles::SecurityEventsView.new(security_events: @security_events)
