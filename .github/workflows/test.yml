@@ -26,10 +26,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.6.1"
+            version: "3.6.2"
           - name: latest
             version: latest
-        ruby_version: ["3.3.6"]
+        ruby_version: ["3.4.1"]
         tests:
           - name: general
             command: test
@@ -37,7 +37,7 @@ jobs:
             command: test:system
         include:
           - rubygems: { name: latest, version: latest }
-            ruby_version: "3.3.6"
+            ruby_version: "3.4.1"
             tests: { name: "avo without pro", command: "test test/*/avo" }
     name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-22.04
