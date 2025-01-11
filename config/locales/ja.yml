@@ -473,6 +473,7 @@ ja:
       success: 数分でEメールが届きます。メールにはパスワードを変更する手順が記載されています。
       failure_on_missing_email: Eメールは空にできません。
     update:
+      success:
       failure: パスワードを変更できませんでした。もう一度お試しください。
   multifactor_auths:
     session_expired: ログインページのセッションが期限切れになりました。

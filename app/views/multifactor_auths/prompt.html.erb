@@ -19,7 +19,7 @@
         <div class="text_field">
           <% if @user.totp_enabled? %>
             <%= label_tag :otp, t(".otp_or_recovery"), class: 'form__label' %>
-            <%= text_field_tag :otp, '', class: 'form__input', autofocus: true, autocomplete: :off %>
+            <%= text_field_tag :otp, '', class: 'form__input', autofocus: true, autocomplete: "one-time-code" %>
           <% elsif @user.webauthn_only_with_recovery? %>
             <%= text_field_tag :otp,
               '',

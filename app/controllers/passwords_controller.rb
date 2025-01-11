@@ -38,10 +38,11 @@ class PasswordsController < ApplicationController
       @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
       @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
       delete_password_reset_session
+      flash[:notice] = t(".success")
       redirect_to signed_in? ? dashboard_path : sign_in_path
     else
       flash.now[:alert] = t(".failure")
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -65,6 +66,7 @@ class PasswordsController < ApplicationController
 
   def validate_confirmation_token
     confirmation_token = params.permit(:token).fetch(:token, "").to_s
+    return login_failure(t("passwords.edit.token_failure")) if confirmation_token.blank?
     @user = User.find_by(confirmation_token:)
     return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
     sign_out if signed_in? && @user != current_user
@@ -82,7 +84,7 @@ class PasswordsController < ApplicationController
 
   def validate_password_reset_session
     return login_failure(t("passwords.edit.token_failure")) if session[:password_reset_verified].nil?
-    return login_failure(t("verification_expired")) if session[:password_reset_verified] < Time.current
+    return login_failure(t("verification_expired")) if Time.current.after?(session[:password_reset_verified])
     @user = User.find_by(id: session[:password_reset_verified_user])
     login_failure(t("verification_expired")) unless @user
   end
@@ -98,8 +100,7 @@ class PasswordsController < ApplicationController
   end
 
   def mfa_failure(message)
-    flash.now.alert = message
-    render template: "multifactor_auths/prompt", status: :unauthorized
+    prompt_mfa(alert: message, status: :unauthorized)
   end
 
   def login_failure(alert)
