@@ -29,7 +29,8 @@ class Attestation < ApplicationRecord
     commit = extensions["1.3.6.1.4.1.57264.1.3"]
     ref  =  extensions["1.3.6.1.4.1.57264.1.14"]
     san  =  extensions["subjectAltName"]
-    build_file_url = extensions["1.3.6.1.4.1.57264.1.21"]
+    build_summary_url = extensions["1.3.6.1.4.1.57264.1.21"]
+    build_file_url = build_summary_url.sub(%r{attempts/\d+\z}, "workflow")
 
     case issuer
     when "https://token.actions.githubusercontent.com"
@@ -38,9 +39,9 @@ class Attestation < ApplicationRecord
       {
         ci_platform: "GitHub Actions",
         source_commit_string: "#{repo}@#{commit[0, 7]}",
-        source_commit_url: "https://github.com/#{repo}/tree/#{commit}",
+        source_commit_url: "https://github.com/#{repo}/commit/#{commit}",
         build_file_string:, build_file_url:,
-        build_summary_url: "https://github.com/#{repo}/actions/#{build_file_string.delete_prefix('.github/')}"
+        build_summary_url:
       }
     else
       raise "Unhandled issuer: #{issuer.inspect}"
