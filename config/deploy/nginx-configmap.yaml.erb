@@ -144,7 +144,7 @@ data:
 
     }
   logging: |
-    log_format json '{'
+    log_format json escape=json '{'
       '"host": "${HOSTNAME}", '
       '"@timestamp": "$time_iso8601", '
       '"service": "rubygems.org", '
@@ -161,6 +161,7 @@ data:
         '"args": "$args", '
         '"dest_host": "$http_host", '
         '"content_type": "$sent_http_content_type", '
+        '"location": "$sent_http_location", '
         '"protocol": "$server_protocol", '
         '"referer": "$http_referer", '
         '"useragent": "$http_user_agent", '
