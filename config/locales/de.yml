@@ -244,7 +244,7 @@ de:
   home:
     index:
       downloads_counting_html: Gezählte Downloads
-      find_blurb: Finde, installiere und veröffentliche RubyGems.
+      find_blurb_html: Finde, installiere und veröffentliche RubyGems.
       learn:
         install_rubygems: Installiere RubyGems
   layouts:

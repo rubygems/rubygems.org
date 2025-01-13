@@ -230,7 +230,7 @@ en:
   home:
     index:
       downloads_counting_html: downloads &amp; counting
-      find_blurb: Find, install, and publish RubyGems.
+      find_blurb_html: Find, install, and publish RubyGems.
       learn:
         install_rubygems: Install RubyGems
   layouts:

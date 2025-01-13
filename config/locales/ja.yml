@@ -224,7 +224,7 @@ ja:
   home:
     index:
       downloads_counting_html: ダウンロード数
-      find_blurb: RubyGemを発見、インストール、公開しよう。
+      find_blurb_html: RubyGemを発見、<br>インストール、公開しよう。
       learn:
         install_rubygems: RubyGemsをインストール
   layouts:

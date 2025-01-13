@@ -225,7 +225,7 @@ zh-CN:
   home:
     index:
       downloads_counting_html: 总下载次数
-      find_blurb: 查找、安装以及发布 Gem
+      find_blurb_html: 查找、安装以及发布 Gem
       learn:
         install_rubygems: 安装 RubyGems
   layouts:
