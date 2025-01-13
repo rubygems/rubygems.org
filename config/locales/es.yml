@@ -243,7 +243,7 @@ es:
   home:
     index:
       downloads_counting_html: descargas y contando
-      find_blurb: Encuentra, instala, y publica RubyGems.
+      find_blurb_html: Encuentra, instala, y publica RubyGems.
       learn:
         install_rubygems: Instala RubyGems
   layouts:

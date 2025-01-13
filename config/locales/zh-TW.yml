@@ -224,7 +224,7 @@ zh-TW:
   home:
     index:
       downloads_counting_html: 總下載次數
-      find_blurb: 搜尋、安裝以及發佈 RubyGems
+      find_blurb_html: 搜尋、安裝以及發佈 RubyGems
       learn:
         install_rubygems: 安裝 RubyGems
   layouts:

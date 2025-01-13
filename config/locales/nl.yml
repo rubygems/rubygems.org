@@ -226,7 +226,7 @@ nl:
   home:
     index:
       downloads_counting_html:
-      find_blurb: Vind je gems makkelijker en publiceer ze sneller.
+      find_blurb_html: Vind je gems makkelijker en publiceer ze sneller.
       learn:
         install_rubygems: Installeer RubyGems
   layouts:
