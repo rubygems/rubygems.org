@@ -10,7 +10,7 @@ class CreateDownloads < ActiveRecord::Migration[7.1]
       chunk_time_interval: '1 day',
       compress_segmentby: 'gem_name, gem_version',
       compress_orderby: 'created_at DESC',
-      compression_interval: '7 days'
+      compress_after: '7 days'
     }
 
     create_table(:downloads, id: false, hypertable: hypertable_options) do |t|

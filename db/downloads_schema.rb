@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_23_181725) do
     t.index ["key", "directory"], name: "index_log_downloads_on_key_and_directory", unique: true
   end
 
-  create_hypertable "downloads", time_column: "created_at", chunk_time_interval: "1 day", compress_segmentby: "gem_name, gem_version", compress_orderby: "created_at DESC", compression_interval: "P7D"
+  create_hypertable "downloads", time_column: "created_at", chunk_time_interval: "1 day", compress_segmentby: "gem_name, gem_version", compress_orderby: "created_at DESC", compress_after: "P7D"
   create_continuous_aggregate("total_downloads_per_minute", <<-SQL, refresh_policies: { start_offset: "INTERVAL 'PT10M'", end_offset: "INTERVAL 'PT1M'", schedule_interval: "INTERVAL '60'"}, materialized_only: true, finalized: true)
     SELECT time_bucket('PT1M'::interval, created_at) AS created_at,
       count(*) AS downloads
