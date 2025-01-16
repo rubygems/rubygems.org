@@ -10,6 +10,10 @@ data:
       worker_connections  5120;
     }
     http {
+      # Ensure buffer is large enough to contend with a redirect to a URL that is at the request line length limit
+      proxy_buffers   4 16k;
+      proxy_buffer_size 16k;
+
       server {
           listen       80;
           server_name  _;
