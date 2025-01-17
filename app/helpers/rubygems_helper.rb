@@ -156,9 +156,16 @@ module RubygemsHelper
     rubygem.versions_count > 5 || rubygem.yanked_versions?
   end
 
+  def latest_release_date(rubygem)
+    latest = latest_version(rubygem)
+    return version_date_tag(latest) if latest.present?
+
+    tag.small("- #{nice_date_for(rubygem.updated)}", class: "gem__version__date") if rubygem.respond_to?(:updated) && rubygem.updated.present?
+  end
+
   def latest_version_number(rubygem)
     return rubygem.version if rubygem.respond_to?(:version)
-    (rubygem.latest_version || rubygem.versions.last)&.number
+    latest_version(rubygem)&.number
   end
 
   def link_to_github(rubygem)
@@ -212,5 +219,11 @@ module RubygemsHelper
         clipboard_success_content_value: "✔"
       }
     )
+  end
+
+  private
+
+  def latest_version(rubygem)
+    (rubygem.latest_version || rubygem.versions.last)
   end
 end
