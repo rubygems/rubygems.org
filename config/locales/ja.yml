@@ -21,11 +21,11 @@ ja:
   locale_name: 日本語
   none: なし
   not_found: 見つかりませんでした
-  forbidden:
-  api_gem_not_found:
+  forbidden: 禁止されています
+  api_gem_not_found: このgemは見つかりませんでした
   api_key_forbidden: APIキーにアクセス権がありません
-  api_key_soft_deleted:
-  api_key_insufficient_scope:
+  api_key_soft_deleted: 正しくないAPIキーは使えません。削除して新規作成してください。
+  api_key_insufficient_scope: このAPIキーはこのgemに対して指定された動作を実行できません。
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
   please_sign_in: サインインしてお進みください。
   otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
@@ -69,13 +69,13 @@ ja:
         handle: ユーザー名
         password: パスワード
       ownership/role:
-        owner:
-        maintainer:
+        owner: 所有者
+        maintainer: メンテナ
       membership/role:
-        owner:
-        admin:
-        maintainer:
-        outside_contributor:
+        owner: 所有者
+        admin: 管理者
+        maintainer: メンテナ
+        outside_contributor: 外部の貢献者
       api_key:
         oidc_api_key_role: OIDC APIキーのロール
       oidc/id_token:
@@ -99,7 +99,7 @@ ja:
         organization:
           attributes:
             handle:
-              invalid:
+              invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
         ownership:
           attributes:
             user_id:
@@ -108,9 +108,9 @@ ja:
         user:
           attributes:
             handle:
-              invalid:
+              invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
             password:
-              bcrypt_length:
+              bcrypt_length: は長すぎます（最大72バイト）
         version:
           attributes:
             gem_full_name:
@@ -181,7 +181,7 @@ ja:
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA
       expiration: 期限
-      update_owner:
+      update_owner: 所有者を更新
     new:
       new_api_key: 新しいAPIキー
     reset:
@@ -205,7 +205,7 @@ ja:
       my_subscriptions: 購読
       no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}ガイドをご覧ください。
       no_subscriptions_html: まだgemを購読していません。%{gem_link}から何か購読してみてください。
-      organizations:
+      organizations: 組織
       title: ダッシュボード
   dependencies:
     show:
@@ -272,8 +272,8 @@ ja:
     settings: 設定
     org_name: 組織：%{name}
     subscriptions: 購読
-    gems:
-    members:
+    gems: gem
+    members: メンバー
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -357,11 +357,12 @@ ja:
       body_html: <b>あなた</b>は<b>%{remover}</b>によって%{host}上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者から削除されました。
     owner_updated:
-      subject:
-      title:
-      subtitle:
-      body_html:
-      body_text:
+      subject: "%{gem} gemのロールが更新されました"
+      title: 所有者のロールが更新されました
+      subtitle: こんにちは、%{user_handle}！
+      body_html: <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gemのロールが%{role}に更新されました。
+      body_text: "%{gem} gemのロールが%{role}に更新されました。"
     web_hook_deleted:
       title: webhookが削除されました
       subject: "%{host}のwebhookが削除されました"
@@ -391,7 +392,7 @@ ja:
     gem_trusted_publisher_added:
       title: 信頼できる発行元が追加されました
     admin_manual:
-      title:
+      title: RubyGems.orgの管理者からのお知らせ
   news:
     show:
       title: 新しいリリース - 全てのgem
@@ -401,14 +402,14 @@ ja:
       title: 新しいリリース - 人気のgem
   organizations:
     index:
-      title:
+      title: 組織
     show:
-      organization:
-      gems:
-      history:
-      members:
-      no_history:
-      no_gems:
+      organization: 組織
+      gems: gem
+      history: 履歴
+      members: メンバー
+      no_history: まだ履歴がありません
+      no_gems: まだgemがありません
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"
@@ -454,7 +455,7 @@ ja:
       success: 数分でEメールが届きます。メールにはパスワードを変更する手順が記載されています。
       failure_on_missing_email: Eメールは空にできません。
     update:
-      success:
+      success: パスワードが変更されました。
       failure: パスワードを変更できませんでした。もう一度お試しください。
   multifactor_auths:
     session_expired: ログインページのセッションが期限切れになりました。
@@ -468,16 +469,26 @@ ja:
     setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">詳細はこちら</a>！"
     api:
-      mfa_required:
-      mfa_required_not_yet_enabled:
-      mfa_required_weak_level_enabled:
-      mfa_recommended_not_yet_enabled:
-      mfa_recommended_weak_level_enabled:
+      mfa_required: このgemにはMFAの有効化が必要です。まだMFAを有効にしていません。
+      mfa_required_not_yet_enabled: |
+        ［エラー］アカウントとgemの保護のため、 https://rubygems.org/totp/new で多要素認証の設定が必要です。
+
+        詳しくはブログ記事をお読みください (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html)。
+      mfa_required_weak_level_enabled: |
+        ［エラー］アカウントとgemの保護のため、 https://rubygems.org/settings/edit でMFAの水準を「UIとgemのサインイン」または「UIとAPI」に変える必要があります。
+
+        詳しくはブログ記事をお読みください (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html)。
+      mfa_recommended_not_yet_enabled: |
+        ［警告］アカウントとgemの保護のため、 https://rubygems.org/totp/new で多要素認証を設定することを推奨します。
+        今後アカウントにはMFAの有効化が必須になります。
+      mfa_recommended_weak_level_enabled: |
+        ［警告］アカウントとgemの保護のため、 https://rubygems.org/settings/edit で多要素認証の水準を「UIとgemのサインイン」または「UIとAPI」に変えることをお勧めします。
+        将来的に、アカウントはこれらの水準の何れかでMFAが有効にしていることが必要となります。
     recovery:
       continue: 続ける
       title: 復旧コード
       saved: 復旧コードを保存したことを確認しました。
-      confirm_dialog:
+      confirm_dialog: 復旧コードをコピーせずにこのページを離れますか？
       note_html: これらの復旧コードを<strong class='recovery__bold'>コピー及び保存</strong>してください。認証機器を紛失した場合にこれらのコードを使ってログインしMFAをリセットできます。各コードは1回使えます。
       already_generated: 既に復旧コードを保存したはずです。
     update:
@@ -542,11 +553,11 @@ ja:
       close_browser: このブラウザを閉じて再試行してください。
   organization_onboardings:
     confirm:
-      success:
+      success: 組織の立ち上げに成功しました！
   owners:
     edit:
-      role:
-      title:
+      role: ロール
+      title: 所有者を編集
     confirm:
       confirmed_email: "%{gem} gemの所有者として追加されました"
       token_expired: 確認トークンが期限切れです。gemのページからトークンを再送してみてください。
@@ -558,8 +569,8 @@ ja:
       confirmed_at: 確定日時
       added_by: 追加者
       action: 操作
-      role:
-      role_field:
+      role: ロール
+      role_field: ロール
       email_field: Eメール / ハンドル名
       submit_button: 所有者を追加
       info: 所有者を追加または削除する
@@ -571,8 +582,8 @@ ja:
     create:
       success_notice: "%{handle}が未確定の所有者として追加されました。当該ユーザーがEメールに送られた確定メールでクリックした後に所有権アクセスが有効になります。"
     update:
-      update_current_user_role:
-      success_notice:
+      update_current_user_role: 自分自身のロールは更新できません
+      success_notice: "%{handle}が正常に更新されました。"
     destroy:
       removed_notice: "%{owner_name}は所有者から正常に削除されました"
       failed_notice: gemの唯一の所有者は削除できません。
@@ -700,7 +711,7 @@ ja:
       sha_256_checksum: SHA 256チェックサム
       signature_period: シグネチャの有効期限
       expired: 期限切れ
-      provenance_header:
+      provenance_header: 来歴
     version_navigation:
       previous_version: "←前のバージョン"
       next_version: 次のバージョン→
@@ -722,11 +733,11 @@ ja:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。このgemのヤンクされたバージョンはまだ存在する可能性があります。
       reserved_namespace_html:
         one: このgemは以前存在していましたが、所有者が削除しました。RubyGems.orgチームはこの名前を1日間だけ予約しています。期間終了後、誰でもgem
-          pushによりこの名前を要求できます。<br/>もしあなたが以前の所有者ならば、gem ownerコマンドを用いて所有者を変更できる他、新しいバージョンをgem
-          pushを用いて公開できます。
+          pushによりこの名前を要求できます。<br/><br/>もしあなたが以前の所有者ならば、gem ownerコマンドを用いてこのgemの所有者を変更したり、gem
+          pushコマンドを用いて新しいバージョンを作成できます。
         other: このgemは以前存在していましたが、所有者が削除しました。RubyGems.orgチームはこの名前を%{count}日間予約しています。期間終了後、誰でもgem
-          pushによりこの名前を要求できます。<br/>もしあなたがこのgemの以前の所有者ならば、gem ownerコマンドを用いて所有者を変更できる他、新しいバージョンをgem
-          pushを用いて公開できます。
+          pushによりこの名前を要求できます。<br/><br/>もしあなたがこのgemの以前の所有者ならば、gem ownerコマンドを用いてこのgemの所有者を変更したり、gem
+          pushコマンドを用いて新しいバージョンを作成できます。
     security_events:
       title: セキュリティ事象
       description_html: このページには%{gem}に起こったセキュリティ事象が表示されます。何か疑わしい活動が見られたときは、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
