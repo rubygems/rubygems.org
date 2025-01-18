@@ -69,8 +69,8 @@ ja:
         handle: ユーザー名
         password: パスワード
       ownership/role:
-        owner:
-        maintainer:
+        owner: 所有者
+        maintainer: メンテナ
       membership/role:
         owner:
         admin:
@@ -181,7 +181,7 @@ ja:
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA
       expiration: 期限
-      update_owner:
+      update_owner: 所有者を更新
     new:
       new_api_key: 新しいAPIキー
     reset:
@@ -357,11 +357,12 @@ ja:
       body_html: <b>あなた</b>は<b>%{remover}</b>によって%{host}上の<strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemの所有者から削除されました。
     owner_updated:
-      subject:
-      title:
-      subtitle:
-      body_html:
-      body_text:
+      subject: "%{gem} gemのロールが更新されました"
+      title: 所有者のロールが更新されました
+      subtitle: こんにちは、%{user_handle}！
+      body_html: <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gemのロールが%{role}に更新されました。
+      body_text: "%{gem} gemのロールが%{role}に更新されました。"
     web_hook_deleted:
       title: webhookが削除されました
       subject: "%{host}のwebhookが削除されました"
@@ -568,8 +569,8 @@ ja:
       confirmed_at: 確定日時
       added_by: 追加者
       action: 操作
-      role:
-      role_field:
+      role: ロール
+      role_field: ロール
       email_field: Eメール / ハンドル名
       submit_button: 所有者を追加
       info: 所有者を追加または削除する
@@ -581,8 +582,8 @@ ja:
     create:
       success_notice: "%{handle}が未確定の所有者として追加されました。当該ユーザーがEメールに送られた確定メールでクリックした後に所有権アクセスが有効になります。"
     update:
-      update_current_user_role:
-      success_notice:
+      update_current_user_role: 自分自身のロールは更新できません
+      success_notice: "%{handle}が正常に更新されました。"
     destroy:
       removed_notice: "%{owner_name}は所有者から正常に削除されました"
       failed_notice: gemの唯一の所有者は削除できません。
