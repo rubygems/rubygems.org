@@ -14,44 +14,44 @@
         <p>
           Effective today, multi-factor authentication (MFA) is required on your RubyGems account.
         </p>
-        <br/>
+        <br>
 
         <% if @user.mfa_disabled? %>
           <p>
             A number of operations are now restricted until you enable MFA.
             These restrictions include editing profile pages on the web, signing in on the command line, and performing <a href="https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations" target="_blank">privileged actions</a> (ie. push, yank, add/remove owners).
           </p>
-          <br/>
+          <br>
 
-          <p> 
+          <p>
             To re-enable these operations for your account, <b>please enable multi-factor authentication 🙏.</b>
           </p>
-          <br/>
+          <br>
         <% elsif @user.mfa_ui_only? %>
           <p>
             Your current MFA level is no longer recommended. In fact, it's deprecated.
             <b>You need to upgrade your RubyGems account to a stronger MFA level 🙏.</b>
           </p>
-          <br/>
+          <br>
 
           <p>
             We recommend setting the
             <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels" target="_blank">MFA level</a>
             to <b><i>UI and API</i></b>. However, <b><i>UI and gem signin</i></b> is acceptable too.
           </p>
-          <br/>
+          <br>
 
           <p>
             A number of operations are restricted until you upgrade your MFA setting.
             These restrictions include editing profile pages on the web, signing in on the command line, and performing <a href="https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations" target="_blank">privileged actions</a> (ie. push, yank, add/remove owners).
           </p>
-          <br/>
+          <br>
         <% end %>
 
         <p>
           For more information, check out our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html" target="_blank">announcement</a>.
         </p>
-        <br/>
+        <br>
 
         <p>Thank you for making the RubyGems ecosystem more secure.</p>
       </div>

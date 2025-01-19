@@ -14,39 +14,39 @@
         <p>
           Recently, we've <a href="https://blog.rubygems.org/2022/06/13/making-packages-more-secure.html" target="_blank">announced</a> our security-focused ambitions to the community.
         </p>
-        <br/>
+        <br>
 
         <p>
           Next week, on August 15, 2022, we will begin requiring maintainers like yourself, who are owners of packages with more than 180 million downloads, to have multi-factor authentication (MFA) enabled.
         </p>
-        <br/>
+        <br>
 
         <p>
           If you don't have MFA enabled by this date, a number of operations will be restricted.
           These restrictions include editing profile pages on the web, signing in on the command line, and performing <a href="https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations" target="_blank">privileged actions</a> (ie. push, yank, add/remove owners).
         </p>
-        <br/>
+        <br>
 
         <% if @user.mfa_disabled? %>
-          <p> 
+          <p>
             To avoid any disruptions with your RubyGems account, <b>please enable multi-factor authentication 🙏.</b>
           </p>
-          <br/>
+          <br>
         <% elsif @user.mfa_ui_only? %>
           <p>
             We're notifying you of this policy because you have MFA enabled only for the UI.
             <b>Please upgrade your RubyGems account to a stronger MFA level 🙏.</b>
           </p>
-          <br/>
+          <br>
 
           <p>
             We recommend setting the
             <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels" target="_blank">MFA level</a>
             to <b><i>UI and API</i></b>. However, <b><i>UI and gem signin</i></b> is acceptable too.
           </p>
-          <br />
+          <br>
         <% end %>
-        <br/>
+        <br>
 
         <p>Thank you for making the RubyGems ecosystem more secure.</p>
       </div>

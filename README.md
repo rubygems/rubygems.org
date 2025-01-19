@@ -9,7 +9,7 @@ The Ruby community's gem host.
 
 ## Support
 
-<a href="https://rubycentral.org/"><img src="doc/ruby_central_logo.png" height=110></a><br/>
+<a href="https://rubycentral.org/"><img src="doc/ruby_central_logo.png" height=110></a><br>
 
 [RubyGems.org](https://rubygems.org) is managed by [Ruby Central](https://rubycentral.org), a non-profit organization that supports the Ruby community through projects like this one, as well as [RubyConf](https://rubyconf.org), [RailsConf](https://railsconf.org), and [Bundler](https://bundler.io). You can support Ruby Central by attending or [sponsoring](sponsors@rubycentral.org) a conference, or by [joining as a supporting member](https://rubycentral.org/#/portal/signup).
 

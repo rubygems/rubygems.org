@@ -10,7 +10,7 @@ zh-TW:
   feed_subscribed: RubyGems.org | 訂閱 Gems
   footer_about_html: RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓您能立即地<a href="%{publish_docs}">發佈</a>及<a
     href="%{install_docs}">安裝</a>您的 Gem 套件，並且利用 <a href="%{api_docs}">API</a> 查詢及操作<a
-    href="%{gem_list}">可用 Gem</a> 的詳細資訊。<br />現在就<a href="%{contributing_docs}">成為貢獻者</a>，貢獻一己之力來改善本站。
+    href="%{gem_list}">可用 Gem</a> 的詳細資訊。<br>現在就<a href="%{contributing_docs}">成為貢獻者</a>，貢獻一己之力來改善本站。
   footer_sponsors_html: RubyGems.org 透過與廣大的 Ruby 社群合作而誕生。 <a href="https://www.fastly.com/">Fastly</a>
     提供頻寬和 CDN 支援， <a href="https://www.rubycentral.org/">Ruby Central</a> 支付設備費用，並為進行中的開發和營運工作提供資金。
     <a href="%{sponsors_page}">進一步了解我們的贊助商和它們是如何合作的</a>。

@@ -11,7 +11,7 @@
 
   <div class="text_field">
     <%= label_tag :role, t(".role"), class: 'form__label' %>
-    <br/>
+    <br>
     <%= select_tag :role, options_for_select(@roles, @ownership.role), class: "form__input form__select"  %>
   </div>
 
