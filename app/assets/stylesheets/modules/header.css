@@ -131,8 +131,8 @@
       display: inline-block;
       margin-right: 16px;
       margin-left: 16px;
-      padding: 25px 0 26px 0;
       border-bottom: 5px solid transparent;
+      line-height: 70px;
       transition-property: box-shadow; }
       .header__nav-link:last-child {
         margin-right: -16px; }
