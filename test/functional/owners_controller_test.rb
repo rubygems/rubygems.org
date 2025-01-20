@@ -393,7 +393,7 @@ class OwnersControllerTest < ActionController::TestCase
       should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
 
       should "set success notice flash" do
-        assert_equal "#{@maintainer.name} was succesfully updated.", flash[:notice]
+        assert_equal "#{@maintainer.name} was successfully updated.", flash[:notice]
       end
 
       should "downgrade the ownership to a maintainer role" do
