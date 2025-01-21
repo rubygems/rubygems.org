@@ -43,6 +43,7 @@ zh-CN:
   total_downloads: 下载总量
   try_again: 出了点儿问题，请重试。
   update: 更新
+  remove:
   view_all: 查看全部
   advanced_search: 高级搜索
   authenticate: 身份认证
@@ -244,6 +245,7 @@ zh-CN:
         hosted_by: 托管
         monitored_by: 监控
         optimized_by: 优化
+        releases:
         resolved_with: 解析
         security: 安全
         source_code: 源代码

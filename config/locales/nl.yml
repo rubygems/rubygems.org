@@ -41,6 +41,7 @@ nl:
   total_downloads:
   try_again: Er is iets fout gegaan, probeer het opnieuw.
   update: Wijzig
+  remove:
   view_all: Bekijk alles
   advanced_search: Uitgebreid zoeken
   authenticate:
@@ -245,6 +246,7 @@ nl:
         hosted_by: Hosting
         monitored_by: Monitoring
         optimized_by: Optimalisatie
+        releases:
         resolved_with: DNS
         security: Security
         source_code: Code

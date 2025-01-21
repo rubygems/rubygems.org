@@ -42,6 +42,7 @@ ja:
   total_downloads: 累計ダウンロード数
   try_again: エラーが発生しました。再試行してください。
   update: 更新
+  remove: 削除
   view_all: 全て表示
   advanced_search: 高度な検索
   authenticate: 認証
@@ -243,6 +244,7 @@ ja:
         hosted_by: ホスト
         monitored_by: 監視
         optimized_by: 最適化
+        releases: リリース
         resolved_with: DNS
         security: セキュリティ
         source_code: コード
@@ -700,13 +702,13 @@ ja:
       header: "%{title}依存関係"
     gem_members:
       authors_header: 作者
-      self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証 (MFA)
+      self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証（MFA）
         の有効化</a>をご検討ください。
-      not_using_mfa_warning_show: 多要素認証 (MFA) を使っていない所有者がいます。完全な一覧を見るにはクリックしてください。
-      not_using_mfa_warning_hide: "* 以下の所有者は多要素認証 (MFA) を使っていません。クリックして隠します。"
+      not_using_mfa_warning_show: 多要素認証（MFA）を使っていない所有者がいます。完全な一覧を見るにはクリックしてください。
+      not_using_mfa_warning_hide: "* 以下の所有者は多要素認証（MFA）を使っていません。クリックして隠します。"
       owners_header: 所有者
       pushed_by: プッシュ者
-      using_mfa_info: "* 全ての所有者が多要素認証 (MFA) を使っています。"
+      using_mfa_info: "* 全ての所有者が多要素認証（MFA）を使っています。"
       yanked_by: ヤンク者
       sha_256_checksum: SHA 256チェックサム
       signature_period: シグネチャの有効期限
@@ -888,7 +890,7 @@ ja:
         create: 作成
         description_html: |
           待機中の信頼できる発行元を使うと、gemの最初のバージョンをプッシュする前に信頼できる発行元を構成できます。
-           信頼できる発行元を設定する方法についてより詳しくは、<a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
+          信頼できる発行元を設定する方法についてより詳しくは、<a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
       destroy:
         success: 待機中の信頼できる発行元が削除されました
       create:
@@ -938,7 +940,7 @@ ja:
         version_yanked: バージョンがヤンクされました
         version_unyanked: バージョンのヤンクが取り消されました
         version_html: バージョン：%{version}
-        version_pushed_sha256_html: 'SHA256: %{sha256}'
+        version_pushed_sha256_html: SHA256：%{sha256}
         version_pushed_by_html: プッシュ者：%{pusher}
         version_yanked_by_html: ヤンク者：%{pusher}
       owner:
@@ -969,6 +971,6 @@ ja:
         api_key_deleted: APIキーが削除されました
         api_key_name: 名前：%{name}
         api_key_scopes: スコープ：%{scopes}
-        api_key_gem_html: 'gem: %{gem}'
-        api_key_mfa: 'MFA: %{mfa}'
+        api_key_gem_html: gem：%{gem}
+        api_key_mfa: MFA：%{mfa}
         not_required: 必要ではありません

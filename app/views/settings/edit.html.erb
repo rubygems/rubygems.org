@@ -71,7 +71,7 @@
 
 <div class="t-body">
   <h2><%= link_to t('oidc.pending_trusted_publishers.index.title'), profile_oidc_pending_trusted_publishers_path %></h2>
-  <span>Pending trusted publishers allow you to configure trusted publishing before you have pushed the first version of a gem. For more information about how to set up trusted publishing, see <a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/">the trusted publishing documentation</a>.</span>
+  <span><%= t("oidc.pending_trusted_publishers.index.description_html") %></span>
 </div>
 
 <% if @user.oidc_api_key_roles.any? %>
