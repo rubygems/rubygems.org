@@ -20,6 +20,6 @@ class Organizations::Onboarding::UsersController < Organizations::Onboarding::Ba
   helper_method :role_options
 
   def onboarding_user_params
-    params.expect(organization_onboarding: [invites_attributes: %i[id role]])
+    params.expect(organization_onboarding: [invites_attributes: [%i[id role]]])
   end
 end
