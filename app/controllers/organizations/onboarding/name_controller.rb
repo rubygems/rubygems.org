@@ -13,6 +13,6 @@ class Organizations::Onboarding::NameController < Organizations::Onboarding::Bas
   private
 
   def onboarding_name_params
-    params.require(:organization_onboarding).permit(:organization_name, :organization_handle)
+    params.expect(organization_onboarding: %i[organization_name organization_handle])
   end
 end
