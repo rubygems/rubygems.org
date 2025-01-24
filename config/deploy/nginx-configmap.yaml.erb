@@ -78,6 +78,8 @@ data:
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme_from_fastly;
+        proxy_set_header Forwarded "";
+        proxy_set_header X-Forwarded-Host "";
         proxy_set_header Client-IP "";
         proxy_set_header Host $host;
         proxy_redirect off;
