@@ -188,7 +188,8 @@ GEM
       xpath (~> 3.2)
     cbor (0.5.9.8)
     chartkick (5.1.2)
-    childprocess (5.0.0)
+    childprocess (5.1.0)
+      logger (~> 1.5)
     choice (0.2.0)
     chunky_png (1.4.0)
     clearance (2.9.3)
@@ -393,9 +394,10 @@ GEM
       observer (~> 0.1.2)
       semantic (~> 1.6)
       zlib (~> 3.1)
-    launchy (3.0.1)
+    launchy (3.1.0)
       addressable (~> 2.8)
       childprocess (~> 5.0)
+      logger (~> 1.6)
     ld-eventsource (2.2.2)
       concurrent-ruby (~> 1.0)
       http (>= 4.4.1, < 6.0.0)
@@ -936,7 +938,7 @@ DEPENDENCIES
   importmap-rails (~> 2.1)
   kaminari (~> 1.2)
   launchdarkly-server-sdk (~> 8.8)
-  launchy (~> 3.0)
+  launchy (~> 3.1)
   letter_opener (~> 1.10)
   letter_opener_web (~> 3.0)
   listen (~> 3.9)
@@ -1066,7 +1068,7 @@ CHECKSUMS
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   cbor (0.5.9.8) sha256=9ee097fc58d9bc5e406d112cd2d4e112c7354ec16f8b6ff34e4732c1e44b4eb7
   chartkick (5.1.2) sha256=1bb981ebb567c6bc6d1f555fba3dc5b4a7d1e7d170ea7d6980b4badf0032305a
-  childprocess (5.0.0) sha256=0746b7ab1d6c68156e64a3767631d7124121516192c0492929a7f0af7310d835
+  childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
   clearance (2.9.3) sha256=d0669b37b62b43d48a6357b6e217f5062a9b22791a36ac9f67ddc2ab4df0b3e9
@@ -1152,7 +1154,7 @@ CHECKSUMS
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
   launchdarkly-server-sdk (8.8.2) sha256=7a65646751b7e37389d8b0a2717eef1584b0d5829ba2c3efbc09d0e80047ac49
-  launchy (3.0.1) sha256=b7fa60bda0197cf57614e271a250a8ca1f6a34ab889a3c73f67ec5d57c8a7f2c
+  launchy (3.1.0) sha256=4964ae775cd802f5a57ae5584fbdb1151a8908cb0c626341563430d614a59572
   ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860

@@ -133,7 +133,7 @@ group :test do
   gem "minitest", "~> 5.25", require: false
   gem "minitest-retry", "~> 0.2.3"
   gem "capybara", "~> 3.40"
-  gem "launchy", "~> 3.0"
+  gem "launchy", "~> 3.1"
   gem "rack-test", "~> 2.2", require: "rack/test"
   gem "rails-controller-testing", "~> 1.0"
   gem "mocha", "~> 2.7", require: false
