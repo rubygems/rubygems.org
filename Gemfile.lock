@@ -810,9 +810,9 @@ GEM
       attr_required (>= 0.0.5)
       faraday (~> 2.0)
       faraday-follow_redirects
-    tailwindcss-rails (3.3.0)
+    tailwindcss-rails (3.3.1)
       railties (>= 7.0.0)
-      tailwindcss-ruby
+      tailwindcss-ruby (~> 3.0)
     tailwindcss-ruby (3.4.17)
     tailwindcss-ruby (3.4.17-aarch64-linux)
     tailwindcss-ruby (3.4.17-arm-linux)
@@ -1318,7 +1318,7 @@ CHECKSUMS
   stringio (3.1.2) sha256=204f1828f85cdb39d57cac4abc6dc44b04505a223f131587f2e20ae3729ba131
   strong_migrations (2.1.0) sha256=d48015334c4f9276a2e82e0ed6a2f610424afdbccae64a761b8c900aa10092f9
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
-  tailwindcss-rails (3.3.0) sha256=dcb8ecbc737152236b625920659a0089a043393d85bcce51c34235d0ebfaba1c
+  tailwindcss-rails (3.3.1) sha256=5dcc010ee90d53a59f40eff1f2706bc0b1d77fd3713a0fb196ff698bc4529dfe
   tailwindcss-ruby (3.4.17) sha256=464fb7cc45f1bd7446af3457a2007651eee07491df9b03ae2f1ac53b5203c427
   tailwindcss-ruby (3.4.17-aarch64-linux) sha256=a013deb088c6f32d62bb17fa804b5599486e60d76dd826d4be7697a92e881284
   tailwindcss-ruby (3.4.17-arm-linux) sha256=5562183cd75418e18427ff227a47bccba1d325f3c6a2384d752fadfe8d4ce1ba
