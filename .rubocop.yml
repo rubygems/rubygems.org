@@ -13,7 +13,7 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db/(migrate/|schema\.rb|downloads_schema\.rb)|tmp|server)($|\/.*)/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 3.3
+  TargetRubyVersion: 3.4
   NewCops: enable
 
 Rails:
