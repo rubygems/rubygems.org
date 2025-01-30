@@ -63,5 +63,56 @@ FactoryBot.define do
     transient do
       pkey { OpenSSL::PKey::RSA.generate(2048) }
     end
+
+    trait :buildkite do
+      sequence(:issuer) { |n| "https://#{n}.agent.buildkite.com" }
+      configuration do
+        {
+          issuer: issuer,
+          jwks_uri: "#{issuer}/.well-known/jwks",
+          id_token_signing_alg_values_supported: [
+            "RS256"
+          ],
+          response_types_supported: [
+            "id_token"
+          ],
+          scopes_supported: [
+            "openid"
+          ],
+          subject_types_supported: %w[
+            public
+            pairwise
+          ],
+          claims_supported: %w[
+            sub
+            aud
+            exp
+            iat
+            iss
+            nbf
+            jti
+            organization_id
+            organization_slug
+            pipeline_id
+            pipeline_slug
+            build_number
+            build_branch
+            build_tag
+            build_commit
+            build_source
+            step_key
+            job_id
+            agent_id
+            cluster_id
+            cluster_name
+            queue_id
+            queue_key
+            runner_environment
+          ]
+        }
+      end
+    end
+
+    factory :oidc_provider_buildkite, traits: [:buildkite]
   end
 end
