@@ -25,11 +25,11 @@ class GemPackageEnumerator
 
   private
 
-  def open_data_tar(&blk)
+  def open_data_tar(&)
     @package.verify
     @package.gem.with_read_io do |io|
       Gem::Package::TarReader.new(io).seek("data.tar.gz") do |gem_entry|
-        @package.open_tar_gz(gem_entry, &blk)
+        @package.open_tar_gz(gem_entry, &)
       end
     end
   end

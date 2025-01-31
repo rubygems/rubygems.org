@@ -7,7 +7,7 @@ module AvoAuditable
     prepend_around_action :unscope_users
   end
 
-  def perform_action_and_record_errors(&blk)
+  def perform_action_and_record_errors(&)
     super do
       action = params.fetch(:action)
       fields = action == "destroy" ? {} : cast_nullable(model_params)
@@ -23,7 +23,7 @@ module AvoAuditable
         fields: fields.reverse_merge(comment: action_name),
         arguments: {},
         models: [@record],
-        &blk
+        &
       )
       value
     end

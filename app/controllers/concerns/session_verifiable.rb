@@ -2,11 +2,11 @@ module SessionVerifiable
   extend ActiveSupport::Concern
 
   class_methods do
-    def verify_session_before(**opts)
-      before_action :redirect_to_signin, **opts, unless: :signed_in?
-      before_action :redirect_to_new_mfa, **opts, if: :mfa_required_not_yet_enabled?
-      before_action :redirect_to_settings_strong_mfa_required, **opts, if: :mfa_required_weak_level_enabled?
-      before_action :redirect_to_verify, **opts, unless: :verified_session_active?
+    def verify_session_before(**)
+      before_action(:redirect_to_signin, **, unless: :signed_in?)
+      before_action(:redirect_to_new_mfa, **, if: :mfa_required_not_yet_enabled?)
+      before_action(:redirect_to_settings_strong_mfa_required, **, if: :mfa_required_weak_level_enabled?)
+      before_action(:redirect_to_verify, **, unless: :verified_session_active?)
     end
   end
 
