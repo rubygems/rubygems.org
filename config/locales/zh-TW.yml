@@ -42,6 +42,7 @@ zh-TW:
   total_downloads: 總下載次數
   try_again: 發生錯誤。請再試一次。
   update: 更新
+  remove:
   view_all: 查看全部
   advanced_search: 進階搜尋
   authenticate: 驗證
@@ -243,6 +244,7 @@ zh-TW:
         hosted_by: 托管
         monitored_by: 監控
         optimized_by: 最佳化
+        releases:
         resolved_with: 解析
         security: 安全
         source_code: 原始碼

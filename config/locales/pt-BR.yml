@@ -48,6 +48,7 @@ pt-BR:
   total_downloads: Total de downloads
   try_again: Algo deu errado. Por favor, tente novamente.
   update: Atualizar
+  remove:
   view_all: Ver tudo
   advanced_search: Busca avançada
   authenticate:
@@ -251,6 +252,7 @@ pt-BR:
         hosted_by: Hospedagem
         monitored_by: Monitoramento
         optimized_by: Otimizações
+        releases:
         resolved_with: DNS
         security: Segurança
         source_code: Código Fonte

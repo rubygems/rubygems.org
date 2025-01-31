@@ -62,7 +62,7 @@
   </div>
 
   <div class="password_field">
-    <%= form.label :password, :class => 'form__label' %>
+    <%= form.label :password, t("activerecord.attributes.user.password"), :class => 'form__label' %>
     <p class='form__field__instructions'>
       <%= t('.enter_password') %>
     </p>
@@ -76,7 +76,7 @@
   </div>
 
   <div class="submit_field">
-    <%= form.submit 'Update', :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= form.submit t("update"), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>
 <% end %>
 

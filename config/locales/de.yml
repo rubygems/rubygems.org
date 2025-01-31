@@ -51,6 +51,7 @@ de:
   total_downloads: Downloads insgesamt
   try_again: Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
   update: Aktualisieren
+  remove:
   view_all: Alle anzeigen
   advanced_search: Erweiterte Suche
   authenticate: Authentifizieren
@@ -263,6 +264,7 @@ de:
         hosted_by: Gehostet von
         monitored_by: Überwacht von
         optimized_by: Optimiert mit
+        releases:
         resolved_with: Aufgelöst mit
         security: Security
         source_code: Code

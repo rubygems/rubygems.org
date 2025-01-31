@@ -5,7 +5,7 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.1"
 gem "rails-i18n", "~> 8.0.1"
 
-gem "aws-sdk-s3", "~> 1.177"
+gem "aws-sdk-s3", "~> 1.179"
 gem "aws-sdk-sqs", "~> 1.91"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.9"
@@ -29,12 +29,12 @@ gem "omniauth", "~> 2.1"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
 gem "openid_connect", "~> 2.3"
 gem "pg", "~> 1.5"
-gem "puma", "~> 6.5"
+gem "puma", "~> 6.6"
 gem "rack", "~> 3.1"
 gem "rackup", "~> 2.2"
 gem "rack-sanitizer", "~> 2.0"
 gem "rbtrace", "~> 0.5.1"
-gem "rdoc", "~> 6.10"
+gem "rdoc", "~> 6.11"
 gem "roadie-rails", "~> 3.3"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 6.2", require: false
@@ -52,7 +52,7 @@ gem "unpwn", "~> 1.0"
 gem "webauthn", "~> 3.2"
 gem "browser", "~> 6.2"
 gem "bcrypt", "~> 3.1"
-gem "maintenance_tasks", "~> 2.10"
+gem "maintenance_tasks", "~> 2.11"
 gem "strong_migrations", "~> 2.1"
 gem "phlex-rails", "~> 1.2"
 gem "discard", "~> 1.4"
@@ -94,7 +94,7 @@ gem "local_time", "~> 3.0"
 gem "better_html", "~> 2.1"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 3.1"
+  gem "tailwindcss-rails", "~> 3.3"
 end
 
 group :development, :test do
@@ -111,8 +111,8 @@ group :development, :test do
   gem "pg_query", "~> 6.0"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.70", require: false
-  gem "rubocop-rails", "~> 2.28", require: false
+  gem "rubocop", "~> 1.71", require: false
+  gem "rubocop-rails", "~> 2.29", require: false
   gem "rubocop-performance", "~> 1.23", require: false
   gem "rubocop-minitest", "~> 0.35", require: false
   gem "rubocop-capybara", "~> 2.21", require: false
@@ -129,17 +129,17 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.11"
+  gem "datadog-ci", "~> 1.12"
   gem "minitest", "~> 5.25", require: false
-  gem "minitest-retry", "~> 0.2.3"
+  gem "minitest-retry", "~> 0.2.5"
   gem "capybara", "~> 3.40"
-  gem "launchy", "~> 3.0"
+  gem "launchy", "~> 3.1"
   gem "rack-test", "~> 2.2", require: "rack/test"
   gem "rails-controller-testing", "~> 1.0"
   gem "mocha", "~> 2.7", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 6.4"
-  gem "selenium-webdriver", "~> 4.27"
+  gem "selenium-webdriver", "~> 4.28"
   gem "webmock", "~> 3.24"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false
