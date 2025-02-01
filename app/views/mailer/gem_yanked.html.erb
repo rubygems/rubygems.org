@@ -14,15 +14,15 @@
         </p>
         <p>
           Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem.slug, @version.slug), target: "_blank" %></strong>
-          <br/>
+          <br>
           Yanked by user:
           <strong>
             <%= link_to @yanked_by_user.handle, profile_url(@yanked_by_user.display_id), target: "_blank" %> <%= mail_to(@yanked_by_user.email) if @yanked_by_user.public_email? %>
           </strong>
-          <br/>
+          <br>
           Yanked at: <strong><%= @version.yanked_at.to_formatted_s(:rfc822) %></strong>
         </p>
-        <br/>
+        <br>
         <p>If this yank is expected, you do not need to take further action.</p>
         <p>
           <strong>Only if this yank is unexpected</strong>

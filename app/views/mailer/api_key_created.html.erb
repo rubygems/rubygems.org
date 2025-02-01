@@ -28,7 +28,7 @@
           <% end %>
           <br>
         </p>
-        <br/>
+        <br>
         <% if @api_key.name == "legacy-key" %>
           <p>
             Note that we are in the process of migration from a single API key per account to multiple API keys with minimum scopes enabled.
@@ -37,10 +37,10 @@
             new <strong>POST /api/v1/api_key</strong> endpoint (<%= link_to("Read more", "https://guides.rubygems.org/api-key-scopes/", target: :_blank) %>).
           </p>
 
-          <br/>
+          <br>
           Please feel free to <%= mail_to("support@rubygems.org", "contact us") %> if something feels amiss.
         <% else %>
-          <br/>
+          <br>
           <p>If this key creation is expected, you do not need to take further action.
             <strong>Only if this is unexpected</strong> please take immediate steps to secure your account and gems:
           </p>

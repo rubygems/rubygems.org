@@ -14,7 +14,7 @@
         </p>
         <p>
           Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem.slug, @version.slug), target: "_blank" %></strong>
-          <br/>
+          <br>
           <% if @pushed_by_user %>
             <% if @pushed_by_user.is_a?(User) %>
               Pushed by user:
@@ -27,13 +27,13 @@
                 <%= link_to @pushed_by_user.name, rubygem_trusted_publishers_url(@version.rubygem.slug), target: "_blank" %>
               </strong>
             <% end %>
-            <br/>
+            <br>
           <% else %>
-            <strong>Unknown</strong><br/>
+            <strong>Unknown</strong><br>
           <% end %>
           Pushed at: <strong><%= @version.created_at.to_formatted_s(:rfc822) %></strong>
         </p>
-        <br/>
+        <br>
         <p>If this push is expected, you do not need to take further action.</p>
         <p>
           <strong>Only if this push is unexpected</strong>

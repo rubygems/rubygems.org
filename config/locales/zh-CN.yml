@@ -729,10 +729,10 @@ zh-CN:
       not_hosted_notice: 这个 Gem 目前没有被托管在 RubyGems.org 中。这个 Gem 撤回的版本可能已经存在了。
       reserved_namespace_html:
         one: 这个 Gem 以前存在过，但被它的所有者移除了。RubyGems.org 团队将会把这个 Gem 的名称多保留 1 天。在此之后，任何人都可以使用
-          <code>gem push</code> 申请此 Gem 名称。<br/> 如果您是该 Gem 的前所有者，您可以使用 <code>gem owner</code>
+          <code>gem push</code> 申请此 Gem 名称。<br> 如果您是该 Gem 的前所有者，您可以使用 <code>gem owner</code>
           命令更改该 Gem 的所有者。您也可以使用 <code>gem push</code> 创建这个 gem 的新版本。
         other: 这个 Gem 以前存在过，但被它的所有者移除了。RubyGems.org 团队将会把这个 Gem 的名称多保留 %{count} 天。在此之后，任何人都可以使用
-          <code>gem push</code> 申请此 Gem 名称。<br/> 如果您是该 Gem 的前所有者，您可以使用 <code>gem owner</code>
+          <code>gem push</code> 申请此 Gem 名称。<br> 如果您是该 Gem 的前所有者，您可以使用 <code>gem owner</code>
           命令更改该 Gem 的所有者。您也可以使用 <code>gem push</code> 创建这个 gem 的新版本。
     security_events:
       title:

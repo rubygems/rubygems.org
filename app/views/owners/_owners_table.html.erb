@@ -55,7 +55,7 @@
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
-        <br/>
+        <br>
         <%= button_to t("edit"),
           edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
           disabled: ownership.user == current_user,

@@ -14,17 +14,17 @@
         </p>
         <p>
           Gem: <strong><%= link_to @rubygem_trusted_publisher.rubygem.name, rubygem_url(@rubygem_trusted_publisher.rubygem.slug), target: "_blank" %></strong>
-          <br/>
+          <br>
           Trusted publisher: <strong><%= link_to @rubygem_trusted_publisher.trusted_publisher.name, rubygem_trusted_publishers_url(@rubygem_trusted_publisher.rubygem.slug), target: "_blank" %></strong>
-          <br/>
+          <br>
           Added by:
           <strong>
             <%= link_to @created_by_user.display_handle, profile_url(@created_by_user.display_id), target: "_blank" %> <%= mail_to(@created_by_user.email) if @created_by_user.public_email? %>
           </strong>
-          <br/>
+          <br>
           Added at: <strong><%= @rubygem_trusted_publisher.created_at.to_formatted_s(:rfc822) %></strong>
         </p>
-        <br/>
+        <br>
         <p>If this new trusted publisher is expected, you do not need to take further action.</p>
         <p>
           <strong>Only if this change is unexpected</strong>

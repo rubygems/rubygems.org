@@ -757,14 +757,14 @@ fr:
         one: Cette gem existait, mais a été supprimée par son propriétaire. L'équipe
           RubyGems.org a réservé ce nom de gem pour un jour supplémentaire. Une fois
           ce temps écoulé, quiconque pourra utiliser ce nom de gem en utilisant gem
-          push. <br/> Si vous êtes le propriétaire précédent de cette gem, vous pouvez
+          push. <br> Si vous êtes le propriétaire précédent de cette gem, vous pouvez
           modifier la propriété de cette gem en utilisant la commande de gem owner.
           Vous pouvez également créer de nouvelles versions de cette gem avec gem
           push.
         other: Cette gem existait, mais a été supprimée par son propriétaire. L'équipe
           RubyGems.org a réservé ce nom de gem pour %{count} jours supplémentaires.
           Une fois ce temps écoulé, quiconque pourra utiliser ce nom de gem en utilisant
-          gem push. <br/> Si vous êtes le propriétaire précédent de cette gem, vous
+          gem push. <br> Si vous êtes le propriétaire précédent de cette gem, vous
           pouvez modifier la propriété de cette gem en utilisant la commande de gem
           owner. Vous pouvez également créer de nouvelles versions de cette gem avec
           gem push.
