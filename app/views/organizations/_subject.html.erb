@@ -18,7 +18,7 @@
   <%= nav.link t("layouts.application.header.dashboard"), organization_path(@organization), name: :dashboard, icon: "space-dashboard" %>
   <%= nav.link t("organizations.show.history"), organization_path(@organization), name: :subscriptions, icon: "notifications" %>
   <%= nav.link t("organizations.show.gems"), organization_gems_path(@organization), name: :gems, icon: "gems" %>
-  <%= nav.link t("organizations.show.members"), organization_path(@organization), name: :organizations, icon: "organizations" %>
+  <%= nav.link t("organizations.show.members"), organization_members_path(@organization), name: :members, icon: "organizations" %>
   <% if policy(@organization).edit? %>
     <%= nav.link t("layouts.application.header.settings"), edit_organization_path(@organization), name: :settings, icon: "settings" %>
   <% end %>
