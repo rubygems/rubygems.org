@@ -52,7 +52,9 @@ Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   # config.locale = 'en-US'
 
   ## == Resource options ==
-  config.resource_controls_placement = :left
+  config.resource_row_controls_config = {
+    placement: :left
+  }
   # config.model_resource_mapping = {}
   # config.default_view_type = :table
   # config.per_page = 24
