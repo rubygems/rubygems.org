@@ -981,20 +981,20 @@ class UserTest < ActiveSupport::TestCase
 
     should "preserve valid characters so that the format error can be returned" do
       # UTF-8 "香" character, which is valid UTF-8, but we reject utf-8 in email addresses
-      assert_equal "香@example.com", User.normalize_email("\u9999@example.com".force_encoding("utf-8"))
+      assert_equal "香@example.com", User.normalize_email(String.new("\u9999@example.com", encoding: "utf-8"))
 
       # ISO-8859-1 "Å" character (valid in ISO-8859-1)
-      encoded_email = "myem\xC5il@example.com".force_encoding("ISO-8859-1")
+      encoded_email = String.new("myem\xC5il@example.com", encoding: "ISO-8859-1")
 
       assert_equal encoded_email, User.normalize_email(encoded_email)
     end
 
     should "return an empty string on invalid inputs" do
       # bad encoding when sent as ASCII-8BIT
-      assert_equal "", User.normalize_email("\u9999@example.com".force_encoding("ascii"))
+      assert_equal "", User.normalize_email(String.new("\u9999@example.com", encoding: "ascii"))
 
       # ISO-8859-1 "Å" character (invalid in UTF-8, which uses \xC385 for this character)
-      assert_equal "", User.normalize_email("myem\xC5il@example.com".force_encoding("UTF-8"))
+      assert_equal "", User.normalize_email(String.new("myem\xC5il@example.com", encoding: "UTF-8"))
     end
 
     should "return an empty string for nil" do
