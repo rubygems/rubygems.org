@@ -46,7 +46,7 @@ module DynamicErrorsHelper
           end
         end.join.html_safe
 
-        contents = ''
+        contents = +''
         contents << content_tag(options[:header_tag] || :h2, header_message) unless header_message.blank?
         contents << content_tag(:p, message) unless message.blank?
         contents << content_tag(:ul, error_messages)
