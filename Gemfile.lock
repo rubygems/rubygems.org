@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.16.5)
-      avo (= 3.16.5)
-      avo-dynamic_filters (= 3.16.5)
-      avo-pro (= 3.16.5)
+    avo-advanced (3.17.2)
+      avo (>= 3.17.2, < 3.17.3)
+      avo-dynamic_filters (= 3.17.2)
+      avo-pro (= 3.17.2)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.16.5)
-      avo (= 3.16.5)
+    avo-dashboards (3.17.2)
+      avo (>= 3.17.2, < 3.17.3)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.16.5)
-      avo (= 3.16.5)
+    avo-dynamic_filters (3.17.2)
+      avo (>= 3.17.2, < 3.17.3)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.16.5)
-      avo (= 3.16.5)
+    avo-menu (3.17.2)
+      avo (>= 3.17.2, < 3.17.3)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.16.5)
-      avo (= 3.16.5)
-      avo-dashboards (= 3.16.5)
-      avo-menu (= 3.16.5)
+    avo-pro (3.17.2)
+      avo (>= 3.17.2, < 3.17.3)
+      avo-dashboards (= 3.17.2)
+      avo-menu (= 3.17.2)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    avo (3.16.5)
+    avo (3.17.2)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -564,7 +564,7 @@ GEM
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.1.0)
-    ostruct (0.6.0)
+    ostruct (0.6.1)
     pagy (8.6.3)
     parallel (1.26.3)
     parser (3.3.7.0)
@@ -914,7 +914,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.7)
   avo (~> 3.13)
-  avo-advanced (~> 3.16)!
+  avo-advanced (~> 3.17)!
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.179)
   aws-sdk-sqs (~> 1.91)
@@ -1050,12 +1050,12 @@ CHECKSUMS
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.16.5) sha256=88b27658e9dff19541b2807c629d29c8d122bcff855864468f4bb8f0bbc79512
-  avo-advanced (3.16.5) sha256=dffb49577e4ac19ac39c5c082664f880f9d1af9227d9dd1f7d0af3637cd12e47
-  avo-dashboards (3.16.5) sha256=7d7aeb132b3ca9266969bca4259d0dc415d074c9822f27fd18351473c57bdfcd
-  avo-dynamic_filters (3.16.5) sha256=e690eee0a81376f73f7711f4749ec219eb02a8b93c6be1401699f886d352ff25
-  avo-menu (3.16.5) sha256=8a31565f529bf946b6a4a18d1c50e3c25ecbb801e215f537b8c3f75c44c2dddd
-  avo-pro (3.16.5) sha256=91328c1b48fc4906733708c4c987f8049c708e37118b04e8c8285621438c2e2b
+  avo (3.17.2) sha256=dcfd1bad8108bd3e048b6e14a2fe918779430b2db6375566477a1dfdb0f30cb3
+  avo-advanced (3.17.2) sha256=eaf24ebcf1ec80b1cd74a5a219b242e772bd7dd5efb42b0bcca9715f1b84ab62
+  avo-dashboards (3.17.2) sha256=b09db0d8b9ffe98b7dedcee9c38d3fdbe6b4990aa0a8c8ca878b4810d021f92b
+  avo-dynamic_filters (3.17.2) sha256=2d1e268991dfa6a1c720e82a355f0635a1ba68cf1140185e4e47a970bbf26808
+  avo-menu (3.17.2) sha256=0cc117b4a25ff7e7899476597afd9104d390f1462ab8d696b1bb74051c15c5d0
+  avo-pro (3.17.2) sha256=792fd4d7a395b53ba6bd371d6ea759b94151f726f7bf10724adeac724cb4510f
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.1043.0) sha256=9003e45467bb41d30df529742a5721fbeba9e6bd7428058e5e3783c29fa497f8
@@ -1234,7 +1234,7 @@ CHECKSUMS
   openssl (3.2.0) sha256=3c4bb8760977b4becd2819c6c2569bcf5c6f48b32b9f7a4ce1fd37f996378d14
   openssl-signature_algorithm (1.3.0) sha256=a3b40b5e8276162d4a6e50c7c97cdaf1446f9b2c3946a6fa2c14628e0c957e80
   optimist (3.1.0) sha256=81886f53ee8919f330aa30076d320d88eef9bc85aae2275376b4afb007c69260
-  ostruct (0.6.0) sha256=3b1736c99f4d985de36bde1155be5e22aaf6e564b30ff9bd481e2ef7c2d9ba85
+  ostruct (0.6.1) sha256=09a3fb7ecc1fa4039f25418cc05ae9c82bd520472c5c6a6f515f03e4988cb817
   pagy (8.6.3) sha256=537b2ee3119f237dd6c4a0d0a35c67a77b9d91ebb9d4f85e31407c2686774fb2
   parallel (1.26.3) sha256=d86babb7a2b814be9f4b81587bf0b6ce2da7d45969fab24d8ae4bf2bb4d4c7ef
   parser (3.3.7.0) sha256=7449011771e3e7881297859b849de26a6f4fccd515bece9520a87e7d2116119b
