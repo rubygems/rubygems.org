@@ -55,8 +55,13 @@ class SqsWorkerTest < ActiveSupport::TestCase
     should "create Logticket" do
       StatsD.expects(:increment).with("fastly_log_processor.s3_entry_fetched")
       StatsD.expects(:increment).with("fastly_log_processor.enqueued")
+      StatsD.expects(:increment).with("fastly_log_downloads_processor.enqueued") if ENV['DOWNLOADS_DB_ENABLED'] == 'true'
       StatsD.expects(:increment).with("rails.enqueue.active_job.success", 1,
         has_entry(tags: has_entries(queue: "default", priority: 4, job_class: FastlyLogProcessorJob.name)))
+      if ENV['DOWNLOADS_DB_ENABLED'] == 'true'
+        StatsD.expects(:increment).with("rails.enqueue.active_job.success", 1,
+          has_entry(tags: has_entries(queue: "default", priority: 4, job_class: FastlyLogDownloadsProcessorJob.name)))
+      end
       assert_enqueued_jobs 1, only: FastlyLogProcessorJob do
         @sqs_worker.perform(nil, @body)
       end
@@ -66,6 +71,12 @@ class SqsWorkerTest < ActiveSupport::TestCase
       assert_equal "bucket-name", log_ticket.directory
       assert_equal "object-key", log_ticket.key
       assert_equal "pending", log_ticket.status
+
+      if ENV['DOWNLOADS_DB_ENABLED'] == 'true'
+        log_download = LogDownload.last
+        assert_equal "bucket-name", log_download.directory
+        assert_equal "object-key", log_download.key
+      end
     end
 
     should "not create duplicate LogTicket" do
@@ -76,8 +87,17 @@ class SqsWorkerTest < ActiveSupport::TestCase
       StatsD.expects(:increment).with("fastly_log_processor.enqueued").twice
       StatsD.expects(:increment).with("fastly_log_processor.duplicated")
       StatsD.expects(:increment).with("rails.enqueue.active_job.success", 1,
-        has_entry(tags: has_entries(queue: "default", priority: 4, job_class: FastlyLogProcessorJob.name)))
-      assert_enqueued_jobs 1, only: FastlyLogProcessorJob do
+          has_entry(tags: has_entries(queue: "default", priority: 4, job_class: FastlyLogProcessorJob.name)))
+      jobs = [FastlyLogProcessorJob]
+
+      if ENV['DOWNLOADS_DB_ENABLED'] == 'true'
+        StatsD.expects(:increment).with("fastly_log_downloads_processor.enqueued").once
+        StatsD.expects(:increment).with("rails.enqueue.active_job.success", 1,
+          has_entry(tags: has_entries(queue: "default", priority: 4, job_class: FastlyLogDownloadsProcessorJob.name)))
+        jobs << FastlyLogDownloadsProcessorJob
+      end
+
+      assert_enqueued_jobs jobs.size, only: jobs do
         @sqs_worker.perform(nil, @body)
       end
     end
