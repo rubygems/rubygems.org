@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_04_065953) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_04_190405) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
-  enable_extension "plpgsql"
 
   create_table "admin_github_users", force: :cascade do |t|
     t.string "login"
@@ -407,6 +407,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_04_065953) do
     t.datetime "updated_at", null: false
     t.index ["rubygem_id", "trusted_publisher_id", "trusted_publisher_type"], name: "index_oidc_rubygem_trusted_publishers_unique", unique: true
     t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_rubygem_trusted_publishers_on_trusted_publisher"
+  end
+
+  create_table "oidc_trusted_publisher_buildkites", force: :cascade do |t|
+    t.string "organization_slug", null: false
+    t.string "pipeline_slug", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_slug", "pipeline_slug"], name: "index_oidc_trusted_publisher_buildkite_claims", unique: true
   end
 
   create_table "oidc_trusted_publisher_github_actions", force: :cascade do |t|

@@ -14,22 +14,31 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
     title_content
 
     div(class: "t-body") do
+      p do
+        "New Trusted Publisher: #{rubygem_trusted_publisher.trusted_publisher.class.publisher_name}"
+      end
       form_with(
         model: rubygem_trusted_publisher,
         url: rubygem_trusted_publishers_path(rubygem_trusted_publisher.rubygem.slug)
       ) do |f|
-        f.label :trusted_publisher_type, class: "form__label"
-        f.select :trusted_publisher_type, OIDC::TrustedPublisher.all.map { |type|
-                                            [type.publisher_name, type.polymorphic_name]
-                                          }, {}, class: "form__input form__select"
+        f.hidden_field :trusted_publisher_type
 
-        render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(
-          github_action_form: f
-        )
+        render form_component(f)
         f.submit class: "form__submit"
       end
     end
   end
 
   delegate :rubygem, to: :rubygem_trusted_publisher
+
+  private
+
+  def form_component(form)
+    case rubygem_trusted_publisher.trusted_publisher
+    when OIDC::TrustedPublisher::Buildkite then OIDC::TrustedPublisher::Buildkite::FormComponent.new(buildkite_form: form)
+    when OIDC::TrustedPublisher::GitHubAction then OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form: form)
+    else
+      raise "oh no"
+    end
+  end
 end
