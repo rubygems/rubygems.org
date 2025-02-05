@@ -248,19 +248,14 @@ class OIDCTest < ApplicationSystemTestCase
       id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_0_operator"
     assert_field "Value", with: Gemcutter::HOST,
       id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_0_value"
-    assert_field "Claim", with: "repository",
-      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_claim"
-    assert_select "Operator", options: ["String Equals", "String Matches"], selected: "String Equals",
-      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_operator"
-    assert_field "Value", with: "example/repo",
-      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_value"
 
     # Adjust the form to align with Buildkite OIDC tokens
     page.select "https://agent.buildkite.com", from: "OIDC provider"
 
-    last_condition = page.find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_conditions_attributes_\d+_wrapper/).last
-    last_condition.fill_in "Claim", with: "organization_slug"
-    last_condition.fill_in "Value", with: "example-org"
+    page.click_button "Add condition"
+    new_condition = page.find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_conditions_attributes_\d+_wrapper/).last
+    new_condition.fill_in "Claim", with: "organization_slug"
+    new_condition.fill_in "Value", with: "example-org"
 
     page.click_button "Add condition"
     new_condition = page.find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_conditions_attributes_\d+_wrapper/).last
