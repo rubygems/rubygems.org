@@ -334,7 +334,7 @@ GEM
     gravtastic (3.2.6)
     groupdate (6.5.1)
       activesupport (>= 7)
-    hashdiff (1.1.1)
+    hashdiff (1.1.2)
     hashie (5.0.0)
     heapy (0.2.0)
       thor
@@ -882,7 +882,7 @@ GEM
       activesupport
       faraday (~> 2.0)
       faraday-follow_redirects
-    webmock (3.24.0)
+    webmock (3.25.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -1025,7 +1025,7 @@ DEPENDENCIES
   validates_formatting_of (~> 0.9)
   view_component (~> 3.21.0)
   webauthn (~> 3.3)
-  webmock (~> 3.24)
+  webmock (~> 3.25)
   xml-simple (~> 1.1)
 
 CHECKSUMS
@@ -1144,7 +1144,7 @@ CHECKSUMS
   google-protobuf (4.29.3-x86_64-linux) sha256=4ac194b06c59559457ce1d1d57d03760b50e009dbcfe5ef065a1af48ce4a2d0e
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.5.1) sha256=a0a78d051a510d61864fe987f00089d8f03739741eadc41e6ad4ea6f786da110
-  hashdiff (1.1.1) sha256=c7966316726e0ceefe9f5c6aef107ebc3ccfef8b6db55fe3934f046b2cf0936a
+  hashdiff (1.1.2) sha256=2c30eeded6ed3dce8401d2b5b99e6963fe5f14ed85e60dd9e33c545a44b71a77
   hashie (5.0.0) sha256=9d6c4e51f2a36d4616cbc8a322d619a162d8f42815a792596039fc95595603da
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
   honeybadger (5.26.2) sha256=231b3402964f004fc3ff9f8c51a643bed5c17636d6087032f4ca2a8508c2109b
@@ -1362,7 +1362,7 @@ CHECKSUMS
   view_component (3.21.0) sha256=7f5a77bca29e7385495fad2b7c1acdcd2c581b3cd2e573a831a9808f6710df5c
   webauthn (3.3.0) sha256=3068f3cf4b9403c50df59618247a17f0a2b5ccbeb9b9f510b11c6b0e3704cc3b
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
-  webmock (3.24.0) sha256=be01357f6fc773606337ca79f3ba332b7d52cbe5c27587671abc0572dbec7122
+  webmock (3.25.0) sha256=573c23fc4887008c830f22da588db339ca38b6d59856fd57f5a068959474198e
   websocket (1.2.11) sha256=b7e7a74e2410b5e85c25858b26b3322f29161e300935f70a0e0d3c35e0462737
   websocket-driver (0.7.6) sha256=f69400be7bc197879726ad8e6f5869a61823147372fd8928836a53c2c741d0db
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
