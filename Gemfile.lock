@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.17.2)
-      avo (>= 3.17.2, < 3.17.3)
-      avo-dynamic_filters (= 3.17.2)
-      avo-pro (= 3.17.2)
+    avo-advanced (3.17.3)
+      avo (= 3.17.3)
+      avo-dynamic_filters (= 3.17.3)
+      avo-pro (= 3.17.3)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.17.2)
-      avo (>= 3.17.2, < 3.17.3)
+    avo-dashboards (3.17.3)
+      avo (= 3.17.3)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.17.2)
-      avo (>= 3.17.2, < 3.17.3)
+    avo-dynamic_filters (3.17.3)
+      avo (= 3.17.3)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.17.2)
-      avo (>= 3.17.2, < 3.17.3)
+    avo-menu (3.17.3)
+      avo (= 3.17.3)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.17.2)
-      avo (>= 3.17.2, < 3.17.3)
-      avo-dashboards (= 3.17.2)
-      avo-menu (= 3.17.2)
+    avo-pro (3.17.3)
+      avo (= 3.17.3)
+      avo-dashboards (= 3.17.3)
+      avo-menu (= 3.17.3)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    avo (3.17.2)
+    avo (3.17.3)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -485,7 +485,7 @@ GEM
       minitest (>= 5.0)
     mocha (2.7.1)
       ruby2_keywords (>= 0.0.5)
-    msgpack (1.7.5)
+    msgpack (1.8.0)
     multi_json (1.15.0)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
@@ -686,7 +686,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.2.1)
-    ransack (4.2.1)
+    ransack (4.3.0)
       activerecord (>= 6.1.5)
       activesupport (>= 6.1.5)
       i18n
@@ -1050,12 +1050,12 @@ CHECKSUMS
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.17.2) sha256=dcfd1bad8108bd3e048b6e14a2fe918779430b2db6375566477a1dfdb0f30cb3
-  avo-advanced (3.17.2) sha256=eaf24ebcf1ec80b1cd74a5a219b242e772bd7dd5efb42b0bcca9715f1b84ab62
-  avo-dashboards (3.17.2) sha256=b09db0d8b9ffe98b7dedcee9c38d3fdbe6b4990aa0a8c8ca878b4810d021f92b
-  avo-dynamic_filters (3.17.2) sha256=2d1e268991dfa6a1c720e82a355f0635a1ba68cf1140185e4e47a970bbf26808
-  avo-menu (3.17.2) sha256=0cc117b4a25ff7e7899476597afd9104d390f1462ab8d696b1bb74051c15c5d0
-  avo-pro (3.17.2) sha256=792fd4d7a395b53ba6bd371d6ea759b94151f726f7bf10724adeac724cb4510f
+  avo (3.17.3) sha256=da6ae7a734cfe5656d52f35d44f9abfc06b8f5c24e4d396bea53c04681bd5147
+  avo-advanced (3.17.3) sha256=97b202c6494a525a4d1cef4db3f62496c0cdeb1e930eb7a01cb722b4d8e2c789
+  avo-dashboards (3.17.3) sha256=4c8ee5fad7208c40b81587d9986944ca7a62c4d0d6c457a1cfbb12fa90d55915
+  avo-dynamic_filters (3.17.3) sha256=cec31bddb24c1b9336a3e43a7b1754209aeeabb5118c03b9904a4bcf40ae792d
+  avo-menu (3.17.3) sha256=d854d362e8c05389dd45a235d303a584b0469a4d0c56b2eec9817110dccb497f
+  avo-pro (3.17.3) sha256=04a186d58c1d06e7ae2f779aff14958fed10509e421703e2fc3370527957bb28
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.3.0) sha256=f1434cc03ab2248756eb02cfa45e900e59a061d7fbdc4a9fd82a5dd23d796d3f
   aws-partitions (1.1047.0) sha256=976e74daa0f8a3425ef0b090d8908625c64fe18806b5df2608b3479ec42390ba
@@ -1203,7 +1203,7 @@ CHECKSUMS
   minitest-reporters (1.7.1) sha256=5060413a0c95b8c32fe73e0606f3631c173a884d7900e50013e15094eb50562c
   minitest-retry (0.2.5) sha256=2f968fd33706fe91c6f38b6e3e2a2f581d5e8aeceb80113eab0c6a6ed96185fc
   mocha (2.7.1) sha256=8f7d538d5d3ebc75fc788b3d92fbab913a93a78462d2a3ce99d1bdde7af7f851
-  msgpack (1.7.5) sha256=ffb04979f51e6406823c03abe50e1da2c825c55a37dee138518cdd09d9d3aea8
+  msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
   multi_json (1.15.0) sha256=1fd04138b6e4a90017e8d1b804c039031399866ff3fbabb7822aea367c78615d
   multi_xml (0.7.1) sha256=4fce100c68af588ff91b8ba90a0bb3f0466f06c909f21a32f4962059140ba61b
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
@@ -1279,7 +1279,7 @@ CHECKSUMS
   railties (8.0.1) sha256=8f653c6b1b0721b553045bd0deda1f22074b9ddc2209526e6f7285fcf607ac51
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.2.1) sha256=46cb38dae65d7d74b6020a4ac9d48afed8eb8149c040eccf0523bec91907059d
-  ransack (4.2.1) sha256=e0f688c6ef35abe0bad3cf5afc1b050f36a819bdd56eb454c955c63cdd1bef40
+  ransack (4.3.0) sha256=48e141814eb4af8a5cc4e9890b7a088fe818c9996c6b8c846f11104b4c12e8b1
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.10.1) sha256=050062d4f31d307cca52c3f6a7f4b946df8de25fc4bd373e1a5142e41034a7ca
   rbtrace (0.5.1) sha256=e8cba64d462bfb8ba102d7be2ecaacc789247d52ac587d8003549d909cb9c5dc
