@@ -1,6 +1,5 @@
 require "test_helper"
-require_relative "../../../../lib/gemcutter/middleware/security_headers_middleware.rb"
-
+require_relative "../../../../lib/gemcutter/middleware/security_headers_middleware"
 
 class SecurityHeadersMiddlewareTest < ActiveSupport::TestCase
   def setup
@@ -18,7 +17,7 @@ class SecurityHeadersMiddlewareTest < ActiveSupport::TestCase
 
   test "preserves other existing headers" do
     env = Rack::MockRequest.env_for("/")
-    _, headers, _ = @middleware.call(env)
+    _, headers, = @middleware.call(env)
 
     assert headers.key?("Content-Type")
   end
