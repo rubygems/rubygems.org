@@ -29,6 +29,10 @@ module Gemcutter
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
 
+    # Insert the middleware to apply COOP to all responses
+    require_relative "../lib/gemcutter/middleware/security_headers_middleware"
+    config.middleware.insert_before 0, SecurityHeadersMiddleware
+
     ###
     # TODO: This is a 8.0 framework default, but load order requires it to be here to avoid deprecation warnings.
     #
@@ -84,10 +88,6 @@ module Gemcutter
     config.active_support.cache_format_version = 7.1
 
     config.action_dispatch.rescue_responses["Rack::Multipart::EmptyContentError"] = :bad_request
-
-    config.action_dispatch.default_headers.merge!(
-      "Cross-Origin-Opener-Policy" => "same-origin"
-    )
   end
 
   def self.config
