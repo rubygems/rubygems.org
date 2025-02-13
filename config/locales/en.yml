@@ -887,6 +887,9 @@ en:
         title: "New Pending Trusted Publisher"
     trusted_publisher:
       unsupported_type: "Unsupported trusted publisher type"
+      buildkite:
+        organization_slug_help_html: "The Buildkite organization slug that owns the pipeline"
+        pipeline_slug_help_html: "The slug of the Buildkite Pipeline that runs the publishing workflow"
       github_actions:
         repository_owner_help_html: "The GitHub organization name or GitHub username that owns the repository"
         repository_name_help_html: "The name of the GitHub repository that contains the publishing workflow"
