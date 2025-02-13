@@ -34,6 +34,7 @@ require "helpers/policy_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "helpers/avo_helpers"
+require 'helpers/timescaledb_helpers'
 require "webmock/minitest"
 require "phlex/testing/rails/view_helper"
 
@@ -79,6 +80,7 @@ class ActiveSupport::TestCase
   include GemHelpers
   include EmailHelpers
   include PasswordHelpers
+  include TimescaledbHelpers
 
   parallelize_setup do |_worker|
     SemanticLogger.reopen
