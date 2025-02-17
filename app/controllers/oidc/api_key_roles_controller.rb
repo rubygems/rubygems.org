@@ -136,8 +136,6 @@ class OIDC::ApiKeyRolesController < ApplicationController
     return unless (gh = helpers.link_to_github(rubygem)).presence
     return unless (@api_key_role.provider = OIDC::Provider.github_actions)
 
-    statement.principal = { oidc: @api_key_role.provider.issuer }
-
     repo_condition = OIDC::AccessPolicy::Statement::Condition.new(
       claim: "repository",
       operator: "string_equals",
