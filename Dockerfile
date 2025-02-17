@@ -41,6 +41,7 @@ RUN \
   linux-headers \
   zlib-dev \
   tzdata \
+  yaml-dev \
   git
 
 WORKDIR /app
