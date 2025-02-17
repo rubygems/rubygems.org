@@ -111,10 +111,10 @@ group :development, :test do
   gem "pg_query", "~> 6.0"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.71", require: false
-  gem "rubocop-rails", "~> 2.29", require: false
-  gem "rubocop-performance", "~> 1.23", require: false
-  gem "rubocop-minitest", "~> 0.35", require: false
+  gem "rubocop", "~> 1.72", require: false
+  gem "rubocop-rails", "~> 2.30", require: false
+  gem "rubocop-performance", "~> 1.24", require: false
+  gem "rubocop-minitest", "~> 0.37", require: false
   gem "rubocop-capybara", "~> 2.21", require: false
   gem "rubocop-factory_bot", "~> 2.26", require: false
 end
