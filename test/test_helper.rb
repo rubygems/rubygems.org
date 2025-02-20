@@ -353,9 +353,7 @@ class AdminPolicyTestCase < ActiveSupport::TestCase
     nil
   end
 
-  def policy!(user, record)
-    @authorization_client.policy!(user, record)
-  end
+  delegate :policy!, to: :@authorization_client
 
   def policy_scope!(user, record)
     @authorization_client.apply_policy(user, record, policy_class: policy_class)

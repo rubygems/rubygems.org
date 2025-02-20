@@ -10,7 +10,7 @@ module Auditable
       end
     end
 
-    def in_audited_transaction(auditable:, admin_github_user:, action:, fields:, arguments:, models:, &) # rubocop:disable Metrics Naming/BlockForwarding
+    def in_audited_transaction(auditable:, admin_github_user:, action:, fields:, arguments:, models:, &) # rubocop:disable Metrics
       logger.debug { "Auditing changes to #{auditable}: #{fields}" }
 
       User.transaction do

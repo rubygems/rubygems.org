@@ -1,8 +1,9 @@
 inherit_from: .rubocop_todo.yml
-require:
+plugins:
   - rubocop-performance
   - rubocop-rails
   - rubocop-minitest
+require:
   - rubocop-capybara
   - rubocop-factory_bot
 
@@ -300,4 +301,7 @@ Capybara/ClickLinkOrButtonStyle:
   Enabled: false
 
 Rails/ThreeStateBooleanColumn:
+  Enabled: false
+
+Lint/UselessConstantScoping:
   Enabled: false
