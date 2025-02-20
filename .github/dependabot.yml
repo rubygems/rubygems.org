@@ -13,6 +13,8 @@ updates:
       patterns: ["rubocop", "rubocop-*"]
     rails:
       patterns: ["rails", "active*", "action*", "railties"]
+    aws:
+      patterns: ["aws-*"]
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
