@@ -18,7 +18,8 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
       end
 
       p do
-        button_to t(".create"), new_rubygem_trusted_publisher_path(rubygem.slug), class: "form__submit", method: :get
+        button_to t(".create") + " Buildkite", new_rubygem_trusted_publisher_path(rubygem.slug), params: {trusted_publisher: "buildkite"}, class: "form__submit", method: :get
+        button_to t(".create") + " Github Actions", new_rubygem_trusted_publisher_path(rubygem.slug), params: {trusted_publisher: "github_actions"}, class: "form__submit", method: :get
       end
 
       header(class: "gems__header push--s") do

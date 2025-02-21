@@ -12,8 +12,14 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def new
+    trusted_publisher = if params[:trusted_publisher] == "buildkite"
+                          buildkite_trusted_publisher
+                        else
+                          gh_actions_trusted_publisher
+                        end
+
     render OIDC::RubygemTrustedPublishers::NewView.new(
-      rubygem_trusted_publisher: @rubygem.oidc_rubygem_trusted_publishers.new(trusted_publisher: gh_actions_trusted_publisher)
+      rubygem_trusted_publisher: @rubygem.oidc_rubygem_trusted_publishers.new(trusted_publisher: trusted_publisher)
     )
   end
 
@@ -58,6 +64,10 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
 
   def find_rubygem_trusted_publisher
     @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params[:id])
+  end
+
+  def buildkite_trusted_publisher
+    OIDC::TrustedPublisher::Buildkite.new
   end
 
   def gh_actions_trusted_publisher
