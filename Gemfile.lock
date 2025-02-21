@@ -587,7 +587,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
-    prosopite (1.4.2)
+    prosopite (2.0.0)
     protobug (0.1.0)
     protobug_googleapis_field_behavior_protos (0.1.0)
       protobug (= 0.1.0)
@@ -976,7 +976,7 @@ DEPENDENCIES
   pp (= 0.6.2)
   prop_initializer (~> 0.2)
   propshaft (~> 1.1.0)
-  prosopite (~> 1.4)
+  prosopite (~> 2.0)
   pry-byebug (~> 3.10)
   puma (~> 6.6)
   pundit (~> 2.4)
@@ -1242,7 +1242,7 @@ CHECKSUMS
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prop_initializer (0.2.0) sha256=bd27704d0df8c59c3baf0df5cf448eba2b140fb9934fb31b2e379b5c842d8820
   propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
-  prosopite (1.4.2) sha256=b2e422e2d9dbf3ce20130ded3252fe14adb3833555eacd451f5015d8c9177e79
+  prosopite (2.0.0) sha256=a3a520b3263fb15af7ea7f16c74b0b044794d0f8b10888e0a6b991569bd0011b
   protobug (0.1.0) sha256=5bf1356cedf99dcf311890743b78f5e602f62ca703e574764337f1996b746bf2
   protobug_googleapis_field_behavior_protos (0.1.0) sha256=db48ef6a5913b2355b4a6931ab400a9e3e995fb48499977a3ad0be6365f9e265
   protobug_sigstore_protos (0.1.0) sha256=4ad1eebaf6454131b6f432dda50ad0e513773613474b92470847614a5acacce1

@@ -107,7 +107,7 @@ group :development, :test do
   gem "brakeman", "~> 7.0", require: false
 
   # used to find n+1 queries
-  gem "prosopite", "~> 1.4"
+  gem "prosopite", "~> 2.0"
   gem "pg_query", "~> 6.0"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
