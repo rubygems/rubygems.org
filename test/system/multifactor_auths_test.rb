@@ -136,8 +136,6 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     end
 
     should "user with webauthn can change mfa level" do
-      fullscreen_headless_chrome_driver
-
       sign_in
       visit edit_settings_path
 

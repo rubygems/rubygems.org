@@ -16,7 +16,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     assert_nil URI.parse(page.current_url).query
 
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[index_rubygems]"
 
     refute page.has_content? "Enable MFA"
@@ -28,7 +28,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_nil @user.api_keys.last.rubygem
 
     assert_event Events::UserEvent::API_KEY_CREATED, {
-      name: "test",
+      name: "test-api-key",
       scopes: ["index_rubygems"],
       mfa: false,
       api_key_gid: @user.api_keys.last.to_global_id.to_s
@@ -43,7 +43,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     assert_empty URI.parse(page.current_url).query
 
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[index_rubygems]"
 
     refute page.has_content? "Enable MFA"
@@ -58,7 +58,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   test "creating new api key scoped to a gem" do
     visit_profile_api_keys_path
 
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[push_rubygem]"
 
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
@@ -82,7 +82,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   ApiKey::APPLICABLE_GEM_API_SCOPES.each do |scope|
     test "creating new api key scoped to a gem with #{scope} scope" do
       visit_profile_api_keys_path
-      fill_in "api_key[name]", with: "test"
+      fill_in "api_key[name]", with: "test-api-key"
       check "api_key[#{scope}]"
 
       assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
@@ -96,7 +96,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
   test "selecting the exclusive scope deselects the other scopes and vice versa" do
     visit_profile_api_keys_path
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[index_rubygems]"
     check "api_key[push_rubygem]"
 
@@ -125,7 +125,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   test "creating new api key scoped to gem that the user does not own" do
     visit_profile_api_keys_path
 
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[push_rubygem]"
 
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
@@ -144,7 +144,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     visit_profile_api_keys_path
 
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[index_rubygems]"
     check "mfa"
     click_button "Create API Key"
@@ -158,7 +158,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     expiration = 1.day.from_now.beginning_of_minute
 
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[index_rubygems]"
     fill_in "api_key[expires_at]", with: expiration
     click_button "Create API Key"
@@ -173,7 +173,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     visit_profile_api_keys_path
 
-    fill_in "api_key[name]", with: "test"
+    fill_in "api_key[name]", with: "test-api-key"
     check "api_key[index_rubygems]"
     click_button "Create API Key"
 
