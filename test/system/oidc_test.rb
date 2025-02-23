@@ -8,11 +8,14 @@ class OIDCTest < ApplicationSystemTestCase
     @id_token = create(:oidc_id_token, user: @user, api_key_role: @api_key_role)
   end
 
-  def sign_in
+  def sign_in # rubocop:disable Minitest/TestMethodName
     visit sign_in_path
     fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
+
+    # Wait for the reload and confirm the sign in worked
+    page.assert_selector "h1", text: "Dashboard"
   end
 
   def verify_session # rubocop:disable Minitest/TestMethodName
@@ -227,7 +230,6 @@ class OIDCTest < ApplicationSystemTestCase
 
     sign_in
 
-    page.assert_selector "h1", text: "Dashboard"
     visit rubygem_path(rubygem.slug)
     click_link "OIDC: Create"
     verify_session
