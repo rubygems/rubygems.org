@@ -239,7 +239,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       @user.forgot_password!
       @webauthn_credential = create(:webauthn_credential, user: @user)
 
-      @origin = WebAuthn.configuration.origin
+      @origin = WebAuthn.configuration.allowed_origins.first
       @rp_id = URI.parse(@origin).host
       @client = WebAuthn::FakeClient.new(@origin, encoding: false)
     end
