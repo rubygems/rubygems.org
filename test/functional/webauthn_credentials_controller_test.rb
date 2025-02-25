@@ -89,7 +89,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         setup do
           @nickname = SecureRandom.hex
           challenge = JSON.parse(response.body)["challenge"]
-          origin = WebAuthn.configuration.origin
+          origin = WebAuthn.configuration.allowed_origins.first
           client = WebAuthn::FakeClient.new(origin, encoding: false)
 
           perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -148,7 +148,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         setup do
           @nickname = ""
           challenge = JSON.parse(response.body)["challenge"]
-          origin = WebAuthn.configuration.origin
+          origin = WebAuthn.configuration.allowed_origins.first
           client = WebAuthn::FakeClient.new(origin, encoding: false)
           post(
             :callback,
@@ -170,7 +170,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         setup do
           @nickname = SecureRandom.hex
           challenge = SecureRandom.hex
-          origin = WebAuthn.configuration.origin
+          origin = WebAuthn.configuration.allowed_origins.first
           client = WebAuthn::FakeClient.new(origin, encoding: false)
           post(
             :callback,
@@ -197,7 +197,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
           @nickname = SecureRandom.hex
           @challenge = JSON.parse(response.body)["challenge"]
-          origin = WebAuthn.configuration.origin
+          origin = WebAuthn.configuration.allowed_origins.first
           @client = WebAuthn::FakeClient.new(origin, encoding: false)
         end
 
