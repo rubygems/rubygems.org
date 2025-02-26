@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.17.8)
-      avo (= 3.17.8)
-      avo-dynamic_filters (= 3.17.8)
-      avo-pro (= 3.17.8)
+    avo-advanced (3.17.9)
+      avo (= 3.17.9)
+      avo-dynamic_filters (= 3.17.9)
+      avo-pro (= 3.17.9)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.17.8)
-      avo (= 3.17.8)
+    avo-dashboards (3.17.9)
+      avo (= 3.17.9)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.17.8)
-      avo (= 3.17.8)
+    avo-dynamic_filters (3.17.9)
+      avo (= 3.17.9)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.17.8)
-      avo (= 3.17.8)
+    avo-menu (3.17.9)
+      avo (= 3.17.9)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.17.8)
-      avo (= 3.17.8)
-      avo-dashboards (= 3.17.8)
-      avo-menu (= 3.17.8)
+    avo-pro (3.17.9)
+      avo (= 3.17.9)
+      avo-dashboards (= 3.17.9)
+      avo-menu (= 3.17.9)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    avo (3.17.8)
+    avo (3.17.9)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -811,7 +811,7 @@ GEM
     statsd-instrument (3.9.9)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
-    stringio (3.1.4)
+    stringio (3.1.5)
     strong_migrations (2.2.0)
       activerecord (>= 7)
     swd (2.0.3)
@@ -853,7 +853,7 @@ GEM
     unpwn (1.0.0)
       bloomer (~> 1.0)
       pwned (~> 2.0)
-    uri (1.0.2)
+    uri (1.0.3)
     user_agent_parser (2.18.0)
     useragent (0.16.11)
     validate_url (1.0.15)
@@ -1046,13 +1046,13 @@ CHECKSUMS
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.17.8) sha256=92db148f0399a84654eabccde83d12df2f839ed9a920f3c0af46d92c5390dea4
-  avo-advanced (3.17.8) sha256=2daae3b0091807a70a2af9577390b2b958c96c0d81ab636cd9186d456da1799c
-  avo-dashboards (3.17.8) sha256=fd0bfd3d798e1c6b90f6f5f9b104ca9e13025ed476204be3754293cf721c0aaa
-  avo-dynamic_filters (3.17.8) sha256=94dab2355265c198dd39806188665a9b3c6ea92205e9914bbabff9976297b20e
+  avo (3.17.9) sha256=8c25866302d3c2b4253f11436943f4fb9a3c29c2bb97ad178986e0428c7eb1dc
+  avo-advanced (3.17.9) sha256=2eee83612c4e59de17e3247c080d18ade2f6b839e9257a09bfec9934b773ab62
+  avo-dashboards (3.17.9) sha256=467b149fd72c3dcb1fdf5e114ca63262773a05c99fadf728f7669d43ea2c14c9
+  avo-dynamic_filters (3.17.9) sha256=4d33ab533c0602306b76403610735e8f0552948f80885b515cc817f57a8e8afd
   avo-heroicons (0.1.1) sha256=65cf6b4165691585d172d885ba30b8c7cf979615907febf6f34c1a6569bdbff6
-  avo-menu (3.17.8) sha256=cd31143262bcfecfd70311adb3083e38a2e6b7fc22919d79b6f0b4981e988847
-  avo-pro (3.17.8) sha256=cd8e02bfbf99a39acc9f1ce6ec6fbcd671b6a4afea6c87e1c4afa3ab8f24916e
+  avo-menu (3.17.9) sha256=4423112b87925fd42733733bf6cf84cea470cbed887681fa423a85e68db9e7f6
+  avo-pro (3.17.9) sha256=1e32468e8ce3630a6c1660bf7cce5e777bab1d9a1263d365e6f337de441b3f56
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.3.1) sha256=4465b2add71d69a36fb1268a738d9b3d1a593c789e0286f28fad38e132d4403b
   aws-partitions (1.1052.0) sha256=4dfe9876211c11433cab7fbb3e693c1837f8a89aaf634678f82d5431b2d7c829
@@ -1326,7 +1326,7 @@ CHECKSUMS
   snaky_hash (2.0.1) sha256=1ac87ec157fcfe7a460e821e0cd48ae1e6f5e3e082ab520f03f31a9259dbdc31
   statsd-instrument (3.9.9) sha256=4404872dd03cc0d4bae57396b5c529135a4223fb78d616ca52f37562ac1803e6
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
-  stringio (3.1.4) sha256=7dd68f6f1a88610817c21f6d926dbf36e1fc585d3869fcd4a56c1f3210591d70
+  stringio (3.1.5) sha256=bca92461515a131535743bc81d5559fa1de7d80cff9a654d6c0af6f9f27e35c8
   strong_migrations (2.2.0) sha256=9fed7609633138bd1a97ccc371a3933f292073cde2c7bb888fbe452c76c4b02d
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (3.3.1) sha256=5dcc010ee90d53a59f40eff1f2706bc0b1d77fd3713a0fb196ff698bc4529dfe
@@ -1347,7 +1347,7 @@ CHECKSUMS
   unicode-display_width (3.1.4) sha256=8caf2af1c0f2f07ec89ef9e18c7d88c2790e217c482bfc78aaa65eadd5415ac1
   unicode-emoji (4.0.4) sha256=2c2c4ef7f353e5809497126285a50b23056cc6e61b64433764a35eff6c36532a
   unpwn (1.0.0) sha256=6239d17d46a882b3719b24fb79c78a34caff89d57ab0f5e546be5b5c882bc7d3
-  uri (1.0.2) sha256=b303504ceb7e5905771fa7fa14b649652fa949df18b5880d69cfb12494791e27
+  uri (1.0.3) sha256=e9f2244608eea2f7bc357d954c65c910ce0399ca5e18a7a29207ac22d8767011
   user_agent_parser (2.18.0) sha256=aa943b91da8906cace7d3fe16b450c9d77b68f571485c11e577af97aecb25584
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
