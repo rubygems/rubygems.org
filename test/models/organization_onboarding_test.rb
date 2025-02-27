@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OrganizationOnboardingTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @owner = create(:user)
     @maintainer = create(:user)
@@ -255,6 +257,12 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         assert_raises StandardError, "onboard has already been completed" do
           @onboarding.onboard!
         end
+      end
+    end
+
+    context "should schedule an email to be sent to each user that was onboarded" do
+      should "send an email to each user" do
+        assert_enqueued_jobs @onboarding.users.size
       end
     end
   end

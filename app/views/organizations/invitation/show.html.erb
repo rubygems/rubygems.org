@@ -1,0 +1,3 @@
+<%= form_with model: @membership, url: organization_invitation_path(@organization), method: :patch do |f| %>
+    <%= f.submit "Accept" %>
+<% end %>

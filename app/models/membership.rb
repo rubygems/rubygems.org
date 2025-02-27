@@ -9,7 +9,23 @@ class Membership < ApplicationRecord
 
   scope :with_minimum_role, ->(role) { where(role: Access.flag_for_role(role)...) }
 
+  before_create :set_invitation_expire_time
+
+  def confirm!
+    update_attribute(:confirmed_at, Time.now)
+  end
+
   def confirmed?
-    !confirmed_at.nil?
+    confirmed_at.present?
+  end
+
+  def refresh_invitation
+    update_attribute(:invitation_expires_at, Gemcutter::MEMBERSHIP_INVITE_EXPIRES_AFTER.from_now)
+  end
+
+  private
+
+  def set_invitation_expire_time
+    self.invitation_expires_at = Gemcutter::MEMBERSHIP_INVITE_EXPIRES_AFTER.from_now
   end
 end

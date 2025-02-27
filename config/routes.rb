@@ -281,6 +281,7 @@ Rails.application.routes.draw do
     end
     resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
       resources :gems, only: :index, controller: 'organizations/gems'
+      resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: 'organizations/invitation'
     end
   end
 
