@@ -216,4 +216,8 @@ class MailerPreview < ActionMailer::Preview
       and a p tag <p foo="bar" style="color: yellow;">with html</p> and a <a href="https://example.com">link</a>
     TEXT
   end
+
+  def membership_created
+    MembershipMailer.user_invited(Membership.last)
+  end
 end

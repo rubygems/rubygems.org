@@ -45,9 +45,12 @@ class OrganizationOnboarding < ApplicationRecord
         status: :completed,
         onboarded_organization_id: onboarded_organization.id
       )
-    end
 
-    remove_ownerships
+      remove_ownerships
+      email_onboarded_users(onboarded_organization)
+    end
+    
+
   rescue ActiveRecord::ActiveRecordError => e
     self.status = :failed
     self.error = e.message
@@ -158,6 +161,13 @@ class OrganizationOnboarding < ApplicationRecord
 
     selected_rubygems.reject { ownerships[it.id].present? && ownerships[it.id].owner? }.each do |rubygem|
       errors.add(:created_by, "must be an owner of the #{rubygem.name} gem")
+    end
+  end
+
+  def email_onboarded_users(organization)
+    organization.memberships.each do |membership|
+      next if membership.user == created_by
+      OrganizationMailer.user_invited(membership).deliver_later
     end
   end
 end

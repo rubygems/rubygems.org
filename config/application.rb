@@ -105,6 +105,7 @@ module Gemcutter
   MAX_PAGES = 1000
   MFA_KEY_EXPIRY = 30.minutes
   OWNERSHIP_TOKEN_EXPIRES_AFTER = 48.hours
+  MEMBERSHIP_INVITE_EXPIRES_AFTER = 7.days
   POPULAR_DAYS_LIMIT = 70.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
