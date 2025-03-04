@@ -434,13 +434,21 @@ nl:
         header: 'Welkom bij %{site}, dé hosting service voor de Ruby community. Het
           doel van dit poroject is drieledig:'
         transparent_pages: Het maken van meer transparante en toegankelijke projectpagina's.
+    acceptable_use:
+      title:
     data:
       title:
     download:
       title:
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title:
     sponsors:
+      title:
+    terms_of_service:
       title:
   password_mailer:
     change_password:
