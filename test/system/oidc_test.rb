@@ -221,7 +221,7 @@ class OIDCTest < ApplicationSystemTestCase
     assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
   end
 
-  test "creating an api key role for a provider who isn't GitHub" do
+  test "creating and updating an api key role for a provider who isn't GitHub" do
     provider_two = create(:oidc_provider_buildkite, issuer: "https://agent.buildkite.com")
     rubygem = create(:rubygem, owners: [@user])
 
@@ -307,6 +307,18 @@ class OIDCTest < ApplicationSystemTestCase
     }
 
     assert_equal_hash(expected, role.as_json.slice(*expected.keys))
+
+    click_button "Edit API Key Role"
+
+    page.assert_selector "h1", text: "Edit API Key Role"
+
+    assert_select "OIDC provider", options: ["https://token.actions.githubusercontent.com", "https://agent.buildkite.com"], selected: "https://agent.buildkite.com"
+
+    page.fill_in "Name", with: "Another Name"
+
+    click_button "Update Api key role"
+
+    page.assert_selector "h1", text: "API Key Role Another Name"
   end
 
   test "creating rubygem trusted publishers" do
