@@ -446,13 +446,21 @@ pt-BR:
         header: 'Bem vindo ao %{site}, o serviço de hospedagem de gems da comunidade
           Ruby. Este projeto tem três propósitos:'
         transparent_pages: Criar páginas mais acessíveis e transparentes para os projetos
+    acceptable_use:
+      title:
     data:
       title:
     download:
       title:
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title:
     sponsors:
+      title:
+    terms_of_service:
       title:
   password_mailer:
     change_password:

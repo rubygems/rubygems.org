@@ -428,14 +428,22 @@ en:
         enable_community: Enable the community to improve and enhance the site
         header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
         transparent_pages: Create more transparent and accessible project pages
+    acceptable_use:
+      title: Acceptable Use
     data:
       title: RubyGems.org Data Dumps
     download:
       title: Download RubyGems
+    policies:
+      title: RubyGems.org Policies
+    privacy_notice:
+      title: Privacy Notice
     security:
       title: Security
     sponsors:
       title: Sponsors
+    terms_of_service:
+      title: Terms of Service
   password_mailer:
     change_password:
       closing: If you didn't request this, ignore this email. Your password has

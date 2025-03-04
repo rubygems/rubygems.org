@@ -480,14 +480,22 @@ es:
         header: 'Bienvenido a %{site}, el servicio de alojamiento de gemas para la
           comunidad de Ruby. Este proyecto tiene 3 objetivos:'
         transparent_pages: Crear páginas de proyecto más accesibles y transparentes
+    acceptable_use:
+      title:
     data:
       title: Volcado de datos de RubyGems.org
     download:
       title: Descargar RubyGems
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title: Seguridad
     sponsors:
       title: Patrocinadores
+    terms_of_service:
+      title:
   password_mailer:
     change_password:
       closing:
