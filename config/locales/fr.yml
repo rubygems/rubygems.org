@@ -449,13 +449,21 @@ fr:
         header: 'Bienvenue sur %{site}, le service d''hébergement des gems de la communauté
           Ruby. Ce projet a trois objectifs :'
         transparent_pages: Créer des pages de projet plus accessibles et transparentes
+    acceptable_use:
+      title:
     data:
       title:
     download:
       title:
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title:
     sponsors:
+      title:
+    terms_of_service:
       title:
   password_mailer:
     change_password:

@@ -430,14 +430,22 @@ ja:
         enable_community: コミュニティがサイトを改善できるようにすること
         header: ようこそRubyコミュニティのgemホスティングサービス %{site}へ。このプロジェクトの目的は以下の3点です：
         transparent_pages: 透過的でアクセスしやすいプロジェクトページを作成すること
+    acceptable_use:
+      title:
     data:
       title: RubyGems.orgのデータのダンプ
     download:
       title: RubyGemsをダウンロード
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title: セキュリティ
     sponsors:
       title: 出資者
+    terms_of_service:
+      title:
   password_mailer:
     change_password:
       closing: こちらを申請しなかった場合はこのEメールはご放念ください。パスワードは変更されません。

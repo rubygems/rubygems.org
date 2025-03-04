@@ -312,6 +312,13 @@ Rails.application.routes.draw do
   # static pages routes
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
+  scope :policies, to: 'pages#policies', constraints: { format: :html } do
+    get '', id: 'policies'
+    get 'terms-of-service', id: 'terms_of_service'
+    get 'acceptable-use', id: 'acceptable_use'
+    get 'privacy-notice', id: 'privacy_notice'
+end
+
   ################################################################################
   # Internal Routes
 
