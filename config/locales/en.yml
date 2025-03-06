@@ -250,6 +250,7 @@ en:
         hosted_by: Hosted by
         monitored_by: Monitored by
         optimized_by: Optimized by
+        policies: Policies
         releases: Releases
         resolved_with: Resolved with
         security: Security
@@ -430,6 +431,8 @@ en:
         transparent_pages: Create more transparent and accessible project pages
     acceptable_use:
       title: Acceptable Use
+    copyright_policy:
+      title: Copyright Policy
     data:
       title: RubyGems.org Data Dumps
     download:

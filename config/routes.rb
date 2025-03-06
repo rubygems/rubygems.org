@@ -313,10 +313,11 @@ Rails.application.routes.draw do
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
   scope :policies, to: 'pages#policies', constraints: { format: :html } do
-    get '', id: 'policies'
-    get 'terms-of-service', id: 'terms_of_service'
+    get '', id: 'policies', as: 'policies'
     get 'acceptable-use', id: 'acceptable_use'
+    get 'copyright-policy', id: 'copyright_policy'
     get 'privacy-notice', id: 'privacy_notice'
+    get 'terms-of-service', id: 'terms_of_service'
   end
 
   ################################################################################

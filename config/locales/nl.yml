@@ -246,6 +246,7 @@ nl:
         hosted_by: Hosting
         monitored_by: Monitoring
         optimized_by: Optimalisatie
+        policies:
         releases:
         resolved_with: DNS
         security: Security
@@ -435,6 +436,8 @@ nl:
           doel van dit poroject is drieledig:'
         transparent_pages: Het maken van meer transparante en toegankelijke projectpagina's.
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title:

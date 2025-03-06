@@ -263,6 +263,7 @@ es:
         hosted_by: Alojado por
         monitored_by: Monitoreado por
         optimized_by: Optimizado por
+        policies:
         releases:
         resolved_with: DNS
         security: Seguridad
@@ -481,6 +482,8 @@ es:
           comunidad de Ruby. Este proyecto tiene 3 objetivos:'
         transparent_pages: Crear páginas de proyecto más accesibles y transparentes
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title: Volcado de datos de RubyGems.org
@@ -835,10 +838,10 @@ es:
       reserved_namespace_html:
         one: Esta gema existió previamente, pero fue eliminada por sus propietarios.
           El equipo de RubyGems.org ha reservado este nombre por un día más. Luego
-          cualquiera podrá solicitar este nombre de gema usando `gem push`. <br>
-          Si eres el anterior propietario, puedes cambiar la propiedad de esta gema
-          usando el comando `gem owner`. También puedes crear nuevas versiones de
-          esta gema usando `gem push`.
+          cualquiera podrá solicitar este nombre de gema usando `gem push`. <br> Si
+          eres el anterior propietario, puedes cambiar la propiedad de esta gema usando
+          el comando `gem owner`. También puedes crear nuevas versiones de esta gema
+          usando `gem push`.
         other: Esta gema existió previamente, pero fue eliminada por sus propietarios.
           El equipo de RubyGems.org ha reservado este nombre por %{count} días más.
           Luego cualquiera podrá solicitar este nombre de gema usando `gem push`.

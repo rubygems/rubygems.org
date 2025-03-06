@@ -244,6 +244,7 @@ ja:
         hosted_by: ホスト
         monitored_by: 監視
         optimized_by: 最適化
+        policies:
         releases: リリース
         resolved_with: DNS
         security: セキュリティ
@@ -431,6 +432,8 @@ ja:
         header: ようこそRubyコミュニティのgemホスティングサービス %{site}へ。このプロジェクトの目的は以下の3点です：
         transparent_pages: 透過的でアクセスしやすいプロジェクトページを作成すること
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title: RubyGems.orgのデータのダンプ

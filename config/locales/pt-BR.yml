@@ -252,6 +252,7 @@ pt-BR:
         hosted_by: Hospedagem
         monitored_by: Monitoramento
         optimized_by: Otimizações
+        policies:
         releases:
         resolved_with: DNS
         security: Segurança
@@ -447,6 +448,8 @@ pt-BR:
           Ruby. Este projeto tem três propósitos:'
         transparent_pages: Criar páginas mais acessíveis e transparentes para os projetos
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title:

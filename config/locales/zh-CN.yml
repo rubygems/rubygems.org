@@ -245,6 +245,7 @@ zh-CN:
         hosted_by: 托管
         monitored_by: 监控
         optimized_by: 优化
+        policies:
         releases:
         resolved_with: 解析
         security: 安全
@@ -438,6 +439,8 @@ zh-CN:
         header: 欢迎来到 %{site}, 这是 Ruby 社区的 Gem 托管服务。此项目有三个目的：
         transparent_pages: 构建更透明以及便于浏览的项目页面
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title: RubyGems.org 数据转储

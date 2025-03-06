@@ -244,6 +244,7 @@ zh-TW:
         hosted_by: 托管
         monitored_by: 監控
         optimized_by: 最佳化
+        policies:
         releases:
         resolved_with: 解析
         security: 安全
@@ -431,6 +432,8 @@ zh-TW:
         header: 歡迎來到 %{site}，這裡是 Ruby 社群 Gem 套件管理服務。此專案的建立有以下三個目的：
         transparent_pages: 建立更透明、更易於瀏覽的 Gem 專案頁面
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title:

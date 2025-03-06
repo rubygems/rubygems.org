@@ -255,6 +255,7 @@ fr:
         hosted_by: Hébergé par
         monitored_by: Monitoring par
         optimized_by: Optimisé par
+        policies:
         releases:
         resolved_with: Résolu par
         security: Security
@@ -450,6 +451,8 @@ fr:
           Ruby. Ce projet a trois objectifs :'
         transparent_pages: Créer des pages de projet plus accessibles et transparentes
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title:
