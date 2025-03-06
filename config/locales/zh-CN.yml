@@ -34,6 +34,8 @@ zh-CN:
   sign_in: 登录
   sign_out: 退出
   sign_up: 注册
+  by_signing_up:
+  sign_up_terms:
   dependency_list: 显示所有传递性依赖
   multifactor_authentication: 多因素验证（MFA）
   subtitle: 您的社区 Gem 托管中心

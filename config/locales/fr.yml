@@ -40,6 +40,8 @@ fr:
   sign_in: Connexion
   sign_out: Déconnexion
   sign_up: Inscription
+  by_signing_up:
+  sign_up_terms:
   dependency_list:
   multifactor_authentication: Authentification Multifacteur
   subtitle: votre communauté d'hébergement des gems

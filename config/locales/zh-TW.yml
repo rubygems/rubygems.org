@@ -33,6 +33,8 @@ zh-TW:
   sign_in: 登入
   sign_out: 登出
   sign_up: 註冊
+  by_signing_up:
+  sign_up_terms:
   dependency_list:
   multifactor_authentication: 多重要素驗證
   subtitle: Ruby 社群 Gem 套件管理平台

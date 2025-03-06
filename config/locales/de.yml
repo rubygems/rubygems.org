@@ -42,6 +42,8 @@ de:
   sign_in: Anmelden
   sign_out: Abmelden
   sign_up: Registrieren
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Alle transitiven Abhängigkeiten anzeigen
   multifactor_authentication: Mehrfaktorauthentifizierung
   subtitle: Ihre Community des Gem-Hostingservices

@@ -40,6 +40,8 @@ es:
   sign_in: Ingresa
   sign_out: Salir
   sign_up: Regístrate
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Mostrar toda la cadena de dependencias
   multifactor_authentication: Autenticación de múltiples factores
   subtitle: el alojamiento de gemas de tu comunidad
