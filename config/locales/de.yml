@@ -264,6 +264,7 @@ de:
         hosted_by: Gehostet von
         monitored_by: Überwacht von
         optimized_by: Optimiert mit
+        policies:
         releases:
         resolved_with: Aufgelöst mit
         security: Security
@@ -489,6 +490,8 @@ de:
           Dieses Projekt hat drei Ziele:'
         transparent_pages: Mehr transparente und barrierefreie Projektseiten zu erstellen
     acceptable_use:
+      title:
+    copyright_policy:
       title:
     data:
       title: RubyGems.org Data Dumps
