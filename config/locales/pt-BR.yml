@@ -39,6 +39,8 @@ pt-BR:
   sign_in: Fazer Login
   sign_out: Sair
   sign_up: Cadastrar
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Mostrar todas as dependências
   multifactor_authentication: Autenticação Multifator
   subtitle: O host de gems da sua comunidade

@@ -33,6 +33,8 @@ ja:
   sign_in: サインイン
   sign_out: サインアウト
   sign_up: 新規登録
+  by_signing_up:
+  sign_up_terms:
   dependency_list: 全ての推移的な依存関係を表示
   multifactor_authentication: 多要素認証
   subtitle: コミュニティのgemホスティングサービス

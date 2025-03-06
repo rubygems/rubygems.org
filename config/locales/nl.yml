@@ -32,6 +32,8 @@ nl:
   sign_in: Inloggen
   sign_out: Uitloggen
   sign_up: Registreren
+  by_signing_up:
+  sign_up_terms:
   dependency_list:
   multifactor_authentication: Multifactor authenticatie
   subtitle: De gem host voor de community

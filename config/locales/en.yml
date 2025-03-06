@@ -39,6 +39,8 @@ en:
   sign_in: Sign in
   sign_out: Sign out
   sign_up: Sign up
+  by_signing_up: By signing up, you agree to the
+  sign_up_terms: RubyGems Terms of Service
   dependency_list: Show all transitive dependencies
   multifactor_authentication: Multi-factor authentication
   subtitle: your community gem host
