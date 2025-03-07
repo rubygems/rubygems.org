@@ -116,7 +116,7 @@ group :development, :test do
   gem "rubocop-performance", "~> 1.24", require: false
   gem "rubocop-minitest", "~> 0.37", require: false
   gem "rubocop-capybara", "~> 2.21", require: false
-  gem "rubocop-factory_bot", "~> 2.26", require: false
+  gem "rubocop-factory_bot", "~> 2.27", require: false
 end
 
 group :development do
