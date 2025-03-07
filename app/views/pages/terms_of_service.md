@@ -1,6 +1,6 @@
 # RubyGems.org Terms of Service
 
-Last updated Mar 4, 2025
+Last updated Mar 7, 2025
 
 The RubyGems.org website and service located at [https://rubygems.org](https://rubygems.org) (the “Service”) are operated by Ruby Central, Inc. (“Provider,” “we,” or “us”). By registering for, using, or accessing the Service, you agree to be bound by these terms of service (“Terms”). These Terms also incorporate our other policies applicable to the Service, including the [Ruby Central Privacy Policy](https://rubycentral.org/privacy-notice), [RubyGems.org Privacy Policy](https://rubygems.org/policies/privacy-notice), and [RubyGems.org Acceptable Use Policy](https://rubygems.org/policies/acceptable-use). If you don’t agree to these Terms, you must discontinue use of the Service.  If you have any questions about these terms, please contact us: [contact@rubycentral.org](mailto:contact@rubycentral.org).
 
@@ -32,7 +32,7 @@ b. You retain your rights to Your Content. You grant to Provider a non-exclusive
 c. You grant to users of the Service a non-exclusive, worldwide, royalty-free, perpetual, license to use, store, cache, and reproduce Your Content, in all media now known or later developed, for the purpose of downloading, using, and preparing derivative works of your Content consistent with any license terms you have applied to Your Content.  
 d. You grant to operators of public RubyGems mirrors a non-exclusive, worldwide, royalty-free, perpetual, license (including the right to sublicense) to use, host, store, cache, reproduce, publish, display, perform, distribute, and transmit Your Content, in all media now known or later developed, for the purpose of operating public mirrors of the RubyGems package archive.  
 e. You represent and warrant that you have all necessary rights and authority to grant the above licenses. With regard to any third-party Content that you submit, you represent and warrant that you have a license to provide the Content according to these Terms, or that your use is otherwise permissible, for example as fair use.  
-f. We have the right to refuse or remove any User Content that, in our sole discretion, violates any laws or Provider policies.
+f. We have the right to refuse or remove any User Content that we determine, in our sole discretion (1) violates this Agreement or any other applicable Ruby Central policy, (2) we are required by law to remove your content, or (3) poses any risk to Ruby Central or our users..
 
 ## 4\. Acceptable Use Policy
 
@@ -40,7 +40,7 @@ a. Your use of the Service must not violate any applicable laws, including copyr
 
 b. You agree that you will not under any circumstances violate our [Acceptable Use Policies](https://rubygems.org/policies/acceptable-use).
 
-c. Provider reserves the right, to the extent permitted by applicable law, to remove or prohibit any User Content at any time, whether for violating this Agreement or for any other reason.
+c. Provider reserves the right, to the extent permitted by applicable law, to remove or prohibit any User Content at any time, for violating this Agreement or any other applicable Ruby Central policy, if we reasonably determine that we are required by law to remove your content, or if we reasonably determine that hosting your content poses any risk to Ruby Central or our users.
 
 ## 5\. Ownership of the Services; Service Changes and Limitations
 
@@ -49,13 +49,13 @@ b. Provider may change the Service at any time, without notice to you. Provider 
 
 ## 6\. Copyright Policy
 
-a. If you believe that content on our website violates your copyright, please contact us in accordance with our Copyright Policy. If you are a copyright owner and you believe that content on the Service violates your rights, please contact us by emailing [contact@rubycentral.org](mailto:contact@rubycentral.org). There may be legal consequences for sending a false or frivolous takedown notice. Before sending a takedown request, you must consider legal uses such as fair use and licensed uses.  
+a. If you believe that content on our website violates your copyright, please contact us in accordance with our [Copyright Policy](https://rubycentral.org/copyright-policy/). If you are a copyright owner and you believe that content on the Service violates your rights, please contact us by emailing [contact@rubycentral.org](mailto:contact@rubycentral.org). There may be legal consequences for sending a false or frivolous takedown notice. Before sending a takedown request, you must consider legal uses such as fair use and licensed uses.  
 b. We will terminate the Accounts of repeat infringers of this policy.
 
 ## 7\. Termination
 
 a. You may terminate your Account at any time.  
-b. We may suspend or terminate your access to the Service, with or without notice, at any time and for any reason, including for violations of this Agreement.  
+b. We may suspend or terminate your access to the Service, with or without notice, at any time if we determine, in our sole discretion, that your use of the Service:  (1) violates this Agreement or any other applicable Ruby Central policy, (2) violates any applicable law in your use of the Service, or (3) poses any risk to Ruby Central or our users.  
 c. We will retain and use your information as necessary to comply with our legal obligations, resolve disputes, and enforce our agreements, but barring legal requirements, we will delete your Account information and any User Content associated with it within 90 days of cancellation or termination (though some information may remain in encrypted backups). This information can not be recovered once your Account is canceled.  
 d. In the event of termination, the following sections of these Terms shall remain in effect: 3, 5, 6, 7(c), 8, 9, 10, 11, and 12\.
 
@@ -77,7 +77,7 @@ a. You agree to indemnify and hold harmless Provider, and its subsidiaries, affi
 ## 11\. Notice
 
 a. Notice to You. Provider may provide you with notices through the Service, or by email to your email address on record in your Provider Account. You are responsible for ensuring that your contact information is both current and accurate in your Provider Account.  
-b. Notice to Provider. If you have a dispute with Provider or wish to provide a notice under this Agreement, you must promptly send written notice to Provider at: contact@rubycentral.org.
+b. Notice to Provider. If you have a dispute with Provider or wish to provide a notice under this Agreement, you must promptly send written notice to Provider at: [contact@rubycentral.org](mailto:contact@rubycentral.org).
 
 ## 12\. Miscellaneous Terms
 
