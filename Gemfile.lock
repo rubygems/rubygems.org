@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.17.9)
-      avo (= 3.17.9)
-      avo-dynamic_filters (= 3.17.9)
-      avo-pro (= 3.17.9)
+    avo-advanced (3.18.1)
+      avo (> 3.18.0, <= 3.18.1)
+      avo-dynamic_filters (= 3.18.1)
+      avo-pro (= 3.18.1)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.17.9)
-      avo (= 3.17.9)
+    avo-dashboards (3.18.1)
+      avo (> 3.18.0, <= 3.18.1)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.17.9)
-      avo (= 3.17.9)
+    avo-dynamic_filters (3.18.1)
+      avo (> 3.18.0, <= 3.18.1)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.17.9)
-      avo (= 3.17.9)
+    avo-menu (3.18.1)
+      avo (> 3.18.0, <= 3.18.1)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.17.9)
-      avo (= 3.17.9)
-      avo-dashboards (= 3.17.9)
-      avo-menu (= 3.17.9)
+    avo-pro (3.18.1)
+      avo (> 3.18.0, <= 3.18.1)
+      avo-dashboards (= 3.18.1)
+      avo-menu (= 3.18.1)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    avo (3.17.9)
+    avo (3.18.1)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -841,9 +841,9 @@ GEM
       bindata (~> 2.4)
       openssl (> 2.0)
       openssl-signature_algorithm (~> 1.0)
-    turbo-rails (2.0.11)
-      actionpack (>= 6.0.0)
-      railties (>= 6.0.0)
+    turbo-rails (2.0.13)
+      actionpack (>= 7.1.0)
+      railties (>= 7.1.0)
     turbo_power (0.7.0)
       turbo-rails (>= 1.3.0)
     tzinfo (2.0.6)
@@ -911,7 +911,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.7)
   avo (~> 3.13)
-  avo-advanced (~> 3.17)!
+  avo-advanced (~> 3.18)!
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.182)
   aws-sdk-sqs (~> 1.93)
@@ -1047,13 +1047,13 @@ CHECKSUMS
   argon2 (2.3.0) sha256=980ef65172bf512ad37b6cbb0d61eef40b6dccab6a7db4e70557527e1dce9557
   ast (2.4.2) sha256=1e280232e6a33754cde542bc5ef85520b74db2aac73ec14acef453784447cc12
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.17.9) sha256=8c25866302d3c2b4253f11436943f4fb9a3c29c2bb97ad178986e0428c7eb1dc
-  avo-advanced (3.17.9) sha256=2eee83612c4e59de17e3247c080d18ade2f6b839e9257a09bfec9934b773ab62
-  avo-dashboards (3.17.9) sha256=467b149fd72c3dcb1fdf5e114ca63262773a05c99fadf728f7669d43ea2c14c9
-  avo-dynamic_filters (3.17.9) sha256=4d33ab533c0602306b76403610735e8f0552948f80885b515cc817f57a8e8afd
+  avo (3.18.1) sha256=2ba79a74a81d4a962a4595c46dd4dc8e1fd1888bd659d99e0182c5b4971a1fe3
+  avo-advanced (3.18.1) sha256=b99f341dd637870c61491bd2c3e35bd0c54e2a2cafbdb7725f178142f890064e
+  avo-dashboards (3.18.1) sha256=41dfd96629774d53ef4f4872a53576fa9cc6686ee9f80d681525f11257bc3b8b
+  avo-dynamic_filters (3.18.1) sha256=7dbc7438332817762f7b26a7ca034734d3851ab942317676bc1983f54918e881
   avo-heroicons (0.1.1) sha256=65cf6b4165691585d172d885ba30b8c7cf979615907febf6f34c1a6569bdbff6
-  avo-menu (3.17.9) sha256=4423112b87925fd42733733bf6cf84cea470cbed887681fa423a85e68db9e7f6
-  avo-pro (3.17.9) sha256=1e32468e8ce3630a6c1660bf7cce5e777bab1d9a1263d365e6f337de441b3f56
+  avo-menu (3.18.1) sha256=a3a1fb93d8f1a94c112f8cd16e8d20a6754a017ac99dd52f6a0c82976d0f7107
+  avo-pro (3.18.1) sha256=221fdc4d9ab6de50c593969a560057f05c923cf9abbfaaf7a76f520910f96068
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.3.1) sha256=4465b2add71d69a36fb1268a738d9b3d1a593c789e0286f28fad38e132d4403b
   aws-partitions (1.1052.0) sha256=4dfe9876211c11433cab7fbb3e693c1837f8a89aaf634678f82d5431b2d7c829
@@ -1342,7 +1342,7 @@ CHECKSUMS
   timescaledb (0.3.2) sha256=4d0efb7f4f520142a8d91af4b728379b0c5a343795781b7492f1cbfc4be15080
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.14.0) sha256=d05cc52b397f89c36a7307407e0e84d3ea1c7afce50e0a70b146f8ab17d2bf4b
-  turbo-rails (2.0.11) sha256=fc47674736372780abd2a4dc0d84bef242f5ca156a457cd7fa6308291e397fcf
+  turbo-rails (2.0.13) sha256=c40ac0a3ccd57c129925c8ac524a5dfd1e17fad080906e2d32135721a8bba22f
   turbo_power (0.7.0) sha256=ad95d147e0fa761d0023ad9ca00528c7b7ddf6bba8ca2e23755d5b21b290d967
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (3.1.4) sha256=8caf2af1c0f2f07ec89ef9e18c7d88c2790e217c482bfc78aaa65eadd5415ac1
