@@ -33,6 +33,8 @@ zh-TW:
   sign_in: 登入
   sign_out: 登出
   sign_up: 註冊
+  by_signing_up:
+  sign_up_terms:
   dependency_list:
   multifactor_authentication: 多重要素驗證
   subtitle: Ruby 社群 Gem 套件管理平台
@@ -244,6 +246,7 @@ zh-TW:
         hosted_by: 托管
         monitored_by: 監控
         optimized_by: 最佳化
+        policies:
         releases:
         resolved_with: 解析
         security: 安全
@@ -430,14 +433,24 @@ zh-TW:
         enable_community: 讓社群能透過眾人的力量來改善本站
         header: 歡迎來到 %{site}，這裡是 Ruby 社群 Gem 套件管理服務。此專案的建立有以下三個目的：
         transparent_pages: 建立更透明、更易於瀏覽的 Gem 專案頁面
+    acceptable_use:
+      title:
+    copyright_policy:
+      title:
     data:
       title:
     download:
       title: 下載 RubyGems
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title: 安全性
     sponsors:
       title: 贊助者
+    terms_of_service:
+      title:
   password_mailer:
     change_password:
       closing:

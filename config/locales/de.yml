@@ -42,6 +42,8 @@ de:
   sign_in: Anmelden
   sign_out: Abmelden
   sign_up: Registrieren
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Alle transitiven Abhängigkeiten anzeigen
   multifactor_authentication: Mehrfaktorauthentifizierung
   subtitle: Ihre Community des Gem-Hostingservices
@@ -264,6 +266,7 @@ de:
         hosted_by: Gehostet von
         monitored_by: Überwacht von
         optimized_by: Optimiert mit
+        policies:
         releases:
         resolved_with: Aufgelöst mit
         security: Security
@@ -488,14 +491,24 @@ de:
         header: 'Willkommen bei RubyGems.org, dem Gem-Hosting-Srrvice der Ruby-Community.
           Dieses Projekt hat drei Ziele:'
         transparent_pages: Mehr transparente und barrierefreie Projektseiten zu erstellen
+    acceptable_use:
+      title:
+    copyright_policy:
+      title:
     data:
       title: RubyGems.org Data Dumps
     download:
       title: Download RubyGems
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title: Security
     sponsors:
       title: Sponsors
+    terms_of_service:
+      title:
   password_mailer:
     change_password:
       closing: If you didn't request this, ignore this email. Your password has not

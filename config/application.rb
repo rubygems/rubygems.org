@@ -125,4 +125,7 @@ module Gemcutter
   PAGES = %w[
     about data download security sponsors
   ].freeze
+  POLICY_PAGES = %w[
+    acceptable_use copyright_policy policies privacy_notice terms_of_service
+  ].freeze
 end
