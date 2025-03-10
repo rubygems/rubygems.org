@@ -5,7 +5,7 @@
     <% field.get_fields.each do |f| %>
       <tr class="!tw-py-0" >
         <td><%= f.name %></td>
-        <%= render f.hydrate(view:, model: field.value, resource:).component_for_view(view).new(field: f, resource:, flush: true) %>
+        <%= render f.hydrate(view:, record: field.value, resource:).component_for_view(view).new(field: f, resource:, flush: true) %>
       </tr>
     <% end %>
     </tbody></table>
