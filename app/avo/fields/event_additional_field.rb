@@ -9,15 +9,16 @@ class Avo::Fields::EventAdditionalField < Avo::Fields::BaseField
 
     Avo::Fields::NestedField.new(id, **@args) do
       additional_type.attribute_types.each do |attribute_name, type|
+        attribute_name = attribute_name.to_sym
         case type
         when Types::GlobalId
-          field attribute_name.to_sym, as: :global_id, show_on: :index
+          field attribute_name, as: :global_id, show_on: :index
         when ActiveModel::Type::String
-          field attribute_name.to_sym, as: :text, show_on: :index
+          field attribute_name, as: :text, show_on: :index
         when ActiveModel::Type::Boolean
-          field attribute_name.to_sym, as: :boolean, show_on: :index
+          field attribute_name, as: :boolean, show_on: :index
         else
-          field attribute_name.to_sym, as: :json_viewer, hide_on: :index
+          field attribute_name, as: :text, hide_on: :index
         end
       end
     end.hydrate(record:, resource:, action:, view:, panel_name:, user:)
