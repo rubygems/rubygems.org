@@ -33,6 +33,8 @@ ja:
   sign_in: サインイン
   sign_out: サインアウト
   sign_up: 新規登録
+  by_signing_up:
+  sign_up_terms:
   dependency_list: 全ての推移的な依存関係を表示
   multifactor_authentication: 多要素認証
   subtitle: コミュニティのgemホスティングサービス
@@ -244,6 +246,7 @@ ja:
         hosted_by: ホスト
         monitored_by: 監視
         optimized_by: 最適化
+        policies:
         releases: リリース
         resolved_with: DNS
         security: セキュリティ
@@ -430,14 +433,24 @@ ja:
         enable_community: コミュニティがサイトを改善できるようにすること
         header: ようこそRubyコミュニティのgemホスティングサービス %{site}へ。このプロジェクトの目的は以下の3点です：
         transparent_pages: 透過的でアクセスしやすいプロジェクトページを作成すること
+    acceptable_use:
+      title:
+    copyright_policy:
+      title:
     data:
       title: RubyGems.orgのデータのダンプ
     download:
       title: RubyGemsをダウンロード
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title: セキュリティ
     sponsors:
       title: 出資者
+    terms_of_service:
+      title:
   password_mailer:
     change_password:
       closing: こちらを申請しなかった場合はこのEメールはご放念ください。パスワードは変更されません。

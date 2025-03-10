@@ -39,6 +39,8 @@ pt-BR:
   sign_in: Fazer Login
   sign_out: Sair
   sign_up: Cadastrar
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Mostrar todas as dependências
   multifactor_authentication: Autenticação Multifator
   subtitle: O host de gems da sua comunidade
@@ -252,6 +254,7 @@ pt-BR:
         hosted_by: Hospedagem
         monitored_by: Monitoramento
         optimized_by: Otimizações
+        policies:
         releases:
         resolved_with: DNS
         security: Segurança
@@ -446,13 +449,23 @@ pt-BR:
         header: 'Bem vindo ao %{site}, o serviço de hospedagem de gems da comunidade
           Ruby. Este projeto tem três propósitos:'
         transparent_pages: Criar páginas mais acessíveis e transparentes para os projetos
+    acceptable_use:
+      title:
+    copyright_policy:
+      title:
     data:
       title:
     download:
       title:
+    policies:
+      title:
+    privacy_notice:
+      title:
     security:
       title:
     sponsors:
+      title:
+    terms_of_service:
       title:
   password_mailer:
     change_password:
