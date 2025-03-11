@@ -951,7 +951,7 @@ DEPENDENCIES
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.1)
   kaminari (~> 1.2)
-  kramdown
+  kramdown (~> 2.5)
   launchdarkly-server-sdk (~> 8.9)
   launchy (~> 3.1)
   letter_opener (~> 1.10)
