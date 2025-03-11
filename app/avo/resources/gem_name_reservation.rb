@@ -10,5 +10,6 @@ class Avo::Resources::GemNameReservation < Avo::BaseResource
   def fields
     field :id, as: :id
     field :name, as: :text
+    field :audits, as: :has_many
   end
 end
