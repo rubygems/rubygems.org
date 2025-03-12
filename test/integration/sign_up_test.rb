@@ -104,6 +104,12 @@ class SignUpTest < SystemTest
     assert page.has_content? "Sign out"
   end
 
+  test "links to terms of service" do
+    visit sign_up_path
+
+    assert page.has_link? "RubyGems Terms of Service", href: "/policies/terms-of-service"
+  end
+
   teardown do
     Clearance.configure { |config| config.allow_sign_up = true }
     Rails.application.reload_routes!
