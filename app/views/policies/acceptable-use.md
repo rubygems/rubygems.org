@@ -2,7 +2,7 @@
 
 Last updated: Mar 4, 2025
 
-This RubyGems.org Acceptable Use Policy is part of, and subject to the terms of, the RubyGems.org [Terms of Service](http://rubygems.org/policies/terms-of-service).
+This RubyGems.org Acceptable Use Policy is part of, and subject to the terms of, the RubyGems.org [Terms of Service](https://rubygems.org/policies/terms-of-service).
 
 *Ruby is a kind and supportive community. We’re happy to have you here\! It’s important to understand that RubyGems.org is a critical resource for the Ruby ecosystem. The service hosts a variety of packages from a diverse group of users, many of them critical for the function of Ruby itself. In order to be effective, we must all be able to work together as part of a community in good faith.*   
 *While using RubyGems.org, we expect you to comply with these Acceptable Usage Policies which include some restrictions on content and conduct on RubyGems.org related to user safety, intellectual property, privacy, authenticity, and other limitations. As is often said in the Ruby Community, “Matz is nice and so we are nice.” In short: be nice.*  
