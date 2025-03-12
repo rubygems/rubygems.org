@@ -16,7 +16,7 @@ class PoliciesController < ApplicationController
   private
 
   def find_policy
-    id = params[:id]
+    id = params[:policy]
     raise ActionController::RoutingError, "Policy page not found" unless Gemcutter::POLICY_PAGES.include?(id)
     @page = id
   end

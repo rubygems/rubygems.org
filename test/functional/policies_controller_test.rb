@@ -11,7 +11,7 @@ class PoliciesControllerTest < ActionController::TestCase
 
   context "when valid page is requested" do
     setup do
-      get :show, params: { id: "acceptable-use" }
+      get :show, params: { policy: "acceptable-use" }
     end
 
     should respond_with :ok
@@ -20,7 +20,7 @@ class PoliciesControllerTest < ActionController::TestCase
   context "when invalid page is requested" do
     should "error" do
       assert_raises(ActionController::UrlGenerationError) do
-        get :show, params: { id: "not-found-page" }
+        get :show, params: { policy: "not-found-page" }
       end
     end
   end
