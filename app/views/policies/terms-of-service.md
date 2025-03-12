@@ -2,12 +2,12 @@
 
 Last updated Mar 7, 2025
 
-The RubyGems.org website and service located at [https://rubygems.org](https://rubygems.org) (the “Service”) are operated by Ruby Central, Inc. (“Provider,” “we,” or “us”). By registering for, using, or accessing the Service, you agree to be bound by these terms of service (“Terms”). These Terms also incorporate our other policies applicable to the Service, including the [Ruby Central Privacy Policy](https://rubycentral.org/privacy-notice), [RubyGems.org Privacy Policy](https://rubygems.org/policies/privacy-notice), and [RubyGems.org Acceptable Use Policy](https://rubygems.org/policies/acceptable-use). If you don’t agree to these Terms, you must discontinue use of the Service.  If you have any questions about these terms, please contact us: [contact@rubycentral.org](mailto:contact@rubycentral.org).
+The RubyGems.org website and service located at [https://rubygems.org](https://rubygems.org) (the “Service”) are operated by Ruby Central, Inc. (“Provider,” “we,” or “us”). By registering for, using, or accessing the Service, you agree to be bound by these terms of service (“Terms”). These Terms also incorporate our other policies applicable to the Service, including the [Ruby Central Privacy Policy](https://rubycentral.org/privacy-notice), [RubyGems.org Privacy Policy](https://rubygems.org/policies/privacy), and [RubyGems.org Acceptable Use Policy](https://rubygems.org/policies/acceptable-use). If you don’t agree to these Terms, you must discontinue use of the Service.  If you have any questions about these terms, please contact us: [contact@rubycentral.org](mailto:contact@rubycentral.org).
 
 ## Definitions
 
 1. An "Account" represents your legal relationship with Provider and your authorization to log into and use the Service.  
-2. The "Agreement" refers, collectively, to all the terms, conditions, notices contained or referenced in these Terms and all other operating rules, policies (including our [Privacy Notice](https://rubygems.org/policies/privacy-notice)) and procedures that we may publish from time to time on the Website.  
+2. The "Agreement" refers, collectively, to all the terms, conditions, notices contained or referenced in these Terms and all other operating rules, policies (including our [Privacy Notice](https://rubygems.org/policies/privacy)) and procedures that we may publish from time to time on the Website.  
 3. "Content" means Content featured or displayed through the Website, including without limitation text, data, articles, images, photographs, graphics, designs, features, and other materials that are available on the Website or otherwise available through the Service. "Content" also includes Services.  
 4. A "User" or "you" refers to the individual person, company, or organization that has visited or is using the Website or Service; that accesses or uses any part of the Account; or that directs the use of the Account in the performance of its functions.  
 5. "User-Generated Content" is Content, written or otherwise, created or uploaded by our Users. "Your Content" is Content that you create or own.
@@ -16,7 +16,7 @@ The RubyGems.org website and service located at [https://rubygems.org](https://r
 
  a. To use the Service, you must register an Account by providing an email address.  
  b. You agree to provide truthful and accurate information about yourself when you register for an Account.  
- c. The privacy of any personal information you provide is governed by our [Privacy Notice](https://rubygems.org/policies/privacy-notice). We will not use or share any personal information except as provided in our Privacy Notice.  
+ c. The privacy of any personal information you provide is governed by our [Privacy Notice](https://rubygems.org/policies/privacy). We will not use or share any personal information except as provided in our Privacy Notice.  
  d. The Service is not intended for children under the age of 13\. If we learn that any registered user of the Service is under the age of 13, it is our policy to disable the user’s Account and to delete any personal information provided by that user.
 
 ## 2\. Account Security
