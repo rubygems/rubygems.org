@@ -40,6 +40,8 @@ es:
   sign_in: Ingresa
   sign_out: Salir
   sign_up: Regístrate
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Mostrar toda la cadena de dependencias
   multifactor_authentication: Autenticación de múltiples factores
   subtitle: el alojamiento de gemas de tu comunidad
@@ -263,6 +265,7 @@ es:
         hosted_by: Alojado por
         monitored_by: Monitoreado por
         optimized_by: Optimizado por
+        policies:
         releases:
         resolved_with: DNS
         security: Seguridad
@@ -488,6 +491,17 @@ es:
       title: Seguridad
     sponsors:
       title: Patrocinadores
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
+      title:
   password_mailer:
     change_password:
       closing:
@@ -827,10 +841,10 @@ es:
       reserved_namespace_html:
         one: Esta gema existió previamente, pero fue eliminada por sus propietarios.
           El equipo de RubyGems.org ha reservado este nombre por un día más. Luego
-          cualquiera podrá solicitar este nombre de gema usando `gem push`. <br>
-          Si eres el anterior propietario, puedes cambiar la propiedad de esta gema
-          usando el comando `gem owner`. También puedes crear nuevas versiones de
-          esta gema usando `gem push`.
+          cualquiera podrá solicitar este nombre de gema usando `gem push`. <br> Si
+          eres el anterior propietario, puedes cambiar la propiedad de esta gema usando
+          el comando `gem owner`. También puedes crear nuevas versiones de esta gema
+          usando `gem push`.
         other: Esta gema existió previamente, pero fue eliminada por sus propietarios.
           El equipo de RubyGems.org ha reservado este nombre por %{count} días más.
           Luego cualquiera podrá solicitar este nombre de gema usando `gem push`.

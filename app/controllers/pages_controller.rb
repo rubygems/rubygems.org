@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_action :find_page
+  before_action :find_page, only: :show
 
   layout "hammy"
 

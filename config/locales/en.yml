@@ -39,6 +39,8 @@ en:
   sign_in: Sign in
   sign_out: Sign out
   sign_up: Sign up
+  by_signing_up: By signing up, you agree to the
+  sign_up_terms: RubyGems Terms of Service
   dependency_list: Show all transitive dependencies
   multifactor_authentication: Multi-factor authentication
   subtitle: your community gem host
@@ -250,6 +252,7 @@ en:
         hosted_by: Hosted by
         monitored_by: Monitored by
         optimized_by: Optimized by
+        policies: Policies
         releases: Releases
         resolved_with: Resolved with
         security: Security
@@ -436,6 +439,17 @@ en:
       title: Security
     sponsors:
       title: Sponsors
+  policies:
+    index:
+      title: RubyGems.org Policies
+    terms-of-service:
+      title: Terms of Service
+    acceptable-use:
+      title: Acceptable Use
+    copyright:
+      title: Copyright Policy
+    privacy:
+      title: Privacy Notice
   password_mailer:
     change_password:
       closing: If you didn't request this, ignore this email. Your password has

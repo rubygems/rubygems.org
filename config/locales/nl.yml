@@ -32,6 +32,8 @@ nl:
   sign_in: Inloggen
   sign_out: Uitloggen
   sign_up: Registreren
+  by_signing_up:
+  sign_up_terms:
   dependency_list:
   multifactor_authentication: Multifactor authenticatie
   subtitle: De gem host voor de community
@@ -246,6 +248,7 @@ nl:
         hosted_by: Hosting
         monitored_by: Monitoring
         optimized_by: Optimalisatie
+        policies:
         releases:
         resolved_with: DNS
         security: Security
@@ -441,6 +444,17 @@ nl:
     security:
       title:
     sponsors:
+      title:
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
       title:
   password_mailer:
     change_password:
