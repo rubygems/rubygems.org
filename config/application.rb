@@ -126,6 +126,6 @@ module Gemcutter
     about data download security sponsors
   ].freeze
   POLICY_PAGES = %w[
-    acceptable_use copyright_policy policies privacy_notice terms_of_service
+    acceptable-use copyright privacy terms-of-service
   ].freeze
 end

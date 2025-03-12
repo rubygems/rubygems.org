@@ -491,23 +491,24 @@ de:
         header: 'Willkommen bei RubyGems.org, dem Gem-Hosting-Srrvice der Ruby-Community.
           Dieses Projekt hat drei Ziele:'
         transparent_pages: Mehr transparente und barrierefreie Projektseiten zu erstellen
-    acceptable_use:
-      title:
-    copyright_policy:
-      title:
     data:
       title: RubyGems.org Data Dumps
     download:
       title: Download RubyGems
-    policies:
-      title:
-    privacy_notice:
-      title:
     security:
       title: Security
     sponsors:
       title: Sponsors
-    terms_of_service:
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
       title:
   password_mailer:
     change_password:
