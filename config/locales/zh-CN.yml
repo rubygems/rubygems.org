@@ -440,23 +440,24 @@ zh-CN:
         enable_community: 可以让社区来改善本站
         header: 欢迎来到 %{site}, 这是 Ruby 社区的 Gem 托管服务。此项目有三个目的：
         transparent_pages: 构建更透明以及便于浏览的项目页面
-    acceptable_use:
-      title:
-    copyright_policy:
-      title:
     data:
       title: RubyGems.org 数据转储
     download:
       title: 下载 RubyGems
-    policies:
-      title:
-    privacy_notice:
-      title:
     security:
       title: 安全
     sponsors:
       title: 赞助商
-    terms_of_service:
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
       title:
   password_mailer:
     change_password:
