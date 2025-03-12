@@ -1,0 +1,18 @@
+<% @title = t(".title") %>
+
+<%= prose do%>
+  <h1 id="rubygemsorg-policies"><%= t(".title") %></h1>
+
+  <p>
+    The RubyGems.org website and service are maintained and operated by Ruby Central’s 
+    <%= link_to "open source program", "https://rubycentral.org/open-source/" %>
+    and the RubyGems team.
+    Here are our policies for the use of RubyGems.org.
+  </p>
+
+  <ul>
+    <% Gemcutter::POLICY_PAGES.each do |policy| %>
+      <li><%= link_to(t("policies.#{policy}.title"), policy_path(policy)) %>
+    <% end %>
+  </ul>
+<% end %>
