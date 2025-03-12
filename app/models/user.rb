@@ -17,6 +17,7 @@ class User < ApplicationRecord
   after_update :record_email_update_event, if: :email_was_updated?
   after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }
   after_update :record_password_update_event, if: :saved_change_to_encrypted_password?
+  after_update :record_policies_acknowledged_event, if: :saved_change_to_policies_acknowledged_at?
   before_discard :yank_gems
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
@@ -374,5 +375,9 @@ class User < ApplicationRecord
 
   def unique_with_org_handle
     errors.add(:handle, "has already been taken") if handle && Organization.where("lower(handle) = lower(?)", handle).any?
+  end
+
+  def record_policies_acknowledged_event
+    record_event!(Events::UserEvent::POLICIES_ACKNOWLEDGED)
   end
 end
