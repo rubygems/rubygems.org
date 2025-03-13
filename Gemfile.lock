@@ -629,7 +629,7 @@ GEM
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
       rack (>= 3.0.0, < 4)
-    rack-sanitizer (2.0.3)
+    rack-sanitizer (2.0.4)
       rack (>= 1.0, < 4.0)
     rack-session (2.1.0)
       base64 (>= 0.1.0)
@@ -1261,7 +1261,7 @@ CHECKSUMS
   rack-attack (6.7.0) sha256=3ca47e8f66cd33b2c96af53ea4754525cd928ed3fa8da10ee6dad0277791d77c
   rack-oauth2 (2.2.1) sha256=c73aa87c508043e2258f02b4fb110cacba9b37d2ccf884e22487d014a120d1a5
   rack-protection (4.1.1) sha256=51a254a5d574a7f0ca4f0672025ce2a5ef7c8c3bd09c431349d683e825d7d16a
-  rack-sanitizer (2.0.3) sha256=3e492e1b56b0005fb1b56d77dff996821059aad4321634883ae3c42c865f9af0
+  rack-sanitizer (2.0.4) sha256=782ff5efb53177f6d2ab3a80ce07dbfecef8123a1e5c613160a38731e49e846c
   rack-session (2.1.0) sha256=437c3916535b58ef71c816ce4a2dee0a01c8a52ae6077dc2b6cd19085760a290
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
   rackup (2.2.1) sha256=f737191fd5c5b348b7f0a4412a3b86383f88c43e13b8217b63d4c8d90b9e798d
