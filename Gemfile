@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 ruby file: ".ruby-version"
 
-gem "rails", "~> 8.0.1"
+gem "rails", "~> 8.0.2"
 gem "rails-i18n", "~> 8.0.1"
 
 gem "aws-sdk-s3", "~> 1.182"
