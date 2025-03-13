@@ -60,6 +60,10 @@ jobs:
           rubygems-version: ${{ matrix.rubygems.version }}
           install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
 
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 133
+
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
         run: bin/rails ${{ matrix.tests.command }}
