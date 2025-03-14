@@ -19,5 +19,5 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     end
   end
 
-  Selenium::WebDriver::Chrome::Service.driver_path = ENV["CHROMEDRIVER_PATH"] if ENV["CHROMEDRIVER_PATH"].present?
+  Selenium::WebDriver::Chrome.path = ENV["CHROMEDRIVER_PATH"] if ENV["CHROMEDRIVER_PATH"].present?
 end
