@@ -64,7 +64,7 @@ jobs:
         id: install-chrome
         with:
           install-chromedriver: true
-          chrome-version: 133
+          chrome-version: 132
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
