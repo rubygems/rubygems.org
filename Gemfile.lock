@@ -367,7 +367,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.8.0)
       activejob (>= 5.2)
-    json (2.10.1)
+    json (2.10.2)
     json-jwt (1.16.7)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -390,11 +390,11 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.4)
-    launchdarkly-server-sdk (8.8.3)
+    launchdarkly-server-sdk (8.9.0)
       concurrent-ruby (~> 1.1)
       http (>= 4.4.0, < 6.0.0)
       json (~> 2.3)
-      ld-eventsource (= 2.2.2)
+      ld-eventsource (= 2.2.3)
       observer (~> 0.1.2)
       semantic (~> 1.6)
       zlib (~> 3.1)
@@ -402,7 +402,7 @@ GEM
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
-    ld-eventsource (2.2.2)
+    ld-eventsource (2.2.3)
       concurrent-ruby (~> 1.0)
       http (>= 4.4.1, < 6.0.0)
     letter_opener (1.10.0)
@@ -429,7 +429,7 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    llhttp-ffi (0.5.0)
+    llhttp-ffi (0.5.1)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     local_time (3.0.2)
@@ -947,7 +947,7 @@ DEPENDENCIES
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.1)
   kaminari (~> 1.2)
-  launchdarkly-server-sdk (~> 8.8)
+  launchdarkly-server-sdk (~> 8.9)
   launchy (~> 3.1)
   letter_opener (~> 1.10)
   letter_opener_web (~> 3.0)
@@ -1156,7 +1156,7 @@ CHECKSUMS
   irb (1.15.1) sha256=d9bca745ac4207a8b728a52b98b766ca909b86ff1a504bcde3d6f8c84faae890
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.8.0) sha256=1ebd966eff0ab08a9b48c7196e5c8b9110a8d9cf8177de6d0dc75a97e6e9e40e
-  json (2.10.1) sha256=ddc88ad91a1baf3f0038c174f253af3b086d30dc74db17ca4259bbde982f94dc
+  json (2.10.2) sha256=34e0eada93022b2a0a3345bb0b5efddb6e9ff5be7c48e409cfb54ff8a36a8b06
   json-jwt (1.16.7) sha256=ccabff4c6d1a14276b23178e8bebe513ef236399b72a0b886d7ed94800d172a5
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
@@ -1164,9 +1164,9 @@ CHECKSUMS
   kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   language_server-protocol (3.17.0.4) sha256=c484626478664fd13482d8180947c50a8590484b1258b99b7aedb3b69df89669
-  launchdarkly-server-sdk (8.8.3) sha256=2c68da8b8ac196a5c37bbab67b97431b59552f76a6f097e2b87ef91ad06c1424
+  launchdarkly-server-sdk (8.9.0) sha256=56858db49f8906db996f2f3ce6eb51aa6811f6349e0ed4a16aea2aafbe73d967
   launchy (3.1.1) sha256=72b847b5cc961589dde2c395af0108c86ff0119f42d4648d25b5440ebb10059e
-  ld-eventsource (2.2.2) sha256=5ea087a6f06bbd8e325d2c1aaead50f37f13d025b952985739e9380a78a96beb
+  ld-eventsource (2.2.3) sha256=e72f3eef9808348c71b74afc79c60b7fd74f02874486b7c2edd2aef1b566a538
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860
   libdatadog (16.0.1.1.0) sha256=e1418fdbc5cf7ecd402ffa1e055e71e7eb00497df4ead178207941d720062e5c
@@ -1179,7 +1179,7 @@ CHECKSUMS
   libddwaf (1.18.0.0.1-x86_64-linux) sha256=5865c3bd99bbf7b05d21bd720d4b39ffe3de0b4e9bef4b5bd5e6f39a4657fbf5
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
-  llhttp-ffi (0.5.0) sha256=496f40ad44bcbf99de02da1f26b1ad64e6593cd487b931508a86228e2a3af0fa
+  llhttp-ffi (0.5.1) sha256=9a25a7fc19311f691a78c9c0ac0fbf4675adbd0cca74310228fdf841018fa7bc
   local_time (3.0.2) sha256=cb8abb2d56726ae285d00b0bd7f4c34bafc38c0c1cbc70ddc28f3a5661168d9d
   logger (1.6.6) sha256=dd618d24e637715472732e7eed02e33cfbdf56deaad225edd0f1f89d38024017
   loofah (2.24.0) sha256=61e6a710883abb8210887f3dc868cf3ed66594c509d9ff6987621efa6651ee1e
