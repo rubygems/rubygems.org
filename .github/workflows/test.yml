@@ -60,13 +60,16 @@ jobs:
           rubygems-version: ${{ matrix.rubygems.version }}
           install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
 
-      - uses: browser-actions/setup-chrome@v1
+      - uses: browser-actions/setup-chrome@19ae4b339ee18925ab85cf12c1041150ea4a44c8 # v1
+        id: install-chrome
         with:
           chrome-version: 133
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
         run: bin/rails ${{ matrix.tests.command }}
+        env:
+          CHROME_PATH: ${{ steps.install-chrome.outputs.chrome-path }}
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
