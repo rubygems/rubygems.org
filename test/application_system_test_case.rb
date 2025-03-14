@@ -10,14 +10,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400], options: {
       browser: :remote,
       url: "http://#{ENV['SELENIUM_HOST']}:4444"
-    } do |options|
-      options.binary = ENV["CHROME_PATH"] if ENV["CHROME_PATH"].present?
-    end
+    }
   else
-    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400] do |options|
-      options.binary = ENV["CHROME_PATH"] if ENV["CHROME_PATH"].present?
-    end
+    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
   end
-
-  Selenium::WebDriver::Chrome.path = ENV["CHROMEDRIVER_PATH"] if ENV["CHROMEDRIVER_PATH"].present?
 end
