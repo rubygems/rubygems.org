@@ -18,7 +18,7 @@ gem "faraday-retry", "~> 2.2"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 5.26.4", require: false # see https://github.com/rubygems/rubygems.org/pull/4598
+gem "honeybadger", "~> 5.27.0", require: false # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "launchdarkly-server-sdk", "~> 8.8"
