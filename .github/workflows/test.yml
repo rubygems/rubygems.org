@@ -67,7 +67,7 @@ jobs:
           chrome-version: 132
 
       - name: Update Chrome Path
-        run: sudo ln -sf /opt/hostedtoolcache/setup-chrome/chromium/stable/x64/chrome /usr/bin/google-chrome
+        run: sudo ln -sf ${{ steps.setup-chrome.outputs.chrome-path }} /usr/bin/google-chrome
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
