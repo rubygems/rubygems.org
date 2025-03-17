@@ -313,19 +313,19 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-protobuf (4.30.0)
+    google-protobuf (4.30.1)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.0-aarch64-linux)
+    google-protobuf (4.30.1-aarch64-linux)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.0-arm64-darwin)
+    google-protobuf (4.30.1-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.0-x86_64-darwin)
+    google-protobuf (4.30.1-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.0-x86_64-linux)
+    google-protobuf (4.30.1-x86_64-linux)
       bigdecimal
       rake (>= 13)
     gravtastic (3.2.6)
@@ -1132,11 +1132,11 @@ CHECKSUMS
   get_process_mem (1.0.0) sha256=d54024f3bcbf776a4d6e0155ec2b21bc3ba44e2fd158c4c00c80aa8a36e0b4aa
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
-  google-protobuf (4.30.0) sha256=4427249acaccb0ec4d64bc4dbd551d1630f9ca50e4e34bd5601e30e75cd842e9
-  google-protobuf (4.30.0-aarch64-linux) sha256=fdc118bedd9267279dfcd7c006e594341d817ad4e26d9741732b6dbfe7441c7f
-  google-protobuf (4.30.0-arm64-darwin) sha256=791d5bec1e468848c84cec390dfb3a6016afee04cfebc564e3cb2e3c264e6415
-  google-protobuf (4.30.0-x86_64-darwin) sha256=135195ff560031018e31b1b7b8cb935e60e3731c2ec257a1a7750e3bd3b7a7d9
-  google-protobuf (4.30.0-x86_64-linux) sha256=a5b3f1a7e7bc832249a136d20c2d520e693c2340d682e32bc73fe8e28190148d
+  google-protobuf (4.30.1) sha256=0c88b433866eac8a07d13ea19182e23334b14ac99d2a186cd88b72e2413d0778
+  google-protobuf (4.30.1-aarch64-linux) sha256=5e155eae7b686bd4f826f947f311d1c00b4c3b467ca21b27c47610b400a215c5
+  google-protobuf (4.30.1-arm64-darwin) sha256=f69682f65a0c2f689040714e2c6407c838b9113dce87d76e7e568f1213b7fdeb
+  google-protobuf (4.30.1-x86_64-darwin) sha256=626836baf2470c5590fedda795598cea1c3385f690a97f2ed6d7d43a31110d9a
+  google-protobuf (4.30.1-x86_64-linux) sha256=84c87b239dec7a200dddbcbd9bdb03a59c109f4b32667a50bec84286faa9784e
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.5.1) sha256=a0a78d051a510d61864fe987f00089d8f03739741eadc41e6ad4ea6f786da110
   hashdiff (1.1.2) sha256=2c30eeded6ed3dce8401d2b5b99e6963fe5f14ed85e60dd9e33c545a44b71a77
