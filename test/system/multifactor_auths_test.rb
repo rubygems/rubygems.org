@@ -69,7 +69,11 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
       end
 
       should "user with mfa disabled gets redirected back to new api keys pages after setting up mfa" do
-        redirect_test_mfa_disabled(new_profile_api_key_path) { verify_password }
+        redirect_test_mfa_disabled(new_profile_api_key_path) do
+          verify_password
+
+          assert page.has_content?("New API key")
+        end
       end
 
       should "user with mfa disabled gets redirected back to notifier pages after setting up mfa" do
@@ -78,7 +82,11 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
       should "user with mfa disabled gets redirected back to profile api keys pages after setting up mfa" do
         create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
-        redirect_test_mfa_disabled(profile_api_keys_path) { verify_password }
+        redirect_test_mfa_disabled(profile_api_keys_path) do
+          verify_password
+
+          assert page.has_content?("API keys")
+        end
       end
 
       should "user with mfa disabled gets redirected back to verify session pages after setting up mfa" do
@@ -100,7 +108,11 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
       end
 
       should "user gets redirected back to new api keys pages after setting up mfa" do
-        redirect_test_mfa_weak_level(new_profile_api_key_path) { verify_password }
+        redirect_test_mfa_weak_level(new_profile_api_key_path) do
+          verify_password
+
+          assert page.has_content?("New API key")
+        end
       end
 
       should "user gets redirected back to notifier pages after setting up mfa" do
@@ -109,7 +121,11 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
       should "user gets redirected back to profile api keys pages after setting up mfa" do
         create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
-        redirect_test_mfa_weak_level(profile_api_keys_path) { verify_password }
+        redirect_test_mfa_weak_level(profile_api_keys_path) do
+          verify_password
+
+          assert page.has_content?("API keys")
+        end
       end
 
       should "user gets redirected back to verify session pages after setting up mfa" do
@@ -157,7 +173,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   end
 
   def redirect_test_mfa_disabled(path)
-    sign_in
+    sign_in(wait_for: "For protection of your account and your gems, you are required to set up multi-factor authentication.")
     visit path
 
     assert(page.has_content?("you are required to set up multi-factor authentication"))
@@ -175,7 +191,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   end
 
   def redirect_test_mfa_weak_level(path)
-    sign_in
+    sign_in(wait_for: "For protection of your account and your gems, you are required to set up multi-factor authentication.")
     @user.enable_totp!(@seed, :ui_only)
     visit path
 
@@ -186,16 +202,20 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
     click_button "Authenticate"
 
+    assert page.has_content?("You have successfully updated your multi-factor authentication level.")
+
     yield if block_given?
 
     assert_equal path, current_path, "was not redirected back to original destination: #{path}"
   end
 
-  def sign_in
+  def sign_in(wait_for: "Dashboard")
     visit sign_in_path
     fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
+
+    assert page.has_content?(wait_for)
   end
 
   def otp_key

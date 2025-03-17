@@ -14,6 +14,8 @@ class EmailConfirmationTest < SystemTest
     click_link "Didn't receive confirmation mail?"
     fill_in "Email address", with: email
     click_button "Resend Confirmation"
+
+    assert page.has_content? "We will email you confirmation link to activate your account if one exists."
   end
 
   test "requesting confirmation mail does not tell if a user exists" do

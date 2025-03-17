@@ -8,18 +8,6 @@ class ProfileTest < ApplicationSystemTestCase
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
 
-  def sign_in
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-  end
-
-  def sign_out
-    reset_session!
-    visit "/"
-  end
-
   test "changing handle" do
     sign_in
 
@@ -180,6 +168,8 @@ class ProfileTest < ApplicationSystemTestCase
       fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
       click_button "Confirm"
     end
+
+    assert page.has_content?("Your account deletion request has been enqueued.")
 
     sign_in
     visit delete_profile_path

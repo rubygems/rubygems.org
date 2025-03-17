@@ -8,16 +8,6 @@ class OIDCTest < ApplicationSystemTestCase
     @id_token = create(:oidc_id_token, user: @user, api_key_role: @api_key_role)
   end
 
-  def sign_in # rubocop:disable Minitest/TestMethodName
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-
-    # Wait for the reload and confirm the sign in worked
-    page.assert_selector "h1", text: "Dashboard"
-  end
-
   def verify_session # rubocop:disable Minitest/TestMethodName
     page.assert_title(/^Confirm Password/)
     fill_in "Password", with: @user.password

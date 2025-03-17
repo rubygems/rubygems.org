@@ -7,13 +7,6 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     @user = create(:user)
   end
 
-  def sign_in
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-  end
-
   should "have security device form" do
     sign_in
     visit edit_settings_path

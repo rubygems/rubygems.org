@@ -14,4 +14,20 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   else
     driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
   end
+
+  def sign_in
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.reload.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+
+    assert page.has_content?("Dashboard")
+  end
+
+  def sign_out
+    reset_session!
+    visit "/"
+
+    assert page.has_content?("Sign in".upcase)
+  end
 end
