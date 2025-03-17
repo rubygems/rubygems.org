@@ -12,8 +12,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   test "when verifying webauthn credential" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert_match "Authenticate with Security Device", page.html
-    assert_match "Authenticating as #{@user.handle}", page.html
+    assert page.has_content?("Authenticate with Security Device")
+    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
 
     click_on "Authenticate"
 
@@ -28,8 +28,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert_match "Authenticate with Security Device", page.html
-    assert_match "Authenticating as #{@user.handle}", page.html
+    assert page.has_content?("Authenticate with Security Device")
+    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
 
     click_on "Authenticate"
 
@@ -46,8 +46,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   test "when client closes connection during verification" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert_match "Authenticate with Security Device", page.html
-    assert_match "Authenticating as #{@user.handle}", page.html
+    assert page.has_content?("Authenticate with Security Device")
+    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
 
     @mock_client.kill_server
     click_on "Authenticate"
@@ -64,8 +64,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     wrong_port = 1111
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: wrong_port })
 
-    assert_match "Authenticate with Security Device", page.html
-    assert_match "Authenticating as #{@user.handle}", page.html
+    assert page.has_content?("Authenticate with Security Device")
+    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
 
     click_on "Authenticate"
 
@@ -81,8 +81,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @mock_client.response = @mock_client.bad_request_response
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert_match "Authenticate with Security Device", page.html
-    assert_match "Authenticating as #{@user.handle}", page.html
+    assert page.has_content?("Authenticate with Security Device")
+    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
 
     click_on "Authenticate"
 
@@ -97,8 +97,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     travel 3.minutes do
-      assert_match "Authenticate with Security Device", page.html
-      assert_match "Authenticating as #{@user.handle}", page.html
+      assert page.has_content?("Authenticate with Security Device")
+      assert page.has_content?("Authenticating as #{@user.handle}".upcase)
 
       click_on "Authenticate"
 

@@ -189,10 +189,14 @@ class ActiveSupport::TestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
+    assert page.has_content? "Dashboard"
+
     @authenticator = create_webauthn_credential_while_signed_in
 
     find(:css, ".header__popup-link").click
     click_on "Sign out"
+
+    assert page.has_content?("Sign in".upcase)
 
     @authenticator
   end

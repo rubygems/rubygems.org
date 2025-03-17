@@ -18,7 +18,11 @@ class PasswordResetTest < SystemTest
 
     click_link "Forgot password?"
     fill_in "Email address", with: email
-    perform_enqueued_jobs { click_button "Reset password" }
+    perform_enqueued_jobs do
+      click_button "Reset password"
+
+      assert page.has_content? "You will receive an email within the next few minutes."
+    end
   end
 
   test "reset password form does not tell if a user exists" do

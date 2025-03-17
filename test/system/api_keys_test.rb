@@ -9,6 +9,8 @@ class ApiKeysTest < ApplicationSystemTestCase
     fill_in "Email or Username", with: @user.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
+
+    assert page.has_content?("Dashboard")
   end
 
   test "creating new api key" do
@@ -40,6 +42,8 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     visit_profile_api_keys_path
     click_button "New API key"
+
+    assert page.has_content?("New API key")
 
     assert_empty URI.parse(page.current_url).query
 
@@ -194,6 +198,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     refute page.has_content? "Enable MFA"
     click_button "Update API Key"
 
+    assert page.has_content?("Successfully updated API key")
     assert_predicate api_key.reload, :can_add_owner?
   end
 
@@ -208,6 +213,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.select "All Gems"
     click_button "Update API Key"
 
+    assert page.has_content?("Successfully updated API key")
     assert_equal "All Gems", page.find('.owners__cell[data-title="Gem"]').text
     assert_nil api_key.reload.rubygem
   end
@@ -225,6 +231,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
     click_button "Update API Key"
 
+    assert page.has_content?("Successfully updated API key")
     assert_nil api_key.reload.rubygem
   end
 
@@ -243,6 +250,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.select @ownership.rubygem.name
     click_button "Update API Key"
 
+    assert page.has_content?("Successfully updated API key")
     assert_equal api_key.reload.rubygem, @ownership.rubygem
   end
 
@@ -278,6 +286,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     check "mfa"
     click_button "Update API Key"
 
+    assert page.has_content?("Successfully updated API key")
     assert_predicate api_key.reload, :can_add_owner?
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
@@ -296,6 +305,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     refute page.has_content? "Enable MFA"
     click_button "Update API Key"
 
+    assert page.has_content?("Successfully updated API key")
     assert_predicate api_key.reload, :can_add_owner?
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end

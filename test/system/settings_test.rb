@@ -5,13 +5,6 @@ class SettingsTest < ApplicationSystemTestCase
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
 
-  def sign_in
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-  end
-
   def enable_otp
     key = ROTP::Base32.random_base32
     @user.enable_totp!(key, :ui_only)
