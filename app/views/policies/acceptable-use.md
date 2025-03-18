@@ -38,24 +38,24 @@ You are responsible for using RubyGems.org in compliance with all applicable law
 
 For issues such as DMCA violations, or trademark and copyright infringements, the RubyGems.org team will respect the legal decisions of Ruby Central as the official legal entity providing the RubyGems.org service.
 
-## **Package Ownership**
+## Package Ownership
 
 RubyGems.org has a first-come, first-serve policy on gem names. Upon publishing a package, the publisher will be made owner of the package on RubyGems.org.  
 If you want to take over a package, we require you to first try and contact the current owner directly. If the current owner agrees, they can add you as an owner of the gem and you can then remove them, if necessary. If the current owner is not reachable or has not published any contact information, the RubyGems.org team may reach out to help mediate the process of the ownership transfer.
 
 TIn line with our goal of a reliable immutable registry, we do not permit gem owners to delete their gems unilaterally. The RubyGems.org team may delete rubygems from the registry that do not comply with the policies on this document, when legal or copyright claims require it, or when the RubyGems.org team decides that the deletion is in the best interest of the community. In many cases the team will first give the author the chance to respond before deletion. If the RubyGems.org staff determines, in its sole discretion, that a gem presents a security or site availability concern, we may delete the gem without prior notification to the author. 
 
-## **Data Access**
+## Data Access
 
 Details on how to access the RubyGems.org data can be found on [RubyGems.org data dumps](https://rubygems.org/pages/data).
 
-## **Security**
+## Security
 
 Security is one of our core principles. To that end, we would like to ensure that RubyGems.org, RubyGems and Bundler have secure implementations. To learn more about disclosing security vulnerabilities for these tools, please see [RubyGems.org Security](https://rubygems.org/pages/security). Do not post vulnerabilities in public channels.  
 For disclosure of security concerns regarding gems on rubygems.org, please seek guidance from the individual gem owners and their specific policies. RubyGems.org and Ruby Central staff, contractors and contributors are not responsible for individual rubygems or for the disclosure of vulnerabilities found in specific rubygems.  
 Thank you for taking the time to responsibly disclose any issues you find.
 
-## **Sexually Obscene Content**
+## Sexually Obscene Content
 
 We do not tolerate content associated with sexual exploitation or abuse of another individual, including where minors are concerned. We do not allow sexually themed content to be hosted by rubygems.org that serves little or no purpose other than to solicit an erotic or shocking response, particularly where that content is amplified by its placement in profiles or other social contexts.  
 This includes:
@@ -66,13 +66,13 @@ This includes:
 
 We recognize that not all nudity or content related to sexuality is obscene. We may allow visual and/or textual depictions in artistic, educational, historical or journalistic contexts, or as it relates to victim advocacy. In some cases a disclaimer can help communicate the context of the project.
 
-## **Violations and Enforcement**
+## Violations and Enforcement
 
 RubyGems.org retains full discretion to take action in response to a violation of these policies, including account suspension, account termination, or removal of content.  
 While we proactively monitor for security and site stability concerns, we rely on the community to draw our attention to any violations of our acceptable usage policy.  
 The majority of interactions between individuals in the Ruby community falls within our policies. The Ruby community has always been a kind and supportive place. Unfortunately, violations of those policies do occur at times. When they do, the RubyGems.org team may need to take enforcement action to address the violations. In most cases, account or content deletion is not reversible. Account suspension may be lifted at the team's discretion, for example in the case of someone's account being compromised.
 
-## **Credits & License**
+## Credits & License
 
 This policy is partially based on [Crates.io’s Usage Policy](https://crates.io/policies) which was in turn based on [PyPI’s Acceptable Use Policy](https://github.com/pypi/warehouse/blob/3c404ada9fed7a03bbf7c3c74e86c383f705d96a/policies/acceptable-use-policy.md) and modified from its original form.  
 Licensed under the [Creative Commons Attribution 4.0 International license](https://creativecommons.org/licenses/by/4.0/).
