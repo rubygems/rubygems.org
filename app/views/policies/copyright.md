@@ -1,6 +1,6 @@
 # Copyright Policy
 
-Last updated Mar 4, 2025
+Last updated Mar 18, 2025
 
 ## Reporting Claims of Copyright Infringement
 
@@ -37,7 +37,7 @@ Please be aware that if you knowingly materially misrepresent that material or a
 Our designated copyright agent to receive DMCA Notices and Counter Notices is:
 
 Marty Haught  
-[contact@rubycentral.org](mailto:contact@rubycentral.org)
+[legal@rubycentral.org](mailto:legal@rubycentral.org)
 
 ## Repeat Infringers
 

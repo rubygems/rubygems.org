@@ -1,6 +1,8 @@
 # RubyGems.org Acceptable Use Policy
 
-Last updated: Mar 4, 2025
+Last updated: Mar 18, 2025
+
+**This policy is in community review. It will take effect at the end of this period estimated on May 20th, 2025\.**
 
 This RubyGems.org Acceptable Use Policy is part of, and subject to the terms of, the RubyGems.org [Terms of Service](https://rubygems.org/policies/terms-of-service).
 
