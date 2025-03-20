@@ -235,7 +235,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should "send confirmation mail to second user" do
-            assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+            assert_equal "Please confirm the ownership of the #{@rubygem.name} gem on RubyGems.org", last_email.subject
             assert_equal [@second_user.email], last_email.to
           end
         end
@@ -671,7 +671,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should "send email notification to user being removed" do
-            assert_equal "You were removed as an owner from #{@rubygem.name} gem", last_email.subject
+            assert_equal "You were removed as an owner from the #{@rubygem.name} gem", last_email.subject
             assert_equal [@second_user.email], last_email.to
           end
         end
