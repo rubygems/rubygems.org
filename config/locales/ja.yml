@@ -33,6 +33,8 @@ ja:
   sign_in: サインイン
   sign_out: サインアウト
   sign_up: 新規登録
+  by_signing_up:
+  sign_up_terms:
   dependency_list: 全ての推移的な依存関係を表示
   multifactor_authentication: 多要素認証
   subtitle: コミュニティのgemホスティングサービス
@@ -244,6 +246,7 @@ ja:
         hosted_by: ホスト
         monitored_by: 監視
         optimized_by: 最適化
+        policies:
         releases: リリース
         resolved_with: DNS
         security: セキュリティ
@@ -438,6 +441,17 @@ ja:
       title: セキュリティ
     sponsors:
       title: 出資者
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
+      title:
   password_mailer:
     change_password:
       closing: こちらを申請しなかった場合はこのEメールはご放念ください。パスワードは変更されません。

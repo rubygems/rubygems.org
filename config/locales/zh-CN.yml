@@ -34,6 +34,8 @@ zh-CN:
   sign_in: 登录
   sign_out: 退出
   sign_up: 注册
+  by_signing_up:
+  sign_up_terms:
   dependency_list: 显示所有传递性依赖
   multifactor_authentication: 多因素验证（MFA）
   subtitle: 您的社区 Gem 托管中心
@@ -245,6 +247,7 @@ zh-CN:
         hosted_by: 托管
         monitored_by: 监控
         optimized_by: 优化
+        policies:
         releases:
         resolved_with: 解析
         security: 安全
@@ -340,7 +343,8 @@ zh-CN:
       title: 所有权确认
       subtitle: 你好，%{handle}！
       body_text: 您已被 %{authorizer} 添加为 Gem %{gem} 的所有者之一。请点击下方的链接来确认您的所有权。
-      body_html: 您已被 <strong>%{authorizer}</strong> 添加为 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 的所有者之一。请点击下方的链接来确认您的所有权。
+      body_html: 您已被 <strong>%{authorizer}</strong> 添加为 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        的所有者之一。请点击下方的链接来确认您的所有权。
       link_expiration_explanation_html: 请注意，此链接仅在 %{expiry_hours} 内有效。您可以在登录后从 Gem
         <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 页面重新发送确认邮件。
     owner_added:
@@ -444,6 +448,17 @@ zh-CN:
       title: 安全
     sponsors:
       title: 赞助商
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
+      title:
   password_mailer:
     change_password:
       closing:
@@ -471,10 +486,10 @@ zh-CN:
     require_webauthn_enabled: 您还没有启用任何安全设备。您必须首先关联一个设备到您的账户。
     setup_required_html: 为了保护您的帐户和您的 Gem，您需要设置多因素验证（MFA）。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">博客文章</a>了解详情。
     setup_recommended: 为了保护您的帐户和您的 Gem，我们鼓励您设置多因素验证（MFA）。在将来，您的帐户将被要求启用多因素验证（MFA）。
-    strong_mfa_level_required_html: 为了保护您的帐户和您的 Gem，您需要将您的多因素验证（MFA）级别更改为 "UI and gem signin"
-      或 "UI and API"。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html"">博客文章</a>了解详情。
-    strong_mfa_level_recommended: 为了保护您的帐户和您的 Gem，我们建议您将您的多因素验证（MFA）级别更改为 "UI and gem signin"
-      或 "UI and API"。在将来，您的帐户将被要求在其中某一个级别上启用多因素验证（MFA）。
+    strong_mfa_level_required_html: 为了保护您的帐户和您的 Gem，您需要将您的多因素验证（MFA）级别更改为 "UI and
+      gem signin" 或 "UI and API"。请阅读我们的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html"">博客文章</a>了解详情。
+    strong_mfa_level_recommended: 为了保护您的帐户和您的 Gem，我们建议您将您的多因素验证（MFA）级别更改为 "UI and
+      gem signin" 或 "UI and API"。在将来，您的帐户将被要求在其中某一个级别上启用多因素验证（MFA）。
     setup_webauthn_html:
     api:
       mfa_required:
@@ -605,12 +620,13 @@ zh-CN:
       mfa:
         multifactor_auth: 多因素验证（MFA）
         otp: 身份认证应用
-        disabled_html: 您尚未启用基于 OTP 的多因素身份验证。请参考 <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+        disabled_html: 您尚未启用基于 OTP 的多因素身份验证。请参考 <a target="_blank" rel="noopener"
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
           多因素验证（MFA）指南</a> 来了解更多关于多因素验证（MFA）级别的信息。
         go_settings: 注册新设备
         level_html: 您已启用多因素身份验证，请点击“更新”来改变您的 MFA 级别。请参考 <a target="_blank" rel="noopener"
-          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems</a> 多重身份验证指南
-          来了解更多 MFA 级别的信息。
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems</a>
+          多重身份验证指南 来了解更多 MFA 级别的信息。
         enabled_note: 您已启用多因素身份验证。请输入您从身份验证器上获得的 OTP 码，或使用您已生效的恢复码来禁用。
         update: 更新
         disable:

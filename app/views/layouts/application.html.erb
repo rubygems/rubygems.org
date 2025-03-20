@@ -138,6 +138,7 @@
             <%- end %>
             <%= mail_to "support@rubygems.org", t('.footer.help'), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.api'), "https://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.policies'), policies_path, class: "nav--v__link--footer" %>
             <%- if request.path_info == '/pages/security' %>
               <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer is-active" %>
             <%- else %>

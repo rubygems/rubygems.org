@@ -1,0 +1,24 @@
+<% @title = t(".title") %>
+
+<%= prose do%>
+  <h1 id="rubygemsorg-policies"><%= t(".title") %></h1>
+
+  <p>
+    The RubyGems.org website and service are maintained and operated by Ruby Central’s 
+    <%= link_to "open source program", "https://rubycentral.org/open-source/" %>
+    and the RubyGems team. 
+  </p>
+  <p>
+    These are the policies for using RubyGems.org. They are in community review.  We are seeking feedback on these policies until <b>April 20th, 2025</b>.  You can provide feedback through email at 
+    <%= link_to "legal@rubycentral.org", "mailto:legal@rubycentral.org" %>
+    or the 
+    <%= link_to "#oss-program-ruby-central", "https://rubycentralcommunity.slack.com/archives/C08J92C73N1" %> 
+    channel in the Ruby Central Community Slack.  After a 30-day comment period, we'll review feedback and finalize the policies.  They will take effect at the end of this period, estimated on <b>May 20th, 2025</b>.
+  </p>
+
+  <ul>
+    <% Gemcutter::POLICY_PAGES.each do |policy| %>
+      <li><%= link_to(t("policies.#{policy}.title"), policy_path(policy)) %>
+    <% end %>
+  </ul>
+<% end %>

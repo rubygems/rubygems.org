@@ -39,6 +39,8 @@ pt-BR:
   sign_in: Fazer Login
   sign_out: Sair
   sign_up: Cadastrar
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Mostrar todas as dependências
   multifactor_authentication: Autenticação Multifator
   subtitle: O host de gems da sua comunidade
@@ -252,6 +254,7 @@ pt-BR:
         hosted_by: Hospedagem
         monitored_by: Monitoramento
         optimized_by: Otimizações
+        policies:
         releases:
         resolved_with: DNS
         security: Segurança
@@ -453,6 +456,17 @@ pt-BR:
     security:
       title:
     sponsors:
+      title:
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
       title:
   password_mailer:
     change_password:

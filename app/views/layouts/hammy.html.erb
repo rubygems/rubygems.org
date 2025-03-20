@@ -209,6 +209,7 @@
             <ul class="flex flex-col md:flex-row md:space-x-8 text-b1 md:text-b2">
               <li><%= link_to t("layouts.application.footer.about"), page_path("about"), class: "hover:text-neutral-600" %></li>
               <li><%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "hover:text-neutral-600" %></li>
+              <li><%= link_to t("layouts.application.footer.policies"), policies_path, class: "hover:text-neutral-600" %></li>
               <li><%= link_to t("layouts.application.footer.status"), "https://status.rubygems.org", class: "hover:text-neutral-600" %></li>
               <li><%= link_to t("layouts.application.footer.security"), page_path("security"), class: "hover:text-neutral-600" %></li>
               <li><%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), class: "hover:text-neutral-600" %></li>
