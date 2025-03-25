@@ -106,7 +106,11 @@ class PushTest < ActionDispatch::IntegrationTest
 
     refute_nil RubygemFs.instance.get("gems/sandworm-2.0.0.gem")
     refute_nil RubygemFs.instance.get("quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz")
-    assert_equal({ checksum_sha256: rubygem.versions.find_by!(full_name: "sandworm-2.0.0").sha256, key: "gems/sandworm-2.0.0.gem" },
+    checksum_sha256 = rubygem.versions.find_by!(full_name: "sandworm-2.0.0").sha256
+
+    assert_equal({ checksum_sha256:, key: "gems/sandworm-2.0.0.gem",
+                   metadata: { "gem" => "sandworm", "version" => "2.0.0", "platform" => "ruby",
+                               "surrogate-key" => "gem/sandworm", "sha256" => checksum_sha256 } },
                  RubygemFs.instance.head("gems/sandworm-2.0.0.gem"))
 
     spec = Gem::Package.new("sandworm-2.0.0.gem").spec
