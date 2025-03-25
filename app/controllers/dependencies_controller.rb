@@ -7,6 +7,7 @@ class DependenciesController < ApplicationController
     @dependencies = Hash.new { |h, k| h[k] = [] }
     resolvable_dependencies = @latest_version.dependencies.where(unresolved_name: nil)
       .strict_loading.preload(rubygem: :public_versions)
+      .load
 
     resolvable_dependencies.each do |dependency|
       gem_name = dependency.rubygem.name
@@ -27,7 +28,7 @@ class DependenciesController < ApplicationController
     requirements = dependency.clean_requirements
     reqs = Gem::Dependency.new(name, requirements.split(/\s*,\s*/))
 
-    matching_versions = dependency.rubygem.public_versions.select { |v| reqs.match?(name, v.number) }
+    matching_versions = dependency.rubygem.public_versions.lazy.select { |v| reqs.match?(name, v.number) }
     match = matching_versions.detect { |v| match_platform(platform, v.platform) } || matching_versions.first
     match&.slug
   end

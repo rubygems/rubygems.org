@@ -189,6 +189,12 @@
             <a href="https://blog.rubygems.org/2024/10/15/our-new-design.html" class="text-blue-500 dark:text-blue-400 text-nowrap">Learn more</a>
           <% end %>
 
+          <% if current_user && current_user.policies_acknowledged_at.nil? %>
+            <%= render AlertComponent.new(style: :warning, closeable: true) do %>
+              <%= sanitize t("policied.added_html") %>
+            <% end %>
+          <% end %>
+
           <% flash.each do |name, msg| %>
             <%= render AlertComponent.new(style: name, closeable: true) do %>
               <%= flash_message(name, msg) %>

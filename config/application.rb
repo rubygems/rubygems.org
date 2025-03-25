@@ -125,7 +125,12 @@ module Gemcutter
   PAGES = %w[
     about data download security sponsors
   ].freeze
+<<<<<<< Updated upstream
   POLICY_PAGES = %w[
     acceptable-use copyright privacy terms-of-service
   ].freeze
+=======
+
+  POLICIES_UPDATED_AT = Time.utc(2025, 3, 20)
+>>>>>>> Stashed changes
 end

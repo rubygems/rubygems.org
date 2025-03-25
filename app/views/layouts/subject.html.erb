@@ -7,6 +7,13 @@
 <% content_for :main do %>
   <div class="w-full px-8 pt-10 lg:pt-0 flex-col bg-white dark:bg-black lg:bg-neutral-050 lg:dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center">
     <div class="max-w-screen-xl w-full mx-auto">
+      <% if current_user && current_user.policies_acknowledged_at.nil? %>
+        <%= render AlertComponent.new(style: :alert) do %>
+          <%= sanitize t("policies.added_html") %>
+          <%= link_to t("policies.acknowledge"), "/policies/acknowledge", method: :post, class: "text-blue-500 dark:text-blue-400" %>
+        <% end %>
+      <% end %>
+
       <!-- New design notice -->
       <%= render AlertComponent.new(style: :neutral, closeable: true) do %>
         Design Under Construction.

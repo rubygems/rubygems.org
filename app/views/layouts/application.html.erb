@@ -86,6 +86,17 @@
       </div>
     </header>
 
+    <% if true %>
+    <div class="flash" data-controller="policies" data-policies-action="<%= "/policies/acknowledge" %>">
+      <div class="flash-wrap">
+        <div class="l-wrap--b l-flex">
+          <span class="l-flex-child"><%= sanitize t("policies.added_html") %></span>
+          <button class="flash__close" data-action="click->policies#accept"><%= t("policies.accept") %></button>
+        </div>
+      </div>
+    </div>
+    <% end %>
+
     <% flash.each do |name, msg| %>
       <div id="flash-border" class="flash">
         <div class="flash-wrap">

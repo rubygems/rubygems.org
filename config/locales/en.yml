@@ -440,6 +440,7 @@ en:
     sponsors:
       title: Sponsors
   policies:
+<<<<<<< Updated upstream
     index:
       title: RubyGems.org Policies
     terms-of-service:
@@ -450,6 +451,11 @@ en:
       title: Copyright Policy
     privacy:
       title: Privacy Notice
+=======
+    added_html: "RubyGems.org has added new <a href='/policies'>policies</a>. Please acknowledge acceptance of those terms to continue using the site."
+    acknowledge: Acknowledge
+    accept: Accept
+>>>>>>> Stashed changes
   password_mailer:
     change_password:
       closing: If you didn't request this, ignore this email. Your password has
