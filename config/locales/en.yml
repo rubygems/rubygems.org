@@ -202,7 +202,7 @@ en:
       edit_api_key: "Edit API key"
       invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
     all_gems: All Gems
-    gem_ownership_removed: Ownership of %{rubygem_name} has been removed after being scoped to this key.
+    gem_ownership_removed: Ownership of the %{rubygem_name} gem has been removed after being scoped to this key.
   dashboards:
     show:
       creating_link_text: creating
@@ -343,30 +343,30 @@ en:
       subject: You have requested email address update on %{host}
       title: EMAIL UPDATE REQUESTED
     ownership_confirmation:
-      subject: Please confirm the ownership of %{gem} gem on %{host}
+      subject: Please confirm the ownership of the %{gem} gem on %{host}
       title: OWNERSHIP CONFIRMATION
       subtitle: Hi %{handle}!
-      body_text: You were added as an owner to %{gem} gem by %{authorizer}. Please visit link below to confirm your ownership.
-      body_html: You were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
-      link_expiration_explanation_html: Please note that this link is valid for only %{expiry_hours}. You can resend confirmation mail from the  <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem page after sign in.
+      body_text: You were added as an owner to the %{gem} gem by %{authorizer}. Please visit link below to confirm your ownership.
+      body_html: You were added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
+      link_expiration_explanation_html: Please note that this link is valid for only %{expiry_hours}. You can resend confirmation mail from the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem page after sign in.
     owner_added:
-      subject_self: You were added as an owner to %{gem} gem
-      subject_others: User %{owner_handle} was added as an owner to %{gem} gem
+      subject_self: You were added as an owner to the %{gem} gem
+      subject_others: User %{owner_handle} was added as an owner to the %{gem} gem
       title: OWNER ADDED
       subtitle: Hi %{user_handle}!
-      body_self_html: <b>You</b> were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host}.
-      body_others_html: <b>%{owner_handle}</b> was added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving this notification because you are an owner of %{gem}.
+      body_self_html: <b>You</b> were added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host}.
+      body_others_html: <b>%{owner_handle}</b> was added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving this notification because you are an owner of %{gem}.
     owner_removed:
-      subject: You were removed as an owner from %{gem} gem
+      subject: You were removed as an owner from the %{gem} gem
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
-      body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host} by <b>%{remover}</b>.
+      body_html: <b>You</b> were removed as an owner from the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host} by <b>%{remover}</b>.
     owner_updated:
-      subject: Your role was updated for %{gem} gem
+      subject: Your role was updated for the %{gem} gem
       title: OWNER ROLE UPDATED
       subtitle: Hi %{user_handle}!
-      body_html: Your role was updated to %{role} for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem.
-      body_text: Your role was updated to %{role} for %{gem} gem.
+      body_html: Your role was updated to %{role} for the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem.
+      body_text: Your role was updated to %{role} for the %{gem} gem.
     web_hook_deleted:
       title: WEBHOOK DELETED
       subject: Your %{host} webhook was deleted
@@ -573,7 +573,7 @@ en:
       role: Role
       title: Edit Owner
     confirm:
-      confirmed_email: You were added as an owner to %{gem} gem
+      confirmed_email: You were added as an owner to the %{gem} gem
       token_expired: The confirmation token has expired. Please try resending the token from the gem page.
     index:
       add_owner: ADD OWNER

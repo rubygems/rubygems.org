@@ -88,7 +88,7 @@ class OwnersControllerTest < ActionController::TestCase
             perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
             assert_emails 1
-            assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+            assert_equal "Please confirm the ownership of the #{@rubygem.name} gem on RubyGems.org", last_email.subject
             assert_equal [@new_owner.email], last_email.to
           end
 
@@ -198,7 +198,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
           should "send email notifications about owner removal" do
             assert_emails 1
-            assert_contains last_email.subject, "You were removed as an owner from #{@rubygem.name} gem"
+            assert_contains last_email.subject, "You were removed as an owner from the #{@rubygem.name} gem"
             assert_equal [@second_user.email], last_email.to
           end
         end
@@ -218,7 +218,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
           should "send email notifications about owner removal" do
             assert_emails 1
-            assert_contains last_email.subject, "You were removed as an owner from #{@rubygem.name} gem"
+            assert_contains last_email.subject, "You were removed as an owner from the #{@rubygem.name} gem"
             assert_equal [@second_user.email], last_email.to
           end
         end
@@ -317,7 +317,7 @@ class OwnersControllerTest < ActionController::TestCase
         end
         should "resend confirmation email" do
           assert_emails 1
-          assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+          assert_equal "Please confirm the ownership of the #{@rubygem.name} gem on RubyGems.org", last_email.subject
           assert_equal [@new_owner.email], last_email.to
         end
       end
@@ -551,7 +551,7 @@ class OwnersControllerTest < ActionController::TestCase
         should "confirm ownership" do
           assert_predicate @ownership, :confirmed?
           assert redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
-          assert_equal "You were added as an owner to #{@rubygem.name} gem", flash[:notice]
+          assert_equal "You were added as an owner to the #{@rubygem.name} gem", flash[:notice]
         end
 
         should "not sign in the user" do
@@ -561,8 +561,8 @@ class OwnersControllerTest < ActionController::TestCase
         should "send email notifications about new owner" do
           owner_added_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
 
-          assert_contains owner_added_email_subjects, "You were added as an owner to #{@rubygem.name} gem"
-          assert_contains owner_added_email_subjects, "User #{@user.handle} was added as an owner to #{@rubygem.name} gem"
+          assert_contains owner_added_email_subjects, "You were added as an owner to the #{@rubygem.name} gem"
+          assert_contains owner_added_email_subjects, "User #{@user.handle} was added as an owner to the #{@rubygem.name} gem"
 
           owner_added_email_to = ActionMailer::Base.deliveries.map(&:to).flatten
 
