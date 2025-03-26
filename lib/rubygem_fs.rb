@@ -82,6 +82,12 @@ module RubygemFs
       nil
     end
 
+    def get_object(key)
+      body = get(key)
+      return unless body
+      [body, head(key)]
+    end
+
     def each_key(prefix: nil, &)
       return enum_for(__method__, prefix:) unless block_given?
       base = dir_for(prefix)
@@ -182,6 +188,13 @@ module RubygemFs
 
     def get(key)
       s3.get_object(key: key, bucket: bucket).body.read
+    rescue Aws::S3::Errors::NoSuchKey
+      nil
+    end
+
+    def get_object(key)
+      response = s3.get_object(key: key, bucket: bucket)
+      [response.body.read, response.to_h]
     rescue Aws::S3::Errors::NoSuchKey
       nil
     end
