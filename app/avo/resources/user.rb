@@ -39,6 +39,8 @@ class Avo::Resources::User < Avo::BaseResource
     field :mail_fails, as: :number
     field :blocked_email, as: :text
 
+    field :policies_acknowledged_at, as: :date_time
+
     tabs style: :pills do
       tab "Auth" do
         field :encrypted_password, as: :password, visible: -> { false }

@@ -44,4 +44,6 @@ class Events::UserEvent < ApplicationRecord
   end
 
   PASSWORD_CHANGED = define_event "user:password:changed"
+
+  POLICIES_ACKNOWLEDGED = define_event "user:policies:acknowledged"
 end
