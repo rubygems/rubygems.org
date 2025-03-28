@@ -770,6 +770,7 @@ ja:
       summary: 概要
       description: 説明
       downloads: ダウンロード数
+      trusted_publisher:
       updated: 更新日
       yanked: ヤンク済み
     show:
