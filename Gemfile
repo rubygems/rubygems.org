@@ -99,7 +99,7 @@ group :assets, :development do
 end
 
 group :development, :test do
-  gem "pry-byebug", "~> 3.10"
+  gem "pry-byebug", "~> 3.11"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.4"
   gem "dotenv-rails", "~> 3.1"
