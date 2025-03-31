@@ -191,8 +191,8 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert_empty URI.parse(page.current_url).query
     assert page.has_content? "Edit API key"
+    assert_empty URI.parse(page.current_url).query
     check "api_key[add_owner]"
 
     refute page.has_content? "Enable MFA"
