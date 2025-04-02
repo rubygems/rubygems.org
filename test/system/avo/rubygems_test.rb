@@ -299,7 +299,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
               "unchanged" => {}
             },
             "gid://gemcutter/Events::RubygemEvent/#{event.id}" => {
-              "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+              "changes" => event.attributes.transform_values { [nil, it.as_json] },
               "unchanged" => {}
             }
           }

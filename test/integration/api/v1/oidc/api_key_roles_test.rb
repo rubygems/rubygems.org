@@ -153,7 +153,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
       context "with a jwt that does not match the jwks" do
         should "respond not found" do
-          @role.provider.jwks.each { _1["n"] += "NO" }
+          @role.provider.jwks.each { it["n"] += "NO" }
           @role.provider.save!
 
           post assume_role_api_v1_oidc_api_key_role_path(@role),

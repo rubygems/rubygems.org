@@ -3,7 +3,7 @@ class OIDC::AccessPolicy < ApplicationModel
     def match_jwt?(jwt)
       return false unless principal.oidc == jwt[:iss]
 
-      conditions.all? { _1.match?(jwt) }
+      conditions.all? { it.match?(jwt) }
     end
 
     class Principal < ApplicationModel
@@ -80,7 +80,7 @@ class OIDC::AccessPolicy < ApplicationModel
   end
 
   def verify_access!(jwt)
-    matching_statements = statements.select { _1.match_jwt?(jwt) }
+    matching_statements = statements.select { it.match_jwt?(jwt) }
     raise AccessError, "denying due to no matching statements" if matching_statements.empty?
 
     case (effect = matching_statements.last.effect)

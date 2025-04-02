@@ -22,7 +22,7 @@ module Auditable
 
           records = data[:connection].transaction_manager.current_transaction.records || []
           records.uniq(&:__id__).each do |record|
-            merge_changes!((changed_records[record] ||= {}), record.attributes.transform_values { [nil, _1] }) if record.new_record?
+            merge_changes!((changed_records[record] ||= {}), record.attributes.transform_values { [nil, it] }) if record.new_record?
             merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
           end
         end, "sql.active_record", &)
@@ -36,8 +36,8 @@ module Auditable
 
         audited_changed_records = changed_records.to_h do |record, changes|
           key = record.to_global_id.uri
-          changes = merge_changes!(changes, record.attributes.slice("id").transform_values { [_1, _1] }) if changes.key?("id")
-          changes = merge_changes!(changes, record.attributes.compact.transform_values { [_1, nil] }) if record.destroyed?
+          changes = merge_changes!(changes, record.attributes.slice("id").transform_values { [it, it] }) if changes.key?("id")
+          changes = merge_changes!(changes, record.attributes.compact.transform_values { [it, nil] }) if record.destroyed?
 
           [key, changes:, unchanged: record.attributes.except(*changes.keys)]
         end
@@ -51,7 +51,7 @@ module Auditable
             records: audited_changed_records,
             fields: fields.except(:comment),
             arguments: arguments,
-            models: models&.map { _1.to_global_id.uri }
+            models: models&.map { it.to_global_id.uri }
           }
         )
 

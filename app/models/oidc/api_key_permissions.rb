@@ -1,7 +1,7 @@
 class OIDC::ApiKeyPermissions < ApplicationModel
   def create_params(user)
     params = { scopes: scopes }
-    params[:ownership] = gems&.first&.then { user.ownerships.joins(:rubygem).find_by!(rubygem: { name: _1 }) }
+    params[:ownership] = gems&.first&.then { user.ownerships.joins(:rubygem).find_by!(rubygem: { name: it }) }
     params[:expires_at] = DateTime.now.utc + valid_for
     params
   end

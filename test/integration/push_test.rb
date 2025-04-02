@@ -34,7 +34,7 @@ class PushTest < ActionDispatch::IntegrationTest
       nbf: Time.zone.now.to_i - 60,
       iss: "sigstore-conformance",
       sub: "sigstore-conformance"
-    }.to_json, ""].map { Base64.strict_encode64(_1) }.join(".")
+    }.to_json, ""].map { Base64.strict_encode64(it) }.join(".")
 
     Pusher.any_instance.stubs(:sigstore_signing_jwt).returns(signing_jwt)
     Sigstore::Signer.any_instance.stubs(:sign).returns({})

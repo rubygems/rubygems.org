@@ -72,7 +72,7 @@ class Events::TableComponent < ApplicationComponent
 
   def additional_info(event)
     return unless event.tags.key?(event.tag)
-    return if event.geoip_info.nil? && (event.additional.blank? && event.additional.user_agent_info.nil?)
+    return if event.geoip_info.nil? && event.additional.blank? && event.additional.user_agent_info.nil?
 
     p(class: "!tw-mb-0") do
       break div { t(".redacted") } unless show_additional_info?(event)

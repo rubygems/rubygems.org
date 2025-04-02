@@ -125,7 +125,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     end
 
     def verify(cert)
-      ref = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.14")&.value_der&.then { OpenSSL::ASN1.decode(_1).value }
+      ref = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.14")&.value_der&.then { OpenSSL::ASN1.decode(it).value }
       Sigstore::Policy::Identity.new(
         identity: "https://github.com/#{@trusted_publisher.repository}/#{@trusted_publisher.workflow_slug}@#{ref}",
         issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER

@@ -97,7 +97,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
             "unchanged" => {}
           },
           version_unyank_event.to_gid.to_s => {
-            "changes" => version_unyank_event.attributes.transform_values { [nil, _1] }.as_json,
+            "changes" => version_unyank_event.attributes.transform_values { [nil, it] }.as_json,
             "unchanged" => {}
           }
         },

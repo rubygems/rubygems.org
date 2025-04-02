@@ -39,7 +39,7 @@ class GemsTest < ActionDispatch::IntegrationTest
     alternates = page.all(:css, css, visible: false)
     # I18n.available_locales.length + 1 (x-default)
     assert_equal (I18n.available_locales.length + 1), alternates.length
-    exp = I18n.available_locales.map { "#{base_url}?locale=#{_1}" } << base_url
+    exp = I18n.available_locales.map { "#{base_url}?locale=#{it}" } << base_url
     act = alternates.pluck(:href)
 
     assert_same_elements exp, act

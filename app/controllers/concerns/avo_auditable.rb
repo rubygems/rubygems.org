@@ -12,7 +12,7 @@ module AvoAuditable
       action = params.fetch(:action)
       fields = action == "destroy" ? {} : cast_nullable(model_params)
 
-      @record.errors.add :comment, "must supply a sufficiently detailed comment" if fields[:comment]&.then { _1.length < 10 }
+      @record.errors.add :comment, "must supply a sufficiently detailed comment" if fields[:comment]&.then { it.length < 10 }
       raise ActiveRecord::RecordInvalid, @record if @record.errors.present?
       action_name = "Manual #{action} of #{@record.class}"
 
