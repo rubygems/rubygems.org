@@ -4,7 +4,7 @@ class Avo::Filters::ScopeBooleanFilter < Avo::Filters::BooleanFilter
   end
 
   def apply(_request, query, values)
-    return query if default.each_key.all? { values[_1] }
+    return query if default.each_key.all? { values[it] }
 
     default.each_key.reduce(query.none) do |relation, scope|
       next relation unless values[scope]

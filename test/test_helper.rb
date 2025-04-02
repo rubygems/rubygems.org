@@ -222,7 +222,7 @@ class ActiveSupport::TestCase
     click_on "Continue"
 
     visit edit_settings_path
-    find("div", text: credential_nickname, match: :first)
+    first("div", text: credential_nickname)
 
     @user.reload
     @authenticator

@@ -49,7 +49,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
       to: :@action
 
     set_callback :handle, :before do
-      error "Must supply a sufficiently detailed comment" unless fields[:comment].presence&.then { _1.length >= 10 }
+      error "Must supply a sufficiently detailed comment" unless fields[:comment].presence&.then { it.length >= 10 }
     end
 
     set_callback :handle, :around, lambda { |_, block|
@@ -84,7 +84,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
     end
 
     def errored?
-      @action.response[:messages].any? { _1[:type] == :error }
+      @action.response[:messages].any? { it[:type] == :error }
     end
 
     def do_handle_standalone

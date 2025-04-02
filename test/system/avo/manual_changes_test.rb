@@ -39,7 +39,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/LogTicket/#{log_ticket.id}" => {
-            "changes" => log_ticket.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => log_ticket.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           }
         },
@@ -133,7 +133,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/LogTicket/#{log_ticket.id}" => {
-            "changes" => log_ticket.attributes.transform_values { [_1, nil] },
+            "changes" => log_ticket.attributes.transform_values { [it, nil] },
             "unchanged" => {}
           }
         },

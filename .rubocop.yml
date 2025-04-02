@@ -3,7 +3,6 @@ plugins:
   - rubocop-performance
   - rubocop-rails
   - rubocop-minitest
-require:
   - rubocop-capybara
   - rubocop-factory_bot
 

@@ -7,7 +7,7 @@ class NotifyWebHookJob < ApplicationJob
 
   TIMEOUT_SEC = 5
 
-  before_perform { @kwargs = arguments.last.then { _1 if Hash.ruby2_keywords_hash?(_1) } }
+  before_perform { @kwargs = arguments.last.then { it if Hash.ruby2_keywords_hash?(it) } }
   before_perform { @webhook = @kwargs.fetch(:webhook) }
   before_perform { @protocol = @kwargs.fetch(:protocol) }
   before_perform { @host_with_port = @kwargs.fetch(:host_with_port) }

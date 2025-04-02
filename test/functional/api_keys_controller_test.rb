@@ -344,7 +344,7 @@ class ApiKeysControllerTest < ActionController::TestCase
       should redirect_to("the index api key page") { profile_api_keys_path }
 
       should "expire all api key of user" do
-        @user.api_keys.each { assert_predicate _1, :expired? }
+        @user.api_keys.each { assert_predicate it, :expired? }
       end
     end
 

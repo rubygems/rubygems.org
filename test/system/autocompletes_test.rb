@@ -71,17 +71,17 @@ class AutocompletesTest < ApplicationSystemTestCase
   test "up arrow key should loop" do
     @fill_field.native.send_keys :up, :up, :up, :up
 
-    assert find(".suggest-list").all(".menu-item").first.matches_css?(".selected")
+    assert find(".suggest-list").first(".menu-item").matches_css?(".selected")
   end
 
   test "mouse hover a suggest item to choose suggestion" do
-    find("li", text: "rubocop", match: :first).hover
+    first("li", text: "rubocop").hover
 
     assert_selector ".selected"
   end
 
   test "mouse click a suggestion item to submit" do
-    find("li", text: "rubocop", match: :first).click
+    first("li", text: "rubocop").click
 
     assert_equal current_path, search_path || "/gems/"
     assert page.has_content? "rubocop"

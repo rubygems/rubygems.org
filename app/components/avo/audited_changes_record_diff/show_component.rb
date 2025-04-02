@@ -37,7 +37,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
 
   def sorted_fields
     @resource.only_fields
-      .reject { _1.is_a?(Avo::Fields::HasManyBaseField) }
+      .reject { it.is_a?(Avo::Fields::HasManyBaseField) }
       .sort_by.with_index { |f, i| [changes.key?(f.id.to_s) ? -1 : 1, i] }
   end
 

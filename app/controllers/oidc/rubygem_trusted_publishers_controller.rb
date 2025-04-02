@@ -73,8 +73,8 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def workflow_filename(repo)
-    paths = Octokit.contents(repo, path: ".github/workflows").lazy.select { _1.type == "file" }.map(&:name).grep(/\.ya?ml\z/)
-    paths.max_by { |path| [path.include?("release"), path.include?("push")].map! { (_1 && 1) || 0 } }
+    paths = Octokit.contents(repo, path: ".github/workflows").lazy.select { it.type == "file" }.map(&:name).grep(/\.ya?ml\z/)
+    paths.max_by { |path| [path.include?("release"), path.include?("push")].map! { (it && 1) || 0 } }
   rescue Octokit::NotFound, Octokit::InvalidRepository
     nil
   end

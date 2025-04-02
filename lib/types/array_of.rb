@@ -11,7 +11,7 @@ class Types::ArrayOf < ActiveModel::Type::Value
   end
 
   def cast_value(value)
-    value&.map { member.cast(_1) }
+    value&.map { member.cast(it) }
   end
 
   def member = @klass.is_a?(Symbol) ? ActiveModel::Type.lookup(@klass) : @klass

@@ -64,7 +64,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               .transform_values(&:as_json)
           },
           event.to_gid.as_json => {
-            "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           }
         },
@@ -154,15 +154,15 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               ).transform_values(&:as_json)
           },
           email_added_event.to_gid.as_json => {
-            "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => email_added_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           email_verified_event.to_gid.as_json => {
-            "changes" => email_verified_event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => email_verified_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           password_changed_event.to_gid.as_json => {
-            "changes" => password_changed_event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => password_changed_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           }
         },
@@ -223,7 +223,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 ).transform_values(&:as_json)
             },
             event.to_gid.as_json => {
-              "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+              "changes" => event.attributes.transform_values { [nil, it.as_json] },
               "unchanged" => {}
             }
           },
@@ -298,7 +298,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => deletion.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => deletion.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           "gid://gemcutter/Version/#{version.id}" => {
@@ -328,7 +328,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               ).transform_values(&:as_json)
           },
           version_yanked_event.to_gid.to_s => {
-            "changes" => version_yanked_event.attributes.transform_values { [nil, _1] }.as_json,
+            "changes" => version_yanked_event.attributes.transform_values { [nil, it] }.as_json,
             "unchanged" => {}
           }
         },
@@ -402,7 +402,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => deletion.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => deletion.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           "gid://gemcutter/Version/#{version.id}" => {
@@ -459,19 +459,19 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               ).transform_values(&:as_json)
           },
           email_added_event.to_gid.as_json => {
-            "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => email_added_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           email_verified_event.to_gid.as_json => {
-            "changes" => email_verified_event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => email_verified_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           password_changed_event.to_gid.as_json => {
-            "changes" => password_changed_event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => password_changed_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           version_yanked_event.to_gid.as_json => {
-            "changes" => version_yanked_event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => version_yanked_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           }
         },
@@ -540,11 +540,11 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 ).transform_values(&:as_json)
             },
             email_added_event.to_gid.as_json => {
-              "changes" => email_added_event.attributes.transform_values { [nil, _1.as_json] },
+              "changes" => email_added_event.attributes.transform_values { [nil, it.as_json] },
               "unchanged" => {}
             },
             email_sent_event.to_gid.as_json => {
-              "changes" => email_sent_event.attributes.transform_values { [nil, _1.as_json] },
+              "changes" => email_sent_event.attributes.transform_values { [nil, it.as_json] },
               "unchanged" => {}
             }
           },
@@ -597,11 +597,11 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/User/#{user.id}" => {
-            "changes" =>   user.attributes.transform_values { [nil, _1.as_json] },
+            "changes" =>   user.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           event.to_gid.as_json => {
-            "changes" => event.attributes.transform_values { [nil, _1.as_json] },
+            "changes" => event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           }
         },

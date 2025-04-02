@@ -92,7 +92,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   def sync_invites
     existing_invites = invites.index_by(&:user_id)
-    self.invites = users_for_selected_gems.map { existing_invites[_1.id] || OrganizationOnboardingInvite.new(user: _1) }
+    self.invites = users_for_selected_gems.map { existing_invites[it.id] || OrganizationOnboardingInvite.new(user: it) }
   end
 
   def remove_invalid_invites
@@ -131,7 +131,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def remove_ownerships
-    onboarded_users = invites.reject { _1.role.nil? || _1.outside_contributor? }.map(&:user)
+    onboarded_users = invites.reject { it.role.nil? || it.outside_contributor? }.map(&:user)
     onboarded_users << created_by
 
     Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: onboarded_users, rubygem: selected_rubygems).destroy_all
@@ -146,7 +146,7 @@ class OrganizationOnboarding < ApplicationRecord
   def organization_handle_matches_rubygem_name
     return if organization_handle.blank?
     return if namesake_rubygem.present?
-    return if selected_rubygems.any? { _1.name == organization_handle }
+    return if selected_rubygems.any? { it.name == organization_handle }
 
     errors.add(:organization_handle, "must match a rubygem you own")
   end
@@ -156,7 +156,7 @@ class OrganizationOnboarding < ApplicationRecord
 
     ownerships = Ownership.where(user: created_by, rubygem: rubygems).index_by(&:rubygem_id)
 
-    selected_rubygems.reject { ownerships[_1.id].present? && ownerships[_1.id].owner? }.each do |rubygem|
+    selected_rubygems.reject { ownerships[it.id].present? && ownerships[it.id].owner? }.each do |rubygem|
       errors.add(:created_by, "must be an owner of the #{rubygem.name} gem")
     end
   end

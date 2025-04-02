@@ -4,6 +4,6 @@ class Avo::Fields::JsonViewerField < Avo::Fields::CodeField
   end
 
   def value(...)
-    super&.then { JSON.pretty_generate(_1.as_json) }
+    super&.then { JSON.pretty_generate(it.as_json) }
   end
 end
