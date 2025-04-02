@@ -14,7 +14,7 @@ class OwnersMailerTest < ActionMailer::TestCase
       email = OwnersMailer.with(ownership: @maintainer_ownership).owner_updated
 
       assert_emails(1) { email.deliver_now }
-      assert_equal email.subject, "Your role was updated for #{@rubygem.name} gem"
+      assert_equal email.subject, "Your role was updated for the #{@rubygem.name} gem"
     end
   end
 end

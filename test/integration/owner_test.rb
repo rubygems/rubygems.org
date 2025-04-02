@@ -35,7 +35,7 @@ class OwnerTest < SystemTest
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_emails 1
-    assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+    assert_equal "Please confirm the ownership of the #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
 
   test "adding owner via UI with handle" do
@@ -53,7 +53,7 @@ class OwnerTest < SystemTest
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_emails 1
-    assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+    assert_equal "Please confirm the ownership of the #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
 
   test "owners data is correctly represented" do
@@ -95,7 +95,7 @@ class OwnerTest < SystemTest
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
     assert_emails 1
-    assert_contains last_email.subject, "You were removed as an owner from #{@rubygem.name} gem"
+    assert_contains last_email.subject, "You were removed as an owner from the #{@rubygem.name} gem"
     assert_equal [@other_user.email], last_email.to
   end
 
@@ -198,14 +198,14 @@ class OwnerTest < SystemTest
     end
 
     assert_equal page.current_path, rubygem_path(@rubygem.slug)
-    assert page.has_selector? "#flash_notice", text: "You were added as an owner to #{@rubygem.name} gem"
+    assert page.has_selector? "#flash_notice", text: "You were added as an owner to the #{@rubygem.name} gem"
 
     assert_emails 2
 
     owner_added_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
 
-    assert_contains owner_added_email_subjects, "You were added as an owner to #{@rubygem.name} gem"
-    assert_contains owner_added_email_subjects, "User #{@unconfirmed_ownership.user.handle} was added as an owner to #{@rubygem.name} gem"
+    assert_contains owner_added_email_subjects, "You were added as an owner to the #{@rubygem.name} gem"
+    assert_contains owner_added_email_subjects, "User #{@unconfirmed_ownership.user.handle} was added as an owner to the #{@rubygem.name} gem"
   end
 
   test "clicking on incorrect link shows error" do
