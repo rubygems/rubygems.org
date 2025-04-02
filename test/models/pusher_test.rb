@@ -635,6 +635,7 @@ class PusherTest < ActiveSupport::TestCase
           "version_downloads" => 0,
           "platform"          => "ruby",
           "authors"           => "Joe User",
+          "trusted_publisher" => false,
           "info"              => "Some awesome gem",
           "licenses"          => "MIT",
           "metadata"          => { "foo" => "bar" },
