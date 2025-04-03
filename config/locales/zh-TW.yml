@@ -363,6 +363,14 @@ zh-TW:
       subtitle:
       body_html:
       body_text:
+    policy_update_announcement:
+      subject:
+      title:
+      subtitle:
+    policy_update_review_closed:
+      subject:
+      title:
+      subtitle:
     web_hook_deleted:
       title: Webhook 遭刪除
       subject: 您在 RubyGems.org 上的 Webhook 遭到刪除

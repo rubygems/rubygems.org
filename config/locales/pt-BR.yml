@@ -376,6 +376,14 @@ pt-BR:
       subtitle:
       body_html:
       body_text:
+    policy_update_announcement:
+      subject:
+      title:
+      subtitle:
+    policy_update_review_closed:
+      subject:
+      title:
+      subtitle:
     web_hook_deleted:
       title:
       subject:

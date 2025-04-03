@@ -368,6 +368,14 @@ ja:
       body_html: <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gemのロールが%{role}に更新されました。
       body_text: "%{gem} gemのロールが%{role}に更新されました。"
+    policy_update_announcement:
+      subject:
+      title:
+      subtitle:
+    policy_update_review_closed:
+      subject:
+      title:
+      subtitle:
     web_hook_deleted:
       title: webhookが削除されました
       subject: "%{host}のwebhookが削除されました"
