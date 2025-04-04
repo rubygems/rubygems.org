@@ -328,6 +328,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
           should "not include mfa warnings" do
             @gems.each_value do |gem|
+              travel_to 30.seconds.from_now
+
               @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
               delete :create, params: { gem_name: gem[:name], version: gem[:version] }
 
