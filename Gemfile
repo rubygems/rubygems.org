@@ -41,7 +41,7 @@ gem "shoryuken", "~> 6.2", require: false
 gem "statsd-instrument", "~> 3.9"
 gem "validates_formatting_of", "~> 0.9"
 gem "opensearch-ruby", "~> 3.4"
-gem "searchkick", "~> 5.4"
+gem "searchkick", "~> 5.5"
 gem "faraday_middleware-aws-sigv4", "~> 1.0"
 gem "xml-simple", "~> 1.1"
 gem "compact_index", "~> 0.15.0"
