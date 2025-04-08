@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_04_065953) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -612,6 +612,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_04_065953) do
     t.index ["pusher_api_key_id"], name: "index_versions_on_pusher_api_key_id"
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
+t.index ["rubygem_id", "position", "created_at"], name: "index_versions_on_rubygem_id_and_position_and_created_at", order: { created_at: :desc }, where: "(indexed = true)", include: ["full_name", "number", "platform"]
   end
 
   create_table "web_hooks", id: :serial, force: :cascade do |t|

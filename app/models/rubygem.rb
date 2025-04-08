@@ -138,6 +138,9 @@ class Rubygem < ApplicationRecord
   end
 
   has_many :public_versions, -> { by_position.published }, class_name: "Version", inverse_of: :rubygem
+  has_many :public_versions_for_dependencies, lambda {
+    order(:rubygem_id).by_position.published.select(:rubygem_id, :full_name, :number, :platform)
+  }, class_name: "Version", inverse_of: :rubygem
 
   def public_versions_with_extra_version(extra_version)
     versions = public_versions.limit(5).to_a
