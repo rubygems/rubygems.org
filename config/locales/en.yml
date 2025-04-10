@@ -367,6 +367,14 @@ en:
       subtitle: Hi %{user_handle}!
       body_html: Your role was updated to %{role} for the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem.
       body_text: Your role was updated to %{role} for the %{gem} gem.
+    policy_update_announcement:
+      subject: Review New RubyGems.org Policies
+      title: POLICY UPDATE ANNOUNCEMENT
+      subtitle: Hi %{handle}!
+    policy_update_review_closed:
+      subject: RubyGems.org New Policy Adoption
+      title: POLICY UPDATE REVIEW CLOSED
+      subtitle: Hi %{handle}!
     web_hook_deleted:
       title: WEBHOOK DELETED
       subject: Your %{host} webhook was deleted
