@@ -53,7 +53,7 @@ class VersionManifest
   def store_package(package)
     magic = Magic.open(Magic::MIME)
     entries = GemPackageEnumerator.new(package).filter_map do |tar_entry|
-      Rails.error.handle(context: { gem: package.spec.full_name, entry: tar_entry.full_name }) do
+      Rails.error.handle(context: { gem:, version:, entry: tar_entry.full_name }) do
         RubygemContents::Entry.from_tar_entry(tar_entry, magic:)
       end
     end
