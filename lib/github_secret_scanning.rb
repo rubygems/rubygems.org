@@ -16,7 +16,7 @@ class GitHubSecretScanning
   end
 
   def self.public_key(id)
-    cache_key = ["GitHubSecretScanning", "public_keys", id]
+    cache_key = [name, "public_keys", id]
     Rails.cache.fetch(cache_key) do
       public_keys = secret_scanning_keys.public_keys
       public_keys&.find { |v| v.key_identifier == id }&.key
@@ -25,5 +25,13 @@ class GitHubSecretScanning
 
   def self.secret_scanning_keys
     Octokit.client.get(KEYS_URI)
+  end
+
+  class DepsDev < GitHubSecretScanning
+    KEYS_URI = "https://storage.googleapis.com/depsdev-gcp-public-keys/secret_scanning".freeze
+
+    def self.secret_scanning_keys
+      Octokit.client.get(KEYS_URI)
+    end
   end
 end
