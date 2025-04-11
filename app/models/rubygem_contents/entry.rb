@@ -64,7 +64,7 @@ class RubygemContents::Entry
     else
       @body_persisted = sha256.present? && !large? && text?
       @body = attrs[:body] if @body_persisted
-      @lines = @body&.lines&.count unless symlink?
+      @lines = @body.count("\n") + (@body.end_with?("\n") || @body.empty? ? 0 : 1) if @body && !symlink?
     end
   end
 
