@@ -1,6 +1,9 @@
 class Api::V1::GitHubSecretScanningController < Api::BaseController
   include ApiKeyable
 
+  before_action :find_secret_scanning_key
+  before_action :validate_secret_scanning_key
+
   # API called by GitHub Secret Scanning tool
   # see docs https://docs.github.com/en/developers/overview/secret-scanning
   # Sample message:
@@ -16,14 +19,6 @@ class Api::V1::GitHubSecretScanningController < Api::BaseController
   # [{"token": "some_token", "type": "some_type", "url": "some_url"}]
   #
   def revoke
-    key_id = request.headers.fetch("GITHUB-PUBLIC-KEY-IDENTIFIER", "")
-    signature = request.headers.fetch("GITHUB-PUBLIC-KEY-SIGNATURE", "")
-
-    return render plain: "Missing GitHub Signature", status: :unauthorized if key_id.blank? || signature.blank?
-    key = secret_scanning_key(key_id)
-    return render plain: "Can't fetch public key from GitHub", status: :unauthorized if key.empty_public_key?
-    return render plain: "Invalid GitHub Signature", status: :unauthorized unless key.valid_github_signature?(signature, request.body.read.chomp)
-
     tokens = params.expect(_json: [%i[token type url]]).index_by { |t| hashed_key(t.require(:token)) }
     api_keys = ApiKey.where(hashed_key: tokens.keys).index_by(&:hashed_key)
     resp = tokens.map do |hashed_key, t|
@@ -49,12 +44,25 @@ class Api::V1::GitHubSecretScanningController < Api::BaseController
 
   private
 
+  def find_secret_scanning_key
+    if (key_id = request.headers.fetch("GITHUB-PUBLIC-KEY-IDENTIFIER", "").presence) &&
+        (@signature = request.headers.fetch("GITHUB-PUBLIC-KEY-SIGNATURE", "").presence)
+      @key = GitHubSecretScanning.new(key_id)
+    elsif (key_id = request.headers.fetch("DepsDev-Public-Key-Identifier", "").presence) &&
+        (@signature = request.headers.fetch("DepsDevPublic-Key-Signature", "").presence)
+      @key = GitHubSecretScanning::DepsDev.new(key_id)
+    else
+      render plain: "Missing GitHub Signature", status: :unauthorized
+    end
+  end
+
+  def validate_secret_scanning_key
+    return render plain: "Can't fetch public key from GitHub", status: :unauthorized if @key.empty_public_key?
+    render plain: "Invalid GitHub Signature", status: :unauthorized unless @key.valid_github_signature?(@signature, request.body.read.chomp)
+  end
+
   def schedule_revoke_email(api_key, url)
     return unless api_key.user?
     Mailer.api_key_revoked(api_key.owner_id, api_key.name, api_key.scopes.join(", "), url).deliver_later
-  end
-
-  def secret_scanning_key(key_id)
-    GitHubSecretScanning.new(key_id)
   end
 end
