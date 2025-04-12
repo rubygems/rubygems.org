@@ -4,10 +4,22 @@ class RubygemContents::Entry
   class InvalidMetadata < RuntimeError; end
 
   SIZE_LIMIT = 500.megabytes
-  MIME_TEXTUAL_SUBTYPES = %w[json ld+json x-csh x-sh x-httpd-php xhtml+xml xml].freeze
+  MIME_TEXTUAL_SUBTYPES = %w[
+    text/
+    application/json
+    application/ld\+json
+    application/x-csh
+    application/x-sh
+    application/x-httpd-php
+    application/xhtml\+xml
+    application/xml
+  ].freeze
 
   class << self
-    def from_tar_entry(entry)
+    # Passing in an existing Magic instance is very important for memory usage.
+    # Magic.open(Magic::MIME) opens a new instance for each call and they are
+    # very memory heavy.
+    def from_tar_entry(entry, magic: Magic.open(Magic::MIME))
       attrs = {
         size: entry.size,
         path: entry.full_name,
@@ -16,7 +28,7 @@ class RubygemContents::Entry
 
       if entry.size > SIZE_LIMIT
         head = entry.read(4096)
-        mime = Magic.buffer(head, Magic::MIME)
+        mime = magic.buffer(head)
         return new(mime: mime, **attrs)
       end
 
@@ -27,7 +39,7 @@ class RubygemContents::Entry
 
       new(
         body: body,
-        mime: Magic.buffer(body, Magic::MIME),
+        mime: magic.buffer(body),
         sha256: Digest::SHA256.hexdigest(body),
         **attrs
       )
@@ -48,7 +60,7 @@ class RubygemContents::Entry
   alias content_length size
   alias bytesize size
 
-  def initialize(path:, size:, persisted: false, **attrs, &reader)
+  def initialize(path:, size:, persisted: false, **attrs, &reader) # rubocop:todo Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     @path = path
     @size = size.to_i
     @persisted = persisted
@@ -61,7 +73,7 @@ class RubygemContents::Entry
     else
       @body_persisted = sha256.present? && !large? && text?
       @body = attrs[:body] if @body_persisted
-      @lines = @body&.lines&.count unless symlink?
+      @lines = @body.count("\n") + (@body.end_with?("\n") || @body.empty? ? 0 : 1) if @body && !symlink?
     end
   end
 
@@ -93,10 +105,7 @@ class RubygemContents::Entry
     return false unless mime
     return true if empty?
     return false if mime.end_with?("charset=binary")
-    media_type, sub_type = mime.split(";").first.split("/")
-    return true if media_type == "text"
-    return false if media_type != "application"
-    true if MIME_TEXTUAL_SUBTYPES.include?(sub_type)
+    MIME_TEXTUAL_SUBTYPES.any? { |subtype| mime.start_with?(subtype) }
   end
 
   def body
