@@ -3,7 +3,9 @@
 class RubygemContents::Entry
   class InvalidMetadata < RuntimeError; end
 
-  SIZE_LIMIT = 500.megabytes
+  # Reading 262 bytes is (supposedly) enough to determine the mime type of the entry.
+  BYTES_FOR_MAGIC_DETECTION = 262
+  SIZE_LIMIT = 100.megabytes
   MIME_TEXTUAL_SUBTYPES = %w[
     text/
     application/json
@@ -27,9 +29,8 @@ class RubygemContents::Entry
       }
 
       if entry.size > SIZE_LIMIT
-        head = entry.read(4096)
-        mime = magic.buffer(head)
-        return new(mime: mime, **attrs)
+        mime = magic.buffer(entry.read(BYTES_FOR_MAGIC_DETECTION))
+        return new(mime:, **attrs)
       end
 
       # Using the linkname as the body, like git, makes it easier to show and diff symlinks. Thanks git!

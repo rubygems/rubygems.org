@@ -50,7 +50,7 @@ class RubygemContentsEntryTest < ActiveSupport::TestCase
       size: RubygemContents::Entry::SIZE_LIMIT + 1,
       symlink?: false
     )
-    tar_entry.stubs(:read).with(4096).returns("a" * 4096)
+    tar_entry.stubs(:read).with(262).returns("a" * 262)
     RubygemContents::Entry.from_tar_entry(tar_entry)
   end
 
@@ -123,7 +123,7 @@ class RubygemContentsEntryTest < ActiveSupport::TestCase
       tar_entry.expects(:full_name).returns(large_entry.path)
       tar_entry.expects(:header).returns(mock(mode: 0o644))
       tar_entry.expects(:size).at_least_once.returns(RubygemContents::Entry::SIZE_LIMIT + 1)
-      tar_entry.expects(:read).with(4096).returns("a" * 4096)
+      tar_entry.expects(:read).with(262).returns("a" * 262)
       entry = RubygemContents::Entry.from_tar_entry(tar_entry)
 
       assert_equal large_entry, entry
