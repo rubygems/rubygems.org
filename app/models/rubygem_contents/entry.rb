@@ -7,7 +7,10 @@ class RubygemContents::Entry
   MIME_TEXTUAL_SUBTYPES = %w[json ld+json x-csh x-sh x-httpd-php xhtml+xml xml].freeze
 
   class << self
-    def from_tar_entry(entry)
+    # Passing in an existing Magic instance is very important for memory usage.
+    # Magic.open(Magic::MIME) opens a new instance for each call and they are
+    # very memory heavy.
+    def from_tar_entry(entry, magic: Magic.open(Magic::MIME))
       attrs = {
         size: entry.size,
         path: entry.full_name,
@@ -16,7 +19,7 @@ class RubygemContents::Entry
 
       if entry.size > SIZE_LIMIT
         head = entry.read(4096)
-        mime = Magic.buffer(head, Magic::MIME)
+        mime = magic.buffer(head)
         return new(mime: mime, **attrs)
       end
 
@@ -27,7 +30,7 @@ class RubygemContents::Entry
 
       new(
         body: body,
-        mime: Magic.buffer(body, Magic::MIME),
+        mime: magic.buffer(body),
         sha256: Digest::SHA256.hexdigest(body),
         **attrs
       )
