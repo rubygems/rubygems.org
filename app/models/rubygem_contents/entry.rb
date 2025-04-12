@@ -4,7 +4,16 @@ class RubygemContents::Entry
   class InvalidMetadata < RuntimeError; end
 
   SIZE_LIMIT = 500.megabytes
-  MIME_TEXTUAL_SUBTYPES = %w[json ld+json x-csh x-sh x-httpd-php xhtml+xml xml].freeze
+  MIME_TEXTUAL_SUBTYPES = %w[
+    text/
+    application/json
+    application/ld\+json
+    application/x-csh
+    application/x-sh
+    application/x-httpd-php
+    application/xhtml\+xml
+    application/xml
+  ].freeze
 
   class << self
     # Passing in an existing Magic instance is very important for memory usage.
@@ -96,10 +105,7 @@ class RubygemContents::Entry
     return false unless mime
     return true if empty?
     return false if mime.end_with?("charset=binary")
-    media_type, sub_type = mime.split(";").first.split("/")
-    return true if media_type == "text"
-    return false if media_type != "application"
-    true if MIME_TEXTUAL_SUBTYPES.include?(sub_type)
+    MIME_TEXTUAL_SUBTYPES.any? { |subtype| mime.start_with?(subtype) }
   end
 
   def body
