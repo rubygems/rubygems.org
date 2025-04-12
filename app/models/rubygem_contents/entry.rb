@@ -60,7 +60,7 @@ class RubygemContents::Entry
   alias content_length size
   alias bytesize size
 
-  def initialize(path:, size:, persisted: false, **attrs, &reader)
+  def initialize(path:, size:, persisted: false, **attrs, &reader) # rubocop:todo Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     @path = path
     @size = size.to_i
     @persisted = persisted
