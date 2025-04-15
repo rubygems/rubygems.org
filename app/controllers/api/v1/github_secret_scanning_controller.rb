@@ -49,7 +49,7 @@ class Api::V1::GitHubSecretScanningController < Api::BaseController
         (@signature = request.headers.fetch("GITHUB-PUBLIC-KEY-SIGNATURE", "").presence)
       @key = GitHubSecretScanning.new(key_id)
     elsif (key_id = request.headers.fetch("DepsDev-Public-Key-Identifier", "").presence) &&
-        (@signature = request.headers.fetch("DepsDevPublic-Key-Signature", "").presence)
+        (@signature = request.headers.fetch("DepsDev-Public-Key-Signature", "").presence)
       @key = GitHubSecretScanning::DepsDev.new(key_id)
     else
       render plain: "Missing GitHub Signature", status: :unauthorized

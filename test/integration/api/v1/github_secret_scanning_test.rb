@@ -5,7 +5,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
   HEADER_SIGNATURE = "GITHUB-PUBLIC-KEY-SIGNATURE".freeze
 
   DEPS_DEV_HEADER_KEYID = "DepsDev-Public-Key-Identifier".freeze
-  DEPS_DEV_HEADER_SIGNATURE = "DepsDevPublic-Key-Signature".freeze
+  DEPS_DEV_HEADER_SIGNATURE = "DepsDev-Public-Key-Signature".freeze
 
   KEYS_RESPONSE_BODY =
     { "public_keys" => [
