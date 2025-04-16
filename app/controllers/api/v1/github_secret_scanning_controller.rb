@@ -58,7 +58,10 @@ class Api::V1::GitHubSecretScanningController < Api::BaseController
 
   def validate_secret_scanning_key
     return render plain: "Can't fetch public key from GitHub", status: :unauthorized if @key.empty_public_key?
-    render plain: "Invalid GitHub Signature", status: :unauthorized unless @key.valid_github_signature?(@signature, request.body.read)
+    body = request.body.read
+    return if @key.valid_github_signature?(@signature, body)
+    logger.warn "Invalid GitHub Signature", key: @key, signature: @signature, body: body
+    render plain: "Invalid GitHub Signature", status: :unauthorized
   end
 
   def schedule_revoke_email(api_key, url)
