@@ -1,4 +1,6 @@
 class GitHubSecretScanning
+  include SemanticLogger::Loggable
+
   KEYS_URI = "https://api.github.com/meta/public_keys/secret_scanning".freeze
 
   def initialize(key_identifier)
