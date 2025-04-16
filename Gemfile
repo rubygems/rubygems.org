@@ -130,7 +130,7 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.15"
+  gem "datadog-ci", "~> 1.16"
   gem "minitest", "~> 5.25", require: false
   gem "minitest-retry", "~> 0.2.5"
   gem "capybara", "~> 3.40"
