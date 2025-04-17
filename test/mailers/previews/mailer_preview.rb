@@ -103,6 +103,14 @@ class MailerPreview < ActionMailer::Preview
     OwnersMailer.with(ownership: ownership, authorizer: owner).owner_updated
   end
 
+  def policy_update_announcement
+    Mailer.policy_update_announcement(User.last)
+  end
+
+  def policy_update_review_closed
+    Mailer.policy_update_review_closed(User.last)
+  end
+
   def api_key_created
     api_key = ApiKey.where(owner_type: "User").last
     Mailer.api_key_created(api_key.id)

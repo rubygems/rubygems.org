@@ -89,6 +89,18 @@ class Mailer < ApplicationMailer
       subject: "Please consider enabling multi-factor authentication for your account"
   end
 
+  def policy_update_announcement(user)
+    @user = user
+    mail to: user.email, reply_to: "legal@rubycentral.org", from: "support@rubygems.org",
+      subject: I18n.t("mailer.policy_update_announcement.subject", host: Gemcutter::HOST_DISPLAY)
+  end
+
+  def policy_update_review_closed(user)
+    @user = user
+    mail to: user.email, reply_to: "legal@rubycentral.org", from: "support@rubygems.org",
+      subject: I18n.t("mailer.policy_update_review_closed.subject", host: Gemcutter::HOST_DISPLAY)
+  end
+
   def mfa_recommendation_announcement(user_id)
     @user = User.find(user_id)
 
