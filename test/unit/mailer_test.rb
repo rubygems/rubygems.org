@@ -159,6 +159,36 @@ class MailerTest < ActionMailer::TestCase
     end
   end
 
+  context "sending mail for rubygem policy announcement" do
+    setup do
+      @user = create(:user)
+    end
+
+    should "send mail to users" do
+      Mailer.policy_update_announcement(@user).deliver_now
+
+      refute_empty ActionMailer::Base.deliveries
+      email = ActionMailer::Base.deliveries.last
+
+      assert_equal [@user.email], email.to
+      assert_equal I18n.t("mailer.policy_update_announcement.subject", host: Gemcutter::HOST_DISPLAY), email.subject
+    end
+
+    should "send mail to users with blocked email" do
+      @user.email = "blocked@rubygems.org"
+      @user.blocked_email = "original-email@example.com"
+      @user.save!
+
+      Mailer.policy_update_announcement(@user).deliver_now
+
+      refute_empty ActionMailer::Base.deliveries
+      email = ActionMailer::Base.deliveries.last
+
+      assert_equal [@user.blocked_email], email.to
+      assert_equal I18n.t("mailer.policy_update_announcement.subject", host: Gemcutter::HOST_DISPLAY), email.subject
+    end
+  end
+
   teardown do
     Rake::Task["mfa_policy:announce_recommendation"].reenable
   end
