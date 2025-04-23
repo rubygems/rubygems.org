@@ -577,10 +577,11 @@ GEM
       google-protobuf (>= 3.25.3)
     pghero (3.6.2)
       activerecord (>= 6.1)
-    phlex (1.11.0)
-    phlex-rails (1.2.2)
-      phlex (>= 1.10, < 2)
-      railties (>= 6.1, < 9)
+    phlex (2.2.1)
+      zeitwerk (~> 2.7)
+    phlex-rails (2.2.0)
+      phlex (~> 2.2.1)
+      railties (>= 7.1, < 9)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -820,7 +821,7 @@ GEM
     statsd-instrument (3.9.9)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
-    stringio (3.1.6)
+    stringio (3.1.7)
     strong_migrations (2.3.0)
       activerecord (>= 7)
     swd (2.0.3)
@@ -983,7 +984,7 @@ DEPENDENCIES
   pg (~> 1.5)
   pg_query (~> 6.1)
   pghero (~> 3.6)
-  phlex-rails (~> 1.2)
+  phlex-rails (~> 2.2)
   pp (= 0.6.2)
   prop_initializer (~> 0.2)
   propshaft (~> 1.1.0)
@@ -1248,8 +1249,8 @@ CHECKSUMS
   pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
   pg_query (6.1.0) sha256=8b005229e209f12c5887c34c60d0eb2a241953b9475b53a9840d24578532481e
   pghero (3.6.2) sha256=0520429820a6c209e32d39471fe09ea270f73f0a8f6154897c408fb02f2e5896
-  phlex (1.11.0) sha256=979548e79a205c981612f1ab613addc8fa128c8092694d02f41aad4cea905e73
-  phlex-rails (1.2.2) sha256=a20218449e71bc9fa5a71b672fbede8a654c6b32a58f1c4ea83ddc1682307a4c
+  phlex (2.2.1) sha256=1ae5033b9afb7698caa69646baf973e56912d3f7d8b40a76deb4d2004b50dcf7
+  phlex-rails (2.2.0) sha256=09deab4cd2d6818e0bc7a8e96945c19b9b7cbd2eb7a965a52c157fd444801b65
   pp (0.6.2) sha256=947ec3120c6f92195f8ee8aa25a7b2c5297bb106d83b41baa02983686577b6ff
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.4.0) sha256=dc0e3e00e93160213dc2a65519d9002a4a1e7b962db57d444cf1a71565bb703e
@@ -1339,7 +1340,7 @@ CHECKSUMS
   snaky_hash (2.0.1) sha256=1ac87ec157fcfe7a460e821e0cd48ae1e6f5e3e082ab520f03f31a9259dbdc31
   statsd-instrument (3.9.9) sha256=4404872dd03cc0d4bae57396b5c529135a4223fb78d616ca52f37562ac1803e6
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
-  stringio (3.1.6) sha256=292c495d1657adfcdf0a32eecf12a60e6691317a500c3112ad3b2e31068274f5
+  stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
   strong_migrations (2.3.0) sha256=41e0ec98725dd0fd6d4b660b227619e355645baec248c966d13940c0b4be80fe
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (3.3.1) sha256=5dcc010ee90d53a59f40eff1f2706bc0b1d77fd3713a0fb196ff698bc4529dfe
