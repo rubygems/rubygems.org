@@ -5,12 +5,6 @@ services:
       - "127.0.0.1:5432:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
-  downloads-db:
-    image: index.docker.io/timescale/timescaledb@sha256:2e3a19fa4624addcb2bb8d37dfe2fee9e12597537b057a742c68aa226ed77da5 # 2.15.1-pg16
-    ports:
-      - "127.0.0.1:5434:5432"
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
   cache:
     image: index.docker.io/library/memcached@sha256:f4504742a8fb03c3ac0cd172e1c1d2277117629f8d21d52f78307121ddc3de5f # 1.4.39
     ports:

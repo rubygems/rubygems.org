@@ -839,11 +839,6 @@ GEM
     tailwindcss-ruby (3.4.17-x86_64-linux)
     thor (1.3.2)
     timeout (0.4.3)
-    timescaledb (0.3.2)
-      activerecord
-      activesupport
-      ostruct
-      pg (~> 1.2)
     toxiproxy (2.0.2)
     tpm-key_attestation (0.14.0)
       bindata (~> 2.4)
@@ -1025,7 +1020,6 @@ DEPENDENCIES
   stimulus-rails (~> 1.3)
   strong_migrations (~> 2.3)
   tailwindcss-rails (~> 3.3)
-  timescaledb (~> 0.3)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
   user_agent_parser (~> 2.18)
@@ -1351,7 +1345,6 @@ CHECKSUMS
   tailwindcss-ruby (3.4.17-x86_64-linux) sha256=5c607785d4d38d3d70f5ee5cb6a0e846fa1de32f911a7dcaca9cb94feaa864ff
   thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
   timeout (0.4.3) sha256=9509f079b2b55fe4236d79633bd75e34c1c1e7e3fb4b56cb5fda61f80a0fe30e
-  timescaledb (0.3.2) sha256=4d0efb7f4f520142a8d91af4b728379b0c5a343795781b7492f1cbfc4be15080
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.14.0) sha256=d05cc52b397f89c36a7307407e0e84d3ea1c7afce50e0a70b146f8ab17d2bf4b
   turbo-rails (2.0.11) sha256=fc47674736372780abd2a4dc0d84bef242f5ca156a457cd7fa6308291e397fcf
