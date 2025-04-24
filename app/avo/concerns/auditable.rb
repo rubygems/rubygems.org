@@ -22,8 +22,8 @@ module Auditable
 
           records = data[:connection].transaction_manager.current_transaction.records || []
           records.uniq(&:__id__).each do |record|
-            merge_changes!((changed_records[record] ||= {}), record.attributes.transform_values { [nil, it] }) if record.new_record?
-            merge_changes!((changed_records[record] ||= {}), record.changes_to_save)
+            merge_changes!(changed_records[record] ||= {}, record.attributes.transform_values { [nil, it] }) if record.new_record?
+            merge_changes!(changed_records[record] ||= {}, record.changes_to_save)
           end
         end, "sql.active_record", &)
 
