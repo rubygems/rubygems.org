@@ -63,7 +63,3 @@ on_worker_boot do
   # Re-open appenders after forking the process. https://logger.rocketjob.io/forking.html
   SemanticLogger.reopen
 end
-
-on_restart do
-  Rails.configuration.launch_darkly_client&.close
-end

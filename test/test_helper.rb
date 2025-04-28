@@ -92,15 +92,7 @@ class ActiveSupport::TestCase
     Unpwn.offline = true
     OmniAuth.config.mock_auth.clear
 
-    @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
-    config = LaunchDarkly::Config.new(data_source: @launch_darkly, send_events: false)
-    Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)
-
     ActionMailer::Base.deliveries.clear
-  end
-
-  teardown do
-    Rails.configuration.launch_darkly_client.close
   end
 
   def page

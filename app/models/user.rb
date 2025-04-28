@@ -274,15 +274,6 @@ class User < ApplicationRecord
     rubygem.owned_by?(self)
   end
 
-  def ld_context
-    LaunchDarkly::LDContext.create(
-      key: "user-key-#{id}",
-      kind: "user",
-      name: handle,
-      email: email
-    )
-  end
-
   private
 
   def update_email
