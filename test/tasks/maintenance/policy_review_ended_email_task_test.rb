@@ -3,13 +3,15 @@
 require "test_helper"
 
 class Maintenance::PolicyReviewEndedEmailTaskTest < ActiveSupport::TestCase
-  test "send email to user" do
-    user = create(:user)
+  include ActiveJob::TestHelper
 
-    assert_difference "ActionMailer::Base.deliveries.size", 1 do
-      Maintenance::PolicyReviewEndedEmailTask.process(user)
+  setup do
+    @user = create(:user)
+  end
+
+  test "queues mail to be delivered to the user" do
+    assert_enqueued_with(job: ActionMailer::MailDeliveryJob, queue: :within_24_hours) do
+      Maintenance::PolicyReviewEndedEmailTask.process(@user)
     end
-
-    assert_equal [user.email], ActionMailer::Base.deliveries.last.to
   end
 end

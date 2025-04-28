@@ -6,7 +6,7 @@ class Maintenance::PolicyAnnouncementEmailTask < MaintenanceTasks::Task
   end
 
   def process(user)
-    Mailer.policy_update_announcement(user).deliver_now
+    PoliciesMailer.policy_update_announcement(user).deliver_later(queue: :within_24_hours)
   end
 
   delegate :count, to: :User
