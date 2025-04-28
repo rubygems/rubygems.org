@@ -2,7 +2,7 @@
 
 class Maintenance::PolicyAnnouncementEmailTask < MaintenanceTasks::Task
   def collection
-    User.all
+    User.order(id: :asc)
   end
 
   def process(user)
