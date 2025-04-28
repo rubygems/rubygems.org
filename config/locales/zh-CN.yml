@@ -369,14 +369,6 @@ zh-CN:
       subtitle:
       body_html:
       body_text:
-    policy_update_announcement:
-      subject:
-      title:
-      subtitle:
-    policy_update_review_closed:
-      subject:
-      title:
-      subtitle:
     web_hook_deleted:
       title: 删除 Webhook
       subject: 您的 RubyGems.org Webhook 已被删除
@@ -467,6 +459,15 @@ zh-CN:
       title:
     privacy:
       title:
+  policies_mailer:
+    policy_update_announcement:
+      subject:
+      title:
+      subtitle:
+    policy_update_review_closed:
+      subject:
+      title:
+      subtitle:
   password_mailer:
     change_password:
       closing:

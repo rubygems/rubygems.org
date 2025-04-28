@@ -104,11 +104,11 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def policy_update_announcement
-    Mailer.policy_update_announcement(User.last)
+    PoliciesMailer.policy_update_announcement(User.last)
   end
 
   def policy_update_review_closed
-    Mailer.policy_update_review_closed(User.last)
+    PoliciesMailer.policy_update_review_closed(User.last)
   end
 
   def api_key_created
