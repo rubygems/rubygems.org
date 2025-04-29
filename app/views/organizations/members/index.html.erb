@@ -1,0 +1,35 @@
+<%
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.gems")
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :users %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("organizations.show.members") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t("organizations.show.members"), icon: "user", count: @memberships_count %>
+  <% end %>
+    <%= c.divided_list do %>
+		<% @memberships.each do |membership| %>
+			<%= c.list_item_to(
+				organization_membership_path(@organization, membership),
+				title: membership.user.handle,
+			) do %>
+				<div class="flex flex-col w-full justify-between">
+					<div class="flex flex-row w-full items-center justify-between">
+						<p class="text-neutral-800 dark:text-white"><%= membership.user.handle %></p>
+						<% if membership.confirmed? %>
+						<p class="text-neutral-500 capitalize"><%= membership.role %></p>
+						<% else %>
+						<p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
+						<% end %>
+					</div>
+				</div>
+			<% end %>
+		<% end %>
+  <% end %>
+<% end %>
