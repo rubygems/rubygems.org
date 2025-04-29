@@ -9,15 +9,18 @@ class Organizations::InvitationControllerTest < ActionDispatch::IntegrationTest
 
   test "GET /organizations/:organization_handle/invitation" do
     get organization_invitation_path(@organization, as: @user)
+
     assert_response :success
   end
 
   test "PATCH /organizations/:organization_handle/invitation" do
     patch organization_invitation_path(@organization, as: @user)
+
     assert_redirected_to organization_path(@organization)
 
     @membership.reload
+
     assert_not_nil @membership.invitation_expires_at
-    assert @membership.confirmed?
+    assert_predicate @membership, :confirmed?
   end
 end

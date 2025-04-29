@@ -1,3 +1,21 @@
-<%= form_with model: @membership, url: organization_invitation_path(@organization), method: :patch do |f| %>
-    <%= f.submit "Accept" %>
-<% end %>
+<div class="flex items-center justify-center bg-slate-50">
+  <div class="invitation-container max-w-md w-full bg-white border border-slate-200 rounded-xl shadow-md p-8 text-center">
+    <div class="mb-6">
+      <div class="flex justify-center items-center mb-4">
+        <div class="w-16 h-16 rounded-full bg-slate-300 flex items-center justify-center text-3xl font-bold text-slate-700 overflow-hidden">
+          <%= @organization.name[0,2].upcase %>
+        </div>
+      </div>
+      <h1 class="text-2xl font-bold text-slate-800 mb-1">Join <%= @organization.name %></h1>
+      <div class="text-slate-500 text-base mb-5">
+        You have been invited to join the <strong><%= @organization.name %></strong> organization.
+      </div>
+    </div>
+    <%= form_with model: @membership, url: organization_invitation_path(@organization), method: :patch do |f| %>
+      <%= render ButtonComponent.new t(".accept"), type: :submit %>
+    <% end %>
+    <div class="mt-6 text-slate-500 text-sm">
+      Not you? <a href="/" class="text-blue-600 underline hover:text-blue-800">Return to homepage</a>
+    </div>
+  </div>
+</div>
