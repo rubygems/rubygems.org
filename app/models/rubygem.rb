@@ -377,6 +377,10 @@ class Rubygem < ApplicationRecord
     URI.join("https://rubygems.org/gems/", name)
   end
 
+  def owned_by_organization?
+    organization.present?
+  end
+
   private
 
   # a gem namespace is not protected if it is
@@ -427,10 +431,6 @@ class Rubygem < ApplicationRecord
 
     sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, update_query)
     ActiveRecord::Base.connection.execute(sanitized_query)
-  end
-
-  def owned_by_organization?
-    organization.present?
   end
 
   def user_authorized_for_organization?(user)

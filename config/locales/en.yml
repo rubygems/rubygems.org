@@ -748,6 +748,9 @@ en:
     security_events:
       title: Security Events
       description_html: "This page shows the security events that have occurred on %{gem}. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
+    organization:
+      organizations_header: Organization
+      owned_by_organization: This gem is owned by an organization
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"

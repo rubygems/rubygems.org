@@ -79,7 +79,11 @@
       </div>
     <% end %>
 
-    <%= render partial: "rubygems/gem_members", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+    <% if @rubygem.owned_by_organization? %>
+      <%= render partial: "rubygems/organization", locals: { latest_version: @latest_version, rubygem: @rubygem, organization: @rubygem.organization } %>
+    <% else %>
+      <%= render partial: "rubygems/gem_members", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+    <% end %>
     <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
   </div>
 

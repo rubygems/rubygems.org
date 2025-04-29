@@ -1,0 +1,20 @@
+<div class="gem__organization-widget">
+  <div class="gem__organization-avatar">
+    <%= organization.name[0,2].upcase %>
+  </div>
+  <div class="gem__organization-info">
+    <div>
+      <h2><%= link_to organization.name, organization_path(organization)%></h2>
+      <span><%= t('.owned_by_organization') %></span>
+    </div>
+    <div>
+    <% if latest_version.pusher.present? %>
+      <h4><%= t '.pushed_by' %>:</h4>
+      <span class="gem__users"><%= link_to_user(latest_version.pusher) %></span>
+    <% elsif latest_version.pusher_api_key&.owner.present? %>
+      <h4><%= t '.pushed_by' %>:</h4>
+      <span class="gem__users"><%= link_to_pusher(latest_version.pusher_api_key.owner) %></span>
+    <% end %>
+    </div>
+  </div>
+</div>

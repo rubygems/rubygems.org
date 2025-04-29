@@ -22,7 +22,39 @@
 .gem__desc {
   font-size: 16px;
   font-weight: 300;
-  line-height: 1.5; }
+}
+
+.gem__organization-widget {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1em 1.5em;
+  margin-bottom: 2em;
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+}
+
+  .gem__organization-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: #334155;
+    overflow: hidden;
+  }
+
+  .gem__organization-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
 
 .gem__members {
   padding-top: 30px;
