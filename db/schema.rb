@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_30_033155) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -494,6 +494,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.integer "role", default: 70, null: false
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
+  end
+
+  create_table "rubygem_transfers", force: :cascade do |t|
+    t.string "status", default: "pending", null: false
+    t.string "targetable_type", null: false
+    t.string "targetable_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "rubygem_id_id", null: false
+    t.datetime "completed_at"
+    t.jsonb "users", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_rubygem_transfers_on_created_by_id"
+    t.index ["rubygem_id_id"], name: "index_rubygem_transfers_on_rubygem_id_id"
   end
 
   create_table "rubygems", id: :serial, force: :cascade do |t|
