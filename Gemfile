@@ -5,7 +5,7 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.2"
 gem "rails-i18n", "~> 8.0.1"
 
-gem "aws-sdk-s3", "~> 1.183"
+gem "aws-sdk-s3", "~> 1.184"
 gem "aws-sdk-sqs", "~> 1.93"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.10"
