@@ -62,7 +62,7 @@ class VersionManifest
     entries = GemPackageEnumerator.new(package).filter_map do |tar_entry|
       count += 1
       # bail completely if the gem is too large.
-      # this is better than producting a partial manifest,
+      # this is better than producing a partial manifest,
       # because that could trick someone into thinking they
       # are seeing the entire gem when they are not.
       return if count > MAX_ENTRIES # rubocop:disable Lint/NonLocalExitFromIterator
