@@ -219,6 +219,7 @@ Rails.application.routes.draw do
         get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
       end
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
+      resource :transfer, only: %i[show create]
     end
 
     resources :webauthn_credentials, only: :destroy

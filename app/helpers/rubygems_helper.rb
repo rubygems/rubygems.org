@@ -134,6 +134,11 @@ module RubygemsHelper
     rubygem.owners.without_mfa.sort_by(&:id).inject(+"") { |link, owner| link << link_to_user(owner) }.html_safe
   end
 
+  def rubygem_transfer_link(rubygem)
+    link_to "Transfer Ownership",
+      rubygem_transfer_path(rubygem.slug), class: "gem__link t-list__item"
+  end
+
   def link_to_user(user)
     link_to avatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
       alt: user.display_handle, title: user.display_handle
