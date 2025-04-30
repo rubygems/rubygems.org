@@ -1,0 +1,31 @@
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :members %>
+<% end %>
+
+<% @roles = Membership.roles.map { |k,_| [Membership.human_attribute_name("role.#{k}"), k] } %>
+
+<h1 class="text-h2 mb-10"><%= t("layouts.application.header.members") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title @membership.user.handle, icon: "user" %>
+  <% end %>
+
+  <%= form_with(url: organization_membership_path(@organization, @membership), method: :patch, html: { class: "bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-6 border border-gray-200 dark:border-gray-700" }) do |f| %>
+    <div class="mb-4">
+      <%= label_tag :role, t(".role"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= select_tag :role, options_for_select(@roles, @membership.role), class: "form__input form__select block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400"  %>
+    </div>
+    <div class="flex justify-end">
+      <%= render ButtonComponent.new t(".update"), type: :submit, style: :outline, class: "px-4 py-2 dark:border-gray-400 dark:text-gray-100" %>
+    </div>
+  <% end %>
+
+  <hr class="my-6 border-gray-200 dark:border-gray-700"/>
+
+  <%= form_with(url: organization_membership_path(@organization, @membership), method: :delete, confirm: "Are you sure?", html: { class: "bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700" }) do |f| %>
+    <div class="flex justify-end">
+      <%= render ButtonComponent.new t(".destroy"), type: :submit, style: :outline, class: "px-4 py-2 text-red-600 border-red-300 hover:bg-red-50 dark:text-red-400 dark:border-red-700 dark:hover:bg-red-900/20" %>
+    </div>
+  <% end %>
+<% end %>

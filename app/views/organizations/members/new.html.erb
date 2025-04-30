@@ -1,0 +1,27 @@
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :members %>
+<% end %>
+
+<% @roles = Membership.roles.map { |k,_| [Membership.human_attribute_name("role.#{k}"), k] } %>
+
+<h1 class="text-h2 mb-10"><%= t("layouts.application.header.members") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title "New Membership", icon: "user" %>
+  <% end %>
+
+  <%= form_with(url: organization_memberships_path(@organization), method: :post, html: { class: "bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-6 border border-gray-200 dark:border-gray-700" }) do |f| %>
+    <div class="mb-4">
+      <%= label_tag :handle, t(".handle"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= text_field_tag :handle, nil, class: "form__input block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400", placeholder: "user handle" %>
+    </div>
+    <div class="mb-4">
+      <%= label_tag :role, t(".role"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= select_tag :role, options_for_select(@roles), class: "form__input form__select block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400"  %>
+    </div>
+    <div class="flex justify-end">
+      <%= render ButtonComponent.new t(".create"), type: :submit, style: :outline, class: "px-4 py-2 dark:border-gray-400 dark:text-gray-100" %>
+    </div>
+  <% end %>
+<% end %>

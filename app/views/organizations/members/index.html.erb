@@ -7,16 +7,19 @@
   <%= render "organizations/subject", organization: @organization, current: :users %>
 <% end %>
 
+<div class="flex flex-row items-center justify-between">
 <h1 class="text-h2 mb-10"><%= t("organizations.show.members") %></h1>
+  <%= link_to t("organizations.show.add_member"), new_organization_membership_path(@organization), class: "btn btn-primary" %>
+</div>
 
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
-    <%= c.title t("organizations.show.members"), icon: "user", count: @memberships_count %>
+		<%= c.title t("organizations.show.members"), icon: "user", count: @memberships_count %>
   <% end %>
     <%= c.divided_list do %>
 		<% @memberships.each do |membership| %>
 			<%= c.list_item_to(
-				organization_membership_path(@organization, membership),
+				edit_organization_membership_path(@organization, membership),
 				title: membership.user.handle,
 			) do %>
 				<div class="flex flex-col w-full justify-between">

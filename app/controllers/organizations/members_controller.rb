@@ -1,20 +1,51 @@
 class Organizations::MembersController < Organizations::BaseController
-  before_action :find_membership, only: %i[show update]
+  before_action :find_membership, only: %i[edit update destroy]
 
   def index
     @memberships = @organization.memberships_including_unconfirmed.includes(:user)
     @memberships_count = @organization.memberships_including_unconfirmed.count
   end
 
-  def show
+  def new
+    @membership = @organization.memberships.build
+  end
+
+  def edit
+  end
+
+  def create
+    @membership = @organization.memberships.build(membership_params)
+    @membership.user = User.find_by(handle: params[:handle])
+
+    if @membership.save
+      OrganizationMailer.user_invited(@membership).deliver_later
+      redirect_to organization_memberships_path(@organization), notice: "Member added successfully."
+    else
+      render :new
+    end
   end
 
   def update
+    if @membership.update(membership_params)
+      redirect_to organization_memberships_path(@organization), notice: "Member updated successfully."
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @membership.destroy!
+
+    redirect_to organization_memberships_path(@organization), notice: "Member removed successfully."
   end
 
   private
 
   def find_membership
     @membership = @organization.memberships_including_unconfirmed.find(params[:id])
+  end
+
+  def membership_params
+    params.permit(:role)
   end
 end
