@@ -188,7 +188,7 @@
 
 .stats__graph__gem__count {
   position: absolute;
-  right: 12px; }
+  left: 12px; }
   @media (max-width: 419px) {
     .stats__graph__gem__count {
       font-size: 12px; } }
