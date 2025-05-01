@@ -337,7 +337,7 @@ GEM
     hashie (5.0.0)
     heapy (0.2.0)
       thor
-    honeybadger (5.27.2)
+    honeybadger (5.27.4)
       logger
       ostruct
     htmlbeautifier (1.4.3)
@@ -952,7 +952,7 @@ DEPENDENCIES
   google-protobuf (~> 4.30)
   gravtastic (~> 3.2)
   groupdate (~> 6.5)
-  honeybadger (~> 5.27.2)
+  honeybadger (~> 5.27.4)
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.1)
   kaminari (~> 1.2)
@@ -1152,7 +1152,7 @@ CHECKSUMS
   hashdiff (1.1.2) sha256=2c30eeded6ed3dce8401d2b5b99e6963fe5f14ed85e60dd9e33c545a44b71a77
   hashie (5.0.0) sha256=9d6c4e51f2a36d4616cbc8a322d619a162d8f42815a792596039fc95595603da
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
-  honeybadger (5.27.2) sha256=d18c1cd4acdea8cc02782b14b8119e41f847d76a22579c97eb7dd1fcbf3498d1
+  honeybadger (5.27.4) sha256=79f73c337168f2a33af2ca3f7cd93219821df11ce16b858c2b217ce540d3294d
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http (5.2.0) sha256=b99ed3c65376e0fd8107647fbaf5a8ab4f66c347d1271fb74cea757e209c6115
