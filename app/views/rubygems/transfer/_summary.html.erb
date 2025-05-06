@@ -1,0 +1,48 @@
+<% current_step ||= 1 %>
+
+<!-- Summary Header -->
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-h4">Summary</h2>
+</div>
+
+<%# Name Section %>
+<div class="mb-6">
+  <div class="flex justify-between items-center">
+    <h3 class="text-b1 text-neutral-900 dark:text-white">Organization</h3>
+    <% if current_step > 1 %>
+      <%= link_to "edit", rubygem_transfer_organization_path(@rubygem.slug), class: "text-orange-500" %>
+    <% end %>
+  </div>
+  <div class="mt-4">
+    <p class="flex justify-between">
+      <span class="font-semibold">Handle</span>
+      <span class="text-neutral-700 dark:text-neutral-300 ml-2"><%= @rubygem_transfer.transferable&.handle %></span>
+    </p>
+  </div>
+</div>
+<hr class="border-neutral-400 my-6">
+
+<%# People Section %>
+<div class="mb-6">
+  <div class="flex justify-between items-center">
+    <h3 class="text-b1 text-neutral-900 dark:text-white">
+      People
+      <span class="text-neutral-600 font-light ml-1"><%= @rubygem_transfer.approved_invites.size %></span>
+    </h3>
+    <% if current_step > 2 %>
+      <%= link_to "edit", rubygem_transfer_users_path(@rubygem.slug), class: "text-orange-500" %>
+    <% end %>
+  </div>
+  <ul class="mt-2 items-center space-y-4">
+    <% @rubygem_transfer.approved_invites.each do |invite| %>
+      <% user = invite.user %>
+      <li class="flex flex-row w-full justify-between">
+        <span class="flex flex-row items-center">
+          <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2 inline-block" %>
+          <span class="text-neutral-800 dark:text-white"><%= user.handle %></span>
+        </span>
+        <span class="text-neutral-500"><%= invite.role %></span>
+      </li>
+    <% end %>
+  </ul>
+</div>

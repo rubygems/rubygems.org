@@ -135,7 +135,7 @@ module RubygemsHelper
   end
 
   def rubygem_transfer_link(rubygem)
-    link_to "Transfer Ownership",
+    link_to "Transfer to Organization",
       rubygem_transfer_path(rubygem.slug), class: "gem__link t-list__item"
   end
 

@@ -49,8 +49,6 @@ class OrganizationOnboarding < ApplicationRecord
       remove_ownerships
       email_onboarded_users(onboarded_organization)
     end
-    
-
   rescue ActiveRecord::ActiveRecordError => e
     self.status = :failed
     self.error = e.message

@@ -236,6 +236,8 @@ en:
       learn:
         install_rubygems: Install RubyGems
   layouts:
+    onboarding:
+      title: Test
     application:
       footer:
         about: About

@@ -33,6 +33,7 @@
   display: flex;
   align-items: center;
   gap: 1.5em;
+  width: 100%;
 }
 
   .gem__organization-avatar {

@@ -33,7 +33,7 @@ User.create_with(
 organization_author = User.create_with(
   handle: "organization-owner",
   email_confirmed: true,
-  password: password,
+  password: password
 ).find_or_create_by!(email: "organization-owner@example.com")
 
 Organization.find_or_create_by!(
@@ -45,7 +45,7 @@ Membership.find_or_create_by!(
   user: author,
   organization: org,
   role: :owner,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.zone.now
 )
 
 Membership.find_or_create_by!(
@@ -55,7 +55,8 @@ Membership.find_or_create_by!(
 )
 
 rubygem0 = Rubygem.find_or_create_by!(
-  name: "rubygem0"
+  name: "rubygem0",
+  organization: org
 ) do |rubygem|
   rubygem.ownerships.new(user: author, authorizer: author).confirm!
 end
@@ -67,7 +68,7 @@ rubygem1 = Rubygem.find_or_create_by!(
   rubygem.ownerships.new(user: maintainer, authorizer: author).confirm!
 end
 
-rubygem_2  = Rubygem.find_or_create_by!(
+rubygem_2 = Rubygem.find_or_create_by!(
   name: "rubygem2"
 ) do |rubygem|
   rubygem.organization = org
