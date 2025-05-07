@@ -34,7 +34,7 @@ jobs:
       - name: Install and start services (needed for image test)
         run: docker compose up -d
       - name: Configure AWS credentials from Production account
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
+        uses: aws-actions/configure-aws-credentials@f24d7193d98baebaeacc7e2227925dd47cc267f5 # v4.2.0
         if: github.secret_source != 'None'
         with:
           role-to-assume: arn:aws:iam::048268392960:role/rubygems-ecr-pusher
