@@ -1,8 +1,7 @@
-# syntax = docker/dockerfile:1.4
-
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.4.3
 FROM ghcr.io/rails/devcontainer/images/ruby:$RUBY_VERSION
 
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends pkg-config \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Ensure binding is always 0.0.0.0
+# Binds the server to all IP addresses of the container, so it can be accessed from outside the container.
+ENV BINDING="0.0.0.0"
