@@ -59,7 +59,6 @@ gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.18"
 gem "pghero", "~> 3.6"
 gem "faraday-multipart", "~> 1.1"
-gem "timescaledb", "~> 0.3"
 gem "sigstore", "~> 0.2.1"
 gem "kramdown", "~> 2.5"
 
