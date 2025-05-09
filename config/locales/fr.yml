@@ -798,6 +798,7 @@ fr:
       summary: Sommaire
       description: Description
       downloads: Téléchargements
+      trusted_publisher:
       updated: Mis à jour
       yanked:
     show:

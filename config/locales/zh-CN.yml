@@ -766,6 +766,7 @@ zh-CN:
       summary: 概要
       description: 描述
       downloads: 下载数
+      trusted_publisher:
       updated: 更新
       yanked: 撤回
     show:
