@@ -1,8 +1,7 @@
-<% [:default, :mailers, :within_24_hours].each do |queue| %>
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jobs-<%= queue %>
+  name: jobs
   annotations:
     shipit.shopify.io/restart: 'true'
 spec:
@@ -27,7 +26,7 @@ spec:
       containers:
       - name: good-job
         image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
-        args: ["good_job", "start", "--queues", "<%= queue %>"]
+        args: ["good_job", "start"]
         resources:
           <% if environment == 'production' %>
           requests:
@@ -177,4 +176,3 @@ spec:
                 key: launch_darkly_sdk_key
         securityContext:
           privileged: false
-<% end %>
