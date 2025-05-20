@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jobs
+  name: jobs-within-24-hours
   annotations:
     shipit.shopify.io/restart: 'true'
 spec:
@@ -12,13 +12,13 @@ spec:
       maxUnavailable: 50%
   selector:
     matchLabels:
-      name: jobs
+      name: jobs-within-24-hours
   template:
     metadata:
       annotations:
         ad.datadoghq.com/good-job.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
       labels:
-        name: jobs
+        name: jobs-within-24-hours
         tags.datadoghq.com/env: "<%= environment %>"
         tags.datadoghq.com/service: rubygems.org
         tags.datadoghq.com/version: <%= current_sha %>
@@ -26,7 +26,7 @@ spec:
       containers:
       - name: good-job
         image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
-        args: ["good_job", "start", "--queues", "default,mailers,searchkick"]
+        args: ["good_job", "start", "--queues", "within_24_hours"]
         resources:
           <% if environment == 'production' %>
           requests:
