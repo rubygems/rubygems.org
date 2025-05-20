@@ -170,7 +170,7 @@ GEM
       smart_properties
     bigdecimal (3.1.9)
     bindata (2.5.0)
-    bitarray (1.2.0)
+    bitarray (1.3.1)
     bloomer (1.0.0)
       bitarray
       msgpack
@@ -620,7 +620,7 @@ GEM
       nio4r (~> 2.0)
     pundit (2.5.0)
       activesupport (>= 3.0.0)
-    pwned (2.3.0)
+    pwned (2.4.1)
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.1.15)
@@ -857,7 +857,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    unpwn (1.0.0)
+    unpwn (1.0.1)
       bloomer (~> 1.0)
       pwned (~> 2.0)
     uri (1.0.3)
@@ -1076,7 +1076,7 @@ CHECKSUMS
   better_html (2.1.1) sha256=046c3551d1488a3f2939a7cac6fabf2bde08c32e135c91fcd683380118e5af55
   bigdecimal (3.1.9) sha256=2ffc742031521ad69c2dfc815a98e426a230a3d22aeac1995826a75dabfad8cc
   bindata (2.5.0) sha256=29dccb8ba1cc9de148f24bb88930840c62db56715f0f80eccadd624d9f3d2623
-  bitarray (1.2.0) sha256=7f9f31fadbd87bf51544cf13058e81cd6ec408ff40f127902cef3d6767b23f11
+  bitarray (1.3.1) sha256=6ec714933c4a6100b31dcb49a68135a0409524a1834c9d614b0bd929e3da0743
   bloomer (1.0.0) sha256=57a0d3a78628db9a92c6723f06c67697e420abcdb05aa757c6dfae607251d272
   bootsnap (1.18.6) sha256=0ae2393c1e911e38be0f24e9173e7be570c3650128251bf06240046f84a07d00
   brakeman (7.0.2) sha256=b602d91bcec6c5ce4d4bc9e081e01f621c304b7a69f227d1e58784135f333786
@@ -1264,7 +1264,7 @@ CHECKSUMS
   public_suffix (6.0.1) sha256=61d44e1cab5cbbbe5b31068481cf16976dd0dc1b6b07bd95617ef8c5e3e00c6f
   puma (6.6.0) sha256=f25c06873eb3d5de5f0a4ebc783acc81a4ccfe580c760cfe323497798018ad87
   pundit (2.5.0) sha256=4fb6b8ad3fbfe6c34e4be172a1eac03dfcb36c29d6a1214574517af5a605beda
-  pwned (2.3.0) sha256=63f5a9576f109203684e9dd053f815649fd5bc0a0348b7190568272641b22353
+  pwned (2.4.1) sha256=e375b45e1cd78aded2c923737f75e09e64bc66582142c144bd85f4ce1fa0955d
   raabro (1.4.0) sha256=d4fa9ff5172391edb92b242eed8be802d1934b1464061ae5e70d80962c5da882
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rack (3.1.15) sha256=d12b3e9960d18a26ded961250f2c0e3b375b49ff40dbe6786e9c3b160cbffca4
@@ -1356,7 +1356,7 @@ CHECKSUMS
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (3.1.4) sha256=8caf2af1c0f2f07ec89ef9e18c7d88c2790e217c482bfc78aaa65eadd5415ac1
   unicode-emoji (4.0.4) sha256=2c2c4ef7f353e5809497126285a50b23056cc6e61b64433764a35eff6c36532a
-  unpwn (1.0.0) sha256=6239d17d46a882b3719b24fb79c78a34caff89d57ab0f5e546be5b5c882bc7d3
+  unpwn (1.0.1) sha256=103b3cc9ee9fb3dd68b88b73778bd17a9bfe7cfe12fc7053c2bf9f06caa2c155
   uri (1.0.3) sha256=e9f2244608eea2f7bc357d954c65c910ce0399ca5e18a7a29207ac22d8767011
   user_agent_parser (2.18.0) sha256=aa943b91da8906cace7d3fe16b450c9d77b68f571485c11e577af97aecb25584
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
