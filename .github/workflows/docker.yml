@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       RUBYGEMS_VERSION: "3.6.8"
-      RUBY_VERSION: "3.4.3"
+      RUBY_VERSION: "3.4.4"
     permissions:
       id-token: write
     steps:
