@@ -26,7 +26,7 @@ spec:
       containers:
       - name: good-job
         image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
-        args: ["good_job", "start", "--queues", "default,mailers,searchkick"]
+        args: ["good_job", "start", "--queues", "default,mailers,searchkick,stats,version_contents"]
         resources:
           <% if environment == 'production' %>
           requests:
