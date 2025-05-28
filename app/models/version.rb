@@ -292,6 +292,18 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     )
   end
 
+  def update_dependencies!(spec)
+    spec.dependencies.each do |dependency|
+      dependencies.create!(gem_dependency: dependency)
+    rescue ActiveRecord::RecordInvalid => e
+      # ActiveRecord can't chain a nested error here, so we have to add and reraise
+      e.record.errors.errors.each do |error|
+        errors.import(error, attribute: "dependency.#{error.attribute}")
+      end
+      raise
+    end
+  end
+
   def platform_as_number
     if platformed?
       0
@@ -312,7 +324,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def slug
-    full_name.remove(/^#{rubygem.name}-/)
+    full_name.delete_prefix("#{rubygem.name}-")
   end
 
   def downloads_count
@@ -482,7 +494,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def metadata_links_format
-    Linkset::LINKS.each do |link|
+    Links::LINKS.each_value do |link|
       url = metadata[link]
       next unless url
       next if Patterns::URL_VALIDATION_REGEXP.match?(url)

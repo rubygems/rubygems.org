@@ -880,21 +880,21 @@ class VersionTest < ActiveSupport::TestCase
 
     context "with metadata" do
       should "be invalid with empty string as link" do
-        @version.metadata = { "home" => "" }
+        @version.metadata = { "source_code_uri" => "" }
         @version.validate
 
-        assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
+        assert_equal(["['source_code_uri'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be invalid with invalid link" do
-        @version.metadata = { "home" => "http:/github.com/bestgemever" }
+        @version.metadata = { "source_code_uri" => "http:/github.com/bestgemever" }
         @version.validate
 
-        assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
+        assert_equal(["['source_code_uri'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be valid with valid link" do
-        @version.metadata = { "home" => "http://github.com/bestgemever" }
+        @version.metadata = { "source_code_uri" => "http://github.com/bestgemever" }
 
         assert @version.validate
         assert_empty(@version.errors.messages[:metadata])
