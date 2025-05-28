@@ -494,7 +494,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def metadata_links_format
-    Linkset::LINKS.each do |link|
+    Links::LINKS.each_value do |link|
       url = metadata[link]
       next unless url
       next if Patterns::URL_VALIDATION_REGEXP.match?(url)

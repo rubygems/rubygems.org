@@ -411,6 +411,16 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_match(/You have added cert_chain in gemspec but signature was empty/, response.body)
   end
 
+  test "publishing a gem with an invalid homepage" do
+    build_gem "sandworm", "2.0.0" do |gemspec|
+      gemspec.homepage = "not a valid url"
+    end
+    push_gem "sandworm-2.0.0.gem"
+
+    assert_response :unprocessable_content
+    assert_match(/is not a valid HTTP URI/, response.body)
+  end
+
   setup do
     @act = ENV["HOOK_RELAY_ACCOUNT_ID"]
     @id = ENV["HOOK_RELAY_HOOK_ID"]
