@@ -1,0 +1,20 @@
+<div class="flex items-center justify-center bg-slate-50 dark:bg-neutral-950">
+  <div class="invitation-container max-w-md w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-8 text-center">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-orange-600 mb-1"><%= @organization.name %></h1>
+      <div class="text-slate-700 dark:text-white text-lg mb-5">
+        invited you to join their organization<br>as an <span class="font-bold"><%= @membership.role %></span>.
+      </div>
+    </div>
+    <div class="flex justify-center gap-3 mb-6">
+      <%= form_with model: @membership, url: organization_invitation_path(@organization), method: :patch, class: "inline" do |f| %>
+        <%= render ButtonComponent.new t(".accept"), type: :submit, class: "bg-orange-500 hover:bg-orange-600 text-white" %>
+      <% end %>
+      <%= button_to t(".decline", default: "Decline"), organization_invitation_path(@organization), method: :delete, class: "border border-slate-400 text-slate-700 px-4 py-2 rounded dark:text-white hover:bg-slate-100" %>
+    </div>
+    <hr class="my-6">
+    <div class="text-xs text-slate-500 dark:text-white">
+      If this user is sending spam or malicious content, you can <a href="mailto:support@rubygems.org" class="text-orange-600 underline hover:text-orange-800">contact support</a>.
+    </div>
+  </div>
+</div>
