@@ -107,10 +107,6 @@ class MailerPreview < ActionMailer::Preview
     PoliciesMailer.policy_update_announcement(User.last)
   end
 
-  def policy_update_review_closed
-    PoliciesMailer.policy_update_review_closed(User.last)
-  end
-
   def api_key_created
     api_key = ApiKey.where(owner_type: "User").last
     Mailer.api_key_created(api_key.id)
