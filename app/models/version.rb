@@ -334,6 +334,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def payload
     {
       "authors"                    => authors,
+      "pusher_id"                  => pusher_id,
       "built_at"                   => built_at,
       "created_at"                 => created_at,
       "description"                => description,
