@@ -9,6 +9,8 @@ class ReverseDependenciesController < ApplicationController
     @reverse_dependencies = @rubygem.reverse_dependencies
       .by_downloads
       .preload(:gem_download, :latest_version)
+      .distinct
+      .select("rubygems.*, gem_downloads.count")
 
     @reverse_dependencies = @reverse_dependencies.legacy_search(params[:rdeps_query]) if params[:rdeps_query].is_a?(String)
     @reverse_dependencies = @reverse_dependencies.page(@page).without_count
