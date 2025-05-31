@@ -36,4 +36,8 @@ module OwnersHelper
   def can_modify_or_remove_owners?(rubygem)
     can_modify_owners?(rubygem) || can_remove_owners?(rubygem)
   end
+
+  def multiple_owners?(rubygem)
+    rubygem.owners.size > 1
+  end
 end

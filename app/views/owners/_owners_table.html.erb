@@ -58,7 +58,7 @@
                     color: :secondary,
                     disabled: ownership.user == current_user) %>
                 <% end %>
-                <% if can_remove_owners?(@rubygem) %>
+                <% if can_remove_owners?(@rubygem) && multiple_owners?(@rubygem) %>
                   <% if ownership.user == current_user %>
                     <div data-controller="confirm-remove-self"
                          data-confirm-remove-self-username-value="<%= current_user.display_id %>">
