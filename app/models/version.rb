@@ -233,6 +233,19 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     built_at && built_at <= RUBYGEMS_IMPORT_DATE
   end
 
+  def self.oldest_authored_at
+    minimum(
+      <<~SQL.squish
+        CASE WHEN DATE(created_at) = '#{RUBYGEMS_IMPORT_DATE}'
+            AND built_at <= created_at THEN
+            built_at
+        ELSE
+            created_at
+        END
+      SQL
+    )
+  end
+
   def refresh_rubygem_indexed
     rubygem.refresh_indexed!
   end
