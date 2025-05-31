@@ -99,21 +99,6 @@ class OwnerTest < SystemTest
     assert_equal [@other_user.email], last_email.to
   end
 
-  test "removing last owner shows error message" do
-    visit_ownerships_page
-
-    within_element owner_row(@user) do
-      click_button "Remove"
-    end
-
-    assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
-    assert page.has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
-
-    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
-
-    assert_no_emails
-  end
-
   test "verify using webauthn" do
     create_webauthn_credential
 
@@ -221,6 +206,20 @@ class OwnerTest < SystemTest
     visit rubygem_path(@rubygem.slug)
 
     assert page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+  end
+
+  test "hides the remove button only for personal ownership" do
+    create(:ownership, user: @other_user, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      assert page.has_no_button?("Remove")
+    end
+
+    within_element owner_row(@other_user) do
+      assert page.has_button?("Remove")
+    end
   end
 
   test "hides ownership link when not owner" do

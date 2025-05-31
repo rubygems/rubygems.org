@@ -18,4 +18,8 @@ module OwnersHelper
       image_tag("/images/check.svg")
     end
   end
+
+  def can_delete_ownership?(ownership, user)
+    ownership&.user_id != user.id
+  end
 end
