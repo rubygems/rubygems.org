@@ -1,8 +1,6 @@
 # RubyGems.org Acceptable Use Policy
 
-Last updated: Mar 18, 2025
-
-**This policy is in community review. It will take effect at the end of this period estimated on June 4th, 2025\.**
+Last updated: Jun 4, 2025
 
 This RubyGems.org Acceptable Use Policy is part of, and subject to the terms of, the RubyGems.org [Terms of Service](https://rubygems.org/policies/terms-of-service).
 
@@ -43,7 +41,7 @@ For issues such as DMCA violations, or trademark and copyright infringements, th
 RubyGems.org has a first-come, first-serve policy on gem names. Upon publishing a package, the publisher will be made owner of the package on RubyGems.org.  
 If you want to take over a package, we require you to first try and contact the current owner directly. If the current owner agrees, they can add you as an owner of the gem and you can then remove them, if necessary. If the current owner is not reachable or has not published any contact information, the RubyGems.org team may reach out to help mediate the process of the ownership transfer.
 
-TIn line with our goal of a reliable immutable registry, we do not permit gem owners to delete their gems unilaterally. The RubyGems.org team may delete rubygems from the registry that do not comply with the policies on this document, when legal or copyright claims require it, or when the RubyGems.org team decides that the deletion is in the best interest of the community. In many cases the team will first give the author the chance to respond before deletion. If the RubyGems.org staff determines, in its sole discretion, that a gem presents a security or site availability concern, we may delete the gem without prior notification to the author. 
+In line with our goal of a reliable immutable registry, we do not permit gem owners to delete their gems unilaterally. The RubyGems.org team may delete rubygems from the registry that do not comply with the policies on this document, when legal or copyright claims require it, or when the RubyGems.org team decides that the deletion is in the best interest of the community. In many cases the team will first give the author the chance to respond before deletion. If the RubyGems.org staff determines, in its sole discretion, that a gem presents a security or site availability concern, we may delete the gem without prior notification to the author. 
 
 ## Data Access
 
