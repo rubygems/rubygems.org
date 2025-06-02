@@ -159,7 +159,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
     bcrypt (3.1.20)
-    benchmark (0.4.0)
+    benchmark (0.4.1)
     benchmark-ips (2.14.0)
     better_html (2.1.1)
       actionview (>= 6.0)
@@ -168,7 +168,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (3.2.0)
+    bigdecimal (3.2.1)
     bindata (2.5.0)
     bitarray (1.3.1)
     bloomer (1.0.0)
@@ -442,7 +442,7 @@ GEM
       rake (~> 13.0)
     local_time (3.0.3)
     logger (1.7.0)
-    loofah (2.24.0)
+    loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     lookbook (2.3.9)
@@ -478,7 +478,7 @@ GEM
     method_source (1.1.0)
     mini_histogram (0.3.1)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
+    mini_portile2 (2.8.9)
     minitest (5.25.5)
     minitest-gcstats (1.3.1)
       minitest (~> 5.0)
@@ -581,10 +581,12 @@ GEM
       google-protobuf (>= 3.25.3)
     pghero (3.7.0)
       activerecord (>= 7.1)
-    phlex (1.11.0)
-    phlex-rails (1.2.2)
-      phlex (>= 1.10, < 2)
-      railties (>= 6.1, < 9)
+    phlex (2.3.1)
+      zeitwerk (~> 2.7)
+    phlex-rails (2.3.0)
+      phlex (~> 2.3.0)
+      railties (>= 7.1, < 9)
+      zeitwerk (~> 2.7)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -665,7 +667,7 @@ GEM
       actionpack (>= 5.0.1.rc1)
       actionview (>= 5.0.1.rc1)
       activesupport (>= 5.0.1.rc1)
-    rails-dom-testing (2.2.0)
+    rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
@@ -901,7 +903,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.37)
-    zeitwerk (2.7.2)
+    zeitwerk (2.7.3)
     zlib (3.2.1)
 
 PLATFORMS
@@ -983,7 +985,7 @@ DEPENDENCIES
   pg (~> 1.5)
   pg_query (~> 6.1)
   pghero (~> 3.7)
-  phlex-rails (~> 1.2)
+  phlex-rails (~> 2.3)
   pp (= 0.6.2)
   prop_initializer (~> 0.2)
   propshaft (~> 1.1.0)
@@ -1073,10 +1075,10 @@ CHECKSUMS
   aws-sigv4 (1.11.0) sha256=50a8796991a862324442036ad7a395920572b84bb6cd29b945e5e1800e8da1db
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.20) sha256=8410f8c7b3ed54a3c00cd2456bf13917d695117f033218e2483b2e40b0784099
-  benchmark (0.4.0) sha256=0f12f8c495545e3710c3e4f0480f63f06b4c842cc94cec7f33a956f5180e874a
+  benchmark (0.4.1) sha256=d4ef40037bba27f03b28013e219b950b82bace296549ec15a78016552f8d2cce
   benchmark-ips (2.14.0) sha256=b72bc8a65d525d5906f8cd94270dccf73452ee3257a32b89fbd6684d3e8a9b1d
   better_html (2.1.1) sha256=046c3551d1488a3f2939a7cac6fabf2bde08c32e135c91fcd683380118e5af55
-  bigdecimal (3.2.0) sha256=f220c34e07d98b04e02eb23193bee436fab9afcd551f43dce8837a1b4aa80762
+  bigdecimal (3.2.1) sha256=1f68631e876c6aba8fe9b84b36983c55ad3293ff2d1ad4c6f115bde1e9d802e3
   bindata (2.5.0) sha256=29dccb8ba1cc9de148f24bb88930840c62db56715f0f80eccadd624d9f3d2623
   bitarray (1.3.1) sha256=6ec714933c4a6100b31dcb49a68135a0409524a1834c9d614b0bd929e3da0743
   bloomer (1.0.0) sha256=57a0d3a78628db9a92c6723f06c67697e420abcdb05aa757c6dfae607251d272
@@ -1194,7 +1196,7 @@ CHECKSUMS
   llhttp-ffi (0.5.1) sha256=9a25a7fc19311f691a78c9c0ac0fbf4675adbd0cca74310228fdf841018fa7bc
   local_time (3.0.3) sha256=c69a8974d993fdf6e60db02977ed23c070f203dcb3a1ff0de52ad3d2393f8303
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
-  loofah (2.24.0) sha256=61e6a710883abb8210887f3dc868cf3ed66594c509d9ff6987621efa6651ee1e
+  loofah (2.24.1) sha256=655a30842b70ec476410b347ab1cd2a5b92da46a19044357bbd9f401b009a337
   lookbook (2.3.9) sha256=b91fd92bd20281b87fbd23d7b22ffacb83ceb086c30986ab90275d220eaf0f39
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
   maintenance_tasks (2.12.0) sha256=f236ca6dc35e579692b61b42368d73f0e201cc33585ff62ebcc5bef15ad0f1a7
@@ -1205,7 +1207,7 @@ CHECKSUMS
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_histogram (0.3.1) sha256=6a114b504e4618b0e076cc672996036870f7cc6f16b8e5c25c0c637726d2dd94
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  mini_portile2 (2.8.8) sha256=8e47136cdac04ce81750bb6c09733b37895bf06962554e4b4056d78168d70a75
+  mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   minitest (5.25.5) sha256=391b6c6cb43a4802bfb7c93af1ebe2ac66a210293f4a3fb7db36f2fc7dc2c756
   minitest-gcstats (1.3.1) sha256=cb25490f93aac02e3a5ff307e560d41afcdcafa7952c1c32efdeb9886b1f4711
   minitest-reporters (1.7.1) sha256=5060413a0c95b8c32fe73e0606f3631c173a884d7900e50013e15094eb50562c
@@ -1249,8 +1251,8 @@ CHECKSUMS
   pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
   pg_query (6.1.0) sha256=8b005229e209f12c5887c34c60d0eb2a241953b9475b53a9840d24578532481e
   pghero (3.7.0) sha256=a8d8497095dbe168bb03fe50a11309ab068cd1c1ef4c88d9bbeb97be4809f522
-  phlex (1.11.0) sha256=979548e79a205c981612f1ab613addc8fa128c8092694d02f41aad4cea905e73
-  phlex-rails (1.2.2) sha256=a20218449e71bc9fa5a71b672fbede8a654c6b32a58f1c4ea83ddc1682307a4c
+  phlex (2.3.1) sha256=8c0b2d6774f1e5cdb806bd19a9dc9338acd573e61fe8310a89785d5b25756b66
+  phlex-rails (2.3.0) sha256=4dd8b3ec4020601cc78e481aa8cee1df3995436b23f4961f6f96ffe8fbf0109e
   pp (0.6.2) sha256=947ec3120c6f92195f8ee8aa25a7b2c5297bb106d83b41baa02983686577b6ff
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.4.0) sha256=dc0e3e00e93160213dc2a65519d9002a4a1e7b962db57d444cf1a71565bb703e
@@ -1280,7 +1282,7 @@ CHECKSUMS
   rackup (2.2.1) sha256=f737191fd5c5b348b7f0a4412a3b86383f88c43e13b8217b63d4c8d90b9e798d
   rails (8.0.2) sha256=fdfaa5a83ec0388e02864e88d515959caedc88053b5f701c4deb1652d8f164c6
   rails-controller-testing (1.0.5) sha256=741448db59366073e86fc965ba403f881c636b79a2c39a48d0486f2607182e94
-  rails-dom-testing (2.2.0) sha256=e515712e48df1f687a1d7c380fd7b07b8558faa26464474da64183a7426fa93b
+  rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-erd (1.7.2) sha256=0b17d0fba25d319d8da8af7a3e5e2149d02d6187cc7351e8be43423f07c48bcd
   rails-html-sanitizer (1.6.2) sha256=35fce2ca8242da8775c83b6ba9c1bcaad6751d9eb73c1abaa8403475ab89a560
   rails-i18n (8.0.1) sha256=15303195450bdac9a80636cf14c7e5ada2f43907cc60fcd19bbb3f81ab45be0d
@@ -1376,7 +1378,7 @@ CHECKSUMS
   xml-simple (1.1.9) sha256=d21131e519c86f1a5bc2b6d2d57d46e6998e47f18ed249b25cad86433dbd695d
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yard (0.9.37) sha256=a6e910399e78e613f80ba9add9ba7c394b1a935f083cccbef82903a3d2a26992
-  zeitwerk (2.7.2) sha256=842e067cb11eb923d747249badfb5fcdc9652d6f20a1f06453317920fdcd4673
+  zeitwerk (2.7.3) sha256=b2e86b4a9b57d26ba68a15230dcc7fe6f040f06831ce64417b0621ad96ba3e85
   zlib (3.2.1) sha256=6301546b5f108c358304c3095d20e45ddebb31d5079341f95e08e9049770aa6a
 
 RUBY VERSION
