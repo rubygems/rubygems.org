@@ -2,7 +2,7 @@
 
 class Maintenance::PolicyAnnouncementEmailTask < MaintenanceTasks::Task
   def collection
-    User.all
+    User.where("id > ?", 10_333)
   end
 
   def process(user)
