@@ -8,9 +8,8 @@ The RubyGems.org website and service located at [https://rubygems.org](https://r
 
 1. An "Account" represents your legal relationship with Provider and your authorization to log into and use the Service.  
 2. The "Agreement" refers, collectively, to all the terms, conditions, notices contained or referenced in these Terms and all other operating rules, policies (including our [Privacy Notice](https://rubygems.org/policies/privacy)) and procedures that we may publish from time to time on the Website.  
-3. "Content" means Content featured or displayed through the Website, including without limitation text, data, articles, images, photographs, graphics, designs, features, and other materials that are available on the Website or otherwise available through the Service. "Content" also includes Services.  
-4. A "User" or "you" refers to the individual person, company, or organization that has visited or is using the Website or Service; that accesses or uses any part of the Account; or that directs the use of the Account in the performance of its functions.  
-5. "User-Generated Content" is Content, written or otherwise, created or uploaded by our Users. "Your Content" is Content that you create or own.
+3. A "User" or "you" refers to the individual person, company, or organization that has visited or is using the Website or Service; that accesses or uses any part of the Account; or that directs the use of the Account in the performance of its functions.  
+4. "User Content" means text, data, articles, images, photographs, graphics, designs, features, and other materials uploaded by our Users. "Your Content" is User Content that you own.
 
 ## 1\. Registration, Personal Information, and Privacy
 
@@ -22,17 +21,18 @@ The RubyGems.org website and service located at [https://rubygems.org](https://r
 ## 2\. Account Security
 
 a. You are responsible for keeping your Account secure while you use our Service, including keeping your login information and two-factor authentication information (if applicable) private. Provider cannot and will not be liable for any loss or damage from your failure to comply with this security obligation.  
-b. You are responsible for all Content posted and activity that occurs under your Account.  
+b. You are responsible for all User Content posted and activity that occurs under your Account.  
 c. You will promptly notify Provider if you become aware of any unauthorized use of, or access to, our Service through your Account, including any unauthorized use of your password or Account.
 
 ## 3\. User Content
 
-a. All information and Content submitted by users of the Service (“User Content”) is the sole responsibility of the person who provides it; Provider is not responsible for any User Content. Provider reserves the right, subject to applicable law and its obligations to its customers, to remove User Content for any reason, including that it violates our Acceptable Use Policy. However, Provider has no obligation to monitor, filter, or disable access to any User Content, and shall not be responsible if you encounter objectionable User Content on the Service.  
-b. You retain your rights to Your Content. You grant to Provider a non-exclusive, worldwide, royalty-free, perpetual, license (including the right to sublicense) to use, host, store, cache, reproduce, publish, display, perform, distribute, transmit, adapt, and modify Your Content, in all media now known or later developed, for the purpose of operating, promoting, and improving the Service, and developing new services.  
-c. You grant to users of the Service a non-exclusive, worldwide, royalty-free, perpetual, license to use, store, cache, and reproduce Your Content, in all media now known or later developed, for the purpose of downloading, using, and preparing derivative works of your Content consistent with any license terms you have applied to Your Content.  
+a. All User Content is the sole responsibility of the person who provides it; Provider is not responsible for any User Content. Provider reserves the right, subject to applicable law and its obligations to its customers, to remove User Content for any reason, including that it violates our Acceptable Use Policy. However, Provider has no obligation to monitor, filter, or disable access to any User Content, and shall not be responsible if you encounter objectionable User Content on the Service.  
+b. You retain your rights to Your Content. You grant to Provider a non-exclusive, worldwide, royalty-free, perpetual, license (including the right to sublicense) to use, host, store, cache, reproduce, publish, display, perform, distribute, and transmit Your Content for the purpose of operating, promoting, and improving the Service. You further grant to Provider the right to adapt and modify Your Content as we reasonably determine is necessary to protect the safety and security of the Service and its users.  
+c. You grant to users of the Service a non-exclusive, worldwide, royalty-free, license to download and reproduce Your Content. All other use of Your Content is subject to any license terms you have applied to Your Content.  
 d. You grant to operators of public RubyGems mirrors a non-exclusive, worldwide, royalty-free, perpetual, license (including the right to sublicense) to use, host, store, cache, reproduce, publish, display, perform, distribute, and transmit Your Content, in all media now known or later developed, for the purpose of operating public mirrors of the RubyGems package archive.  
-e. You represent and warrant that you have all necessary rights and authority to grant the above licenses. With regard to any third-party Content that you submit, you represent and warrant that you have a license to provide the Content according to these Terms, or that your use is otherwise permissible, for example as fair use.  
-f. We have the right to refuse or remove any User Content that we determine, in our sole discretion (1) violates this Agreement or any other applicable Ruby Central policy, (2) we are required by law to remove your content, or (3) poses any risk to Ruby Central or our users..
+e. You represent and warrant that you have all necessary rights and authority to grant the above licenses. With regard to any third-party materials that you submit, you represent and warrant that you have a license to provide the materials according to these Terms, or that your use is otherwise permissible, for example as fair use.  
+f. We have the right to refuse or remove any User Content that we determine, in our sole discretion (1) violates this Agreement or any other applicable Ruby Central policy, (2) we are required by law to remove, or (3) poses any risk to Ruby Central or our users.  
+g. To the extent that User Content contains personal information pertaining to you or any other person, that information is governed by our [Privacy Notice](https://rubygems.org/policies/privacy) and the [Ruby Central Privacy Notice](https://rubycentral.org/privacy-notice/), including any applicable data subject rights described in those policies.
 
 ## 4\. Acceptable Use Policy
 
@@ -40,7 +40,7 @@ a. Your use of the Service must not violate any applicable laws, including copyr
 
 b. You agree that you will not under any circumstances violate our [Acceptable Use Policies](https://rubygems.org/policies/acceptable-use).
 
-c. Provider reserves the right, to the extent permitted by applicable law, to remove or prohibit any User Content at any time, for violating this Agreement or any other applicable Ruby Central policy, if we reasonably determine that we are required by law to remove your content, or if we reasonably determine that hosting your content poses any risk to Ruby Central or our users.
+c. Provider reserves the right, to the extent permitted by applicable law, to remove or prohibit any User Content at any time, for violating this Agreement or any other applicable Ruby Central policy, if we reasonably determine that we are required by law to remove Your Content, or if we reasonably determine that hosting Your Content poses any risk to Ruby Central or our users.
 
 ## 5\. Ownership of the Services; Service Changes and Limitations
 
