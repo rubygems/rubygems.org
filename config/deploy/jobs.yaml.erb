@@ -65,6 +65,8 @@ spec:
             value: "<%= environment %>"
           - name: GOOD_JOB_PROBE_PORT
             value: "7001"
+          - name: GOOD_JOB_QUEUE_SELECT_LIMIT
+            value: "1000"
           <% if environment != "production" %>
           - name: GOOD_JOB_MAX_THREADS
             value: "2"
