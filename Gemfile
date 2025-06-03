@@ -68,7 +68,7 @@ gem "pagy", "~> 8.4"
 gem "view_component", "~> 3.23.2"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.1"
-gem "groupdate", "~> 6.6"
+gem "groupdate", "~> 6.7"
 gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
