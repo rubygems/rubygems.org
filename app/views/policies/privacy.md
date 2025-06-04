@@ -1,8 +1,6 @@
 # RubyGems.org Privacy Notice
 
-Last updated May 9, 2025
-
-**This policy is in community review. It will take effect at the end of this period estimated on June 4th, 2025\.**
+Last updated Jun 4, 2025
 
 This privacy notice describes what personal information Ruby Central, Inc. (“Ruby Central”) collects from users of RubyGems.org, when and how we share that information, and why. This notice is an addendum to the [Ruby Central Privacy Notice](https://rubycentral.org/privacy-notice), which also applies to users of RubyGems.org.
 
