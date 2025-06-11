@@ -45,10 +45,10 @@ class OrganizationOnboarding < ApplicationRecord
         status: :completed,
         onboarded_organization_id: onboarded_organization.id
       )
-    end
 
-    remove_ownerships
-    email_onboarded_users(onboarded_organization)
+      remove_ownerships
+      email_onboarded_users(onboarded_organization)
+    end
   rescue ActiveRecord::ActiveRecordError => e
     self.status = :failed
     self.error = e.message

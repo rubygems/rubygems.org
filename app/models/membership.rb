@@ -12,7 +12,7 @@ class Membership < ApplicationRecord
   before_create :set_invitation_expire_time
 
   def confirm!
-    update_attribute(:confirmed_at, Time.now)
+    update_attribute(:confirmed_at, Time.zone.now)
   end
 
   def confirmed?

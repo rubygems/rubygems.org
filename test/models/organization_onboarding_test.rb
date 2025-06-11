@@ -261,10 +261,9 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
   end
 
-  context "should schedule an email to be sent to each user that was onboarded" do
-    should "send an email to each user" do
-      assert_enqueued_jobs @onboarding.users.size
-    end
+  should "should schedule an email to be sent to each user that was onboarded" do
+    @onboarding.onboard!
+    assert_enqueued_jobs @onboarding.users.size
   end
 
   context "#available_rubygems" do
