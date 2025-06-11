@@ -1,5 +1,5 @@
 class Organizations::InvitationsController < Organizations::BaseController
-  before_action :find_membership, :set_breadcrumbs
+  before_action :find_membership
 
   layout "hammy"
 
@@ -14,12 +14,6 @@ class Organizations::InvitationsController < Organizations::BaseController
   private
 
   def find_membership
-    @membership = Membership.find_by!(organization: @organization, user: current_user)
-  end
-
-  def set_breadcrumbs
-    add_breadcrumb "Organizations", organizations_path
-    add_breadcrumb @organization.handle, organization_path(@organization)
-    add_breadcrumb "Invitation", organization_invitation_path(@organization)
+    @membership = Membership.find_by!(organization: @organization, user: current_user, confirmed_at: nil)
   end
 end

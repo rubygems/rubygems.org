@@ -417,9 +417,10 @@ en:
       no_history: No events yet
       no_gems: No gems yet
       add_member: Invite Member
+      invite: Invite
     members:
       create:
-        member_added: Member invited.
+        member_invited: Member invited.
       update:
         member_updated: Member updated successfully.
       destroy:
@@ -427,6 +428,7 @@ en:
         cannot_remove_self: You cannot remove yourself from the organization.
       index:
         invite: Invite
+        pending: Pending
       new:
         handle: Handle
         role: Role

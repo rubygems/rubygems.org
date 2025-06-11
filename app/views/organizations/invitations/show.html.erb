@@ -1,8 +1,16 @@
+<% 
+
+    add_breadcrumb "Organizations", organizations_path
+    add_breadcrumb @organization.handle, organization_path(@organization)
+    add_breadcrumb "Invitation", organization_invitation_path(@organization)
+
+%>
+
 <div class="flex items-center justify-center bg-slate-50 dark:bg-neutral-950">
   <div class="invitation-container max-w-md w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-8 text-center">
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-orange-600 mb-1"><%= @organization.name %></h1>
       <div class="text-slate-700 dark:text-white text-lg mb-5">
+        <span class="text-2xl font-bold text-orange-600 mb-1"><%= @organization.name %></span>
         <%= t(".title_html", role: @membership.role) %>
       </div>
     </div>

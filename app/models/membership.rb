@@ -19,6 +19,10 @@ class Membership < ApplicationRecord
     confirmed_at.present?
   end
 
+  def unconfirmed?
+    confirmed_at.nil?
+  end
+
   def refresh_invitation!
     set_invitation_expire_time
     save!

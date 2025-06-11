@@ -24,18 +24,14 @@ user = User.create_with(
   email_confirmed: true
 ).find_or_create_by!(email: "gem-user@example.com")
 
-Membership.find_or_create_by!(
-  user: author,
-  organization: org,
+Membership.create_with(
   role: :owner,
   confirmed_at: Time.zone.now
-)
+).find_or_create_by!(user: author, organization: org)
 
-Membership.find_or_create_by!(
-  user: maintainer,
-  organization: org,
-  role: :maintainer
-)
+Membership.create_with(
+  role: :owner,
+).find_or_create_by!(user: maintainer, organization: org)
 
 User.create_with(
   handle: "gem-security",

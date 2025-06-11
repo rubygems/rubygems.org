@@ -4,7 +4,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @organization = create(:organization)
     @user = create(:user)
-    @membership = create(:membership, organization: @organization, user: @user)
+    @membership = create(:membership, organization: @organization, user: @user, role: :admin)
 
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
   end

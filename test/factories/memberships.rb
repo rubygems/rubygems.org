@@ -7,6 +7,7 @@ FactoryBot.define do
 
     trait :pending do
       invitation_expires_at { Gemcutter::MEMBERSHIP_INVITE_EXPIRES_AFTER.from_now }
+      confirmed_at { nil }
     end
 
     trait :maintainer do

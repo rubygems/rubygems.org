@@ -16,6 +16,8 @@ class MembershipPolicy < ApplicationPolicy
     organization_member_with_role?(user, minimum_required_role) || deny(t(:forbidden))
   end
 
+  alias edit? update?
+
   def destroy?
     minimum_required_role = membership.owner? ? :owner : :admin
     organization_member_with_role?(user, minimum_required_role) || deny(t(:forbidden))

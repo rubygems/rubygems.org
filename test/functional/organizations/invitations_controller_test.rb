@@ -13,6 +13,14 @@ class Organizations::InvitationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET /organizations/:organization_handle/invitation with already confirmed membership" do
+    @membership.update!(confirmed_at: Time.current)
+
+    get organization_invitation_path(@organization, as: @user)
+
+    assert_response :not_found
+  end
+
   test "PATCH /organizations/:organization_handle/invitation" do
     patch organization_invitation_path(@organization, as: @user)
 
