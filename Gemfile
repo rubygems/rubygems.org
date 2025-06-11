@@ -33,7 +33,7 @@ gem "puma", "~> 6.6"
 gem "rack", "~> 3.1"
 gem "rackup", "~> 2.2"
 gem "rack-sanitizer", "~> 2.0"
-gem "rbtrace", "~> 0.5.1"
+gem "rbtrace", "~> 0.5.2"
 gem "rdoc", "~> 6.14"
 gem "roadie-rails", "~> 3.3"
 gem "ruby-magic", "~> 0.6"
@@ -129,7 +129,7 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.17"
+  gem "datadog-ci", "~> 1.18"
   gem "minitest", "~> 5.25", require: false
   gem "minitest-retry", "~> 0.2.5"
   gem "capybara", "~> 3.40"
