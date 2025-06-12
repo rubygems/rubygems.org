@@ -723,7 +723,8 @@ ja:
       reserved_namespace: この名前空間はrubygems.orgにより予約されています。
     dependencies:
       header: "%{title}依存関係"
-    gem_members:
+    release_info:
+      managed_by:
       authors_header: 作者
       self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証（MFA）
         の有効化</a>をご検討ください。
