@@ -9,7 +9,7 @@ export default class extends Controller {
   ]
   static classes = ["expanded"]
 
-  connect() { this.skipSandwichIcon = true }
+  connect(){this.mousedown = false}
 
   toggle(e) {
     e.preventDefault();
@@ -21,16 +21,24 @@ export default class extends Controller {
     }
   }
 
-  focus() {
-    if (this.skipSandwichIcon) { // skip sandwich icon when you tab from "gem" icon
-      this.enter();
-      this.hasSearchTarget && this.searchTarget.focus();
-      this.skipSandwichIcon = false;
-    } else {
-      this.leave();
-      this.logoTarget.focus();
-      this.skipSandwichIcon = true;
+  // This event is used to open the menu when user presses "TAB" and focuses on the burger menu
+  focus(event) {
+    // Ignore click events on the burger menu, we are only interested in tab events
+    if (this.mousedown){
+      this.mousedown = false
+      return;
     }
+    // Open the menu
+    this.enter();
+    // Wait 50ms before focusing on the search input - necessary for Firefox mobile
+    setTimeout(() => {
+      this.hasSearchTarget && this.searchTarget.focus();
+    }, 50);
+  }
+
+  // Register if last event was a mousedown
+  mouseDown(e){
+    this.mousedown = true
   }
 
   hide(e) { !this.headerTarget.contains(e.target) && this.leave() }
