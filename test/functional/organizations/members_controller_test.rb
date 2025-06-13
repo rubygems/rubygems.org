@@ -17,9 +17,19 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /organizations/:organization_handle/members as a non-member" do
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
     get organization_memberships_path(@organization)
 
     assert_response :not_found
+  end
+
+  test "GET /organizations/:organization_handle/members as maintainer" do
+    @membership.update(role: "maintainer")
+    get organization_memberships_path(@organization)
+
+    assert_response :success
   end
 
   test "GET /organizations/:organization_handle/members/new" do
@@ -29,19 +39,18 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_select "h3", text: "Invite Member"
   end
 
-  test "POST /organizations/:organization_handle/members" do
-    new_user = create(:user)
+  test "GET /organizations/:organization_handle/members/:new as a guest" do
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
-    post organization_memberships_path(@organization), params: { handle: new_user.handle, role: "maintainer" }
+    get new_organization_membership_path(@organization)
 
-    assert_redirected_to organization_memberships_path(@organization)
-    assert_equal "Member invited.", flash[:notice]
+    assert_response :not_found
   end
 
-  test "POST /organizations/:organization_handle/members as a maintainer" do
-    new_user = create(:user)
-
-    post organization_memberships_path(@organization), params: { handle: new_user.handle, role: "maintainer" }
+  test "GET /organizations/:organization_handle/members/new as a maintainer" do
+    @membership.update(role: "maintainer")
+    get new_organization_membership_path(@organization)
 
     assert_response :not_found
   end
@@ -53,6 +62,22 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Member updated successfully.", flash[:notice]
   end
 
+  test "PATCH /organizations/:organization_handle/members/:id as a guest" do
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    patch organization_membership_path(@organization, @membership), params: { role: "admin" }
+
+    assert_response :not_found
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id as a maintainer" do
+    @membership.update(role: "maintainer")
+    patch organization_membership_path(@organization, @membership), params: { role: "admin" }
+
+    assert_response :not_found
+  end
+
   test "DELETE /organizations/:organization_handle/members/:id" do
     new_user = create(:user)
     membership = create(:membership, organization: @organization, user: new_user)
@@ -61,6 +86,22 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to organization_memberships_path(@organization)
     assert_equal "Member removed successfully.", flash[:notice]
+  end
+
+  test "DELETE /organizations/:organization_handle/members/:id as a guest" do
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    delete organization_membership_path(@organization, @membership)
+
+    assert_response :not_found
+  end
+
+  test "DELETE /organizations/:organization_handle/members/:id as a maintainer" do
+    @membership.update(role: "maintainer")
+    delete organization_membership_path(@organization, @membership)
+
+    assert_response :not_found
   end
 
   test "DELETE /organizations/:organization_handle/members/:id with current user's membership" do

@@ -1,6 +1,8 @@
 class Organizations::MembersController < Organizations::BaseController
   before_action :find_membership, only: %i[edit update destroy]
 
+  rescue_from Pundit::NotAuthorizedError, with: :render_not_found
+
   def index
     authorize @organization, :list_memberships?
 
