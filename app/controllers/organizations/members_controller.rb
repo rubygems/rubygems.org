@@ -2,11 +2,15 @@ class Organizations::MembersController < Organizations::BaseController
   before_action :find_membership, only: %i[edit update destroy]
 
   def index
+    authorize @organization, :list_memberships?
+
     @memberships = @organization.memberships_including_unconfirmed.includes(:user)
     @memberships_count = @organization.memberships_including_unconfirmed.count
   end
 
   def new
+    authorize @organization, :invite_member?
+
     @membership = @organization.memberships.build
     authorize @membership, :create?
   end

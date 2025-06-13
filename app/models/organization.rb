@@ -22,6 +22,10 @@ class Organization < ApplicationRecord
     record_event!(Events::OrganizationEvent::CREATED, actor_gid: memberships.first&.to_gid)
   end
 
+  def user_is_member?(user)
+    memberships.exists?(user: user)
+  end
+
   def self.find_by_handle(handle)
     find_by("lower(handle) = lower(?)", handle)
   end

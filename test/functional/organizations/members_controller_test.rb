@@ -16,6 +16,12 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", text: "Members"
   end
 
+  test "GET /organizations/:organization_handle/members as a non-member" do
+    get organization_memberships_path(@organization)
+
+    assert_response :not_found
+  end
+
   test "GET /organizations/:organization_handle/members/new" do
     get new_organization_membership_path(@organization)
 
@@ -30,6 +36,14 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to organization_memberships_path(@organization)
     assert_equal "Member invited.", flash[:notice]
+  end
+
+  test "POST /organizations/:organization_handle/members as a maintainer" do
+    new_user = create(:user)
+
+    post organization_memberships_path(@organization), params: { handle: new_user.handle, role: "maintainer" }
+
+    assert_response :not_found
   end
 
   test "PATCH /organizations/:organization_handle/members/:id" do
