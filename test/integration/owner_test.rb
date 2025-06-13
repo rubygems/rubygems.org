@@ -208,17 +208,25 @@ class OwnerTest < SystemTest
     assert page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
   end
 
-  test "hides the remove button only for personal ownership" do
+  test "shows the remove button for all owners when there are multiple owners" do
     create(:ownership, user: @other_user, rubygem: @rubygem)
 
     visit_ownerships_page
 
     within_element owner_row(@user) do
-      assert page.has_no_button?("Remove")
+      assert page.has_button?("Remove")
     end
 
     within_element owner_row(@other_user) do
       assert page.has_button?("Remove")
+    end
+  end
+
+  test "hides the remove button if owner is single" do
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      assert page.has_no_button?("Remove")
     end
   end
 

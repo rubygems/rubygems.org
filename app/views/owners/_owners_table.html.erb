@@ -50,7 +50,7 @@
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
       </td>
       <td class="owners__cell" data-title="Action">
-        <% if can_delete_ownership?(ownership, current_user) %>
+        <% if multiple_owners?(@rubygem) %>
           <%= button_to t("remove"),
             rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
             method: "delete",

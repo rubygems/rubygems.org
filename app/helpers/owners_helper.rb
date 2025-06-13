@@ -19,7 +19,7 @@ module OwnersHelper
     end
   end
 
-  def can_delete_ownership?(ownership, user)
-    ownership&.user_id != user.id
+  def multiple_owners?(rubygem)
+    rubygem.owners.size > 1
   end
 end
