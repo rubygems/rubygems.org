@@ -100,7 +100,7 @@ end
 group :development, :test do
   gem "pry-byebug", "~> 3.11"
   gem "toxiproxy", "~> 2.0"
-  gem "factory_bot_rails", "~> 6.4"
+  gem "factory_bot_rails", "~> 6.5"
   gem "dotenv-rails", "~> 3.1"
   gem "lookbook", "~> 2.3"
 
