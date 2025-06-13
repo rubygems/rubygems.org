@@ -30,7 +30,7 @@ Membership.create_with(
 ).find_or_create_by!(user: author, organization: org)
 
 Membership.create_with(
-  role: :owner,
+  role: :owner
 ).find_or_create_by!(user: maintainer, organization: org)
 
 User.create_with(
