@@ -3,7 +3,7 @@
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
 ARG RUBY_VERSION=3.4.4
 ARG ALPINE_VERSION=3.20
-FROM ruby:$RUBY_VERSION-alpine${ALPINE_VERSION} as base
+FROM ruby:$RUBY_VERSION-alpine${ALPINE_VERSION} AS base
 
 # Install packages
 RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
@@ -28,7 +28,7 @@ ARG RUBYGEMS_VERSION
 RUN gem update --system ${RUBYGEMS_VERSION} --no-document
 
 # Throw-away build stage to reduce size of final image
-FROM base as build
+FROM base AS build
 
 # Install packages
 RUN \
