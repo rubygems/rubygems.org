@@ -79,7 +79,7 @@
       </div>
     <% end %>
 
-    <%= render partial: "rubygems/gem_members", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+    <%= render partial: "rubygems/release_info", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
     <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
   </div>
 

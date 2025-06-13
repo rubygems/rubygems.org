@@ -712,7 +712,8 @@ zh-TW:
       reserved_namespace: 此命名空間被 rubygems.org 保留。
     dependencies:
       header: "%{title} 相依性套件"
-    gem_members:
+    release_info:
+      managed_by:
       authors_header: 作者
       self_no_mfa_warning_html:
       not_using_mfa_warning_show: "* 某些擁有者未使用多重要素驗證 (MFA)。點擊此處以顯示完整名單。"

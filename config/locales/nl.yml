@@ -710,7 +710,8 @@ nl:
       reserved_namespace:
     dependencies:
       header: "%{title} afhankelijkheden"
-    gem_members:
+    release_info:
+      managed_by:
       authors_header:
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:

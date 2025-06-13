@@ -1,5 +1,13 @@
 <div class="gem__members">
-  <% if rubygem.owners.present? %>
+
+  <% if rubygem.owned_by_organization? %>
+    <div class="gem__organization-header">
+      <h3 class="t-list__heading"><%= t '.managed_by' %>:</h3>
+      <div class="gem__organization-info">
+        <h4 class="gem__organization-header"><%= link_to rubygem.organization.name, organization_path(rubygem.organization), class: "gem__organization-name" %></h4>
+      </div>
+    </div>
+  <% elsif rubygem.owners.present? %>
     <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
     <div class="gem__users">
       <%= links_to_owners(rubygem) %>
