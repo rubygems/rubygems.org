@@ -22,10 +22,11 @@ class Organizations::MembersController < Organizations::BaseController
   end
 
   def create
+    authorize @organization, :invite_member?
+
     @membership = @organization.memberships.build(membership_params)
     @membership.user = User.find_by(handle: params[:handle])
-
-    authorize @membership, :create?
+    @membership.invited_by = current_user
 
     if @membership.save
       OrganizationMailer.user_invited(@membership).deliver_later

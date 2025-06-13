@@ -101,7 +101,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def create_organization!
-    memberships = invites.filter_map(&:to_membership)
+    memberships = invites.filter_map { it.to_membership(actor: created_by) }
     memberships << build_owner
 
     Organization.create!(

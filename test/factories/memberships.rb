@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :membership do
     user
     organization
+    invited_by { association(:user) }
     confirmed_at { Time.zone.now }
     role { :maintainer }
 

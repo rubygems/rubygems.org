@@ -26,14 +26,16 @@ class InvitationTest < ApplicationSystemTestCase
   end
 
   test "accepting an invitation to an organization" do
-    membership = create(:membership, :pending, user: @outside_user, organization: @organization)
+    membership = create(:membership, :pending, user: @outside_user, organization: @organization, invited_by: @user)
     OrganizationMailer.user_invited(membership).deliver_now
 
     sign_in @outside_user
 
-    invitation = Capybara.string(ActionMailer::Base.deliveries.last.body.to_s)
-    invitation_link = invitation.find(:link, "Accept invitation")[:href]
+    invitation = Capybara.string(ActionMailer::Base.deliveries.last.html_part.body.to_s)
 
+    assert invitation.has_text? "#{@user.handle} has invited you to join the #{@organization.handle} organization on rubygems.org."
+
+    invitation_link = invitation.find(:link, "Accept invitation")[:href]
     invitation_path = URI.parse(invitation_link).request_uri
 
     visit invitation_path

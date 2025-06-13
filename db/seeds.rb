@@ -26,11 +26,13 @@ user = User.create_with(
 
 Membership.create_with(
   role: :owner,
-  confirmed_at: Time.zone.now
+  confirmed_at: Time.zone.now,
+  invited_by: nil
 ).find_or_create_by!(user: author, organization: org)
 
 Membership.create_with(
-  role: :owner
+  role: :owner,
+  invited_by: author
 ).find_or_create_by!(user: maintainer, organization: org)
 
 User.create_with(

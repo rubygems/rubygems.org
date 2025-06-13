@@ -16,6 +16,5 @@ class OrganizationMailerTest < ActionMailer::TestCase
 
     assert_equal [user.email], email.to
     assert_equal "You've been invited to join #{organization.handle}", email.subject
-    assert_includes email.body.to_s, organization_invitation_path(organization)
   end
 end
