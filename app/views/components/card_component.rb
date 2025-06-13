@@ -6,7 +6,7 @@ class CardComponent < ApplicationComponent
   def view_template(&)
     color = "bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white "
     box = "w-full px-4 py-6 md:p-10 mb-10 rounded-md shadow overflow-hidden"
-    article(**classes(color, box), &)
+    section(**classes(color, box), &)
   end
 
   def head(title = nil, icon: nil, count: nil, url: nil, **options, &block)
