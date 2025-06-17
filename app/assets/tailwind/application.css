@@ -1,7 +1,5 @@
 @config "../../../config/tailwind.config.js";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/aspect-ratio";
