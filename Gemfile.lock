@@ -346,9 +346,8 @@ GEM
       ostruct
     htmlbeautifier (1.4.3)
     htmlentities (4.3.4)
-    http (5.2.0)
+    http (5.3.1)
       addressable (~> 2.8)
-      base64 (~> 0.1)
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
       llhttp-ffi (~> 0.5.0)
@@ -398,7 +397,8 @@ GEM
     kramdown (2.5.1)
       rexml (>= 3.3.9)
     language_server-protocol (3.17.0.5)
-    launchdarkly-server-sdk (8.10.0)
+    launchdarkly-server-sdk (8.10.1)
+      benchmark (~> 0.1, >= 0.1.1)
       concurrent-ruby (~> 1.1)
       http (>= 4.4.0, < 6.0.0)
       json (~> 2.3)
@@ -616,7 +616,7 @@ GEM
     psych (5.2.6)
       date
       stringio
-    public_suffix (6.0.1)
+    public_suffix (6.0.2)
     puma (6.6.0)
       nio4r (~> 2.0)
     pundit (2.5.0)
@@ -1156,7 +1156,7 @@ CHECKSUMS
   honeybadger (5.28.0) sha256=010acb869e49ea18796a2a3293aa99103802fdca3a94181db9a0163f1ead6431
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
-  http (5.2.0) sha256=b99ed3c65376e0fd8107647fbaf5a8ab4f66c347d1271fb74cea757e209c6115
+  http (5.3.1) sha256=c50802d8e9be3926cb84ac3b36d1a31fbbac383bc4cbecdce9053cb604231d7d
   http-cookie (1.0.8) sha256=b14fe0445cf24bf9ae098633e9b8d42e4c07c3c1f700672b09fbfe32ffd41aa6
   http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
@@ -1176,7 +1176,7 @@ CHECKSUMS
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   kramdown (2.5.1) sha256=87bbb6abd9d3cebe4fc1f33e367c392b4500e6f8fa19dd61c0972cf4afe7368c
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
-  launchdarkly-server-sdk (8.10.0) sha256=c581c52ee003bcc636bef9471b6527bc29973c65aca4ef430b5d25abf44c1342
+  launchdarkly-server-sdk (8.10.1) sha256=2cf17fbf658a9263fdf05153f1c9309d9f19b5b6121128c1badd5f7cd14677ba
   launchy (3.1.1) sha256=72b847b5cc961589dde2c395af0108c86ff0119f42d4648d25b5440ebb10059e
   ld-eventsource (2.2.3) sha256=e72f3eef9808348c71b74afc79c60b7fd74f02874486b7c2edd2aef1b566a538
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
@@ -1264,7 +1264,7 @@ CHECKSUMS
   pry (0.15.2) sha256=12d54b8640d3fa29c9211dd4ffb08f3fd8bf7a4fd9b5a73ce5b59c8709385b6b
   pry-byebug (3.11.0) sha256=0b0abb7d309bc7f00044d512a3c8567274f7012b944b38becc8440439a1cea72
   psych (5.2.6) sha256=814328aa5dcb6d604d32126a20bc1cbcf05521a5b49dbb1a8b30a07e580f316e
-  public_suffix (6.0.1) sha256=61d44e1cab5cbbbe5b31068481cf16976dd0dc1b6b07bd95617ef8c5e3e00c6f
+  public_suffix (6.0.2) sha256=bfa7cd5108066f8c9602e0d6d4114999a5df5839a63149d3e8b0f9c1d3558394
   puma (6.6.0) sha256=f25c06873eb3d5de5f0a4ebc783acc81a4ccfe580c760cfe323497798018ad87
   pundit (2.5.0) sha256=4fb6b8ad3fbfe6c34e4be172a1eac03dfcb36c29d6a1214574517af5a605beda
   pwned (2.4.1) sha256=e375b45e1cd78aded2c923737f75e09e64bc66582142c144bd85f4ce1fa0955d
