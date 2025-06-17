@@ -191,7 +191,7 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     cbor (0.5.9.8)
-    chartkick (5.1.5)
+    chartkick (5.2.0)
     childprocess (5.1.0)
       logger (~> 1.5)
     choice (0.2.0)
@@ -930,7 +930,7 @@ DEPENDENCIES
   brakeman (~> 7.0)
   browser (~> 6.2)
   capybara (~> 3.40)
-  chartkick (~> 5.1)
+  chartkick (~> 5.2)
   clearance (~> 2.10)
   compact_index (~> 0.15.0)
   csv (~> 3.3)
@@ -1087,7 +1087,7 @@ CHECKSUMS
   byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   cbor (0.5.9.8) sha256=9ee097fc58d9bc5e406d112cd2d4e112c7354ec16f8b6ff34e4732c1e44b4eb7
-  chartkick (5.1.5) sha256=368f7fa61a3c1d731c9f5b3ebf7c49e552a5f5798776fb1811fe744f1cdbf34e
+  chartkick (5.2.0) sha256=75273928d7a4a93301d23647885a1041359104550071699222e0923d2d38f576
   childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
