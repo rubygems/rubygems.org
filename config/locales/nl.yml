@@ -271,6 +271,7 @@ nl:
         settings: Instellingen
         edit_profile: Wijzig profiel
         search_gem_html: Gems Zoeken&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Startpagina
@@ -280,6 +281,7 @@ nl:
     subscriptions: Abonnementen
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -404,6 +406,29 @@ nl:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount:

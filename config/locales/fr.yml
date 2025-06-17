@@ -280,6 +280,7 @@ fr:
         settings: Paramètres
         edit_profile: Modifier le profil
         search_gem_html: Recherche de Gems&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Accueil
@@ -289,6 +290,7 @@ fr:
     subscriptions: Abonnements
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
@@ -420,6 +422,29 @@ fr:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount:

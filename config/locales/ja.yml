@@ -269,6 +269,7 @@ ja:
         settings: 設定
         edit_profile: プロフィールを編集
         search_gem_html: gemを検索...
+        members:
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
         to blog post)！"
   breadcrumbs:
@@ -279,6 +280,7 @@ ja:
     subscriptions: 購読
     gems: gem
     members: メンバー
+    invite_member:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -415,6 +417,29 @@ ja:
       members: メンバー
       no_history: まだ履歴がありません
       no_gems: まだgemがありません
+      add_member:
+      invite:
+    members:
+      create:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"

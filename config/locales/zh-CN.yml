@@ -270,6 +270,7 @@ zh-CN:
         settings: 设置
         edit_profile: 编辑个人信息
         search_gem_html: 搜索 Gem &hellip;&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: 首页
@@ -279,6 +280,7 @@ zh-CN:
     subscriptions: 订阅
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: 请在发送到您的邮件中点击链接，确认您的邮箱地址。
     confirmation_subject: 请确认您的邮箱地址
@@ -419,6 +421,29 @@ zh-CN:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount:
