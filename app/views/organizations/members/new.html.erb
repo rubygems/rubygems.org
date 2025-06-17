@@ -15,7 +15,7 @@
 
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
-    <%= c.title "Invite Member", icon: "user" %>
+    <%= c.title "Invite Member", icon: "organizations" %>
   <% end %>
 
   <%= form_with(url: organization_memberships_path(@organization), method: :post, html: { class: "bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-6 border border-gray-200 dark:border-gray-700" }) do |f| %>
