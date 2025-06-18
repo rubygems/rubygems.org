@@ -2,7 +2,7 @@ class OrganizationOnboarding < ApplicationRecord
   enum :name_type, { gem: "gem", user: "user" }, prefix: true, default: "gem"
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
-  has_many :invites, -> { preload(:user) }, class_name: "OrganizationOnboardingInvite", inverse_of: :organization_onboarding, dependent: :destroy
+  has_many :invites, as: :principal, class_name: "OrganizationInduction", dependent: :destroy
   has_many :users, through: :invites
   belongs_to :organization, optional: true, foreign_key: :onboarded_organization_id, inverse_of: :organization_onboarding
   belongs_to :created_by, class_name: "User", inverse_of: :organization_onboardings
@@ -92,7 +92,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   def sync_invites
     existing_invites = invites.index_by(&:user_id)
-    self.invites = users_for_selected_gems.map { existing_invites[it.id] || OrganizationOnboardingInvite.new(user: it) }
+    self.invites = users_for_selected_gems.map { existing_invites[it.id] || OrganizationInduction.new(user: it) }
   end
 
   def remove_invalid_invites

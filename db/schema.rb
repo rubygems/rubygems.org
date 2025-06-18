@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_17_074103) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pgcrypto"
@@ -420,6 +420,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "organization_inductions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "principal_type", null: false
+    t.bigint "principal_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["principal_type", "principal_id"], name: "idx_on_principal_type_principal_id_727138ef00"
+    t.index ["principal_type", "principal_id"], name: "index_organization_inductions_on_principal"
+    t.index ["user_id"], name: "index_organization_inductions_on_user_id"
+  end
+
   create_table "organization_onboarding_invites", force: :cascade do |t|
     t.bigint "organization_onboarding_id", null: false
     t.bigint "user_id", null: false
@@ -676,6 +688,7 @@ t.index ["rubygem_id", "position", "created_at"], name: "index_versions_on_rubyg
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "organization_inductions", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"

@@ -215,7 +215,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       setup do
         @contributor = create(:user)
         @ownership = create(:ownership, user: @contributor, rubygem: @rubygem, role: "owner")
-        @onboarding.invites << create(:organization_onboarding_invite, user: @contributor, role: :outside_contributor)
+        @onboarding.invites << create(:organization_induction, user: @contributor, role: :outside_contributor)
       end
 
       should "not remove the Ownership record" do
