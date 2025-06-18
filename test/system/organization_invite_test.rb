@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class OrgnaizationInviteTest < ActionDispatch::SystemTestCase
+class OrganizationInviteTest < ApplicationSystemTestCase
   setup do
     @owner = create(:user)
     @member = create(:user)
@@ -8,14 +8,12 @@ class OrgnaizationInviteTest < ActionDispatch::SystemTestCase
   end
 
   test "invite user to organization" do
-    visit sign_in_path
-
-    click_link "login as #{@owner[:handle]}"
+    sign_in(@owner)
 
     visit organization_path(@organization)
 
     click_on "Members"
-    click_on "Invite Member"
+    click_on "Invite"
 
     fill_in "Handle", with: @member.handle
     select "Maintainer", from: "Role"
