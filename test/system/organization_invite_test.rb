@@ -10,7 +10,7 @@ class OrgnaizationInviteTest < ActionDispatch::SystemTestCase
   test "invite user to organization" do
     visit sign_in_path
 
-    click_link "login as #{@user[:handle]}"
+    click_link "login as #{@owner[:handle]}"
 
     visit organization_path(@organization)
 
