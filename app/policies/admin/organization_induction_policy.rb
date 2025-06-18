@@ -1,4 +1,4 @@
-class Admin::OrganizationOnboardingInvitePolicy < Admin::ApplicationPolicy
+class Admin::OrganizationInductionPolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     def resolve
       scope.all
