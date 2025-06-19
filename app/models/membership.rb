@@ -12,6 +12,7 @@ class Membership < ApplicationRecord
   scope :with_minimum_role, ->(role) { where(role: Access.flag_for_role(role)...) }
 
   validates :invited_by, presence: true, unless: :owner_created_during_onboarding?
+  validates :user, uniqueness: { scope: :organization }
 
   before_create :set_invitation_expire_time
 
