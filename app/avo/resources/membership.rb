@@ -11,5 +11,6 @@ class Avo::Resources::Membership < Avo::BaseResource
     field :id, as: :id
     field :user, as: :belongs_to
     field :organization, as: :belongs_to
+    field :role, as: :select, enum: Membership.roles
   end
 end
