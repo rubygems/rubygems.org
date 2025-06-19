@@ -462,6 +462,8 @@ de:
       invite:
     members:
       create:
+        user_already_invited:
+        user_not_found:
         member_invited:
       update:
         member_updated:

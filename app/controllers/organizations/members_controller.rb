@@ -1,5 +1,6 @@
 class Organizations::MembersController < Organizations::BaseController
   before_action :find_membership, only: %i[edit update destroy]
+  before_action :find_invited_user, :check_existing_invitation, only: %i[create]
 
   rescue_from Pundit::NotAuthorizedError, with: :render_not_found
 
@@ -25,7 +26,7 @@ class Organizations::MembersController < Organizations::BaseController
     authorize @organization, :invite_member?
 
     @membership = @organization.memberships.build(membership_params)
-    @membership.user = User.find_by(handle: params[:handle])
+    @membership.user = @invited_user
     @membership.invited_by = current_user
 
     if @membership.save
@@ -54,6 +55,21 @@ class Organizations::MembersController < Organizations::BaseController
   end
 
   private
+
+  def check_existing_invitation
+    return unless Membership.exists?(user: @invited_user, organization: @organization)
+
+    flash.now[:alert] = t(".user_already_invited")
+    render :new, status: :unprocessable_entity
+  end
+
+  def find_invited_user
+    @invited_user = User.find_by(handle: params[:handle])
+
+    return unless @invited_user.nil?
+    flash.now[:alert] = t(".user_not_found")
+    render :new, status: :unprocessable_entity
+  end
 
   def find_membership
     @membership = @organization.memberships_including_unconfirmed.find(params[:id])

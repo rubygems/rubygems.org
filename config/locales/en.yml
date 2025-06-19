@@ -420,6 +420,8 @@ en:
       invite: Invite
     members:
       create:
+        user_already_invited: User already invited to the organization.
+        user_not_found: User not found.
         member_invited: Member invited.
       update:
         member_updated: Member updated successfully.
