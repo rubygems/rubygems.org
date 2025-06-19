@@ -22,7 +22,10 @@
     </div>
     <hr class="my-6">
     <div class="text-xs text-slate-500 dark:text-white">
-      If this user is sending spam or malicious content, you can <a href="mailto:support@rubygems.org" class="text-orange-600 underline hover:text-orange-800">contact support</a>.
+      If this user is sending spam or malicious content, you can 
+        <%= mail_to "support@rubygems.org", class: "text-orange-600 underline hover:text-orange-800" do %>
+          contact support
+        <% end %>.
     </div>
   </div>
 </div>
