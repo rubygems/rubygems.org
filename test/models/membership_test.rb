@@ -10,6 +10,19 @@ class MembershipTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
+  should "validate the invited_by user" do
+    membership = Membership.new(organization: @organization, user: @user)
+
+    refute_predicate membership, :valid?
+    assert_includes membership.errors[:invited_by], "can't be blank"
+  end
+
+  should "not require the invited_by field if the membership is the owner from onboarding" do
+    membership = Membership.new(organization: @organization, user: @user, invited_by: @owner, confirmed_at: Time.zone.now)
+
+    assert_predicate membership, :valid?
+  end
+
   should "be unconfirmed by default" do
     membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
 
