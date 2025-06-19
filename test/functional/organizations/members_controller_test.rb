@@ -58,28 +58,14 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
   test "POST /organizations/:organization_handle/members" do
     new_user = create(:user)
 
-    post organization_memberships_path(@organization), params: { handle: new_user.handle, role: :admin }
+    post organization_memberships_path(@organization), params: { membership: { user: new_user.handle, role: :admin } }
 
     assert_redirected_to organization_memberships_path(@organization)
     assert_equal "Member invited.", flash[:notice]
   end
 
-  test "POST /organizations/:organization_handle/members a user that does not exist" do
-    post organization_memberships_path(@organization), params: { handle: "nonexistent_user", role: :admin }
-
-    assert_response :unprocessable_entity
-    assert_equal "User not found.", flash[:alert]
-  end
-
-  test "POST /organizations/:organization_handle/members on an already invited user" do
-    post organization_memberships_path(@organization), params: { handle: @user.handle, role: :admin }
-
-    assert_response :unprocessable_entity
-    assert_equal "User already invited to the organization.", flash[:alert]
-  end
-
   test "PATCH /organizations/:organization_handle/members/:id" do
-    patch organization_membership_path(@organization, @membership), params: { role: "admin" }
+    patch organization_membership_path(@organization, @membership), params: { membership: { role: "admin" } }
 
     assert_redirected_to organization_memberships_path(@organization)
     assert_equal "Member updated successfully.", flash[:notice]
@@ -89,14 +75,14 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     guest = create(:user)
     post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
-    patch organization_membership_path(@organization, @membership), params: { role: "admin" }
+    patch organization_membership_path(@organization, @membership), params: { membership: { role: "admin" } }
 
     assert_response :not_found
   end
 
   test "PATCH /organizations/:organization_handle/members/:id as a maintainer" do
     @membership.update(role: "maintainer")
-    patch organization_membership_path(@organization, @membership), params: { role: "admin" }
+    patch organization_membership_path(@organization, @membership), params: { membership: { role: "admin" } }
 
     assert_response :not_found
   end

@@ -18,7 +18,7 @@ class InvitationTest < ApplicationSystemTestCase
     click_on "Invite"
 
     fill_in "Handle", with: @outside_user.handle
-    select "Maintainer", from: :role
+    select "Maintainer", from: "Role"
 
     click_on "Invite"
 
