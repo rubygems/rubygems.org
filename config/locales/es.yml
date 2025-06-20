@@ -468,6 +468,9 @@ es:
       index:
         invite:
         pending:
+      edit:
+        update:
+        delete:
       new:
         handle:
         role:
