@@ -11,7 +11,6 @@ class Membership < ApplicationRecord
 
   scope :with_minimum_role, ->(role) { where(role: Access.flag_for_role(role)...) }
 
-  validates :invited_by, presence: true, unless: :owner_created_during_onboarding?
   validates :user, uniqueness: { scope: :organization }
 
   before_create :set_invitation_expire_time
@@ -33,11 +32,5 @@ class Membership < ApplicationRecord
 
   def set_invitation_expire_time
     self.invitation_expires_at = Gemcutter::MEMBERSHIP_INVITE_EXPIRES_AFTER.from_now
-  end
-
-  # Check if this is an organization owner membership created during onboarding
-  # These memberships are automatically confirmed and don't need an invited_by
-  def owner_created_during_onboarding?
-    owner? && confirmed_at.present? && invited_by.blank?
   end
 end

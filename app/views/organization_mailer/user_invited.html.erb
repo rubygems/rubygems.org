@@ -9,7 +9,7 @@
 
       <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
         <p>
-          <%= @invited_by.handle %> has invited you to join the <%= @organization.handle %> organization on rubygems.org.
+          <%= @invited_by.handle.present? ? "#{@invited_by.handle} has invited you" : "You have been invited" %> to join the <%= @organization.handle %> organization on rubygems.org.
         </p>
         <br/>
         <p>
