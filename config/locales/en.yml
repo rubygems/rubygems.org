@@ -749,7 +749,8 @@ en:
       reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header: "%{title} Dependencies"
-    gem_members:
+    release_info:
+      managed_by: Managed By
       authors_header: Authors
       self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling multi-factor authentication (MFA)</a> to keep your account secure.
       not_using_mfa_warning_show: "* Some owners are not using multi-factor authentication (MFA). Click for the complete list."

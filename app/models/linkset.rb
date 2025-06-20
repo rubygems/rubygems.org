@@ -1,5 +1,5 @@
 class Linkset < ApplicationRecord
-  belongs_to :rubygem
+  belongs_to :rubygem, inverse_of: :linkset
 
   before_save :create_homepage_link_verification, if: :home_changed?
 
@@ -17,10 +17,6 @@ class Linkset < ApplicationRecord
 
   def empty?
     LINKS.map { |link| attributes[link] }.all?(&:blank?)
-  end
-
-  def update_attributes_from_gem_specification!(spec)
-    update!(home: spec.homepage)
   end
 
   def create_homepage_link_verification

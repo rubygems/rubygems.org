@@ -752,7 +752,8 @@ pt-BR:
       reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header:
-    gem_members:
+    release_info:
+      managed_by:
       authors_header: Autores
       self_no_mfa_warning_html:
       not_using_mfa_warning_show: "* Alguns donos não estão usando MFA. Clique para

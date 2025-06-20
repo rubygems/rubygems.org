@@ -840,7 +840,8 @@ es:
       reserved_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
       header: dependencias de %{title}
-    gem_members:
+    release_info:
+      managed_by:
       authors_header: Autores
       self_no_mfa_warning_html: Considera por favor <a href="/settings/edit">activar
         la autenticación de múltiples factores (AMF)</a> para mantener tu cuenta segura.

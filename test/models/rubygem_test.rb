@@ -359,24 +359,13 @@ class RubygemTest < ActiveSupport::TestCase
       refute_predicate @rubygem, :valid?
     end
 
-    should "return linkset errors in #all_errors" do
-      @specification = gem_specification_from_gem_fixture("test-0.0.0")
-      @specification.homepage = "badurl.com"
-
-      assert_raise ActiveRecord::RecordInvalid do
-        @rubygem.update_linkset!(@specification)
-      end
-
-      assert_equal "Home does not appear to be a valid URL", @rubygem.all_errors
-    end
-
     should "return version errors in #all_errors" do
       @version = build(:version)
       @specification = gem_specification_from_gem_fixture("test-0.0.0")
       @specification.authors = [3]
 
       assert_raise ActiveRecord::RecordInvalid do
-        @rubygem.update_versions!(@version, @specification)
+        @version.update_attributes_from_gem_specification!(@specification)
       end
 
       assert_equal "Authors must be an Array of Strings", @rubygem.all_errors(@version)
@@ -394,9 +383,7 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem.name = "1337"
 
       refute_predicate @rubygem, :valid?
-      assert_raise ActiveRecord::RecordInvalid do
-        @rubygem.update_linkset!(@specification)
-      end
+      @rubygem.linkset.update(home: @specification.homepage)
 
       assert_match "Name must include at least one letter, Home does not appear to be a valid URL",
         @rubygem.all_errors
@@ -828,10 +815,6 @@ class RubygemTest < ActiveSupport::TestCase
         refute_predicate @rubygem, :new_record?
         assert_predicate @rubygem.versions, :present?
       end
-
-      should "have the homepage set properly" do
-        assert_equal @specification.homepage, @rubygem.linkset.home
-      end
     end
 
     context "from a Gem::Specification with metadata with links" do
@@ -839,14 +822,12 @@ class RubygemTest < ActiveSupport::TestCase
 
       setup do
         @specification = new_gemspec("test", "1.0.0", "A summary", "ruby") do |s|
-          s.homepage = "https://example.com/test"
           s.metadata = {
             "funding_uri" => "https://example.com/",
             "documentation_uri" => "https://example.com/docs",
-            "source_code_uri" => "::",
-            "bug_tracker_uri" => "",
             "mailing_list_uri" => "http://example.com/mailing_list",
-            "wiki_uri" => "https://example.com/"
+            "wiki_uri" => "https://example.com/",
+            "homepage_uri" => "https://example.com/test"
           }
         end
 
@@ -857,7 +838,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "create link verification records" do
-        assert_equal ["::", "http://example.com/mailing_list", "https://example.com/", "https://example.com/docs", "https://example.com/test"],
+        assert_equal ["http://example.com/mailing_list", "https://example.com/", "https://example.com/docs", "https://example.com/test"],
                      @rubygem.link_verifications.pluck(:uri).sort
       end
 

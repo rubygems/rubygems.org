@@ -750,7 +750,8 @@ zh-CN:
       reserved_namespace: 该命名空间由 RubyGems.org 保留。
     dependencies:
       header: "%{title} 依赖"
-    gem_members:
+    release_info:
+      managed_by:
       authors_header: 作者
       self_no_mfa_warning_html: 请考虑 <a href="/settings/edit">启用多因素身份验证（MFA）</a> 来保障您的帐户安全。
       not_using_mfa_warning_show: "* 某些所有者当前还没有启用多因素验证（MFA）。请点击查看完整列表。"

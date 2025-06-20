@@ -2,7 +2,7 @@
 
 Last updated Mar 18, 2025  
 
-**This policy is in community review. It will take effect at the end of this period estimated on May 20th, 2025\.**
+**This policy is in community review. It will take effect at the end of this period estimated on June 4th, 2025\.**
 
 The RubyGems.org website and service located at [https://rubygems.org](https://rubygems.org) (the “Service”) are operated by Ruby Central, Inc. (“Provider,” “we,” or “us”). By registering for, using, or accessing the Service, you agree to be bound by these terms of service (“Terms”). These Terms also incorporate our other policies applicable to the Service, including the [Ruby Central Privacy Policy](https://rubycentral.org/privacy-notice), [RubyGems.org Privacy Policy](https://rubygems.org/policies/privacy), and [RubyGems.org Acceptable Use Policy](https://rubygems.org/policies/acceptable-use). If you don’t agree to these Terms, you must discontinue use of the Service.  If you have any questions about these terms, please contact us: [legal@rubycentral.org](mailto:legal@rubycentral.org).
 

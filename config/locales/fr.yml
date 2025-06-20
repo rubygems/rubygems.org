@@ -773,7 +773,8 @@ fr:
       reserved_namespace: Ce nom est réservé par rubygems.org.
     dependencies:
       header: Dépendances de %{title}
-    gem_members:
+    release_info:
+      managed_by:
       authors_header: Auteurs
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:

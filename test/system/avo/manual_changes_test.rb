@@ -60,6 +60,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
 
     find('div[data-field-id="auditable"]').click_on log_ticket.to_param
 
+    page.assert_text "pending"
     page.assert_title(/^#{log_ticket.to_param}/)
 
     click_on "Edit"

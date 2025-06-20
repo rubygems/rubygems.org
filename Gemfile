@@ -5,12 +5,12 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.2"
 gem "rails-i18n", "~> 8.0.1"
 
-gem "aws-sdk-s3", "~> 1.186"
-gem "aws-sdk-sqs", "~> 1.95"
+gem "aws-sdk-s3", "~> 1.189"
+gem "aws-sdk-sqs", "~> 1.96"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.10"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.16"
+gem "datadog", "~> 2.17"
 gem "dogstatsd-ruby", "~> 5.6"
 gem "google-protobuf", "~> 4.31"
 gem "faraday", "~> 2.13"
@@ -33,7 +33,7 @@ gem "puma", "~> 6.6"
 gem "rack", "~> 3.1"
 gem "rackup", "~> 2.2"
 gem "rack-sanitizer", "~> 2.0"
-gem "rbtrace", "~> 0.5.1"
+gem "rbtrace", "~> 0.5.2"
 gem "rdoc", "~> 6.14"
 gem "roadie-rails", "~> 3.3"
 gem "ruby-magic", "~> 0.6"
@@ -57,7 +57,7 @@ gem "strong_migrations", "~> 2.3"
 gem "phlex-rails", "~> 1.2"
 gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.18"
-gem "pghero", "~> 3.6"
+gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.1"
 gem "sigstore", "~> 0.2.1"
 gem "kramdown", "~> 2.5"
@@ -65,10 +65,10 @@ gem "kramdown", "~> 2.5"
 # Admin dashboard
 gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 3.23.1"
+gem "view_component", "~> 3.23.2"
 gem "pundit", "~> 2.5"
-gem "chartkick", "~> 5.1"
-gem "groupdate", "~> 6.6"
+gem "chartkick", "~> 5.2"
+gem "groupdate", "~> 6.7"
 gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
@@ -94,13 +94,13 @@ gem "local_time", "~> 3.0"
 gem "better_html", "~> 2.1"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 3.3"
+  gem "tailwindcss-rails", "~> 4.2"
 end
 
 group :development, :test do
   gem "pry-byebug", "~> 3.11"
   gem "toxiproxy", "~> 2.0"
-  gem "factory_bot_rails", "~> 6.4"
+  gem "factory_bot_rails", "~> 6.5"
   gem "dotenv-rails", "~> 3.1"
   gem "lookbook", "~> 2.3"
 
@@ -129,7 +129,7 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.17"
+  gem "datadog-ci", "~> 1.19"
   gem "minitest", "~> 5.25", require: false
   gem "minitest-retry", "~> 0.2.5"
   gem "capybara", "~> 3.40"
@@ -139,7 +139,7 @@ group :test do
   gem "mocha", "~> 2.7", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 6.5"
-  gem "selenium-webdriver", "~> 4.32"
+  gem "selenium-webdriver", "~> 4.33"
   gem "webmock", "~> 3.25"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1", require: false

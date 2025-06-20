@@ -242,6 +242,25 @@ class VersionTest < ActiveSupport::TestCase
       end
     end
 
+    context ".oldest_authored_at scope" do
+      setup do
+        @built_at = Version::RUBYGEMS_IMPORT_DATE - 60.days
+        @version.update(built_at: @built_at, created_at: Version::RUBYGEMS_IMPORT_DATE)
+        _newer_version = create(:version, rubygem: @version.rubygem)
+      end
+
+      should "return the built_at of the oldest version when created_at is the same as RUBYGEMS_IMPORT_DATE" do
+        assert_equal @built_at, Version.oldest_authored_at
+      end
+
+      should "return the created_at of the oldest version when created_at is not the same as RUBYGEMS_IMPORT_DATE" do
+        created_at = Version::RUBYGEMS_IMPORT_DATE + 1.day
+        @version.update(created_at: created_at)
+
+        assert_equal created_at, Version.oldest_authored_at
+      end
+    end
+
     should "have a rubygems version" do
       @version.update(required_rubygems_version: @required_rubygems_version)
       new_version = Version.find(@version.id)
@@ -880,21 +899,21 @@ class VersionTest < ActiveSupport::TestCase
 
     context "with metadata" do
       should "be invalid with empty string as link" do
-        @version.metadata = { "home" => "" }
+        @version.metadata = { "source_code_uri" => "" }
         @version.validate
 
-        assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
+        assert_equal(["['source_code_uri'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be invalid with invalid link" do
-        @version.metadata = { "home" => "http:/github.com/bestgemever" }
+        @version.metadata = { "source_code_uri" => "http:/github.com/bestgemever" }
         @version.validate
 
-        assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
+        assert_equal(["['source_code_uri'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be valid with valid link" do
-        @version.metadata = { "home" => "http://github.com/bestgemever" }
+        @version.metadata = { "source_code_uri" => "http://github.com/bestgemever" }
 
         assert @version.validate
         assert_empty(@version.errors.messages[:metadata])
