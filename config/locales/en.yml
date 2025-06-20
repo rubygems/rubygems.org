@@ -431,6 +431,9 @@ en:
       index:
         invite: Invite
         pending: Pending
+      edit:
+        update: Update
+        delete: Delete
       new:
         handle: Handle
         role: Role

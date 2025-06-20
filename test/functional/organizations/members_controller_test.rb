@@ -55,6 +55,28 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "GET /organizations/:organization_handle/members/:id/edit" do
+    get edit_organization_membership_path(@organization, @membership)
+
+    assert_response :success
+  end
+
+  test "GET /organizations/:organization_handle/members/:id/edit as a maintainer" do
+    @membership.update(role: "maintainer")
+    get edit_organization_membership_path(@organization, @membership)
+
+    assert_response :not_found
+  end
+
+  test "GET /organizations/:organization_handle/members/:id/edit as a guest" do
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    get edit_organization_membership_path(@organization, @membership)
+
+    assert_response :not_found
+  end
+
   test "POST /organizations/:organization_handle/members" do
     new_user = create(:user)
 
@@ -64,11 +86,43 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Member invited.", flash[:notice]
   end
 
+  test "POST /organizations/:organization_handle/members with invalid values" do
+    post organization_memberships_path(@organization), params: { membership: { user: "invalid role", role: :invalid_role } }
+
+    assert_response :unprocessable_entity
+  end
+
+  test "POST /organizations/:organization_handle/members as a maintainer" do
+    @membership.update(role: "maintainer")
+    new_user = create(:user)
+
+    post organization_memberships_path(@organization), params: { membership: { user: new_user.handle, role: :admin } }
+
+    assert_response :not_found
+  end
+
+  test "POST /organizations/:organization_handle/members as a guest" do
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    new_user = create(:user)
+
+    post organization_memberships_path(@organization), params: { membership: { user: new_user.handle, role: :admin } }
+
+    assert_response :not_found
+  end
+
   test "PATCH /organizations/:organization_handle/members/:id" do
     patch organization_membership_path(@organization, @membership), params: { membership: { role: "admin" } }
 
     assert_redirected_to organization_memberships_path(@organization)
     assert_equal "Member updated successfully.", flash[:notice]
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id with invalid values" do
+    patch organization_membership_path(@organization, @membership), params: { membership: { role: "invalid_role" } }
+
+    assert_response :unprocessable_entity
   end
 
   test "PATCH /organizations/:organization_handle/members/:id as a guest" do
