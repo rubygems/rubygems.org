@@ -82,7 +82,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
 
     get organization_path(organization)
 
-    assert page.has_content? "Invite", normalize_ws: true
+    assert page.has_content? "Invite"
   end
 
   test "should not render the invite button for users with less access than admins" do
@@ -90,6 +90,6 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
 
     get organization_path(organization)
 
-    refute page.has_content? "Invite", normalize_ws: true
+    refute page.has_content? "Invite"
   end
 end
