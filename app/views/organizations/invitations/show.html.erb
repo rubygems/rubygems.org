@@ -1,0 +1,31 @@
+<% 
+
+    add_breadcrumb "Organizations", organizations_path
+    add_breadcrumb @organization.handle, organization_path(@organization)
+    add_breadcrumb "Invitation", organization_invitation_path(@organization)
+
+%>
+
+<div class="flex items-center justify-center bg-slate-50 dark:bg-neutral-950">
+  <div class="invitation-container max-w-md w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-8 text-center">
+    <div class="mb-6">
+      <div class="text-slate-700 dark:text-white text-lg mb-5">
+        <span class="text-2xl font-bold text-orange-600 mb-1"><%= @organization.name %></span>
+        <%= t(".title_html", role: @membership.role) %>
+      </div>
+    </div>
+    <div class="flex justify-center gap-3 mb-6">
+      <%= form_with model: @membership, url: organization_invitation_path(@organization), method: :patch, class: "inline" do |f| %>
+        <%= render ButtonComponent.new t(".accept"), type: :submit, class: "bg-orange-500 hover:bg-orange-600 text-white" %>
+      <% end %>
+      <%= button_to t(".decline"), organization_invitation_path(@organization), method: :delete, class: "border border-slate-400 text-slate-700 px-4 py-2 rounded dark:text-white hover:bg-slate-100" %>
+    </div>
+    <hr class="my-6">
+    <div class="text-xs text-slate-500 dark:text-white">
+      If this user is sending spam or malicious content, you can 
+        <%= mail_to "support@rubygems.org", class: "text-orange-600 underline hover:text-orange-800" do %>
+          contact support
+        <% end %>.
+    </div>
+  </div>
+</div>

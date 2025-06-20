@@ -22,7 +22,7 @@ class OrganizationsController < ApplicationController
       .preload(:most_recent_version, :gem_download)
       .load_async
     @gems_count = @organization.rubygems.with_versions.count
-    @memberships = @organization.memberships
+    @memberships = @organization.memberships.includes(:user)
     @memberships_count = @organization.memberships.count
   end
 

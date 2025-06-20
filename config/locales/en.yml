@@ -275,6 +275,7 @@ en:
         settings: Settings
         edit_profile: Edit profile
         search_gem_html: Search Gems&hellip;
+        members: Members
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
   breadcrumbs:
     home: Home
@@ -284,6 +285,7 @@ en:
     subscriptions: Subscriptions
     gems: Gems
     members: Members
+    invite_member: Invite Member
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
@@ -414,6 +416,34 @@ en:
       members: Members
       no_history: No events yet
       no_gems: No gems yet
+      add_member: Invite Member
+      invite: Invite
+    members:
+      create:
+        user_already_invited: User already invited to the organization.
+        user_not_found: User not found.
+        member_invited: Member invited.
+      update:
+        member_updated: Member updated successfully.
+      destroy:
+        member_removed: Member removed successfully.
+        cannot_remove_self: You cannot remove yourself from the organization.
+      index:
+        invite: Invite
+        pending: Pending
+      edit:
+        update: Update
+        delete: Delete
+      new:
+        handle: Handle
+        role: Role
+        create: Create
+        invite: Invite
+    invitations:
+      show:
+        accept: Accept
+        decline: Decline
+        title_html: "invited you to join their organization<br>as an <span class=\"font-bold\">%{role}</span>."
   pages:
     about:
       contributors_amount: "%{count} Rubyists"

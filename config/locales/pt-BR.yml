@@ -277,6 +277,7 @@ pt-BR:
         settings: Configurações da Conta
         edit_profile: Editar Perfil
         search_gem_html: Buscar Gems&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Início
@@ -286,6 +287,7 @@ pt-BR:
     subscriptions: Observando
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
@@ -417,6 +419,34 @@ pt-BR:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount:

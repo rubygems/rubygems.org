@@ -1,0 +1,57 @@
+<%
+  add_breadcrumb "Dashboard", dashboard_path
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle)
+  add_breadcrumb t("breadcrumbs.members"), organization_memberships_path(@organization)
+  add_breadcrumb t("breadcrumbs.invite_member")
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :members %>
+<% end %>
+
+<% @roles = Membership.roles.map { |k,_| [Membership.human_attribute_name("role.#{k}"), k] } %>
+
+<h1 class="text-h2 mb-10"><%= t("layouts.application.header.members") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title "Invite Member", icon: "organizations" %>
+  <% end %>
+
+  <%= form_with(model: @membership, url: organization_memberships_path(@organization), method: :post, html: { class: "bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-6 border border-gray-200 dark:border-gray-700" }) do |f| %>
+    <% if @membership.errors.any? %>
+      <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+              <%= pluralize(@membership.errors.count, "error") %> prohibited this membership from being saved:
+            </h3>
+            <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+              <ul class="list-disc pl-5 space-y-1">
+                <% @membership.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="mb-4">
+      <%= f.label :user, t(".handle"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= f.text_field :user, value: @membership.user&.handle, class: "form__input block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400", placeholder: "user handle" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :role, t(".role"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= f.select :role, options_for_select(@roles), {}, { class: "form__input form__select block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400" } %>
+    </div>
+    <div class="flex justify-end">
+      <%= render ButtonComponent.new t(".invite"), type: :submit, style: :outline, class: "px-4 py-2 dark:border-gray-400 dark:text-gray-100" %>
+    </div>
+  <% end %>
+<% end %>

@@ -9,6 +9,7 @@ class Organization < ApplicationRecord
 
   has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :organization
   has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :organization
+  has_many :memberships_including_unconfirmed, class_name: "Membership", dependent: :destroy, inverse_of: :organization
   has_many :users, through: :memberships
   has_many :rubygems, dependent: :nullify
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
@@ -19,6 +20,10 @@ class Organization < ApplicationRecord
 
   after_create do
     record_event!(Events::OrganizationEvent::CREATED, actor_gid: memberships.first&.to_gid)
+  end
+
+  def user_is_member?(user)
+    memberships.exists?(user: user)
   end
 
   def self.find_by_handle(handle)

@@ -289,6 +289,7 @@ de:
         settings: Einstellungen
         edit_profile: Profil bearbeiten
         search_gem_html: Suche Gems&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Startseite
@@ -298,6 +299,7 @@ de:
     subscriptions: Abonnements
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -456,6 +458,34 @@ de:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount: "%{count} Rubyists"

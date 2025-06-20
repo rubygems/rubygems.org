@@ -59,4 +59,21 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
 
     assert page.has_content? "New Name"
   end
+
+  test "should render user roles for users in the organization" do
+    organization = create(:organization, owners: [@user])
+
+    get organization_path(organization)
+
+    assert page.has_content? "#{@user.handle} owner", normalize_ws: true
+  end
+
+  test "should not render user roles for users outside the organization" do
+    owner = create(:user)
+    organization = create(:organization, owners: [owner])
+
+    get organization_path(organization)
+
+    refute page.has_content? "#{owner.handle} owner", normalize_ws: true
+  end
 end

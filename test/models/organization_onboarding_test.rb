@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OrganizationOnboardingTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @owner = create(:user)
     @maintainer = create(:user)
@@ -257,6 +259,12 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         end
       end
     end
+  end
+
+  should "should schedule an email to be sent to each user that was onboarded" do
+    @onboarding.onboard!
+
+    assert_enqueued_jobs @onboarding.users.size
   end
 
   context "#available_rubygems" do

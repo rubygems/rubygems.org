@@ -7,10 +7,11 @@ class OrganizationOnboardingInvite < ApplicationRecord
   enum :role, { owner: "owner", admin: "admin", maintainer: "maintainer", outside_contributor: "outside_contributor" },
     validate: { allow_nil: true }
 
-  def to_membership
+  def to_membership(actor: nil)
     Membership.new(
       user: user,
-      role: role
+      role: role,
+      invited_by: actor
     )
   end
 end
