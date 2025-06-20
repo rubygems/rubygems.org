@@ -37,7 +37,7 @@ class Organizations::MembersController < Organizations::BaseController
   end
 
   def update
-    authorize @membership, :destroy?
+    authorize @membership, :update?
     if @membership.update(membership_params[:membership])
       redirect_to organization_memberships_path(@organization), notice: t(".member_updated")
     else
