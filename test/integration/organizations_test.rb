@@ -76,4 +76,20 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
 
     refute page.has_content? "#{owner.handle} owner", normalize_ws: true
   end
+
+  test "should render an invite button for admins+" do
+    organization = create(:organization, owners: [@user])
+
+    get organization_path(organization)
+
+    assert page.has_content? "Invite", normalize_ws: true
+  end
+
+  test "should not render the invite button for users with less access than admins" do
+    organization = create(:organization, maintainers: [@user])
+
+    get organization_path(organization)
+
+    refute page.has_content? "Invite", normalize_ws: true
+  end
 end

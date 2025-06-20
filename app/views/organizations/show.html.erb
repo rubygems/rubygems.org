@@ -93,8 +93,10 @@
       <% end %>
     <% end %>
 
-    <div class="pt-6 flex flex-row justify-end">
-      <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
-    </div>
+    <% if policy(@organization).invite_member? %>
+      <div class="pt-6 flex flex-row justify-end">
+        <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
