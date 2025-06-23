@@ -1,10 +1,14 @@
 require "test_helper"
 
 class UpdateVersionsFileTest < ActiveSupport::TestCase
+  include RakeTaskHelper
+
   setup do
     @tmp_versions_file = Tempfile.new("tmp_versions_file")
     tmp_path = @tmp_versions_file.path
     Rails.application.config.rubygems.stubs(:[]).with("versions_file_location").returns(tmp_path)
+
+    setup_rake_tasks("compact_index.rake")
   end
 
   def update_versions_file
@@ -15,7 +19,6 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
   end
 
   teardown do
-    Rake::Task["compact_index:update_versions_file"].reenable
     @tmp_versions_file.unlink
   end
 

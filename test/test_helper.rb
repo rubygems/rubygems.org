@@ -31,11 +31,13 @@ require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/policy_helpers"
+require "helpers/rake_task_helper"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "helpers/avo_helpers"
 require "webmock/minitest"
 require "phlex/testing/rails/view_helper"
+require "rake"
 
 # setup license early since some tests are testing Avo outside of requests
 # and license is set with first request
@@ -298,8 +300,6 @@ class ActionDispatch::IntegrationTest
     assert_nil request.env[:clearance].current_user
   end
 end
-
-Gemcutter::Application.load_tasks
 
 # Force loading of ActionDispatch::SystemTesting::* helpers
 _ = ActionDispatch::SystemTestCase
