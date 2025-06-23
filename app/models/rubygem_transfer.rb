@@ -10,23 +10,24 @@ class RubygemTransfer < ApplicationRecord
 
   accepts_nested_attributes_for :invites
 
-  validate :rubygem_ownership, :organization_ownership
+  validate :rubygem_ownership, :organization_ownership, :rubygem_existing_organization
 
   before_save :sync_invites, if: :organization_changed?
 
   def transfer!
     transaction do
-      organization.memberships << approved_invites.filter_map(&:to_membership)
-
-      rubygem.update!(organization_id: organization.id)
+      memberships = approved_invites.filter_map { it.to_membership(actor: created_by) }
+      organization.memberships << memberships
 
       update!(
         status: :completed,
         completed_at: Time.zone.now
       )
 
+      rubygem.update!(organization_id: organization.id)
+
       remove_ownerships!
-      email_onboarded_users
+      email_onboarded_users(memberships)
     end
   rescue ActiveRecord::ActiveRecordError => e
     self.status = :failed
@@ -37,19 +38,16 @@ class RubygemTransfer < ApplicationRecord
   end
 
   def approved_invites
-    invites.select { |invite| invite.user.present? && invite.role.present? }
+    invites.includes(:user).select { |invite| invite.user.present? && invite.role.present? }
   end
 
   private
 
   def remove_ownerships!
-    invited_users = invites.reject { it.role.nil? || it.outside_contributor? }.map(&:user)
+    invited_users = invites.includes(:user).reject { |it| it.role.nil? || it.outside_contributor? }.map(&:user)
     invited_users << created_by
-    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: invited_users, rubygem: rubygem).destroy_all
-  end
 
-  def email_onboarded_users
-    # TODO
+    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: invited_users, rubygem: rubygem).destroy_all
   end
 
   def users_for_rubygem
@@ -61,8 +59,8 @@ class RubygemTransfer < ApplicationRecord
   end
 
   def sync_invites
-    existing_invites = invites.index_by(&:user_id)
-    self.invites = users_for_rubygem.map { existing_invites[it.id] || OrganizationInduction.new(user: it) }
+    existing_invites = invites.includes(:user).index_by(&:user_id)
+    self.invites = users_for_rubygem.map { |user| existing_invites[user.id] || OrganizationInduction.new(user: user) }
   end
 
   def rubygem_ownership
@@ -73,5 +71,14 @@ class RubygemTransfer < ApplicationRecord
   def organization_ownership
     return if OrganizationPolicy.new(created_by, organization).transfer_gem?
     errors.add(:organization, "does not have permission to transfer gems to this organization")
+  end
+
+  def rubygem_existing_organization
+    return if rubygem.organization.nil?
+    errors.add(:rubygem, "is already owned by an organization")
+  end
+
+  def email_onboarded_users(memberships)
+    memberships.each { OrganizationMailer.user_invited(it).deliver_later }
   end
 end

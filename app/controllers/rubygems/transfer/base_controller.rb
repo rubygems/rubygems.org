@@ -4,9 +4,11 @@ class Rubygems::Transfer::BaseController < ApplicationController
   before_action :find_or_initialize_transfer
   before_action :set_breadcrumbs
 
+  rescue_from Pundit::NotAuthorizedError, with: :render_not_found
+
   def find_or_initialize_transfer
     @rubygem = Rubygem.find_by(name: params[:rubygem_id])
-    @rubygem_transfer = RubygemTransfer.find_or_initialize_by(created_by: Current.user, rubygem: @rubygem, status: :pending)
+    @rubygem_transfer = RubygemTransfer.includes(invites: :user).find_or_initialize_by(created_by: Current.user, rubygem: @rubygem, status: :pending)
   end
 
   def set_breadcrumbs

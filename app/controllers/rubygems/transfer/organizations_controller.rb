@@ -4,11 +4,15 @@ class Rubygems::Transfer::OrganizationsController < Rubygems::Transfer::BaseCont
   layout "onboarding"
 
   def new
+    authorize @rubygem, :transfer_gem?
+    @organizations = Current.user.organizations
   end
 
   def create
+    authorize @rubygem, :transfer_gem?
+
     @organizations = Current.user.organizations
-    @organization = @organizations.find_by(handle: organization_params[:rubygem_transfer][:organization_handle])
+    @organization = @organizations.find_by(handle: organization_params[:rubygem_transfer][:organization])
 
     @rubygem_transfer.organization = @organization
     if @rubygem_transfer.save
@@ -21,6 +25,6 @@ class Rubygems::Transfer::OrganizationsController < Rubygems::Transfer::BaseCont
   private
 
   def organization_params
-    params.permit(rubygem_transfer: [:organization_handle])
+    params.permit(rubygem_transfer: [:organization])
   end
 end
