@@ -1,3 +1,5 @@
+<% @title = "Transfer a Gem" %>
+
 <% content_for :aside do %>
   <%= render "rubygems/transfer/summary", current_step: 1 %>
 <% end %>
@@ -10,16 +12,17 @@
   Choose which organization you want to transfer your gems to.
 </p>
 
-<%= form_with(model: @rubygem_transfer, url: rubygem_transfer_organization_path(@rubygem.slug), method: :post) do |form| %>
+<%= form_with(model: @rubygem_transfer, url: rubygem_transfer_organization_path(@rubygem.slug), method: :post) do |f| %>
+  <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
+  <%= f.label :organization, t(".organization"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
   <label class="flex flex-col xl:flex-row items-center rounded-lg border border-neutral-400 dark:border-neutral-600 overflow-hidden">
-    <%= form.select(
-      :organization_handle,
+    <%= f.select(
+      :organization,
       @organizations.map(&:handle),
       { prompt: "select..." },
       {
         required: true,
-        class: "flex-1 w-full h-11 text-b2 px-4 xl:px-2 bg-white border-none dark:bg-neutral-950 rounded-b-lg xl:rounded-bl-none xl:rounded-r-lg outline-none appearance-none focus:ring-inset focus:ring-1 focus:ring-orange-500",
-        data: { action: "onboarding-name#updateDisplayname" }
+        class: "flex-1 w-full h-11 text-b2 px-4 xl:px-2 bg-white border-none dark:bg-neutral-950 rounded-b-lg xl:rounded-bl-none xl:rounded-r-lg outline-none appearance-none focus:ring-inset focus:ring-1 focus:ring-orange-500"
       }
     ) %>
   </label>

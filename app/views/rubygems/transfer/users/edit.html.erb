@@ -1,3 +1,5 @@
+<% @title = "Transfer a Gem" %>
+
 <% content_for :aside do %>
   <%= render "rubygems/transfer/summary", current_step: 2 %>
 <% end %>
@@ -59,6 +61,8 @@
 </div>
 
 <%= form_with(model: @rubygem_transfer, url: rubygem_transfer_users_path(@rubygem.slug), method: :patch) do |form| %>
+  <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
+  <% if @rubygem_transfer.invites.any? %>
   <ul>
     <%= form.fields_for :invites do |invite_fields| %>
       <% user = invite_fields.object.user %>
@@ -78,6 +82,11 @@
       </li>
     <% end %>
   </ul>
+  <% else %>
+  <p class="text-b2 text-neutral-800 mb-10">
+    No owners to manage. You can invite owners to join the organization later.
+  </p>
+  <% end %>
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
     <%= render ButtonComponent.new("Back", rubygem_transfer_organization_path(@rubygem.slug), type: :link, color: :neutral, style: :outline) %>

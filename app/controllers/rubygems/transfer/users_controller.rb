@@ -16,6 +16,13 @@ class Rubygems::Transfer::UsersController < Rubygems::Transfer::BaseController
 
   private
 
+  def role_options
+    @role_options ||= OrganizationInduction.roles.map do |k, _|
+      [Membership.human_attribute_name("role.#{k}"), k]
+    end
+  end
+  helper_method :role_options
+
   def rubygem_transfer_params
     params.expect(rubygem_transfer: [invites_attributes: [%i[id role]]])
   end

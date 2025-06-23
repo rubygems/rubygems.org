@@ -3,12 +3,9 @@ require "test_helper"
 class RubygemTransferTest < ActiveSupport::TestCase
   setup do
     @owner = create(:user)
-    @second_owner = create(:user)
-    @rubygem = create(:rubygem, owners: [@owner, @second_owner])
+    @rubygem = create(:rubygem, owners: [@owner])
     @organization = create(:organization, owners: [@owner])
-
-    @invite = OrganizationInduction.new(user: @second_owner, role: :owner)
-    @transfer = create(:rubygem_transfer, created_by: @owner, rubygem: @rubygem, organization: @organization, invites: [@invite])
+    @transfer = create(:rubygem_transfer, created_by: @owner, rubygem: @rubygem, organization: @organization)
   end
 
   test "record errors when transfer fails" do
@@ -26,14 +23,17 @@ class RubygemTransferTest < ActiveSupport::TestCase
   test "removing previous owners from the rubygem" do
     @transfer.transfer!
 
-    assert_empty @rubygem.reload.owners
+    assert_empty Ownership.where(rubygem: @rubygem)
   end
 
   test "not removing owners who are given the outside contributor role" do
-    @invite.role = :outside_contributor
+    user = create(:user)
+    create(:ownership, rubygem: @rubygem, user: user, role: :owner)
+
+    @transfer.invites.create!(user: user, principal: @transfer, role: :outside_contributor)
     @transfer.transfer!
 
-    assert_includes @rubygem.reload.owners, @second_owner
+    assert_includes @rubygem.reload.owners, user
   end
 
   test "validates rubygem ownership before transfer" do
@@ -76,5 +76,13 @@ class RubygemTransferTest < ActiveSupport::TestCase
 
     assert_predicate @transfer, :completed?
     assert_predicate @transfer.completed_at, :present?
+  end
+
+  test "not allowing transfer if rubygem already has an organization" do
+    existing_organization = create(:organization)
+    @rubygem.update!(organization: existing_organization)
+
+    assert_not @transfer.valid?
+    assert_includes @transfer.errors[:rubygem], "is already owned by an organization"
   end
 end
