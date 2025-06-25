@@ -1,6 +1,6 @@
 # RubyGems.org Acceptable Use Policy
 
-Last updated: Jun 4, 2025
+Last updated: Jun 25, 2025
 
 This RubyGems.org Acceptable Use Policy is part of, and subject to the terms of, the RubyGems.org [Terms of Service](https://rubygems.org/policies/terms-of-service).
 
@@ -15,6 +15,7 @@ We do not allow content or activity on RubyGems.org that:
 * infringes any proprietary right of any party, including patent, trademark, trade secret, copyright, right of publicity, or other right  
 * unlawfully shares unauthorized product licensing keys, software for generating unauthorized product licensing keys, or software for bypassing checks for product licensing keys, including extension of a free license beyond its trial period  
 * contains malicious code, such as computer viruses, computer worms, rootkits, back doors, or spyware, including content submitted for research purposes (tools designed and documented explicitly to assist in security research are acceptable, but exploits and malware that use the RubyGems.org registry as a deployment or delivery vector are not)  
+* uses obfuscation to hide or mask malicious functionality  
 * is discriminatory toward, harasses or abuses another individual or group  
 * threatens or incites violence toward any individual or group, especially on the basis of who they are  
 * is using RubyGems.org as a platform for propagating abuse on other platforms  
