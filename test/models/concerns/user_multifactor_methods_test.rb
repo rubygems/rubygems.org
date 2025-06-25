@@ -410,6 +410,23 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
         refute @user.ui_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
       end
+
+      should "return false when reused" do
+        code = ROTP::TOTP.new(@user.totp_seed).now
+
+        assert @user.ui_mfa_verified?(code)
+        refute @user.ui_mfa_verified?(code)
+      end
+
+      should "return true after waiting for the next interval" do
+        code = ROTP::TOTP.new(@user.totp_seed).now
+
+        assert @user.ui_mfa_verified?(code)
+        travel_to 30.seconds.from_now do
+          refute @user.ui_mfa_verified?(code)
+          assert @user.ui_mfa_verified?(ROTP::TOTP.new(@user.totp_seed).now)
+        end
+      end
     end
 
     context "with webauthn otp" do
@@ -452,6 +469,23 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
 
       should "return false if otp is incorrect" do
         refute @user.api_mfa_verified?(ROTP::TOTP.new(ROTP::Base32.random_base32).now)
+      end
+
+      should "return false when reused" do
+        code = ROTP::TOTP.new(@user.totp_seed).now
+
+        assert @user.api_mfa_verified?(code)
+        refute @user.api_mfa_verified?(code)
+      end
+
+      should "return true after waiting for the next interval" do
+        code = ROTP::TOTP.new(@user.totp_seed).now
+
+        assert @user.api_mfa_verified?(code)
+        travel_to 30.seconds.from_now do
+          refute @user.api_mfa_verified?(code)
+          assert @user.api_mfa_verified?(ROTP::TOTP.new(@user.totp_seed).now)
+        end
       end
     end
 
