@@ -225,7 +225,7 @@ class Pusher
   end
 
   def update
-    rubygem.disown if rubygem.versions.indexed.count.zero?
+    rubygem.disown if rubygem.versions.indexed.none?
     rubygem.update_attributes_from_gem_specification!(version, spec)
 
     if rubygem.unowned?

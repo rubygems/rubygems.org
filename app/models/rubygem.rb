@@ -182,7 +182,7 @@ class Rubygem < ApplicationRecord
   end
 
   def indexed_versions?
-    versions.indexed.count > 0
+    versions.indexed.any?
   end
 
   def owned_by?(user)
