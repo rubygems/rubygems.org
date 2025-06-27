@@ -347,7 +347,7 @@ Rails.application.routes.draw do
         mount PgHero::Engine, at: "pghero"
       end
 
-      mount Avo::Engine, at: Avo.configuration.root_path
+      mount_avo
     end
   end
 
