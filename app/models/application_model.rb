@@ -54,7 +54,7 @@ class ApplicationModel
         _read_attribute(attr_name) { |n| missing_attribute(n, caller) }
       end
 
-      def has_attribute?(attr_name) # rubocop:disable Naming/PredicateName
+      def has_attribute?(attr_name) # rubocop:disable Naming/PredicatePrefix
         @attributes.key?(attr_name.to_s)
       end
     end
