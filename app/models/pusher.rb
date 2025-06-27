@@ -216,7 +216,7 @@ class Pusher
     Rstuf::AddJob.perform_later(version:)
   end
 
-  def notify(message, code)
+  def notify(message, code) # rubocop:disable Naming/PredicateMethod
     logger.info { { message:, code:, owner: owner.to_gid, api_key: api_key&.id, rubygem: rubygem&.name, version: version&.full_name } }
 
     @message = message
@@ -357,7 +357,7 @@ class Pusher
     policy.validate(false)
   end
 
-  def serialize_spec
+  def serialize_spec # rubocop:disable Naming/PredicateMethod
     spec = self.spec.dup
     spec.abbreviate
     spec.sanitize
