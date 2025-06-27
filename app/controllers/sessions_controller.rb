@@ -53,7 +53,7 @@ class SessionsController < Clearance::SessionsController
 
   def authenticate
     @user = current_user
-    if verify_user
+    if user_verified?
       mark_verified
     else
       flash.now[:alert] = t("profiles.request_denied")
@@ -86,7 +86,7 @@ class SessionsController < Clearance::SessionsController
     redirect_to session.delete(:redirect_uri) || root_path
   end
 
-  def verify_user
+  def user_verified?
     current_user.authenticated? verify_password_params[:password]
   end
 

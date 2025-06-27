@@ -50,7 +50,7 @@
               </a>
             <% end %>
 
-            <%= link_to t('.footer.releases'), news_url, class: "header__nav-link #{active?(news_path)}" %>
+            <%= link_to t('.footer.releases'), news_url, class: "header__nav-link #{active_status(news_path)}" %>
             <%= link_to t('.footer.blog'), "https://blog.rubygems.org", class: "header__nav-link" %>
 
             <%- if request.path_info == '/gems' %>

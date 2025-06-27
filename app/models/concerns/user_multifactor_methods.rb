@@ -17,7 +17,7 @@ module UserMultifactorMethods
   end
 
   def mfa_device_count_one?
-    (totp_disabled? && webauthn_credentials.count == 1) || (totp_enabled? && webauthn_disabled?)
+    (totp_disabled? && webauthn_credentials.one?) || (totp_enabled? && webauthn_disabled?)
   end
 
   def no_mfa_devices?

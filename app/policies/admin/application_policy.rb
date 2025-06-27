@@ -47,7 +47,7 @@ class Admin::ApplicationPolicy
     false
   end
 
-  def self.has_association(assocation) # rubocop:disable Naming/PredicateName
+  def self.has_association(assocation) # rubocop:disable Naming/PredicatePrefix
     %w[create attach detach destroy edit].each do |action|
       define_method(:"#{action}_#{assocation}?") { false }
     end

@@ -439,10 +439,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     ActiveRecord::Type::Boolean.new.cast(metadata["rubygems_mfa_required"])
   end
 
-  def prerelease
+  def prerelease?
     !!to_gem_version.prerelease?
   end
-  alias prerelease? prerelease
+  alias prerelease prerelease?
 
   def manifest
     rubygem.version_manifest(number, platformed? ? platform : nil)
