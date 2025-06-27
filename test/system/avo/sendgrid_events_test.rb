@@ -13,23 +13,23 @@ class Avo::SendgridEventsSystemTest < ApplicationSystemTestCase
 
     visit avo.resources_sendgrid_events_path
 
-    page.assert_text event.email
+    assert_text event.email
 
     click_on "Filters"
     fill_in id: "avo_filters_email_filter", with: "nope"
     click_on "Filter by email"
 
-    page.assert_no_text event.email
-    page.assert_text "No record found"
+    assert_no_text event.email
+    assert_text "No record found"
 
     click_on "Filters"
     fill_in id: "avo_filters_email_filter", with: ".+e@gmail.*"
     click_on "Filter by email"
 
-    page.assert_text event.email
+    assert_text event.email
 
     visit avo.resources_sendgrid_event_path(event)
 
-    page.assert_text event.sendgrid_id
+    assert_text event.sendgrid_id
   end
 end
