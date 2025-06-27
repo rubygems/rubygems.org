@@ -30,7 +30,7 @@ class Events::TableDetailsComponent < ApplicationComponent
     if version
       helpers.link_to version.to_title, rubygem_version_path(version.rubygem.slug, version.slug)
     else
-      "#{rubygem.name} (#{number}#{platform.blank? || platform == 'ruby' ? '' : "-#{platform}"})"
+      "#{rubygem.name} (#{number}#{"-#{platform}" unless platform.blank? || platform == 'ruby'})"
     end
   end
 
