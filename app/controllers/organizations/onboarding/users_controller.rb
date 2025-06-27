@@ -13,7 +13,7 @@ class Organizations::Onboarding::UsersController < Organizations::Onboarding::Ba
   private
 
   def role_options
-    @role_options ||= OrganizationOnboardingInvite.roles.map do |k, _|
+    @role_options ||= OrganizationInduction.roles.map do |k, _|
       [Membership.human_attribute_name("role.#{k}"), k]
     end
   end
