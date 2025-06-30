@@ -627,7 +627,7 @@ class PusherTest < ActiveSupport::TestCase
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 07, 04))
         perform_enqueued_jobs only: ReindexRubygemJob
-        response = Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: @rubygem.id
+        response = Searchkick.client.get index: Rubygem.searchkick_index.name, id: @rubygem.id
         expected_response = {
           "name"              => "gemsgemsgems",
           "downloads"         => 0,
@@ -732,7 +732,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "update rubygem index" do
       perform_enqueued_jobs only: ReindexRubygemJob
-      response = Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: @rubygem.id
+      response = Searchkick.client.get index: Rubygem.searchkick_index.name, id: @rubygem.id
 
       assert_equal "new summary", response["_source"]["summary"]
     end

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class LocaleTest < SystemTest
+class LocaleTest < ActionDispatch::IntegrationTest
   test "html lang attribute is set from locale" do
     I18n.available_locales.each do |locale|
       visit root_path(locale: locale)

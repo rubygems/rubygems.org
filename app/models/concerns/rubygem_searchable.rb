@@ -2,8 +2,7 @@ module RubygemSearchable
   extend ActiveSupport::Concern
 
   included do
-    searchkick index_name: Gemcutter::SEARCH_INDEX_NAME,
-      callbacks: false,
+    searchkick callbacks: false,
       settings: {
         number_of_shards: 1,
         number_of_replicas: Gemcutter::SEARCH_NUM_REPLICAS,
