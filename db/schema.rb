@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_13_064553) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -560,11 +560,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_13_064553) do
     t.string "mfa_hashed_recovery_codes", default: [], array: true
     t.boolean "public_email", default: false, null: false
     t.datetime "deleted_at"
+    t.datetime "policies_acknowledged_at"
     t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
     t.index ["id", "token"], name: "index_users_on_id_and_token"
+    t.index ["id"], name: "index_users_on_policies_not_acknowledged", where: "(policies_acknowledged_at IS NULL)"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["token"], name: "index_users_on_token"
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true

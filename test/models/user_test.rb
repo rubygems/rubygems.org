@@ -1001,4 +1001,13 @@ class UserTest < ActiveSupport::TestCase
       assert_equal "", User.normalize_email(nil)
     end
   end
+
+  context "#policies_acknowledged_at" do
+    should "log an event when the policies is acknowledged" do
+      user = create(:user)
+      user.acknowledge_policies!
+
+      assert_event Events::UserEvent::POLICIES_ACKNOWLEDGED, {}, user.reload.events.where(tag: Events::UserEvent::POLICIES_ACKNOWLEDGED).sole
+    end
+  end
 end
