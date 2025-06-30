@@ -566,6 +566,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
     t.index ["id", "token"], name: "index_users_on_id_and_token"
+    t.index ["id"], name: "index_users_on_policies_not_acknowledged", where: "(policies_acknowledged_at IS NULL)"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["token"], name: "index_users_on_token"
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
