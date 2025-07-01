@@ -1,4 +1,4 @@
-<% if current_user.present? && current_user.policies_acknowledged_at.blank? %>
+<% if current_user.present? && !current_user.policies_acknowledged? %>
   <div class="bg-blue-50 dark:bg-blue-950 border-b border-blue-200 dark:border-blue-800" role="alert">
     <div class="max-w-screen-xl mx-auto py-4">
       <div class="flex items-start gap-4">
