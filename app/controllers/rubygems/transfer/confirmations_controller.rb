@@ -13,7 +13,7 @@ class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseCont
     flash[:notice] = I18n.t("rubygems.transfer.confirm.success", gem: @rubygem.name, organization: @rubygem_transfer.organization.name)
     redirect_to rubygem_path(@rubygem.slug)
   rescue ActiveRecord::ActiveRecordError
-    flash.now[:error] = "Onboarding error: #{@organization_onboarding.error}"
+    flash[:error] = "Onboarding error: #{@organization_onboarding.error}"
     render :edit, status: :unprocessable_entity
   end
 end

@@ -38,7 +38,7 @@ class RubygemTransferTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
-    assert_text "#{@rubygem.name} has been transferred successfully to #{@organization.name}."
+    assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
   end
 
   test "transfer a rubygem to an organization with users" do
@@ -65,6 +65,6 @@ class RubygemTransferTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
-    assert_text "#{@rubygem.name} has been transferred successfully to #{@organization.name}."
+    assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
   end
 end
