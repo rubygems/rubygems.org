@@ -24,6 +24,6 @@ class Rubygems::Transfer::UsersController < Rubygems::Transfer::BaseController
   helper_method :role_options
 
   def rubygem_transfer_params
-    params.expect(rubygem_transfer: [invites_attributes: [%i[id role]]])
+    params.fetch(:rubygem_transfer, {}).permit(invites_attributes: [%i[id role]])
   end
 end

@@ -28,6 +28,13 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to rubygem_transfer_confirm_path(@rubygem.slug)
   end
 
+  test "PATCH /rubygems/:rubygem_id/transfer/users without any invite attributes" do
+    patch rubygem_transfer_users_path(@rubygem.slug, as: @user), params: {}
+
+    assert_response :redirect
+    assert_redirected_to rubygem_transfer_confirm_path(@rubygem.slug)
+  end
+
   test "POST /rubygems/:rubygem_id/transfer/users with invalid role" do
     patch rubygem_transfer_users_path(@rubygem.slug, as: @user), params: {
       rubygem_transfer: {

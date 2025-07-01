@@ -72,7 +72,7 @@ class OrganizationOnboarding < ApplicationRecord
   end
 
   def approved_invites
-    invites.select { |invite| invite.user.present? && invite.role.present? }
+    invites.includes(:user).select { |invite| invite.user.present? && invite.role.present? }
   end
 
   def rubygems=(value)

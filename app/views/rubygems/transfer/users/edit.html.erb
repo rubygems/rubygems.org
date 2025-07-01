@@ -89,7 +89,7 @@
   <% end %>
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Back", rubygem_transfer_organization_path(@rubygem.slug), type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Back", rubygem_transfer_confirm_path(@rubygem.slug), type: :link, color: :neutral, style: :outline) %>
     <span class="space-x-2">
       <%= render ButtonComponent.new("Skip for now", rubygem_transfer_confirm_path(@rubygem.slug), type: :link, color: :neutral, style: :plain) %>
       <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
