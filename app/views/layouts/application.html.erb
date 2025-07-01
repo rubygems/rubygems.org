@@ -31,7 +31,7 @@
     <% end %>
     
     <!-- Policies acknowledgment banner -->
-    <%= render "layouts/policies_acknowledgement" %>
+    <%= render "layouts/policies_acknowledgement" if show_policies_acknowledge_banner?(current_user) %>
     
     <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
       <div class="l-wrap--header">

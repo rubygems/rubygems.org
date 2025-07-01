@@ -174,7 +174,7 @@
       </div>
 
       <!-- Policies acknowledgment banner -->
-      <%= render "layouts/policies_acknowledgement_hammy" %>
+      <%= render "layouts/policies_acknowledgement_hammy" if show_policies_acknowledge_banner?(current_user) %>
 
       <!-- Breadcrumbs -->
       <%= render "layouts/breadcrumbs" %>

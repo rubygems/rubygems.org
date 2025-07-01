@@ -1,29 +1,27 @@
-<% if current_user.present? && !current_user.policies_acknowledged? %>
-  <div class="bg-blue-50 dark:bg-blue-950 border-b border-blue-200 dark:border-blue-800" role="alert">
-    <div class="max-w-screen-xl mx-auto py-4">
-      <div class="flex items-start gap-4">
+<div class="bg-blue-50 dark:bg-blue-950 border-b border-blue-200 dark:border-blue-800" role="alert">
+  <div class="max-w-screen-xl mx-auto py-4">
+    <div class="flex items-start gap-4">
+      
+      <!-- Content -->
+      <div class="flex-1 min-w-0">
+        <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+          New Policies for RubyGems.org
+        </h3>
+        <p class="text-sm text-blue-700 dark:text-blue-200 mb-3 leading-relaxed">
+          We've introduced new Terms of Service, Privacy Notice, Acceptable Use Policy, and Copyright Policy to provide clarity and transparency regarding our operations and commitment to maintaining a safe environment for all users.
+        </p>
         
-        <!-- Content -->
-        <div class="flex-1 min-w-0">
-          <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
-            New Policies for RubyGems.org
-          </h3>
-          <p class="text-sm text-blue-700 dark:text-blue-200 mb-3 leading-relaxed">
-            We've introduced new Terms of Service, Privacy Notice, Acceptable Use Policy, and Copyright Policy to provide clarity and transparency regarding our operations and commitment to maintaining a safe environment for all users.
-          </p>
-          
-          <!-- Actions -->
-          <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
-            <%= link_to "Review Policies", policies_path, 
-                class: "text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline" %>
-            <%= form_with url: acknowledge_policies_path, method: :patch, local: true, 
-                class: "inline-flex" do |form| %>
-              <%= form.submit "I Accept", 
-                  class: "px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-blue-900 transition-colors" %>
-            <% end %>
-          </div>
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+          <%= link_to "Review Policies", policies_path, 
+              class: "text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline" %>
+          <%= form_with url: acknowledge_policies_path, method: :patch, local: true, 
+              class: "inline-flex" do |form| %>
+            <%= form.submit "I Accept", 
+                class: "px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-blue-900 transition-colors" %>
+          <% end %>
         </div>
       </div>
     </div>
   </div>
-<% end %>
+</div>
