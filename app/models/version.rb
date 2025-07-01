@@ -346,6 +346,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def payload
     {
+      "name"                       => rubygem.name,
+      "full_name"                  => full_name,
       "authors"                    => authors,
       "built_at"                   => built_at,
       "created_at"                 => created_at,
