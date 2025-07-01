@@ -1010,4 +1010,18 @@ class UserTest < ActiveSupport::TestCase
       assert_event Events::UserEvent::POLICIES_ACKNOWLEDGED, {}, user.reload.events.where(tag: Events::UserEvent::POLICIES_ACKNOWLEDGED).sole
     end
   end
+
+  context "#policies_acknowledged?" do
+    should "return true when policies_acknowledged_at is set" do
+      user = create(:user, policies_acknowledged_at: Time.current)
+
+      assert_predicate user, :policies_acknowledged?
+    end
+
+    should "return false when policies_acknowledged_at is not set" do
+      user = create(:user, policies_acknowledged_at: nil)
+
+      refute_predicate user, :policies_acknowledged?
+    end
+  end
 end

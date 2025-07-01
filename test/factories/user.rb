@@ -7,6 +7,7 @@ FactoryBot.define do
     password { PasswordHelpers::SECURE_TEST_PASSWORD }
     api_key { "secret123" }
     email_confirmed { true }
+    policies_acknowledged_at { Time.zone.now }
 
     transient do
       mfa_recovery_codes { [] }

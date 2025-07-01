@@ -20,6 +20,84 @@
   text-decoration: underline;
   font-weight: bold;
 }
+
+/* Policy Banner */
+
+.policy-banner {
+  background-color: #fff6d2;
+  border-bottom: 1px solid #dcd3b1;
+  padding: 15px 0;
+  position: relative;
+}
+
+.policy-banner__wrap {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.policy-banner__content {
+  flex: 1;
+}
+
+.policy-banner__title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #141c22;
+}
+
+.policy-banner__body {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #141c22;
+  line-height: 1.4;
+}
+
+.policy-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.policy-banner__link {
+  color: #141c22;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.policy-banner__link:hover {
+  color: #e9573f;
+}
+
+.policy-banner__form {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .policy-banner__wrap {
+    padding: 0 15px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .policy-banner__actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .policy-banner__close {
+    top: 8px;
+    right: 10px;
+  }
+}
+
 /* Announcement Styles */
 
 #announcement {
@@ -44,28 +122,42 @@
   margin-bottom: 60px;
   padding: 20px;
   border: 1px solid #e9573f;
-  border-radius: 3px; }
-  .errorExplanation h2 {
-    margin-bottom: 10px; }
-  .errorExplanation p {
-    font-style: italic; }
-  .errorExplanation ul {
-    margin-top: 18px; }
-  .errorExplanation ul li, .errorExplanation p {
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 1.66; }
-  .errorExplanation ul li {
-    padding-left: 23px;
-    text-indent: -23px; }
-    .errorExplanation ul li:before {
-      content: "✘";
-      margin-right: 15px;
-      position: relative;
-      top: -2px;
-      font-family: "icomoon";
-      font-size: 10px;
-      color: #e9573f; }
+  border-radius: 3px;
+}
+
+.errorExplanation h2 {
+  margin-bottom: 10px;
+}
+
+.errorExplanation p {
+  font-style: italic;
+}
+
+.errorExplanation ul {
+  margin-top: 18px;
+}
+
+.errorExplanation ul li,
+.errorExplanation p {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.66;
+}
+
+.errorExplanation ul li {
+  padding-left: 23px;
+  text-indent: -23px;
+}
+
+.errorExplanation ul li:before {
+  content: "✘";
+  margin-right: 15px;
+  position: relative;
+  top: -2px;
+  font-family: "icomoon";
+  font-size: 10px;
+  color: #e9573f;
+}
 
 
 
@@ -75,7 +167,8 @@
   padding-top: 50px;
   font-weight: 300;
   font-size: 18px;
-  line-height: 1.66; }
+  line-height: 1.66;
+}
 
 
 
@@ -83,10 +176,12 @@
 
 .dashboard {
   width: 100%;
-  overflow: auto; }
+  overflow: auto;
+}
 
 .dashboard__gems {
-  margin-top: -30px; }
+  margin-top: -30px;
+}
 
 .dashboard__updates {
   margin-top: 3px;
@@ -94,35 +189,43 @@
   font-weight: 800;
   font-size: 12px;
   text-transform: uppercase;
-  color: #c1c4ca; }
+  color: #c1c4ca;
+}
 
 .dashboard__gem {
   padding-top: 20px;
   padding-bottom: 20px;
   display: block;
   border-bottom: 1px solid #c1c4ca;
-  color: #141c22; }
-  .dashboard__gem:hover .dashboard__gem__name {
-    color: #e9573f; }
+  color: #141c22;
+}
+
+.dashboard__gem:hover .dashboard__gem__name {
+  color: #e9573f;
+}
 
 .dashboard__gem__info {
-  margin-bottom: 6px; }
+  margin-bottom: 6px;
+}
 
 .dashboard__gem__name {
   font-weight: 800;
   font-size: 18px;
   transition-duration: 0.25s;
-  transition-property: color; }
+  transition-property: color;
+}
 
 .dashboard__gem__version {
   margin-left: 10px;
   font-weight: 300;
-  color: #a6aab2; }
+  color: #a6aab2;
+}
 
 .dashboard__gem__desc {
   font-weight: 300;
   font-size: 15px;
-  line-height: 1.66; }
+  line-height: 1.66;
+}
 
 
 
@@ -132,34 +235,54 @@
   padding-bottom: 40px;
   width: 100%;
   overflow: auto;
-  border-bottom: 1px solid #c1c4ca; }
-  @media (max-width: 779px) {
-    .profile__header {
-      padding-top: 18px; } }
-  @media (min-width: 780px) {
-    .profile__header {
-      padding-top: 60px; } }
+  border-bottom: 1px solid #c1c4ca;
+}
+
+@media (max-width: 779px) {
+  .profile__header {
+    padding-top: 18px;
+  }
+}
+
+@media (min-width: 780px) {
+  .profile__header {
+    padding-top: 60px;
+  }
+}
 
 @media (min-width: 600px) {
   .profile__header__name-wrap {
     float: left;
-    width: 70%; } }
+    width: 70%;
+  }
+}
 
 .profile__header__name {
-  overflow-x: auto; }
-  @media (min-width: 780px) {
-    .profile__header__name {
-      padding-top: 16px; } }
+  overflow-x: auto;
+}
+
+@media (min-width: 780px) {
+  .profile__header__name {
+    padding-top: 16px;
+  }
+}
 
 .profile__header__username {
-  overflow-x: auto; }
+  overflow-x: auto;
+}
+
 @media (min-width: 780px) {
   .profile__header__username {
-    padding-top: 4px; } }
+    padding-top: 4px;
+  }
+}
 
 @media (max-width: 779px) {
   .profile__header__avatar {
-    display: none; } }
+    display: none;
+  }
+}
+
 @media (min-width: 780px) {
   .profile__header__avatar {
     margin-right: 45px;
@@ -167,56 +290,77 @@
     width: 150px;
     float: left;
     border-radius: 50%;
-    margin-bottom: 21px; } }
+    margin-bottom: 21px;
+  }
+}
 
 .profile__header__attribute {
   padding-top: 10px;
-  display: inline-block; }
-  .profile__header__attribute:before {
-    margin-right: 9px;
-    position: relative;
-    top: 1px; }
+  display: inline-block;
+}
+
+.profile__header__attribute:before {
+  margin-right: 9px;
+  position: relative;
+  top: 1px;
+}
 
 .profile__header__icon {
   height: 14px;
   float: left;
   margin-top: 12px;
   margin-left: 1px;
-  padding-right: 7px; }
+  padding-right: 7px;
+}
 
 @media (max-width: 599px) {
   .profile__downloads-wrap {
     padding-top: 32px;
     width: 100%;
-    float: left; } }
+    float: left;
+  }
+}
+
 @media (min-width: 600px) {
   .profile__downloads-wrap {
     float: right;
-    text-align: right; } }
+    text-align: right;
+  }
+}
+
 @media (min-width: 780px) {
   .profile__downloads-wrap {
-    padding-top: 32px; } }
+    padding-top: 32px;
+  }
+}
 
 
 
 /* Dashboard Gems and Subscriptions */
 
 .mine h1 {
-  margin-bottom: 0 !important; }
+  margin-bottom: 0 !important;
+}
 
 .mine ul {
-  margin-top: 10px !important; }
+  margin-top: 10px !important;
+}
 
 .mine li {
   text-indent: 0 !important;
   overflow: auto;
-  font-size: 15px !important; }
-  .mine li:before {
-    margin-left: -23px;
-    float: left;
-    top: 9px !important; }
-  .mine li a {
-    word-break: break-all; }
+  font-size: 15px !important;
+}
+
+.mine li:before {
+  margin-left: -23px;
+  float: left;
+  top: 9px !important;
+}
+
+.mine li a {
+  word-break: break-all;
+}
 
 
 
@@ -224,18 +368,22 @@
 
 @media (max-width: 529px) {
   .hide-assets {
-    display: none; }}
+    display: none;
+  }
+}
 
 .about__assets__heading {
   text-transform: none !important;
-  margin-bottom: 18px !important; }
+  margin-bottom: 18px !important;
+}
 
 .about__assets-wrap {
   padding-left: 32px;
   height: 90px;
   max-width: 440px;
   background-color: #c1c4ca;
-  border-radius: 45px; }
+  border-radius: 45px;
+}
 
 .about__assets {
   padding-right: 26px;
@@ -243,10 +391,12 @@
   top: 16px;
   float: left;
   height: 60px;
-  border-right: 1px solid #8d9197; }
+  border-right: 1px solid #8d9197;
+}
 
 .about__asset {
-  width: 60px; }
+  width: 60px;
+}
 
 .about__assets__download {
   margin-left: 32px;
@@ -259,14 +409,23 @@
   background-color: #ffffff;
   font-size: 18px;
   font-weight: 800;
-  line-height: 44px; }
-  .about__assets__download:focus, .about__assets__download:hover {
-    color: #e9573f !important; }
-  .about__assets__download:before {
-    margin-left: 8px;
-    float: right; }
-  .about__assets__download:focus:before, .about__assets__download:hover:before {
-    animation: arrow .75s infinite; }
+  line-height: 44px;
+}
+
+.about__assets__download:focus,
+.about__assets__download:hover {
+  color: #e9573f !important;
+}
+
+.about__assets__download:before {
+  margin-left: 8px;
+  float: right;
+}
+
+.about__assets__download:focus:before,
+.about__assets__download:hover:before {
+  animation: arrow .75s infinite;
+}
 
 /* Banner */
 

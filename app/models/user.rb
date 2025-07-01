@@ -288,6 +288,10 @@ class User < ApplicationRecord
     update(policies_acknowledged_at: Time.zone.now)
   end
 
+  def policies_acknowledged?
+    policies_acknowledged_at.present?
+  end
+
   private
 
   def update_email

@@ -1,5 +1,6 @@
 class PoliciesController < ApplicationController
   before_action :find_policy, only: :show
+  before_action :redirect_to_signin, unless: :signed_in?, only: %i[acknowledge]
 
   layout "hammy"
 
@@ -11,6 +12,11 @@ class PoliciesController < ApplicationController
     add_breadcrumb t("policies.index.title"), policies_path
     add_breadcrumb t("policies.#{@page}.title")
     render @page
+  end
+
+  def acknowledge
+    current_user.acknowledge_policies!
+    redirect_back_or_to root_path
   end
 
   private

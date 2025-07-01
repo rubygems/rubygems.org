@@ -1,0 +1,17 @@
+<div class="policy-banner" role="alert">
+  <div class="policy-banner__wrap">
+    <div class="policy-banner__content">
+        <h3 class="policy-banner__title">New Policies for RubyGems.org</h3>
+        <p class="policy-banner__body">
+            We've introduced new Terms of Service, Privacy Notice, Acceptable Use Policy, and Copyright Policy to provide clarity and transparency regarding our operations and commitment to maintaining a safe environment for all users.
+        </p>
+        <div class="policy-banner__actions">
+            <%= link_to "Review Policies", policies_path, class: "policy-banner__link" %>
+            <%= form_with url: acknowledge_policies_path, method: :patch, local: true, class: "policy-banner__form" do |form| %>
+            <%= form.submit "I Accept" %>
+            <% end %>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
