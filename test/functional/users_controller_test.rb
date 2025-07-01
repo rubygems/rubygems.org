@@ -36,11 +36,12 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "acknowledge the rubygems.org policies" do
-        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        freeze_time do
+          post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+          user = User.find_by(email: "foo@bar.com")
 
-        user = User.find_by(email: "foo@bar.com")
-
-        assert_not_nil user.policies_acknowledged_at
+          assert_equal Time.current, user.policies_acknowledged_at
+        end
       end
     end
 
