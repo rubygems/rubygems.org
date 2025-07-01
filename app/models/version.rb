@@ -353,6 +353,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       "downloads_count"            => downloads_count,
       "metadata"                   => metadata,
       "number"                     => number,
+      "version"                    => number, # simple alias for number
       "summary"                    => summary,
       "platform"                   => platform,
       "rubygems_version"           => required_rubygems_version,
