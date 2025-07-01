@@ -34,6 +34,14 @@ class UsersControllerTest < ActionController::TestCase
 
         assert User.find_by(email: "foo@bar.com")
       end
+
+      should "acknowledge the rubygems.org policies" do
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+
+        user = User.find_by(email: "foo@bar.com")
+
+        assert_not_nil user.policies_acknowledged_at
+      end
     end
 
     context "when missing a parameter" do

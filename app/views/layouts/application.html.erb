@@ -29,6 +29,10 @@
         <%= yield :banner %>
       </div>
     <% end %>
+    
+    <!-- Policies acknowledgment banner -->
+    <%= render "layouts/policies_acknowledgement" %>
+    
     <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "logo" }) do %>

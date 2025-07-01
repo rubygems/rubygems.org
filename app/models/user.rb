@@ -288,6 +288,10 @@ class User < ApplicationRecord
     update(policies_acknowledged_at: Time.zone.now)
   end
 
+  def policies_acknowledged?
+    policies_acknowledged_at.present?
+  end
+
   private
 
   def update_email
@@ -383,5 +387,9 @@ class User < ApplicationRecord
 
   def record_policies_acknowledged_event
     record_event!(Events::UserEvent::POLICIES_ACKNOWLEDGED)
+  end
+
+  def acknowledged_policies
+    errors.add(:policies_acknowledged_at, "must be acknowledged") if policies_acknowledged_at.blank?
   end
 end
