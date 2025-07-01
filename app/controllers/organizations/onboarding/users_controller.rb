@@ -12,10 +12,6 @@ class Organizations::Onboarding::UsersController < Organizations::Onboarding::Ba
 
   private
 
-  def find_or_initialize_onboarding
-    @organization_onboarding = OrganizationOnboarding.includes(invites: :user).find_by(created_by: Current.user, status: :pending)
-  end
-
   def role_options
     @role_options ||= OrganizationInvite.roles.map do |k, _|
       [Membership.human_attribute_name("role.#{k}"), k]

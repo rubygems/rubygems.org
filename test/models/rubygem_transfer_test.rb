@@ -3,8 +3,8 @@ require "test_helper"
 class RubygemTransferTest < ActiveSupport::TestCase
   setup do
     @owner = create(:user)
-    @rubygem = create(:rubygem, owners: [@owner])
-    @organization = create(:organization, owners: [@owner])
+    @rubygem = create(:rubygem)
+    @organization = create(:organization)
     @transfer = create(:rubygem_transfer, created_by: @owner, rubygem: @rubygem, organization: @organization)
   end
 

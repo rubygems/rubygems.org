@@ -13,7 +13,7 @@
 <%= form_with(model: @rubygem_transfer, url: rubygem_transfer_confirm_path(@rubygem.slug), method: :patch) do |form| %>
   <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Back", organization_onboarding_users_path, type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Back", rubygem_transfer_users_path(@rubygem.slug), type: :link, color: :neutral, style: :outline) %>
     <%= render ButtonComponent.new("Transfer Gem", type: :submit, style: :fill) %>
   </div>
 <% end %>

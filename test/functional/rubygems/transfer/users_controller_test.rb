@@ -4,8 +4,8 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user)
     @other_users = create_list(:user, 2)
-    @organization = create(:organization, owners: [@user])
-    @rubygem = create(:rubygem, owners: [@user], maintainers: @other_users)
+    @organization = create(:organization)
+    @rubygem = create(:rubygem, maintainers: @other_users)
 
     @transfer = create(:rubygem_transfer, rubygem: @rubygem, organization: @organization, created_by: @user)
     @invites = @transfer.invites.to_a

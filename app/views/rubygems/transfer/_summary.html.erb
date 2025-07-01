@@ -41,7 +41,7 @@
           <%= avatar 48, "gravatar-#{user.id}", user, theme: :dark, class: "h-6 w-6 rounded mr-2 inline-block" %>
           <span class="text-neutral-800 dark:text-white"><%= user.handle %></span>
         </span>
-        <span class="text-neutral-500"><%= invite.role %></span>
+        <span class="text-neutral-500"><%= Membership.human_attribute_name("role.#{invite.role}") %></span>
       </li>
     <% end %>
   </ul>
