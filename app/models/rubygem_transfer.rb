@@ -5,7 +5,7 @@ class RubygemTransfer < ApplicationRecord
   belongs_to :organization
   belongs_to :created_by, class_name: "User"
 
-  has_many :invites, as: :principal, class_name: "OrganizationInduction", dependent: :destroy
+  has_many :invites, as: :invitable, class_name: "OrganizationInvite", dependent: :destroy
   has_many :users, through: :invites
 
   accepts_nested_attributes_for :invites
@@ -60,7 +60,7 @@ class RubygemTransfer < ApplicationRecord
 
   def sync_invites
     existing_invites = invites.includes(:user).index_by(&:user_id)
-    self.invites = users_for_rubygem.map { |user| existing_invites[user.id] || OrganizationInduction.new(user: user) }
+    self.invites = users_for_rubygem.map { |user| existing_invites[user.id] || OrganizationInvite.new(user: user) }
   end
 
   def rubygem_ownership

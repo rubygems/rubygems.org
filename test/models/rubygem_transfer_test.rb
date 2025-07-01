@@ -30,7 +30,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     user = create(:user)
     create(:ownership, rubygem: @rubygem, user: user, role: :owner)
 
-    @transfer.invites.create!(user: user, principal: @transfer, role: :outside_contributor)
+    @transfer.invites.create!(user: user, invitable: @transfer, role: :outside_contributor)
     @transfer.transfer!
 
     assert_includes @rubygem.reload.owners, user
@@ -52,7 +52,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
   end
 
   test "creating memberships from invites" do
-    invites = build_list(:organization_induction, 2, principal: @transfer, role: :owner)
+    invites = build_list(:organization_invite, 2, invitable: @transfer, role: :owner)
     @transfer.invites << invites
     @transfer.transfer!
 
@@ -62,7 +62,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
   end
 
   test "not creating memberships for invites without a specified role" do
-    invites = build_list(:organization_induction, 2, principal: @transfer, role: nil)
+    invites = build_list(:organization_invite, 2, invitable: @transfer, role: nil)
     @transfer.invites << invites
     @transfer.transfer!
 
