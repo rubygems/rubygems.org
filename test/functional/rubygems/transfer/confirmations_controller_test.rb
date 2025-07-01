@@ -18,6 +18,17 @@ class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::Integrat
     assert_equal flash[:notice], "#{@rubygem.name} has been transferred successfully to #{@organization.name}."
   end
 
+  test "PATCH /rubygems/:rubygem_id/transfer/confirm when transfer is invalid" do
+    error_message = "Sorry"
+    # cause transferring to fail
+    RubygemTransfer.any_instance.stubs(:update!).raises(ActiveRecord::ActiveRecordError, error_message)
+
+    patch rubygem_transfer_confirm_path(@rubygem.slug, as: @user)
+
+    assert_response :unprocessable_entity
+    assert_equal flash[:error], "Onboarding error: #{error_message}"
+  end
+
   test "PATCH /rubygems/:rubygem_id/transfer/confirm with an unauthorized user" do
     unauthorized_user = create(:user)
 
