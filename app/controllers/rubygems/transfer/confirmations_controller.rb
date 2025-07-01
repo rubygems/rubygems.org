@@ -1,4 +1,4 @@
-class Rubygems::Transfer::ConfirmController < Rubygems::Transfer::BaseController
+class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseController
   layout "onboarding"
 
   def edit

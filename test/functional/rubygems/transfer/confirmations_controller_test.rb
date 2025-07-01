@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Rubygems::Transfer::ConfirmControllerTest < ActionDispatch::IntegrationTest
+class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user)
     @other_users = create_list(:user, 2)
