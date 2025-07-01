@@ -388,8 +388,4 @@ class User < ApplicationRecord
   def record_policies_acknowledged_event
     record_event!(Events::UserEvent::POLICIES_ACKNOWLEDGED)
   end
-
-  def acknowledged_policies
-    errors.add(:policies_acknowledged_at, "must be acknowledged") if policies_acknowledged_at.blank?
-  end
 end
