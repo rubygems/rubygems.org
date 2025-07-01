@@ -12,6 +12,15 @@ exclude_patterns:
 - "**/vendor/"
 - "**/*.d.ts"
 - "app/models/user.rb"
+
 method-count:
     config:
       threshold: 25
+
+engines:
+  duplication:
+    enabled: true
+    exclude_paths:
+      - "app/avo/actions/**/*"
+      - "app/avo/fields/**/*"
+      - "app/avo/resources/**/*"
