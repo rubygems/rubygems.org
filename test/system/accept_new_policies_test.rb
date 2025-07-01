@@ -10,11 +10,11 @@ class AcceptNewPoliciesTest < ApplicationSystemTestCase
 
     visit root_path
 
-    assert_text "New Terms of Service and Privacy Policy"
+    assert_text "New Policies for RubyGems.org"
     click_button "Accept"
 
     assert_current_path root_path
-    assert_no_text "New Terms of Service and Privacy Policy"
+    assert_no_text "New Policies for RubyGems.org"
   end
 
   test "user accepts new policies on hammy layout" do
@@ -24,10 +24,10 @@ class AcceptNewPoliciesTest < ApplicationSystemTestCase
 
     visit dashboard_path
 
-    assert_text "New Terms of Service and Privacy Policy"
+    assert_text "New Policies for RubyGems.org"
     click_button "Accept"
 
     assert_current_path dashboard_path
-    assert_no_text "New Terms of Service and Privacy Policy"
+    assert_no_text "New Policies for RubyGems.org"
   end
 end
