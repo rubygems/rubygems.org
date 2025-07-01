@@ -67,4 +67,18 @@ class RubygemTransferTest < ApplicationSystemTestCase
 
     assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
   end
+
+  test "cancelling a rubygem transfer" do
+    sign_in @owner
+
+    visit rubygem_path(@rubygem.slug)
+    click_on "Transfer to Organization"
+
+    assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
+
+    select @organization.handle, from: "Organization"
+    click_on "Cancel"
+
+    assert_current_path rubygem_path(@rubygem.slug)
+  end
 end
