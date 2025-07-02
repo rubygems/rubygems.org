@@ -1,8 +1,8 @@
 class Api::V1::ActivitiesController < Api::BaseController
   def latest
     rubygems = Rubygem.includes(:linkset, :gem_download, latest_version: %i[dependencies gem_download])
+      .with_versions
       .order(created_at: :desc)
-      .where(indexed: true)
       .limit(50)
       .map { |rubygem| rubygem.payload(rubygem.latest_version) }
     render_rubygems(rubygems)
