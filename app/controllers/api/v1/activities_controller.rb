@@ -1,21 +1,23 @@
 class Api::V1::ActivitiesController < Api::BaseController
   def latest
-    versions = Version.new_pushed_versions(50)
-    render_rubygems(versions)
+    rubygems = Rubygem.includes(:linkset, :gem_download, latest_version: %i[dependencies gem_download])
+      .order(created_at: :desc)
+      .where(indexed: true)
+      .limit(50)
+      .map { |rubygem| rubygem.payload(rubygem.latest_version) }
+    render_rubygems(rubygems)
   end
 
   def just_updated
-    versions = Version.just_updated(50)
-    render_rubygems(versions)
+    rubygems = Version.includes(:dependencies, :gem_download, rubygem: %i[linkset gem_download])
+      .just_updated(50)
+      .map { |version| version.rubygem.payload(version) }
+    render_rubygems(rubygems)
   end
 
   private
 
-  def render_rubygems(versions)
-    rubygems = versions.includes(:dependencies, :gem_download, rubygem: %i[linkset gem_download]).map do |version|
-      version.rubygem.payload(version)
-    end
-
+  def render_rubygems(rubygems)
     set_surrogate_key "api/v1/activities"
     cache_expiry_headers
 
