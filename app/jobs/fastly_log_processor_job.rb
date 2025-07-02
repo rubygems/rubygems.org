@@ -9,7 +9,7 @@ class FastlyLogProcessorJob < ApplicationJob
     #
     # Limited to avoid overloading the gem_download table with
     # too many concurrent conflicting updates
-    perform_limit: good_job_concurrency_perform_limit(default: 5),
+    perform_limit: 5,
     key: name
   )
 
