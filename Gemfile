@@ -21,7 +21,6 @@ gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 5.29.1", require: false # see https://github.com/rubygems/rubygems.org/pull/4598
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
-gem "launchdarkly-server-sdk", "~> 8.10"
 gem "mail", "~> 2.8"
 gem "octokit", "~> 10.0"
 gem "omniauth-github", "~> 2.0"
@@ -61,6 +60,7 @@ gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.1"
 gem "sigstore", "~> 0.2.1"
 gem "kramdown", "~> 2.5"
+gem "zlib", "~> 3.2"
 
 # Admin dashboard
 gem "avo", "~> 3.13"

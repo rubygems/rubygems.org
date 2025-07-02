@@ -254,7 +254,6 @@ GEM
       activerecord (>= 4.2, < 9.0)
     docile (1.4.1)
     dogstatsd-ruby (5.6.6)
-    domain_name (0.6.20240107)
     dotenv (3.1.8)
     dotenv-rails (3.1.8)
       dotenv (= 3.1.8)
@@ -346,14 +345,6 @@ GEM
       ostruct
     htmlbeautifier (1.4.3)
     htmlentities (4.3.4)
-    http (5.3.1)
-      addressable (~> 2.8)
-      http-cookie (~> 1.0)
-      http-form_data (~> 2.2)
-      llhttp-ffi (~> 0.5.0)
-    http-cookie (1.0.8)
-      domain_name (~> 0.5)
-    http-form_data (2.3.0)
     http_accept_language (2.1.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
@@ -397,22 +388,10 @@ GEM
     kramdown (2.5.1)
       rexml (>= 3.3.9)
     language_server-protocol (3.17.0.5)
-    launchdarkly-server-sdk (8.10.1)
-      benchmark (~> 0.1, >= 0.1.1)
-      concurrent-ruby (~> 1.1)
-      http (>= 4.4.0, < 6.0.0)
-      json (~> 2.3)
-      ld-eventsource (= 2.2.3)
-      observer (~> 0.1.2)
-      semantic (~> 1.6)
-      zlib (~> 3.1)
     launchy (3.1.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
-    ld-eventsource (2.2.3)
-      concurrent-ruby (~> 1.0)
-      http (>= 4.4.1, < 6.0.0)
     letter_opener (1.10.0)
       launchy (>= 2.2, < 4)
     letter_opener_web (3.0.0)
@@ -437,9 +416,6 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    llhttp-ffi (0.5.1)
-      ffi-compiler (~> 1.0)
-      rake (~> 13.0)
     local_time (3.0.3)
     logger (1.7.0)
     loofah (2.24.1)
@@ -795,7 +771,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    semantic (1.6.1)
     semantic_logger (4.16.0)
       concurrent-ruby (~> 1.0)
     shoryuken (6.2.1)
@@ -957,7 +932,6 @@ DEPENDENCIES
   importmap-rails (~> 2.1)
   kaminari (~> 1.2)
   kramdown (~> 2.5)
-  launchdarkly-server-sdk (~> 8.10)
   launchy (~> 3.1)
   letter_opener (~> 1.10)
   letter_opener_web (~> 3.0)
@@ -1033,6 +1007,7 @@ DEPENDENCIES
   webauthn (~> 3.4)
   webmock (~> 3.25)
   xml-simple (~> 1.1)
+  zlib (~> 3.2)
 
 CHECKSUMS
   actioncable (8.0.2) sha256=7bcce2df62e91a80143592600e16583c273e98aab50ae40a9f6a2604bb3289a0
@@ -1111,7 +1086,6 @@ CHECKSUMS
   discard (1.4.0) sha256=6efcd2a53ddf96781f81b825d398f1c88ab88c0faa84e131bea6e16ef95d65d0
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   dogstatsd-ruby (5.6.6) sha256=7706ba4a34c6f541463730af280c3ac3d45f18774fcaf38a5b6e53f563f7f355
-  domain_name (0.6.20240107) sha256=5f693b2215708476517479bf2b3802e49068ad82167bcd2286f899536a17d933
   dotenv (3.1.8) sha256=9e1176060ced581f8e6ce4384e91361817763a76e3c625c8bddc18b35bd392c3
   dotenv-rails (3.1.8) sha256=46c9d1226a8b58a83b5f61325aa8cffd25cea1c0fafdfbbbee1e5dfea77980c4
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
@@ -1156,9 +1130,6 @@ CHECKSUMS
   honeybadger (5.29.1) sha256=e90cbdc9938d8d7c43dea877af295a4089c4558c81047e1fcc371ac5e5fde9c3
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
-  http (5.3.1) sha256=c50802d8e9be3926cb84ac3b36d1a31fbbac383bc4cbecdce9053cb604231d7d
-  http-cookie (1.0.8) sha256=b14fe0445cf24bf9ae098633e9b8d42e4c07c3c1f700672b09fbfe32ffd41aa6
-  http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
   i18n (1.14.7) sha256=ceba573f8138ff2c0915427f1fc5bdf4aa3ab8ae88c8ce255eb3ecf0a11a5d0f
   importmap-rails (2.1.0) sha256=9f10c67d60651a547579f448100d033df311c5d5db578301374aeb774faae741
@@ -1176,9 +1147,7 @@ CHECKSUMS
   kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
   kramdown (2.5.1) sha256=87bbb6abd9d3cebe4fc1f33e367c392b4500e6f8fa19dd61c0972cf4afe7368c
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
-  launchdarkly-server-sdk (8.10.1) sha256=2cf17fbf658a9263fdf05153f1c9309d9f19b5b6121128c1badd5f7cd14677ba
   launchy (3.1.1) sha256=72b847b5cc961589dde2c395af0108c86ff0119f42d4648d25b5440ebb10059e
-  ld-eventsource (2.2.3) sha256=e72f3eef9808348c71b74afc79c60b7fd74f02874486b7c2edd2aef1b566a538
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860
   libdatadog (18.1.0.1.0) sha256=fbdd74d24c2474544418f183a31725c4ee4da85341c1310dcbe292c5ec151b09
@@ -1191,7 +1160,6 @@ CHECKSUMS
   libddwaf (1.22.0.0.2-x86_64-linux) sha256=6b6d55f67a287ff80fe306d625f393e37246d2022689d879f65dbab3a5b5287c
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
-  llhttp-ffi (0.5.1) sha256=9a25a7fc19311f691a78c9c0ac0fbf4675adbd0cca74310228fdf841018fa7bc
   local_time (3.0.3) sha256=c69a8974d993fdf6e60db02977ed23c070f203dcb3a1ff0de52ad3d2393f8303
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   loofah (2.24.1) sha256=655a30842b70ec476410b347ab1cd2a5b92da46a19044357bbd9f401b009a337
@@ -1326,7 +1294,6 @@ CHECKSUMS
   searchkick (5.5.2) sha256=8be24a74b612d1ac7f1dbc4a3cba310d6af2f8ba7405f30960769db871e3cf67
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   selenium-webdriver (4.34.0) sha256=ec7bb718cbe66fe2b247d8ca5e6ba26caed0976d76579d7cb2fadd8dae8b271e
-  semantic (1.6.1) sha256=3cdbb48f59198ebb782a3fdfb87b559e0822a311610db153bae22777a7d0c163
   semantic_logger (4.16.0) sha256=ffba0bd0e008ceaf6be26da588f610a61208b9a9f55676b32729e962904023d9
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a

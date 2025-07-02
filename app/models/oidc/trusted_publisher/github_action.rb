@@ -149,14 +149,6 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
 
-  def ld_context
-    LaunchDarkly::LDContext.create(
-      key: "#{model_name.singular}-key-#{id}",
-      kind: "trusted_publisher",
-      name: name
-    )
-  end
-
   private
 
   def find_github_repository_owner_id

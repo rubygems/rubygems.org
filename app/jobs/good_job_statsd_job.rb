@@ -16,30 +16,26 @@ class GoodJobStatsDJob < ApplicationJob
     state_counts = filter.states
     gauge "count", state_counts
 
-    if ld_variation(key: "good_job.GoodJobStatsDJob.measure_staleness", default: true)
-      state_staleness = state_counts.each_key.index_with do |state|
-        case state
-        when "scheduled", "queued" # not started jobs don't have discrete execution entry yet
-          columns = %w[executions_good_jobs.scheduled_at executions_good_jobs.created_at]
-          relation = :executions
-        when "retried", "running", "succeeded", "discarded"
-          columns = %w[good_job_executions.scheduled_at good_job_executions.created_at]
-          relation = :discrete_executions
-        else raise "unknown GoodJob state '#{state}'"
-        end
-
-        staleness(now, filter.filtered_query(state:), columns, relation)
+    state_staleness = state_counts.each_key.index_with do |state|
+      case state
+      when "scheduled", "queued" # not started jobs don't have discrete execution entry yet
+        columns = %w[executions_good_jobs.scheduled_at executions_good_jobs.created_at]
+        relation = :executions
+      when "retried", "running", "succeeded", "discarded"
+        columns = %w[good_job_executions.scheduled_at good_job_executions.created_at]
+        relation = :discrete_executions
+      else raise "unknown GoodJob state '#{state}'"
       end
-      gauge "staleness", state_staleness
-    end
 
-    if ld_variation(key: "good_job.GoodJobStatsDJob.measure_latest_execution", default: true)
-      state_latest_execution = state_counts.each_key.index_with do |state|
-        columns = %w[good_job_executions.performed_at good_job_executions.finished_at good_job_executions.scheduled_at good_job_executions.created_at]
-        staleness(now, filter.filtered_query(state:), columns, :discrete_executions)
-      end
-      gauge "latest_execution", state_latest_execution
+      staleness(now, filter.filtered_query(state:), columns, relation)
     end
+    gauge "staleness", state_staleness
+
+    state_latest_execution = state_counts.each_key.index_with do |state|
+      columns = %w[good_job_executions.performed_at good_job_executions.finished_at good_job_executions.scheduled_at good_job_executions.created_at]
+      staleness(now, filter.filtered_query(state:), columns, :discrete_executions)
+    end
+    gauge "latest_execution", state_latest_execution
 
     nil
   end
