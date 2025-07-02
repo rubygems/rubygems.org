@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -146,6 +146,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
     t.index ["ip_address_id"], name: "index_events_user_events_on_ip_address_id"
     t.index ["tag"], name: "index_events_user_events_on_tag"
     t.index ["user_id"], name: "index_events_user_events_on_user_id"
+  end
+
+  create_table "flipper_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_flipper_features_on_key", unique: true
+  end
+
+  create_table "flipper_gates", force: :cascade do |t|
+    t.string "feature_key", null: false
+    t.string "key", null: false
+    t.text "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
   create_table "gem_downloads", id: :serial, force: :cascade do |t|
@@ -423,6 +439,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "organization_inductions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "principal_type", null: false
+    t.bigint "principal_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["principal_type", "principal_id"], name: "idx_on_principal_type_principal_id_727138ef00"
+    t.index ["principal_type", "principal_id"], name: "index_organization_inductions_on_principal"
+    t.index ["user_id"], name: "index_organization_inductions_on_user_id"
+  end
+
   create_table "organization_onboarding_invites", force: :cascade do |t|
     t.bigint "organization_onboarding_id", null: false
     t.bigint "user_id", null: false
@@ -496,6 +524,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
     t.integer "role", default: 70, null: false
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
+  end
+
+  create_table "rubygem_transfers", force: :cascade do |t|
+    t.string "status", default: "pending", null: false
+    t.bigint "organization_id"
+    t.bigint "created_by_id", null: false
+    t.bigint "rubygem_id", null: false
+    t.datetime "completed_at"
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_rubygem_transfers_on_created_by_id"
+    t.index ["organization_id"], name: "index_rubygem_transfers_on_organization_id"
+    t.index ["rubygem_id"], name: "index_rubygem_transfers_on_rubygem_id"
   end
 
   create_table "rubygems", id: :serial, force: :cascade do |t|
@@ -681,6 +723,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "organization_inductions", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
@@ -690,6 +733,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_032149) do
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "rubygem_transfers", "organizations"
+  add_foreign_key "rubygem_transfers", "rubygems"
+  add_foreign_key "rubygem_transfers", "users", column: "created_by_id"
   add_foreign_key "rubygems", "organizations", on_delete: :nullify
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"
