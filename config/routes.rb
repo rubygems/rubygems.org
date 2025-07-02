@@ -321,6 +321,8 @@ Rails.application.routes.draw do
       end
     end
 
+  post 'policies/:policy', to: 'policies#method_not_allowed', constraints: { policy: Regexp.union(Gemcutter::POLICY_PAGES) }
+
   ################################################################################
   # Internal Routes
 

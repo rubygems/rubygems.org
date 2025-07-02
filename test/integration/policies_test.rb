@@ -36,4 +36,17 @@ class PoliciesTest < SystemTest
 
     assert page.has_content?("Copyright Policy")
   end
+
+  test "POST to valid policy returns method not allowed" do
+    post "/policies/copyright"
+
+    assert_response :method_not_allowed
+    assert_equal "GET", response.headers["Allow"]
+  end
+
+  test "POST to invalid policy is disallowed" do
+    assert_raises(ActionController::RoutingError) do
+      post "/policies/nonexistent-policy"
+    end
+  end
 end

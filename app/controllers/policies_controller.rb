@@ -19,6 +19,11 @@ class PoliciesController < ApplicationController
     redirect_back_or_to root_path
   end
 
+  def method_not_allowed
+    response.headers["Allow"] = "GET"
+    head :method_not_allowed
+  end
+
   private
 
   def find_policy

@@ -51,4 +51,15 @@ class PoliciesControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "when POST request is made to policy pages" do
+    should "return method not allowed for any policy" do
+      Gemcutter::POLICY_PAGES.each do |policy|
+        post :method_not_allowed, params: { policy: policy }
+
+        assert_response :method_not_allowed
+        assert_equal "GET", response.headers["Allow"]
+      end
+    end
+  end
 end
