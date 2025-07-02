@@ -60,6 +60,7 @@ gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.1"
 gem "sigstore", "~> 0.2.1"
 gem "kramdown", "~> 2.5"
+gem "zlib", "~> 3.2"
 
 # Admin dashboard
 gem "avo", "~> 3.13"
