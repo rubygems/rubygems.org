@@ -31,6 +31,7 @@ require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/policy_helpers"
+require "helpers/feature_flag_helpers"
 require "helpers/rake_task_helper"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
@@ -81,6 +82,7 @@ class ActiveSupport::TestCase
   include GemHelpers
   include EmailHelpers
   include PasswordHelpers
+  include FeatureFlagHelpers
 
   parallelize_setup do |_worker|
     SemanticLogger.reopen
