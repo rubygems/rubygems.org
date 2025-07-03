@@ -18,19 +18,6 @@ class GoodJobStatsDJob < ApplicationJob
     nil
   end
 
-  def staleness(now, filtered_query, columns, joined_relation)
-    filtered_query.joins(joined_relation).then do |rel|
-      rel.pluck(
-        *rel.group_values,
-        Arel::Nodes::Max.new(
-          [Arel::Nodes.build_quoted(now, rel.arel_table[:created_at]) -
-            rel.arel_table.coalesce(*rel.send(:arel_columns, columns))]
-        )
-      )
-        .to_h { |*a, v| [a, v] }
-    end
-  end
-
   def gauge(key, values)
     values.each do |state, tags|
       tags.each do |(queue, priority, job_class), value|
