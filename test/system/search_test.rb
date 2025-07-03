@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class SearchTest < SystemTest
+class SearchTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   test "searching for a gem" do

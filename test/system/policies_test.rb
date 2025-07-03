@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class PoliciesTest < SystemTest
+class PoliciesTest < ApplicationSystemTestCase
   test "gracefully fails on unknown page" do
     assert_raises(ActionController::RoutingError) do
       visit "/policies/not-existing-one"
