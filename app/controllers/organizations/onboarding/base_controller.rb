@@ -7,7 +7,7 @@ class Organizations::Onboarding::BaseController < ApplicationController
   layout "onboarding"
 
   def find_or_initialize_onboarding
-    @organization_onboarding = OrganizationOnboarding.find_or_initialize_by(created_by: Current.user, status: :pending)
+    @organization_onboarding = OrganizationOnboarding.includes(invites: :user).find_or_initialize_by(created_by: Current.user, status: :pending)
   end
 
   def set_breadcrumbs

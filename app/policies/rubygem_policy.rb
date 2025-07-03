@@ -39,4 +39,8 @@ class RubygemPolicy < ApplicationPolicy
   def remove_owner?
     rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
   end
+
+  def transfer_gem?
+    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+  end
 end

@@ -1,10 +1,10 @@
-<% @title = "Create an Organization"%>
+<% @title = "Transfer a Gem" %>
 
 <% content_for :aside do %>
-  <%= render "organizations/onboarding/summary", current_step: 3 %>
+  <%= render "rubygems/transfer/summary", current_step: 2 %>
 <% end %>
 
-<%= render "organizations/onboarding/progress", current_step: 3 %>
+<%= render "rubygems/transfer/progress", current_step: 2 %>
 
 <h2 class="text-h4 mb-10">Manage Members</h2>
 
@@ -60,15 +60,10 @@
   </div>
 </div>
 
-<%= form_with(model: @organization_onboarding, url: organization_onboarding_users_path, method: :patch) do |form| %>
+<%= form_with(model: @rubygem_transfer, url: rubygem_transfer_users_path(@rubygem.slug), method: :patch) do |form| %>
+  <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
+  <% if @rubygem_transfer.invites.any? %>
   <ul>
-    <li class="flex w-full py-3 pl-[11px] pr-10 justify-between box-border border border-neutral-400 rounded-lg">
-      <span class="flex flex-row items-center">
-        <%= avatar 48, "gravatar-#{@organization_onboarding.created_by.id}", theme: :dark, class: "h-6 w-6 rounded mr-2" %>
-        <span><%= @organization_onboarding.created_by.handle %></span>
-      </span>
-      <span>Owner</span>
-    </li>
     <%= form.fields_for :invites do |invite_fields| %>
       <% user = invite_fields.object.user %>
       <li class="flex w-full py-3 pl-3 justify-between items-center" data-user-handle="<%= user.handle %>">
@@ -87,11 +82,16 @@
       </li>
     <% end %>
   </ul>
+  <% else %>
+  <p class="text-b2 text-neutral-800 mb-10">
+    No owners to manage. You can invite owners to join the organization later.
+  </p>
+  <% end %>
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Back", organization_onboarding_gems_path, type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Back", rubygem_transfer_organization_path(@rubygem.slug), type: :link, color: :neutral, style: :outline) %>
     <span class="space-x-2">
-      <%= render ButtonComponent.new("Skip for now", organization_onboarding_confirm_path, type: :link, color: :neutral, style: :plain) %>
+      <%= render ButtonComponent.new("Skip for now", rubygem_transfer_confirm_path(@rubygem.slug), type: :link, color: :neutral, style: :plain) %>
       <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
     </span>
   </div>

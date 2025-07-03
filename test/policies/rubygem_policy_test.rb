@@ -144,4 +144,13 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :remove_owner?
     end
   end
+
+  context "#transfer_gem?" do
+    should "only allow the owner" do
+      assert_authorized policy!(@owner), :transfer_gem?
+      refute_authorized policy!(@maintainer), :transfer_gem?
+      refute_authorized policy!(@user), :transfer_gem?
+      refute_authorized policy!(nil), :transfer_gem?
+    end
+  end
 end

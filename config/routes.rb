@@ -219,6 +219,20 @@ Rails.application.routes.draw do
         get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
       end
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
+
+      get "transfer", to: redirect("/gems/%{rubygem_id}/transfer/organization")
+      delete "transfer", to: "rubygems/transfers#destroy"
+
+      namespace :transfer do
+        get "organization", to: "/rubygems/transfer/organizations#new"
+        post "organization", to: "/rubygems/transfer/organizations#create"
+
+        get "users", to: "/rubygems/transfer/users#edit"
+        patch "users", to: "/rubygems/transfer/users#update"
+
+        get "confirm", to: "/rubygems/transfer/confirmations#edit"
+        patch "confirm", to: "/rubygems/transfer/confirmations#update"
+      end
     end
 
     resources :webauthn_credentials, only: :destroy
