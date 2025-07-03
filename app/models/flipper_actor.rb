@@ -7,7 +7,7 @@ class FlipperActor
   end
 
   def to_s
-    "#{record.class.name}: #{record.handle}"
+    "#{record.handle} (#{record.class.name})"
   end
 
   def self.find(flipper_id)

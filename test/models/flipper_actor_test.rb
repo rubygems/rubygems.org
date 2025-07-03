@@ -18,8 +18,8 @@ class FlipperActorTest < ActiveSupport::TestCase
     user_actor = FlipperActor.new(@user)
     org_actor = FlipperActor.new(@organization)
 
-    assert_equal "User: user_handle", user_actor.to_s
-    assert_equal "Organization: organization_handle", org_actor.to_s
+    assert_equal "user_handle (User)", user_actor.to_s
+    assert_equal "organization_handle (Organization)", org_actor.to_s
   end
 
   test "find returns FlipperActor for existing user" do
