@@ -5,6 +5,10 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
+  setup do
+    StoreVersionContentsJob.stubs(:perform_later)
+  end
+
   test "restore a rubygem version" do
     admin_user = create(:admin_github_user, :is_admin)
     avo_sign_in_as admin_user

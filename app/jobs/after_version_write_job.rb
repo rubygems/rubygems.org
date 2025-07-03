@@ -12,7 +12,7 @@ class AfterVersionWriteJob < ApplicationJob
       UploadInfoFileJob.perform_later(rubygem_name: rubygem.name)
       UploadNamesFileJob.perform_later
       ReindexRubygemJob.perform_later(rubygem:)
-      StoreVersionContentsJob.perform_later(version:) if should_store_version_contents?
+      StoreVersionContentsJob.perform_later(version:)
       version.update!(indexed: true)
       checksum = GemInfo.new(rubygem.name, cached: false).info_checksum
       version.update_attribute :info_checksum, checksum
@@ -22,11 +22,5 @@ class AfterVersionWriteJob < ApplicationJob
 
   def owner
     arguments.dig(0, :version).pusher_api_key&.owner
-  end
-
-  private
-
-  def should_store_version_contents?
-    !Rails.env.test?
   end
 end
