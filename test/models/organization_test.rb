@@ -64,4 +64,12 @@ class OrganizationTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#flipper_id" do
+    should "return Organization;handle" do
+      organization = create(:organization)
+
+      assert_equal "Organization;#{organization.handle}", organization.flipper_id
+    end
+  end
 end
