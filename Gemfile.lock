@@ -937,9 +937,9 @@ DEPENDENCIES
   faraday-restrict-ip-addresses (~> 0.3.0)
   faraday-retry (~> 2.3)
   faraday_middleware-aws-sigv4 (~> 1.0)
-  flipper
-  flipper-active_record
-  flipper-ui
+  flipper (~> 1.3)
+  flipper-active_record (~> 1.3)
+  flipper-ui (~> 1.3)
   gem_server_conformance (~> 0.1.4)
   good_job (~> 3.99)
   google-protobuf (~> 4.31)
