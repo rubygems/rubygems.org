@@ -572,7 +572,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
-    prosopite (2.1.0)
+    prosopite (2.1.1)
     protobug (0.1.0)
     protobug_googleapis_field_behavior_protos (0.1.0)
       protobug (= 0.1.0)
@@ -1224,7 +1224,7 @@ CHECKSUMS
   prism (1.4.0) sha256=dc0e3e00e93160213dc2a65519d9002a4a1e7b962db57d444cf1a71565bb703e
   prop_initializer (0.2.0) sha256=bd27704d0df8c59c3baf0df5cf448eba2b140fb9934fb31b2e379b5c842d8820
   propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
-  prosopite (2.1.0) sha256=343e398087b9edcf691662d29db5f5b20a4efd7010f6b0531c400ef19f2ca53c
+  prosopite (2.1.1) sha256=c60e3fdc6325fa30d5afdbf2128ae63d941fa73192bcca9255123c669d01311c
   protobug (0.1.0) sha256=5bf1356cedf99dcf311890743b78f5e602f62ca703e574764337f1996b746bf2
   protobug_googleapis_field_behavior_protos (0.1.0) sha256=db48ef6a5913b2355b4a6931ab400a9e3e995fb48499977a3ad0be6365f9e265
   protobug_sigstore_protos (0.1.0) sha256=4ad1eebaf6454131b6f432dda50ad0e513773613474b92470847614a5acacce1
