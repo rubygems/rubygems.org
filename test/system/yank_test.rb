@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class YankTest < SystemTest
+class YankTest < ApplicationSystemTestCase
   setup do
     @user = create(:user, password: PasswordHelpers::SECURE_TEST_PASSWORD)
     @rubygem = create(:rubygem, name: "sandworm")
