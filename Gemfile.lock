@@ -808,15 +808,15 @@ GEM
       attr_required (>= 0.0.5)
       faraday (~> 2.0)
       faraday-follow_redirects
-    tailwindcss-rails (4.2.3)
+    tailwindcss-rails (4.3.0)
       railties (>= 7.0.0)
       tailwindcss-ruby (~> 4.0)
-    tailwindcss-ruby (4.1.7)
-    tailwindcss-ruby (4.1.7-aarch64-linux-gnu)
-    tailwindcss-ruby (4.1.7-arm64-darwin)
-    tailwindcss-ruby (4.1.7-x86_64-darwin)
-    tailwindcss-ruby (4.1.7-x86_64-linux-gnu)
-    tailwindcss-ruby (4.1.7-x86_64-linux-musl)
+    tailwindcss-ruby (4.1.11)
+    tailwindcss-ruby (4.1.11-aarch64-linux-gnu)
+    tailwindcss-ruby (4.1.11-arm64-darwin)
+    tailwindcss-ruby (4.1.11-x86_64-darwin)
+    tailwindcss-ruby (4.1.11-x86_64-linux-gnu)
+    tailwindcss-ruby (4.1.11-x86_64-linux-musl)
     thor (1.3.2)
     timeout (0.4.3)
     toxiproxy (2.0.2)
@@ -998,7 +998,7 @@ DEPENDENCIES
   statsd-instrument (~> 3.9)
   stimulus-rails (~> 1.3)
   strong_migrations (~> 2.4)
-  tailwindcss-rails (~> 4.2)
+  tailwindcss-rails (~> 4.3)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
   user_agent_parser (~> 2.18)
@@ -1310,13 +1310,13 @@ CHECKSUMS
   stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
   strong_migrations (2.4.0) sha256=db34321486ccda5380192fa22904249534def03db6b0e1e128321f36e3f9e855
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
-  tailwindcss-rails (4.2.3) sha256=2850bf70819d0753589fd73b3bd30df41d6f1e6e996f8ba635bdffa7446b68a9
-  tailwindcss-ruby (4.1.7) sha256=d86d36bdcf0a807f76dbdef9dc7592119509d4763e22f2a07dd7b7d8b226f9bd
-  tailwindcss-ruby (4.1.7-aarch64-linux-gnu) sha256=2c4789f8aa21c20f90ff8aa684b484eb0d14ceba880423e5b3d076cc0f31c845
-  tailwindcss-ruby (4.1.7-arm64-darwin) sha256=bdf4857562c37936587dc9421fd29fae374fe23eb962d4fbbf0cdb8a3a0098be
-  tailwindcss-ruby (4.1.7-x86_64-darwin) sha256=3aab76291527b9bb996da8c2ae4eabb491ebf4744baef929f8af777b167799ca
-  tailwindcss-ruby (4.1.7-x86_64-linux-gnu) sha256=d27dfd96a50909cb4d3732504d87a1ba2bcd537d900664857df2cbab693b115e
-  tailwindcss-ruby (4.1.7-x86_64-linux-musl) sha256=b58d8480fd94f22fdef311307785c70773252d3c05d3284a21117719b10e4dba
+  tailwindcss-rails (4.3.0) sha256=1e7bf788b8724ba76fec7c43c151a8bca2a39f5d52484aef867f75322df3a6d5
+  tailwindcss-ruby (4.1.11) sha256=a244698cfa8beb95e351371d0838808b3f5662901622985d7efcec1fe580a952
+  tailwindcss-ruby (4.1.11-aarch64-linux-gnu) sha256=834c29e857951da6828c99e499e95f8d9b25d979491dcf5c82365ee2e72c6a16
+  tailwindcss-ruby (4.1.11-arm64-darwin) sha256=24be4c4a73a155177e3c1a7366af55a7c29ed98c605f3e3199acae52777cf3b9
+  tailwindcss-ruby (4.1.11-x86_64-darwin) sha256=9e613bd5e09b807a1a850ad01cae054ddc40ae72ca1b70d05cfa26c1c1e9a638
+  tailwindcss-ruby (4.1.11-x86_64-linux-gnu) sha256=5633d76566839bc675960cd841d30795a3189b81c53a8c49bcf1629210b7a3b1
+  tailwindcss-ruby (4.1.11-x86_64-linux-musl) sha256=6a9845bc086a846c9b1b0d70c0e469d34a3a9b0a820df6ee94b7a81715fb1439
   thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
   timeout (0.4.3) sha256=9509f079b2b55fe4236d79633bd75e34c1c1e7e3fb4b56cb5fda61f80a0fe30e
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
