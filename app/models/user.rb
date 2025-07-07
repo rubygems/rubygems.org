@@ -161,7 +161,7 @@ class User < ApplicationRecord
   end
 
   def flipper_id
-    "#{self.class.name};#{handle}"
+    "user:#{handle}"
   end
 
   def reset_api_key!

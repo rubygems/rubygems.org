@@ -11,12 +11,12 @@ class FlipperActor
   end
 
   def self.find(flipper_id)
-    klass, handle = flipper_id.split(';')
+    type, handle = flipper_id.split(':')
 
-    actor = case klass
-            when "User"
+    actor = case type
+            when "user"
               User.find_by(handle: handle)
-            when "Organization"
+            when "org"
               Organization.find_by(handle: handle)
             end
 

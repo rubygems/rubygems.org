@@ -39,6 +39,6 @@ class Organization < ApplicationRecord
   end
 
   def flipper_id
-    "#{self.class.name};#{handle}"
+    "org:#{handle}"
   end
 end

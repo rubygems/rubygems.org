@@ -274,8 +274,8 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.handle, @user.name
     end
 
-    should "return User;handle for #flipper_id" do
-      assert_equal "User;#{@user.handle}", @user.flipper_id
+    should "return user:handle for #flipper_id" do
+      assert_equal "user:#{@user.handle}", @user.flipper_id
     end
 
     should "setup a field to toggle showing email with default falsš" do

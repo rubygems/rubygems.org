@@ -66,10 +66,10 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   context "#flipper_id" do
-    should "return Organization;handle" do
+    should "return org:handle" do
       organization = create(:organization)
 
-      assert_equal "Organization;#{organization.handle}", organization.flipper_id
+      assert_equal "org:#{organization.handle}", organization.flipper_id
     end
   end
 end
