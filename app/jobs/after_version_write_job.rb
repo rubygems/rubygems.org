@@ -12,6 +12,7 @@ class AfterVersionWriteJob < ApplicationJob
       UploadInfoFileJob.perform_later(rubygem_name: rubygem.name)
       UploadNamesFileJob.perform_later
       ReindexRubygemJob.perform_later(rubygem:)
+      StoreVersionContentsJob.perform_later(version:)
       version.update!(indexed: true)
       checksum = GemInfo.new(rubygem.name, cached: false).info_checksum
       version.update_attribute :info_checksum, checksum

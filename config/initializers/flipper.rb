@@ -9,7 +9,7 @@ Flipper::UI.configure do |ui_config|
 
   ui_config.add_actor_placeholder = "Enter user:handle OR org:handle"
   ui_config.actor_names_source = lambda do |keys|
-    # keys are like ["User;john_doe", "Organization;acme_corp"]
+    # keys are like ["user:john_doe", "org:acme_corp"]
     keys.each_with_object({}) do |key, hash|
       actor = FlipperActor.find(key)
       hash[key] = actor ? actor.to_s : "#{key} (invalid)"

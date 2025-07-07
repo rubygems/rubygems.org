@@ -137,18 +137,18 @@ GEM
       rails (>= 6.0.0)
       zeitwerk
     aws-eventstream (1.4.0)
-    aws-partitions (1.1120.0)
-    aws-sdk-core (3.226.1)
+    aws-partitions (1.1124.0)
+    aws-sdk-core (3.226.2)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
       base64
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-kms (1.105.0)
+    aws-sdk-kms (1.106.0)
       aws-sdk-core (~> 3, >= 3.225.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.191.0)
+    aws-sdk-s3 (1.192.0)
       aws-sdk-core (~> 3, >= 3.225.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -219,13 +219,13 @@ GEM
       addressable
     csv (3.3.5)
     dalli (3.2.8)
-    datadog (2.17.0)
+    datadog (2.18.0)
       datadog-ruby_core_source (~> 3.4, >= 3.4.1)
       libdatadog (~> 18.1.0.1.0)
-      libddwaf (~> 1.22.0.0.2)
+      libddwaf (~> 1.24.1.0.0)
       logger
       msgpack
-    datadog-ci (1.19.0)
+    datadog-ci (1.20.2)
       datadog (~> 2.4)
       drb
       msgpack
@@ -270,7 +270,7 @@ GEM
     factory_bot_rails (6.5.0)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
-    faraday (2.13.1)
+    faraday (2.13.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -414,15 +414,15 @@ GEM
     libdatadog (18.1.0.1.0)
     libdatadog (18.1.0.1.0-aarch64-linux)
     libdatadog (18.1.0.1.0-x86_64-linux)
-    libddwaf (1.22.0.0.2)
+    libddwaf (1.24.1.0.0)
       ffi (~> 1.0)
-    libddwaf (1.22.0.0.2-aarch64-linux)
+    libddwaf (1.24.1.0.0-aarch64-linux)
       ffi (~> 1.0)
-    libddwaf (1.22.0.0.2-arm64-darwin)
+    libddwaf (1.24.1.0.0-arm64-darwin)
       ffi (~> 1.0)
-    libddwaf (1.22.0.0.2-x86_64-darwin)
+    libddwaf (1.24.1.0.0-x86_64-darwin)
       ffi (~> 1.0)
-    libddwaf (1.22.0.0.2-x86_64-linux)
+    libddwaf (1.24.1.0.0-x86_64-linux)
       ffi (~> 1.0)
     lint_roller (1.1.0)
     listen (3.9.0)
@@ -584,7 +584,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
-    prosopite (2.1.0)
+    prosopite (2.1.1)
     protobug (0.1.0)
     protobug_googleapis_field_behavior_protos (0.1.0)
       protobug (= 0.1.0)
@@ -693,7 +693,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
-    rdoc (6.14.1)
+    rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
     redcarpet (3.6.1)
@@ -912,7 +912,7 @@ DEPENDENCIES
   avo (~> 3.13)
   avo-advanced (~> 3.21)!
   avo_upgrade (~> 0.1.1)
-  aws-sdk-s3 (~> 1.191)
+  aws-sdk-s3 (~> 1.192)
   aws-sdk-sqs (~> 1.96)
   bcrypt (~> 3.1)
   better_html (~> 2.1)
@@ -925,8 +925,8 @@ DEPENDENCIES
   compact_index (~> 0.15.0)
   csv (~> 3.3)
   dalli (~> 3.2)
-  datadog (~> 2.17)
-  datadog-ci (~> 1.19)
+  datadog (~> 2.18)
+  datadog-ci (~> 1.20)
   derailed_benchmarks (~> 2.2)
   discard (~> 1.4)
   dogstatsd-ruby (~> 5.6)
@@ -1058,10 +1058,10 @@ CHECKSUMS
   avo-pro (3.21.1) sha256=c8b05504cb0a2ff9caa68f40b397733bfea4a30f9ddaf0a10a8e7bc72631abc9
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
-  aws-partitions (1.1120.0) sha256=9dd2c4de7780ad0b51f6314a9cefb405e7e5cb678c67c5fecdc8b60367226d6b
-  aws-sdk-core (3.226.1) sha256=6e0fcee9d5fb8792c785ce5ae6a7af266e16e09e24bc623f13db7e91047ff5eb
-  aws-sdk-kms (1.105.0) sha256=d7756c1c2e3a79afaceb7c590f3846d2814cf217e28971c243608c41d65bae4f
-  aws-sdk-s3 (1.191.0) sha256=62b541dbaee2925cbc9d21d2003cd4270f778ddbdb7a7dd58a5343514004dfd3
+  aws-partitions (1.1124.0) sha256=6abc53e3c1300cde99738b0dd4dff9d0847797eaace9815f2784597418822bd5
+  aws-sdk-core (3.226.2) sha256=ef85b574ccfa6e8a3d59c1eafd2b7388752121d8e62eee4f777ca55df9c4c9c7
+  aws-sdk-kms (1.106.0) sha256=1737e3f154746dedcaf6aecf2e5490ab5e6447ac373bb5a57a19bb1184506007
+  aws-sdk-s3 (1.192.0) sha256=0cd451b4119c9228cc97f6fb9a1e99cf77b827f3a15cf3ada760be12b3a620d0
   aws-sdk-sqs (1.96.0) sha256=842bc82a07a46b81e6543c8f49dc8b5b7e93427a13d08199624aa962dc2c0bac
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
@@ -1095,8 +1095,8 @@ CHECKSUMS
   css_parser (1.21.1) sha256=6cfd3ffc0a97333b39d2b1b49c95397b05e0e3b684d68f77ec471ba4ec2ef7c7
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
-  datadog (2.17.0) sha256=871959b41cfa358ee461a0ce0b666e68ea21cde499d829126f5cff5ae04f927e
-  datadog-ci (1.19.0) sha256=fa62f0ef295c9e6224dbbb3245247b53ed7072c43e3cfe4562d55f04d8b5123f
+  datadog (2.18.0) sha256=cb670e7f99fc3e2b54970b5a9d7c1be68cd2810581e67ee803cef9638f5488f5
+  datadog-ci (1.20.2) sha256=0774ce76173c0f321e0afb2965e4e97c32b4cbe6dd5b79e603e0b7f3ae3a860b
   datadog-ruby_core_source (3.4.1) sha256=fa40f1c3c8f764b6651a6443382b57d39aeb3c9f94b5af98f499bcfc678a2fb9
   date (3.4.1) sha256=bf268e14ef7158009bfeaec40b5fa3c7271906e88b196d958a89d4b408abe64f
   derailed_benchmarks (2.2.1) sha256=654280664fded41c9cd8fc27fc0fcfaf096023afab90eb4ac1185ba70c5d4439
@@ -1113,7 +1113,7 @@ CHECKSUMS
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
   factory_bot (6.5.4) sha256=4707fb7d80a7c14d71feb069460587bfc342e4ff1ef28097e0ad69d5ddfce613
   factory_bot_rails (6.5.0) sha256=4a7b61635424a57cc60412a18b72b9dcfb02fabfce2c930447a01dce8b37c0a2
-  faraday (2.13.1) sha256=cc531eb5467e7d74d4517630fa96f1a7003647cbf20a9a3e067d098941217b75
+  faraday (2.13.2) sha256=5c19762e3bbe78e61d8007c5119f2968373c5296d6c6d6aa05b6f9cec34f2a1a
   faraday-follow_redirects (0.3.0) sha256=d92d975635e2c7fe525dd494fcd4b9bb7f0a4a0ec0d5f4c15c729530fdb807f9
   faraday-multipart (1.1.1) sha256=77a18ff40149030fd1aef55bb4fc7a67ce46419a8a3fcd010e28c2526e8d8903
   faraday-net_http (3.4.1) sha256=095757fae7872b94eac839c08a1a4b8d84fd91d6886cfbe75caa2143de64ab3b
@@ -1174,11 +1174,11 @@ CHECKSUMS
   libdatadog (18.1.0.1.0) sha256=fbdd74d24c2474544418f183a31725c4ee4da85341c1310dcbe292c5ec151b09
   libdatadog (18.1.0.1.0-aarch64-linux) sha256=681576b54d5dd64ff18dca25f36fd2b86c831675d906383f60626533313282a8
   libdatadog (18.1.0.1.0-x86_64-linux) sha256=e5c2a5b0d15aa1edd426a62f687b0efbad6d63592a7022bcbecb735b91d7e048
-  libddwaf (1.22.0.0.2) sha256=c4ccf484de31fb3433cccd24c5fde6050bb15482fc5a83b2554c685737fd9cbf
-  libddwaf (1.22.0.0.2-aarch64-linux) sha256=b235de2361a05fc8e413c5e33d7e6f2b1e26603a6d86ba5d4aecf43dea6060e5
-  libddwaf (1.22.0.0.2-arm64-darwin) sha256=0b43beccc1b604e2f4d2fbd4488adc902836f42195b2aeb2f3401502ce5f55b1
-  libddwaf (1.22.0.0.2-x86_64-darwin) sha256=1506745daefb03ae99e53ade683a304c319cde89fdce200a594a3f276c9345c6
-  libddwaf (1.22.0.0.2-x86_64-linux) sha256=6b6d55f67a287ff80fe306d625f393e37246d2022689d879f65dbab3a5b5287c
+  libddwaf (1.24.1.0.0) sha256=1b933ba23313016c57270fbb006566c68149fba4b7ff01e2442798379c6b7037
+  libddwaf (1.24.1.0.0-aarch64-linux) sha256=2e36ddd445357a9216d7bc47ee1eaa4cb9671dd056cc3334316728112948a734
+  libddwaf (1.24.1.0.0-arm64-darwin) sha256=48bc6965571cfe60cff728385fe0a1ea0a5a2d4a1a6d696e6aaa92434075c054
+  libddwaf (1.24.1.0.0-x86_64-darwin) sha256=4a83732cf00ce4d9be238a61e48b717d2b13685a0166be92bbc4a8ede13af9f0
+  libddwaf (1.24.1.0.0-x86_64-linux) sha256=a3b6ff25ba3ca8acd1ff4358cd77bd54af3c57cc301402e701063a9294598449
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   local_time (3.0.3) sha256=c69a8974d993fdf6e60db02977ed23c070f203dcb3a1ff0de52ad3d2393f8303
@@ -1245,7 +1245,7 @@ CHECKSUMS
   prism (1.4.0) sha256=dc0e3e00e93160213dc2a65519d9002a4a1e7b962db57d444cf1a71565bb703e
   prop_initializer (0.2.0) sha256=bd27704d0df8c59c3baf0df5cf448eba2b140fb9934fb31b2e379b5c842d8820
   propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
-  prosopite (2.1.0) sha256=343e398087b9edcf691662d29db5f5b20a4efd7010f6b0531c400ef19f2ca53c
+  prosopite (2.1.1) sha256=c60e3fdc6325fa30d5afdbf2128ae63d941fa73192bcca9255123c669d01311c
   protobug (0.1.0) sha256=5bf1356cedf99dcf311890743b78f5e602f62ca703e574764337f1996b746bf2
   protobug_googleapis_field_behavior_protos (0.1.0) sha256=db48ef6a5913b2355b4a6931ab400a9e3e995fb48499977a3ad0be6365f9e265
   protobug_sigstore_protos (0.1.0) sha256=4ad1eebaf6454131b6f432dda50ad0e513773613474b92470847614a5acacce1
@@ -1281,7 +1281,7 @@ CHECKSUMS
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.10.1) sha256=050062d4f31d307cca52c3f6a7f4b946df8de25fc4bd373e1a5142e41034a7ca
   rbtrace (0.5.2) sha256=a2d7d222ab81363aaa0e91337ddbf70df834885d401a80ea0339d86c71f31895
-  rdoc (6.14.1) sha256=905efa796cd296ef252af4fb31fe41c073dee894de6aad715821f335c632516b
+  rdoc (6.14.2) sha256=9fdd44df130f856ae70cc9a264dfd659b9b40de369b16581f4ab746e42439226
   redcarpet (3.6.1) sha256=d444910e6aa55480c6bcdc0cdb057626e8a32c054c29e793fa642ba2f155f445
   regexp_parser (2.10.0) sha256=cb6f0ddde88772cd64bff1dbbf68df66d376043fe2e66a9ef77fcb1b0c548c61
   reline (0.6.1) sha256=1afcc9d7cb1029cdbe780d72f2f09251ce46d3780050f3ec39c3ccc6b60675fb

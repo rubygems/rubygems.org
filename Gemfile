@@ -5,12 +5,12 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.2"
 gem "rails-i18n", "~> 8.0.1"
 
-gem "aws-sdk-s3", "~> 1.191"
+gem "aws-sdk-s3", "~> 1.192"
 gem "aws-sdk-sqs", "~> 1.96"
 gem "bootsnap", "~> 1.18"
 gem "clearance", "~> 2.10"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.17"
+gem "datadog", "~> 2.18"
 gem "dogstatsd-ruby", "~> 5.6"
 gem "google-protobuf", "~> 4.31"
 gem "faraday", "~> 2.13"
@@ -132,7 +132,7 @@ group :development do
 end
 
 group :test do
-  gem "datadog-ci", "~> 1.19"
+  gem "datadog-ci", "~> 1.20"
   gem "minitest", "~> 5.25", require: false
   gem "minitest-retry", "~> 0.2.5"
   gem "capybara", "~> 3.40"

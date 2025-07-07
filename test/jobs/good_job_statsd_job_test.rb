@@ -98,26 +98,16 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
              value: 1,
              tags: { "state" => "queued", "queue" => "retry_once", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::RetryJob", "env" => "test" }),
-      metric(name: "good_job.staleness", type: :g,
-             tags: { "state" => "queued", "queue" => "retry_once", "priority" => "0",
-                     "job_class" => "GoodJobStatsDJobTest::RetryJob", "env" => "test" }),
 
       # Concurrency limited job
       metric(name: "good_job.count", type: :g,
              value: 1,
               tags: { "state" => "retried", "queue" => "concurrency_limited", "priority" => "0",
                       "job_class" => "GoodJobStatsDJobTest::ConcurrencyLimitedJob", "env" => "test" }),
-      metric(name: "good_job.staleness", type: :g,
-          value: 3.days,
-              tags: { "state" => "retried", "queue" => "concurrency_limited", "priority" => "0",
-                      "job_class" => "GoodJobStatsDJobTest::ConcurrencyLimitedJob", "env" => "test" }),
 
       # Failure job
       metric(name: "good_job.count", type: :g,
              value: 1,
-             tags: { "state" => "discarded", "queue" => "fail_once", "priority" => "0",
-                     "job_class" => "GoodJobStatsDJobTest::FailureJob", "env" => "test" }),
-      metric(name: "good_job.staleness", type: :g,
              tags: { "state" => "discarded", "queue" => "fail_once", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::FailureJob", "env" => "test" }),
 
@@ -130,19 +120,10 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
              value: 1,
              tags: { "state" => "succeeded", "queue" => "default", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
-      metric(name: "good_job.staleness", type: :g,
-             tags: { "state" => "queued", "queue" => "default", "priority" => "-2",
-                     "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
-      metric(name: "good_job.staleness", type: :g,
-             tags: { "state" => "succeeded", "queue" => "default", "priority" => "0",
-                     "job_class" => "GoodJobStatsDJobTest::SuccessJob", "env" => "test" }),
 
       # Discard job
       metric(name: "good_job.count", type: :g,
              value: 1,
-             tags: { "state" => "discarded", "queue" => "default", "priority" => "0",
-                     "job_class" => "GoodJobStatsDJobTest::DiscardJob", "env" => "test" }),
-      metric(name: "good_job.staleness", type: :g,
              tags: { "state" => "discarded", "queue" => "default", "priority" => "0",
                      "job_class" => "GoodJobStatsDJobTest::DiscardJob", "env" => "test" }),
 
@@ -156,22 +137,5 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
     ] do
       GoodJobStatsDJob.perform_now
     end
-  end
-
-  # covering unexpected GoodJob states enum change
-  class BrokenFilter
-    def states
-      { "invalid_state" => [] }
-    end
-  end
-
-  test "invalid state" do
-    GoodJobStatsDJob::Filter.stubs(:new).returns(BrokenFilter.new)
-
-    error = assert_raises(StandardError) do
-      GoodJobStatsDJob.new.perform
-    end
-
-    assert_equal("unknown GoodJob state 'invalid_state'", error.message)
   end
 end

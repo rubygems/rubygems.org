@@ -439,16 +439,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
-  create_table "organization_inductions", force: :cascade do |t|
+  create_table "organization_invites", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "principal_type", null: false
-    t.bigint "principal_id", null: false
+    t.string "invitable_type", null: false
+    t.bigint "invitable_id", null: false
     t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["principal_type", "principal_id"], name: "idx_on_principal_type_principal_id_727138ef00"
-    t.index ["principal_type", "principal_id"], name: "index_organization_inductions_on_principal"
-    t.index ["user_id"], name: "index_organization_inductions_on_user_id"
+    t.index ["invitable_type", "invitable_id"], name: "index_organization_invites_on_invitable"
+    t.index ["invitable_type", "invitable_id"], name: "index_organization_invites_on_invitable_type_and_invitable_id"
+    t.index ["user_id"], name: "index_organization_invites_on_user_id"
   end
 
   create_table "organization_onboarding_invites", force: :cascade do |t|
@@ -723,7 +723,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
-  add_foreign_key "organization_inductions", "users"
+  add_foreign_key "organization_invites", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"

@@ -803,6 +803,12 @@ pt-BR:
     security_events:
       title:
       description_html:
+    transfer:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
   reverse_dependencies:
     index:
       title: Dependências Reversas para %{name}
