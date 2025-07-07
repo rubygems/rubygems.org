@@ -1,5 +1,5 @@
 # test/lib/flipper_actor_test.rb
-require 'test_helper'
+require "test_helper"
 
 class FlipperActorTest < ActiveSupport::TestCase
   def setup

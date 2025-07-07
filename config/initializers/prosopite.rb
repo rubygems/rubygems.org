@@ -16,7 +16,7 @@ if Rails.env.local?
       "app/components/avo/views/resource_index_component.html.erb",
 
       # feature flag management relies on a query per actor
-      "config/initializers/flipper",
+      "config/initializers/flipper"
     ]
   end
 end

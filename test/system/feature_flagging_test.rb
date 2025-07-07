@@ -41,6 +41,7 @@ class FeatureFlaggingTest < ApplicationSystemTestCase
     assert_text "Remove"
 
     click_button "Remove"
+
     assert_no_text "user:#{allowed_user.handle}"
   end
 end

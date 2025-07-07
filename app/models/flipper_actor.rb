@@ -11,7 +11,7 @@ class FlipperActor
   end
 
   def self.find(flipper_id)
-    type, handle = flipper_id.split(':')
+    type, handle = flipper_id.split(":")
 
     actor = case type
             when "user"
