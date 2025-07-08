@@ -11,7 +11,7 @@ Flipper::UI.configure do |ui_config|
   ui_config.actor_names_source = lambda do |keys|
     # keys are like ["user:john_doe", "org:acme_corp"]
     keys.each_with_object({}) do |key, hash|
-      actor = FlipperActor.find(key)
+      actor = FeatureFlagActor.find(key)
       hash[key] = actor ? actor.to_s : "#{key} (invalid)"
     end
   end

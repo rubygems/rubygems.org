@@ -1,4 +1,4 @@
-class FlipperActor
+class FeatureFlagActor
   attr_reader :flipper_id, :record
 
   def initialize(record)
