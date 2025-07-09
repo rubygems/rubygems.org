@@ -363,6 +363,7 @@ Rails.application.routes.draw do
         mount GoodJob::Engine, at: 'good_job'
         mount MaintenanceTasks::Engine, at: "maintenance_tasks"
         mount PgHero::Engine, at: "pghero"
+        mount Flipper::UI.app(Flipper), at: '/features'
       end
 
       mount_avo

@@ -37,4 +37,8 @@ class Organization < ApplicationRecord
   def to_param
     handle
   end
+
+  def flipper_id
+    "org:#{handle}"
+  end
 end

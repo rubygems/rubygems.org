@@ -160,6 +160,10 @@ class User < ApplicationRecord
     handle || id
   end
 
+  def flipper_id
+    "user:#{handle}"
+  end
+
   def reset_api_key!
     generate_api_key && save!
   end

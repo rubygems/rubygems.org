@@ -274,6 +274,10 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.handle, @user.name
     end
 
+    should "return user:handle for #flipper_id" do
+      assert_equal "user:#{@user.handle}", @user.flipper_id
+    end
+
     should "setup a field to toggle showing email with default falsš" do
       refute_predicate @user, :public_email?
     end
