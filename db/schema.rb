@@ -10,11 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_09_191919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "status_marker", ["active", "archived", "quarantined", "deprecated"]
 
   create_table "admin_github_users", force: :cascade do |t|
     t.string "login"
@@ -546,6 +550,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
     t.datetime "updated_at", precision: nil
     t.boolean "indexed", default: false, null: false
     t.bigint "organization_id"
+    t.enum "status_marker", default: "active", enum_type: "status_marker"
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
