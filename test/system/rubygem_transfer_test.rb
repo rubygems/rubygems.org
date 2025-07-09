@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class RubygemTransferTest < ApplicationSystemTestCase
+class RubygemTransferSystemTest < ApplicationSystemTestCase
   def setup
     @owner = create(:user)
     @rubygem = create(:rubygem, owners: [@owner])

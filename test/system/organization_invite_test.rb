@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class OrganizationInviteTest < ApplicationSystemTestCase
+class OrganizationInviteSystemTest < ApplicationSystemTestCase
   setup do
     @owner = create(:user)
     @member = create(:user)
