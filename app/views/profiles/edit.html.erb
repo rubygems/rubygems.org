@@ -20,25 +20,6 @@
     <%= form.text_field :handle, :class => 'form__input' %>
   </div>
 
-  <div class="text_field">
-    <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
-      <%=
-        image_tag("/images/x_icon.png", alt: 'X icon', class: 'form__label__icon')
-      %>
-
-      <span class='form__label__text'><%= t('.twitter_username') %></span>
-    <% end %>
-
-    <p class='form__field__instructions'>
-      <%= t('.optional_twitter_username') %>
-    </p>
-
-    <div class="form__input__addon-container form__input__addon-left">
-      <span class="form__input__addon">@</span>
-      <%= form.text_field(:twitter_username, class: 'form__input') %>
-    </div>
-  </div>
-
   <% if current_user.unconfirmed_email %>
     <div class="push--bottom-s">
       <p class='form__field__instructions'>

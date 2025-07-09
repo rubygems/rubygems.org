@@ -64,24 +64,6 @@
             %>
           </p>
         <% end %>
-
-        <% if @user.twitter_username.present? %>
-          <%=
-            image_tag(
-              "/images/x_icon.png",
-              alt: "X icon",
-              class: "profile__header__icon"
-            )
-          %>
-
-          <%=
-            link_to(
-              twitter_username(@user),
-              twitter_url(@user),
-              class: "profile__header__attribute t-link--black"
-            )
-          %>
-        <% end %>
       <% end %>
     </div>
 

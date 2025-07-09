@@ -763,8 +763,6 @@ de:
       email_awaiting_confirmation:
       enter_password:
       optional_full_name:
-      optional_twitter_username:
-      twitter_username: Benutzername
       title: Bearbeite Profil
       delete:
         delete:

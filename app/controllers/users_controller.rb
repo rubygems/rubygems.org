@@ -27,7 +27,6 @@ class UsersController < ApplicationController
     location
     password
     website
-    twitter_username
     full_name
   ].freeze
 

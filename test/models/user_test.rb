@@ -162,16 +162,6 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context "twitter_username" do
-      should validate_length_of(:twitter_username).is_at_most(20)
-      should allow_value("user123_32").for(:twitter_username)
-      should_not allow_value("@user").for(:twitter_username)
-      should_not allow_value("user 1").for(:twitter_username)
-      should_not allow_value("user-1").for(:twitter_username)
-      should allow_value("01234567890123456789").for(:twitter_username)
-      should_not allow_value("012345678901234567890").for(:twitter_username)
-    end
-
     context "password" do
       should "be between 10 characters and 72 bytes" do
         user = build(:user, password: "%5a&12ed/")

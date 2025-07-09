@@ -73,11 +73,6 @@ class User < ApplicationRecord
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
   validate :unique_with_org_handle
 
-  validates :twitter_username, format: {
-    with: /\A[a-zA-Z0-9_]*\z/,
-    message: "can only contain letters, numbers, and underscores"
-  }, allow_nil: true, length: { within: 0..20 }
-
   validates :password,
     length: { minimum: 10 },
     unpwn: true,
