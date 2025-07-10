@@ -54,7 +54,7 @@ class Rubygem < ApplicationRecord
   MFA_RECOMMENDED_THRESHOLD = 165_000_000
   MFA_REQUIRED_THRESHOLD = 180_000_000
 
-  enum :status_marker, { active: 0, archived: 1, quarantined: 2, deprecated: 3 }
+  enum :status_marker, { active: "active", archived: "archived", quarantined: "quarantined", deprecated: "deprecated" }
 
   scope :mfa_recommended, -> { joins(:gem_download).where("gem_downloads.count > ?", MFA_RECOMMENDED_THRESHOLD) }
   scope :mfa_required, -> { joins(:gem_download).where("gem_downloads.count > ?", MFA_REQUIRED_THRESHOLD) }
@@ -233,6 +233,7 @@ class Rubygem < ApplicationRecord
       "info"               => version.info,
       "licenses"           => version.licenses,
       "metadata"           => version.metadata,
+      "status"             => status_marker,
       "yanked"             => version.yanked?,
       "sha"                => version.sha256_hex,
       "spec_sha"           => version.spec_sha256_hex,
