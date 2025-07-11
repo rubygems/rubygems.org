@@ -4,6 +4,21 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    FeatureFlag.enable_for_actor(:organizations, @user)
+  end
+
+  test "requires feature flag enablement" do
+    with_feature(:organizations, enabled: false, actor: @user) do
+      get organizations_path
+
+      assert_response :not_found
+
+      organization = create(:organization, owners: [@user])
+      get "/organizations/#{organization.to_param}"
+
+      assert_response :not_found
+    end
   end
 
   test "should show an organization" do

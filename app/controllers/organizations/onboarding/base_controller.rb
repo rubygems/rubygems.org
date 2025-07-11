@@ -1,6 +1,7 @@
 class Organizations::Onboarding::BaseController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
+  before_action :render_not_found, unless: :organizations_enabled?
   before_action :find_or_initialize_onboarding
   before_action :set_breadcrumbs
 
@@ -27,4 +28,10 @@ class Organizations::Onboarding::BaseController < ApplicationController
     @approved_invites ||= @organization_onboarding.approved_invites
   end
   helper_method :approved_invites
+
+  private
+
+  def organizations_enabled?
+    FeatureFlag.enabled?(:organizations, current_user)
+  end
 end
