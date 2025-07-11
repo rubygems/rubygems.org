@@ -3,6 +3,7 @@ require "test_helper"
 class Organizations::OnboardingControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user)
+    FeatureFlag.enable_for_actor(:organizations, @user)
   end
 
   context "GET /organizations/onboarding" do
@@ -10,6 +11,17 @@ class Organizations::OnboardingControllerTest < ActionDispatch::IntegrationTest
       get organization_onboarding_path(as: @user)
 
       assert_redirected_to organization_onboarding_name_path
+    end
+  end
+
+  should "require feature flag enablement" do
+    with_feature(:organizations, enabled: false, actor: @user) do
+      organization_onboarding = create(:organization_onboarding, :completed, created_by: @user)
+
+      delete organization_onboarding_path(as: @user)
+
+      assert_response :not_found
+      assert OrganizationOnboarding.exists?(id: organization_onboarding.id)
     end
   end
 

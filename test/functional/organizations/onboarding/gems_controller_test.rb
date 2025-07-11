@@ -13,6 +13,20 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       organization_handle: @namesake_rubygem.name,
       organization_name: "Existing Name"
     )
+
+    FeatureFlag.enable_for_actor(:organizations, @user)
+  end
+
+  should "require feature flat enablement" do
+    with_feature(:organizations, enabled: false, actor: @user) do
+      get organization_onboarding_gems_path(as: @user)
+
+      assert_response :not_found
+
+      patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [@gem.id] } }
+
+      assert_response :not_found
+    end
   end
 
   context "PATCH update" do
