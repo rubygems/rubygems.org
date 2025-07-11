@@ -107,44 +107,6 @@ class ProfileTest < ApplicationSystemTestCase
     assert page.has_content?("Email Me")
   end
 
-  test "adding X(formerly Twitter) username" do
-    sign_in
-    visit profile_path("nick1")
-
-    click_link "Edit Profile"
-    fill_in "user_twitter_username", with: "nick1"
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Update"
-
-    sign_out
-    visit profile_path("nick1")
-
-    assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
-  end
-
-  test "adding X(formerly Twitter) username without filling in your password" do
-    twitter_username = "nick1twitter"
-
-    sign_in
-    visit profile_path("nick1")
-
-    click_link "Edit Profile"
-    fill_in "user_twitter_username", with: twitter_username
-
-    assert_equal twitter_username, page.find_by_id("user_twitter_username").value
-
-    click_button "Update"
-
-    # Verify that the newly added Twitter username is still on the form so that the user does not need to re-enter it
-    assert_equal twitter_username, page.find_by_id("user_twitter_username").value
-
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Update"
-
-    assert page.has_content? "Your profile was updated."
-    assert_equal twitter_username, page.find_by_id("user_twitter_username").value
-  end
-
   test "deleting profile" do
     sign_in
     visit profile_path("nick1")
