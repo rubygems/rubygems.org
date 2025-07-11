@@ -8,7 +8,7 @@ module FeatureFlagHelpers
   end
 
   def disable_feature(flag_name)
-    FeatureFlag.disable(flag_name)
+    FeatureFlag.disable_globally(flag_name)
   end
 
   def with_feature(flag_name, enabled: true, actor: nil)
