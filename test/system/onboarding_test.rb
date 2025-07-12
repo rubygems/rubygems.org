@@ -8,6 +8,20 @@ class OnboardingTest < ApplicationSystemTestCase
     @maintainer = create(:user)
     @rubygem = create(:rubygem, owners: [@user, @other_user, @admin, @maintainer])
     @other_rubygem = create(:rubygem, owners: [@user, @other_user])
+
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
+  end
+
+  test "requires feature flag enablement" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      visit sign_in_path
+
+      click_link "login as #{@user[:handle]}"
+
+      visit organization_onboarding_path
+
+      assert_no_text "Create an Org"
+    end
   end
 
   test "onboarding an organization with a single gem and user" do
