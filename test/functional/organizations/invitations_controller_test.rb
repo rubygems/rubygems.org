@@ -6,11 +6,11 @@ class Organizations::InvitationsControllerTest < ActionDispatch::IntegrationTest
     @organization = create(:organization)
     @membership = create(:membership, :pending, organization: @organization, user: @user)
 
-    FeatureFlag.enable_for_actor(:organizations, @user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
   end
 
   test "requires feature flag enablement" do
-    with_feature(:organizations, enabled: false, actor: @user) do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
       get organization_invitation_path(@organization, as: @user)
 
       assert_response :not_found

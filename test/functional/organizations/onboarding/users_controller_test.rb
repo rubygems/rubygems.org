@@ -14,11 +14,11 @@ class Organizations::Onboarding::UsersControllerTest < ActionDispatch::Integrati
 
     @invites = @organization_onboarding.invites.to_a
 
-    FeatureFlag.enable_for_actor(:organizations, @user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
   end
 
   should "require feature flag enablement" do
-    with_feature(:organizations, enabled: false, actor: @user) do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
       get organization_onboarding_users_path(as: @user)
 
       assert_response :not_found
