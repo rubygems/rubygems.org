@@ -6,12 +6,12 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     @user = create(:user)
     @membership = create(:membership, organization: @organization, user: @user, role: :admin)
 
-    FeatureFlag.enable_for_actor(:organizations, @user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
   end
 
   test "feature flag enablement is required" do
-    with_feature(:organizations, enabled: false, actor: @user) do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
       get organization_memberships_path(@organization)
 
       assert_response :not_found

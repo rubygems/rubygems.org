@@ -9,11 +9,11 @@ class OnboardingTest < ApplicationSystemTestCase
     @rubygem = create(:rubygem, owners: [@user, @other_user, @admin, @maintainer])
     @other_rubygem = create(:rubygem, owners: [@user, @other_user])
 
-    FeatureFlag.enable_for_actor(:organizations, @user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
   end
 
   test "requires feature flag enablement" do
-    with_feature(:organizations, enabled: false, actor: @user) do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
       visit sign_in_path
 
       click_link "login as #{@user[:handle]}"

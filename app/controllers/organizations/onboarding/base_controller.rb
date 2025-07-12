@@ -32,6 +32,6 @@ class Organizations::Onboarding::BaseController < ApplicationController
   private
 
   def organizations_enabled?
-    FeatureFlag.enabled?(:organizations, current_user)
+    FeatureFlag.enabled?(FeatureFlag::ORGANIZATIONS, current_user)
   end
 end

@@ -10,12 +10,12 @@ class InvitationTest < ApplicationSystemTestCase
 
     @outside_user = create(:user)
 
-    FeatureFlag.enable_for_actor(:organizations, @user)
-    FeatureFlag.enable_for_actor(:organizations, @outside_user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @outside_user)
   end
 
   test "requires feature flag enablement" do
-    with_feature(:organizations, enabled: false, actor: @user) do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
       sign_in
 
       visit organization_path(@organization)

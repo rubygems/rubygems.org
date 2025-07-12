@@ -6,11 +6,11 @@ class OrganizationInviteSystemTest < ApplicationSystemTestCase
     @member = create(:user)
     @organization = create(:organization, owners: [@owner])
 
-    FeatureFlag.enable_for_actor(:organizations, @owner)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @owner)
   end
 
   test "requires feature flag enablement" do
-    with_feature(:organizations, enabled: false, actor: @owner) do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @owner) do
       sign_in(@owner)
 
       visit organization_path(@organization)
