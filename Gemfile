@@ -145,7 +145,7 @@ group :test do
   gem "selenium-webdriver", "~> 4.34"
   gem "webmock", "~> 3.25"
   gem "simplecov", "~> 0.22", require: false
-  gem "simplecov-cobertura", "~> 2.1", require: false
+  gem "simplecov-cobertura", "~> 3.0", require: false
   gem "aggregate_assertions", "~> 0.2.0"
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.7"
