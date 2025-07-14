@@ -803,10 +803,10 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-cobertura (2.1.0)
+    simplecov-cobertura (3.0.0)
       rexml
       simplecov (~> 0.19)
-    simplecov-html (0.12.3)
+    simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
     smart_properties (1.17.0)
     snaky_hash (2.0.1)
@@ -1012,7 +1012,7 @@ DEPENDENCIES
   shoulda-matchers (~> 6.5)
   sigstore (~> 0.2.1)
   simplecov (~> 0.22)
-  simplecov-cobertura (~> 2.1)
+  simplecov-cobertura (~> 3.0)
   statsd-instrument (~> 3.9)
   stimulus-rails (~> 1.3)
   strong_migrations (~> 2.4)
@@ -1322,8 +1322,8 @@ CHECKSUMS
   shoulda-matchers (6.5.0) sha256=ef6b572b2bed1ac4aba6ab2c5ff345a24b6d055a93a3d1c3bfc86d9d499e3f44
   sigstore (0.2.1) sha256=58031c34c7899dd6aac43c54d0ab1a5282a551804013d4b7cb6930a32cbc8775
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
-  simplecov-cobertura (2.1.0) sha256=2c6532e34df2e38a379d72cef9a05c3b16c64ce90566beebc6887801c4ad3f02
-  simplecov-html (0.12.3) sha256=4b1aad33259ffba8b29c6876c12db70e5750cb9df829486e4c6e5da4fa0aa07b
+  simplecov-cobertura (3.0.0) sha256=ba158d232c58045da5c4d5d9d03cc4ecadbf456792b4d0ff7e76373fdb2ef25a
+  simplecov-html (0.13.1) sha256=5dab0b7ee612e60e9887ad57693832fdf4695b4c0c859eaea5f95c18791ef10b
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   smart_properties (1.17.0) sha256=f9323f8122e932341756ddec8e0ac9ec6e238408a7661508be99439ca6d6384b
   snaky_hash (2.0.1) sha256=1ac87ec157fcfe7a460e821e0cd48ae1e6f5e3e082ab520f03f31a9259dbdc31
