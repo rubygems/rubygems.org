@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class PageParamsTest < SystemTest
+class PageParamsTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   test "stats with page param more than 10" do
@@ -36,8 +36,7 @@ class PageParamsTest < SystemTest
   end
 
   test "api search with page smaller than 1" do
-    create(:rubygem, name: "some", number: "1.0.0")
-    import_and_refresh
+    create(:rubygem, :reindex, name: "some", number: "1.0.0")
     visit api_v1_search_path(page: "0", query: "some", format: :json)
 
     assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
@@ -45,8 +44,7 @@ class PageParamsTest < SystemTest
   end
 
   test "api search with page is not a numer" do
-    create(:rubygem, name: "some", number: "1.0.0")
-    import_and_refresh
+    create(:rubygem, :reindex, name: "some", number: "1.0.0")
     visit api_v1_search_path(page: "foo", query: "some", format: :json)
 
     assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
@@ -54,8 +52,7 @@ class PageParamsTest < SystemTest
   end
 
   test "api search with page that can't be converted to a number" do
-    create(:rubygem, name: "some", number: "1.0.0")
-    import_and_refresh
+    create(:rubygem, :reindex, name: "some", number: "1.0.0")
     visit api_v1_search_path(page: { "$acunetix" => "1" }, query: "some", format: :json)
 
     assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
