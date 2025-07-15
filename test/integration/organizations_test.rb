@@ -8,14 +8,30 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
   end
 
-  test "requires feature flag enablement" do
+  test "show and index are not feature flagged" do
     with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
       get organizations_path
 
-      assert_response :not_found
+      assert_response :success
 
       organization = create(:organization, owners: [@user])
       get "/organizations/#{organization.to_param}"
+
+      assert_response :success
+    end
+  end
+
+  test "modifying resources requires feature flag enablement" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      organization = create(:organization, owners: [@user])
+      get "/organizations/#{organization.to_param}/edit"
+
+      assert_response :not_found
+
+      patch "/organizations/#{organization.to_param}"
+      patch "/organizations/#{organization.to_param}", params: {
+        organization: { name: "New Name" }
+      }
 
       assert_response :not_found
     end
