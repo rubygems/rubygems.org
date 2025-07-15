@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class WebAuthnVerificationTest < ApplicationSystemTestCase
+  include ExtendedTimeoutHelper
+
   setup do
     @user = create(:user)
     create_webauthn_credential
