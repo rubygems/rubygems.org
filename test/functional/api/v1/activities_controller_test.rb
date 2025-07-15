@@ -20,18 +20,20 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         get :latest, format: :json
         gems = JSON.load @response.body
 
-        assert_equal 2, gems.length
+        assert_equal 3, gems.length
         assert_equal "foobar", gems[0]["name"]
         assert_equal "sinatra", gems[1]["name"]
+        assert_equal "rails", gems[2]["name"]
       end
 
       should "return correct YAML for latest gems" do
         get :latest, format: :yaml
         gems = YAML.safe_load(@response.body)
 
-        assert_equal 2, gems.length
+        assert_equal 3, gems.length
         assert_equal "foobar", gems[0]["name"]
         assert_equal "sinatra", gems[1]["name"]
+        assert_equal "rails", gems[2]["name"]
       end
     end
 
