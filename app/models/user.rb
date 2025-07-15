@@ -73,6 +73,8 @@ class User < ApplicationRecord
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
   validate :unique_with_org_handle
 
+  validates :social_link, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::URL_VALIDATION_REGEXP }, allow_nil: true
+
   validates :password,
     length: { minimum: 10 },
     unpwn: true,
@@ -339,7 +341,8 @@ class User < ApplicationRecord
       handle: nil, email_confirmed: false,
       unconfirmed_email: nil, blocked_email: nil,
       api_key: nil, confirmation_token: nil, remember_token: nil,
-      twitter_username: nil, webauthn_id: nil, full_name: nil,
+      twitter_username: nil, social_link: nil,
+      webauthn_id: nil, full_name: nil,
       totp_seed: nil, mfa_hashed_recovery_codes: nil,
       mfa_level: :disabled,
       password: SecureRandom.hex(20).encode("UTF-8")

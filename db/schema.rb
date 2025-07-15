@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_15_222503) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -603,6 +603,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
     t.boolean "public_email", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "policies_acknowledged_at"
+    t.string "social_link"
     t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"

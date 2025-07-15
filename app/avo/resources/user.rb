@@ -33,6 +33,7 @@ class Avo::Resources::User < Avo::BaseResource
     field :email_reset, as: :boolean
     field :handle, as: :text
     field :public_email, as: :boolean
+    field :social_link, as: :text, as_html: true
     field :unconfirmed_email, as: :text
 
     field :mail_fails, as: :number

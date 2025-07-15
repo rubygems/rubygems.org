@@ -20,6 +20,14 @@
       %></p>
     </div>
   <% end %>
+
+  <% if user.social_link.present? %>
+    <div class="flex items-center mb-4 text-b3 lg:text-b2">
+      <p class="text-neutral-800 dark:text-white"><%=
+        link_to(social_link(user))
+      %></p>
+    </div>
+  <% end %>
 </div>
 
 <hr class="hidden lg:block lg:mb-6 border-neutral-400 dark:border-neutral-600" />
