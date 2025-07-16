@@ -181,6 +181,9 @@ class ActiveSupport::TestCase
     fullscreen_headless_chrome_driver
 
     visit sign_in_path
+
+    assert page.has_content?("Sign in")
+
     fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
