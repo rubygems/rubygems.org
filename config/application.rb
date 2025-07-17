@@ -88,6 +88,8 @@ module Gemcutter
     config.action_dispatch.default_headers.merge!(
       "Cross-Origin-Opener-Policy" => "same-origin"
     )
+
+    config.flipper.preload = false
   end
 
   def self.config
