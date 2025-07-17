@@ -93,7 +93,7 @@
       <% end %>
     <% end %>
 
-    <% if policy(@organization).invite_member? %>
+    <% if policy(@organization).invite_member? && organizations_enabled?(current_user) %>
       <div class="pt-6 flex flex-row justify-end">
         <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
       </div>

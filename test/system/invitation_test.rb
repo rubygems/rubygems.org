@@ -9,6 +9,19 @@ class InvitationTest < ApplicationSystemTestCase
     @membership = create(:membership, user: @user, organization: @organization, role: :admin)
 
     @outside_user = create(:user)
+
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @outside_user)
+  end
+
+  test "requires feature flag enablement" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      sign_in
+
+      visit organization_path(@organization)
+
+      assert_no_text "Invite"
+    end
   end
 
   test "inviting a user to an organization" do

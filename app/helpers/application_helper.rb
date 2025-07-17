@@ -106,4 +106,8 @@ module ApplicationHelper
       **kwargs
     )
   end
+
+  def organizations_enabled?(user)
+    FeatureFlag.enabled?(FeatureFlag::ORGANIZATIONS, user)
+  end
 end
