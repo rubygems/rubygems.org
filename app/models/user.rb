@@ -73,7 +73,7 @@ class User < ApplicationRecord
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
   validate :unique_with_org_handle
 
-  validates :social_link, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::URL_VALIDATION_REGEXP }, allow_nil: true
+  validates :social_link, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::URL_VALIDATION_REGEXP }, allow_blank: true
 
   validates :password,
     length: { minimum: 10 },

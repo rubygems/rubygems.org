@@ -64,6 +64,15 @@
             %>
           </p>
         <% end %>
+
+        <% if @user.social_link.present? %>
+          <%=
+            link_to(
+              social_link(@user),
+              class: "profile__header__attribute t-link--black"
+            )
+          %>
+        <% end %>
       <% end %>
     </div>
 

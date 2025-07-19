@@ -676,6 +676,8 @@ zh-TW:
       email_awaiting_confirmation: 請確認您的新電子郵件地址 %{unconfirmed_email}
       enter_password: 輸入密碼
       optional_full_name: 選填。將公開顯示
+      optional_social_link:
+      social_link:
       title: 編輯個人檔案
       delete:
         delete: 刪除

@@ -107,6 +107,45 @@ class ProfileTest < ApplicationSystemTestCase
     assert page.has_content?("Email Me")
   end
 
+  test "adding social link" do
+    social_link = "https://example.com/nick1"
+    sign_in
+    visit profile_path("nick1")
+
+    click_link "Edit Profile"
+    fill_in "user_social_link", with: social_link
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Update"
+
+    sign_out
+    visit profile_path("nick1")
+
+    assert page.has_link?(social_link)
+  end
+
+  test "adding social link without filling in your password" do
+    social_link = "https://example.com/nick1"
+
+    sign_in
+    visit profile_path("nick1")
+
+    click_link "Edit Profile"
+    fill_in "user_social_link", with: social_link
+
+    assert_equal social_link, page.find_by_id("user_social_link").value
+
+    click_button "Update"
+
+    # Verify that the newly added social link is still on the form so that the user does not need to re-enter it
+    assert_equal social_link, page.find_by_id("user_social_link").value
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Update"
+
+    assert page.has_content? "Your profile was updated."
+    assert_equal social_link, page.find_by_id("user_social_link").value
+  end
+
   test "deleting profile" do
     sign_in
     visit profile_path("nick1")

@@ -20,6 +20,20 @@
     <%= form.text_field :handle, :class => 'form__input' %>
   </div>
 
+  <div class="text_field">
+    <%= form.label :social_link, class: 'form__label form__label__icon-container' do %>
+      <span class='form__label__text'><%= t('.social_link') %></span>
+    <% end %>
+
+    <p class='form__field__instructions'>
+      <%= t('.optional_social_link') %>
+    </p>
+
+    <div class="form__input__addon-container form__input__addon-left">
+      <%= form.text_field(:social_link, class: 'form__input') %>
+    </div>
+  </div>
+
   <% if current_user.unconfirmed_email %>
     <div class="push--bottom-s">
       <p class='form__field__instructions'>

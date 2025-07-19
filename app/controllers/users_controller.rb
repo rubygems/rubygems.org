@@ -27,6 +27,7 @@ class UsersController < ApplicationController
     location
     password
     website
+    social_link
     full_name
   ].freeze
 

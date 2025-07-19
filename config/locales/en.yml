@@ -684,6 +684,8 @@ en:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
       optional_full_name: Optional. Will be displayed publicly
+      optional_social_link: Optional social link. Will be displayed publicly
+      social_link: Social Link
       title: Edit profile
       delete:
         delete: Delete

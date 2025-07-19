@@ -763,6 +763,8 @@ de:
       email_awaiting_confirmation:
       enter_password:
       optional_full_name:
+      optional_social_link:
+      social_link:
       title: Bearbeite Profil
       delete:
         delete:

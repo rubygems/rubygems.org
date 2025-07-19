@@ -696,6 +696,8 @@ fr:
         %{unconfirmed_email}
       enter_password: Veuillez entrer le mot de passe de votre compte
       optional_full_name:
+      optional_social_link:
+      social_link:
       title: Modification de profil
       delete:
         delete: Supprimer
