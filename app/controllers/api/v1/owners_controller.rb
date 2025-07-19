@@ -6,9 +6,12 @@ class Api::V1::OwnersController < Api::BaseController
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   def show
+    # owners is a through relationship, where the through table is ownerships, connecting User and Rubygem.
+    # role lives in the ownership table, as a user could have a different role for different gems.
+    # so the role should correspond to this gem only
     respond_to do |format|
-      format.json { render json: @rubygem.owners }
-      format.yaml { render yaml: @rubygem.owners }
+      format.json { render json: @rubygem.owners.map { |owner| owner.payload.merge("role" => owner.ownerships.find_by(rubygem: @rubygem).role) } }
+      format.yaml { render yaml: @rubygem.owners.map { |owner| owner.payload.merge("role" => owner.ownerships.find_by(rubygem: @rubygem).role) } }
     end
   end
 
