@@ -99,6 +99,21 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     should respond_with :not_found
   end
 
+
+  context "GET /api/v1/gems/:gem/owners.json" do
+    setup do
+      @user = create(:user)
+      @rubygem = create(:rubygem, owners: [@user])
+      get :show, params: { rubygem_id: @rubygem.slug }, format: :json
+    end
+    should "include associated users id, handle, and role in response" do
+      user_payload = JSON.parse(@response.body).first
+      assert_equal "owner", user_payload["role"]
+      assert_equal @user.id, user_payload["id"]
+      assert_equal @user.handle, user_payload["handle"]
+    end
+  end
+
   should "route POST /api/v1/gems/rubygem/owners.json" do
     route = { controller: "api/v1/owners",
               action: "create",
