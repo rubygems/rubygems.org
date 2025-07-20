@@ -20,6 +20,12 @@ FactoryBot.define do
     sha256 { "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=" }
     spec_sha256 { Digest::SHA2.base64digest("#{rubygem.name}-#{number}-#{platform}") }
 
+    trait :reindex do
+      after(:create) do |version|
+        version.rubygem.reindex(refresh: true)
+      end
+    end
+
     trait :yanked do
       indexed { false }
     end

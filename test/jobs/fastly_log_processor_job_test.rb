@@ -21,7 +21,6 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
     @processor = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
     @job = FastlyLogProcessorJob.new(bucket: "test-bucket", key: "fastly-fake.log")
     create(:gem_download)
-    import_and_refresh
   end
 
   teardown do
@@ -58,8 +57,6 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
       create(:version, rubygem: json, number: "1.8.3", platform: "java")
       create(:version, rubygem: json, number: "1.8.3")
       create(:version, rubygem: json, number: "1.8.2")
-
-      import_and_refresh
     end
 
     context "#perform" do
@@ -68,6 +65,8 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
         assert_equal 0, GemDownload.count_for_rubygem(json.id)
         3.times { @job.perform_now }
+
+        json.reindex(refresh: true)
 
         assert_equal 7, es_downloads(json.id)
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
@@ -85,6 +84,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
         end
 
         json = Rubygem.find_by_name("json")
+        json.reindex(refresh: true)
 
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
         assert_equal 7, es_downloads(json.id)
@@ -93,6 +93,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
       should "not run if already processed" do
         json = Rubygem.find_by_name("json")
+        json.reindex(refresh: true)
 
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)
@@ -119,6 +120,7 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
 
         @job.perform_now
         json = Rubygem.find_by_name("json")
+        json.reindex(refresh: true)
 
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)

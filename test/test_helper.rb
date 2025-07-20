@@ -62,7 +62,6 @@ end
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}" if ENV["DEVCONTAINER_APP_HOST"].blank?
 Capybara.always_include_port = true
-Capybara.server_port = 31_337
 Capybara.server = :puma, { Silent: true }
 
 GoodJob::Execution.delete_all
@@ -73,8 +72,6 @@ Mocha.configure do |c|
   c.strict_keyword_argument_matching = true
 end
 
-Rubygem.searchkick_reindex(import: false)
-
 OmniAuth.config.test_mode = true
 
 class ActiveSupport::TestCase
@@ -84,9 +81,16 @@ class ActiveSupport::TestCase
   include PasswordHelpers
   include FeatureFlagHelpers
 
-  parallelize_setup do |_worker|
+  parallelize_setup do |worker|
+    Version.reset_column_information # TODO: Remove once https://github.com/rails/rails/pull/52703 is released
+
     SemanticLogger.reopen
+    Searchkick.index_suffix = "_#{worker}"
+    Rubygem.reindex
+    Searchkick.disable_callbacks
   end
+
+  parallelize(workers: :number_of_processors)
 
   setup do
     I18n.locale = :en
@@ -272,6 +276,8 @@ end
 
 class ActionDispatch::IntegrationTest
   include OauthHelpers
+  include Capybara::DSL
+  include Capybara::Minitest::Assertions
 
   setup { host! Gemcutter::HOST }
 
@@ -300,17 +306,6 @@ end
 
 # Force loading of ActionDispatch::SystemTesting::* helpers
 _ = ActionDispatch::SystemTestCase
-
-class SystemTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
-  include Capybara::Minitest::Assertions
-  include ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
-  include ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
-
-  setup do
-    Capybara.current_driver = :rack_test
-  end
-end
 
 class AdminPolicyTestCase < ActiveSupport::TestCase
   def setup
