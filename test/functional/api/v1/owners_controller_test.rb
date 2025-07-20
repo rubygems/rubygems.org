@@ -99,7 +99,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     should respond_with :not_found
   end
 
-
   context "GET /api/v1/gems/:gem/owners.json" do
     setup do
       @user = create(:user)
@@ -108,6 +107,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
     should "include associated users id, handle, and role in response" do
       user_payload = JSON.parse(@response.body).first
+
       assert_equal "owner", user_payload["role"]
       assert_equal @user.id, user_payload["id"]
       assert_equal @user.handle, user_payload["handle"]
