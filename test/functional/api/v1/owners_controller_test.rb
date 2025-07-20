@@ -101,16 +101,16 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
   context "GET /api/v1/gems/:gem/owners.json" do
     setup do
-      @user = create(:user)
+      @user = create(:user, public_email: true)
       @rubygem = create(:rubygem, owners: [@user])
       get :show, params: { rubygem_id: @rubygem.slug }, format: :json
+      @user_payload = JSON.parse(@response.body).first
     end
-    should "include associated users id, handle, and role in response" do
-      user_payload = JSON.parse(@response.body).first
-
-      assert_equal "owner", user_payload["role"]
-      assert_equal @user.id, user_payload["id"]
-      assert_equal @user.handle, user_payload["handle"]
+    should "include associated users id, handle, email, and role in response" do
+      assert_equal "owner", @user_payload["role"]
+      assert_equal @user.id, @user_payload["id"]
+      assert_equal @user.handle, @user_payload["handle"]
+      assert_equal @user.email, @user_payload["email"]
     end
   end
 

@@ -6,10 +6,9 @@ class Api::V1::OwnersController < Api::BaseController
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   def show
-    payload = @rubygem.owners.map { |owner| owner.payload.merge("role" => owner.ownerships.find_by(rubygem: @rubygem).role) }
     respond_to do |format|
-      format.json { render json: payload }
-      format.yaml { render yaml: payload }
+      format.json { render json: owners_payload }
+      format.yaml { render yaml: owners_payload }
     end
   end
 
@@ -83,5 +82,12 @@ class Api::V1::OwnersController < Api::BaseController
 
   def ownership_params
     params.permit(:role)
+  end
+
+  def owners_payload
+    @rubygem.owners
+      .joins(:ownerships)
+      .select("users.id, users.public_email, users.email, users.handle, users.webauthn_id, ownerships.role as role")
+      .map { |owner| owner.payload.merge("role" => Ownership.roles.key(owner.role)) }
   end
 end
