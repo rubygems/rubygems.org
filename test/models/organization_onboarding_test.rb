@@ -109,9 +109,10 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
   context "#save" do
     should "not create invites for rubygems owned by the owner but not selected" do
       other_owner = create(:user)
-      other_rubygem = create(:rubygem, owners: [@owner, other_owner])
+      create(:rubygem, owners: [@owner, other_owner])
 
-      @onboarding = create(:organization_onboarding, name_type: "gem", organization_handle: @rubygem.name, created_by: @owner, namesake_rubygem: @rubygem, rubygems: [@rubygem])
+      @onboarding = create(:organization_onboarding, name_type: "gem", organization_handle: @rubygem.name, created_by: @owner,
+namesake_rubygem: @rubygem, rubygems: [@rubygem])
 
       assert_equal @onboarding.users, [@maintainer]
     end
