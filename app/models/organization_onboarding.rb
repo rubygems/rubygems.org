@@ -85,7 +85,7 @@ class OrganizationOnboarding < ApplicationRecord
     return User.none if available_rubygems.blank? || created_by.blank?
     User
       .joins(:ownerships)
-      .where(ownerships: { rubygem_id: available_rubygems.pluck(:id) })
+      .where(ownerships: { rubygem_id: selected_rubygems.pluck(:id) })
       .where.not(ownerships: { user_id: created_by })
       .order(Arel.sql("COUNT (ownerships.id) DESC"))
       .group(users: [:id])
@@ -135,7 +135,7 @@ class OrganizationOnboarding < ApplicationRecord
     onboarded_users = invites.reject { it.role.nil? || it.outside_contributor? }.map(&:user)
     onboarded_users << created_by
 
-    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: onboarded_users, rubygem: selected_rubygems).destroy_all
+    Ownership.includes(:rubygem, :user, api_key_rubygem_scopes: :api_key).where(user: onboarded_users, rubygem: selected_rubygems).destroy_all
   end
 
   def add_namesake_rubygem
