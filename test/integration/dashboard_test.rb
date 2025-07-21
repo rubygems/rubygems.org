@@ -5,6 +5,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
     @user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
     create(:rubygem, name: "arrakis", number: "1.0.0")
   end
 
@@ -42,6 +43,24 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
     assert page.has_content? "sandworm"
     refute page.has_content?("arrakis")
+  end
+
+  test "organizations are introduced on my dashboard when I belong to one" do
+    create(:organization, owners: [@user])
+
+    get dashboard_path
+
+    assert page.has_content? "Introducing Organizations!"
+  end
+
+  test "organizations are only introduced when the feature flag is enabled" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      create(:organization, owners: [@user])
+
+      get dashboard_path
+
+      refute page.has_content? "Introducing Organizations!"
+    end
   end
 
   test "dashboard with a non valid format" do

@@ -4,6 +4,22 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
   setup do
     @user = create(:user, :mfa_enabled)
     @gem = create(:rubygem, owners: [@user])
+
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
+  end
+
+  should "require feature flag enablement" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      get organization_onboarding_name_path(as: @user)
+
+      assert_response :not_found
+
+      post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
+        organization_name: "New Name", organization_handle: @gem.name, name_type: "gem"
+      } }
+
+      assert_response :not_found
+    end
   end
 
   context "GET new" do
