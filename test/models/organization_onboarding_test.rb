@@ -106,6 +106,18 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
   end
 
+  context "#save" do
+    should "not create invites for rubygems owned by the owner but not selected" do
+      other_owner = create(:user)
+      create(:rubygem, owners: [@owner, other_owner])
+
+      @onboarding = create(:organization_onboarding, name_type: "gem", organization_handle: @rubygem.name, created_by: @owner,
+namesake_rubygem: @rubygem, rubygems: [@rubygem])
+
+      assert_equal @onboarding.users, [@maintainer]
+    end
+  end
+
   context "#set_user_handle" do
     context "when the gem name is set to user" do
       setup do
