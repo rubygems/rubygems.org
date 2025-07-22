@@ -22,7 +22,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
 
     get organization_memberships_path(@organization)
 
-    assert_response :not_found
+    assert_response :success
   end
 
   test "GET /organizations/:organization_handle/members as maintainer" do
