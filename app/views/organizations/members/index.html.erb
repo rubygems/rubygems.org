@@ -5,7 +5,7 @@
 %>
 
 <% content_for :subject do %>
-  <%= render "organizations/subject", organization: @organization, current: :users %>
+  <%= render "organizations/subject", organization: @organization, current: :members %>
 <% end %>
 
 <div class="flex flex-row items-center justify-between">
@@ -15,21 +15,25 @@
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
 		<%= c.title t("organizations.show.members"), icon: "organizations", count: @memberships_count %>
-    <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
+    <% if policy(@organization).invite_member? %>
+      <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
+    <% end %>
   <% end %>
     <%= c.divided_list do %>
 		<% @memberships.each do |membership| %>
 			<%= c.list_item_to(
-				edit_organization_membership_path(@organization, membership),
+				policy(@organization).list_memberships? ? edit_organization_membership_path(@organization, membership) : profile_path(membership.user),
 				title: membership.user.handle,
 			) do %>
 				<div class="flex flex-col w-full justify-between">
 					<div class="flex flex-row w-full items-center justify-between">
 						<p class="text-neutral-800 dark:text-white"><%= membership.user.handle %></p>
-						<% if membership.confirmed? %>
-						<p class="text-neutral-500 capitalize"><%= membership.role %></p>
-						<% else %>
-						<p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
+						<% if policy(@organization).list_memberships? %>
+							<% if membership.confirmed? %>
+							<p class="text-neutral-500 capitalize"><%= membership.role %></p>
+							<% else %>
+							<p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
+							<% end %>
 						<% end %>
 					</div>
 				</div>
