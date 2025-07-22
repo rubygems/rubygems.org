@@ -104,6 +104,12 @@ zh-CN:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+            user_id:
+              taken:
         ownership:
           attributes:
             user_id:
