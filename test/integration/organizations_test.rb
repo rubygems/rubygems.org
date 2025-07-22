@@ -26,6 +26,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     get "/organizations"
 
     assert_response :success
+    assert page.has_content? "You are not a member of any organizations."
   end
 
   test "should list organizations for a user" do

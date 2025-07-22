@@ -419,6 +419,7 @@ en:
   organizations:
     index:
       title: Organizations
+      no_organizations: You are not a member of any organizations.
     show:
       organization: Organization
       gems: Gems

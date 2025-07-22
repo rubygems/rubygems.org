@@ -422,6 +422,7 @@ pt-BR:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:

@@ -420,6 +420,7 @@ ja:
   organizations:
     index:
       title: 組織
+      no_organizations:
     show:
       organization: 組織
       gems: gem
