@@ -40,6 +40,23 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
         assert_select "input[name=?][value=?]", "organization_onboarding[organization_name]", @organization_onboarding.organization_name
       end
     end
+
+    context "when the user has an existing failed onboarding" do
+      setup do
+        @organization_onboarding = create(
+          :organization_onboarding,
+          :failed,
+          created_by: @user,
+          organization_name: "Failed Name"
+        )
+      end
+
+      should "render with the failed onboarding" do
+        get organization_onboarding_name_path(as: @user)
+
+        assert_select "input[name=?][value=?]", "organization_onboarding[organization_name]", @organization_onboarding.organization_name
+      end
+    end
   end
 
   context "POST create" do
