@@ -15,6 +15,12 @@ class OrganizationInviteTest < ActiveSupport::TestCase
     assert_nil invite.to_membership
   end
 
+  test "to_membership returns nil when role is empty" do
+    invite = create(:organization_invite, role: "")
+
+    assert_nil invite.to_membership
+  end
+
   test "to_membership sets invited_by to the actor" do
     user = create(:user)
     invite = create(:organization_invite, role: :owner)
