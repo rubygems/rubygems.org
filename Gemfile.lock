@@ -831,7 +831,7 @@ GEM
     tailwindcss-ruby (4.1.11-x86_64-darwin)
     tailwindcss-ruby (4.1.11-x86_64-linux-gnu)
     tailwindcss-ruby (4.1.11-x86_64-linux-musl)
-    thor (1.3.2)
+    thor (1.4.0)
     timeout (0.4.3)
     toxiproxy (2.0.2)
     tpm-key_attestation (0.14.1)
@@ -1338,7 +1338,7 @@ CHECKSUMS
   tailwindcss-ruby (4.1.11-x86_64-darwin) sha256=9e613bd5e09b807a1a850ad01cae054ddc40ae72ca1b70d05cfa26c1c1e9a638
   tailwindcss-ruby (4.1.11-x86_64-linux-gnu) sha256=5633d76566839bc675960cd841d30795a3189b81c53a8c49bcf1629210b7a3b1
   tailwindcss-ruby (4.1.11-x86_64-linux-musl) sha256=6a9845bc086a846c9b1b0d70c0e469d34a3a9b0a820df6ee94b7a81715fb1439
-  thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
+  thor (1.4.0) sha256=8763e822ccb0f1d7bee88cde131b19a65606657b847cc7b7b4b82e772bcd8a3d
   timeout (0.4.3) sha256=9509f079b2b55fe4236d79633bd75e34c1c1e7e3fb4b56cb5fda61f80a0fe30e
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.14.1) sha256=7fd4e4653a7afd0a386632ddfb05d10ecfdd47678299c5e69165bc9ae111193f
