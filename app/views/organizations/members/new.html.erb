@@ -18,7 +18,7 @@
     <%= c.title "Invite Member", icon: "organizations" %>
   <% end %>
 
-  <%= form_with(model: @membership, url: organization_memberships_path(@organization), method: :post, html: { class: "bg-white dark:bg-gray-900 p-6" }) do |f| %>
+  <%= form_with(model: @membership, url: organization_memberships_path(@organization), method: :post, html: { class: "p-6" }) do |f| %>
     <% if @membership.errors.any? %>
       <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
         <div class="flex">

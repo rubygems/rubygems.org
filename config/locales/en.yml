@@ -113,8 +113,12 @@ en:
           attributes:
             user:
               taken: has already been invited to this organization
+              blank: not found
+              required: not found
             user_id:
               taken: has already been invited to this organization
+              blank: not found
+              required: not found
         ownership:
           attributes:
             user_id:

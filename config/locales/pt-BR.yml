@@ -113,8 +113,12 @@ pt-BR:
           attributes:
             user:
               taken:
+              blank:
+              required:
             user_id:
               taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
