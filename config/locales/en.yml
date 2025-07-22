@@ -109,6 +109,12 @@ en:
           attributes:
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+        membership:
+          attributes:
+            user:
+              taken: has already been invited to this organization
+            user_id:
+              taken: has already been invited to this organization
         ownership:
           attributes:
             user_id:
