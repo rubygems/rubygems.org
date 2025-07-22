@@ -755,6 +755,7 @@ ja:
       header: "%{title}依存関係"
     release_info:
       managed_by:
+      outside_contributors:
       authors_header: 作者
       self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証（MFA）
         の有効化</a>をご検討ください。

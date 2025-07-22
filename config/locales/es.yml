@@ -842,6 +842,7 @@ es:
       header: dependencias de %{title}
     release_info:
       managed_by:
+      outside_contributors:
       authors_header: Autores
       self_no_mfa_warning_html: Considera por favor <a href="/settings/edit">activar
         la autenticación de múltiples factores (AMF)</a> para mantener tu cuenta segura.

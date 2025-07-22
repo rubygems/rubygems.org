@@ -754,6 +754,7 @@ pt-BR:
       header:
     release_info:
       managed_by:
+      outside_contributors:
       authors_header: Autores
       self_no_mfa_warning_html:
       not_using_mfa_warning_show: "* Alguns donos não estão usando MFA. Clique para
