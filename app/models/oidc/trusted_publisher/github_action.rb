@@ -41,7 +41,6 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def self.build_trusted_publisher(params)
     params = params.reverse_merge(repository_owner_id: nil, repository_name: nil, workflow_filename: nil, environment: nil)
-    params.delete(:environment) if params[:environment].blank?
     params.delete(:repository_owner_id)
     find_or_initialize_by(params)
   end
