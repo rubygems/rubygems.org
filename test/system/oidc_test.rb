@@ -353,12 +353,48 @@ class OIDCTest < ApplicationSystemTestCase
     stub_request(:get, "https://api.github.com/users/example")
       .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
 
+    fill_in "Environment", with: "prod"
+
     click_button "Create Rubygem trusted publisher"
 
     page.assert_text "Trusted Publisher created"
     page.assert_selector "h1", text: "Trusted Publishers"
     page.assert_text("Trusted publishers for rubygem0")
-    page.assert_text "GitHub Actions\nDelete\nGitHub Repository\nexample/rubygem0\nWorkflow Filename\npush_rubygem.yml"
+    page.assert_text "GitHub Actions\nDelete\nGitHub Repository\nexample/rubygem0\nWorkflow Filename\npush_rubygem.yml\nEnvironment\nprod"
+
+    # Let's delete the trusted publisher we just created (which had Environment prod).
+    # We'll come back to this later.
+    click_button "Delete"
+
+    page.assert_text("Trusted publishers for rubygem0")
+
+    stub_request(:get, "https://api.github.com/repos/example/rubygem0/contents/.github/workflows")
+      .to_return(status: 200, body: [
+        { name: "ci.yml", type: "file" },
+        { name: "push_rubygem.yml", type: "file" },
+        { name: "push_README.md", type: "file" },
+        { name: "push.yml", type: "directory" }
+      ].to_json, headers: { "Content-Type" => "application/json" })
+
+    click_button "Create"
+
+    page.assert_selector "h1", text: "New Trusted Publisher"
+
+    assert_field "Repository owner", with: "example"
+    assert_field "Repository name", with: "rubygem0"
+    assert_field "Workflow filename", with: "push_rubygem.yml"
+    assert_field "Environment", with: ""
+
+    # Let's create another trusted publisher, this time _without_ the environment
+    # This should NOT result in a record the environment which was previously set (prod)
+    fill_in "Environment", with: ""
+
+    click_button "Create Rubygem trusted publisher"
+
+    page.assert_text "Trusted Publisher created"
+    page.assert_selector "h1", text: "Trusted Publishers"
+    page.assert_text("Trusted publishers for rubygem0")
+    page.assert_no_text "Environment\nprod"
   end
 
   test "deleting rubygem trusted publishers" do

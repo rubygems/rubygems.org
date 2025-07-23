@@ -10,7 +10,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   validates :repository_owner, :repository_name, :workflow_filename, :repository_owner_id,
     presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
-  validates :environment, presence: true, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :environment, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   validate :unique_publisher
   validate :workflow_filename_format
@@ -41,8 +41,8 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def self.build_trusted_publisher(params)
     params = params.reverse_merge(repository_owner_id: nil, repository_name: nil, workflow_filename: nil, environment: nil)
-    params.delete(:environment) if params[:environment].blank?
     params.delete(:repository_owner_id)
+    params[:environment] = nil if params[:environment].blank?
     find_or_initialize_by(params)
   end
 

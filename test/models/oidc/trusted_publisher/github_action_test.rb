@@ -55,6 +55,52 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     assert_equal bar_test, OIDC::TrustedPublisher::GitHubAction.for_claims(claims.merge(environment: "test"))
   end
 
+  test ".build_trusted_publisher" do
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    existing_publisher = create(:oidc_trusted_publisher_github_action,
+                               repository_owner: "example",
+                               repository_name: "test-repo",
+                               workflow_filename: "ci.yml",
+                               environment: "production")
+
+    # Test returning existing record when params match
+    result = OIDC::TrustedPublisher::GitHubAction.build_trusted_publisher(
+      repository_owner: "example",
+      repository_name: "test-repo",
+      workflow_filename: "ci.yml",
+      environment: "production"
+    )
+
+    assert_equal existing_publisher, result
+    refute_predicate result, :new_record?
+
+    # Test building new record when environment is blank
+    new_publisher = OIDC::TrustedPublisher::GitHubAction.build_trusted_publisher(
+      repository_owner: "example",
+      repository_name: "test-repo",
+      workflow_filename: "ci.yml",
+      environment: ""
+    )
+
+    refute_equal existing_publisher, new_publisher
+    assert_predicate new_publisher, :new_record?
+    assert_nil new_publisher.environment
+
+    # Test building new record when no existing record matches
+    another_new_publisher = OIDC::TrustedPublisher::GitHubAction.build_trusted_publisher(
+      repository_owner: "different-owner",
+      repository_name: "different-repo",
+      workflow_filename: "deploy.yml",
+      environment: ""
+    )
+
+    assert_predicate another_new_publisher, :new_record?
+    assert_equal "different-owner", another_new_publisher.repository_owner
+    assert_equal "different-repo", another_new_publisher.repository_name
+  end
+
   test "#name" do
     publisher = create(:oidc_trusted_publisher_github_action, repository_name: "bar")
 
