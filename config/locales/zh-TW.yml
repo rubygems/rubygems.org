@@ -103,6 +103,16 @@ zh-TW:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -405,6 +415,7 @@ zh-TW:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -744,6 +755,7 @@ zh-TW:
       header: "%{title} 相依性套件"
     release_info:
       managed_by:
+      outside_contributors:
       authors_header: 作者
       self_no_mfa_warning_html:
       not_using_mfa_warning_show: "* 某些擁有者未使用多重要素驗證 (MFA)。點擊此處以顯示完整名單。"

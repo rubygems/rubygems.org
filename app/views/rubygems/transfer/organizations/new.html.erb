@@ -18,8 +18,10 @@
   <label class="flex flex-col xl:flex-row items-center rounded-lg border border-neutral-400 dark:border-neutral-600 overflow-hidden">
     <%= f.select(
       :organization,
-      @organizations.map(&:handle),
-      { prompt: "select..." },
+      options_for_select(@organizations.collect { [it.name, it.handle]}, selected: @rubygem_transfer.organization&.handle),
+      { 
+        prompt: "select...",
+      },
       {
         required: true,
         class: "flex-1 w-full h-11 text-b2 px-4 xl:px-2 bg-white border-none dark:bg-neutral-950 rounded-b-lg xl:rounded-bl-none xl:rounded-r-lg outline-none appearance-none focus:ring-inset focus:ring-1 focus:ring-orange-500"

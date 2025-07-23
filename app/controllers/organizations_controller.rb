@@ -3,8 +3,6 @@ class OrganizationsController < Organizations::BaseController
   before_action :redirect_to_new_mfa, only: :index, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, only: :index, if: :mfa_required_weak_level_enabled?
 
-  skip_before_action :render_not_found, only: %i[show index]
-
   before_action :find_organization, only: %i[show edit update]
 
   layout "subject"

@@ -109,6 +109,16 @@ en:
           attributes:
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+        membership:
+          attributes:
+            user:
+              taken: has already been invited to this organization
+              blank: not found
+              required: not found
+            user_id:
+              taken: has already been invited to this organization
+              blank: not found
+              required: not found
         ownership:
           attributes:
             user_id:
@@ -409,6 +419,7 @@ en:
   organizations:
     index:
       title: Organizations
+      no_organizations: You are not a member of any organizations.
     show:
       organization: Organization
       gems: Gems
@@ -751,6 +762,7 @@ en:
       header: "%{title} Dependencies"
     release_info:
       managed_by: Managed By
+      outside_contributors: Outside Contributors
       authors_header: Authors
       self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling multi-factor authentication (MFA)</a> to keep your account secure.
       not_using_mfa_warning_show: "* Some owners are not using multi-factor authentication (MFA). Click for the complete list."

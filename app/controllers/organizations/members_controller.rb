@@ -1,13 +1,18 @@
 class Organizations::MembersController < Organizations::BaseController
   before_action :find_membership, only: %i[edit update destroy]
 
+  skip_before_action :redirect_to_signin, only: %i[index]
+
   rescue_from Pundit::NotAuthorizedError, with: :render_not_found
 
   def index
-    authorize @organization, :list_memberships?
-
-    @memberships = @organization.memberships_including_unconfirmed.includes(:user)
-    @memberships_count = @organization.memberships_including_unconfirmed.count
+    if OrganizationPolicy.new(current_user, @organization).list_memberships?
+      @memberships = @organization.memberships_including_unconfirmed.includes(:user)
+      @memberships_count = @organization.memberships_including_unconfirmed.count
+    else
+      @memberships = @organization.memberships.includes(:user)
+      @memberships_count = @organization.memberships.count
+    end
   end
 
   def new

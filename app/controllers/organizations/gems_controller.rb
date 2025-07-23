@@ -1,6 +1,8 @@
 class Organizations::GemsController < Organizations::BaseController
   before_action :find_organization, only: %i[index]
 
+  skip_before_action :redirect_to_signin, only: %i[index]
+
   layout "subject"
 
   def index

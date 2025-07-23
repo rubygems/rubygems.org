@@ -102,6 +102,16 @@ nl:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -399,6 +409,7 @@ nl:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -742,6 +753,7 @@ nl:
       header: "%{title} afhankelijkheden"
     release_info:
       managed_by:
+      outside_contributors:
       authors_header:
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:

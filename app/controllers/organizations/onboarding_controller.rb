@@ -1,4 +1,4 @@
-class Organizations::OnboardingController < Organizations::BaseController
+class Organizations::OnboardingController < Organizations::Onboarding::BaseController
   def destroy
     OrganizationOnboarding.destroy_by(created_by: Current.user, status: %i[pending failed])
 

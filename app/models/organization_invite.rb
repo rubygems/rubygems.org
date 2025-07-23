@@ -8,7 +8,7 @@ class OrganizationInvite < ApplicationRecord
     validate: { allow_nil: true }
 
   def to_membership(actor: nil)
-    return nil if outside_contributor?
+    return nil if role.blank? || outside_contributor?
 
     Membership.new(
       user: user,

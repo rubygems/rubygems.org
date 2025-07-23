@@ -114,6 +114,16 @@ de:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -451,6 +461,7 @@ de:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -830,6 +841,7 @@ de:
       header: "%{title} Abhängigkeiten"
     release_info:
       managed_by:
+      outside_contributors:
       authors_header: Autoren
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:

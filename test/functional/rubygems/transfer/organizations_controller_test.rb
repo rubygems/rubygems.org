@@ -7,6 +7,21 @@ class Rubygems::Transfer::OrganizationsControllerTest < ActionDispatch::Integrat
     @rubygem = create(:rubygem, owners: [@user])
   end
 
+  test "GET /rubygems/:rubygem_id/transfer/organization" do
+    get rubygem_transfer_organization_path(@rubygem.slug, as: @user)
+
+    assert_response :success
+  end
+
+  test "GET /rubygems/:rubygem_id/transfer/organization with existing rubygems transfer" do
+    transfer = create(:rubygem_transfer, rubygem: @rubygem, organization: @organization, created_by: @user, status: :pending)
+
+    get rubygem_transfer_organization_path(@rubygem.slug, as: @user)
+
+    assert_response :success
+    assert_select "select[name=?] option[selected=selected][value=?]", "rubygem_transfer[organization]", transfer.organization.handle
+  end
+
   test "POST /rubygems/:rubygem_id/transfer/organization" do
     post rubygem_transfer_organization_path(@rubygem.slug, as: @user), params: { rubygem_transfer: { organization: @organization.handle } }
 

@@ -27,7 +27,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
 
-    select @organization.handle, from: "Organization"
+    select @organization.name, from: "Organization"
     click_on "Continue"
 
     assert_text "No owners to manage"
@@ -53,7 +53,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
 
-    select @organization.handle, from: "Organization"
+    select @organization.name, from: "Organization"
 
     click_on "Continue"
 
@@ -76,7 +76,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
 
-    select @organization.handle, from: "Organization"
+    select @organization.name, from: "Organization"
     click_on "Cancel"
 
     assert_current_path rubygem_path(@rubygem.slug)
