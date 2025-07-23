@@ -225,7 +225,7 @@ GEM
       libddwaf (~> 1.24.1.0.0)
       logger
       msgpack
-    datadog-ci (1.21.0)
+    datadog-ci (1.21.1)
       datadog (~> 2.4)
       drb
       msgpack
@@ -414,15 +414,7 @@ GEM
     libdatadog (18.1.0.1.0)
     libdatadog (18.1.0.1.0-aarch64-linux)
     libdatadog (18.1.0.1.0-x86_64-linux)
-    libddwaf (1.24.1.0.0)
-      ffi (~> 1.0)
-    libddwaf (1.24.1.0.0-aarch64-linux)
-      ffi (~> 1.0)
-    libddwaf (1.24.1.0.0-arm64-darwin)
-      ffi (~> 1.0)
-    libddwaf (1.24.1.0.0-x86_64-darwin)
-      ffi (~> 1.0)
-    libddwaf (1.24.1.0.0-x86_64-linux)
+    libddwaf (1.24.1.0.2)
       ffi (~> 1.0)
     lint_roller (1.1.0)
     listen (3.9.0)
@@ -1095,7 +1087,7 @@ CHECKSUMS
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
   datadog (2.18.0) sha256=cb670e7f99fc3e2b54970b5a9d7c1be68cd2810581e67ee803cef9638f5488f5
-  datadog-ci (1.21.0) sha256=6ccb297d1b7e2eda161d896311d97d022d8b7605350c82d9424e470ca09792e3
+  datadog-ci (1.21.1) sha256=0e0c8749b9aec8bc3cfedb700f957e62eb987a8d6db9b519e3ca12a7e32cdc92
   datadog-ruby_core_source (3.4.1) sha256=fa40f1c3c8f764b6651a6443382b57d39aeb3c9f94b5af98f499bcfc678a2fb9
   date (3.4.1) sha256=bf268e14ef7158009bfeaec40b5fa3c7271906e88b196d958a89d4b408abe64f
   derailed_benchmarks (2.2.1) sha256=654280664fded41c9cd8fc27fc0fcfaf096023afab90eb4ac1185ba70c5d4439
@@ -1173,11 +1165,7 @@ CHECKSUMS
   libdatadog (18.1.0.1.0) sha256=fbdd74d24c2474544418f183a31725c4ee4da85341c1310dcbe292c5ec151b09
   libdatadog (18.1.0.1.0-aarch64-linux) sha256=681576b54d5dd64ff18dca25f36fd2b86c831675d906383f60626533313282a8
   libdatadog (18.1.0.1.0-x86_64-linux) sha256=e5c2a5b0d15aa1edd426a62f687b0efbad6d63592a7022bcbecb735b91d7e048
-  libddwaf (1.24.1.0.0) sha256=1b933ba23313016c57270fbb006566c68149fba4b7ff01e2442798379c6b7037
-  libddwaf (1.24.1.0.0-aarch64-linux) sha256=2e36ddd445357a9216d7bc47ee1eaa4cb9671dd056cc3334316728112948a734
-  libddwaf (1.24.1.0.0-arm64-darwin) sha256=48bc6965571cfe60cff728385fe0a1ea0a5a2d4a1a6d696e6aaa92434075c054
-  libddwaf (1.24.1.0.0-x86_64-darwin) sha256=4a83732cf00ce4d9be238a61e48b717d2b13685a0166be92bbc4a8ede13af9f0
-  libddwaf (1.24.1.0.0-x86_64-linux) sha256=a3b6ff25ba3ca8acd1ff4358cd77bd54af3c57cc301402e701063a9294598449
+  libddwaf (1.24.1.0.2) sha256=ee8b888b609eddf8faff64ed18b0ee2d7631a5712808cebded4a8a3ea7841e61
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   local_time (3.0.3) sha256=c69a8974d993fdf6e60db02977ed23c070f203dcb3a1ff0de52ad3d2393f8303
