@@ -81,7 +81,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       repository_owner: "example",
       repository_name: "test-repo",
       workflow_filename: "ci.yml",
-      environment: nil
+      environment: ""
     )
 
     refute_equal existing_publisher, new_publisher
@@ -93,7 +93,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       repository_owner: "different-owner",
       repository_name: "different-repo",
       workflow_filename: "deploy.yml",
-      environment: nil
+      environment: ""
     )
 
     assert_predicate another_new_publisher, :new_record?
