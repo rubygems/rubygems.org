@@ -73,10 +73,7 @@ class User < ApplicationRecord
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
   validate :unique_with_org_handle
 
-  validates :twitter_username, format: {
-    with: /\A[a-zA-Z0-9_]*\z/,
-    message: "can only contain letters, numbers, and underscores"
-  }, allow_nil: true, length: { within: 0..20 }
+  validates :social_link, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Patterns::URL_VALIDATION_REGEXP }, allow_blank: true
 
   validates :password,
     length: { minimum: 10 },
@@ -344,7 +341,8 @@ class User < ApplicationRecord
       handle: nil, email_confirmed: false,
       unconfirmed_email: nil, blocked_email: nil,
       api_key: nil, confirmation_token: nil, remember_token: nil,
-      twitter_username: nil, webauthn_id: nil, full_name: nil,
+      twitter_username: nil, social_link: nil,
+      webauthn_id: nil, full_name: nil,
       totp_seed: nil, mfa_hashed_recovery_codes: nil,
       mfa_level: :disabled,
       password: SecureRandom.hex(20).encode("UTF-8")
