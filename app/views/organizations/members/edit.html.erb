@@ -1,4 +1,4 @@
-<% 
+<%
   add_breadcrumb "Dashboard", dashboard_path
   add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle)
   add_breadcrumb t("breadcrumbs.members"), organization_memberships_path(@organization)
@@ -16,6 +16,11 @@
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
     <%= c.title @membership.user.handle, icon: "organizations" %>
+    <% if @membership.confirmed? %>
+      <div class="flex flex-col">
+        <p class="text-neutral-500 capitalize">Joined: <%= nice_date_for(@membership.confirmed_at) %></p>
+      </div>
+    <% end %>
   <% end %>
 
   <%= form_with(model: @membership, url: organization_membership_path(@organization, @membership), method: :patch) do |f| %>
