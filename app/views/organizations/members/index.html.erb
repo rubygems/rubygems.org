@@ -1,4 +1,4 @@
-<% 
+<%
   add_breadcrumb "Dashboard", dashboard_path
   add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle)
   add_breadcrumb t("breadcrumbs.members"), organization_memberships_path(@organization)
@@ -14,30 +14,30 @@
 
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
-		<%= c.title t("organizations.show.members"), icon: "organizations", count: @memberships_count %>
+    <%= c.title t("organizations.show.members"), icon: "organizations", count: @memberships_count %>
     <% if policy(@organization).invite_member? %>
       <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
     <% end %>
   <% end %>
-    <%= c.divided_list do %>
-		<% @memberships.each do |membership| %>
-			<%= c.list_item_to(
-				policy(@organization).list_memberships? ? edit_organization_membership_path(@organization, membership) : profile_path(membership.user),
-				title: membership.user.handle,
-			) do %>
-				<div class="flex flex-col w-full justify-between">
-					<div class="flex flex-row w-full items-center justify-between">
-						<p class="text-neutral-800 dark:text-white"><%= membership.user.handle %></p>
-						<% if policy(@organization).list_memberships? %>
-							<% if membership.confirmed? %>
-							<p class="text-neutral-500 capitalize"><%= membership.role %></p>
-							<% else %>
-							<p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
-							<% end %>
-						<% end %>
-					</div>
-				</div>
-			<% end %>
-		<% end %>
+  <%= c.divided_list do %>
+    <% @memberships.each do |membership| %>
+      <%= c.list_item_to(
+        policy(@organization).list_memberships? ? edit_organization_membership_path(@organization, membership) : profile_path(membership.user),
+        title: membership.user.handle,
+      ) do %>
+        <div class="flex flex-col w-full justify-between">
+            <div class="flex flex-row w-full items-center justify-between">
+            <p class="text-neutral-800 dark:text-white"><%= membership.user.handle %></p>
+            <% if policy(@organization).list_memberships? %>
+              <% if membership.confirmed? %>
+                <p class="text-neutral-500 capitalize"><%= membership.role %></p>
+              <% else %>
+                <p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
