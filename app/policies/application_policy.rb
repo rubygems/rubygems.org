@@ -37,14 +37,11 @@ class ApplicationPolicy
 
   def rubygem_owned_by?(user)
     rubygem.owned_by?(user) ||
-      organization_member_with_role?(user, :maintainer) ||
       deny(t(:forbidden))
   end
 
-  def rubygem_owned_by_with_role?(user, minimum_required_role:, minimum_required_org_role: :owner)
-    organization_member_with_role?(user, minimum_required_org_role) ||
-      rubygem.owned_by_with_role?(user, minimum_required_role) ||
-      deny(t(:forbidden))
+  def rubygem_owned_by_with_role?(user, minimum_required_role:)
+    rubygem.owned_by_with_role?(user, minimum_required_role) || deny(t(:forbidden))
   end
 
   def organization_member_with_role?(user, minimum_role)

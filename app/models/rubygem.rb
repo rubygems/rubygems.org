@@ -186,13 +186,17 @@ class Rubygem < ApplicationRecord
   end
 
   def owned_by?(user)
-    return false unless user
-    ownerships.exists?(user_id: user.id) || (owned_by_organization? && user_authorized_for_organization?(user))
+    owned_by_with_role?(user, :maintainer)
   end
 
   def owned_by_with_role?(user, minimum_required_role)
     return false if user.blank?
-    ownerships.user_with_minimum_role(user, minimum_required_role).exists?
+
+    if owned_by_organization?
+      organization.memberships.where(user: user).with_minimum_role(minimum_required_role).exists?
+    else
+      ownerships.user_with_minimum_role(user, minimum_required_role).exists?
+    end
   rescue KeyError
     false
   end
