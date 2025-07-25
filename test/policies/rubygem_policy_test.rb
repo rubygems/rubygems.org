@@ -48,12 +48,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :configure_oidc?
     end
 
-    should "only allow owners, org owners and admins" do
+    should "only allow org owners and admins when owned by an org" do
       assert_authorized org_policy!(@org_owner), :configure_oidc?
       assert_authorized org_policy!(@org_admin), :configure_oidc?
-      assert_authorized org_policy!(@owner), :configure_oidc?
 
       refute_authorized org_policy!(@org_maintainer), :configure_oidc?
+      refute_authorized org_policy!(@owner), :configure_oidc?
       refute_authorized org_policy!(@user), :configure_oidc?
       refute_authorized org_policy!(nil), :configure_oidc?
     end
@@ -71,10 +71,11 @@ class RubygemPolicyTest < PolicyTestCase
       assert_authorized org_policy!(@org_owner), :show_events?
       assert_authorized org_policy!(@org_admin), :show_events?
       assert_authorized org_policy!(@org_maintainer), :show_events?
-      assert_authorized org_policy!(@owner), :show_events?
-      assert_authorized org_policy!(@maintainer), :show_events?
 
+      # the gem is owned by an org, so org membership is prioritized
       refute_authorized org_policy!(@user), :show_events?
+      refute_authorized org_policy!(@owner), :show_events?
+      refute_authorized org_policy!(@maintainer), :show_events?
       refute_authorized org_policy!(nil), :show_events?
     end
   end
@@ -87,12 +88,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :configure_trusted_publishers?
     end
 
-    should "only allow owners, org owners and admins" do
+    should "only allow org owners and admins when gem is owned by an org" do
       assert_authorized org_policy!(@org_owner), :configure_trusted_publishers?
       assert_authorized org_policy!(@org_admin), :configure_trusted_publishers?
-      assert_authorized org_policy!(@owner), :configure_trusted_publishers?
 
       refute_authorized org_policy!(@org_maintainer), :configure_trusted_publishers?
+      refute_authorized org_policy!(@owner), :configure_trusted_publishers?
       refute_authorized org_policy!(@maintainer), :configure_trusted_publishers?
       refute_authorized org_policy!(@user), :configure_trusted_publishers?
       refute_authorized org_policy!(nil), :configure_trusted_publishers?
@@ -107,12 +108,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :show_unconfirmed_ownerships?
     end
 
-    should "only allow owners, org owners and admins" do
+    should "only allow org owners and admins when gem is owned by an org" do
       assert_authorized org_policy!(@org_owner), :show_unconfirmed_ownerships?
       assert_authorized org_policy!(@org_admin), :show_unconfirmed_ownerships?
-      assert_authorized org_policy!(@owner), :show_unconfirmed_ownerships?
 
       refute_authorized org_policy!(@org_maintainer), :show_unconfirmed_ownerships?
+      refute_authorized org_policy!(@owner), :show_unconfirmed_ownerships?
       refute_authorized org_policy!(@user), :show_unconfirmed_ownerships?
       refute_authorized org_policy!(nil), :show_unconfirmed_ownerships?
     end
