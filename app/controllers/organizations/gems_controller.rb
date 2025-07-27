@@ -1,13 +1,9 @@
-class Organizations::GemsController < ApplicationController
-  before_action :redirect_to_signin, unless: :signed_in?
-  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
-  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
-
+class Organizations::GemsController < Organizations::BaseController
   before_action :find_organization, only: %i[index]
 
-  layout "subject"
+  skip_before_action :redirect_to_signin, only: %i[index]
 
-  # GET /organizations/organization_id/gems
+  layout "subject"
 
   def index
     @gems = @organization.rubygems.with_versions.by_downloads.preload(:most_recent_version, :gem_download).load_async

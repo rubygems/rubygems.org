@@ -7,6 +7,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.policies_acknowledged_at = Time.zone.now
     if @user.save
       Mailer.email_confirmation(@user).deliver_later
       flash[:notice] = t(".email_sent")

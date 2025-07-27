@@ -102,6 +102,16 @@ nl:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -271,6 +281,7 @@ nl:
         settings: Instellingen
         edit_profile: Wijzig profiel
         search_gem_html: Gems Zoeken&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Startpagina
@@ -280,6 +291,7 @@ nl:
     subscriptions: Abonnementen
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -397,6 +409,7 @@ nl:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -404,6 +417,34 @@ nl:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount:
@@ -710,7 +751,9 @@ nl:
       reserved_namespace:
     dependencies:
       header: "%{title} afhankelijkheden"
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header:
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:
@@ -748,6 +791,12 @@ nl:
     security_events:
       title:
       description_html:
+    transfer:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
   reverse_dependencies:
     index:
       title:

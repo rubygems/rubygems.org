@@ -88,6 +88,8 @@ module Gemcutter
     config.action_dispatch.default_headers.merge!(
       "Cross-Origin-Opener-Policy" => "same-origin"
     )
+
+    config.flipper.preload = false
   end
 
   def self.config
@@ -106,6 +108,7 @@ module Gemcutter
   MFA_KEY_EXPIRY = 30.minutes
   OWNERSHIP_TOKEN_EXPIRES_AFTER = 48.hours
   POPULAR_DAYS_LIMIT = 70.days
+  MEMBERSHIP_INVITE_EXPIRES_AFTER = 7.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
   SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze

@@ -26,7 +26,7 @@ class ApplicationPolicy
 
   delegate :t, to: I18n
 
-  def deny(error = t(:forbidden))
+  def deny(error = t(:forbidden)) # rubocop:disable Naming/PredicateMethod
     @error = error
     false
   end

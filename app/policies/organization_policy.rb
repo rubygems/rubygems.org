@@ -22,6 +22,8 @@ class OrganizationPolicy < ApplicationPolicy
     organization_member_with_role?(user, :admin) || deny(t(:forbidden))
   end
 
+  alias transfer_gem? add_gem?
+
   def remove_gem?
     organization_member_with_role?(user, :owner) || deny(t(:forbidden))
   end
@@ -32,6 +34,10 @@ class OrganizationPolicy < ApplicationPolicy
 
   def list_memberships?
     organization_member_with_role?(user, :maintainer) || deny(t(:forbidden))
+  end
+
+  def invite_member?
+    organization_member_with_role?(user, :admin) || deny(t(:forbidden))
   end
 
   def destroy?

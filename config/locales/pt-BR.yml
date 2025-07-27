@@ -109,6 +109,16 @@ pt-BR:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -277,6 +287,7 @@ pt-BR:
         settings: Configurações da Conta
         edit_profile: Editar Perfil
         search_gem_html: Buscar Gems&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Início
@@ -286,6 +297,7 @@ pt-BR:
     subscriptions: Observando
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
@@ -410,6 +422,7 @@ pt-BR:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -417,6 +430,34 @@ pt-BR:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount:
@@ -722,7 +763,9 @@ pt-BR:
       reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header:
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header: Autores
       self_no_mfa_warning_html:
       not_using_mfa_warning_show: "* Alguns donos não estão usando MFA. Clique para
@@ -772,6 +815,12 @@ pt-BR:
     security_events:
       title:
       description_html:
+    transfer:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
   reverse_dependencies:
     index:
       title: Dependências Reversas para %{name}

@@ -103,6 +103,16 @@ ja:
           attributes:
             handle:
               invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -269,6 +279,7 @@ ja:
         settings: 設定
         edit_profile: プロフィールを編集
         search_gem_html: gemを検索...
+        members:
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
         to blog post)！"
   breadcrumbs:
@@ -279,6 +290,7 @@ ja:
     subscriptions: 購読
     gems: gem
     members: メンバー
+    invite_member:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -408,6 +420,7 @@ ja:
   organizations:
     index:
       title: 組織
+      no_organizations:
     show:
       organization: 組織
       gems: gem
@@ -415,6 +428,34 @@ ja:
       members: メンバー
       no_history: まだ履歴がありません
       no_gems: まだgemがありません
+      add_member:
+      invite:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"
@@ -723,7 +764,9 @@ ja:
       reserved_namespace: この名前空間はrubygems.orgにより予約されています。
     dependencies:
       header: "%{title}依存関係"
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header: 作者
       self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証（MFA）
         の有効化</a>をご検討ください。
@@ -766,6 +809,12 @@ ja:
     security_events:
       title: セキュリティ事象
       description_html: このページには%{gem}に起こったセキュリティ事象が表示されます。何か疑わしい活動が見られたときは、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
+    transfer:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
   reverse_dependencies:
     index:
       title: "%{name}の被依存関係"

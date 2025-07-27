@@ -24,4 +24,31 @@ class PoliciesControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "when acknowledge is requested" do
+    context "without authenticated user" do
+      should "redirect to sign in" do
+        patch :acknowledge, params: { accept: "1" }
+
+        assert_response :redirect
+        assert_redirected_to sign_in_path
+      end
+    end
+
+    context "with authenticated user" do
+      setup do
+        @user = create(:user, policies_acknowledged_at: nil)
+        sign_in_as(@user)
+      end
+
+      should "acknowledge policies and redirect" do
+        patch :acknowledge, params: { accept: "1" }
+
+        assert_response :redirect
+        @user.reload
+
+        assert_not_nil @user.policies_acknowledged_at
+      end
+    end
+  end
 end

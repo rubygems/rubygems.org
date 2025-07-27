@@ -274,6 +274,10 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.handle, @user.name
     end
 
+    should "return user:handle for #flipper_id" do
+      assert_equal "user:#{@user.handle}", @user.flipper_id
+    end
+
     should "setup a field to toggle showing email with default falsš" do
       refute_predicate @user, :public_email?
     end
@@ -999,6 +1003,29 @@ class UserTest < ActiveSupport::TestCase
 
     should "return an empty string for nil" do
       assert_equal "", User.normalize_email(nil)
+    end
+  end
+
+  context "#policies_acknowledged_at" do
+    should "log an event when the policies is acknowledged" do
+      user = create(:user)
+      user.acknowledge_policies!
+
+      assert_event Events::UserEvent::POLICIES_ACKNOWLEDGED, {}, user.reload.events.where(tag: Events::UserEvent::POLICIES_ACKNOWLEDGED).sole
+    end
+  end
+
+  context "#policies_acknowledged?" do
+    should "return true when policies_acknowledged_at is set" do
+      user = create(:user, policies_acknowledged_at: Time.current)
+
+      assert_predicate user, :policies_acknowledged?
+    end
+
+    should "return false when policies_acknowledged_at is not set" do
+      user = create(:user, policies_acknowledged_at: nil)
+
+      refute_predicate user, :policies_acknowledged?
     end
   end
 end

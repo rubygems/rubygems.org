@@ -15,10 +15,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
   end
 
-  def sign_in
+  def sign_in(user = nil)
+    user ||= @user
+
     visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
+    fill_in "Email or Username", with: user.reload.email
+    fill_in "Password", with: user.password
     click_button "Sign in"
 
     assert page.has_content?("Dashboard")

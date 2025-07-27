@@ -187,19 +187,21 @@
   color: #b6aa51; }
 
 .stats__graph__gem__count {
-  position: absolute;
-  right: 12px; }
+  position: absolute; }
+  @media (max-width: 709px) {
+    .stats__graph__gem__count {
+      left: 12px;
+      top: 7px; } }
   @media (max-width: 419px) {
     .stats__graph__gem__count {
       font-size: 12px; } }
   @media (min-width: 420px) and (max-width: 709px) {
     .stats__graph__gem__count {
       font-size: 13px; } }
-  @media (max-width: 709px) {
-    .stats__graph__gem__count {
-      top: 7px; } }
   @media (min-width: 710px) {
     .stats__graph__gem__count {
+      right: 12px;
+      left: 12px;
       top: 5px;
       font-size: 15px; } }
   @-moz-document url-prefix() {

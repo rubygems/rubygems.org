@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OrganizationOnboardingTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @owner = create(:user)
     @maintainer = create(:user)
@@ -101,6 +103,18 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
           assert_predicate @onboarding, :invalid?
         end
       end
+    end
+  end
+
+  context "#save" do
+    should "not create invites for rubygems owned by the owner but not selected" do
+      other_owner = create(:user)
+      create(:rubygem, owners: [@owner, other_owner])
+
+      @onboarding = create(:organization_onboarding, name_type: "gem", organization_handle: @rubygem.name, created_by: @owner,
+namesake_rubygem: @rubygem, rubygems: [@rubygem])
+
+      assert_equal @onboarding.users, [@maintainer]
     end
   end
 
@@ -215,7 +229,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       setup do
         @contributor = create(:user)
         @ownership = create(:ownership, user: @contributor, rubygem: @rubygem, role: "owner")
-        @onboarding.invites << create(:organization_onboarding_invite, user: @contributor, role: :outside_contributor)
+        @onboarding.invites << create(:organization_invite, user: @contributor, role: :outside_contributor)
       end
 
       should "not remove the Ownership record" do
@@ -257,6 +271,12 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         end
       end
     end
+  end
+
+  should "should schedule an email to be sent to each user that was onboarded" do
+    @onboarding.onboard!
+
+    assert_enqueued_jobs @onboarding.users.size
   end
 
   context "#available_rubygems" do

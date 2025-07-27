@@ -81,10 +81,22 @@
         <%= c.list_item_to(profile_path(membership.user.handle)) do %>
           <div class="flex justify-between">
             <p class="text-neutral-800 dark:text-white"><%= membership.user.name %></p>
-            <p class="text-neutral-500 capitalize"><%= membership.role %></p>
+            <% if @organization.user_is_member?(current_user) %>
+              <% if membership.confirmed? %>
+              <p class="text-neutral-500 capitalize"><%= membership.role %></p>
+              <% else %>
+              <p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
+              <% end %>
+            <% end %>
           </div>
         <% end %>
       <% end %>
+    <% end %>
+
+    <% if policy(@organization).invite_member? %>
+      <div class="pt-6 flex flex-row justify-end">
+        <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
+      </div>
     <% end %>
   <% end %>
 <% end %>

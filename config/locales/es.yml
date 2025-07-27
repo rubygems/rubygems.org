@@ -112,6 +112,16 @@ es:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -288,6 +298,7 @@ es:
         settings: Configuración
         edit_profile: Editar
         search_gem_html: Buscar gemas&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Inicio
@@ -297,6 +308,7 @@ es:
     subscriptions: Suscripciones
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -444,6 +456,7 @@ es:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -451,6 +464,34 @@ es:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount: "%{count} Rubystas"
@@ -810,7 +851,9 @@ es:
       reserved_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
       header: dependencias de %{title}
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header: Autores
       self_no_mfa_warning_html: Considera por favor <a href="/settings/edit">activar
         la autenticación de múltiples factores (AMF)</a> para mantener tu cuenta segura.
@@ -863,6 +906,12 @@ es:
     security_events:
       title:
       description_html:
+    transfer:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
   reverse_dependencies:
     index:
       title: Dependencias inversas para %{name}

@@ -5,8 +5,6 @@ class Admin::OrganizationOnboardingPolicy < Admin::ApplicationPolicy
     end
   end
 
-  has_association :organization_onboarding_invites
-
   def avo_index?
     rubygems_org_admin?
   end

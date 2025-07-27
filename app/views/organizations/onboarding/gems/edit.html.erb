@@ -1,3 +1,5 @@
+<% @title = "Create an Organization" %>
+
 <% content_for :aside do %>
   <%= render "organizations/onboarding/summary", current_step: 2 %>
 <% end %>
@@ -15,7 +17,7 @@
         <input
           type="checkbox"
           data-checkbox-select-all-target="checkboxAll"
-          class="h-5 w-5 fill-white text-orange-500 bg-white dark:bg-black border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 rounded disabled:text-neutral-700 dark:disabled:text-neutral-700"
+          class="h-5 w-5 border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 disabled:text-neutral-700 dark:disabled:text-neutral-700 text-orange-500"
         />
       </label>
     </div>
@@ -39,7 +41,7 @@
               "organization_onboarding[rubygems][]",
               gem.id,
               @organization_onboarding.rubygems.include?(gem.id),
-              class: "h-5 w-5 fill-white text-orange-500 bg-white dark:bg-black border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 rounded disabled:text-neutral-700 dark:disabled:text-neutral-700",
+              class: "h-5 w-5 text-orange-500 border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 rounded disabled:text-neutral-700 dark:disabled:text-neutral-700",
               disabled: required,
               data: data,
             ) %>

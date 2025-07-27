@@ -1,5 +1,10 @@
 password = "super-secret-password"
 
+org = Organization.create_with(
+  name: "RubyGems",
+  handle: "rubygems"
+).find_or_create_by!(name: "RubyGems")
+
 author = User.create_with(
   handle: "gem-author",
   password: password,
@@ -19,6 +24,17 @@ user = User.create_with(
   email_confirmed: true
 ).find_or_create_by!(email: "gem-user@example.com")
 
+Membership.create_with(
+  role: :owner,
+  confirmed_at: Time.zone.now,
+  invited_by: nil
+).find_or_create_by!(user: author, organization: org)
+
+Membership.create_with(
+  role: :owner,
+  invited_by: author
+).find_or_create_by!(user: maintainer, organization: org)
+
 User.create_with(
   handle: "gem-security",
   email_confirmed: true,
@@ -36,6 +52,12 @@ rubygem1 = Rubygem.find_or_create_by!(
 ) do |rubygem|
   rubygem.ownerships.new(user: author, authorizer: author).confirm!
   rubygem.ownerships.new(user: maintainer, authorizer: author).confirm!
+end
+
+rubygem2 = Rubygem.find_or_create_by!(
+  name: "rubygem2"
+) do |rubygem|
+  rubygem.organization = org
 end
 
 Version.create_with(
@@ -77,6 +99,13 @@ Version.create_with(
   yanked_at: Time.utc(2020, 3, 3),
   sha256: Digest::SHA2.base64digest("rubygem_requestable-1.0.0.gem")
 ).find_or_create_by!(rubygem: rubygem1, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
+
+Version.create_with(
+  indexed: true,
+  pusher: author,
+  dependencies: [Dependency.new(gem_dependency: Gem::Dependency.new("rubygem0", "~> 1.0.0"))],
+  sha256: Digest::SHA2.base64digest("rubygem2-1.0.0.gem")
+).find_or_create_by!(rubygem: rubygem2, number: "1.0.0", platform: "ruby", gem_platform: "ruby")
 
 user.web_hooks.find_or_create_by!(url: "https://example.com/rubygem0", rubygem: rubygem0)
 user.web_hooks.find_or_create_by!(url: "http://example.com/all", rubygem: nil)
@@ -296,6 +325,8 @@ author.webauthn_credentials.create_with(nickname: "segiddins development")
   )
 
 IpAddress.find_or_create_by!(ip_address: "127.0.0.1")
+
+FeatureFlag.enable_globally(:organizations)
 
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:

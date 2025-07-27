@@ -55,7 +55,7 @@ module ApplicationHelper
     gem.downloads * 1.0 / count * 100
   end
 
-  def active?(path)
+  def active_status(path)
     "is-active" if request.path_info == path
   end
 
@@ -105,5 +105,9 @@ module ApplicationHelper
       data:,
       **kwargs
     )
+  end
+
+  def organizations_enabled?(user)
+    FeatureFlag.enabled?(FeatureFlag::ORGANIZATIONS, user)
   end
 end

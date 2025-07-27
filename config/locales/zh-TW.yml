@@ -103,6 +103,16 @@ zh-TW:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -269,6 +279,7 @@ zh-TW:
         settings: 設定
         edit_profile: 編輯個人檔案
         search_gem_html: 搜尋 Gems&hellip;
+        members:
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
   breadcrumbs:
     home: 首頁
@@ -278,6 +289,7 @@ zh-TW:
     subscriptions: 訂閱
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -403,6 +415,7 @@ zh-TW:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -410,6 +423,34 @@ zh-TW:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount: "%{count} 位 Ruby 愛好者"
@@ -712,7 +753,9 @@ zh-TW:
       reserved_namespace: 此命名空間被 rubygems.org 保留。
     dependencies:
       header: "%{title} 相依性套件"
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header: 作者
       self_no_mfa_warning_html:
       not_using_mfa_warning_show: "* 某些擁有者未使用多重要素驗證 (MFA)。點擊此處以顯示完整名單。"
@@ -750,6 +793,12 @@ zh-TW:
     security_events:
       title:
       description_html:
+    transfer:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
   reverse_dependencies:
     index:
       title: "%{name} 的反向依賴"

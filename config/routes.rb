@@ -219,6 +219,20 @@ Rails.application.routes.draw do
         get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
       end
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
+
+      get "transfer", to: redirect("/gems/%{rubygem_id}/transfer/organization")
+      delete "transfer", to: "rubygems/transfers#destroy"
+
+      namespace :transfer do
+        get "organization", to: "/rubygems/transfer/organizations#new"
+        post "organization", to: "/rubygems/transfer/organizations#create"
+
+        get "users", to: "/rubygems/transfer/users#edit"
+        patch "users", to: "/rubygems/transfer/users#update"
+
+        get "confirm", to: "/rubygems/transfer/confirmations#edit"
+        patch "confirm", to: "/rubygems/transfer/confirmations#update"
+      end
     end
 
     resources :webauthn_credentials, only: :destroy
@@ -280,6 +294,8 @@ Rails.application.routes.draw do
       end
     end
     resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
+      resources :memberships, controller: 'organizations/members', except: :show
+      resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
       resources :gems, only: :index, controller: 'organizations/gems'
     end
   end
@@ -313,7 +329,11 @@ Rails.application.routes.draw do
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
   resources :policies, only: %i[index show], constraints: { format: :html, policy: Regexp.union(Gemcutter::POLICY_PAGES) },
-    param: :policy
+    param: :policy do
+      collection do
+        patch :acknowledge
+      end
+    end
 
   ################################################################################
   # Internal Routes
@@ -343,9 +363,10 @@ Rails.application.routes.draw do
         mount GoodJob::Engine, at: 'good_job'
         mount MaintenanceTasks::Engine, at: "maintenance_tasks"
         mount PgHero::Engine, at: "pghero"
+        mount Flipper::UI.app(Flipper), at: '/features'
       end
 
-      mount Avo::Engine, at: Avo.configuration.root_path
+      mount_avo
     end
   end
 

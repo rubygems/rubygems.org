@@ -31,11 +31,14 @@ require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
 require "helpers/policy_helpers"
+require "helpers/feature_flag_helpers"
+require "helpers/rake_task_helper"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "helpers/avo_helpers"
 require "webmock/minitest"
 require "phlex/testing/rails/view_helper"
+require "rake"
 
 # setup license early since some tests are testing Avo outside of requests
 # and license is set with first request
@@ -57,7 +60,7 @@ WebMock.globally_stub_request(:after_local_stubs) do |request|
 end
 
 Capybara.default_max_wait_time = 2
-Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
+Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}" if ENV["DEVCONTAINER_APP_HOST"].blank?
 Capybara.always_include_port = true
 Capybara.server_port = 31_337
 Capybara.server = :puma, { Silent: true }
@@ -79,6 +82,7 @@ class ActiveSupport::TestCase
   include GemHelpers
   include EmailHelpers
   include PasswordHelpers
+  include FeatureFlagHelpers
 
   parallelize_setup do |_worker|
     SemanticLogger.reopen
@@ -92,15 +96,7 @@ class ActiveSupport::TestCase
     Unpwn.offline = true
     OmniAuth.config.mock_auth.clear
 
-    @launch_darkly = LaunchDarkly::Integrations::TestData.data_source
-    config = LaunchDarkly::Config.new(data_source: @launch_darkly, send_events: false)
-    Rails.configuration.launch_darkly_client = LaunchDarkly::LDClient.new("", config)
-
     ActionMailer::Base.deliveries.clear
-  end
-
-  teardown do
-    Rails.configuration.launch_darkly_client.close
   end
 
   def page
@@ -185,6 +181,9 @@ class ActiveSupport::TestCase
     fullscreen_headless_chrome_driver
 
     visit sign_in_path
+
+    assert page.has_content?("Sign in")
+
     fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
@@ -298,8 +297,6 @@ class ActionDispatch::IntegrationTest
     assert_nil request.env[:clearance].current_user
   end
 end
-
-Gemcutter::Application.load_tasks
 
 # Force loading of ActionDispatch::SystemTesting::* helpers
 _ = ActionDispatch::SystemTestCase

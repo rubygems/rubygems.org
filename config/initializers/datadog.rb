@@ -1,17 +1,14 @@
 require "app_revision"
 
-return if Rails.env.local? # Don't enable Datadog in local Development & Test environments
-
 Datadog.configure do |c|
   # unified service tagging
-
   c.service = "rubygems.org"
   c.version = AppRevision.version
   c.env = Rails.env
 
   # Enabling datadog functionality
-
-  enabled = ENV["DD_AGENT_HOST"].present? && !defined?(Rails::Console)
+  running_locally = Rails.env.local? || defined?(Rails::Console)
+  enabled = !running_locally || ENV["DD_AGENT_HOST"].present?
   c.runtime_metrics.enabled = enabled
   c.profiling.enabled = enabled
   c.tracing.enabled = enabled
@@ -31,26 +28,29 @@ Datadog.configure do |c|
   }
 
   # Configuring the datadog library
-
   c.logger.instance = SemanticLogger[Datadog]
 
-  # Configuring tracing
+  # Configuring tracing (when enabled)
+  if enabled
+    c.tracing.report_hostname = true
 
-  c.tracing.report_hostname = true
-
-  c.tracing.instrument :aws
-  c.tracing.instrument :dalli
-  c.tracing.instrument :faraday, split_by_domain: true, service_name: c.service
-  c.tracing.instrument :http, split_by_domain: true, service_name: c.service
-  c.tracing.instrument :opensearch, service_name: c.service
-  c.tracing.instrument :pg, comment_propagation: 'full'
-  c.tracing.instrument :rails, request_queuing: true
-  c.tracing.instrument :shoryuken if defined?(Shoryuken)
+    c.tracing.instrument :aws
+    c.tracing.instrument :dalli
+    c.tracing.instrument :faraday, split_by_domain: true, service_name: c.service
+    c.tracing.instrument :http, split_by_domain: true, service_name: c.service
+    c.tracing.instrument :opensearch, service_name: c.service
+    c.tracing.instrument :pg, comment_propagation: 'full'
+    c.tracing.instrument :rails, request_queuing: true
+    c.tracing.instrument :shoryuken if defined?(Shoryuken)
+  end
 end
 
-Datadog::Tracing.before_flush(
-  # Remove spans for the /internal/ping endpoint
-  Datadog::Tracing::Pipeline::SpanFilter.new { |span| span.resource == "Internal::PingController#index" }
-)
+# Only set up span filtering when tracing is enabled
+if Datadog.configuration.tracing.enabled
+  Datadog::Tracing.before_flush(
+    # Remove spans for the /internal/ping endpoint
+    Datadog::Tracing::Pipeline::SpanFilter.new { |span| span.resource == "Internal::PingController#index" }
+  )
+end
 
 require "datadog/auto_instrument"

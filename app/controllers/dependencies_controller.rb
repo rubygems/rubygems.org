@@ -28,11 +28,11 @@ class DependenciesController < ApplicationController
     reqs = Gem::Dependency.new(name, requirements.split(/\s*,\s*/))
 
     matching_versions = dependency.rubygem.public_versions_for_dependencies.select { |v| reqs.match?(name, v.number) }
-    match = matching_versions.detect { |v| match_platform(platform, v.platform) } || matching_versions.first
+    match = matching_versions.detect { |v| match_platform?(platform, v.platform) } || matching_versions.first
     match&.slug
   end
 
-  def match_platform(platform, dep_platform)
+  def match_platform?(platform, dep_platform)
     Gem::Platform.new(platform) == Gem::Platform.new(dep_platform)
   end
 

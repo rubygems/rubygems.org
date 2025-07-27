@@ -442,4 +442,36 @@ class RubygemsControllerTest < ActionController::TestCase
       should respond_with :redirect
     end
   end
+
+  context "when gem is owned by an organization" do
+    setup do
+      @owner = create(:user)
+      @rubygem = create(:rubygem)
+      @version = create(:version, rubygem: @rubygem)
+      @organization = create(:organization, name: "Test Org", handle: "test-org", rubygems: [@rubygem], owners: [@owner])
+    end
+
+    should "link the organization profile page" do
+      get :show, params: { id: @rubygem.slug }
+
+      assert page.has_link?(@organization.name, href: organization_path(@organization))
+    end
+  end
+
+  context "when a gem is owned by an organization and has outside contributors" do
+    setup do
+      @owner = create(:user)
+      @rubygem = create(:rubygem, owners: [@owner])
+      @version = create(:version, rubygem: @rubygem)
+      @organization = create(:organization, owners: [@owner])
+      @outside_contributor = create(:user)
+      create(:ownership, rubygem: @rubygem, user: @outside_contributor, role: :maintainer)
+    end
+
+    should "display outside contributors" do
+      get :show, params: { id: @rubygem.slug }
+
+      assert page.has_selector?("a[href='#{profile_path(@outside_contributor.display_id)}']")
+    end
+  end
 end

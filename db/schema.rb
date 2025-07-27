@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
-  enable_extension "plpgsql"
 
   create_table "admin_github_users", force: :cascade do |t|
     t.string "login"
@@ -146,6 +146,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.index ["ip_address_id"], name: "index_events_user_events_on_ip_address_id"
     t.index ["tag"], name: "index_events_user_events_on_tag"
     t.index ["user_id"], name: "index_events_user_events_on_user_id"
+  end
+
+  create_table "flipper_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_flipper_features_on_key", unique: true
+  end
+
+  create_table "flipper_gates", force: :cascade do |t|
+    t.string "feature_key", null: false
+    t.string "key", null: false
+    t.text "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
   create_table "gem_downloads", id: :serial, force: :cascade do |t|
@@ -347,6 +363,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role", default: 50, null: false
+    t.datetime "invitation_expires_at"
+    t.bigint "invited_by_id"
+    t.index ["invited_by_id"], name: "index_memberships_on_invited_by_id"
     t.index ["organization_id"], name: "index_memberships_on_organization_id"
     t.index ["user_id", "organization_id"], name: "index_memberships_on_user_id_and_organization_id", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
@@ -418,6 +437,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
+  end
+
+  create_table "organization_invites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "invitable_type", null: false
+    t.bigint "invitable_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invitable_type", "invitable_id"], name: "index_organization_invites_on_invitable"
+    t.index ["invitable_type", "invitable_id"], name: "index_organization_invites_on_invitable_type_and_invitable_id"
+    t.index ["user_id"], name: "index_organization_invites_on_user_id"
   end
 
   create_table "organization_onboarding_invites", force: :cascade do |t|
@@ -495,6 +526,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
   end
 
+  create_table "rubygem_transfers", force: :cascade do |t|
+    t.string "status", default: "pending", null: false
+    t.bigint "organization_id"
+    t.bigint "created_by_id", null: false
+    t.bigint "rubygem_id", null: false
+    t.datetime "completed_at"
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_rubygem_transfers_on_created_by_id"
+    t.index ["organization_id"], name: "index_rubygem_transfers_on_organization_id"
+    t.index ["rubygem_id"], name: "index_rubygem_transfers_on_rubygem_id"
+  end
+
   create_table "rubygems", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: nil
@@ -557,11 +602,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.string "mfa_hashed_recovery_codes", default: [], array: true
     t.boolean "public_email", default: false, null: false
     t.datetime "deleted_at"
+    t.datetime "policies_acknowledged_at"
     t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
     t.index ["id", "token"], name: "index_users_on_id_and_token"
+    t.index ["id"], name: "index_users_on_policies_not_acknowledged", where: "(policies_acknowledged_at IS NULL)"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["token"], name: "index_users_on_token"
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
@@ -612,7 +659,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_201204) do
     t.index ["pusher_api_key_id"], name: "index_versions_on_pusher_api_key_id"
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
-t.index ["rubygem_id", "position", "created_at"], name: "index_versions_on_rubygem_id_and_position_and_created_at", order: { created_at: :desc }, where: "(indexed = true)", include: ["full_name", "number", "platform"]
+    t.index ["rubygem_id", "position", "created_at"], name: "index_versions_on_rubygem_id_and_position_and_created_at", order: { created_at: :desc }, where: "(indexed = true)", include: ["full_name", "number", "platform"]
   end
 
   create_table "web_hooks", id: :serial, force: :cascade do |t|
@@ -676,6 +723,7 @@ t.index ["rubygem_id", "position", "created_at"], name: "index_versions_on_rubyg
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "organization_invites", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
@@ -685,6 +733,9 @@ t.index ["rubygem_id", "position", "created_at"], name: "index_versions_on_rubyg
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "rubygem_transfers", "organizations"
+  add_foreign_key "rubygem_transfers", "rubygems"
+  add_foreign_key "rubygem_transfers", "users", column: "created_by_id"
   add_foreign_key "rubygems", "organizations", on_delete: :nullify
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"

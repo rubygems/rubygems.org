@@ -8,7 +8,7 @@ class Events::TableComponentTest < ComponentTest
     include ActiveModel::Serializers::JSON
 
     def self.belongs_to(...) = nil
-    def has_attribute?(name) = respond_to?(name) # rubocop:disable Naming/PredicateName
+    def has_attribute?(name) = respond_to?(name) # rubocop:disable Naming/PredicatePrefix
 
     attribute :tag, :string
     attribute :additional

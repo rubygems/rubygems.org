@@ -11,5 +11,5 @@ class Avo::Fields::GlobalIdField < Avo::Fields::BelongsToField
 
   def view_component_name = "BelongsToField"
 
-  def is_polymorphic? = true # rubocop:disable Naming/PredicateName
+  def is_polymorphic? = true # rubocop:disable Naming/PredicatePrefix
 end

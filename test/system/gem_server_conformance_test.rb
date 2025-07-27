@@ -5,6 +5,7 @@ require_relative "../../lib/gemcutter/middleware/hostess"
 class GemServerConformanceTest < ApplicationSystemTestCase
   include ActionDispatch::Assertions::RoutingAssertions
   include ActiveJob::TestHelper
+  include RakeTaskHelper
 
   setup do
     @tmp_versions_file = Tempfile.new("tmp_versions_file")
@@ -13,6 +14,8 @@ class GemServerConformanceTest < ApplicationSystemTestCase
     Rails.application.config.rubygems.stubs(:[]).with("versions_file_location").returns(tmp_path)
     Rails.application.config.rubygems.stubs(:[]).with("s3_compact_index_bucket").returns("s3_compact_index_bucket")
     Rails.application.config.rubygems.stubs(:[]).with("s3_contents_bucket").returns("s3_contents_bucket")
+
+    setup_rake_tasks("compact_index.rake")
 
     test = self
     Rails.application.routes.disable_clear_and_finalize = true
@@ -23,7 +26,6 @@ class GemServerConformanceTest < ApplicationSystemTestCase
       }
       post "/rebuild_versions_list", to: lambda { |_env|
         Rake::Task["compact_index:update_versions_file"].execute
-        Rake::Task["compact_index:update_versions_file"].reenable
         [200, {}, ["OK"]]
       }
       hostess = Gemcutter::Middleware::Hostess.new(nil)

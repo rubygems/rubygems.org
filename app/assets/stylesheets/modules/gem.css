@@ -411,3 +411,10 @@
     width: 100%;
   }
 }
+
+.gem__organization-name {
+    padding: 16px 0;
+    display: block;
+    color: #141c22;
+    transition-duration: 0.25s;
+    transition-property: color; }
