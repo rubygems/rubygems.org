@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class PasswordResetTest < SystemTest
+class PasswordResetTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
   def password_reset_link
