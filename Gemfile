@@ -82,7 +82,7 @@ end
 
 # Logging
 gem "amazing_print", "~> 1.8"
-gem "rails_semantic_logger", "~> 4.17"
+gem "rails_semantic_logger", "~> 4.18"
 gem "pp", "0.6.2"
 
 # Former default gems
