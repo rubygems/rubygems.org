@@ -26,6 +26,14 @@ class Organization < ApplicationRecord
     memberships.exists?(user: user)
   end
 
+  def owned_by?(user)
+    memberships.where(user: user).with_minimum_role(:owner).exists?
+  end
+
+  def administered_by?(user)
+    memberships.where(user: user).with_minimum_role(:admin).exists?
+  end
+
   def self.find_by_handle(handle)
     find_by("lower(handle) = lower(?)", handle)
   end
