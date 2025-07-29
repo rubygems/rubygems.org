@@ -44,7 +44,7 @@ class RubygemTransfer < ApplicationRecord
   private
 
   def remove_ownerships!
-    invited_users = invites.includes(:user).reject { |it| it.role.nil? || it.outside_contributor? }.map(&:user)
+    invited_users = invites.includes(:user).reject { |invite| invite.role.nil? || invite.outside_contributor? }.map(&:user)
     invited_users << created_by
 
     Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: invited_users, rubygem: rubygem).destroy_all
