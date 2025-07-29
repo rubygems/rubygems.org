@@ -3,6 +3,7 @@ module MaintenanceTasksAuditable
 
   prepended do
     include Auditable
+
     around_action :audit_action
 
     def audit_action(&)

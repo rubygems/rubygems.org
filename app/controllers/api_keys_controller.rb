@@ -5,6 +5,7 @@ class ApiKeysController < ApplicationController
   include ApiKeyable
 
   include SessionVerifiable
+
   verify_session_before
 
   def index

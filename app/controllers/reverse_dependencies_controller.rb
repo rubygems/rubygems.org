@@ -1,5 +1,6 @@
 class ReverseDependenciesController < ApplicationController
   include LatestVersion
+
   before_action :find_rubygem, only: [:index]
   before_action :latest_version, only: [:index]
   before_action :set_page, only: [:index]
