@@ -410,51 +410,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    context "with a user" do
-      setup do
-        @rubygem.save
-        @user = create(:user)
-      end
-
-      should "be owned by a user in ownership" do
-        create(:ownership, user: @user, rubygem: @rubygem)
-
-        assert @rubygem.owned_by?(@user)
-        refute_predicate @rubygem, :unowned?
-      end
-
-      should "be not owned if no ownerships" do
-        assert_empty @rubygem.ownerships
-        refute @rubygem.owned_by?(@user)
-        assert_predicate @rubygem, :unowned?
-      end
-
-      should "be not owned if no user" do
-        refute @rubygem.owned_by?(nil)
-        assert_predicate @rubygem, :unowned?
-      end
-    end
-
-    context "with a user that belongs to an organization" do
-      setup do
-        @owner = create(:user)
-        @admin = create(:user)
-        @maintainer = create(:user)
-        @guest = create(:user)
-
-        @organization = create(:organization, admins: [@admin], owners: [@owner], maintainers: [@maintainer], rubygems: [@rubygem])
-      end
-
-      should "be owned by organization user" do
-        assert @rubygem.owned_by?(@owner)
-        assert @rubygem.owned_by?(@admin)
-        assert @rubygem.owned_by?(@maintainer)
-        refute @rubygem.owned_by?(@guest)
-
-        refute_predicate @rubygem, :unowned?
-      end
-    end
-
     context "with subscribed users" do
       setup do
         @subscribed_user   = create(:user)
@@ -665,8 +620,8 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem_with_version.versions.first.update! indexed: false
       end
 
-      should "still be owned" do
-        assert @rubygem_with_version.ownerships.include?(@owner)
+      should "still have ownerships" do
+        assert_predicate @rubygem_with_version.ownerships.where(user: @owner), :exists?
       end
 
       should "no longer be indexed" do
@@ -1180,65 +1135,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_predicate @version_one, :yanked?
       refute_predicate @version_two, :yanked?
       refute_predicate @version_three, :yanked?
-    end
-  end
-
-  context "#owned_by_with_role?" do
-    setup do
-      @rubygem = create(:rubygem)
-      @owner = create(:user)
-    end
-
-    context "when the user is not an owner of a gem" do
-      should "return false" do
-        refute @rubygem.owned_by_with_role?(@owner, :maintainer)
-      end
-    end
-
-    context "when the user is an owner of a gem" do
-      setup do
-        @ownership = create(:ownership, user: @owner, rubygem: @rubygem)
-      end
-
-      should "return true" do
-        assert @rubygem.owned_by_with_role?(@owner, :maintainer)
-      end
-    end
-
-    context "when the role is less than the given value" do
-      setup do
-        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :maintainer)
-      end
-
-      should "return false" do
-        refute @rubygem.owned_by_with_role?(@owner, :owner)
-      end
-    end
-
-    context "when the role is more than the given value" do
-      setup do
-        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
-      end
-
-      should "return true" do
-        assert @rubygem.owned_by_with_role?(@owner, :maintainer)
-      end
-    end
-
-    context "when the role is equal to the given role" do
-      setup do
-        @ownership = create(:ownership, user: @owner, rubygem: @rubygem, role: :owner)
-      end
-
-      should "return true" do
-        assert @rubygem.owned_by_with_role?(@owner, :owner)
-      end
-    end
-
-    context "when the given role does not exist" do
-      should "not raise an argument" do
-        refute @rubygem.owned_by_with_role?(@owner, :nonexistent_role)
-      end
     end
   end
 end

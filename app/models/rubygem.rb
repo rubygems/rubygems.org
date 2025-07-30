@@ -185,22 +185,6 @@ class Rubygem < ApplicationRecord
     versions.indexed.any?
   end
 
-  def owned_by?(user)
-    owned_by_with_role?(user, :maintainer)
-  end
-
-  def owned_by_with_role?(user, minimum_required_role)
-    return false if user.blank?
-
-    if owned_by_organization?
-      organization.memberships.where(user: user).with_minimum_role(minimum_required_role).exists?
-    else
-      ownerships.user_with_minimum_role(user, minimum_required_role).exists?
-    end
-  rescue KeyError
-    false
-  end
-
   def unconfirmed_ownerships
     ownerships_including_unconfirmed.unconfirmed
   end
