@@ -24,6 +24,10 @@ class RubygemPolicy < ApplicationPolicy
     gem_permissions.can_push? || deny
   end
 
+  def show_mfa_status?
+    gem_permissions.can_push? || deny
+  end
+
   def show_unconfirmed_ownerships?
     gem_permissions.can_perform_gem_admin? || deny
   end
