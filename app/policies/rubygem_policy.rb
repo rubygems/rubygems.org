@@ -13,11 +13,11 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def configure_oidc?
-    gem_permissions.can_admin? || deny
+    gem_permissions.can_perform_gem_admin? || deny
   end
 
   def configure_trusted_publishers?
-    gem_permissions.can_admin? || deny
+    gem_permissions.can_perform_gem_admin? || deny
   end
 
   def show_events?
@@ -25,7 +25,7 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_unconfirmed_ownerships?
-    gem_permissions.can_admin? || deny
+    gem_permissions.can_perform_gem_admin? || deny
   end
 
   def add_owner?

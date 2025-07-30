@@ -49,39 +49,39 @@ class GemPermissionsTest < ActiveSupport::TestCase
       end
     end
 
-    context "#can_admin?" do
+    context "#can_perform_gem_admin?" do
       should "return false when user is a maintainer of the organization" do
         create(:membership, organization: @organization, user: @user, role: :maintainer)
 
-        refute_predicate @permissions, :can_admin?
+        refute_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return true when user is an admin of the organization" do
         create(:membership, organization: @organization, user: @user, role: :admin)
 
-        assert_predicate @permissions, :can_admin?
+        assert_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return true when user is an owner of the organization" do
         create(:membership, organization: @organization, user: @user, role: :owner)
 
-        assert_predicate @permissions, :can_admin?
+        assert_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return false when user is not a member of the organization" do
-        refute_predicate @permissions, :can_admin?
+        refute_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return false when user has unconfirmed admin membership" do
         create(:membership, organization: @organization, user: @user, role: :admin, confirmed_at: nil)
 
-        refute_predicate @permissions, :can_admin?
+        refute_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return false when user is nil" do
         permissions = GemPermissions.new(@rubygem, nil)
 
-        refute_predicate permissions, :can_admin?
+        refute_predicate permissions, :can_perform_gem_admin?
       end
     end
 
@@ -152,27 +152,27 @@ class GemPermissionsTest < ActiveSupport::TestCase
       end
     end
 
-    context "#can_admin?" do
+    context "#can_perform_gem_admin?" do
       should "return false when user has maintainer ownership" do
         create(:ownership, user: @user, rubygem: @rubygem, role: :maintainer)
 
-        refute_predicate @permissions, :can_admin?
+        refute_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return true when user has owner ownership" do
         create(:ownership, user: @user, rubygem: @rubygem, role: :owner)
 
-        assert_predicate @permissions, :can_admin?
+        assert_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return false when user has no ownership" do
-        refute_predicate @permissions, :can_admin?
+        refute_predicate @permissions, :can_perform_gem_admin?
       end
 
       should "return false when user is nil" do
         permissions = GemPermissions.new(@rubygem, nil)
 
-        refute_predicate permissions, :can_admin?
+        refute_predicate permissions, :can_perform_gem_admin?
       end
     end
 
@@ -219,7 +219,7 @@ class GemPermissionsTest < ActiveSupport::TestCase
 
       # All valid roles should work
       assert_predicate permissions, :can_push?
-      assert_predicate permissions, :can_admin?
+      assert_predicate permissions, :can_perform_gem_admin?
       assert_predicate permissions, :can_manage_owners?
     end
   end

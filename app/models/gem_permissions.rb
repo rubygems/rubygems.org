@@ -18,7 +18,7 @@ class GemPermissions
     role_granted?(:owner)
   end
 
-  def can_admin?
+  def can_perform_gem_admin?
     role_granted?(:admin)
   end
 
