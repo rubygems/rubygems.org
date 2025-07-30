@@ -71,11 +71,10 @@ class RubygemPolicyTest < PolicyTestCase
       assert_authorized org_policy!(@org_owner), :show_events?
       assert_authorized org_policy!(@org_admin), :show_events?
       assert_authorized org_policy!(@org_maintainer), :show_events?
+      assert_authorized org_policy!(@owner), :show_events?
+      assert_authorized org_policy!(@maintainer), :show_events?
 
-      # the gem is owned by an org, so org membership is prioritized
       refute_authorized org_policy!(@user), :show_events?
-      refute_authorized org_policy!(@owner), :show_events?
-      refute_authorized org_policy!(@maintainer), :show_events?
       refute_authorized org_policy!(nil), :show_events?
     end
   end
