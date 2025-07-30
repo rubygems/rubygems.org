@@ -666,7 +666,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "still be owned" do
-        assert @rubygem_with_version.owned_by?(@owner)
+        assert @rubygem_with_version.ownerships.include?(@owner)
       end
 
       should "no longer be indexed" do
