@@ -5,14 +5,20 @@ class OIDC::RubygemTrustedPublisherPolicy < ApplicationPolicy
   delegate :rubygem, to: :record
 
   def show?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    permissions.can_manage_owners? || deny
   end
 
   def create?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    permissions.can_manage_owners? || deny
   end
 
   def destroy?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    permissions.can_manage_owners? || deny
+  end
+
+  private
+
+  def permissions
+    GemPermissions.new(rubygem, user)
   end
 end
