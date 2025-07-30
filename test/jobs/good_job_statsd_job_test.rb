@@ -39,6 +39,7 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
     self.queue_adapter = ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :async)
     queue_as :concurrency_limited
     include GoodJob::ActiveJobExtensions::Concurrency
+
     good_job_control_concurrency_with(
       perform_limit: 0,
       key: name

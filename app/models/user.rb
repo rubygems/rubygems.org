@@ -1,12 +1,12 @@
 class User < ApplicationRecord
-  include UserMultifactorMethods
   include Clearance::User
-
-  include Gravtastic
+  include Discard::Model
   include Events::Recordable
+  include Gravtastic
+  include UserMultifactorMethods
+
   is_gravtastic default: "retro"
 
-  include Discard::Model
   self.discard_column = :deleted_at
 
   default_scope { not_deleted }

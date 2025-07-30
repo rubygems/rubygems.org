@@ -1,5 +1,6 @@
 class OwnersMailer < ApplicationMailer
   include OwnersHelper
+
   helper :owners
 
   def ownership_confirmation(ownership)

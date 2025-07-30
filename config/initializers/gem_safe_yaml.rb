@@ -6,5 +6,6 @@ Gem::SafeYAML.aliases_enabled = false
 
 Gem::Package.class_eval do
   include SemanticLogger::Loggable
+
   delegate :warn, to: :logger
 end
