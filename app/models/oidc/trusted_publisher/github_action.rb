@@ -147,7 +147,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def workflow_slug = ".github/workflows/#{workflow_filename}"
 
-  def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
+  def can_push?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
 
   private
 

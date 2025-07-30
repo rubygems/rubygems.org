@@ -275,8 +275,8 @@ class User < ApplicationRecord
     blocked_email.present?
   end
 
-  def owns_gem?(rubygem)
-    rubygem.owned_by?(self)
+  def can_push?(rubygem)
+    GemPermissions.new(rubygem, self).can_push?
   end
 
   def acknowledge_policies!
