@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.22.4)
-      avo (= 3.22.4)
-      avo-dynamic_filters (= 3.22.4)
-      avo-pro (= 3.22.4)
+    avo-advanced (3.22.5)
+      avo (= 3.22.5)
+      avo-dynamic_filters (= 3.22.5)
+      avo-pro (= 3.22.5)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.22.4)
-      avo (= 3.22.4)
+    avo-dashboards (3.22.5)
+      avo (= 3.22.5)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.22.4)
-      avo (= 3.22.4)
+    avo-dynamic_filters (3.22.5)
+      avo (= 3.22.5)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.22.4)
-      avo (= 3.22.4)
+    avo-menu (3.22.5)
+      avo (= 3.22.5)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.22.4)
-      avo (= 3.22.4)
-      avo-dashboards (= 3.22.4)
-      avo-menu (= 3.22.4)
+    avo-pro (3.22.5)
+      avo (= 3.22.5)
+      avo-dashboards (= 3.22.5)
+      avo-menu (= 3.22.5)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.3)
     attr_required (1.0.2)
-    avo (3.22.4)
+    avo (3.22.5)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -1054,13 +1054,13 @@ CHECKSUMS
   argon2 (2.3.2) sha256=62b04170af37ca8d9975bc6e24dd3b74794e82a98e6d8cfa9ae95a76804a6f89
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.22.4) sha256=43d9c59bb9e3b5bd21aed3df98352812ef2289091eab43bb53c72e044b408d70
-  avo-advanced (3.22.4) sha256=96a82826bd8b8fd4331f97f9ed3b41392deb4f9e2fff52416a72ae766879fcc6
-  avo-dashboards (3.22.4) sha256=6007ebbeba278c39e71486cf308622d59c326c145640a0af421e595f4a08682a
-  avo-dynamic_filters (3.22.4) sha256=ac9cb786c2a0f2fb88b66748efa9f028fc7a8e4a3cb332d86db835c316508989
+  avo (3.22.5) sha256=f211eaa39ab3b2bfab5619b8be1015ee46ab5c4c468eec1205aa500ab091062c
+  avo-advanced (3.22.5) sha256=1cf148bb7c72351b65d9dada950c84154120ebc13aaf06844f6adc33fab7a82b
+  avo-dashboards (3.22.5) sha256=cd3bbbae0850c5f355742314edf9f5c0a8c49161e6061f19d0db0b2cbf3689fa
+  avo-dynamic_filters (3.22.5) sha256=cb9a616badddd20f811afbc8c6a85d2884f70ddf3456eaecdd6b1b8c91890e4d
   avo-heroicons (0.1.1) sha256=65cf6b4165691585d172d885ba30b8c7cf979615907febf6f34c1a6569bdbff6
-  avo-menu (3.22.4) sha256=764d3eb9c13a2000c24c85ff258a3fc3ef92862f79c43ca74d25f29f2054c713
-  avo-pro (3.22.4) sha256=7604f0712f550357d6f37b14e2444e2c192b85780a52ea1d3946bff5117f46b3
+  avo-menu (3.22.5) sha256=e0596b2aff4b227c234f8e2b1a0e4a987d567d006e5195dfa3bc46c251b36e18
+  avo-pro (3.22.5) sha256=9fa98c4a5e508e473b5c58b543f75078957f089f6bcba55a89727a45be104ba7
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
   aws-partitions (1.1136.0) sha256=230a5bf8be8f236fce1a723f990027e4b798989bf9adeee6992f08bdc2138498
