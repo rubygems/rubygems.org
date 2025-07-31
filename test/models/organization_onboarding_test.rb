@@ -189,6 +189,16 @@ namesake_rubygem: @rubygem, rubygems: [@rubygem])
 
   context "#onboard!" do
     setup do
+      # Setup for "when a user is marked as an Outside Contributor" context
+      @contributor = create(:user)
+      @ownership = create(:ownership, user: @contributor, rubygem: @rubygem, role: "owner")
+      @onboarding.invites << create(:organization_invite, user: @contributor, role: :outside_contributor)
+
+      # Setup for "when outside contributor has maintainer ownership role" context
+      @maintainer_contributor = create(:user)
+      @maintainer_ownership = create(:ownership, user: @maintainer_contributor, rubygem: @rubygem, role: "maintainer")
+      @onboarding.invites << create(:organization_invite, user: @maintainer_contributor, role: :outside_contributor)
+
       @onboarding.onboard!
     end
 
@@ -226,14 +236,39 @@ namesake_rubygem: @rubygem, rubygems: [@rubygem])
     end
 
     context "when a user is marked as an Outside Contributor" do
-      setup do
-        @contributor = create(:user)
-        @ownership = create(:ownership, user: @contributor, rubygem: @rubygem, role: "owner")
-        @onboarding.invites << create(:organization_invite, user: @contributor, role: :outside_contributor)
-      end
-
       should "not remove the Ownership record" do
         assert_not_nil Ownership.find_by(user: @contributor, rubygem: @rubygem)
+      end
+
+      should "demote the ownership from owner to maintainer role" do
+        ownership = Ownership.find_by(user: @contributor, rubygem: @rubygem)
+
+        assert_equal "maintainer", ownership.role
+      end
+
+      should "not create an organization membership for the outside contributor" do
+        membership = @onboarding.organization.memberships.find_by(user: @contributor)
+
+        assert_nil membership
+      end
+
+      should "not affect regular membership users' ownerships" do
+        assert_nil Ownership.find_by(user: @owner, rubygem: @rubygem)
+        assert_nil Ownership.find_by(user: @maintainer, rubygem: @rubygem)
+      end
+
+      context "when outside contributor has maintainer ownership role" do
+        should "keep maintainer ownership role unchanged" do
+          ownership = Ownership.find_by(user: @maintainer_contributor, rubygem: @rubygem)
+
+          assert_equal "maintainer", ownership.role
+        end
+
+        should "not create an organization membership" do
+          membership = @onboarding.organization.memberships.find_by(user: @maintainer_contributor)
+
+          assert_nil membership
+        end
       end
     end
 

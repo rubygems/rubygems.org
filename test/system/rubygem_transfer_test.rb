@@ -68,6 +68,39 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
     assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
   end
 
+  test "transfer a rubygem to an organization with outside contributor" do
+    maintainer = create(:user)
+    create(:ownership, rubygem: @rubygem, user: maintainer, role: :owner)
+
+    sign_in @owner
+
+    visit rubygem_path(@rubygem.slug)
+
+    click_on "Transfer to Organization"
+
+    assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
+
+    select @organization.name, from: "Organization"
+
+    click_on "Continue"
+
+    select "Outside Contributor", from: maintainer.handle
+
+    click_on "Continue"
+
+    assert_text "Review the summary"
+
+    click_on "Transfer Gem"
+
+    assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
+
+    # Verify the outside contributor still has ownership but was demoted to maintainer
+    ownership = Ownership.find_by(user: maintainer, rubygem: @rubygem)
+
+    assert_not_nil ownership
+    assert_equal "maintainer", ownership.role
+  end
+
   test "cancelling a rubygem transfer" do
     sign_in @owner
 

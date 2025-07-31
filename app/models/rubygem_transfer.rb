@@ -26,7 +26,8 @@ class RubygemTransfer < ApplicationRecord
 
       rubygem.update!(organization_id: organization.id)
 
-      remove_ownerships!
+      remove_ownerships_for_joining_members
+      demote_outside_contributors_to_maintainer
       email_onboarded_users(memberships)
     end
   rescue ActiveRecord::ActiveRecordError => e
@@ -43,11 +44,19 @@ class RubygemTransfer < ApplicationRecord
 
   private
 
-  def remove_ownerships!
+  def remove_ownerships_for_joining_members
     invited_users = invites.includes(:user).reject { |invite| invite.role.nil? || invite.outside_contributor? }.map(&:user)
     invited_users << created_by
 
     Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: invited_users, rubygem: rubygem).destroy_all
+  end
+
+  def demote_outside_contributors_to_maintainer
+    outside_contributors = invites.select(&:outside_contributor?).map(&:user)
+
+    Ownership.includes(:rubygem, :user, api_key_rubygem_scopes: :api_key)
+      .where(user: outside_contributors, rubygem: rubygem)
+      .update_all(role: :maintainer)
   end
 
   def users_for_rubygem
