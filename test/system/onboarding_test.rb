@@ -114,4 +114,45 @@ class OnboardingTest < ApplicationSystemTestCase
 
     click_button "Create Org"
   end
+
+  test "onboarding with outside contributors demotes their ownership to maintainer" do
+    outside_contributor = create(:user)
+    create(:ownership, user: outside_contributor, rubygem: @rubygem, role: "owner")
+
+    visit sign_in_path
+
+    click_link "login as #{@user[:handle]}"
+
+    visit organization_onboarding_name_path
+
+    find("label", text: "a gem you own").click
+
+    select @rubygem.name, from: "rubygems.org/organizations/"
+
+    click_button "Continue"
+
+    assert_text "Add gems to your Org"
+
+    click_button "Continue"
+
+    assert_text "Manage Members"
+
+    select "Outside Contributor", from: outside_contributor.handle
+
+    click_button "Continue"
+
+    assert_text "Finalize"
+
+    click_button "Create Org"
+
+    ownership = Ownership.find_by(user: outside_contributor, rubygem: @rubygem)
+
+    assert_not_nil ownership
+    assert_equal "maintainer", ownership.role
+
+    organization = Organization.find_by(handle: @rubygem.name)
+    membership = organization.memberships.find_by(user: outside_contributor)
+
+    assert_nil membership
+  end
 end
