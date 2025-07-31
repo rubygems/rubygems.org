@@ -32,7 +32,7 @@ class Api::V1::DeletionsController < Api::BaseController
     if !@rubygem.hosted?
       render plain: response_with_mfa_warning(t(:this_rubygem_could_not_be_found)),
              status: :not_found
-    elsif !@rubygem.owned_by?(@api_key.user)
+    elsif !can_delete_gem?(@api_key.user)
       render_forbidden response_with_mfa_warning("You do not have permission to delete this gem.")
     else
       begin
@@ -44,5 +44,9 @@ class Api::V1::DeletionsController < Api::BaseController
                status: :not_found
       end
     end
+  end
+
+  def can_delete_gem?(user)
+    GemPermissions.new(@rubygem, user).can_push?
   end
 end

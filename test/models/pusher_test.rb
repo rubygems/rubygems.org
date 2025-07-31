@@ -504,7 +504,7 @@ class PusherTest < ActiveSupport::TestCase
       owner = stub("owner", to_gid: nil)
       @api_key.update_columns(owner_id: 0, owner_type: "stub")
       @cutter.stubs(:owner).returns owner
-      owner.expects(:owns_gem?).with(@cutter.rubygem).returns(false)
+      owner.expects(:can_push?).with(@cutter.rubygem).returns(false)
 
       refute @cutter.authorize
       assert_equal "You are not allowed to push this gem.",
@@ -541,7 +541,7 @@ class PusherTest < ActiveSupport::TestCase
         owner = stub("owner", to_gid: nil)
         @api_key.update_columns(owner_id: 0, owner_type: "stub")
         @cutter.stubs(:owner).returns owner
-        owner.expects(:owns_gem?).with(@rubygem).returns(false)
+        owner.expects(:can_push?).with(@rubygem).returns(false)
 
         refute @cutter.authorize
         assert_equal "You are not allowed to push this gem.",
