@@ -429,12 +429,16 @@ nl:
       destroy:
         member_removed:
         cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
       index:
         invite:
         pending:
       edit:
         update:
         delete:
+        resend_invitation:
       new:
         handle:
         role:

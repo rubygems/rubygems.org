@@ -173,4 +173,45 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to organization_memberships_path(@organization)
     assert_equal "You cannot remove yourself from the organization.", flash[:alert]
   end
+
+  test "PATCH /organizations/:organization_handle/members/:id/resend_invitation with pending membership" do
+    pending_user = create(:user)
+    pending_membership = create(:membership, :pending, organization: @organization, user: pending_user)
+
+    assert_enqueued_with job: ActionMailer::MailDeliveryJob do
+      patch resend_invitation_organization_membership_path(@organization, pending_membership)
+    end
+
+    assert_redirected_to organization_memberships_path(@organization)
+    assert_equal "Invitation resent successfully.", flash[:notice]
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id/resend_invitation with confirmed membership" do
+    patch resend_invitation_organization_membership_path(@organization, @membership)
+
+    assert_redirected_to organization_memberships_path(@organization)
+    assert_equal "Member is already confirmed.", flash[:alert]
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id/resend_invitation as a maintainer" do
+    @membership.update(role: "maintainer")
+    pending_user = create(:user)
+    pending_membership = create(:membership, :pending, organization: @organization, user: pending_user)
+
+    patch resend_invitation_organization_membership_path(@organization, pending_membership)
+
+    assert_response :not_found
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id/resend as a guest" do
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    pending_user = create(:user)
+    pending_membership = create(:membership, :pending, organization: @organization, user: pending_user)
+
+    patch resend_invitation_organization_membership_path(@organization, pending_membership)
+
+    assert_response :not_found
+  end
 end

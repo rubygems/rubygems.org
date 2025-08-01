@@ -294,7 +294,11 @@ Rails.application.routes.draw do
       end
     end
     resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
-      resources :memberships, controller: 'organizations/members', except: :show
+      resources :memberships, controller: 'organizations/members', except: :show do
+        member do
+          patch :resend_invitation
+        end
+      end
       resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
       resources :gems, only: :index, controller: 'organizations/gems'
     end
