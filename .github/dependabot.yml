@@ -15,6 +15,8 @@ updates:
       patterns: ["rails", "active*", "action*", "railties"]
     aws:
       patterns: ["aws-*"]
+    flipper:
+      patterns: ["flipper*"]
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
