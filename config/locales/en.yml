@@ -439,12 +439,16 @@ en:
       destroy:
         member_removed: Member removed successfully.
         cannot_remove_self: You cannot remove yourself from the organization.
+      resend_invitation:
+        invitation_resent: Invitation resent successfully.
+        already_confirmed: Member is already confirmed.
       index:
         invite: Invite
         pending: Pending
       edit:
         update: Update
         delete: Delete
+        resend_invitation: Resend Invitation
       new:
         handle: Handle
         role: Role
