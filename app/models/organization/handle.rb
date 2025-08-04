@@ -94,7 +94,6 @@ class Organization::Handle
     register
     root
     ruby
-    rubygems
     search
     security
     security_events
