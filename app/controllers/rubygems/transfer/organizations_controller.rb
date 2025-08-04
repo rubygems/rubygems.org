@@ -18,7 +18,7 @@ class Rubygems::Transfer::OrganizationsController < Rubygems::Transfer::BaseCont
     if @rubygem_transfer.save
       redirect_to rubygem_transfer_users_path(@rubygem.slug)
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

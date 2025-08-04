@@ -10,7 +10,7 @@ class Rubygems::Transfer::UsersController < Rubygems::Transfer::BaseController
     if @rubygem_transfer.update(rubygem_transfer_params)
       redirect_to rubygem_transfer_confirm_path(@rubygem.slug)
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

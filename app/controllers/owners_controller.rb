@@ -49,7 +49,7 @@ class OwnersController < ApplicationController
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
     else
-      index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity
+      index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_content
     end
   end
 
@@ -61,7 +61,7 @@ class OwnersController < ApplicationController
       OwnersMailer.with(ownership: @ownership, authorizer: current_user).owner_updated.deliver_later
       redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".success_notice", handle: @ownership.user.name)
     else
-      index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_entity
+      index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_content
     end
   end
 

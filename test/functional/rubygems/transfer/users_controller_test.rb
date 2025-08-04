@@ -44,6 +44,6 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 end

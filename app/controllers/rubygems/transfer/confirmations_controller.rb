@@ -14,6 +14,6 @@ class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseCont
     redirect_to rubygem_path(@rubygem.slug)
   rescue ActiveRecord::ActiveRecordError
     flash[:error] = "Onboarding error: #{@rubygem_transfer.error}"
-    render :edit, status: :unprocessable_entity
+    render :edit, status: :unprocessable_content
   end
 end
