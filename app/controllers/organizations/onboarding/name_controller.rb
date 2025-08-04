@@ -6,7 +6,7 @@ class Organizations::Onboarding::NameController < Organizations::Onboarding::Bas
     if @organization_onboarding.update(onboarding_name_params)
       redirect_to organization_onboarding_gems_path
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

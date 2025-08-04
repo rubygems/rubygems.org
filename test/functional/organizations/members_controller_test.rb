@@ -89,7 +89,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
   test "POST /organizations/:organization_handle/members with invalid values" do
     post organization_memberships_path(@organization), params: { membership: { user: "invalid role", role: :invalid_role } }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "POST /organizations/:organization_handle/members as a maintainer" do
@@ -122,7 +122,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
   test "PATCH /organizations/:organization_handle/members/:id with invalid values" do
     patch organization_membership_path(@organization, @membership), params: { membership: { role: "invalid_role" } }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "PATCH /organizations/:organization_handle/members/:id as a guest" do

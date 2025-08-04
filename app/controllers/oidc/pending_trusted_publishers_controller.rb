@@ -32,7 +32,7 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
       flash.now[:error] = trusted_publisher.errors.full_messages.to_sentence
       render OIDC::PendingTrustedPublishers::NewView.new(
         pending_trusted_publisher: trusted_publisher
-      ), status: :unprocessable_entity
+      ), status: :unprocessable_content
     end
   end
 

@@ -55,7 +55,7 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       notmygem = create(:rubygem)
       patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [notmygem.id] } }
 
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
       assert_equal [@namesake_rubygem.id], @organization_onboarding.reload.rubygems
     end
   end

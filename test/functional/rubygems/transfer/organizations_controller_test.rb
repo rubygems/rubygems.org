@@ -41,6 +41,6 @@ class Rubygems::Transfer::OrganizationsControllerTest < ActionDispatch::Integrat
   test "POST /rubygems/:rubygem_id/transfer/organization with invalid organization" do
     post rubygem_transfer_organization_path(@rubygem.slug, as: @user), params: { rubygem_transfer: { organization: "invalid_handle" } }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 end
