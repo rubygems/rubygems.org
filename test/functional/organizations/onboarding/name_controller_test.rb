@@ -90,7 +90,7 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
           organization_name: ""
         } }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
       end
     end
   end

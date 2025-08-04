@@ -25,7 +25,7 @@ class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::Integrat
 
     patch rubygem_transfer_confirm_path(@rubygem.slug, as: @user)
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_equal flash[:error], "Onboarding error: #{error_message}"
   end
 

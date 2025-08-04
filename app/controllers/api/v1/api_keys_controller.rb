@@ -39,7 +39,7 @@ class Api::V1::ApiKeysController < Api::BaseController
           respond_with "Scopes for the API key #{api_key.name} updated"
         else
           errors = api_key.errors.full_messages
-          respond_with "Failed to update scopes for the API key #{api_key.name}: #{errors}", status: :unprocessable_entity
+          respond_with "Failed to update scopes for the API key #{api_key.name}: #{errors}", status: :unprocessable_content
         end
       end
     end
@@ -69,7 +69,7 @@ class Api::V1::ApiKeysController < Api::BaseController
       Mailer.api_key_created(api_key.id).deliver_later
       respond_with key
     else
-      respond_with api_key.errors.full_messages.to_sentence, status: :unprocessable_entity
+      respond_with api_key.errors.full_messages.to_sentence, status: :unprocessable_content
     end
   end
 

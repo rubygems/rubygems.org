@@ -23,7 +23,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
     if trusted_publisher.save
       render json: trusted_publisher, status: :created
     else
-      render json: { errors: trusted_publisher.errors, status: :unprocessable_entity }, status: :unprocessable_entity
+      render json: { errors: trusted_publisher.errors, status: :unprocessable_entity }, status: :unprocessable_content
     end
   end
 
@@ -49,7 +49,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
 
     return if @trusted_publisher_type
 
-    render json: { error: t("oidc.trusted_publisher.unsupported_type") }, status: :unprocessable_entity
+    render json: { error: t("oidc.trusted_publisher.unsupported_type") }, status: :unprocessable_content
   end
 
   def create_params

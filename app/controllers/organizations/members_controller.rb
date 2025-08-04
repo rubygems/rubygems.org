@@ -37,7 +37,7 @@ class Organizations::MembersController < Organizations::BaseController
       OrganizationMailer.user_invited(@membership).deliver_later
       redirect_to organization_memberships_path(@organization), notice: t(".member_invited")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -46,7 +46,7 @@ class Organizations::MembersController < Organizations::BaseController
     if @membership.update(membership_params[:membership])
       redirect_to organization_memberships_path(@organization), notice: t(".member_updated")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
