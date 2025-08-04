@@ -53,7 +53,7 @@ class OwnersController < ApplicationController
     end
   end
 
-  # This action is used to update a user's owenrship role. This endpoint currently asssumes
+  # This action is used to update a user's ownership role. This endpoint currently assumes
   # the role is the only thing that can be updated. If more fields are added to the ownership
   # this action will need to be tweaked a bit
   def update
