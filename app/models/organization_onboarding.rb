@@ -27,6 +27,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   with_options if: :name_type_gem? do
     validate :organization_handle_matches_rubygem_name
+    validate :organization_handle_reservable
     after_validation :add_namesake_rubygem
   end
 
@@ -150,6 +151,13 @@ class OrganizationOnboarding < ApplicationRecord
     return if selected_rubygems.any? { it.name == organization_handle }
 
     errors.add(:organization_handle, "must match a rubygem you own")
+  end
+
+  def organization_handle_reservable
+    return if organization_handle.blank?
+    return unless Organization::Handle.reserved?(organization_handle)
+
+    errors.add(:organization_handle, "is reserved and cannot be used")
   end
 
   def created_by_gem_ownerships
