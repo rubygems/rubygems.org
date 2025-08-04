@@ -34,7 +34,7 @@ show_help() {
   cat << EOF
 Usage: ${0##*/} [-h] [-c] [-d DATABASE] [-u USER] FILE
 
-Load a rubygems.org postgresql dump into a datatbase.
+Load a rubygems.org postgresql dump into a database.
 
     -h          display this help and exit
     -c          download the latest file to FILE
