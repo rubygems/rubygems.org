@@ -23,9 +23,7 @@
     <% else %>
       <div class="flex flex-col">
         <% if policy(@organization).invite_member? %>
-          <%= form_with url: resend_invitation_organization_membership_path(@organization, @membership), method: :patch, local: true, class: "mt-2" do |f| %>
-            <%= render ButtonComponent.new t(".resend_invitation"), type: :submit, style: :outline, class: "text-xs px-3 py-1" %>
-          <% end %>
+          <%= render ButtonComponent.new t(".resend_invitation"), resend_invitation_organization_membership_path(@organization, @membership), method: :patch, style: :outline, class: "text-xs px-3 py-1" %>
         <% end %>
       </div>
     <% end %>
