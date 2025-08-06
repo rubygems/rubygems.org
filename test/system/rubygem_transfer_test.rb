@@ -94,11 +94,16 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
 
-    # Verify the outside contributor still has ownership but was demoted to maintainer
-    ownership = Ownership.find_by(user: maintainer, rubygem: @rubygem)
+    visit rubygem_owners_path(@rubygem.slug)
 
-    assert_not_nil ownership
-    assert_equal "maintainer", ownership.role
+    assert_text "Please confirm your password to continue"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+
+    click_button "Confirm"
+
+    # headers:         OWNER             STATUS     MFA                         ADDED BY                      ROLE
+    assert_text "#{maintainer.handle}\nConfirmed\nDisabled\n#{maintainer.ownerships.first.authorizer_name} Maintainer"
   end
 
   test "cancelling a rubygem transfer" do

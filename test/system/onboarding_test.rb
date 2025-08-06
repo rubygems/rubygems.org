@@ -145,14 +145,15 @@ class OnboardingTest < ApplicationSystemTestCase
 
     click_button "Create Org"
 
-    ownership = Ownership.find_by(user: outside_contributor, rubygem: @rubygem)
+    visit rubygem_owners_path(@rubygem.slug)
 
-    assert_not_nil ownership
-    assert_equal "maintainer", ownership.role
+    assert_text "Please confirm your password to continue"
 
-    organization = Organization.find_by(handle: @rubygem.name)
-    membership = organization.memberships.find_by(user: outside_contributor)
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
 
-    assert_nil membership
+    click_button "Confirm"
+
+    # headers:               OWNER                STATUS     MFA                         ADDED BY                               ROLE
+    assert_text "#{outside_contributor.handle}\nConfirmed\nDisabled\n#{outside_contributor.ownerships.first.authorizer_name} Maintainer"
   end
 end
