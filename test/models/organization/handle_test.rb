@@ -28,10 +28,10 @@ class Organization::ReservedHandlesTest < ActiveSupport::TestCase
     should "include common route conflicts" do
       # Test a subset of important reserved handles to ensure they're included
       expected_reserved = %w[
-        onboarding new edit create update destroy index show
-        api admin dashboard profile settings
-        user users organization organizations
-        gem gems search stats
+        new edit create update destroy index show
+        onboarding members users invitation invitations
+        api admin dashboard profile settings users teams
+        gems stats
       ]
 
       expected_reserved.each do |handle|

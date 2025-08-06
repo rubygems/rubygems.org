@@ -1,142 +1,34 @@
 class Organization::Handle
-  # These terms have the potential to conflict application routes or functionality
-  RESERVED = %w[
-    about
-    account
-    activities
-    activity
-    admin
-    administrator
-    api
-    api_key
-    api_keys
-    assets
-    auth
-    backup
-    blog
-    bundler
-    cache
-    cdn
-    config
-    confirmation
-    confirmations
-    contact
+  RESTFUL_ACTIONS = %w[
     create
-    css
-    dashboard
-    data
-    dependencies
-    dependency
     destroy
-    developers
-    docs
-    documentation
-    download
-    downloads
     edit
-    email
-    emails
-    employee
-    events
-    files
-    fonts
-    ftp
-    gem
-    gems
-    group
-    groups
-    help
-    images
     index
-    internal
+    new
+    show
+    update
+  ].freeze
+
+  ROUTES = %w[
+    admin
+    api
+    dashboard
+    gems
     invitation
     invitations
-    invite
-    invites
-    javascripts
-    js
-    legal
-    log
-    login
-    logout
-    logs
-    mail
-    member
     members
-    membership
     memberships
-    moderator
-    multifactor_auth
-    new
-    news
-    notification
-    notifications
-    notifier
-    oauth
     onboarding
-    org
-    organization
-    organizations
-    orgs
-    owner
-    owners
-    page
-    pages
-    password
-    passwords
-    policies
-    policy
-    privacy
     profile
-    public
-    rails
-    rake
-    register
-    root
-    ruby
-    search
-    security
-    security_events
-    service
-    services
-    session
-    sessions
     settings
-    show
-    signin
-    signout
-    signup
-    spec
-    specs
-    staff
-    static
-    statistics
     stats
-    status
-    stylesheets
-    subscription
-    subscriptions
-    support
-    system
-    team
     teams
-    temp
-    terms
-    test
-    tests
-    tmp
-    totp
-    transfer
-    transfers
-    update
-    upload
-    uploads
-    user
     users
-    version
-    versions
-    webauthn
-    www
+  ].freeze
+
+  RESERVED = [
+    *RESTFUL_ACTIONS,
+    *ROUTES
   ].freeze
 
   def self.reserved?(handle)
