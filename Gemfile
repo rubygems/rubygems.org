@@ -76,7 +76,7 @@ gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.22"
+    gem "avo-advanced", "~> 3.23"
   end
 end
 
