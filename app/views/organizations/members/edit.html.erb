@@ -55,7 +55,7 @@
       <% if !@membership.confirmed? %>
         <div class="flex flex-col">
           <% if policy(@organization).invite_member? %>
-            <%= render ButtonComponent.new t(".resend_invitation"), resend_invitation_organization_membership_path(@organization, @membership), method: :patch, style: :outline, class: "text-xs px-3 py-1 mr-3" %>
+            <%= render ButtonComponent.new t(".resend_invitation"), resend_invitation_organization_membership_path(@organization, @membership), type: :link, method: :patch, style: :outline, class: "text-xs px-3 py-1 mr-3" %>
           <% end %>
         </div>
       <% end %>
