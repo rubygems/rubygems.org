@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
-  def initialize(gid:, changes:, unchanged:, view:, user:)
-    super
+  def initialize(gid:, changes:, unchanged:, view:, user:) # rubocop:disable Lint/MissingSuper
     @gid = gid
     @changes = changes
     @unchanged = unchanged
