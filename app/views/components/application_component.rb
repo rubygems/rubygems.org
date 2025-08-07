@@ -7,6 +7,15 @@ class ApplicationComponent < Phlex::HTML
 
   # Register Rails helpers that return HTML content
   register_output_helper :icon_tag
+  register_output_helper :link_to
+  register_output_helper :paginate
+  register_output_helper :time_tag
+  register_output_helper :local_time_ago
+  register_output_helper :avatar
+  # Register Rails helpers that return values
+  register_value_helper :page_entries_info
+  register_value_helper :class_names
+  register_value_helper :current_user
 
   class TranslationHelper
     include ActionView::Helpers::TranslationHelper
