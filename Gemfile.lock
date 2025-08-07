@@ -866,10 +866,9 @@ GEM
     validates_formatting_of (0.9.0)
       activemodel
     version_gem (1.1.1)
-    view_component (3.23.2)
-      activesupport (>= 5.2.0, < 8.1)
+    view_component (4.0.1)
+      activesupport (>= 7.1.0, < 8.1)
       concurrent-ruby (~> 1)
-      method_source (~> 1.0)
     webauthn (3.4.1)
       android_key_attestation (~> 0.3.0)
       bindata (~> 2.4)
@@ -1026,7 +1025,7 @@ DEPENDENCIES
   unpwn (~> 1.0)
   user_agent_parser (~> 2.20)
   validates_formatting_of (~> 0.9)
-  view_component (~> 3.23.2)
+  view_component (~> 4.0.1)
   webauthn (~> 3.4)
   webmock (~> 3.25)
   xml-simple (~> 1.1)
@@ -1365,7 +1364,7 @@ CHECKSUMS
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
   validates_formatting_of (0.9.0) sha256=139590a4b87596dbfb04d93e897bd2e6d30fb849d04fab0343e71ed2ca856e7e
   version_gem (1.1.1) sha256=3c2da6ded29045ddcc0387e152dc634e1f0c490b7128dce0697ccc1cf0915b6c
-  view_component (3.23.2) sha256=3c2fed4b9e38bf074fa3d42ca55eedbb2cc070e0f3c31d7c13a50b0db530892b
+  view_component (4.0.1) sha256=ce7d1138316cb414ea7d831baa24cb29263f10aa7badb069c7601a1c537983ae
   webauthn (3.4.1) sha256=f7c6f69178dd35dcc90313bc0d9b6558002336451d0c19d641ef1280624ac3ea
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
   webmock (3.25.1) sha256=ab9d5d9353bcbe6322c83e1c60a7103988efc7b67cd72ffb9012629c3d396323
