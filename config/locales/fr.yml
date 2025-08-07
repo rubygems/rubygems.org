@@ -429,6 +429,7 @@ fr:
       no_gems:
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -836,6 +837,7 @@ fr:
       title:
       description_html:
     transfer:
+      cancelled:
       organizations:
         new:
           organization:

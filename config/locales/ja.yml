@@ -426,6 +426,7 @@ ja:
       no_gems: まだgemがありません
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -810,6 +811,7 @@ ja:
       title: セキュリティ事象
       description_html: このページには%{gem}に起こったセキュリティ事象が表示されます。何か疑わしい活動が見られたときは、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
     transfer:
+      cancelled:
       organizations:
         new:
           organization:
