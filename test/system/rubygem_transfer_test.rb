@@ -8,26 +8,29 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
     @organization = create(:organization, owners: [@owner])
   end
 
-  test "transfer a rubygem that is not eligible" do
+  test "unable to transfer with maintainer role" do
     maintainer = create(:user)
     create(:ownership, rubygem: @rubygem, user: maintainer, role: :maintainer)
 
     sign_in maintainer
 
-    visit rubygem_path(@rubygem.slug)
+    visit organization_path(@organization.handle)
 
-    assert_no_link "Transfer to Organization"
+    assert_no_link "Transfer"
   end
 
   test "transfer a rubygem to an organization" do
     sign_in @owner
 
-    visit rubygem_path(@rubygem.slug)
-    click_on "Transfer to Organization"
+    visit organization_path(@organization.handle)
+    click_on "Transfer"
 
-    assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
+    assert_current_path organization_transfer_rubygems_path
 
     select @organization.name, from: "Organization"
+    click_on "Continue"
+
+    check @rubygem.name
     click_on "Continue"
 
     assert_text "No owners to manage"
@@ -38,7 +41,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
-    assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
+    assert_text "Your gems have been transferred successfully to #{@organization.name}."
   end
 
   test "transfer a rubygem to an organization with users" do
@@ -47,14 +50,16 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     sign_in @owner
 
-    visit rubygem_path(@rubygem.slug)
+    visit organization_path(@organization.handle)
+    click_on "Transfer"
 
-    click_on "Transfer to Organization"
-
-    assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
+    assert_current_path organization_transfer_rubygems_path
 
     select @organization.name, from: "Organization"
 
+    click_on "Continue"
+
+    check @rubygem.name
     click_on "Continue"
 
     select "Owner", from: maintainer.handle
@@ -65,7 +70,12 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
-    assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
+    assert_text "Your gems have been transferred successfully to #{@organization.name}."
+
+    visit organization_path(@organization.handle)
+    click_on "Members"
+
+    assert_text "#{maintainer.handle} Pending", normalize_ws: true
   end
 
   test "transfer a rubygem to an organization with outside contributor" do
@@ -109,14 +119,15 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
   test "cancelling a rubygem transfer" do
     sign_in @owner
 
-    visit rubygem_path(@rubygem.slug)
-    click_on "Transfer to Organization"
+    visit organization_path(@organization.handle)
+    click_on "Transfer"
 
-    assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
+    assert_current_path organization_transfer_rubygems_path
 
     select @organization.name, from: "Organization"
     click_on "Cancel"
 
-    assert_current_path rubygem_path(@rubygem.slug)
+    assert_current_path dashboard_path
+    assert_text "Your draft gem transfer has been cancelled."
   end
 end

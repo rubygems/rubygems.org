@@ -1,4 +1,4 @@
-<% @title = "Transfer a Gem" %>
+<% @title = "Transfer Gems" %>
 
 <% content_for :aside do %>
   <%= render "rubygems/transfer/summary", current_step: 1 %>
@@ -12,7 +12,7 @@
   Choose which organization you want to transfer your gem to.
 </p>
 
-<%= form_with(model: @rubygem_transfer, url: rubygem_transfer_organization_path(@rubygem.slug), method: :post) do |f| %>
+<%= form_with(model: @rubygem_transfer, url: organization_transfer_rubygems_path, method: :post) do |f| %>
   <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
   <%= f.label :organization, t(".organization"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
   <label class="flex flex-col xl:flex-row items-center rounded-lg border border-neutral-400 dark:border-neutral-600 overflow-hidden">
@@ -30,7 +30,7 @@
   </label>
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Cancel", rubygem_transfer_path, type: :link, color: :neutral, style: :outline, method: :delete) %>
+    <%= render ButtonComponent.new("Cancel", transfer_rubygems_path, type: :link, color: :neutral, style: :outline, method: :delete) %>
     <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
   </div>
 <% end %>

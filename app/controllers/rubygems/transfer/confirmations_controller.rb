@@ -2,16 +2,16 @@ class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseCont
   layout "onboarding"
 
   def edit
-    authorize @rubygem, :transfer_gem?
+    authorize @rubygem_transfer.organization, :add_gem?
   end
 
   def update
-    authorize @rubygem, :transfer_gem?
+    authorize @rubygem_transfer.organization, :add_gem?
 
     @rubygem_transfer.transfer!
 
-    flash[:notice] = I18n.t("rubygems.transfer.confirm.success", gem: @rubygem.name, organization: @rubygem_transfer.organization.name)
-    redirect_to rubygem_path(@rubygem.slug)
+    flash[:notice] = I18n.t("rubygems.transfer.confirm.success", organization: @rubygem_transfer.organization.name)
+    redirect_to organization_path(@rubygem_transfer.organization.handle)
   rescue ActiveRecord::ActiveRecordError
     flash[:error] = "Onboarding error: #{@rubygem_transfer.error}"
     render :edit, status: :unprocessable_content

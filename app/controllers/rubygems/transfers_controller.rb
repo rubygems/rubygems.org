@@ -4,10 +4,10 @@ class Rubygems::TransfersController < ApplicationController
   before_action :find_rubygem
 
   def destroy
-    @rubygem_transfer = RubygemTransfer.find_by(created_by: Current.user, rubygem: @rubygem, status: :pending)
+    @rubygem_transfer = RubygemTransfer.find_by(created_by: Current.user, status: :pending)
     @rubygem_transfer&.destroy!
 
-    redirect_to rubygem_path(@rubygem.slug)
+    redirect_to dashboard_path, notice: t("rubygems.transfer.cancelled")
   end
 
   private
