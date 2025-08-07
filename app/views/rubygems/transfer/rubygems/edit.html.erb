@@ -1,0 +1,48 @@
+<% @title = "Transfer Gems" %>
+
+<% content_for :aside do %>
+  <%= render "rubygems/transfer/summary", current_step: 2 %>
+<% end %>
+
+<%= render "rubygems/transfer/progress", current_step: 2 %>
+
+<h2 class="text-h4 mb-10">Add gems to your Organization</h2>
+
+<%= form_with(model: @rubygem_transfer, url: rubygems_transfer_rubygems_path, method: :patch, data: { controller: "onboarding-gems counter" }) do |form| %>
+  <div class="border border-neutral-700 dark:border-neutral-300 rounded-lg" data-controller="checkbox-select-all">
+    <div class="flex flex-row p-4 w-full border-b border-neutral-700 dark:border-neutral-300 justify-between items-center">
+      <h3 class="text-b2 font-semibold">Gems<span data-counter-target="counter" class="ml-2 font-light text-neutral-600"><%= @rubygem_transfer.rubygems.size %></span></h3>
+      <label class="flex items-center">
+        <span class="mr-3">Select all</span>
+        <input
+          type="checkbox"
+          data-checkbox-select-all-target="checkboxAll"
+          class="h-5 w-5 border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 disabled:text-neutral-700 dark:disabled:text-neutral-700 text-orange-500"
+        />
+      </label>
+    </div>
+    <ul class="divide-y divide-neutral-300 dark:divide-neutral-700">
+      <% @rubygem_transfer.available_rubygems.each do |gem| %>
+        <li class="flex items-center">
+          <label class="flex w-full px-4 py-2 items-center justify-between space-x-2">
+            <span class="flex">
+              <span class="text-neutral-800 dark:text-white"><%= gem.name %></span>
+            </span>
+            <%= check_box_tag(
+              "rubygem_transfer[rubygems][]",
+              gem.id,
+              @rubygem_transfer.rubygems.include?(gem.id),
+              class: "h-5 w-5 text-orange-500 border-neutral-500 rounded focus:ring-2 focus:ring-orange-500 rounded disabled:text-neutral-700 dark:disabled:text-neutral-700",
+              data: { counter_target: "checked", checkbox_select_all_target: "checkbox" }
+            ) %>
+          </label>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
+    <%= render ButtonComponent.new("Back", organization_transfer_rubygems_path, type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
+  </div>
+<% end %>
