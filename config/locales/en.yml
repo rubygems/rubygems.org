@@ -424,6 +424,7 @@ en:
       no_gems: No gems yet
       add_member: Invite Member
       invite: Invite
+      transfer: Transfer
     members:
       create:
         user_already_invited: User already invited to the organization.
@@ -800,11 +801,12 @@ en:
       title: Security Events
       description_html: "This page shows the security events that have occurred on %{gem}. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
     transfer:
+      cancelled: Your draft gem transfer has been cancelled.
       organizations:
         new:
           organization: Organization
       confirm:
-        success: "%{gem} has been transferred successfully to %{organization}."
+        success: "Your gems have been transferred successfully to %{organization}."
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"
