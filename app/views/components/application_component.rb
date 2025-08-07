@@ -3,6 +3,10 @@
 class ApplicationComponent < Phlex::HTML
   include Phlex::Rails::Helpers::Routes
   extend PropInitializer::Properties
+  extend Phlex::Rails::HelperMacros
+
+  # Register Rails helpers that return HTML content
+  register_output_helper :icon_tag
 
   class TranslationHelper
     include ActionView::Helpers::TranslationHelper
@@ -33,5 +37,11 @@ class ApplicationComponent < Phlex::HTML
       n.gsub!(/([a-z])([A-Z])/, '\1_\2')
       n.downcase!
     end
+  end
+
+  private
+
+  def classes(*class_names)
+    class_names.compact.join(" ").strip
   end
 end

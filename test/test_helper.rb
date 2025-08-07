@@ -37,7 +37,6 @@ require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "helpers/avo_helpers"
 require "webmock/minitest"
-require "phlex/testing/rails/view_helper"
 require "rake"
 
 # setup license early since some tests are testing Avo outside of requests
@@ -370,17 +369,31 @@ class PolicyTestCase < ActiveSupport::TestCase
 end
 
 class ComponentTest < ActiveSupport::TestCase
-  include Phlex::Testing::Rails::ViewHelper
   include Capybara::Minitest::Assertions
 
   attr_reader :page
 
-  def render(...)
-    response = super
+  def render(component, &block)
+    response = if block
+                 view_context.render(component, &block)
+               else
+                 view_context.render(component)
+               end
     app = ->(_env) { [200, { "Content-Type" => "text/html" }, [response]] }
     session = Capybara::Session.new(:rack_test, app)
     session.visit("/")
     @page = session.document
+    response
+  end
+
+  private
+
+  def view_context
+    @view_context ||= controller.view_context
+  end
+
+  def controller
+    @controller ||= ActionView::TestCase::TestController.new
   end
 
   def preview(path = preview_path, scenario: :default, **params)

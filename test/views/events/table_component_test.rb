@@ -1,5 +1,4 @@
 require "test_helper"
-require "phlex/testing/rails/view_helper"
 
 class Events::TableComponentTest < ComponentTest
   class TestEvent
@@ -33,8 +32,8 @@ class Events::TableComponentTest < ComponentTest
     end
   end
 
-  def render(...)
-    response = super
+  def render_page(component, &)
+    response = render(component, &)
     Capybara.string(response)
   end
 
@@ -43,13 +42,13 @@ class Events::TableComponentTest < ComponentTest
   end
 
   test "renders an empty view" do
-    page = render table
+    page = render_page table
 
     assert_text page, "No entries found"
   end
 
   test "renders an unknown event" do
-    page = render table(page([TestEvent.new(tag: "unknown:other")]))
+    page = render_page table(page([TestEvent.new(tag: "unknown:other")]))
 
     assert_text page, "Displaying 1 entry"
     assert_text page, "unknown:other"
@@ -60,11 +59,11 @@ class Events::TableComponentTest < ComponentTest
 
     user = create(:user)
 
-    page = render table(page([
-                               UserTestEvent.new(tag: tag, user_id: user.id + 1, geoip_info: build(:geoip_info), additional: {
-                                                   user_agent_info: build(:events_user_agent_info)
-                                                 })
-                             ]), stubs: { current_user: user })
+    page = render_page table(page([
+                                    UserTestEvent.new(tag: tag, user_id: user.id + 1, geoip_info: build(:geoip_info), additional: {
+                                                        user_agent_info: build(:events_user_agent_info)
+                                                      })
+                                  ]), stubs: { current_user: user })
 
     assert_text page, "Displaying 1 entry"
     assert_text page, "user2:created"
@@ -78,11 +77,11 @@ class Events::TableComponentTest < ComponentTest
 
     user = create(:user)
 
-    page = render table(page([
-                               UserTestEvent.new(tag: tag, user_id: user.id, geoip_info: build(:geoip_info), additional: {
-                                                   user_agent_info: build(:events_user_agent_info)
-                                                 })
-                             ]), stubs: { current_user: user })
+    page = render_page table(page([
+                                    UserTestEvent.new(tag: tag, user_id: user.id, geoip_info: build(:geoip_info), additional: {
+                                                        user_agent_info: build(:events_user_agent_info)
+                                                      })
+                                  ]), stubs: { current_user: user })
 
     assert_text page, "Displaying 1 entry"
     assert_text page, "user:created"
