@@ -46,4 +46,21 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_content
   end
+
+  test "PATCH /rubygems/:rubygem_id/transfer/users with outside contributor role" do
+    patch rubygem_transfer_users_path(@rubygem.slug, as: @user), params: {
+      rubygem_transfer: {
+        invites_attributes: {
+          "0" => { id: @invites[0].id, role: "outside_contributor" },
+          "1" => { id: @invites[1].id, role: "maintainer" }
+        }
+      }
+    }
+
+    assert_equal "outside_contributor", @transfer.invites.find_by(user_id: @other_users[0].id).role
+    assert_equal "maintainer", @transfer.invites.find_by(user_id: @other_users[1].id).role
+
+    assert_response :redirect
+    assert_redirected_to rubygem_transfer_confirm_path(@rubygem.slug)
+  end
 end

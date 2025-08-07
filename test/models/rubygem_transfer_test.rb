@@ -71,6 +71,40 @@ class RubygemTransferTest < ActiveSupport::TestCase
     end
   end
 
+  test "demote outside contributors from owner to maintainer role" do
+    user = create(:user)
+    ownership = create(:ownership, rubygem: @rubygem, user: user, role: :owner)
+
+    @transfer.invites.create!(user: user, invitable: @transfer, role: :outside_contributor)
+    @transfer.transfer!
+
+    ownership.reload
+
+    assert_equal "maintainer", ownership.role
+  end
+
+  test "keep outside contributors with maintainer role unchanged" do
+    user = create(:user)
+    ownership = create(:ownership, rubygem: @rubygem, user: user, role: :maintainer)
+
+    @transfer.invites.create!(user: user, invitable: @transfer, role: :outside_contributor)
+    @transfer.transfer!
+
+    ownership.reload
+
+    assert_equal "maintainer", ownership.role
+  end
+
+  test "not create organization membership for outside contributors" do
+    user = create(:user)
+    create(:ownership, rubygem: @rubygem, user: user, role: :owner)
+
+    @transfer.invites.create!(user: user, invitable: @transfer, role: :outside_contributor)
+    @transfer.transfer!
+
+    assert_not Membership.exists?(user: user, organization: @organization)
+  end
+
   test "updates the status and completed_at fields when transfer is successful" do
     @transfer.transfer!
 
