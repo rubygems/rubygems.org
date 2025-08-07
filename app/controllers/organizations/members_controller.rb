@@ -1,5 +1,5 @@
 class Organizations::MembersController < Organizations::BaseController
-  before_action :find_membership, only: %i[edit update destroy]
+  before_action :find_membership, only: %i[edit update destroy resend_invitation]
 
   skip_before_action :redirect_to_signin, only: %i[index]
 
@@ -56,6 +56,16 @@ class Organizations::MembersController < Organizations::BaseController
     @membership.destroy!
 
     redirect_to organization_memberships_path(@organization), notice: t(".member_removed")
+  end
+
+  def resend_invitation
+    return redirect_to organization_memberships_path(@organization), alert: t(".already_confirmed") if @membership.confirmed?
+
+    authorize @organization, :invite_member?
+
+    @membership.refresh_invitation!
+    OrganizationMailer.user_invited(@membership).deliver_later
+    redirect_to organization_memberships_path(@organization), notice: t(".invitation_resent")
   end
 
   private
