@@ -48,19 +48,33 @@ class OrganizationTest < ActiveSupport::TestCase
       end
 
       should "be invalid with duplicate handle on create" do
-        create(:organization, handle: "test")
-        organization = build(:organization, handle: "Test")
+        create(:organization, handle: "mycompany")
+        organization = build(:organization, handle: "MyCompany")
 
         refute_predicate organization, :valid?
       end
 
       should "be invalid with duplicate handle on update" do
-        create(:organization, handle: "test")
-        organization = create(:organization, handle: "test2")
-        organization.update(handle: "Test")
+        create(:organization, handle: "mycompany")
+        organization = create(:organization, handle: "othercompany")
+        organization.update(handle: "MyCompany")
 
         assert_contains organization.errors[:handle], "has already been taken"
         refute_predicate organization, :valid?
+      end
+
+      should "be invalid when handle is reserved" do
+        organization = build(:organization, handle: "onboarding")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "is reserved and cannot be used"
+      end
+
+      should "be invalid when handle is reserved (case insensitive)" do
+        organization = build(:organization, handle: "ONBOARDING")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "is reserved and cannot be used"
       end
     end
   end
