@@ -5,7 +5,7 @@ class Events::RubygemEventPolicy < ApplicationPolicy
   delegate :rubygem, to: :record
 
   def show?
-    rubygem.owned_by?(user)
+    GemPermissions.new(rubygem, user).can_push?
   end
 
   def create?
