@@ -61,7 +61,7 @@ class ProfilesController < ApplicationController
     end
   end
 
-  PERMITTED_PROFILE_PARAMS = %i[handle twitter_username unconfirmed_email public_email full_name].freeze
+  PERMITTED_PROFILE_PARAMS = %i[handle social_link unconfirmed_email public_email full_name].freeze
 
   def verify_password
     password = params.expect(user: :password)[:password]
