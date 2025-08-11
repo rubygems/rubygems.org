@@ -478,8 +478,8 @@ en:
       title: Download RubyGems
     security:
       title: Security
-    sponsors:
-      title: Sponsors
+    supporters:
+      title: RubyGems Supporters
   policies:
     index:
       title: RubyGems.org Policies
