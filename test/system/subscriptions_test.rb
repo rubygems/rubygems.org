@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class SubscriptionsTest < SystemTest
+class SubscriptionsTest < ApplicationSystemTestCase
   setup do
     @user = create(:user)
     @rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
