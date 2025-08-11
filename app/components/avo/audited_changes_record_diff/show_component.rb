@@ -11,7 +11,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
     global_id = GlobalID.parse(gid)
     resource_class = Avo.resource_manager.get_resource_by_model_class(global_id.model_class)
     unless resource_class
-      logger.info "No avo resource class for #{global_id} found"
+      Rails.logger.info "No avo resource class for #{global_id} found"
       return
     end
 
