@@ -226,7 +226,7 @@ GEM
       libddwaf (~> 1.24.1.0.3)
       logger
       msgpack
-    datadog-ci (1.21.1)
+    datadog-ci (1.22.0)
       datadog (~> 2.4)
       drb
       msgpack
@@ -930,7 +930,7 @@ DEPENDENCIES
   csv (~> 3.3)
   dalli (~> 3.2)
   datadog (~> 2.19)
-  datadog-ci (~> 1.21)
+  datadog-ci (~> 1.22)
   derailed_benchmarks (~> 2.2)
   discard (~> 1.4)
   dogstatsd-ruby (~> 5.7)
@@ -1100,7 +1100,7 @@ CHECKSUMS
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
   datadog (2.19.0) sha256=a9fe198c7dc459531c94bf9fef4f4036153cb7fe5bdc91023354d000a326a21a
-  datadog-ci (1.21.1) sha256=0e0c8749b9aec8bc3cfedb700f957e62eb987a8d6db9b519e3ca12a7e32cdc92
+  datadog-ci (1.22.0) sha256=8f6dbf1119218f3118f0547cee0ed293ccf8c727cbab8016c2321cdca08c0a8f
   datadog-ruby_core_source (3.4.1) sha256=fa40f1c3c8f764b6651a6443382b57d39aeb3c9f94b5af98f499bcfc678a2fb9
   date (3.4.1) sha256=bf268e14ef7158009bfeaec40b5fa3c7271906e88b196d958a89d4b408abe64f
   derailed_benchmarks (2.2.1) sha256=654280664fded41c9cd8fc27fc0fcfaf096023afab90eb4ac1185ba70c5d4439
