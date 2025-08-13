@@ -14,14 +14,11 @@ en:
     Use <a href="%{api_docs}">the API</a> to find out more about <a href="%{gem_list}">available gems</a>.
     <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
   footer_sponsors_html:
-    RubyGems.org is made possible through a partnership with the greater Ruby community.
-    <a href="https://www.fastly.com/">Fastly</a> provides bandwidth and CDN support,
-    <a href="https://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, and
-    funds ongoing development and ops work.
-    <a href="%{sponsors_page}">Learn more about our sponsors and how they work together</a>.
-  footer_join_rt_html:
-    We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
-    <a href="https://rubycentral.org/#/portal/signup">Join Ruby Central today</a>.
+    The RubyGems.org website and service are maintained and operated by Ruby Central’s
+    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team. 
+    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations. 
+    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler 
+    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.   
   form_disable_with: Please wait...
   invalid_page: Page number is out of range. Redirected to default page.
   locale_name: English
@@ -254,7 +251,6 @@ en:
         contribute: Contribute
         data: Data
         docs: Docs
-        designed_by: Designed by
         discussion_forum: Discuss
         gems_served_by: Gems served by
         guides: Guides
@@ -269,14 +265,12 @@ en:
         source_code: Code
         statistics: Stats
         status: Status
+        support_us: Support Us
         supported_by: Supported by
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           is supported by
-        tested_by: Tested by
-        tracking_by: Tracking by
         uptime: Uptime
-        verified_by: Verified by
         secured_by: Secured by
         looking_for_maintainers: maintainers wanted
       header:

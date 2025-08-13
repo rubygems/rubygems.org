@@ -126,7 +126,7 @@ module Gemcutter
   ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
   MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
   PAGES = %w[
-    about data download security sponsors supporters
+    about data download security supporters
   ].freeze
   POLICY_PAGES = %w[
     acceptable-use copyright privacy terms-of-service

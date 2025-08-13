@@ -14,7 +14,6 @@ nl:
     beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a>
     en verbeter de site met jouw aanpassingen.
   footer_sponsors_html:
-  footer_join_rt_html:
   form_disable_with: Een moment geduld...
   invalid_page:
   locale_name: Nederlands
@@ -250,7 +249,6 @@ nl:
         contribute: Bijdragen
         data: Data
         docs: Documentatie
-        designed_by: Ontwerp
         discussion_forum: Forum
         gems_served_by:
         guides: Handleidingen
@@ -265,14 +263,12 @@ nl:
         source_code: Code
         statistics: Statistieken
         status: Status
+        support_us:
         supported_by: Ondersteuning
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> wordt ondersteund door
-        tested_by: Getest door
-        tracking_by: Tracking
         uptime: Uptime
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:

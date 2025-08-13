@@ -14,9 +14,7 @@ zh-CN:
     由您自己改善我们的网站。
   footer_sponsors_html: RubyGems.org 是通过与更大的 Ruby 社区的合作得以实现的。<a href="https://www.fastly.com/">Fastly</a>
     提供带宽和 CDN 支持， <a href="https://www.rubycentral.org/">Ruby Central</a> 涵盖基础设施成本，并且
-    资助正在进行的开发和运营工作。 <a href="%{sponsors_page}">了解更多关于我们的赞助商以及他们是如何合作的</a>。
-  footer_join_rt_html: 我们需要您的帮助 —— 通过资助开发人员，来保持 RubyGems.org 的稳定运行，为每个人顺利地服务。 <a href="https://rubycentral.org/#/portal/signup">今天就加入
-    Ruby Central 吧！</a>
+    资助正在进行的开发和运营工作。 <a href="%{supporters_page}">了解更多关于我们的赞助商以及他们是如何合作的</a>。
   form_disable_with: 请稍后...
   invalid_page: 页码超出范围，已重定向到默认页面。
   locale_name: 简体中文
@@ -249,7 +247,6 @@ zh-CN:
         contribute: 贡献
         data: 数据
         docs: 文档
-        designed_by: 设计
         discussion_forum: 讨论
         gems_served_by: 服务
         guides: 指南
@@ -264,14 +261,12 @@ zh-CN:
         source_code: 源代码
         statistics: 统计
         status: 状态
+        support_us:
         supported_by: 支持
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> 由以下支持
-        tested_by: 测试
-        tracking_by: 追踪
         uptime: 服务运行时间
-        verified_by: 验证
         secured_by: 安全保护
         looking_for_maintainers: 招募维护者
       header:

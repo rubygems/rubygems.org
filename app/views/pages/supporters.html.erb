@@ -1,21 +1,24 @@
 <% @title = t('.title') %>
 
 <%= prose do %>
+  <h1>Support RubyGems.org</h1>
   <p>
-    RubyGems.org is a critical part of the Ruby ecosystem, processing millions of downloads each day and enabling developers around the world to build with confidence. As a community-run service overseen by Ruby Central, a 501(c)(3) nonprofit, we rely on the support of individuals and organizations who believe in open source and want to keep RubyGems.org secure and reliable long-term.  Specifically, we fund this service through generous support from RubyGems Supporters, Ruby Central’s Corporate Sponsorship Program, Ruby Central memberships, and Infrastructure Sponsors.
+    RubyGems.org is a critical part of the Ruby ecosystem, processing millions of downloads each day and enabling developers around the world to build with confidence. As a community-run service overseen by Ruby Central, a 501(c)(3) nonprofit, we rely on the support of individuals and organizations who believe in open source and want to keep RubyGems.org secure and reliable long-term. Specifically, we fund this service through generous support from RubyGems Supporters, Ruby Central’s Corporate Sponsorship Program, Ruby Central memberships, and Infrastructure Sponsors.
   </p>
   <p>
-    The RubyGems Supporter Program is an easy way for you or your company to contribute to the maintenance, operations, and growth of the open source infrastructure you depend on. You can find out more about this program <a href="https://rubycentral.org/open-source/">here</a>.
+    The RubyGems Supporter Program is an easy way for you or your company to directly contribute to the maintenance, operations, and growth of RubyGems.org. You can find out more about this program <a href="https://rubycentral.org/open-source/">here</a>.
   </p>
-
-  <h2>Want to support RubyGems.org?</h2>
   <p>
     <a href="https://rubycentral.org/open-source/#/portal/signup">Become a Supporter</a>
   </p>
   <h2>RubyGems Supporters</h2>
   <h3>Supporter Plus</h3>
   <ul>
-    <li><a href="https://www.cloudamqp.com/">CloudAMQP's Logo</a></li>
+    <li><a href="https://www.cloudamqp.com/"><%= image_tag "supporters/cloudamqp-dark.svg", alt: "CloudAMQP" %></a></li>
+    <li><a href="https://www.pennylane.com/fr"><%= image_tag "supporters/pennylane.png", alt: "Pennylane" %></a></li>
+    <li><a href="https://gobetweenlab.com/"><%= image_tag "supporters/gobetween-dark.png", alt: "Go Between Lab" %></a></li>
+    <li><a href="https://serpapi.com/"><%= image_tag "supporters/serpapi.png", alt: "SerpApi" %></a></li>
+    <li>3 Anonymous</li>
   </ul>
 
   <h3>Supporter</h3>
@@ -25,11 +28,11 @@
 
   <h2>Corporate Sponsors</h2>
   <p>
-    Corporate sponsors support Ruby Central's work more broadly, including RubyGems.org and our other community initiatives.  There are opportunities starting at $10K/year for companies looking to support Ruby Central’s mission which includes RubyGems.org. You can learn more about Ruby Central’s Corporate Sponsorship Program <a href="https://rubycentral.org/corporate-sponsorship/">here</a>. 
+    Corporate sponsors support Ruby Central's work more broadly, including RubyGems.org and other community-focused initiatives. Sponsorship opportunities start at $10K/year for companies seeking greater visibility in the Ruby ecosystem. You can learn more about Ruby Central’s Corporate Sponsorship Program <a href="https://rubycentral.org/corporate-sponsorship/">here</a>. 
   </p>
-  <h2>Infrastructure Sponsors</h2>
+  <h2>Infrastructure Donors</h2>
   <p>
-    Our infrastructure sponsors provide donated services that our team uses to keep RubyGems.org running smoothly and reliably, such as hosting, monitoring, security, and more.
+    Our infrastructure donors provide core services that keep RubyGems.org running smoothly and reliably, such as hosting, monitoring, security, and more.
   </p>
   <div class="w-full lg:grow mx-auto grid grid-cols-3 gap-6 justify-items-center md:flex md:items-center md:justify-between">
     <a href="https://aws.amazon.com/" class="p-1"><%= icon_tag "aws", size: 15 %></a>

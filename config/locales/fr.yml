@@ -16,12 +16,8 @@ fr:
     la communauté Ruby au sens large. <a href="https://www.fastly.com/">Fastly</a>
     fournisseur de bande passante et du support CDN, <a href="https://www.rubycentral.org/">Ruby
     Central</a> qui couvre les frais d'infrastructure, et qui finance le développement
-    et l'administration des serveurs. <a href="%{sponsors_page}">Apprenez en plus
+    et l'administration des serveurs. <a href="%{supporters_page}">Apprenez en plus
     sur nos sponsors et comment ils travaillent entre eux.</a>
-  footer_join_rt_html: Nous avons besoin de votre aide pour financer le travail des
-    développeurs/développeuses qui font que RubyGems.org fonctionne de manière fluide
-    pour tout le monde. <a href="https://rubycentral.org/#/portal/signup">Join Ruby
-    Central today</a>.
   form_disable_with: Veuillez patienter...
   invalid_page: Le numéro de page est hors de portée. Redirection vers la page par
     défaut.
@@ -259,7 +255,6 @@ fr:
         contribute: Contribuer
         data: Données
         docs: Documentation
-        designed_by: Design par
         discussion_forum: Discussions
         gems_served_by: Gems mis à disposition par
         guides: Guides
@@ -274,14 +269,12 @@ fr:
         source_code: Code
         statistics: Stats
         status: Statut
+        support_us:
         supported_by: Soutenu par
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> est soutenu par
-        tested_by: Testé par
-        tracking_by: Tracking par
         uptime: Uptime
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:
