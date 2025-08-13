@@ -1,6 +1,6 @@
 <%= render Onboarding::StepsComponent.new(current_step) do |s| %>
   <%= s.step "Organization", organization_transfer_rubygems_path %>
   <%= s.step "RubyGems", rubygems_transfer_rubygems_path %>
-  <%= s.step "Invite Owners", users_transfer_rubygems_path %>
+  <%= s.step "Owners", users_transfer_rubygems_path %>
   <%= s.step "Finalize", confirm_transfer_rubygems_path %>
 <% end %>
