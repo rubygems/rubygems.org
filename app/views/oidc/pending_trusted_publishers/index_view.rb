@@ -21,7 +21,7 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
       end
 
       header(class: "gems__header push--s") do
-        p(class: "gems__meter l-mb-0") { plain page_entries_info(trusted_publishers) }
+        p(class: "gems__meter l-mb-0") { page_entries_info(trusted_publishers) }
       end
 
       div(class: "tw-divide-y") do
@@ -30,7 +30,7 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
         end
       end
 
-      plain paginate(trusted_publishers)
+      paginate(trusted_publishers)
     end
   end
 
@@ -54,9 +54,9 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
       div(class: "sm:tw-flex sm:tw-flex-row tw-gap-4") do
         p(class: "!tw-mb-0") { pending_trusted_publisher.trusted_publisher.class.publisher_name }
         p(class: "!tw-mb-0") do
-          t(".valid_for_html",
-            time_html: time_tag(pending_trusted_publisher.expires_at,
-distance_of_time_in_words_to_now(pending_trusted_publisher.expires_at)))
+          raw t(".valid_for_html",
+            time_html: view_context.time_tag(pending_trusted_publisher.expires_at,
+view_context.distance_of_time_in_words_to_now(pending_trusted_publisher.expires_at)))
         end
       end
 

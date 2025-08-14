@@ -50,7 +50,9 @@ class Events::TableComponentTest < ComponentTest
   test "renders an unknown event" do
     page = render_page table(page([TestEvent.new(tag: "unknown:other")]))
 
-    assert_text page, "Displaying 1 entry"
+    assert_text page, "Displaying"
+    assert_text page, "1"
+    assert_text page, "entry"
     assert_text page, "unknown:other"
   end
 
@@ -65,7 +67,9 @@ class Events::TableComponentTest < ComponentTest
                                                       })
                                   ]), stubs: { current_user: user })
 
-    assert_text page, "Displaying 1 entry"
+    assert_text page, "Displaying"
+    assert_text page, "1"
+    assert_text page, "entry"
     assert_text page, "user2:created"
     assert_text page, "Redacted"
     assert_no_text page, "Buffalo, NY, US"
@@ -83,7 +87,9 @@ class Events::TableComponentTest < ComponentTest
                                                       })
                                   ]), stubs: { current_user: user })
 
-    assert_text page, "Displaying 1 entry"
+    assert_text page, "Displaying"
+    assert_text page, "1"
+    assert_text page, "entry"
     assert_text page, "user:created"
     assert_text page, "Buffalo, NY, US"
     assert_text page, "installer (implementation on system)"

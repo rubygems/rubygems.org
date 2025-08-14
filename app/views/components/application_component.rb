@@ -13,30 +13,19 @@ class ApplicationComponent < Phlex::HTML
   register_output_helper :local_time_ago
   register_output_helper :avatar
   # Register Rails helpers that return values
-  register_value_helper :page_entries_info
+  register_output_helper :page_entries_info
   register_value_helper :class_names
   register_value_helper :current_user
 
-  class TranslationHelper
-    include ActionView::Helpers::TranslationHelper
+  def t(key, **)
+    scoped_key = if key&.start_with?(".")
+                   "#{self.class.translation_path}#{key}"
+                 else
+                   key
+                 end
 
-    def initialize(translation_path:)
-      @translation_path = translation_path
-    end
-
-    private
-
-    def scope_key_by_partial(key)
-      return key unless key&.start_with?(".")
-
-      "#{@translation_path}#{key}"
-    end
-  end
-
-  delegate :t, to: "self.class.translation_helper"
-
-  def self.translation_helper
-    @translation_helper ||= TranslationHelper.new(translation_path:)
+    result = view_context.t(scoped_key, **)
+    result.html_safe? ? result : result.to_s
   end
 
   def self.translation_path
