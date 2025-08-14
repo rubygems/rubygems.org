@@ -34,7 +34,7 @@ class User < ApplicationRecord
 
   has_many :rubygems, through: :ownerships, source: :rubygem
   has_many :subscriptions, dependent: :destroy
-  has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
+  has_many :subscribed_gems, -> { order(:name) }, through: :subscriptions, source: :rubygem
 
   has_many :rubygems_downloaded,
     -> { with_versions.joins(:gem_download).order(GemDownload.arel_table["count"].desc) },

@@ -3,7 +3,7 @@ class LogTicket < ApplicationRecord
   enum :status, %i[pending processing failed processed].index_with(&:to_s)
 
   def self.pop(key: nil, directory: nil)
-    scope = pending.limit(1).lock(true).order("id ASC")
+    scope = pending.limit(1).lock(true).order(:id)
     scope = scope.where(key: key) if key
     scope = scope.where(directory: directory) if directory
     scope.sole.tap do |ticket|
