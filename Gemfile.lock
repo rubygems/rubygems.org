@@ -772,7 +772,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby-statistics (4.0.1)
     ruby2_keywords (0.0.5)
-    rubyzip (2.4.1)
+    rubyzip (3.0.1)
     safety_net_attestation (0.4.0)
       jwt (~> 2.0)
     sanitize (7.0.0)
@@ -785,11 +785,11 @@ GEM
       activemodel (>= 7.1)
       hashie
     securerandom (0.4.1)
-    selenium-webdriver (4.34.0)
+    selenium-webdriver (4.35.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
+      rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
     semantic_logger (4.17.0)
       concurrent-ruby (~> 1.0)
@@ -1010,7 +1010,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.32)
   ruby-magic (~> 0.6)
   searchkick (~> 5.5)
-  selenium-webdriver (~> 4.34)
+  selenium-webdriver (~> 4.35)
   shoryuken (~> 6.2)
   shoulda-context (~> 3.0.0.rc1)
   shoulda-matchers (~> 6.5)
@@ -1318,13 +1318,13 @@ CHECKSUMS
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby-statistics (4.0.1) sha256=aede68e6261b979431b31ba39aa661844c18f97a89966768cb60edf2a56b6782
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
-  rubyzip (2.4.1) sha256=8577c88edc1fde8935eb91064c5cb1aef9ad5494b940cf19c775ee833e075615
+  rubyzip (3.0.1) sha256=8bbbf32ff93db9a156ce2626820e748e2913352e6df80d764d0eea1ed1f5b8a7
   safety_net_attestation (0.4.0) sha256=96be2d74e7ed26453a51894913449bea0e072f44490021545ac2d1c38b0718ce
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984
   sawyer (0.9.2) sha256=fa3a72d62a4525517b18857ddb78926aab3424de0129be6772a8e2ba240e7aca
   searchkick (5.5.2) sha256=8be24a74b612d1ac7f1dbc4a3cba310d6af2f8ba7405f30960769db871e3cf67
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  selenium-webdriver (4.34.0) sha256=ec7bb718cbe66fe2b247d8ca5e6ba26caed0976d76579d7cb2fadd8dae8b271e
+  selenium-webdriver (4.35.0) sha256=6fc920cec4b9e6263afeb4941289d8deb0853acbc49e0d6f7de91c86986d359b
   semantic_logger (4.17.0) sha256=c54b60d8596abe2e22bd4f20648d4f6c46e4287fba357779c7932335c8d130e9
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
