@@ -9,7 +9,7 @@ class RubygemTransfer < ApplicationRecord
 
   accepts_nested_attributes_for :invites
 
-  validate :created_by_gem_ownerships, :created_by_organization_ownership, :rubygem_existing_organization
+  validate :rubygems_owned_by_transferrer, :created_by_organization_ownership, :rubygem_existing_organization
 
   before_save :sync_invites, if: :rubygems_changed?
 
@@ -87,7 +87,7 @@ class RubygemTransfer < ApplicationRecord
     self.invites = users_for_rubygem.map { |user| existing_invites[user.id] || OrganizationInvite.new(user: user) }
   end
 
-  def created_by_gem_ownerships
+  def rubygems_owned_by_transferrer
     return if created_by.blank? || rubygems.blank?
 
     ownerships = Ownership.where(user: created_by, rubygem: rubygems).index_by(&:rubygem_id)
