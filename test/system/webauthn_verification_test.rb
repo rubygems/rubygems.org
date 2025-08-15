@@ -112,7 +112,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def teardown
     @mock_client.kill_server
     @authenticator&.remove!
-    Capybara.reset_sessions!
     Capybara.use_default_driver
   end
 
