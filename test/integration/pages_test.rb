@@ -47,9 +47,16 @@ class PagesTest < SystemTest
     assert page.has_content?("Security")
   end
 
-  test "renders /pages/sponsors" do
+  test "renders /pages/supporters" do
+    visit "/pages/supporters"
+
+    assert page.has_content?("Supporters")
+  end
+
+  test "redirects /pages/sponsors to /pages/supporters" do
     visit "/pages/sponsors"
 
-    assert page.has_content?("Sponsors")
+    assert_current_path "/pages/supporters"
+    assert page.has_content?("Supporters")
   end
 end
