@@ -186,11 +186,6 @@
     <% else %>
       <main class="flex-1 w-full px-8 flex-col bg-neutral-050 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center inline-flex">
         <div class="max-w-screen-xl w-full mx-auto pt-8 pb-10 mb-12 md:mb-16 lg:mb-28">
-          <!-- New design notice -->
-          <%= render AlertComponent.new(style: :neutral, closeable: true) do %>
-            Design Under Construction.
-            <a href="https://blog.rubygems.org/2024/10/15/our-new-design.html" class="text-blue-500 dark:text-blue-400 text-nowrap">Learn more</a>
-          <% end %>
 
           <% flash.each do |name, msg| %>
             <%= render AlertComponent.new(style: name, closeable: true) do %>
