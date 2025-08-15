@@ -65,6 +65,11 @@
       <% end %>
     <% end %>
   <% end %>
+  <% if policy(@organization).add_gem? %>
+  <div class="pt-6 flex flex-row justify-end">
+    <%= render ButtonComponent.new t(".transfer"), transfer_rubygems_path, type: :link %>
+  </div>
+  <% end %>
 <% end %>
 
 <%= render CardComponent.new do |c| %>
