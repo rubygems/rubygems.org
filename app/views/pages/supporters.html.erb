@@ -8,9 +8,17 @@
   <p>
     The RubyGems Supporter Program is an easy way for you or your company to directly contribute to the maintenance, operations, and growth of RubyGems.org. You can find out more about this program <a href="https://rubycentral.org/open-source/">here</a>.
   </p>
-  <p>
-    <a href="https://rubycentral.org/open-source/#/portal/signup">Become a Supporter</a>
-  </p>
+  <div class="my-6">
+    <%= render ButtonComponent.new("Become a Supporter", "https://rubycentral.org/open-source/#/portal/signup", type: :link, color: :primary, size: :large, style: :fill) %>
+    <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-3">
+      <span class="inline-flex items-center">
+        <svg class="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        Tax-deductible donation to Ruby Central (501c3)
+      </span>
+    </p>
+  </div>
   <h2>RubyGems Supporters</h2>
   <h3>Supporter Plus</h3>
   <ul>
