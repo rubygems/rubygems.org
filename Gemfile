@@ -68,7 +68,7 @@ gem "zlib", "~> 3.2"
 # Admin dashboard
 gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.0.1"
+gem "view_component", "~> 4.0.2"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.7"
