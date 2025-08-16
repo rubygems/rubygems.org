@@ -19,14 +19,14 @@ class OIDC::Providers::IndexView < ApplicationView
       end
       hr
       header(class: "gems__header push--s") do
-        p(class: "gems__meter l-mb-0") { plain helpers.page_entries_info(providers) }
+        p(class: "gems__meter l-mb-0") { plain page_entries_info(providers) }
       end
       ul do
         providers.each do |provider|
           li { link_to provider.issuer, profile_oidc_provider_path(provider) }
         end
       end
-      plain helpers.paginate(providers)
+      plain paginate(providers)
     end
   end
 end

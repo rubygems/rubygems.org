@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Onboarding::StepsComponent < ApplicationComponent
-  include Phlex::DeferredRender
-
   include Phlex::Rails::Helpers::LinkTo
 
   def initialize(current_step)
@@ -12,6 +10,8 @@ class Onboarding::StepsComponent < ApplicationComponent
   end
 
   def view_template(&)
+    vanish(&) if block_given?
+
     nav(class: "mb-10 flex items-start text-start text-neutral-800 dark:text-white") do
       @steps.each_with_index do |step, idx|
         step_item(idx + 1, *step)
