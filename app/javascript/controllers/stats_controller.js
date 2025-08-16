@@ -1,10 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
-import $ from 'jquery'
 
 export default class extends Controller {
   static values = { width: String }
 
   connect() {
-    $(this.element).animate({ width: this.widthValue + '%' }, 700).removeClass('t-item--hidden').css("display", "block");
+    const el = this.element
+    el.style.display = "block"
+    el.classList.remove("t-item--hidden")
+
+    // Animate width to the provided value over 700ms
+    el.style.transition = "width 700ms"
+    // Trigger in next frame to ensure transition applies
+    requestAnimationFrame(() => {
+      el.style.width = `${this.widthValue}%`
+    })
   }
 }
