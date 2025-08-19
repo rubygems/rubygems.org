@@ -21,18 +21,30 @@
   </div>
   <h2>RubyGems Supporters</h2>
   <h3>Supporter Plus</h3>
-  <ul>
-    <li><a href="https://www.cloudamqp.com/"><%= image_tag "supporters/cloudamqp-dark.svg", alt: "CloudAMQP" %></a></li>
-    <li><a href="https://www.pennylane.com/fr"><%= image_tag "supporters/pennylane.png", alt: "Pennylane" %></a></li>
-    <li><a href="https://gobetweenlab.com/"><%= image_tag "supporters/gobetween-dark.png", alt: "Go Between Lab" %></a></li>
-    <li><a href="https://serpapi.com/?utm_source=rubygems.org"><%= image_tag "supporters/serpapi.png", alt: "SerpApi" %></a></li>
-    <li>3 Anonymous</li>
-  </ul>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <a href="https://www.cloudamqp.com/" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/cloudamqp-dark.svg", alt: "CloudAMQP", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <a href="https://www.pennylane.com/fr" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/pennylane.png", alt: "Pennylane", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <a href="https://gobetweenlab.com/" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/gobetween-dark.png", alt: "Go Between Lab", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <a href="https://serpapi.com/?utm_source=rubygems.org" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+        <%= image_tag "supporters/serpapi.png", alt: "SerpApi", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <div class="flex items-center justify-center text-center rounded-sm min-h-[120px] bg-gray-200">
+      <a href="#" class="dark:text-neutral-950 no-underline">3 Anonymous</a>
+    </div>
+  </div>
 
   <h3>Supporter</h3>
-  <ul>
-    <li><a href="https://www.coffeeandcode.com/">Coffee and Code</a></li>
-  </ul>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="flex items-center justify-center bg-gray-200 rounded-sm text-center" style="height: calc(120px - 6px);">
+      <a href="https://www.coffeeandcode.com/" class="dark:text-neutral-950 no-underline">Coffee and Code</a>
+    </div>
+  </div>
 
   <h2>Corporate Sponsors</h2>
   <p>
@@ -42,12 +54,24 @@
   <p>
     Our infrastructure donors provide core services that keep RubyGems.org running smoothly and reliably, such as hosting, monitoring, security, and more.
   </p>
-  <div class="w-full lg:grow mx-auto grid grid-cols-3 gap-6 justify-items-center md:flex md:items-center md:justify-between">
-    <a href="https://aws.amazon.com/" class="p-1"><%= icon_tag "aws", size: 15 %></a>
-    <a href="https://dnsimple.link/resolving-rubygems" class="p-1"><%= icon_tag "dnsimple", size: 15 %></a>
-    <a href="https://www.datadoghq.com/" class="p-1"><%= icon_tag "datadog", size: 15 %></a>
-    <a href="https://www.fastly.com/" class="p-1"><%= icon_tag "fastly", size: 15 %></a>
-    <a href="https://www.honeybadger.io/" class="p-1"><%= icon_tag "honeybadger", size: 15 %></a>
-    <a href="https://mend.io/" class="col-start-2 p-1"><%= icon_tag "mend-io", size: 15 %></a>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <a href="https://aws.amazon.com/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "aws", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://dnsimple.link/resolving-rubygems" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "dnsimple", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://www.datadoghq.com/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "datadog", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://www.fastly.com/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "fastly", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://www.honeybadger.io/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "honeybadger", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://mend.io/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "mend-io", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
   </div>
 <% end %>
