@@ -265,6 +265,7 @@ nl:
         status: Status
         support_us:
         supported_by: Ondersteuning
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> wordt ondersteund door

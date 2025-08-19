@@ -17,8 +17,8 @@ es:
     comunidad de Ruby. <a href="https://www.fastly.com/">Fastly</a> provee ancho de
     banda y soporte de CDN <a href="https://www.rubycentral.org/">Ruby Central</a>
     cubre los costos de infraestructura y financia el desarrollo y el trabajo en los
-    servidores. <a href="%{supporters_page}">Aprende más sobre nuestros sponsors y cómo
-    trabajan en conjunto</a>
+    servidores. <a href="%{supporters_page}">Aprende más sobre nuestros sponsors y
+    cómo trabajan en conjunto</a>
   form_disable_with: Un momento por favor...
   invalid_page: Número de página inexistente. Redireccionando a la página por defecto.
   locale_name: Español
@@ -280,6 +280,7 @@ es:
         status: Estado
         support_us:
         supported_by: Con el apoyo de
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           es respaldado por

@@ -269,6 +269,7 @@ pt-BR:
         status: Status
         support_us:
         supported_by: Patrocínio
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> é apoiado por

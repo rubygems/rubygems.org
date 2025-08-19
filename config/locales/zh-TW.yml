@@ -262,6 +262,7 @@ zh-TW:
         status: 狀態
         support_us:
         supported_by: 支持
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> 由以下支持

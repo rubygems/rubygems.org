@@ -17,8 +17,8 @@ de:
     Ruby-Gemeinschaft ermöglicht. <a href="https://www.fastly.com/">Fastly</a>, der
     Anbieter von Bandbreite und CDN-Support, <a href="https://www.rubycentral.org/">Ruby
     Central</a>, das die Infrastrukturkosten trägt, und die Finanzierung der Entwicklung
-    und Verwaltung der Server übernimmt. <a href="%{supporters_page}">Erfahren Sie mehr
-    über unsere Sponsoren und wie sie zusammenarbeiten.</a>
+    und Verwaltung der Server übernimmt. <a href="%{supporters_page}">Erfahren Sie
+    mehr über unsere Sponsoren und wie sie zusammenarbeiten.</a>
   form_disable_with: Bitte warten...
   invalid_page: Die Seitennummer liegt außerhalb des Bereichs. Umleitung zur Standardseite.
   locale_name: Deutsch
@@ -281,6 +281,7 @@ de:
         status: Status
         support_us:
         supported_by: Unterstützt von
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           wird unterstützt von

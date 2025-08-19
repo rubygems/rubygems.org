@@ -267,6 +267,7 @@ en:
         status: Status
         support_us: Support Us
         supported_by: Supported by
+        operated_by: Operated by
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           is supported by

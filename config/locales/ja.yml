@@ -262,6 +262,7 @@ ja:
         status: 状態
         support_us:
         supported_by: 協賛
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           は以下から支援を受けています
