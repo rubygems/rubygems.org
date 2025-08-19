@@ -103,6 +103,24 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
           assert_predicate @onboarding, :invalid?
         end
       end
+
+      context "when the organization handle is reserved" do
+        should "be invalid" do
+          @onboarding.organization_handle = "admin"
+
+          assert_predicate @onboarding, :invalid?
+          assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
+        end
+      end
+
+      context "when the organization handle is reserved (case insensitive)" do
+        should "be invalid" do
+          @onboarding.organization_handle = "ADMIN"
+
+          assert_predicate @onboarding, :invalid?
+          assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
+        end
+      end
     end
   end
 
