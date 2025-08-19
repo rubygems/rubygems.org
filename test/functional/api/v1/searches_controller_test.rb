@@ -39,9 +39,8 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     setup do
       @match = create(:rubygem, name: "match")
       @other = create(:rubygem, name: "other")
-      create(:version, rubygem: @match)
-      create(:version, rubygem: @other)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @match)
+      create(:version, :reindex, rubygem: @other)
     end
 
     should_respond_to(:json) do |body|
@@ -79,10 +78,9 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       @match1 = create(:rubygem, name: "match1")
       @match2 = create(:rubygem, name: "match2")
       @other = create(:rubygem, name: "other")
-      create(:version, rubygem: @match1)
-      create(:version, rubygem: @match2)
-      create(:version, rubygem: @other)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @match1)
+      create(:version, :reindex, rubygem: @match2)
+      create(:version, :reindex, rubygem: @other)
     end
 
     context "with elasticsearch up" do

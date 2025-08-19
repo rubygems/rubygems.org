@@ -12,7 +12,6 @@ class DeletionTest < ActiveSupport::TestCase
     @gem_file.rewind
     @version = Version.last
     @spec_rz = RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    import_and_refresh
   end
 
   teardown do
@@ -160,7 +159,7 @@ class DeletionTest < ActiveSupport::TestCase
 
     perform_enqueued_jobs
 
-    response = Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: @version.rubygem_id
+    response = Searchkick.client.get index: Rubygem.searchkick_index.name, id: @version.rubygem_id
 
     assert response["_source"]["yanked"]
   end

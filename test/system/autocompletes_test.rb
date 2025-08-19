@@ -5,10 +5,9 @@ class AutocompletesTest < ApplicationSystemTestCase
 
   setup do
     rubygem = create(:rubygem, name: "rubocop")
-    create(:version, rubygem: rubygem, indexed: true)
+    create(:version, :reindex, rubygem: rubygem, indexed: true)
     rubygem = create(:rubygem, name: "rubocop-performance")
-    create(:version, rubygem: rubygem, indexed: true)
-    import_and_refresh
+    create(:version, :reindex, rubygem: rubygem, indexed: true)
 
     visit root_path
     @fill_field = find_by_id "query"
