@@ -7,7 +7,7 @@ module MaintenanceTasksAuditable
     around_action :audit_action
   end
 
-  def audit_action(&)
+  def audit_action(&blk)
     return yield if params[:action].in?(%w[show index])
 
     action = params.fetch(:action)
@@ -24,7 +24,7 @@ module MaintenanceTasksAuditable
       fields: params.slice(:comment).reverse_merge(comment: action_name),
       arguments: params,
       models: [run].compact,
-      &
+      &blk
     )
     value
   end
