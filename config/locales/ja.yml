@@ -13,9 +13,7 @@ ja:
     href="%{contributing_docs}">貢献者となり</a>サイトをより良くしてください。
   footer_sponsors_html: RubyGems.orgは広範囲のRubyコミュニティとの連携を通じて成立しました。<a href="https://www.fastly.com/">Fastly</a>はネットワーク帯域とCDNのサポートを提供しています。<a
     href="https://www.rubycentral.org/">Ruby Central</a>はインフラの費用を捻出し、開発や運用の資金を募っています。<a
-    href="%{sponsors_page}">出資者と出資の仕組みについてご確認ください</a>。
-  footer_join_rt_html: 全ての人にとって円滑にRubyGems.orgを稼動させ続けていく上で、開発者の時間を賄うためのご支援が必要です。<a
-    href="https://rubycentral.org/#/portal/signup">今日からでもRuby Centralにご参加ください</a>。
+    href="%{supporters_page}">出資者と出資の仕組みについてご確認ください</a>。
   form_disable_with: お待ちください……
   invalid_page: ページ番号が範囲外です。既定のページにリダイレクトしました
   locale_name: 日本語
@@ -248,7 +246,6 @@ ja:
         contribute: 貢献
         data: データ
         docs: ドキュメント
-        designed_by: 設計
         discussion_forum: 議論
         gems_served_by: gemの提供
         guides: ガイド
@@ -263,14 +260,13 @@ ja:
         source_code: コード
         statistics: 統計
         status: 状態
+        support_us:
         supported_by: 協賛
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           は以下から支援を受けています
-        tested_by: テスト
-        tracking_by: 追跡
         uptime: 稼働時間
-        verified_by: 検証
         secured_by: セキュリティ
         looking_for_maintainers: メンテナの募集
       header:
@@ -484,8 +480,8 @@ ja:
       title: RubyGemsをダウンロード
     security:
       title: セキュリティ
-    sponsors:
-      title: 出資者
+    supporters:
+      title:
   policies:
     index:
       title:
