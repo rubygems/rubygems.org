@@ -1,13 +1,13 @@
 require "test_helper"
 
 class CardComponentTest < ComponentTest
-  def render(...)
-    response = super
+  def render_page(component, &)
+    response = render(component, &)
     Capybara.string(response)
   end
 
   should "render a card with title, icon, and list content" do
-    render CardComponent.new do |c|
+    render_page CardComponent.new do |c|
       c.head("Gems", icon: "gems", count: 3)
       c.list do
         c.list_item_to("rubygem_version_path(1)") { "RubyGem1 (0.0.1)" }
@@ -27,7 +27,7 @@ class CardComponentTest < ComponentTest
   end
 
   should "render a card with custom title and scrollable content" do
-    render CardComponent.new do |c|
+    render_page CardComponent.new do |c|
       c.head do
         c.title("History")
       end
