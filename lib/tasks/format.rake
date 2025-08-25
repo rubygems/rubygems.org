@@ -1,17 +1,25 @@
 desc "Format code with RuboCop and Prettier"
-task format: :environment do
-  Rake::Task["format:ruby"].invoke
-  Rake::Task["format:js"].invoke
-end
+task format: %i[format:ruby format:js]
 
 namespace :format do
-  desc "Format Ruby code with RuboCop"
-  task ruby: :environment do
-    sh "bundle exec rubocop -a"
+  begin
+    require "rubocop/rake_task"
+  rescue LoadError # rubocop:disable Lint/SuppressedException
+    task :ruby do
+      puts "RuboCop is not available"
+    end
+  else
+    Rake::Task[:ruby].clear if Rake::Task.task_defined?(:ruby)
+    desc "Format Ruby code with RuboCop"
+    RuboCop::RakeTask.new(:ruby) do |task|
+      task.options = ["--display-cop-names", "--display-style-guide", "--fix-layout"]
+      task.fail_on_error = true
+    end
+    task ruby: :environment
   end
 
   desc "Format JavaScript code with Prettier"
   task js: :environment do
-    sh "npx prettier@3 --write 'app/javascript/**/*.js' 'config/*.js'"
+    sh "bin/prettier --write 'app/javascript/**/*.js' 'config/*.js'"
   end
 end
