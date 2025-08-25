@@ -86,12 +86,16 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     visit rubygem_path(@rubygem.slug)
 
-    click_on "Transfer to Organization"
+    visit organization_path(@organization.handle)
+    click_on "Transfer"
 
-    assert_current_path rubygem_transfer_organization_path(@rubygem.slug)
+    assert_current_path organization_transfer_rubygems_path
 
     select @organization.name, from: "Organization"
 
+    click_on "Continue"
+
+    check @rubygem.name
     click_on "Continue"
 
     select "Outside Contributor", from: maintainer.handle
@@ -102,9 +106,11 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
+    visit rubygem_path(@rubygem.name)
+
     assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
 
-    visit rubygem_owners_path(@rubygem.slug)
+    click_on "Owners"
 
     assert_text "Please confirm your password to continue"
 
