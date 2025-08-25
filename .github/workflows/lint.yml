@@ -55,7 +55,7 @@ jobs:
         with:
           node-version: '20'
       - name: Check JavaScript formatting
-        run: npx prettier@3 --check 'app/javascript/**/*.js' 'config/*.js'
+        run: bin/prettier
   kubeconform:
     name: Kubeconform
     runs-on: ubuntu-24.04

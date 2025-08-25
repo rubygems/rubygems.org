@@ -36,10 +36,10 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
       clientExtensionResults: credentials.clientExtensionResults,
       response: {
         authenticatorData: bufferToBase64url(
-          credentials.response.authenticatorData
+          credentials.response.authenticatorData,
         ),
         attestationObject: bufferToBase64url(
-          credentials.response.attestationObject
+          credentials.response.attestationObject,
         ),
         clientDataJSON: bufferToBase64url(credentials.response.clientDataJSON),
         signature: bufferToBase64url(credentials.response.signature),
@@ -158,7 +158,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
 
     function failed_verification_url(message) {
       const url = new URL(
-        `${location.origin}/webauthn_verification/failed_verification`
+        `${location.origin}/webauthn_verification/failed_verification`,
       );
       url.searchParams.append("error", message);
       return url.href;

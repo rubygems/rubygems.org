@@ -9,7 +9,7 @@ export default class extends Controller {
 
   getDumpData() {
     fetch(
-      "https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_postgresql"
+      "https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_postgresql",
     )
       .then((response) => response.text())
       .then((data) => {

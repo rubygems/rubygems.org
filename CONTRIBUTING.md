@@ -153,13 +153,13 @@ Please ensure any changes you make conform to our style standards or else the bu
 
 **Check formatting for all code:**
 
-    bundle exec rake rubocop
-    npx prettier@3 --check 'app/javascript/**/*.js' 'config/*.js'
+    bin/rubocop
+    bin/prettier
 
 **Automatically fix formatting issues:**
 
     rake format           # Fix both Ruby and JavaScript formatting
-    rake format:ruby      # Fix Ruby formatting only (runs rubocop -a)
+    rake format:ruby      # Fix Ruby formatting only (runs rubocop --fix-layout)
     rake format:js        # Fix JavaScript formatting only (runs prettier)
 
 **Manual commands:**
@@ -170,7 +170,7 @@ For Ruby formatting:
 
 For JavaScript formatting:
 
-    npx prettier@3 --write 'app/javascript/**/*.js' 'config/*.js'
+    bin/prettier --write
 
 #### Importing gems into the database
 

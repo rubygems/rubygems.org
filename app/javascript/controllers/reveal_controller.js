@@ -15,7 +15,7 @@ export default class extends Reveal {
     super.toggle();
     if (this.hasButtonTarget) {
       this.setAriaExpanded(
-        this.buttonTarget.ariaExpanded === "true" ? "false" : "true"
+        this.buttonTarget.ariaExpanded === "true" ? "false" : "true",
       );
     }
     if (this.hasToggleTarget && this.hasToggleClass) {

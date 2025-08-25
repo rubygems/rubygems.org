@@ -15,7 +15,7 @@ export default class extends Controller {
     this.radioTargets.forEach((radio) => {
       if (radio.checked) {
         const item = this.itemTargets.find(
-          (item) => item.dataset.name == radio.value
+          (item) => item.dataset.name == radio.value,
         );
         item.classList.remove("hidden");
       }

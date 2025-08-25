@@ -104,7 +104,7 @@ export default class extends Controller {
       return;
     }
     this.itemTargets.forEach((el) =>
-      el.classList.remove(...this.selectedClasses)
+      el.classList.remove(...this.selectedClasses),
     );
     el.classList.add(...this.selectedClasses);
     this.suggestionsTarget.setAttribute("aria-activedescendant", el.id);

@@ -48,7 +48,7 @@ export default class extends Controller {
   }
   leave() {
     this.collapseTargets.forEach((el) =>
-      el.classList.remove(this.expandedClass)
+      el.classList.remove(this.expandedClass),
     );
   }
   enter() {

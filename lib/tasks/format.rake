@@ -1,17 +1,14 @@
 desc "Format code with RuboCop and Prettier"
-task format: :environment do
-  Rake::Task["format:ruby"].invoke
-  Rake::Task["format:js"].invoke
-end
+task format: %i[format:ruby format:js]
 
 namespace :format do
   desc "Format Ruby code with RuboCop"
-  task ruby: :environment do
-    sh "bundle exec rubocop -a"
+  task :ruby do
+    sh "bin/rubocop --fix-layout"
   end
 
   desc "Format JavaScript code with Prettier"
-  task js: :environment do
-    sh "npx prettier@3 --write 'app/javascript/**/*.js' 'config/*.js'"
+  task :js do
+    sh "bin/prettier --write 'app/javascript/**/*.js' 'config/*.js'"
   end
 end

@@ -8,7 +8,7 @@ export default class extends Controller {
       .map((field) =>
         field.value.length > 0 && field.checkValidity()
           ? `${field.name}: ${field.value}`
-          : ""
+          : "",
       )
       .join(" ");
   }
