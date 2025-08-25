@@ -11,7 +11,7 @@ class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseCont
 
     @rubygem_transfer.transfer!
 
-    flash[:notice] = I18n.t("rubygems.transfer.confirm.success", 
+    flash[:notice] = I18n.t("rubygems.transfer.confirm.success",
                             organization: @rubygem_transfer.organization.name,
                             count: @rubygem_transfer.rubygems.size)
     redirect_to organization_path(@rubygem_transfer.organization.handle)
@@ -24,8 +24,8 @@ class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseCont
 
   def ensure_valid_transfer
     # Redirect if organization is missing or no gems selected
-    return if @rubygem_transfer.organization.present? && 
-              (@rubygem_transfer.new_record? || @rubygem_transfer.rubygems.any?)
+    return if @rubygem_transfer.organization.present? &&
+      (@rubygem_transfer.new_record? || @rubygem_transfer.rubygems.any?)
 
     redirect_to organization_transfer_rubygems_path
   end
