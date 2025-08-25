@@ -813,6 +813,8 @@ zh-CN:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: "%{name} 的反向依赖"

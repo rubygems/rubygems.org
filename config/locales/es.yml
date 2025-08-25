@@ -913,6 +913,8 @@ es:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: Dependencias inversas para %{name}

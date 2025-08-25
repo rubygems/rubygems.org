@@ -800,6 +800,8 @@ nl:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title:

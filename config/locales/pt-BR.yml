@@ -822,6 +822,8 @@ pt-BR:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: Dependências Reversas para %{name}

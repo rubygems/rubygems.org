@@ -843,6 +843,8 @@ fr:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: Dépendances inversées pour %{name}
