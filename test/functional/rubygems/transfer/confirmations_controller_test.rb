@@ -29,11 +29,48 @@ class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::Integrat
     assert_equal flash[:error], "Onboarding error: #{error_message}"
   end
 
-  test "PATCH /rubygems/:rubygem_id/transfer/confirm with an unauthorized user" do
-    unauthorized_user = create(:user)
+  test "PATCH /rubygems/:rubygem_id/transfer/confirm with a different user redirects to start transfer flow" do
+    different_user = create(:user)
 
-    patch confirm_transfer_rubygems_path(as: unauthorized_user)
+    patch confirm_transfer_rubygems_path(as: different_user)
 
-    assert_response :not_found
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "GET /rubygems/transfer/confirm redirects when organization is nil" do
+    @transfer.update_column(:organization_id, nil)
+
+    get confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "PATCH /rubygems/transfer/confirm redirects when organization is nil" do
+    @transfer.update_column(:organization_id, nil)
+
+    patch confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "GET /rubygems/transfer/confirm redirects when no rubygems selected" do
+    @transfer.update_column(:rubygems, [])
+
+    get confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "PATCH /rubygems/transfer/confirm redirects when no rubygems selected" do
+    @transfer.update_column(:rubygems, [])
+
+    patch confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
   end
 end

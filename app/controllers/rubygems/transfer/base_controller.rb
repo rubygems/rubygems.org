@@ -4,7 +4,7 @@ class Rubygems::Transfer::BaseController < ApplicationController
   before_action :find_or_initialize_transfer
   before_action :set_breadcrumbs
 
-  rescue_from Pundit::NotAuthorizedError, Pundit::NotDefinedError, with: :render_not_found
+  rescue_from Pundit::NotAuthorizedError, with: :render_not_found
 
   def find_or_initialize_transfer
     @rubygem_transfer = RubygemTransfer
