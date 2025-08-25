@@ -172,10 +172,6 @@ For JavaScript formatting:
 
     npx prettier@3 --write 'app/javascript/**/*.js' 'config/*.js'
 
-To automatically fix JavaScript formatting issues:
-
-    npm run format
-
 #### Importing gems into the database
 
 * Import gems into the database with Rake task.
