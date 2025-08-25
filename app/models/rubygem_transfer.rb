@@ -70,7 +70,7 @@ class RubygemTransfer < ApplicationRecord
     outside_contributors = invites.select(&:outside_contributor?).map(&:user)
 
     Ownership.includes(:rubygem, :user, api_key_rubygem_scopes: :api_key)
-      .where(user: outside_contributors, rubygem: rubygem)
+      .where(user: outside_contributors, rubygem: rubygems)
       .update_all(role: :maintainer)
   end
 
