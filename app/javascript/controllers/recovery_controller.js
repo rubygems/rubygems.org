@@ -1,9 +1,9 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static values = {
-    confirm: { type: String, default: "Leave without copying recovery codes?" }
-  }
+    confirm: { type: String, default: "Leave without copying recovery codes?" },
+  };
 
   connect() {
     this.copied = false;
