@@ -54,11 +54,8 @@ jobs:
       - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: '20'
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
       - name: Check JavaScript formatting
-        run: npm run lint:js
+        run: npx prettier@3 --check 'app/javascript/**/*.js' 'config/*.js'
   kubeconform:
     name: Kubeconform
     runs-on: ubuntu-24.04

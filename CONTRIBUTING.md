@@ -146,28 +146,31 @@ Make sure that the tests run successfully before making changes.
 * [Account confirmation email](http://localhost:3000/rails/mailers/mailer/email_confirmation)
 * [A list of all email previews](http://localhost:3000/rails/mailers)
 
-#### Running RuboCop
+#### Formatting and Linting
 
-We use RuboCop to enforce a consistent coding style throughout the project.
-Please ensure any changes you make conform to our style standards or else the
-build will fail.
+We use RuboCop for Ruby and Prettier for JavaScript to enforce consistent coding styles throughout the project.
+Please ensure any changes you make conform to our style standards or else the build will fail.
+
+**Check formatting for all code:**
 
     bundle exec rake rubocop
+    npx prettier@3 --check 'app/javascript/**/*.js' 'config/*.js'
 
-If you'd like RuboCop to attempt to automatically fix your style offenses, you
-can try running:
+**Automatically fix formatting issues:**
+
+    rake format           # Fix both Ruby and JavaScript formatting
+    rake format:ruby      # Fix Ruby formatting only (runs rubocop -a)
+    rake format:js        # Fix JavaScript formatting only (runs prettier)
+
+**Manual commands:**
+
+For Ruby formatting:
 
     bundle exec rake rubocop:autocorrect
 
-#### Running JavaScript Formatting
+For JavaScript formatting:
 
-We use Prettier to enforce consistent JavaScript code style throughout the project.
-Please ensure any JavaScript changes conform to our style standards or else the
-build will fail.
-
-Check JavaScript formatting:
-
-    npm run lint:js
+    npx prettier@3 --write 'app/javascript/**/*.js' 'config/*.js'
 
 To automatically fix JavaScript formatting issues:
 
