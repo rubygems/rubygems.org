@@ -48,7 +48,7 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "PATCH /rubygems/:rubygem_id/transfer/users with outside contributor role" do
-    patch rubygem_transfer_users_path(@rubygem.slug, as: @user), params: {
+    patch users_transfer_rubygems_path(as: @owner), params: {
       rubygem_transfer: {
         invites_attributes: {
           "0" => { id: @invites[0].id, role: "outside_contributor" },
@@ -57,10 +57,10 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_equal "outside_contributor", @transfer.invites.find_by(user_id: @other_users[0].id).role
-    assert_equal "maintainer", @transfer.invites.find_by(user_id: @other_users[1].id).role
+    assert_equal "outside_contributor", @transfer.invites.find_by(user_id: @maintainers[0].id).role
+    assert_equal "maintainer", @transfer.invites.find_by(user_id: @maintainers[1].id).role
 
     assert_response :redirect
-    assert_redirected_to rubygem_transfer_confirm_path(@rubygem.slug)
+    assert_redirected_to confirm_transfer_rubygems_path
   end
 end
