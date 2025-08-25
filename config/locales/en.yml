@@ -806,7 +806,9 @@ en:
         new:
           organization: Organization
       confirm:
-        success: "Your gems have been transferred successfully to %{organization}."
+        success:
+          one: "Successfully transferred 1 gem to %{organization}."
+          other: "Successfully transferred %{count} gems to %{organization}."
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"

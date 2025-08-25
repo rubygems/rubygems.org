@@ -15,7 +15,7 @@ class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::Integrat
 
     assert_response :redirect
     assert_redirected_to organization_path(@organization.handle)
-    assert_equal flash[:notice], "Your gems have been transferred successfully to #{@organization.name}."
+    assert_equal flash[:notice], "Successfully transferred 1 gem to #{@organization.name}."
   end
 
   test "PATCH /rubygems/:rubygem_id/transfer/confirm when transfer is invalid" do

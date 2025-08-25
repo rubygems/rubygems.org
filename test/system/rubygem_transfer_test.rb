@@ -41,7 +41,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
-    assert_text "Your gems have been transferred successfully to #{@organization.name}."
+    assert_text "Successfully transferred 1 gem to #{@organization.name}."
   end
 
   test "transfer a rubygem to an organization with users" do
@@ -70,7 +70,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
-    assert_text "Your gems have been transferred successfully to #{@organization.name}."
+    assert_text "Successfully transferred 1 gem to #{@organization.name}."
 
     visit organization_path(@organization.handle)
     click_on "Members"
