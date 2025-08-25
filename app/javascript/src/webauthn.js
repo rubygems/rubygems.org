@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
 
 (function () {
@@ -8,9 +7,13 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
   };
 
   const setError = function (submit, error, message) {
-    submit.attr("disabled", false);
-    error.attr("hidden", false);
-    error.text(message);
+    if (submit) {
+      submit.disabled = false;
+    }
+    if (error) {
+      error.hidden = false;
+      error.textContent = String(message);
+    }
   };
 
   const handleHtmlResponse = function (submit, responseError, response) {
@@ -74,15 +77,36 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
     };
   };
 
-  $(function () {
-    const credentialForm = $(".js-new-webauthn-credential--form");
-    const credentialError = $(".js-new-webauthn-credential--error");
-    const credentialSubmit = $(".js-new-webauthn-credential--submit");
-    const csrfToken = $("[name='csrf-token']").attr("content");
+  const onReady = (fn) => {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn);
+    } else {
+      fn();
+    }
+  };
 
-    credentialForm.submit(function (event) {
+  onReady(() => {
+    const credentialForm = document.querySelector(
+      ".js-new-webauthn-credential--form",
+    );
+    if (!credentialForm) {
+      return;
+    }
+    const credentialError = document.querySelector(
+      ".js-new-webauthn-credential--error",
+    );
+    const credentialSubmit = document.querySelector(
+      ".js-new-webauthn-credential--submit",
+    );
+    const csrfMeta = document.querySelector("[name='csrf-token']");
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+
+    credentialForm.addEventListener("submit", function (event) {
       const form = handleEvent(event);
-      const nickname = $(".js-new-webauthn-credential--nickname").val();
+      const nicknameInput = document.querySelector(
+        ".js-new-webauthn-credential--nickname",
+      );
+      const nickname = nicknameInput ? nicknameInput.value : "";
 
       fetch(form.action + ".json", {
         method: "POST",
@@ -151,10 +175,18 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
     });
   };
 
-  $(function () {
-    const cliSessionForm = $(".js-webauthn-session-cli--form");
-    const cliSessionError = $(".js-webauthn-session-cli--error");
-    const csrfToken = $("[name='csrf-token']").attr("content");
+  onReady(() => {
+    const cliSessionForm = document.querySelector(
+      ".js-webauthn-session-cli--form",
+    );
+    if (!cliSessionForm) {
+      return;
+    }
+    const cliSessionError = document.querySelector(
+      ".js-webauthn-session-cli--error",
+    );
+    const csrfMeta = document.querySelector("[name='csrf-token']");
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
 
     function failed_verification_url(message) {
       const url = new URL(
@@ -164,7 +196,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
       return url.href;
     }
 
-    cliSessionForm.submit(function (event) {
+    cliSessionForm.addEventListener("submit", function (event) {
       getCredentials(event, csrfToken)
         .then(function (response) {
           response.text().then(function (text) {
@@ -181,13 +213,19 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
     });
   });
 
-  $(function () {
-    const sessionForm = $(".js-webauthn-session--form");
-    const sessionSubmit = $(".js-webauthn-session--submit");
-    const sessionError = $(".js-webauthn-session--error");
-    const csrfToken = $("[name='csrf-token']").attr("content");
+  onReady(() => {
+    const sessionForm = document.querySelector(".js-webauthn-session--form");
+    if (!sessionForm) {
+      return;
+    }
+    const sessionSubmit = document.querySelector(
+      ".js-webauthn-session--submit",
+    );
+    const sessionError = document.querySelector(".js-webauthn-session--error");
+    const csrfMeta = document.querySelector("[name='csrf-token']");
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
 
-    sessionForm.submit(async function (event) {
+    sessionForm.addEventListener("submit", async function (event) {
       try {
         const response = await getCredentials(event, csrfToken);
         handleHtmlResponse(sessionSubmit, sessionError, response);
