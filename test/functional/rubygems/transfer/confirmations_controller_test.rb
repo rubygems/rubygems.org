@@ -2,20 +2,20 @@ require "test_helper"
 
 class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user)
-    @other_users = create_list(:user, 2)
+    @owner = create(:user)
+    @maintainers = create_list(:user, 2)
     @organization = create(:organization)
-    @rubygem = create(:rubygem, maintainers: @other_users)
+    @rubygem = create(:rubygem, maintainers: @maintainers)
 
-    @transfer = create(:rubygem_transfer, rubygem: @rubygem, organization: @organization, created_by: @user)
+    @transfer = create(:rubygem_transfer, rubygems: [@rubygem.id], organization: @organization, created_by: @owner)
   end
 
   test "PATCH /rubygems/:rubygem_id/transfer/confirm" do
-    patch rubygem_transfer_confirm_path(@rubygem.slug, as: @user)
+    patch confirm_transfer_rubygems_path(as: @owner)
 
     assert_response :redirect
-    assert_redirected_to rubygem_path(@rubygem.slug)
-    assert_equal flash[:notice], "#{@rubygem.name} has been transferred successfully to #{@organization.name}."
+    assert_redirected_to organization_path(@organization.handle)
+    assert_equal flash[:notice], "Successfully transferred 1 gem to #{@organization.name}."
   end
 
   test "PATCH /rubygems/:rubygem_id/transfer/confirm when transfer is invalid" do
@@ -23,17 +23,54 @@ class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::Integrat
     # cause transferring to fail
     RubygemTransfer.any_instance.stubs(:update!).raises(ActiveRecord::ActiveRecordError, error_message)
 
-    patch rubygem_transfer_confirm_path(@rubygem.slug, as: @user)
+    patch confirm_transfer_rubygems_path(as: @owner)
 
     assert_response :unprocessable_content
     assert_equal flash[:error], "Onboarding error: #{error_message}"
   end
 
-  test "PATCH /rubygems/:rubygem_id/transfer/confirm with an unauthorized user" do
-    unauthorized_user = create(:user)
+  test "PATCH /rubygems/:rubygem_id/transfer/confirm with a different user redirects to start transfer flow" do
+    different_user = create(:user)
 
-    patch rubygem_transfer_confirm_path(@rubygem.slug, as: unauthorized_user)
+    patch confirm_transfer_rubygems_path(as: different_user)
 
-    assert_response :not_found
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "GET /rubygems/transfer/confirm redirects when organization is nil" do
+    @transfer.update_column(:organization_id, nil)
+
+    get confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "PATCH /rubygems/transfer/confirm redirects when organization is nil" do
+    @transfer.update_column(:organization_id, nil)
+
+    patch confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "GET /rubygems/transfer/confirm redirects when no rubygems selected" do
+    @transfer.update_column(:rubygems, [])
+
+    get confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
+  end
+
+  test "PATCH /rubygems/transfer/confirm redirects when no rubygems selected" do
+    @transfer.update_column(:rubygems, [])
+
+    patch confirm_transfer_rubygems_path(as: @owner)
+
+    assert_response :redirect
+    assert_redirected_to organization_transfer_rubygems_path
   end
 end
