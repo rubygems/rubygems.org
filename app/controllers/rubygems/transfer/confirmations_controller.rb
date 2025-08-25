@@ -11,7 +11,9 @@ class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseCont
 
     @rubygem_transfer.transfer!
 
-    flash[:notice] = I18n.t("rubygems.transfer.confirm.success", organization: @rubygem_transfer.organization.name)
+    flash[:notice] = I18n.t("rubygems.transfer.confirm.success", 
+                            organization: @rubygem_transfer.organization.name,
+                            count: @rubygem_transfer.rubygems.size)
     redirect_to organization_path(@rubygem_transfer.organization.handle)
   rescue ActiveRecord::ActiveRecordError
     flash[:error] = "Onboarding error: #{@rubygem_transfer.error}"
