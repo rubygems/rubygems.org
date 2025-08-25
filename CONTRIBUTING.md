@@ -159,6 +159,20 @@ can try running:
 
     bundle exec rake rubocop:autocorrect
 
+#### Running JavaScript Formatting
+
+We use Prettier to enforce consistent JavaScript code style throughout the project.
+Please ensure any JavaScript changes conform to our style standards or else the
+build will fail.
+
+Check JavaScript formatting:
+
+    npm run lint:js
+
+To automatically fix JavaScript formatting issues:
+
+    npm run format
+
 #### Importing gems into the database
 
 * Import gems into the database with Rake task.
