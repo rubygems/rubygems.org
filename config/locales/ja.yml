@@ -817,6 +817,8 @@ ja:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: "%{name}の被依存関係"
