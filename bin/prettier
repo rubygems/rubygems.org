@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Default to check mode with app/javascript/**/*.js and config/*.js if no arguments are provided.
+# The github action is configured to run this script with no arguments, so it must be the default.
+if [ -z "$1" ]; then
+  exec npx prettier@3 --check 'app/javascript/**/*.js' 'config/*.js' "$@"
+else
+  exec npx prettier@3 "$@"
+fi
