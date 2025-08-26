@@ -250,7 +250,7 @@ GEM
     discard (1.4.0)
       activerecord (>= 4.2, < 9.0)
     docile (1.4.1)
-    dogstatsd-ruby (5.7.0)
+    dogstatsd-ruby (5.7.1)
     dotenv (3.1.8)
     dotenv-rails (3.1.8)
       dotenv (= 3.1.8)
@@ -1101,7 +1101,7 @@ CHECKSUMS
   diff-lcs (1.5.1) sha256=273223dfb40685548436d32b4733aa67351769c7dea621da7d9dd4813e63ddfe
   discard (1.4.0) sha256=6efcd2a53ddf96781f81b825d398f1c88ab88c0faa84e131bea6e16ef95d65d0
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
-  dogstatsd-ruby (5.7.0) sha256=9c1e3b56e373e3f0e8d2ce258eeed89a93d7f5ff596e518fa0cf8790bfe8758e
+  dogstatsd-ruby (5.7.1) sha256=d2e211f9635d6bbe773e152e00fd4cb9f165d26e10356dbef8f917f7a9e5d58c
   dotenv (3.1.8) sha256=9e1176060ced581f8e6ce4384e91361817763a76e3c625c8bddc18b35bd392c3
   dotenv-rails (3.1.8) sha256=46c9d1226a8b58a83b5f61325aa8cffd25cea1c0fafdfbbbee1e5dfea77980c4
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
