@@ -67,6 +67,8 @@ spec:
             value: "<%= environment == 'production' ? 8 : 2 %>"
           - name: RAILS_MAX_THREADS
             value: "5"
+          - name: DD_TAGS
+            value: "app:rubygems.org"
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
@@ -81,6 +83,8 @@ spec:
                 fieldPath: status.hostIP
           - name: STATSD_ADDR
             value: $(STATSD_HOST):8125
+          - name: STATSD_GROUPING
+            value: "rubygems"
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
