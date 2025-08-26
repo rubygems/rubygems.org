@@ -84,7 +84,11 @@ spec:
           - name: STATSD_ADDR
             value: $(STATSD_HOST):8125
           - name: STATSD_GROUPING
-            value: "rubygems"
+            value: "rubygems.org"
+          - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
