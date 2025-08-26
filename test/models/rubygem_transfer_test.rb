@@ -40,6 +40,8 @@ class RubygemTransferTest < ActiveSupport::TestCase
     maintainer = create(:user)
     other_rubygem = create(:rubygem, owners: [@owner], maintainers: [maintainer])
 
+    assert_empty @transfer.invites
+
     @transfer.rubygems = [other_rubygem.id]
     @transfer.save
 
