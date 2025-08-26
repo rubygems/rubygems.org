@@ -162,14 +162,26 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context "twitter_username" do
-      should validate_length_of(:twitter_username).is_at_most(20)
-      should allow_value("user123_32").for(:twitter_username)
-      should_not allow_value("@user").for(:twitter_username)
-      should_not allow_value("user 1").for(:twitter_username)
-      should_not allow_value("user-1").for(:twitter_username)
-      should allow_value("01234567890123456789").for(:twitter_username)
-      should_not allow_value("012345678901234567890").for(:twitter_username)
+    context "social_link" do
+      should "be less than 255 characters" do
+        user = build(:user, social_link: format("%s.example.com", "a" * 256))
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:social_link], "is too long (maximum is 255 characters)"
+      end
+
+      should "be valid when it matches a valid URI regex" do
+        user = build(:user, social_link: "https://example.com/someone")
+
+        assert_predicate user, :valid?
+      end
+
+      should "be invalid when it doesn't match a valid URI regex" do
+        user = build(:user, social_link: ">\"<script>alert(document.cookie)</script>.gmail.com")
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:social_link], "is invalid"
+      end
     end
 
     context "password" do

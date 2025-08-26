@@ -65,19 +65,10 @@
           </p>
         <% end %>
 
-        <% if @user.twitter_username.present? %>
-          <%=
-            image_tag(
-              "/images/x_icon.png",
-              alt: "X icon",
-              class: "profile__header__icon"
-            )
-          %>
-
+        <% if @user.social_link.present? %>
           <%=
             link_to(
-              twitter_username(@user),
-              twitter_url(@user),
+              social_link(@user),
               class: "profile__header__attribute t-link--black"
             )
           %>
