@@ -85,6 +85,7 @@ spec:
             value: $(STATSD_HOST):8125
           - name: STATSD_GROUPING
             value: "rubygems.org"
+          # https://github.com/yob/puma-plugin-statsd/blob/b01769e37e30b801b82dbc0ab899a695731d3629/README.md#my_pod_name
           - name: MY_POD_NAME
             valueFrom:
               fieldRef:
