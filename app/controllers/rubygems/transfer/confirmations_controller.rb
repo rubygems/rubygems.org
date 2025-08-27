@@ -22,10 +22,11 @@ class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseCont
 
   private
 
+  # This is a quick sanity check to ensure we have a ready RubygemTransfer. If the
+  # transfer doesn't have an associated Organization, check the user authorization
+  # would raise a Pundit::NilClassPolicy
   def ensure_valid_transfer
-    # Redirect if organization is missing or no gems selected
-    return if @rubygem_transfer.organization.present? &&
-      (@rubygem_transfer.new_record? || @rubygem_transfer.rubygems.any?)
+    return if @rubygem_transfer.organization.present? && @rubygem_transfer.rubygems.any?
 
     redirect_to organization_transfer_rubygems_path
   end
