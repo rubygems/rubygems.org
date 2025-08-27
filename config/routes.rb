@@ -220,18 +220,23 @@ Rails.application.routes.draw do
       end
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
 
-      get "transfer", to: redirect("/gems/%{rubygem_id}/transfer/organization")
-      delete "transfer", to: "rubygems/transfers#destroy"
+      collection do
+        get "transfer", to: redirect("/gems/transfer/organization")
+        delete "transfer", to: "rubygems/transfers#destroy"
 
-      namespace :transfer do
-        get "organization", to: "/rubygems/transfer/organizations#new"
-        post "organization", to: "/rubygems/transfer/organizations#create"
+        namespace :transfer do
+          get "organization", to: "/rubygems/transfer/organizations#new"
+          post "organization", to: "/rubygems/transfer/organizations#create"
 
-        get "users", to: "/rubygems/transfer/users#edit"
-        patch "users", to: "/rubygems/transfer/users#update"
+          get "rubygems", to: "/rubygems/transfer/rubygems#edit"
+          patch "rubygems", to: "/rubygems/transfer/rubygems#update"
 
-        get "confirm", to: "/rubygems/transfer/confirmations#edit"
-        patch "confirm", to: "/rubygems/transfer/confirmations#update"
+          get "users", to: "/rubygems/transfer/users#edit"
+          patch "users", to: "/rubygems/transfer/users#update"
+
+          get "confirm", to: "/rubygems/transfer/confirmations#edit"
+          patch "confirm", to: "/rubygems/transfer/confirmations#update"
+        end
       end
     end
 

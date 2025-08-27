@@ -430,6 +430,7 @@ zh-CN:
       no_gems:
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -806,11 +807,14 @@ zh-CN:
       title:
       description_html:
     transfer:
+      cancelled:
       organizations:
         new:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: "%{name} 的反向依赖"

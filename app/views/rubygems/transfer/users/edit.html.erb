@@ -1,10 +1,10 @@
-<% @title = "Transfer a Gem" %>
+<% @title = "Transfer Gems" %>
 
 <% content_for :aside do %>
-  <%= render "rubygems/transfer/summary", current_step: 2 %>
+  <%= render "rubygems/transfer/summary", current_step: 3 %>
 <% end %>
 
-<%= render "rubygems/transfer/progress", current_step: 2 %>
+<%= render "rubygems/transfer/progress", current_step: 3 %>
 
 <h2 class="text-h4 mb-10">Manage Members</h2>
 
@@ -60,7 +60,7 @@
   </div>
 </div>
 
-<%= form_with(model: @rubygem_transfer, url: rubygem_transfer_users_path(@rubygem.slug), method: :patch) do |form| %>
+<%= form_with(model: @rubygem_transfer, url: users_transfer_rubygems_path, method: :patch) do |form| %>
   <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
   <% if @rubygem_transfer.invites.any? %>
   <ul>
@@ -89,9 +89,9 @@
   <% end %>
 
   <div class="flex border-t border-neutral-400 lg:-mx-10 lg:px-10 pt-10 mt-10 justify-between">
-    <%= render ButtonComponent.new("Back", rubygem_transfer_organization_path(@rubygem.slug), type: :link, color: :neutral, style: :outline) %>
+    <%= render ButtonComponent.new("Back", rubygems_transfer_rubygems_path, type: :link, color: :neutral, style: :outline) %>
     <span class="space-x-2">
-      <%= render ButtonComponent.new("Skip for now", rubygem_transfer_confirm_path(@rubygem.slug), type: :link, color: :neutral, style: :plain) %>
+      <%= render ButtonComponent.new("Skip for now", confirm_transfer_rubygems_path, type: :link, color: :neutral, style: :plain) %>
       <%= render ButtonComponent.new("Continue", type: :submit, style: :outline) %>
     </span>
   </div>

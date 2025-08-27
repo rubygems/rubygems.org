@@ -5,7 +5,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     @owner = create(:user)
     @rubygem = create(:rubygem)
     @organization = create(:organization)
-    @transfer = create(:rubygem_transfer, created_by: @owner, rubygem: @rubygem, organization: @organization)
+    @transfer = create(:rubygem_transfer, created_by: @owner, rubygems: [@rubygem.id], organization: @organization)
   end
 
   test "record errors when transfer fails" do
@@ -36,16 +36,28 @@ class RubygemTransferTest < ActiveSupport::TestCase
     assert_includes @rubygem.reload.owners, user
   end
 
+  test "updating invites when rubygems change" do
+    maintainer = create(:user)
+    other_rubygem = create(:rubygem, owners: [@owner], maintainers: [maintainer])
+
+    assert_empty @transfer.invites
+
+    @transfer.rubygems = [other_rubygem.id]
+    @transfer.save
+
+    assert_includes @transfer.invites.map(&:user), maintainer
+  end
+
   test "validates rubygem ownership before transfer" do
     non_owner = create(:user)
     @transfer.created_by = non_owner
 
     assert_not @transfer.valid?
-    assert_includes @transfer.errors[:rubygem], "does not have permission to transfer this gem"
-    assert_includes @transfer.errors[:organization], "does not have permission to transfer gems to this organization"
+    assert_includes @transfer.errors[:created_by], "must be an owner of the #{@rubygem.name} gem"
+    assert_includes @transfer.errors[:created_by], "does not have permission to transfer gems to this organization"
   end
 
-  test "sets the organization for the rubygem" do
+  test "sets the organization for each rubygem" do
     @transfer.transfer!
 
     assert_equal @organization, @rubygem.reload.organization
@@ -117,6 +129,6 @@ class RubygemTransferTest < ActiveSupport::TestCase
     @rubygem.update!(organization: existing_organization)
 
     assert_not @transfer.valid?
-    assert_includes @transfer.errors[:rubygem], "is already owned by an organization"
+    assert_includes @transfer.errors[:rubygems], "#{@rubygem.name} is already owned by an organization"
   end
 end
