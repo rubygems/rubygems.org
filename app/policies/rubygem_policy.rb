@@ -13,34 +13,44 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def configure_oidc?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
+    gem_permissions.can_perform_gem_admin? || deny
   end
 
   def configure_trusted_publishers?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
+    gem_permissions.can_perform_gem_admin? || deny
   end
 
   def show_events?
-    rubygem_owned_by?(user)
+    gem_permissions.can_push? || deny
+  end
+
+  def show_mfa_status?
+    gem_permissions.can_push? || deny
   end
 
   def show_unconfirmed_ownerships?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
+    gem_permissions.can_perform_gem_admin? || deny
   end
 
   def add_owner?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    gem_permissions.can_manage_owners? || deny
   end
 
   def update_owner?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    gem_permissions.can_manage_owners? || deny
   end
 
   def remove_owner?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    gem_permissions.can_manage_owners? || deny
   end
 
   def transfer_gem?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner)
+    gem_permissions.can_manage_owners? || deny
+  end
+
+  private
+
+  def gem_permissions
+    GemPermissions.new(record, user)
   end
 end
