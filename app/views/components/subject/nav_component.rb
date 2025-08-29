@@ -31,7 +31,7 @@ class Subject::NavComponent < ApplicationComponent
     data = { scroll_target: "scrollLeft" } if is_current
     options[:class] = "#{options[:class]} #{is_current ? ACTIVE_LINK : INACTIVE_LINK}"
     link_to(url, data:, **options) do
-      unsafe_raw helpers.icon_tag(icon, size: 7, class: is_current && "text-orange-500")
+      icon_tag(icon, size: 7, class: is_current && "text-orange-500")
       span { text }
     end
   end
