@@ -68,7 +68,7 @@ spec:
           - name: RAILS_MAX_THREADS
             value: "5"
           - name: DD_TAGS
-            value: "app:rubygems.org"
+            value: "app:rubygems.org env:<%= environment %>"
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
