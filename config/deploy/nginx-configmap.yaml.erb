@@ -82,6 +82,7 @@ data:
         proxy_set_header X-Forwarded-Host "";
         proxy_set_header Client-IP "";
         proxy_set_header Host $host;
+        proxy_set_header X-Request-Start "t=${msec}";
         proxy_redirect off;
 
         client_max_body_size 500M;
