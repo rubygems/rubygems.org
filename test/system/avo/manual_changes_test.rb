@@ -32,6 +32,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     audit = Audit.sole
 
     page.assert_text audit.id
+
     assert_equal log_ticket, audit.auditable
     assert_equal "LogTicket", audit.auditable_type
     assert_equal "Manual create of LogTicket", audit.action
@@ -78,6 +79,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     audit = Audit.last
 
     page.assert_text audit.id
+
     assert_equal log_ticket, audit.auditable
     assert_equal "LogTicket", audit.auditable_type
     assert_equal "Manual update of LogTicket", audit.action
