@@ -46,6 +46,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Reset User 2FA", audit.action
     assert_equal_hash(
@@ -121,6 +122,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Block User", audit.action
     assert_equal_hash(
@@ -206,6 +208,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
+
       assert_equal "User", audit.auditable_type
       assert_equal "Reset Api Key", audit.action
       assert_equal_hash(
@@ -286,6 +289,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Yank all Rubygems", audit.action
 
@@ -386,6 +390,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     deletion = security_user.deletions.first
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Yank User", audit.action
 
@@ -517,6 +522,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       email_sent_event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
+
       assert_equal "User", audit.auditable_type
       assert_equal "Change User Email", audit.action
       assert_equal_hash(
@@ -591,6 +597,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     event = user.events.where(tag: Events::UserEvent::CREATED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Create User", audit.action
     assert_equal_hash(
