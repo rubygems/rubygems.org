@@ -16,11 +16,8 @@ pt-BR:
     a grande comunidade Ruby. <a href="https://www.fastly.com/">Fastly</a> fornece
     uma largura de banda (bandwidth) e suporte a CDN, <a href="https://www.rubycentral.org/">Ruby
     Central</a> cobre a infraestrutura e custos, e financia o desenvolvimento e o
-    trabalho operacional. <a href="%{sponsors_page}">Saiba mais sobre nossos parceiros
+    trabalho operacional. <a href="%{supporters_page}">Saiba mais sobre nossos parceiros
     e como eles trabalham juntos</a>.
-  footer_join_rt_html: Nós precisamos de sua ajuda para financiar os desenvolvedores
-    que mantém o RubyGems.org funcionando sem problemas. <a href="https://rubycentral.org/#/portal/signup">
-    Junte-se ao Ruby Central</a>.
   form_disable_with: Por favor, aguarde...
   invalid_page: Esta página é inválida. Redirecionando para a página inicial...
   locale_name: Português do Brasil
@@ -256,7 +253,6 @@ pt-BR:
         contribute: Como Contribuir
         data: Dump de Dados
         docs: Documentação
-        designed_by: Design
         discussion_forum: Fóruns
         gems_served_by: Provisionamento
         guides: Guias
@@ -271,14 +267,13 @@ pt-BR:
         source_code: Código Fonte
         statistics: Estatísticas
         status: Status
+        support_us:
         supported_by: Patrocínio
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> é apoiado por
-        tested_by: Testado por
-        tracking_by: Coleta de Dados
         uptime: Uptime
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:
@@ -432,6 +427,7 @@ pt-BR:
       no_gems:
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -442,12 +438,16 @@ pt-BR:
       destroy:
         member_removed:
         cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
       index:
         invite:
         pending:
       edit:
         update:
         delete:
+        resend_invitation:
       new:
         handle:
         role:
@@ -496,7 +496,7 @@ pt-BR:
       title:
     security:
       title:
-    sponsors:
+    supporters:
       title:
   policies:
     index:
@@ -816,11 +816,14 @@ pt-BR:
       title:
       description_html:
     transfer:
+      cancelled:
       organizations:
         new:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: Dependências Reversas para %{name}

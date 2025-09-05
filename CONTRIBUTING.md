@@ -90,7 +90,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
   * Note that `-e "xpack.security.enabled=false"` disables authentication.
 
-* Install PostgreSQL (>= 13.x): `brew install postgresql`
+* Install PostgreSQL (>= 14.x): `brew install postgresql`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
   * Show all memcached options: `memcached -h`
@@ -146,18 +146,31 @@ Make sure that the tests run successfully before making changes.
 * [Account confirmation email](http://localhost:3000/rails/mailers/mailer/email_confirmation)
 * [A list of all email previews](http://localhost:3000/rails/mailers)
 
-#### Running RuboCop
+#### Formatting and Linting
 
-We use RuboCop to enforce a consistent coding style throughout the project.
-Please ensure any changes you make conform to our style standards or else the
-build will fail.
+We use RuboCop for Ruby and Prettier for JavaScript to enforce consistent coding styles throughout the project.
+Please ensure any changes you make conform to our style standards or else the build will fail.
 
-    bundle exec rake rubocop
+**Check formatting for all code:**
 
-If you'd like RuboCop to attempt to automatically fix your style offenses, you
-can try running:
+    bin/rubocop
+    bin/prettier
+
+**Automatically fix formatting issues:**
+
+    rake format           # Fix both Ruby and JavaScript formatting
+    rake format:ruby      # Fix Ruby formatting only (runs rubocop --fix-layout)
+    rake format:js        # Fix JavaScript formatting only (runs prettier)
+
+**Manual commands:**
+
+For Ruby formatting:
 
     bundle exec rake rubocop:autocorrect
+
+For JavaScript formatting:
+
+    bin/prettier --write
 
 #### Importing gems into the database
 

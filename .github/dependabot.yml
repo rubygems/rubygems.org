@@ -3,7 +3,7 @@ updates:
 - package-ecosystem: bundler
   directory: "/"
   schedule:
-    interval: daily
+    interval: weekly
   open-pull-requests-limit: 99
   versioning-strategy: increase
   groups:
@@ -15,12 +15,10 @@ updates:
       patterns: ["rails", "active*", "action*", "railties"]
     aws:
       patterns: ["aws-*"]
+    flipper:
+      patterns: ["flipper*"]
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
-    interval: daily
+    interval: weekly
   open-pull-requests-limit: 99
-- package-ecosystem: docker
-  directory: /
-  schedule:
-    interval: daily

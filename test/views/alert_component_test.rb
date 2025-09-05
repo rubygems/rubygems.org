@@ -1,18 +1,17 @@
 require "test_helper"
-require "phlex/testing/rails/view_helper"
 
 class AlertComponentTest < ComponentTest
   def alert(...)
     AlertComponent.new(...)
   end
 
-  def render(...)
-    response = super
+  def render_page(component, &)
+    response = render(component, &)
     Capybara.string(response)
   end
 
   test "renders a non-closable (blue) notice by default" do
-    page = render(alert { "Hello, world!" })
+    page = render_page(alert { "Hello, world!" })
 
     assert_selector ".bg-blue-200.text-neutral-800"
     assert_text page, "Hello, world!"
@@ -20,7 +19,7 @@ class AlertComponentTest < ComponentTest
   end
 
   test "renders a closable alert" do
-    page = render(alert(style: :alert, closeable: true) { "Alert!" })
+    page = render_page(alert(style: :alert, closeable: true) { "Alert!" })
 
     assert_selector ".bg-yellow-200.text-neutral-800"
     assert_text page, "Alert!"
@@ -28,7 +27,7 @@ class AlertComponentTest < ComponentTest
   end
 
   test "renders a closable error" do
-    page = render(alert(style: :error, closeable: true) { "Error!" })
+    page = render_page(alert(style: :error, closeable: true) { "Error!" })
 
     assert_selector ".bg-red-200.text-neutral-800"
     assert_text page, "Error!"
@@ -36,7 +35,7 @@ class AlertComponentTest < ComponentTest
   end
 
   test "renders a closable success" do
-    page = render(alert(style: :success, closeable: true) { "Success!" })
+    page = render_page(alert(style: :success, closeable: true) { "Success!" })
 
     assert_selector ".bg-green-200.text-neutral-800"
     assert_text page, "Success!"
@@ -44,7 +43,7 @@ class AlertComponentTest < ComponentTest
   end
 
   test "renders a neutral alert" do
-    page = render(alert(style: :neutral, closeable: false) { "Here's some info" })
+    page = render_page(alert(style: :neutral, closeable: false) { "Here's some info" })
 
     assert_selector ".bg-neutral-200.text-neutral-800"
     assert_text page, "Here's some info"

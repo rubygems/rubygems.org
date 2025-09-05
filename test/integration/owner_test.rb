@@ -133,6 +133,7 @@ class OwnerTest < SystemTest
     click_button "Authenticate with security device"
 
     page.assert_text "Credentials required"
+
     assert page.has_css? "#verify_password_password"
   end
 

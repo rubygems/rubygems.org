@@ -90,7 +90,20 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
           organization_name: ""
         } }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
+      end
+    end
+
+    context "when the organization handle is reserved" do
+      should "render the form with an error for reserved handle" do
+        post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
+          organization_name: "Admin Organization",
+          organization_handle: "admin",
+          name_type: "custom"
+        } }
+
+        assert_response :unprocessable_content
+        assert_select ".field_with_errors"
       end
     end
   end

@@ -3,6 +3,7 @@ module OIDC::Concerns::TrustedPublisherCreation
 
   included do
     include SessionVerifiable
+
     verify_session_before
 
     before_action :set_trusted_publisher_type, only: %i[create]

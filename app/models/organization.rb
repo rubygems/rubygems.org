@@ -6,6 +6,7 @@ class Organization < ApplicationRecord
     length: { within: 2..40 },
     format: { with: Patterns::HANDLE_PATTERN }
   validates :name, presence: true, length: { within: 2..255 }
+  validate :handle_not_reserved
 
   has_many :memberships, -> { where.not(confirmed_at: nil) }, dependent: :destroy, inverse_of: :organization
   has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :organization
@@ -40,5 +41,15 @@ class Organization < ApplicationRecord
 
   def flipper_id
     "org:#{handle}"
+  end
+
+  private
+
+  def handle_not_reserved
+    return if handle.blank?
+
+    return unless Handle.reserved?(handle)
+
+    errors.add(:handle, "is reserved and cannot be used")
   end
 end

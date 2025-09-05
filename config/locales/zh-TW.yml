@@ -13,9 +13,7 @@ zh-TW:
     href="%{gem_list}">可用 Gem</a> 的詳細資訊。<br>現在就<a href="%{contributing_docs}">成為貢獻者</a>，貢獻一己之力來改善本站。
   footer_sponsors_html: RubyGems.org 透過與廣大的 Ruby 社群合作而誕生。 <a href="https://www.fastly.com/">Fastly</a>
     提供頻寬和 CDN 支援， <a href="https://www.rubycentral.org/">Ruby Central</a> 支付設備費用，並為進行中的開發和營運工作提供資金。
-    <a href="%{sponsors_page}">進一步了解我們的贊助商和它們是如何合作的</a>。
-  footer_join_rt_html: 我們需要您的幫助來資助開發者為保證 RubyGems.org 能夠順利運行所耗費的時間。 <a href="https://rubycentral.org/#/portal/signup">立刻加入
-    Ruby Central</a>。
+    <a href="%{supporters_page}">進一步了解我們的贊助商和它們是如何合作的</a>。
   form_disable_with: 請稍候...
   invalid_page: 頁碼超出範圍。已重新導向至預設頁面。
   locale_name: 正體中文
@@ -248,7 +246,6 @@ zh-TW:
         contribute: 貢獻
         data: 資料
         docs: 文件
-        designed_by: 設計
         discussion_forum: 討論群組
         gems_served_by: 服務
         guides: 教學文件
@@ -263,14 +260,13 @@ zh-TW:
         source_code: 原始碼
         statistics: 統計
         status: 狀態
+        support_us:
         supported_by: 支持
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> 由以下支持
-        tested_by: 測試
-        tracking_by: 追蹤
         uptime: 上線時間
-        verified_by: 驗證
         secured_by:
         looking_for_maintainers: 徵求維護者
       header:
@@ -425,6 +421,7 @@ zh-TW:
       no_gems:
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -435,12 +432,16 @@ zh-TW:
       destroy:
         member_removed:
         cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
       index:
         invite:
         pending:
       edit:
         update:
         delete:
+        resend_invitation:
       new:
         handle:
         role:
@@ -480,8 +481,8 @@ zh-TW:
       title: 下載 RubyGems
     security:
       title: 安全性
-    sponsors:
-      title: 贊助者
+    supporters:
+      title:
   policies:
     index:
       title:
@@ -794,11 +795,14 @@ zh-TW:
       title:
       description_html:
     transfer:
+      cancelled:
       organizations:
         new:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: "%{name} 的反向依賴"

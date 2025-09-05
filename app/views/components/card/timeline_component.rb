@@ -21,7 +21,7 @@ class Card::TimelineComponent < ApplicationComponent
       div(class: "flex-1 flex-col ml-5 md:ml-7 pb-4 border-b border-neutral-300 dark:border-neutral-700") do
         div(class: "flex items-center justify-between") do
           span(class: "text-b3 text-neutral-600") do
-            helpers.local_time_ago(datetime, class: "text-b3 text-neutral-600")
+            local_time_ago(datetime, class: "text-b3 text-neutral-600")
           end
           span(class: "text-b3 text-neutral-800 dark:text-white max-h-6") { user_link } if user_link
         end
@@ -33,7 +33,7 @@ class Card::TimelineComponent < ApplicationComponent
 
   def link_to_user(user)
     link_to(profile_path(user.display_id), alt: user.display_handle, title: user.display_handle, class: "flex items-center") do
-      span(class: "w-6 h-6 inline-block mr-2 rounded") { helpers.avatar(48, "gravatar-#{user.id}", user) }
+      span(class: "w-6 h-6 inline-block mr-2 rounded") { avatar(48, "gravatar-#{user.id}", user) }
       span { user.display_handle }
     end
   end

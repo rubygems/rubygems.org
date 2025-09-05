@@ -4,6 +4,7 @@ class OIDC::IdTokensController < ApplicationController
   include ApiKeyable
 
   include SessionVerifiable
+
   verify_session_before
 
   before_action :find_id_token, except: %i[index]
