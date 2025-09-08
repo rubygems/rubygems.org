@@ -26,6 +26,7 @@ class Pusher
         authorize &&
         verify_gem_scope &&
         verify_mfa_requirement &&
+        verify_dependencies_resolvable &&
         validate &&
         save
     end
@@ -44,6 +45,20 @@ class Pusher
   def verify_mfa_requirement
     (!api_key.user? || owner.mfa_enabled?) || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
       notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
+  end
+
+  def verify_dependencies_resolvable
+    return true if spec.dependencies.empty?
+
+    dependency_names = spec.dependencies.map(&:name)
+    existing_gems = Rubygem.where(name: dependency_names).pluck(:name)
+    missing_gems = dependency_names - existing_gems
+
+    if missing_gems.any?
+      return notify("There was a problem saving your gem: \nThe following dependencies don't exist: #{missing_gems.join(', ')}", 422)
+    end
+
+    true
   end
 
   def validate

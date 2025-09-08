@@ -242,13 +242,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     push_gem "sandworm-1.0.0.gem"
 
-    assert_response :success
-
-    get rubygem_path("sandworm")
-
-    assert_response :success
-    assert page.has_content?("mauddib")
-    assert page.has_content?("> 1")
+    assert_response :unprocessable_entity
   end
 
   test "pushing a gem with a new platform for the same version" do
