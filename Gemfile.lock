@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.23.1)
-      avo (= 3.23.1)
-      avo-dynamic_filters (= 3.23.1)
-      avo-pro (= 3.23.1)
+    avo-advanced (3.24.0)
+      avo (= 3.24.0)
+      avo-dynamic_filters (= 3.24.0)
+      avo-pro (= 3.24.0)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.23.1)
-      avo (= 3.23.1)
+    avo-dashboards (3.24.0)
+      avo (= 3.24.0)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.23.1)
-      avo (= 3.23.1)
+    avo-dynamic_filters (3.24.0)
+      avo (= 3.24.0)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.23.1)
-      avo (= 3.23.1)
+    avo-menu (3.24.0)
+      avo (= 3.24.0)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.23.1)
-      avo (= 3.23.1)
-      avo-dashboards (= 3.23.1)
-      avo-menu (= 3.23.1)
+    avo-pro (3.24.0)
+      avo (= 3.24.0)
+      avo-dashboards (= 3.24.0)
+      avo-menu (= 3.24.0)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.3)
     attr_required (1.0.2)
-    avo (3.23.1)
+    avo (3.24.0)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -169,7 +169,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (3.2.2)
+    bigdecimal (3.2.3)
     bindata (2.5.1)
     bitarray (1.3.1)
     bloomer (1.0.0)
@@ -208,7 +208,7 @@ GEM
     coderay (1.1.3)
     compact_index (0.15.0)
     concurrent-ruby (1.3.5)
-    connection_pool (2.5.3)
+    connection_pool (2.5.4)
     cose (1.3.1)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
@@ -914,7 +914,7 @@ DEPENDENCIES
   aggregate_assertions (~> 0.2.0)
   amazing_print (~> 1.8)
   avo (~> 3.13)
-  avo-advanced (~> 3.23)!
+  avo-advanced (~> 3.24)!
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.198)
   aws-sdk-sqs (~> 1.103)
@@ -1053,13 +1053,13 @@ CHECKSUMS
   argon2 (2.3.2) sha256=62b04170af37ca8d9975bc6e24dd3b74794e82a98e6d8cfa9ae95a76804a6f89
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.23.1) sha256=b579b94b44db3cda7e94cb048fc8bee379e387e0db7c153aa7020140c393410a
-  avo-advanced (3.23.1) sha256=5245357c1b41111dd4f353b13fbe93073ed0562c3898f7b0cd0c81e1619dbe7f
-  avo-dashboards (3.23.1) sha256=0b5fd30eb3dd5dff765331a4db6b7d6c7fe36c793f28314b40445bf2e78333ab
-  avo-dynamic_filters (3.23.1) sha256=b6aacc5d6d067adde4744990b5fe71a9778b722fe0037f780f145d452d283f8a
+  avo (3.24.0) sha256=9f53ed0fd1fd32ca8388b174feaeffb7406df3cc154f60f30ec0bfb5db6ca8c1
+  avo-advanced (3.24.0) sha256=1cefced89c05e3e191f4a9c2cdb657e4a713d417b8da78daba1cf31347f1db3a
+  avo-dashboards (3.24.0) sha256=3ff59885394bf4d183804e44332220c5b192e697dbb6157047617e179b6b7b99
+  avo-dynamic_filters (3.24.0) sha256=19970c546390024d8561f2dac68b13b7bad7e4940695574c06c96e9c0b2b73cb
   avo-heroicons (0.1.1) sha256=65cf6b4165691585d172d885ba30b8c7cf979615907febf6f34c1a6569bdbff6
-  avo-menu (3.23.1) sha256=d3b92811a399b59fbb0a9808acb526b71d2a5f4af3e152db6bbf5fac984feb8c
-  avo-pro (3.23.1) sha256=272860a7c0d98e4b8617cb48f5a018a3a5ec85cb6a4f79cc6d32a5c67cb0ac71
+  avo-menu (3.24.0) sha256=de9174beb99d5714b453bc6bb018f99b1397f79d0db722621bd20736aafb9876
+  avo-pro (3.24.0) sha256=ae6db1935baa62e79e81476d40a26583f1edc76cd854692dad1746905f990460
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
   aws-partitions (1.1151.0) sha256=57f704d14aa3d4c8f297458cd0b389b197dbe7118bf2c05cb80370fc9e4a1d33
@@ -1073,7 +1073,7 @@ CHECKSUMS
   benchmark (0.4.1) sha256=d4ef40037bba27f03b28013e219b950b82bace296549ec15a78016552f8d2cce
   benchmark-ips (2.14.0) sha256=b72bc8a65d525d5906f8cd94270dccf73452ee3257a32b89fbd6684d3e8a9b1d
   better_html (2.1.1) sha256=046c3551d1488a3f2939a7cac6fabf2bde08c32e135c91fcd683380118e5af55
-  bigdecimal (3.2.2) sha256=39085f76b495eb39a79ce07af716f3a6829bc35eb44f2195e2753749f2fa5adc
+  bigdecimal (3.2.3) sha256=ffd11d1ac67a0d3b2f44aec0a6487210b3f813f363dd11f1fcccf5ba00da4e1b
   bindata (2.5.1) sha256=53186a1ec2da943d4cb413583d680644eb810aacbf8902497aac8f191fad9e58
   bitarray (1.3.1) sha256=6ec714933c4a6100b31dcb49a68135a0409524a1834c9d614b0bd929e3da0743
   bloomer (1.0.0) sha256=57a0d3a78628db9a92c6723f06c67697e420abcdb05aa757c6dfae607251d272
@@ -1092,7 +1092,7 @@ CHECKSUMS
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
   compact_index (0.15.0) sha256=5c6c404afca8928a7d9f4dde9524f6e1610db17e675330803055db282da84a8b
   concurrent-ruby (1.3.5) sha256=813b3e37aca6df2a21a3b9f1d497f8cbab24a2b94cab325bffe65ee0f6cbebc6
-  connection_pool (2.5.3) sha256=cfd74a82b9b094d1ce30c4f1a346da23ee19dc8a062a16a85f58eab1ced4305b
+  connection_pool (2.5.4) sha256=e9e1922327416091f3f6542f5f4446c2a20745276b9aa796dd0bb2fd0ea1e70a
   cose (1.3.1) sha256=d5d4dbcd6b035d513edc4e1ab9bc10e9ce13b4011c96e3d1b8fe5e6413fd6de5
   crack (1.0.0) sha256=c83aefdb428cdc7b66c7f287e488c796f055c0839e6e545fec2c7047743c4a49
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
