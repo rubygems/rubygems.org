@@ -561,12 +561,12 @@ GEM
     parser (3.3.9.0)
       ast (~> 2.4.1)
       racc
-    pg (1.6.1)
-    pg (1.6.1-aarch64-linux)
-    pg (1.6.1-arm64-darwin)
-    pg (1.6.1-x86_64-darwin)
-    pg (1.6.1-x86_64-linux)
-    pg (1.6.1-x86_64-linux-musl)
+    pg (1.6.2)
+    pg (1.6.2-aarch64-linux)
+    pg (1.6.2-arm64-darwin)
+    pg (1.6.2-x86_64-darwin)
+    pg (1.6.2-x86_64-linux)
+    pg (1.6.2-x86_64-linux-musl)
     pg_query (6.1.0)
       google-protobuf (>= 3.25.3)
     pghero (3.7.0)
@@ -1238,12 +1238,12 @@ CHECKSUMS
   pagy (8.6.3) sha256=537b2ee3119f237dd6c4a0d0a35c67a77b9d91ebb9d4f85e31407c2686774fb2
   parallel (1.27.0) sha256=4ac151e1806b755fb4e2dc2332cbf0e54f2e24ba821ff2d3dcf86bf6dc4ae130
   parser (3.3.9.0) sha256=94d6929354b1a6e3e1f89d79d4d302cc8f5aa814431a6c9c7e0623335d7687f2
-  pg (1.6.1) sha256=e210a75e5f702954537e73bb82f90dfbe0c6d9273c018cd0e93e779181028e6b
-  pg (1.6.1-aarch64-linux) sha256=2dc057589c4df67240bd52c68303a00a91299329bc7573b7447faee42331e214
-  pg (1.6.1-arm64-darwin) sha256=3b502915de30cf5983d62aabae927cb7c3628b0ca46cdf3a6b888af4ff7f42b3
-  pg (1.6.1-x86_64-darwin) sha256=c8930170622c39ee24b318a2265655b5f8f34628444ee00e4ae44068865309f7
-  pg (1.6.1-x86_64-linux) sha256=6ac0d5c8efafc3f22a7eca2a264300037598fabe27a88e5029bc0e6d90caeb1f
-  pg (1.6.1-x86_64-linux-musl) sha256=419a8e971ef122fb758a296424cb245a369c05a797b6c4787902d7d30eefa494
+  pg (1.6.2) sha256=58614afd405cc9c2c9e15bffe8432e0d6cfc58b722344ad4a47c73a85189c875
+  pg (1.6.2-aarch64-linux) sha256=0503c6be5b0ca5ca3aaf91f2ed638f90843313cb81e8e7d7b60ad4bb62c3d131
+  pg (1.6.2-arm64-darwin) sha256=4d44500b28d5193b26674583d199a6484f80f1f2ea9cf54f7d7d06a1b7e316b6
+  pg (1.6.2-x86_64-darwin) sha256=c441a55723584e2ae41749bf26024d7ffdfe1841b442308ed50cd6b7fda04115
+  pg (1.6.2-x86_64-linux) sha256=525f438137f2d1411a1ebcc4208ec35cb526b5a3b285a629355c73208506a8ea
+  pg (1.6.2-x86_64-linux-musl) sha256=e5c8668ffeaf7a9c3458a3dcb002dffa6d8ee1fca9ae534ffef861d2b15644ca
   pg_query (6.1.0) sha256=8b005229e209f12c5887c34c60d0eb2a241953b9475b53a9840d24578532481e
   pghero (3.7.0) sha256=a8d8497095dbe168bb03fe50a11309ab068cd1c1ef4c88d9bbeb97be4809f522
   phlex (2.3.1) sha256=8c0b2d6774f1e5cdb806bd19a9dc9338acd573e61fe8310a89785d5b25756b66
