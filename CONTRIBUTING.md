@@ -60,7 +60,7 @@ Move to the newly cloned repository directory: `cd rubygems.org`
 ### Setting up the environment
 
 Rubygems.org is a Ruby on Rails application.
-The app depends on Elasticsearch, Memcached, and PostgreSQL.
+The app depends on OpenSearch, Memcached, and PostgreSQL.
 Google Chrome is used for tests.
 
 Setup the development environment using one of the approaches below.
@@ -79,16 +79,16 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (OS X)
 
-* Install Elasticsearch:
+* Install OpenSearch:
 
-  * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
-  * Running Elasticsearch from the command line:
+  * Pull OpenSearch `2.13.0` : `docker pull opensearchproject/opensearch:2.13.0`
+  * Running OpenSearch from the command line:
 
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+  docker run -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" -e "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" opensearchproject/opensearch:2.13.0
   ```
 
-  * Note that `-e "xpack.security.enabled=false"` disables authentication.
+  * Note that `-e "DISABLE_SECURITY_PLUGIN=true"` disables authentication.
 
 * Install PostgreSQL (>= 14.x): `brew install postgresql`
   * Setup information: `brew info postgresql`
@@ -98,11 +98,11 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Install Elasticsearch (see the docker installation instructions above):
-  * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
-  * Running Elasticsearch from the command line:
+* Install OpenSearch (see the docker installation instructions above):
+  * Pull OpenSearch `2.13.0` : `docker pull opensearchproject/opensearch:2.13.0`
+  * Running OpenSearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+  docker run -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" -e "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" opensearchproject/opensearch:2.13.0
   ```
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
@@ -117,12 +117,12 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Use Ruby 3.4.x
   * See: [Ruby install instructions](https://www.ruby-lang.org/en/downloads/).
   * `.ruby-version` is present and can be used.
-* Use Rubygems 3.5.x
+* Use Rubygems 3.6.x
 * Install bundler:
   `gem install bundler`
 * Install dependencies and setup the database:
   `./bin/setup`
-* Set up elasticsearch indexes:
+* Set up search indexes:
     `bundle exec rake searchkick:reindex CLASS=Rubygem`
 
 ### Running tests
@@ -130,14 +130,14 @@ Follow the instructions below on how to install Bundler and setup the database.
 Make sure that the tests run successfully before making changes.
 
 * Depending on how you setup your environment, run `docker compose up` or
-  ensure elasticsearch, memcached, and postgres are running.
+  ensure opensearch, memcached, and postgres are running.
 * Run the tests: `bin/rails test:all`
 * See also: [Ruby on Rails testing documentation](https://guides.rubyonrails.org/testing.html).
 
 ### Running the application
 
 * Depending on how you setup your environment, run `docker compose up` or
-  ensure elasticsearch, memcached, and postgres are running.
+  ensure opensearch, memcached, and postgres are running.
 * Start the application: `bin/rails s`
 * Visit http://localhost:3000 in your browser.
 
