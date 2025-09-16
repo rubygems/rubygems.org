@@ -26,6 +26,6 @@ class Rubygems::Transfer::RubygemsControllerTest < ActionDispatch::IntegrationTe
     other_gem = create(:rubygem)
     patch rubygems_transfer_rubygems_path(as: @user), params: { rubygem_transfer: { rubygems: [other_gem.id] } }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 end
