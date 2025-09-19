@@ -36,6 +36,26 @@ data:
 
       proxy_cache_path  /var/lib/nginx/cache  levels=1:2 keys_zone=cache-versions:10m inactive=24h  max_size=100m;
 
+      # Normalize request URIs for metrics collection
+      # Converts dynamic paths (/gems/rails-7.0.1) to patterns (/gems/GEM_NAME)
+      # This is meant to keep our custom metrics within quota
+      map $request_uri $normalized_path {
+        ~^/$                                          /;
+        ~^/gems$                                      /gems;
+        ~^/api/v\d+/dependencies$                     /api/vN/dependencies;
+        ~^/api/v\d+/dependencies\.json$               /api/vN/dependencies.json;
+        ~^/api/v\d+/timeframe_versions\.json$         /api/vN/timeframe_versions.json;
+        ~^/gems/[^/]+(/.*)?$                          /gems/GEM_NAME$1;
+        ~^/api/v\d+/gems/[^/]+(/.*)?$                 /api/vN/gems/GEM_NAME$1;
+        ~^/api/v\d+/gems/[^/]+/versions/[^/]+(/.*)?$  /api/vN/gems/GEM_NAME/versions/VERSION$1;
+        ~^/gems/[^/]+/versions/[^/]+(/.*)?$           /gems/GEM_NAME/versions/VERSION$1;
+        ~^/search\?.*$                                /search?QUERY;
+        ~^/versions/[^/]+(/.*)?$                      /versions/VERSION$1;
+        ~^/api/v\d+/search\?.*$                       /api/vN/search?QUERY;
+        ~^/api/v\d+/dependencies\?.*$                 /api/vN/dependencies?QUERY;
+        default                                       $request_uri;
+      }
+
       include /etc/nginx/conf.d/logging.conf;
       include /etc/nginx/sites-enabled/*;
     }
@@ -164,7 +184,11 @@ data:
       '"http": {'
         '"status_code": $status, '
         '"scheme": "$scheme_from_fastly", '
-        '"url": "$scheme_from_fastly://$http_host$request_uri", '
+        '"url": "$scheme_from_fastly://$http_host$normalized_path", '
+        '"url_details": {'
+          '"path": "$normalized_path", '
+          '"host": "$http_host"'
+        '}, '
         '"args": "$args", '
         '"dest_host": "$http_host", '
         '"content_type": "$sent_http_content_type", '
