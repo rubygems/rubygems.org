@@ -32,7 +32,7 @@ class Pusher
   end
 
   def authorize
-    (rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)) || owner.owns_gem?(rubygem) || notify_unauthorized
+    (rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)) || owner.can_push?(rubygem) || notify_unauthorized
   end
 
   def verify_gem_scope
@@ -260,7 +260,7 @@ class Pusher
       notify("It appears that #{version.full_name} did not finish pushing.\n" \
              "Please contact support@rubygems.org for assistance if you pushed this gem more than a minute ago.", 409)
     else
-      different_owner = "pushed by a previous owner of this gem " unless owner.owns_gem?(version.rubygem)
+      different_owner = "pushed by a previous owner of this gem " unless owner.can_push?(version.rubygem)
       notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
              "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
     end
