@@ -11,6 +11,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
       @rubygem_three = @version_three.rubygem
       @version_four = create(:version)
       @rubygem_four = @version_four.rubygem
+      @version_two_two = create(:version, rubygem: @rubygem_two, position: 0)
 
       @version_two.dependencies << create(:dependency,
         version: @version_two,
@@ -21,6 +22,9 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
       @version_four.dependencies << create(:dependency,
         version: @version_four,
         rubygem: @rubygem_two)
+      @version_two_two.dependencies << create(:dependency,
+        version: @version_two_two,
+        rubygem: @rubygem_one)
     end
 
     context "render template" do
@@ -36,6 +40,18 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
       get :index, params: { rubygem_id: @rubygem_one.slug }
 
       assert page.has_content?(@rubygem_two.name)
+      refute page.has_content?(@rubygem_three.name)
+
+      form_path = rubygem_reverse_dependencies_path(@rubygem_one.slug)
+
+      assert page.has_selector?("form#rdeps-search[action='#{form_path}']")
+    end
+
+    should "show distinct reverse dependencies" do
+      @version_two.update_column(:position, 0)
+      get :index, params: { rubygem_id: @rubygem_one.slug }
+
+      assert page.has_content?(@rubygem_two.name, count: 1)
       refute page.has_content?(@rubygem_three.name)
 
       form_path = rubygem_reverse_dependencies_path(@rubygem_one.slug)
