@@ -90,6 +90,11 @@ class Pusher
     # ensure the body can't be treated as a file path
     package_source = Gem::Package::IOSource.new(body)
     package = Gem::Package.new(package_source, gem_security_policy)
+
+    # Verify the contents of the gem
+    package.verify
+
+    # Get the spec
     @spec = package.spec
     @files = package.files
     validate_spec && serialize_spec
