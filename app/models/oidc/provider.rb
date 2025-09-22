@@ -12,13 +12,22 @@ class OIDC::Provider < ApplicationRecord
   has_many :audits, as: :auditable, dependent: :nullify
 
   GITHUB_ACTIONS_ISSUER = "https://token.actions.githubusercontent.com".freeze
+  GITLAB_ISSUER = "https://gitlab.com".freeze
 
   def self.github_actions
     find_by(issuer: GITHUB_ACTIONS_ISSUER)
   end
 
+  def self.gitlab
+    find_by(issuer: GITLAB_ISSUER)
+  end
+
   def github_actions?
     issuer == GITHUB_ACTIONS_ISSUER
+  end
+
+  def gitlab?
+    issuer == GITLAB_ISSUER
   end
 
   class Configuration < ::OpenIDConnect::Discovery::Provider::Config::Response
@@ -43,6 +52,8 @@ class OIDC::Provider < ApplicationRecord
     case issuer
     when GITHUB_ACTIONS_ISSUER
       OIDC::TrustedPublisher::GitHubAction
+    when GITLAB_ISSUER
+      OIDC::TrustedPublisher::GitLab
     end
   end
 

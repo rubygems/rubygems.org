@@ -4,6 +4,6 @@ module OIDC::TrustedPublisher
   end
 
   def self.all
-    [GitHubAction]
+    [GitHubAction, GitLab]
   end
 end
