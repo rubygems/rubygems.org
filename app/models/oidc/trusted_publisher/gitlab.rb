@@ -31,6 +31,10 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
     "GitLab"
   end
 
+  def self.url_identifier = "gitlab"
+
+  def self.form_component = OIDC::TrustedPublisher::GitLab::FormComponent
+
   def payload
     {
       name:,
