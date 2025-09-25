@@ -54,6 +54,8 @@ class OIDC::Provider < ApplicationRecord
       OIDC::TrustedPublisher::GitHubAction
     when GITLAB_ISSUER
       OIDC::TrustedPublisher::GitLab
+    when "https://gdk.test:3000" # FIXME: Local testing
+      OIDC::TrustedPublisher::GitLab
     end
   end
 

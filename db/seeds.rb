@@ -201,6 +201,22 @@ github_oidc_provider = OIDC::Provider
     }
   ).find_or_create_by!(issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER)
 
+gitlab_oidc_provider = OIDC::Provider
+  .create_with(
+    configuration: {
+      issuer: OIDC::Provider::GITLAB_ISSUER,
+      jwks_uri: "#{OIDC::Provider::GITLAB_ISSUER}/.well-known/jwks",
+      subject_types_supported: %w[public pairwise],
+      response_types_supported: ["id_token"],
+      claims_supported: %w[sub aud exp iat iss jti nbf ref repository repository_id repository_owner repository_owner_id
+                           run_id run_number run_attempt actor actor_id workflow workflow_ref workflow_sha head_ref
+                           base_ref event_name ref_type environment environment_node_id job_workflow_ref
+                           job_workflow_sha repository_visibility runner_environment],
+      id_token_signing_alg_values_supported: ["RS256"],
+      scopes_supported: ["openid"]
+    }
+  ).find_or_create_by!(issuer: OIDC::Provider::GITLAB_ISSUER)
+
 author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
   api_key_permissions: {
     gems: ["rubygem0"],

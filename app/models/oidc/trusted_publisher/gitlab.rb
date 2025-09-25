@@ -51,7 +51,8 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
         OIDC::AccessPolicy::Statement.new(
           effect: "allow",
           principal: OIDC::AccessPolicy::Statement::Principal.new(
-            oidc: OIDC::Provider::GITLAB_ISSUER
+            oidc: "https://gdk.test:3000"
+            # oidc: OIDC::Provider::GITLAB_ISSUER
           ),
           conditions: [
             OIDC::AccessPolicy::Statement::Condition.new(
@@ -83,6 +84,8 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   def name
     "#{self.class.publisher_name} #{namespace_path}/#{project_path}"
   end
+
+  def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
 
   private
 
