@@ -25,6 +25,17 @@ class InvitationTest < ApplicationSystemTestCase
     assert_text I18n.t("organizations.members.create.member_invited")
   end
 
+  test "maintainers cannot invite users to an organization" do
+    maintainer = create(:user)
+    create(:membership, user: maintainer, organization: @organization, role: :maintainer)
+
+    sign_in maintainer
+
+    visit organization_path(@organization)
+
+    assert_no_text "Invite"
+  end
+
   test "accepting an invitation to an organization" do
     membership = create(:membership, :pending, user: @outside_user, organization: @organization, invited_by: @user)
     OrganizationMailer.user_invited(membership).deliver_now
