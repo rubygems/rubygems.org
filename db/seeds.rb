@@ -201,17 +201,58 @@ github_oidc_provider = OIDC::Provider
     }
   ).find_or_create_by!(issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER)
 
-gitlab_oidc_provider = OIDC::Provider
+# gitlab claims
+# {
+#   "namespace_id": "72",
+#   "namespace_path": "my-group",
+#   "project_id": "20",
+#   "project_path": "my-group/my-project",
+#   "user_id": "1",
+#   "user_login": "sample-user",
+#   "user_email": "sample-user@example.com",
+#   "user_identities": [
+#       {"provider": "github", "extern_uid": "2435223452345"},
+#       {"provider": "bitbucket", "extern_uid": "john.smith"}
+#   ],
+#   "pipeline_id": "574",
+#   "pipeline_source": "push",
+#   "job_id": "302",
+#   "ref": "feature-branch-1",
+#   "ref_type": "branch",
+#   "ref_path": "refs/heads/feature-branch-1",
+#   "ref_protected": "false",
+#   "groups_direct": ["mygroup/mysubgroup", "myothergroup/myothersubgroup"],
+#   "environment": "test-environment2",
+#   "environment_protected": "false",
+#   "deployment_tier": "testing",
+#   "environment_action": "start",
+#   "runner_id": 1,
+#   "runner_environment": "self-hosted",
+#   "sha": "714a629c0b401fdce83e847fc9589983fc6f46bc",
+#   "project_visibility": "public",
+#   "ci_config_ref_uri": "gitlab.example.com/my-group/my-project//.gitlab-ci.yml@refs/heads/main",
+#   "ci_config_sha": "714a629c0b401fdce83e847fc9589983fc6f46bc",
+#   "jti": "235b3a54-b797-45c7-ae9a-f72d7bc6ef5b",
+#   "iss": "https://gitlab.example.com",
+#   "iat": 1681395193,
+#   "nbf": 1681395188,
+#   "exp": 1681398793,
+#   "sub": "project_path:my-group/my-project:ref_type:branch:ref:feature-branch-1",
+#   "aud": "https://vault.example.com"
+# }
+OIDC::Provider
   .create_with(
     configuration: {
       issuer: OIDC::Provider::GITLAB_ISSUER,
       jwks_uri: "#{OIDC::Provider::GITLAB_ISSUER}/.well-known/jwks",
       subject_types_supported: %w[public pairwise],
       response_types_supported: ["id_token"],
-      claims_supported: %w[sub aud exp iat iss jti nbf ref repository repository_id repository_owner repository_owner_id
-                           run_id run_number run_attempt actor actor_id workflow workflow_ref workflow_sha head_ref
-                           base_ref event_name ref_type environment environment_node_id job_workflow_ref
-                           job_workflow_sha repository_visibility runner_environment],
+      claims_supported: %w[jti iss iat nbf expa sub aud
+                           namespace_id namespace_path project_id project_path user_id user_login
+                           user_email user_identities pipeline_id pipeline_source job_id ref ref_type ref_path
+                           ref_protected groups_direct environment environment_protected deployment_tier
+                           environment_action runner_id runner_environment sha project_visibility
+                           ci_config_ref_uri ci_config_sha],
       id_token_signing_alg_values_supported: ["RS256"],
       scopes_supported: ["openid"]
     }
