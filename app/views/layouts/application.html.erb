@@ -29,10 +29,10 @@
         <%= yield :banner %>
       </div>
     <% end %>
-    
+
     <!-- Policies acknowledgment banner -->
     <%= render "layouts/policies_acknowledgement" if show_policies_acknowledge_banner?(current_user) %>
-    
+
     <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "logo" }) do %>
@@ -171,6 +171,10 @@
         <a class="footer__sponsor footer__sponsor__ruby_central" href="https://rubycentral.org/open-source/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.operated_by") %>
           <span class="t-hidden">Ruby Central</span>
+        </a>
+        <a class="footer__sponsor footer__sponsor__dockyard" href="https://dockyard.com/ruby-on-rails-consulting" target="_blank" rel="noopener">
+          <%= t("layouts.application.footer.designed_by") %>
+          <span class="t-hidden">DockYard</span>
         </a>
         <a class="footer__sponsor footer__sponsor__aws" href="https://aws.amazon.com/" target="_blank" rel="noopener">
           <%= t("layouts.application.footer.hosted_by") %>
