@@ -5,8 +5,10 @@ class OIDC::TrustedPublisher::GitLab::FormComponent < ApplicationComponent
 
   def view_template
     form.fields_for :trusted_publisher do |trusted_publisher_form|
-      field trusted_publisher_form, :text_field, :namespace_path, autocomplete: :off
       field trusted_publisher_form, :text_field, :project_path, autocomplete: :off
+      field trusted_publisher_form, :text_field, :ref_path, autocomplete: :off
+      field trusted_publisher_form, :text_field, :environment, autocomplete: :off, optional: true
+      field trusted_publisher_form, :text_field, :ci_config_ref_uri, autocomplete: :off, optional: true
     end
   end
 

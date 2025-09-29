@@ -6,24 +6,28 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   has_many :rubygems, through: :rubygem_trusted_publishers
   has_many :api_keys, dependent: :destroy, inverse_of: :owner, as: :owner
 
-  validates :namespace_path, :project_path, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :project_path, :ref_path, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :environment, :ci_config_ref_uri, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
   validate :unique_publisher
 
   def self.for_claims(claims)
     required = {
-      namespace_path: claims.fetch(:namespace_path),
-      project_path: claims.fetch(:project_path)
+      project_path: claims.fetch(:project_path),
+      ref_path: claims.fetch(:ref_path)
     }
-
-    where(required).first!
+    optional = {
+      environment: claims.fetch(:environment, nil),
+      ci_config_ref_uri: claims.fetch(:ci_config_ref_uri, nil)
+    }.compact
+    where(required.merge(optional)).first!
   end
 
   def self.permitted_attributes
-    %i[namespace_path project_path]
+    %i[project_path ref_path environment ci_config_ref_uri]
   end
 
   def self.build_trusted_publisher(params)
-    params = params.reverse_merge(namespace_path: nil, project_path: nil)
+    params = params.reverse_merge(project_path: nil, ref_path: nil, environment: nil, ci_config_ref_uri: nil)
     find_or_initialize_by(params)
   end
 
@@ -38,28 +42,24 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   def payload
     {
       name:,
-      namespace_path:,
-      project_path:
+      project_path:,
+      ref_path:,
+      environment:,
+      ci_config_ref_uri:
     }
   end
 
   delegate :as_json, to: :payload
 
-  def to_access_policy(jwt)
+  def to_access_policy(_jwt)
     OIDC::AccessPolicy.new(
       statements: [
         OIDC::AccessPolicy::Statement.new(
           effect: "allow",
           principal: OIDC::AccessPolicy::Statement::Principal.new(
-            oidc: "https://gdk.test:3000"
-            # oidc: OIDC::Provider::GITLAB_ISSUER
+            oidc: OIDC::Provider::GITLAB_ISSUER
           ),
           conditions: [
-            OIDC::AccessPolicy::Statement::Condition.new(
-              operator: "string_equals",
-              claim: "namespace_path",
-              value: namespace_path
-            ),
             OIDC::AccessPolicy::Statement::Condition.new(
               operator: "string_equals",
               claim: "project_path",
@@ -67,22 +67,27 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
             ),
             OIDC::AccessPolicy::Statement::Condition.new(
               operator: "string_equals",
-              claim: "ref",
-              value: jwt.fetch(:ref)
+              claim: "ref_path",
+              value: ref_path
             ),
-            OIDC::AccessPolicy::Statement::Condition.new(
+            environment.present? && OIDC::AccessPolicy::Statement::Condition.new(
               operator: "string_equals",
-              claim: "ref_type",
-              value: jwt.fetch(:ref_type)
+              claim: "environment",
+              value: environment
+            ),
+            ci_config_ref_uri.present? && OIDC::AccessPolicy::Statement::Condition.new(
+              operator: "string_equals",
+              claim: "ci_config_ref_uri",
+              value: ci_config_ref_uri
             )
-          ].compact
+          ].compact.uniq
         )
       ]
     )
   end
 
   def name
-    "#{self.class.publisher_name} #{namespace_path}/#{project_path}"
+    "#{self.class.publisher_name} #{project_path}"
   end
 
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
@@ -91,8 +96,10 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   def unique_publisher
     return unless self.class.exists?(
-      namespace_path: namespace_path,
-      project_path: project_path
+      project_path: project_path,
+      ref_path: ref_path,
+      environment: environment,
+      ci_config_ref_uri: ci_config_ref_uri
     )
 
     errors.add(:base, "publisher already exists")

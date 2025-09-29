@@ -440,8 +440,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_080406) do
   end
 
   create_table "oidc_trusted_publisher_gitlabs", force: :cascade do |t|
-    t.string "namespace_path"
     t.string "project_path"
+    t.string "ref_path"
+    t.string "environment"
+    t.string "ci_config_ref_uri"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

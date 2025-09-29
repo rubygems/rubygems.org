@@ -12,7 +12,8 @@ class OIDC::Provider < ApplicationRecord
   has_many :audits, as: :auditable, dependent: :nullify
 
   GITHUB_ACTIONS_ISSUER = "https://token.actions.githubusercontent.com".freeze
-  GITLAB_ISSUER = "https://gitlab.com".freeze
+  # GITLAB_ISSUER = "https://gitlab.com".freeze
+  GITLAB_ISSUER = "https://gdk.test:3000".freeze
 
   def self.github_actions
     find_by(issuer: GITHUB_ACTIONS_ISSUER)
@@ -53,8 +54,6 @@ class OIDC::Provider < ApplicationRecord
     when GITHUB_ACTIONS_ISSUER
       OIDC::TrustedPublisher::GitHubAction
     when GITLAB_ISSUER
-      OIDC::TrustedPublisher::GitLab
-    when "https://gdk.test:3000" # FIXME: Local testing
       OIDC::TrustedPublisher::GitLab
     end
   end
