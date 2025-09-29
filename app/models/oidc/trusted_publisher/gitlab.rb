@@ -6,20 +6,22 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   has_many :rubygems, through: :rubygem_trusted_publishers
   has_many :api_keys, dependent: :destroy, inverse_of: :owner, as: :owner
 
-  validates :project_path, :ref_path, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
-  validates :environment, :ci_config_ref_uri, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
+  validates :project_path, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :environment, :ci_config_ref_uri, :ref_path, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
   validate :unique_publisher
+  validate :ci_config_ref_uri_format
 
   def self.for_claims(claims)
     required = {
-      project_path: claims.fetch(:project_path),
-      ref_path: claims.fetch(:ref_path)
+      project_path: claims.fetch(:project_path)
     }
-    optional = {
-      environment: claims.fetch(:environment, nil),
-      ci_config_ref_uri: claims.fetch(:ci_config_ref_uri, nil)
-    }.compact
-    where(required.merge(optional)).first!
+    base = where(required)
+
+    if (env = claims[:environment])
+      base.where(environment: env).or(base.where(environment: nil)).order(environment: :asc)
+    else
+      base.where(environment: nil)
+    end.first!
   end
 
   def self.permitted_attributes
@@ -27,13 +29,17 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   end
 
   def self.build_trusted_publisher(params)
-    params = params.reverse_merge(project_path: nil, ref_path: nil, environment: nil, ci_config_ref_uri: nil)
-    find_or_initialize_by(params)
+    mapped_params = {
+      project_path: params[:project_path],
+      ci_config_ref_uri: params[:ci_config_ref_uri],
+      environment: params[:environment],
+      ref_path: params[:ref_path]
+    }
+    mapped_params[:environment] = nil if mapped_params[:environment].blank?
+    find_or_initialize_by(mapped_params)
   end
 
-  def self.publisher_name
-    "GitLab"
-  end
+  def self.publisher_name = "GitLab"
 
   def self.url_identifier = "gitlab"
 
@@ -51,7 +57,28 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   delegate :as_json, to: :payload
 
-  def to_access_policy(_jwt)
+  def to_access_policy(jwt)
+    conditions = [
+      OIDC::AccessPolicy::Statement::Condition.new(
+        operator: "string_equals",
+        claim: "project_path",
+        value: project_path
+      ),
+      OIDC::AccessPolicy::Statement::Condition.new(
+        operator: "string_equals",
+        claim: "aud",
+        # value: Gemcutter::HOST
+        value: "http://host.docker.internal:3000"
+      )
+    ]
+    if environment.present?
+      conditions << OIDC::AccessPolicy::Statement::Condition.new(
+        operator: "string_equals",
+        claim: "environment",
+        value: environment
+      )
+    end
+
     OIDC::AccessPolicy.new(
       statements: [
         OIDC::AccessPolicy::Statement.new(
@@ -59,35 +86,16 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
           principal: OIDC::AccessPolicy::Statement::Principal.new(
             oidc: OIDC::Provider::GITLAB_ISSUER
           ),
-          conditions: [
-            OIDC::AccessPolicy::Statement::Condition.new(
-              operator: "string_equals",
-              claim: "project_path",
-              value: project_path
-            ),
-            OIDC::AccessPolicy::Statement::Condition.new(
-              operator: "string_equals",
-              claim: "ref_path",
-              value: ref_path
-            ),
-            environment.present? && OIDC::AccessPolicy::Statement::Condition.new(
-              operator: "string_equals",
-              claim: "environment",
-              value: environment
-            ),
-            ci_config_ref_uri.present? && OIDC::AccessPolicy::Statement::Condition.new(
-              operator: "string_equals",
-              claim: "ci_config_ref_uri",
-              value: ci_config_ref_uri
-            )
-          ].compact.uniq
+          conditions: conditions
         )
       ]
     )
   end
 
   def name
-    "#{self.class.publisher_name} #{project_path}"
+    name = "#{self.class.publisher_name} #{project_path} @ #{ci_config_ref_uri}"
+    name << " (#{environment})" if environment?
+    name
   end
 
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
@@ -97,11 +105,17 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   def unique_publisher
     return unless self.class.exists?(
       project_path: project_path,
-      ref_path: ref_path,
-      environment: environment,
-      ci_config_ref_uri: ci_config_ref_uri
+      ci_config_ref_uri: ci_config_ref_uri,
+      environment: environment
     )
 
     errors.add(:base, "publisher already exists")
+  end
+
+  def ci_config_ref_uri_format
+    return if ci_config_ref_uri.blank?
+
+    errors.add(:ci_config_ref_uri, "must end with .yml or .yaml") unless /\.ya?ml\z/.match?(ci_config_ref_uri)
+    errors.add(:ci_config_ref_uri, "must be a filename only, without directories") if ci_config_ref_uri.include?("/")
   end
 end

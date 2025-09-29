@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class OIDC::TrustedPublisher::GitLab::FormComponent < ApplicationComponent
-  prop :form, reader: :public
+  prop :gitlab_form, reader: :public
 
   def view_template
-    form.fields_for :trusted_publisher do |trusted_publisher_form|
+    gitlab_form.fields_for :trusted_publisher do |trusted_publisher_form|
       field trusted_publisher_form, :text_field, :project_path, autocomplete: :off
       field trusted_publisher_form, :text_field, :ref_path, autocomplete: :off
       field trusted_publisher_form, :text_field, :environment, autocomplete: :off, optional: true

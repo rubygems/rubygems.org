@@ -48,7 +48,7 @@ class Api::BaseController < ApplicationController
   def authenticate_with_api_key
     params_key = request.headers["Authorization"] || ""
     hashed_key = Digest::SHA256.hexdigest(params_key)
-    @api_key = ApiKey.unexpired.find_by_hashed_key(hashed_key)
+    @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
     return render_unauthorized unless @api_key
     set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.user.api_key_id" => @api_key.id
     Current.user = @api_key.user

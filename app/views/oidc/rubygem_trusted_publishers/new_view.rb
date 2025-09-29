@@ -35,7 +35,7 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
           if selected_trusted_publisher_type == OIDC::TrustedPublisher::GitHubAction
             render selected_trusted_publisher_type.form_component.new(github_action_form: f)
           elsif selected_trusted_publisher_type == OIDC::TrustedPublisher::GitLab
-            render selected_trusted_publisher_type.form_component.new(form: f)
+            render selected_trusted_publisher_type.form_component.new(gitlab_form: f)
           end
         end
         f.submit class: "form__submit"
