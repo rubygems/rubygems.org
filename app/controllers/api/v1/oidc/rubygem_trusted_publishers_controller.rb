@@ -23,7 +23,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
     if trusted_publisher.save
       render json: trusted_publisher, status: :created
     else
-      render json: { errors: trusted_publisher.errors, status: :unprocessable_entity }, status: :unprocessable_content
+      render json: { errors: trusted_publisher.errors, status: :unprocessable_content }, status: :unprocessable_content
     end
   end
 
