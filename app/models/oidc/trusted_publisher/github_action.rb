@@ -48,6 +48,10 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def self.publisher_name = "GitHub Actions"
 
+  def self.url_identifier = "github_actions"
+
+  def self.form_component = OIDC::TrustedPublisher::GitHubAction::FormComponent
+
   def payload
     {
       name:,

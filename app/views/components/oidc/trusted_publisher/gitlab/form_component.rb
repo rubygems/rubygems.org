@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
-  prop :github_action_form, reader: :public
+class OIDC::TrustedPublisher::GitLab::FormComponent < ApplicationComponent
+  prop :gitlab_form, reader: :public
 
   def view_template
-    github_action_form.fields_for :trusted_publisher do |trusted_publisher_form|
-      field trusted_publisher_form, :text_field, :repository_owner, autocomplete: :off
-      field trusted_publisher_form, :text_field, :repository_name, autocomplete: :off
-      field trusted_publisher_form, :text_field, :workflow_filename, autocomplete: :off
+    gitlab_form.fields_for :trusted_publisher do |trusted_publisher_form|
+      field trusted_publisher_form, :text_field, :project_path, autocomplete: :off
+      field trusted_publisher_form, :text_field, :ref_path, autocomplete: :off
       field trusted_publisher_form, :text_field, :environment, autocomplete: :off, optional: true
+      field trusted_publisher_form, :text_field, :ci_config_ref_uri, autocomplete: :off, optional: true
     end
   end
 
@@ -26,6 +26,6 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
       span(class: "t-text--s") { " (#{t('form.optional')})" } if optional
     end
     form.send(type, name, class: class_names("form__input", "tw-border tw-border-red-500" => form.object.errors.include?(name)), **)
-    p(class: "form__field__instructions") { t("oidc.trusted_publisher.github_actions.#{name}_help_html") }
+    p(class: "form__field__instructions") { t("oidc.trusted_publisher.gitlab.#{name}_help_html") }
   end
 end
