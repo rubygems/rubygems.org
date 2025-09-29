@@ -144,7 +144,7 @@ module RubygemsHelper
     when OIDC::TrustedPublisher::GitHubAction
       image_tag "github_icon.png", width: 48, height: 48, theme: :light, alt: "GitHub", title: api_key_owner.name
     when OIDC::TrustedPublisher::GitLab
-      image_tag "github_icon.png", width: 48, height: 48, theme: :light, alt: "GitLab", title: api_key_owner.name
+      image_tag "gitlab_icon.png", width: 48, height: 48, theme: :light, alt: "GitLab", title: api_key_owner.name
     else
       raise ArgumentError, "unknown api_key_owner type #{api_key_owner.class}"
     end
