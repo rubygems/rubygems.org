@@ -21,6 +21,8 @@ spec:
         value: "<%= environment %>"
       - name: ENV
         value: "<%= environment %>"
+      - name: DD_TAGS
+        value: "service:rubygems.org env:<%= environment %>"
       - name: DD_AGENT_HOST
         valueFrom:
           fieldRef:
