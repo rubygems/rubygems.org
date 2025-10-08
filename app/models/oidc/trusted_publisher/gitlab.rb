@@ -57,7 +57,7 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   delegate :as_json, to: :payload
 
-  def to_access_policy(jwt)
+  def to_access_policy(_jwt)
     conditions = [
       OIDC::AccessPolicy::Statement::Condition.new(
         operator: "string_equals",

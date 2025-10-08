@@ -8,7 +8,6 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
 
   prop :rubygem, reader: :public
   prop :trusted_publishers, reader: :public
-  prop :trusted_publisher_types, reader: :private
 
   def view_template
     title_content
@@ -18,11 +17,8 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
         t(".description_html")
       end
 
-      div(class: "tw-flex tw-gap-2 tw-mb-4") do # New section for provider selection
-        trusted_publisher_types.each do |type|
-          link_to "Add #{type.publisher_name} Trusted Publisher",
-new_rubygem_trusted_publisher_path(rubygem.slug, trusted_publisher_provider: type.url_identifier), class: "form__submit"
-        end
+      p do
+        button_to t(".create"), new_rubygem_trusted_publisher_path(rubygem.slug), class: "form__submit", method: :get
       end
 
       header(class: "gems__header push--s") do

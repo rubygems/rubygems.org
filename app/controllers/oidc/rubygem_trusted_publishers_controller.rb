@@ -7,15 +7,14 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   def index
     render OIDC::RubygemTrustedPublishers::IndexView.new(
       rubygem: @rubygem,
-      trusted_publishers: @rubygem.oidc_rubygem_trusted_publishers.includes(:trusted_publisher).page(@page).strict_loading,
-      trusted_publisher_types: OIDC::TrustedPublisher.all
+      trusted_publishers: @rubygem.oidc_rubygem_trusted_publishers.includes(:trusted_publisher).page(@page).strict_loading
     )
   end
 
   def new
     selected_trusted_publisher_type = nil
-    if params[:trusted_publisher_provider].present?
-      selected_trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.url_identifier == params[:trusted_publisher_provider] }
+    if params[:trusted_publisher_type].present?
+      selected_trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.url_identifier == params[:trusted_publisher_type] }
     end
 
     rubygem_trusted_publisher_instance = @rubygem.oidc_rubygem_trusted_publishers.new

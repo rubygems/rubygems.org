@@ -17,39 +17,30 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
     form_with(url: new_profile_oidc_pending_trusted_publisher_path, method: :get, class: "mb-4") do |f|
       f.label :trusted_publisher_type, "Select CI/CD Provider:", class: "form__label"
       f.select :trusted_publisher_type, trusted_publisher_types.map { |type|
-                                          [type.publisher_name, type.polymorphic_name]
-                                        }, { selected: selected_trusted_publisher_type&.polymorphic_name }, class: "form__input form__select"
+                                          [type.publisher_name, type.url_identifier]
+                                        }, { selected: selected_trusted_publisher_type&.url_identifier }, class: "form__input form__select"
       f.submit "Select", class: "form__submit"
     end
 
-    if selected_trusted_publisher_type
-      div(class: "t-body") do
-        form_with(
-          model: pending_trusted_publisher,
-          url: profile_oidc_pending_trusted_publishers_path
-        ) do |f|
-          f.label :rubygem_name, class: "form__label"
-          f.text_field :rubygem_name, class: "form__input", autocomplete: :off
-          p(class: "form__field__instructions") { t("oidc.trusted_publisher.pending.rubygem_name_help_html") }
+    return unless selected_trusted_publisher_type
+    div(class: "t-body") do
+      form_with(
+        model: pending_trusted_publisher,
+        url: profile_oidc_pending_trusted_publishers_path
+      ) do |f|
+        f.label :rubygem_name, class: "form__label"
+        f.text_field :rubygem_name, class: "form__input", autocomplete: :off
+        p(class: "form__field__instructions") { t("oidc.trusted_publisher.pending.rubygem_name_help_html") }
 
-          f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
+        f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
 
-          case pending_trusted_publisher.trusted_publisher
-          when OIDC::TrustedPublisher::GitHubAction
-            render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(
-              github_action_form: f
-            )
-          when OIDC::TrustedPublisher::GitLab
-            render OIDC::TrustedPublisher::GitLab::FormComponent.new(
-              gitlab_form: f
-            )
-          end
-          f.submit class: "form__submit"
+        case pending_trusted_publisher.trusted_publisher
+        when OIDC::TrustedPublisher::GitHubAction
+          render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form: f)
+        when OIDC::TrustedPublisher::GitLab
+          render OIDC::TrustedPublisher::GitLab::FormComponent.new(gitlab_form: f)
         end
-      end
-    else
-      div(class: "t-body") do
-        # p "Please select a CI/CD provider to create a pending trusted publisher."
+        f.submit class: "form__submit"
       end
     end
   end

@@ -15,14 +15,8 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
   private
 
   def field(form, type, name, optional: false, **)
-    attribute_owner_class = begin
-      form.object.trusted_publisher.class
-    rescue StandardError
-      nil
-    end
-
     form.label name, class: "form__label" do
-      plain attribute_owner_class&.human_attribute_name(name) || name.to_s.humanize
+      plain form.object.class.human_attribute_name(name)
       span(class: "t-text--s") { " (#{t('form.optional')})" } if optional
     end
     form.send(type, name, class: class_names("form__input", "tw-border tw-border-red-500" => form.object.errors.include?(name)), **)
