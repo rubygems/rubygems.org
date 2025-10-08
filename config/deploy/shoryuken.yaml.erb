@@ -37,11 +37,11 @@ spec:
             memory: 700Mi
           <% else %>
           requests:
-            cpu: 100m
-            memory: 250Mi
+            cpu: 150m
+            memory: 350Mi
           limits:
-            cpu: 400m
-            memory: 300Mi
+            cpu: 600m
+            memory: 450Mi
           <% end %>
         env:
           - name: RAILS_ENV
