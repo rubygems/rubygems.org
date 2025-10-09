@@ -35,7 +35,7 @@ class Rubygems::Transfer::OrganizationsControllerTest < ActionDispatch::Integrat
     non_owner = create(:user)
     post organization_transfer_rubygems_path(as: non_owner), params: { rubygem_transfer: { organization: @organization.handle } }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "POST /rubygems/transfer/organization with invalid organization" do
