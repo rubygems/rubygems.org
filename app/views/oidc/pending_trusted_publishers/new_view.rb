@@ -7,10 +7,22 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
   include Phlex::Rails::Helpers::FormWith
 
   prop :pending_trusted_publisher, reader: :public
+  prop :trusted_publisher_types, reader: :private
+  prop :selected_trusted_publisher_type, reader: :private
 
   def view_template
     self.title = t(".title")
 
+    # Form for selecting trusted publisher type
+    form_with(url: new_profile_oidc_pending_trusted_publisher_path, method: :get, class: "mb-4") do |f|
+      f.label :trusted_publisher_type, "Select CI/CD Provider:", class: "form__label"
+      f.select :trusted_publisher_type, trusted_publisher_types.map { |type|
+                                          [type.publisher_name, type.url_identifier]
+                                        }, { selected: selected_trusted_publisher_type&.url_identifier }, class: "form__input form__select"
+      f.submit "Select", class: "form__submit"
+    end
+
+    return unless selected_trusted_publisher_type
     div(class: "t-body") do
       form_with(
         model: pending_trusted_publisher,
@@ -20,14 +32,14 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
         f.text_field :rubygem_name, class: "form__input", autocomplete: :off
         p(class: "form__field__instructions") { t("oidc.trusted_publisher.pending.rubygem_name_help_html") }
 
-        f.label :trusted_publisher_type, class: "form__label"
-        f.select :trusted_publisher_type, OIDC::TrustedPublisher.all.map { |type|
-                                            [type.publisher_name, type.polymorphic_name]
-                                          }, {}, class: "form__input form__select"
+        f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
 
-        render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(
-          github_action_form: f
-        )
+        case pending_trusted_publisher.trusted_publisher
+        when OIDC::TrustedPublisher::GitHubAction
+          render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form: f)
+        when OIDC::TrustedPublisher::GitLab
+          render OIDC::TrustedPublisher::GitLab::FormComponent.new(gitlab_form: f)
+        end
         f.submit class: "form__submit"
       end
     end
