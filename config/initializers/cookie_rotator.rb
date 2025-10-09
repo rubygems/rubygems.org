@@ -6,9 +6,7 @@ Rails.application.config.after_initialize do
     previous_secret_key_base = ENV['PREVIOUS_SECRET_KEY_BASE']
     if previous_secret_key_base.present?
       # Rotate encrypted cookies with old secret
-      old_key_generator = ActiveSupport::KeyGenerator.new(
-        previous_secret_key_base, iterations: 1000, hash_digest_class: OpenSSL::Digest::SHA1
-      )
+      old_key_generator = Rails.application.key_generator(previous_secret_key_base)
       key_len = ActiveSupport::MessageEncryptor.key_len
       old_secret = old_key_generator.generate_key(salt, key_len)
       cookies.rotate :encrypted, old_secret
