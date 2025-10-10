@@ -40,6 +40,11 @@ spec:
           secretKeyRef:
             name: <%= environment %>
             key: secret_key_base
+      - name: PREVIOUS_SECRET_KEY_BASE
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: previous_secret_key_base
       - name: AWS_REGION
         value: "us-west-2"
       - name: S3_KEY
