@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/landongrindheim/sigstore-ruby.git
+  revision: 6fafa2324662735b9c93e067e1c3465ba5ab69d8
+  ref: 6fafa2324662735b9c93e067e1c3465ba5ab69d8
+  specs:
+    sigstore (0.2.1)
+      logger
+      net-http
+      protobug_sigstore_protos (~> 0.1.0)
+      uri
+
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
@@ -800,10 +811,6 @@ GEM
     shoulda-context (3.0.0.rc1)
     shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
-    sigstore (0.2.1)
-      net-http
-      protobug_sigstore_protos (~> 0.1.0)
-      uri
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -1014,7 +1021,7 @@ DEPENDENCIES
   shoryuken (~> 6.2)
   shoulda-context (~> 3.0.0.rc1)
   shoulda-matchers (~> 6.5)
-  sigstore (~> 0.2.1)
+  sigstore!
   simplecov (~> 0.22)
   simplecov-cobertura (~> 3.1)
   statsd-instrument (~> 3.9)
@@ -1329,7 +1336,7 @@ CHECKSUMS
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
   shoulda-matchers (6.5.0) sha256=ef6b572b2bed1ac4aba6ab2c5ff345a24b6d055a93a3d1c3bfc86d9d499e3f44
-  sigstore (0.2.1) sha256=58031c34c7899dd6aac43c54d0ab1a5282a551804013d4b7cb6930a32cbc8775
+  sigstore (0.2.1)
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-cobertura (3.1.0) sha256=6d7f38aa32c965ca2174b2e5bd88cb17138eaf629518854976ac50e628925dc5
   simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
