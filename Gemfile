@@ -82,7 +82,7 @@ group :avo, optional: true do
 end
 
 # Logging
-gem "amazing_print", "~> 1.8"
+gem "amazing_print", "~> 2.0"
 gem "rails_semantic_logger", "~> 4.18"
 gem "pp", "0.6.3"
 
