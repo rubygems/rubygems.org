@@ -203,6 +203,7 @@ class Pusher
       @version.attestations << Attestation.new(body: bundle, media_type: bundle.media_type)
     end
 
+    StatsD.increment("attestation.verified", tags: { rubygem: rubygem.name })
     true
   rescue Sigstore::Error => e
     notify <<~MSG, 422

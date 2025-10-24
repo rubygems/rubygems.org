@@ -862,9 +862,9 @@ class PusherTest < ActiveSupport::TestCase
     context "with attestations and trusted publisher" do
       setup do
         attestations = build_list(:sigstore_bundle, 2)
-        rubygem = create(:rubygem, name: "test", owners: [@user])
-        create(:version, rubygem: rubygem, number: "0.1.1", indexed: true)
-        rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+        @rubygem = create(:rubygem, name: "test", owners: [@user])
+        create(:version, rubygem: @rubygem, number: "0.1.1", indexed: true)
+        rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: @rubygem)
         rubygem_trusted_publisher.trusted_publisher.update!(
           repository_owner: "sigstore-conformance",
           repository_name: "extremely-dangerous-public-oidc-beacon",
@@ -882,6 +882,15 @@ class PusherTest < ActiveSupport::TestCase
 
         assert @cutter.process, @cutter.message # rubocop:disable Minitest/AssertWithExpectedArgument
         assert_equal 2, @cutter.version.attestations.size
+      end
+
+      should "report metrics around successful attestation verification" do
+        StatsD.stubs(:increment)
+        StatsD.expects(:increment).with("attestation.verified", tags: { rubygem: @rubygem.name }).once
+
+        @cutter.send(:sigstore_verifier).expects(:verify).twice
+          .returns Sigstore::VerificationSuccess.new
+        @cutter.process
       end
 
       should "fail when first attestation fails to validate" do
