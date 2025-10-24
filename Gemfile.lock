@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/landongrindheim/sigstore-ruby.git
-  revision: 6fafa2324662735b9c93e067e1c3465ba5ab69d8
-  ref: 6fafa2324662735b9c93e067e1c3465ba5ab69d8
+  remote: https://github.com/sigstore/sigstore-ruby.git
+  revision: 8d5b49629ddcda7d61b328a37a42fb10291d96ad
+  ref: 8d5b49629ddcda7d61b328a37a42fb10291d96ad
   specs:
     sigstore (0.2.1)
       logger
