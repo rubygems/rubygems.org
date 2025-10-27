@@ -143,7 +143,7 @@ group :test do
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 6.5"
   gem "selenium-webdriver", "~> 4.38"
-  gem "webmock", "~> 3.25"
+  gem "webmock", "~> 3.26"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 3.1", require: false
   gem "aggregate_assertions", "~> 0.2.0"
