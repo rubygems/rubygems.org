@@ -62,7 +62,7 @@ gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.20"
 gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.1"
-gem "sigstore", github: "sigstore/sigstore-ruby", ref: "8d5b49629ddcda7d61b328a37a42fb10291d96ad"
+gem "sigstore", "~> 0.2.2"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
 
