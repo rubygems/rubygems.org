@@ -208,7 +208,7 @@ GEM
       logger (~> 1.5)
     choice (0.2.0)
     chunky_png (1.4.0)
-    clearance (2.10.0)
+    clearance (2.11.0)
       actionmailer (>= 5.0)
       activemodel (>= 5.0)
       activerecord (>= 5.0)
@@ -326,7 +326,7 @@ GEM
     get_process_mem (1.0.0)
       bigdecimal (>= 2.0)
       ffi (~> 1.0)
-    globalid (1.2.1)
+    globalid (1.3.0)
       activesupport (>= 6.1)
     good_job (3.99.1)
       activejob (>= 6.0.0)
@@ -495,7 +495,7 @@ GEM
     mutex_m (0.2.0)
     net-http (0.6.0)
       uri
-    net-imap (0.5.9)
+    net-imap (0.5.10)
       date
       net-protocol
     net-pop (0.1.2)
@@ -935,7 +935,7 @@ DEPENDENCIES
   browser (~> 6.2)
   capybara (~> 3.40)
   chartkick (~> 5.2)
-  clearance (~> 2.10)
+  clearance (~> 2.11)
   compact_index (~> 0.15.0)
   csv (~> 3.3)
   dalli (~> 3.2)
@@ -1098,7 +1098,7 @@ CHECKSUMS
   childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
-  clearance (2.10.0) sha256=4772760301f23728fe5e47419a9f4c3c6407eecef991e3e4cc1641b4652bbcbd
+  clearance (2.11.0) sha256=c198711033c095cf127ea076f6afd4b52723548992b5d40bc1d2e3a28e9b0c79
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
   compact_index (0.15.0) sha256=5c6c404afca8928a7d9f4dde9524f6e1610db17e675330803055db282da84a8b
   concurrent-ruby (1.3.5) sha256=813b3e37aca6df2a21a3b9f1d497f8cbab24a2b94cab325bffe65ee0f6cbebc6
@@ -1148,7 +1148,7 @@ CHECKSUMS
   fugit (1.11.1) sha256=e89485e7be22226d8e9c6da411664d0660284b4b1c08cacb540f505907869868
   gem_server_conformance (0.1.5) sha256=5713ac325a5e1410c0307c00e9c988d8cf97f0eff8103f724ef69f38d910ebc9
   get_process_mem (1.0.0) sha256=d54024f3bcbf776a4d6e0155ec2b21bc3ba44e2fd158c4c00c80aa8a36e0b4aa
-  globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
+  globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
   google-protobuf (4.32.1) sha256=d9ec3f52a283802055647af5d824dcdfe0a791c6ecbad6a514442f40759015e7
   google-protobuf (4.32.1-aarch64-linux-gnu) sha256=b2254c50085b86a0395b2adea11d9742fe703a135b67689991dcc03a1c9bc179
@@ -1219,7 +1219,7 @@ CHECKSUMS
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
   mutex_m (0.2.0) sha256=b6ef0c6c842ede846f2ec0ade9e266b1a9dac0bc151682b04835e8ebd54840d5
   net-http (0.6.0) sha256=9621b20c137898af9d890556848c93603716cab516dc2c89b01a38b894e259fb
-  net-imap (0.5.9) sha256=d95905321e1bd9f294ffc7ff8697be218eee1ec96c8504c0960964d0a0be33fc
+  net-imap (0.5.10) sha256=f84d206a296bff48a3a10507567fc38b050d2a40c92ea0d448164f64e60d6205
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
