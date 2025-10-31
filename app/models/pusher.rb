@@ -277,7 +277,7 @@ class Pusher
       notify("You are not allowed to push this gem.", 403)
     elsif rubygem.unconfirmed_ownership?(owner)
       notify("You do not have permission to push to this gem. " \
-             "Please click the confirmation link we just emailed you to #{owner.email} to confirm you own this gem, so we can verify that you are the rightful owner before allowing pushes.", 403)
+             "Please click the confirmation link we emailed you at #{owner.email} to verify ownership before pushing.", 403)
     else
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{owner.email}", 403)
     end
