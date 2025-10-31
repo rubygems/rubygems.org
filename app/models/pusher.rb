@@ -344,7 +344,7 @@ class Pusher
   end
 
   def validate_spec
-    spec.send(:invalidate_memoized_attributes)
+    spec.send(:invalidate_memoized_attributes) if spec.respond_to?(:invalidate_memoized_attributes, true)
 
     spec = self.spec.dup
 
