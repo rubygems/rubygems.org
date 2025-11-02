@@ -439,15 +439,15 @@ ja:
         member_removed: メンバーが正常に削除されました。
         cannot_remove_self: 組織から自分自身を削除できません。
       resend_invitation:
-        invitation_resent:
-        already_confirmed:
+        invitation_resent: 招待は正常に再送信されました。
+        already_confirmed: メンバーは既に確定しています。
       index:
         invite: 招待
         pending: 保留
       edit:
         update: 更新
         delete: 削除
-        resend_invitation:
+        resend_invitation: 招待を再送信
       new:
         handle: ハンドル名
         role: ロール
