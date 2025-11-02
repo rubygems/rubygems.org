@@ -287,7 +287,7 @@ ja:
     subscriptions: 購読
     gems: gem
     members: メンバー
-    invite_member:
+    invite_member: メンバーを招待
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -425,39 +425,41 @@ ja:
       members: メンバー
       no_history: まだ履歴がありません
       no_gems: まだgemがありません
-      add_member:
-      invite:
+      add_member: メンバーを招待
+      invite: 招待
       transfer:
     members:
       create:
-        user_already_invited:
-        user_not_found:
-        member_invited:
+        user_already_invited: ユーザーは既に組織に招待されています。
+        user_not_found: ユーザーが見つかりません。
+        member_invited: メンバーが招待されました。
       update:
-        member_updated:
+        member_updated: メンバーが正常に更新されました。
       destroy:
-        member_removed:
-        cannot_remove_self:
+        member_removed: メンバーが正常に削除されました。
+        cannot_remove_self: 組織から自分自身を削除できません。
       resend_invitation:
         invitation_resent:
         already_confirmed:
       index:
-        invite:
-        pending:
+        invite: 招待
+        pending: 保留
       edit:
-        update:
-        delete:
+        update: 更新
+        delete: 削除
         resend_invitation:
       new:
-        handle:
-        role:
-        create:
-        invite:
+        handle: ハンドル名
+        role: ロール
+        create: 作成
+        invite: 招待
     invitations:
       show:
-        accept:
-        decline:
-        title_html:
+        accept: 承認
+        decline: 拒否
+        title_html: |-
+          <span class="font-bold">%{role}</span>として<br>
+          組織へ参加するよう招待されました。
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"
