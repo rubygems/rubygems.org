@@ -497,13 +497,13 @@ ja:
       title: プライバシー通知
   policies_mailer:
     policy_update_announcement:
-      subject:
-      title:
-      subtitle:
+      subject: 新しいRubyGems.orgのポリシーを確認
+      title: ポリシー更新のお知らせ
+      subtitle: こんにちは、%{handle}！
     policy_update_review_closed:
-      subject:
-      title:
-      subtitle:
+      subject: RubyGems.orgの新しいポリシーの適合
+      title: ポリシー更新の確認を完了
+      subtitle: こんにちは、%{handle}！
   password_mailer:
     change_password:
       closing: こちらを申請しなかった場合はこのEメールはご放念ください。パスワードは変更されません。
