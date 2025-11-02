@@ -11,9 +11,10 @@ ja:
   footer_about_html: RubyGems.orgはRubyコミュニティのgemのホスティングサービスです。すぐに<a href="%{publish_docs}">gemを公開</a>して<a
     href="%{install_docs}">インストール</a>できます。<a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なgem</a>の詳細を調べられます。ご自身が<a
     href="%{contributing_docs}">貢献者となり</a>サイトをより良くしてください。
-  footer_sponsors_html: RubyGems.orgは広範囲のRubyコミュニティとの連携を通じて成立しました。<a href="https://www.fastly.com/">Fastly</a>はネットワーク帯域とCDNのサポートを提供しています。<a
-    href="https://www.rubycentral.org/">Ruby Central</a>はインフラの費用を捻出し、開発や運用の資金を募っています。<a
-    href="%{supporters_page}">出資者と出資の仕組みについてご確認ください</a>。
+  footer_sponsors_html: |-
+    RubyGems.orgのウェブサイトとサービスはRuby Centralの<a href="https://rubycentral.org/open-source/">オープンソースプログラムOpen Source Program</a>とRubyGemsチームによって保守・運用されています。
+    スポンサー、メンバー、インスラへの寄付を通じて、広くRubyコミュニティ全体によって支援されています。
+    <b>Rubyで開発を行い、私達の理念に共感してくださるのであれば、RubyGems.org、RubyGems、Bundlerを今後も安全で持続可能なものにするために、<a href="%{supporters_page}">こちら</a>からご参加ください。
   form_disable_with: お待ちください……
   invalid_page: ページ番号が範囲外です。既定のページにリダイレクトしました
   locale_name: 日本語
@@ -261,9 +262,9 @@ ja:
         source_code: コード
         statistics: 統計
         status: 状態
-        support_us:
+        support_us: 支援
         supported_by: 協賛
-        operated_by:
+        operated_by: 運営
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           は以下から支援を受けています
@@ -485,7 +486,7 @@ ja:
     security:
       title: セキュリティ
     supporters:
-      title:
+      title: RubyGemsの支援者
   policies:
     index:
       title: RubyGems.orgのポリシー
