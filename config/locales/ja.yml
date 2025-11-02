@@ -428,7 +428,7 @@ ja:
       no_gems: まだgemがありません
       add_member: メンバーを招待
       invite: 招待
-      transfer:
+      transfer: 移動
     members:
       create:
         user_already_invited: ユーザーは既に組織に招待されています。
@@ -815,14 +815,14 @@ ja:
       title: セキュリティ事象
       description_html: このページには%{gem}に起こったセキュリティ事象が表示されます。何か疑わしい活動が見られたときは、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
     transfer:
-      cancelled:
+      cancelled: gemの仮の移動が取り消されました。
       organizations:
         new:
           organization: 組織
       confirm:
         success:
-          one:
-          other:
+          one: 1つのgemを%{organization}に正常に移動しました。
+          other: "%{count} gemを%{organization}に正常に移動しました。"
   reverse_dependencies:
     index:
       title: "%{name}の被依存関係"
