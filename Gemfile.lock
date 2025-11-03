@@ -901,7 +901,7 @@ GEM
       nokogiri (~> 1.8)
     yard (0.9.37)
     zeitwerk (2.7.3)
-    zlib (3.2.1)
+    zlib (3.2.2)
 
 PLATFORMS
   aarch64-linux
@@ -1381,7 +1381,7 @@ CHECKSUMS
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yard (0.9.37) sha256=a6e910399e78e613f80ba9add9ba7c394b1a935f083cccbef82903a3d2a26992
   zeitwerk (2.7.3) sha256=b2e86b4a9b57d26ba68a15230dcc7fe6f040f06831ce64417b0621ad96ba3e85
-  zlib (3.2.1) sha256=6301546b5f108c358304c3095d20e45ddebb31d5079341f95e08e9049770aa6a
+  zlib (3.2.2) sha256=908e61263f99c1371b5422581e2d6663bd37c6b04ae13b5f8cb10b0d09379f40
 
 RUBY VERSION
    ruby 3.4.4p34
