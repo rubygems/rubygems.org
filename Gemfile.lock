@@ -801,8 +801,8 @@ GEM
       concurrent-ruby
       thor
     shoulda-context (3.0.0.rc1)
-    shoulda-matchers (6.5.0)
-      activesupport (>= 5.2.0)
+    shoulda-matchers (7.0.1)
+      activesupport (>= 7.1)
     sigstore (0.2.2)
       logger
       net-http
@@ -862,7 +862,7 @@ GEM
     unpwn (1.0.1)
       bloomer (~> 1.0)
       pwned (~> 2.0)
-    uri (1.0.4)
+    uri (1.1.0)
     user_agent_parser (2.20.0)
     useragent (0.16.11)
     validate_url (1.0.15)
@@ -1018,7 +1018,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.38)
   shoryuken (~> 6.2)
   shoulda-context (~> 3.0.0.rc1)
-  shoulda-matchers (~> 6.5)
+  shoulda-matchers (~> 7.0)
   sigstore (~> 0.2.2)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 3.1)
@@ -1333,7 +1333,7 @@ CHECKSUMS
   semantic_logger (4.17.0) sha256=c54b60d8596abe2e22bd4f20648d4f6c46e4287fba357779c7932335c8d130e9
   shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
-  shoulda-matchers (6.5.0) sha256=ef6b572b2bed1ac4aba6ab2c5ff345a24b6d055a93a3d1c3bfc86d9d499e3f44
+  shoulda-matchers (7.0.1) sha256=b4bfd8744c10e0a36c8ac1a687f921ee7e25ed529e50488d61b79a8688749c77
   sigstore (0.2.2) sha256=062d14c1490721e21eb1c33e93b5c48cd9167f79499033fb035c98efbc3dc0a1
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-cobertura (3.1.0) sha256=6d7f38aa32c965ca2174b2e5bd88cb17138eaf629518854976ac50e628925dc5
@@ -1364,7 +1364,7 @@ CHECKSUMS
   unicode-display_width (3.1.5) sha256=bf566817855ee7ee3adcf7bace0d5906cb14401417db59193f8a5fcedf02dd4e
   unicode-emoji (4.0.4) sha256=2c2c4ef7f353e5809497126285a50b23056cc6e61b64433764a35eff6c36532a
   unpwn (1.0.1) sha256=103b3cc9ee9fb3dd68b88b73778bd17a9bfe7cfe12fc7053c2bf9f06caa2c155
-  uri (1.0.4) sha256=34485d137c079f8753a0ca1d883841a7ba2e5fae556e3c30c2aab0dde616344b
+  uri (1.1.0) sha256=e23a2061c1e924efa2cc3016f517f888e7c866c0d7f6531f5cded089f2b9e625
   user_agent_parser (2.20.0) sha256=4bd9b667923ee4c7ca0abbe07135e49d9acd6534200b156b89c5e082acbe6ca6
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
