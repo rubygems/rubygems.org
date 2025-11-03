@@ -442,7 +442,8 @@ GEM
       view_component (>= 2.0)
       yard (~> 0.9)
       zeitwerk (~> 2.5)
-    mail (2.8.1)
+    mail (2.9.0)
+      logger
       mini_mime (>= 0.1.1)
       net-imap
       net-pop
@@ -843,7 +844,7 @@ GEM
     tailwindcss-ruby (4.1.11-x86_64-linux-gnu)
     tailwindcss-ruby (4.1.11-x86_64-linux-musl)
     thor (1.4.0)
-    timeout (0.4.3)
+    timeout (0.4.4)
     toxiproxy (2.0.2)
     tpm-key_attestation (0.14.1)
       bindata (~> 2.4)
@@ -965,7 +966,7 @@ DEPENDENCIES
   listen (~> 3.9)
   local_time (~> 3.0)
   lookbook (~> 2.3)
-  mail (~> 2.8)
+  mail (~> 2.9)
   maintenance_tasks (~> 2.12)
   memory_profiler (~> 1.1)
   minitest (~> 5.26)
@@ -1194,7 +1195,7 @@ CHECKSUMS
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   loofah (2.24.1) sha256=655a30842b70ec476410b347ab1cd2a5b92da46a19044357bbd9f401b009a337
   lookbook (2.3.13) sha256=acfa04a1ba7a87b057c222d78a2d72763546f52549e97590993344c8373f6d21
-  mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
+  mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
   maintenance_tasks (2.12.0) sha256=f236ca6dc35e579692b61b42368d73f0e201cc33585ff62ebcc5bef15ad0f1a7
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
@@ -1355,7 +1356,7 @@ CHECKSUMS
   tailwindcss-ruby (4.1.11-x86_64-linux-gnu) sha256=5633d76566839bc675960cd841d30795a3189b81c53a8c49bcf1629210b7a3b1
   tailwindcss-ruby (4.1.11-x86_64-linux-musl) sha256=6a9845bc086a846c9b1b0d70c0e469d34a3a9b0a820df6ee94b7a81715fb1439
   thor (1.4.0) sha256=8763e822ccb0f1d7bee88cde131b19a65606657b847cc7b7b4b82e772bcd8a3d
-  timeout (0.4.3) sha256=9509f079b2b55fe4236d79633bd75e34c1c1e7e3fb4b56cb5fda61f80a0fe30e
+  timeout (0.4.4) sha256=f0f6f970104b82427cd990680f539b6bbb8b1e55efa913a55c6492935e4e0edb
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.14.1) sha256=7fd4e4653a7afd0a386632ddfb05d10ecfdd47678299c5e69165bc9ae111193f
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
