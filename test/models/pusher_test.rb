@@ -549,6 +549,17 @@ class PusherTest < ActiveSupport::TestCase
         assert_equal 403, @cutter.code
       end
 
+      should "be false if ownership is not confirmed" do
+        create(:ownership, rubygem: @rubygem, user: @user, confirmed_at: nil)
+        create(:version, rubygem: @rubygem, number: "0.1.1")
+
+        refute @cutter.authorize
+        assert_equal "You do not have permission to push to this gem. " \
+                     "Please click the confirmation link we emailed you at #{@user.email} to verify ownership before pushing.",
+          @cutter.message
+        assert_equal 403, @cutter.code
+      end
+
       should "be true if not owned by user but no indexed versions exist" do
         create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
 
