@@ -126,11 +126,6 @@ module RubygemsHelper
       security_events_rubygem_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
-  def rubygem_organization_transfer_link(rubygem)
-    link_to "Transfer to Organization",
-      rubygem_transfer_path(rubygem.slug), class: "gem__link t-list__item"
-  end
-
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).inject(+"") { |link, owner| link << link_to_user(owner) }.html_safe
   end

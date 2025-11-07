@@ -40,7 +40,7 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "ownerships should be sorted by rubygem name ascendant order" do
-      assert_equal @gems.sort, (@ownerships.map { |own| own.rubygem.name })
+      assert_equal(@gems.sort, @ownerships.map { |own| own.rubygem.name })
     end
   end
 

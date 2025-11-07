@@ -6,7 +6,7 @@ class Organizations::Onboarding::UsersController < Organizations::Onboarding::Ba
     if @organization_onboarding.update(onboarding_user_params)
       redirect_to organization_onboarding_confirm_path
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

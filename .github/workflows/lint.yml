@@ -12,10 +12,10 @@ jobs:
     name: Rubocop
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@a9bfc2ecf3dd40734a9418f89a7e9d484c32b990 # v1.248.0
+      - uses: ruby/setup-ruby@d5126b9b3579e429dd52e51e68624dda2e05be25 # v1.267.0
         with:
           bundler-cache: true
       - name: Rubocop
@@ -24,10 +24,10 @@ jobs:
     name: Brakeman
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@a9bfc2ecf3dd40734a9418f89a7e9d484c32b990 # v1.248.0
+      - uses: ruby/setup-ruby@d5126b9b3579e429dd52e51e68624dda2e05be25 # v1.267.0
         with:
           bundler-cache: true
       - name: Brakeman
@@ -36,14 +36,26 @@ jobs:
     name: Importmap Verify
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@a9bfc2ecf3dd40734a9418f89a7e9d484c32b990 # v1.248.0
+      - uses: ruby/setup-ruby@d5126b9b3579e429dd52e51e68624dda2e05be25 # v1.267.0
         with:
           bundler-cache: true
       - name: Importmap Verify
         run: bundle exec rake importmap:verify
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: '20'
+      - name: Check JavaScript formatting
+        run: bin/prettier
   kubeconform:
     name: Kubeconform
     runs-on: ubuntu-24.04
@@ -56,10 +68,10 @@ jobs:
     steps:
       - name: login to Github Packages
         run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@a9bfc2ecf3dd40734a9418f89a7e9d484c32b990 # v1.248.0
+      - uses: ruby/setup-ruby@d5126b9b3579e429dd52e51e68624dda2e05be25 # v1.267.0
         with:
           bundler-cache: true
       - name: krane render
@@ -68,7 +80,7 @@ jobs:
         env:
           ENVIRONMENT: "${{ matrix.environment }}"
           REVISION: "${{ github.sha }}"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: "${{ matrix.environment }}.rendered.yaml"
           path: "config/deploy/${{ matrix.environment }}.rendered.yaml"
@@ -81,7 +93,7 @@ jobs:
     name: Frizbee
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - uses: stacklok/frizbee-action@c7009cdb455a69ae0dab0c37f296e0f545b4211c # main
@@ -104,12 +116,12 @@ jobs:
       actions: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc # v6.4.3
+        uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
 
       - name: Run zizmor 🌈
         run: uvx zizmor --format sarif . > results.sarif
@@ -118,7 +130,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@4e828ff8d448a8a6e532957b1811f387a63867e8 # v3.29.4
+        uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         with:
           sarif_file: results.sarif
           category: zizmor

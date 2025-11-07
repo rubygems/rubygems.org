@@ -2,15 +2,13 @@ class Rubygems::Transfer::UsersController < Rubygems::Transfer::BaseController
   layout "onboarding"
 
   def edit
-    @users = @rubygem.owners
-    @organization = @rubygem_transfer.organization
   end
 
   def update
     if @rubygem_transfer.update(rubygem_transfer_params)
-      redirect_to rubygem_transfer_confirm_path(@rubygem.slug)
+      redirect_to confirm_transfer_rubygems_path
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

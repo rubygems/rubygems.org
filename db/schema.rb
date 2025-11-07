@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_05_054836) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -530,14 +530,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
     t.string "status", default: "pending", null: false
     t.bigint "organization_id"
     t.bigint "created_by_id", null: false
-    t.bigint "rubygem_id", null: false
     t.datetime "completed_at"
     t.text "error"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "rubygems", default: [], array: true
     t.index ["created_by_id"], name: "index_rubygem_transfers_on_created_by_id"
     t.index ["organization_id"], name: "index_rubygem_transfers_on_organization_id"
-    t.index ["rubygem_id"], name: "index_rubygem_transfers_on_rubygem_id"
   end
 
   create_table "rubygems", id: :serial, force: :cascade do |t|
@@ -734,7 +733,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_195347) do
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
   add_foreign_key "rubygem_transfers", "organizations"
-  add_foreign_key "rubygem_transfers", "rubygems"
   add_foreign_key "rubygem_transfers", "users", column: "created_by_id"
   add_foreign_key "rubygems", "organizations", on_delete: :nullify
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"

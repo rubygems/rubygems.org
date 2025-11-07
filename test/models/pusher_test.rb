@@ -549,6 +549,17 @@ class PusherTest < ActiveSupport::TestCase
         assert_equal 403, @cutter.code
       end
 
+      should "be false if ownership is not confirmed" do
+        create(:ownership, rubygem: @rubygem, user: @user, confirmed_at: nil)
+        create(:version, rubygem: @rubygem, number: "0.1.1")
+
+        refute @cutter.authorize
+        assert_equal "You do not have permission to push to this gem. " \
+                     "Please click the confirmation link we emailed you at #{@user.email} to verify ownership before pushing.",
+          @cutter.message
+        assert_equal 403, @cutter.code
+      end
+
       should "be true if not owned by user but no indexed versions exist" do
         create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
 
@@ -862,9 +873,9 @@ class PusherTest < ActiveSupport::TestCase
     context "with attestations and trusted publisher" do
       setup do
         attestations = build_list(:sigstore_bundle, 2)
-        rubygem = create(:rubygem, name: "test", owners: [@user])
-        create(:version, rubygem: rubygem, number: "0.1.1", indexed: true)
-        rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+        @rubygem = create(:rubygem, name: "test", owners: [@user])
+        create(:version, rubygem: @rubygem, number: "0.1.1", indexed: true)
+        rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: @rubygem)
         rubygem_trusted_publisher.trusted_publisher.update!(
           repository_owner: "sigstore-conformance",
           repository_name: "extremely-dangerous-public-oidc-beacon",
@@ -882,6 +893,15 @@ class PusherTest < ActiveSupport::TestCase
 
         assert @cutter.process, @cutter.message # rubocop:disable Minitest/AssertWithExpectedArgument
         assert_equal 2, @cutter.version.attestations.size
+      end
+
+      should "report metrics around successful attestation verification" do
+        StatsD.stubs(:increment)
+        StatsD.expects(:increment).with("attestation.verified", tags: { rubygem: @rubygem.name }).once
+
+        @cutter.send(:sigstore_verifier).expects(:verify).twice
+          .returns Sigstore::VerificationSuccess.new
+        @cutter.process
       end
 
       should "fail when first attestation fails to validate" do

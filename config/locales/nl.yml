@@ -14,7 +14,6 @@ nl:
     beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a>
     en verbeter de site met jouw aanpassingen.
   footer_sponsors_html:
-  footer_join_rt_html:
   form_disable_with: Een moment geduld...
   invalid_page:
   locale_name: Nederlands
@@ -265,14 +264,13 @@ nl:
         source_code: Code
         statistics: Statistieken
         status: Status
+        support_us:
         supported_by: Ondersteuning
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> wordt ondersteund door
-        tested_by: Getest door
-        tracking_by: Tracking
         uptime: Uptime
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:
@@ -419,6 +417,7 @@ nl:
       no_gems:
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -429,12 +428,16 @@ nl:
       destroy:
         member_removed:
         cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
       index:
         invite:
         pending:
       edit:
         update:
         delete:
+        resend_invitation:
       new:
         handle:
         role:
@@ -484,7 +487,7 @@ nl:
       title:
     security:
       title:
-    sponsors:
+    supporters:
       title:
   policies:
     index:
@@ -792,11 +795,14 @@ nl:
       title:
       description_html:
     transfer:
+      cancelled:
       organizations:
         new:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title:

@@ -30,24 +30,26 @@ spec:
         resources:
           <% if environment == 'production' %>
           requests:
-            cpu: 100m
-            memory: 300Mi
+            cpu: 150m
+            memory: 400Mi
           limits:
-            cpu: 400m
-            memory: 500Mi
+            cpu: 600m
+            memory: 700Mi
           <% else %>
           requests:
-            cpu: 100m
-            memory: 250Mi
+            cpu: 150m
+            memory: 350Mi
           limits:
-            cpu: 400m
-            memory: 300Mi
+            cpu: 600m
+            memory: 450Mi
           <% end %>
         env:
           - name: RAILS_ENV
             value: "<%= environment %>"
           - name: ENV
             value: "<%= environment %>"
+          - name: DD_TAGS
+            value: "service:rubygems.org env:<%= environment %>"
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
@@ -67,6 +69,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: secret_key_base
+          - name: PREVIOUS_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: previous_secret_key_base
           - name: AWS_REGION
             value: "us-west-2"
           - name: FASTLY_LOG_PROCESSOR_ENABLED

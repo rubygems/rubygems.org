@@ -57,4 +57,44 @@ class InvitationTest < ApplicationSystemTestCase
 
     assert_text "You have successfully joined the #{@organization.handle} organization."
   end
+
+  test "resending an invitation to an organization" do
+    pending_membership = create(:membership, :pending, user: @outside_user, organization: @organization, invited_by: @user)
+
+    sign_in
+
+    visit edit_organization_membership_path(@organization, pending_membership)
+
+    assert_text @outside_user.handle
+    assert_text "Resend Invitation"
+
+    click_on "Resend Invitation"
+
+    assert_text "Invitation resent successfully."
+  end
+
+  test "resend button only appears for pending invitations" do
+    confirmed_membership = create(:membership, user: @outside_user, organization: @organization, role: :maintainer)
+
+    sign_in
+
+    visit edit_organization_membership_path(@organization, confirmed_membership)
+
+    assert_text @outside_user.handle
+    assert_text "Joined:"
+    refute_text "Resend Invitation"
+  end
+
+  test "resend button requires admin permissions" do
+    maintainer = create(:user)
+    create(:membership, user: maintainer, organization: @organization, role: :maintainer)
+    pending_membership = create(:membership, :pending, user: @outside_user, organization: @organization, invited_by: @user)
+
+    sign_in maintainer
+
+    visit edit_organization_membership_path(@organization, pending_membership)
+
+    # Maintainers cannot access the edit page at all
+    assert_text "Page not found"
+  end
 end

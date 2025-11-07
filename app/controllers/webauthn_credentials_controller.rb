@@ -17,10 +17,10 @@ class WebauthnCredentialsController < ApplicationController
       render_callback_redirect
     else
       message = webauthn_credential.errors.full_messages.to_sentence
-      render json: { message: message }, status: :unprocessable_entity
+      render json: { message: message }, status: :unprocessable_content
     end
   rescue WebAuthn::Error => e
-    render json: { message: e.message }, status: :unprocessable_entity
+    render json: { message: e.message }, status: :unprocessable_content
   ensure
     session.delete("webauthn_registration")
   end

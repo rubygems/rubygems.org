@@ -177,8 +177,19 @@ class VerifyLinkJobTest < ActiveJob::TestCase
     assert_enqueued_jobs 1, only: VerifyLinkJob
   end
 
+  test "does not verify http links" do
+    freeze_time
+
+    VerifyLinkJob.perform_now(link_verification: @docs)
+
+    refute_predicate @docs.reload, :verified?
+    assert_nil @docs.last_verified_at
+    assert_equal 0, @docs.failures_since_last_verification
+    assert_enqueued_jobs 0, only: VerifyLinkJob
+  end
+
   test "does not retry link verification after max failures" do
-    @bugs.update_columns(failures_since_last_verification: LinkVerification::MAX_FAILURES - 1)
+    @bugs.update_columns(failures_since_last_verification: LinkVerification::MAX_FAILURES)
     freeze_time
 
     VerifyLinkJob.perform_now(link_verification: @bugs)
@@ -186,17 +197,6 @@ class VerifyLinkJobTest < ActiveJob::TestCase
     refute_predicate @bugs.reload, :verified?
     assert_nil @bugs.last_verified_at
     assert_equal LinkVerification::MAX_FAILURES, @bugs.failures_since_last_verification
-    assert_enqueued_jobs 0, only: VerifyLinkJob
-  end
-
-  test "does not retry link verification for http link" do
-    freeze_time
-
-    VerifyLinkJob.perform_now(link_verification: @docs)
-
-    refute_predicate @docs.reload, :verified?
-    assert_nil @docs.last_verified_at
-    assert_equal 1, @docs.failures_since_last_verification
     assert_enqueued_jobs 0, only: VerifyLinkJob
   end
 

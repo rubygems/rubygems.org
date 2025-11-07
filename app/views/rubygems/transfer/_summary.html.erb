@@ -8,7 +8,7 @@
   <div class="flex justify-between items-center">
     <h3 class="text-b1 text-neutral-900 dark:text-white">Organization</h3>
     <% if current_step > 1 %>
-      <%= link_to "edit", rubygem_transfer_organization_path(@rubygem.slug), class: "text-orange-500" %>
+      <%= link_to "edit", organization_transfer_rubygems_path, class: "text-orange-500" %>
     <% end %>
   </div>
   <div class="mt-4">
@@ -23,11 +23,29 @@
 <div class="mb-6">
   <div class="flex justify-between items-center">
     <h3 class="text-b1 text-neutral-900 dark:text-white">
+      Gems
+      <span class="text-neutral-600 font-light ml-1"><%= @rubygem_transfer.selected_rubygems.size %></span>
+    </h3>
+    <% if current_step > 2 %>
+      <%= link_to "edit", rubygems_transfer_rubygems_path, class: "text-orange-500" %>
+    <% end %>
+  </div>
+  <ul class="mt-4">
+    <% @rubygem_transfer.selected_rubygems.each do |rubygem| %>
+      <li class="mt-2 text-neutral-800 dark:text-neutral-200"><%= rubygem.name %></li>
+    <% end %>
+  </ul>
+</div>
+<hr class="border-neutral-400 my-6">
+
+<div class="mb-6">
+  <div class="flex justify-between items-center">
+    <h3 class="text-b1 text-neutral-900 dark:text-white">
       People
       <span class="text-neutral-600 font-light ml-1"><%= @rubygem_transfer.approved_invites.size %></span>
     </h3>
     <% if current_step > 2 %>
-      <%= link_to "edit", rubygem_transfer_users_path(@rubygem.slug), class: "text-orange-500" %>
+      <%= link_to "edit", users_transfer_rubygems_path, class: "text-orange-500" %>
     <% end %>
   </div>
   <ul class="mt-2 items-center space-y-4">

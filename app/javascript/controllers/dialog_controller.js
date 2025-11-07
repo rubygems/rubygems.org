@@ -1,28 +1,28 @@
-import Dialog from '@stimulus-components/dialog'
+import Dialog from "@stimulus-components/dialog";
 
 export default class extends Dialog {
-  static targets = ["dialog", "button"]
+  static targets = ["dialog", "button"];
 
   connect() {
-    super.connect()
-    this.setAriaExpanded('false')
+    super.connect();
+    this.setAriaExpanded("false");
   }
 
   open(e) {
-    super.open()
-    e.preventDefault()
-    this.setAriaExpanded('true')
+    super.open();
+    e.preventDefault();
+    this.setAriaExpanded("true");
   }
 
   close(e) {
-    super.close()
-    e.preventDefault()
-    this.setAriaExpanded('false')
+    super.close();
+    e.preventDefault();
+    this.setAriaExpanded("false");
   }
 
   setAriaExpanded(expanded) {
     if (this.hasButtonTarget) {
-      this.buttonTarget.setAttribute('aria-expanded', expanded)
+      this.buttonTarget.setAttribute("aria-expanded", expanded);
     }
   }
 }

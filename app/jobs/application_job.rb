@@ -18,4 +18,12 @@ class ApplicationJob < ActiveJob::Base
 
   # Most jobs are safe to ignore if the underlying records are no longer available
   # discard_on ActiveJob::DeserializationError
+
+  after_discard do |job, exception|
+    tags = job.statsd_tags.merge(
+      exception: exception.class.name,
+      adapter: job.class.queue_adapter.class.name
+    )
+    StatsD.increment("good_job.discarded", tags: tags)
+  end
 end

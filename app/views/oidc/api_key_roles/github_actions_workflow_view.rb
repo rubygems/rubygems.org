@@ -18,12 +18,12 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
     div(class: "t-body", data: { controller: "clipboard", clipboard_success_content_value: "✔" }) do
       p do
         t(".configured_for_html", link_html:
-          single_gem_role? ? helpers.link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
+          single_gem_role? ? link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
       end
 
       p do
         t(".to_automate_html", link_html:
-         single_gem_role? ? helpers.link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
+         single_gem_role? ? link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
       end
 
       p { t(".instructions_html") }

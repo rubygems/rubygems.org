@@ -136,6 +136,7 @@ class Avo::OIDCProvidersSystemTest < ApplicationSystemTestCase
     audit = provider.audits.sole
 
     page.assert_text audit.id
+
     assert_equal "OIDC::Provider", audit.auditable_type
     assert_equal "Refresh OIDC Provider", audit.action
     assert_equal(

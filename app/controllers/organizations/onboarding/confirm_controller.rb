@@ -9,6 +9,6 @@ class Organizations::Onboarding::ConfirmController < Organizations::Onboarding::
     redirect_to organization_path(@organization_onboarding.organization)
   rescue ActiveRecord::ActiveRecordError
     flash.now[:error] = "Onboarding error: #{@organization_onboarding.error}"
-    render :edit, status: :unprocessable_entity
+    render :edit, status: :unprocessable_content
   end
 end

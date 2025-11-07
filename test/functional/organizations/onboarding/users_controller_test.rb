@@ -121,6 +121,24 @@ class Organizations::Onboarding::UsersControllerTest < ActionDispatch::Integrati
       assert_equal "admin", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
     end
 
+    should "update user to outside contributor role" do
+      patch organization_onboarding_users_path(as: @user), params: {
+        organization_onboarding: {
+          invites_attributes: {
+            "0" => { id: @invites[0].id, role: "outside_contributor" },
+            "1" => { id: @invites[1].id, role: "maintainer" }
+          }
+        }
+      }
+
+      assert_redirected_to organization_onboarding_confirm_path
+
+      @organization_onboarding.reload
+
+      assert_equal "outside_contributor", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
+      assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
+    end
+
     context "when already invited users" do
       should "update roles and/or uninvite" do
         @organization_onboarding.invites.create(user_id: @other_users[0].id, role: "admin")

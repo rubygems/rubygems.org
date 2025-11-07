@@ -11,11 +11,10 @@ ja:
   footer_about_html: RubyGems.orgはRubyコミュニティのgemのホスティングサービスです。すぐに<a href="%{publish_docs}">gemを公開</a>して<a
     href="%{install_docs}">インストール</a>できます。<a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なgem</a>の詳細を調べられます。ご自身が<a
     href="%{contributing_docs}">貢献者となり</a>サイトをより良くしてください。
-  footer_sponsors_html: RubyGems.orgは広範囲のRubyコミュニティとの連携を通じて成立しました。<a href="https://www.fastly.com/">Fastly</a>はネットワーク帯域とCDNのサポートを提供しています。<a
-    href="https://www.rubycentral.org/">Ruby Central</a>はインフラの費用を捻出し、開発や運用の資金を募っています。<a
-    href="%{sponsors_page}">出資者と出資の仕組みについてご確認ください</a>。
-  footer_join_rt_html: 全ての人にとって円滑にRubyGems.orgを稼動させ続けていく上で、開発者の時間を賄うためのご支援が必要です。<a
-    href="https://rubycentral.org/#/portal/signup">今日からでもRuby Centralにご参加ください</a>。
+  footer_sponsors_html: |-
+    RubyGems.orgのウェブサイトとサービスはRuby Centralの<a href="https://rubycentral.org/open-source/">オープンソースプログラムOpen Source Program</a>とRubyGemsチームによって保守・運用されています。
+    スポンサー、メンバー、インスラへの寄付を通じて、広くRubyコミュニティ全体によって支援されています。
+    <b>Rubyで開発を行い、私達の理念に共感してくださるのであれば、RubyGems.org、RubyGems、Bundlerを今後も安全で持続可能なものにするために、<a href="%{supporters_page}">こちら</a>からご参加ください。
   form_disable_with: お待ちください……
   invalid_page: ページ番号が範囲外です。既定のページにリダイレクトしました
   locale_name: 日本語
@@ -33,8 +32,8 @@ ja:
   sign_in: サインイン
   sign_out: サインアウト
   sign_up: 新規登録
-  by_signing_up:
-  sign_up_terms:
+  by_signing_up: 新規登録するときは次に同意したものとみなします：
+  sign_up_terms: RubyGemsの利用規約
   dependency_list: 全ての推移的な依存関係を表示
   multifactor_authentication: 多要素認証
   subtitle: コミュニティのgemホスティングサービス
@@ -106,13 +105,13 @@ ja:
         membership:
           attributes:
             user:
-              taken:
-              blank:
-              required:
+              taken: は既にこの組織に招待されています
+              blank: 見つかりませんでした
+              required: 見つかりませんでした
             user_id:
-              taken:
-              blank:
-              required:
+              taken: は既にこの組織に招待されています
+              blank: 見つかりませんでした
+              required: 見つかりませんでした
         ownership:
           attributes:
             user_id:
@@ -256,21 +255,20 @@ ja:
         hosted_by: ホスト
         monitored_by: 監視
         optimized_by: 最適化
-        policies:
+        policies: ポリシー
         releases: リリース
         resolved_with: DNS
         security: セキュリティ
         source_code: コード
         statistics: 統計
         status: 状態
+        support_us: 支援
         supported_by: 協賛
+        operated_by: 運営
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           は以下から支援を受けています
-        tested_by: テスト
-        tracking_by: 追跡
         uptime: 稼働時間
-        verified_by: 検証
         secured_by: セキュリティ
         looking_for_maintainers: メンテナの募集
       header:
@@ -279,7 +277,7 @@ ja:
         settings: 設定
         edit_profile: プロフィールを編集
         search_gem_html: gemを検索...
-        members:
+        members: メンバー
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
         to blog post)！"
   breadcrumbs:
@@ -290,7 +288,7 @@ ja:
     subscriptions: 購読
     gems: gem
     members: メンバー
-    invite_member:
+    invite_member: メンバーを招待
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -420,7 +418,7 @@ ja:
   organizations:
     index:
       title: 組織
-      no_organizations:
+      no_organizations: どの組織のメンバーでもありません。
     show:
       organization: 組織
       gems: gem
@@ -428,34 +426,41 @@ ja:
       members: メンバー
       no_history: まだ履歴がありません
       no_gems: まだgemがありません
-      add_member:
-      invite:
+      add_member: メンバーを招待
+      invite: 招待
+      transfer: 移動
     members:
       create:
-        user_already_invited:
-        user_not_found:
-        member_invited:
+        user_already_invited: ユーザーは既に組織に招待されています。
+        user_not_found: ユーザーが見つかりません。
+        member_invited: メンバーが招待されました。
       update:
-        member_updated:
+        member_updated: メンバーが正常に更新されました。
       destroy:
-        member_removed:
-        cannot_remove_self:
+        member_removed: メンバーが正常に削除されました。
+        cannot_remove_self: 組織から自分自身を削除できません。
+      resend_invitation:
+        invitation_resent: 招待は正常に再送信されました。
+        already_confirmed: メンバーは既に確定しています。
       index:
-        invite:
-        pending:
+        invite: 招待
+        pending: 保留
       edit:
-        update:
-        delete:
+        update: 更新
+        delete: 削除
+        resend_invitation: 招待を再送信
       new:
-        handle:
-        role:
-        create:
-        invite:
+        handle: ハンドル名
+        role: ロール
+        create: 作成
+        invite: 招待
     invitations:
       show:
-        accept:
-        decline:
-        title_html:
+        accept: 承認
+        decline: 拒否
+        title_html: |-
+          <span class="font-bold">%{role}</span>として<br>
+          組織へ参加するよう招待されました。
   pages:
     about:
       contributors_amount: "%{count}人以上のRubyist"
@@ -480,28 +485,28 @@ ja:
       title: RubyGemsをダウンロード
     security:
       title: セキュリティ
-    sponsors:
-      title: 出資者
+    supporters:
+      title: RubyGemsの支援者
   policies:
     index:
-      title:
+      title: RubyGems.orgのポリシー
     terms-of-service:
-      title:
+      title: 利用規約
     acceptable-use:
-      title:
+      title: 適性利用
     copyright:
-      title:
+      title: 著作権ポリシー
     privacy:
-      title:
+      title: プライバシー通知
   policies_mailer:
     policy_update_announcement:
-      subject:
-      title:
-      subtitle:
+      subject: 新しいRubyGems.orgのポリシーを確認
+      title: ポリシー更新のお知らせ
+      subtitle: こんにちは、%{handle}！
     policy_update_review_closed:
-      subject:
-      title:
-      subtitle:
+      subject: RubyGems.orgの新しいポリシーの適合
+      title: ポリシー更新の確認を完了
+      subtitle: こんにちは、%{handle}！
   password_mailer:
     change_password:
       closing: こちらを申請しなかった場合はこのEメールはご放念ください。パスワードは変更されません。
@@ -765,8 +770,8 @@ ja:
     dependencies:
       header: "%{title}依存関係"
     release_info:
-      managed_by:
-      outside_contributors:
+      managed_by: 管理者
+      outside_contributors: 外部の貢献者
       authors_header: 作者
       self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証（MFA）
         の有効化</a>をご検討ください。
@@ -810,11 +815,14 @@ ja:
       title: セキュリティ事象
       description_html: このページには%{gem}に起こったセキュリティ事象が表示されます。何か疑わしい活動が見られたときは、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
     transfer:
+      cancelled: gemの仮の移動が取り消されました。
       organizations:
         new:
-          organization:
+          organization: 組織
       confirm:
         success:
+          one: 1つのgemを%{organization}に正常に移動しました。
+          other: "%{count} gemを%{organization}に正常に移動しました。"
   reverse_dependencies:
     index:
       title: "%{name}の被依存関係"

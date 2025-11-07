@@ -69,7 +69,7 @@ class MultifactorAuthsController < ApplicationController
       flash[:success] = t("multifactor_auths.update.success")
       current_user.update!(mfa_level: level_param)
     else
-      flash[:error] = t("multifactor_auths.update.invalid_level") # rubocop:disable Rails/ActionControllerFlashBeforeRender
+      flash[:error] = t("multifactor_auths.update.invalid_level")
     end
 
     redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
