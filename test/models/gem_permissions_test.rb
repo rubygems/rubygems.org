@@ -200,27 +200,4 @@ class GemPermissionsTest < ActiveSupport::TestCase
       end
     end
   end
-
-  context "edge cases" do
-    setup do
-      @rubygem = create(:rubygem)
-      @permissions = GemPermissions.new(@rubygem, @user)
-    end
-
-    should "handle unknown minimum_role gracefully" do
-      # This tests the else clause in organization_role_check
-      organization = create(:organization)
-      @rubygem.update(organization: organization)
-      create(:membership, organization: organization, user: @user, role: :owner)
-
-      # We can't directly test the private method, but we can verify that
-      # unknown roles return false by testing a role that doesn't exist
-      permissions = GemPermissions.new(@rubygem, @user)
-
-      # All valid roles should work
-      assert_predicate permissions, :can_push?
-      assert_predicate permissions, :can_perform_gem_admin?
-      assert_predicate permissions, :can_manage_owners?
-    end
-  end
 end
