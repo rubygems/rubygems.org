@@ -40,13 +40,13 @@ override_csp: true
 # time_zone: "Pacific Time (US & Canada)"
 
 # class name of the user model
-# user_class: User
+user_class: Admin::GitHubUser
 
 # method name for the current user
-# user_method: current_user
+user_method: admin_user
 
 # method name for the display name
-# user_name: name
+user_name: login
 
 # custom before_action to use for auth
 # before_action_method: require_admin
