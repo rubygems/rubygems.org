@@ -374,6 +374,7 @@ Rails.application.routes.draw do
         mount MaintenanceTasks::Engine, at: "maintenance_tasks"
         mount PgHero::Engine, at: "pghero"
         mount Flipper::UI.app(Flipper), at: '/features'
+        mount Blazer::Engine, at: "blazer"
       end
 
       mount_avo
