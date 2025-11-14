@@ -264,7 +264,7 @@ GEM
     drb (2.2.3)
     email_validator (2.2.4)
       activemodel
-    erb (5.1.3)
+    erb (6.0.0)
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
@@ -454,13 +454,13 @@ GEM
       net-imap
       net-pop
       net-smtp
-    maintenance_tasks (2.12.0)
-      actionpack (>= 7.0)
-      activejob (>= 7.0)
-      activerecord (>= 7.0)
+    maintenance_tasks (2.13.0)
+      actionpack (>= 7.1)
+      activejob (>= 7.1)
+      activerecord (>= 7.1)
       csv
       job-iteration (>= 1.3.6)
-      railties (>= 7.0)
+      railties (>= 7.1)
       zeitwerk (>= 2.6.2)
     marcel (1.1.0)
     matrix (0.4.2)
@@ -833,7 +833,7 @@ GEM
     statsd-instrument (3.9.10)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
-    stringio (3.1.7)
+    stringio (3.1.8)
     strong_migrations (2.5.0)
       activerecord (>= 7.1)
     swd (2.0.3)
@@ -975,7 +975,7 @@ DEPENDENCIES
   local_time (~> 3.0)
   lookbook (~> 2.3)
   mail (~> 2.9)
-  maintenance_tasks (~> 2.12)
+  maintenance_tasks (~> 2.13)
   memory_profiler (~> 1.1)
   minitest (~> 5.26)
   minitest-gcstats (~> 1.3)
@@ -1127,7 +1127,7 @@ CHECKSUMS
   dotenv-rails (3.1.8) sha256=46c9d1226a8b58a83b5f61325aa8cffd25cea1c0fafdfbbbee1e5dfea77980c4
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
-  erb (5.1.3) sha256=566e53057b6ba48699f824b578473b391fa8aef100aa14afad1c46725fae0e67
+  erb (6.0.0) sha256=2730893f9d8c9733f16cab315a4e4b71c1afa9cabc1a1e7ad1403feba8f52579
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
   factory_bot (6.5.5) sha256=ce59295daee1b4704dab8a2fee6816f513d467c6aa3bc587860767d74a66efbe
@@ -1205,7 +1205,7 @@ CHECKSUMS
   loofah (2.24.1) sha256=655a30842b70ec476410b347ab1cd2a5b92da46a19044357bbd9f401b009a337
   lookbook (2.3.13) sha256=acfa04a1ba7a87b057c222d78a2d72763546f52549e97590993344c8373f6d21
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
-  maintenance_tasks (2.12.0) sha256=f236ca6dc35e579692b61b42368d73f0e201cc33585ff62ebcc5bef15ad0f1a7
+  maintenance_tasks (2.13.0) sha256=8b58a579e7e26e000c86bc00a35da99678a33430339cc8492e0f2fa322df1a7f
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
@@ -1355,7 +1355,7 @@ CHECKSUMS
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
   statsd-instrument (3.9.10) sha256=06f8ae18dc2c2c90e6d4e2de5ef58b47d68562357140bec64228df9716a27048
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
-  stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
+  stringio (3.1.8) sha256=99c43c3a9302843cca223fd985bfc503dd50a4b1723d3e4a9eb1d9c37d99e4ec
   strong_migrations (2.5.0) sha256=6100cab81305bb753fafa22fecb24d5c81f8891b617c408930e55e34ab7359df
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (4.4.0) sha256=efa2961351a52acebe616e645a81a30bb4f27fde46cc06ce7688d1cd1131e916
