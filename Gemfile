@@ -24,7 +24,7 @@ gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 6.1.3", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
-gem "mail", "~> 2.8"
+gem "mail", "~> 2.9"
 gem "octokit", "~> 10.0"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth", "~> 2.1"
