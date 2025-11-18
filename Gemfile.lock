@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.26.2)
-      avo (= 3.26.2)
-      avo-dynamic_filters (= 3.26.2)
-      avo-pro (= 3.26.2)
+    avo-advanced (3.26.4)
+      avo (= 3.26.4)
+      avo-dynamic_filters (= 3.26.4)
+      avo-pro (= 3.26.4)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.26.2)
-      avo (= 3.26.2)
+    avo-dashboards (3.26.4)
+      avo (= 3.26.4)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.26.2)
-      avo (= 3.26.2)
+    avo-dynamic_filters (3.26.4)
+      avo (= 3.26.4)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.26.2)
-      avo (= 3.26.2)
+    avo-menu (3.26.4)
+      avo (= 3.26.4)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.26.2)
-      avo (= 3.26.2)
-      avo-dashboards (= 3.26.2)
-      avo-menu (= 3.26.2)
+    avo-pro (3.26.4)
+      avo (= 3.26.4)
+      avo-dashboards (= 3.26.4)
+      avo-menu (= 3.26.4)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.3)
     attr_required (1.0.2)
-    avo (3.26.2)
+    avo (3.26.4)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -264,7 +264,7 @@ GEM
     drb (2.2.3)
     email_validator (2.2.4)
       activemodel
-    erb (5.1.3)
+    erb (6.0.0)
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
@@ -833,7 +833,7 @@ GEM
     statsd-instrument (3.9.10)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
-    stringio (3.1.7)
+    stringio (3.1.8)
     strong_migrations (2.5.0)
       activerecord (>= 7.1)
     swd (2.0.3)
@@ -1069,13 +1069,13 @@ CHECKSUMS
   argon2 (2.3.2) sha256=62b04170af37ca8d9975bc6e24dd3b74794e82a98e6d8cfa9ae95a76804a6f89
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.26.2) sha256=a079c44038e146d26ec7c8fa2e3637dcb799f3dffad3a7f05b4118fb1dc9683f
-  avo-advanced (3.26.2) sha256=0bc40bea2c2e5413034d308def8cec9e8d08b588d4975cbff09f800ab196c44b
-  avo-dashboards (3.26.2) sha256=4e1a900130ff6ff03c86d44b7c84d7cdd8469b02c0f3362e7c8209bfbdcf23f0
-  avo-dynamic_filters (3.26.2) sha256=f17d76bac8c17de1a79912756640365b12b7168fc620c5170da75af721725770
+  avo (3.26.4) sha256=a17613d7652bdfcd208c89252085e450956689f19a94daa83594cf14ebb56855
+  avo-advanced (3.26.4) sha256=95b044a55ad8cf7ab4e73a4975419a26ab0c6f55cf83fb9d401b4ef60d33d4ef
+  avo-dashboards (3.26.4) sha256=d2da333f5ac823cc009477fca682c34a6a3d40ce6796ed2abc715543c7d218f7
+  avo-dynamic_filters (3.26.4) sha256=65d8f02a8be0ae83ac95f4ce14618930bb87e2f52dadb9bd9d8bf2d70a6988a0
   avo-icons (0.1.1) sha256=d9a23d6d47bb7f8f04163119352a66a436dc8accf53f15cd0c3b5fcaffed082c
-  avo-menu (3.26.2) sha256=46873dab590febea3fde49507d435a4579fec35194fb20ddbf27a72b96d18ac6
-  avo-pro (3.26.2) sha256=791ff2f046a1d66b9f7b5d94541062ff84e9c0bf750459f31d80ca2e77782e71
+  avo-menu (3.26.4) sha256=7aa5e85282a9700fc9255c9b75468b26eb3465e3c96cd73950717844cd719fd9
+  avo-pro (3.26.4) sha256=537c1df5c6e9413c83efc3891328d2407eee674651428a876b45738c69f67199
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
   aws-partitions (1.1181.0) sha256=ad818435b31c5ed60f9332896dc83bfa7eff9661af93935b468f012e07c8ea7d
@@ -1128,7 +1128,7 @@ CHECKSUMS
   dotenv-rails (3.1.8) sha256=46c9d1226a8b58a83b5f61325aa8cffd25cea1c0fafdfbbbee1e5dfea77980c4
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   email_validator (2.2.4) sha256=5ab238095bec7aef9389f230e9e0c64c5081cdf91f19d6c5cecee0a93af20604
-  erb (5.1.3) sha256=566e53057b6ba48699f824b578473b391fa8aef100aa14afad1c46725fae0e67
+  erb (6.0.0) sha256=2730893f9d8c9733f16cab315a4e4b71c1afa9cabc1a1e7ad1403feba8f52579
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
   factory_bot (6.5.5) sha256=ce59295daee1b4704dab8a2fee6816f513d467c6aa3bc587860767d74a66efbe
@@ -1356,7 +1356,7 @@ CHECKSUMS
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
   statsd-instrument (3.9.10) sha256=06f8ae18dc2c2c90e6d4e2de5ef58b47d68562357140bec64228df9716a27048
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
-  stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
+  stringio (3.1.8) sha256=99c43c3a9302843cca223fd985bfc503dd50a4b1723d3e4a9eb1d9c37d99e4ec
   strong_migrations (2.5.0) sha256=6100cab81305bb753fafa22fecb24d5c81f8891b617c408930e55e34ab7359df
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (4.4.0) sha256=efa2961351a52acebe616e645a81a30bb4f27fde46cc06ce7688d1cd1131e916
