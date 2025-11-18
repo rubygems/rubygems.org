@@ -834,7 +834,7 @@ GEM
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.1.8)
-    strong_migrations (2.5.0)
+    strong_migrations (2.5.1)
       activerecord (>= 7.1)
     swd (2.0.3)
       activesupport (>= 3)
@@ -1357,7 +1357,7 @@ CHECKSUMS
   statsd-instrument (3.9.10) sha256=06f8ae18dc2c2c90e6d4e2de5ef58b47d68562357140bec64228df9716a27048
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
   stringio (3.1.8) sha256=99c43c3a9302843cca223fd985bfc503dd50a4b1723d3e4a9eb1d9c37d99e4ec
-  strong_migrations (2.5.0) sha256=6100cab81305bb753fafa22fecb24d5c81f8891b617c408930e55e34ab7359df
+  strong_migrations (2.5.1) sha256=8bca3a9b491ec20cf1961c18050c16ac67d8b8f4e3a7c2ccf652b79638859426
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
   tailwindcss-rails (4.4.0) sha256=efa2961351a52acebe616e645a81a30bb4f27fde46cc06ce7688d1cd1131e916
   tailwindcss-ruby (4.1.16) sha256=d30e4713152bb89ebe1fddb5b5f9b31d7755bf5576453e601eb58b19174c48c0
