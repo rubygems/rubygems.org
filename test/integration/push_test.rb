@@ -189,7 +189,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     rubygem = Rubygem.find_by!(name: "sandworm")
 
-    assert rubygem.owned_by?(@user)
+    assert @user.can_push?(rubygem)
     assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
   end
 
@@ -213,7 +213,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     rubygem = Rubygem.find_by!(name: "sandworm")
 
-    assert rubygem.owned_by?(@user)
+    assert @user.can_push?(rubygem)
     assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
   end
 

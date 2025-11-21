@@ -19,6 +19,20 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
     assert_no_link "Transfer"
   end
 
+  test "maintainers see no transferable gems" do
+    maintainer = create(:user)
+    create(:ownership, rubygem: @rubygem, user: maintainer, role: :maintainer)
+    maintainer_org = create(:organization, owners: [maintainer])
+
+    sign_in maintainer
+    visit organization_transfer_rubygems_path
+
+    select maintainer_org.name, from: "Organization"
+    click_on "Continue"
+
+    assert_text "Gems 0" # No gems available to transfer
+  end
+
   test "transfer a rubygem to an organization" do
     sign_in @owner
 

@@ -20,7 +20,7 @@
       <%= links_to_owners(rubygem) %>
     </div>
 
-    <% if  rubygem.owned_by?(current_user) %>
+    <% if policy(rubygem).show_mfa_status? %>
       <% if rubygem.owners.without_mfa.present? %>
         <% if current_user.mfa_disabled? %>
           <span class="gem__users__mfa-text mfa-warn">
