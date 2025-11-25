@@ -35,8 +35,18 @@ class Links
   delegate :keys, to: :links
 
   def unique_links
-    links.uniq do |_short, long|
-      send(long)
+    seen_urls = {}
+    links.select do |short, long|
+      url = send(long)
+      # always include 'code' (source_code_uri) even if URL is duplicate
+      if short == "code"
+        true
+      elsif seen_urls[url]
+        false
+      else
+        seen_urls[url] = true
+        true
+      end
     end
   end
 

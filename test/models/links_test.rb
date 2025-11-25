@@ -69,6 +69,19 @@ class LinksTest < ActiveSupport::TestCase
     assert_equal([["home", "https://example.code"], ["download", "/downloads/.gem"]], enumerated)
   end
 
+  should "always include source code even when duplicate" do
+    metadata = { "homepage_uri" => "https://example.com", "source_code_uri" => "https://example.com" }
+    version = build(:version, indexed: true, metadata: metadata)
+    rubygem = build(:rubygem, linkset: build(:linkset), versions: [version])
+    links = rubygem.links(version)
+
+    enumerated = links.map do |short, value|
+      [short, value]
+    end
+
+    assert_equal([["home", "https://example.code"], ["code", "https://example.code"], ["download", "/downloads/.gem"]], enumerated)
+  end
+
   context "metadata includes unknown uri key" do
     setup do
       metadata = {
