@@ -3,7 +3,7 @@ source "https://rubygems.org"
 ruby file: ".ruby-version"
 
 gem "rails", "~> 8.0.3"
-gem "rails-i18n", "~> 8.0.2"
+gem "rails-i18n", "~> 8.1.0"
 
 gem "aws-sdk-s3", "~> 1.203"
 gem "aws-sdk-sqs", "~> 1.106"
