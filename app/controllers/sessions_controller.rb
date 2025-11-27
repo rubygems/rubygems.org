@@ -11,6 +11,7 @@ class SessionsController < Clearance::SessionsController
 
   before_action :ensure_not_blocked, only: %i[create]
   before_action :find_user, only: %i[create]
+  before_action :check_password_compromised, only: %i[create]
   before_action :require_mfa, only: %i[create]
   before_action :find_mfa_user, only: %i[webauthn_create otp_create]
   before_action :validate_otp, only: %i[otp_create]
@@ -151,13 +152,49 @@ class SessionsController < Clearance::SessionsController
   end
 
   def url_after_create
-    if current_user.mfa_recommended_not_yet_enabled?
+    if session.delete(:password_compromised)
+      flash[:alert] = t("sessions.create.password_compromised_warning")
+      new_password_path
+    elsif current_user.mfa_recommended_not_yet_enabled?
       new_totp_path
     elsif current_user.mfa_recommended_weak_level_enabled?
       edit_settings_path
     else
       dashboard_path
     end
+  end
+
+  def check_password_compromised
+    return unless @user
+
+    checker = PasswordBreachChecker.new(params.dig(:session, :password))
+    return unless checker.breached?
+
+    StatsD.increment "login.password_compromised"
+
+    if @user.mfa_enabled?
+      handle_compromised_password_with_mfa
+    else
+      handle_compromised_password_without_mfa
+    end
+  end
+
+  def handle_compromised_password_with_mfa
+    @user.record_event!(Events::UserEvent::PASSWORD_COMPROMISED,
+      request:, mfa_enabled: true, action_taken: "warning_shown")
+    session[:password_compromised] = true
+    flash[:alert] = t(".password_compromised_warning")
+  end
+
+  def handle_compromised_password_without_mfa
+    @user.record_event!(Events::UserEvent::PASSWORD_COMPROMISED,
+      request:, mfa_enabled: false, action_taken: "email_reset_required")
+
+    reset_session
+
+    session[:compromised_password_user_id] = @user.id
+
+    redirect_to compromised_password_path
   end
 
   def ensure_not_blocked
