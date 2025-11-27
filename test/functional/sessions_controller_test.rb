@@ -818,4 +818,131 @@ class SessionsControllerTest < ActionController::TestCase
       format: :html
     )
   end
+
+  context "when password is compromised" do
+    setup do
+      @user = create(:user, email_confirmed: true, handle: "compromised_user")
+      PasswordBreachChecker.any_instance.stubs(:breached?).returns(true)
+    end
+
+    context "when user has no MFA" do
+      context "on POST to create" do
+        setup do
+          post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        should redirect_to("the compromised password page") { compromised_password_path }
+
+        should "store user id in session for password reset" do
+          assert_equal @user.id, @controller.session[:compromised_password_user_id]
+        end
+
+        should "not sign in the user" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "record compromised password event" do
+          event = @user.events.find_by(tag: Events::UserEvent::PASSWORD_COMPROMISED)
+
+          assert_predicate event, :present?
+          refute event.additional["mfa_enabled"]
+          assert_equal "email_reset_required", event.additional["action_taken"]
+        end
+      end
+    end
+
+    context "when user has MFA enabled" do
+      setup do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+      end
+
+      context "on POST to create" do
+        setup do
+          post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        should respond_with :success
+
+        should "save user id in session for MFA" do
+          assert_equal @user.id, @controller.session[:mfa_user]
+        end
+
+        should "set password_compromised flag in session" do
+          assert @controller.session[:password_compromised]
+        end
+
+        should "show MFA prompt" do
+          assert page.has_content? "Multi-factor authentication"
+        end
+
+        should "set flash alert with warning" do
+          assert_equal I18n.t("sessions.create.password_compromised_warning"), flash[:alert]
+        end
+
+        should "record compromised password event" do
+          event = @user.events.find_by(tag: Events::UserEvent::PASSWORD_COMPROMISED)
+
+          assert_predicate event, :present?
+          assert_equal "warning_shown", event.additional["action_taken"]
+          assert event.additional["mfa_enabled"]
+        end
+      end
+
+      context "after successful MFA" do
+        setup do
+          post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+          @controller.session[:mfa_user] = @user.id
+          post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+        end
+
+        should redirect_to("the password reset page") { new_password_path }
+
+        should "clear password_compromised flag from session" do
+          refute @controller.session[:password_compromised]
+        end
+
+        should "make user logged in" do
+          assert_predicate @controller.request.env[:clearance], :signed_in?
+        end
+      end
+    end
+  end
+
+  context "when HIBP API fails" do
+    setup do
+      @user = create(:user, email_confirmed: true, handle: "safe_user")
+      PasswordBreachChecker.any_instance.stubs(:breached?).returns(false)
+    end
+
+    context "on POST to create" do
+      setup do
+        post :create, params: { session: { who: "safe_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      end
+
+      should redirect_to("the dashboard") { dashboard_path }
+
+      should "sign in the user" do
+        assert_predicate @controller.request.env[:clearance], :signed_in?
+      end
+    end
+  end
+
+  context "when credentials are wrong" do
+    setup do
+      @user = create(:user, email_confirmed: true, handle: "wrong_password_user")
+      PasswordBreachChecker.any_instance.expects(:breached?).never
+    end
+
+    context "on POST to create with wrong password" do
+      setup do
+        post :create, params: { session: { who: "wrong_password_user", password: "wrong_password" } }
+      end
+
+      should respond_with :unauthorized
+
+      should "not sign in the user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+    end
+  end
 end
