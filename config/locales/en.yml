@@ -24,6 +24,7 @@ en:
   locale_name: English
   none: None
   not_found: Not Found
+  or: or
   forbidden: Forbidden
   api_gem_not_found: This gem could not be found
   api_key_forbidden: The API key doesn't have access
