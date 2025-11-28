@@ -1,39 +1,66 @@
 <% @title = t("multifactor_authentication") %>
+<% add_breadcrumb t("sign_in"), sign_in_path %>
+<% add_breadcrumb t("multifactor_authentication") %>
 
-<div class="mfa__container">
-  <% if @user.webauthn_enabled?%>
-    <%= render "multifactor_auths/webauthn_prompt" %>
-  <% end %>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6">
+      <%= t("multifactor_authentication") %>
+    </h1>
 
-  <% if @user.totp_enabled? || @user.webauthn_only_with_recovery? %>
-    <div class="mfa__option">
-      <% if @user.totp_enabled? %>
-        <h2 class="page__subheading--block"> <%= t(".otp_code") %></h2>
-      <% elsif @user.webauthn_only_with_recovery? %>
-        <h2 class="page__subheading--block"> <%= t(".recovery_code") %></h2>
+    <% if @user.webauthn_enabled? %>
+      <%= render "multifactor_auths/webauthn_prompt" %>
+    <% end %>
+
+    <% if @user.totp_enabled? || @user.webauthn_only_with_recovery? %>
+      <% if @user.webauthn_enabled? %>
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-neutral-200 dark:border-neutral-700"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="bg-white dark:bg-black px-4 text-neutral-500 dark:text-neutral-400"><%= t("or") %></span>
+          </div>
+        </div>
       <% end %>
-      <div class="t-body">
-        <p><%= t(".recovery_code_html") %></p>
+
+      <div>
+        <% if @user.totp_enabled? %>
+          <h2 class="text-lg font-medium text-neutral-800 dark:text-neutral-200 mb-2">
+            <%= t(".otp_code") %>
+          </h2>
+        <% elsif @user.webauthn_only_with_recovery? %>
+          <h2 class="text-lg font-medium text-neutral-800 dark:text-neutral-200 mb-2">
+            <%= t(".recovery_code") %>
+          </h2>
+        <% end %>
+
+        <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
+          <%= t(".recovery_code_html") %>
+        </p>
+
+        <%= form_tag @otp_verification_url, method: :post do %>
+          <div class="mb-4">
+            <% if @user.totp_enabled? %>
+              <%= label_tag :otp, t(".otp_or_recovery"), class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+              <%= text_field_tag :otp, "",
+                class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition",
+                autofocus: true,
+                autocomplete: "one-time-code" %>
+            <% elsif @user.webauthn_only_with_recovery? %>
+              <%= text_field_tag :otp, "",
+                class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition",
+                autofocus: true,
+                autocomplete: :off,
+                aria: { label: t(".recovery_code") } %>
+            <% end %>
+          </div>
+
+          <div>
+            <%= render ButtonComponent.new(t("authenticate"), type: :submit, color: :primary) %>
+          </div>
+        <% end %>
       </div>
-      <%= form_tag @otp_verification_url, method: :post do %>
-        <div class="text_field">
-          <% if @user.totp_enabled? %>
-            <%= label_tag :otp, t(".otp_or_recovery"), class: 'form__label' %>
-            <%= text_field_tag :otp, '', class: 'form__input', autofocus: true, autocomplete: "one-time-code" %>
-          <% elsif @user.webauthn_only_with_recovery? %>
-            <%= text_field_tag :otp,
-              '',
-              class: 'form__input',
-              autofocus: true,
-              autocomplete: :off,
-              aria: { label: t(".recovery_code") }
-            %>
-          <% end %>
-        </div>
-        <div class="form_bottom">
-          <%= submit_tag t("authenticate"), data: { disable_with: t("form_disable_with")}, class: "form__submit" %>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
