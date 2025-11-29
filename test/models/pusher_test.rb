@@ -916,31 +916,32 @@ class PusherTest < ActiveSupport::TestCase
       should "preserve kindVersion and certificate rawBytes from original JSON" do
         # Use real attestation JSON that includes kindVersion and properly encoded certificate
         real_bundle = JSON.parse(File.read(gem_file("sigstore-1.0.0.gem.sigstore.json")))
-        
+
         @cutter = Pusher.new(@api_key, gem_file("test-1.0.0.gem"), attestations: [real_bundle])
         @cutter.send(:sigstore_verifier).expects(:verify).once
           .returns Sigstore::VerificationSuccess.new
-        
+
         assert @cutter.process, @cutter.message # rubocop:disable Minitest/AssertWithExpectedArgument
-        
+
         stored_attestation = @cutter.version.attestations.first
         stored_body = stored_attestation.body
-        
+
         # Verify kindVersion is preserved in tlogEntries
-        assert stored_body["verificationMaterial"]["tlogEntries"].first.key?("kindVersion"), 
+        assert stored_body["verificationMaterial"]["tlogEntries"].first.key?("kindVersion"),
           "kindVersion should be preserved in tlogEntries"
         assert_equal "hashedrekord", stored_body["verificationMaterial"]["tlogEntries"].first["kindVersion"]["kind"]
         assert_equal "0.0.1", stored_body["verificationMaterial"]["tlogEntries"].first["kindVersion"]["version"]
-        
+
         # Verify certificate rawBytes are not double-encoded
         original_cert_bytes = real_bundle["verificationMaterial"]["certificate"]["rawBytes"]
         stored_cert_bytes = stored_body["verificationMaterial"]["certificate"]["rawBytes"]
-        assert_equal original_cert_bytes, stored_cert_bytes, 
+
+        assert_equal original_cert_bytes, stored_cert_bytes,
           "Certificate rawBytes should not be double base64 encoded"
-        
+
         # Additional verification that the stored JSON matches the original structure
         assert_equal real_bundle["mediaType"], stored_body["mediaType"]
-        assert_equal real_bundle["verificationMaterial"]["tlogEntries"].first["logIndex"], 
+        assert_equal real_bundle["verificationMaterial"]["tlogEntries"].first["logIndex"],
           stored_body["verificationMaterial"]["tlogEntries"].first["logIndex"]
       end
 
