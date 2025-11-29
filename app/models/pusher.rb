@@ -200,7 +200,7 @@ class Pusher
       return notify("Attestation verification failed:\n#{sigstore_verification.reason}", 422) unless sigstore_verification.verified?
       return notify("Must provide at least v0.3 bundles", 422) unless input.sbundle.bundle_type >= Sigstore::BundleType::BUNDLE_0_3
 
-      @version.attestations << Attestation.new(body: bundle, media_type: bundle.media_type)
+      @version.attestations << Attestation.new(body: attestation, media_type: bundle.media_type)
     end
 
     StatsD.increment("attestation.verified", tags: { rubygem: rubygem.name })
