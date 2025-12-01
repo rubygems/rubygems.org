@@ -921,7 +921,8 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.send(:sigstore_verifier).expects(:verify).once
           .returns Sigstore::VerificationSuccess.new
 
-        assert @cutter.process, @cutter.message # rubocop:disable Minitest/AssertWithExpectedArgument
+        assert @cutter.process
+        assert_equal "Successfully registered gem: test (1.0.0)", @cutter.message
 
         stored_attestation = @cutter.version.attestations.first
         stored_body = stored_attestation.body
