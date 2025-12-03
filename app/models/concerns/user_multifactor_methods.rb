@@ -72,6 +72,12 @@ module UserMultifactorMethods
     self.mfa_hashed_recovery_codes = new_mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
   end
 
+  def reset_mfa_attributes
+    self.mfa_level = "disabled"
+    self.new_mfa_recovery_codes = nil
+    self.mfa_hashed_recovery_codes = []
+  end
+
   private
 
   def strong_mfa_level?
