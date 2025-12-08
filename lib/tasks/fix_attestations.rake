@@ -73,7 +73,6 @@ namespace :attestations do
           if needs_fix
             if dry_run
               puts "[#{processed}/#{total_count}] WOULD FIX Attestation #{attestation.id} — #{changes.join(', ')}"
-              fixed += 1
             else
               attestation.update!(body: body)
               puts "[#{processed}/#{total_count}] FIXED Attestation #{attestation.id} — #{changes.join(', ')}"
