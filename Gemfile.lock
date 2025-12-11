@@ -647,7 +647,7 @@ GEM
       rack (>= 3.0.0)
     rack-test (2.2.0)
       rack (>= 1.3)
-    rackup (2.2.1)
+    rackup (2.3.1)
       rack (>= 3)
     rails (8.0.3)
       actioncable (= 8.0.3)
@@ -1007,7 +1007,7 @@ DEPENDENCIES
   rack-attack (~> 6.8)
   rack-sanitizer (~> 2.0)
   rack-test (~> 2.2)
-  rackup (~> 2.2)
+  rackup (~> 2.3)
   rails (~> 8.0.3)
   rails-controller-testing (~> 1.0)
   rails-erd (~> 1.7)
@@ -1292,7 +1292,7 @@ CHECKSUMS
   rack-sanitizer (2.0.4) sha256=782ff5efb53177f6d2ab3a80ce07dbfecef8123a1e5c613160a38731e49e846c
   rack-session (2.1.1) sha256=0b6dc07dea7e4b583f58a48e8b806d4c9f1c6c9214ebc202ec94562cbea2e4e9
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
-  rackup (2.2.1) sha256=f737191fd5c5b348b7f0a4412a3b86383f88c43e13b8217b63d4c8d90b9e798d
+  rackup (2.3.1) sha256=6c79c26753778e90983761d677a48937ee3192b3ffef6bc963c0950f94688868
   rails (8.0.3) sha256=5d83c0822d1aaea32a278a99b1afedd3f28e14cfff846e96987bb24ebcb3fd45
   rails-controller-testing (1.0.5) sha256=741448db59366073e86fc965ba403f881c636b79a2c39a48d0486f2607182e94
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
