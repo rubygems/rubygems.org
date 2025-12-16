@@ -66,6 +66,7 @@ gem "faraday-multipart", "~> 1.1"
 gem "sigstore", "~> 0.2.2"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
+gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
 
 # Admin dashboard
 gem "avo", "~> 3.13"
@@ -117,11 +118,11 @@ group :development, :test do
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.81", require: false
-  gem "rubocop-rails", "~> 2.33", require: false
+  gem "rubocop-rails", "~> 2.34", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.38", require: false
   gem "rubocop-capybara", "~> 2.22", require: false
-  gem "rubocop-factory_bot", "~> 2.27", require: false
+  gem "rubocop-factory_bot", "~> 2.28", require: false
 end
 
 group :development do
