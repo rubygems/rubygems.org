@@ -107,7 +107,7 @@ group :development, :test do
   gem "pry-byebug", "~> 3.11"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.5"
-  gem "dotenv-rails", "~> 3.1"
+  gem "dotenv-rails", "~> 3.2"
   gem "lookbook", "~> 2.3"
 
   gem "brakeman", "~> 7.1", require: false
