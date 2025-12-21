@@ -1006,6 +1006,7 @@ DEPENDENCIES
   puma (~> 6.6)
   puma-plugin-statsd (~> 2.7)
   pundit (~> 2.5)
+  pwned (~> 2.4)
   rack (~> 3.2)
   rack-attack (~> 6.8)
   rack-sanitizer (~> 2.0)

@@ -842,6 +842,27 @@ en:
       notice: Please confirm your password to continue.
     create:
       account_blocked: Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account.
+      password_compromised_warning: "Your password was found in a data breach. Reset it now to keep your account secure."
+  compromised_passwords:
+    show:
+      title: Password Reset Required
+      heading: Password found in data breach
+      subheading: Your RubyGems.org account remains secure
+      explanation_html: The password you entered has been found in a public data breach from <strong>another website</strong>. This doesn't mean your RubyGems.org account was compromised, but because passwords are often reused, we require a reset to keep your account secure.
+      email_sent: "We've sent a password reset link to:"
+      next_steps: "Here's what to do next:"
+      step_1: Check your email inbox (and spam folder) for the password reset link
+      step_2: Click the link and create a new, unique password you don't use elsewhere
+      step_3: Sign in with your new password
+      step_4_html: Consider %{link} for additional security
+      step_4_link_text: enabling multi-factor authentication
+      learn_more: Learn more
+      learn_more_hibp_html: Check if your email appears in other breaches at %{link}
+      learn_more_hibp_link_text: Have I Been Pwned
+      learn_more_mfa_html: Protect your account with %{link}
+      learn_more_mfa_link_text: multi-factor authentication
+      back_to_sign_in: Back to Sign In
+      need_help_html: "Need help? Contact %{email}"
   stats:
     index:
       title: Stats
@@ -1035,3 +1056,9 @@ en:
         api_key_gem_html: "Gem: %{gem}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
+      password:
+        password_compromised: "Password Compromised"
+        mfa_status: "MFA Status: %{status}"
+        mfa_enabled: "Enabled"
+        mfa_disabled: "Disabled"
+        action_taken: "Action: %{action}"
