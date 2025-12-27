@@ -45,7 +45,12 @@ class RubygemTransfer < ApplicationRecord
 
   def available_rubygems
     return Rubygem.none if created_by.blank?
-    created_by.rubygems.where(organization_id: nil).order(:name)
+    created_by.rubygems
+      .joins(:ownerships)
+      .where(ownerships: { user: created_by, role: :owner })
+      .where(organization_id: nil)
+      .distinct
+      .order(:name)
   end
 
   def selected_rubygems
