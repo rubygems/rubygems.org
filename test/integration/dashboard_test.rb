@@ -45,16 +45,32 @@ class DashboardTest < ActionDispatch::IntegrationTest
     refute page.has_content?("arrakis")
   end
 
-  test "organizations are introduced on my dashboard when I belong to one" do
-    create(:organization, owners: [@user])
+  test "organizations I belong to show on my dashboard" do
+    create(:organization, owners: [@user], handle: "arrakis", name: "Arrakis Organization")
 
     get dashboard_path
 
-    assert page.has_content? "Introducing Organizations!"
+    assert page.has_content? "Arrakis Organization"
   end
 
-  test "organizations are only introduced when the feature flag is enabled" do
+  test "organization promo popup shown when the feature flag is enabled" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: true, actor: @user) do
+      get dashboard_path
+
+      assert page.has_content? "Introducing Organizations!"
+    end
+  end
+
+  test "organization promo popup not shown when the feature flag is disabled" do
     with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      get dashboard_path
+
+      refute page.has_content? "Introducing Organizations!"
+    end
+  end
+
+  test "organization promo popup not shown when I belong to an organization" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: true, actor: @user) do
       create(:organization, owners: [@user])
 
       get dashboard_path
