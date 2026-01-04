@@ -90,6 +90,11 @@ class Pusher
     # ensure the body can't be treated as a file path
     package_source = Gem::Package::IOSource.new(body)
     package = Gem::Package.new(package_source, gem_security_policy)
+
+    # Verify the contents of the gem
+    package.verify
+
+    # Get the spec
     @spec = package.spec
     @files = package.files
     validate_spec && serialize_spec
@@ -198,6 +203,7 @@ class Pusher
       @version.attestations << Attestation.new(body: bundle, media_type: bundle.media_type)
     end
 
+    StatsD.increment("attestation.verified", tags: { rubygem: rubygem.name })
     true
   rescue Sigstore::Error => e
     notify <<~MSG, 422
@@ -271,7 +277,7 @@ class Pusher
       notify("You are not allowed to push this gem.", 403)
     elsif rubygem.unconfirmed_ownership?(owner)
       notify("You do not have permission to push to this gem. " \
-             "Please confirm the ownership by clicking on the confirmation link sent your email #{owner.email}", 403)
+             "Please click the confirmation link we emailed you at #{owner.email} to verify ownership before pushing.", 403)
     else
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{owner.email}", 403)
     end
@@ -338,7 +344,7 @@ class Pusher
   end
 
   def validate_spec
-    spec.send(:invalidate_memoized_attributes)
+    spec.send(:invalidate_memoized_attributes) if spec.respond_to?(:invalidate_memoized_attributes, true)
 
     spec = self.spec.dup
 

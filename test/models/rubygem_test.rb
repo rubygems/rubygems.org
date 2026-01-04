@@ -178,11 +178,11 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "#public_versions_with_extra_version" do
       setup do
-        @first_version = FactoryBot.create(:version,
+        @first_version = create(:version,
           rubygem: @rubygem,
           number: "1.0.0",
           position: 1)
-        @extra_version = FactoryBot.create(:version,
+        @extra_version = create(:version,
           rubygem: @rubygem,
           number: "0.1.0",
           position: 2)
@@ -208,13 +208,13 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "#find_public_version" do
       setup do
-        @version = FactoryBot.create(:version,
+        @version = create(:version,
           rubygem: @rubygem,
           number: "1.0.0",
           platform: "ruby",
           licenses: "MIT",
           info_checksum: "1234567890")
-        @jruby_version = FactoryBot.create(:version,
+        @jruby_version = create(:version,
           rubygem: @rubygem,
           number: "1.0.0",
           platform: "jruby",

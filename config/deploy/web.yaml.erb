@@ -68,7 +68,7 @@ spec:
           - name: RAILS_MAX_THREADS
             value: "5"
           - name: DD_TAGS
-            value: "app:rubygems.org env:<%= environment %>"
+            value: "app:rubygems.org service:rubygems.org env:<%= environment %>"
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
@@ -95,6 +95,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: secret_key_base
+          - name: PREVIOUS_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: previous_secret_key_base
           - name: RAILS_SERVE_STATIC_FILES
             value: "true"
           - name: AWS_REGION

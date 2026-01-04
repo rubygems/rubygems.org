@@ -16,7 +16,7 @@ class StoreVersionContentsJobTest < ActiveJob::TestCase
     @version = Version.last
 
     @destination_dir = Rails.root.join("tmp", "gems", @gem_package.spec.full_name)
-    @gem_package.extract_files(@destination_dir.to_s) # TODO: expand once per test run?
+    @gem_package.extract_files(@destination_dir.to_s) unless @destination_dir.exist?
   end
 
   def each_file_in_gem
