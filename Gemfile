@@ -5,16 +5,16 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.3"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.206"
+gem "aws-sdk-s3", "~> 1.209"
 gem "aws-sdk-sqs", "~> 1.107"
-gem "bootsnap", "~> 1.19"
+gem "bootsnap", "~> 1.20"
 gem "clearance", "~> 2.11"
 gem "dalli", "~> 3.2"
 gem "datadog", "~> 2.23"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.33"
 gem "faraday", "~> 2.14"
-gem "faraday-retry", "~> 2.3"
+gem "faraday-retry", "~> 2.4"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
 gem "flipper", "~> 1.3"
 gem "flipper-active_record", "~> 1.3"
@@ -28,7 +28,7 @@ gem "mail", "~> 2.9"
 gem "octokit", "~> 10.0"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth", "~> 2.1"
-gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "omniauth-rails_csrf_protection", "~> 2.0"
 gem "openid_connect", "~> 2.3"
 gem "pg", "~> 1.6"
 gem "puma", "~> 6.6"
@@ -37,7 +37,7 @@ gem "rack", "~> 3.2"
 gem "rackup", "~> 2.3"
 gem "rack-sanitizer", "~> 2.0"
 gem "rbtrace", "~> 0.5.3"
-gem "rdoc", "~> 6.17"
+gem "rdoc", "~> 7.0"
 gem "roadie-rails", "~> 3.4"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 6.2", require: false
@@ -62,7 +62,7 @@ gem "phlex-rails", "~> 2.3"
 gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.20"
 gem "pghero", "~> 3.7"
-gem "faraday-multipart", "~> 1.1"
+gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.2"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
@@ -117,7 +117,7 @@ group :development, :test do
   gem "pg_query", "~> 6.1"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.81", require: false
+  gem "rubocop", "~> 1.82", require: false
   gem "rubocop-rails", "~> 2.34", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.38", require: false
@@ -136,7 +136,7 @@ end
 
 group :test do
   gem "minitest", "~> 5.27", require: false
-  gem "minitest-retry", "~> 0.2.5"
+  gem "minitest-retry", "~> 0.3.0"
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.1"
   gem "rack-test", "~> 2.2", require: "rack/test"
