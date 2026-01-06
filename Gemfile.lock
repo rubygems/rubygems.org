@@ -474,8 +474,8 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
     minitest (5.27.0)
-    minitest-gcstats (1.3.1)
-      minitest (~> 5.0)
+    minitest-gcstats (1.3.2)
+      minitest (> 5.0)
     minitest-reporters (1.7.1)
       ansi
       builder
@@ -1220,7 +1220,7 @@ CHECKSUMS
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
-  minitest-gcstats (1.3.1) sha256=cb25490f93aac02e3a5ff307e560d41afcdcafa7952c1c32efdeb9886b1f4711
+  minitest-gcstats (1.3.2) sha256=56d299805738622b2975ac6c141d5aedd81d3bec3fd8e05d4f926c3787f68867
   minitest-reporters (1.7.1) sha256=5060413a0c95b8c32fe73e0606f3631c173a884d7900e50013e15094eb50562c
   minitest-retry (0.3.0) sha256=346b34134656e6af7726cf12cd80cf2d95c31d6eefb9901b0efacc6111f8f753
   mocha (3.0.1) sha256=74f82c5959e3df6cfa2757d60aa420dcb151ac7c5eb61dcebf1cd4e368ed7469
