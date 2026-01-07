@@ -9,6 +9,8 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
       field trusted_publisher_form, :text_field, :repository_name, autocomplete: :off
       field trusted_publisher_form, :text_field, :workflow_filename, autocomplete: :off
       field trusted_publisher_form, :text_field, :environment, autocomplete: :off, optional: true
+      field trusted_publisher_form, :text_field, :workflow_repository_owner, autocomplete: :off, optional: true
+      field trusted_publisher_form, :text_field, :workflow_repository_name, autocomplete: :off, optional: true
     end
   end
 

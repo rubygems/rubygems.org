@@ -11,16 +11,23 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   validates :repository_owner, :repository_name, :workflow_filename, :repository_owner_id,
     presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :environment, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :workflow_repository_owner, :workflow_repository_name,
+    allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   validate :unique_publisher
   validate :workflow_filename_format
+  validate :workflow_repository_fields_consistency
+  validate :workflow_repository_differs_from_repository
 
   def self.for_claims(claims)
     repository = claims.fetch(:repository)
     repository_owner, repository_name = repository.split("/", 2)
-    workflow_prefix = "#{repository}/.github/workflows/"
-    workflow_ref = claims.fetch(:job_workflow_ref).delete_prefix(workflow_prefix)
-    workflow_filename = workflow_ref.sub(/@[^@]+\z/, "")
+    job_workflow_ref = claims.fetch(:job_workflow_ref)
+
+    match = job_workflow_ref.match(%r{\A([^/]+)/([^/]+)/\.github/workflows/([^@]+)@})
+    raise ActiveRecord::RecordNotFound, "Invalid job_workflow_ref format" unless match
+
+    workflow_repo_owner, workflow_repo_name, workflow_filename = match.captures
 
     required = {
       repository_owner:, repository_name:, workflow_filename:,
@@ -28,6 +35,15 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     }
 
     base = where(required)
+
+    same_repo = workflow_repo_owner == repository_owner && workflow_repo_name == repository_name
+    base = if same_repo
+             base.where(workflow_repository_owner: workflow_repo_owner, workflow_repository_name: workflow_repo_name)
+               .or(base.where(workflow_repository_owner: nil, workflow_repository_name: nil))
+           else
+             base.where(workflow_repository_owner: workflow_repo_owner, workflow_repository_name: workflow_repo_name)
+           end
+
     if (env = claims[:environment])
       base.where(environment: env).or(base.where(environment: nil)).order(environment: :asc) # NULLS LAST by default for asc
     else
@@ -36,13 +52,17 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   end
 
   def self.permitted_attributes
-    %i[repository_owner repository_name workflow_filename environment]
+    %i[repository_owner repository_name workflow_filename environment
+       workflow_repository_owner workflow_repository_name]
   end
 
   def self.build_trusted_publisher(params)
-    params = params.reverse_merge(repository_owner_id: nil, repository_name: nil, workflow_filename: nil, environment: nil)
+    params = params.reverse_merge(repository_owner_id: nil, repository_name: nil, workflow_filename: nil, environment: nil,
+                                  workflow_repository_owner: nil, workflow_repository_name: nil)
     params.delete(:repository_owner_id)
     params[:environment] = nil if params[:environment].blank?
+    params[:workflow_repository_owner] = nil if params[:workflow_repository_owner].blank?
+    params[:workflow_repository_name] = nil if params[:workflow_repository_name].blank?
     find_or_initialize_by(params)
   end
 
@@ -55,7 +75,9 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
       repository_name:,
       repository_owner_id:,
       workflow_filename:,
-      environment:
+      environment:,
+      workflow_repository_owner:,
+      workflow_repository_name:
     }
   end
 
@@ -98,7 +120,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     OIDC::AccessPolicy::Statement::Condition.new(
       operator: "string_equals",
       claim: "job_workflow_ref",
-      value: "#{repository}/#{workflow_slug}@#{ref}"
+      value: "#{workflow_repository}/#{workflow_slug}@#{ref}"
     )
   end
 
@@ -127,7 +149,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     def verify(cert)
       ref = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.14")&.value_der&.then { OpenSSL::ASN1.decode(it).value }
       Sigstore::Policy::Identity.new(
-        identity: "https://github.com/#{@trusted_publisher.repository}/#{@trusted_publisher.workflow_slug}@#{ref}",
+        identity: "https://github.com/#{@trusted_publisher.workflow_repository}/#{@trusted_publisher.workflow_slug}@#{ref}",
         issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER
       ).verify(cert)
     end
@@ -144,6 +166,14 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   end
 
   def repository = "#{repository_owner}/#{repository_name}"
+
+  def workflow_repository
+    if workflow_repository_owner.present? && workflow_repository_name.present?
+      "#{workflow_repository_owner}/#{workflow_repository_name}"
+    else
+      repository
+    end
+  end
 
   def workflow_slug = ".github/workflows/#{workflow_filename}"
 
@@ -169,7 +199,9 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
       repository_name: repository_name,
       repository_owner_id: repository_owner_id,
       workflow_filename: workflow_filename,
-      environment: environment
+      environment: environment,
+      workflow_repository_owner: workflow_repository_owner,
+      workflow_repository_name: workflow_repository_name
     )
 
     errors.add(:base, "publisher already exists")
@@ -180,5 +212,21 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
     errors.add(:workflow_filename, "must end with .yml or .yaml") unless /\.ya?ml\z/.match?(workflow_filename)
     errors.add(:workflow_filename, "must be a filename only, without directories") if workflow_filename.include?("/")
+  end
+
+  def workflow_repository_fields_consistency
+    owner_present = workflow_repository_owner.present?
+    name_present = workflow_repository_name.present?
+
+    return if owner_present == name_present
+
+    errors.add(:base, "workflow_repository_owner and workflow_repository_name must both be set or both be blank")
+  end
+
+  def workflow_repository_differs_from_repository
+    return if workflow_repository_owner.blank? && workflow_repository_name.blank?
+    return unless workflow_repository_owner == repository_owner && workflow_repository_name == repository_name
+
+    errors.add(:base, "workflow_repository must be different from the repository, leave blank for same-repository workflows")
   end
 end
