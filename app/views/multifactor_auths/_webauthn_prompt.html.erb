@@ -6,7 +6,7 @@
     <%= t("multifactor_auths.prompt.webauthn_credential_note") %>
   </p>
 
-  <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
+  <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session--form", data: { turbo: false, options: @webauthn_options.to_json } do %>
     <p hidden class="text-red-600 dark:text-red-400 text-sm mb-4 js-webauthn-session--error"></p>
 
     <%= render ButtonComponent.new(
