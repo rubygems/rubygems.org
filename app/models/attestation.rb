@@ -1,4 +1,6 @@
 class Attestation < ApplicationRecord
+  include AttestationBundleRepair
+
   belongs_to :version
 
   validates :body, :media_type, presence: true
@@ -8,6 +10,12 @@ class Attestation < ApplicationRecord
     Sigstore::SBundle.new(
       Sigstore::Bundle::V1::Bundle.decode_json_hash(body, registry: Sigstore::REGISTRY)
     )
+  end
+
+  def valid_bundle?
+    sigstore_bundle.present?
+  rescue Sigstore::Error
+    false
   end
 
   def display_data # rubocop:disable Metrics/MethodLength
