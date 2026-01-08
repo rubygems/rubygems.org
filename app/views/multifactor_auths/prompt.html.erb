@@ -1,6 +1,9 @@
 <% @title = t("multifactor_authentication") %>
 <% add_breadcrumb t("sign_in"), sign_in_path %>
 <% add_breadcrumb t("multifactor_authentication") %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
 
 <div class="flex items-center justify-center">
   <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">

@@ -32,8 +32,10 @@
     <ol class="list-decimal list-inside space-y-3 text-neutral-600 dark:text-neutral-400 mb-8">
       <li><%= t('.step_1') %></li>
       <li><%= t('.step_2') %></li>
-      <li><%= t('.step_3') %></li>
-      <li><%= t('.step_4_html', link: link_to(t('.step_4_link_text'), new_totp_path, class: "text-orange-500 dark:text-orange-400 hover:underline")) %></li>
+      <% unless signed_in? %>
+        <li><%= t('.step_3') %></li>
+        <li><%= t('.step_4_html', link: link_to(t('.step_4_link_text'), new_totp_path, class: "text-orange-500 dark:text-orange-400 hover:underline")) %></li>
+      <% end %>
     </ol>
 
     <div class="border-t border-neutral-200 dark:border-neutral-700 pt-8 mb-8">
@@ -47,7 +49,11 @@
     </div>
 
     <div class="flex justify-center">
-      <%= render ButtonComponent.new(t('.back_to_sign_in'), sign_in_path, type: :link, color: :secondary) %>
+      <% if signed_in? %>
+        <%= render ButtonComponent.new(t('.continue_to_dashboard'), dashboard_path, type: :link, color: :primary) %>
+      <% else %>
+        <%= render ButtonComponent.new(t('.back_to_sign_in'), sign_in_path, type: :link, color: :secondary) %>
+      <% end %>
     </div>
 
     <p class="text-center text-sm text-neutral-500 dark:text-neutral-500 mt-8">
