@@ -1,5 +1,8 @@
 <% @title = t('sign_in') %>
 <% add_breadcrumb t('sign_in') %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
 
 <div class="flex items-center justify-center">
   <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">

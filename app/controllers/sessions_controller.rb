@@ -4,7 +4,7 @@ class SessionsController < Clearance::SessionsController
   include WebauthnVerifiable
   include SessionVerifiable
 
-  layout "hammy", only: %i[new]
+  layout "hammy", only: %i[new create webauthn_full_create webauthn_create otp_create]
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
@@ -155,8 +155,8 @@ class SessionsController < Clearance::SessionsController
 
   def url_after_create
     if session.delete(:password_compromised)
-      flash[:alert] = t("sessions.create.password_compromised_warning")
-      new_password_path
+      session[:compromised_password_user_id] = current_user.id
+      compromised_password_path
     elsif current_user.mfa_recommended_not_yet_enabled?
       new_totp_path
     elsif current_user.mfa_recommended_weak_level_enabled?
@@ -183,9 +183,8 @@ class SessionsController < Clearance::SessionsController
 
   def handle_compromised_password_with_mfa
     @user.record_event!(Events::UserEvent::PASSWORD_COMPROMISED,
-      request:, mfa_enabled: true, action_taken: "warning_shown")
+      request:, mfa_enabled: true, action_taken: "password_reset_redirect")
     session[:password_compromised] = true
-    flash[:alert] = t(".password_compromised_warning")
   end
 
   def handle_compromised_password_without_mfa

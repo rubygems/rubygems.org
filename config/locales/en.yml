@@ -863,6 +863,7 @@ en:
       learn_more_mfa_html: Protect your account with %{link}
       learn_more_mfa_link_text: multi-factor authentication
       back_to_sign_in: Back to Sign In
+      continue_to_dashboard: Continue to Dashboard
       need_help_html: "Need help? Contact %{email}"
   stats:
     index:
