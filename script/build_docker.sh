@@ -29,18 +29,18 @@ docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
 # This is a ruby script we run to ensure that all dependencies are configured properly in
 # the docker container, even if they are not used in the the few requests made to the application.
 docker run -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=postgresql://localhost \
-  -e DD_TRACE_ENABLED=false -e DD_PROFILING_ENABLED=false \
-  --net host "$DOCKER_TAG" \
+  -e DD_DISABLED=true
+  --net host "$DOCKER_TAG" 
   -- bin/rails runner - <<-EOS
 Magic.buffer('')
 EOS
 
 docker run -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=postgresql://localhost \
-  -e DD_TRACE_ENABLED=false -e DD_PROFILING_ENABLED=false \
+  -e DD_DISABLED=true
   --net host "$DOCKER_TAG" \
   -- bin/rails db:create db:migrate
 docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=postgresql://localhost \
-  -e DD_TRACE_ENABLED=false -e DD_PROFILING_ENABLED=false \
+  -e DD_DISABLED=true
   --net host "$DOCKER_TAG" \
   -- puma --environment production --config /app/config/puma.rb
 

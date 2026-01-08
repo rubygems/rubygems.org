@@ -8,7 +8,7 @@ Datadog.configure do |c|
 
   # Enabling datadog functionality
   running_locally = Rails.env.local? || defined?(Rails::Console)
-  enabled = !running_locally || ENV["DD_AGENT_HOST"].present?
+  enabled = !running_locally || ENV["DD_AGENT_HOST"].present? || !ENV["DD_DISABLED"]
   c.runtime_metrics.enabled = enabled
   c.profiling.enabled = enabled
   c.tracing.enabled = enabled
