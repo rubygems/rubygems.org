@@ -38,7 +38,7 @@
       </div>
     <% end %>
 
-    <%= form_for :session, url: session_path do |form| %>
+    <%= form_for :session, url: session_path, data: { turbo: false } do |form| %>
       <div class="mb-4">
         <%= form.label :who, t('activerecord.attributes.session.who'), class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
         <%= form.text_field :who,

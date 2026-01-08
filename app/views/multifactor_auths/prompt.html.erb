@@ -39,7 +39,7 @@
           <%= t(".recovery_code_html") %>
         </p>
 
-        <%= form_tag @otp_verification_url, method: :post do %>
+        <%= form_tag @otp_verification_url, method: :post, data: { turbo: false } do %>
           <div class="mb-4">
             <% if @user.totp_enabled? %>
               <%= label_tag :otp, t(".otp_or_recovery"), class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
