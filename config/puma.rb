@@ -28,6 +28,10 @@ production_like = !%w[development test].include?(rails_env) # rubocop:disable Ra
 
 require "concurrent"
 
+# Disable preload_app to prevent Datadog profiler from starting before fork
+# (preload_app! is now ON by default in Puma 7.x)
+preload_app!(false)
+
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
   worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
