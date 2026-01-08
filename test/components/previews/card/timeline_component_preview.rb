@@ -23,7 +23,7 @@ class Card::TimelineComponentPreview < Lookbook::Preview
       c.scrollable do
         render Card::TimelineComponent.new do |t|
           t.timeline_item(datetime, user_link) do
-            <<~HTML.html_safe # rubocop:disable Rails/OutputSafety
+            <<~HTML.html_safe
               <div class="flex text-b1 text-neutral-800 dark:text-white"><a href="#">gemname</a></div>
               <code class="px-2 text-c3 bg-green-200 dark:bg-green-800 rounded-sm text-neutral-900 dark:text-white">1.63.1</code>
             HTML

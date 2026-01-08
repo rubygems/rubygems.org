@@ -33,7 +33,8 @@ class CardComponent < ApplicationComponent
   end
 
   def divided_list(**options, &)
-    options[:class] = "#{options[:class]} -mx-4 divide-y divide-neutral-200 dark:divide-neutral-800"
+    options[:class] = "#{options[:class]} -mx-4 divide-y divide-neutral-200 dark:divide-neutral-800 " \
+                      "border-b border-neutral-200 dark:border-neutral-800"
     ul(**options, &)
   end
 

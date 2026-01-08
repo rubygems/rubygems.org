@@ -8,6 +8,7 @@ class User < ApplicationRecord
   is_gravtastic default: "retro"
 
   self.discard_column = :deleted_at
+  self.ignored_columns += [:token]
 
   default_scope { not_deleted }
 
