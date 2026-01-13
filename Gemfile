@@ -66,7 +66,7 @@ gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.2"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
-gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
+gem "connection_pool", "~> 3.0" # TODO: Remove when Rails makes new release after (16/12/2025)
 
 # Admin dashboard
 gem "avo", "~> 3.13"
