@@ -37,6 +37,16 @@ class Organizations::Onboarding::UsersControllerTest < ActionDispatch::Integrati
   end
 
   context "on GET /organizations/onboarding/users" do
+    should "show the creator with Owner role in approved invites" do
+      get organization_onboarding_users_path(as: @user)
+
+      assert_response :ok
+
+      creator_invite = @controller.view_assigns["approved_invites"].find { |i| i.user == @user }
+
+      assert_equal "owner", creator_invite.role
+    end
+
     should "render the list of users to invite" do
       get organization_onboarding_users_path(as: @user)
 
