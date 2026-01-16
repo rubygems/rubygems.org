@@ -72,7 +72,8 @@ class SearchQuerySanitizer
 
     ALLOWED_FIELDS.each do |field|
       # Pattern matches both unquoted (name:rails) and quoted (name:"web framework") field values
-      pattern = /\b#{field}:(?:"[^"]*"|\S+)/i
+      # Uses (?:[^"\\]|\\.)* to handle escaped quotes within quoted strings
+      pattern = /\b#{field}:(?:"(?:[^"\\]|\\.)*"|\S+)/i
       occurrences = @query.scan(pattern)
       total_field_count += [occurrences.length, MAX_FIELD_OCCURRENCES].min
 
@@ -93,7 +94,8 @@ class SearchQuerySanitizer
 
   def collapse_to_total_limit!
     # Build a combined pattern matching any field filter
-    combined_pattern = /\b(?:#{ALLOWED_FIELDS.join('|')}):(?:"[^"]*"|\S+)/i
+    # Uses (?:[^"\\]|\\.)* to handle escaped quotes within quoted strings
+    combined_pattern = /\b(?:#{ALLOWED_FIELDS.join('|')}):(?:"(?:[^"\\]|\\.)*"|\S+)/i
     kept_count = 0
 
     @query = @query.gsub(combined_pattern) do |match|

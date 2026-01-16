@@ -147,5 +147,14 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
       end
     end
+
+    context "query exceeding max length" do
+      should "return bad request" do
+        get :autocomplete, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
   end
 end

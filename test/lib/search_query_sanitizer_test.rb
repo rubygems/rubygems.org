@@ -119,8 +119,20 @@ class SearchQuerySanitizerTest < ActiveSupport::TestCase
     assert_equal 'name:"web framework"', SearchQuerySanitizer.sanitize('name:"web framework"')
   end
 
+  test "handle quoted field values with escaped quotes" do
+    query = 'name:"value with \"nested\" quotes"'
+
+    assert_equal query, SearchQuerySanitizer.sanitize(query)
+  end
+
   test "collapse redundant quoted field values" do
     result = SearchQuerySanitizer.sanitize('name:"a" name:"b" name:"c"')
+
+    assert_equal 2, result.scan(/name:/i).length
+  end
+
+  test "collapse redundant quoted field values with escaped quotes" do
+    result = SearchQuerySanitizer.sanitize('name:"a\"b" name:"c\"d" name:"e\"f"')
 
     assert_equal 2, result.scan(/name:/i).length
   end
