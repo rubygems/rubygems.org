@@ -63,7 +63,8 @@ class SearchQuerySanitizer
     # Block bracket range syntax entirely - users should use comparison operators instead
     # e.g., use "updated:>2024-01-01" not "updated:[2024-01-01 TO *]"
     # Uses word boundary \b around TO to avoid false positives like [GOTO] or [AUTOMATOR]
-    raise MalformedQueryError, "Range syntax not supported" if @query.match?(/[\[{][^\]}]*\bTO\b[^\]}]*[\]}]/i)
+    # Length limiters {0,100} prevent ReDoS by making regex O(1) time complexity
+    raise MalformedQueryError, "Range syntax not supported" if @query.match?(/[\[{][^\]{}]{0,100}\bTO\b[^\]{}]{0,100}[\]}]/i)
   end
 
   def collapse_redundant_fields!
