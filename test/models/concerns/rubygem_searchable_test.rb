@@ -330,7 +330,9 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
       context "Searchkick::InvalidQueryError" do
         setup do
-          @ill_formated_query = "updated:[2016-08-10 TO }"
+          # Use a query that passes sanitization but is invalid OpenSearch syntax
+          # (can't start with AND operator)
+          @ill_formated_query = "AND other"
         end
 
         should "give correct error message" do

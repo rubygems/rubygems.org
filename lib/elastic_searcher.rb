@@ -11,8 +11,8 @@ class ElasticSearcher
   InvalidQueryError = Class.new(StandardError)
 
   def initialize(query, page: 1)
-    @query  = query
-    @page   = page
+    @query = SearchQuerySanitizer.sanitize(query)
+    @page = page
   end
 
   def search

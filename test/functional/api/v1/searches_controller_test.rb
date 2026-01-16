@@ -72,6 +72,32 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         assert_equal "Failed to parse search term: 'AND other'.", JSON.parse(@response.body)["error"]
       end
     end
+
+    context "malformed query with range syntax" do
+      should "return bad request" do
+        get :show, params: { query: "test:[a TO b]" }, format: :json
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
+
+    context "query exceeding max length" do
+      should "return bad request" do
+        get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }, format: :json
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
+
+    context "query with redundant fields is sanitized" do
+      should "return results after collapsing redundant fields" do
+        get :show, params: { query: "match name:a name:b name:c" }, format: :json
+
+        assert_response :success
+      end
+    end
   end
 
   context "on GET to autocomplete with query=ma" do
@@ -110,6 +136,24 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
           assert_response :success
           assert_empty JSON.parse(@response.body)
         end
+      end
+    end
+
+    context "malformed query with range syntax" do
+      should "return bad request" do
+        get :autocomplete, params: { query: "test:[a TO b]" }
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
+
+    context "query exceeding max length" do
+      should "return bad request" do
+        get :autocomplete, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
       end
     end
   end
