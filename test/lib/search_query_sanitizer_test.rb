@@ -83,4 +83,12 @@ class SearchQuerySanitizerTest < ActiveSupport::TestCase
   test "strip leading and trailing whitespace" do
     assert_equal "rails", SearchQuerySanitizer.sanitize("  rails  ")
   end
+
+  test "logs rejected queries with details" do
+    Rails.logger.expects(:warn).with(includes("[SearchQuerySanitizer] Rejected query"))
+
+    assert_raises(SearchQuerySanitizer::QueryTooLongError) do
+      SearchQuerySanitizer.sanitize("a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1))
+    end
+  end
 end

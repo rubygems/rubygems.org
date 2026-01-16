@@ -24,10 +24,12 @@ class SearchQuerySanitizer
 
     @query
   rescue QueryTooLongError, MalformedQueryError => e
-    Rails.logger.warn("[SearchQuerySanitizer] Rejected query",
-      reason: e.class.name,
-      query_length: @query.length,
-      query_preview: @query.truncate(100))
+    Rails.logger.warn(
+      "[SearchQuerySanitizer] Rejected query: " \
+      "reason=#{e.class.name} " \
+      "query_length=#{@query.length} " \
+      "query_preview=#{@query.truncate(100).inspect}"
+    )
     raise
   end
 
@@ -40,7 +42,7 @@ class SearchQuerySanitizer
   def validate_no_range_syntax!
     # Block bracket range syntax entirely - users should use comparison operators instead
     # e.g., use "updated:>2024-01-01" not "updated:[2024-01-01 TO *]"
-    raise MalformedQueryError, "Range syntax not supported" if @query.match?(/[\[{].*TO.*[\]}]/i)
+    raise MalformedQueryError, "Range syntax not supported" if @query.match?(/[\[{][^\]}]*TO[^\]}]*[\]}]/i)
   end
 
   def collapse_redundant_fields!

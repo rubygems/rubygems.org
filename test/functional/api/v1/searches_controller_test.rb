@@ -72,6 +72,24 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         assert_equal "Failed to parse search term: 'AND other'.", JSON.parse(@response.body)["error"]
       end
     end
+
+    context "malformed query with range syntax" do
+      should "return bad request" do
+        get :show, params: { query: "test:[a TO b]" }, format: :json
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
+
+    context "query exceeding max length" do
+      should "return bad request" do
+        get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }, format: :json
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
   end
 
   context "on GET to autocomplete with query=ma" do

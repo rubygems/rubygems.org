@@ -1,10 +1,12 @@
 class SearchesController < ApplicationController
   before_action -> { set_page Gemcutter::SEARCH_MAX_PAGES }, only: :show
-  before_action :sanitize_query, only: :show
+
+  rescue_from SearchQuerySanitizer::QueryTooLongError,
+              SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
 
   def show
-    return if @sanitized_query.blank?
-    @error_msg, @gems = ElasticSearcher.new(@sanitized_query, page: @page).search
+    return if params[:query].blank?
+    @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
 
     return unless @gems
     set_total_pages if @gems.total_count > Gemcutter::SEARCH_MAX_PAGES * Rubygem.default_per_page
@@ -18,11 +20,9 @@ class SearchesController < ApplicationController
 
   private
 
-  def sanitize_query
-    @sanitized_query = SearchQuerySanitizer.sanitize(params[:query])
-  rescue SearchQuerySanitizer::QueryTooLongError, SearchQuerySanitizer::MalformedQueryError
+  def render_invalid_query
     @error_msg = "Invalid search query. Please simplify your search and try again."
-    @sanitized_query = nil
+    render :show
   end
 
   def set_total_pages
