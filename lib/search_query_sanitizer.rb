@@ -37,10 +37,10 @@ class SearchQuerySanitizer
   def sanitize
     return "" if @query.blank?
 
-    validate_length!
     validate_no_range_syntax!
     collapse_redundant_fields!
     escape_dangerous_patterns!
+    validate_length!
 
     @query
   rescue QueryTooLongError, MalformedQueryError => e
