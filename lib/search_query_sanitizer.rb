@@ -12,6 +12,10 @@ class SearchQuerySanitizer
   # while preventing abuse from very long machine-generated queries.
   MAX_QUERY_LENGTH = 500
 
+  # Hard limit on input length before any processing. This prevents wasting CPU cycles
+  # on obviously abusive queries and protects against regex performance attacks.
+  MAX_INPUT_LENGTH = 2000
+
   # Maximum occurrences of any single field filter (e.g., updated:).
   # Allows date ranges like "updated:>2024-01-01 updated:<2024-12-31"
   # while blocking repeated filters used in DoS attacks.
@@ -37,6 +41,7 @@ class SearchQuerySanitizer
   def sanitize
     return "" if @query.blank?
 
+    validate_input_length!
     validate_no_range_syntax!
     collapse_redundant_fields!
     escape_dangerous_patterns!
@@ -54,6 +59,10 @@ class SearchQuerySanitizer
   end
 
   private
+
+  def validate_input_length!
+    raise QueryTooLongError, "Query exceeds max input length of #{MAX_INPUT_LENGTH}" if @query.length > MAX_INPUT_LENGTH
+  end
 
   def validate_length!
     raise QueryTooLongError, "Query exceeds max length of #{MAX_QUERY_LENGTH}" if @query.length > MAX_QUERY_LENGTH
@@ -73,7 +82,8 @@ class SearchQuerySanitizer
     ALLOWED_FIELDS.each do |field|
       # Pattern matches both unquoted (name:rails) and quoted (name:"web framework") field values
       # Uses (?:[^"\\]|\\.)* to handle escaped quotes within quoted strings
-      pattern = /\b#{field}:(?:"(?:[^"\\]|\\.)*"|\S+)/i
+      # Length caps {0,200} prevent regex performance issues on malformed inputs
+      pattern = /\b#{field}:(?:"(?:[^"\\]|\\.){0,200}"|\S{1,200})/i
       occurrences = @query.scan(pattern)
       total_field_count += [occurrences.length, MAX_FIELD_OCCURRENCES].min
 
@@ -95,7 +105,8 @@ class SearchQuerySanitizer
   def collapse_to_total_limit!
     # Build a combined pattern matching any field filter
     # Uses (?:[^"\\]|\\.)* to handle escaped quotes within quoted strings
-    combined_pattern = /\b(?:#{ALLOWED_FIELDS.join('|')}):(?:"(?:[^"\\]|\\.)*"|\S+)/i
+    # Length caps {0,200} prevent regex performance issues on malformed inputs
+    combined_pattern = /\b(?:#{ALLOWED_FIELDS.join('|')}):(?:"(?:[^"\\]|\\.){0,200}"|\S{1,200})/i
     kept_count = 0
 
     @query = @query.gsub(combined_pattern) do |match|

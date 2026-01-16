@@ -152,4 +152,25 @@ class SearchQuerySanitizerTest < ActiveSupport::TestCase
 
     assert_equal(6, SearchQuerySanitizer::ALLOWED_FIELDS.sum { |f| result.scan(/#{f}:/i).length })
   end
+
+  # Unknown field tests - documenting expected behavior
+  test "unknown fields are passed through unchanged" do
+    # Fields not in ALLOWED_FIELDS are not subject to field collapsing rules
+    # This allows OpenSearch to handle them (typically as literal text search)
+    assert_equal "foo:bar", SearchQuerySanitizer.sanitize("foo:bar")
+    assert_equal "unknown:value other:thing", SearchQuerySanitizer.sanitize("unknown:value other:thing")
+  end
+
+  # Input length validation tests
+  test "query exceeding max input length raises QueryTooLongError before processing" do
+    # MAX_INPUT_LENGTH is checked before any regex processing to prevent DoS
+    long_query = "a" * (SearchQuerySanitizer::MAX_INPUT_LENGTH + 1)
+    assert_raises(SearchQuerySanitizer::QueryTooLongError) { SearchQuerySanitizer.sanitize(long_query) }
+  end
+
+  test "query at max input length is processed normally" do
+    query = "a" * SearchQuerySanitizer::MAX_INPUT_LENGTH
+    # Should not raise - will be processed and then fail MAX_QUERY_LENGTH check
+    assert_raises(SearchQuerySanitizer::QueryTooLongError) { SearchQuerySanitizer.sanitize(query) }
+  end
 end

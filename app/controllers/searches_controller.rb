@@ -5,6 +5,8 @@ class SearchesController < ApplicationController
               SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
 
   def show
+    # Return early for blank queries. Non-string params (e.g., arrays) are converted
+    # to strings by SearchQuerySanitizer via to_s, which handles them safely.
     return if params[:query].blank?
     @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
 
