@@ -112,5 +112,14 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "malformed query with range syntax" do
+      should "return bad request" do
+        get :autocomplete, params: { query: "test:[a TO b]" }
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
   end
 end

@@ -148,6 +148,45 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show with malformed query containing range syntax" do
+    setup do
+      get :show, params: { query: "aws-sdk AND updated:[2025-06-18 TO *}" }
+    end
+
+    should respond_with :success
+
+    should "show error message" do
+      assert page.has_content?("Invalid search query. Please simplify your search and try again.")
+    end
+  end
+
+  context "on GET to show with query exceeding max length" do
+    setup do
+      get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
+    end
+
+    should respond_with :success
+
+    should "show error message" do
+      assert page.has_content?("Invalid search query. Please simplify your search and try again.")
+    end
+  end
+
+  context "on GET to show with valid advanced search query" do
+    setup do
+      @sinatra = create(:rubygem, name: "sinatra")
+      create(:version, rubygem: @sinatra, indexed: true)
+      import_and_refresh
+      get :show, params: { query: "sinatra AND downloads:>0" }
+    end
+
+    should respond_with :success
+
+    should "process the query successfully" do
+      refute page.has_content?("Invalid search query. Please simplify your search and try again.")
+    end
+  end
+
   context "with elasticsearch down" do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
