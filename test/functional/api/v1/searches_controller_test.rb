@@ -90,6 +90,14 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
       end
     end
+
+    context "query with redundant fields is sanitized" do
+      should "return results after collapsing redundant fields" do
+        get :show, params: { query: "match name:a name:b name:c" }, format: :json
+
+        assert_response :success
+      end
+    end
   end
 
   context "on GET to autocomplete with query=ma" do

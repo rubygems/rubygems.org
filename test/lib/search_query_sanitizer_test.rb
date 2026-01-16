@@ -91,4 +91,53 @@ class SearchQuerySanitizerTest < ActiveSupport::TestCase
       SearchQuerySanitizer.sanitize("a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1))
     end
   end
+
+  # Edge case tests for range syntax
+  test "reject lowercase 'to' in range syntax" do
+    assert_raises(SearchQuerySanitizer::MalformedQueryError) do
+      SearchQuerySanitizer.sanitize("updated:[2024-01-01 to 2024-12-31]")
+    end
+  end
+
+  test "reject mismatched brackets in range syntax" do
+    assert_raises(SearchQuerySanitizer::MalformedQueryError) do
+      SearchQuerySanitizer.sanitize("updated:[2024-01-01 TO 2024-12-31}")
+    end
+    assert_raises(SearchQuerySanitizer::MalformedQueryError) do
+      SearchQuerySanitizer.sanitize("updated:{2024-01-01 TO 2024-12-31]")
+    end
+  end
+
+  test "allow words containing TO that are not range syntax" do
+    assert_equal "GOTO", SearchQuerySanitizer.sanitize("GOTO")
+    assert_equal "name:AUTOMATOR", SearchQuerySanitizer.sanitize("name:AUTOMATOR")
+    assert_equal "TOMATO", SearchQuerySanitizer.sanitize("TOMATO")
+  end
+
+  # Quoted field value tests
+  test "handle quoted field values" do
+    assert_equal 'name:"web framework"', SearchQuerySanitizer.sanitize('name:"web framework"')
+  end
+
+  test "collapse redundant quoted field values" do
+    result = SearchQuerySanitizer.sanitize('name:"a" name:"b" name:"c"')
+
+    assert_equal 2, result.scan(/name:/i).length
+  end
+
+  test "limit total field filters across all field types" do
+    query = "name:a name:b summary:c summary:d downloads:>1 downloads:>2 updated:>2024 updated:<2025"
+    result = SearchQuerySanitizer.sanitize(query)
+
+    total_fields = SearchQuerySanitizer::ALLOWED_FIELDS.sum { |f| result.scan(/#{f}:/i).length }
+
+    assert_operator total_fields, :<=, SearchQuerySanitizer::MAX_TOTAL_FIELD_FILTERS
+  end
+
+  test "allow queries at or below total field filter limit" do
+    query = "name:a name:b summary:c downloads:>1 updated:>2024 description:test"
+    result = SearchQuerySanitizer.sanitize(query)
+
+    assert_equal(6, SearchQuerySanitizer::ALLOWED_FIELDS.sum { |f| result.scan(/#{f}:/i).length })
+  end
 end
