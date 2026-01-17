@@ -6,17 +6,22 @@ class OIDC::TrustedPublisher::GitLab::TableComponent < ApplicationComponent
       dt(class: "description__heading ") { "GitLab Project Path" }
       dd { code { gitlab.project_path } }
 
-      dt(class: "description__heading ") { "GitLab Ref Path" }
-      dd { code { gitlab.ref_path } }
+      dt(class: "description__heading ") { "GitLab CI Config Path" }
+      dd { code { gitlab.ci_config_path } }
 
       if gitlab.environment.present?
         dt(class: "description__heading ") { "GitLab Environment" }
         dd { code { gitlab.environment } }
       end
 
-      if gitlab.ci_config_ref_uri.present?
-        dt(class: "description__heading ") { "GitLab CI Config Ref URI" }
-        dd { code { gitlab.ci_config_ref_uri } }
+      if gitlab.ref_type.present?
+        dt(class: "description__heading ") { "Ref Type" }
+        dd { code { gitlab.ref_type } }
+      end
+
+      if gitlab.branch_name.present?
+        dt(class: "description__heading ") { "Branch Name" }
+        dd { code { gitlab.branch_name } }
       end
     end
   end

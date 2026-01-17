@@ -973,9 +973,10 @@ en:
           While not required, a dedicated publishing environment is strongly encouraged, especially if your repository has maintainers with commit access who shouldn't have RubyGems.org gem push access.
       gitlab:
         project_path_help_html: "The path to the GitLab project, in the format <code>&lt;namespace&gt;/&lt;project&gt;</code>"
-        ref_path_help_html: "The path to the Git ref, in the format <code>refs/heads/&lt;branch&gt;</code> or <code>refs/tags/&lt;tag&gt;</code>"
+        ci_config_path_help_html: "The path to the CI configuration file (e.g. <code>.gitlab-ci.yml</code>)"
         environment_help_html: "The name of the GitLab CI/CD environment"
-        ci_config_ref_uri_help_html: "The URI of the CI/CD configuration file, in the format <code>&lt;project_path&gt;/.gitlab-ci.yml@&lt;ref&gt;</code>"
+        ref_type_help_html: "Restrict publishing to a specific ref type (Branch or Tag)"
+        branch_name_help_html: "The name of the branch to restrict publishing to (e.g. <code>main</code>)"
       pending:
         rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
   duration:

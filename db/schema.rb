@@ -496,12 +496,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_032329) do
   end
 
   create_table "oidc_trusted_publisher_gitlabs", force: :cascade do |t|
-    t.string "project_path"
-    t.string "ref_path"
+    t.string "project_path", null: false
+    t.string "ci_config_path", null: false
     t.string "environment"
-    t.string "ci_config_ref_uri"
+    t.string "ref_type"
+    t.string "branch_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["project_path", "ci_config_path", "environment", "ref_type", "branch_name"], name: "index_oidc_trusted_publisher_gitlabs_on_claims", unique: true
   end
 
   create_table "organization_invites", force: :cascade do |t|
