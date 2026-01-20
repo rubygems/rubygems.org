@@ -254,7 +254,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     assert_equal standard_publisher, OIDC::TrustedPublisher::GitHubAction.for_claims(claims)
   end
 
-  test "validates workflow_repository_fields_consistency" do
+  test "validates workflow_repository_fields must both be present or both be blank" do
     stub_request(:get, "https://api.github.com/users/example")
       .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
 
@@ -290,7 +290,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     )
 
     refute_predicate publisher, :valid?
-    assert_includes publisher.errors[:base], "workflow_repository_owner and workflow_repository_name must both be set or both be blank"
+    assert_includes publisher.errors[:workflow_repository_name], "can't be blank"
 
     # Only name set - invalid
     publisher = OIDC::TrustedPublisher::GitHubAction.new(
@@ -302,7 +302,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     )
 
     refute_predicate publisher, :valid?
-    assert_includes publisher.errors[:base], "workflow_repository_owner and workflow_repository_name must both be set or both be blank"
+    assert_includes publisher.errors[:workflow_repository_owner], "can't be blank"
   end
 
   test "validates workflow_repository_differs_from_repository" do

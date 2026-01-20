@@ -12,11 +12,12 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :environment, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :workflow_repository_owner, :workflow_repository_name,
-    allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+    allow_blank: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :workflow_repository_owner, presence: true, if: -> { workflow_repository_name.present? }
+  validates :workflow_repository_name, presence: true, if: -> { workflow_repository_owner.present? }
 
   validate :unique_publisher
   validate :workflow_filename_format
-  validate :workflow_repository_fields_consistency
   validate :workflow_repository_differs_from_repository
 
   def self.for_claims(claims)
@@ -38,8 +39,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
     same_repo = workflow_repo_owner == repository_owner && workflow_repo_name == repository_name
     base = if same_repo
-             base.where(workflow_repository_owner: workflow_repo_owner, workflow_repository_name: workflow_repo_name)
-               .or(base.where(workflow_repository_owner: nil, workflow_repository_name: nil))
+             base.where(workflow_repository_owner: nil, workflow_repository_name: nil)
            else
              base.where(workflow_repository_owner: workflow_repo_owner, workflow_repository_name: workflow_repo_name)
            end
@@ -212,15 +212,6 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
     errors.add(:workflow_filename, "must end with .yml or .yaml") unless /\.ya?ml\z/.match?(workflow_filename)
     errors.add(:workflow_filename, "must be a filename only, without directories") if workflow_filename.include?("/")
-  end
-
-  def workflow_repository_fields_consistency
-    owner_present = workflow_repository_owner.present?
-    name_present = workflow_repository_name.present?
-
-    return if owner_present == name_present
-
-    errors.add(:base, "workflow_repository_owner and workflow_repository_name must both be set or both be blank")
   end
 
   def workflow_repository_differs_from_repository
