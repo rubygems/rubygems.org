@@ -47,6 +47,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_dependencies_resolvable).returns true
         @cutter.stubs(:validate).returns true
         @cutter.stubs(:verify_sigstore).returns true
         @cutter.stubs(:sign_sigstore).returns true
@@ -100,12 +101,26 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.process
       end
 
-      should "not attempt to validate if mfa check failed" do
+      should "not attempt to verify dependencies resolve if mfa check failed" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns false
+        @cutter.stubs(:verify_dependencies_resolvable).never
+        @cutter.stubs(:validate).never
+        @cutter.stubs(:save).never
+
+        @cutter.process
+      end
+
+      should "not attempt to validate if dependencies don't resolve" do
+        @cutter.stubs(:pull_spec).returns true
+        @cutter.stubs(:find).returns true
+        @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_mfa_requirement).returns true
+        @cutter.stubs(:verify_dependencies_resolvable).returns false
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
 
@@ -118,6 +133,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
+        @cutter.stubs(:verify_dependencies_resolvable).returns true
         @cutter.stubs(:validate).returns false
         @cutter.stubs(:save).never
 
@@ -202,7 +218,7 @@ class PusherTest < ActiveSupport::TestCase
           .instance_variable_set(:@requirements, [["!!!", "0"]])
       end)
       @cutter.stubs(:validate_signature_exists?).returns(true)
-
+      @cutter.stubs(:verify_dependencies_resolvable).returns true
       @cutter.process
 
       assert_match(/requirements must be list of valid requirements/, @cutter.message)
@@ -214,11 +230,23 @@ class PusherTest < ActiveSupport::TestCase
         s.add_runtime_dependency "\nother"
       end)
       @cutter.stubs(:validate_signature_exists?).returns(true)
+      @cutter.stubs(:verify_dependencies_resolvable).returns true
 
       @cutter.process
 
       assert_match(/Dependency unresolved name can only include letters, numbers, dashes, and underscores/, @cutter.message)
       assert_equal 403, @cutter.code
+    end
+
+    should "not be able to save a gem if the dependencies are not resolvable" do
+      @cutter.stubs(:spec).returns(new_gemspec("gem-with-nonexistent-dep", "1.0.0", "Summary", "ruby") do |s|
+        s.add_runtime_dependency "non-existent-gem", "~> 1.0"
+      end)
+
+      @cutter.process
+
+      assert_match(/There was a problem saving your gem: \nThe following dependencies don't exist: non-existent-gem/, @cutter.message)
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to save a gem if the metadata has incorrect values" do
