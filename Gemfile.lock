@@ -228,14 +228,14 @@ GEM
       addressable
     csv (3.3.5)
     dalli (3.2.8)
-    datadog (2.24.0)
+    datadog (2.26.0)
       cgi
-      datadog-ruby_core_source (~> 3.4, >= 3.4.2)
-      libdatadog (~> 24.0.1.1.0)
+      datadog-ruby_core_source (~> 3.5, >= 3.5.1)
+      libdatadog (~> 25.0.0.1.0)
       libddwaf (~> 1.30.0.0.0)
       logger
       msgpack
-    datadog-ruby_core_source (3.5.0)
+    datadog-ruby_core_source (3.5.1)
     date (3.5.1)
     derailed_benchmarks (2.2.1)
       base64
@@ -417,9 +417,9 @@ GEM
       letter_opener (~> 1.9)
       railties (>= 6.1)
       rexml
-    libdatadog (24.0.1.1.0)
-    libdatadog (24.0.1.1.0-aarch64-linux)
-    libdatadog (24.0.1.1.0-x86_64-linux)
+    libdatadog (25.0.0.1.0)
+    libdatadog (25.0.0.1.0-aarch64-linux)
+    libdatadog (25.0.0.1.0-x86_64-linux)
     libddwaf (1.30.0.0.0)
       ffi (~> 1.0)
     libddwaf (1.30.0.0.0-aarch64-linux)
@@ -950,7 +950,7 @@ DEPENDENCIES
   connection_pool (~> 2.0)
   csv (~> 3.3)
   dalli (~> 3.2)
-  datadog (~> 2.24)
+  datadog (~> 2.26)
   derailed_benchmarks (~> 2.2)
   discard (~> 1.4)
   dogstatsd-ruby (~> 5.7)
@@ -1122,8 +1122,8 @@ CHECKSUMS
   css_parser (1.21.1) sha256=6cfd3ffc0a97333b39d2b1b49c95397b05e0e3b684d68f77ec471ba4ec2ef7c7
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
-  datadog (2.24.0) sha256=076af1858c2b2a128fe15ccfcae1f81971e1fc97c867dbe2e767ac41c2296b0d
-  datadog-ruby_core_source (3.5.0) sha256=5cf9924ac6d7e8b52d65aa25a9be0e8f981612bb85063b3dc3d425bf7de3c56e
+  datadog (2.26.0) sha256=8375cf47ff38c47e58bbb5a7518ca04006562f1497141797eddb2a478106b7f0
+  datadog-ruby_core_source (3.5.1) sha256=6620521d98c22c2e1cbe3c4bff2698a0cff6d3280a14b95f026806b2c964a7f5
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   derailed_benchmarks (2.2.1) sha256=654280664fded41c9cd8fc27fc0fcfaf096023afab90eb4ac1185ba70c5d4439
   diff-lcs (1.5.1) sha256=273223dfb40685548436d32b4733aa67351769c7dea621da7d9dd4813e63ddfe
@@ -1197,9 +1197,9 @@ CHECKSUMS
   launchy (3.1.1) sha256=72b847b5cc961589dde2c395af0108c86ff0119f42d4648d25b5440ebb10059e
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860
-  libdatadog (24.0.1.1.0) sha256=5f911a5598deb11f8c4179077a46e50a57b778b87a152bf23859ae6e557b1751
-  libdatadog (24.0.1.1.0-aarch64-linux) sha256=aa1fad15d3fb1039164c5bbf481f76acc6f3d230e8ff160d3792bf9e87ba5075
-  libdatadog (24.0.1.1.0-x86_64-linux) sha256=d15aea8b2be3e45ecfd9dec4ebc53b4c178e8540dee59c40cf2500bed67aacde
+  libdatadog (25.0.0.1.0) sha256=73e687f68d928c75f01f56cf6e9ee9cd3d6438f1da9add89d02b3845cf8e8f43
+  libdatadog (25.0.0.1.0-aarch64-linux) sha256=c3b1d3380cb1fa98d5edaad844a0384b6578dcb004ae518ae12406e3897e1486
+  libdatadog (25.0.0.1.0-x86_64-linux) sha256=260d78ab20bf5b5db310aade93900a02adf18434a5c0b28fec4d05db54f7c206
   libddwaf (1.30.0.0.0) sha256=d5c350555ec5bdfb99534b37ad578163c83642ca03cecb3bae30fd29dc47d4fc
   libddwaf (1.30.0.0.0-aarch64-linux) sha256=b901cf0be4cc8a0c0fc34845f8f283b791a2fa0fc6a80d88992f111242813daa
   libddwaf (1.30.0.0.0-arm64-darwin) sha256=b4997ab7e8a4c41fa3993b00d89c209dfbed4d5ac5c03fc1dd70464185ffe193
