@@ -32,4 +32,8 @@ class Avo::Resources::Organization < Avo::BaseResource
       field :organization_onboarding, as: :belongs_to
     end
   end
+
+  def actions
+    action Avo::Actions::ChangeOrganizationHandle
+  end
 end

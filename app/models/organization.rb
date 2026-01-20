@@ -13,6 +13,7 @@ class Organization < ApplicationRecord
   has_many :memberships_including_unconfirmed, class_name: "Membership", dependent: :destroy, inverse_of: :organization
   has_many :users, through: :memberships
   has_many :rubygems, dependent: :nullify
+  has_many :audits, as: :auditable, dependent: :nullify
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
 
   default_scope { not_deleted }
@@ -28,11 +29,17 @@ class Organization < ApplicationRecord
   end
 
   def self.find_by_handle(handle)
+    return where("lower(handle) IN (?)", handle.map(&:downcase)) if handle.is_a?(Array)
+
     find_by("lower(handle) = lower(?)", handle)
   end
 
   def self.find_by_handle!(handle)
-    find_by_handle(handle) || raise(ActiveRecord::RecordNotFound)
+    result = find_by_handle(handle)
+
+    raise ActiveRecord::RecordNotFound if handle.is_a?(Array) && result.empty?
+
+    result || raise(ActiveRecord::RecordNotFound)
   end
 
   def to_param
