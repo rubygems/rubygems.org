@@ -10,7 +10,9 @@ class Avo::Resources::Attestation < Avo::BaseResource
     field :id, as: :id
 
     field :valid, as: :boolean, only_on: %i[index show] do
-      record.valid_bundle?
+      Rails.cache.fetch(["attestation-valid-bundle", record.id, record.updated_at]) do
+        record.valid_bundle?
+      end
     end
 
     field :version, as: :belongs_to
