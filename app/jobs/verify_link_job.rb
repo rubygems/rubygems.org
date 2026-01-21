@@ -1,5 +1,5 @@
 class VerifyLinkJob < ApplicationJob
-  queue_as :default
+  queue_as :links
 
   retry_on ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid, wait: :polynomially_longer, attempts: 3
 
