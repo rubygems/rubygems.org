@@ -136,4 +136,5 @@ Rails.application.configure do
   end
 
   config.hosts << "rubygems.test"
+  config.hosts << "host.docker.internal:3000"
 end
