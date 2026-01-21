@@ -174,4 +174,69 @@ class RepairAttestationTest < ActiveSupport::TestCase
 
     refute decoded.start_with?("-----BEGIN CERTIFICATE-----")
   end
+
+  test "creates audit record when repair is performed" do
+    attestation = Attestation.create!(
+      version: @version,
+      media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+      body: {
+        "verificationMaterial" => {
+          "tlogEntries" => [{ "logIndex" => 123 }],
+          "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
+        }
+      }
+    )
+
+    action = Avo::Actions::RepairAttestation.new
+    action.handle(
+      fields: { comment: "Repairing invalid attestation for audit test" },
+      current_user: @admin,
+      resource: nil,
+      records: [attestation],
+      query: nil
+    )
+
+    audit = Audit.last
+
+    assert_not_nil audit
+    assert_equal "Attestation", audit.auditable_type
+    assert_equal attestation.id, audit.auditable_id
+    assert_equal @admin.id, audit.admin_github_user_id
+    assert_equal "Repairing invalid attestation for audit test", audit.comment
+  end
+
+  test "handles certificate repair failure gracefully" do
+    pem_like_but_invalid = "-----BEGIN CERTIFICATE-----\nINVALID_CERT_DATA\n-----END CERTIFICATE-----\n"
+    double_encoded = Base64.strict_encode64(pem_like_but_invalid)
+
+    attestation = Attestation.create!(
+      version: @version,
+      media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+      body: {
+        "verificationMaterial" => {
+          "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+          "certificate" => { "rawBytes" => double_encoded }
+        }
+      }
+    )
+
+    assert_predicate attestation, :repairable?
+
+    action = Avo::Actions::RepairAttestation.new
+    action.handle(
+      fields: { comment: "Testing error handling" },
+      current_user: @admin,
+      resource: nil,
+      records: [attestation],
+      query: nil
+    )
+
+    # Should complete successfully (redirect means action completed)
+    assert_equal :redirect, action.response[:type]
+
+    # Should report the failure in the success message
+    messages = action.response[:messages]
+
+    assert(messages.any? { |m| m[:body].include?("Failed to repair certificate") })
+  end
 end

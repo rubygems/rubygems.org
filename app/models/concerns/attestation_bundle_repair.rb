@@ -1,5 +1,16 @@
+# Repairs known issues in Sigstore attestation bundles that prevent successful parsing.
+#
+# An attestation is considered repairable when it has one or both of these issues:
+# 1. Missing `kindVersion` field in tlog entries - Some attestations were created without
+#    the required kindVersion field that Sigstore expects in transaction log entries.
+# 2. Double-encoded PEM certificates - Some certificates were incorrectly stored as
+#    Base64-encoded PEM strings instead of Base64-encoded DER bytes.
 module AttestationBundleRepair
   extend ActiveSupport::Concern
+
+  # Sigstore DSSE (Dead Simple Signing Envelope) default values for kindVersion.
+  # These are the standard values used by Sigstore for DSSE-type entries.
+  DSSE_KIND_VERSION = { "kind" => "dsse", "version" => "0.0.1" }.freeze
 
   def repairable?
     verification = body["verificationMaterial"]
@@ -43,7 +54,7 @@ module AttestationBundleRepair
   def repair_kind_version!(verification, changes)
     verification["tlogEntries"]&.each_with_index do |entry, idx|
       next if entry.key?("kindVersion")
-      entry["kindVersion"] = { "kind" => "dsse", "version" => "0.0.1" }
+      entry["kindVersion"] = DSSE_KIND_VERSION.dup
       changes << "Added missing kindVersion to tlogEntry #{idx}"
     end
   end
@@ -60,5 +71,6 @@ module AttestationBundleRepair
     changes << "Converted double-encoded PEM certificate to DER"
   rescue ArgumentError, OpenSSL::X509::CertificateError => e
     Rails.logger.warn("Failed to repair certificate: #{e.message}")
+    changes << "Failed to repair certificate: #{e.message}"
   end
 end
