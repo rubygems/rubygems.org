@@ -206,6 +206,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
   end
 
   test "handles certificate repair failure gracefully" do
+    # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
     pem_like_but_invalid = "-----BEGIN CERTIFICATE-----\nINVALID_CERT_DATA\n-----END CERTIFICATE-----\n"
     double_encoded = Base64.strict_encode64(pem_like_but_invalid)
 

@@ -36,6 +36,7 @@ class AttestationTest < ActiveSupport::TestCase
     end
 
     should "be repairable when certificate is double-encoded PEM" do
+      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       pem_cert = "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKHBfpN...\n-----END CERTIFICATE-----\n"
       double_encoded = Base64.strict_encode64(pem_cert)
 
@@ -108,6 +109,7 @@ class AttestationTest < ActiveSupport::TestCase
     end
 
     should "return certificate issue when double-encoded" do
+      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       pem_cert = "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKHBfpN...\n-----END CERTIFICATE-----\n"
       double_encoded = Base64.strict_encode64(pem_cert)
 
@@ -129,6 +131,7 @@ class AttestationTest < ActiveSupport::TestCase
     end
 
     should "return both issues when both present" do
+      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       pem_cert = "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKHBfpN...\n-----END CERTIFICATE-----\n"
       double_encoded = Base64.strict_encode64(pem_cert)
 
@@ -228,6 +231,7 @@ class AttestationTest < ActiveSupport::TestCase
     end
 
     should "report failure when certificate repair fails" do
+      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       pem_like_but_invalid = "-----BEGIN CERTIFICATE-----\nINVALID\n-----END CERTIFICATE-----\n"
       double_encoded = Base64.strict_encode64(pem_like_but_invalid)
 
