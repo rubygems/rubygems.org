@@ -63,6 +63,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
     attestation = Attestation.create!(
       version: @version,
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       body: {
         "verificationMaterial" => {
           "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
@@ -96,6 +97,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
     attestation = Attestation.create!(
       version: @version,
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       body: {
         "verificationMaterial" => {
           "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
@@ -213,6 +215,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
     attestation = Attestation.create!(
       version: @version,
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       body: {
         "verificationMaterial" => {
           "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
