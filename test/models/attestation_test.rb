@@ -44,7 +44,7 @@ class AttestationTest < ActiveSupport::TestCase
         media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
         body: {
           "verificationMaterial" => {
-            "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+            "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
             "certificate" => { "rawBytes" => double_encoded }
           }
         }
@@ -59,7 +59,7 @@ class AttestationTest < ActiveSupport::TestCase
         media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
         body: {
           "verificationMaterial" => {
-            "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+            "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
             "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
           }
         }
@@ -113,7 +113,7 @@ class AttestationTest < ActiveSupport::TestCase
       assert_kind_of Array, changes
       assert_includes changes.first, "Added missing kindVersion"
       assert_equal(
-        { "kind" => "dsse", "version" => "0.0.1" },
+        { "kind" => "hashedrekord", "version" => "0.0.1" },
         attestation.body.dig("verificationMaterial", "tlogEntries", 0, "kindVersion")
       )
     end
@@ -124,7 +124,7 @@ class AttestationTest < ActiveSupport::TestCase
         media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
         body: {
           "verificationMaterial" => {
-            "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+            "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
             "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
           }
         }
@@ -156,7 +156,7 @@ class AttestationTest < ActiveSupport::TestCase
         media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
         body: {
           "verificationMaterial" => {
-            "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+            "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
             "certificate" => { "rawBytes" => double_encoded }
           }
         }

@@ -8,9 +8,9 @@
 module AttestationBundleRepair
   extend ActiveSupport::Concern
 
-  # Sigstore DSSE (Dead Simple Signing Envelope) default values for kindVersion.
-  # These are the standard values used by Sigstore for DSSE-type entries.
-  DSSE_KIND_VERSION = { "kind" => "dsse", "version" => "0.0.1" }.freeze
+  # Default kindVersion for Rekor transparency log entries.
+  # RubyGems attestations use "hashedrekord" (hashed artifact signature) entries.
+  HASHED_REKORD_KIND_VERSION = { "kind" => "hashedrekord", "version" => "0.0.1" }.freeze
 
   def repairable?
     verification = body["verificationMaterial"]
@@ -54,7 +54,7 @@ module AttestationBundleRepair
   def repair_kind_version!(verification, changes)
     verification["tlogEntries"]&.each_with_index do |entry, idx|
       next if entry.key?("kindVersion")
-      entry["kindVersion"] = DSSE_KIND_VERSION.dup
+      entry["kindVersion"] = HASHED_REKORD_KIND_VERSION.dup
       changes << "Added missing kindVersion to tlogEntry #{idx}"
     end
   end

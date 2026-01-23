@@ -40,7 +40,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
 
     refute_predicate attestation, :repairable?
     assert_equal(
-      { "kind" => "dsse", "version" => "0.0.1" },
+      { "kind" => "hashedrekord", "version" => "0.0.1" },
       attestation.body.dig("verificationMaterial", "tlogEntries", 0, "kindVersion")
     )
   end
@@ -65,7 +65,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+          "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
           "certificate" => { "rawBytes" => double_encoded }
         }
       }
@@ -98,7 +98,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+          "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
           "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
         }
       }
@@ -164,7 +164,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
 
     # Verify kindVersion was added
     assert_equal(
-      { "kind" => "dsse", "version" => "0.0.1" },
+      { "kind" => "hashedrekord", "version" => "0.0.1" },
       attestation.body.dig("verificationMaterial", "tlogEntries", 0, "kindVersion")
     )
 
@@ -214,7 +214,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "kindVersion" => { "kind" => "dsse", "version" => "0.0.1" } }],
+          "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
           "certificate" => { "rawBytes" => double_encoded }
         }
       }

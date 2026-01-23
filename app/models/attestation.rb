@@ -16,6 +16,9 @@ class Attestation < ApplicationRecord
     sigstore_bundle.present?
   rescue Sigstore::Error
     false
+  rescue StandardError => e
+    Rails.logger.warn("Failed to validate sigstore bundle for Attestation #{id}: #{e.class}: #{e.message}")
+    false
   end
 
   def display_data # rubocop:disable Metrics/MethodLength
