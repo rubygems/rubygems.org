@@ -22,8 +22,14 @@ FactoryBot.define do
     checkpoint factory: %i[sigstore_checkpoint]
     to_create { |instance| instance }
   end
+  factory :sigstore_kind_version, class: "Sigstore::Rekor::V1::KindVersion" do
+    kind { "hashedrekord" }
+    version { "0.0.1" }
+    to_create { |instance| instance }
+  end
   factory :sigstore_tlog_entry, class: "Sigstore::Rekor::V1::TransparencyLogEntry" do
     sequence(:log_index)
+    kind_version factory: %i[sigstore_kind_version]
     inclusion_proof factory: %i[sigstore_inclusion_proof]
     to_create { |instance| instance }
   end

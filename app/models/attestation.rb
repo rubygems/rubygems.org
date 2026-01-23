@@ -13,7 +13,7 @@ class Attestation < ApplicationRecord
   end
 
   def valid_bundle?
-    sigstore_bundle.present?
+    sigstore_bundle.present? && !repairable?
   rescue Sigstore::Error
     false
   rescue StandardError => e
