@@ -69,6 +69,86 @@ class AttestationTest < ActiveSupport::TestCase
     end
   end
 
+  context "#repair_issues" do
+    setup do
+      @version = create(:version)
+    end
+
+    should "return empty array when no issues" do
+      attestation = Attestation.new(
+        version: @version,
+        media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+        body: {
+          "verificationMaterial" => {
+            "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
+            "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
+          }
+        }
+      )
+
+      assert_empty attestation.repair_issues
+    end
+
+    should "return kindVersion issue when missing" do
+      attestation = Attestation.new(
+        version: @version,
+        media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+        body: {
+          "verificationMaterial" => {
+            "tlogEntries" => [{ "logIndex" => 123 }],
+            "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
+          }
+        }
+      )
+
+      issues = attestation.repair_issues
+
+      assert_equal 1, issues.length
+      assert_includes issues.first, "kindVersion"
+    end
+
+    should "return certificate issue when double-encoded" do
+      pem_cert = "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKHBfpN...\n-----END CERTIFICATE-----\n"
+      double_encoded = Base64.strict_encode64(pem_cert)
+
+      attestation = Attestation.new(
+        version: @version,
+        media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+        body: {
+          "verificationMaterial" => {
+            "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
+            "certificate" => { "rawBytes" => double_encoded }
+          }
+        }
+      )
+
+      issues = attestation.repair_issues
+
+      assert_equal 1, issues.length
+      assert_includes issues.first, "certificate"
+    end
+
+    should "return both issues when both present" do
+      pem_cert = "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKHBfpN...\n-----END CERTIFICATE-----\n"
+      double_encoded = Base64.strict_encode64(pem_cert)
+
+      attestation = Attestation.new(
+        version: @version,
+        media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+        body: {
+          "verificationMaterial" => {
+            "tlogEntries" => [{ "logIndex" => 123 }],
+            "certificate" => { "rawBytes" => double_encoded }
+          }
+        }
+      )
+
+      issues = attestation.repair_issues
+
+      assert_equal 2, issues.length
+    end
+  end
+
   context "#valid_bundle?" do
     setup do
       @version = create(:version)

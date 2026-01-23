@@ -4,8 +4,10 @@ class Avo::Actions::RepairAttestation < Avo::Actions::ApplicationAction
     current_user.team_member?("rubygems-org") && view == :show
   }
   self.message = lambda {
-    if resource.record.repairable?
-      "This attestation has invalid data that needs repair. Proceed with repair?"
+    attestation = resource.record
+    if attestation.repairable?
+      issues = attestation.repair_issues
+      "This attestation has the following issues:\n\n#{issues.map { |i| "• #{i}" }.join("\n")}\n\nProceed with repair?"
     else
       "This attestation appears valid. No repairs are expected."
     end

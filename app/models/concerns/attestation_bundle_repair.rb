@@ -13,10 +13,17 @@ module AttestationBundleRepair
   HASHED_REKORD_KIND_VERSION = { "kind" => "hashedrekord", "version" => "0.0.1" }.freeze
 
   def repairable?
-    verification = body["verificationMaterial"]
-    return false if verification.blank?
+    repair_issues.any?
+  end
 
-    missing_kind_version?(verification) || double_encoded_certificate?(verification)
+  def repair_issues
+    verification = body["verificationMaterial"]
+    return [] if verification.blank?
+
+    issues = []
+    issues << "Missing kindVersion in tlog entries" if missing_kind_version?(verification)
+    issues << "Double-encoded PEM certificate" if double_encoded_certificate?(verification)
+    issues
   end
 
   def repair!
