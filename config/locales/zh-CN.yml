@@ -87,6 +87,8 @@ zh-CN:
         api_key_permissions:
       oidc/trusted_publisher/github_action:
         repository_owner_id:
+        workflow_repository_owner:
+        workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
     errors:
@@ -970,6 +972,8 @@ zh-CN:
         repository_name_help_html:
         workflow_filename_help_html:
         environment_help_html:
+        workflow_repository_owner_help_html:
+        workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
   duration:
