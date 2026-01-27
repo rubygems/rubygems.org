@@ -4,6 +4,7 @@ class Avo::Resources::Attestation < Avo::BaseResource
 
   def actions
     action Avo::Actions::RepairAttestation
+    action Avo::Actions::ValidateAttestation
   end
 
   def fields
