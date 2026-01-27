@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_06_032329) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_07_200001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -492,7 +492,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_032329) do
     t.string "environment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
+    t.string "workflow_repository_owner"
+    t.string "workflow_repository_name"
+    t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment", "workflow_repository_owner", "workflow_repository_name"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
   create_table "organization_invites", force: :cascade do |t|

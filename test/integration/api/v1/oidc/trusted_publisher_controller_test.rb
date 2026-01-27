@@ -267,5 +267,72 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
 
       assert_equal api_key.owner, trusted_publisher
     end
+
+    should "succeed with matching trusted publisher using reusable workflow" do
+      @claims["repository"] = "cseeman/my-gem"
+      @claims["repository_owner"] = "cseeman"
+      @claims["repository_owner_id"] = "1946610"
+      @claims["job_workflow_ref"] = "rubygems/shared-workflows/.github/workflows/release.yml@refs/heads/main"
+
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "my-gem",
+        repository_owner_id: "1946610",
+        workflow_filename: "release.yml",
+        workflow_repository_owner: "rubygems",
+        workflow_repository_name: "shared-workflows")
+      trusted_publisher.repository_owner = "cseeman"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :success
+
+      resp = response.parsed_body
+
+      assert_match(/^rubygems_/, resp["rubygems_api_key"])
+    end
+
+    should "return not found when reusable workflow does not match configured workflow_repository" do
+      @claims["repository"] = "cseeman/my-gem"
+      @claims["repository_owner"] = "cseeman"
+      @claims["repository_owner_id"] = "1946610"
+      @claims["job_workflow_ref"] = "attacker-org/malicious-workflows/.github/workflows/release.yml@refs/heads/main"
+
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "my-gem",
+        repository_owner_id: "1946610",
+        workflow_filename: "release.yml",
+        workflow_repository_owner: "rubygems",
+        workflow_repository_name: "shared-workflows")
+      trusted_publisher.repository_owner = "cseeman"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "return not found when reusable workflow used but trusted publisher expects same-repo workflow" do
+      @claims["repository"] = "cseeman/my-gem"
+      @claims["repository_owner"] = "cseeman"
+      @claims["repository_owner_id"] = "1946610"
+      @claims["job_workflow_ref"] = "rubygems/shared-workflows/.github/workflows/release.yml@refs/heads/main"
+
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "my-gem",
+        repository_owner_id: "1946610",
+        workflow_filename: "release.yml",
+        workflow_repository_owner: nil,
+        workflow_repository_name: nil)
+      trusted_publisher.repository_owner = "cseeman"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :not_found
+    end
   end
 end

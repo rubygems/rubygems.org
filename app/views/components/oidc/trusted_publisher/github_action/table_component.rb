@@ -9,6 +9,11 @@ class OIDC::TrustedPublisher::GitHubAction::TableComponent < ApplicationComponen
       dt(class: "description__heading ") { "Workflow Filename" }
       dd { code { github_action.workflow_filename } }
 
+      if github_action.workflow_repository_owner.present?
+        dt(class: "description__heading") { "Workflow Repository" }
+        dd { code { github_action.workflow_repository } }
+      end
+
       if github_action.environment?
         dt(class: "description__heading") { "Environment" }
         dd { code { github_action.environment } }

@@ -44,7 +44,11 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       assert_equal [@namesake_rubygem.id], @organization_onboarding.reload.rubygems
     end
 
-    should "ignore empty params" do
+    should "remove non namesake gems if rubygems param is empty" do
+      @organization_onboarding.update!(rubygems: [@gem.id])
+
+      assert_equal [@namesake_rubygem.id, @gem.id], @organization_onboarding.reload.rubygems
+
       patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [""] } }
 
       assert_redirected_to organization_onboarding_users_path

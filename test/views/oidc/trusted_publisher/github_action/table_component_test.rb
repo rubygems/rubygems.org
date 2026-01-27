@@ -18,6 +18,26 @@ class OIDC::TrustedPublisher::GitHubAction::TableComponentTest < ComponentTest
     )
   end
 
+  should "render preview with workflow repository" do
+    preview(repository_name: "my-gem", workflow_filename: "shared-release.yml",
+            workflow_repository_owner: "shared-org", workflow_repository_name: "shared-workflows")
+
+    assert_dl(
+      lambda { |dt, dd|
+        dt.assert_text "GitHub Repository", exact: true
+        dd.assert_text "example/my-gem", exact: true
+      },
+      lambda { |dt, dd|
+        dt.assert_text "Workflow Filename", exact: true
+        dd.assert_text "shared-release.yml", exact: true
+      },
+      lambda { |dt, dd|
+        dt.assert_text "Workflow Repository", exact: true
+        dd.assert_text "shared-org/shared-workflows", exact: true
+      }
+    )
+  end
+
   def assert_dl(*rows, node: page)
     node.all("dl > *").each_slice(2) do |dt, dd|
       assert_equal "dt", dt.tag_name

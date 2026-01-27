@@ -87,6 +87,8 @@ ja:
         api_key_permissions: APIキーのパーミッション
       oidc/trusted_publisher/github_action:
         repository_owner_id: GitHubリポジトリの所有者ID
+        workflow_repository_owner:
+        workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name: RubyGem名
     errors:
@@ -990,6 +992,8 @@ ja:
           これはリポジトリの設定で構成されていると良いでしょう。<br>
           必須ではありませんが、個別の公開環境は強く推奨されます。
           特にリポジトリに、コミットアクセスを持つがRubyGems.orgへのgemのプッシュアクセスを持つべきではないメンテナがいるときが該当します。
+        workflow_repository_owner_help_html:
+        workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html: "（RubyGems.orgの）gemはこの発行元が使われたときに作られます"
   duration:

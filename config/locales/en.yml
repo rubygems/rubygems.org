@@ -91,6 +91,8 @@ en:
         api_key_permissions: API Key Permissions
       oidc/trusted_publisher/github_action:
         repository_owner_id: GitHub Repository Owner ID
+        workflow_repository_owner: Workflow Repository Owner
+        workflow_repository_name: Workflow Repository Name
       oidc/pending_trusted_publisher:
         rubygem_name: RubyGem name
     errors:
@@ -971,6 +973,12 @@ en:
           The name of the <a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">GitHub Actions environment</a> that the above workflow uses for publishing.<br>
           This should be configured under the repository's settings.<br>
           While not required, a dedicated publishing environment is strongly encouraged, especially if your repository has maintainers with commit access who shouldn't have RubyGems.org gem push access.
+        workflow_repository_owner_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The GitHub organization or username that owns the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
+        workflow_repository_name_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The name of the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
       pending:
         rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
   duration:
