@@ -37,11 +37,14 @@ class Avo::Actions::ValidateAttestation < Avo::Actions::ApplicationAction
       return { success: false, message: "Gem file not found in storage" } unless gem_contents
 
       # Parse the sigstore bundle
-      bundle = attestation.sigstore_bundle
-      return { success: false, message: "Failed to parse sigstore bundle" } unless bundle
+      sbundle = attestation.sigstore_bundle
+      return { success: false, message: "Failed to parse sigstore bundle" } unless sbundle
 
       # Extract identity from the certificate for policy verification
-      policy = extract_policy_from_certificate(bundle.leaf_certificate)
+      policy = extract_policy_from_certificate(sbundle.leaf_certificate)
+
+      # Get the raw bundle for verification input
+      bundle = Sigstore::Bundle::V1::Bundle.decode_json_hash(attestation.body, registry: Sigstore::REGISTRY)
       return { success: false, message: "Failed to extract identity from certificate" } unless policy
 
       # Build verification input
@@ -50,7 +53,7 @@ class Avo::Actions::ValidateAttestation < Avo::Actions::ApplicationAction
 
       verification_input = Sigstore::Verification::V1::Input.new
       verification_input.artifact = artifact
-      verification_input.bundle = bundle.inner
+      verification_input.bundle = bundle
       input = Sigstore::VerificationInput.new(verification_input)
 
       # Verify the attestation against Sigstore's Rekor transparency log.

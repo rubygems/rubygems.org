@@ -20,6 +20,13 @@ FactoryBot.define do
 
     trait :github_actions_fulcio do
       after(:build) do |cert, ctx|
+        # Add subjectAltName with the workflow URI (required for policy extraction)
+        cert.add_extension(ctx.extension_factory.create_ext(
+                             "subjectAltName",
+          "URI:https://github.com/sigstore/sigstore-ruby/.github/workflows/release.yml@refs/tags/v0.1.1",
+          false
+                           ))
+
         {
           "1.3.6.1.4.1.57264.1.1" =>
                 "https://token.actions.githubusercontent.com",

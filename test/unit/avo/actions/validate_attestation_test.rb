@@ -72,4 +72,26 @@ class ValidateAttestationTest < ActiveSupport::TestCase
     assert_equal attestation.id, audit.auditable_id
     assert_equal @admin.id, audit.admin_github_user_id
   end
+
+  test "succeeds when attestation verifies against gem file" do
+    attestation = create(:attestation, version: @version)
+
+    RubygemFs.instance.stubs(:get).returns("gem contents")
+
+    mock_verifier = mock
+    mock_verifier.stubs(:verify).returns(Sigstore::VerificationSuccess.new)
+    Sigstore::Verifier.stubs(:production).returns(mock_verifier)
+
+    action = Avo::Actions::ValidateAttestation.new
+    action.handle(
+      fields: {},
+      current_user: @admin,
+      resource: nil,
+      records: [attestation],
+      query: nil
+    )
+
+    assert_equal :success, action.response[:messages].first[:type]
+    assert_includes action.response[:messages].first[:body], "verified successfully"
+  end
 end

@@ -39,9 +39,7 @@ module AttestationBundleRepair
     repair_certificate!(new_verification, changes, errors) if double_encoded_certificate?(verification)
 
     # Only persist if there were actual successful changes
-    if changes.any?
-      update!(body: new_body)
-    end
+    update!(body: new_body) if changes.any?
 
     # Return combined results, with errors clearly marked
     return false if changes.empty? && errors.empty?
