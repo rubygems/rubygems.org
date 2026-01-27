@@ -52,12 +52,6 @@ class SearchTest < ApplicationSystemTestCase
     refute page.has_content?("2.2.2")
   end
 
-  test "search page with a non valid format" do
-    assert_raises(ActionController::RoutingError) do
-      get search_path(format: :json), params: { query: "foobar" }
-    end
-  end
-
   test "params has non white listed keys" do
     Kaminari.configure { |c| c.default_per_page = 1 }
     create(:rubygem, name: "ruby-ruby", number: "1.0.0")

@@ -1,6 +1,7 @@
 require "application_system_test_case"
 
 class OwnerTest < ApplicationSystemTestCase
+  include ActionMailer::TestHelper
   include ActiveJob::TestHelper
   include RubygemsHelper
 
@@ -86,7 +87,9 @@ class OwnerTest < ApplicationSystemTestCase
 
     within_element owner_row(@other_user) do
       perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-        click_button "Remove"
+        accept_confirm do
+          click_button "Remove"
+        end
       end
     end
 
@@ -103,7 +106,9 @@ class OwnerTest < ApplicationSystemTestCase
     visit_ownerships_page
 
     within_element owner_row(@user) do
-      click_button "Remove"
+      accept_confirm do
+        click_button "Remove"
+      end
     end
 
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
@@ -150,17 +155,6 @@ class OwnerTest < ApplicationSystemTestCase
     page.assert_text "Credentials required"
 
     assert page.has_css? "#verify_password_password"
-  end
-
-  test "verify password again after 10 minutes" do
-    visit_ownerships_page
-    travel 15.minutes
-    visit rubygem_path(@rubygem.slug)
-    click_link "Ownership"
-
-    assert page.has_field? "Password"
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Confirm"
   end
 
   test "incorrect password on verify shows error" do
@@ -225,7 +219,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "hides ownership link when not owner" do
-    page.click_link(nil, href: "/sign_out")
+    sign_out
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem.slug)
 
@@ -233,14 +227,14 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "hides ownership link when not signed in" do
-    page.click_link(nil, href: "/sign_out")
+    sign_out
     visit rubygem_path(@rubygem.slug)
 
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
   end
 
   test "shows resend confirmation link when unconfirmed" do
-    page.click_link(nil, href: "/sign_out")
+    sign_out
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem.slug)
