@@ -63,7 +63,6 @@ class RepairAttestationTest < ActiveSupport::TestCase
     attestation = Attestation.create!(
       version: @version,
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
-      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       body: {
         "verificationMaterial" => {
           "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
@@ -97,7 +96,6 @@ class RepairAttestationTest < ActiveSupport::TestCase
     attestation = Attestation.create!(
       version: @version,
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
-      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       body: {
         "verificationMaterial" => {
           "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
@@ -208,14 +206,12 @@ class RepairAttestationTest < ActiveSupport::TestCase
   end
 
   test "handles certificate repair failure gracefully" do
-    # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
     pem_like_but_invalid = "-----BEGIN CERTIFICATE-----\nINVALID_CERT_DATA\n-----END CERTIFICATE-----\n"
     double_encoded = Base64.strict_encode64(pem_like_but_invalid)
 
     attestation = Attestation.create!(
       version: @version,
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
-      # lgtm[rb/clear-text-storage-sensitive-data] - Mock test data, not a real certificate
       body: {
         "verificationMaterial" => {
           "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
