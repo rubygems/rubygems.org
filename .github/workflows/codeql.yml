@@ -76,3 +76,20 @@ jobs:
         uses: github/codeql-action/analyze@5d4e8d1aca955e8d8589aabd499c5cae939e33c7 # v4.31.9
         with:
           category: "/language:${{matrix.language}}"
+          output: sarif-results
+          upload: failure-only
+
+      - name: Filter SARIF to exclude test files
+        uses: advanced-security/filter-sarif@f3b8118a9349d88f7b1c0c488476411145b6270d # v1.0.1
+        with:
+          patterns: |
+            -test/**
+            -**/*_test.rb
+          input: sarif-results/${{ matrix.language }}.sarif
+          output: sarif-results/${{ matrix.language }}.sarif
+
+      - name: Upload filtered SARIF
+        uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7 # v4.31.9
+        with:
+          sarif_file: sarif-results/${{ matrix.language }}.sarif
+          category: "/language:${{matrix.language}}"
