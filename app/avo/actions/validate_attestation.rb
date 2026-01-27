@@ -6,11 +6,10 @@ class Avo::Actions::ValidateAttestation < Avo::Actions::ApplicationAction
   self.message = "This will perform a full end-to-end validation of the attestation against the gem file. Proceed?"
   self.confirm_button_label = "Validate attestation"
 
-  # No user-provided comment needed for read-only validation
-  def fields
-  end
-
   class ActionHandler < Avo::Actions::ActionHandler
+    # Timeout for external Sigstore verification calls (in seconds)
+    VERIFICATION_TIMEOUT = 30
+
     # Skip comment validation and provide default comment for audit
     reset_callbacks :handle
 
@@ -54,18 +53,24 @@ class Avo::Actions::ValidateAttestation < Avo::Actions::ApplicationAction
       verification_input.bundle = bundle.inner
       input = Sigstore::VerificationInput.new(verification_input)
 
-      # Verify the attestation
+      # Verify the attestation against Sigstore's Rekor transparency log.
+      # Note: This makes external network calls to Sigstore services.
       verifier = Sigstore::Verifier.production
-      result = verifier.verify(input:, policy:, offline: false)
+      result = Timeout.timeout(VERIFICATION_TIMEOUT) do
+        verifier.verify(input:, policy:, offline: false)
+      end
 
       if result.verified?
         { success: true, message: "Attestation verified successfully against gem file" }
       else
         { success: false, message: "Verification failed: #{result.reason}" }
       end
+    rescue Timeout::Error
+      { success: false, message: "Verification timed out after #{VERIFICATION_TIMEOUT} seconds" }
     rescue Sigstore::Error => e
       { success: false, message: "Sigstore error: #{e.message}" }
     rescue StandardError => e
+      Rails.logger.error("Attestation validation error: #{e.class}: #{e.message}\n#{e.backtrace&.first(5)&.join("\n")}")
       { success: false, message: "Validation error: #{e.class}: #{e.message}" }
     end
 

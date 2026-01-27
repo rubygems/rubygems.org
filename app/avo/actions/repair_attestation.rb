@@ -23,6 +23,11 @@ class Avo::Actions::RepairAttestation < Avo::Actions::ApplicationAction
       else
         succeed "No repair was needed"
       end
+    rescue ActiveRecord::RecordInvalid => e
+      error "Failed to save repaired attestation: #{e.message}"
+    rescue StandardError => e
+      Rails.logger.error("Attestation repair error: #{e.class}: #{e.message}\n#{e.backtrace&.first(5)&.join("\n")}")
+      error "Repair failed: #{e.class}: #{e.message}"
     end
   end
 end

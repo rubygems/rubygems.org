@@ -33,14 +33,19 @@ module AttestationBundleRepair
     new_body = body.deep_dup
     new_verification = new_body["verificationMaterial"]
     changes = []
+    errors = []
 
     repair_kind_version!(new_verification, changes) if missing_kind_version?(verification)
-    repair_certificate!(new_verification, changes) if double_encoded_certificate?(verification)
+    repair_certificate!(new_verification, changes, errors) if double_encoded_certificate?(verification)
 
-    return false if changes.empty?
+    # Only persist if there were actual successful changes
+    if changes.any?
+      update!(body: new_body)
+    end
 
-    update!(body: new_body)
-    changes
+    # Return combined results, with errors clearly marked
+    return false if changes.empty? && errors.empty?
+    errors.any? ? changes + errors.map { |e| "(Error) #{e}" } : changes
   end
 
   private
@@ -66,7 +71,7 @@ module AttestationBundleRepair
     end
   end
 
-  def repair_certificate!(verification, changes)
+  def repair_certificate!(verification, changes, errors)
     raw_bytes = verification.dig("certificate", "rawBytes")
     return unless raw_bytes
 
@@ -78,6 +83,6 @@ module AttestationBundleRepair
     changes << "Converted double-encoded PEM certificate to DER"
   rescue ArgumentError, OpenSSL::X509::CertificateError => e
     Rails.logger.warn("Failed to repair certificate: #{e.message}")
-    changes << "Failed to repair certificate: #{e.message}"
+    errors << "Failed to repair certificate: #{e.message}"
   end
 end

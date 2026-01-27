@@ -169,6 +169,38 @@ class AttestationTest < ActiveSupport::TestCase
 
       refute_predicate attestation, :valid_bundle?
     end
+
+    should "return false when Sigstore::Error is raised" do
+      attestation = create(:attestation, version: @version)
+      attestation.stubs(:sigstore_bundle).raises(Sigstore::Error.new("test error"))
+
+      refute_predicate attestation, :valid_bundle?
+    end
+
+    should "return false and log warning when StandardError is raised" do
+      attestation = create(:attestation, version: @version)
+      attestation.stubs(:sigstore_bundle).raises(ArgumentError.new("test error"))
+
+      Rails.logger.expects(:warn).with(regexp_matches(/Failed to validate sigstore bundle/))
+
+      refute_predicate attestation, :valid_bundle?
+    end
+
+    should "return false when attestation is repairable" do
+      attestation = Attestation.new(
+        version: @version,
+        media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
+        body: {
+          "verificationMaterial" => {
+            "tlogEntries" => [{ "logIndex" => 123 }],
+            "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
+          }
+        }
+      )
+
+      assert_predicate attestation, :repairable?
+      refute_predicate attestation, :valid_bundle?
+    end
   end
 
   context "#repair!" do
