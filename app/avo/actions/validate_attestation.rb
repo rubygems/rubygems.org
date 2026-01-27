@@ -17,6 +17,7 @@ class Avo::Actions::ValidateAttestation < Avo::Actions::ApplicationAction
     def fields
       @fields.reverse_merge(comment: "Attestation validation check")
     end
+
     def handle_record(attestation)
       result = validate_attestation(attestation)
 
@@ -78,7 +79,7 @@ class Avo::Actions::ValidateAttestation < Avo::Actions::ApplicationAction
 
       # SAN format is "URI:https://github.com/owner/repo/.github/workflows/workflow.yml@refs/..."
       san_value = san_extension.value
-      identity = san_value.sub(/\AURI:/, "")
+      identity = san_value.delete_prefix("URI:")
 
       Sigstore::Policy::Identity.new(identity:, issuer:)
     rescue StandardError
