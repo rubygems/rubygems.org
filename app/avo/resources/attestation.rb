@@ -2,8 +2,19 @@ class Avo::Resources::Attestation < Avo::BaseResource
   self.title = :id
   self.includes = [:version]
 
+  def actions
+    action Avo::Actions::RepairAttestation
+    action Avo::Actions::ValidateAttestation
+  end
+
   def fields
     field :id, as: :id
+
+    field :valid, as: :boolean, only_on: %i[index show] do
+      Rails.cache.fetch(["attestation-valid-bundle", record.id, record.updated_at]) do
+        record.valid_bundle?
+      end
+    end
 
     field :version, as: :belongs_to
     field :media_type, as: :text
