@@ -24,7 +24,7 @@
   font-weight: 300;
   line-height: 1.5; }
 
-.gem__desc:has(:is(h2, h3, h4, h5, h6)) { /* Same rule as RubygemsHelper#simple_markup */
+.gem__desc:has(:not(p:only-child)) {
   /** Based on Aliki by Stan Lo, available under the MIT license */
   font-weight: 400;
   line-height: 1.625;
