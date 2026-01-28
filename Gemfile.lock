@@ -814,10 +814,11 @@ GEM
       websocket (~> 1.0)
     semantic_logger (4.17.0)
       concurrent-ruby (~> 1.0)
-    shoryuken (6.2.1)
-      aws-sdk-core (>= 2)
+    shoryuken (7.0.0)
+      aws-sdk-sqs (>= 1.66.0)
       concurrent-ruby
       thor
+      zeitwerk (~> 2.6)
     shoulda-context (3.0.0.rc1)
     shoulda-matchers (7.0.1)
       activesupport (>= 7.1)
@@ -1037,7 +1038,7 @@ DEPENDENCIES
   ruby-magic (~> 0.6)
   searchkick (~> 5.5)
   selenium-webdriver (~> 4.40)
-  shoryuken (~> 6.2)
+  shoryuken (~> 7.0)
   shoulda-context (~> 3.0.0.rc1)
   shoulda-matchers (~> 7.0)
   sigstore (~> 0.2.2)
@@ -1356,7 +1357,7 @@ CHECKSUMS
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   selenium-webdriver (4.40.0) sha256=16ef7aa9853c1d4b9d52eac45aafa916e3934c5c83cb4facb03f250adfd15e5b
   semantic_logger (4.17.0) sha256=c54b60d8596abe2e22bd4f20648d4f6c46e4287fba357779c7932335c8d130e9
-  shoryuken (6.2.1) sha256=95ddc0a717624a54e799d25a0a05100cb5a0c3728a96211935c214faaf16b3b6
+  shoryuken (7.0.0) sha256=ad2ef4c91dee07990eccf19bf69cd67fc6f2cd874c12ea55edc82ffdd7903db4
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
   shoulda-matchers (7.0.1) sha256=b4bfd8744c10e0a36c8ac1a687f921ee7e25ed529e50488d61b79a8688749c77
   sigstore (0.2.2) sha256=062d14c1490721e21eb1c33e93b5c48cd9167f79499033fb035c98efbc3dc0a1
