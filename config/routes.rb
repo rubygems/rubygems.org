@@ -262,6 +262,8 @@ Rails.application.routes.draw do
       post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
     end
 
+    resource :compromised_password, only: %i[show]
+
     resource :session, only: %i[create destroy] do
       post 'otp_create', to: 'sessions#otp_create', as: :otp_create
       post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create

@@ -1,0 +1,63 @@
+<% @title = t('.title') %>
+<% add_breadcrumb t("sign_in"), sign_in_path %>
+<% add_breadcrumb t('.title') %>
+
+<div class="flex items-center justify-center">
+  <div class="max-w-2xl w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <%= render AlertComponent.new(style: :warning) do %>
+      <span class="font-semibold"><%= t('.heading') %></span>
+    <% end %>
+
+    <p class="text-neutral-700 dark:text-neutral-300 mb-6">
+      <%= t('.subheading') %>
+    </p>
+
+    <p class="text-neutral-700 dark:text-neutral-300 mb-8">
+      <%= t('.explanation_html') %>
+    </p>
+
+    <div class="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-5 mb-8">
+      <p class="text-neutral-700 dark:text-neutral-300 text-sm mb-2">
+        <%= t('.email_sent') %>
+      </p>
+      <p class="text-orange-600 dark:text-orange-400 font-semibold break-all">
+        <%= obfuscate_email(@user.email) %>
+      </p>
+    </div>
+
+    <p class="text-neutral-700 dark:text-neutral-300 font-medium mb-4">
+      <%= t('.next_steps') %>
+    </p>
+
+    <ol class="list-decimal list-inside space-y-3 text-neutral-600 dark:text-neutral-400 mb-8">
+      <li><%= t('.step_1') %></li>
+      <li><%= t('.step_2') %></li>
+      <% unless signed_in? %>
+        <li><%= t('.step_3') %></li>
+        <li><%= t('.step_4_html', link: link_to(t('.step_4_link_text'), new_totp_path, class: "text-orange-500 dark:text-orange-400 hover:underline")) %></li>
+      <% end %>
+    </ol>
+
+    <div class="border-t border-neutral-200 dark:border-neutral-700 pt-8 mb-8">
+      <p class="text-neutral-700 dark:text-neutral-300 font-medium mb-4">
+        <%= t('.learn_more') %>
+      </p>
+      <ul class="space-y-3 text-sm text-neutral-600 dark:text-neutral-400">
+        <li><%= t('.learn_more_hibp_html', link: link_to(t('.learn_more_hibp_link_text'), "https://haveibeenpwned.com", target: "_blank", rel: "noopener", class: "text-orange-500 dark:text-orange-400 hover:underline")) %></li>
+        <li><%= t('.learn_more_mfa_html', link: link_to(t('.learn_more_mfa_link_text'), "https://guides.rubygems.org/setting-up-multifactor-authentication/", target: "_blank", rel: "noopener", class: "text-orange-500 dark:text-orange-400 hover:underline")) %></li>
+      </ul>
+    </div>
+
+    <div class="flex justify-center">
+      <% if signed_in? %>
+        <%= render ButtonComponent.new(t('.continue_to_dashboard'), dashboard_path, type: :link, color: :primary) %>
+      <% else %>
+        <%= render ButtonComponent.new(t('.back_to_sign_in'), sign_in_path, type: :link, color: :secondary) %>
+      <% end %>
+    </div>
+
+    <p class="text-center text-sm text-neutral-500 dark:text-neutral-500 mt-8">
+      <%= t('.need_help_html', email: mail_to("support@rubygems.org", "support@rubygems.org", class: "text-orange-500 dark:text-orange-400 hover:underline")) %>
+    </p>
+  </div>
+</div>

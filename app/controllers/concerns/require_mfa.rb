@@ -19,7 +19,7 @@ module RequireMfa
     @otp_verification_url = otp_verification_url
     setup_webauthn_authentication form_url: webauthn_verification_url
     flash.now.alert = alert if alert
-    render template: "multifactor_auths/prompt", status:
+    render template: "multifactor_auths/prompt", layout: "hammy", status:
   end
 
   def otp_param
