@@ -1,6 +1,6 @@
-require "test_helper"
+require "application_system_test_case"
 
-class LocaleTest < SystemTest
+class LocaleTest < ApplicationSystemTestCase
   test "html lang attribute is set from locale" do
     I18n.available_locales.each do |locale|
       visit root_path(locale: locale)
