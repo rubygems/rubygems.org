@@ -111,15 +111,15 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     assert_equal "GitHub Actions example/bar @ .github/workflows/push_gem.yml (test)", publisher.name
   end
 
-  test "#owns_gem?" do
+  test "#can_push?" do
     rubygem1 = create(:rubygem)
     rubygem2 = create(:rubygem)
 
     publisher = create(:oidc_trusted_publisher_github_action)
     create(:oidc_rubygem_trusted_publisher, trusted_publisher: publisher, rubygem: rubygem1)
 
-    assert publisher.owns_gem?(rubygem1)
-    refute publisher.owns_gem?(rubygem2)
+    assert publisher.can_push?(rubygem1)
+    refute publisher.can_push?(rubygem2)
   end
 
   test "#to_access_policy" do

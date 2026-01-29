@@ -48,12 +48,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :configure_oidc?
     end
 
-    should "only allow owners, org owners and admins" do
+    should "only allow org owners and admins when owned by an org" do
       assert_authorized org_policy!(@org_owner), :configure_oidc?
       assert_authorized org_policy!(@org_admin), :configure_oidc?
-      assert_authorized org_policy!(@owner), :configure_oidc?
 
       refute_authorized org_policy!(@org_maintainer), :configure_oidc?
+      refute_authorized org_policy!(@owner), :configure_oidc?
       refute_authorized org_policy!(@user), :configure_oidc?
       refute_authorized org_policy!(nil), :configure_oidc?
     end
@@ -67,7 +67,7 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :show_events?
     end
 
-    should "only allow anyone with access to the gem" do
+    should "allow anyone with access to the gem when owned by an org" do
       assert_authorized org_policy!(@org_owner), :show_events?
       assert_authorized org_policy!(@org_admin), :show_events?
       assert_authorized org_policy!(@org_maintainer), :show_events?
@@ -79,6 +79,25 @@ class RubygemPolicyTest < PolicyTestCase
     end
   end
 
+  context "#show_mfa_status?" do
+    should "only allow the owner and maintainer" do
+      assert_authorized policy!(@owner), :show_mfa_status?
+      assert_authorized policy!(@maintainer), :show_mfa_status?
+      refute_authorized policy!(@user), :show_mfa_status?
+      refute_authorized policy!(nil), :show_mfa_status?
+    end
+
+    should "allow anyone with access to the gem when owned by an org" do
+      assert_authorized org_policy!(@org_owner), :show_mfa_status?
+      assert_authorized org_policy!(@org_admin), :show_mfa_status?
+      assert_authorized org_policy!(@org_maintainer), :show_mfa_status?
+      assert_authorized org_policy!(@owner), :show_mfa_status?
+      assert_authorized org_policy!(@maintainer), :show_mfa_status?
+
+      refute_authorized org_policy!(@user), :show_mfa_status?
+      refute_authorized org_policy!(nil), :show_mfa_status?
+    end
+  end
   context "#configure_trusted_publishers?" do
     should "only allow the owner" do
       assert_authorized policy!(@owner), :configure_trusted_publishers?
@@ -87,12 +106,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :configure_trusted_publishers?
     end
 
-    should "only allow owners, org owners and admins" do
+    should "only allow org owners and admins when gem is owned by an org" do
       assert_authorized org_policy!(@org_owner), :configure_trusted_publishers?
       assert_authorized org_policy!(@org_admin), :configure_trusted_publishers?
-      assert_authorized org_policy!(@owner), :configure_trusted_publishers?
 
       refute_authorized org_policy!(@org_maintainer), :configure_trusted_publishers?
+      refute_authorized org_policy!(@owner), :configure_trusted_publishers?
       refute_authorized org_policy!(@maintainer), :configure_trusted_publishers?
       refute_authorized org_policy!(@user), :configure_trusted_publishers?
       refute_authorized org_policy!(nil), :configure_trusted_publishers?
@@ -107,12 +126,12 @@ class RubygemPolicyTest < PolicyTestCase
       refute_authorized policy!(nil), :show_unconfirmed_ownerships?
     end
 
-    should "only allow owners, org owners and admins" do
+    should "only allow org owners and admins when gem is owned by an org" do
       assert_authorized org_policy!(@org_owner), :show_unconfirmed_ownerships?
       assert_authorized org_policy!(@org_admin), :show_unconfirmed_ownerships?
-      assert_authorized org_policy!(@owner), :show_unconfirmed_ownerships?
 
       refute_authorized org_policy!(@org_maintainer), :show_unconfirmed_ownerships?
+      refute_authorized org_policy!(@owner), :show_unconfirmed_ownerships?
       refute_authorized org_policy!(@user), :show_unconfirmed_ownerships?
       refute_authorized org_policy!(nil), :show_unconfirmed_ownerships?
     end

@@ -86,4 +86,86 @@ class OrganizationTest < ActiveSupport::TestCase
       assert_equal "org:#{organization.handle}", organization.flipper_id
     end
   end
+
+  context "#owned_by?" do
+    should "return true when user is an owner" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :owner)
+
+      assert organization.owned_by?(user)
+    end
+
+    should "return false when user is an admin" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :admin)
+
+      refute organization.owned_by?(user)
+    end
+
+    should "return false when user is a maintainer" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :maintainer)
+
+      refute organization.owned_by?(user)
+    end
+
+    should "return false when user is not a member" do
+      organization = create(:organization)
+      user = create(:user)
+
+      refute organization.owned_by?(user)
+    end
+
+    should "return false when user has unconfirmed owner membership" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :owner, confirmed_at: nil)
+
+      refute organization.owned_by?(user)
+    end
+  end
+
+  context "#administered_by?" do
+    should "return true when user is an owner" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :owner)
+
+      assert organization.administered_by?(user)
+    end
+
+    should "return true when user is an admin" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :admin)
+
+      assert organization.administered_by?(user)
+    end
+
+    should "return false when user is a maintainer" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :maintainer)
+
+      refute organization.administered_by?(user)
+    end
+
+    should "return false when user is not a member" do
+      organization = create(:organization)
+      user = create(:user)
+
+      refute organization.administered_by?(user)
+    end
+
+    should "return false when user has unconfirmed admin membership" do
+      organization = create(:organization)
+      user = create(:user)
+      create(:membership, organization: organization, user: user, role: :admin, confirmed_at: nil)
+
+      refute organization.administered_by?(user)
+    end
+  end
 end

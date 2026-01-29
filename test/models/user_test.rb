@@ -1032,4 +1032,23 @@ class UserTest < ActiveSupport::TestCase
       refute_predicate user, :policies_acknowledged?
     end
   end
+
+  context "#can_push?" do
+    should "delegate to GemPermissions#can_push?" do
+      user = build(:user)
+      rubygem = build(:rubygem)
+
+      gem_permissions = mock
+      gem_permissions.expects(:can_push?).returns(true)
+      GemPermissions.expects(:new).with(rubygem, user).returns(gem_permissions)
+
+      assert user.can_push?(rubygem)
+
+      gem_permissions = mock
+      gem_permissions.expects(:can_push?).returns(false)
+      GemPermissions.expects(:new).with(rubygem, user).returns(gem_permissions)
+
+      refute user.can_push?(rubygem)
+    end
+  end
 end
