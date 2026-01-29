@@ -18,4 +18,8 @@ module OwnersHelper
       image_tag("/images/check.svg")
     end
   end
+
+  def multiple_owners?(rubygem)
+    rubygem.owners.size > 1
+  end
 end
