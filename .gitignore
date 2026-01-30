@@ -28,3 +28,7 @@ REVISION
 /doc/erd.*
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# CodeQL
+codeql-db/
+codeql-results.sarif

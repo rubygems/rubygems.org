@@ -5,12 +5,12 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.3"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.211"
-gem "aws-sdk-sqs", "~> 1.109"
+gem "aws-sdk-s3", "~> 1.212"
+gem "aws-sdk-sqs", "~> 1.111"
 gem "bootsnap", "~> 1.21"
 gem "clearance", "~> 2.11"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.26"
+gem "datadog", "~> 2.27"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.33"
 gem "faraday", "~> 2.14"
@@ -21,7 +21,7 @@ gem "flipper-active_record", "~> 1.3"
 gem "flipper-ui", "~> 1.3"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.2.0", require: false
+gem "honeybadger", "~> 6.2.1", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -114,7 +114,7 @@ group :development, :test do
 
   # used to find n+1 queries
   gem "prosopite", "~> 2.1"
-  gem "pg_query", "~> 6.1"
+  gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.82", require: false
