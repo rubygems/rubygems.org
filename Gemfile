@@ -110,7 +110,7 @@ group :development, :test do
   gem "dotenv-rails", "~> 3.2"
   gem "lookbook", "~> 2.3"
 
-  gem "brakeman", "~> 7.1", require: false
+  gem "brakeman", "~> 8.0", require: false
 
   # used to find n+1 queries
   gem "prosopite", "~> 2.1"
