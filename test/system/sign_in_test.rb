@@ -130,6 +130,7 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "OTP or recovery code", with: "0123456789ab"
     click_button "Authenticate"
 
+    assert_current_path dashboard_path
     assert_text "Dashboard"
   end
 

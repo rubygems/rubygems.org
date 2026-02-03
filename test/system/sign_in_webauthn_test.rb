@@ -64,8 +64,8 @@ class SignInWebauthnTest < ApplicationSystemTestCase
 
     click_on "Authenticate with security device"
 
-    assert_no_text "Dashboard"
     assert_text "Sign in"
+    assert_no_text "Dashboard"
   end
 
   test "sign in with webauthn mfa using recovery codes" do
