@@ -5,7 +5,6 @@ class GemDownloadTest < ActiveSupport::TestCase
 
   setup do
     create(:gem_download, count: 0)
-    import_and_refresh
   end
 
   context ".increment" do
@@ -64,7 +63,7 @@ class GemDownloadTest < ActiveSupport::TestCase
         @counts   = Array.new(3) { rand(100) }
         @data     = @versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
         @gem_downloads = [(@counts[0] + @counts[2]), @counts[1]]
-        import_and_refresh
+        @gems.each { |gem| gem.reindex(refresh: true) }
       end
 
       should "write the proper values" do
@@ -104,8 +103,9 @@ class GemDownloadTest < ActiveSupport::TestCase
             @gem_downloads[i] += counts[i]
           end
         end
-        import_and_refresh
+        @gems.each { |gem| gem.reindex(refresh: true) }
         GemDownload.bulk_update(data)
+        @gems.each(&:reload)
       end
 
       should "update rubygems downloads irrespective of rubygem_ids order" do
@@ -127,7 +127,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     context "with prerelease versions" do
       setup do
         @rubygem = create(:rubygem, number: "0.0.1.rc")
-        import_and_refresh
+        @rubygem.reindex(refresh: true)
         most_recent_version = @rubygem.most_recent_version
         version_downloads = [most_recent_version.full_name, 40]
         GemDownload.bulk_update([version_downloads])
@@ -141,7 +141,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     context "with no ruby platform versions" do
       setup do
         @version = create(:version, platform: "java")
-        import_and_refresh
+        @version.rubygem.reindex(refresh: true)
         version_downloads = [@version.full_name, 40]
         GemDownload.bulk_update([version_downloads])
       end

@@ -3,10 +3,6 @@ require "test_helper"
 class RubygemSearchableTest < ActiveSupport::TestCase
   include SearchKickHelper
 
-  setup do
-    Rubygem.searchkick_index.delete if Rubygem.searchkick_index.exists?
-  end
-
   context "#search_data" do
     setup do
       @rubygem = create(:rubygem, name: "example_gem", downloads: 10)
@@ -112,7 +108,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       setup do
         @rubygem = create(:rubygem, name: "large_downloads_example_gem", downloads: 10_000_000_000) # 10 Billion downloads
         @version = create(:version, number: "1.0.0", rubygem: @rubygem)
-        import_and_refresh
+        @rubygem.reindex(refresh: true)
       end
 
       should "allow the number of downloads to be stored as a 64 bit integer" do
@@ -125,10 +121,9 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
   context "rubygems analyzer" do
     setup do
-      create(:rubygem, name: "example-gem", number: "0.0.1")
-      create(:rubygem, name: "example_1", number: "0.0.1")
-      create(:rubygem, name: "example.rb", number: "0.0.1")
-      import_and_refresh
+      create(:rubygem, :reindex, name: "example-gem", number: "0.0.1")
+      create(:rubygem, :reindex, name: "example_1", number: "0.0.1")
+      create(:rubygem, :reindex, name: "example.rb", number: "0.0.1")
     end
 
     should "find all gems with matching tokens" do
@@ -145,9 +140,8 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     setup do
       example_1 = create(:rubygem, name: "example_1")
       example_2 = create(:rubygem, name: "example_2")
-      create(:version, rubygem: example_1, indexed: false)
-      create(:version, rubygem: example_2)
-      import_and_refresh
+      create(:version, :reindex, rubygem: example_1, indexed: false)
+      create(:version, :reindex, rubygem: example_2)
     end
 
     should "filter yanked gems from the result" do
@@ -164,10 +158,9 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       example_gem1 = create(:rubygem, name: "keyword", downloads: 1)
       example_gem2 = create(:rubygem, name: "example_gem2", downloads: 1)
       example_gem3 = create(:rubygem, name: "example_gem3", downloads: 1)
-      create(:version, rubygem: example_gem1, description: "some", summary: "some")
-      create(:version, rubygem: example_gem2, description: "keyword", summary: "some")
-      create(:version, rubygem: example_gem3, summary: "keyword", description: "some")
-      import_and_refresh
+      create(:version, :reindex, rubygem: example_gem1, description: "some", summary: "some")
+      create(:version, :reindex, rubygem: example_gem2, description: "keyword", summary: "some")
+      create(:version, :reindex, rubygem: example_gem3, summary: "keyword", description: "some")
     end
 
     should "look for keyword in name, summary and description and order them in same priority order" do
@@ -182,9 +175,8 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     setup do
       (10..30).step(10) do |downloads|
         rubygem = create(:rubygem, name: "gem_#{downloads}", downloads: downloads)
-        create(:version, rubygem: rubygem)
+        create(:version, :reindex, rubygem: rubygem)
       end
-      import_and_refresh
     end
 
     should "boost score of result by downloads count" do
@@ -198,8 +190,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
   context "source" do
     setup do
       rubygem = create(:rubygem, name: "example_gem", downloads: 10)
-      create(:version, rubygem: rubygem, summary: "some summary", description: "some description")
-      import_and_refresh
+      create(:version, :reindex, rubygem: rubygem, summary: "some summary", description: "some description")
     end
 
     should "return all terms of source" do
@@ -224,8 +215,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       example1 = create(:rubygem, name: "keyword")
       example2 = create(:rubygem, name: "keywordo")
       example3 = create(:rubygem, name: "keywo")
-      [example1, example2, example3].each { |gem| create(:version, rubygem: gem) }
-      import_and_refresh
+      [example1, example2, example3].each { |gem| create(:version, :reindex, rubygem: gem) }
     end
 
     should "suggest names of possible gems" do
@@ -247,9 +237,8 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     setup do
       rubygem1 = create(:rubygem, name: "example", downloads: 101)
       rubygem2 = create(:rubygem, name: "web-rubygem", downloads: 99)
-      create(:version, rubygem: rubygem1, summary: "special word with web-rubygem")
-      create(:version, rubygem: rubygem2, description: "example special word")
-      import_and_refresh
+      create(:version, :reindex, rubygem: rubygem1, summary: "special word with web-rubygem")
+      create(:version, :reindex, rubygem: rubygem2, description: "example special word")
     end
 
     should "filter gems on downloads" do
@@ -299,11 +288,12 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     setup do
       rubygem1 = create(:rubygem, name: "example")
       rubygem2 = create(:rubygem, name: "rubygem")
-      create(:version, rubygem: rubygem1, summary: "gemest of all gems")
-      create(:version, rubygem: rubygem2, description: "example gems set the example")
+      create(:version, :reindex, rubygem: rubygem1, summary: "gemest of all gems")
+      create(:version, :reindex, rubygem: rubygem2, description: "example gems set the example")
       rubygem1.update_column("updated_at", 2.days.ago)
       rubygem2.update_column("updated_at", 10.days.ago)
-      import_and_refresh
+      rubygem1.reindex(refresh: true)
+      rubygem2.reindex(refresh: true)
       _, @response = ElasticSearcher.new("example").search
     end
 
@@ -326,8 +316,6 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
   context "#search" do
     context "exception handling" do
-      setup { import_and_refresh }
-
       context "Searchkick::InvalidQueryError" do
         setup do
           # Use a query that passes sanitization but is invalid OpenSearch syntax
@@ -364,9 +352,8 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       setup do
         %w[rails-async async-rails].each do |gem_name|
           rubygem = create(:rubygem, name: gem_name, downloads: 10)
-          create(:version, rubygem: rubygem)
+          create(:version, :reindex, rubygem: rubygem)
         end
-        import_and_refresh
       end
 
       should "not affect results" do
@@ -381,9 +368,8 @@ class RubygemSearchableTest < ActiveSupport::TestCase
   context "query matches gem name prefix" do
     setup do
       %w[term-ansicolor term-an].each do |gem_name|
-        create(:rubygem, name: gem_name, number: "0.0.1", downloads: 10)
+        create(:rubygem, :reindex, name: gem_name, number: "0.0.1", downloads: 10)
       end
-      import_and_refresh
     end
 
     should "return results" do
