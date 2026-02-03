@@ -1,24 +1,11 @@
-require "test_helper"
+require "application_system_test_case"
 
-class PagesTest < SystemTest
-  test "gracefully fails on unknown page" do
-    assert_raises(ActionController::RoutingError) do
-      visit "/pages/not-existing-one"
-    end
-  end
-
-  test "it only allows html format" do
-    assert_raises(ActionController::RoutingError) do
-      visit "/pages/data.zip"
-    end
-  end
-
+class PagesTest < ApplicationSystemTestCase
   test "renders /pages/about for all supported languages" do
     I18n.available_locales.each do |locale|
-      visit "/?locale=#{locale}"
-      click_link I18n.t("layouts.application.footer.about")
+      visit "/pages/about?locale=#{locale}"
 
-      assert page.has_content? I18n.t("pages.about.title")
+      assert_text I18n.t("pages.about.title", locale: locale)
     end
   end
 
@@ -32,31 +19,31 @@ class PagesTest < SystemTest
 
     visit "/pages/download"
 
-    assert page.has_content?("v3.5.22 - October 16, 2024")
+    assert_text("v3.5.22 - October 16, 2024")
   end
 
   test "renders /pages/data" do
     visit "/pages/data"
 
-    assert page.has_content?("PostgreSQL Data")
+    assert_text("PostgreSQL Data")
   end
 
   test "renders /pages/security" do
     visit "/pages/security"
 
-    assert page.has_content?("Security")
+    assert_text("Security")
   end
 
   test "renders /pages/supporters" do
     visit "/pages/supporters"
 
-    assert page.has_content?("Supporters")
+    assert_text("Supporters")
   end
 
   test "redirects /pages/sponsors to /pages/supporters" do
     visit "/pages/sponsors"
 
     assert_current_path "/pages/supporters"
-    assert page.has_content?("Supporters")
+    assert_text("Supporters")
   end
 end

@@ -1,6 +1,7 @@
-require "test_helper"
+require "application_system_test_case"
 
-class OwnerTest < SystemTest
+class OwnerTest < ApplicationSystemTestCase
+  include ActionMailer::TestHelper
   include ActiveJob::TestHelper
   include RubygemsHelper
 
@@ -10,7 +11,7 @@ class OwnerTest < SystemTest
     @rubygem = create(:rubygem, number: "1.0.0")
     @ownership = create(:ownership, user: @user, rubygem: @rubygem)
 
-    sign_in_as(@user)
+    sign_in(@user)
   end
 
   test "adding owner via UI with email" do
@@ -86,7 +87,9 @@ class OwnerTest < SystemTest
 
     within_element owner_row(@other_user) do
       perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-        click_button "Remove"
+        accept_confirm do
+          click_button "Remove"
+        end
       end
     end
 
@@ -103,7 +106,9 @@ class OwnerTest < SystemTest
     visit_ownerships_page
 
     within_element owner_row(@user) do
-      click_button "Remove"
+      accept_confirm do
+        click_button "Remove"
+      end
     end
 
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
@@ -152,17 +157,6 @@ class OwnerTest < SystemTest
     assert page.has_css? "#verify_password_password"
   end
 
-  test "verify password again after 10 minutes" do
-    visit_ownerships_page
-    travel 15.minutes
-    visit rubygem_path(@rubygem.slug)
-    click_link "Ownership"
-
-    assert page.has_field? "Password"
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Confirm"
-  end
-
   test "incorrect password on verify shows error" do
     visit rubygem_path(@rubygem.slug)
     click_link "Ownership"
@@ -172,6 +166,19 @@ class OwnerTest < SystemTest
     click_button "Confirm"
 
     assert page.has_selector? "#flash_alert", text: "This request was denied. We could not verify your password."
+  end
+
+  test "verify password again after 10 minutes" do
+    visit_ownerships_page
+
+    travel 15.minutes
+
+    visit rubygem_path(@rubygem.slug)
+    click_link "Ownership"
+
+    assert page.has_field? "Password"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
   end
 
   test "incorrect password error does not persist after correct password" do
@@ -198,7 +205,7 @@ class OwnerTest < SystemTest
       visit confirmation_link
     end
 
-    assert_equal page.current_path, rubygem_path(@rubygem.slug)
+    assert_current_path rubygem_path(@rubygem.slug)
     assert page.has_selector? "#flash_notice", text: "You were added as an owner to the #{@rubygem.name} gem"
 
     assert_emails 2
@@ -213,7 +220,7 @@ class OwnerTest < SystemTest
     confirmation_link = confirm_rubygem_owners_url(@rubygem.slug, token: SecureRandom.hex(20).encode("UTF-8"))
     visit confirmation_link
 
-    assert page.has_content? "Page not found."
+    assert_text "Page not found."
 
     assert_no_emails
   end
@@ -225,24 +232,24 @@ class OwnerTest < SystemTest
   end
 
   test "hides ownership link when not owner" do
-    page.click_link(nil, href: "/sign_out")
-    sign_in_as(@other_user)
+    sign_out
+    sign_in(@other_user)
     visit rubygem_path(@rubygem.slug)
 
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
   end
 
   test "hides ownership link when not signed in" do
-    page.click_link(nil, href: "/sign_out")
+    sign_out
     visit rubygem_path(@rubygem.slug)
 
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
   end
 
   test "shows resend confirmation link when unconfirmed" do
-    page.click_link(nil, href: "/sign_out")
+    sign_out
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
-    sign_in_as(@other_user)
+    sign_in(@other_user)
     visit rubygem_path(@rubygem.slug)
 
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
@@ -254,7 +261,7 @@ class OwnerTest < SystemTest
     @other_user.destroy
     visit_ownerships_page
 
-    refute page.has_content? @other_user.handle
+    assert_no_text @other_user.handle
   end
 
   test "updating user to maintainer role" do
@@ -297,8 +304,6 @@ class OwnerTest < SystemTest
 
   teardown do
     @authenticator&.remove!
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 
   private
@@ -322,14 +327,7 @@ class OwnerTest < SystemTest
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
-  end
 
-  def sign_in_as(user)
-    visit sign_in_path
-    fill_in "Email or Username", with: user.email
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Sign in"
-
-    find(:css, ".header__popup-link")
+    assert_text "ADD OWNER"
   end
 end
