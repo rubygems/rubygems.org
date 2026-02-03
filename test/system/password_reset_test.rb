@@ -35,15 +35,14 @@ class PasswordResetTest < ApplicationSystemTestCase
     forgot_password_with @user.email
 
     visit password_reset_link
-    expected_path = "/password/edit"
 
-    assert_equal expected_path, page.current_path, "removes confirmation token from url"
+    assert_current_path edit_password_path, ignore_query: true
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert page.has_content? "Your password has been changed."
-    assert_equal sign_in_path, page.current_path
+    assert_current_path sign_in_path
 
     fill_in "Email or Username", with: @user.email
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -76,7 +75,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     click_button "Save this password"
 
     assert page.has_content? "Your password has been changed."
-    assert_equal sign_in_path, page.current_path
+    assert_current_path sign_in_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
@@ -121,7 +120,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     click_button "Save this password"
 
     assert page.has_content? "Sign in"
-    assert_equal sign_in_path, page.current_path
+    assert_current_path sign_in_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
 
     assert_event Events::UserEvent::PASSWORD_CHANGED, {},
@@ -145,7 +144,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     click_button "Save this password"
 
     assert page.has_content? "Your password has been changed."
-    assert_equal sign_in_path, page.current_path
+    assert_current_path sign_in_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
@@ -180,7 +179,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     click_button "Save this password"
 
     assert page.has_content?("Sign in")
-    assert_equal sign_in_path, page.current_path
+    assert_current_path sign_in_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 
@@ -204,7 +203,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     click_button "Save this password"
 
     assert page.has_content?("Sign in")
-    assert_equal sign_in_path, page.current_path
+    assert_current_path sign_in_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
 

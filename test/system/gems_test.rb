@@ -11,10 +11,10 @@ class GemsSystemTest < ApplicationSystemTestCase
     visit rubygem_version_path(@rubygem.slug, "1.0.0")
     click_link "Next version →"
 
-    assert_equal rubygem_version_path(@rubygem.slug, "1.1.1"), page.current_path
+    assert_current_path rubygem_version_path(@rubygem.slug, "1.1.1")
     click_link "← Previous version"
 
-    assert_equal rubygem_version_path(@rubygem.slug, "1.0.0"), page.current_path
+    assert_current_path rubygem_version_path(@rubygem.slug, "1.0.0")
   end
 
   test "subscribe to a gem" do

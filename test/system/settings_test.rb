@@ -119,13 +119,13 @@ class SettingsTest < ApplicationSystemTestCase
     end
 
     assert_equal "Leave without copying recovery codes?", confirm_text
-    assert_equal recovery_multifactor_auth_path, page.current_path
+    assert_current_path recovery_multifactor_auth_path
     page.accept_confirm do
       click_button "Continue"
     end
     page.find("h1", text: "Edit settings")
 
-    assert_equal edit_settings_path, page.current_path
+    assert_current_path edit_settings_path
   end
 
   test "Navigating away another way without copying recovery codes creates default leave warning popup" do
@@ -142,13 +142,13 @@ class SettingsTest < ApplicationSystemTestCase
       click_on "Continue"
     end
 
-    assert_equal recovery_multifactor_auth_path, page.current_path
+    assert_current_path recovery_multifactor_auth_path
 
     accept_confirm("Leave without copying recovery codes?") do
       click_on "Continue"
     end
 
-    assert_equal edit_settings_path, page.current_path
+    assert_current_path edit_settings_path
   end
 
   test "shows 'ui only' if user's level is ui_only" do

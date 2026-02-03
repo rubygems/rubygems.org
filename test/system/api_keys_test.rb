@@ -365,7 +365,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_edit_profile_api_key_path(api_key)
 
     assert page.has_content? "An invalid API key cannot be edited. Please delete it and create a new one."
-    assert_equal profile_api_keys_path, page.current_path
+    assert_current_path profile_api_keys_path
   end
 
   def visit_profile_api_keys_path

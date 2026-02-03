@@ -187,7 +187,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     click_button "Continue"
     yield if block_given?
 
-    assert_equal path, current_path, "was not redirected back to original destination: #{path}"
+    assert_current_path path
   end
 
   def redirect_test_mfa_weak_level(path)
@@ -206,7 +206,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
     yield if block_given?
 
-    assert_equal path, current_path, "was not redirected back to original destination: #{path}"
+    assert_current_path path
   end
 
   def sign_in(wait_for: "Dashboard")

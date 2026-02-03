@@ -100,12 +100,12 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       assert page.has_content? "Recovery codes"
     end
 
-    assert_equal recovery_multifactor_auth_path, current_path
+    assert_current_path recovery_multifactor_auth_path
     click_on "Copy to clipboard"
     check "ack"
     click_on "Continue"
 
-    assert_equal edit_settings_path, current_path
+    assert_current_path edit_settings_path
 
     webauthn_credential_creation_email = ActionMailer::Base.deliveries.find do |email|
       email.to.include?(@user.email)

@@ -205,7 +205,7 @@ class OwnerTest < ApplicationSystemTestCase
       visit confirmation_link
     end
 
-    assert_equal page.current_path, rubygem_path(@rubygem.slug)
+    assert_current_path rubygem_path(@rubygem.slug)
     assert page.has_selector? "#flash_notice", text: "You were added as an owner to the #{@rubygem.name} gem"
 
     assert_emails 2
