@@ -165,8 +165,13 @@ class SettingsTest < ApplicationSystemTestCase
     enable_otp
     visit edit_settings_path
 
-    page.fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     change_auth_level "UI and API"
+
+    assert page.has_content? "Multi-factor authentication"
+    page.fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
+    click_button "Authenticate"
+
+    assert page.has_content? "Edit settings"
 
     refute page.has_selector?("#level > option:nth-child(3)")
     refute page.has_content? "UI Only"

@@ -83,7 +83,7 @@ class AutocompletesTest < ApplicationSystemTestCase
   test "mouse click a suggestion item to submit" do
     first("li", text: "rubocop").click
 
-    assert_equal current_path, search_path || "/gems/"
+    assert_current_path search_path, ignore_query: true
     assert page.has_content? "rubocop"
   end
 end

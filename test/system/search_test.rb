@@ -28,8 +28,8 @@ class SearchTest < ApplicationSystemTestCase
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content? "No gems found"
-    assert page.has_content? "Yanked (1)"
+    assert page.has_content? "NO GEMS FOUND"
+    assert page.has_content? "YANKED (1)"
 
     click_link "Yanked (1)"
 
@@ -78,11 +78,11 @@ class SearchTest < ApplicationSystemTestCase
 
       visit "/search?query=ruby"
 
-      assert page.has_content? "Displaying gem 1 - 1 of 3 in total"
+      assert page.has_content? "DISPLAYING GEM 1 - 1 OF 3 IN TOTAL"
 
       click_link "Last"
 
-      assert page.has_content? "Displaying gem 2 - 2 of 3 in total"
+      assert page.has_content? "DISPLAYING GEM 2 - 2 OF 3 IN TOTAL"
 
       Gemcutter::SEARCH_MAX_PAGES = orignal_val
       Kaminari.configure { |c| c.default_per_page = 30 }

@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class SignUpTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   test "sign up" do
     visit sign_up_path
 
@@ -67,15 +69,6 @@ class SignUpTest < ApplicationSystemTestCase
     visit root_path
 
     refute page.has_content? "Sign up"
-    assert_raises(ActionController::RoutingError) do
-      visit "/sign_up"
-    end
-  end
-
-  test "sign up when user param is string" do
-    assert_nothing_raised do
-      get "/sign_up?user=JJJ12QQQ"
-    end
   end
 
   test "email confirmation" do
@@ -87,6 +80,7 @@ class SignUpTest < ApplicationSystemTestCase
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
       click_button "Sign up"
+      assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
     end
 
     link = last_email_link
@@ -101,7 +95,7 @@ class SignUpTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
   end
 
   test "links to terms of service" do

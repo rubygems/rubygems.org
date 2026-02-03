@@ -99,6 +99,7 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     check "Show email in public profile"
     click_button "Update"
+    assert page.has_content? "Your profile was updated."
     sign_out
 
     visit profile_path("nick1")
@@ -114,6 +115,7 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "user_twitter_username", with: "nick1"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
+    assert page.has_content? "Your profile was updated."
 
     sign_out
     visit profile_path("nick1")

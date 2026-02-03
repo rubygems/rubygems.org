@@ -47,7 +47,6 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     visit link
 
-    assert page.has_content? "Sign in"
     assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
   end
 

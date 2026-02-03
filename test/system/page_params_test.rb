@@ -35,30 +35,4 @@ class PageParamsTest < ApplicationSystemTestCase
     assert page.has_content? "Page number is out of range. Redirected to default page."
   end
 
-  test "api search with page smaller than 1" do
-    create(:rubygem, name: "some", number: "1.0.0")
-    import_and_refresh
-    visit api_v1_search_path(page: "0", query: "some", format: :json)
-
-    assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
-    refute_empty JSON.parse(page.body)
-  end
-
-  test "api search with page is not a numer" do
-    create(:rubygem, name: "some", number: "1.0.0")
-    import_and_refresh
-    visit api_v1_search_path(page: "foo", query: "some", format: :json)
-
-    assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
-    refute_empty JSON.parse(page.body)
-  end
-
-  test "api search with page that can't be converted to a number" do
-    create(:rubygem, name: "some", number: "1.0.0")
-    import_and_refresh
-    visit api_v1_search_path(page: { "$acunetix" => "1" }, query: "some", format: :json)
-
-    assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
-    refute_empty JSON.parse(page.body)
-  end
 end

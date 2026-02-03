@@ -42,13 +42,14 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
+    assert page.has_content? "Your password has been changed."
     assert_equal sign_in_path, page.current_path
 
     fill_in "Email or Username", with: @user.email
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
   end
 
   test "resetting a password with a blank or short password" do
@@ -74,6 +75,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
+    assert page.has_content? "Your password has been changed."
     assert_equal sign_in_path, page.current_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
@@ -99,20 +101,25 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
+    assert page.has_content? "Dashboard"
     visit edit_settings_path
 
     click_link "Reset password"
 
     fill_in "Email address", with: @user.email
-    perform_enqueued_jobs { click_button "Reset password" }
+    perform_enqueued_jobs do
+      click_button "Reset password"
+      assert page.has_content? "You will receive an email within the next few minutes."
+    end
 
     visit password_reset_link
 
-    assert page.has_content?("Sign out")
+    assert page.has_content?("Reset password")
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
+    assert page.has_content? "Sign in"
     assert_equal sign_in_path, page.current_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
 
@@ -136,6 +143,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
+    assert page.has_content? "Your password has been changed."
     assert_equal sign_in_path, page.current_path
     assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
   end
@@ -209,15 +217,20 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
+    assert page.has_content? "Dashboard"
     visit edit_profile_path
 
     fill_in "user_handle", with: "username"
     fill_in "Email address", with: new_email
     fill_in "Password", with: @user.password
-    perform_enqueued_jobs { click_button "Update" }
+    perform_enqueued_jobs do
+      click_button "Update"
+      assert page.has_content? "instructions for confirming your new email address"
+    end
 
     assert_equal new_email, @user.reload.unconfirmed_email
 
+    find(:css, ".header__popup-link").click
     click_link "Sign out"
 
     forgot_password_with email

@@ -14,7 +14,7 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
     assert page.has_content? "We now support security devices!"
 
     assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password" },
@@ -27,7 +27,7 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
   end
 
   test "signing in with wrong password" do
@@ -58,6 +58,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
+    assert page.has_content? "A confirmation mail has been sent to your email address."
+
     visit sign_in_path
     fill_in "Email or Username", with: "email@person.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -79,7 +81,7 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
     click_button "Authenticate"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
     assert page.has_content? "We now support security devices!"
 
     assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password", two_factor_method: "otp", two_factor_label: "OTP" },
@@ -128,7 +130,7 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "OTP or recovery code", with: "0123456789ab"
     click_button "Authenticate"
 
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
   end
 
   test "signing in with invalid recovery code when mfa enabled" do
@@ -162,7 +164,7 @@ class SignInTest < ApplicationSystemTestCase
 
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(new_totp_path)
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Enabling multi-factor auth"
   end
 
   test "signing in with mfa enabled on `ui_only` with gem ownership that exceeds the recommended download threshold" do
@@ -188,7 +190,7 @@ class SignInTest < ApplicationSystemTestCase
 
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(edit_settings_path)
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Edit settings"
   end
 
   test "signing in with mfa enabled on `ui_and_gem_signin` with gem ownership that exceeds the recommended download threshold" do
@@ -211,7 +213,7 @@ class SignInTest < ApplicationSystemTestCase
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
   end
 
   test "signing in with mfa enabled on `ui_and_api` with gem ownership that exceeds the recommended download threshold" do
@@ -234,7 +236,7 @@ class SignInTest < ApplicationSystemTestCase
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
   end
 
   test "siging in when user does not have handle" do
@@ -250,7 +252,7 @@ class SignInTest < ApplicationSystemTestCase
     click_button "Authenticate"
 
     assert page.has_content? "john@example.com"
-    assert page.has_content? "Sign out"
+    assert page.has_content? "Dashboard"
   end
 
   test "signing out" do
@@ -259,6 +261,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
+    assert page.has_content? "Dashboard"
+    find(:css, ".header__popup-link").click
     click_link "Sign out"
 
     assert page.has_content? "Sign in"
@@ -269,6 +273,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Email or Username", with: "nick@example.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
+
+    assert page.has_content? "Dashboard"
 
     travel 15.days do
       visit edit_profile_path

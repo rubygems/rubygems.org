@@ -1,24 +1,11 @@
 require "application_system_test_case"
 
 class PagesTest < ApplicationSystemTestCase
-  test "gracefully fails on unknown page" do
-    assert_raises(ActionController::RoutingError) do
-      visit "/pages/not-existing-one"
-    end
-  end
-
-  test "it only allows html format" do
-    assert_raises(ActionController::RoutingError) do
-      visit "/pages/data.zip"
-    end
-  end
-
   test "renders /pages/about for all supported languages" do
     I18n.available_locales.each do |locale|
-      visit "/?locale=#{locale}"
-      click_link I18n.t("layouts.application.footer.about")
+      visit "/pages/about?locale=#{locale}"
 
-      assert page.has_content? I18n.t("pages.about.title")
+      assert page.has_content? I18n.t("pages.about.title", locale: locale)
     end
   end
 

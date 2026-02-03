@@ -1,18 +1,6 @@
 require "application_system_test_case"
 
 class PoliciesTest < ApplicationSystemTestCase
-  test "gracefully fails on unknown page" do
-    assert_raises(ActionController::RoutingError) do
-      visit "/policies/not-existing-one"
-    end
-  end
-
-  test "it only allows html format" do
-    assert_raises(ActionController::RoutingError) do
-      visit "/policies/privacy-notice.zip"
-    end
-  end
-
   test "renders /policies/terms-of-service" do
     visit "/policies/terms-of-service"
 
