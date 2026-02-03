@@ -36,8 +36,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: "wordcrimes12345"
     click_button "Sign in"
 
-    assert_text "Sign in"
     assert_text "Bad email or password"
+    assert_text "Sign in"
   end
 
   test "signing in with wrong email" do
@@ -46,8 +46,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert_text "Sign in"
     assert_text "Bad email or password"
+    assert_text "Sign in"
   end
 
   test "signing in with unconfirmed email" do
