@@ -1,5 +1,21 @@
 require "test_helper"
 
+# Workaround for ChromeDriver bug where Turbo Drive DOM replacement causes
+# "Node with given id does not belong to the document" to be raised as a generic
+# UnknownError instead of StaleElementReferenceError. Capybara only retries the
+# latter, so the error crashes the test instead of being retried.
+# See: https://github.com/SeleniumHQ/selenium/issues/15401
+# TODO: Remove when migrating to Playwright (capybara-playwright-driver)
+module ChromeNodeStaleElementPatch
+  def visible?
+    super
+  rescue Selenium::WebDriver::Error::UnknownError => e
+    raise Selenium::WebDriver::Error::StaleElementReferenceError, e.message if e.message.include?("does not belong to the document")
+    raise
+  end
+end
+Capybara::Selenium::ChromeNode.prepend(ChromeNodeStaleElementPatch)
+
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include OauthHelpers
   include AvoHelpers
