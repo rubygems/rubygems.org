@@ -160,7 +160,7 @@ class ProfileTest < ApplicationSystemTestCase
     end
 
     assert_text "Your account deletion request has been enqueued. " \
-                             "We will send you a confirmation mail when your request has been processed."
+                "We will send you a confirmation mail when your request has been processed."
   end
 
   test "deleting profile multiple times" do
