@@ -32,5 +32,8 @@
 
     <dt><%= label_tag :updated, t(".updated"), class: "form__label" %></dt>
     <dd><%= text_field_tag :updated, "", placeholder: ">#{1.week.ago.strftime('%F')}", class: "form__input", pattern: "\\s*(<=?|>=?)?[\\d-]+\\s*", data: { search_target: "attribute", action: "input->search#input keydown.enter->search#submit" } %></dd>
+
+    <dt><%= label_tag :trusted_publisher, t(".trusted_publisher"), class: "form__label" %></dt>
+    <dd><%= text_field_tag :trusted_publisher, "", placeholder: "true", class: "form__input", pattern: "true|false", data: { search_target: "attribute", action: "input->search#input keydown.enter->search#submit" } %></dd>
   </dl>
 </div>

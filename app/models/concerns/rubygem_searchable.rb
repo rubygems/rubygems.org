@@ -25,7 +25,8 @@ module RubygemSearchable
           suggest: { type: "completion", contexts: { name: "yanked", type: "category" } },
           yanked: { type: "boolean" },
           downloads: { type: "long" },
-          updated: { type: "date" }
+          updated: { type: "date" },
+          trusted_publisher: { type: "boolean" }
         }
       }
     scope :search_import, -> { includes(:linkset, :gem_download, :most_recent_version, :versions, :latest_version) }
@@ -43,6 +44,7 @@ module RubygemSearchable
         version_downloads: latest_version&.downloads_count,
         platform:          latest_version&.platform,
         authors:           latest_version&.authors,
+        trusted_publisher: latest_version&.pushed_by_trusted_publisher?,
         info:              latest_version&.info,
         licenses:          latest_version&.licenses,
         metadata:          latest_version&.metadata,

@@ -117,6 +117,38 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "#pushed_by_trusted_publisher?" do
+    context "with a trusted publisher api key association" do
+      setup do
+        @version = build(:version, :has_trusted_publisher)
+      end
+
+      should "return true" do
+        assert_predicate @version, :pushed_by_trusted_publisher?
+      end
+    end
+
+    context "with an untrusted publisher api key association" do
+      setup do
+        @version = build(:version, :has_untrusted_publisher)
+      end
+
+      should "return false" do
+        refute_predicate @version, :pushed_by_trusted_publisher?
+      end
+    end
+
+    context "with no api key association" do
+      setup do
+        @version = build(:version)
+      end
+
+      should "return false" do
+        refute_predicate @version, :pushed_by_trusted_publisher?
+      end
+    end
+  end
+
   context "updated gems" do
     setup do
       @existing_gem = create(:rubygem)

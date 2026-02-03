@@ -931,6 +931,7 @@ es:
       summary: Resumen
       description: Descripción
       downloads: Descargas
+      trusted_publisher:
       updated: Actualizada
       yanked: Borrada
     show:

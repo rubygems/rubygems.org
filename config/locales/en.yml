@@ -825,6 +825,7 @@ en:
       summary: Summary
       description: Description
       downloads: Downloads
+      trusted_publisher: Trusted Publisher
       updated: Updated
       yanked: Yanked
     show:

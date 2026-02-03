@@ -818,6 +818,7 @@ nl:
       summary:
       description:
       downloads:
+      trusted_publisher:
       updated:
       yanked:
     show:
