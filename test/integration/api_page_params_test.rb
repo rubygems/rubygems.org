@@ -15,7 +15,7 @@ class ApiPageParamsTest < ActionDispatch::IntegrationTest
     refute_empty response.parsed_body
   end
 
-  test "api search with page is not a numer" do
+  test "api search with page is not a number" do
     create(:rubygem, name: "some", number: "1.0.0")
     import_and_refresh
 
