@@ -14,8 +14,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Dashboard"
-    assert page.has_content? "We now support security devices!"
+    assert_text "Dashboard"
+    assert_text "We now support security devices!"
 
     assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password" },
       User.find_by(email: "nick@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
@@ -27,7 +27,7 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
   end
 
   test "signing in with wrong password" do
@@ -36,8 +36,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: "wordcrimes12345"
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Bad email or password"
+    assert_text "Sign in"
+    assert_text "Bad email or password"
   end
 
   test "signing in with wrong email" do
@@ -46,8 +46,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Bad email or password"
+    assert_text "Sign in"
+    assert_text "Bad email or password"
   end
 
   test "signing in with unconfirmed email" do
@@ -58,15 +58,15 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
-    assert page.has_content? "A confirmation mail has been sent to your email address."
+    assert_text "A confirmation mail has been sent to your email address."
 
     visit sign_in_path
     fill_in "Email or Username", with: "email@person.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Please confirm your email address with the link sent to your email."
+    assert_text "Sign in"
+    assert_text "Please confirm your email address with the link sent to your email."
   end
 
   test "signing in with current valid otp when mfa enabled" do
@@ -77,12 +77,12 @@ class SignInTest < ApplicationSystemTestCase
 
     StatsD.expects(:distribution)
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
     click_button "Authenticate"
 
-    assert page.has_content? "Dashboard"
-    assert page.has_content? "We now support security devices!"
+    assert_text "Dashboard"
+    assert_text "We now support security devices!"
 
     assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password", two_factor_method: "otp", two_factor_label: "OTP" },
       User.find_by(email: "john@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
@@ -94,13 +94,13 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
 
     travel 30.minutes do
       fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
       click_button "Authenticate"
 
-      assert page.has_content? "Sign in"
+      assert_text "Sign in"
       expected_notice = "Your login page session has expired."
 
       assert page.has_selector? "#flash_notice", text: expected_notice
@@ -113,11 +113,11 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: "11111"
     click_button "Authenticate"
 
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "signing in with valid recovery code when mfa enabled" do
@@ -126,11 +126,11 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: "0123456789ab"
     click_button "Authenticate"
 
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
   end
 
   test "signing in with invalid recovery code when mfa enabled" do
@@ -139,11 +139,11 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: "ab0123456789"
     click_button "Authenticate"
 
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "signing in with mfa disabled with gem ownership that exceeds the recommended download threshold" do
@@ -164,7 +164,7 @@ class SignInTest < ApplicationSystemTestCase
 
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(new_totp_path)
-    assert page.has_content? "Enabling multi-factor auth"
+    assert_text "Enabling multi-factor auth"
   end
 
   test "signing in with mfa enabled on `ui_only` with gem ownership that exceeds the recommended download threshold" do
@@ -180,7 +180,7 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: "0123456789ab"
     click_button "Authenticate"
 
@@ -190,7 +190,7 @@ class SignInTest < ApplicationSystemTestCase
 
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(edit_settings_path)
-    assert page.has_content? "Edit settings"
+    assert_text "Edit settings"
   end
 
   test "signing in with mfa enabled on `ui_and_gem_signin` with gem ownership that exceeds the recommended download threshold" do
@@ -207,13 +207,13 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: "0123456789ab"
     click_button "Authenticate"
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
   end
 
   test "signing in with mfa enabled on `ui_and_api` with gem ownership that exceeds the recommended download threshold" do
@@ -230,13 +230,13 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: "0123456789ab"
     click_button "Authenticate"
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
   end
 
   test "siging in when user does not have handle" do
@@ -247,12 +247,12 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multi-factor authentication"
+    assert_text "Multi-factor authentication"
     fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
     click_button "Authenticate"
 
-    assert page.has_content? "john@example.com"
-    assert page.has_content? "Dashboard"
+    assert_text "john@example.com"
+    assert_text "Dashboard"
   end
 
   test "signing out" do
@@ -261,11 +261,11 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
     find(:css, ".header__popup-link").click
     click_link "Sign out"
 
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "session expires in two weeks" do
@@ -274,12 +274,12 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Dashboard"
+    assert_text "Dashboard"
 
     travel 15.days do
       visit edit_profile_path
 
-      assert page.has_content? "Sign in"
+      assert_text "Sign in"
     end
   end
 
@@ -291,8 +291,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+    assert_text "Sign in"
+    assert_text "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
 
   test "sign in to deleted account" do
@@ -303,8 +303,8 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Bad email or password."
+    assert_text "Sign in"
+    assert_text "Bad email or password."
   end
 
   teardown do

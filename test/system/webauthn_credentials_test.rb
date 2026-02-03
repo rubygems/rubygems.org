@@ -97,7 +97,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       fill_in "Nickname", with: @credential_nickname
       click_on "Register device"
 
-      assert page.has_content? "Recovery codes"
+      assert_text "Recovery codes"
     end
 
     assert_current_path recovery_multifactor_auth_path

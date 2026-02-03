@@ -5,7 +5,7 @@ class PagesTest < ApplicationSystemTestCase
     I18n.available_locales.each do |locale|
       visit "/pages/about?locale=#{locale}"
 
-      assert page.has_content? I18n.t("pages.about.title", locale: locale)
+      assert_text I18n.t("pages.about.title", locale: locale)
     end
   end
 
@@ -19,31 +19,31 @@ class PagesTest < ApplicationSystemTestCase
 
     visit "/pages/download"
 
-    assert page.has_content?("v3.5.22 - October 16, 2024")
+    assert_text("v3.5.22 - October 16, 2024")
   end
 
   test "renders /pages/data" do
     visit "/pages/data"
 
-    assert page.has_content?("PostgreSQL Data")
+    assert_text("PostgreSQL Data")
   end
 
   test "renders /pages/security" do
     visit "/pages/security"
 
-    assert page.has_content?("Security")
+    assert_text("Security")
   end
 
   test "renders /pages/supporters" do
     visit "/pages/supporters"
 
-    assert page.has_content?("Supporters")
+    assert_text("Supporters")
   end
 
   test "redirects /pages/sponsors to /pages/supporters" do
     visit "/pages/sponsors"
 
     assert_current_path "/pages/supporters"
-    assert page.has_content?("Supporters")
+    assert_text("Supporters")
   end
 end

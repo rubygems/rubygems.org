@@ -24,7 +24,7 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     click_link "Subscribe"
 
-    assert page.has_content? "Unsubscribe"
+    assert_text "Unsubscribe"
     assert_equal @user.subscribed_gems.first, @rubygem
   end
 
@@ -37,7 +37,7 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     click_link "Unsubscribe"
 
-    assert page.has_content? "Subscribe"
+    assert_text "Subscribe"
     assert_empty @user.subscribed_gems
   end
 
@@ -46,7 +46,7 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     visit rubygem_path(@rubygem.slug, as: @user.id)
 
-    assert page.has_content? "Please consider enabling multi-factor"
+    assert_text "Please consider enabling multi-factor"
     find(".gem__users__mfa-text.mfa-warn").click
 
     assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
@@ -128,8 +128,8 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
-    assert page.has_content? "NEW VERSIONS REQUIRE MFA"
-    assert page.has_content? "VERSION PUBLISHED WITH MFA"
+    assert_text "NEW VERSIONS REQUIRE MFA"
+    assert_text "VERSION PUBLISHED WITH MFA"
   end
 
   test "shows 'new' mfa header only if latest requires MFA but viewed version doesn't" do
@@ -138,8 +138,8 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
-    assert page.has_content? "NEW VERSIONS REQUIRE MFA"
-    refute page.has_content? "VERSION PUBLISHED WITH MFA"
+    assert_text "NEW VERSIONS REQUIRE MFA"
+    assert_no_text "VERSION PUBLISHED WITH MFA"
   end
 
   test "shows 'version' mfa header only if latest does not require MFA but viewed version does" do
@@ -148,8 +148,8 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
-    refute page.has_content? "NEW VERSIONS REQUIRE MFA"
-    assert page.has_content? "VERSION PUBLISHED WITH MFA"
+    assert_no_text "NEW VERSIONS REQUIRE MFA"
+    assert_text "VERSION PUBLISHED WITH MFA"
   end
 
   test "does not show either mfa header if neither latest or viewed version require MFA" do
@@ -158,8 +158,8 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     visit rubygem_version_path(@rubygem.slug, "0.1.1")
 
-    refute page.has_content? "NEW VERSIONS REQUIRE MFA"
-    refute page.has_content? "VERSION PUBLISHED WITH MFA"
+    assert_no_text "NEW VERSIONS REQUIRE MFA"
+    assert_no_text "VERSION PUBLISHED WITH MFA"
   end
 
   test "shows both mfa headers if MFA enabled for latest version and viewing latest version" do
@@ -167,8 +167,8 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     visit rubygem_path(@rubygem.slug)
 
-    assert page.has_content? "NEW VERSIONS REQUIRE MFA"
-    assert page.has_content? "VERSION PUBLISHED WITH MFA"
+    assert_text "NEW VERSIONS REQUIRE MFA"
+    assert_text "VERSION PUBLISHED WITH MFA"
   end
 
   test "shows neither mfa header if MFA disabled for latest version and viewing latest version" do
@@ -176,7 +176,7 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     visit rubygem_path(@rubygem.slug)
 
-    refute page.has_content? "NEW VERSIONS REQUIRE MFA"
-    refute page.has_content? "VERSION PUBLISHED WITH MFA"
+    assert_no_text "NEW VERSIONS REQUIRE MFA"
+    assert_no_text "VERSION PUBLISHED WITH MFA"
   end
 end

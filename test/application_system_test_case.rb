@@ -23,13 +23,13 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_in "Password", with: user.password
     click_button "Sign in"
 
-    assert page.has_content?("Dashboard")
+    assert_text("Dashboard")
   end
 
   def sign_out
     reset_session!
     visit "/"
 
-    assert page.has_content?("Sign in".upcase)
+    assert_text("Sign in".upcase)
   end
 end

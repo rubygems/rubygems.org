@@ -20,8 +20,8 @@ class AutocompletesTest < ApplicationSystemTestCase
     @fill_field.set "rubocop"
     click_on class: "home__search__icon"
 
-    assert page.has_content? "search"
-    assert page.has_content? "rubocop"
+    assert_text "search"
+    assert_text "rubocop"
   end
 
   test "selected field is only one with cursor selecting" do
@@ -84,6 +84,6 @@ class AutocompletesTest < ApplicationSystemTestCase
     first("li", text: "rubocop").click
 
     assert_current_path search_path, ignore_query: true
-    assert page.has_content? "rubocop"
+    assert_text "rubocop"
   end
 end
