@@ -104,7 +104,8 @@ class YankTest < ApplicationSystemTestCase
     req = Net::HTTP::Delete.new(uri)
     req["Authorization"] = api_key
     response = Net::HTTP.start(uri.hostname, uri.port) { |http| http.request(req) }
-    assert response.is_a?(Net::HTTPSuccess), "Yank API failed: #{response.code} #{response.body}"
+
+    assert_kind_of Net::HTTPSuccess, response, "Yank API failed: #{response.code} #{response.body}"
   end
 
   def push_gem_via_api(api_key, gem_file_path)
@@ -114,6 +115,7 @@ class YankTest < ApplicationSystemTestCase
     req["Content-Type"] = "application/octet-stream"
     req.body = File.binread(gem_file_path)
     response = Net::HTTP.start(uri.hostname, uri.port) { |http| http.request(req) }
-    assert response.is_a?(Net::HTTPSuccess), "Push API failed: #{response.code} #{response.body}"
+
+    assert_kind_of Net::HTTPSuccess, response, "Push API failed: #{response.code} #{response.body}"
   end
 end

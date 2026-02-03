@@ -37,6 +37,7 @@ class NotificationSettingsTest < ApplicationSystemTestCase
       within_element notifier_form_selector do
         click_button I18n.t("notifiers.show.update")
       end
+
       assert_selector "#flash_notice", text: I18n.t("notifiers.update.success")
     end
 

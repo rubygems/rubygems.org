@@ -48,6 +48,7 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     assert page.has_content? "Please consider enabling multi-factor"
     find(".gem__users__mfa-text.mfa-warn").click
+
     assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
   end
 
@@ -62,6 +63,7 @@ class GemsSystemTest < ApplicationSystemTestCase
 
     assert page.has_selector?(".gem__users__mfa-text.mfa-warn")
     find(".gem__users__mfa-text.mfa-warn").click
+
     assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
   end
 

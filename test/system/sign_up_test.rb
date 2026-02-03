@@ -80,6 +80,7 @@ class SignUpTest < ApplicationSystemTestCase
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
       click_button "Sign up"
+
       assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
     end
 

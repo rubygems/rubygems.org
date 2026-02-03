@@ -34,5 +34,4 @@ class PageParamsTest < ApplicationSystemTestCase
     assert page.has_content? "New Releases — Popular Gems"
     assert page.has_content? "Page number is out of range. Redirected to default page."
   end
-
 end

@@ -109,6 +109,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "Email address", with: @user.email
     perform_enqueued_jobs do
       click_button "Reset password"
+
       assert page.has_content? "You will receive an email within the next few minutes."
     end
 
@@ -225,6 +226,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     perform_enqueued_jobs do
       click_button "Update"
+
       assert page.has_content? "instructions for confirming your new email address"
     end
 

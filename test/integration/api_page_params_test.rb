@@ -11,6 +11,7 @@ class ApiPageParamsTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to api_v1_search_path(page: "1", query: "some", format: :json)
     follow_redirect!
+
     refute_empty response.parsed_body
   end
 
@@ -22,6 +23,7 @@ class ApiPageParamsTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to api_v1_search_path(page: "1", query: "some", format: :json)
     follow_redirect!
+
     refute_empty response.parsed_body
   end
 
@@ -33,6 +35,7 @@ class ApiPageParamsTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to api_v1_search_path(page: "1", query: "some", format: :json)
     follow_redirect!
+
     refute_empty response.parsed_body
   end
 end
