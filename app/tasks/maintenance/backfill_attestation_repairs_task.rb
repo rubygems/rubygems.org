@@ -20,7 +20,13 @@ class Maintenance::BackfillAttestationRepairsTask < MaintenanceTasks::Task
       changes = attestation.repair!
 
       if changes
-        logger.info "Attestation #{attestation.id} repaired: #{changes.join(', ')}"
+        error_changes = Array(changes).select { |msg| msg.to_s.start_with?("(Error)") }
+
+        if error_changes.any?
+          logger.error "Attestation #{attestation.id} repair encountered errors: #{changes.join(', ')}"
+        else
+          logger.info "Attestation #{attestation.id} repaired: #{changes.join(', ')}"
+        end
       else
         logger.warn "Attestation #{attestation.id} was repairable but repair! returned false"
       end
