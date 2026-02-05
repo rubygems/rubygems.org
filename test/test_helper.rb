@@ -63,6 +63,7 @@ end
 Capybara.default_max_wait_time = 2
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}" if ENV["DEVCONTAINER_APP_HOST"].blank?
 Capybara.always_include_port = true
+Capybara.server_port = 31_337
 Capybara.server = :puma, { Silent: true }
 
 GoodJob::Execution.delete_all
@@ -74,6 +75,7 @@ Mocha.configure do |c|
 end
 
 OmniAuth.config.test_mode = true
+WebAuthn.configuration.allowed_origins = ["http://localhost:31337"]
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
@@ -89,6 +91,10 @@ class ActiveSupport::TestCase
     Rubygem.reindex
     Searchkick.disable_callbacks
     Rails.cache.options[:namespace] = "test_#{worker}"
+
+    port = 31_337 + worker
+    Capybara.server_port = port
+    WebAuthn.configuration.allowed_origins = ["http://localhost:#{port}"]
   end
 
   parallelize(workers: :number_of_processors)
