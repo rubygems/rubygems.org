@@ -84,7 +84,10 @@ class ActiveSupport::TestCase
   include PasswordHelpers
   include FeatureFlagHelpers
 
+  cattr_accessor :parallel_worker_number
+
   parallelize_setup do |worker|
+    self.parallel_worker_number = worker
     Version.reset_column_information
     SemanticLogger.reopen
     Searchkick.index_suffix = "_#{worker}"
@@ -95,6 +98,25 @@ class ActiveSupport::TestCase
     port = 31_337 + worker
     Capybara.server_port = port
     WebAuthn.configuration.allowed_origins = ["http://localhost:#{port}"]
+
+    if Toxiproxy.running?
+      toxiproxy_port = 22_222 + worker
+      toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "127.0.0.1")
+      toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
+      Toxiproxy.populate(
+        [
+          {
+            name: "elasticsearch_#{worker}",
+            listen: "#{toxiproxy_listen_host}:#{toxiproxy_port}",
+            upstream: toxiproxy_upstream
+          }
+        ]
+      )
+      Searchkick.client = OpenSearch::Client.new(
+        url: "http://localhost:#{toxiproxy_port}",
+        request_timeout: 2
+      )
+    end
   end
 
   parallelize(workers: :number_of_processors)
@@ -117,6 +139,11 @@ class ActiveSupport::TestCase
     return if Toxiproxy.running?
     raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]
     skip("Toxiproxy is not running, but was required for this test.")
+  end
+
+  def toxiproxy_elasticsearch
+    worker = self.class.parallel_worker_number
+    Toxiproxy[worker ? :"elasticsearch_#{worker}" : :elasticsearch]
   end
 
   def requires_avo_pro

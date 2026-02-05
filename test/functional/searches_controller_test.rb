@@ -190,7 +190,7 @@ class SearchesControllerTest < ActionController::TestCase
     end
     should "error with friendly error message" do
       requires_toxiproxy
-      Toxiproxy[:elasticsearch].down do
+      toxiproxy_elasticsearch.down do
         get :show, params: { query: "sinatra" }
 
         assert_response :success

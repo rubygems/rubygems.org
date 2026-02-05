@@ -54,7 +54,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     context "with elasticsearch down" do
       should "returns friendly error message" do
         requires_toxiproxy
-        Toxiproxy[:elasticsearch].down do
+        toxiproxy_elasticsearch.down do
           get :show, params: { query: "other" }, format: :json
 
           assert_response :service_unavailable
@@ -128,7 +128,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     context "with elasticsearch down" do
       should "fallback to legacy search" do
         requires_toxiproxy
-        Toxiproxy[:elasticsearch].down do
+        toxiproxy_elasticsearch.down do
           get :autocomplete, params: { query: "ot" }
 
           assert_response :success

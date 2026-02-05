@@ -337,7 +337,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         should "fails with friendly error message" do
           requires_toxiproxy
 
-          Toxiproxy[:elasticsearch].down do
+          toxiproxy_elasticsearch.down do
             error_msg, result = ElasticSearcher.new("something").search
             expected_msg = "Search is currently unavailable. Please try again later."
 
@@ -386,7 +386,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     should "be disabled" do
       requires_toxiproxy
 
-      Toxiproxy[:elasticsearch].down do
+      toxiproxy_elasticsearch.down do
         rubygem = create(:rubygem, name: "common-gem", number: "0.0.1", downloads: 10)
 
         assert rubygem.update(name: "renamed-gem")
