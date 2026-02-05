@@ -918,6 +918,7 @@ GEM
       rexml
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yaml-schema (1.2.0)
     yard (0.9.38)
     zeitwerk (2.7.4)
     zlib (3.2.2)
@@ -1055,6 +1056,7 @@ DEPENDENCIES
   webauthn (~> 3.4)
   webmock (~> 3.26)
   xml-simple (~> 1.1)
+  yaml-schema (~> 1.2)
   zlib (~> 3.2)
 
 CHECKSUMS
@@ -1404,6 +1406,7 @@ CHECKSUMS
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xml-simple (1.1.9) sha256=d21131e519c86f1a5bc2b6d2d57d46e6998e47f18ed249b25cad86433dbd695d
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
+  yaml-schema (1.2.0) sha256=642577657e826a8bbc20a30a64e27f7b6086b29c9ef0f53fbf437d45279d3ec2
   yard (0.9.38) sha256=721fb82afb10532aa49860655f6cc2eaa7130889df291b052e1e6b268283010f
   zeitwerk (2.7.4) sha256=2bef90f356bdafe9a6c2bd32bcd804f83a4f9b8bc27f3600fff051eb3edcec8b
   zlib (3.2.2) sha256=908e61263f99c1371b5422581e2d6663bd37c6b04ae13b5f8cb10b0d09379f40

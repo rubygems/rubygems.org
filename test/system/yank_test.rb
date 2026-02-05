@@ -75,8 +75,8 @@ class YankTest < ApplicationSystemTestCase
     other_user_key = "12323"
     other_api_key = create(:api_key, key: other_user_key, scopes: %i[push_rubygem])
 
-    build_gem "sandworm", "1.0.0"
-    push_gem_via_api(other_user_key, "sandworm-1.0.0.gem")
+    gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
+    push_gem_via_api(other_user_key, gem_io)
 
     visit rubygem_path(@rubygem.slug)
 
@@ -108,12 +108,12 @@ class YankTest < ApplicationSystemTestCase
     assert_kind_of Net::HTTPSuccess, response, "Yank API failed: #{response.code} #{response.body}"
   end
 
-  def push_gem_via_api(api_key, gem_file_path)
+  def push_gem_via_api(api_key, gem)
     uri = URI(api_url(api_v1_rubygems_path))
     req = Net::HTTP::Post.new(uri)
     req["Authorization"] = api_key
     req["Content-Type"] = "application/octet-stream"
-    req.body = File.binread(gem_file_path)
+    req.body = gem.respond_to?(:string) ? gem.string : File.binread(gem)
     response = Net::HTTP.start(uri.hostname, uri.port) { |http| http.request(req) }
 
     assert_kind_of Net::HTTPSuccess, response, "Push API failed: #{response.code} #{response.body}"

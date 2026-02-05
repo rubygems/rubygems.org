@@ -416,8 +416,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with reserved gem name" do
       setup do
+        gem = build_gem(new_gemspec("rubygems", "2.0.0", "Gemcutter", "ruby"))
         create(:gem_name_reservation, name: "rubygems")
-        post :create, body: gem_file("rubygems-0.1.0.gem").read
+        post :create, body: gem.read
       end
       should respond_with 403
       should "not register gem" do
