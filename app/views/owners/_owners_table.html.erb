@@ -50,9 +50,11 @@
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
       </td>
       <td class="owners__cell" data-title="Action">
+        <% can_remove = ownership.unconfirmed? || @rubygem.owners.many? %>
         <%= button_to t("remove"),
           rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
           method: "delete",
+          disabled: !can_remove,
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
         <br>
