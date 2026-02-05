@@ -9,9 +9,7 @@ module SearchKickHelper
     Rubygem.reindex
   end
 
-  def disable_callbacks
-    Searchkick.disable_callbacks
-  end
+  delegate :disable_callbacks, to: :Searchkick
 
   def es_downloads(id)
     response = get_response(id)
