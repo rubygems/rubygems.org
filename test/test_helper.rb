@@ -88,7 +88,7 @@ class ActiveSupport::TestCase
     Version.reset_column_information
     SemanticLogger.reopen
     Searchkick.index_suffix = "_#{worker}"
-    Rubygem.reindex
+    Rubygem.reindex(import: false)
     Searchkick.disable_callbacks
     Rails.cache.options[:namespace] = "test_#{worker}"
 
