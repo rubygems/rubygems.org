@@ -88,13 +88,13 @@ class ActiveSupport::TestCase
     Searchkick.index_suffix = "_#{worker}"
     Rubygem.reindex
     Searchkick.disable_callbacks
+    Rails.cache.options[:namespace] = "test_#{worker}"
   end
 
   parallelize(workers: :number_of_processors)
 
   setup do
     I18n.locale = :en
-    Rails.cache.clear
     Rack::Attack.cache.store.clear
 
     Unpwn.offline = true

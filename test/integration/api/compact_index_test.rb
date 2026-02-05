@@ -11,6 +11,9 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   setup do
+    Rails.cache.delete("names")
+    %w[gemA gemB gemC].each { |name| Rails.cache.delete("info/#{name}") }
+
     @rubygem2 = create(:rubygem, name: "gemB")
     @version = create(:version, rubygem: @rubygem2, number: "1.0.0", info_checksum: "qw2dwe")
 
@@ -54,7 +57,8 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   teardown do
-    Rails.cache.clear
+    Rails.cache.delete("names")
+    %w[gemA gemB gemC].each { |name| Rails.cache.delete("info/#{name}") }
   end
 
   test "/names output" do
