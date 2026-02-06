@@ -53,7 +53,6 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     create(:dependency, rubygem: dep2, version: version)
   end
 
-
   test "/names output" do
     get names_path
 
@@ -66,6 +65,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_includes gem_names, "gemB"
 
     expected_digest = digest(@response.body)
+
     assert_equal etag(@response.body), @response.headers["ETag"]
     assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
     assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
