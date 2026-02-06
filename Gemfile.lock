@@ -584,7 +584,7 @@ GEM
       google-protobuf (>= 3.25.3)
     pghero (3.7.0)
       activerecord (>= 7.1)
-    phlex (2.4.0)
+    phlex (2.4.1)
       refract (~> 1.0)
       zeitwerk (~> 2.7)
     phlex-rails (2.4.0)
@@ -594,7 +594,7 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.7.0)
+    prism (1.9.0)
     prop_initializer (0.2.0)
       zeitwerk (>= 2.6.18)
     propshaft (1.3.1)
@@ -1276,11 +1276,11 @@ CHECKSUMS
   pg (1.6.3-x86_64-linux-musl) sha256=9c9c90d98c72f78eb04c0f55e9618fe55d1512128e411035fe229ff427864009
   pg_query (6.2.2) sha256=316c194160ccfac8af9a7aff55cdc5b2d13bdd8bd8734976c6bddc477e779b6f
   pghero (3.7.0) sha256=a8d8497095dbe168bb03fe50a11309ab068cd1c1ef4c88d9bbeb97be4809f522
-  phlex (2.4.0) sha256=8aad2f0cd792d7b1bd287f15a1f89474c9cacac28120dc33d2a81467ae934067
+  phlex (2.4.1) sha256=e596717fbfe38b5271840266758779ebe75092e02629f0c170287e6290a70b12
   phlex-rails (2.4.0) sha256=2bcddbd488681acb25753bab1887d3ac150e644244ff8ba307f2171a4d0195f5
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
-  prism (1.7.0) sha256=10062f734bf7985c8424c44fac382ac04a58124ea3d220ec3ba9fe4f2da65103
+  prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
   prop_initializer (0.2.0) sha256=bd27704d0df8c59c3baf0df5cf448eba2b140fb9934fb31b2e379b5c842d8820
   propshaft (1.3.1) sha256=9acc664ef67e819ffa3d95bd7ad4c3623ea799110c5f4dee67fa7e583e74c392
   prosopite (2.1.2) sha256=ca474e5b83bf65cdb1b3d44f848ceb3270c1e3474a9c20fd9228114bf766fd0b
