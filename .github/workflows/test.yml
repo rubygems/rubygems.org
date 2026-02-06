@@ -45,6 +45,8 @@ jobs:
       RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
+      TOXIPROXY_LISTEN_HOST: "0.0.0.0"
+      TOXIPROXY_UPSTREAM: "search:9200"
       REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.name != 'avo without pro' }}
       AVO_LICENSE_KEY: ${{ secrets.AVO_LICENSE_KEY }}
       BUNDLE_PACKAGER__DEV: ${{ secrets.BUNDLE_PACKAGER__DEV }}

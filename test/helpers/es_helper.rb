@@ -1,10 +1,15 @@
 module SearchKickHelper
-  def import_and_refresh
-    Rubygem.searchkick_reindex
-
-    # wait for indexing to finish
-    Searchkick.client.cluster.health wait_for_status: "yellow"
+  def self.included(base)
+    base.setup :enable_callbacks
+    base.teardown :disable_callbacks
   end
+
+  def enable_callbacks
+    Searchkick.enable_callbacks
+    Rubygem.reindex
+  end
+
+  delegate :disable_callbacks, to: :Searchkick
 
   def es_downloads(id)
     response = get_response(id)
@@ -18,6 +23,6 @@ module SearchKickHelper
 
   def get_response(id)
     Rubygem.searchkick_index.refresh
-    Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: id
+    Searchkick.client.get index: Rubygem.searchkick_index.name, id: id
   end
 end

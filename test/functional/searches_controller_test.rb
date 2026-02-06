@@ -15,8 +15,7 @@ class SearchesControllerTest < ActionController::TestCase
 
   context "on GET to show with search parameters for a rubygem without versions" do
     setup do
-      @sinatra = create(:rubygem, name: "sinatra")
-      import_and_refresh
+      @sinatra = create(:rubygem, :reindex, name: "sinatra")
 
       assert_nil @sinatra.most_recent_version
       assert_predicate @sinatra.reload.versions.count, :zero?
@@ -35,10 +34,9 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra = create(:rubygem, name: "sinatra")
       @sinatra_redux = create(:rubygem, name: "sinatra-redux")
       @brando = create(:rubygem, name: "brando")
-      create(:version, rubygem: @sinatra)
-      create(:version, rubygem: @sinatra_redux)
-      create(:version, rubygem: @brando)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @sinatra)
+      create(:version, :reindex, rubygem: @sinatra_redux)
+      create(:version, :reindex, rubygem: @brando)
       get :show, params: { query: "sinatra" }
     end
 
@@ -61,10 +59,9 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra = create(:rubygem, name: "sinatra")
       @sinatra_redux = create(:rubygem, name: "sinatra-redux")
       @brando = create(:rubygem, name: "brando")
-      create(:version, rubygem: @sinatra)
-      create(:version, rubygem: @sinatra_redux)
-      create(:version, rubygem: @brando)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @sinatra)
+      create(:version, :reindex, rubygem: @sinatra_redux)
+      create(:version, :reindex, rubygem: @brando)
       get :show, params: { query: "sinatra" }
     end
 
@@ -103,10 +100,9 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra = create(:rubygem, name: "sinatra")
       @sinatra_redux = create(:rubygem, name: "sinatra-redux")
       @brando = create(:rubygem, name: "brando")
-      create(:version, rubygem: @sinatra)
-      create(:version, rubygem: @sinatra_redux)
-      create(:version, rubygem: @brando)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @sinatra)
+      create(:version, :reindex, rubygem: @sinatra_redux)
+      create(:version, :reindex, rubygem: @brando)
       get :show, params: { query: "sinatre" }
     end
 
@@ -132,9 +128,8 @@ class SearchesControllerTest < ActionController::TestCase
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       @sinatra_redux = create(:rubygem, name: "sinatra-redux")
-      create(:version, rubygem: @sinatra)
-      create(:version, :yanked, rubygem: @sinatra_redux)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @sinatra)
+      create(:version, :reindex, :yanked, rubygem: @sinatra_redux)
       get :show, params: { query: @sinatra_redux.name.to_s, yanked: true }
     end
 
@@ -175,8 +170,7 @@ class SearchesControllerTest < ActionController::TestCase
   context "on GET to show with valid advanced search query" do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
-      create(:version, rubygem: @sinatra, indexed: true)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @sinatra, indexed: true)
       get :show, params: { query: "sinatra AND downloads:>0" }
     end
 
@@ -196,7 +190,7 @@ class SearchesControllerTest < ActionController::TestCase
     end
     should "error with friendly error message" do
       requires_toxiproxy
-      Toxiproxy[:elasticsearch].down do
+      toxiproxy_elasticsearch.down do
         get :show, params: { query: "sinatra" }
 
         assert_response :success

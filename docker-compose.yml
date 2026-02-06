@@ -50,4 +50,9 @@ services:
         condition: service_healthy
   toxiproxy:
     image: ghcr.io/shopify/toxiproxy@sha256:927c797a2115a193ae3a527e5a36782b938419904ac6706ca0efa029ebea58cb # 2.5.0
-    network_mode: "host"
+    ports:
+      - "127.0.0.1:8474:8474"
+      - "127.0.0.1:22221-22237:22221-22237"
+    depends_on:
+      search:
+        condition: service_healthy

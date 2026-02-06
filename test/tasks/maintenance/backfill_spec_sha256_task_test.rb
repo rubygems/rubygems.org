@@ -17,11 +17,8 @@ class Maintenance::BackfillSpecSha256TaskTest < ActiveSupport::TestCase
     include SemanticLogger::Test::Minitest
 
     setup do
-      @rubygem = create(:rubygem, name: "rubygem")
-    end
-
-    teardown do
       RubygemFs.mock!
+      @rubygem = create(:rubygem, name: "rubygem")
     end
 
     should "update the spec sha256" do

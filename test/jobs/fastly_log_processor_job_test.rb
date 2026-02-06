@@ -21,7 +21,6 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
     @processor = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
     @job = FastlyLogProcessorJob.new(bucket: "test-bucket", key: "fastly-fake.log")
     create(:gem_download)
-    import_and_refresh
   end
 
   teardown do
@@ -59,7 +58,8 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
       create(:version, rubygem: json, number: "1.8.3")
       create(:version, rubygem: json, number: "1.8.2")
 
-      import_and_refresh
+      bundler.reindex(refresh: true)
+      json.reindex(refresh: true)
     end
 
     context "#perform" do

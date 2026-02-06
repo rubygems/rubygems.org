@@ -1,8 +1,14 @@
 require "test_helper"
 
 class GemInfoTest < ActiveSupport::TestCase
+  setup do
+    Rails.cache.delete("names")
+    Rails.cache.delete("info/example")
+  end
+
   teardown do
-    Rails.cache.clear
+    Rails.cache.delete("names")
+    Rails.cache.delete("info/example")
   end
 
   context "#compact_index_info" do

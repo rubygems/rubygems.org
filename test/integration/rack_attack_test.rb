@@ -6,7 +6,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   setup do
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
-    Rails.cache.clear
 
     @ip_address = "1.2.3.4"
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
