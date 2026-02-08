@@ -7,8 +7,11 @@ class ElasticSearcher
     Errno::ECONNRESET
   ].freeze
 
-  SearchNotAvailableError = Class.new(StandardError)
-  InvalidQueryError = Class.new(StandardError)
+  class SearchNotAvailableError < StandardError
+  end
+
+  class InvalidQueryError < StandardError
+  end
 
   def initialize(query, page: 1)
     @query = SearchQuerySanitizer.sanitize(query)
