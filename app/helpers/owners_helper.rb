@@ -18,4 +18,12 @@ module OwnersHelper
       image_tag("/images/check.svg")
     end
   end
+
+  def can_add_owner?(rubygem)
+    policy(rubygem).add_owner?
+  end
+
+  def can_modify_owners?(rubygem)
+    policy(rubygem).update_owner?
+  end
 end

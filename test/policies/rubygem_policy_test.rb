@@ -100,19 +100,20 @@ class RubygemPolicyTest < PolicyTestCase
   end
 
   context "#show_unconfirmed_ownerships?" do
-    should "only allow the owner" do
+    should "allow any gem owner including maintainers" do
       assert_authorized policy!(@owner), :show_unconfirmed_ownerships?
-      refute_authorized policy!(@maintainer), :show_unconfirmed_ownerships?
+      assert_authorized policy!(@maintainer), :show_unconfirmed_ownerships?
       refute_authorized policy!(@user), :show_unconfirmed_ownerships?
       refute_authorized policy!(nil), :show_unconfirmed_ownerships?
     end
 
-    should "only allow owners, org owners and admins" do
+    should "allow anyone with access to the gem" do
       assert_authorized org_policy!(@org_owner), :show_unconfirmed_ownerships?
       assert_authorized org_policy!(@org_admin), :show_unconfirmed_ownerships?
+      assert_authorized org_policy!(@org_maintainer), :show_unconfirmed_ownerships?
       assert_authorized org_policy!(@owner), :show_unconfirmed_ownerships?
+      assert_authorized org_policy!(@maintainer), :show_unconfirmed_ownerships?
 
-      refute_authorized org_policy!(@org_maintainer), :show_unconfirmed_ownerships?
       refute_authorized org_policy!(@user), :show_unconfirmed_ownerships?
       refute_authorized org_policy!(nil), :show_unconfirmed_ownerships?
     end
