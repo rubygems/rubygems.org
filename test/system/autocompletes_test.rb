@@ -5,10 +5,9 @@ class AutocompletesTest < ApplicationSystemTestCase
 
   setup do
     rubygem = create(:rubygem, name: "rubocop")
-    create(:version, rubygem: rubygem, indexed: true)
+    create(:version, :reindex, rubygem: rubygem, indexed: true)
     rubygem = create(:rubygem, name: "rubocop-performance")
-    create(:version, rubygem: rubygem, indexed: true)
-    import_and_refresh
+    create(:version, :reindex, rubygem: rubygem, indexed: true)
 
     visit root_path
     @fill_field = find_by_id "query"
@@ -65,13 +64,13 @@ class AutocompletesTest < ApplicationSystemTestCase
   test "down arrow key should loop" do
     @fill_field.native.send_keys :down, :down, :down, :down
 
-    assert find(".suggest-list").all(".menu-item").last.matches_css?(".selected")
+    assert_selector ".suggest-list .menu-item:last-child.selected"
   end
 
   test "up arrow key should loop" do
     @fill_field.native.send_keys :up, :up, :up, :up
 
-    assert find(".suggest-list").first(".menu-item").matches_css?(".selected")
+    assert_selector ".suggest-list .menu-item:first-child.selected"
   end
 
   test "mouse hover a suggest item to choose suggestion" do
