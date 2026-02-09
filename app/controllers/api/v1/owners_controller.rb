@@ -85,9 +85,10 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def owners_payload
-    @rubygem.owners
-      .joins(:ownerships)
-      .select("users.id, users.public_email, users.email, users.handle, users.webauthn_id, ownerships.role as role")
-      .map { |owner| owner.payload.merge("role" => Ownership.roles.key(owner.role)) }
+    @rubygem.ownerships
+      .includes(:user)
+      .map do |ownership|
+        ownership.user.payload.merge("role" => Ownership.roles.key(ownership.role))
+      end
   end
 end
