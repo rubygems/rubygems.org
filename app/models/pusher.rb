@@ -1,4 +1,5 @@
 require "digest/sha2"
+require "gem_validator"
 
 class Pusher
   include TraceTagger
@@ -87,37 +88,17 @@ class Pusher
   end
 
   def pull_spec
-    # ensure the body can't be treated as a file path
-    package_source = Gem::Package::IOSource.new(body)
-    package = Gem::Package.new(package_source, gem_security_policy)
+    package = GemValidator::Package.validate(body, gem_security_policy)
 
-    # Verify the contents of the gem
-    package.verify
-
-    # Get the spec
     @spec = package.spec
     @files = package.files
     validate_spec && serialize_spec
-  rescue Psych::AliasesNotEnabled
-    notify <<~MSG, 422
-      RubyGems.org cannot process this gem.
-      Pushing gems where there are aliases in the YAML gemspec is no longer supported.
-      Ensure you are using a recent version of RubyGems to build the gem by running
-      `gem update --system` and then try pushing again.
-    MSG
-  rescue Gem::Exception, Psych::DisallowedClass, ArgumentError => e
-    notify <<~MSG, 422
-      RubyGems.org cannot process this gem.
-      Please try rebuilding it and installing it locally to make sure it's valid.
-      Error:
-      #{e.message}
-    MSG
+  rescue GemValidator::Package::InvalidGemspec => e
+    notify_invalid_gemspec(e)
+  rescue GemValidator::Error, Gem::Exception, Psych::DisallowedClass, ArgumentError => e
+    notify_gem_processing_error(e)
   rescue StandardError
-    # Ensure arbitrary exceptions are not leaked to the client
-    notify <<~MSG, 422
-      RubyGems.org cannot process this gem.
-      Please try rebuilding it and installing it locally to make sure it's valid.
-    MSG
+    notify_gem_processing_error
   end
 
   def find # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -277,10 +258,41 @@ class Pusher
       notify("You are not allowed to push this gem.", 403)
     elsif rubygem.unconfirmed_ownership?(owner)
       notify("You do not have permission to push to this gem. " \
-             "Please confirm the ownership by clicking on the confirmation link sent your email #{owner.email}", 403)
+             "Please click the confirmation link we emailed you at #{owner.email} to verify ownership before pushing.", 403)
     else
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{owner.email}", 403)
     end
+  end
+
+  def notify_invalid_gemspec(exception)
+    if exception.cause.is_a?(YAMLSchema::Validator::UnexpectedAlias)
+      notify_yaml_alias_error
+    else
+      notify_gem_processing_error(exception)
+    end
+  end
+
+  def notify_yaml_alias_error
+    notify <<~MSG, 422
+      RubyGems.org cannot process this gem.
+      Pushing gems where there are aliases in the YAML gemspec is no longer supported.
+      Ensure you are using a recent version of RubyGems to build the gem by running
+      `gem update --system` and then try pushing again.
+    MSG
+  end
+
+  def notify_gem_processing_error(exception = nil)
+    error_detail = extract_error_message(exception) if exception
+
+    notify <<~MSG, 422
+      RubyGems.org cannot process this gem.
+      Please try rebuilding it and installing it locally to make sure it's valid.#{"\nError:\n#{error_detail}" if error_detail}
+    MSG
+  end
+
+  def extract_error_message(exception)
+    source = exception.cause || exception
+    source.message.truncate(500)
   end
 
   def gem_security_policy
@@ -344,7 +356,7 @@ class Pusher
   end
 
   def validate_spec
-    spec.send(:invalidate_memoized_attributes)
+    spec.send(:invalidate_memoized_attributes) if spec.respond_to?(:invalidate_memoized_attributes, true)
 
     spec = self.spec.dup
 

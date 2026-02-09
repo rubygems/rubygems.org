@@ -86,4 +86,54 @@ class OrganizationTest < ActiveSupport::TestCase
       assert_equal "org:#{organization.handle}", organization.flipper_id
     end
   end
+
+  context "#find_by_handle" do
+    should "return organization by handle" do
+      organization = create(:organization)
+
+      assert_equal organization, Organization.find_by_handle(organization.handle)
+    end
+
+    should "return organizations by handles" do
+      organization1 = create(:organization)
+      organization2 = create(:organization)
+
+      assert_equal [organization1, organization2], Organization.find_by_handle([organization1.handle, organization2.handle])
+    end
+
+    should "return nil if organization is not found" do
+      assert_nil Organization.find_by_handle("nonexistent")
+    end
+
+    should "return empty array if organizations are not found" do
+      assert_predicate Organization.find_by_handle(%w[nonexistent nonexistent2]), :empty?
+    end
+  end
+
+  context "#find_by_handle!" do
+    should "return organization by handle" do
+      organization = create(:organization)
+
+      assert_equal organization, Organization.find_by_handle!(organization.handle)
+    end
+
+    should "return organizations by handles" do
+      organization1 = create(:organization)
+      organization2 = create(:organization)
+
+      assert_equal [organization1, organization2], Organization.find_by_handle!([organization1.handle, organization2.handle])
+    end
+
+    should "raise error if organization is not found" do
+      assert_raises ActiveRecord::RecordNotFound do
+        Organization.find_by_handle!("nonexistent")
+      end
+    end
+
+    should "raise error if organizations are not found" do
+      assert_raises ActiveRecord::RecordNotFound do
+        Organization.find_by_handle!(%w[nonexistent nonexistent2])
+      end
+    end
+  end
 end

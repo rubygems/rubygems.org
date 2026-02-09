@@ -71,9 +71,9 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "pushing a gem" do
-    build_gem "sandworm", "1.0.0"
+    gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
 
-    push_gem "sandworm-1.0.0.gem"
+    push_gem gem_io
 
     assert_response :success
     perform_enqueued_jobs
@@ -92,7 +92,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_equal Digest::MD5.hexdigest(<<~INFO), Rubygem.find_by!(name: "sandworm").versions.sole.info_checksum
       ---
-      1.0.0 |checksum:#{Digest::SHA256.hexdigest File.binread('sandworm-1.0.0.gem')}
+      1.0.0 |checksum:#{Digest::SHA256.hexdigest gem_io.string}
     INFO
   end
 
@@ -100,9 +100,9 @@ class PushTest < ActionDispatch::IntegrationTest
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:ownership, rubygem: rubygem, user: @user)
 
-    build_gem "sandworm", "2.0.0"
+    gem_io = build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
 
-    push_gem "sandworm-2.0.0.gem"
+    push_gem gem_io
 
     assert_response :success
 
@@ -115,7 +115,8 @@ class PushTest < ActionDispatch::IntegrationTest
                                "surrogate-key" => "gem/sandworm", "sha256" => checksum_sha256 } },
                  RubygemFs.instance.head("gems/sandworm-2.0.0.gem"))
 
-    spec = Gem::Package.new("sandworm-2.0.0.gem").spec
+    gem_io.rewind
+    spec = Gem::Package.new(Gem::Package::IOSource.new(gem_io)).spec
     spec.abbreviate
     spec.sanitize
     spec_checksum = Digest::SHA256.base64digest Gem.deflate Marshal.dump spec
@@ -139,9 +140,7 @@ class PushTest < ActionDispatch::IntegrationTest
     @key = "543321"
     create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
-    build_gem "sandworm", "2.0.0"
-
-    push_gem "sandworm-2.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
 
     assert_response :success, response.body
 
@@ -175,9 +174,7 @@ class PushTest < ActionDispatch::IntegrationTest
     @key = "543321"
     create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
-    build_gem "sandworm", "2.0.0"
-
-    push_gem "sandworm-2.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
 
     assert_response :success
 
@@ -199,9 +196,7 @@ class PushTest < ActionDispatch::IntegrationTest
     @key = "543321"
     create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
 
-    build_gem "sandworm", "2.0.0"
-
-    push_gem "sandworm-2.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
 
     assert_response :success
 
@@ -220,11 +215,9 @@ class PushTest < ActionDispatch::IntegrationTest
   test "pushing a gem with a known dependency" do
     rubygem = create(:rubygem, name: "crysknife", number: "1.0.0")
 
-    build_gem "sandworm", "1.0.0" do |gemspec|
-      gemspec.add_runtime_dependency(rubygem.name, "> 0")
-    end
-
-    push_gem "sandworm-1.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby") { |s|
+      s.add_runtime_dependency(rubygem.name, "> 0")
+    })
 
     assert_response :success
 
@@ -236,11 +229,9 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "pushing a gem with an unknown dependency" do
-    build_gem "sandworm", "1.0.0" do |gemspec|
-      gemspec.add_runtime_dependency("mauddib", "> 1")
-    end
-
-    push_gem "sandworm-1.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby") { |s|
+      s.add_runtime_dependency("mauddib", "> 1")
+    })
 
     assert_response :success
 
@@ -257,11 +248,9 @@ class PushTest < ActionDispatch::IntegrationTest
     create(:version, number: "1.0.0", platform: "ruby", rubygem: rubygem)
     create(:version, number: "1.0.0", platform: "java", rubygem: rubygem)
 
-    build_gem "sandworm", "1.0.0" do |gemspec|
-      gemspec.platform = "universal-darwin-19"
-    end
-
-    push_gem "sandworm-1.0.0-universal-darwin-19.gem"
+    push_gem build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby") { |s|
+      s.platform = "universal-darwin-19"
+    })
 
     assert_response :success
 
@@ -277,11 +266,9 @@ class PushTest < ActionDispatch::IntegrationTest
     create(:ownership, rubygem: rubygem, user: @user)
     create(:version, number: "1.0.0", platform: "universal-darwin-19", rubygem: rubygem)
 
-    build_gem "sandworm", "1.0.0" do |gemspec|
-      gemspec.platform = "universal-darwin19"
-    end
-
-    push_gem "sandworm-1.0.0-universal-darwin-19.gem"
+    push_gem build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby") { |s|
+      s.platform = "universal-darwin19"
+    })
 
     assert_response :forbidden
     assert_equal "There was a problem saving your gem: " \
@@ -320,14 +307,14 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "push errors don't save files" do
-    build_gem "sandworm", "1.0.0"
+    gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
 
     assert_nil Rubygem.find_by(name: "sandworm")
 
     # Error on empty authors now happens in a different place,
     # but test what would happen if marshal dumping failed
     Gem::Specification.any_instance.stubs(:_dump).raises(NoMethodError)
-    push_gem "sandworm-1.0.0.gem"
+    push_gem gem_io
 
     assert_response :unprocessable_content
     assert_match(/Please try rebuilding it and installing it locally to make sure it's valid./, response.body)
@@ -343,9 +330,7 @@ class PushTest < ActionDispatch::IntegrationTest
     version = create(:version, number: "1.0.0", rubygem: rubygem)
     create(:deletion, version:)
 
-    build_gem "sandworm", "1.0.0"
-
-    push_gem "sandworm-1.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
 
     assert_response :conflict
     assert_match(/A yanked version already exists \(sandworm-1.0.0\)/, response.body)
@@ -356,23 +341,21 @@ class PushTest < ActionDispatch::IntegrationTest
     version = create(:version, number: "1.0.0", rubygem: rubygem)
     create(:deletion, version:)
 
-    build_gem "sandworm", "1.0.0"
-
-    push_gem "sandworm-1.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
 
     assert_response :conflict
     assert_match(/A yanked version pushed by a previous owner of this gem already exists \(sandworm-1.0.0\)/, response.body)
   end
 
   test "republish an indexed version" do
-    build_gem "sandworm", "1.0.0"
+    gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
 
-    push_gem "sandworm-1.0.0.gem"
+    push_gem gem_io
 
     assert_response :success
 
     assert_enqueued_jobs 0 do
-      push_gem "sandworm-1.0.0.gem"
+      push_gem gem_io
     end
 
     assert_response :success
@@ -380,16 +363,16 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "republish a version where the gem is un-indexed but not yanked" do
-    build_gem "sandworm", "1.0.0"
+    gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
 
     Pusher.any_instance.stubs(:after_write)
 
-    push_gem "sandworm-1.0.0.gem"
+    push_gem gem_io
 
     Pusher.any_instance.unstub(:after_write)
 
     assert_enqueued_jobs 0 do
-      push_gem "sandworm-1.0.0.gem"
+      push_gem gem_io
     end
 
     assert_response :conflict
@@ -401,24 +384,21 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "publishing a gem with ceritifcate but not signatures" do
-    build_gem "sandworm", "2.0.0" do |gemspec|
-      gemspec.cert_chain = [File.read(File.expand_path("../certs/chain.pem", __dir__))]
-    end
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby") { |s|
+      s.cert_chain = [File.read(File.expand_path("../certs/chain.pem", __dir__))]
+    })
 
-    push_gem "sandworm-2.0.0.gem"
-
-    assert_response :forbidden
-    assert_match(/You have added cert_chain in gemspec but signature was empty/, response.body)
+    assert_response :unprocessable_content
+    assert_match(/Cert chain provided, but no signatures found/, response.body)
   end
 
   test "publishing a gem with an invalid homepage" do
-    build_gem "sandworm", "2.0.0" do |gemspec|
-      gemspec.homepage = "not a valid url"
-    end
-    push_gem "sandworm-2.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby") { |s|
+      s.homepage = "not a valid url"
+    })
 
     assert_response :unprocessable_content
-    assert_match(/is not a valid HTTP URI/, response.body)
+    assert_match(/is not.*URI/, response.body)
   end
 
   setup do
@@ -436,8 +416,7 @@ class PushTest < ActionDispatch::IntegrationTest
   test "publishing a gem with webhook subscribers" do
     hook = create(:global_web_hook)
 
-    build_gem "sandworm", "2.0.0"
-    push_gem "sandworm-2.0.0.gem"
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
 
     assert_response :success
 
@@ -542,7 +521,7 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       aggregate_assertions "should fail to push" do
-        assert_response :forbidden
+        assert_response :unprocessable_content
 
         assert_nil Rubygem.find_by(name: "book")
         assert_nil RubygemFs.instance.get("gems/book-2-2.0.gem")
@@ -568,7 +547,7 @@ class PushTest < ActionDispatch::IntegrationTest
       push_gem "malicious.gem"
 
       aggregate_assertions "should fail to push" do
-        assert_response :forbidden
+        assert_response :unprocessable_content
 
         assert_nil Rubygem.find_by(name: "book-2.0-universal-darwin")
         assert_nil RubygemFs.instance.get("gems/book-2.0-universal-darwin-19.gem")
@@ -591,7 +570,7 @@ class PushTest < ActionDispatch::IntegrationTest
         push_gem "malicious.gem"
 
         aggregate_assertions "should fail to push" do
-          assert_response :conflict
+          assert_response :unprocessable_content
 
           assert_nil Rubygem.find_by(name: "book")
           assert_nil RubygemFs.instance.get("gems/book-1-ruby.gem")
@@ -611,7 +590,7 @@ class PushTest < ActionDispatch::IntegrationTest
         YAML
         push_gem "malicious.gem"
 
-        assert_response :forbidden
+        assert_response :unprocessable_content
       end
     end
 
@@ -643,7 +622,7 @@ class PushTest < ActionDispatch::IntegrationTest
       YAML
       push_gem "malicious.gem"
 
-      assert_response :forbidden
+      assert_response :unprocessable_content
     end
 
     should "fail when spec.date cannot Marshal.dump" do
@@ -667,9 +646,10 @@ class PushTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def push_gem(path)
+  def push_gem(gem)
+    data = gem.respond_to?(:string) ? gem.string : File.read(gem)
     post api_v1_rubygems_path,
-      env: { "RAW_POST_DATA" => File.read(path) },
+      env: { "RAW_POST_DATA" => data },
       headers: { "CONTENT_TYPE" => "application/octet-stream",
                  "HTTP_AUTHORIZATION" => @key }
   end

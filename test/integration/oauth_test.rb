@@ -125,7 +125,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
 
   context "with an existing user for the github_id" do
     setup do
-      @existing = FactoryBot.create(
+      @existing = create(
         :admin_github_user,
         :is_admin
       )

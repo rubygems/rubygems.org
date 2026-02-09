@@ -1,72 +1,62 @@
-require "test_helper"
+require "application_system_test_case"
 
-class SearchTest < SystemTest
+class SearchTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   test "searching for a gem" do
-    create(:rubygem, name: "LDAP", number: "1.0.0")
-    create(:rubygem, name: "LDAP-PLUS", number: "1.0.0")
-    import_and_refresh
+    create(:rubygem, :reindex, name: "LDAP", number: "1.0.0")
+    create(:rubygem, :reindex, name: "LDAP-PLUS", number: "1.0.0")
 
     visit search_path
 
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content? "LDAP"
+    assert_text "LDAP"
 
-    assert page.has_content? "LDAP-PLUS"
+    assert_text "LDAP-PLUS"
   end
 
   test "searching for a yanked gem" do
     rubygem = create(:rubygem, name: "LDAP")
-    create(:version, rubygem: rubygem, indexed: false)
-    import_and_refresh
+    create(:version, :reindex, rubygem: rubygem, indexed: false)
 
     visit search_path
 
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content? "No gems found"
-    assert page.has_content? "Yanked (1)"
+    assert_text "NO GEMS FOUND"
+    assert_text "YANKED (1)"
 
     click_link "Yanked (1)"
 
-    assert page.has_content? "LDAP"
+    assert_text "LDAP"
     assert page.has_selector? "a[href='#{rubygem_path('LDAP')}']"
   end
 
   test "searching for a gem with yanked versions" do
     rubygem = create(:rubygem, name: "LDAP")
-    create(:version, rubygem: rubygem, number: "1.1.1", indexed: true)
-    create(:version, rubygem: rubygem, number: "2.2.2", indexed: false)
-    import_and_refresh
+    create(:version, :reindex, rubygem: rubygem, number: "1.1.1", indexed: true)
+    create(:version, :reindex, rubygem: rubygem, number: "2.2.2", indexed: false)
 
     visit search_path
 
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content?("1.1.1")
-    refute page.has_content?("2.2.2")
-  end
-
-  test "search page with a non valid format" do
-    assert_raises(ActionController::RoutingError) do
-      get search_path(format: :json), params: { query: "foobar" }
-    end
+    assert_text("1.1.1")
+    assert_no_text("2.2.2")
   end
 
   test "params has non white listed keys" do
     Kaminari.configure { |c| c.default_per_page = 1 }
-    create(:rubygem, name: "ruby-ruby", number: "1.0.0")
-    create(:rubygem, name: "ruby-gems", number: "1.0.0")
-    import_and_refresh
+    create(:rubygem, :reindex, name: "ruby-ruby", number: "1.0.0")
+    create(:rubygem, :reindex, name: "ruby-gems", number: "1.0.0")
 
     visit "/search?query=ruby&original_script_name=javascript:alert(1)//&script_name=javascript:alert(1)//"
 
-    assert page.has_content? "ruby-ruby"
+    assert_text "ruby-ruby"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
     Kaminari.configure { |c| c.default_per_page = 30 }
   end
@@ -77,18 +67,17 @@ class SearchTest < SystemTest
       orignal_val = Gemcutter::SEARCH_MAX_PAGES
       Gemcutter::SEARCH_MAX_PAGES = 2
 
-      create(:rubygem, name: "ruby-ruby", number: "1.0.0")
-      create(:rubygem, name: "ruby-gems", number: "1.0.0")
-      create(:rubygem, name: "ruby-thing", number: "1.0.0")
-      import_and_refresh
+      create(:rubygem, :reindex, name: "ruby-ruby", number: "1.0.0")
+      create(:rubygem, :reindex, name: "ruby-gems", number: "1.0.0")
+      create(:rubygem, :reindex, name: "ruby-thing", number: "1.0.0")
 
       visit "/search?query=ruby"
 
-      assert page.has_content? "Displaying gem 1 - 1 of 3 in total"
+      assert_text "DISPLAYING GEM 1 - 1 OF 3 IN TOTAL"
 
       click_link "Last"
 
-      assert page.has_content? "Displaying gem 2 - 2 of 3 in total"
+      assert_text "DISPLAYING GEM 2 - 2 OF 3 IN TOTAL"
 
       Gemcutter::SEARCH_MAX_PAGES = orignal_val
       Kaminari.configure { |c| c.default_per_page = 30 }
@@ -105,14 +94,14 @@ class SearchTest < SystemTest
 
     visit "/gems/#{dependency.name}/reverse_dependencies"
 
-    assert page.has_content? "Search reverse dependencies Gems…"
+    assert_text "Search reverse dependencies Gems…"
     within ".reverse__dependencies" do
-      assert page.has_content? gem.name
+      assert_text gem.name
     end
 
     visit "/gems/#{gem.name}/reverse_dependencies"
 
-    refute page.has_content? "Search reverse dependencies Gems…"
-    assert page.has_content? "This gem has no reverse dependencies"
+    assert_no_text "Search reverse dependencies Gems…"
+    assert_text "This gem has no reverse dependencies"
   end
 end

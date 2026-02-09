@@ -28,7 +28,7 @@ class Organizations::Onboarding::BaseController < ApplicationController
   helper_method :available_rubygems
 
   def approved_invites
-    owner = OrganizationInvite.new(user: @organization_onboarding.created_by, role: :admin)
+    owner = OrganizationInvite.new(user: @organization_onboarding.created_by, role: :owner)
     @approved_invites ||= @organization_onboarding.approved_invites.prepend(owner)
   end
   helper_method :approved_invites

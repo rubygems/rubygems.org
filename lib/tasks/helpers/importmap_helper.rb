@@ -3,7 +3,8 @@
 require "importmap/packager"
 
 module ImportmapHelper
-  VerifyError = Class.new(StandardError)
+  class VerifyError < StandardError
+  end
 
   class Packager < Importmap::Packager
     self.endpoint = URI("https://api.jspm.io/generate")

@@ -1,7 +1,9 @@
-require "test_helper"
+require "application_system_test_case"
 require "capybara/minitest"
 
-class NotificationSettingsTest < SystemTest
+class NotificationSettingsTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
   include Capybara::Minitest::Assertions
 
   test "changing email notification settings" do
@@ -29,17 +31,19 @@ class NotificationSettingsTest < SystemTest
 
       choose notifier_off_radio(ownership1, "push")
       choose notifier_off_radio(ownership2, "owner")
+    end
 
-      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      within_element notifier_form_selector do
         click_button I18n.t("notifiers.show.update")
       end
+
+      assert_selector "#flash_notice", text: I18n.t("notifiers.update.success")
     end
 
     assert_emails 1
 
     assert_equal I18n.t("mailer.notifiers_changed.subject", host: Gemcutter::HOST_DISPLAY), last_email.subject
-
-    assert_selector "#flash_notice", text: I18n.t("notifiers.update.success")
 
     within_element notifier_form_selector do
       assert_unchecked_field notifier_on_radio(ownership1, "push")

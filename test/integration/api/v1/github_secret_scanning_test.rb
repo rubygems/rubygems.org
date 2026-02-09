@@ -26,6 +26,9 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
           @private_key_pem = key.to_pem
           @public_key_pem = key.public_to_pem
 
+          Rails.cache.delete([GitHubSecretScanning.name, "public_keys", "test_key_id"])
+          Rails.cache.delete([GitHubSecretScanning::DepsDev.name, "public_keys", "test_key_id"])
+
           h = KEYS_RESPONSE_BODY.dup
           h["public_keys"][0]["key"] = @public_key_pem
 

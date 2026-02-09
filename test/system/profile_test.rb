@@ -1,5 +1,4 @@
 require "application_system_test_case"
-require "test_helper"
 
 class ProfileTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
@@ -13,7 +12,7 @@ class ProfileTest < ApplicationSystemTestCase
 
     visit profile_path("nick1")
 
-    assert page.has_content? "nick1"
+    assert_text "nick1"
 
     click_link "Edit Profile"
     fill_in "user_handle", with: "nick2"
@@ -34,7 +33,7 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "Username has already been taken"
+    assert_text "Username has already been taken"
   end
 
   test "changing to invalid handle does not affect rendering" do
@@ -46,7 +45,7 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "Username is too long (maximum is 40 characters)"
+    assert_text "Username is too long (maximum is 40 characters)"
     assert page.has_link?("nick1", href: "/profiles/nick1")
   end
 
@@ -77,7 +76,7 @@ class ProfileTest < ApplicationSystemTestCase
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
       visit link
 
-      assert page.has_content?("Your email address has been verified")
+      assert_text("Your email address has been verified")
       visit edit_profile_path
 
       assert page.has_selector? "input[value='nick2@example.com']"
@@ -91,7 +90,7 @@ class ProfileTest < ApplicationSystemTestCase
     # email is hidden at public profile by default
     visit profile_path("nick1")
 
-    refute page.has_content?("Email Me")
+    assert_no_text("Email Me")
 
     sign_in
     visit profile_path("nick1")
@@ -100,11 +99,13 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     check "Show email in public profile"
     click_button "Update"
+
+    assert_text "Your profile was updated."
     sign_out
 
     visit profile_path("nick1")
 
-    assert page.has_content?("Email Me")
+    assert_text("Email Me")
   end
 
   test "adding X(formerly Twitter) username" do
@@ -115,6 +116,8 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "user_twitter_username", with: "nick1"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
+
+    assert_text "Your profile was updated."
 
     sign_out
     visit profile_path("nick1")
@@ -141,7 +144,7 @@ class ProfileTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "Your profile was updated."
+    assert_text "Your profile was updated."
     assert_equal twitter_username, page.find_by_id("user_twitter_username").value
   end
 
@@ -156,8 +159,8 @@ class ProfileTest < ApplicationSystemTestCase
       click_button "Confirm"
     end
 
-    assert page.has_content? "Your account deletion request has been enqueued. " \
-                             "We will send you a confirmation mail when your request has been processed."
+    assert_text "Your account deletion request has been enqueued. " \
+                "We will send you a confirmation mail when your request has been processed."
   end
 
   test "deleting profile multiple times" do
@@ -169,7 +172,7 @@ class ProfileTest < ApplicationSystemTestCase
       click_button "Confirm"
     end
 
-    assert page.has_content?("Your account deletion request has been enqueued.")
+    assert_text("Your account deletion request has been enqueued.")
 
     sign_in
     visit delete_profile_path

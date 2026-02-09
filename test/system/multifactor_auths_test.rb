@@ -20,13 +20,13 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
       register_otp_device
 
-      assert page.has_content? "Recovery codes"
+      assert_text "Recovery codes"
 
       go_back
 
-      assert page.has_content? "has already been enabled"
-      refute page.has_content? "Register a new device"
-      refute page.has_content? @otp_key
+      assert_text "has already been enabled"
+      assert_no_text "Register a new device"
+      assert_no_text @otp_key
     end
 
     should "setup mfa does not cache recovery codes" do
@@ -34,14 +34,14 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
       register_otp_device
 
-      assert page.has_content? "Recovery codes"
+      assert_text "Recovery codes"
       click_link "Copy to clipboard"
       check "ack"
       click_button "Continue"
 
       go_back
 
-      refute page.has_content? "Recovery codes"
+      assert_no_text "Recovery codes"
     end
   end
 
@@ -72,7 +72,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
         redirect_test_mfa_disabled(new_profile_api_key_path) do
           verify_password
 
-          assert page.has_content?("New API key")
+          assert_text("New API key")
         end
       end
 
@@ -85,7 +85,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
         redirect_test_mfa_disabled(profile_api_keys_path) do
           verify_password
 
-          assert page.has_content?("API keys")
+          assert_text("API keys")
         end
       end
 
@@ -111,7 +111,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
         redirect_test_mfa_weak_level(new_profile_api_key_path) do
           verify_password
 
-          assert page.has_content?("New API key")
+          assert_text("New API key")
         end
       end
 
@@ -124,7 +124,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
         redirect_test_mfa_weak_level(profile_api_keys_path) do
           verify_password
 
-          assert page.has_content?("API keys")
+          assert_text("API keys")
         end
       end
 
@@ -141,14 +141,14 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
       visit edit_settings_path
 
-      assert page.has_content?("UI and gem signin"), "UI and gem signin was not the default level"
+      assert_text "UI and gem signin"
 
       change_auth_level "UI and API (Recommended)"
       fill_in "otp", with: @totp.now
       click_button "Authenticate"
 
       assert_current_path(edit_settings_path)
-      assert page.has_content?("UI and API (Recommended)"), "MFA level was not updated"
+      assert_text "UI and API (Recommended)"
     end
 
     should "user with webauthn can change mfa level" do
@@ -159,16 +159,16 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
       @authenticator = create_webauthn_credential_while_signed_in
 
-      assert page.has_content?("UI and gem signin"), "UI and gem signin was not the default level"
+      assert_text "UI and gem signin"
 
       change_auth_level "UI and API (Recommended)"
 
-      assert page.has_content? "Multi-factor authentication"
-      assert page.has_content? "Security Device"
+      assert_text "Multi-factor authentication"
+      assert_text "Security Device"
       click_on "Authenticate with security device"
 
       assert_current_path(edit_settings_path)
-      assert page.has_content?("UI and API (Recommended)"), "MFA level was not updated"
+      assert_text "UI and API (Recommended)"
     end
   end
 
@@ -176,18 +176,18 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     sign_in(wait_for: "For protection of your account and your gems, you are required to set up multi-factor authentication.")
     visit path
 
-    assert(page.has_content?("you are required to set up multi-factor authentication"))
+    assert_text "you are required to set up multi-factor authentication"
     assert_current_path(edit_settings_path)
 
     register_otp_device
 
-    assert page.has_content? "Recovery codes"
+    assert_text "Recovery codes"
     click_link "Copy to clipboard"
     check "ack"
     click_button "Continue"
     yield if block_given?
 
-    assert_equal path, current_path, "was not redirected back to original destination: #{path}"
+    assert_current_path path
   end
 
   def redirect_test_mfa_weak_level(path)
@@ -195,18 +195,18 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     @user.enable_totp!(@seed, :ui_only)
     visit path
 
-    assert page.has_content? "Edit settings"
+    assert_text "Edit settings"
 
     change_auth_level "UI and gem signin"
     fill_in "otp", with: @totp.now
 
     click_button "Authenticate"
 
-    assert page.has_content?("You have successfully updated your multi-factor authentication level.")
+    assert_text("You have successfully updated your multi-factor authentication level.")
 
     yield if block_given?
 
-    assert_equal path, current_path, "was not redirected back to original destination: #{path}"
+    assert_current_path path
   end
 
   def sign_in(wait_for: "Dashboard")
@@ -215,7 +215,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    assert page.has_content?(wait_for)
+    assert_text(wait_for)
   end
 
   def otp_key
