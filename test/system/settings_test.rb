@@ -25,19 +25,19 @@ class SettingsTest < ApplicationSystemTestCase
     visit edit_settings_path
     click_button "Register a new device"
 
-    assert page.has_content? "Enabling multi-factor auth"
+    assert_text "Enabling multi-factor auth"
 
     totp = ROTP::TOTP.new(otp_key)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
-    assert page.has_content? "Recovery codes"
+    assert_text "Recovery codes"
 
     click_link "Copy to clipboard"
     check "ack"
     click_button "Continue"
 
-    assert page.has_content? "You have enabled multi-factor authentication."
+    assert_text "You have enabled multi-factor authentication."
     css = %(a[href="https://guides.rubygems.org/setting-up-multifactor-authentication"])
 
     assert page.has_css?(css, visible: true)
@@ -48,13 +48,13 @@ class SettingsTest < ApplicationSystemTestCase
     visit edit_settings_path
     click_button "Register a new device"
 
-    assert page.has_content? "Enabling multi-factor auth"
+    assert_text "Enabling multi-factor auth"
 
     totp = ROTP::TOTP.new(ROTP::Base32.random_base32)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
-    assert page.has_content? "You have not yet enabled OTP based multi-factor authentication."
+    assert_text "You have not yet enabled OTP based multi-factor authentication."
   end
 
   test "disabling multi-factor authentication with valid otp" do
@@ -65,7 +65,7 @@ class SettingsTest < ApplicationSystemTestCase
     page.fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Disable"
 
-    assert page.has_content? "You have not yet enabled OTP based multi-factor authentication."
+    assert_text "You have not yet enabled OTP based multi-factor authentication."
     css = %(a[href="https://guides.rubygems.org/setting-up-multifactor-authentication"])
 
     assert page.has_css?(css)
@@ -80,7 +80,7 @@ class SettingsTest < ApplicationSystemTestCase
     page.fill_in "otp", with: ROTP::TOTP.new(key).now
     click_button "Disable"
 
-    assert page.has_content? "You have enabled multi-factor authentication."
+    assert_text "You have enabled multi-factor authentication."
   end
 
   test "disabling multi-factor authentication with recovery code" do
@@ -92,7 +92,7 @@ class SettingsTest < ApplicationSystemTestCase
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
-    assert page.has_content? "Recovery codes"
+    assert_text "Recovery codes"
 
     recoveries = page.find(:css, ".recovery-code-list").value.split
 
@@ -102,7 +102,7 @@ class SettingsTest < ApplicationSystemTestCase
     page.fill_in "otp", with: recoveries.sample
     click_button "Disable"
 
-    assert page.has_content? "You have not yet enabled OTP based multi-factor authentication."
+    assert_text "You have not yet enabled OTP based multi-factor authentication."
   end
 
   test "Clicking MFA continue button without copying recovery codes creates confirm popup" do
@@ -119,13 +119,13 @@ class SettingsTest < ApplicationSystemTestCase
     end
 
     assert_equal "Leave without copying recovery codes?", confirm_text
-    assert_equal recovery_multifactor_auth_path, page.current_path
+    assert_current_path recovery_multifactor_auth_path
     page.accept_confirm do
       click_button "Continue"
     end
     page.find("h1", text: "Edit settings")
 
-    assert_equal edit_settings_path, page.current_path
+    assert_current_path edit_settings_path
   end
 
   test "Navigating away another way without copying recovery codes creates default leave warning popup" do
@@ -142,13 +142,13 @@ class SettingsTest < ApplicationSystemTestCase
       click_on "Continue"
     end
 
-    assert_equal recovery_multifactor_auth_path, page.current_path
+    assert_current_path recovery_multifactor_auth_path
 
     accept_confirm("Leave without copying recovery codes?") do
       click_on "Continue"
     end
 
-    assert_equal edit_settings_path, page.current_path
+    assert_current_path edit_settings_path
   end
 
   test "shows 'ui only' if user's level is ui_only" do
@@ -157,7 +157,7 @@ class SettingsTest < ApplicationSystemTestCase
     visit edit_settings_path
 
     assert page.has_selector?("#level > option:nth-child(3)")
-    assert page.has_content? "UI Only"
+    assert_text "UI Only"
   end
 
   test "does not shows 'ui only' if user's level is not ui_only" do
@@ -165,10 +165,15 @@ class SettingsTest < ApplicationSystemTestCase
     enable_otp
     visit edit_settings_path
 
-    page.fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     change_auth_level "UI and API"
 
+    assert_text "Multi-factor authentication"
+    page.fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
+    click_button "Authenticate"
+
+    assert_text "Edit settings"
+
     refute page.has_selector?("#level > option:nth-child(3)")
-    refute page.has_content? "UI Only"
+    assert_no_text "UI Only"
   end
 end

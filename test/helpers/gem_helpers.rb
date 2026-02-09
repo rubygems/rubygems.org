@@ -1,4 +1,10 @@
-module GemHelpers
+module GemHelpers # rubocop:disable Metrics/ModuleLength
+  def gem_tar_builder(&block)
+    builder = GemTarBuilder.new
+    builder.instance_eval(&block)
+    builder.to_io
+  end
+
   def gem_specification_from_gem_fixture(name)
     Gem::Package.new(File.join("test", "gems", "#{name}.gem")).spec
   end
@@ -13,8 +19,81 @@ module GemHelpers
     end
   end
 
-  def build_gem(name, version, summary = "Gemcutter", platform = "ruby", &)
-    build_gemspec(new_gemspec(name, version, summary, platform, &))
+  def build_gem(spec, key: nil) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+    checksums = {
+      "SHA256" => {},
+      "SHA512" => {}
+    }
+    tar = StringIO.new("".b)
+
+    Gem::Package::TarWriter.new(tar) do |gem_tar|
+      sha256 = OpenSSL::Digest.new "SHA256"
+      sha512 = OpenSSL::Digest.new "SHA512"
+
+      gem_tar.add_file "metadata.gz", 0o444 do |io|
+        yaml = spec.is_a?(String) ? spec : spec.to_yaml
+        Gem::Package::DigestIO.wrap(io, [["SHA256", sha256], ["SHA512", sha512]]) do |dio|
+          gz_io = Zlib::GzipWriter.new dio, Zlib::BEST_COMPRESSION
+          gz_io.write yaml
+          gz_io.close
+        end
+        checksums["SHA256"]["metadata.gz"] = sha256.hexdigest
+        checksums["SHA512"]["metadata.gz"] = sha512.hexdigest
+      end
+
+      if key.present?
+        gem_tar.add_file "metadata.gz.sig", 0o444 do |io|
+          io.write key.sign(OpenSSL::Digest.new("SHA256").new, sha256.digest)
+        end
+      end
+
+      sha256 = OpenSSL::Digest.new "SHA256"
+      sha512 = OpenSSL::Digest.new "SHA512"
+
+      gem_tar.add_file "data.tar.gz", 0o444 do |io|
+        Gem::Package::DigestIO.wrap(io, [["SHA256", sha256], ["SHA512", sha512]]) do |dio|
+          gz_io = Zlib::GzipWriter.new dio, Zlib::BEST_COMPRESSION
+          Gem::Package::TarWriter.new gz_io do |data_tar|
+            data = "hello world"
+            data_tar.add_file_simple "lib/testing.txt", 0o444, data.bytesize do |file_io|
+              file_io.write data
+            end
+          end
+          gz_io.close
+        end
+        checksums["SHA256"]["data.tar.gz"] = sha256.hexdigest
+        checksums["SHA512"]["data.tar.gz"] = sha512.hexdigest
+      end
+
+      if key.present?
+        gem_tar.add_file "data.tar.gz.sig", 0o444 do |io|
+          io.write key.sign(OpenSSL::Digest.new("SHA256").new, sha256.digest)
+        end
+      end
+
+      sha256 = OpenSSL::Digest.new "SHA256"
+      sha512 = OpenSSL::Digest.new "SHA512"
+
+      gem_tar.add_file "checksums.yaml.gz", 0o444 do |io|
+        Gem::Package::DigestIO.wrap(io, [["SHA256", sha256], ["SHA512", sha512]]) do |dio|
+          gz_io = Zlib::GzipWriter.new dio, Zlib::BEST_COMPRESSION
+          gz_io.write Psych.dump(checksums)
+          gz_io.close
+        end
+        checksums["SHA256"]["checksums.yaml.gz"] = sha256.hexdigest
+        checksums["SHA512"]["checksums.yaml.gz"] = sha512.hexdigest
+      end
+
+      if key.present?
+        gem_tar.add_file "checksums.yaml.gz.sig", 0o444 do |io|
+          io.write key.sign(OpenSSL::Digest.new("SHA256").new, sha256.digest)
+        end
+      end
+
+      yield gem_tar if block_given?
+    end
+
+    StringIO.new(tar.string)
   end
 
   def build_gem_raw(file_name:, spec:, contents_writer: nil)

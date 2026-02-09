@@ -1,6 +1,8 @@
-require "test_helper"
+require "application_system_test_case"
 
-class SignUpTest < SystemTest
+class SignUpTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   test "sign up" do
     visit sign_up_path
 
@@ -34,7 +36,7 @@ class SignUpTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
-    assert page.has_content? "errors prohibited"
+    assert_text "errors prohibited"
   end
 
   test "sign up with bad handle" do
@@ -45,7 +47,7 @@ class SignUpTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
-    assert page.has_content? "error prohibited"
+    assert_text "error prohibited"
   end
 
   test "sign up with someone else's handle" do
@@ -57,7 +59,7 @@ class SignUpTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
-    assert page.has_content? "error prohibited"
+    assert_text "error prohibited"
   end
 
   test "sign up when sign up is disabled" do
@@ -66,16 +68,7 @@ class SignUpTest < SystemTest
 
     visit root_path
 
-    refute page.has_content? "Sign up"
-    assert_raises(ActionController::RoutingError) do
-      visit "/sign_up"
-    end
-  end
-
-  test "sign up when user param is string" do
-    assert_nothing_raised do
-      get "/sign_up?user=JJJ12QQQ"
-    end
+    assert_no_text "Sign up"
   end
 
   test "email confirmation" do
@@ -87,6 +80,8 @@ class SignUpTest < SystemTest
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
       click_button "Sign up"
+
+      assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
     end
 
     link = last_email_link
@@ -94,14 +89,14 @@ class SignUpTest < SystemTest
     assert_not_nil link
     visit link
 
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
 
     fill_in "Email or Username", with: "email@person.com"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert_text "Dashboard"
   end
 
   test "links to terms of service" do

@@ -21,8 +21,8 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_equal "maintainer", @transfer.invites.find_by(user_id: @maintainers[0].id).role
-    assert_nil @transfer.invites.find_by(user_id: @maintainers[1].id).role
+    assert_equal "maintainer", @invites[0].reload.role
+    assert_nil @invites[1].reload.role
 
     assert_response :redirect
     assert_redirected_to confirm_transfer_rubygems_path
@@ -57,8 +57,8 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_equal "outside_contributor", @transfer.invites.find_by(user_id: @maintainers[0].id).role
-    assert_equal "maintainer", @transfer.invites.find_by(user_id: @maintainers[1].id).role
+    assert_equal "outside_contributor", @invites[0].reload.role
+    assert_equal "maintainer", @invites[1].reload.role
 
     assert_response :redirect
     assert_redirected_to confirm_transfer_rubygems_path

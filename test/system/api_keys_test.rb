@@ -10,7 +10,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    assert page.has_content?("Dashboard")
+    assert_text("Dashboard")
   end
 
   test "creating new api key" do
@@ -21,10 +21,10 @@ class ApiKeysTest < ApplicationSystemTestCase
     fill_in "api_key[name]", with: "test"
     check "api_key[index_rubygems]"
 
-    refute page.has_content? "Enable MFA"
+    assert_no_text "Enable MFA"
     click_button "Create API Key"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :can_index_rubygems?
     refute_predicate @user.api_keys.last, :mfa_enabled?
     assert_nil @user.api_keys.last.rubygem
@@ -43,17 +43,17 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "New API key"
 
-    assert page.has_content?("New API key")
+    assert_text("New API key")
 
     assert_empty URI.parse(page.current_url).query
 
     fill_in "api_key[name]", with: "test"
     check "api_key[index_rubygems]"
 
-    refute page.has_content? "Enable MFA"
+    assert_no_text "Enable MFA"
     click_button "Create API Key"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :can_index_rubygems?
     refute_predicate @user.api_keys.last, :mfa_enabled?
     assert_nil @user.api_keys.last.rubygem
@@ -69,7 +69,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.select @ownership.rubygem.name
     click_button "Create API Key"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert_equal @ownership.rubygem.name, page.find('.owners__cell[data-title="Gem"]').text
     assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
   end
@@ -93,7 +93,7 @@ class ApiKeysTest < ApplicationSystemTestCase
       page.select @ownership.rubygem.name
       click_button "Create API Key"
 
-      assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+      assert_text "Note that we won't be able to show the key to you again. New API key:"
       assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
     end
   end
@@ -122,7 +122,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     click_button "Create API Key"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :can_index_rubygems?
   end
 
@@ -139,7 +139,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Create API Key"
 
     assert page.has_css? ".flash"
-    assert page.has_content? "Rubygem must be a gem that you are an owner of"
+    assert_text "Rubygem must be a gem that you are an owner of"
     assert_empty @user.api_keys
   end
 
@@ -153,7 +153,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     check "mfa"
     click_button "Create API Key"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
@@ -181,7 +181,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     check "api_key[index_rubygems]"
     click_button "Create API Key"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
@@ -191,14 +191,14 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     assert_empty URI.parse(page.current_url).query
     check "api_key[add_owner]"
 
-    refute page.has_content? "Enable MFA"
+    assert_no_text "Enable MFA"
     click_button "Update API Key"
 
-    assert page.has_content?("Successfully updated API key")
+    assert_text("Successfully updated API key")
     assert_predicate api_key.reload, :can_add_owner?
   end
 
@@ -208,12 +208,12 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     assert page.has_select? "api_key_rubygem_id", selected: @ownership.rubygem.name
     page.select "All Gems"
     click_button "Update API Key"
 
-    assert page.has_content?("Successfully updated API key")
+    assert_text("Successfully updated API key")
     assert_equal "All Gems", page.find('.owners__cell[data-title="Gem"]').text
     assert_nil api_key.reload.rubygem
   end
@@ -224,14 +224,14 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     page.check "api_key[index_rubygems]"
     page.uncheck "api_key[push_rubygem]"
 
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
     click_button "Update API Key"
 
-    assert page.has_content?("Successfully updated API key")
+    assert_text("Successfully updated API key")
     assert_nil api_key.reload.rubygem
   end
 
@@ -241,7 +241,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     page.uncheck "api_key[push_rubygem]"
 
     assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
@@ -250,7 +250,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     page.select @ownership.rubygem.name
     click_button "Update API Key"
 
-    assert page.has_content?("Successfully updated API key")
+    assert_text("Successfully updated API key")
     assert_equal api_key.reload.rubygem, @ownership.rubygem
   end
 
@@ -261,7 +261,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     assert page.has_select? "api_key_rubygem_id", selected: @ownership.rubygem.name
     page.select "another_gem"
 
@@ -269,7 +269,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Update API Key"
 
     assert page.has_css? ".flash"
-    assert page.has_content? "Rubygem must be a gem that you are an owner of"
+    assert_text "Rubygem must be a gem that you are an owner of"
     assert_equal @ownership.rubygem, api_key.reload.rubygem
   end
 
@@ -281,12 +281,12 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     check "api_key[add_owner]"
     check "mfa"
     click_button "Update API Key"
 
-    assert page.has_content?("Successfully updated API key")
+    assert_text("Successfully updated API key")
     assert_predicate api_key.reload, :can_add_owner?
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
@@ -299,13 +299,13 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     check "api_key[add_owner]"
 
-    refute page.has_content? "Enable MFA"
+    assert_no_text "Enable MFA"
     click_button "Update API Key"
 
-    assert page.has_content?("Successfully updated API key")
+    assert_text("Successfully updated API key")
     assert_predicate api_key.reload, :can_add_owner?
     assert_predicate @user.api_keys.last, :mfa_enabled?
   end
@@ -316,7 +316,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     assert page.has_field? "api_key[expires_at]", disabled: true
   end
 
@@ -328,7 +328,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     page.accept_alert
 
-    assert page.has_content? "New API key"
+    assert_text "New API key"
     page.assert_text "Successfully deleted API key: #{api_key.name}"
 
     assert_event Events::UserEvent::API_KEY_DELETED, { name: api_key.name, api_key_gid: api_key.to_global_id.to_s },
@@ -343,7 +343,7 @@ class ApiKeysTest < ApplicationSystemTestCase
 
     page.accept_alert
 
-    assert page.has_content? "New API key"
+    assert_text "New API key"
     page.assert_no_text api_key.name
   end
 
@@ -364,8 +364,8 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_equal "#{@ownership.rubygem.name} [?]", page.find('.owners__cell[data-title="Gem"]').text
     visit_edit_profile_api_key_path(api_key)
 
-    assert page.has_content? "An invalid API key cannot be edited. Please delete it and create a new one."
-    assert_equal profile_api_keys_path, page.current_path
+    assert_text "An invalid API key cannot be edited. Please delete it and create a new one."
+    assert_current_path profile_api_keys_path
   end
 
   def visit_profile_api_keys_path
