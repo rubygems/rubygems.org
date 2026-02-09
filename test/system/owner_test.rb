@@ -232,12 +232,7 @@ class OwnerTest < ApplicationSystemTestCase
     sign_out
     sign_in(maintainer)
 
-    visit rubygem_path(@rubygem.slug)
-    click_link "Ownership"
-    return unless page.has_css? "#verify_password_password"
-
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Confirm"
+    visit_ownerships_page
 
     assert page.has_selector?(".owners__table")
 
