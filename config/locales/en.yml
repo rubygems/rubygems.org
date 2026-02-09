@@ -14,14 +14,11 @@ en:
     Use <a href="%{api_docs}">the API</a> to find out more about <a href="%{gem_list}">available gems</a>.
     <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
   footer_sponsors_html:
-    RubyGems.org is made possible through a partnership with the greater Ruby community.
-    <a href="https://www.fastly.com/">Fastly</a> provides bandwidth and CDN support,
-    <a href="https://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, and
-    funds ongoing development and ops work.
-    <a href="%{sponsors_page}">Learn more about our sponsors and how they work together</a>.
-  footer_join_rt_html:
-    We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
-    <a href="https://rubycentral.org/#/portal/signup">Join Ruby Central today</a>.
+    The RubyGems.org website and service are maintained and operated by Ruby Central’s
+    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team. 
+    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations. 
+    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler 
+    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.   
   form_disable_with: Please wait...
   invalid_page: Page number is out of range. Redirected to default page.
   locale_name: English
@@ -94,6 +91,8 @@ en:
         api_key_permissions: API Key Permissions
       oidc/trusted_publisher/github_action:
         repository_owner_id: GitHub Repository Owner ID
+        workflow_repository_owner: Workflow Repository Owner
+        workflow_repository_name: Workflow Repository Name
       oidc/pending_trusted_publisher:
         rubygem_name: RubyGem name
     errors:
@@ -109,6 +108,16 @@ en:
           attributes:
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+        membership:
+          attributes:
+            user:
+              taken: has already been invited to this organization
+              blank: not found
+              required: not found
+            user_id:
+              taken: has already been invited to this organization
+              blank: not found
+              required: not found
         ownership:
           attributes:
             user_id:
@@ -259,14 +268,13 @@ en:
         source_code: Code
         statistics: Stats
         status: Status
+        support_us: Support Us
         supported_by: Supported by
+        operated_by: Operated by
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           is supported by
-        tested_by: Tested by
-        tracking_by: Tracking by
         uptime: Uptime
-        verified_by: Verified by
         secured_by: Secured by
         looking_for_maintainers: maintainers wanted
       header:
@@ -409,6 +417,7 @@ en:
   organizations:
     index:
       title: Organizations
+      no_organizations: You are not a member of any organizations.
     show:
       organization: Organization
       gems: Gems
@@ -418,6 +427,7 @@ en:
       no_gems: No gems yet
       add_member: Invite Member
       invite: Invite
+      transfer: Transfer
     members:
       create:
         user_already_invited: User already invited to the organization.
@@ -428,12 +438,16 @@ en:
       destroy:
         member_removed: Member removed successfully.
         cannot_remove_self: You cannot remove yourself from the organization.
+      resend_invitation:
+        invitation_resent: Invitation resent successfully.
+        already_confirmed: Member is already confirmed.
       index:
         invite: Invite
         pending: Pending
       edit:
         update: Update
         delete: Delete
+        resend_invitation: Resend Invitation
       new:
         handle: Handle
         role: Role
@@ -467,8 +481,8 @@ en:
       title: Download RubyGems
     security:
       title: Security
-    sponsors:
-      title: Sponsors
+    supporters:
+      title: RubyGems Supporters
   policies:
     index:
       title: RubyGems.org Policies
@@ -751,6 +765,7 @@ en:
       header: "%{title} Dependencies"
     release_info:
       managed_by: Managed By
+      outside_contributors: Outside Contributors
       authors_header: Authors
       self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling multi-factor authentication (MFA)</a> to keep your account secure.
       not_using_mfa_warning_show: "* Some owners are not using multi-factor authentication (MFA). Click for the complete list."
@@ -789,11 +804,14 @@ en:
       title: Security Events
       description_html: "This page shows the security events that have occurred on %{gem}. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
     transfer:
+      cancelled: Your draft gem transfer has been cancelled.
       organizations:
         new:
           organization: Organization
       confirm:
-        success: "%{gem} has been transferred successfully to %{organization}."
+        success:
+          one: "Successfully transferred 1 gem to %{organization}."
+          other: "Successfully transferred %{count} gems to %{organization}."
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"
@@ -955,6 +973,12 @@ en:
           The name of the <a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">GitHub Actions environment</a> that the above workflow uses for publishing.<br>
           This should be configured under the repository's settings.<br>
           While not required, a dedicated publishing environment is strongly encouraged, especially if your repository has maintainers with commit access who shouldn't have RubyGems.org gem push access.
+        workflow_repository_owner_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The GitHub organization or username that owns the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
+        workflow_repository_name_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The name of the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
       pending:
         rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
   duration:

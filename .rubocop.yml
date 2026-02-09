@@ -53,6 +53,13 @@ Rails/Output:
     - app/views/**/*_view.rb
     - app/views/**/*_component.rb
 
+# Disable block forwarding style enforcement - let context determine choice
+Naming/BlockForwarding:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
+
 Layout/ArgumentAlignment:
   Enabled: false
 

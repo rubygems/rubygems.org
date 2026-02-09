@@ -116,7 +116,9 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
               "repository_name" => repository_name,
               "repository_owner_id" => "123456",
               "workflow_filename" => "push_gem.yml",
-              "environment" => nil
+              "environment" => nil,
+              "workflow_repository_owner" => nil,
+              "workflow_repository_name" => nil
             } },
           @response.parsed_body
         )
@@ -152,7 +154,49 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
               "repository_name" => "rubygem1",
               "repository_owner_id" => "123456",
               "workflow_filename" => "push_gem.yml",
-              "environment" => nil
+              "environment" => nil,
+              "workflow_repository_owner" => nil,
+              "workflow_repository_name" => nil
+            } },
+          response.parsed_body
+        )
+      end
+
+      should "create a trusted publisher with reusable workflow" do
+        stub_request(:get, "https://api.github.com/users/example")
+          .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+        post api_v1_rubygem_trusted_publishers_path(@rubygem.slug),
+             params: {
+               trusted_publisher_type: "OIDC::TrustedPublisher::GitHubAction",
+               trusted_publisher: {
+                 repository_owner: "example",
+                 repository_name: "rubygem1",
+                 workflow_filename: "shared-release.yml",
+                 workflow_repository_owner: "shared-org",
+                 workflow_repository_name: "shared-workflows"
+               }
+             },
+             headers: { "HTTP_AUTHORIZATION" => "12345" }
+
+        assert_response :created
+        trusted_publisher = OIDC::RubygemTrustedPublisher.find(response.parsed_body["id"])
+
+        assert_equal @rubygem, trusted_publisher.rubygem
+        assert_equal "shared-org", trusted_publisher.trusted_publisher.workflow_repository_owner
+        assert_equal "shared-workflows", trusted_publisher.trusted_publisher.workflow_repository_name
+        assert_equal_hash(
+          { "id" => response.parsed_body["id"],
+            "trusted_publisher_type" => "OIDC::TrustedPublisher::GitHubAction",
+            "trusted_publisher" => {
+              "name" => "GitHub Actions example/rubygem1 @ .github/workflows/shared-release.yml",
+              "repository_owner" => "example",
+              "repository_name" => "rubygem1",
+              "repository_owner_id" => "123456",
+              "workflow_filename" => "shared-release.yml",
+              "environment" => nil,
+              "workflow_repository_owner" => "shared-org",
+              "workflow_repository_name" => "shared-workflows"
             } },
           response.parsed_body
         )

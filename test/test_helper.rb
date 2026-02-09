@@ -27,6 +27,8 @@ require "shoulda/matchers"
 require "helpers/admin_helpers"
 require "helpers/api_policy_helpers"
 require "helpers/gem_helpers"
+require "helpers/gem_tar_builder"
+require "helpers/gemspec_yaml_template_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
@@ -37,7 +39,6 @@ require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "helpers/avo_helpers"
 require "webmock/minitest"
-require "phlex/testing/rails/view_helper"
 require "rake"
 
 # setup license early since some tests are testing Avo outside of requests
@@ -73,9 +74,8 @@ Mocha.configure do |c|
   c.strict_keyword_argument_matching = true
 end
 
-Rubygem.searchkick_reindex(import: false)
-
 OmniAuth.config.test_mode = true
+WebAuthn.configuration.allowed_origins = ["http://localhost:31337"]
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
@@ -84,13 +84,45 @@ class ActiveSupport::TestCase
   include PasswordHelpers
   include FeatureFlagHelpers
 
-  parallelize_setup do |_worker|
+  cattr_accessor :parallel_worker_number
+
+  parallelize_setup do |worker|
+    self.parallel_worker_number = worker
+    Version.reset_column_information
     SemanticLogger.reopen
+    Searchkick.index_suffix = "_#{worker}"
+    Rubygem.reindex(import: false)
+    Searchkick.disable_callbacks
+    Rails.cache.options[:namespace] = "test_#{worker}"
+
+    port = 31_337 + worker
+    Capybara.server_port = port
+    WebAuthn.configuration.allowed_origins = ["http://localhost:#{port}"]
+
+    if Toxiproxy.running?
+      toxiproxy_port = 22_222 + worker
+      toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "127.0.0.1")
+      toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
+      Toxiproxy.populate(
+        [
+          {
+            name: "elasticsearch_#{worker}",
+            listen: "#{toxiproxy_listen_host}:#{toxiproxy_port}",
+            upstream: toxiproxy_upstream
+          }
+        ]
+      )
+      Searchkick.client = OpenSearch::Client.new(
+        url: "http://localhost:#{toxiproxy_port}",
+        request_timeout: 2
+      )
+    end
   end
+
+  parallelize(workers: :number_of_processors)
 
   setup do
     I18n.locale = :en
-    Rails.cache.clear
     Rack::Attack.cache.store.clear
 
     Unpwn.offline = true
@@ -107,6 +139,11 @@ class ActiveSupport::TestCase
     return if Toxiproxy.running?
     raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]
     skip("Toxiproxy is not running, but was required for this test.")
+  end
+
+  def toxiproxy_elasticsearch
+    worker = self.class.parallel_worker_number
+    Toxiproxy[worker ? :"elasticsearch_#{worker}" : :elasticsearch]
   end
 
   def requires_avo_pro
@@ -301,17 +338,6 @@ end
 # Force loading of ActionDispatch::SystemTesting::* helpers
 _ = ActionDispatch::SystemTestCase
 
-class SystemTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
-  include Capybara::Minitest::Assertions
-  include ActionDispatch::SystemTesting::TestHelpers::ScreenshotHelper
-  include ActionDispatch::SystemTesting::TestHelpers::SetupAndTeardown
-
-  setup do
-    Capybara.current_driver = :rack_test
-  end
-end
-
 class AdminPolicyTestCase < ActiveSupport::TestCase
   def setup
     requires_avo_pro
@@ -370,17 +396,31 @@ class PolicyTestCase < ActiveSupport::TestCase
 end
 
 class ComponentTest < ActiveSupport::TestCase
-  include Phlex::Testing::Rails::ViewHelper
   include Capybara::Minitest::Assertions
 
   attr_reader :page
 
-  def render(...)
-    response = super
+  def render(component, &block)
+    response = if block
+                 view_context.render(component, &block)
+               else
+                 view_context.render(component)
+               end
     app = ->(_env) { [200, { "Content-Type" => "text/html" }, [response]] }
     session = Capybara::Session.new(:rack_test, app)
     session.visit("/")
     @page = session.document
+    response
+  end
+
+  private
+
+  def view_context
+    @view_context ||= controller.view_context
+  end
+
+  def controller
+    @controller ||= ActionView::TestCase::TestController.new
   end
 
   def preview(path = preview_path, scenario: :default, **params)

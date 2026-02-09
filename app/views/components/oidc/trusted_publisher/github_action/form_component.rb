@@ -9,6 +9,8 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
       field trusted_publisher_form, :text_field, :repository_name, autocomplete: :off
       field trusted_publisher_form, :text_field, :workflow_filename, autocomplete: :off
       field trusted_publisher_form, :text_field, :environment, autocomplete: :off, optional: true
+      field trusted_publisher_form, :text_field, :workflow_repository_owner, autocomplete: :off, optional: true
+      field trusted_publisher_form, :text_field, :workflow_repository_name, autocomplete: :off, optional: true
     end
   end
 
@@ -19,7 +21,7 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
       plain form.object.class.human_attribute_name(name)
       span(class: "t-text--s") { " (#{t('form.optional')})" } if optional
     end
-    form.send(type, name, class: helpers.class_names("form__input", "tw-border tw-border-red-500" => form.object.errors.include?(name)), **)
+    form.send(type, name, class: class_names("form__input", "tw-border tw-border-red-500" => form.object.errors.include?(name)), **)
     p(class: "form__field__instructions") { t("oidc.trusted_publisher.github_actions.#{name}_help_html") }
   end
 end

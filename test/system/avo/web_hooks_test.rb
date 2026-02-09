@@ -29,6 +29,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
     audit = Audit.sole
 
     page.assert_text audit.id
+
     assert_equal "WebHook", audit.auditable_type
     assert_equal "Delete Webhook", audit.action
     assert_equal_hash(

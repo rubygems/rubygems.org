@@ -49,11 +49,11 @@ class OwnersController < ApplicationController
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
     else
-      index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity
+      index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_content
     end
   end
 
-  # This action is used to update a user's owenrship role. This endpoint currently asssumes
+  # This action is used to update a user's ownership role. This endpoint currently assumes
   # the role is the only thing that can be updated. If more fields are added to the ownership
   # this action will need to be tweaked a bit
   def update
@@ -61,7 +61,7 @@ class OwnersController < ApplicationController
       OwnersMailer.with(ownership: @ownership, authorizer: current_user).owner_updated.deliver_later
       redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".success_notice", handle: @ownership.user.name)
     else
-      index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_entity
+      index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_content
     end
   end
 

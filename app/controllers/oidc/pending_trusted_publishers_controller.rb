@@ -32,7 +32,7 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
       flash.now[:error] = trusted_publisher.errors.full_messages.to_sentence
       render OIDC::PendingTrustedPublishers::NewView.new(
         pending_trusted_publisher: trusted_publisher
-      ), status: :unprocessable_entity
+      ), status: :unprocessable_content
     end
   end
 
@@ -40,8 +40,7 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
     if @pending_trusted_publisher.destroy
       redirect_to profile_oidc_pending_trusted_publishers_path, flash: { notice: t(".success") }
     else
-      redirect_back fallback_location: profile_oidc_pending_trusted_publishers_path,
-                    flash: { error: @pending_trusted_publisher.errors.full_messages.to_sentence }
+      redirect_back_or_to(profile_oidc_pending_trusted_publishers_path, flash: { error: @pending_trusted_publisher.errors.full_messages.to_sentence })
     end
   end
 

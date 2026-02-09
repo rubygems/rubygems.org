@@ -13,6 +13,20 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       organization_handle: @namesake_rubygem.name,
       organization_name: "Existing Name"
     )
+
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
+  end
+
+  should "require feature flat enablement" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      get organization_onboarding_gems_path(as: @user)
+
+      assert_response :not_found
+
+      patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [@gem.id] } }
+
+      assert_response :not_found
+    end
   end
 
   context "PATCH update" do
@@ -30,7 +44,11 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       assert_equal [@namesake_rubygem.id], @organization_onboarding.reload.rubygems
     end
 
-    should "ignore empty params" do
+    should "remove non namesake gems if rubygems param is empty" do
+      @organization_onboarding.update!(rubygems: [@gem.id])
+
+      assert_equal [@namesake_rubygem.id, @gem.id], @organization_onboarding.reload.rubygems
+
       patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [""] } }
 
       assert_redirected_to organization_onboarding_users_path
@@ -41,7 +59,7 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       notmygem = create(:rubygem)
       patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [notmygem.id] } }
 
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
       assert_equal [@namesake_rubygem.id], @organization_onboarding.reload.rubygems
     end
   end

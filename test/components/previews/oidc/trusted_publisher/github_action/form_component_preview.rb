@@ -10,6 +10,7 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponentPreview < Lookbook::Pre
     include Phlex::Rails::Helpers::FormWith
 
     extend PropInitializer::Properties
+
     prop :form_object
 
     def view_template

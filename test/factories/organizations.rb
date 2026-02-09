@@ -13,15 +13,15 @@ FactoryBot.define do
 
     after(:create) do |organization, evaluator|
       evaluator.owners.each do |user|
-        create(:membership, user: user, organization: organization, role: :owner)
+        create(:membership, user: user, organization: organization, role: :owner, confirmed_at: Time.zone.now)
       end
 
       evaluator.admins.each do |user|
-        create(:membership, user: user, organization: organization, role: :admin)
+        create(:membership, user: user, organization: organization, role: :admin, confirmed_at: Time.zone.now)
       end
 
       evaluator.maintainers.each do |user|
-        create(:membership, user: user, organization: organization, role: :maintainer)
+        create(:membership, user: user, organization: organization, role: :maintainer, confirmed_at: Time.zone.now)
       end
 
       evaluator.rubygems.each do |rubygem|

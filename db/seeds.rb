@@ -326,6 +326,8 @@ author.webauthn_credentials.create_with(nickname: "segiddins development")
 
 IpAddress.find_or_create_by!(ip_address: "127.0.0.1")
 
+FeatureFlag.enable_globally(:organizations)
+
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:
     - email: #{author.email}, password: #{password} -> gem author owning few example gems

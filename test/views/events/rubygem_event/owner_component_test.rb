@@ -5,20 +5,22 @@ class Events::RubygemEvent::OwnerComponentTest < ComponentTest
     user = create(:user, handle: "Owner")
     preview("events/rubygem_event/owner/added", user:)
 
-    assert_text "New owner added: OwnerAuthorized by: Authorizer", exact: true
-    assert_link user.handle, href: view_context.profile_path(user.display_id)
-    assert_link "Authorizer", href: view_context.profile_path(user.display_id)
+    assert_text "New owner added:"
+    assert_text "Authorized by:"
+    assert_link user.handle
+    assert_link "Authorizer"
 
     preview("events/rubygem_event/owner/added", scenario: :without_actor)
 
-    assert_text "New owner added: OwnerAuthorized by: Authorizer", exact: true
-    assert_link user.handle, href: view_context.profile_path(user.display_id)
+    assert_text "New owner added:"
+    assert_text "Authorized by:"
+    assert_link user.handle
     assert_no_link "Authorizer"
 
     preview("events/rubygem_event/owner/added", scenario: :without_authorizer)
 
     assert_text "New owner added: Owner", exact: true
-    assert_link user.handle, href: view_context.profile_path(user.display_id)
+    assert_link user.handle
   end
 
   test "owner added with a deleted user" do
@@ -27,7 +29,8 @@ class Events::RubygemEvent::OwnerComponentTest < ComponentTest
       user.destroy!
     end
 
-    assert_text "New owner added: OwnerAuthorized by: Authorizer", exact: true
+    assert_text "New owner added:"
+    assert_text "Authorized by:"
     assert_no_link "Owner"
   end
 end

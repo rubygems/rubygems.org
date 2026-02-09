@@ -1,5 +1,6 @@
 class RubygemsController < ApplicationController
   include LatestVersion
+
   before_action :show_reserved_gem, only: %i[show security_events]
   before_action :find_rubygem, only: %i[show security_events]
   before_action :latest_version, only: %i[show]

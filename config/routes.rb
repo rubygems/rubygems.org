@@ -220,18 +220,23 @@ Rails.application.routes.draw do
       end
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
 
-      get "transfer", to: redirect("/gems/%{rubygem_id}/transfer/organization")
-      delete "transfer", to: "rubygems/transfers#destroy"
+      collection do
+        get "transfer", to: redirect("/gems/transfer/organization")
+        delete "transfer", to: "rubygems/transfers#destroy"
 
-      namespace :transfer do
-        get "organization", to: "/rubygems/transfer/organizations#new"
-        post "organization", to: "/rubygems/transfer/organizations#create"
+        namespace :transfer do
+          get "organization", to: "/rubygems/transfer/organizations#new"
+          post "organization", to: "/rubygems/transfer/organizations#create"
 
-        get "users", to: "/rubygems/transfer/users#edit"
-        patch "users", to: "/rubygems/transfer/users#update"
+          get "rubygems", to: "/rubygems/transfer/rubygems#edit"
+          patch "rubygems", to: "/rubygems/transfer/rubygems#update"
 
-        get "confirm", to: "/rubygems/transfer/confirmations#edit"
-        patch "confirm", to: "/rubygems/transfer/confirmations#update"
+          get "users", to: "/rubygems/transfer/users#edit"
+          patch "users", to: "/rubygems/transfer/users#update"
+
+          get "confirm", to: "/rubygems/transfer/confirmations#edit"
+          patch "confirm", to: "/rubygems/transfer/confirmations#update"
+        end
       end
     end
 
@@ -294,7 +299,11 @@ Rails.application.routes.draw do
       end
     end
     resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
-      resources :memberships, controller: 'organizations/members', except: :show
+      resources :memberships, controller: 'organizations/members', except: :show do
+        member do
+          patch :resend_invitation
+        end
+      end
       resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
       resources :gems, only: :index, controller: 'organizations/gems'
     end
@@ -326,6 +335,7 @@ Rails.application.routes.draw do
 
   ################################################################################
   # static pages routes
+  get 'pages/sponsors' => redirect('/pages/supporters'), constraints: { format: :html }
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
   resources :policies, only: %i[index show], constraints: { format: :html, policy: Regexp.union(Gemcutter::POLICY_PAGES) },
@@ -364,6 +374,7 @@ Rails.application.routes.draw do
         mount MaintenanceTasks::Engine, at: "maintenance_tasks"
         mount PgHero::Engine, at: "pghero"
         mount Flipper::UI.app(Flipper), at: '/features'
+        mount Blazer::Engine, at: "blazer"
       end
 
       mount_avo

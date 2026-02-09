@@ -25,7 +25,7 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
       flash.now[:error] = trusted_publisher.errors.full_messages.to_sentence
       render OIDC::RubygemTrustedPublishers::NewView.new(
         rubygem_trusted_publisher: trusted_publisher
-      ), status: :unprocessable_entity
+      ), status: :unprocessable_content
     end
   end
 
@@ -33,8 +33,8 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
     if @rubygem_trusted_publisher.destroy
       redirect_to rubygem_trusted_publishers_path(@rubygem.slug), flash: { notice: t(".success") }
     else
-      redirect_back fallback_location: rubygem_trusted_publishers_path(@rubygem.slug),
-                    flash: { error: @rubygem_trusted_publisher.errors.full_messages.to_sentence }
+      redirect_back_or_to(rubygem_trusted_publishers_path(@rubygem.slug),
+flash: { error: @rubygem_trusted_publisher.errors.full_messages.to_sentence })
     end
   end
 

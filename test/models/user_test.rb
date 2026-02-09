@@ -642,6 +642,10 @@ class UserTest < ActiveSupport::TestCase
         end
       end
     end
+
+    should "ignore the token column" do
+      assert_includes @user.class.ignored_columns, "token"
+    end
   end
 
   context ".without_mfa" do

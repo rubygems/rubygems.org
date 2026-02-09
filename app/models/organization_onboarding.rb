@@ -27,6 +27,7 @@ class OrganizationOnboarding < ApplicationRecord
 
   with_options if: :name_type_gem? do
     validate :organization_handle_matches_rubygem_name
+    validate :organization_handle_reservable
     after_validation :add_namesake_rubygem
   end
 
@@ -46,7 +47,8 @@ class OrganizationOnboarding < ApplicationRecord
         onboarded_organization_id: onboarded_organization.id
       )
 
-      remove_ownerships
+      remove_ownerships_for_joining_members
+      demote_outside_contributors_to_maintainer
       email_onboarded_users(onboarded_organization)
     end
   rescue ActiveRecord::ActiveRecordError => e
@@ -85,7 +87,7 @@ class OrganizationOnboarding < ApplicationRecord
     return User.none if available_rubygems.blank? || created_by.blank?
     User
       .joins(:ownerships)
-      .where(ownerships: { rubygem_id: available_rubygems.pluck(:id) })
+      .where(ownerships: { rubygem_id: selected_rubygems.pluck(:id) })
       .where.not(ownerships: { user_id: created_by })
       .order(Arel.sql("COUNT (ownerships.id) DESC"))
       .group(users: [:id])
@@ -131,11 +133,19 @@ class OrganizationOnboarding < ApplicationRecord
     self.organization_handle = created_by.handle
   end
 
-  def remove_ownerships
+  def remove_ownerships_for_joining_members
     onboarded_users = invites.reject { it.role.nil? || it.outside_contributor? }.map(&:user)
     onboarded_users << created_by
 
-    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: onboarded_users, rubygem: selected_rubygems).destroy_all
+    Ownership.includes(:rubygem, :user, api_key_rubygem_scopes: :api_key).where(user: onboarded_users, rubygem: selected_rubygems).destroy_all
+  end
+
+  def demote_outside_contributors_to_maintainer
+    outside_contributors = invites.select(&:outside_contributor?).map(&:user)
+
+    Ownership.includes(:rubygem, :user, api_key_rubygem_scopes: :api_key)
+      .where(user: outside_contributors, rubygem: selected_rubygems)
+      .update_all(role: :maintainer)
   end
 
   def add_namesake_rubygem
@@ -150,6 +160,13 @@ class OrganizationOnboarding < ApplicationRecord
     return if selected_rubygems.any? { it.name == organization_handle }
 
     errors.add(:organization_handle, "must match a rubygem you own")
+  end
+
+  def organization_handle_reservable
+    return if organization_handle.blank?
+    return unless Organization::Handle.reserved?(organization_handle)
+
+    errors.add(:organization_handle, "is reserved and cannot be used")
   end
 
   def created_by_gem_ownerships

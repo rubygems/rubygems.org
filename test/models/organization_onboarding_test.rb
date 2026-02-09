@@ -103,6 +103,36 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
           assert_predicate @onboarding, :invalid?
         end
       end
+
+      context "when the organization handle is reserved" do
+        should "be invalid" do
+          @onboarding.organization_handle = "admin"
+
+          assert_predicate @onboarding, :invalid?
+          assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
+        end
+      end
+
+      context "when the organization handle is reserved (case insensitive)" do
+        should "be invalid" do
+          @onboarding.organization_handle = "ADMIN"
+
+          assert_predicate @onboarding, :invalid?
+          assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
+        end
+      end
+    end
+  end
+
+  context "#save" do
+    should "not create invites for rubygems owned by the owner but not selected" do
+      other_owner = create(:user)
+      create(:rubygem, owners: [@owner, other_owner])
+
+      @onboarding = create(:organization_onboarding, name_type: "gem", organization_handle: @rubygem.name, created_by: @owner,
+namesake_rubygem: @rubygem, rubygems: [@rubygem])
+
+      assert_equal @onboarding.users, [@maintainer]
     end
   end
 
@@ -177,6 +207,16 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
   context "#onboard!" do
     setup do
+      # Setup for "when a user is marked as an Outside Contributor" context
+      @contributor = create(:user)
+      @ownership = create(:ownership, user: @contributor, rubygem: @rubygem, role: "owner")
+      @onboarding.invites << create(:organization_invite, user: @contributor, role: :outside_contributor)
+
+      # Setup for "when outside contributor has maintainer ownership role" context
+      @maintainer_contributor = create(:user)
+      @maintainer_ownership = create(:ownership, user: @maintainer_contributor, rubygem: @rubygem, role: "maintainer")
+      @onboarding.invites << create(:organization_invite, user: @maintainer_contributor, role: :outside_contributor)
+
       @onboarding.onboard!
     end
 
@@ -214,14 +254,39 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
 
     context "when a user is marked as an Outside Contributor" do
-      setup do
-        @contributor = create(:user)
-        @ownership = create(:ownership, user: @contributor, rubygem: @rubygem, role: "owner")
-        @onboarding.invites << create(:organization_invite, user: @contributor, role: :outside_contributor)
-      end
-
       should "not remove the Ownership record" do
         assert_not_nil Ownership.find_by(user: @contributor, rubygem: @rubygem)
+      end
+
+      should "demote the ownership from owner to maintainer role" do
+        ownership = Ownership.find_by(user: @contributor, rubygem: @rubygem)
+
+        assert_equal "maintainer", ownership.role
+      end
+
+      should "not create an organization membership for the outside contributor" do
+        membership = @onboarding.organization.memberships.find_by(user: @contributor)
+
+        assert_nil membership
+      end
+
+      should "not affect regular membership users' ownerships" do
+        assert_nil Ownership.find_by(user: @owner, rubygem: @rubygem)
+        assert_nil Ownership.find_by(user: @maintainer, rubygem: @rubygem)
+      end
+
+      context "when outside contributor has maintainer ownership role" do
+        should "keep maintainer ownership role unchanged" do
+          ownership = Ownership.find_by(user: @maintainer_contributor, rubygem: @rubygem)
+
+          assert_equal "maintainer", ownership.role
+        end
+
+        should "not create an organization membership" do
+          membership = @onboarding.organization.memberships.find_by(user: @maintainer_contributor)
+
+          assert_nil membership
+        end
       end
     end
 

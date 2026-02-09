@@ -5,21 +5,21 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @user = create(:user)
     create_webauthn_credential
     @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
-    @port = 5678
-    @mock_client = MockClientServer.new(@port)
+    @mock_client = MockClientServer.new
+    @port = @mock_client.port
   end
 
   test "when verifying webauthn credential" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert page.has_content?("Authenticate with Security Device")
-    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
+    assert_text "Authenticate with Security Device"
+    assert_text "Authenticating as #{@user.handle}".upcase
 
     click_on "Authenticate"
 
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(successful_verification_webauthn_verification_path)
-    assert page.has_content?("Success!")
+    assert_text "Success!"
     assert_link_is_expired
     assert_successful_verification_not_found
   end
@@ -28,14 +28,14 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert page.has_content?("Authenticate with Security Device")
-    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
+    assert_text "Authenticate with Security Device"
+    assert_text "Authenticating as #{@user.handle}".upcase
 
     click_on "Authenticate"
 
     Browser::Chrome.any_instance.stubs(:safari?).returns true
 
-    assert page.has_content?("Success!")
+    assert_text "Success!"
     assert_current_path(successful_verification_webauthn_verification_path)
 
     assert_link_is_expired
@@ -46,16 +46,16 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   test "when client closes connection during verification" do
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert page.has_content?("Authenticate with Security Device")
-    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
+    assert_text "Authenticate with Security Device"
+    assert_text "Authenticating as #{@user.handle}".upcase
 
     @mock_client.kill_server
     click_on "Authenticate"
 
     assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text "Failed to fetch"
+    assert_text "Please close this browser and try again."
     assert_link_is_expired
     assert_failed_verification_not_found
   end
@@ -64,15 +64,15 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     wrong_port = 1111
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: wrong_port })
 
-    assert page.has_content?("Authenticate with Security Device")
-    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
+    assert_text "Authenticate with Security Device"
+    assert_text "Authenticating as #{@user.handle}".upcase
 
     click_on "Authenticate"
 
     assert redirect_to("http://localhost:#{wrong_port}?code=#{@verification.otp}")
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text "Failed to fetch"
+    assert_text "Please close this browser and try again."
     assert_link_is_expired
     assert_failed_verification_not_found
   end
@@ -81,14 +81,14 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @mock_client.response = @mock_client.bad_request_response
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert page.has_content?("Authenticate with Security Device")
-    assert page.has_content?("Authenticating as #{@user.handle}".upcase)
+    assert_text "Authenticate with Security Device"
+    assert_text "Authenticating as #{@user.handle}".upcase
 
     click_on "Authenticate"
 
     assert redirect_to(failed_verification_webauthn_verification_path)
-    assert page.has_content?("Failed to fetch")
-    assert page.has_content?("Please close this browser and try again.")
+    assert_text "Failed to fetch"
+    assert_text "Please close this browser and try again."
     assert_link_is_expired
     assert_failed_verification_not_found
   end
@@ -97,14 +97,14 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     travel 3.minutes do
-      assert page.has_content?("Authenticate with Security Device")
-      assert page.has_content?("Authenticating as #{@user.handle}".upcase)
+      assert_text "Authenticate with Security Device"
+      assert_text "Authenticating as #{@user.handle}".upcase
 
       click_on "Authenticate"
 
       assert redirect_to(failed_verification_webauthn_verification_path)
-      assert page.has_content?("The token in the link you used has either expired or been used already.")
-      assert page.has_content?("Please close this browser and try again.")
+      assert_text "The token in the link you used has either expired or been used already."
+      assert_text "Please close this browser and try again."
       assert_failed_verification_not_found
     end
   end
@@ -112,7 +112,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def teardown
     @mock_client.kill_server
     @authenticator&.remove!
-    Capybara.reset_sessions!
     Capybara.use_default_driver
   end
 
@@ -121,7 +120,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def assert_link_is_expired
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
-    assert page.has_content?("The token in the link you used has either expired or been used already.")
+    assert_text "The token in the link you used has either expired or been used already."
   end
 
   def assert_poll_status(status)
@@ -139,21 +138,22 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def assert_successful_verification_not_found
     visit successful_verification_webauthn_verification_path
 
-    assert page.has_content?("Page not found.")
+    assert_text "Page not found."
   end
 
   def assert_failed_verification_not_found
     visit failed_verification_webauthn_verification_path
 
-    assert page.has_content?("Page not found.")
+    assert_text "Page not found."
   end
 
   class MockClientServer
     attr_writer :response
+    attr_reader :port
 
-    def initialize(port)
-      @port = port
-      @server = TCPServer.new(@port)
+    def initialize
+      @server = TCPServer.new(0)
+      @port = @server.addr[1]
       @response = success_response
       create_socket
     end

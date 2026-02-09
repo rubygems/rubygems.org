@@ -39,9 +39,8 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     setup do
       @match = create(:rubygem, name: "match")
       @other = create(:rubygem, name: "other")
-      create(:version, rubygem: @match)
-      create(:version, rubygem: @other)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @match)
+      create(:version, :reindex, rubygem: @other)
     end
 
     should_respond_to(:json) do |body|
@@ -55,7 +54,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     context "with elasticsearch down" do
       should "returns friendly error message" do
         requires_toxiproxy
-        Toxiproxy[:elasticsearch].down do
+        toxiproxy_elasticsearch.down do
           get :show, params: { query: "other" }, format: :json
 
           assert_response :service_unavailable
@@ -72,6 +71,32 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         assert_equal "Failed to parse search term: 'AND other'.", JSON.parse(@response.body)["error"]
       end
     end
+
+    context "malformed query with range syntax" do
+      should "return bad request" do
+        get :show, params: { query: "test:[a TO b]" }, format: :json
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
+
+    context "query exceeding max length" do
+      should "return bad request" do
+        get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }, format: :json
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
+
+    context "query with redundant fields is sanitized" do
+      should "return results after collapsing redundant fields" do
+        get :show, params: { query: "match name:a name:b name:c" }, format: :json
+
+        assert_response :success
+      end
+    end
   end
 
   context "on GET to autocomplete with query=ma" do
@@ -79,10 +104,9 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       @match1 = create(:rubygem, name: "match1")
       @match2 = create(:rubygem, name: "match2")
       @other = create(:rubygem, name: "other")
-      create(:version, rubygem: @match1)
-      create(:version, rubygem: @match2)
-      create(:version, rubygem: @other)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @match1)
+      create(:version, :reindex, rubygem: @match2)
+      create(:version, :reindex, rubygem: @other)
     end
 
     context "with elasticsearch up" do
@@ -104,12 +128,30 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     context "with elasticsearch down" do
       should "fallback to legacy search" do
         requires_toxiproxy
-        Toxiproxy[:elasticsearch].down do
+        toxiproxy_elasticsearch.down do
           get :autocomplete, params: { query: "ot" }
 
           assert_response :success
           assert_empty JSON.parse(@response.body)
         end
+      end
+    end
+
+    context "malformed query with range syntax" do
+      should "return bad request" do
+        get :autocomplete, params: { query: "test:[a TO b]" }
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
+      end
+    end
+
+    context "query exceeding max length" do
+      should "return bad request" do
+        get :autocomplete, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
+
+        assert_response :bad_request
+        assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
       end
     end
   end

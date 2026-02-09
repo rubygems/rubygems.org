@@ -111,7 +111,6 @@ module Gemcutter
   MEMBERSHIP_INVITE_EXPIRES_AFTER = 7.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
-  SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze
   SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 1).to_i
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
@@ -126,7 +125,7 @@ module Gemcutter
   ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
   MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
   PAGES = %w[
-    about data download security sponsors
+    about data download security supporters
   ].freeze
   POLICY_PAGES = %w[
     acceptable-use copyright privacy terms-of-service

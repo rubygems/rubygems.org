@@ -1,7 +1,12 @@
 class Rstuf::CheckJob < Rstuf::ApplicationJob
-  RetryException = Class.new(StandardError)
-  FailureException = Class.new(StandardError)
-  ErrorException = Class.new(StandardError)
+  class RetryException < StandardError
+  end
+
+  class FailureException < StandardError
+  end
+
+  class ErrorException < StandardError
+  end
   retry_on RetryException, wait: :polynomially_longer, attempts: 10
 
   queue_with_priority PRIORITIES.fetch(:push)

@@ -10,14 +10,14 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     organization = create(:organization, owners: [@user], handle: "arrakis", name: "Arrakis")
     organization.rubygems << create(:rubygem, name: "arrakis", number: "1.0.0")
 
-    get "/organizations/#{organization.to_param}"
+    get organization_path(organization)
 
     assert_response :success
     assert page.has_content? "arrakis"
   end
 
   test "should render not found when an organization doesn't exist" do
-    get "/organizations/notfound"
+    get organization_path("nonexistent")
 
     assert_response :not_found
   end
@@ -26,12 +26,13 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     get "/organizations"
 
     assert_response :success
+    assert page.has_content? "You are not a member of any organizations."
   end
 
   test "should list organizations for a user" do
     organization = create(:organization, owners: [@user])
 
-    get "/organizations"
+    get organizations_path
 
     assert_response :success
     assert page.has_content? organization.name
@@ -40,7 +41,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
   test "should render organization edit form" do
     organization = create(:organization, owners: [@user])
 
-    get "/organizations/#{organization.to_param}/edit"
+    get edit_organization_path(organization)
 
     assert_response :success
     assert_select "form[action=?]", organization_path(organization)
@@ -50,7 +51,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
   test "should update an organization display name" do
     organization = create(:organization, owners: [@user])
 
-    patch "/organizations/#{organization.to_param}", params: {
+    patch organization_path(organization), params: {
       organization: { name: "New Name" }
     }
 
@@ -82,7 +83,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
 
     get organization_path(organization)
 
-    assert page.has_content? "Invite"
+    assert_select "a[href=?]", new_organization_membership_path(organization), text: "Invite"
   end
 
   test "should not render the invite button for users with less access than admins" do

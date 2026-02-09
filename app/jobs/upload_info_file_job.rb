@@ -2,6 +2,7 @@ class UploadInfoFileJob < ApplicationJob
   queue_with_priority PRIORITIES.fetch(:push)
 
   include GoodJob::ActiveJobExtensions::Concurrency
+
   good_job_control_concurrency_with(
     # Maximum number of jobs with the concurrency key to be
     # concurrently enqueued (excludes performing jobs)

@@ -55,6 +55,52 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     assert_equal bar_test, OIDC::TrustedPublisher::GitHubAction.for_claims(claims.merge(environment: "test"))
   end
 
+  test ".build_trusted_publisher" do
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    existing_publisher = create(:oidc_trusted_publisher_github_action,
+                               repository_owner: "example",
+                               repository_name: "test-repo",
+                               workflow_filename: "ci.yml",
+                               environment: "production")
+
+    # Test returning existing record when params match
+    result = OIDC::TrustedPublisher::GitHubAction.build_trusted_publisher(
+      repository_owner: "example",
+      repository_name: "test-repo",
+      workflow_filename: "ci.yml",
+      environment: "production"
+    )
+
+    assert_equal existing_publisher, result
+    refute_predicate result, :new_record?
+
+    # Test building new record when environment is blank
+    new_publisher = OIDC::TrustedPublisher::GitHubAction.build_trusted_publisher(
+      repository_owner: "example",
+      repository_name: "test-repo",
+      workflow_filename: "ci.yml",
+      environment: ""
+    )
+
+    refute_equal existing_publisher, new_publisher
+    assert_predicate new_publisher, :new_record?
+    assert_nil new_publisher.environment
+
+    # Test building new record when no existing record matches
+    another_new_publisher = OIDC::TrustedPublisher::GitHubAction.build_trusted_publisher(
+      repository_owner: "different-owner",
+      repository_name: "different-repo",
+      workflow_filename: "deploy.yml",
+      environment: ""
+    )
+
+    assert_predicate another_new_publisher, :new_record?
+    assert_equal "different-owner", another_new_publisher.repository_owner
+    assert_equal "different-repo", another_new_publisher.repository_name
+  end
+
   test "#name" do
     publisher = create(:oidc_trusted_publisher_github_action, repository_name: "bar")
 
@@ -142,5 +188,191 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       }.deep_stringify_keys,
       publisher.to_access_policy({ ref: "ref", sha: "sha" }).as_json
     )
+  end
+
+  test ".for_claims with reusable workflow from different repository" do
+    # Publisher configured for reusable workflow: caller is example/caller-repo,
+    # but workflow is from shared-org/shared-workflows
+    reusable_publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "example",
+      repository_name: "caller-repo",
+      workflow_filename: "shared-release.yml",
+      workflow_repository_owner: "shared-org",
+      workflow_repository_name: "shared-workflows")
+
+    claims = {
+      repository: "example/caller-repo",
+      job_workflow_ref: "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/heads/main",
+      ref: "refs/heads/main",
+      sha: "abc123def456",
+      repository_owner_id: "123456"
+    }
+
+    assert_equal reusable_publisher, OIDC::TrustedPublisher::GitHubAction.for_claims(claims)
+  end
+
+  test ".for_claims rejects reusable workflow when caller repository does not match" do
+    # Publisher configured for specific caller repo
+    create(:oidc_trusted_publisher_github_action,
+      repository_owner: "allowed-org",
+      repository_name: "allowed-repo",
+      workflow_filename: "shared-release.yml",
+      workflow_repository_owner: "shared-org",
+      workflow_repository_name: "shared-workflows")
+
+    # Attacker tries to use the same shared workflow from a different repo
+    claims = {
+      repository: "attacker-org/attacker-repo",
+      job_workflow_ref: "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/heads/main",
+      ref: "refs/heads/main",
+      sha: "abc123def456",
+      repository_owner_id: "999999"
+    }
+
+    assert_raises(ActiveRecord::RecordNotFound) do
+      OIDC::TrustedPublisher::GitHubAction.for_claims(claims)
+    end
+  end
+
+  test ".for_claims works with same-repo workflow when workflow_repository is nil" do
+    # Standard publisher without workflow_repository set (backward compatible)
+    standard_publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "example",
+      repository_name: "my-gem",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: nil,
+      workflow_repository_name: nil)
+
+    claims = {
+      repository: "example/my-gem",
+      job_workflow_ref: "example/my-gem/.github/workflows/release.yml@refs/heads/main",
+      ref: "refs/heads/main",
+      sha: "abc123",
+      repository_owner_id: "123456"
+    }
+
+    assert_equal standard_publisher, OIDC::TrustedPublisher::GitHubAction.for_claims(claims)
+  end
+
+  test "validates workflow_repository_fields must both be present or both be blank" do
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    # Both set - valid
+    publisher = OIDC::TrustedPublisher::GitHubAction.new(
+      repository_owner: "example",
+      repository_name: "repo",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: "shared",
+      workflow_repository_name: "workflows"
+    )
+
+    assert_predicate publisher, :valid?
+
+    # Both nil - valid
+    publisher = OIDC::TrustedPublisher::GitHubAction.new(
+      repository_owner: "example",
+      repository_name: "repo",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: nil,
+      workflow_repository_name: nil
+    )
+
+    assert_predicate publisher, :valid?
+
+    # Only owner set - invalid
+    publisher = OIDC::TrustedPublisher::GitHubAction.new(
+      repository_owner: "example",
+      repository_name: "repo",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: "shared",
+      workflow_repository_name: nil
+    )
+
+    refute_predicate publisher, :valid?
+    assert_includes publisher.errors[:workflow_repository_name], "can't be blank"
+
+    # Only name set - invalid
+    publisher = OIDC::TrustedPublisher::GitHubAction.new(
+      repository_owner: "example",
+      repository_name: "repo",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: nil,
+      workflow_repository_name: "workflows"
+    )
+
+    refute_predicate publisher, :valid?
+    assert_includes publisher.errors[:workflow_repository_owner], "can't be blank"
+  end
+
+  test "validates workflow_repository_differs_from_repository" do
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    # workflow_repository same as repository - invalid
+    publisher = OIDC::TrustedPublisher::GitHubAction.new(
+      repository_owner: "example",
+      repository_name: "my-gem",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: "example",
+      workflow_repository_name: "my-gem"
+    )
+
+    refute_predicate publisher, :valid?
+    assert_includes publisher.errors[:base], "workflow_repository must be different from the repository, leave blank for same-repository workflows"
+
+    # workflow_repository different from repository - valid
+    publisher = OIDC::TrustedPublisher::GitHubAction.new(
+      repository_owner: "example",
+      repository_name: "my-gem",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: "shared-org",
+      workflow_repository_name: "shared-workflows"
+    )
+
+    assert_predicate publisher, :valid?
+  end
+
+  test "#workflow_repository returns workflow repo when set" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "caller-org",
+      repository_name: "caller-repo",
+      workflow_repository_owner: "shared-org",
+      workflow_repository_name: "shared-repo")
+
+    assert_equal "shared-org/shared-repo", publisher.workflow_repository
+  end
+
+  test "#workflow_repository returns caller repo when workflow repo not set" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "example",
+      repository_name: "my-gem",
+      workflow_repository_owner: nil,
+      workflow_repository_name: nil)
+
+    assert_equal "example/my-gem", publisher.workflow_repository
+  end
+
+  test "#to_access_policy with reusable workflow" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "caller-org",
+      repository_name: "caller-repo",
+      workflow_filename: "shared-release.yml",
+      workflow_repository_owner: "shared-org",
+      workflow_repository_name: "shared-workflows")
+
+    policy = publisher.to_access_policy({ ref: "refs/heads/main", sha: "abc123" })
+
+    # Verify job_workflow_ref points to the shared workflow repo, not the caller repo
+    first_statement = policy.statements.first
+    job_workflow_ref_condition = first_statement.conditions.find { |c| c.claim == "job_workflow_ref" }
+
+    assert_equal "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/heads/main",
+                 job_workflow_ref_condition.value
+
+    # Verify repository condition still points to caller repo (security)
+    repository_condition = first_statement.conditions.find { |c| c.claim == "repository" }
+
+    assert_equal "caller-org/caller-repo", repository_condition.value
   end
 end

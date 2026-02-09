@@ -1,4 +1,4 @@
-<% 
+<%
   add_breadcrumb "Dashboard", dashboard_path
   add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle)
   add_breadcrumb t("breadcrumbs.members"), organization_memberships_path(@organization)
@@ -16,6 +16,11 @@
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
     <%= c.title @membership.user.handle, icon: "organizations" %>
+    <% if @membership.confirmed? %>
+      <div class="flex flex-col">
+        <p class="text-neutral-500 capitalize">Joined: <%= nice_date_for(@membership.confirmed_at) %></p>
+      </div>
+    <% end %>
   <% end %>
 
   <%= form_with(model: @membership, url: organization_membership_path(@organization, @membership), method: :patch) do |f| %>
@@ -47,6 +52,13 @@
       <%= f.select :role, options_for_select(@roles, @membership.role), {}, class: "form__input form__select block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400"  %>
     </div>
     <div class="flex justify-end">
+      <% if !@membership.confirmed? %>
+        <div class="flex flex-col">
+          <% if policy(@organization).invite_member? %>
+            <%= render ButtonComponent.new t(".resend_invitation"), resend_invitation_organization_membership_path(@organization, @membership), type: :link, method: :patch, style: :outline, class: "text-xs px-3 py-1 mr-3" %>
+          <% end %>
+        </div>
+      <% end %>
       <%= render ButtonComponent.new t(".update"), type: :submit, style: :outline, class: "px-4 py-2 dark:border-gray-400 dark:text-gray-100" %>
     </div>
   <% end %>

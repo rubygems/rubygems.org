@@ -1,4 +1,6 @@
 class FeatureFlag
+  ORGANIZATIONS = :organizations
+
   class << self
     def enabled?(flag_name, actor = nil)
       Flipper.enabled?(flag_name, actor)

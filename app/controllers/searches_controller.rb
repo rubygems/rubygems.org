@@ -1,8 +1,13 @@
 class SearchesController < ApplicationController
   before_action -> { set_page Gemcutter::SEARCH_MAX_PAGES }, only: :show
 
+  rescue_from SearchQuerySanitizer::QueryTooLongError,
+              SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
+
   def show
-    return unless params[:query].is_a?(String)
+    # Return early for blank queries. Non-string params (e.g., arrays) are converted
+    # to strings by SearchQuerySanitizer via to_s, which handles them safely.
+    return if params[:query].blank?
     @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
 
     return unless @gems
@@ -16,6 +21,11 @@ class SearchesController < ApplicationController
   end
 
   private
+
+  def render_invalid_query
+    @error_msg = "Invalid search query. Please simplify your search and try again."
+    render :show
+  end
 
   def set_total_pages
     class << @gems

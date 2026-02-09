@@ -12,7 +12,9 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     user = create(:user)
     user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+    webauthn_credential = create(:webauthn_credential, user:)
     user_attributes = user.attributes.with_indifferent_access
+    webauthn_attributes = webauthn_credential.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
 
@@ -41,11 +43,13 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
     assert_nil user.totp_seed
     assert_empty user.mfa_hashed_recovery_codes
+    assert_empty user.webauthn_credentials
 
     audit = user.audits.sole
     event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Reset User 2FA", audit.action
     assert_equal_hash(
@@ -62,6 +66,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "unchanged" => user.attributes
               .except("mfa_level", "updated_at", "totp_seed", "mfa_hashed_recovery_codes", "encrypted_password")
               .transform_values(&:as_json)
+          },
+          "gid://gemcutter/WebauthnCredential/#{webauthn_credential.id}" => {
+            "changes" => webauthn_attributes.transform_values { [it.as_json, nil] },
+            "unchanged" => {}
           },
           event.to_gid.as_json => {
             "changes" => event.attributes.transform_values { [nil, it.as_json] },
@@ -121,6 +129,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Block User", audit.action
     assert_equal_hash(
@@ -206,6 +215,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
+
       assert_equal "User", audit.auditable_type
       assert_equal "Reset Api Key", audit.action
       assert_equal_hash(
@@ -286,6 +296,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Yank all Rubygems", audit.action
 
@@ -386,6 +397,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     deletion = security_user.deletions.first
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Yank User", audit.action
 
@@ -517,6 +529,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       email_sent_event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
+
       assert_equal "User", audit.auditable_type
       assert_equal "Change User Email", audit.action
       assert_equal_hash(
@@ -591,6 +604,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     event = user.events.where(tag: Events::UserEvent::CREATED).sole
 
     page.assert_text audit.id
+
     assert_equal "User", audit.auditable_type
     assert_equal "Create User", audit.action
     assert_equal_hash(

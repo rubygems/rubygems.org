@@ -23,6 +23,7 @@ Hosting is donated by [Amazon Web Services](https://aws.amazon.com), with CDN se
 * [RFCs](https://github.com/rubygems/rfcs)
 * [Support](mailto:support@rubygems.org)
 * [GitHub Workflow][]: [![test workflow](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml) [![lint workflow](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml) [![docker workflow](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml)
+[![codecov](https://codecov.io/github/rubygems/rubygems.org/graph/badge.svg)](https://codecov.io/github/rubygems/rubygems.org)
 
 [github workflow]: https://github.com/rubygems/rubygems.org/actions/
 

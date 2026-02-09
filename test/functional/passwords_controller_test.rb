@@ -374,7 +374,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
           password_reset: { reset_api_key: "true", password: "pass" }
         }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_select "#flash_alert", "Your password could not be changed. Please try again."
         assert_select "h1", "Reset password"
         assert_select "#errorExplanation", /Password is too short \(minimum is 10 characters\)/

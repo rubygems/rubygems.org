@@ -38,6 +38,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     audit = rubygem.audits.sole
 
     page.assert_text audit.id
+
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Release reserved namespace", audit.action
     assert_equal_hash(
@@ -104,6 +105,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     deletion = security_user.deletions.first
 
     page.assert_text audit.id
+
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Yank Rubygem", audit.action
     assert_equal_hash(
@@ -184,6 +186,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     deletion2 = security_user.deletions.last
 
     page.assert_text audit.id
+
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Yank Rubygem", audit.action
 
@@ -271,6 +274,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     event = rubygem.events.where(tag: Events::RubygemEvent::OWNER_ADDED).sole
 
     page.assert_text audit.id
+
     assert_equal "Rubygem", audit.auditable_type
     assert_equal "Add owner", audit.action
 

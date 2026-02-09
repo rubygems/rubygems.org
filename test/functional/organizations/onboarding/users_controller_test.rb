@@ -13,9 +13,40 @@ class Organizations::Onboarding::UsersControllerTest < ActionDispatch::Integrati
     )
 
     @invites = @organization_onboarding.invites.to_a
+
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
+  end
+
+  should "require feature flag enablement" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      get organization_onboarding_users_path(as: @user)
+
+      assert_response :not_found
+
+      patch organization_onboarding_users_path(as: @user), params: {
+        organization_onboarding: {
+          invites_attributes: {
+            "0" => { id: @invites[0].id, role: "maintainer" },
+            "1" => { id: @invites[1].id, role: "admin" }
+          }
+        }
+      }
+
+      assert_response :not_found
+    end
   end
 
   context "on GET /organizations/onboarding/users" do
+    should "show the creator with Owner role in approved invites" do
+      get organization_onboarding_users_path(as: @user)
+
+      assert_response :ok
+
+      creator_invite = @controller.view_assigns["approved_invites"].find { |i| i.user == @user }
+
+      assert_equal "owner", creator_invite.role
+    end
+
     should "render the list of users to invite" do
       get organization_onboarding_users_path(as: @user)
 
@@ -98,6 +129,24 @@ class Organizations::Onboarding::UsersControllerTest < ActionDispatch::Integrati
 
       assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
       assert_equal "admin", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
+    end
+
+    should "update user to outside contributor role" do
+      patch organization_onboarding_users_path(as: @user), params: {
+        organization_onboarding: {
+          invites_attributes: {
+            "0" => { id: @invites[0].id, role: "outside_contributor" },
+            "1" => { id: @invites[1].id, role: "maintainer" }
+          }
+        }
+      }
+
+      assert_redirected_to organization_onboarding_confirm_path
+
+      @organization_onboarding.reload
+
+      assert_equal "outside_contributor", @organization_onboarding.invites.find_by(user_id: @other_users[0].id).role
+      assert_equal "maintainer", @organization_onboarding.invites.find_by(user_id: @other_users[1].id).role
     end
 
     context "when already invited users" do

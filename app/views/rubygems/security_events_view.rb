@@ -13,7 +13,7 @@ class Rubygems::SecurityEventsView < ApplicationView
 
     div(class: "tw-space-y-2 t-body") do
       p do
-        t(".description_html", gem: helpers.link_to(rubygem.name, rubygem_path(rubygem.slug)))
+        t(".description_html", gem: link_to(rubygem.name, rubygem_path(rubygem.slug)))
       end
 
       render Events::TableComponent.new(security_events: security_events)

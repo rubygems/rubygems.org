@@ -16,12 +16,8 @@ fr:
     la communauté Ruby au sens large. <a href="https://www.fastly.com/">Fastly</a>
     fournisseur de bande passante et du support CDN, <a href="https://www.rubycentral.org/">Ruby
     Central</a> qui couvre les frais d'infrastructure, et qui finance le développement
-    et l'administration des serveurs. <a href="%{sponsors_page}">Apprenez en plus
+    et l'administration des serveurs. <a href="%{supporters_page}">Apprenez en plus
     sur nos sponsors et comment ils travaillent entre eux.</a>
-  footer_join_rt_html: Nous avons besoin de votre aide pour financer le travail des
-    développeurs/développeuses qui font que RubyGems.org fonctionne de manière fluide
-    pour tout le monde. <a href="https://rubycentral.org/#/portal/signup">Join Ruby
-    Central today</a>.
   form_disable_with: Veuillez patienter...
   invalid_page: Le numéro de page est hors de portée. Redirection vers la page par
     défaut.
@@ -95,6 +91,8 @@ fr:
         api_key_permissions:
       oidc/trusted_publisher/github_action:
         repository_owner_id:
+        workflow_repository_owner:
+        workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
     errors:
@@ -110,6 +108,16 @@ fr:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -264,14 +272,13 @@ fr:
         source_code: Code
         statistics: Stats
         status: Statut
+        support_us:
         supported_by: Soutenu par
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> est soutenu par
-        tested_by: Testé par
-        tracking_by: Tracking par
         uptime: Uptime
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:
@@ -415,6 +422,7 @@ fr:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -424,6 +432,7 @@ fr:
       no_gems:
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -434,12 +443,16 @@ fr:
       destroy:
         member_removed:
         cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
       index:
         invite:
         pending:
       edit:
         update:
         delete:
+        resend_invitation:
       new:
         handle:
         role:
@@ -488,7 +501,7 @@ fr:
       title:
     security:
       title:
-    sponsors:
+    supporters:
       title:
   policies:
     index:
@@ -775,6 +788,7 @@ fr:
       header: Dépendances de %{title}
     release_info:
       managed_by:
+      outside_contributors:
       authors_header: Auteurs
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:
@@ -826,11 +840,14 @@ fr:
       title:
       description_html:
     transfer:
+      cancelled:
       organizations:
         new:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: Dépendances inversées pour %{name}
@@ -984,6 +1001,8 @@ fr:
         repository_name_help_html:
         workflow_filename_help_html:
         environment_help_html:
+        workflow_repository_owner_help_html:
+        workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
   duration:

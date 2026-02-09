@@ -2,6 +2,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
   include ApiKeyable
 
   include SessionVerifiable
+
   verify_session_before
 
   helper RubygemsHelper

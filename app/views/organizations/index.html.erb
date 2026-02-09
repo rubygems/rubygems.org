@@ -19,16 +19,32 @@
 <!-- Organizations -->
 <%= render CardComponent.new do |c| %>
   <%= c.divided_list do %>
-    <% @memberships.each do |membership| %>
-      <%= c.list_item_to(organization_path(membership.organization.handle)) do %>
-        <div class="flex flex-row w-full justify-between items-center">
-          <div class="flex flex-col">
-            <p class="text-neutral-800 dark:text-white"><%= membership.organization.name %></p>
-            <p class="text-b3 text-neutral-600"><%= membership.organization.handle %></p>
+    <% if @memberships.size.zero? %>
+      <%= c.list_item do %>
+        <%= t(".no_organizations") %>
+      <% end %>
+    <% else %>
+      <% @memberships.each do |membership| %>
+        <%= c.list_item_to(organization_path(membership.organization.handle)) do %>
+          <div class="flex flex-row w-full justify-between items-center">
+            <div class="flex flex-col">
+              <p class="text-neutral-800 dark:text-white"><%= membership.organization.name %></p>
+              <p class="text-b3 text-neutral-600"><%= membership.organization.handle %></p>
+            </div>
+            <p class="text-neutral-500 capitalize"><%= membership.role %></p>
           </div>
-          <p class="text-neutral-500 capitalize"><%= membership.role %></p>
-        </div>
+        <% end %>
       <% end %>
     <% end %>
+  <% end %>
+  <% if organizations_enabled?(current_user) %>
+    <div class="pt-6 flex flex-row justify-end">
+      <%= render ButtonComponent.new organization_onboarding_name_path, type: :link, style: :outline, color: :neutral do %>
+        <span class="flex items-center">
+          <%= t(".create_new_organization") %>
+          <%= icon_tag "arrow-forward", size: 6, class: "ml-2" %>
+        </span>
+      <% end %>
+    </div>
   <% end %>
 <% end %>

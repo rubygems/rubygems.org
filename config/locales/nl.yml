@@ -14,7 +14,6 @@ nl:
     beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a>
     en verbeter de site met jouw aanpassingen.
   footer_sponsors_html:
-  footer_join_rt_html:
   form_disable_with: Een moment geduld...
   invalid_page:
   locale_name: Nederlands
@@ -87,6 +86,8 @@ nl:
         api_key_permissions:
       oidc/trusted_publisher/github_action:
         repository_owner_id:
+        workflow_repository_owner:
+        workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
     errors:
@@ -102,6 +103,16 @@ nl:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -255,14 +266,13 @@ nl:
         source_code: Code
         statistics: Statistieken
         status: Status
+        support_us:
         supported_by: Ondersteuning
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> wordt ondersteund door
-        tested_by: Getest door
-        tracking_by: Tracking
         uptime: Uptime
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:
@@ -399,6 +409,7 @@ nl:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -408,6 +419,7 @@ nl:
       no_gems:
       add_member:
       invite:
+      transfer:
     members:
       create:
         user_already_invited:
@@ -418,12 +430,16 @@ nl:
       destroy:
         member_removed:
         cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
       index:
         invite:
         pending:
       edit:
         update:
         delete:
+        resend_invitation:
       new:
         handle:
         role:
@@ -473,7 +489,7 @@ nl:
       title:
     security:
       title:
-    sponsors:
+    supporters:
       title:
   policies:
     index:
@@ -742,6 +758,7 @@ nl:
       header: "%{title} afhankelijkheden"
     release_info:
       managed_by:
+      outside_contributors:
       authors_header:
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:
@@ -780,11 +797,14 @@ nl:
       title:
       description_html:
     transfer:
+      cancelled:
       organizations:
         new:
           organization:
       confirm:
         success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title:
@@ -938,6 +958,8 @@ nl:
         repository_name_help_html:
         workflow_filename_help_html:
         environment_help_html:
+        workflow_repository_owner_help_html:
+        workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
   duration:

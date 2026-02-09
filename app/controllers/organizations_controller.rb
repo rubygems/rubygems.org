@@ -1,4 +1,4 @@
-class OrganizationsController < ApplicationController
+class OrganizationsController < Organizations::BaseController
   before_action :redirect_to_signin, only: :index, unless: :signed_in?
   before_action :redirect_to_new_mfa, only: :index, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, only: :index, if: :mfa_required_weak_level_enabled?

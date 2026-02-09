@@ -30,9 +30,9 @@ class OIDC::Providers::ShowView < ApplicationView
         h3(class: "t-list__heading") { "Roles" }
 
         div(class: "") do
-          api_key_roles = helpers.current_user.oidc_api_key_roles.where(provider:).page(0).per(10)
+          api_key_roles = current_user.oidc_api_key_roles.where(provider:).page(0).per(10)
           header(class: "gems__header push--s") do
-            p(class: "gems__meter l-mb-0") { plain helpers.page_entries_info(api_key_roles) }
+            p(class: "gems__meter l-mb-0") { plain page_entries_info(api_key_roles) }
           end
           render OIDC::ApiKeyRole::TableComponent.new(api_key_roles:) if api_key_roles.present?
         end

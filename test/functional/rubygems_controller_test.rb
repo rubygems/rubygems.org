@@ -457,4 +457,21 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_link?(@organization.name, href: organization_path(@organization))
     end
   end
+
+  context "when a gem is owned by an organization and has outside contributors" do
+    setup do
+      @owner = create(:user)
+      @rubygem = create(:rubygem, owners: [@owner])
+      @version = create(:version, rubygem: @rubygem)
+      @organization = create(:organization, owners: [@owner])
+      @outside_contributor = create(:user)
+      create(:ownership, rubygem: @rubygem, user: @outside_contributor, role: :maintainer)
+    end
+
+    should "display outside contributors" do
+      get :show, params: { id: @rubygem.slug }
+
+      assert page.has_selector?("a[href='#{profile_path(@outside_contributor.display_id)}']")
+    end
+  end
 end

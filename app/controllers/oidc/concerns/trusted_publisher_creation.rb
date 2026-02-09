@@ -3,6 +3,7 @@ module OIDC::Concerns::TrustedPublisherCreation
 
   included do
     include SessionVerifiable
+
     verify_session_before
 
     before_action :set_trusted_publisher_type, only: %i[create]
@@ -16,6 +17,6 @@ module OIDC::Concerns::TrustedPublisherCreation
     @trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.polymorphic_name == trusted_publisher_type }
 
     return if @trusted_publisher_type
-    redirect_back fallback_location: root_path, flash: { error: t("oidc.trusted_publisher.unsupported_type") }
+    redirect_back_or_to(root_path, flash: { error: t("oidc.trusted_publisher.unsupported_type") })
   end
 end

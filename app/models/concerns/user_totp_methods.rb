@@ -12,10 +12,7 @@ module UserTotpMethods
   def disable_totp!
     self.totp_seed = nil
 
-    if no_mfa_devices?
-      self.mfa_level = "disabled"
-      self.mfa_hashed_recovery_codes = []
-    end
+    reset_mfa_attributes if no_mfa_devices?
 
     save!(validate: false)
     Mailer.totp_disabled(id, Time.now.utc).deliver_later
