@@ -207,6 +207,23 @@ class OwnersControllerTest < ActionController::TestCase
     end
 
     context "on DELETE to owners" do
+      context "when user is a maintainer of the gem" do
+        setup do
+          @maintainer = create(:user)
+          create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+          verified_sign_in_as(@maintainer)
+          @second_user = create(:user)
+          create(:ownership, rubygem: @rubygem, user: @second_user)
+          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
+        end
+
+        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+
+        should "not remove user as owner" do
+          assert_includes @rubygem.owners, @second_user
+        end
+      end
+
       context "when user owns the gem" do
         context "with invalid handle" do
           setup do
