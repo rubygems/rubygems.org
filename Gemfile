@@ -21,7 +21,7 @@ gem "flipper-active_record", "~> 1.3"
 gem "flipper-ui", "~> 1.3"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.2.1", require: false
+gem "honeybadger", "~> 6.3.0", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -67,6 +67,7 @@ gem "sigstore", "~> 0.2.2"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
 gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
+gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard
 gem "avo", "~> 3.13"
@@ -104,20 +105,20 @@ group :assets, :development do
 end
 
 group :development, :test do
-  gem "pry-byebug", "~> 3.12"
+  gem "debug", "~> 1.0"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.5"
   gem "dotenv-rails", "~> 3.2"
   gem "lookbook", "~> 2.3"
 
-  gem "brakeman", "~> 7.1", require: false
+  gem "brakeman", "~> 8.0", require: false
 
   # used to find n+1 queries
   gem "prosopite", "~> 2.1"
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.82", require: false
+  gem "rubocop", "~> 1.84", require: false
   gem "rubocop-rails", "~> 2.34", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.38", require: false

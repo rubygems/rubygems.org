@@ -17,5 +17,6 @@ end
 
 Rails.autoloaders.once.inflector.inflect(
   "http" => "HTTP",
-  "oidc" => "OIDC"
+  "oidc" => "OIDC",
+  "yaml_gemspec" => "YAMLGemspec"
 )

@@ -21,7 +21,6 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
     @processor = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
     @job = FastlyLogProcessorJob.new(bucket: "test-bucket", key: "fastly-fake.log")
     create(:gem_download)
-    import_and_refresh
   end
 
   teardown do
@@ -59,7 +58,8 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
       create(:version, rubygem: json, number: "1.8.3")
       create(:version, rubygem: json, number: "1.8.2")
 
-      import_and_refresh
+      bundler.reindex(refresh: true)
+      json.reindex(refresh: true)
     end
 
     context "#perform" do
@@ -77,11 +77,11 @@ class FastlyLogProcessorJobTest < ActiveJob::TestCase
         @job.perform_now
         @sample_log_counts
           .each do |name, expected_count|
-            version = Version.find_by(full_name: name)
-            next unless version
-            count = GemDownload.find_by(rubygem_id: version.rubygem.id, version_id: version.id).count
+          version = Version.find_by(full_name: name)
+          next unless version
+          count = GemDownload.find_by(rubygem_id: version.rubygem.id, version_id: version.id).count
 
-            assert_equal expected_count, count, "invalid value for #{name}"
+          assert_equal expected_count, count, "invalid value for #{name}"
         end
 
         json = Rubygem.find_by_name("json")
