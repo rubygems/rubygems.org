@@ -20,11 +20,10 @@ class ElasticSearcher
 
   def search
     result = Rubygem.searchkick_search(
-      body: search_definition.to_hash,
+      body: search_definition.to_hash.merge(timeout: "2s"),
       page: @page,
       per_page: Kaminari.config.default_per_page,
-      load: false,
-      timeout: "2s"
+      load: false
     )
     result.response # ES query is triggered here to allow fallback. avoids lazy loading done in the view
     [nil, result]
@@ -33,8 +32,8 @@ class ElasticSearcher
   end
 
   def api_search
-    result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash, page: @page, per_page: Kaminari.config.default_per_page,
-load: false, timeout: "2s")
+    result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash.merge(timeout: "2s"), page: @page, per_page: Kaminari.config.default_per_page,
+load: false)
     result.response["hits"]["hits"].pluck("_source")
   rescue Searchkick::InvalidQueryError => e
     raise InvalidQueryError, error_msg(e)
@@ -43,8 +42,8 @@ load: false, timeout: "2s")
   end
 
   def suggestions
-    result = Rubygem.searchkick_search(body: suggestions_definition.to_hash, page: @page, per_page: Kaminari.config.default_per_page, load: false,
-timeout: "2s")
+    result = Rubygem.searchkick_search(body: suggestions_definition.to_hash.merge(timeout: "2s"), page: @page, per_page: Kaminari.config.default_per_page,
+load: false)
     result = result.response["suggest"]["completion_suggestion"][0]["options"]
     result.map { |gem| gem["_source"]["name"] }
   rescue *CONNECTION_ERRORS => e
