@@ -113,8 +113,7 @@ class ActiveSupport::TestCase
         ]
       )
       Searchkick.client = OpenSearch::Client.new(
-        url: "http://localhost:#{toxiproxy_port}",
-        request_timeout: 2
+        url: "http://localhost:#{toxiproxy_port}"
       )
     end
   end
