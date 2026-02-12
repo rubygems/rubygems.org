@@ -21,7 +21,6 @@ options = {}
 
 options[:url] = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 options[:tracer] = SemanticLogger[OpenSearch::Client]
-options[:request_timeout] = 2
 
 Searchkick.client = OpenSearch::Client.new(**options.compact) do |f|
   unless Rails.env.local?
