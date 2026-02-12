@@ -6,6 +6,7 @@
   <%= render "owners_table" %>
 </div>
 
+<% if can_add_owner?(@rubygem) %>
 <div class="l-overflow">
   <div class="t-body">
     <h2><%= t(".add_owner") %></h2>
@@ -25,3 +26,4 @@
     </div>
   <% end %>
 </div>
+<% end %>
