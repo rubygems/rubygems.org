@@ -183,7 +183,7 @@ GEM
       msgpack
     bootsnap (1.22.0)
       msgpack (~> 1.2)
-    brakeman (8.0.1)
+    brakeman (8.0.2)
       racc
     browser (6.2.0)
     builder (3.3.0)
@@ -225,9 +225,9 @@ GEM
       addressable
     csv (3.3.5)
     dalli (3.2.8)
-    datadog (2.27.0)
+    datadog (2.28.0)
       cgi
-      datadog-ruby_core_source (~> 3.5, >= 3.5.1)
+      datadog-ruby_core_source (~> 3.5, >= 3.5.2)
       libdatadog (~> 25.0.0.1.0)
       libddwaf (~> 1.30.0.0.0)
       logger
@@ -276,7 +276,7 @@ GEM
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
-    faraday (2.14.0)
+    faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -333,22 +333,22 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-protobuf (4.33.4)
+    google-protobuf (4.33.5)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-aarch64-linux-gnu)
+    google-protobuf (4.33.5-aarch64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-arm64-darwin)
+    google-protobuf (4.33.5-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-x86_64-darwin)
+    google-protobuf (4.33.5-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-x86_64-linux-gnu)
+    google-protobuf (4.33.5-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-x86_64-linux-musl)
+    google-protobuf (4.33.5-x86_64-linux-musl)
       bigdecimal
       rake (>= 13)
     gravtastic (3.2.6)
@@ -381,7 +381,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.11.0)
       activejob (>= 6.1)
-    json (2.18.0)
+    json (2.18.1)
     json-jwt (1.16.7)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -948,7 +948,7 @@ DEPENDENCIES
   connection_pool (~> 2.0)
   csv (~> 3.3)
   dalli (~> 3.2)
-  datadog (~> 2.27)
+  datadog (~> 2.28)
   debug (~> 1.0)
   derailed_benchmarks (~> 2.2)
   discard (~> 1.4)
@@ -1099,7 +1099,7 @@ CHECKSUMS
   blazer (3.3.0) sha256=01e151091ce1e7d27c156243916b2f13109ef2ef1a16cfa62bef67f4c5fd169f
   bloomer (1.0.0) sha256=57a0d3a78628db9a92c6723f06c67697e420abcdb05aa757c6dfae607251d272
   bootsnap (1.22.0) sha256=5820c9d42c2efef095bee6565484bdc511f1223bf950140449c9385ae775793e
-  brakeman (8.0.1) sha256=c68ce0ac35a6295027c4eab8b4ac597d2a0bfc82f0d62dcd334bbf944d352f70
+  brakeman (8.0.2) sha256=7b02065ce8b1de93949cefd3f2ad78e8eb370e644b95c8556a32a912a782426a
   browser (6.2.0) sha256=281d5295788825c9396427c292c2d2be0a5c91875c93c390fde6e5d61a5ace2d
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
@@ -1119,7 +1119,7 @@ CHECKSUMS
   css_parser (1.21.1) sha256=6cfd3ffc0a97333b39d2b1b49c95397b05e0e3b684d68f77ec471ba4ec2ef7c7
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
-  datadog (2.27.0) sha256=64570e6073268b1cd65e3ef3a40c2817168ec05ff93965662d45b6dca0a74935
+  datadog (2.28.0) sha256=78c88fbf12896bb9d4268b02ea6e7ce80ee138296696742b9bc75c45bd7852b4
   datadog-ruby_core_source (3.5.2) sha256=c379c012eca11d6c58b112d716a986d051fb566a436d58f46cde7cfec43cb299
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
@@ -1137,7 +1137,7 @@ CHECKSUMS
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
   factory_bot (6.5.5) sha256=ce59295daee1b4704dab8a2fee6816f513d467c6aa3bc587860767d74a66efbe
   factory_bot_rails (6.5.1) sha256=d3cc4851eae4dea8a665ec4a4516895045e710554d2b5ac9e68b94d351bc6d68
-  faraday (2.14.0) sha256=8699cfe5d97e55268f2596f9a9d5a43736808a943714e3d9a53e6110593941cd
+  faraday (2.14.1) sha256=a43cceedc1e39d188f4d2cdd360a8aaa6a11da0c407052e426ba8d3fb42ef61c
   faraday-follow_redirects (0.3.0) sha256=d92d975635e2c7fe525dd494fcd4b9bb7f0a4a0ec0d5f4c15c729530fdb807f9
   faraday-multipart (1.2.0) sha256=7d89a949693714176f612323ca13746a2ded204031a6ba528adee788694ef757
   faraday-net_http (3.4.2) sha256=f147758260d3526939bf57ecf911682f94926a3666502e24c69992765875906c
@@ -1161,12 +1161,12 @@ CHECKSUMS
   get_process_mem (1.0.0) sha256=d54024f3bcbf776a4d6e0155ec2b21bc3ba44e2fd158c4c00c80aa8a36e0b4aa
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
-  google-protobuf (4.33.4) sha256=86921935b023ed0d872d6e84382e79016c91689be0520d614c74426778f13c16
-  google-protobuf (4.33.4-aarch64-linux-gnu) sha256=7b091ec8a80520738a4dbff59458e2a7ed4304d7fc20fd779b3d019ff52fbead
-  google-protobuf (4.33.4-arm64-darwin) sha256=63bb57e3d7108986f961546a536adaa38bd9ab5b1ebc39a1741a16c6eba3e869
-  google-protobuf (4.33.4-x86_64-darwin) sha256=72906abcb572b324eba760b0abdbb827ab781b8e26f718fa3f7f49485295c8d3
-  google-protobuf (4.33.4-x86_64-linux-gnu) sha256=a8cff953d742bc804ece78bd96e82d88cf65a7d8c1910e045359e2f53074e55d
-  google-protobuf (4.33.4-x86_64-linux-musl) sha256=265e6e5bbcc0ba1367268739e31c4cc84ff310b56e8d738d2a3245b5cccfc2e7
+  google-protobuf (4.33.5) sha256=1b64fb774c101b23ac3f6923eca24be04fd971635d235c4cd4cfe0d752620da0
+  google-protobuf (4.33.5-aarch64-linux-gnu) sha256=f70ca066e37a7ac60b4f34a836bb48ca3fc41a9371310052e484d8c9f925ff39
+  google-protobuf (4.33.5-arm64-darwin) sha256=996d4e93c4232cc42f0facd821a92b4f4a926c3c9c1a768e7d768b33d9ef72f9
+  google-protobuf (4.33.5-x86_64-darwin) sha256=173d1d6c9f0de93fd9ee25fde172d6fb6376099dca8844e19bc5782bbc7b93b0
+  google-protobuf (4.33.5-x86_64-linux-gnu) sha256=a782adf86bfba207740b49d7bb9ccdc25c4fb8f800fe222af62bce951149338a
+  google-protobuf (4.33.5-x86_64-linux-musl) sha256=d14feec9118f44cfdc3ee4a1d1baa4e6dd77fa418967ccf22ecbe76b8c1bacbf
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.7.0) sha256=beaa8d5bf3856814681914a1d4a20e77436a2214b85d0017dc2ea5c355fb6777
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
@@ -1183,7 +1183,7 @@ CHECKSUMS
   irb (1.16.0) sha256=2abe56c9ac947cdcb2f150572904ba798c1e93c890c256f8429981a7675b0806
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.11.0) sha256=3a5c876f26d65aaef20c190ecbda5ed72075b37949ef4870d79c8af7b97e3f16
-  json (2.18.0) sha256=b10506aee4183f5cf49e0efc48073d7b75843ce3782c68dbeb763351c08fd505
+  json (2.18.1) sha256=fe112755501b8d0466b5ada6cf50c8c3f41e897fa128ac5d263ec09eedc9f986
   json-jwt (1.16.7) sha256=ccabff4c6d1a14276b23178e8bebe513ef236399b72a0b886d7ed94800d172a5
   jwt (3.1.2) sha256=af6991f19a6bb4060d618d9add7a66f0eeb005ac0bc017cd01f63b42e122d535
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
