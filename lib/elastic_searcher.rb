@@ -52,6 +52,7 @@ class ElasticSearcher
     result.map { |gem| gem["_source"]["name"] }
   rescue *CONNECTION_ERRORS => e
     Rails.error.report(e, handled: true)
+    StatsD.increment("search.failure", tags: { exception: e.class.name })
     Array(nil)
   end
 
@@ -128,6 +129,7 @@ class ElasticSearcher
       "Failed to parse search term: '#{@query}'."
     else
       Rails.error.report(error, handled: true)
+      StatsD.increment("search.failure", tags: { exception: error.class.name })
       "Search is currently unavailable. Please try again later."
     end
   end

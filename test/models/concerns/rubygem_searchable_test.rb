@@ -334,15 +334,17 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       end
 
       context "OpenSearch::Transport::Transport::Errors" do
-        should "fails with friendly error message" do
+        should "fails with friendly error message and increments search.failure metric" do
           requires_toxiproxy
 
           toxiproxy_elasticsearch.down do
-            error_msg, result = ElasticSearcher.new("something").search
-            expected_msg = "Search is currently unavailable. Please try again later."
+            assert_statsd_increment("search.failure") do
+              error_msg, result = ElasticSearcher.new("something").search
+              expected_msg = "Search is currently unavailable. Please try again later."
 
-            assert_nil result
-            assert_equal expected_msg, error_msg
+              assert_nil result
+              assert_equal expected_msg, error_msg
+            end
           end
         end
       end
