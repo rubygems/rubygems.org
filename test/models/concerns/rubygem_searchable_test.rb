@@ -2,6 +2,7 @@ require "test_helper"
 
 class RubygemSearchableTest < ActiveSupport::TestCase
   include SearchKickHelper
+  include StatsD::Instrument::Assertions
 
   context "#search_data" do
     setup do
