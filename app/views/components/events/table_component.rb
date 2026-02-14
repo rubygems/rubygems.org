@@ -15,7 +15,7 @@ class Events::TableComponent < ApplicationComponent
 
   def view_template
     header(class: "gems__header push--s") do
-      p(class: "gems__meter l-mb-0") { plain page_entries_info(security_events) }
+      p(class: "gems__meter l-mb-0") { raw page_entries_info(security_events) } # rubocop:disable Rails/OutputSafety
     end
 
     if security_events.any?
@@ -36,7 +36,7 @@ class Events::TableComponent < ApplicationComponent
       end
     end
 
-    plain paginate(security_events)
+    raw paginate(security_events) # rubocop:disable Rails/OutputSafety
   end
 
   private
