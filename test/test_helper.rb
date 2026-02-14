@@ -48,6 +48,7 @@ Avo::Current.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
+    "api.pwnedpasswords.com",
     "chromedriver.storage.googleapis.com",
     "search", # DevContainer services
     "selenium",

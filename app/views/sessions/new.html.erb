@@ -1,38 +1,80 @@
 <% @title = t('sign_in') %>
+<% add_breadcrumb t('sign_in') %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
 
-<% if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN %>
-<div class="t-body">
-  <h2 class="page__subheading--block">Development Login</h2>
-  <ul>
-    <% User.all.order(id: :asc).each do |user| %>
-    <li>
-      <%= link_to "login as #{user.handle}", controller: :sessions, action: "development_log_in_as", user_id: user.id %>
-    </li>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6">
+      <%= t('sign_in') %>
+    </h1>
+
+    <% if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN %>
+      <div class="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+        <h2 class="text-sm font-semibold text-purple-800 dark:text-purple-200 mb-3">Development Login</h2>
+
+        <div class="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 gap-y-1 text-sm items-center">
+          <% User.includes(:ownerships, :memberships).order(id: :asc).limit(20).each do |user| %>
+            <%= link_to user.handle || user.email, { controller: :sessions, action: :development_log_in_as, user_id: user.id },
+              class: "text-purple-700 dark:text-purple-300 hover:underline" %>
+            <span class="justify-self-center">
+              <% if user.mfa_enabled? %>
+                <span class="text-xs px-1.5 py-0.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">MFA</span>
+              <% end %>
+            </span>
+            <span class="justify-self-center">
+              <% if user.ownerships.any? %>
+                <span class="text-xs px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded"><%= pluralize(user.ownerships.size, "gem") %></span>
+              <% end %>
+            </span>
+            <span class="justify-self-center">
+              <% if user.memberships.any? %>
+                <span class="text-xs px-1.5 py-0.5 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 rounded">Org</span>
+              <% end %>
+            </span>
+          <% end %>
+        </div>
+        <% if User.count > 20 %>
+          <p class="text-xs text-purple-600 dark:text-purple-400 mt-2">Showing first 20 of <%= User.count %> users</p>
+        <% end %>
+      </div>
     <% end %>
-  </ul>
-  <hr/>
+
+    <%= form_for :session, url: session_path, data: { turbo: false } do |form| %>
+      <div class="mb-4">
+        <%= form.label :who, t('activerecord.attributes.session.who'), class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+        <%= form.text_field :who,
+          autofocus: true,
+          class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+      </div>
+
+      <div class="mb-6">
+        <%= form.label :password, t('activerecord.attributes.session.password'), class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+        <%= form.password_field :password,
+          autocomplete: 'current-password',
+          class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+      </div>
+
+      <div class="mb-4">
+        <%= render ButtonComponent.new(t('sign_in'), type: :submit, color: :primary) %>
+      </div>
+    <% end %>
+
+    <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+      <%= link_to t('.forgot_password'), new_password_path, class: "text-orange-500 dark:text-orange-400 hover:underline" %>
+      <%= link_to t('.resend_confirmation'), new_email_confirmations_path, class: "text-orange-500 dark:text-orange-400 hover:underline" %>
+    </div>
+
+    <div class="relative my-6">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-neutral-200 dark:border-neutral-700"></div>
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="bg-white dark:bg-black px-4 text-neutral-500 dark:text-neutral-400"><%= t("or") %></span>
+      </div>
+    </div>
+
+    <%= render "multifactor_auths/webauthn_prompt" %>
+  </div>
 </div>
-<% end %>
-
-<div class="t-body">
-  <p>
-    <%= link_to t('.forgot_password'), new_password_path, class: 't-list__item' %>
-    <%= link_to t('.resend_confirmation'), new_email_confirmations_path, class: 't-list__item' %>
-  </p>
-</div>
-
-<%= form_for :session, :url => session_path do |form| %>
-  <div class="text_field">
-    <%= form.label :who, t('activerecord.attributes.session.who'), :class => 'form__label' %>
-    <%= form.text_field :who, :autofocus => true, :class => 'form__input' %>
-  </div>
-  <div class="password_field">
-    <%= form.label :password, t('activerecord.attributes.session.password'), :class => 'form__label' %>
-    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input' %>
-  </div>
-  <div class="form_bottom">
-    <%= form.submit t('sign_in'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
-  </div>
-<% end %>
-
-<%= render "multifactor_auths/webauthn_prompt" %>
