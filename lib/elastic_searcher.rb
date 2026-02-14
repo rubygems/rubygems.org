@@ -160,6 +160,7 @@ class ElasticSearcher
        summary
        description
        downloads
+       updated
        version]
   end
 end
