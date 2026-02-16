@@ -873,7 +873,7 @@ GEM
       bloomer (~> 1.0)
       pwned (~> 2.0)
     uri (1.1.1)
-    user_agent_parser (2.20.0)
+    user_agent_parser (2.21.0)
     useragent (0.16.11)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
@@ -1042,7 +1042,7 @@ DEPENDENCIES
   tailwindcss-rails (~> 4.4)
   toxiproxy (~> 2.0)
   unpwn (~> 1.0)
-  user_agent_parser (~> 2.20)
+  user_agent_parser (~> 2.21)
   validates_formatting_of (~> 0.9)
   view_component (~> 4.2.0)
   webauthn (~> 3.4)
@@ -1380,7 +1380,7 @@ CHECKSUMS
   unicode-emoji (4.2.0) sha256=519e69150f75652e40bf736106cfbc8f0f73aa3fb6a65afe62fefa7f80b0f80f
   unpwn (1.0.1) sha256=103b3cc9ee9fb3dd68b88b73778bd17a9bfe7cfe12fc7053c2bf9f06caa2c155
   uri (1.1.1) sha256=379fa58d27ffb1387eaada68c749d1426738bd0f654d812fcc07e7568f5c57c6
-  user_agent_parser (2.20.0) sha256=4bd9b667923ee4c7ca0abbe07135e49d9acd6534200b156b89c5e082acbe6ca6
+  user_agent_parser (2.21.0) sha256=d945d914af9955a499a62038fe97d3ac3416b69e5243b3298c8755b48f3f57c7
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
   validates_formatting_of (0.9.0) sha256=139590a4b87596dbfb04d93e897bd2e6d30fb849d04fab0343e71ed2ca856e7e
