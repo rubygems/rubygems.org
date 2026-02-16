@@ -106,8 +106,8 @@ GEM
     addressable (2.8.8)
       public_suffix (>= 2.0.2, < 8.0)
     aes_key_wrap (1.1.0)
-    aggregate_assertions (0.2.0)
-      minitest (~> 5.0)
+    aggregate_assertions (0.3.0)
+      minitest (>= 5.0)
     amazing_print (2.0.0)
     android_key_attestation (0.3.0)
     ansi (1.5.0)
@@ -928,7 +928,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  aggregate_assertions (~> 0.2.0)
+  aggregate_assertions (~> 0.3.0)
   amazing_print (~> 2.0)
   avo (~> 3.13)
   avo-advanced (~> 3.27)!
@@ -1066,7 +1066,7 @@ CHECKSUMS
   activesupport (8.0.3) sha256=a711ce5e30660b23232f26a38699469f8d859d47aa1f722e183fda6d7cc17823
   addressable (2.8.8) sha256=7c13b8f9536cf6364c03b9d417c19986019e28f7c00ac8132da4eb0fe393b057
   aes_key_wrap (1.1.0) sha256=b935f4756b37375895db45669e79dfcdc0f7901e12d4e08974d5540c8e0776a5
-  aggregate_assertions (0.2.0) sha256=9bc51a48323a8e7b82f47cc38d48132817247345e5a8713686c9d65b25daca9e
+  aggregate_assertions (0.3.0) sha256=a5ad621c4b0c451bbd8cf520d5f98caa56882043114954a8725aedd3cba1db11
   amazing_print (2.0.0) sha256=2e36aba46ac78d37ed27ca0e2056afe3583183bb5c64f157c246b267355e5d6a
   android_key_attestation (0.3.0) sha256=467eb01a99d2bb48ef9cf24cc13712669d7056cba5a52d009554ff037560570b
   ansi (1.5.0) sha256=5408253274e33d9d27d4a98c46d2998266fd51cba58a7eb9d08f50e57ed23592
