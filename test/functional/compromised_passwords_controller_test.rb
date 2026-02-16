@@ -21,11 +21,12 @@ class CompromisedPasswordsControllerTest < ActionController::TestCase
         assert_select "a[href=?]", sign_in_path
       end
 
-      should "enqueue password reset email on first visit" do
+      should "enqueue compromised password reset email on first visit" do
         assert_enqueued_emails 1 do
           get :show
         end
 
+        assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
         assert_response :success
       end
 

@@ -21,6 +21,7 @@ class PasswordsController < ApplicationController
   end
 
   def edit
+    @compromised = session[:password_reset_reason] == "compromised"
     render :edit
   end
 
@@ -49,10 +50,12 @@ class PasswordsController < ApplicationController
   end
 
   def otp_edit
+    @compromised = session[:password_reset_reason] == "compromised"
     render :edit
   end
 
   def webauthn_edit
+    @compromised = session[:password_reset_reason] == "compromised"
     render :edit
   end
 
@@ -71,6 +74,7 @@ class PasswordsController < ApplicationController
     return login_failure(t("passwords.edit.token_failure")) if confirmation_token.blank?
     @user = User.find_by(confirmation_token:)
     return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
+    session[:password_reset_reason] = params[:reason] if params[:reason].present?
     sign_out if signed_in? && @user != current_user
   end
 
@@ -78,10 +82,12 @@ class PasswordsController < ApplicationController
   # fail to invalidate the token for some reason, since this would indicate
   # something is wrong with the user, necessitating help from an admin.
   def password_reset_session_verified
+    reason = session[:password_reset_reason]
     reset_session
     @user.update!(confirmation_token: nil)
     session[:password_reset_verified_user] = @user.id
     session[:password_reset_verified] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
+    session[:password_reset_reason] = reason if reason.present?
   end
 
   def validate_password_reset_session
@@ -95,6 +101,7 @@ class PasswordsController < ApplicationController
     delete_mfa_session
     session.delete(:password_reset_verified_user)
     session.delete(:password_reset_verified)
+    session.delete(:password_reset_reason)
   end
 
   def reset_params

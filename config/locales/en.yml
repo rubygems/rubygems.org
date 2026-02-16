@@ -512,11 +512,20 @@ en:
         your password:"
       title: CHANGE PASSWORD
       subtitle: Hi %{handle}!
+    compromised_password_reset:
+      subject: "Action required: Reset your %{host} password"
+      title: PASSWORD RESET REQUIRED
+      subtitle: "Hi %{handle}!"
+      opening: "During your recent sign-in, we detected that your password appears in a public data breach from another website."
+      reassurance: "Your RubyGems.org account has not been compromised, but because passwords are often reused across sites, we require you to change your password to keep your account secure."
+      closing: "If you did not recently try to sign in to RubyGems.org, please contact support@rubygems.org immediately."
   passwords:
     edit:
       submit: Save this password
       title: Reset password
       token_failure: Please double check the URL or try submitting a new password reset.
+      compromised_heading: "Your password was found in a data breach"
+      compromised_explanation_html: "The password you used was found in a public data breach from <strong>another website</strong>. Please choose a new, unique password that you don't use elsewhere."
     new:
       submit: Reset password
       title: Change your password

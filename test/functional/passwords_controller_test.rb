@@ -103,6 +103,24 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context "with reason=compromised param" do
+      should "show compromised warning banner" do
+        get edit_password_path, params: { token: @user.confirmation_token, reason: "compromised" }
+
+        assert_response :success
+        assert_select "h3", I18n.t("passwords.edit.compromised_heading")
+      end
+    end
+
+    context "without reason param" do
+      should "not show compromised warning banner" do
+        get edit_password_path, params: { token: @user.confirmation_token }
+
+        assert_response :success
+        assert_select "h3", { text: I18n.t("passwords.edit.compromised_heading"), count: 0 }
+      end
+    end
+
     context "with expired confirmation_token" do
       should "redirect to the sign in page" do
         @user.update_attribute(:token_expires_at, 1.minute.ago)

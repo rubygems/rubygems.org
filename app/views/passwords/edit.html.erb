@@ -1,5 +1,12 @@
 <% @title = t('.title') %>
 
+<% if @compromised %>
+  <div class="form__notice form__notice--warning" style="margin-bottom: 1.5em; padding: 1em; border: 1px solid #e9573f; border-radius: 4px; background-color: #fdf2f0;">
+    <h3 style="margin-top: 0; color: #e9573f;"><%= t('.compromised_heading') %></h3>
+    <p><%= t('.compromised_explanation_html') %></p>
+  </div>
+<% end %>
+
 <%= form_for(:password_reset, url: password_path, html: { method: :put }) do |form| %>
   <%= error_messages_for @user %>
   <div class="password_field">
