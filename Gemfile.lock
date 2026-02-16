@@ -181,7 +181,7 @@ GEM
     bloomer (1.0.0)
       bitarray
       msgpack
-    bootsnap (1.22.0)
+    bootsnap (1.23.0)
       msgpack (~> 1.2)
     brakeman (8.0.2)
       racc
@@ -938,7 +938,7 @@ DEPENDENCIES
   bcrypt (~> 3.1)
   better_html (~> 2.2)
   blazer (~> 3.3.0)
-  bootsnap (~> 1.22)
+  bootsnap (~> 1.23)
   brakeman (~> 8.0)
   browser (~> 6.2)
   capybara (~> 3.40)
@@ -1098,7 +1098,7 @@ CHECKSUMS
   bitarray (1.3.1) sha256=6ec714933c4a6100b31dcb49a68135a0409524a1834c9d614b0bd929e3da0743
   blazer (3.3.0) sha256=01e151091ce1e7d27c156243916b2f13109ef2ef1a16cfa62bef67f4c5fd169f
   bloomer (1.0.0) sha256=57a0d3a78628db9a92c6723f06c67697e420abcdb05aa757c6dfae607251d272
-  bootsnap (1.22.0) sha256=5820c9d42c2efef095bee6565484bdc511f1223bf950140449c9385ae775793e
+  bootsnap (1.23.0) sha256=c1254f458d58558b58be0f8eb8f6eec2821456785b7cdd1e16248e2020d3f214
   brakeman (8.0.2) sha256=7b02065ce8b1de93949cefd3f2ad78e8eb370e644b95c8556a32a912a782426a
   browser (6.2.0) sha256=281d5295788825c9396427c292c2d2be0a5c91875c93c390fde6e5d61a5ace2d
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
