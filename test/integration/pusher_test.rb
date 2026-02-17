@@ -399,7 +399,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       end
 
       should "enqueue rstuf addition" do
-        assert_enqueued_with(job: Rstuf::AddJob, args: [{ version: @cutter.version }]) do
+        assert_enqueued_with(job: Rstuf::AddJob, args: [version: @cutter.version]) do
           @cutter.save
         end
       end

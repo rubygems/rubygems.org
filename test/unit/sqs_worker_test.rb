@@ -7,7 +7,7 @@ class SqsWorkerTest < ActiveSupport::TestCase
   setup do
     @sqs_worker = SqsWorker.new
     @body = {
-      "Records" =>  [{
+      "Records" =>  [
         "eventVersion" => "2.2",
         "eventSource" => "aws => s3",
         "awsRegion" => "us-west-2",
@@ -47,7 +47,7 @@ class SqsWorkerTest < ActiveSupport::TestCase
             "lifecycleRestoreStorageClass" =>  "Source storage class for restore"
           }
         }
-      }]
+      ]
     }
   end
 

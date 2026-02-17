@@ -218,7 +218,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
               viewerIsAMember: true,
               teams: {
                 edges: [
-                  { node: { slug: "rubygems-org" } }
+                  node: { slug: "rubygems-org" }
                 ]
               }
             }

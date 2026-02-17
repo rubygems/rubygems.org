@@ -18,26 +18,26 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
       assert_response :success
       assert_equal [
-        {
-          "id" => @role.id,
-          "token" => @role.token,
-          "oidc_provider_id" => @role.oidc_provider_id,
-          "user_id" => @user.id,
-          "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
-          "name" => @role.name,
-          "access_policy" =>  { "statements" => [
-            { "effect" => "allow",
-              "principal" => { "oidc" => @role.provider.issuer },
-              "conditions" => [{
-                "operator" => "string_equals",
-                "claim" => "sub",
-                "value" => "repo:segiddins/oidc-test:ref:refs/heads/main"
-              }] }
-          ] },
-          "created_at" => @role.created_at.as_json,
-          "updated_at" => @role.updated_at.as_json,
-          "deleted_at" => nil
-        }
+
+        "id" => @role.id,
+        "token" => @role.token,
+        "oidc_provider_id" => @role.oidc_provider_id,
+        "user_id" => @user.id,
+        "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
+        "name" => @role.name,
+        "access_policy" =>  { "statements" => [
+          "effect" => "allow",
+            "principal" => { "oidc" => @role.provider.issuer },
+            "conditions" => [
+              "operator" => "string_equals",
+              "claim" => "sub",
+              "value" => "repo:segiddins/oidc-test:ref:refs/heads/main"
+            ]
+        ] },
+        "created_at" => @role.created_at.as_json,
+        "updated_at" => @role.updated_at.as_json,
+        "deleted_at" => nil
+
       ], response.parsed_body
     end
   end
@@ -64,13 +64,13 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
           "name" => @role.name,
           "access_policy" =>  { "statements" => [
-            { "effect" => "allow",
-              "principal" => { "oidc" => @role.provider.issuer },
-              "conditions" => [{
-                "operator" => "string_equals",
-                "claim" => "sub",
-                "value" => "repo:segiddins/oidc-test:ref:refs/heads/main"
-              }] }
+            "effect" => "allow",
+             "principal" => { "oidc" => @role.provider.issuer },
+             "conditions" => [
+               "operator" => "string_equals",
+               "claim" => "sub",
+               "value" => "repo:segiddins/oidc-test:ref:refs/heads/main"
+             ]
           ] },
           "created_at" => @role.created_at.as_json,
           "updated_at" => @role.updated_at.as_json,

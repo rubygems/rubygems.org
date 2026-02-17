@@ -8,11 +8,11 @@ if Rails.env.local? && Toxiproxy.running?
   toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
   Toxiproxy.populate(
     [
-      {
-        name: 'elasticsearch',
-        listen: "#{toxiproxy_listen_host}:#{port}",
-        upstream: toxiproxy_upstream
-      }
+
+      name: 'elasticsearch',
+      listen: "#{toxiproxy_listen_host}:#{port}",
+      upstream: toxiproxy_upstream
+
     ]
   )
 end

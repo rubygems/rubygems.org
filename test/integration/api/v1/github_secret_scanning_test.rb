@@ -9,10 +9,10 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
 
   KEYS_RESPONSE_BODY =
     { "public_keys" => [
-      {
-        "key_identifier" => "test_key_id",
-        "is_current" => true
-      }
+
+      "key_identifier" => "test_key_id",
+      "is_current" => true
+
     ] }.freeze
 
   [
@@ -40,7 +40,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
             )
 
           @tokens = [
-            { "token" => "some_token", "type" => "some_type", "url" => "some_url" }
+            "token" => "some_token", "type" => "some_type", "url" => "some_url"
           ]
 
           @user = create(:user)

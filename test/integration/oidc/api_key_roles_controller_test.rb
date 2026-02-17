@@ -93,7 +93,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
       @api_key_role = create(:oidc_api_key_role,
         user: @user,
         provider:,
-        access_policy: { statements: [{ effect: "allow", conditions: [{ claim: "aud", operator: "string_equals", value: "example.com" }] }] })
+        access_policy: { statements: [effect: "allow", conditions: [claim: "aud", operator: "string_equals", value: "example.com"]] })
       get github_actions_workflow_profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :success
@@ -106,7 +106,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
       @api_key_role = create(:oidc_api_key_role,
         user: @user,
         provider:,
-        access_policy: { statements: [{ effect: "allow", conditions: [{ claim: "aud", operator: "string_equals", value: "rubygems.org" }] }] })
+        access_policy: { statements: [effect: "allow", conditions: [claim: "aud", operator: "string_equals", value: "rubygems.org"]] })
       get github_actions_workflow_profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :success

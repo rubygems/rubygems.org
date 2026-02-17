@@ -11,11 +11,11 @@ FactoryBot.define do
     access_policy do
       {
         statements: [
-          { effect: "allow",
-            principal: { oidc: provider.issuer },
-            conditions: [
-              { operator: "string_equals", claim: "sub", value: "repo:segiddins/oidc-test:ref:refs/heads/main" }
-            ] }
+          effect: "allow",
+           principal: { oidc: provider.issuer },
+           conditions: [
+             operator: "string_equals", claim: "sub", value: "repo:segiddins/oidc-test:ref:refs/heads/main"
+           ]
         ]
       }
     end
@@ -26,11 +26,11 @@ FactoryBot.define do
       access_policy do
         {
           statements: [
-            { effect: "allow",
-              principal: { oidc: provider.issuer },
-              conditions: [
-                { operator: "string_equals", claim: "organization_slug", value: "example-org" }
-              ] }
+            effect: "allow",
+             principal: { oidc: provider.issuer },
+             conditions: [
+               operator: "string_equals", claim: "organization_slug", value: "example-org"
+             ]
           ]
         }
       end
