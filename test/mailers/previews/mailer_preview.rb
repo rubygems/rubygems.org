@@ -17,6 +17,10 @@ class MailerPreview < ActionMailer::Preview
     PasswordMailer.change_password(User.last)
   end
 
+  def compromised_password_reset
+    PasswordMailer.compromised_password_reset(User.last)
+  end
+
   def deletion_complete
     Mailer.deletion_complete(User.last)
   end
