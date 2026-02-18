@@ -14,11 +14,15 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def change_password
-    PasswordMailer.change_password(User.last)
+    user = User.last
+    user.generate_password_reset_token!
+    PasswordMailer.change_password(user)
   end
 
   def compromised_password_reset
-    PasswordMailer.compromised_password_reset(User.last)
+    user = User.last
+    user.generate_password_reset_token!
+    PasswordMailer.compromised_password_reset(user)
   end
 
   def deletion_complete

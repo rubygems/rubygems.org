@@ -1,28 +1,41 @@
 <% @title = t('.title') %>
 
-<% if @compromised %>
-  <div class="form__notice form__notice--warning" style="margin-bottom: 1.5em; padding: 1em; border: 1px solid #e9573f; border-radius: 4px; background-color: #fdf2f0;">
-    <h3 style="margin-top: 0; color: #e9573f;"><%= t('.compromised_heading') %></h3>
-    <p><%= t('.compromised_explanation_html') %></p>
-  </div>
-<% end %>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6">
+      <%= t('.title') %>
+    </h1>
 
-<%= form_for(:password_reset, url: password_path, html: { method: :put }) do |form| %>
-  <%= error_messages_for @user %>
-  <div class="password_field">
-    <%= form.label :password, t("activerecord.attributes.user.password"), :class => 'form__label' %>
-    <%= form.password_field :password, autocomplete: 'new-password', class: 'form__input' %>
-  </div>
-  <div class="form__checkbox">
-    <%= form.check_box :reset_api_key, { :class => 'form__checkbox__input' } , 'true', 'false' %>
-    <%= form.label :reset_api_key, t('settings.edit.api_access.reset'), :class => 'form__checkbox__label' %>
-  </div>
-  <div class="form__checkbox">
-    <%= form.check_box :reset_api_keys, { :class => 'form__checkbox__input' } , 'true', 'false' %>
-    <%= form.label :reset_api_keys, t('settings.edit.api_access.reset_all'), :class => 'form__checkbox__label' %>
-  </div>
+    <% if @compromised %>
+      <%= render AlertComponent.new(style: :alert) do %>
+        <span class="font-semibold"><%= t('.compromised_heading') %></span>
+        <span class="block mt-1 text-sm"><%= t('.compromised_explanation_html') %></span>
+      <% end %>
+    <% end %>
 
-  <div class="form_bottom">
-    <%= form.submit t('.submit'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= error_messages_for @user %>
+
+    <%= form_for(:password_reset, url: password_path, html: { method: :put }, data: { turbo: false }) do |form| %>
+      <div class="mb-6">
+        <%= form.label :password, t("activerecord.attributes.user.password"),
+              class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+        <%= form.password_field :password, autocomplete: "new-password",
+              class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+      </div>
+
+      <div class="flex items-center gap-3 mb-3">
+        <%= form.check_box :reset_api_key, { class: "h-4 w-4 rounded border-neutral-300 text-orange-500 focus:ring-orange-500" }, "true", "false" %>
+        <%= form.label :reset_api_key, t("settings.edit.api_access.reset"),
+              class: "text-sm text-neutral-700 dark:text-neutral-300" %>
+      </div>
+
+      <div class="flex items-center gap-3 mb-8">
+        <%= form.check_box :reset_api_keys, { class: "h-4 w-4 rounded border-neutral-300 text-orange-500 focus:ring-orange-500" }, "true", "false" %>
+        <%= form.label :reset_api_keys, t("settings.edit.api_access.reset_all"),
+              class: "text-sm text-neutral-700 dark:text-neutral-300" %>
+      </div>
+
+      <%= render ButtonComponent.new(t(".submit"), type: :submit, color: :primary) %>
+    <% end %>
   </div>
-<% end %>
+</div>

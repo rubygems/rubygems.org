@@ -9,7 +9,7 @@ class CompromisedPasswordsController < ApplicationController
 
     # Send password reset email if not already sent
     return if session[:compromised_password_email_sent]
-    @user.forgot_password!
+    @user.generate_password_reset_token!
     PasswordMailer.compromised_password_reset(@user).deliver_later
     session[:compromised_password_email_sent] = true
   end
