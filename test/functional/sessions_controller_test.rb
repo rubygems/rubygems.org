@@ -877,15 +877,15 @@ class SessionsControllerTest < ActionController::TestCase
           assert page.has_content? "Multi-factor authentication"
         end
 
-        should "set flash alert with warning" do
-          assert_equal I18n.t("sessions.create.password_compromised_warning"), flash[:alert]
+        should "not set a flash alert" do
+          assert_nil flash[:alert]
         end
 
         should "record compromised password event" do
           event = @user.events.find_by(tag: Events::UserEvent::PASSWORD_COMPROMISED)
 
           assert_predicate event, :present?
-          assert_equal "warning_shown", event.additional["action_taken"]
+          assert_equal "password_reset_redirect", event.additional["action_taken"]
           assert event.additional["mfa_enabled"]
         end
       end
@@ -897,7 +897,7 @@ class SessionsControllerTest < ActionController::TestCase
           post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
         end
 
-        should redirect_to("the password reset page") { new_password_path }
+        should redirect_to("the compromised password page") { compromised_password_path }
 
         should "clear password_compromised flag from session" do
           refute @controller.session[:password_compromised]

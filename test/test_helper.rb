@@ -234,7 +234,7 @@ class ActiveSupport::TestCase
     find(:css, ".header__popup-link").click
     click_on "Sign out"
 
-    assert page.has_content?("Sign in".upcase)
+    assert page.has_content?("Sign in")
 
     @authenticator
   end

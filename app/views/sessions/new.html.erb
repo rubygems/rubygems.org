@@ -17,7 +17,7 @@
         <div class="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 gap-y-1 text-sm items-center">
           <% User.includes(:ownerships, :memberships).order(id: :asc).limit(20).each do |user| %>
             <%= link_to user.handle || user.email, { controller: :sessions, action: :development_log_in_as, user_id: user.id },
-              class: "text-purple-700 dark:text-purple-300 hover:underline" %>
+              class: "text-purple-700 dark:text-purple-300 hover:underline", data: { turbo: false } %>
             <span class="justify-self-center">
               <% if user.mfa_enabled? %>
                 <span class="text-xs px-1.5 py-0.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">MFA</span>

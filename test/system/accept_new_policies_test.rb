@@ -8,7 +8,7 @@ class AcceptNewPoliciesTest < ApplicationSystemTestCase
   test "user accepts new policies on default rubygems.org layout" do
     visit sign_in_path
 
-    click_link "login as #{@user[:handle]}"
+    click_link @user[:handle]
 
     visit root_path
 
@@ -22,7 +22,7 @@ class AcceptNewPoliciesTest < ApplicationSystemTestCase
   test "user accepts new policies on hammy layout" do
     visit sign_in_path
 
-    click_link "login as #{@user[:handle]}"
+    click_link @user[:handle]
 
     visit dashboard_path
 
