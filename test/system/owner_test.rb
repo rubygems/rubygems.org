@@ -362,6 +362,6 @@ class OwnerTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert_text "ADD OWNER"
+    assert_selector ".owners__table"
   end
 end
