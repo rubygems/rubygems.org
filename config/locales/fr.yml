@@ -24,6 +24,7 @@ fr:
   locale_name: Français
   none:
   not_found: Introuvable
+  or:
   forbidden:
   api_gem_not_found:
   api_key_forbidden:
@@ -529,11 +530,20 @@ fr:
       opening:
       title:
       subtitle:
+    compromised_password_reset:
+      subject:
+      title:
+      subtitle:
+      opening:
+      reassurance:
+      closing:
   passwords:
     edit:
       submit: Enregistrer ce mot de passe
       title: Nouveau mot de passe
       token_failure: Veuillez vérifier l'URL ou réessayer.
+      compromised_heading:
+      compromised_explanation_html:
     new:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe
@@ -881,6 +891,28 @@ fr:
       notice:
     create:
       account_blocked:
+      password_compromised_warning:
+  compromised_passwords:
+    show:
+      title:
+      heading:
+      subheading:
+      explanation_html:
+      email_sent:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      back_to_sign_in:
+      continue_to_dashboard:
+      need_help_html:
   stats:
     index:
       title:
@@ -1068,3 +1100,9 @@ fr:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      password:
+        password_compromised:
+        mfa_status:
+        mfa_enabled:
+        mfa_disabled:
+        action_taken:

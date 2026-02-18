@@ -19,6 +19,7 @@ zh-TW:
   locale_name: 正體中文
   none: 無
   not_found: 沒有找到
+  or:
   forbidden:
   api_gem_not_found:
   api_key_forbidden: API 金鑰沒有存取權限
@@ -512,11 +513,20 @@ zh-TW:
       opening:
       title:
       subtitle:
+    compromised_password_reset:
+      subject:
+      title:
+      subtitle:
+      opening:
+      reassurance:
+      closing:
   passwords:
     edit:
       submit: 更新密碼
       title: 重設密碼
       token_failure: 請確認 URL 或再次提交
+      compromised_heading:
+      compromised_explanation_html:
     new:
       submit: 更新密碼
       title: 修改密碼
@@ -839,6 +849,28 @@ zh-TW:
       notice: 請確認您的密碼以繼續。
     create:
       account_blocked:
+      password_compromised_warning:
+  compromised_passwords:
+    show:
+      title:
+      heading:
+      subheading:
+      explanation_html:
+      email_sent:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      back_to_sign_in:
+      continue_to_dashboard:
+      need_help_html:
   stats:
     index:
       title: 統計資料
@@ -1027,3 +1059,9 @@ zh-TW:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      password:
+        password_compromised:
+        mfa_status:
+        mfa_enabled:
+        mfa_disabled:
+        action_taken:

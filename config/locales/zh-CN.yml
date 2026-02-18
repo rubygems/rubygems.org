@@ -20,6 +20,7 @@ zh-CN:
   locale_name: 简体中文
   none: 无
   not_found: 未找到
+  or:
   forbidden:
   api_gem_not_found:
   api_key_forbidden: API 密钥没有访问权限
@@ -519,11 +520,20 @@ zh-CN:
       opening:
       title: 修改密码
       subtitle: 你好，%{handle}！
+    compromised_password_reset:
+      subject:
+      title:
+      subtitle:
+      opening:
+      reassurance:
+      closing:
   passwords:
     edit:
       submit: 保存该密码
       title: 重置密码
       token_failure: 请再次确认 URL 或尝试重新提交
+      compromised_heading:
+      compromised_explanation_html:
     new:
       submit: 重置密码
       title: 修改您的密码
@@ -851,6 +861,28 @@ zh-CN:
       notice: 请确认密码后继续
     create:
       account_blocked: 您的账户已被 RubyGems 团队拉黑。请发送邮件至 support@rubygems.org 以恢复您的帐户。
+      password_compromised_warning:
+  compromised_passwords:
+    show:
+      title:
+      heading:
+      subheading:
+      explanation_html:
+      email_sent:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      back_to_sign_in:
+      continue_to_dashboard:
+      need_help_html:
   stats:
     index:
       title: 统计数据
@@ -1039,3 +1071,9 @@ zh-CN:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      password:
+        password_compromised:
+        mfa_status:
+        mfa_enabled:
+        mfa_disabled:
+        action_taken:
