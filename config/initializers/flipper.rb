@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "flipper/adapters/active_record"
 
 Flipper.configure do |config|

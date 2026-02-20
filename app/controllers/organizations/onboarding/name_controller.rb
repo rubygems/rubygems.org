@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organizations::Onboarding::NameController < Organizations::Onboarding::BaseController
   def new
   end

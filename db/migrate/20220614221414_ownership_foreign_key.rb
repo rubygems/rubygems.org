@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OwnershipForeignKey < ActiveRecord::Migration[7.0]
   def up
     add_foreign_key :ownerships, :users, on_delete: :cascade

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Cards::VersionsMetric < Avo::Cards::MetricCard
   self.id = "versions_metric"
   self.label = "Versions pushed"

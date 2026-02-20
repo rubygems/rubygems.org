@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MaintenanceTasksAuditable
   extend ActiveSupport::Concern
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEvent < ApplicationRecord
   belongs_to :rubygem
 

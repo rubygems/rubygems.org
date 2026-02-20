@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 password = "super-secret-password"
 
 org = Organization.create_with(

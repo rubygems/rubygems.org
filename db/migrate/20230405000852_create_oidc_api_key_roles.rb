@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOIDCApiKeyRoles < ActiveRecord::Migration[7.0]
   def change
     create_table :oidc_api_key_roles do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :events_user_agent_info, class: "Events::UserAgentInfo" do
     skip_create

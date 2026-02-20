@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class GitHubSecretScanning
   include SemanticLogger::Loggable
 
-  KEYS_URI = "https://api.github.com/meta/public_keys/secret_scanning".freeze
+  KEYS_URI = "https://api.github.com/meta/public_keys/secret_scanning"
 
   def initialize(key_identifier)
     @public_key = self.class.public_key(key_identifier)
@@ -30,7 +32,7 @@ class GitHubSecretScanning
   end
 
   class DepsDev < GitHubSecretScanning
-    KEYS_URI = "https://storage.googleapis.com/depsdev-gcp-public-keys/secret_scanning".freeze
+    KEYS_URI = "https://storage.googleapis.com/depsdev-gcp-public-keys/secret_scanning"
 
     def self.secret_scanning_keys
       Octokit.client.get(KEYS_URI)

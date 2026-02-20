@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::UserEvent::ApiKey::DeletedComponentPreview < Lookbook::Preview
   # @param name text
   def default(name: "example")

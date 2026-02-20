@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ElasticSearcher
   CONNECTION_ERRORS = [
     Faraday::ConnectionFailed,

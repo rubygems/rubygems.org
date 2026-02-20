@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 if ARGV.empty?
   puts "Yanks a given gem, or all versions if none is given"

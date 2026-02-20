@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddQueueToDelayedJobs < ActiveRecord::Migration[4.2]
   def self.up
     add_column :delayed_jobs, :queue, :string

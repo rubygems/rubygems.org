@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveImproperlyEmbeddedYamlData < ActiveRecord::Migration[4.2]
   def self.up
     # Dependency.where("requirements like '%YAML::Syck::DefaultKey%'").find_each do |d|

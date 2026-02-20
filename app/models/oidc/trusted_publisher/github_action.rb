@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   has_many :rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", as: :trusted_publisher, dependent: :destroy,
     inverse_of: :trusted_publisher

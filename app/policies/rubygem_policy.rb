@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RubygemPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
   end

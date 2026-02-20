@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :log_ticket do
     sequence(:key) { "key-#{it}" }

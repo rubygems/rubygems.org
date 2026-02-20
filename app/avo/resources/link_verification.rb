@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::LinkVerification < Avo::BaseResource
   self.includes = []
 

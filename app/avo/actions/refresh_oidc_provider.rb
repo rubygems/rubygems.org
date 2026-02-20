@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::RefreshOIDCProvider < Avo::Actions::ApplicationAction
   self.name = "Refresh OIDC Provider"
   self.visible = lambda {

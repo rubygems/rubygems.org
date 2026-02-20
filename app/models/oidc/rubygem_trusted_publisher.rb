@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::RubygemTrustedPublisher < ApplicationRecord
   belongs_to :rubygem
   belongs_to :trusted_publisher, polymorphic: true, optional: false

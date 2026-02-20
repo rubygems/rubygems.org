@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Dependency < Avo::BaseResource
   self.includes = []
 

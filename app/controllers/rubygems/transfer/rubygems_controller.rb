@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rubygems::Transfer::RubygemsController < Rubygems::Transfer::BaseController
   layout "onboarding"
 

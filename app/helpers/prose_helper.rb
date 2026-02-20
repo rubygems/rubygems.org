@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ProseHelper
   def prose(**options, &)
     base = "prose prose-neutral dark:prose-invert prose-lg md:prose-xl max-w-prose mx-auto"

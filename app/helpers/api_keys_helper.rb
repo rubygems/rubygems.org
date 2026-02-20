@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApiKeysHelper
   def gem_scope(api_key)
     return invalid_gem_tooltip(api_key.soft_deleted_rubygem_name) if api_key.soft_deleted_by_ownership?

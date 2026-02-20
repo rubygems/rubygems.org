@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Avo::Resources::Concerns::AvoAuditableResource
   extend ActiveSupport::Concern
 

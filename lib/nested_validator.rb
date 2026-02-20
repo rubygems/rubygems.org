@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NestedValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     case value

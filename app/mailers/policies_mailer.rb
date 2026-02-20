@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PoliciesMailer < ApplicationMailer
   self.deliver_later_queue_name = :within_24_hours
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # NOTE: This migration can be deployed manually in advance to prevent DB locks using following SQL statements.
 #       Since it just adds new column to index, it works well with old ad new code at the same time.
 #

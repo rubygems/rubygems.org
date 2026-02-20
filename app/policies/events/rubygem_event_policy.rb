@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEventPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StoreVersionContentsJob < ApplicationJob
   include GoodJob::ActiveJobExtensions::Concurrency
 

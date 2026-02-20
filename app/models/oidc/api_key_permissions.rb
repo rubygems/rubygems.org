@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::ApiKeyPermissions < ApplicationModel
   def create_params(user)
     params = { scopes: scopes }

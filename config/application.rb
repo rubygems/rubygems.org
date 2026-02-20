@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "boot"
 
 require "rails"
@@ -112,7 +114,7 @@ module Gemcutter
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
   ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
-  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
+  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>"
   PAGES = %w[
     about data download security supporters
   ].freeze

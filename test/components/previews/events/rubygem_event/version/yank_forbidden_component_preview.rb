@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEvent::Version::YankForbiddenComponentPreview < Lookbook::Preview
   def default(rubygem: Rubygem.first!, **additional)
     additional[:reason] ||= "Versions used for testing can't be yanked."

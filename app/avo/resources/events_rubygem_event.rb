@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::EventsRubygemEvent < Avo::BaseResource
   self.title = :cache_key
   self.includes = %i[rubygem ip_address geoip_info]

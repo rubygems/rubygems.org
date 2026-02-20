@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::RubygemTrustedPublishersController < ApplicationController
   include OIDC::Concerns::TrustedPublisherCreation
 

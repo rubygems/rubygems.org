@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RubygemTransfer < ApplicationRecord
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 

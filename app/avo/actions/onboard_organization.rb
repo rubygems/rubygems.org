@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::OnboardOrganization < Avo::Actions::ApplicationAction
   self.name = "Onboard Organization"
   self.visible = lambda {

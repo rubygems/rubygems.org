@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveAnnouncements < ActiveRecord::Migration[6.0]
   def up
     drop_table :announcements

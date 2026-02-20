@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddOrganizationOnboardingInvites < ActiveRecord::Migration[7.2]
   def change
     create_table :organization_onboarding_invites do |t|

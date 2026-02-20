@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 WebAuthn.configure do |config|
   config.allowed_origins = [if Rails.env.development?
                               ENV.fetch("WEBAUTHN_ORIGIN", "http://localhost:3000")

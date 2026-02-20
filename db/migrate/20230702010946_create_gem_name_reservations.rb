@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGemNameReservations < ActiveRecord::Migration[7.0]
   ORIGINAL_GEM_NAME_RESERVED_LIST = %w[
     cgi-session
