@@ -6,7 +6,7 @@ class LogTicket < ApplicationRecord
     scope = pending.limit(1).lock(true).order(:id)
     scope = scope.where(key: key) if key
     scope = scope.where(directory: directory) if directory
-    scope.sole.tap do |ticket|
+    scope.take!.tap do |ticket|
       ticket.update_column(:status, "processing")
     end
   rescue ActiveRecord::RecordNotFound
