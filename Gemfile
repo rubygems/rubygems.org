@@ -136,7 +136,7 @@ group :development do
 end
 
 group :test do
-  gem "minitest", "~> 5.27", require: false
+  gem "minitest", "~> 6.0", require: false
   gem "minitest-retry", "~> 0.3.1"
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.1"
