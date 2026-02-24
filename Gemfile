@@ -10,7 +10,7 @@ gem "aws-sdk-sqs", "~> 1.111"
 gem "bootsnap", "~> 1.23"
 gem "clearance", "~> 2.11"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.28"
+gem "datadog", "~> 2.29"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.33"
 gem "faraday", "~> 2.14"
@@ -21,7 +21,7 @@ gem "flipper-active_record", "~> 1.3"
 gem "flipper-ui", "~> 1.3"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.3.1", require: false
+gem "honeybadger", "~> 6.4.0", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -145,7 +145,7 @@ group :test do
   gem "mocha", "~> 3.0", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 7.0"
-  gem "selenium-webdriver", "~> 4.40"
+  gem "selenium-webdriver", "~> 4.41"
   gem "webmock", "~> 3.26"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 3.1", require: false
