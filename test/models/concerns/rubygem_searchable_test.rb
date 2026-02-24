@@ -168,7 +168,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       _, response = ElasticSearcher.new("keyword").search
       names_order = %w[keyword example_gem3 example_gem2]
 
-      assert_equal names_order, response.results.map(&:name)
+      assert_equal names_order, response.map(&:name)
     end
   end
 
@@ -184,7 +184,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       _, response = ElasticSearcher.new("gem").search
       names_order = %w[gem_30 gem_20 gem_10]
 
-      assert_equal names_order, response.results.map(&:name)
+      assert_equal names_order, response.map(&:name)
     end
   end
 
@@ -363,7 +363,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         _, response1 = ElasticSearcher.new("async rails").search
         _, response2 = ElasticSearcher.new("rails async").search
 
-        assert_equal response1.results.map(&:name), response2.results.map(&:name)
+        assert_equal response1.map(&:name), response2.map(&:name)
       end
     end
   end
