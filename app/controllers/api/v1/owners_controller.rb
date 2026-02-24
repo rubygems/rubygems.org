@@ -88,7 +88,7 @@ class Api::V1::OwnersController < Api::BaseController
     @rubygem.ownerships
       .includes(:user)
       .map do |ownership|
-        ownership.user.payload.merge("role" => Ownership.roles.key(ownership.role))
+        ownership.user.payload.merge("role" => ownership.role)
       end
   end
 end

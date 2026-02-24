@@ -37,6 +37,29 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       should "not return other owner handle" do
         assert yield(@response.body).pluck("handle").exclude?(@other_user.handle)
       end
+
+      should "return owner role for default ownership" do
+        response = yield(@response.body)
+
+        assert_equal "owner", response[0]["role"]
+      end
+    end
+
+    context "on GET to show with #{format.to_s.upcase} for maintainer role" do
+      setup do
+        @rubygem = create(:rubygem)
+        @maintainer = create(:user)
+        create(:ownership, rubygem: @rubygem, user: @maintainer, role: :maintainer)
+
+        get :show, params: { rubygem_id: @rubygem.slug }, format: format
+      end
+
+      should "return maintainer role" do
+        response = yield(@response.body)
+        maintainer_entry = response.find { |o| o["handle"] == @maintainer.handle }
+
+        assert_equal "maintainer", maintainer_entry["role"]
+      end
     end
   end
 
@@ -97,21 +120,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     should respond_with :not_found
-  end
-
-  context "GET /api/v1/gems/:gem/owners.json" do
-    setup do
-      @user = create(:user, public_email: true)
-      @rubygem = create(:rubygem, owners: [@user])
-      get :show, params: { rubygem_id: @rubygem.slug }, format: :json
-      @user_payload = JSON.parse(@response.body).first
-    end
-    should "include associated users id, handle, email, and role in response" do
-      assert_equal "owner", @user_payload["role"]
-      assert_equal @user.id, @user_payload["id"]
-      assert_equal @user.handle, @user_payload["handle"]
-      assert_equal @user.email, @user_payload["email"]
-    end
   end
 
   should "route POST /api/v1/gems/rubygem/owners.json" do
