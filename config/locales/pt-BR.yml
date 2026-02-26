@@ -874,9 +874,12 @@ pt-BR:
   compromised_passwords:
     show:
       title:
+      title_signed_in:
       heading:
       subheading:
+      subheading_signed_in:
       explanation_html:
+      explanation_signed_in_html:
       email_sent:
       next_steps:
       step_1:
