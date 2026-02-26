@@ -929,6 +929,30 @@ class SessionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "when stale compromised-password session state exists" do
+    setup do
+      @user = create(:user, email_confirmed: true, handle: "mfa_user")
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+
+      @controller.session[:password_compromised] = true
+      @controller.session[:compromised_password_user_id] = @user.id
+      @controller.session[:compromised_password_email_sent] = true
+
+      PasswordBreachChecker.any_instance.stubs(:breached?).returns(false)
+
+      post :create, params: { session: { who: "mfa_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+    end
+
+    should respond_with :success
+
+    should "clear stale compromised-password state before prompting for MFA" do
+      refute @controller.session[:password_compromised]
+      refute @controller.session[:compromised_password_user_id]
+      refute @controller.session[:compromised_password_email_sent]
+      assert_equal @user.id, @controller.session[:mfa_user]
+    end
+  end
+
   context "when credentials are wrong" do
     setup do
       @user = create(:user, email_confirmed: true, handle: "wrong_password_user")

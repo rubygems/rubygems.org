@@ -13,6 +13,7 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify webauthn_authenticate authenticate]
   before_action :webauthn_new_setup, only: :new
 
+  before_action :clear_compromised_password_session_state, only: %i[create]
   before_action :ensure_not_blocked, only: %i[create]
   before_action :find_user, only: %i[create]
   before_action :check_password_compromised, only: %i[create]
@@ -106,7 +107,7 @@ class SessionsController < Clearance::SessionsController
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
         set_login_flash
-        redirect_to(url_after_create)
+        redirect_to(url_after_create(authentication_method:))
       else
         login_failure(status.failure_message)
       end
@@ -155,8 +156,11 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
-  def url_after_create
+  def url_after_create(authentication_method:)
+    session.delete(:password_compromised) unless authentication_method == "password"
+
     if session.delete(:password_compromised)
+      session.delete(:compromised_password_email_sent)
       session[:compromised_password_user_id] = current_user.id
       compromised_password_path
     elsif current_user.mfa_recommended_not_yet_enabled?
@@ -207,6 +211,12 @@ class SessionsController < Clearance::SessionsController
     flash.now.alert = t(".account_blocked")
     webauthn_new_setup
     render template: "sessions/new", status: :unauthorized
+  end
+
+  def clear_compromised_password_session_state
+    session.delete(:password_compromised)
+    session.delete(:compromised_password_user_id)
+    session.delete(:compromised_password_email_sent)
   end
 
   def record_mfa_login_duration(mfa_type:)
