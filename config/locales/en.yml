@@ -859,9 +859,12 @@ en:
   compromised_passwords:
     show:
       title: Password Reset Required
+      title_signed_in: Password Change Recommended
       heading: Password found in data breach
       subheading: Your RubyGems.org account remains secure
+      subheading_signed_in: Multi-factor authentication protected this sign-in
       explanation_html: The password you entered has been found in a public data breach from <strong>another website</strong>. This doesn't mean your RubyGems.org account was compromised, but because passwords are often reused, we require a reset to keep your account secure.
+      explanation_signed_in_html: The password you entered has been found in a public data breach from <strong>another website</strong>. Your RubyGems.org account was not compromised, and because you have multi-factor authentication enabled we allowed this sign-in, but you should change your password as soon as possible.
       email_sent: "We've sent a password reset link to:"
       next_steps: "Here's what to do next:"
       step_1: Check your email inbox (and spam folder) for the password reset link

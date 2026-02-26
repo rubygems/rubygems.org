@@ -1,6 +1,7 @@
-<% @title = t('.title') %>
+<% reset_required = !signed_in? %>
+<% @title = t(reset_required ? '.title' : '.title_signed_in') %>
 <% add_breadcrumb t("sign_in"), sign_in_path %>
-<% add_breadcrumb t('.title') %>
+<% add_breadcrumb @title %>
 
 <div class="flex items-center justify-center">
   <div class="max-w-2xl w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
@@ -9,11 +10,11 @@
     <% end %>
 
     <p class="text-neutral-700 dark:text-neutral-300 mb-6">
-      <%= t('.subheading') %>
+      <%= t(reset_required ? '.subheading' : '.subheading_signed_in') %>
     </p>
 
     <p class="text-neutral-700 dark:text-neutral-300 mb-8">
-      <%= t('.explanation_html') %>
+      <%= t(reset_required ? '.explanation_html' : '.explanation_signed_in_html') %>
     </p>
 
     <div class="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-5 mb-8">
@@ -50,7 +51,7 @@
 
     <div class="flex justify-center">
       <% if signed_in? %>
-        <%= render ButtonComponent.new(t('.continue_to_dashboard'), dashboard_path, type: :link, color: :primary) %>
+        <%= render ButtonComponent.new(t('.continue_to_dashboard'), dashboard_path, type: :link, color: :secondary) %>
       <% else %>
         <%= render ButtonComponent.new(t('.back_to_sign_in'), sign_in_path, type: :link, color: :secondary) %>
       <% end %>
