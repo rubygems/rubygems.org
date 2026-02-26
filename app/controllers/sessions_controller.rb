@@ -160,7 +160,7 @@ class SessionsController < Clearance::SessionsController
     session.delete(:password_compromised) unless authentication_method == "password"
 
     if session.delete(:password_compromised)
-      session.delete(:compromised_password_email_sent)
+      initiate_compromised_password_reset!(current_user)
       session[:compromised_password_user_id] = current_user.id
       compromised_password_path
     elsif current_user.mfa_recommended_not_yet_enabled?
@@ -197,6 +197,8 @@ class SessionsController < Clearance::SessionsController
     @user.record_event!(Events::UserEvent::PASSWORD_COMPROMISED,
       request:, mfa_enabled: false, action_taken: "email_reset_required")
 
+    initiate_compromised_password_reset!(@user)
+
     reset_session
 
     session[:compromised_password_user_id] = @user.id
@@ -216,7 +218,11 @@ class SessionsController < Clearance::SessionsController
   def clear_compromised_password_session_state
     session.delete(:password_compromised)
     session.delete(:compromised_password_user_id)
-    session.delete(:compromised_password_email_sent)
+  end
+
+  def initiate_compromised_password_reset!(user)
+    user.forgot_password!
+    PasswordMailer.compromised_password_reset(user).deliver_later
   end
 
   def record_mfa_login_duration(mfa_type:)

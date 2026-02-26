@@ -21,18 +21,7 @@ class CompromisedPasswordsControllerTest < ActionController::TestCase
         assert_select "a[href=?]", sign_in_path
       end
 
-      should "enqueue compromised password reset email on first visit" do
-        assert_enqueued_emails 1 do
-          get :show
-        end
-
-        assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
-        assert_response :success
-      end
-
-      should "not re-send password reset email on page refresh" do
-        @controller.session[:compromised_password_email_sent] = true
-
+      should "not enqueue compromised password reset email on page visit" do
         assert_enqueued_emails 0 do
           get :show
         end
@@ -40,20 +29,12 @@ class CompromisedPasswordsControllerTest < ActionController::TestCase
         assert_response :success
       end
 
-      should "update user confirmation_token for password reset" do
+      should "not update user confirmation_token on page visit" do
         original_token = @user.confirmation_token
 
         get :show
 
-        assert_not_equal original_token, @user.reload.confirmation_token
-      end
-
-      should "set email_sent flag in session after sending" do
-        refute @controller.session[:compromised_password_email_sent]
-
-        get :show
-
-        assert @controller.session[:compromised_password_email_sent]
+        assert_equal original_token, @user.reload.confirmation_token
       end
     end
 

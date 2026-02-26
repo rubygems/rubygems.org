@@ -3,6 +3,8 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionController::TestCase
+  include ActionMailer::TestHelper
+
   context "when user has mfa enabled" do
     setup do
       @user = create(:user, email_confirmed: true, handle: "login")
@@ -830,6 +832,7 @@ class SessionsControllerTest < ActionController::TestCase
     context "when user has no MFA" do
       context "on POST to create" do
         setup do
+          @original_confirmation_token = @user.confirmation_token
           post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
 
@@ -849,6 +852,14 @@ class SessionsControllerTest < ActionController::TestCase
           assert_predicate event, :present?
           refute event.additional["mfa_enabled"]
           assert_equal "email_reset_required", event.additional["action_taken"]
+        end
+
+        should "enqueue a compromised password reset email" do
+          assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
+        end
+
+        should "rotate the password reset confirmation token" do
+          assert_not_equal @original_confirmation_token, @user.reload.confirmation_token
         end
       end
     end
@@ -892,6 +903,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "after successful MFA" do
         setup do
+          @original_confirmation_token = @user.confirmation_token
           post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
           @controller.session[:mfa_user] = @user.id
           post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
@@ -905,6 +917,14 @@ class SessionsControllerTest < ActionController::TestCase
 
         should "make user logged in" do
           assert_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "enqueue a compromised password reset email after MFA succeeds" do
+          assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
+        end
+
+        should "rotate the password reset confirmation token after MFA succeeds" do
+          assert_not_equal @original_confirmation_token, @user.reload.confirmation_token
         end
       end
     end
@@ -936,7 +956,6 @@ class SessionsControllerTest < ActionController::TestCase
 
       @controller.session[:password_compromised] = true
       @controller.session[:compromised_password_user_id] = @user.id
-      @controller.session[:compromised_password_email_sent] = true
 
       PasswordBreachChecker.any_instance.stubs(:breached?).returns(false)
 
@@ -948,7 +967,6 @@ class SessionsControllerTest < ActionController::TestCase
     should "clear stale compromised-password state before prompting for MFA" do
       refute @controller.session[:password_compromised]
       refute @controller.session[:compromised_password_user_id]
-      refute @controller.session[:compromised_password_email_sent]
       assert_equal @user.id, @controller.session[:mfa_user]
     end
   end
