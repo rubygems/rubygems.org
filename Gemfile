@@ -105,7 +105,7 @@ group :assets, :development do
 end
 
 group :development, :test do
-  gem "debug", "~> 1.0"
+  gem "debug", "~> 1.0", require: "debug/prelude"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.5"
   gem "dotenv-rails", "~> 3.2"
