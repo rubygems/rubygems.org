@@ -877,7 +877,7 @@ class SessionsControllerTest < ActionController::TestCase
           assert page.has_content? "Multi-factor authentication"
         end
 
-        should "not set a flash alert" do
+        should "not set a flash alert before MFA completion" do
           assert_nil flash[:alert]
         end
 
