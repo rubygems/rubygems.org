@@ -3,22 +3,26 @@ require "test_helper"
 class PasswordBreachCheckerTest < ActiveSupport::TestCase
   context "#breached?" do
     should "return true for compromised passwords" do
-      Unpwn.any_instance.stubs(:acceptable?).returns(false)
+      Pwned::Password.any_instance.stubs(:pwned?).returns(true)
 
       assert_predicate PasswordBreachChecker.new("password123"), :breached?
     end
 
     should "return false for safe passwords" do
-      Unpwn.any_instance.stubs(:pwned?).returns(false)
+      Pwned::Password.any_instance.stubs(:pwned?).returns(false)
 
       refute_predicate PasswordBreachChecker.new("very-secure-password"), :breached?
     end
 
     should "return true for nil password" do
+      Pwned::Password.any_instance.stubs(:pwned?).returns(true)
+
       assert_predicate PasswordBreachChecker.new(nil), :breached?
     end
 
     should "return true for empty password" do
+      Pwned::Password.any_instance.stubs(:pwned?).returns(true)
+
       assert_predicate PasswordBreachChecker.new(""), :breached?
     end
 
