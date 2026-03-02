@@ -185,7 +185,7 @@ class SessionsController < Clearance::SessionsController
       handle_compromised_password_with_mfa
     else
       handle_compromised_password_without_mfa
-      return # halt the before_action chain after redirect
+      nil # halt the before_action chain after redirect
     end
   end
 
