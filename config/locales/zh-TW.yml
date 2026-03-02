@@ -70,6 +70,7 @@ zh-TW:
         full_name: 全名
         handle: 帳號
         password: 密碼
+        password_confirmation:
       ownership/role:
         owner:
         maintainer:
@@ -528,6 +529,11 @@ zh-TW:
       token_failure: 請確認 URL 或再次提交
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: 更新密碼
       title: 修改密碼

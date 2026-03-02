@@ -70,6 +70,7 @@ nl:
         full_name: Voor-en achternaam
         handle: Gebruikersnaam
         password: Wachtwoord
+        password_confirmation:
       ownership/role:
         owner:
         maintainer:
@@ -533,6 +534,11 @@ nl:
       token_failure: Controleer het webadres, en probeer het opnieuw.
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Wachtwoord wijzigen
       title: Wachtwoord wijzigen

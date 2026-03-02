@@ -71,6 +71,7 @@ ja:
         full_name: フルネーム
         handle: ユーザー名
         password: パスワード
+        password_confirmation:
       ownership/role:
         owner: 所有者
         maintainer: メンテナ
@@ -531,6 +532,11 @@ ja:
       token_failure: URLをダブルチェックするか、パスワードリセットを再度試してみてください。
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: パスワードをリセット
       title: パスワードを変更する

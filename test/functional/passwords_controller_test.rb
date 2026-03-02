@@ -166,7 +166,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         assert_webauthn_form
         assert_select "form[action=?]", otp_edit_password_url(token: @user.confirmation_token) do
           assert_select "input[type=text][autocomplete=off]" # no autocomplete for recovery code only
-          assert_select "button[type=submit]", text: I18n.t("authenticate")
+          assert_select "input[type=submit][value=?]", I18n.t("authenticate")
         end
         assert page.has_content?("Recovery code"), "Expect recovery code form"
         refute_signed_in
@@ -519,18 +519,18 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def assert_otp_form
-    assert_select "h1", "Multi-factor authentication"
+    assert_select "h2", I18n.t("multifactor_auths.prompt.otp_code")
     assert_select "form[action=?]", otp_edit_password_url(token: @user.confirmation_token) do
       assert_select "input[type=text][autocomplete=one-time-code]"
-      assert_select "button[type=submit]", text: I18n.t("authenticate")
+      assert_select "input[type=submit][value=?]", I18n.t("authenticate")
     end
   end
 
   def assert_webauthn_form
-    assert_select "h1", "Multi-factor authentication"
-    assert_select "p", "Authenticate with a security device such as Touch ID, YubiKey, etc."
+    assert_select "h2", I18n.t("multifactor_auths.prompt.security_device")
+    assert_select "p", I18n.t("multifactor_auths.prompt.webauthn_credential_note")
     assert_select "form.js-webauthn-session--form[action=?]", webauthn_edit_password_url(token: @user.confirmation_token) do
-      assert_select "button[type=submit]", text: I18n.t("multifactor_auths.prompt.sign_in_with_webauthn_credential")
+      assert_select "input[type=submit][value=?]", I18n.t("multifactor_auths.prompt.sign_in_with_webauthn_credential")
     end
   end
 

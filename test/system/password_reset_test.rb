@@ -41,6 +41,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_current_path edit_password_path, ignore_query: true
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Your password has been changed."
@@ -74,6 +75,7 @@ class PasswordResetTest < ApplicationSystemTestCase
 
     # try again with valid password
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Your password has been changed."
@@ -119,6 +121,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_text("Reset password")
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Sign in"
@@ -140,9 +143,10 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
 
-    assert_no_text("Sign out")
+    assert_text "Reset password"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Your password has been changed."
@@ -171,13 +175,13 @@ class PasswordResetTest < ApplicationSystemTestCase
 
     visit password_reset_link
 
-    assert_text "Multi-factor authentication"
     assert_text "Security Device"
     assert_not_nil page.find(".js-webauthn-session--form")[:action]
 
     click_on "Authenticate with security device"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text("Sign in")
@@ -193,7 +197,6 @@ class PasswordResetTest < ApplicationSystemTestCase
     visit password_reset_link
 
     assert_no_text "Sign out"
-    assert_text "Multi-factor authentication"
     assert_text "Security Device"
     assert_text "Recovery code"
     assert_not_nil page.find(".js-webauthn-session--form")[:action]
@@ -201,7 +204,10 @@ class PasswordResetTest < ApplicationSystemTestCase
     fill_in "otp", with: @mfa_recovery_codes.first
     click_button "Authenticate"
 
+    assert_text "Reset password"
+
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text("Sign in")

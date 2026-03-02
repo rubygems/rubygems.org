@@ -76,6 +76,7 @@ es:
         full_name: Nombre completo
         handle: Usuario
         password: Contraseña
+        password_confirmation:
       ownership/role:
         owner:
         maintainer:
@@ -577,6 +578,11 @@ es:
       token_failure: Por favor verifica la URL o inténtalo nuevamente.
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Restablecer contraseña
       title: Cambiar tu contraseña

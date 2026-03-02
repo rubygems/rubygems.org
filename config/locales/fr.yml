@@ -75,6 +75,7 @@ fr:
         full_name: Nom complet
         handle: Pseudonyme
         password: Mot de passe
+        password_confirmation:
       ownership/role:
         owner:
         maintainer:
@@ -545,6 +546,11 @@ fr:
       token_failure: Veuillez vérifier l'URL ou réessayer.
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe

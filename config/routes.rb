@@ -274,7 +274,7 @@ Rails.application.routes.draw do
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
       post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
 
-      get 'development_log_in_as/:user_id', to: 'sessions#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
+      post 'development_log_in_as/:user_id', to: 'sessions#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
     end
 
     resources :users, only: %i[new create]
@@ -389,7 +389,7 @@ Rails.application.routes.draw do
     get ':provider/callback', to: 'oauth#create'
     get 'failure', to: 'oauth#failure'
 
-    get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
+    post 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
   end
 
   ################################################################################

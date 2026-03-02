@@ -71,6 +71,7 @@ zh-CN:
         full_name: 全名
         handle: 用户名
         password: 密码
+        password_confirmation:
       ownership/role:
         owner:
         maintainer:
@@ -535,6 +536,11 @@ zh-CN:
       token_failure: 请再次确认 URL 或尝试重新提交
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: 重置密码
       title: 修改您的密码

@@ -75,6 +75,7 @@ pt-BR:
         full_name: Nome completo
         handle: Usuário
         password: Senha
+        password_confirmation:
       ownership/role:
         owner:
         maintainer:
@@ -543,6 +544,11 @@ pt-BR:
       token_failure: Por favor, confira a URL ou tente submetê-la novamente.
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Resetar senha
       title: Alterar senha

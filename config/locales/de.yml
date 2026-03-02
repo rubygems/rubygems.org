@@ -80,6 +80,7 @@ de:
         full_name: Vollständiger Name
         handle: Benutzername
         password: Passwort
+        password_confirmation:
       ownership/role:
         owner:
         maintainer:
@@ -589,6 +590,11 @@ de:
       token_failure:
       compromised_heading:
       compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Zurücksetzen des Passworts
       title: Ändere dein Passwort
