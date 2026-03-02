@@ -126,6 +126,12 @@ module RubygemsHelper
       security_events_rubygem_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
+  def clickgems_analytics_link(rubygem)
+    link_to t("rubygems.aside.links.clickgems_analytics"),
+      "https://clickgems.clickhouse.com/dashboard/#{rubygem.name}",
+      class: "gem__link t-list__item"
+  end
+
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).inject(+"") { |link, owner| link << link_to_user(owner) }.html_safe
   end

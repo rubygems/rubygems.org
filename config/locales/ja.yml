@@ -753,6 +753,7 @@ ja:
         header: リンク
         home: ホームページ
         mail: メーリングリスト
+        clickgems_analytics:
         report_abuse: 悪用報告
         reverse_dependencies: 被依存関係
         review_changes: 差分をレビュー
