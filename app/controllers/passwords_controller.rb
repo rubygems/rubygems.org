@@ -39,6 +39,7 @@ class PasswordsController < ApplicationController
   end
 
   def update
+    @user.password_confirmation = reset_params[:password_confirmation]
     if @user.update_password reset_params[:password]
       @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
       @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
@@ -107,7 +108,7 @@ class PasswordsController < ApplicationController
   end
 
   def reset_params
-    params.expect(password_reset: %i[password reset_api_key reset_api_keys])
+    params.expect(password_reset: %i[password password_confirmation reset_api_key reset_api_keys])
   end
 
   def mfa_failure(message)

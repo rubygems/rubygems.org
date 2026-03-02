@@ -353,7 +353,9 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     context "when not verified for password reset" do
       should "redirect to the sign in page" do
         put password_path, params: {
-          password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          password_reset: { reset_api_key: "true", reset_api_keys: "true",
+                            password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                            password_confirmation: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -372,7 +374,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         get edit_password_path, params: { token: @user.confirmation_token }
         travel 16.minutes do
           put password_path, params: {
-            password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                              password_confirmation: PasswordHelpers::SECURE_TEST_PASSWORD }
           }
         end
 
@@ -391,16 +394,35 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "redisplay edit form and not change password" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { reset_api_key: "true", password: "pass" }
+          password_reset: { reset_api_key: "true", password: "pass", password_confirmation: "pass" }
         }
 
         assert_response :unprocessable_content
         assert page.has_content?("Your password could not be changed. Please try again.")
         assert_select "h1", "Reset password"
-        assert_select "#errorExplanation", /Password is too short \(minimum is 10 characters\)/
+        assert page.has_content?("Password is too short (minimum is 10 characters)")
         assert_select "form[action=?]", password_path do
           assert_select "input[type=password][autocomplete=new-password]"
         end
+
+        @user.reload
+
+        assert_equal @user.api_key, @api_key
+        assert_equal @user.encrypted_password, @old_encrypted_password
+      end
+    end
+
+    context "with mismatched password confirmation" do
+      should "redisplay edit form and not change password" do
+        get edit_password_path, params: { token: @user.confirmation_token }
+        put password_path, params: {
+          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                            password_confirmation: "something_else1" }
+        }
+
+        assert_response :unprocessable_content
+        assert page.has_content?("Your password could not be changed. Please try again.")
+        assert page.has_content?("Confirm password doesn't match Password")
 
         @user.reload
 
@@ -413,7 +435,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "change password but not change api_key" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                            password_confirmation: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -430,7 +453,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "change password but not change api_key" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                            password_confirmation: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -447,7 +471,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "change password and reset api_key" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                            password_confirmation: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -467,7 +492,9 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "change password, reset legacy api_key, and expire all api_keys" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          password_reset: { reset_api_key: "true", reset_api_keys: "true",
+                            password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                            password_confirmation: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -511,6 +538,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", I18n.t("passwords.edit.title")
     assert_select "form[action=?]", password_path do
       assert_select "input[type=password][autocomplete=new-password][name=?]", "password_reset[password]"
+      assert_select "input[type=password][autocomplete=new-password][name=?]", "password_reset[password_confirmation]"
       assert_select "input[type=checkbox][name=?]", "password_reset[reset_api_key]"
       assert_select "input[type=checkbox][name=?]", "password_reset[reset_api_keys]"
       assert_select "button[type=submit]", text: I18n.t("passwords.edit.submit")

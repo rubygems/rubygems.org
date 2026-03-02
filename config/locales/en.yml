@@ -75,6 +75,7 @@ en:
         full_name: Full name
         handle: Username
         password: Password
+        password_confirmation: Confirm password
       ownership/role:
         owner: Owner
         maintainer: Maintainer
@@ -527,6 +528,11 @@ en:
       token_failure: Please double check the URL or try submitting a new password reset.
       compromised_heading: "Your password was found in a data breach"
       compromised_explanation_html: "The password you used was found in a public data breach from <strong>another website</strong>. Please choose a new, unique password that you don't use elsewhere."
+      strength:
+        too_short: Too short
+        weak: Weak
+        fair: Fair
+        strong: Strong
     new:
       submit: Reset password
       title: Change your password

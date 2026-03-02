@@ -1,4 +1,5 @@
 <% @title = t('.title') %>
+<% add_breadcrumb @title %>
 
 <div class="flex items-center justify-center">
   <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
@@ -13,13 +14,45 @@
       <% end %>
     <% end %>
 
-    <%= error_messages_for @user %>
+    <% if @user&.errors&.any? %>
+      <div class="mb-6 rounded-lg border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950 p-4">
+        <ul class="space-y-1">
+          <% @user.errors.full_messages.each do |message| %>
+            <li class="flex items-start gap-2 text-sm text-red-700 dark:text-red-300">
+              <%= icon_tag "error", size: 4, class: "fill-red-500 dark:fill-red-400 mt-0.5 flex-shrink-0" %>
+              <span><%= message %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
     <%= form_for(:password_reset, url: password_path, html: { method: :put }, data: { turbo: false }) do |form| %>
-      <div class="mb-6">
+      <div class="mb-6" data-controller="password-strength"
+        data-password-strength-too-short-label-value="<%= t('passwords.edit.strength.too_short') %>"
+        data-password-strength-weak-label-value="<%= t('passwords.edit.strength.weak') %>"
+        data-password-strength-fair-label-value="<%= t('passwords.edit.strength.fair') %>"
+        data-password-strength-strong-label-value="<%= t('passwords.edit.strength.strong') %>">
         <%= form.label :password, t("activerecord.attributes.user.password"),
               class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
         <%= form.password_field :password, autocomplete: "new-password",
+              data: { action: "input->password-strength#update", password_strength_target: "input" },
+              class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+        <div class="hidden mt-2" data-password-strength-target="meter" role="status" aria-live="polite">
+          <div class="flex gap-1">
+            <div class="h-1 flex-1 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-200" data-password-strength-target="segment"></div>
+            <div class="h-1 flex-1 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-200" data-password-strength-target="segment"></div>
+            <div class="h-1 flex-1 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-200" data-password-strength-target="segment"></div>
+            <div class="h-1 flex-1 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-200" data-password-strength-target="segment"></div>
+          </div>
+          <p data-password-strength-target="label" class="text-xs font-medium mt-1"></p>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <%= form.label :password_confirmation, t("activerecord.attributes.user.password_confirmation"),
+              class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+        <%= form.password_field :password_confirmation, autocomplete: "new-password",
               class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
       </div>
 
