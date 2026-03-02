@@ -6,8 +6,6 @@ class SessionsController < Clearance::SessionsController
   include WebauthnVerifiable
   include SessionVerifiable
 
-  layout "hammy", only: %i[new create webauthn_full_create webauthn_create otp_create]
-
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify webauthn_authenticate authenticate]
@@ -156,12 +154,15 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
-  def url_after_create(authentication_method:)
+  def url_after_create(authentication_method: nil)
     session.delete(:password_compromised) unless authentication_method == "password"
 
     if session.delete(:password_compromised)
-      initiate_compromised_password_reset!(current_user)
-      session[:compromised_password_user_id] = current_user.id
+      user = current_user
+      initiate_compromised_password_reset!(user)
+      sign_out
+      reset_session
+      session[:compromised_password_user_id] = user.id
       compromised_password_path
     elsif current_user.mfa_recommended_not_yet_enabled?
       new_totp_path

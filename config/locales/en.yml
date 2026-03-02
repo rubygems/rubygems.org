@@ -518,7 +518,8 @@ en:
       subtitle: "Hi %{handle}!"
       opening: "During your recent sign-in, we detected that your password appears in a public data breach from another website."
       reassurance: "Your RubyGems.org account has not been compromised, but because passwords are often reused across sites, we require you to change your password to keep your account secure."
-      closing: "If you did not recently try to sign in to RubyGems.org, please contact support@rubygems.org immediately."
+      closing_html: "If you did not recently try to sign in to RubyGems.org, please contact %{support_email} immediately."
+      closing_text: "If you did not recently try to sign in to RubyGems.org, please contact support@rubygems.org immediately."
   passwords:
     edit:
       submit: Save this password
@@ -858,13 +859,10 @@ en:
       password_compromised_warning: "Your password was found in a data breach. Reset it now to keep your account secure."
   compromised_passwords:
     show:
-      title: Password Reset Required
-      title_signed_in: Password Change Recommended
+      title: Password Change Required
       heading: Password found in data breach
       subheading: Your RubyGems.org account remains secure
-      subheading_signed_in: Multi-factor authentication protected this sign-in
       explanation_html: The password you entered has been found in a public data breach from <strong>another website</strong>. This doesn't mean your RubyGems.org account was compromised, but because passwords are often reused, we require a reset to keep your account secure.
-      explanation_signed_in_html: The password you entered has been found in a public data breach from <strong>another website</strong>. Your RubyGems.org account was not compromised, and because you have multi-factor authentication enabled we allowed this sign-in, but you should change your password as soon as possible.
       email_sent: "We've sent a password reset link to:"
       next_steps: "Here's what to do next:"
       step_1: Check your email inbox (and spam folder) for the password reset link
@@ -878,7 +876,6 @@ en:
       learn_more_mfa_html: Protect your account with %{link}
       learn_more_mfa_link_text: multi-factor authentication
       back_to_sign_in: Back to Sign In
-      continue_to_dashboard: Continue to Dashboard
       need_help_html: "Need help? Contact %{email}"
   stats:
     index:

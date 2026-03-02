@@ -36,16 +36,6 @@ class CompromisedPasswordsControllerTest < ActionController::TestCase
 
         assert_equal original_token, @user.reload.confirmation_token
       end
-
-      should "show MFA-protected messaging for signed in users" do
-        sign_in_as(@user)
-
-        get :show
-
-        assert_response :success
-        assert_text I18n.t("compromised_passwords.show.subheading_signed_in")
-        assert_select "a[href=?]", dashboard_path
-      end
     end
 
     context "without valid session" do

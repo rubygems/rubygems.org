@@ -915,8 +915,8 @@ class SessionsControllerTest < ActionController::TestCase
           refute @controller.session[:password_compromised]
         end
 
-        should "make user logged in" do
-          assert_predicate @controller.request.env[:clearance], :signed_in?
+        should "not sign in the user" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
         end
 
         should "enqueue a compromised password reset email after MFA succeeds" do

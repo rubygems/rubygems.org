@@ -526,7 +526,8 @@ zh-CN:
       subtitle:
       opening:
       reassurance:
-      closing:
+      closing_html:
+      closing_text:
   passwords:
     edit:
       submit: 保存该密码
@@ -865,12 +866,9 @@ zh-CN:
   compromised_passwords:
     show:
       title:
-      title_signed_in:
       heading:
       subheading:
-      subheading_signed_in:
       explanation_html:
-      explanation_signed_in_html:
       email_sent:
       next_steps:
       step_1:
@@ -884,7 +882,6 @@ zh-CN:
       learn_more_mfa_html:
       learn_more_mfa_link_text:
       back_to_sign_in:
-      continue_to_dashboard:
       need_help_html:
   stats:
     index:

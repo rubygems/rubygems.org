@@ -1,5 +1,4 @@
-<% reset_required = !signed_in? %>
-<% @title = t(reset_required ? '.title' : '.title_signed_in') %>
+<% @title = t('.title') %>
 <% add_breadcrumb t("sign_in"), sign_in_path %>
 <% add_breadcrumb @title %>
 
@@ -10,11 +9,11 @@
     <% end %>
 
     <p class="text-neutral-700 dark:text-neutral-300 mb-6">
-      <%= t(reset_required ? '.subheading' : '.subheading_signed_in') %>
+      <%= t('.subheading') %>
     </p>
 
     <p class="text-neutral-700 dark:text-neutral-300 mb-8">
-      <%= t(reset_required ? '.explanation_html' : '.explanation_signed_in_html') %>
+      <%= t('.explanation_html') %>
     </p>
 
     <div class="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-5 mb-8">
@@ -33,10 +32,8 @@
     <ol class="list-decimal list-inside space-y-3 text-neutral-600 dark:text-neutral-400 mb-8">
       <li><%= t('.step_1') %></li>
       <li><%= t('.step_2') %></li>
-      <% unless signed_in? %>
-        <li><%= t('.step_3') %></li>
-        <li><%= t('.step_4_html', link: link_to(t('.step_4_link_text'), new_totp_path, class: "text-orange-500 dark:text-orange-400 hover:underline")) %></li>
-      <% end %>
+      <li><%= t('.step_3') %></li>
+      <li><%= t('.step_4_html', link: link_to(t('.step_4_link_text'), new_totp_path, class: "text-orange-500 dark:text-orange-400 hover:underline")) %></li>
     </ol>
 
     <div class="border-t border-neutral-200 dark:border-neutral-700 pt-8 mb-8">
@@ -50,11 +47,7 @@
     </div>
 
     <div class="flex justify-center">
-      <% if signed_in? %>
-        <%= render ButtonComponent.new(t('.continue_to_dashboard'), dashboard_path, type: :link, color: :secondary) %>
-      <% else %>
-        <%= render ButtonComponent.new(t('.back_to_sign_in'), sign_in_path, type: :link, color: :secondary) %>
-      <% end %>
+      <%= render ButtonComponent.new(t('.back_to_sign_in'), sign_in_path, type: :link, color: :secondary) %>
     </div>
 
     <p class="text-center text-sm text-neutral-500 dark:text-neutral-500 mt-8">
