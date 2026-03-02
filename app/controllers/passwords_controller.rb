@@ -15,6 +15,7 @@ class PasswordsController < ApplicationController
   before_action :validate_otp, only: %i[otp_edit]
   before_action :validate_webauthn, only: %i[webauthn_edit]
   before_action :password_reset_session_verified, only: %i[edit otp_edit webauthn_edit]
+  before_action :set_compromised_flag, only: %i[edit otp_edit webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
   before_action :validate_password_reset_session, only: :update
@@ -23,7 +24,6 @@ class PasswordsController < ApplicationController
   end
 
   def edit
-    @compromised = session[:password_reset_reason] == "compromised"
     render :edit
   end
 
@@ -53,16 +53,18 @@ class PasswordsController < ApplicationController
   end
 
   def otp_edit
-    @compromised = session[:password_reset_reason] == "compromised"
     render :edit
   end
 
   def webauthn_edit
-    @compromised = session[:password_reset_reason] == "compromised"
     render :edit
   end
 
   private
+
+  def set_compromised_flag
+    @compromised = session[:password_reset_reason] == "compromised"
+  end
 
   def ensure_email_present
     @email = params.dig(:password, :email)
@@ -77,7 +79,7 @@ class PasswordsController < ApplicationController
     return login_failure(t("passwords.edit.token_failure")) if confirmation_token.blank?
     @user = User.find_by(confirmation_token:)
     return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
-    session[:password_reset_reason] = params[:reason] if params[:reason].present?
+    session[:password_reset_reason] = "compromised" if params[:reason] == "compromised"
     sign_out if signed_in? && @user != current_user
   end
 

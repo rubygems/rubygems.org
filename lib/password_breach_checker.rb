@@ -4,14 +4,15 @@ class PasswordBreachChecker
   end
 
   def breached?
-    @password.pwned?
+    return @breached if defined?(@breached)
+    @breached = @password.pwned?
   rescue Pwned::TimeoutError, Pwned::Error => e
     Rails.logger.warn "HIBP check failed: #{e.class}"
     StatsD.increment "login.hibp_check.error"
-    false
+    @breached = false
   end
 
   def inspect
-    "#<PasswordBreachChecker:#{object_id} password=[FILTERED] breached=#{breached?}>"
+    "#<PasswordBreachChecker:#{object_id} password=[FILTERED]>"
   end
 end

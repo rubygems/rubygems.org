@@ -928,6 +928,69 @@ class SessionsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user has WebAuthn enabled" do
+      setup do
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+      end
+
+      context "on POST to create" do
+        setup do
+          post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        should respond_with :success
+
+        should "set password_compromised flag in session" do
+          assert @controller.session[:password_compromised]
+        end
+      end
+
+      context "after successful WebAuthn" do
+        setup do
+          @original_confirmation_token = @user.confirmation_token
+          post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+
+          @challenge = session[:webauthn_authentication]["challenge"]
+          @origin = WebAuthn.configuration.allowed_origins.first
+          @client = WebAuthn::FakeClient.new(@origin, encoding: false)
+          WebauthnHelpers.create_credential(
+            webauthn_credential: @webauthn_credential,
+            client: @client
+          )
+
+          post(
+            :webauthn_create,
+            params: {
+              credentials:
+                WebauthnHelpers.get_result(
+                  client: @client,
+                  challenge: @challenge
+                )
+            },
+            format: :html
+          )
+        end
+
+        should redirect_to("the compromised password page") { compromised_password_path }
+
+        should "clear password_compromised flag from session" do
+          refute @controller.session[:password_compromised]
+        end
+
+        should "not sign in the user" do
+          refute_predicate @controller.request.env[:clearance], :signed_in?
+        end
+
+        should "enqueue a compromised password reset email after WebAuthn succeeds" do
+          assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
+        end
+
+        should "rotate the password reset confirmation token after WebAuthn succeeds" do
+          assert_not_equal @original_confirmation_token, @user.reload.confirmation_token
+        end
+      end
+    end
   end
 
   context "when HIBP API fails" do

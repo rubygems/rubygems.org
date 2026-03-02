@@ -9,8 +9,6 @@ class User < ApplicationRecord
 
   is_gravtastic default: "retro"
 
-  alias generate_password_reset_token! forgot_password!
-
   self.discard_column = :deleted_at
   self.ignored_columns += [:token]
 

@@ -253,6 +253,44 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_equal email, @user.email
   end
 
+  test "login with compromised password without MFA redirects to compromised page" do
+    PasswordBreachChecker.any_instance.stubs(:breached?).returns(true)
+
+    visit sign_in_path
+
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: @user.password
+
+    perform_enqueued_jobs do
+      click_button "Sign in"
+    end
+
+    assert_text "Password found in data breach"
+    assert_text "Password Change Required"
+    assert_current_path compromised_password_path
+  end
+
+  test "login with compromised password with MFA sends reset email after MFA" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    PasswordBreachChecker.any_instance.stubs(:breached?).returns(true)
+
+    visit sign_in_path
+
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+
+    fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
+
+    perform_enqueued_jobs do
+      click_button "Authenticate"
+    end
+
+    assert_text "Password found in data breach"
+    assert_text "Password Change Required"
+    assert_current_path compromised_password_path
+  end
+
   test "resetting password of soft-deleted user" do
     @user.update!(deleted_at: Time.zone.now, email: "deleted+#{@user.id}@rubygems.org")
 
