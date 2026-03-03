@@ -6,7 +6,7 @@
   <ul>
     <% User.all.order(id: :asc).each do |user| %>
     <li>
-      <%= button_to "login as #{user.handle}", { controller: :sessions, action: "development_log_in_as", user_id: user.id }, method: :post, form: { data: { turbo: false } } %>
+      <%= link_to "login as #{user.handle}", { controller: :sessions, action: "development_log_in_as", user_id: user.id }, method: :post, form: { data: { turbo: false } } %>
     </li>
     <% end %>
   </ul>
