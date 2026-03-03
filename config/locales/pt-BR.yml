@@ -748,7 +748,7 @@ pt-BR:
         header: Links
         home: Homepage
         mail: Lista de Emails
-        clickgems_analytics:
+        analytics:
         report_abuse: Denunciar Abuso
         reverse_dependencies: Dependências Reversas
         review_changes:

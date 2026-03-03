@@ -207,6 +207,18 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
+  context "clickgems_analytics_link" do
+    should "link to clickgems dashboard for the gem" do
+      rubygem = create(:rubygem, name: "my_gem")
+      expected_url = "https://clickgems.clickhouse.com/dashboard/my_gem"
+
+      result = clickgems_analytics_link(rubygem)
+
+      assert_match expected_url, result
+      assert_match "gem__link t-list__item", result
+    end
+  end
+
   context "oidc_api_key_role_links" do
     should "return joined links" do
       user = create(:user)

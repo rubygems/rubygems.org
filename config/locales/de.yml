@@ -826,7 +826,7 @@ de:
         header: Links
         home: Homepage
         mail: Mailingliste
-        clickgems_analytics:
+        analytics:
         report_abuse: Missbrauch melden
         reverse_dependencies: Reverse dependencies
         review_changes:

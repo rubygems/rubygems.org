@@ -127,7 +127,7 @@ module RubygemsHelper
   end
 
   def clickgems_analytics_link(rubygem)
-    link_to t("rubygems.aside.links.clickgems_analytics"),
+    link_to t("rubygems.aside.links.analytics"),
       "https://clickgems.clickhouse.com/dashboard/#{rubygem.name}",
       class: "gem__link t-list__item"
   end

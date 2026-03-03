@@ -738,7 +738,7 @@ nl:
         header: Links
         home: Startpagina
         mail: Mailing-list
-        clickgems_analytics:
+        analytics:
         report_abuse:
         reverse_dependencies:
         review_changes:
