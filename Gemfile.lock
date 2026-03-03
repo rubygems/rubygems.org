@@ -183,7 +183,7 @@ GEM
       msgpack
     bootsnap (1.23.0)
       msgpack (~> 1.2)
-    brakeman (8.0.2)
+    brakeman (8.0.4)
       racc
     browser (6.2.0)
     builder (3.3.0)
@@ -304,14 +304,14 @@ GEM
     ffi-compiler (1.3.2)
       ffi (>= 1.15.5)
       rake
-    flipper (1.3.6)
+    flipper (1.4.0)
       concurrent-ruby (< 2)
-    flipper-active_record (1.3.6)
+    flipper-active_record (1.4.0)
       activerecord (>= 4.2, < 9)
-      flipper (~> 1.3.6)
-    flipper-ui (1.3.6)
+      flipper (~> 1.4.0)
+    flipper-ui (1.4.0)
       erubi (>= 1.0.0, < 2.0.0)
-      flipper (~> 1.3.6)
+      flipper (~> 1.4.0)
       rack (>= 1.4, < 4)
       rack-protection (>= 1.5.3, < 5.0.0)
       rack-session (>= 1.0.2, < 3.0.0)
@@ -333,24 +333,24 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-protobuf (4.33.5)
+    google-protobuf (4.34.0)
       bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.5-aarch64-linux-gnu)
+      rake (~> 13.3)
+    google-protobuf (4.34.0-aarch64-linux-gnu)
       bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.5-arm64-darwin)
+      rake (~> 13.3)
+    google-protobuf (4.34.0-arm64-darwin)
       bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.5-x86_64-darwin)
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86_64-darwin)
       bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.5-x86_64-linux-gnu)
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86_64-linux-gnu)
       bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.5-x86_64-linux-musl)
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x86_64-linux-musl)
       bigdecimal
-      rake (>= 13)
+      rake (~> 13.3)
     gravtastic (3.2.6)
     groupdate (6.7.0)
       activesupport (>= 7.1)
@@ -359,7 +359,7 @@ GEM
       logger
     heapy (0.2.0)
       thor
-    honeybadger (6.4.0)
+    honeybadger (6.5.2)
       logger
       ostruct
     htmlbeautifier (1.4.3)
@@ -676,8 +676,8 @@ GEM
       activesupport (>= 4.2)
       choice (~> 0.2.0)
       ruby-graphviz (~> 1.2)
-    rails-html-sanitizer (1.6.2)
-      loofah (~> 2.21)
+    rails-html-sanitizer (1.7.0)
+      loofah (~> 2.25)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rails-i18n (8.1.0)
       i18n (>= 0.7, < 2)
@@ -882,7 +882,7 @@ GEM
     validates_formatting_of (0.9.0)
       activemodel
     version_gem (1.1.9)
-    view_component (4.4.0)
+    view_component (4.5.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
@@ -961,15 +961,15 @@ DEPENDENCIES
   faraday-restrict-ip-addresses (~> 0.3.0)
   faraday-retry (~> 2.4)
   faraday_middleware-aws-sigv4 (~> 1.0)
-  flipper (~> 1.3)
+  flipper (~> 1.4)
   flipper-active_record (~> 1.3)
   flipper-ui (~> 1.3)
   gem_server_conformance (~> 0.1.4)
   good_job (~> 3.99)
-  google-protobuf (~> 4.33)
+  google-protobuf (~> 4.34)
   gravtastic (~> 3.2)
   groupdate (~> 6.7)
-  honeybadger (~> 6.4.0)
+  honeybadger (~> 6.5.2)
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.2)
   kaminari (~> 1.2)
@@ -1045,7 +1045,7 @@ DEPENDENCIES
   unpwn (~> 1.0)
   user_agent_parser (~> 2.21)
   validates_formatting_of (~> 0.9)
-  view_component (~> 4.4.0)
+  view_component (~> 4.5.0)
   webauthn (~> 3.4)
   webmock (~> 3.26)
   xml-simple (~> 1.1)
@@ -1100,7 +1100,7 @@ CHECKSUMS
   blazer (3.3.0) sha256=01e151091ce1e7d27c156243916b2f13109ef2ef1a16cfa62bef67f4c5fd169f
   bloomer (1.0.0) sha256=57a0d3a78628db9a92c6723f06c67697e420abcdb05aa757c6dfae607251d272
   bootsnap (1.23.0) sha256=c1254f458d58558b58be0f8eb8f6eec2821456785b7cdd1e16248e2020d3f214
-  brakeman (8.0.2) sha256=7b02065ce8b1de93949cefd3f2ad78e8eb370e644b95c8556a32a912a782426a
+  brakeman (8.0.4) sha256=7bf921fa9638544835df9aa7b3e720a9a72c0267f34f92135955edd80d4dcf6f
   browser (6.2.0) sha256=281d5295788825c9396427c292c2d2be0a5c91875c93c390fde6e5d61a5ace2d
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
@@ -1154,26 +1154,26 @@ CHECKSUMS
   ffi (1.17.3-x86_64-linux-gnu) sha256=3746b01f677aae7b16dc1acb7cb3cc17b3e35bdae7676a3f568153fb0e2c887f
   ffi (1.17.3-x86_64-linux-musl) sha256=086b221c3a68320b7564066f46fed23449a44f7a1935f1fe5a245bd89d9aea56
   ffi-compiler (1.3.2) sha256=a94f3d81d12caf5c5d4ecf13980a70d0aeaa72268f3b9cc13358bcc6509184a0
-  flipper (1.3.6) sha256=590d82f0250885d8e55231a81396767a48ccd8c2b1b46d5fb7acdfde83b110ed
-  flipper-active_record (1.3.6) sha256=0c172224e4024637abd47fbd1429ded2cd2042693757f3caa7b80f4bb06b2abe
-  flipper-ui (1.3.6) sha256=de56b56c89c4db056752506ba173ba31843f5b836df6dc1913c824519811ba39
+  flipper (1.4.0) sha256=3e2eff8b34bba11ee957262778352bb5461cfbf17059623c54979059f153a084
+  flipper-active_record (1.4.0) sha256=a42531d81e399a2272df19fad4420ad60db2514b143a7b470431832ff50d4d8f
+  flipper-ui (1.4.0) sha256=1d773344249778b3f6f6874f4a0ea3e6bc997957da01e8e5ba813af666ff8fd1
   fugit (1.11.1) sha256=e89485e7be22226d8e9c6da411664d0660284b4b1c08cacb540f505907869868
   gem_server_conformance (0.1.5) sha256=5713ac325a5e1410c0307c00e9c988d8cf97f0eff8103f724ef69f38d910ebc9
   get_process_mem (1.0.0) sha256=d54024f3bcbf776a4d6e0155ec2b21bc3ba44e2fd158c4c00c80aa8a36e0b4aa
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
-  google-protobuf (4.33.5) sha256=1b64fb774c101b23ac3f6923eca24be04fd971635d235c4cd4cfe0d752620da0
-  google-protobuf (4.33.5-aarch64-linux-gnu) sha256=f70ca066e37a7ac60b4f34a836bb48ca3fc41a9371310052e484d8c9f925ff39
-  google-protobuf (4.33.5-arm64-darwin) sha256=996d4e93c4232cc42f0facd821a92b4f4a926c3c9c1a768e7d768b33d9ef72f9
-  google-protobuf (4.33.5-x86_64-darwin) sha256=173d1d6c9f0de93fd9ee25fde172d6fb6376099dca8844e19bc5782bbc7b93b0
-  google-protobuf (4.33.5-x86_64-linux-gnu) sha256=a782adf86bfba207740b49d7bb9ccdc25c4fb8f800fe222af62bce951149338a
-  google-protobuf (4.33.5-x86_64-linux-musl) sha256=d14feec9118f44cfdc3ee4a1d1baa4e6dd77fa418967ccf22ecbe76b8c1bacbf
+  google-protobuf (4.34.0) sha256=bffaea30fbe2807c80667a78953b15645b3bef62b25c10ca187e4418119be531
+  google-protobuf (4.34.0-aarch64-linux-gnu) sha256=0ab8a8a97976a2265d647e69b3ff1980c89184abdaf06d36091856c5ab37cc55
+  google-protobuf (4.34.0-arm64-darwin) sha256=f83967a8095a9da676b79ba372c58fef2ca3878428bd40febfce65b3752c90d1
+  google-protobuf (4.34.0-x86_64-darwin) sha256=4a5b67281993345adca54bb32947f25a289597eafaa240e5b714d0a740f99321
+  google-protobuf (4.34.0-x86_64-linux-gnu) sha256=bbb333fbe79c16f35a2e2154cf29f3ce26f60390dba286b339861206d5435ef9
+  google-protobuf (4.34.0-x86_64-linux-musl) sha256=0b75858a388b17e73aa4176df2e722762dbc92551b7075fdc562d33c1c6de0b0
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.7.0) sha256=beaa8d5bf3856814681914a1d4a20e77436a2214b85d0017dc2ea5c355fb6777
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
-  honeybadger (6.4.0) sha256=655c4f5c134697ba7aba875ce82a848a30fa15baf8d635a38700d97278d87a43
+  honeybadger (6.5.2) sha256=b3a4893ced3cf38f63320c307022a4e4ae7106ee1495d1d6afdefc69ca387035
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
@@ -1299,7 +1299,7 @@ CHECKSUMS
   rails-controller-testing (1.0.5) sha256=741448db59366073e86fc965ba403f881c636b79a2c39a48d0486f2607182e94
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-erd (1.7.2) sha256=0b17d0fba25d319d8da8af7a3e5e2149d02d6187cc7351e8be43423f07c48bcd
-  rails-html-sanitizer (1.6.2) sha256=35fce2ca8242da8775c83b6ba9c1bcaad6751d9eb73c1abaa8403475ab89a560
+  rails-html-sanitizer (1.7.0) sha256=28b145cceaf9cc214a9874feaa183c3acba036c9592b19886e0e45efc62b1e89
   rails-i18n (8.1.0) sha256=52d5fd6c0abef28d84223cc05647f6ae0fd552637a1ede92deee9545755b6cf3
   rails_semantic_logger (4.19.0) sha256=e75e562c68a32abb6a8615940afd7d40c082cff786b8d7b50ff1f7462eff3c16
   railties (8.0.4) sha256=8203d853dcffab4abcdd05c193f101676a92068075464694790f6d8f72d5cb47
@@ -1386,7 +1386,7 @@ CHECKSUMS
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
   validates_formatting_of (0.9.0) sha256=139590a4b87596dbfb04d93e897bd2e6d30fb849d04fab0343e71ed2ca856e7e
   version_gem (1.1.9) sha256=0c1a0962ae543c84a00889bb018d9f14d8f8af6029d26b295d98774e3d2eb9a4
-  view_component (4.4.0) sha256=ecccecb495ee4b4a5d9f93382992dc32c11a0708fde5ec261150a0f5223393d0
+  view_component (4.5.0) sha256=0d951360d830752da4d1daa5f6cb643f17c30f295fb779fd4de90a051537d9c1
   webauthn (3.4.3) sha256=9be6f5f838f3405b0226e560aa40b67cc8c15ec9154509b997caa7ec9a05e1fc
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
   webmock (3.26.1) sha256=4f696fb57c90a827c20aadb2d4f9058bbff10f7f043bd0d4c3f58791143b1cd7

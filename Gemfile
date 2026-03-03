@@ -12,16 +12,16 @@ gem "clearance", "~> 2.11"
 gem "dalli", "~> 3.2"
 gem "datadog", "~> 2.29"
 gem "dogstatsd-ruby", "~> 5.7"
-gem "google-protobuf", "~> 4.33"
+gem "google-protobuf", "~> 4.34"
 gem "faraday", "~> 2.14"
 gem "faraday-retry", "~> 2.4"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
-gem "flipper", "~> 1.3"
+gem "flipper", "~> 1.4"
 gem "flipper-active_record", "~> 1.3"
 gem "flipper-ui", "~> 1.3"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.4.0", require: false
+gem "honeybadger", "~> 6.5.2", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -72,7 +72,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.4.0"
+gem "view_component", "~> 4.5.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.7"
@@ -105,7 +105,7 @@ group :assets, :development do
 end
 
 group :development, :test do
-  gem "debug", "~> 1.0"
+  gem "debug", "~> 1.0", require: "debug/prelude"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.5"
   gem "dotenv-rails", "~> 3.2"
