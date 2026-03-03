@@ -304,14 +304,14 @@ GEM
     ffi-compiler (1.3.2)
       ffi (>= 1.15.5)
       rake
-    flipper (1.3.6)
+    flipper (1.4.0)
       concurrent-ruby (< 2)
-    flipper-active_record (1.3.6)
+    flipper-active_record (1.4.0)
       activerecord (>= 4.2, < 9)
-      flipper (~> 1.3.6)
-    flipper-ui (1.3.6)
+      flipper (~> 1.4.0)
+    flipper-ui (1.4.0)
       erubi (>= 1.0.0, < 2.0.0)
-      flipper (~> 1.3.6)
+      flipper (~> 1.4.0)
       rack (>= 1.4, < 4)
       rack-protection (>= 1.5.3, < 5.0.0)
       rack-session (>= 1.0.2, < 3.0.0)
@@ -961,7 +961,7 @@ DEPENDENCIES
   faraday-restrict-ip-addresses (~> 0.3.0)
   faraday-retry (~> 2.4)
   faraday_middleware-aws-sigv4 (~> 1.0)
-  flipper (~> 1.3)
+  flipper (~> 1.4)
   flipper-active_record (~> 1.3)
   flipper-ui (~> 1.3)
   gem_server_conformance (~> 0.1.4)
@@ -1154,9 +1154,9 @@ CHECKSUMS
   ffi (1.17.3-x86_64-linux-gnu) sha256=3746b01f677aae7b16dc1acb7cb3cc17b3e35bdae7676a3f568153fb0e2c887f
   ffi (1.17.3-x86_64-linux-musl) sha256=086b221c3a68320b7564066f46fed23449a44f7a1935f1fe5a245bd89d9aea56
   ffi-compiler (1.3.2) sha256=a94f3d81d12caf5c5d4ecf13980a70d0aeaa72268f3b9cc13358bcc6509184a0
-  flipper (1.3.6) sha256=590d82f0250885d8e55231a81396767a48ccd8c2b1b46d5fb7acdfde83b110ed
-  flipper-active_record (1.3.6) sha256=0c172224e4024637abd47fbd1429ded2cd2042693757f3caa7b80f4bb06b2abe
-  flipper-ui (1.3.6) sha256=de56b56c89c4db056752506ba173ba31843f5b836df6dc1913c824519811ba39
+  flipper (1.4.0) sha256=3e2eff8b34bba11ee957262778352bb5461cfbf17059623c54979059f153a084
+  flipper-active_record (1.4.0) sha256=a42531d81e399a2272df19fad4420ad60db2514b143a7b470431832ff50d4d8f
+  flipper-ui (1.4.0) sha256=1d773344249778b3f6f6874f4a0ea3e6bc997957da01e8e5ba813af666ff8fd1
   fugit (1.11.1) sha256=e89485e7be22226d8e9c6da411664d0660284b4b1c08cacb540f505907869868
   gem_server_conformance (0.1.5) sha256=5713ac325a5e1410c0307c00e9c988d8cf97f0eff8103f724ef69f38d910ebc9
   get_process_mem (1.0.0) sha256=d54024f3bcbf776a4d6e0155ec2b21bc3ba44e2fd158c4c00c80aa8a36e0b4aa
