@@ -836,6 +836,7 @@ es:
         header: Enlace
         home: Página
         mail: Lista de Correo
+        analytics:
         report_abuse: Reportar abusos
         reverse_dependencies: Dependencias inversas
         review_changes: Revisar cambios

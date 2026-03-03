@@ -768,6 +768,7 @@ fr:
         header: Liens
         home: Page d'accueil
         mail: Liste de diffusion
+        analytics:
         report_abuse: Signaler un abus
         reverse_dependencies:
         review_changes:
