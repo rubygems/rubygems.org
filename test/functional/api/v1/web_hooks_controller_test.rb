@@ -96,7 +96,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
           stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
             .to_return(status: 200, body: { "status" => "success", "responses" => [
-              { "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" } }
+              "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" }
             ] }.to_json, headers: { "Content-Type" => "application/json" })
 
           post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN,
@@ -166,7 +166,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
           stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
             .to_return(status: 200, body: { "status" => "success", "responses" => [
-              { "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" } }
+              "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" }
             ] }.to_json, headers: { "Content-Type" => "application/json" })
 
           post :fire, params: { gem_name: @rubygem.name,
@@ -190,7 +190,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
           stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
             .to_return(status: 200, body: { "status" => "failure",
-"failure_reason" => "exceeded", "responses" => [{ "code" => 404 }] }.to_json, headers: { "Content-Type" => "application/json" })
+"failure_reason" => "exceeded", "responses" => ["code" => 404] }.to_json, headers: { "Content-Type" => "application/json" })
 
           post :fire, params: { gem_name: @rubygem.name,
                                 url: @url }

@@ -6,14 +6,14 @@ class Maintenance::BackfillAttestationRepairsTaskTest < ActiveSupport::TestCase
   setup do
     @repairable_body = {
       "verificationMaterial" => {
-        "tlogEntries" => [{ "logIndex" => 123 }],
+        "tlogEntries" => ["logIndex" => 123],
         "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
       }
     }
 
     @valid_body = {
       "verificationMaterial" => {
-        "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
+        "tlogEntries" => ["kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" }],
         "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
       }
     }

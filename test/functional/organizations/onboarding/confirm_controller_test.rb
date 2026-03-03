@@ -13,7 +13,7 @@ class Organizations::Onboarding::ConfirmControllerTest < ActionDispatch::Integra
       :gem,
       created_by: @user,
       namesake_rubygem: @rubygem,
-      approved_invites: [{ user: @collaborator, role: "maintainer" }]
+      approved_invites: [user: @collaborator, role: "maintainer"]
     )
 
     FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)

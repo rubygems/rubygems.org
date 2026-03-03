@@ -33,7 +33,7 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
       RubygemFs.compact_index.head("info/#{version.rubygem.name}")
     )
 
-    assert_enqueued_with(job: FastlyPurgeJob, args: [{ key: "s3-info/#{version.rubygem.name}", soft: true }])
+    assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-info/#{version.rubygem.name}", soft: true])
   end
 
   test "#good_job_concurrency_key" do

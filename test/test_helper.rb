@@ -105,16 +105,15 @@ class ActiveSupport::TestCase
       toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
       Toxiproxy.populate(
         [
-          {
-            name: "elasticsearch_#{worker}",
-            listen: "#{toxiproxy_listen_host}:#{toxiproxy_port}",
-            upstream: toxiproxy_upstream
-          }
+
+          name: "elasticsearch_#{worker}",
+          listen: "#{toxiproxy_listen_host}:#{toxiproxy_port}",
+          upstream: toxiproxy_upstream
+
         ]
       )
       Searchkick.client = OpenSearch::Client.new(
-        url: "http://localhost:#{toxiproxy_port}",
-        request_timeout: 2
+        url: "http://localhost:#{toxiproxy_port}"
       )
     end
   end

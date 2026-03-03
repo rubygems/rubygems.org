@@ -102,12 +102,12 @@ ActiveSupport::Notifications.subscribe("perform_job.good_job") do |event|
     event.payload.merge(statsd_method: :histogram,
                         measurement: "job_latency",
                         value: GoodJob::Execution
-                        .where("(serialized_params->>'executions')::integer = 0")
-                        .where(active_job_id: execution.active_job_id)
-                        .pick(
-                          Arel::Nodes.build_quoted(Time.current, GoodJob::Execution.arel_table[:created_at]) -
-                           Arel.sql("COALESCE(scheduled_at, created_at)")
-                        ),
+                          .where("(serialized_params->>'executions')::integer = 0")
+                          .where(active_job_id: execution.active_job_id)
+                          .pick(
+                            Arel::Nodes.build_quoted(Time.current, GoodJob::Execution.arel_table[:created_at]) -
+                             Arel.sql("COALESCE(scheduled_at, created_at)")
+                          ),
                         statsd_tags:)
   statsd_measure_performance event.name,
     event.payload.merge(

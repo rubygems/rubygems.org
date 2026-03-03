@@ -32,6 +32,22 @@ class OwnersControllerTest < ActionController::TestCase
         end
       end
 
+      context "when user is a maintainer of the gem" do
+        setup do
+          @maintainer = create(:user)
+          create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+          verified_sign_in_as(@maintainer)
+          get :index, params: { rubygem_id: @rubygem.name }
+        end
+
+        should respond_with :success
+        should "render gem owners in owners table" do
+          @rubygem.ownerships_including_unconfirmed.each do |o|
+            assert page.has_content?(o.owner_name)
+          end
+        end
+      end
+
       context "when user does not own the gem" do
         setup do
           @other_user = create(:user)
@@ -45,6 +61,23 @@ class OwnersControllerTest < ActionController::TestCase
     end
 
     context "on POST to create ownership" do
+      context "when user is a maintainer of the gem" do
+        setup do
+          @maintainer = create(:user)
+          create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+          verified_sign_in_as(@maintainer)
+          @new_owner = create(:user)
+          post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
+        end
+
+        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should set_flash[:alert].to "Forbidden"
+
+        should "not add other user as owner" do
+          refute_includes @rubygem.owners_including_unconfirmed, @new_owner
+        end
+      end
+
       context "when user owns the gem" do
         context "with invalid handle" do
           setup do
@@ -174,6 +207,23 @@ class OwnersControllerTest < ActionController::TestCase
     end
 
     context "on DELETE to owners" do
+      context "when user is a maintainer of the gem" do
+        setup do
+          @maintainer = create(:user)
+          create(:ownership, user: @maintainer, rubygem: @rubygem, role: :maintainer)
+          verified_sign_in_as(@maintainer)
+          @second_user = create(:user)
+          create(:ownership, rubygem: @rubygem, user: @second_user)
+          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
+        end
+
+        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+
+        should "not remove user as owner" do
+          assert_includes @rubygem.owners, @second_user
+        end
+      end
+
       context "when user owns the gem" do
         context "with invalid handle" do
           setup do

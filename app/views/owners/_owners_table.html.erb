@@ -19,9 +19,11 @@
     <th class="owners__cell">
       <%= t("owners.index.confirmed_at") %>
     </th>
+    <% if can_modify_or_remove_owners?(@rubygem) %>
     <th class="owners__cell">
       <%= t("owners.index.action") %>
     </th>
+    <% end %>
   </tr>
 
   <% @ownerships.each do |ownership| %>
@@ -49,19 +51,25 @@
       <td class="owners__cell" data-title="Confirmed At">
         <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
       </td>
+      <% if can_modify_or_remove_owners?(@rubygem) %>
       <td class="owners__cell" data-title="Action">
+        <% if can_remove_owners?(@rubygem) %>
         <%= button_to t("remove"),
           rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
+        <% end %>
+        <% if can_modify_owners?(@rubygem) %>
         <br>
         <%= button_to t("edit"),
           edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
           disabled: ownership.user == current_user,
           method: "get",
           class: "form__submit form__submit--small" %>
+        <% end %>
       </td>
+      <% end %>
     </tr>
   <% end %>
   </tbody>

@@ -171,13 +171,13 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def self.just_updated(limit = 5)
     where(rubygem_id: Version.default_scoped
-                        .select(:rubygem_id)
-                        .indexed
-                        .created_after(6.months.ago)
-                        .group(:rubygem_id)
-                        .having(arel_table["id"].count.gt(1))
-                        .order(arel_table["created_at"].maximum.desc)
-                        .limit(limit))
+      .select(:rubygem_id)
+      .indexed
+      .created_after(6.months.ago)
+      .group(:rubygem_id)
+      .having(arel_table["id"].count.gt(1))
+      .order(arel_table["created_at"].maximum.desc)
+      .limit(limit))
       .joins(:rubygem)
       .indexed
       .by_created_at

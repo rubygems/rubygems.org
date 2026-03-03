@@ -20,7 +20,7 @@ class ElasticSearcher
 
   def search
     result = Rubygem.searchkick_search(
-      body: search_definition.to_hash,
+      body: search_definition.to_hash.merge(timeout: "2s"),
       page: @page,
       per_page: Kaminari.config.default_per_page,
       load: false
@@ -32,8 +32,10 @@ class ElasticSearcher
   end
 
   def api_search
-    result = Rubygem.searchkick_search(body: search_definition(for_api: true).to_hash, page: @page, per_page: Kaminari.config.default_per_page,
-load: false)
+    result = Rubygem.searchkick_search(
+      body: search_definition(for_api: true).to_hash.merge(timeout: "2s"),
+      page: @page, per_page: Kaminari.config.default_per_page, load: false
+    )
     result.response["hits"]["hits"].pluck("_source")
   rescue Searchkick::InvalidQueryError => e
     raise InvalidQueryError, error_msg(e)
@@ -42,11 +44,15 @@ load: false)
   end
 
   def suggestions
-    result = Rubygem.searchkick_search(body: suggestions_definition.to_hash, page: @page, per_page: Kaminari.config.default_per_page, load: false)
+    result = Rubygem.searchkick_search(
+      body: suggestions_definition.to_hash.merge(timeout: "2s"),
+      page: @page, per_page: Kaminari.config.default_per_page, load: false
+    )
     result = result.response["suggest"]["completion_suggestion"][0]["options"]
     result.map { |gem| gem["_source"]["name"] }
   rescue *CONNECTION_ERRORS => e
     Rails.error.report(e, handled: true)
+    StatsD.increment("search.failure", tags: { exception: e.class.name })
     Array(nil)
   end
 
@@ -123,6 +129,7 @@ load: false)
       "Failed to parse search term: '#{@query}'."
     else
       Rails.error.report(error, handled: true)
+      StatsD.increment("search.failure", tags: { exception: error.class.name })
       "Search is currently unavailable. Please try again later."
     end
   end

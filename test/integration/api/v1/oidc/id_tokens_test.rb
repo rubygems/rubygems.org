@@ -20,13 +20,13 @@ class Api::V1::OIDC::IdTokensTest < ActionDispatch::IntegrationTest
 
       assert_response :success
       assert_equal [
-        {
-          "api_key_role_token" => @id_token.api_key_role.token,
-          "jwt" => {
-            "claims" => @id_token.jwt["claims"],
-            "header" => @id_token.jwt["header"]
-          }
+
+        "api_key_role_token" => @id_token.api_key_role.token,
+        "jwt" => {
+          "claims" => @id_token.jwt["claims"],
+          "header" => @id_token.jwt["header"]
         }
+
       ], response.parsed_body
     end
   end

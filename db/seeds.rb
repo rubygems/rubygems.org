@@ -213,11 +213,11 @@ author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
       principal: {
         oidc: "https://token.actions.githubusercontent.com"
       },
-      conditions: [{
+      conditions: [
         operator: "string_equals",
         claim: "repository",
         value: "rubygems/rubygem0"
-      }]
+      ]
     ]
   }
 ).find_or_create_by!(

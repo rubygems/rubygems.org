@@ -127,14 +127,14 @@ class OIDCTest < ApplicationSystemTestCase
       },
       "access_policy" => {
         "statements" => [
-          {
-            "effect" => "allow",
-            "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
-            "conditions" => [
-              { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" },
-              { "operator" => "string_equals", "claim" => "repository", "value" => "example/repo" }
-            ]
-          }
+
+          "effect" => "allow",
+          "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
+          "conditions" => [
+            { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" },
+            { "operator" => "string_equals", "claim" => "repository", "value" => "example/repo" }
+          ]
+
         ]
       }
     }
@@ -199,7 +199,7 @@ class OIDCTest < ApplicationSystemTestCase
             "effect" => "allow",
             "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
             "conditions" => [
-              { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" }
+              "operator" => "string_equals", "claim" => "aud", "value" => "localhost"
             ]
           },
           {
@@ -289,15 +289,15 @@ class OIDCTest < ApplicationSystemTestCase
       },
       "access_policy" => {
         "statements" => [
-          {
-            "effect" => "allow",
-            "principal" => { "oidc" => "https://agent.buildkite.com" },
-            "conditions" => [
-              { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" },
-              { "operator" => "string_equals", "claim" => "organization_slug", "value" => "example-org" },
-              { "operator" => "string_equals", "claim" => "pipeline_slug", "value" => "example-pipeline" }
-            ]
-          }
+
+          "effect" => "allow",
+          "principal" => { "oidc" => "https://agent.buildkite.com" },
+          "conditions" => [
+            { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" },
+            { "operator" => "string_equals", "claim" => "organization_slug", "value" => "example-org" },
+            { "operator" => "string_equals", "claim" => "pipeline_slug", "value" => "example-pipeline" }
+          ]
+
         ]
       }
     }

@@ -225,6 +225,40 @@ class OwnerTest < ApplicationSystemTestCase
     assert_no_emails
   end
 
+  test "maintainer can view ownerships page" do
+    maintainer = create(:user)
+    create(:ownership, user: maintainer, rubygem: @rubygem, role: :maintainer)
+
+    sign_out
+    sign_in(maintainer)
+
+    visit_ownerships_page
+
+    assert page.has_selector?(".owners__table")
+
+    owners_table = page.find(:css, ".owners__table")
+    within_element owners_table do
+      assert_selector(:css, "a[href='#{profile_path(@user.display_id)}']")
+      assert_selector(:css, "a[href='#{profile_path(maintainer.display_id)}']")
+    end
+
+    assert_no_text "ADD OWNER"
+    assert_no_selector "button", text: "Remove"
+    assert_no_selector "button", text: "Edit"
+  end
+
+  test "shows ownership link when is maintainer" do
+    maintainer = create(:user)
+    create(:ownership, user: maintainer, rubygem: @rubygem, role: :maintainer)
+
+    sign_out
+    sign_in(maintainer)
+
+    visit rubygem_path(@rubygem.slug)
+
+    assert page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+  end
+
   test "shows ownership link when is owner" do
     visit rubygem_path(@rubygem.slug)
 
@@ -328,6 +362,6 @@ class OwnerTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert_text "ADD OWNER"
+    assert_selector ".owners__table"
   end
 end

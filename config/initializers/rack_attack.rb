@@ -145,7 +145,7 @@ class Rack::Attack
     req.ip if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
   end
 
-  protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
+  protected_push_action = [controller: "api/v1/rubygems", action: "create"]
 
   EXP_BACKOFF_LEVELS.each do |level|
     throttle("#{PUSH_EXP_THROTTLE_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
@@ -163,7 +163,7 @@ class Rack::Attack
 
   # Throttle yank requests
   YANK_LIMIT = 10
-  protected_yank_action = [{ controller: "api/v1/deletions", action: "create" }]
+  protected_yank_action = [controller: "api/v1/deletions", action: "create"]
 
   throttle("yank/ip", limit: YANK_LIMIT, period: LIMIT_PERIOD) do |req|
     req.ip if protected_route?(protected_yank_action, req.path, req.request_method)
@@ -178,7 +178,7 @@ class Rack::Attack
   # throttle logins for another user and force their login requests to be
   # denied, but that's not very common and shouldn't happen to you. (Knock
   # on wood!)
-  protected_sessions_action = [{ controller: "sessions", action: "create" }]
+  protected_sessions_action = [controller: "sessions", action: "create"]
 
   throttle("logins/handle", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     protected_route = protected_route?(protected_sessions_action, req.path, req.request_method)
@@ -201,7 +201,7 @@ class Rack::Attack
   end
 
   ############################# rate limit per email ############################
-  protected_passwords_action = [{ controller: "passwords", action: "create" }]
+  protected_passwords_action = [controller: "passwords", action: "create"]
 
   throttle("password/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_passwords_action, req.path, req.request_method) && req.params['password']

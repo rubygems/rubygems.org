@@ -411,33 +411,33 @@ class PusherTest < ActiveSupport::TestCase
     should "not push gem if attestation fails to validate" do
       @cutter.stubs(:attestations).returns(
         [
-          { "media_type" => Sigstore::BundleType::BUNDLE_0_3.media_type,
-            "verification_material" => {
-              "certificate" => {
-                "rawBytes" => [build(:x509_certificate, :key_usage).to_der].pack("m0")
-              },
-              "tlogEntries" => [
-                {
-                  "inclusionProof" => {
-                    "checkpoint" => { "envelope" => "" }
-                  },
-                  "canonicalizedBody" => [
-                    JSON.dump(
-                      spec: {
-                        signature: {
-                          content: {
-                            publicKey: { content: [""].pack("m0") }
-                          }
-                        },
-                        kind: "hashedrekord",
-                        apiVersion: "0.0.1"
-                      }
-                    )
-                  ].pack("m0")
-                }
-              ]
-            },
-            "message_signature" => {} }
+          "media_type" => Sigstore::BundleType::BUNDLE_0_3.media_type,
+           "verification_material" => {
+             "certificate" => {
+               "rawBytes" => [build(:x509_certificate, :key_usage).to_der].pack("m0")
+             },
+             "tlogEntries" => [
+
+               "inclusionProof" => {
+                 "checkpoint" => { "envelope" => "" }
+               },
+                "canonicalizedBody" => [
+                  JSON.dump(
+                    spec: {
+                      signature: {
+                        content: {
+                          publicKey: { content: [""].pack("m0") }
+                        }
+                      },
+                      kind: "hashedrekord",
+                      apiVersion: "0.0.1"
+                    }
+                  )
+                ].pack("m0")
+
+             ]
+           },
+           "message_signature" => {}
         ]
       )
       @api_key.owner = create(:oidc_trusted_publisher_github_action)
