@@ -115,8 +115,8 @@ WORKDIR /app
 
 RUN mkdir -p tmp/pids
 
-# Install postgresql14-client
-RUN apk update && apk add postgresql14-client && rm -rf /var/cache/apk/*
+# Install postgresql17-client
+RUN apk update && apk add postgresql17-client && rm -rf /var/cache/apk/*
 
 # Copy built application from previous stage
 COPY --link --from=build /app/ /app/

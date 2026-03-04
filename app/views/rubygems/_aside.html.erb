@@ -69,6 +69,7 @@
     <%= badge_link(@rubygem) %>
     <%= subscribe_link(@rubygem) if @latest_version.indexed %>
     <%= atom_link(@rubygem) %>
+    <%= clickgems_analytics_link(@rubygem) %>
     <%= report_abuse_link(@rubygem) %>
     <%= reverse_dependencies_link(@rubygem) %>
     <%= ownership_link(@rubygem) if policy(@rubygem).show_unconfirmed_ownerships? %>
