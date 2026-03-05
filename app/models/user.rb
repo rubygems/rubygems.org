@@ -83,7 +83,10 @@ class User < ApplicationRecord
 
   validates :password,
     length: { minimum: 10 },
-    not_pwned: { request_options: { read_timeout: 3 } },
+    not_pwned: {
+      request_options: { read_timeout: 3 },
+      on_error: ->(_record, _error) { StatsD.increment "password_validation.hibp_check.error" }
+    },
     allow_blank: true, # avoid double errors with can't be blank
     unless: :skip_password_validation?
 
