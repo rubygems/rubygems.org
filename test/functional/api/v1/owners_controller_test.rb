@@ -6,7 +6,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
   include ActionMailer::TestHelper
 
-  def self.should_respond_to(format)
+  def self.should_respond_to(format) # rubocop:disable Metrics/MethodLength
     should "route GET show with #{format.to_s.upcase}" do
       route = { controller: "api/v1/owners",
                 action: "show",
