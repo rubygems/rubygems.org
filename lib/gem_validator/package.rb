@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GemValidator::Package
   class PackageError < GemValidator::Error; end
   # Raised when we encounter an unexpected file
@@ -37,14 +39,14 @@ class GemValidator::Package
   class SignatureVerificationError < PackageError; end
 
   # File name constants
-  METADATA = "metadata".freeze
-  METADATA_GZ = "metadata.gz".freeze
-  DATA_TAR_GZ = "data.tar.gz".freeze
-  CHECKSUMS_YAML_GZ = "checksums.yaml.gz".freeze
-  SIGNATURE_SUFFIX = ".sig".freeze
+  METADATA = "metadata"
+  METADATA_GZ = "metadata.gz"
+  DATA_TAR_GZ = "data.tar.gz"
+  CHECKSUMS_YAML_GZ = "checksums.yaml.gz"
+  SIGNATURE_SUFFIX = ".sig"
 
   # Checksum algorithm
-  SHA256_ALGORITHM = "SHA256".freeze
+  SHA256_ALGORITHM = "SHA256"
 
   # Size limits
   DEFAULT_MAX_SIZE = 10 * 1024 * 1024

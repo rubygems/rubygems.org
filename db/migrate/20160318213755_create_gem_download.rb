@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGemDownload < ActiveRecord::Migration[4.2]
   def change
     create_table :gem_downloads do |t| # rubocop:disable Rails/CreateTableWithTimestamps

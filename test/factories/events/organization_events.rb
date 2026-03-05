@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :events_organization_event, class: "Events::OrganizationEvent" do
     tag { "organization:created" }

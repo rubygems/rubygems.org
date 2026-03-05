@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::PendingTrustedPublishersController < ApplicationController
   include OIDC::Concerns::TrustedPublisherCreation
 

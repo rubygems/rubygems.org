@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organizations::GemsController < Organizations::BaseController
   before_action :find_organization, only: %i[index]
 

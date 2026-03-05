@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class DeletionTest < ActiveSupport::TestCase
@@ -136,7 +138,7 @@ class DeletionTest < ActiveSupport::TestCase
     end
 
     should "enqueue rstuf removal" do
-      assert_enqueued_with(job: Rstuf::RemoveJob, args: [{ version: @version }]) do
+      assert_enqueued_with(job: Rstuf::RemoveJob, args: [version: @version]) do
         delete_gem
       end
     end
@@ -260,7 +262,7 @@ class DeletionTest < ActiveSupport::TestCase
       @deletion = delete_gem
       assert_enqueued_jobs 1, only: Indexer do
         assert_enqueued_jobs 1, only: UploadVersionsFileJob do
-          assert_enqueued_with job: UploadInfoFileJob, args: [{ rubygem_name: @gem_name }] do
+          assert_enqueued_with job: UploadInfoFileJob, args: [rubygem_name: @gem_name] do
             @deletion.restore!
           end
         end

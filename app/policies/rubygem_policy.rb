@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RubygemPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
   end
@@ -25,7 +27,7 @@ class RubygemPolicy < ApplicationPolicy
   end
 
   def show_unconfirmed_ownerships?
-    rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)
+    rubygem_owned_by?(user)
   end
 
   def add_owner?

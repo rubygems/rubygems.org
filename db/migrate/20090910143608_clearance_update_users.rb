@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClearanceUpdateUsers < ActiveRecord::Migration[4.2]
   def self.up
     change_table(:users, bulk: true) do |t|

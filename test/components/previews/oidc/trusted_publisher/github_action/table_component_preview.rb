@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::TrustedPublisher::GitHubAction::TableComponentPreview < Lookbook::Preview
   # @param environment text The environment for the GitHub Action
   # @param workflow_repository_owner text The owner of the repository containing the reusable workflow

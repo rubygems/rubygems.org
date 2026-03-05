@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class UploadVersionsFileJobTest < ActiveJob::TestCase
@@ -33,6 +35,6 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
       RubygemFs.compact_index.head("versions")
     )
 
-    assert_enqueued_with(job: FastlyPurgeJob, args: [{ key: "s3-versions", soft: true }])
+    assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-versions", soft: true])
   end
 end

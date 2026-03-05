@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LinkVerification < ApplicationRecord
   belongs_to :linkable, polymorphic: true
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MailerHelper
   def mfa_required_soon_subject(mfa_level)
     case mfa_level

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gemcutter::Middleware
   class Redirector
     def initialize(app)

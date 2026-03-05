@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Subscription < Avo::BaseResource
   def fields
     field :id, as: :id

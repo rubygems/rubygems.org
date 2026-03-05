@@ -26,10 +26,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "3.6.9"
+            version: "4.0.7"
           - name: latest
             version: latest
-        ruby_version: ["3.4.4"]
+        ruby_version: ["4.0.1"]
         tests:
           - name: general
             command: test
@@ -37,7 +37,7 @@ jobs:
             command: test:system
         include:
           - rubygems: { name: latest, version: latest }
-            ruby_version: "3.4.4"
+            ruby_version: "4.0.1"
             tests: { name: "avo without pro", command: "test test/*/avo" }
     name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-22.04
@@ -68,7 +68,7 @@ jobs:
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
           path: tmp/capybara

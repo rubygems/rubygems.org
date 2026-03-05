@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GemTarBuilder
   def initialize
     @entries = []

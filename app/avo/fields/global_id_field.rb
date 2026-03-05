@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Fields::GlobalIdField < Avo::Fields::BelongsToField
   include SemanticLogger::Loggable
 

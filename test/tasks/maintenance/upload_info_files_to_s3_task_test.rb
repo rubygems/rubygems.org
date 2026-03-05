@@ -8,7 +8,7 @@ class Maintenance::UploadInfoFilesToS3TaskTest < ActiveSupport::TestCase
   test "#process performs a task iteration" do
     rubygem = create(:rubygem)
     assert_enqueued_jobs 1, only: UploadInfoFileJob do
-      assert_enqueued_with(job: UploadInfoFileJob, args: [{ rubygem_name: rubygem.name }]) do
+      assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: rubygem.name]) do
         Maintenance::UploadInfoFilesToS3Task.process(rubygem)
       end
     end

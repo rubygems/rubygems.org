@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::GemDownload < Avo::BaseResource
   self.title = :inspect
   self.includes = %i[rubygem version]

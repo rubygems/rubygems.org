@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveRawFromDownloads < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :downloads, :raw

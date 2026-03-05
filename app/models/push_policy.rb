@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 PushPolicy = Gem::Security::Policy.new(
   "Push Policy",
   verify_data:   true,

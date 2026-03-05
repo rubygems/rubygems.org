@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.config.after_initialize do
   Rails.application.config.action_dispatch.cookies_rotations.tap do |cookies|
     salt = Rails.application.config.action_dispatch.authenticated_encrypted_cookie_salt

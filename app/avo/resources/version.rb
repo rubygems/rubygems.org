@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Version < Avo::BaseResource
   self.title = :full_name
   self.includes = [:rubygem]

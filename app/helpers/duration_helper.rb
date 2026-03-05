@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DurationHelper
   def duration_string(duration)
     parts = duration.parts

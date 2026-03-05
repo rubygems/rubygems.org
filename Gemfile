@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 ruby file: ".ruby-version"
@@ -7,21 +9,21 @@ gem "rails-i18n", "~> 8.1.0"
 
 gem "aws-sdk-s3", "~> 1.213"
 gem "aws-sdk-sqs", "~> 1.111"
-gem "bootsnap", "~> 1.22"
+gem "bootsnap", "~> 1.23"
 gem "clearance", "~> 2.11"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.27"
+gem "datadog", "~> 2.29"
 gem "dogstatsd-ruby", "~> 5.7"
-gem "google-protobuf", "~> 4.33"
+gem "google-protobuf", "~> 4.34"
 gem "faraday", "~> 2.14"
 gem "faraday-retry", "~> 2.4"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
-gem "flipper", "~> 1.3"
+gem "flipper", "~> 1.4"
 gem "flipper-active_record", "~> 1.3"
 gem "flipper-ui", "~> 1.3"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.3.0", require: false
+gem "honeybadger", "~> 6.5.2", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -37,14 +39,14 @@ gem "rack", "~> 3.2"
 gem "rackup", "~> 2.3"
 gem "rack-sanitizer", "~> 2.0"
 gem "rbtrace", "~> 0.5.3"
-gem "rdoc", "~> 7.1"
+gem "rdoc", "~> 7.2"
 gem "roadie-rails", "~> 3.4"
 gem "ruby-magic", "~> 0.6"
-gem "shoryuken", "~> 6.2", require: false
+gem "shoryuken", "~> 7.0", require: false
 gem "statsd-instrument", "~> 3.9"
 gem "validates_formatting_of", "~> 0.9"
 gem "opensearch-ruby", "~> 3.4"
-gem "searchkick", "~> 5.5"
+gem "searchkick", "~> 6.1"
 gem "faraday_middleware-aws-sigv4", "~> 1.0"
 gem "xml-simple", "~> 1.1"
 gem "compact_index", "~> 0.15.0"
@@ -56,11 +58,11 @@ gem "webauthn", "~> 3.4"
 gem "browser", "~> 6.2"
 gem "bcrypt", "~> 3.1"
 gem "blazer", "~> 3.3.0"
-gem "maintenance_tasks", "~> 2.13"
+gem "maintenance_tasks", "~> 2.14"
 gem "strong_migrations", "~> 2.5"
 gem "phlex-rails", "~> 2.4"
 gem "discard", "~> 1.4"
-gem "user_agent_parser", "~> 2.20"
+gem "user_agent_parser", "~> 2.21"
 gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.2"
@@ -72,7 +74,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.2.0"
+gem "view_component", "~> 4.5.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.7"
@@ -80,7 +82,7 @@ gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.27"
+    gem "avo-advanced", "~> 3.29"
   end
 end
 
@@ -105,7 +107,7 @@ group :assets, :development do
 end
 
 group :development, :test do
-  gem "debug", "~> 1.0"
+  gem "debug", "~> 1.0", require: "debug/prelude"
   gem "toxiproxy", "~> 2.0"
   gem "factory_bot_rails", "~> 6.5"
   gem "dotenv-rails", "~> 3.2"
@@ -145,11 +147,11 @@ group :test do
   gem "mocha", "~> 3.0", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 7.0"
-  gem "selenium-webdriver", "~> 4.40"
+  gem "selenium-webdriver", "~> 4.41"
   gem "webmock", "~> 3.26"
   gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 3.1", require: false
-  gem "aggregate_assertions", "~> 0.2.0"
+  gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.7"
   gem "gem_server_conformance", "~> 0.1.4"

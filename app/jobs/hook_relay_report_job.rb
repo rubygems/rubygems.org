@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HookRelayReportJob < ApplicationJob
   queue_as :default
   self.queue_adapter = :good_job

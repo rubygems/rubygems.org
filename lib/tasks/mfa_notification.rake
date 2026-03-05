@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "resolv"
 
 def mx_exists?(email)

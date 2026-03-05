@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Types::Duration < ActiveModel::Type::Value
   def cast_value(value)
     case value

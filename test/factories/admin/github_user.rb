@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :admin_github_user, class: "Admin::GitHubUser" do
     login { "jackson-keeling" }

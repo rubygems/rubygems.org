@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSoftDeletedAtToApiKeys < ActiveRecord::Migration[7.0]
   def change
     change_table(:api_keys, bulk: true) do |t|

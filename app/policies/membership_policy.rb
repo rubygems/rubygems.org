@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MembershipPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
   end

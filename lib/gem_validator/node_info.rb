@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GemValidator::NodeInfo
   IGNORED_TAGS = Set[
     "!", "!binary", "!str", "tag:yaml.org,2002:null",

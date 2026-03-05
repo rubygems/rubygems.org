@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRubyforgers < ActiveRecord::Migration[4.2]
   def self.up
     create_table :rubyforgers do |t| # rubocop:disable Rails/CreateTableWithTimestamps

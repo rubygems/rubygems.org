@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organizations::MembersController < Organizations::BaseController
   before_action :find_membership, only: %i[edit update destroy resend_invitation]
 

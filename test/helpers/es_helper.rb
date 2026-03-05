@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SearchKickHelper
   def self.included(base)
     base.setup :enable_callbacks

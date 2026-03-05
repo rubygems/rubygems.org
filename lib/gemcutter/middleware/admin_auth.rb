@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../middleware"
 require_relative "../../github_oauthable"
 require_relative "../../trace_tagger"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DeleteUserJob < ApplicationJob
   queue_as :default
   queue_with_priority PRIORITIES.fetch(:profile_deletion)

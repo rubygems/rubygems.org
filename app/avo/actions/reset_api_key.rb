@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ResetApiKey < Avo::Actions::ApplicationAction
   self.name = "Reset Api Key"
   self.visible = lambda {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :gemcutter do
   namespace :index do
     desc "Update the index"

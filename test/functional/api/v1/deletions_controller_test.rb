@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Api::V1::DeletionsControllerTest < ActionController::TestCase
@@ -375,7 +377,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           assert_enqueued_jobs 1, only: Indexer
           assert_enqueued_jobs 1, only: UploadVersionsFileJob
           assert_enqueued_jobs 1, only: UploadNamesFileJob
-          assert_enqueued_with job: UploadInfoFileJob, args: [{ rubygem_name: @rubygem.name }]
+          assert_enqueued_with job: UploadInfoFileJob, args: [rubygem_name: @rubygem.name]
         end
       end
 

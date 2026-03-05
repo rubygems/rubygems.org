@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # For more information regarding these settings check out our docs https://docs.avohq.io
 Avo.configure do |config| # rubocop:disable Metrics/BlockLength
   ## == Routing ==

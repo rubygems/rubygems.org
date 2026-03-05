@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::WebHook < Avo::BaseResource
   self.includes = %i[user rubygem]
 

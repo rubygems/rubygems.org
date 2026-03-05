@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::AddOwner < Avo::Actions::ApplicationAction
   self.name = "Add owner"
   self.visible = lambda {

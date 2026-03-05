@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :api_keys do
   desc "Migrate user api keys to ApiKey model"
   task migrate: :environment do

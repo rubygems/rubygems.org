@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveVersionHistory < ActiveRecord::Migration[4.2]
   def up
     drop_table :version_histories, force: :cascade

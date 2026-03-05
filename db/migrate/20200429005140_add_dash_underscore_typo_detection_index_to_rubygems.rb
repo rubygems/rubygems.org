@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Create a PostgreSQL functional index on all Gem's names with - and _ charcters removed.
 # This index is used by GemTypo to rapidly check newly uploaded Gems for matches against

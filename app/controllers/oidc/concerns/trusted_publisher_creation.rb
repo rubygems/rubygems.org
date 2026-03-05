@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OIDC::Concerns::TrustedPublisherCreation
   extend ActiveSupport::Concern
 

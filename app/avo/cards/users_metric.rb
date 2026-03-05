@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Cards::UsersMetric < Avo::Cards::MetricCard
   self.id = "users_metric"
   self.label = "Total users"

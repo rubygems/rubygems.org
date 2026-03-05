@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::OIDC::IdTokensController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :verify_user_api_key

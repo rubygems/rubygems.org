@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveVersionsCountFromRubygems < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :rubygems, :versions_count

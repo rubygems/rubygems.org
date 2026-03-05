@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'faraday_middleware/aws_sigv4'
 require 'opensearch-dsl'
 
@@ -8,11 +10,11 @@ if Rails.env.local? && Toxiproxy.running?
   toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
   Toxiproxy.populate(
     [
-      {
-        name: 'elasticsearch',
-        listen: "#{toxiproxy_listen_host}:#{port}",
-        upstream: toxiproxy_upstream
-      }
+
+      name: 'elasticsearch',
+      listen: "#{toxiproxy_listen_host}:#{port}",
+      upstream: toxiproxy_upstream
+
     ]
   )
 end
@@ -21,7 +23,6 @@ options = {}
 
 options[:url] = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 options[:tracer] = SemanticLogger[OpenSearch::Client]
-options[:request_timeout] = 2
 
 Searchkick.client = OpenSearch::Client.new(**options.compact) do |f|
   unless Rails.env.local?

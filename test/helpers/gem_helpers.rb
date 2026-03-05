@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GemHelpers # rubocop:disable Metrics/ModuleLength
   def gem_tar_builder(&block)
     builder = GemTarBuilder.new

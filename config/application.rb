@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "boot"
 
 require "rails"
@@ -26,18 +28,7 @@ end
 
 module Gemcutter
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
-
-    ###
-    # TODO: This is a 8.0 framework default, but load order requires it to be here to avoid deprecation warnings.
-    #
-    # Specifies whether `to_time` methods preserve the UTC offset of their receivers or preserves the timezone.
-    # If set to `:zone`, `to_time` methods will use the timezone of their receivers.
-    # If set to `:offset`, `to_time` methods will use the UTC offset.
-    # If `false`, `to_time` methods will convert to the local system UTC offset instead.
-    #++
-    Rails.application.config.active_support.to_time_preserves_timezone = :zone
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -123,7 +114,7 @@ module Gemcutter
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
   ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
-  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
+  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>"
   PAGES = %w[
     about data download security supporters
   ].freeze

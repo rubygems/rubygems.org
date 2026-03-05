@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcessSendgridEventJob < ApplicationJob
   queue_as :default
 

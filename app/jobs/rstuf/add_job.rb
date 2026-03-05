@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rstuf::AddJob < Rstuf::ApplicationJob
   queue_with_priority PRIORITIES.fetch(:push)
 

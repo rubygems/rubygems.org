@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUniqueIndexes < ActiveRecord::Migration[4.2]
   def self.up
     remove_index :rubygems, column: [:name]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserWebauthnMethods
   extend ActiveSupport::Concern
 

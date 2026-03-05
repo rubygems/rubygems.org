@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OIDC::TrustedPublisher
   def self.table_name_prefix
     "oidc_trusted_publisher_"

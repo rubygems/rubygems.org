@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ReleaseReservedNamespace < Avo::Actions::ApplicationAction
   self.name = "Release reserved namespace"
   self.visible = lambda {

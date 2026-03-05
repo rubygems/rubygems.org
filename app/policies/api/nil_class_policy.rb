@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::NilClassPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve

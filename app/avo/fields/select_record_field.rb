@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Fields::SelectRecordField < Avo::Fields::BelongsToField
   def foreign_key
     id

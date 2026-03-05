@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MultifactorAuthsController < ApplicationController
   include MfaExpiryMethods
   include RequireMfa

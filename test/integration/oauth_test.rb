@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class OAuthTest < ActionDispatch::IntegrationTest
@@ -218,7 +220,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
               viewerIsAMember: true,
               teams: {
                 edges: [
-                  { node: { slug: "rubygems-org" } }
+                  node: { slug: "rubygems-org" }
                 ]
               }
             }

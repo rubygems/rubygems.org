@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MfaUsageStatsJob < ApplicationJob
   queue_as "stats"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Admin::GitHubUserPolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!

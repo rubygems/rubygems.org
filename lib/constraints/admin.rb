@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Constraints::Admin
   def self.matches?(request)
     Matcher.new(request).admin_user&.valid?

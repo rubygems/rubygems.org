@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organizations::Onboarding::ConfirmController < Organizations::Onboarding::BaseController
   def edit
   end

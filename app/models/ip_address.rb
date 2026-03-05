@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IpAddress < ApplicationRecord
   validates :ip_address, presence: true, uniqueness: true
   validates :hashed_ip_address, presence: true, uniqueness: true

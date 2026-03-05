@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Internal::PingController < ApplicationController
   def index
     render plain: "PONG"

@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class RubygemSearchableTest < ActiveSupport::TestCase
   include SearchKickHelper
+  include StatsD::Instrument::Assertions
 
   context "#search_data" do
     setup do
@@ -167,7 +170,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       _, response = ElasticSearcher.new("keyword").search
       names_order = %w[keyword example_gem3 example_gem2]
 
-      assert_equal names_order, response.results.map(&:name)
+      assert_equal names_order, response.map(&:name)
     end
   end
 
@@ -183,7 +186,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       _, response = ElasticSearcher.new("gem").search
       names_order = %w[gem_30 gem_20 gem_10]
 
-      assert_equal names_order, response.results.map(&:name)
+      assert_equal names_order, response.map(&:name)
     end
   end
 
@@ -334,15 +337,17 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       end
 
       context "OpenSearch::Transport::Transport::Errors" do
-        should "fails with friendly error message" do
+        should "fails with friendly error message and increments search.failure metric" do
           requires_toxiproxy
 
           toxiproxy_elasticsearch.down do
-            error_msg, result = ElasticSearcher.new("something").search
-            expected_msg = "Search is currently unavailable. Please try again later."
+            assert_statsd_increment("search.failure") do
+              error_msg, result = ElasticSearcher.new("something").search
+              expected_msg = "Search is currently unavailable. Please try again later."
 
-            assert_nil result
-            assert_equal expected_msg, error_msg
+              assert_nil result
+              assert_equal expected_msg, error_msg
+            end
           end
         end
       end
@@ -360,7 +365,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         _, response1 = ElasticSearcher.new("async rails").search
         _, response2 = ElasticSearcher.new("rails async").search
 
-        assert_equal response1.results.map(&:name), response2.results.map(&:name)
+        assert_equal response1.map(&:name), response2.map(&:name)
       end
     end
   end

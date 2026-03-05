@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :x509_certificate, class: "OpenSSL::X509::Certificate" do
     subject { OpenSSL::X509::Name.parse("/DC=org/DC=example/CN=Test") }

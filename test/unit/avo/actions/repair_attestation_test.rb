@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class RepairAttestationTest < ActiveSupport::TestCase
@@ -19,7 +21,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "logIndex" => 123 }],
+          "tlogEntries" => ["logIndex" => 123],
           "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
         }
       }
@@ -65,7 +67,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
+          "tlogEntries" => ["kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" }],
           "certificate" => { "rawBytes" => double_encoded }
         }
       }
@@ -98,7 +100,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
+          "tlogEntries" => ["kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" }],
           "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
         }
       }
@@ -141,7 +143,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "logIndex" => 123 }],
+          "tlogEntries" => ["logIndex" => 123],
           "certificate" => { "rawBytes" => double_encoded }
         }
       }
@@ -181,7 +183,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "logIndex" => 123 }],
+          "tlogEntries" => ["logIndex" => 123],
           "certificate" => { "rawBytes" => Base64.strict_encode64("DER data") }
         }
       }
@@ -214,7 +216,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
       media_type: "application/vnd.dev.sigstore.bundle.v0.3+json",
       body: {
         "verificationMaterial" => {
-          "tlogEntries" => [{ "kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" } }],
+          "tlogEntries" => ["kindVersion" => { "kind" => "hashedrekord", "version" => "0.0.1" }],
           "certificate" => { "rawBytes" => double_encoded }
         }
       }

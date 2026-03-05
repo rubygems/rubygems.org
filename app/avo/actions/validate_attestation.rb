@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ValidateAttestation < Avo::Actions::ApplicationAction
   self.name = "Validate attestation"
   self.visible = lambda {

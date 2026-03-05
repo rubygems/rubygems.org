@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::UserEvent::ApiKey::CreatedComponentPreview < Lookbook::Preview
   # @param name text
   # @param scopes [Array<String>]
