@@ -98,7 +98,7 @@ pt-BR:
         rubygem_name:
     errors:
       messages:
-        unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
+        not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
         blocked:
       models:
         api_key:

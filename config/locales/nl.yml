@@ -93,7 +93,7 @@ nl:
         rubygem_name:
     errors:
       messages:
-        unpwn:
+        not_pwned:
         blocked:
       models:
         api_key:

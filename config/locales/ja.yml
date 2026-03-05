@@ -94,7 +94,7 @@ ja:
         rubygem_name: RubyGem名
     errors:
       messages:
-        unpwn: 過去にデータ侵害を受けたためお使いになれません
+        not_pwned: 過去にデータ侵害を受けたためお使いになれません
         blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
       models:
         api_key:

@@ -103,7 +103,7 @@ de:
         rubygem_name: RubyGem-Name
     errors:
       messages:
-        unpwn: ist bereits in einem Datenleck aufgetaucht und sollte nicht verwendet
+        not_pwned: ist bereits in einem Datenleck aufgetaucht und sollte nicht verwendet
           werden
         blocked: Die Domain '%{domain}' wurde wegen Spam blockiert. Bitte verwenden
           Sie eine gültige persönliche E-Mail-Adresse.

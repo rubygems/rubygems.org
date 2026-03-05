@@ -99,7 +99,7 @@ es:
         rubygem_name:
     errors:
       messages:
-        unpwn: ha aparecido con anterioridad en una filtración de datos y no se debería
+        not_pwned: ha aparecido con anterioridad en una filtración de datos y no se debería
           usar
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.

@@ -93,7 +93,7 @@ zh-TW:
         rubygem_name:
     errors:
       messages:
-        unpwn: 曾出現在資料外洩事件中，不應再使用
+        not_pwned: 曾出現在資料外洩事件中，不應再使用
         blocked: 網域 '%{domain}' 因濫發垃圾郵件而遭封鎖。請使用有效的個人電子郵件地址。
       models:
         api_key:

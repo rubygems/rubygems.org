@@ -50,7 +50,6 @@ Avo::Current.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    "api.pwnedpasswords.com",
     "chromedriver.storage.googleapis.com",
     "search", # DevContainer services
     "selenium",
@@ -60,6 +59,8 @@ WebMock.disable_net_connect!(
 WebMock.globally_stub_request(:after_local_stubs) do |request|
   if WebMock::RequestPattern.new(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s={size}")).matches?(request)
     { status: 404, body: "", headers: {} }
+  elsif WebMock::RequestPattern.new(:get, Addressable::Template.new("https://api.pwnedpasswords.com/range/{hash_prefix}")).matches?(request)
+    { status: 200, body: "", headers: {} }
   end
 end
 
@@ -127,7 +128,6 @@ class ActiveSupport::TestCase
     I18n.locale = :en
     Rack::Attack.cache.store.clear
 
-    Unpwn.offline = true
     OmniAuth.config.mock_auth.clear
 
     ActionMailer::Base.deliveries.clear
