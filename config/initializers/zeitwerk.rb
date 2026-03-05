@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ignore rake tasks because don't need to autoload them
 Rails.autoloaders.main.ignore(Rails.root.join("lib/tasks"))
 
@@ -17,5 +19,6 @@ end
 
 Rails.autoloaders.once.inflector.inflect(
   "http" => "HTTP",
-  "oidc" => "OIDC"
+  "oidc" => "OIDC",
+  "yaml_gemspec" => "YAMLGemspec"
 )

@@ -67,6 +67,8 @@ spec:
             value: "<%= environment == 'production' ? 8 : 2 %>"
           - name: RAILS_MAX_THREADS
             value: "5"
+          - name: DD_TAGS
+            value: "app:rubygems.org service:rubygems.org env:<%= environment %>"
           - name: DD_AGENT_HOST
             valueFrom:
               fieldRef:
@@ -81,11 +83,23 @@ spec:
                 fieldPath: status.hostIP
           - name: STATSD_ADDR
             value: $(STATSD_HOST):8125
+          - name: STATSD_GROUPING
+            value: "rubygems.org"
+          # https://github.com/yob/puma-plugin-statsd/blob/b01769e37e30b801b82dbc0ab899a695731d3629/README.md#my_pod_name
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
                 name: <%= environment %>
                 key: secret_key_base
+          - name: PREVIOUS_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: previous_secret_key_base
           - name: RAILS_SERVE_STATIC_FILES
             value: "true"
           - name: AWS_REGION

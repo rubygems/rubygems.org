@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class RubygemsHelperTest < ActionView::TestCase
@@ -204,6 +206,18 @@ class RubygemsHelperTest < ActionView::TestCase
       should "return parsed uri" do
         assert_equal URI(@github_link), link_to_github(@rubygem)
       end
+    end
+  end
+
+  context "clickgems_analytics_link" do
+    should "link to clickgems dashboard for the gem" do
+      rubygem = create(:rubygem, name: "my_gem")
+      expected_url = "https://clickgems.clickhouse.com/dashboard/my_gem"
+
+      result = clickgems_analytics_link(rubygem)
+
+      assert_match expected_url, result
+      assert_match "gem__link t-list__item", result
     end
   end
 

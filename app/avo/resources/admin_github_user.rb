@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::AdminGitHubUser < Avo::BaseResource
   self.title = :login
   self.includes = []

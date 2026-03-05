@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class Avo::VersionsSystemTest < ApplicationSystemTestCase
@@ -47,6 +49,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
     audit = version.audits.sole
 
     page.assert_text audit.id
+
     assert_equal "Version", audit.auditable_type
     assert_equal "Restore version", audit.action
     assert_equal admin_user, audit.admin_github_user

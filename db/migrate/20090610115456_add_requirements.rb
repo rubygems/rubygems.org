@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRequirements < ActiveRecord::Migration[4.2]
   def self.up
     create_table :requirements do |t| # rubocop:disable Rails/CreateTableWithTimestamps

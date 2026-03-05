@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OrganizationInvite < ApplicationRecord
   belongs_to :invitable, polymorphic: true
   belongs_to :user
@@ -8,7 +10,7 @@ class OrganizationInvite < ApplicationRecord
     validate: { allow_nil: true }
 
   def to_membership(actor: nil)
-    return nil if outside_contributor?
+    return nil if role.blank? || outside_contributor?
 
     Membership.new(
       user: user,

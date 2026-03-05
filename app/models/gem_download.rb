@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GemDownload < ApplicationRecord
   belongs_to :rubygem, optional: true
   belongs_to :version, optional: true
@@ -135,7 +137,7 @@ class GemDownload < ApplicationRecord
     end
 
     def update_query(id, downloads, version_downloads)
-      { update: { _index: Gemcutter::SEARCH_INDEX_NAME,
+      { update: { _index: Rubygem.searchkick_index.name,
                   _id: id,
                   data: { doc: { downloads: downloads, version_downloads: version_downloads } } } }
     end

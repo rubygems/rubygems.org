@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
-  HEADER_KEYID = "GITHUB-PUBLIC-KEY-IDENTIFIER".freeze
-  HEADER_SIGNATURE = "GITHUB-PUBLIC-KEY-SIGNATURE".freeze
+  HEADER_KEYID = "GITHUB-PUBLIC-KEY-IDENTIFIER"
+  HEADER_SIGNATURE = "GITHUB-PUBLIC-KEY-SIGNATURE"
 
-  DEPS_DEV_HEADER_KEYID = "DepsDev-Public-Key-Identifier".freeze
-  DEPS_DEV_HEADER_SIGNATURE = "DepsDev-Public-Key-Signature".freeze
+  DEPS_DEV_HEADER_KEYID = "DepsDev-Public-Key-Identifier"
+  DEPS_DEV_HEADER_SIGNATURE = "DepsDev-Public-Key-Signature"
 
   KEYS_RESPONSE_BODY =
     { "public_keys" => [
-      {
-        "key_identifier" => "test_key_id",
-        "is_current" => true
-      }
+
+      "key_identifier" => "test_key_id",
+      "is_current" => true
+
     ] }.freeze
 
   [
@@ -26,6 +28,9 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
           @private_key_pem = key.to_pem
           @public_key_pem = key.public_to_pem
 
+          Rails.cache.delete([GitHubSecretScanning.name, "public_keys", "test_key_id"])
+          Rails.cache.delete([GitHubSecretScanning::DepsDev.name, "public_keys", "test_key_id"])
+
           h = KEYS_RESPONSE_BODY.dup
           h["public_keys"][0]["key"] = @public_key_pem
 
@@ -37,7 +42,7 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
             )
 
           @tokens = [
-            { "token" => "some_token", "type" => "some_type", "url" => "some_url" }
+            "token" => "some_token", "type" => "some_type", "url" => "some_url"
           ]
 
           @user = create(:user)

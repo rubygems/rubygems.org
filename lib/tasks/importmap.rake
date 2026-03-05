@@ -31,11 +31,13 @@ namespace :importmap do
     )
 
     if (imports = packager.import(*packages, **options))
-      imports.each do |package, url|
-        puts %(Verifying "#{package}" download from #{url})
-        packager.verify(package, url, verbose: ENV["VERBOSE"])
-        path = packager.vendored_package_path(package)
-        puts %(Verified  "#{package}" at #{path})
+      actual_imports = imports.is_a?(Hash) && imports.key?(:imports) ? imports[:imports] : imports
+      actual_imports.each do |package, url|
+        package_name = package.to_s
+        puts %(Verifying "#{package_name}" download from #{url})
+        packager.verify(package_name, url, verbose: ENV["VERBOSE"])
+        path = packager.vendored_package_path(package_name)
+        puts %(Verified  "#{package_name}" at #{path})
         all_files.delete path
       end
 

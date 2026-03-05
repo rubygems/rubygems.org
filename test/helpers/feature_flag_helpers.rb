@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FeatureFlagHelpers
   def enable_feature(flag_name, actor: nil)
     if actor
@@ -8,7 +10,7 @@ module FeatureFlagHelpers
   end
 
   def disable_feature(flag_name)
-    FeatureFlag.disable(flag_name)
+    FeatureFlag.disable_globally(flag_name)
   end
 
   def with_feature(flag_name, enabled: true, actor: nil)

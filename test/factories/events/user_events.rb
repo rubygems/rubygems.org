@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :events_user_event, class: "Events::UserEvent" do
     tag { "user:login:success" }

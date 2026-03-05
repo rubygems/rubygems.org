@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixVersionDates < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :versions, :created_at, :built_at

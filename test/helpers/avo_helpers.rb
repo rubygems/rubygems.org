@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AvoHelpers
   def avo_sign_in_as(user)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(

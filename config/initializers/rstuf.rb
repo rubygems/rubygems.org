@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rstuf'
 
 if ENV['RSTUF_API_URL'].presence

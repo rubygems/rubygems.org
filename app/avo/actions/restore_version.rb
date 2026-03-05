@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::RestoreVersion < Avo::Actions::ApplicationAction
   self.name = "Restore version"
   self.visible = lambda {

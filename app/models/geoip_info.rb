@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeoipInfo < ApplicationRecord
   has_many :ip_addresses, dependent: :nullify
   has_many :user_events, class_name: "Events::UserEvent", dependent: :nullify

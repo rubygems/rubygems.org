@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Organizations::Onboarding::ConfirmControllerTest < ActionDispatch::IntegrationTest
@@ -13,12 +15,26 @@ class Organizations::Onboarding::ConfirmControllerTest < ActionDispatch::Integra
       :gem,
       created_by: @user,
       namesake_rubygem: @rubygem,
-      approved_invites: [{ user: @collaborator, role: "maintainer" }]
+      approved_invites: [user: @collaborator, role: "maintainer"]
     )
+
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
   end
 
-  context "GET #show" do
-    should "to render the show template" do
+  should "require feature flag enablement" do
+    with_feature(FeatureFlag::ORGANIZATIONS, enabled: false, actor: @user) do
+      get "/organizations/onboarding/confirm"
+
+      assert_response :not_found
+
+      patch "/organizations/onboarding/confirm"
+
+      assert_response :not_found
+    end
+  end
+
+  context "GET #edit" do
+    should "to render the edit template" do
       get "/organizations/onboarding/confirm"
 
       assert_response :ok

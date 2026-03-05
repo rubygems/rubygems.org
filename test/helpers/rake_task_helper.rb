@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rake"
 
 # Run Rake tasks without loading them and introducing constant redefinition warnings

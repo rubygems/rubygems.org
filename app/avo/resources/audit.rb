@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Audit < Avo::BaseResource
   self.includes = %i[
     admin_github_user

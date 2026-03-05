@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CardComponentPreview < Lookbook::Preview
   layout "hammy_component_preview"
 

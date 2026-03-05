@@ -1,18 +1,18 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["checkbox", "selector"]
+  static targets = ["checkbox", "selector"];
 
   connect() {
-    this.toggleSelector()
+    this.toggleSelector();
   }
 
   checkboxTargetConnected(el) {
-    el.addEventListener("change", () => this.toggleSelector())
+    el.addEventListener("change", () => this.toggleSelector());
   }
 
   toggleSelector() {
-    const selected = this.checkboxTargets.find((target) => target.checked)
+    const selected = this.checkboxTargets.find((target) => target.checked);
 
     if (selected) {
       this.selectorTarget.disabled = false;
@@ -25,7 +25,9 @@ export default class extends Controller {
   }
 
   addHiddenRubygemField() {
-    if (this.hiddenField) { return }
+    if (this.hiddenField) {
+      return;
+    }
     this.hiddenField = document.createElement("input");
     this.hiddenField.type = "hidden";
     this.hiddenField.name = "api_key[rubygem_id]";
@@ -40,4 +42,3 @@ export default class extends Controller {
     }
   }
 }
-

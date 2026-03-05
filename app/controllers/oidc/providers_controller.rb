@@ -2,6 +2,7 @@
 
 class OIDC::ProvidersController < ApplicationController
   include SessionVerifiable
+
   verify_session_before
 
   before_action :find_provider, except: %i[index]

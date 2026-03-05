@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :rubygem do
     transient do
@@ -8,6 +10,12 @@ FactoryBot.define do
     end
 
     name
+
+    trait :reindex do
+      after(:create) do |rubygem, _evaluator|
+        rubygem.reindex(refresh: true)
+      end
+    end
 
     after(:build) do |rubygem, evaluator|
       if evaluator.linkset

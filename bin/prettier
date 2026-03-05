@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Default to check mode with app/javascript/**/*.js and config/*.js if no arguments are provided.
+# The github action is configured to run this script with no arguments, so use sensible defaults.
+if [ -z "$1" ]; then
+  exec npx prettier@3 --check 'app/javascript/**/*.js' 'config/*.js' '*.js' "$@"
+# if the only argument is --write, then run in write mode with app/javascript/**/*.js and config/*.js
+elif [ "$1" = "--write" ] && [ -z "$2" ]; then
+  exec npx prettier@3 --write 'app/javascript/**/*.js' 'config/*.js' '*.js' "$@"
+else
+  exec npx prettier@3 "$@"
+fi

@@ -54,6 +54,8 @@ spec:
             value: "<%= environment %>"
           - name: ENV
             value: "<%= environment %>"
+          - name: DD_TAGS
+            value: "service:rubygems.org env:<%= environment %>"
           - name: GOOD_JOB_PROBE_PORT
             value: "7001"
           - name: GOOD_JOB_QUEUE_SELECT_LIMIT
@@ -81,6 +83,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: secret_key_base
+          - name: PREVIOUS_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: previous_secret_key_base
           - name: AWS_REGION
             value: "us-west-2"
           - name: FASTLY_LOG_PROCESSOR_ENABLED

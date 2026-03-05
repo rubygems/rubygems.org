@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organizations::Onboarding::UsersController < Organizations::Onboarding::BaseController
   def edit
   end
@@ -6,7 +8,7 @@ class Organizations::Onboarding::UsersController < Organizations::Onboarding::Ba
     if @organization_onboarding.update(onboarding_user_params)
       redirect_to organization_onboarding_confirm_path
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -20,6 +22,6 @@ class Organizations::Onboarding::UsersController < Organizations::Onboarding::Ba
   helper_method :role_options
 
   def onboarding_user_params
-    params.expect(organization_onboarding: [invites_attributes: [%i[id role]]])
+    params.fetch(:organization_onboarding, {}).permit(invites_attributes: [%i[id role]])
   end
 end

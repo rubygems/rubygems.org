@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   include ApiKeyable
   include JwtValidation
@@ -18,7 +20,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   rescue_from ActiveRecord::RecordInvalid do |err|
     render json: {
       errors: err.record.errors
-    }, status: :unprocessable_entity
+    }, status: :unprocessable_content
   end
 
   def index

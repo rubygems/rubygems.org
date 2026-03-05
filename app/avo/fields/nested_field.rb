@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Fields::NestedField < Avo::Fields::BaseField
   include Avo::Concerns::HasItems
 

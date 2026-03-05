@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebauthnHelpers
   def self.create_result(client:, challenge: nil)
     rp_id = URI.parse(client.origin).host

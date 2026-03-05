@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
@@ -32,6 +34,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     audit = Audit.sole
 
     page.assert_text audit.id
+
     assert_equal log_ticket, audit.auditable
     assert_equal "LogTicket", audit.auditable_type
     assert_equal "Manual create of LogTicket", audit.action
@@ -58,7 +61,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
 
-    find('div[data-field-id="auditable"]').click_on log_ticket.to_param
+    visit avo.resources_log_ticket_path(log_ticket)
 
     page.assert_text "pending"
     page.assert_title(/^#{log_ticket.to_param}/)
@@ -78,6 +81,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     audit = Audit.last
 
     page.assert_text audit.id
+
     assert_equal log_ticket, audit.auditable
     assert_equal "LogTicket", audit.auditable_type
     assert_equal "Manual update of LogTicket", audit.action
@@ -109,7 +113,7 @@ class Avo::ManualChangesSystemTest < ApplicationSystemTestCase
     assert_equal admin_user, audit.admin_github_user
     assert_equal "Another comment", audit.comment
 
-    find('div[data-field-id="auditable"]').click_on log_ticket.to_param
+    visit avo.resources_log_ticket_path(log_ticket)
 
     page.assert_title(/^#{log_ticket.to_param}/)
 

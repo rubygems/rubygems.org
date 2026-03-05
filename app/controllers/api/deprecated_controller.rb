@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::DeprecatedController < Api::BaseController
   def index
     render status: :forbidden, plain: "This version of the Gemcutter plugin has been deprecated." \

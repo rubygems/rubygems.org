@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::UploadNamesFile < Avo::Actions::ApplicationAction
   self.name = "Upload Names File"
   self.visible = lambda {

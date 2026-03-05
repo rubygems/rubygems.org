@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
 require "active_support/core_ext/integer/time"
 require_relative "../../lib/gemcutter/middleware/redirector"

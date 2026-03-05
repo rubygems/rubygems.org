@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :oidc_rubygem_trusted_publisher, class: "OIDC::RubygemTrustedPublisher" do
     rubygem

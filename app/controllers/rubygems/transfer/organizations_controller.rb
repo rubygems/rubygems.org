@@ -1,24 +1,23 @@
+# frozen_string_literal: true
+
 class Rubygems::Transfer::OrganizationsController < Rubygems::Transfer::BaseController
   rescue_from ActiveRecord::RecordNotFound, with: -> { redirect_to dashboard_path }
 
   layout "onboarding"
 
   def new
-    authorize @rubygem, :transfer_gem?
-    @organizations = Current.user.organizations
+    @organizations = current_user.organizations
   end
 
   def create
-    authorize @rubygem, :transfer_gem?
-
-    @organizations = Current.user.organizations
+    @organizations = current_user.organizations
     @organization = @organizations.find_by(handle: organization_params[:rubygem_transfer][:organization])
 
     @rubygem_transfer.organization = @organization
     if @rubygem_transfer.save
-      redirect_to rubygem_transfer_users_path(@rubygem.slug)
+      redirect_to rubygems_transfer_rubygems_path
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

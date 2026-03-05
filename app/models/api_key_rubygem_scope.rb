@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApiKeyRubygemScope < ApplicationRecord
   belongs_to :api_key
   belongs_to :ownership

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEvent::Version::YankedComponentPreview < Lookbook::Preview
   def default(rubygem: Rubygem.first!, **additional)
     additional[:number] ||= "0.0.1"

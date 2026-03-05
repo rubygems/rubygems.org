@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class BaseActionTest < ActiveSupport::TestCase
@@ -54,7 +56,7 @@ class BaseActionTest < ActiveSupport::TestCase
 
     action.handle(**args)
 
-    assert_equal [{ type: :error, body: "Cannot enumerate", timeout: nil }], action.response[:messages]
+    assert_equal [type: :error, body: "Cannot enumerate", timeout: nil], action.response[:messages]
     assert_equal :keep_modal_open, action.response[:type]
   end
 

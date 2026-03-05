@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems/package'
 
 Gem.load_yaml
@@ -6,5 +8,6 @@ Gem::SafeYAML.aliases_enabled = false
 
 Gem::Package.class_eval do
   include SemanticLogger::Loggable
+
   delegate :warn, to: :logger
 end

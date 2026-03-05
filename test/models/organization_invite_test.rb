@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class OrganizationInviteTest < ActiveSupport::TestCase
@@ -11,6 +13,12 @@ class OrganizationInviteTest < ActiveSupport::TestCase
 
   test "to_membership returns nil when invite is for outside contributor role" do
     invite = create(:organization_invite, role: :outside_contributor)
+
+    assert_nil invite.to_membership
+  end
+
+  test "to_membership returns nil when role is empty" do
+    invite = create(:organization_invite, role: "")
 
     assert_nil invite.to_membership
   end

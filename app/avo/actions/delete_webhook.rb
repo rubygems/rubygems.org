@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::DeleteWebhook < Avo::Actions::ApplicationAction
   self.name = "Delete Webhook"
   self.visible = lambda {

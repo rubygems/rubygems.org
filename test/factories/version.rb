@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :version do
     authors { ["Joe User"] }
@@ -19,6 +21,12 @@ FactoryBot.define do
     # sha256 is calculated in Pusher, we don't use pusher to create versions in tests
     sha256 { "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=" }
     spec_sha256 { Digest::SHA2.base64digest("#{rubygem.name}-#{number}-#{platform}") }
+
+    trait :reindex do
+      after(:create) do |version|
+        version.rubygem.reindex(refresh: true)
+      end
+    end
 
     trait :yanked do
       indexed { false }

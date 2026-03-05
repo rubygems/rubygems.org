@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if Rails.env.local?
   require 'prosopite/middleware/rack'
   Rails.configuration.middleware.use(Prosopite::Middleware::Rack)

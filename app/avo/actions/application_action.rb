@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ApplicationAction < Avo::BaseAction
   include SemanticLogger::Loggable
 
@@ -11,6 +13,7 @@ class Avo::Actions::ApplicationAction < Avo::BaseAction
     include SemanticLogger::Loggable
 
     include ActiveSupport::Callbacks
+
     define_callbacks :handle, terminator: lambda { |target, result_lambda|
       result_lambda.call
       target.errored?

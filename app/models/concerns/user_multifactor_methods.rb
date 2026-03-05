@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserMultifactorMethods
   extend ActiveSupport::Concern
 
@@ -70,6 +72,12 @@ module UserMultifactorMethods
     self.mfa_level = default_level
     self.new_mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
     self.mfa_hashed_recovery_codes = new_mfa_recovery_codes.map { |code| BCrypt::Password.create(code) }
+  end
+
+  def reset_mfa_attributes
+    self.mfa_level = "disabled"
+    self.new_mfa_recovery_codes = nil
+    self.mfa_hashed_recovery_codes = []
   end
 
   private

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organizations::Onboarding::GemsController < Organizations::Onboarding::BaseController
   def edit
   end
@@ -6,7 +8,7 @@ class Organizations::Onboarding::GemsController < Organizations::Onboarding::Bas
     if @organization_onboarding.update(onboarding_gems_params)
       redirect_to organization_onboarding_users_path
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

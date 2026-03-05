@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::UserEvent::Email::SentComponentPreview < Lookbook::Preview
   # @param subject text
   # @param from email

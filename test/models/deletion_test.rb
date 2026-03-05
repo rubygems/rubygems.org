@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class DeletionTest < ActiveSupport::TestCase
@@ -12,7 +14,6 @@ class DeletionTest < ActiveSupport::TestCase
     @gem_file.rewind
     @version = Version.last
     @spec_rz = RubygemFs.instance.get("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    import_and_refresh
   end
 
   teardown do
@@ -137,7 +138,7 @@ class DeletionTest < ActiveSupport::TestCase
     end
 
     should "enqueue rstuf removal" do
-      assert_enqueued_with(job: Rstuf::RemoveJob, args: [{ version: @version }]) do
+      assert_enqueued_with(job: Rstuf::RemoveJob, args: [version: @version]) do
         delete_gem
       end
     end
@@ -160,7 +161,7 @@ class DeletionTest < ActiveSupport::TestCase
 
     perform_enqueued_jobs
 
-    response = Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: @version.rubygem_id
+    response = Searchkick.client.get index: Rubygem.searchkick_index.name, id: @version.rubygem_id
 
     assert response["_source"]["yanked"]
   end
@@ -261,7 +262,7 @@ class DeletionTest < ActiveSupport::TestCase
       @deletion = delete_gem
       assert_enqueued_jobs 1, only: Indexer do
         assert_enqueued_jobs 1, only: UploadVersionsFileJob do
-          assert_enqueued_with job: UploadInfoFileJob, args: [{ rubygem_name: @gem_name }] do
+          assert_enqueued_with job: UploadInfoFileJob, args: [rubygem_name: @gem_name] do
             @deletion.restore!
           end
         end

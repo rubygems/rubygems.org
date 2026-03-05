@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :oidc_provider, class: "OIDC::Provider" do
     sequence(:issuer) { |n| "https://#{n}.token.actions.githubusercontent.com" }

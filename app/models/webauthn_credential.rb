@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebauthnCredential < ApplicationRecord
   belongs_to :user
 
@@ -28,9 +30,7 @@ class WebauthnCredential < ApplicationRecord
 
   def disable_user_mfa
     return unless user.no_mfa_devices?
-    user.mfa_level = :disabled
-    user.new_mfa_recovery_codes = nil
-    user.mfa_hashed_recovery_codes = []
+    user.reset_mfa_attributes
     user.save!(validate: false)
   end
 end

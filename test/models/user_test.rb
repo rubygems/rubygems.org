@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
@@ -641,6 +643,10 @@ class UserTest < ActiveSupport::TestCase
           refute_predicate @user, :mfa_required?
         end
       end
+    end
+
+    should "ignore the token column" do
+      assert_includes @user.class.ignored_columns, "token"
     end
   end
 

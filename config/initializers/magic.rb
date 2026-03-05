@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ENV["MAGIC"].nil?
   # Be resilient to the gem being moved after installation, as is done in the docker image
   glob = File.join(
