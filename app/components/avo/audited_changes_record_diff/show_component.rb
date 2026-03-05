@@ -50,7 +50,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
       unless field.visible?
         if changes.key?(database_id)
           # dummy field to avoid ever printing out the contents... we just want the label
-          yield (deleted ? :old : :changed), Avo::Fields::BooleanField::ShowComponent.new(field: field)
+          yield (deleted ? :old : :changed), Avo::Fields::TextField::ShowComponent.new(field: field)
         end
         next
       end
