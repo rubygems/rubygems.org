@@ -105,7 +105,7 @@ class SessionsController < Clearance::SessionsController
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
         set_login_flash
-        redirect_to(url_after_create(authentication_method:))
+        redirect_to(url_after_create)
       else
         login_failure(status.failure_message)
       end
