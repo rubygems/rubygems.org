@@ -171,3 +171,9 @@ Rails/ThreeStateBooleanColumn:
 
 Lint/UselessConstantScoping:
   Enabled: false
+
+Style/OneClassPerFile:
+  Exclude:
+    - test/test_helper.rb
+    - test/application_system_test_case.rb
+    - test/functional/concerns/webauthn_verifiable_test.rb
