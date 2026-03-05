@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::OrganizationOnboardingPolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     def resolve

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveLegacyApiKeyScopeColumnsFromApiKeys < ActiveRecord::Migration[7.1]
   def change
     # The columns are ignored

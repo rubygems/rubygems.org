@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rubygems::Transfer::OrganizationsController < Rubygems::Transfer::BaseController
   rescue_from ActiveRecord::RecordNotFound, with: -> { redirect_to dashboard_path }
 

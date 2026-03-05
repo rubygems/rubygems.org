@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSendgridEvents < ActiveRecord::Migration[5.2]
   def change
     create_table :sendgrid_events do |t|

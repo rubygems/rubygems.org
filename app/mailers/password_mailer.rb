@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordMailer < ApplicationMailer
   def change_password(user)
     @user = User.find(user["id"])

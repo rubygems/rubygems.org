@@ -142,9 +142,6 @@ Style/StringLiterals:
   Exclude:
     - config/**/*
 
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 Style/EmptyMethod:
   EnforcedStyle: expanded
 

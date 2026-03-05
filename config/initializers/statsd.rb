@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 StatsD.logger = SemanticLogger[StatsD]
 
 StatsD.singleton_client = StatsD.singleton_client.clone_with_options(

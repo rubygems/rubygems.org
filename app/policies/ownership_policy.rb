@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OwnershipPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
   end

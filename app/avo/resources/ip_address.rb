@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::IpAddress < Avo::BaseResource
   self.title = :ip_address
   self.includes = []

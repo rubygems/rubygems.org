@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::UserEvent::Login::SuccessComponentPreview < Lookbook::Preview
   def password
     event = build_event(

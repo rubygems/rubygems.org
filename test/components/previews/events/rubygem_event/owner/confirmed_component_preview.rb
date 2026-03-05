@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEvent::Owner::ConfirmedComponentPreview < Lookbook::Preview
   # @param owner text
   def default(owner: "Owner", user: User.first!)

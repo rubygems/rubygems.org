@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOIDCTrustedPublisherGitHubActions < ActiveRecord::Migration[7.0]
   def change
     create_table :oidc_trusted_publisher_github_actions do |t|

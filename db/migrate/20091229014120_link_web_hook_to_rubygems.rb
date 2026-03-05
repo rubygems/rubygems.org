@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LinkWebHookToRubygems < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :web_hooks, :gem_name

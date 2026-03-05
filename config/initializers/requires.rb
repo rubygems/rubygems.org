@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rdoc/markup'
 require 'rdoc/markup/to_html'
 require 'patterns'

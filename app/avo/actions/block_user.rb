@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::BlockUser < Avo::Actions::ApplicationAction
   self.name = "Block User"
   self.visible = lambda {

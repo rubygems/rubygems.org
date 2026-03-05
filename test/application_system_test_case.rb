@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # Workaround for ChromeDriver bug where Turbo Drive DOM replacement causes

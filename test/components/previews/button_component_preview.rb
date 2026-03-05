@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ButtonComponentPreview < Lookbook::Preview
   layout "hammy_component_preview"
 

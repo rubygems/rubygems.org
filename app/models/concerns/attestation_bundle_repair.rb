@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Repairs known issues in Sigstore attestation bundles that prevent successful parsing.
 #
 # An attestation is considered repairable when it has one or both of these issues:

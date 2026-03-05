@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveVersionFromDependencies < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :dependencies, :version_id

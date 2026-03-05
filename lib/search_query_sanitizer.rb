@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sanitizes user search queries to protect against DoS attacks targeting OpenSearch.
 #
 # This class validates and transforms search queries to prevent abuse patterns that

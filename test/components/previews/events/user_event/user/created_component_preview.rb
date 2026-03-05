@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::UserEvent::User::CreatedComponentPreview < Lookbook::Preview
   # @param email email
   def default(email: "user@example.com")

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::GeoipInfo < Avo::BaseResource
   self.includes = []
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TotpsController < ApplicationController
   include MfaExpiryMethods
   include RequireMfa

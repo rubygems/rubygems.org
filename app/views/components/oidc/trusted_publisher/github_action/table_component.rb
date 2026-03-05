@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::TrustedPublisher::GitHubAction::TableComponent < ApplicationComponent
   prop :github_action, reader: :public
 

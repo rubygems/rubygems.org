@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddForeignKeys < ActiveRecord::Migration[7.1]
   def change
     add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk", validate: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rubygems::Transfer::ConfirmationsController < Rubygems::Transfer::BaseController
   layout "onboarding"
   before_action :ensure_valid_transfer

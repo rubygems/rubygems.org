@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
   self.title = :token
   self.includes = []

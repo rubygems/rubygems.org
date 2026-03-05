@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   include ApiKeyable
   include JwtValidation

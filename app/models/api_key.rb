@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApiKey < ApplicationRecord
   class ScopeError < RuntimeError; end
 

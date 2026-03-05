@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConfirmedUserGuard < Clearance::SignInGuard
   def call
     if user_unconfirmed?

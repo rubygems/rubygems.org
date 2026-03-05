@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OauthHelpers
   def stub_github_info_request(info_data)
     stub_request(:post, "https://api.github.com/graphql")

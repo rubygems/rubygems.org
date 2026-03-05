@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::YankRubygemsForUser < Avo::Actions::ApplicationAction
   self.name = "Yank all Rubygems"
   self.visible = lambda {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Fields::EventAdditionalField < Avo::Fields::BaseField
   def nested_field
     return unless record

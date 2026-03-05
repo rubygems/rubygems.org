@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SpecificationPolicy < Gem::SpecificationPolicy
   def error(statement)
     return if statement.start_with?("#{Gem::SpecificationPolicy::LAZY} is not a")

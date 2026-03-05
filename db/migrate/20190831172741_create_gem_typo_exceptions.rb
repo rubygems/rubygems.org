@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGemTypoExceptions < ActiveRecord::Migration[5.2]
   def change
     create_table :gem_typo_exceptions do |t|

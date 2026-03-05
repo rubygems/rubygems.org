@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # Not to be confused with Api::V1::WebauthnVerificationsControllerTest. This is for the UI.

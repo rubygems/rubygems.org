@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
-  HEADER_KEYID = "GITHUB-PUBLIC-KEY-IDENTIFIER".freeze
-  HEADER_SIGNATURE = "GITHUB-PUBLIC-KEY-SIGNATURE".freeze
+  HEADER_KEYID = "GITHUB-PUBLIC-KEY-IDENTIFIER"
+  HEADER_SIGNATURE = "GITHUB-PUBLIC-KEY-SIGNATURE"
 
-  DEPS_DEV_HEADER_KEYID = "DepsDev-Public-Key-Identifier".freeze
-  DEPS_DEV_HEADER_SIGNATURE = "DepsDev-Public-Key-Signature".freeze
+  DEPS_DEV_HEADER_KEYID = "DepsDev-Public-Key-Identifier"
+  DEPS_DEV_HEADER_SIGNATURE = "DepsDev-Public-Key-Signature"
 
   KEYS_RESPONSE_BODY =
     { "public_keys" => [

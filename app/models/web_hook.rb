@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class WebHook < ApplicationRecord
-  GLOBAL_PATTERN = "*".freeze
-  TOO_MANY_FAILURES_DISABLED_REASON = "too many failures since the last success".freeze
+  GLOBAL_PATTERN = "*"
+  TOO_MANY_FAILURES_DISABLED_REASON = "too many failures since the last success"
   FAILURE_DISABLE_THRESHOLD = 25
   FAILURE_DISABLE_DURATION = 1.month
 

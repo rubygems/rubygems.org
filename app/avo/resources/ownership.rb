@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Ownership < Avo::BaseResource
   self.title = :cache_key
   self.includes = []

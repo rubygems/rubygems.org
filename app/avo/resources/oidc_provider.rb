@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::OIDCProvider < Avo::BaseResource
   self.title = :issuer
   self.includes = []

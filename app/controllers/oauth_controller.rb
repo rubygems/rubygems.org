@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OAuthController < ApplicationController
   include GitHubOAuthable
 

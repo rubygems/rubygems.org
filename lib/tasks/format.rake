@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "Format code with RuboCop and Prettier"
 task format: %i[format:ruby format:js]
 

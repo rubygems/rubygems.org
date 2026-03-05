@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ResetUser2fa < Avo::Actions::ApplicationAction
   self.name = "Reset User 2FA"
   self.visible = lambda {

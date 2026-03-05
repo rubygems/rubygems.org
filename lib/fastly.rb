@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Fastly
   concerning :TraceTagging do
     class_methods do

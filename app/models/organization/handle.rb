@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organization::Handle
   RESTFUL_ACTIONS = %w[
     create

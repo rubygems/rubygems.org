@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AvatarsController < ApplicationController
   before_action :find_user
   before_action :set_size

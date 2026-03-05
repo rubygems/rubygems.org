@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::MaintenanceTasksRun < Avo::BaseResource
   self.includes = []
   self.model_class = ::MaintenanceTasks::Run

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module GitHubOAuthable
   extend ActiveSupport::Concern
   include SemanticLogger::Loggable
 
-  INFO_QUERY = <<~GRAPHQL.freeze
+  INFO_QUERY = <<~GRAPHQL
     query($organization_name:String!) {
       viewer {
         name

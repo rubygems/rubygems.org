@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LogTicket < ApplicationRecord
   enum :backend, { s3: 0, local: 1 }
   enum :status, %i[pending processing failed processed].index_with(&:to_s)

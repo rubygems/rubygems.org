@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::RubygemTransfer < Avo::BaseResource
   # self.includes = []
   # self.attachments = []

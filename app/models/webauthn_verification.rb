@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebauthnVerification < ApplicationRecord
   belongs_to :user
 

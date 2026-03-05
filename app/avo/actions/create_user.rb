@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::CreateUser < Avo::Actions::ApplicationAction
   self.name = "Create User"
   self.visible = lambda {

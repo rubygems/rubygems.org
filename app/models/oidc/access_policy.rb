@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::AccessPolicy < ApplicationModel
   class Statement < ApplicationModel
     def match_jwt?(jwt)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::RepairAttestation < Avo::Actions::ApplicationAction
   self.name = "Repair attestation"
   self.visible = lambda {

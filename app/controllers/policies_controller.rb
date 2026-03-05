@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PoliciesController < ApplicationController
   before_action :find_policy, only: :show
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[acknowledge]

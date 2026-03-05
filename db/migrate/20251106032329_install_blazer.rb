@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InstallBlazer < ActiveRecord::Migration[8.0]
   def change
     create_table :blazer_queries do |t|

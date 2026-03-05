@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rack::Attack
   include SemanticLogger::Loggable
 
@@ -9,8 +11,8 @@ class Rack::Attack
   PUSH_LIMIT_PERIOD = 60.minutes
   EXP_BASE_LIMIT_PERIOD = 300.seconds
   EXP_BACKOFF_LEVELS = [1, 2].freeze
-  PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
-  PUSH_THROTTLE_PER_USER_KEY = "api/exp/push/user".freeze
+  PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip"
+  PUSH_THROTTLE_PER_USER_KEY = "api/exp/push/user"
 
   ### Prevent Brute-Force Login Attacks ###
 

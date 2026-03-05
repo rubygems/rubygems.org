@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "digest/sha2"
 
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeatureFlagActor
   attr_reader :flipper_id, :record
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEvenMoreIndexesToVersions < ActiveRecord::Migration[4.2]
   def self.up
     add_index :versions, :prerelease

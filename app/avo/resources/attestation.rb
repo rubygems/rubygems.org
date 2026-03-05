@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Attestation < Avo::BaseResource
   self.title = :id
   self.includes = [:version]

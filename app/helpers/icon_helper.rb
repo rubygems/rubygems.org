@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IconHelper
   # size is in tailwind units (6 = 24px)
   def icon_tag(name, size: 6, **options)

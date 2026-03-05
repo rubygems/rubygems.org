@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::RubygemsController < Api::BaseController
   before_action :authenticate_with_api_key, except: %i[show reverse_dependencies]
   before_action :verify_user_api_key, except: %i[show reverse_dependencies create]

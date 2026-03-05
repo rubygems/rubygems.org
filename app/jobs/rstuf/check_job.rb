@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rstuf::CheckJob < Rstuf::ApplicationJob
   class RetryException < StandardError
   end

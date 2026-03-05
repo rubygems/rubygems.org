@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Filters::ScopeBooleanFilter < Avo::Filters::BooleanFilter
   def name
     arguments.fetch(:name) { self.class.to_s.demodulize.underscore.sub(/_filter$/, "").titleize }

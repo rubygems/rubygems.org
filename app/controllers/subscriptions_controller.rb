@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubscriptionsController < ApplicationController
   before_action :redirect_to_signin, only: :index, unless: :signed_in?
   before_action :redirect_to_new_mfa, only: :index, if: :mfa_required_not_yet_enabled?

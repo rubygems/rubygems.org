@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OwnersHelper
   def owner_i18n_key(owner, user)
     owner.id == user.id ? "self" : "others"
