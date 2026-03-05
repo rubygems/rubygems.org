@@ -146,15 +146,15 @@ class GemDownload < ApplicationRecord
       full_names = ary.map { |full_name, _| full_name }.uniq
       versions = Version.select(:full_name, :rubygem_id, :id).where(full_name: full_names)
 
-      versions.each_with_object({}) do |version, hash|
-        hash[version.full_name] = [version, 0]
+      versions.to_h do |version|
+        [version.full_name, [version, 0]]
       end
     end
 
     def most_recent_version_downloads(rubygem_ids)
       latest_downloads = joins(:version).merge(Version.latest.where(platform: "ruby")).where(rubygem_id: rubygem_ids)
 
-      updates_by_version = latest_downloads.each_with_object({}) { |download, hash| hash[download.rubygem_id] = download.count }
+      updates_by_version = latest_downloads.to_h { |download| [download.rubygem_id, download.count] }
       # use most_recent_version to get downloads count missing in latest_downloads
       rubygem_ids.each { |id| updates_by_version[id] = Rubygem.find(id).most_recent_version.downloads_count unless updates_by_version[id] }
 
