@@ -3,6 +3,7 @@
 class Api::V1::ActivitiesController < Api::BaseController
   def latest
     rubygems = Rubygem.includes(:linkset, :gem_download, latest_version: %i[dependencies gem_download])
+      .joins(:latest_version)
       .with_versions
       .order(created_at: :desc)
       .limit(50)
