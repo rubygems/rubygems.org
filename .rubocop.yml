@@ -13,7 +13,8 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db/(migrate/|schema\.rb)|tmp|server)($|\/.*)/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 3.4
+  ParserEngine: parser_prism
+  TargetRubyVersion: 4.0
   NewCops: enable
 
 Rails/SkipsModelValidations:
