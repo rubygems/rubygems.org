@@ -75,7 +75,6 @@ en:
         full_name: Full name
         handle: Username
         password: Password
-        password_confirmation: Confirm password
       ownership/role:
         owner: Owner
         maintainer: Maintainer

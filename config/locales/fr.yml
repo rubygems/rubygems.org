@@ -75,7 +75,6 @@ fr:
         full_name: Nom complet
         handle: Pseudonyme
         password: Mot de passe
-        password_confirmation:
       ownership/role:
         owner:
         maintainer:

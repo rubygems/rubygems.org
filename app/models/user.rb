@@ -84,7 +84,6 @@ class User < ApplicationRecord
   validates :password,
     length: { minimum: 10 },
     unpwn: true,
-    confirmation: true,
     allow_blank: true, # avoid double errors with can't be blank
     unless: :skip_password_validation?
 

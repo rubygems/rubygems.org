@@ -70,7 +70,6 @@ nl:
         full_name: Voor-en achternaam
         handle: Gebruikersnaam
         password: Wachtwoord
-        password_confirmation:
       ownership/role:
         owner:
         maintainer:

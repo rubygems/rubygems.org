@@ -80,7 +80,6 @@ de:
         full_name: Vollständiger Name
         handle: Benutzername
         password: Passwort
-        password_confirmation:
       ownership/role:
         owner:
         maintainer:

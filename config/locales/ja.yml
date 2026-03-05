@@ -71,7 +71,6 @@ ja:
         full_name: フルネーム
         handle: ユーザー名
         password: パスワード
-        password_confirmation:
       ownership/role:
         owner: 所有者
         maintainer: メンテナ

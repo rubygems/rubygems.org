@@ -71,7 +71,6 @@ zh-CN:
         full_name: 全名
         handle: 用户名
         password: 密码
-        password_confirmation:
       ownership/role:
         owner:
         maintainer:
