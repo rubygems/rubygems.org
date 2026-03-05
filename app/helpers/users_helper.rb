@@ -31,7 +31,7 @@ module UsersHelper
   private
 
   def obfuscate_part(str, visible_chars)
-    return str if str.length <= visible_chars + 1
+    return "*" * str.length if str.length <= visible_chars
 
     visible = str[0, visible_chars]
     hidden_length = str.length - visible_chars

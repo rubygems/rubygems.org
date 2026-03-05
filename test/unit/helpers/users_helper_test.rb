@@ -11,11 +11,15 @@ class UsersHelperTest < ActionView::TestCase
     end
 
     should "handle very short email parts" do
-      assert_equal "j@x.io", obfuscate_email("j@x.io")
+      assert_equal "*@*.io", obfuscate_email("j@x.io")
+    end
+
+    should "handle two character local part" do
+      assert_equal "h*@e******.com", obfuscate_email("hi@example.com")
     end
 
     should "handle single character local part" do
-      assert_equal "a@e******.com", obfuscate_email("a@example.com")
+      assert_equal "*@e******.com", obfuscate_email("a@example.com")
     end
 
     should "handle subdomain in TLD" do
