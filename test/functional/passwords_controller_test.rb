@@ -354,8 +354,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "redirect to the sign in page" do
         put password_path, params: {
           password_reset: { reset_api_key: "true", reset_api_keys: "true",
-                            password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                            }
+                            password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -374,8 +373,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         get edit_password_path, params: { token: @user.confirmation_token }
         travel 16.minutes do
           put password_path, params: {
-            password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                              }
+            password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
           }
         end
 
@@ -416,8 +414,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "change password but not change api_key" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                            }
+          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -434,8 +431,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "change password but not change api_key" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                            }
+          password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -452,8 +448,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "change password and reset api_key" do
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
-          password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                            }
+          password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path
@@ -474,8 +469,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         get edit_password_path, params: { token: @user.confirmation_token }
         put password_path, params: {
           password_reset: { reset_api_key: "true", reset_api_keys: "true",
-                            password: PasswordHelpers::SECURE_TEST_PASSWORD,
-                            }
+                            password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
 
         assert_redirected_to sign_in_path

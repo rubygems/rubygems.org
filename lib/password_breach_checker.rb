@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordBreachChecker
   def initialize(password)
     @password = Pwned::Password.new(password.to_s, request_options: { read_timeout: 3, open_timeout: 3 })

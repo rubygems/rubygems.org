@@ -154,7 +154,7 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
-  def url_after_create
+  def url_after_create(_authentication_method: nil)
     if session.delete(:password_compromised)
       user = current_user
       initiate_compromised_password_reset!(user)
