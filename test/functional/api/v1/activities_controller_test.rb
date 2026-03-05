@@ -44,7 +44,7 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
 
         get :latest, format: :json
         gems = JSON.load @response.body
-        gem_names = gems.map { |g| g["name"] }
+        gem_names = gems.pluck("name")
 
         assert_not_includes gem_names, "beta_only"
       end
