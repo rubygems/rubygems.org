@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::DependenciesController < Api::BaseController
   def index
     cache_expiry_headers(expiry: 30, fastly_expiry: 60)

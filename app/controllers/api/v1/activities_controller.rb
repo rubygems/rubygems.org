@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::ActivitiesController < Api::BaseController
   def latest
     rubygems = Rubygem.includes(:linkset, :gem_download, latest_version: %i[dependencies gem_download])

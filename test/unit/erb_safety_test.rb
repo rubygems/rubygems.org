@@ -5,6 +5,7 @@ require "better_html/test_helper/safe_erb_tester"
 
 class ErbSafetyTest < ActiveSupport::TestCase
   include BetterHtml::TestHelper::SafeErbTester
+
   ERB_GLOB = File.join(
     "app", "views", "**", "{*.htm,*.html,*.htm.erb,*.html.erb,*.html+*.erb}"
   )

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 password = "super-secret-password"
 
 org = Organization.create_with(
@@ -213,11 +215,11 @@ author_oidc_api_key_role = author.oidc_api_key_roles.create_with(
       principal: {
         oidc: "https://token.actions.githubusercontent.com"
       },
-      conditions: [{
+      conditions: [
         operator: "string_equals",
         claim: "repository",
         value: "rubygems/rubygem0"
-      }]
+      ]
     ]
   }
 ).find_or_create_by!(
@@ -325,6 +327,8 @@ author.webauthn_credentials.create_with(nickname: "segiddins development")
   )
 
 IpAddress.find_or_create_by!(ip_address: "127.0.0.1")
+
+FeatureFlag.enable_globally(:organizations)
 
 puts <<~MESSAGE # rubocop:disable Rails/Output
   Four users were created, you can login with following combinations:

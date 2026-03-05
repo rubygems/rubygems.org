@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::TrustedPublisher::GitHubAction::FormComponentPreview < Lookbook::Preview
   # @param factory select "factory for the containing trusted publisher" { choices: [oidc_rubygem_trusted_publisher, oidc_pending_trusted_publisher] }
   def default(factory: :oidc_rubygem_trusted_publisher, environment: nil, repository_name: "rubygem2", workflow_filename: "push_gem.yml")
@@ -10,6 +12,7 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponentPreview < Lookbook::Pre
     include Phlex::Rails::Helpers::FormWith
 
     extend PropInitializer::Properties
+
     prop :form_object
 
     def view_template

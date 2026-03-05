@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::DeletionsController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :verify_user_api_key
@@ -22,7 +24,7 @@ class Api::V1::DeletionsController < Api::BaseController
     else
       StatsD.increment "yank.failure"
       render plain: response_with_mfa_warning(@deletion.errors.full_messages.to_sentence),
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
   end
 

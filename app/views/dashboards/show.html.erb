@@ -90,7 +90,7 @@
   <%= render CardComponent.new do |c| %>
     <%= c.head do %>
       <%= c.title t(".organizations"), icon: "organizations", count: current_user.memberships.count %>
-      <%= link_to t("view_all"), "#", class: "text-sm text-orange-500" %>
+      <%= link_to t("view_all"), organizations_path, class: "text-sm text-orange-500" %>
     <% end %>
     <%= c.divided_list do %>
       <% current_user.memberships.preload(:organization).each do |membership| %>

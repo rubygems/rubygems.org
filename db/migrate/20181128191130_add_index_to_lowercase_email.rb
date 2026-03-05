@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIndexToLowercaseEmail < ActiveRecord::Migration[5.2]
   def up
     add_index "users", "lower(email) varchar_pattern_ops", name: "index_users_on_lower_email"

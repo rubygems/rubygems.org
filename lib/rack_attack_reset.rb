@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RackAttackReset
   class << self
     def gem_push_backoff(remote_ip, user_display_id)

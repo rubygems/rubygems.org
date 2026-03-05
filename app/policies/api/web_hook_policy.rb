@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::WebHookPolicy < Api::ApplicationPolicy
   class Scope < Api::ApplicationPolicy::Scope
   end

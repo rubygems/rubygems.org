@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordsController < ApplicationController
   include MfaExpiryMethods
   include RequireMfa
@@ -42,7 +44,7 @@ class PasswordsController < ApplicationController
       redirect_to signed_in? ? dashboard_path : sign_in_path
     else
       flash.now[:alert] = t(".failure")
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -61,7 +63,7 @@ class PasswordsController < ApplicationController
     return if @email.present?
 
     flash.now[:alert] = t(".failure_on_missing_email")
-    render template: "passwords/new", status: :unprocessable_entity
+    render template: "passwords/new", status: :unprocessable_content
   end
 
   def validate_confirmation_token

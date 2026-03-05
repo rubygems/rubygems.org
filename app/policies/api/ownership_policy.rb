@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::OwnershipPolicy < Api::ApplicationPolicy
   class Scope < Api::ApplicationPolicy::Scope
   end

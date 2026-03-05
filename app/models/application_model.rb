@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationModel
   include ActiveModel::Model
   include ActiveModel::Attributes
@@ -64,9 +66,9 @@ class ApplicationModel
     included do
       def ==(other)
         self.class == other.class &&
-          ((attributes.keys | other.attributes.keys).all? do |k|
+          (attributes.keys | other.attributes.keys).all? do |k|
             self[k] == other[k]
-          end)
+          end
       end
 
       alias_method :eql?, :==

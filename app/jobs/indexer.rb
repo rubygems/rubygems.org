@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Indexer < ApplicationJob
   extend StatsD::Instrument
   include TraceTagger
@@ -5,14 +7,15 @@ class Indexer < ApplicationJob
   queue_with_priority PRIORITIES.fetch(:push)
 
   include GoodJob::ActiveJobExtensions::Concurrency
+
   good_job_control_concurrency_with(
     # Maximum number of jobs with the concurrency key to be
     # concurrently enqueued (excludes performing jobs)
     #
     # Because the indexer job only uses current state at time of perform,
     # it makes no sense to enqueue more than one at a time
-    enqueue_limit: good_job_concurrency_enqueue_limit(default: 1),
-    perform_limit: good_job_concurrency_perform_limit(default: 1),
+    enqueue_limit: 1,
+    perform_limit: 1,
     key: name
   )
 

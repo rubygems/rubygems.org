@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 class Rstuf::Client
   include SemanticLogger::Loggable
 
-  Error = Class.new(StandardError)
+  class Error < StandardError
+  end
 
   def self.post_artifacts(targets)
     response = connection.post("/api/v1/artifacts/", { artifacts: targets })

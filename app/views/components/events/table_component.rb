@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Events::TableComponent < ApplicationComponent
-  include Phlex::DeferredRender
   include Phlex::Rails::Helpers::DistanceOfTimeInWordsToNow
   include Phlex::Rails::Helpers::TimeTag
   include Phlex::Rails::Helpers::DOMClass

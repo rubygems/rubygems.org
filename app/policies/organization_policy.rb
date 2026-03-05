@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OrganizationPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
   end
@@ -21,6 +23,8 @@ class OrganizationPolicy < ApplicationPolicy
   def add_gem?
     organization_member_with_role?(user, :admin) || deny(t(:forbidden))
   end
+
+  alias transfer_gem? add_gem?
 
   def remove_gem?
     organization_member_with_role?(user, :owner) || deny(t(:forbidden))

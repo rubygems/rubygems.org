@@ -1,0 +1,76 @@
+<% @title = t('.title') %>
+
+<%= prose do %>
+  <h1>Support RubyGems.org</h1>
+  <p>
+    RubyGems.org is a critical part of the Ruby ecosystem, processing millions of downloads each day and enabling developers around the world to build with confidence. As a community-run service overseen by Ruby Central, a 501(c)(3) nonprofit, we rely on the support of individuals and organizations who believe in open source and want to keep RubyGems.org secure and reliable long-term. Specifically, we fund this service through generous support from RubyGems Supporters, <a href="https://rubycentral.org/corporate-sponsorship/">Ruby Central’s Corporate Sponsorship Program</a>, Ruby Central memberships, and Infrastructure Donors.
+  </p>
+  <p>
+    The RubyGems Supporter Program is an easy way for you or your company to directly contribute to the maintenance, operations, and growth of RubyGems.org. You can find out more about this program <a href="https://rubycentral.org/news/rubygems-org-funding-model-a-new-path-for-community-led-growth/">here</a>.
+  </p>
+  <div class="my-6">
+    <%= render ButtonComponent.new("Become a Supporter", "https://rubycentral.org/open-source/#/portal/signup", type: :link, color: :primary, size: :large, style: :fill) %>
+    <%# <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-3">
+      <span class="inline-flex items-center">
+        <svg class="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        Tax-deductible donation to Ruby Central (501c3)
+      </span>
+    </p> %>
+  </div>
+  <h2>Open Source Sponsors</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <a href="https://www.shopify.com/" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/shopify.png", alt: "Shopify", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <a href="https://gusto.com/" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/gusto.png", alt: "Gusto", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <a href="https://sentry.io/welcome/" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/sentry.png", alt: "Sentry", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+  </div>
+
+  <h2>RubyGems Supporters</h2>
+  <h3>Supporter Plus</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <a href="https://www.cloudamqp.com/" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/cloudamqp-dark.svg", alt: "CloudAMQP", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <a href="https://gobetweenlab.com/" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= image_tag "supporters/gobetween-dark.png", alt: "Go Between Lab", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <a href="https://serpapi.com/?utm_source=rubygems.org" class="flex justify-around rounded-sm min-h-[120px] bg-gray-200">
+        <%= image_tag "supporters/serpapi.png", alt: "SerpApi", class: "object-contain max-w-[210px] max-h-[110px]"%>
+    </a>
+    <div class="flex items-center justify-center text-center rounded-sm min-h-[120px] bg-gray-200">
+      <span class="dark:text-neutral-950 no-underline">3 Anonymous</span>
+    </div>
+  </div>
+
+  <h2>Infrastructure Donors</h2>
+  <p>
+    Our infrastructure donors provide core services that keep RubyGems.org running smoothly and reliably, such as hosting, monitoring, security, and more.  They play an outsized role in keeping the service sustainable.
+  </p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <a href="https://aws.amazon.com/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "aws", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://dnsimple.link/resolving-rubygems" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "dnsimple", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://www.datadoghq.com/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "datadog", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://www.fastly.com/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "fastly", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://www.honeybadger.io/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "honeybadger", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+    <a href="https://mend.io/" class="flex items-center justify-around rounded-sm min-h-[120px] bg-gray-200">
+      <%= icon_tag "mend-io", size: 24, class: "object-contain  fill-inherit max-w-[210px] max-h-[110px]" %>
+    </a>
+  </div>
+<% end %>

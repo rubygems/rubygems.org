@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class RefreshOIDCProviderJobTest < ActiveJob::TestCase
@@ -112,7 +114,7 @@ class RefreshOIDCProviderJobTest < ActiveJob::TestCase
 
   context "when the configuration endpoint returns an invalid configuration" do
     setup do
-      stub_requests(config_body: { "jwks_uri" => nil })
+      stub_requests(config_body: { jwks_uri: nil })
     end
 
     should "raise an error" do

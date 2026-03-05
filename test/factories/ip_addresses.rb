@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :ip_address do
     sequence(:ip_address) { |n| IPAddr.new(n, Socket::AF_INET6).to_s }

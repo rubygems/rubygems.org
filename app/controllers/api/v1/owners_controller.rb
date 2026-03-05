@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::OwnersController < Api::BaseController
   before_action :authenticate_with_api_key, except: %i[show gems]
   before_action :verify_with_otp, except: %i[show gems]
@@ -23,7 +25,7 @@ class Api::V1::OwnersController < Api::BaseController
                                               "Ownership access will be enabled after the user clicks on the " \
                                               "confirmation mail sent to their email.")
     else
-      render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_entity
+      render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_content
     end
   end
 
@@ -40,7 +42,7 @@ class Api::V1::OwnersController < Api::BaseController
     if ownership.update(ownership_params)
       render plain: response_with_mfa_warning("Owner updated successfully.")
     else
-      render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_entity
+      render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_content
     end
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::OrganizationOnboarding < Avo::BaseResource
   self.title = :organization_name
   self.includes = [:invites]
@@ -19,8 +21,7 @@ class Avo::Resources::OrganizationOnboarding < Avo::BaseResource
     field :updated_at, as: :date_time
 
     tabs style: :pills do
-      field :users, as: :has_many, through: :invites
-      field :invites, as: :has_many, use_resource: Avo::Resources::OrganizationOnboardingInvite
+      field :users, as: :has_many, through: :organization
       field :organization, as: :has_one
     end
   end

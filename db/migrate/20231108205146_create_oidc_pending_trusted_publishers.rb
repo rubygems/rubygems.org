@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOIDCPendingTrustedPublishers < ActiveRecord::Migration[7.0]
   def change
     create_table :oidc_pending_trusted_publishers do |t|

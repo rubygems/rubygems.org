@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Deletion < Avo::BaseResource
   self.includes = [:version]
 

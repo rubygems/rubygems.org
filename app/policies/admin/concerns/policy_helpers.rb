@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin::Concerns::PolicyHelpers
   extend ActiveSupport::Concern
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class SendgridWebhookTest < ActionDispatch::IntegrationTest
@@ -5,7 +7,7 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
 
   test "responds 200 OK to valid credentials" do
     params = [
-      { sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i }
+      sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i
     ]
     post "/sendgrid_events", params: params, as: :json, headers: authorization_header
 
@@ -14,7 +16,7 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
 
   test "responds 401 Unauthorized to invalid credentials" do
     params = [
-      { sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i }
+      sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i
     ]
     post "/sendgrid_events", params: params, as: :json, headers: authorization_header(password: "wrong-password")
 
@@ -24,7 +26,7 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
   test "errors if credentials configured on server are invalid" do
     SendgridEventsController.any_instance.stubs(:http_basic_authentication_options_valid?).returns(false)
     params = [
-      { sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i }
+      sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i
     ]
 
     error = assert_raises(RuntimeError) do

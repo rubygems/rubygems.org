@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveDoorkeeperTables < ActiveRecord::Migration[4.2]
   def up
     drop_table :oauth_applications

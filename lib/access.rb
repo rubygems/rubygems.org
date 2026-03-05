@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Access
   MAINTAINER = 50
   ADMIN = 60
   OWNER = 70
 
-  DEFAULT_ROLE = "owner".freeze
+  DEFAULT_ROLE = "owner"
 
   ROLES = {
     "maintainer" => MAINTAINER,

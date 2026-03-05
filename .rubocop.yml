@@ -14,11 +14,8 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
   ParserEngine: parser_prism
-  TargetRubyVersion: 3.4
+  TargetRubyVersion: 4.0
   NewCops: enable
-
-Rails:
-  Enabled: true
 
 Rails/SkipsModelValidations:
   Enabled: false
@@ -52,6 +49,13 @@ Rails/Output:
   Exclude:
     - app/views/**/*_view.rb
     - app/views/**/*_component.rb
+
+# Disable block forwarding style enforcement - let context determine choice
+Naming/BlockForwarding:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
 
 Layout/ArgumentAlignment:
   Enabled: false
@@ -116,12 +120,6 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: true
-
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: true
-
 Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
@@ -131,7 +129,6 @@ Naming/AccessorMethodName:
     - app/controllers/application_controller.rb
 
 Rails/SafeNavigation:
-  Enabled: true
   ConvertTry: true
 
 Style/Documentation:
@@ -145,147 +142,17 @@ Style/StringLiterals:
   Exclude:
     - config/**/*
 
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 Style/EmptyMethod:
   EnforcedStyle: expanded
 
 Style/FormatStringToken:
   Enabled: false
 
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
-Style/ExplicitBlockArgument:
-  Enabled: true
-
-Style/GlobalStdStream:
-  Enabled: true
-
-Style/OptionalBooleanParameter:
-  Enabled: true
-
-Style/SingleArgumentDig:
-  Enabled: true
-
-Style/StringConcatenation:
-  Enabled: true
-
-Lint/DuplicateElsifCondition:
-  Enabled: true
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
-  Enabled: true
-
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: true
-
-Lint/MixedRegexpCaptureTypes:
-  Enabled: true
-
-Lint/BinaryOperatorWithIdenticalOperands:
-  Enabled: true
-
-Lint/DuplicateRescueException:
-  Enabled: true
-
-Lint/EmptyConditionalBody:
-  Enabled: true
-
-Lint/FloatComparison:
-  Enabled: true
-
-Lint/MissingSuper:
-  Enabled: true
-
-Lint/OutOfRangeRegexpRef:
-  Enabled: true
-
-Lint/SelfAssignment:
-  Enabled: true
-
-Lint/TopLevelReturnWithArgument:
-  Enabled: true
-
-Lint/UnreachableLoop:
-  Enabled: true
-
-Performance/AncestorsInclude:
-  Enabled: true
-
-Performance/BigDecimalWithNumericArgument:
-  Enabled: true
-
-Performance/RedundantSortBlock:
-  Enabled: true
-
-Performance/RedundantStringChars:
-  Enabled: true
-
-Performance/ReverseFirst:
-  Enabled: true
-
-Performance/SortReverse:
-  Enabled: true
-
-Performance/Squeeze:
-  Enabled: true
-
-Performance/StringInclude:
-  Enabled: true
-
-Style/ExponentialNotation:
-  Enabled: true
-
-Style/SlicingWithRange:
-  Enabled: true
-
-Style/RedundantRegexpCharacterClass:
-  Enabled: true
-
-Style/RedundantRegexpEscape:
-  Enabled: true
-
-Style/RedundantFetchBlock:
-  Enabled: true
-
-Style/AccessorGrouping:
-  Enabled: true
-
-Style/ArrayCoercion:
-  Enabled: true
-
-Style/BisectedAttrAccessor:
-  Enabled: true
-
-Style/CaseLikeIf:
-  Enabled: true
-
 Style/HashAsLastArrayItem:
-  Enabled: true
   EnforcedStyle: no_braces
-
-Style/HashLikeCase:
-  Enabled: true
 
 Style/HashSyntax:
   EnforcedShorthandSyntax: either
-
-Style/RedundantAssignment:
-  Enabled: true
-
-Style/RedundantFileExtensionInRequire:
-  Enabled: true
 
 Minitest/MultipleAssertions:
   Enabled: false

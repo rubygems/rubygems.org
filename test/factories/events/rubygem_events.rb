@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :events_rubygem_event, class: "Events::RubygemEvent" do
     tag { Events::RubygemEvent::OWNER_ADDED }

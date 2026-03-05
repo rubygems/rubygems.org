@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ChangeUserEmail < Avo::Actions::ApplicationAction
   def fields
     field :from_email, name: "Email", as: :text, required: true

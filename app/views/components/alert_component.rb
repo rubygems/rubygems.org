@@ -16,12 +16,12 @@ class AlertComponent < ApplicationComponent
     data = { controller: "reveal", reveal_target: "item" } if closeable
     p(data:, class: "flex flex-row items-center p-4 mb-10 rounded border text-b2 #{color} justify-between") do
       span(class: "flex flex-row items-center") do
-        unsafe_raw helpers.icon_tag(icon, size: 8, class: "#{icon_color} mr-3 h-8 w-8")
+        icon_tag(icon, size: 8, class: "#{icon_color} mr-3 h-8 w-8")
         span(class: "align-middle", &)
       end
       if closeable
         button(data: { action: "click->reveal#hide" }, title: t("hide"), class: "h-8 w-8 ml-6 items-center justify-center outline-none") do
-          unsafe_raw helpers.icon_tag("close", class: "w-6 h-6", aria: { label: t("hide") })
+          icon_tag("close", class: "w-6 h-6", aria: { label: t("hide") })
         end
       end
     end

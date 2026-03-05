@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "boot"
 
 require "rails"
@@ -26,18 +28,7 @@ end
 
 module Gemcutter
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
-
-    ###
-    # TODO: This is a 8.0 framework default, but load order requires it to be here to avoid deprecation warnings.
-    #
-    # Specifies whether `to_time` methods preserve the UTC offset of their receivers or preserves the timezone.
-    # If set to `:zone`, `to_time` methods will use the timezone of their receivers.
-    # If set to `:offset`, `to_time` methods will use the UTC offset.
-    # If `false`, `to_time` methods will convert to the local system UTC offset instead.
-    #++
-    Rails.application.config.active_support.to_time_preserves_timezone = :zone
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -88,6 +79,8 @@ module Gemcutter
     config.action_dispatch.default_headers.merge!(
       "Cross-Origin-Opener-Policy" => "same-origin"
     )
+
+    config.flipper.preload = false
   end
 
   def self.config
@@ -109,7 +102,6 @@ module Gemcutter
   MEMBERSHIP_INVITE_EXPIRES_AFTER = 7.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
-  SEARCH_INDEX_NAME = "rubygems-#{Rails.env}".freeze
   SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 1).to_i
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
@@ -122,9 +114,9 @@ module Gemcutter
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]
   ENABLE_DEVELOPMENT_LOG_IN = Rails.env.local?
-  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>".freeze
+  MAIL_SENDER = "RubyGems.org <no-reply@mailer.rubygems.org>"
   PAGES = %w[
-    about data download security sponsors
+    about data download security supporters
   ].freeze
   POLICY_PAGES = %w[
     acceptable-use copyright privacy terms-of-service

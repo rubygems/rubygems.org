@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rstuf
   mattr_accessor :base_url
   mattr_accessor :enabled, default: false

@@ -185,7 +185,7 @@ class RubygemFsTest < ActiveSupport::TestCase
 
       should "returns keys for which delete did not work" do
         @s3.stub_responses(:delete_objects, lambda { |_|
-          { errors: [{ key: "missing" }] }
+          { errors: [key: "missing"] }
         })
 
         assert_equal ["missing"], @fs.remove(%w[foo missing])

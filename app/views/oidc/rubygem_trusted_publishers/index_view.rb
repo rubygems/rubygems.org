@@ -22,7 +22,7 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
       end
 
       header(class: "gems__header push--s") do
-        p(class: "gems__meter l-mb-0") { plain helpers.page_entries_info(trusted_publishers) }
+        p(class: "gems__meter l-mb-0") { plain page_entries_info(trusted_publishers) }
       end
 
       div(class: "tw-divide-y") do
@@ -38,7 +38,7 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
         end
       end
 
-      plain helpers.paginate(trusted_publishers)
+      plain paginate(trusted_publishers)
     end
   end
 end

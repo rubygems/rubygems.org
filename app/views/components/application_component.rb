@@ -3,27 +3,29 @@
 class ApplicationComponent < Phlex::HTML
   include Phlex::Rails::Helpers::Routes
   extend PropInitializer::Properties
+  extend Phlex::Rails::HelperMacros
 
-  class TranslationHelper
-    include ActionView::Helpers::TranslationHelper
+  # Register Rails helpers that return HTML content
+  register_output_helper :icon_tag
+  register_output_helper :link_to
+  register_output_helper :paginate
+  register_output_helper :time_tag
+  register_output_helper :local_time_ago
+  register_output_helper :avatar
+  # Register Rails helpers that return values
+  register_output_helper :page_entries_info
+  register_value_helper :class_names
+  register_value_helper :current_user
 
-    def initialize(translation_path:)
-      @translation_path = translation_path
-    end
+  def t(key, **)
+    scoped_key = if key&.start_with?(".")
+                   "#{self.class.translation_path}#{key}"
+                 else
+                   key
+                 end
 
-    private
-
-    def scope_key_by_partial(key)
-      return key unless key&.start_with?(".")
-
-      "#{@translation_path}#{key}"
-    end
-  end
-
-  delegate :t, to: "self.class.translation_helper"
-
-  def self.translation_helper
-    @translation_helper ||= TranslationHelper.new(translation_path:)
+    result = view_context.t(scoped_key, **)
+    result.html_safe? ? result : result.to_s
   end
 
   def self.translation_path
@@ -33,5 +35,11 @@ class ApplicationComponent < Phlex::HTML
       n.gsub!(/([a-z])([A-Z])/, '\1_\2')
       n.downcase!
     end
+  end
+
+  private
+
+  def classes(*class_names)
+    class_names.compact.join(" ").strip
   end
 end

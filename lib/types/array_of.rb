@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Types::ArrayOf < ActiveModel::Type::Value
   def initialize(klass)
     @klass = klass

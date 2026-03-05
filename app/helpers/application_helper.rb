@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   include BetterHtml::Helpers
 
@@ -105,5 +107,9 @@ module ApplicationHelper
       data:,
       **kwargs
     )
+  end
+
+  def organizations_enabled?(user)
+    FeatureFlag.enabled?(FeatureFlag::ORGANIZATIONS, user)
   end
 end

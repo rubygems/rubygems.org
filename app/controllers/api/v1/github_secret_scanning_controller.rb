@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::GitHubSecretScanningController < Api::BaseController
   include ApiKeyable
 

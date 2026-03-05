@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RubygemsHelper
   def pluralized_licenses_header(version)
     t("rubygems.show.licenses_header", count: version&.licenses&.length || 0)
@@ -124,6 +126,12 @@ module RubygemsHelper
   def rubygem_security_events_link(rubygem)
     link_to "Security Events",
       security_events_rubygem_path(rubygem.slug), class: "gem__link t-list__item"
+  end
+
+  def clickgems_analytics_link(rubygem)
+    link_to t("rubygems.aside.links.analytics"),
+      "https://clickgems.clickhouse.com/dashboard/#{rubygem.name}",
+      class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)

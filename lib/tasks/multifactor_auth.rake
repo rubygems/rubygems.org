@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :multifactor_auth do
   desc "Migrate user mfa level from ui_only to ui_and_gem_signin"
   task migrate_ui_only: :environment do

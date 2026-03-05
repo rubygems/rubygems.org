@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 SemanticLogger.application = "rubygems.org"
 
 ActiveSupport.on_load(:action_controller) do
@@ -38,6 +40,7 @@ end
 
 class SemanticErrorSubscriber
   include SemanticLogger::Loggable
+
   def report(error, handled:, severity:, context:, source: nil)
     logger.send severity.to_s.sub(/ing$/, ''), { exception: error, handled:, context:, source: }
   end

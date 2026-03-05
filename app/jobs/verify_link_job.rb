@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VerifyLinkJob < ApplicationJob
   queue_as :default
 
@@ -26,6 +28,8 @@ class VerifyLinkJob < ApplicationJob
   TIMEOUT_SEC = 5
 
   def perform(link_verification:)
+    return unless link_verification.should_verify?
+
     verify_link!(link_verification.uri, link_verification.linkable)
     record_success
   end

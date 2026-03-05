@@ -24,6 +24,82 @@
   font-weight: 300;
   line-height: 1.5; }
 
+.gem__desc:has(:not(p:only-child)) {
+  /** Based on Aliki by Stan Lo, available under the MIT license */
+  font-weight: 400;
+  line-height: 1.625;
+  img:not([alt]) {
+    display: none; }
+  a:link, a:visited {
+    color: inherit;
+    transition-property: color;
+    transition-duration: 0.25s;
+    text-decoration: underline; }
+  a:hover, a:active {
+    color: #e9573f; }
+  p {
+    margin: 1em 0; }
+  pre {
+    font-size: 0.8em;
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0.375rem;
+    overflow-wrap: break-word;
+    overflow-x: auto;
+    overflow-y: unset; }
+  hr {
+    border: 2px solid #c1c4ca;
+    margin: 1.5em 1em; }
+  h1, h2, h3, h4, h5, h6 {
+    color: #e9573f; }
+  h1 {
+    font-size: 1.875em;
+    font-weight: 600;
+    margin: 0 0 0.533em; }
+  h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: 1.333em 0 0.667em; }
+  h3 {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin: 1.2em 0 0.667em; }
+  h4 {
+    font-size: 1.125em;
+    font-weight: 500;
+    margin: 0.889em 0 0.444em; }
+  h5, h6 {
+    font-size: 1em;
+    font-weight: 500;
+    margin: 0.75em 0 0.5em; }
+  blockquote {
+    margin: 0 2em 1.2em 1.2em;
+    padding-left: 0.5em;
+    border-left: 2px solid #c1c4ca; }
+  dl {
+    margin: 1em 0.5em; }
+  dt {
+    line-height: 1.5;
+    font-weight: bold; }
+  dd {
+    margin: 0 0 1em 1em; }
+  dd p:first-child {
+    margin-top: 0; }
+  dl.note-list {
+    margin-block-end: 1em;
+    float: inline-start; }
+  ul, ol {
+    margin: 1em 0;
+    padding-left: 2em; }
+  ul {
+    list-style-type: disc; }
+  ol {
+    list-style-type: decimal; }
+  li {
+    list-style-type: inherit; }
+  li > p {
+    margin: 0.5em; } }
+
 .gem__members {
   padding-top: 30px;
   border-top: 1px solid #c1c4ca;

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEvent::Version::PushedComponent < Events::TableDetailsComponent
   delegate :rubygem, to: :event
 

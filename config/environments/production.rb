@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "active_support/core_ext/integer/time"
 require_relative "../../lib/gemcutter/middleware/redirector"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :oidc_pending_trusted_publisher, class: "OIDC::PendingTrustedPublisher" do
     sequence(:rubygem_name) { |n| "pending-rubygem#{n}" }

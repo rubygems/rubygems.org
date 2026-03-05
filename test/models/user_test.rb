@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
@@ -272,6 +274,10 @@ class UserTest < ActiveSupport::TestCase
       @user.save
 
       assert_equal @user.handle, @user.name
+    end
+
+    should "return user:handle for #flipper_id" do
+      assert_equal "user:#{@user.handle}", @user.flipper_id
     end
 
     should "setup a field to toggle showing email with default falsš" do
@@ -637,6 +643,10 @@ class UserTest < ActiveSupport::TestCase
           refute_predicate @user, :mfa_required?
         end
       end
+    end
+
+    should "ignore the token column" do
+      assert_includes @user.class.ignored_columns, "token"
     end
   end
 

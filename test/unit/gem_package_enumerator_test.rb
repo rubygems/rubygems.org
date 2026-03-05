@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class GemPackageEnumeratorTest < ActiveSupport::TestCase
@@ -6,7 +8,7 @@ class GemPackageEnumeratorTest < ActiveSupport::TestCase
     @gem_package = Gem::Package.new(@gem)
     @enum = GemPackageEnumerator.new(@gem_package)
     @destination_dir = Rails.root.join("tmp", "gems", @gem_package.spec.full_name)
-    @gem_package.extract_files(@destination_dir.to_s) unless @destination_dir.join(@gem_package.spec.full_name).exist?
+    @gem_package.extract_files(@destination_dir.to_s) unless @destination_dir.exist?
   end
 
   teardown do

@@ -1,13 +1,16 @@
-class User < ApplicationRecord
-  include UserMultifactorMethods
-  include Clearance::User
+# frozen_string_literal: true
 
-  include Gravtastic
+class User < ApplicationRecord
+  include Clearance::User
+  include Discard::Model
   include Events::Recordable
+  include Gravtastic
+  include UserMultifactorMethods
+
   is_gravtastic default: "retro"
 
-  include Discard::Model
   self.discard_column = :deleted_at
+  self.ignored_columns += [:token]
 
   default_scope { not_deleted }
 
@@ -34,7 +37,7 @@ class User < ApplicationRecord
 
   has_many :rubygems, through: :ownerships, source: :rubygem
   has_many :subscriptions, dependent: :destroy
-  has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
+  has_many :subscribed_gems, -> { order(:name) }, through: :subscriptions, source: :rubygem
 
   has_many :rubygems_downloaded,
     -> { with_versions.joins(:gem_download).order(GemDownload.arel_table["count"].desc) },
@@ -160,6 +163,10 @@ class User < ApplicationRecord
     handle || id
   end
 
+  def flipper_id
+    "user:#{handle}"
+  end
+
   def reset_api_key!
     generate_api_key && save!
   end
@@ -273,15 +280,6 @@ class User < ApplicationRecord
 
   def owns_gem?(rubygem)
     rubygem.owned_by?(self)
-  end
-
-  def ld_context
-    LaunchDarkly::LDContext.create(
-      key: "user-key-#{id}",
-      kind: "user",
-      name: handle,
-      email: email
-    )
   end
 
   def acknowledge_policies!

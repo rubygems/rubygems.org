@@ -1,31 +1,33 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class ApplicationJobTest < ActiveSupport::TestCase
-  test "good_job_concurrency_perform_limit" do
-    callable = ApplicationJob.good_job_concurrency_perform_limit(default: 12)
+  class TestDiscardableJob < ApplicationJob
+    discard_on ArgumentError
 
-    assert_equal 12, ApplicationJob.new.instance_exec(&callable)
-
-    @launch_darkly.update(
-      @launch_darkly.flag("good_job.concurrency.perform_limit")
-      .variations(100, 5, 1)
-      .variation_for_key("active_job", "ApplicationJob", 2)
-    )
-
-    assert_equal 1, ApplicationJob.new.instance_exec(&callable)
+    def perform(should_raise: false)
+      raise ArgumentError, "Test error" if should_raise
+    end
   end
 
-  test "good_job_concurrency_enqueue_limit" do
-    callable = ApplicationJob.good_job_concurrency_enqueue_limit(default: 12)
+  test "after_discard callback reports metrics to StatsD" do
+    job = TestDiscardableJob.new(should_raise: true)
 
-    assert_equal 12, ApplicationJob.new.instance_exec(&callable)
+    # allow reporting performance measurements
+    StatsD.stubs(:increment)
 
-    @launch_darkly.update(
-      @launch_darkly.flag("good_job.concurrency.enqueue_limit")
-      .variations(100, 5, 1)
-      .variation_for_key("active_job", "ApplicationJob", 2)
-    )
+    StatsD.expects(:increment).with(
+      "good_job.discarded",
+      tags: {
+        queue: "default",
+        priority: nil,
+        job_class: "ApplicationJobTest::TestDiscardableJob",
+        exception: "ArgumentError",
+        adapter: "ActiveJob::QueueAdapters::TestAdapter"
+      }
+    ).once
 
-    assert_equal 1, ApplicationJob.new.instance_exec(&callable)
+    job.perform_now
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Api::V1::OwnersControllerTest < ActionController::TestCase
@@ -1008,7 +1010,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         patch :update, params: { rubygem_id: @rubygem.slug, email: @maintainer.email, role: :invalid }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_equal "Role is not included in the list", @response.body
         assert_predicate ownership.reload, :maintainer?
       end

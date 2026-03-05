@@ -6,7 +6,7 @@ class CardComponent < ApplicationComponent
   def view_template(&)
     color = "bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white "
     box = "w-full px-4 py-6 md:p-10 mb-10 rounded-md shadow overflow-hidden"
-    article(**classes(color, box), &)
+    article(class: classes(color, box), &)
   end
 
   def head(title = nil, icon: nil, count: nil, url: nil, **options, &block)
@@ -33,7 +33,8 @@ class CardComponent < ApplicationComponent
   end
 
   def divided_list(**options, &)
-    options[:class] = "#{options[:class]} -mx-4 divide-y divide-neutral-200 dark:divide-neutral-800"
+    options[:class] = "#{options[:class]} -mx-4 divide-y divide-neutral-200 dark:divide-neutral-800 " \
+                      "border-b border-neutral-200 dark:border-neutral-800"
     ul(**options, &)
   end
 
@@ -72,6 +73,6 @@ class CardComponent < ApplicationComponent
                       "hover:bg-neutral-100 dark:hover:bg-neutral-800"
 
   def render_icon(name, size: 8, **)
-    unsafe_raw helpers.icon_tag(name, size: size, **)
+    icon_tag(name, size: size, **)
   end
 end

@@ -28,7 +28,9 @@ class OIDC::IdToken::TableComponent < ApplicationComponent
   private
 
   def row(token)
-    tr(**classes("owners__row", -> { token.api_key.expired? } => "owners__row__invalid")) do
+    row_classes = ["owners__row"]
+    row_classes << "owners__row__invalid" if token.api_key.expired?
+    tr(class: row_classes.join(" ")) do
       td(class: "owners__cell") { time_tag token.created_at }
       td(class: "owners__cell") { time_tag token.api_key.expires_at }
       td(class: "owners__cell") { link_to_unless_current token.api_key_role.name, profile_oidc_api_key_role_path(token.api_key_role.token) }

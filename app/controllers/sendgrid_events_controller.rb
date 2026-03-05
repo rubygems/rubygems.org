@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SendgridEventsController < ApplicationController
+class SendgridEventsController < Api::BaseController
   # Safelist documented SendGrid Event attributes
   # https://sendgrid.com/docs/API_Reference/Event_Webhook/event.html#-Event-objects
   SENDGRID_EVENT_ATTRIBUTES = [%i[
@@ -8,8 +8,6 @@ class SendgridEventsController < ApplicationController
     status response attempt useragent ip url asm_group_id tls unique_args
     marketing_campaign_id marketing_campaign_name pool type
   ]].freeze
-
-  skip_before_action :verify_authenticity_token, only: :create
 
   http_basic_authenticate_with(
     name: ENV.fetch("SENDGRID_WEBHOOK_USERNAME", "#{Rails.env}_sendgrid_webhook_user"),

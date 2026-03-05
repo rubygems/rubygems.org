@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+public/assets/
+vendor/
+
+# Temporary files
+tmp/
+
+# Test reports
+reports/
+
+# Log files
+*.log
+
+# Lock files
+package-lock.json
+yarn.lock

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Types::JsonDeserializable < ActiveRecord::Type::Json
   def initialize(klass)
     @klass = klass

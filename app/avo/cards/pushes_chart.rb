@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Cards::PushesChart < Avo::Cards::ChartkickCard
   self.id = "pushes_chart"
   self.label = "Pushes by day"

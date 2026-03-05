@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
   after_action :skip_session
@@ -93,9 +95,5 @@ class Api::BaseController < ApplicationController
   def render_bad_request(error = "bad request")
     error = error.message if error.is_a?(Exception)
     render json: { error: error.to_s }, status: :bad_request
-  end
-
-  def owner?
-    @api_key.owner.owns_gem?(@rubygem)
   end
 end

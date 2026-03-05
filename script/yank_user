@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 if ARGV.empty?
   puts "Yanks all of the gems that a user has push access to."

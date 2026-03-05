@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Cards::RubygemsMetric < Avo::Cards::MetricCard
   self.id = "rubygems_metric"
   self.label = "RubyGems "

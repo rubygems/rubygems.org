@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebauthnVerifiable
   extend ActiveSupport::Concern
 
@@ -54,7 +56,9 @@ module WebauthnVerifiable
   end
 
   def user_webauthn_credential
-    @user_webauthn_credential ||= webauthn_credential_scope.find_by(
+    return @user_webauthn_credential if defined?(@user_webauthn_credential)
+
+    @user_webauthn_credential = webauthn_credential_scope.find_by(
       external_id: @credential.id
     )
   end

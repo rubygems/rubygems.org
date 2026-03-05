@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class Avo::WebHooksSystemTest < ApplicationSystemTestCase
@@ -29,6 +31,7 @@ class Avo::WebHooksSystemTest < ApplicationSystemTestCase
     audit = Audit.sole
 
     page.assert_text audit.id
+
     assert_equal "WebHook", audit.auditable_type
     assert_equal "Delete Webhook", audit.action
     assert_equal_hash(

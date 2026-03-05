@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::SendgridEvent < Avo::BaseResource
   self.title = :sendgrid_id
   self.includes = []

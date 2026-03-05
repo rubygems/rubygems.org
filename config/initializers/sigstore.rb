@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "sigstore/verifier"
 require "sigstore/rekor/client"
 require "sigstore/models"

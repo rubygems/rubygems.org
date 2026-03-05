@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Deletion < ApplicationRecord
   # we nullify the user when they delete their account
   belongs_to :user, optional: true

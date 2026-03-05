@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Ownership < ApplicationRecord
   self.ignored_columns += %w[ownership_request_notifier]
 

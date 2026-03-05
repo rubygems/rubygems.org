@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEvent::Owner::RemovedComponentPreview < Lookbook::Preview
   # @param owner text
   def default(owner: "Owner", user: User.first!)

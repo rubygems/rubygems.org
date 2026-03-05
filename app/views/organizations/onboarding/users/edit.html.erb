@@ -1,3 +1,5 @@
+<% @title = "Create an Organization"%>
+
 <% content_for :aside do %>
   <%= render "organizations/onboarding/summary", current_step: 3 %>
 <% end %>
@@ -63,7 +65,7 @@
     <li class="flex w-full py-3 pl-[11px] pr-10 justify-between box-border border border-neutral-400 rounded-lg">
       <span class="flex flex-row items-center">
         <%= avatar 48, "gravatar-#{@organization_onboarding.created_by.id}", theme: :dark, class: "h-6 w-6 rounded mr-2" %>
-        <span><%= @organization_onboarding.created_by.handle %></span>
+        <span><%= @organization_onboarding.created_by.handle %> (you)</span>
       </span>
       <span>Owner</span>
     </li>

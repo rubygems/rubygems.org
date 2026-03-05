@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddFullNameToVersions < ActiveRecord::Migration[4.2]
   def self.up
     add_column :versions, :full_name, :string

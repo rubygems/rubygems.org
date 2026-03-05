@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::Provider < ApplicationRecord
   validate :issuer_match, if: :configuration
   before_validation -> { configuration&.expected_issuer = issuer }
@@ -11,7 +13,7 @@ class OIDC::Provider < ApplicationRecord
 
   has_many :audits, as: :auditable, dependent: :nullify
 
-  GITHUB_ACTIONS_ISSUER = "https://token.actions.githubusercontent.com".freeze
+  GITHUB_ACTIONS_ISSUER = "https://token.actions.githubusercontent.com"
 
   def self.github_actions
     find_by(issuer: GITHUB_ACTIONS_ISSUER)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This controller generates a single-use link as part of the Webauthn CLI flow. It does not challenge
 # the user with a Webauthn login. That is done in controllers/webauthn_verifications_controller.
 class Api::V1::WebauthnVerificationsController < Api::BaseController
@@ -14,7 +16,7 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
         format.json { render json: { path: webauthn_path, expiry: verification.path_token_expires_at.utc } }
       end
     else
-      render plain: t("settings.edit.no_webauthn_credentials"), status: :unprocessable_entity
+      render plain: t("settings.edit.no_webauthn_credentials"), status: :unprocessable_content
     end
   end
 

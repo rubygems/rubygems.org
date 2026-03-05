@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Organization < Avo::BaseResource
   self.title = :name
   self.includes = []
@@ -31,5 +33,9 @@ class Avo::Resources::Organization < Avo::BaseResource
       field :rubygems, as: :has_many
       field :organization_onboarding, as: :belongs_to
     end
+  end
+
+  def actions
+    action Avo::Actions::ChangeOrganizationHandle
   end
 end

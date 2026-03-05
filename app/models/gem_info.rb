@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GemInfo
   def initialize(rubygem_name, cached: true)
     @rubygem_name = rubygem_name
@@ -26,7 +28,7 @@ class GemInfo
       StatsD.increment "compact_index.memcached.names.hit"
     else
       StatsD.increment "compact_index.memcached.names.miss"
-      names = Rubygem.with_versions.order("name").pluck("name")
+      names = Rubygem.with_versions.order(:name).pluck(:name)
       Rails.cache.write("names", names)
     end
     names

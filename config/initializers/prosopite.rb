@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if Rails.env.local?
   require 'prosopite/middleware/rack'
   Rails.configuration.middleware.use(Prosopite::Middleware::Rack)
@@ -13,7 +15,10 @@ if Rails.env.local?
       # avo auditing potentially loads things multiple times, but it will be bounded by the size of the audit
       "app/avo/actions/application_action.rb",
       "app/components/avo/fields/audited_changes_field/show_component.html.erb",
-      "app/components/avo/views/resource_index_component.html.erb"
+      "app/components/avo/views/resource_index_component.html.erb",
+
+      # feature flag management relies on a query per actor
+      "config/initializers/flipper"
     ]
   end
 end

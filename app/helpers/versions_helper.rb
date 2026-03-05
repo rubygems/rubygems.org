@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module VersionsHelper
   def version_date_tag(version, prefix: nil)
     data = {}

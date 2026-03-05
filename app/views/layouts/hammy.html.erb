@@ -186,11 +186,6 @@
     <% else %>
       <main class="flex-1 w-full px-8 flex-col bg-neutral-050 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center inline-flex">
         <div class="max-w-screen-xl w-full mx-auto pt-8 pb-10 mb-12 md:mb-16 lg:mb-28">
-          <!-- New design notice -->
-          <%= render AlertComponent.new(style: :neutral, closeable: true) do %>
-            Design Under Construction.
-            <a href="https://blog.rubygems.org/2024/10/15/our-new-design.html" class="text-blue-500 dark:text-blue-400 text-nowrap">Learn more</a>
-          <% end %>
 
           <% flash.each do |name, msg| %>
             <%= render AlertComponent.new(style: name, closeable: true) do %>
@@ -240,11 +235,11 @@
           <!-- Supporter Icons -->
           <div class="w-full lg:grow mx-auto grid grid-cols-3 gap-6 justify-items-center md:flex md:items-center md:justify-between">
             <a href="https://rubycentral.org/" class="p-1"><%= icon_tag "ruby-central", size: 15 %></a>
+            <a href="https://aws.amazon.com/" class="p-1"><%= icon_tag "aws", size: 15 %></a>
             <a href="https://dnsimple.link/resolving-rubygems" class="p-1"><%= icon_tag "dnsimple", size: 15 %></a>
             <a href="https://www.datadoghq.com/" class="p-1"><%= icon_tag "datadog", size: 15 %></a>
             <a href="https://www.fastly.com/" class="p-1"><%= icon_tag "fastly", size: 15 %></a>
             <a href="https://www.honeybadger.io/" class="p-1"><%= icon_tag "honeybadger", size: 15 %></a>
-            <a href="https://domainr.com/" class="p-1"><%= icon_tag "domainr", size: 15 %></a>
             <a href="https://mend.io/" class="col-start-2 p-1"><%= icon_tag "mend-io", size: 15 %></a>
           </div>
         </div>

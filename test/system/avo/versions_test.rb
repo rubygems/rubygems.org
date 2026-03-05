@@ -1,9 +1,15 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class Avo::VersionsSystemTest < ApplicationSystemTestCase
   make_my_diffs_pretty!
 
   include ActiveJob::TestHelper
+
+  setup do
+    StoreVersionContentsJob.stubs(:perform_later)
+  end
 
   test "restore a rubygem version" do
     admin_user = create(:admin_github_user, :is_admin)
@@ -43,6 +49,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
     audit = version.audits.sole
 
     page.assert_text audit.id
+
     assert_equal "Version", audit.auditable_type
     assert_equal "Restore version", audit.action
     assert_equal admin_user, audit.admin_github_user

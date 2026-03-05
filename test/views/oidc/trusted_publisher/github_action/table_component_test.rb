@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 require "active_support/xml_mini/nokogiri"
@@ -14,6 +16,26 @@ class OIDC::TrustedPublisher::GitHubAction::TableComponentTest < ComponentTest
       lambda { |dt, dd|
         dt.assert_text "Workflow Filename", exact: true
         dd.assert_text "push_gem.yml", exact: true
+      }
+    )
+  end
+
+  should "render preview with workflow repository" do
+    preview(repository_name: "my-gem", workflow_filename: "shared-release.yml",
+            workflow_repository_owner: "shared-org", workflow_repository_name: "shared-workflows")
+
+    assert_dl(
+      lambda { |dt, dd|
+        dt.assert_text "GitHub Repository", exact: true
+        dd.assert_text "example/my-gem", exact: true
+      },
+      lambda { |dt, dd|
+        dt.assert_text "Workflow Filename", exact: true
+        dd.assert_text "shared-release.yml", exact: true
+      },
+      lambda { |dt, dd|
+        dt.assert_text "Workflow Repository", exact: true
+        dd.assert_text "shared-org/shared-workflows", exact: true
       }
     )
   end
