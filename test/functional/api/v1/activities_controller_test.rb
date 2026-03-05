@@ -6,14 +6,14 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
   context "No signed in-user" do
     context "On GET to latest" do
       setup do
-        @rails = create(:rubygem, name: "rails")
+        @rails = create(:rubygem, name: "rails", created_at: 3.days.ago)
         create(:version, rubygem: @rails)
         create(:version, rubygem: @rails)
 
-        @sinatra = create(:rubygem, name: "sinatra")
+        @sinatra = create(:rubygem, name: "sinatra", created_at: 2.days.ago)
         create(:version, rubygem: @sinatra)
 
-        @foobar = create(:rubygem, name: "foobar")
+        @foobar = create(:rubygem, name: "foobar", created_at: 1.day.ago)
         create(:version, rubygem: @foobar,
                dependencies: [build(:dependency, rubygem: @rails), build(:dependency, rubygem: @sinatra)])
       end
@@ -22,18 +22,31 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         get :latest, format: :json
         gems = JSON.load @response.body
 
-        assert_equal 2, gems.length
+        assert_equal 3, gems.length
         assert_equal "foobar", gems[0]["name"]
         assert_equal "sinatra", gems[1]["name"]
+        assert_equal "rails", gems[2]["name"]
       end
 
       should "return correct YAML for latest gems" do
         get :latest, format: :yaml
         gems = YAML.safe_load(@response.body)
 
-        assert_equal 2, gems.length
+        assert_equal 3, gems.length
         assert_equal "foobar", gems[0]["name"]
         assert_equal "sinatra", gems[1]["name"]
+        assert_equal "rails", gems[2]["name"]
+      end
+
+      should "exclude gems with only prerelease versions" do
+        prerelease_gem = create(:rubygem, name: "beta_only")
+        create(:version, rubygem: prerelease_gem, number: "1.0.0.beta1")
+
+        get :latest, format: :json
+        gems = JSON.load @response.body
+        gem_names = gems.pluck("name")
+
+        assert_not_includes gem_names, "beta_only"
       end
     end
 
