@@ -107,14 +107,7 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [:id]
 
-  config.cache_store = :mem_cache_store, ENV['MEMCACHED_ENDPOINT'], {
-    failover: true,
-    socket_timeout: 1.5,
-    socket_failure_delay: 0.2,
-    compress: true,
-    compression_min_size: 524_288,
-    value_max_bytes: 2_097_152 # 2MB
-  }
+  config.cache_store = :solid_cache_store
 
   config.middleware.use Gemcutter::Middleware::Redirector
 end

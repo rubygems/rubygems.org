@@ -60,7 +60,7 @@ Move to the newly cloned repository directory: `cd rubygems.org`
 ### Setting up the environment
 
 Rubygems.org is a Ruby on Rails application.
-The app depends on OpenSearch, Memcached, and PostgreSQL.
+The app depends on OpenSearch and PostgreSQL.
 Google Chrome is used for tests.
 
 Setup the development environment using one of the approaches below.
@@ -68,7 +68,7 @@ Setup the development environment using one of the approaches below.
 #### Environment (Docker)
 
 There is a `docker-compose.yml` file inside the project that easily lets you spin up
-postgresql, memcached & elasticsearch.
+postgresql & elasticsearch.
 
 Note: Docker compose does not run the rubygems.org application itself.
 
@@ -92,8 +92,6 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 * Install PostgreSQL (>= 14.x): `brew install postgresql`
   * Setup information: `brew info postgresql`
-* Install memcached: `brew install memcached`
-  * Show all memcached options: `memcached -h`
 * Install Google-Chrome: `brew install google-chrome --cask`
 
 #### Environment (Linux - Debian/Ubuntu)
@@ -106,8 +104,6 @@ Follow the instructions below on how to install Bundler and setup the database.
   ```
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
-* Install memcached: `apt-get install memcached`
-  * Show all memcached options: `memcached -h`
 * Install Google-Chrome:
   * Download latest stable: `wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb`
   * Install chrome: `sudo dpkg -i google-chrome-stable_current_amd64.deb`
@@ -130,14 +126,14 @@ Follow the instructions below on how to install Bundler and setup the database.
 Make sure that the tests run successfully before making changes.
 
 * Depending on how you setup your environment, run `docker compose up` or
-  ensure opensearch, memcached, and postgres are running.
+  ensure opensearch and postgres are running.
 * Run the tests: `bin/rails test:all`
 * See also: [Ruby on Rails testing documentation](https://guides.rubyonrails.org/testing.html).
 
 ### Running the application
 
 * Depending on how you setup your environment, run `docker compose up` or
-  ensure opensearch, memcached, and postgres are running.
+  ensure opensearch and postgres are running.
 * Start the application: `bin/rails s`
 * Visit http://localhost:3000 in your browser.
 

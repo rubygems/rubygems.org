@@ -72,8 +72,6 @@ module Gemcutter
     config.autoload_paths << "#{root}/app/views/layouts"
     config.autoload_paths << "#{root}/app/views/components"
 
-    config.active_support.cache_format_version = 7.1
-
     config.action_dispatch.rescue_responses["Rack::Multipart::EmptyContentError"] = :bad_request
 
     config.action_dispatch.default_headers.merge!(

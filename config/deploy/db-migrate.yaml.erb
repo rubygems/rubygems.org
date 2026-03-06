@@ -94,11 +94,11 @@ spec:
           secretKeyRef:
             name: <%= environment %>
             key: elasticsearch_url
-      - name: MEMCACHED_ENDPOINT
+      - name: CACHE_DATABASE_URL
         valueFrom:
           secretKeyRef:
             name: <%= environment %>
-            key: memcached_endpoint
+            key: cache_database_url
       - name: SENDGRID_USERNAME
         valueFrom:
           secretKeyRef:

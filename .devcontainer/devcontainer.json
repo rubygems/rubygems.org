@@ -8,14 +8,12 @@
   "service": "rails-app",
   "runServices": [
     "db",
-    "cache",
     "search",
     "toxiproxy",
     "selenium"
   ],
   "forwardPorts": [
     3000, // Rails
-    11211, // Memcache
     9200, // Opensearch
     5432 // PostgreSQL
   ],
@@ -43,8 +41,8 @@
     "SELENIUM_HOST": "selenium",
     "ELASTICSEARCH_URL": "http://search:9200",
     "DATABASE_URL": "postgres://postgres@db:5432",
-    "DEVCONTAINER_APP_HOST": "http://rails-app",
-    "MEMCACHED_URL": "memcache:11211"
+    "CACHE_DATABASE_URL": "postgres://postgres@db:5432/rubygems_development",
+    "DEVCONTAINER_APP_HOST": "http://rails-app"
   },
   "customizations": {
     "codespaces": {

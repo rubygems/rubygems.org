@@ -72,7 +72,7 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Replace the default in-process memory cache store with a durable alternative.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :solid_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
@@ -109,14 +109,7 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  config.cache_store = :mem_cache_store, ENV['MEMCACHED_ENDPOINT'], {
-    failover: true,
-    socket_timeout: 1.5,
-    socket_failure_delay: 0.2,
-    compress: true,
-    compression_min_size: 524_288,
-    value_max_bytes: 2_097_152 # 2MB
-  }
+  config.cache_store = :solid_cache_store
 
   config.middleware.use Gemcutter::Middleware::Redirector
 end

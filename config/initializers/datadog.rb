@@ -37,7 +37,6 @@ Datadog.configure do |c|
     c.tracing.report_hostname = true
 
     c.tracing.instrument :aws
-    c.tracing.instrument :dalli
     c.tracing.instrument :faraday, split_by_domain: true, service_name: c.service
     c.tracing.instrument :http, split_by_domain: true, service_name: c.service
     c.tracing.instrument :opensearch, service_name: c.service

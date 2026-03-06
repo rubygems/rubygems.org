@@ -2,7 +2,7 @@
 
 class GemCachePurger
   def self.call(gem_name)
-    # We need to purge from Fastly and from Memcached
+    # We need to purge from Fastly and from the cache
     ["info/#{gem_name}", "names"].each do |path|
       Rails.cache.delete(path)
       FastlyPurgeJob.perform_later(path:, soft: true)

@@ -8,10 +8,10 @@ class GemInfo
 
   def compact_index_info
     if @cached && (info = Rails.cache.read("info/#{@rubygem_name}"))
-      StatsD.increment "compact_index.memcached.info.hit"
+      StatsD.increment "compact_index.cache.info.hit"
       info
     else
-      StatsD.increment "compact_index.memcached.info.miss"
+      StatsD.increment "compact_index.cache.info.miss"
       compute_compact_index_info.tap do |compact_index_info|
         Rails.cache.write("info/#{@rubygem_name}", compact_index_info)
       end
@@ -25,9 +25,9 @@ class GemInfo
 
   def self.ordered_names(cached: true)
     if cached && (names = Rails.cache.read("names"))
-      StatsD.increment "compact_index.memcached.names.hit"
+      StatsD.increment "compact_index.cache.names.hit"
     else
-      StatsD.increment "compact_index.memcached.names.miss"
+      StatsD.increment "compact_index.cache.names.miss"
       names = Rubygem.with_versions.order(:name).pluck(:name)
       Rails.cache.write("names", names)
     end
