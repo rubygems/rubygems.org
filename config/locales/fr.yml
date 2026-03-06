@@ -892,7 +892,6 @@ fr:
       forgot_password: Mot de passe oublié ?
       resend_confirmation: Vous n'avez pas reçu l'email de confirmation ?
     verify:
-      title:
       confirm:
       notice:
     create:

@@ -849,7 +849,6 @@ nl:
       forgot_password: Wachtwoord vergeten?
       resend_confirmation: Geen bevestigingsemail ontvangen?
     verify:
-      title:
       confirm:
       notice:
     create:

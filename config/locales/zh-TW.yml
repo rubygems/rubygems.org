@@ -850,7 +850,6 @@ zh-TW:
       forgot_password: 忘記密碼？
       resend_confirmation: 沒收到確認信？
     verify:
-      title: 確認密碼
       confirm: 確認
       notice: 請確認您的密碼以繼續。
     create:

@@ -962,7 +962,6 @@ es:
       forgot_password: "¿Olvidaste tu contraseña?"
       resend_confirmation: "¿No recibiste tu correo electrónico de confirmación?"
     verify:
-      title: Confirmar contraseña
       confirm: Confirmar
       notice: Por favor confirma tu contraseña para continuar.
     create:

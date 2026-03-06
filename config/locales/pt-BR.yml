@@ -871,7 +871,6 @@ pt-BR:
       forgot_password: Esqueceu sua Senha?
       resend_confirmation: Não recebeu o email de confirmação?
     verify:
-      title:
       confirm:
       notice:
     create:

@@ -862,7 +862,6 @@ zh-CN:
       forgot_password: 忘了密码？
       resend_confirmation: 没有收到确认邮件？
     verify:
-      title: 确认密码
       confirm: 确认
       notice: 请确认密码后继续
     create:

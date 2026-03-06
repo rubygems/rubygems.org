@@ -869,7 +869,6 @@ ja:
       forgot_password: パスワードをお忘れですか？
       resend_confirmation: 確認メールを受け取っていませんか？
     verify:
-      title: パスワードを確認
       confirm: 確定
       notice: パスワードを確認してお進みください。
     create:
