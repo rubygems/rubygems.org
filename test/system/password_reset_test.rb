@@ -41,7 +41,6 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_current_path edit_password_path, ignore_query: true
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Your password has been changed."
@@ -75,7 +74,6 @@ class PasswordResetTest < ApplicationSystemTestCase
 
     # try again with valid password
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Your password has been changed."
@@ -121,7 +119,6 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_text("Reset password")
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Sign in"
@@ -146,7 +143,6 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_text "Reset password"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text "Your password has been changed."
@@ -181,7 +177,6 @@ class PasswordResetTest < ApplicationSystemTestCase
     click_on "Authenticate with security device"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text("Sign in")
@@ -207,7 +202,6 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_text "Reset password"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    fill_in "Confirm password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
     assert_text("Sign in")
