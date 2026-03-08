@@ -14,12 +14,15 @@ namespace :gemcutter do
   namespace :import do
     desc "Bring the gems through the gemcutter process"
     task :process, %i[gems_cache_path] => :environment do |_task, args|
+      api_key = User.find_by(email: "gem-author@example.com")&.api_keys&.find_by(name: "api key")
+      raise "Seed data not found. Please run `rails db:seed` first before importing gems." unless api_key
+
       gems = Dir[File.join(args[:gems_cache_path] || "#{Gem.path.first}/cache", "*.gem")].reverse
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts "Processing #{path}"
         File.open(path) do |gem_file|
-          cutter = Pusher.new(User.new, gem_file)
+          cutter = Pusher.new(api_key, gem_file)
 
           cutter.process
           puts cutter.message unless cutter.code == 200
