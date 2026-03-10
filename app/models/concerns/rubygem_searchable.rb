@@ -78,8 +78,8 @@ module RubygemSearchable
 
       replace_characters = " " * Patterns::SPECIAL_CHARACTERS.length
       where(conditions, query: "%#{query.strip}%", match: Patterns::SPECIAL_CHARACTERS, replace: replace_characters)
-        .includes(:latest_version, :gem_download)
-        .references(:versions)
+        .joins(:versions)
+        .preload(:latest_version, :gem_download)
         .by_downloads
     end
 
