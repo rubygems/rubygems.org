@@ -7,8 +7,10 @@ task audit_attestation_subject_digest: :environment do
   results = { match: 0, mismatch: 0, skipped: 0, error: 0 }
   mismatches = []
 
-  scope = Attestation.includes(:version).tap do |s|
-    s.where!(id: ..ENV["MAX_ATTESTATION_ID"].to_i) if ENV["MAX_ATTESTATION_ID"].present?
+  scope = Attestation.includes(:version)
+  if ENV["MAX_ATTESTATION_ID"].present?
+    max_attestation_id = Integer(ENV["MAX_ATTESTATION_ID"])
+    scope = scope.where(id: ..max_attestation_id)
   end
   total = scope.count
 
@@ -21,9 +23,10 @@ task audit_attestation_subject_digest: :environment do
     case result.status
     when :mismatch
       mismatches << result.detail
-      warn result.detail
     when :error
       warn result.detail
+    when :skipped
+      warn result.detail if result.detail
     end
   end
 
@@ -75,6 +78,6 @@ def audit_attestation(attestation)
                     detail: "Attestation #{attestation.id} (version #{attestation.version_id}): " \
                             "subject=#{subject_digest} version=#{version_hex}")
   end
-rescue Sigstore::Error, JSON::ParserError => e
+rescue StandardError => e
   AuditResult.new(status: :error, detail: "Attestation #{attestation.id}: #{e.class}: #{e.message}")
 end

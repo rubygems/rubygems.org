@@ -14,10 +14,10 @@ class AuditAttestationSubjectDigestRakeTest < ActiveSupport::TestCase
     in_toto_statement = {
       "_type" => "https://in-toto.io/Statement/v1",
       "subject" => [
-
-        "name" => "test-gem-1.0.0.gem",
-        "digest" => { "sha256" => subject_sha256 }
-
+        {
+          "name" => "test-gem-1.0.0.gem",
+          "digest" => { "sha256" => subject_sha256 }
+        }
       ]
     }
 
@@ -97,6 +97,32 @@ class AuditAttestationSubjectDigestRakeTest < ActiveSupport::TestCase
       assert_match(/Sigstore::Error/, result.detail)
     end
 
+    should "return skipped for unexpected payload type" do
+      envelope = stub(
+        payloadType: "application/octet-stream",
+        payload: ""
+      )
+      bundle = stub(dsse_envelope?: true, dsse_envelope: envelope)
+
+      attestation = create(:attestation)
+      attestation.stubs(:sigstore_bundle).returns(bundle)
+
+      result = audit_attestation(attestation)
+
+      assert_equal :skipped, result.status
+      assert_match(/unexpected payload type/, result.detail)
+    end
+
+    should "return error on StandardError" do
+      attestation = create(:attestation)
+      attestation.stubs(:sigstore_bundle).raises(ArgumentError.new("invalid data"))
+
+      result = audit_attestation(attestation)
+
+      assert_equal :error, result.status
+      assert_match(/ArgumentError/, result.detail)
+    end
+
     should "return error on JSON::ParserError" do
       envelope = stub(
         payloadType: "application/vnd.in-toto+json",
@@ -114,7 +140,7 @@ class AuditAttestationSubjectDigestRakeTest < ActiveSupport::TestCase
     end
   end
 
-  context "rake task output" do
+  context "rake task" do
     should "print summary report" do
       sha256 = Digest::SHA256.base64digest("gem contents")
       expected_hex = Digest::SHA256.hexdigest("gem contents")
@@ -127,6 +153,22 @@ class AuditAttestationSubjectDigestRakeTest < ActiveSupport::TestCase
       assert_match(/Audit Summary/, stdout)
       assert_match(/Match:\s+1/, stdout)
       assert_match(/Mismatch:\s+0/, stdout)
+    end
+
+    should "respect MAX_ATTESTATION_ID filter" do
+      sha256 = Digest::SHA256.base64digest("gem contents")
+      expected_hex = Digest::SHA256.hexdigest("gem contents")
+
+      a1 = create(:attestation, version: create(:version, sha256: sha256))
+      a2 = create(:attestation, version: create(:version, sha256: sha256))
+      Attestation.any_instance.stubs(:sigstore_bundle).returns(build_dsse_bundle(subject_sha256: expected_hex))
+
+      ENV["MAX_ATTESTATION_ID"] = a1.id.to_s
+      stdout, = capture_io { Rake::Task["audit_attestation_subject_digest"].invoke }
+      ENV.delete("MAX_ATTESTATION_ID")
+
+      assert_match(/Auditing 1 attestations/, stdout)
+      assert_match(/Match:\s+1/, stdout)
     end
   end
 end
