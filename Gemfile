@@ -7,7 +7,7 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.3"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.213"
+gem "aws-sdk-s3", "~> 1.215"
 gem "aws-sdk-sqs", "~> 1.111"
 gem "bootsnap", "~> 1.23"
 gem "clearance", "~> 2.11"
@@ -65,7 +65,7 @@ gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.21"
 gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.2"
-gem "sigstore", "~> 0.2.2"
+gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
 gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
@@ -82,7 +82,7 @@ gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.29"
+    gem "avo-advanced", "~> 3.30"
   end
 end
 

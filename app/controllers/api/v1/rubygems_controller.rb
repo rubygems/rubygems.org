@@ -63,11 +63,11 @@ class Api::V1::RubygemsController < Api::BaseController
 
     names = case params[:only]
             when "development"
-              @rubygem.reverse_development_dependencies.pluck(:name)
+              @rubygem.unique_reverse_development_dependencies.pluck(:name)
             when "runtime"
-              @rubygem.reverse_runtime_dependencies.pluck(:name)
+              @rubygem.unique_reverse_runtime_dependencies.pluck(:name)
             else
-              @rubygem.reverse_dependencies.pluck(:name)
+              @rubygem.unique_reverse_dependencies.pluck(:name)
             end
 
     respond_to do |format|

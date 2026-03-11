@@ -9,7 +9,7 @@ class ReverseDependenciesController < ApplicationController
   before_action :find_versioned_links, only: [:index]
 
   def index
-    @reverse_dependencies = @rubygem.reverse_dependencies
+    @reverse_dependencies = @rubygem.unique_reverse_dependencies
       .by_downloads
       .preload(:gem_download, :latest_version)
 
