@@ -14,10 +14,10 @@ class AuditAttestationSubjectDigestRakeTest < ActiveSupport::TestCase
     in_toto_statement = {
       "_type" => "https://in-toto.io/Statement/v1",
       "subject" => [
-        {
-          "name" => "test-gem-1.0.0.gem",
-          "digest" => { "sha256" => subject_sha256 }
-        }
+
+        "name" => "test-gem-1.0.0.gem",
+        "digest" => { "sha256" => subject_sha256 }
+
       ]
     }
 
@@ -159,11 +159,11 @@ class AuditAttestationSubjectDigestRakeTest < ActiveSupport::TestCase
       sha256 = Digest::SHA256.base64digest("gem contents")
       expected_hex = Digest::SHA256.hexdigest("gem contents")
 
-      a1 = create(:attestation, version: create(:version, sha256: sha256))
-      a2 = create(:attestation, version: create(:version, sha256: sha256))
+      included_attestation = create(:attestation, version: create(:version, sha256: sha256))
+      create(:attestation, version: create(:version, sha256: sha256))
       Attestation.any_instance.stubs(:sigstore_bundle).returns(build_dsse_bundle(subject_sha256: expected_hex))
 
-      ENV["MAX_ATTESTATION_ID"] = a1.id.to_s
+      ENV["MAX_ATTESTATION_ID"] = included_attestation.id.to_s
       stdout, = capture_io { Rake::Task["audit_attestation_subject_digest"].invoke }
       ENV.delete("MAX_ATTESTATION_ID")
 
