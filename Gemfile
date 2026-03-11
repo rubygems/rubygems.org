@@ -65,7 +65,7 @@ gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.21"
 gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.2"
-gem "sigstore", "~> 0.2.2"
+gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
 gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
