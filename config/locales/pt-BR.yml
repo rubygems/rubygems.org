@@ -98,7 +98,8 @@ pt-BR:
         rubygem_name:
     errors:
       messages:
-        not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
+        not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser
+          utilizada
         blocked:
       models:
         api_key:
@@ -871,6 +872,7 @@ pt-BR:
       forgot_password: Esqueceu sua Senha?
       resend_confirmation: Não recebeu o email de confirmação?
     verify:
+      title:
       confirm:
       notice:
     create:

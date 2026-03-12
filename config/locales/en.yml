@@ -856,6 +856,7 @@ en:
       forgot_password: Forgot password?
       resend_confirmation: Didn't receive confirmation mail?
     verify:
+      title: Confirm Password
       confirm: Confirm
       notice: Please confirm your password to continue.
     create:

@@ -99,8 +99,8 @@ es:
         rubygem_name:
     errors:
       messages:
-        not_pwned: ha aparecido con anterioridad en una filtración de datos y no se debería
-          usar
+        not_pwned: ha aparecido con anterioridad en una filtración de datos y no se
+          debería usar
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.
       models:
@@ -962,6 +962,7 @@ es:
       forgot_password: "¿Olvidaste tu contraseña?"
       resend_confirmation: "¿No recibiste tu correo electrónico de confirmación?"
     verify:
+      title:
       confirm: Confirmar
       notice: Por favor confirma tu contraseña para continuar.
     create:
