@@ -867,7 +867,6 @@ zh-CN:
       notice: 请确认密码后继续
     create:
       account_blocked: 您的账户已被 RubyGems 团队拉黑。请发送邮件至 support@rubygems.org 以恢复您的帐户。
-      password_compromised_warning:
   compromised_passwords:
     show:
       title:

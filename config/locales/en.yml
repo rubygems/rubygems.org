@@ -861,7 +861,6 @@ en:
       notice: Please confirm your password to continue.
     create:
       account_blocked: Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account.
-      password_compromised_warning: "Your password was found in a data breach. Reset it now to keep your account secure."
   compromised_passwords:
     show:
       title: Password Change Required

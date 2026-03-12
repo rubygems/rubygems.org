@@ -877,7 +877,6 @@ pt-BR:
       notice:
     create:
       account_blocked:
-      password_compromised_warning:
   compromised_passwords:
     show:
       title:

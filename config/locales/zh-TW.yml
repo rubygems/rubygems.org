@@ -855,7 +855,6 @@ zh-TW:
       notice: 請確認您的密碼以繼續。
     create:
       account_blocked:
-      password_compromised_warning:
   compromised_passwords:
     show:
       title:

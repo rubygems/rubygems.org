@@ -11,7 +11,7 @@ class SessionsController < Clearance::SessionsController
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, only: %i[verify webauthn_authenticate authenticate]
   before_action :webauthn_new_setup, only: :new
 
-  before_action :clear_compromised_password_session_state, only: %i[create]
+  before_action :clear_compromised_password_session_state, only: %i[create webauthn_full_create]
   before_action :ensure_not_blocked, only: %i[create]
   before_action :find_user, only: %i[create]
   before_action :check_password_compromised, only: %i[create]

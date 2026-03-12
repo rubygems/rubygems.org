@@ -874,7 +874,6 @@ ja:
       notice: パスワードを確認してお進みください。
     create:
       account_blocked: アカウントがrubygemsチームにより差し止められました。アカウントを復旧するにはsupport@rubygems.orgにEメールを送ってください。
-      password_compromised_warning:
   compromised_passwords:
     show:
       title:

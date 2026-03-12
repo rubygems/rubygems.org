@@ -968,7 +968,6 @@ es:
     create:
       account_blocked: Tu cuenta ha sido bloqueada por el equipo de rubygems. Para
         recuperar tu cuenta envía un mensaje a support@rubygems.org, por favor.
-      password_compromised_warning:
   compromised_passwords:
     show:
       title:
