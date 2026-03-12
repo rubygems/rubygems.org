@@ -198,6 +198,7 @@ class SessionsController < Clearance::SessionsController
 
     initiate_compromised_password_reset!(@user)
 
+    sign_out
     reset_session
 
     session[:compromised_password_user_id] = @user.id
