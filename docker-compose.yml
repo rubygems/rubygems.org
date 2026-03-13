@@ -5,10 +5,6 @@ services:
       - "127.0.0.1:5432:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
-  cache:
-    image: index.docker.io/library/memcached@sha256:f4504742a8fb03c3ac0cd172e1c1d2277117629f8d21d52f78307121ddc3de5f # 1.4.39
-    ports:
-      - "127.0.0.1:11211:11211"
   search:
     image: index.docker.io/opensearchproject/opensearch@sha256:2e954ff0e8c9d0f4868b4818150b3aecc92fbb0cc4a24d00dace38ada227291d # 2.13.0
     environment:
