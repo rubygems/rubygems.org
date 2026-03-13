@@ -24,6 +24,7 @@ es:
   locale_name: Español
   none: Ninguno
   not_found: No encontrado
+  or:
   forbidden:
   api_gem_not_found:
   api_key_forbidden: La clave API no tiene acceso
@@ -98,8 +99,8 @@ es:
         rubygem_name:
     errors:
       messages:
-        unpwn: ha aparecido con anterioridad en una filtración de datos y no se debería
-          usar
+        not_pwned: ha aparecido con anterioridad en una filtración de datos y no se
+          debería usar
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.
       models:
@@ -561,11 +562,26 @@ es:
       opening:
       title: CAMBIAR CONTRASEÑA
       subtitle: "¡Hola %{handle}!"
+    compromised_password_reset:
+      subject:
+      title:
+      subtitle:
+      opening:
+      reassurance:
+      closing_html:
+      closing_text:
   passwords:
     edit:
       submit: Guardar esta contraseña
       title: Restablecer contraseña
       token_failure: Por favor verifica la URL o inténtalo nuevamente.
+      compromised_heading:
+      compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Restablecer contraseña
       title: Cambiar tu contraseña
@@ -946,12 +962,32 @@ es:
       forgot_password: "¿Olvidaste tu contraseña?"
       resend_confirmation: "¿No recibiste tu correo electrónico de confirmación?"
     verify:
-      title: Confirmar contraseña
+      title:
       confirm: Confirmar
       notice: Por favor confirma tu contraseña para continuar.
     create:
       account_blocked: Tu cuenta ha sido bloqueada por el equipo de rubygems. Para
         recuperar tu cuenta envía un mensaje a support@rubygems.org, por favor.
+  compromised_passwords:
+    show:
+      title:
+      heading:
+      subheading:
+      explanation_html:
+      email_sent:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      back_to_sign_in:
+      need_help_html:
   stats:
     index:
       title: Estadísticas
@@ -1157,3 +1193,9 @@ es:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      password:
+        password_compromised:
+        mfa_status:
+        mfa_enabled:
+        mfa_disabled:
+        action_taken:

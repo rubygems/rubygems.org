@@ -188,9 +188,11 @@
         <div class="max-w-screen-xl w-full mx-auto pt-8 pb-10 mb-12 md:mb-16 lg:mb-28">
 
           <% flash.each do |name, msg| %>
-            <%= render AlertComponent.new(style: name, closeable: true) do %>
-              <%= flash_message(name, msg) %>
-            <% end %>
+            <div id="flash_<%= name %>">
+              <%= render AlertComponent.new(style: name, closeable: true) do %>
+                <%= flash_message(name, msg) %>
+              <% end %>
+            </div>
           <% end %>
 
           <%= yield %>
