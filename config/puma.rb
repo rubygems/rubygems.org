@@ -30,8 +30,8 @@ production_like = !%w[development test].include?(rails_env) # rubocop:disable Ra
 
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
-  # Respects WEB_CONCURRENCY env var if set, otherwise auto-detects.
-  workers :auto
+  # WEB_CONCURRENCY env var takes precedence, otherwise auto-detects from available CPUs.
+  workers ENV.fetch("WEB_CONCURRENCY", :auto)
   worker_timeout 60
 
   plugin :statsd
