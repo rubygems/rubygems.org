@@ -12,7 +12,7 @@ class AdminTest < ApplicationSystemTestCase
 
     assert_content("Log in with GitHub")
     assert_content(@admin_user.login)
-    click_link @admin_user.login
+    click_button "login as #{@admin_user.login}"
 
     assert_content("Welcome to the RubyGems.org admin dashboard!")
   end

@@ -27,7 +27,7 @@
           <% if Admin::GitHubUser.any? %>
             <ul class="admin-list">
               <% Admin::GitHubUser.find_each do |user| %>
-                <li><%= button_to "login as #{user.login}", { controller: :oauth, action: :development_log_in_as, admin_github_user_id: user.id }, method: :post %></li>
+                <li><%= link_to "login as #{user.login}", controller: :oauth, action: :development_log_in_as, admin_github_user_id: user.id %></li>
               <% end %>
             </ul>
           <% else %>
