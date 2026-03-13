@@ -47,7 +47,7 @@ class Version::ProvenanceComponent < ApplicationComponent
         SVG
       end
     else
-      "Unknown"
+      plain "Unknown"
     end
     div(class: "gem__attestation__built_on__info") do
       p { plain "Built and signed on" }

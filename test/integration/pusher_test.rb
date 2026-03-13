@@ -193,7 +193,9 @@ class PusherIntegrationTest < ActiveSupport::TestCase
         end
         gem_path = build_gemspec(spec)
 
-        @cutter = Pusher.new(@api_key, File.open(gem_path))
+        File.open(gem_path) do |gem_file|
+          @cutter = Pusher.new(@api_key, gem_file)
+        end
         @cutter.process
 
         assert_equal 200, @cutter.code
@@ -214,7 +216,9 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           Gem::Security::SigningPolicy.verify_root = old_verify_root_policy
         end
 
-        @cutter = Pusher.new(@api_key, File.open(gem_path))
+        File.open(gem_path) do |gem_file|
+          @cutter = Pusher.new(@api_key, gem_file)
+        end
         @cutter.process
 
         assert_includes @cutter.message, %(CN=Root not valid after)
@@ -580,8 +584,9 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       end
       gem_path = build_gemspec(spec)
 
-      @gem = File.open(gem_path)
-      @cutter = Pusher.new(@api_key, @gem)
+      File.open(gem_path) do |gem_file|
+        @cutter = Pusher.new(@api_key, gem_file)
+      end
       @cutter.process
     end
 

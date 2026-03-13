@@ -9,8 +9,8 @@ class Api::V1::OwnersController < Api::BaseController
 
   def show
     respond_to do |format|
-      format.json { render json: @rubygem.owners }
-      format.yaml { render yaml: @rubygem.owners }
+      format.json { render json: owners_payload }
+      format.yaml { render yaml: owners_payload }
     end
   end
 
@@ -84,5 +84,13 @@ class Api::V1::OwnersController < Api::BaseController
 
   def ownership_params
     params.permit(:role)
+  end
+
+  def owners_payload
+    @rubygem.ownerships
+      .includes(:user)
+      .map do |ownership|
+        ownership.user.payload.merge("role" => ownership.role)
+      end
   end
 end

@@ -7,7 +7,7 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.0.3"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.213"
+gem "aws-sdk-s3", "~> 1.215"
 gem "aws-sdk-sqs", "~> 1.111"
 gem "bootsnap", "~> 1.23"
 gem "clearance", "~> 2.11"
@@ -65,7 +65,7 @@ gem "discard", "~> 1.4"
 gem "user_agent_parser", "~> 2.21"
 gem "pghero", "~> 3.7"
 gem "faraday-multipart", "~> 1.2"
-gem "sigstore", "~> 0.2.2"
+gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
 gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
@@ -82,7 +82,7 @@ gem "prop_initializer", "~> 0.2"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.29"
+    gem "avo-advanced", "~> 3.30"
   end
 end
 
@@ -120,10 +120,10 @@ group :development, :test do
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.84", require: false
+  gem "rubocop", "~> 1.85", require: false
   gem "rubocop-rails", "~> 2.34", require: false
   gem "rubocop-performance", "~> 1.26", require: false
-  gem "rubocop-minitest", "~> 0.38", require: false
+  gem "rubocop-minitest", "~> 0.39", require: false
   gem "rubocop-capybara", "~> 2.22", require: false
   gem "rubocop-factory_bot", "~> 2.28", require: false
 end
