@@ -12,14 +12,22 @@ namespace :gemcutter do
   end
 
   namespace :import do
-    desc "Bring the gems through the gemcutter process"
-    task :process, %i[gems_cache_path] => :environment do |_task, args|
+    desc "Bring the gems through the gemcutter process\nUsage: rake gemcutter:import:process[<gems_cache_path>,<user_handle>]"
+    task :process, %i[gems_cache_path user_handle] => :environment do |_task, args|
+      handle = args[:user_handle] || "gem-author"
+      user = User.find_by(handle: handle)
+      raise "User with handle '#{handle}' not found. Please run `rails db:seed` first or provide a valid user handle." unless user
+
+      api_key = user.api_keys.create_with(
+        hashed_key: Digest::SHA256.hexdigest("rubygems_#{SecureRandom.hex(24)}")
+      ).find_or_create_by!(name: "gemcutter-import", scopes: %i[push_rubygem])
+
       gems = Dir[File.join(args[:gems_cache_path] || "#{Gem.path.first}/cache", "*.gem")].reverse
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts "Processing #{path}"
         File.open(path) do |gem_file|
-          cutter = Pusher.new(User.new, gem_file)
+          cutter = Pusher.new(api_key, gem_file)
 
           cutter.process
           puts cutter.message unless cutter.code == 200
