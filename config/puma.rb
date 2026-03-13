@@ -28,19 +28,26 @@ threads threads_count, threads_count
 rails_env = ENV.fetch("RAILS_ENV", "development")
 production_like = !%w[development test].include?(rails_env) # rubocop:disable Rails/NegateInclude
 
-require "concurrent"
-
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
-  worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
-  workers worker_count if worker_count > 1
+  # WEB_CONCURRENCY env var takes precedence, otherwise auto-detects from available CPUs.
+  workers ENV.fetch("WEB_CONCURRENCY", :auto)
   worker_timeout 60
 
   plugin :statsd
+
+  before_fork do
+    sleep 1
+  end
+
+  before_worker_boot do
+    # Re-open appenders after forking the process. https://logger.rocketjob.io/forking.html
+    SemanticLogger.reopen
+  end
 else
   # Specifies the `worker_timeout` threshold that Puma will use to wait before
   # terminating a worker in development environments.
-  worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
+  worker_timeout 3600 if rails_env == "development"
 
   # Allow puma to be restarted by `bin/rails restart` command.
   plugin :tmp_restart
@@ -58,12 +65,3 @@ environment rails_env
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
-
-before_fork do
-  sleep 1
-end
-
-on_worker_boot do
-  # Re-open appenders after forking the process. https://logger.rocketjob.io/forking.html
-  SemanticLogger.reopen
-end

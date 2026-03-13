@@ -38,6 +38,7 @@ docker run -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=po
   --net host "$DOCKER_TAG" \
   -- bin/rails db:create db:migrate
 docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL=postgresql://localhost \
+  -e WEB_CONCURRENCY=0 \
   --net host "$DOCKER_TAG" \
   -- puma --environment production --config /app/config/puma.rb
 
