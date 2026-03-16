@@ -11,7 +11,7 @@ class PasswordsController < ApplicationController
 
   before_action :no_referrer, only: %i[edit otp_edit webauthn_edit]
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
-  before_action :require_mfa, only: %i[edit]
+  before_action :require_mfa, only: %i[edit], unless: -> { params[:reason] == "compromised" }
   before_action :validate_otp, only: %i[otp_edit]
   before_action :validate_webauthn, only: %i[webauthn_edit]
   before_action :password_reset_session_verified, only: %i[edit otp_edit webauthn_edit]

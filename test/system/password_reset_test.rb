@@ -7,8 +7,8 @@ class PasswordResetTest < ApplicationSystemTestCase
 
   def password_reset_link
     body = ActionMailer::Base.deliveries.last.parts[1].body.decoded.to_s
-    link = %r{http://localhost(?::\d+)?/password([^";]*)}.match(body)
-    link[0]
+    link = %r{http://localhost(?::\d+)?/password([^"]*?)(?=")}.match(body)
+    CGI.unescapeHTML(link[0])
   end
 
   setup do
@@ -247,42 +247,71 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_equal email, @user.email
   end
 
-  test "login with compromised password without MFA redirects to compromised page" do
-    PasswordBreachChecker.any_instance.stubs(:breached?).returns(true)
+  test "login with compromised password without MFA redirects to compromised page and resets password" do
+    stub_password_as_compromised(PasswordHelpers::COMPROMISED_TEST_PASSWORD)
+    user = create(:user, handle: nil)
+    user.password = PasswordHelpers::COMPROMISED_TEST_PASSWORD
+    user.save!(validate: false)
 
     visit sign_in_path
 
-    fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: @user.password
+    fill_in "Email or Username", with: user.email
+    fill_in "Password", with: PasswordHelpers::COMPROMISED_TEST_PASSWORD
 
     perform_enqueued_jobs do
       click_button "Sign in"
+
+      assert_text "Password found in data breach"
+      assert_text "Password Change Required"
+      assert_current_path compromised_password_path
     end
 
-    assert_text "Password found in data breach"
-    assert_text "Password Change Required"
-    assert_current_path compromised_password_path
+    visit password_reset_link
+
+    assert_text "Reset password"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert_text "Your password has been changed."
+    assert_current_path sign_in_path
+    assert user.reload.authenticated?(PasswordHelpers::SECURE_TEST_PASSWORD)
   end
 
-  test "login with compromised password with MFA sends reset email after MFA" do
-    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
-    PasswordBreachChecker.any_instance.stubs(:breached?).returns(true)
+  test "login with compromised password with MFA sends reset email after MFA and resets password" do
+    stub_password_as_compromised(PasswordHelpers::COMPROMISED_TEST_PASSWORD)
+    user = create(:user, handle: nil)
+    user.password = PasswordHelpers::COMPROMISED_TEST_PASSWORD
+    user.save!(validate: false)
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
 
     visit sign_in_path
 
-    fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: @user.password
+    fill_in "Email or Username", with: user.email
+    fill_in "Password", with: PasswordHelpers::COMPROMISED_TEST_PASSWORD
     click_button "Sign in"
 
-    fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
+    assert_text "OTP code"
+    fill_in "otp", with: ROTP::TOTP.new(user.totp_seed).now
 
     perform_enqueued_jobs do
       click_button "Authenticate"
+
+      assert_text "Password found in data breach"
+      assert_text "Password Change Required"
+      assert_current_path compromised_password_path
     end
 
-    assert_text "Password found in data breach"
-    assert_text "Password Change Required"
-    assert_current_path compromised_password_path
+    visit password_reset_link
+
+    assert_text "Reset password"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert_text "Your password has been changed."
+    assert_current_path sign_in_path
+    assert user.reload.authenticated?(PasswordHelpers::SECURE_TEST_PASSWORD)
   end
 
   test "resetting password of soft-deleted user" do
@@ -295,6 +324,7 @@ class PasswordResetTest < ApplicationSystemTestCase
   end
 
   teardown do
+    WebMock.reset!
     @authenticator&.remove!
     Capybara.reset_sessions!
     Capybara.use_default_driver
