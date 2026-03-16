@@ -324,7 +324,6 @@ class PasswordResetTest < ApplicationSystemTestCase
   end
 
   teardown do
-    WebMock.reset!
     @authenticator&.remove!
     Capybara.reset_sessions!
     Capybara.use_default_driver
