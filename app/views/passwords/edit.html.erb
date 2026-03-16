@@ -27,7 +27,7 @@
       </div>
     <% end %>
 
-    <%= form_for(:password_reset, url: password_path, html: { method: :put }) do |form| %>
+    <%= form_for(:password_reset, url: password_path, html: { method: :put }, data: { turbo: false }) do |form| %>
       <div class="mb-6" data-controller="password-strength"
         data-password-strength-too-short-label-value="<%= t('passwords.edit.strength.too_short') %>"
         data-password-strength-weak-label-value="<%= t('passwords.edit.strength.weak') %>"
