@@ -5,14 +5,17 @@ class PasswordsController < ApplicationController
   include RequireMfa
   include WebauthnVerifiable
 
+  layout "hammy", only: %i[edit]
+
   before_action :ensure_email_present, only: %i[create]
 
   before_action :no_referrer, only: %i[edit otp_edit webauthn_edit]
   before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
-  before_action :require_mfa, only: %i[edit]
+  before_action :require_mfa, only: %i[edit], unless: -> { params[:reason] == "compromised" }
   before_action :validate_otp, only: %i[otp_edit]
   before_action :validate_webauthn, only: %i[webauthn_edit]
   before_action :password_reset_session_verified, only: %i[edit otp_edit webauthn_edit]
+  before_action :set_compromised_flag, only: %i[edit otp_edit webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
   before_action :validate_password_reset_session, only: :update
@@ -39,6 +42,7 @@ class PasswordsController < ApplicationController
     if @user.update_password reset_params[:password]
       @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
       @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
+      StatsD.increment "login.password_compromised.reset_completed" if session[:password_reset_reason] == "compromised"
       delete_password_reset_session
       flash[:notice] = t(".success")
       redirect_to signed_in? ? dashboard_path : sign_in_path
@@ -58,6 +62,10 @@ class PasswordsController < ApplicationController
 
   private
 
+  def set_compromised_flag
+    @compromised = session[:password_reset_reason] == "compromised"
+  end
+
   def ensure_email_present
     @email = params.dig(:password, :email)
     return if @email.present?
@@ -71,6 +79,7 @@ class PasswordsController < ApplicationController
     return login_failure(t("passwords.edit.token_failure")) if confirmation_token.blank?
     @user = User.find_by(confirmation_token:)
     return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
+    session[:password_reset_reason] = "compromised" if params[:reason] == "compromised"
     sign_out if signed_in? && @user != current_user
   end
 
@@ -78,10 +87,12 @@ class PasswordsController < ApplicationController
   # fail to invalidate the token for some reason, since this would indicate
   # something is wrong with the user, necessitating help from an admin.
   def password_reset_session_verified
+    reason = session[:password_reset_reason]
     reset_session
     @user.update!(confirmation_token: nil)
     session[:password_reset_verified_user] = @user.id
     session[:password_reset_verified] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
+    session[:password_reset_reason] = reason if reason.present?
   end
 
   def validate_password_reset_session
@@ -95,6 +106,7 @@ class PasswordsController < ApplicationController
     delete_mfa_session
     session.delete(:password_reset_verified_user)
     session.delete(:password_reset_verified)
+    session.delete(:password_reset_reason)
   end
 
   def reset_params

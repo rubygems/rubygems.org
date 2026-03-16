@@ -59,6 +59,8 @@ WebMock.disable_net_connect!(
 WebMock.globally_stub_request(:after_local_stubs) do |request|
   if WebMock::RequestPattern.new(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s={size}")).matches?(request)
     { status: 404, body: "", headers: {} }
+  elsif WebMock::RequestPattern.new(:get, Addressable::Template.new("https://api.pwnedpasswords.com/range/{hash_prefix}")).matches?(request)
+    { status: 200, body: "", headers: {} }
   end
 end
 
@@ -126,7 +128,6 @@ class ActiveSupport::TestCase
     I18n.locale = :en
     Rack::Attack.cache.store.clear
 
-    Unpwn.offline = true
     OmniAuth.config.mock_auth.clear
 
     ActionMailer::Base.deliveries.clear
@@ -233,7 +234,7 @@ class ActiveSupport::TestCase
     find(:css, ".header__popup-link").click
     click_on "Sign out"
 
-    assert page.has_content?("Sign in".upcase)
+    assert page.has_content?("Sign in")
 
     @authenticator
   end

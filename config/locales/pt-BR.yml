@@ -23,6 +23,7 @@ pt-BR:
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
+  or:
   forbidden:
   api_gem_not_found:
   api_key_forbidden:
@@ -97,7 +98,8 @@ pt-BR:
         rubygem_name:
     errors:
       messages:
-        unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
+        not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser
+          utilizada
         blocked:
       models:
         api_key:
@@ -527,11 +529,26 @@ pt-BR:
       opening:
       title:
       subtitle:
+    compromised_password_reset:
+      subject:
+      title:
+      subtitle:
+      opening:
+      reassurance:
+      closing_html:
+      closing_text:
   passwords:
     edit:
       submit: Salvar senha
       title: Resetar senha
       token_failure: Por favor, confira a URL ou tente submetê-la novamente.
+      compromised_heading:
+      compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Resetar senha
       title: Alterar senha
@@ -860,6 +877,26 @@ pt-BR:
       notice:
     create:
       account_blocked:
+  compromised_passwords:
+    show:
+      title:
+      heading:
+      subheading:
+      explanation_html:
+      email_sent:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      back_to_sign_in:
+      need_help_html:
   stats:
     index:
       title: Estatísticas
@@ -1047,3 +1084,9 @@ pt-BR:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      password:
+        password_compromised:
+        mfa_status:
+        mfa_enabled:
+        mfa_disabled:
+        action_taken:
