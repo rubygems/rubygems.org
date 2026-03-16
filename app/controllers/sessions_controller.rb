@@ -187,12 +187,14 @@ class SessionsController < Clearance::SessionsController
   end
 
   def handle_compromised_password_with_mfa
+    StatsD.increment "login.password_compromised.with_mfa"
     @user.record_event!(Events::UserEvent::PASSWORD_COMPROMISED,
       request:, mfa_enabled: true, action_taken: "password_reset_redirect")
     session[:password_compromised] = true
   end
 
   def handle_compromised_password_without_mfa
+    StatsD.increment "login.password_compromised.without_mfa"
     @user.record_event!(Events::UserEvent::PASSWORD_COMPROMISED,
       request:, mfa_enabled: false, action_taken: "email_reset_required")
 

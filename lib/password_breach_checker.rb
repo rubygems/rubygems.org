@@ -7,7 +7,9 @@ class PasswordBreachChecker
 
   def breached?
     return @breached if defined?(@breached)
-    @breached = @password.pwned?
+    result = StatsD.measure("login.hibp_check.duration") { @password.pwned? }
+    StatsD.increment "login.hibp_check.success"
+    @breached = result
   rescue Pwned::TimeoutError, Pwned::Error => e
     Rails.logger.warn "HIBP check failed: #{e.class}"
     StatsD.increment "login.hibp_check.error"

@@ -7,7 +7,8 @@ class CompromisedPasswordsController < ApplicationController
 
   def show
     @user = User.find_by(id: session[:compromised_password_user_id])
-    redirect_to sign_in_path unless @user
+    return redirect_to sign_in_path unless @user
+    StatsD.increment "login.password_compromised.page_view"
   end
 
   private

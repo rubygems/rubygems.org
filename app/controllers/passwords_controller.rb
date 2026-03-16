@@ -42,6 +42,7 @@ class PasswordsController < ApplicationController
     if @user.update_password reset_params[:password]
       @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
       @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
+      StatsD.increment "login.password_compromised.reset_completed" if session[:password_reset_reason] == "compromised"
       delete_password_reset_session
       flash[:notice] = t(".success")
       redirect_to signed_in? ? dashboard_path : sign_in_path
