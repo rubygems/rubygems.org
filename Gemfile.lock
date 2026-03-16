@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.30.0)
-      avo (= 3.30.0)
-      avo-dynamic_filters (= 3.30.0)
-      avo-pro (= 3.30.0)
+    avo-advanced (3.30.2)
+      avo (= 3.30.2)
+      avo-dynamic_filters (= 3.30.2)
+      avo-pro (= 3.30.2)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.30.0)
-      avo (= 3.30.0)
+    avo-dashboards (3.30.2)
+      avo (= 3.30.2)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.30.0)
-      avo (= 3.30.0)
+    avo-dynamic_filters (3.30.2)
+      avo (= 3.30.2)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.30.0)
-      avo (= 3.30.0)
+    avo-menu (3.30.2)
+      avo (= 3.30.2)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.30.0)
-      avo (= 3.30.0)
-      avo-dashboards (= 3.30.0)
-      avo-menu (= 3.30.0)
+    avo-pro (3.30.2)
+      avo (= 3.30.2)
+      avo-dashboards (= 3.30.2)
+      avo-menu (= 3.30.2)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -116,7 +116,7 @@ GEM
       ffi-compiler (~> 1.0)
     ast (2.4.3)
     attr_required (1.0.2)
-    avo (3.30.0)
+    avo (3.30.2)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -126,7 +126,7 @@ GEM
       docile
       meta-tags
       pagy (>= 7.0.0, < 43)
-      prop_initializer (>= 0.2.0)
+      prop_initializer (>= 0.3.0)
       turbo-rails (>= 2.0.0)
       turbo_power (>= 0.6.0)
       view_component (>= 3.7.0)
@@ -597,7 +597,7 @@ GEM
       prettyprint
     prettyprint (0.2.0)
     prism (1.9.0)
-    prop_initializer (0.2.0)
+    prop_initializer (0.3.0)
       zeitwerk (>= 2.6.18)
     propshaft (1.3.1)
       actionpack (>= 7.0.0)
@@ -856,7 +856,7 @@ GEM
     tailwindcss-ruby (4.1.16-x86_64-linux-gnu)
     tailwindcss-ruby (4.1.16-x86_64-linux-musl)
     thor (1.5.0)
-    timeout (0.6.0)
+    timeout (0.6.1)
     toxiproxy (2.0.2)
     tpm-key_attestation (0.14.1)
       bindata (~> 2.4)
@@ -1074,13 +1074,13 @@ CHECKSUMS
   argon2 (2.3.2) sha256=62b04170af37ca8d9975bc6e24dd3b74794e82a98e6d8cfa9ae95a76804a6f89
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
-  avo (3.30.0) sha256=e4d63fef7c439b20ec6a7112c1533bf2f593cfd14a5be4609d8f473272d13cff
-  avo-advanced (3.30.0) sha256=33f81e983d16e3994ffc7d4b43a0f74a0a751a06d3c23b1777857a9f280d84c8
-  avo-dashboards (3.30.0) sha256=48dbc3131a483b366393aa0c66e57850a6f5a97b86a5797f16ea22d84045a742
-  avo-dynamic_filters (3.30.0) sha256=3767c199be9c0c36abd0f0980ba2539ff633fae06f5a55a3b9f29532cfca7c0e
+  avo (3.30.2) sha256=fd0150eda8a4101b0847293b4af4e2ade260ef1a58f45791b7ad8be736364187
+  avo-advanced (3.30.2) sha256=957f3f488cf5f31329ba7471de291da11d96627f8be1120bcf66226fdd7eb4c1
+  avo-dashboards (3.30.2) sha256=508ea613ed4c3c83460577524a25541858ed3153ceaeeebb9c37083b7744e2db
+  avo-dynamic_filters (3.30.2) sha256=849bc65184b1f09a28124e882eb94176f4bd2b60c1d16a60c747b0e05d2cb44e
   avo-icons (0.1.1) sha256=d9a23d6d47bb7f8f04163119352a66a436dc8accf53f15cd0c3b5fcaffed082c
-  avo-menu (3.30.0) sha256=cc55b3cd57d74f496fb5c125268db6335f140c9adb6719692d4ca67670091a04
-  avo-pro (3.30.0) sha256=5826fa73445f2a100541fe94c88726c11a2a0a0996fe9ddc904f5184f49cb549
+  avo-menu (3.30.2) sha256=e0c0f39538aa03a8519e23842df10b629206af39a200d736bcb1c44bfca83408
+  avo-pro (3.30.2) sha256=a09c7d15bf2c6927d5d87b3103246030ed9d405a79798a62b6e17309dc8262f3
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
   aws-partitions (1.1223.0) sha256=cdc1b936c2d343c4235f8a0a276bfc27ce17b389b1848a70479b9a686e1f48f3
@@ -1272,7 +1272,7 @@ CHECKSUMS
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
-  prop_initializer (0.2.0) sha256=bd27704d0df8c59c3baf0df5cf448eba2b140fb9934fb31b2e379b5c842d8820
+  prop_initializer (0.3.0) sha256=7ccbe912ba808fb46404d50a594a884ca0f3f43278b34de552be9a2ba1acb162
   propshaft (1.3.1) sha256=9acc664ef67e819ffa3d95bd7ad4c3623ea799110c5f4dee67fa7e583e74c392
   prosopite (2.1.2) sha256=ca474e5b83bf65cdb1b3d44f848ceb3270c1e3474a9c20fd9228114bf766fd0b
   protobug (0.1.0) sha256=5bf1356cedf99dcf311890743b78f5e602f62ca703e574764337f1996b746bf2
@@ -1370,7 +1370,7 @@ CHECKSUMS
   tailwindcss-ruby (4.1.16-x86_64-linux-gnu) sha256=4d7948dbab71afd9d51ed1be77cf99cd47768ab3ddc4701623e8c6b861363941
   tailwindcss-ruby (4.1.16-x86_64-linux-musl) sha256=1f00ac1da0077473a3790e1359709406a9b2b3740e7571a86c64312e9d85b42e
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
-  timeout (0.6.0) sha256=6d722ad619f96ee383a0c557ec6eb8c4ecb08af3af62098a0be5057bf00de1af
+  timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb
   toxiproxy (2.0.2) sha256=2e3b53604fb921d40da3db8f78a52b3133fcae33e93d440725335b15974e440a
   tpm-key_attestation (0.14.1) sha256=7fd4e4653a7afd0a386632ddfb05d10ecfdd47678299c5e69165bc9ae111193f
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
