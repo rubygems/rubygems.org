@@ -144,7 +144,7 @@ group :test do
   gem "launchy", "~> 3.1"
   gem "rack-test", "~> 2.2", require: "rack/test"
   gem "rails-controller-testing", "~> 1.0"
-  gem "mocha", "~> 3.0", require: false
+  gem "mocha", "~> 3.1", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 7.0"
   gem "selenium-webdriver", "~> 4.41"
