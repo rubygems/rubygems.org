@@ -271,6 +271,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_text "Reset password"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+
     assert_text "Strong"
     click_button "Save this password"
 
@@ -308,6 +309,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_text "Reset password"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+
     assert_text "Strong"
     click_button "Save this password"
 
