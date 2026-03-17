@@ -8,14 +8,12 @@ class Events::TableComponent < ApplicationComponent
   extend Phlex::Rails::HelperMacros
 
   register_value_helper :current_user
-  register_value_helper :page_entries_info
-  register_value_helper :paginate
 
   prop :security_events, reader: :public
 
   def view_template
     header(class: "gems__header push--s") do
-      p(class: "gems__meter l-mb-0") { raw page_entries_info(security_events) } # rubocop:disable Rails/OutputSafety
+      p(class: "gems__meter l-mb-0") { page_entries_info(security_events) }
     end
 
     if security_events.any?
@@ -36,7 +34,7 @@ class Events::TableComponent < ApplicationComponent
       end
     end
 
-    raw paginate(security_events) # rubocop:disable Rails/OutputSafety
+    paginate(security_events)
   end
 
   private
