@@ -28,4 +28,14 @@ class OIDC::PendingTrustedPublisherTest < ActiveSupport::TestCase
     refute_predicate publisher, :valid?
     assert_equal ["is already in use"], publisher.errors[:rubygem_name]
   end
+
+  test "validates rubygem name is not a protected typo" do
+    rubygem = create(:rubygem, name: "typekit", downloads: 15_000)
+    create(:version, rubygem: rubygem, created_at: 1.day.ago)
+
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "type_kit")
+
+    refute_predicate publisher, :valid?
+    assert_includes publisher.errors[:rubygem_name].first, "is too similar to an existing gem named 'typekit'"
+  end
 end
