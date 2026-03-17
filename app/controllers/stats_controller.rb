@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatsController < ApplicationController
   before_action -> { set_page Gemcutter::STATS_MAX_PAGES }
 

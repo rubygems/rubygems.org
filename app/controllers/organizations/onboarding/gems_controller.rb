@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organizations::Onboarding::GemsController < Organizations::Onboarding::BaseController
   def edit
   end

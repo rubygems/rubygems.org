@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GoodJobStatsDJob < ApplicationJob
   queue_as "stats"
 

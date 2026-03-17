@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ApplicationAction < Avo::BaseAction
   include SemanticLogger::Loggable
 

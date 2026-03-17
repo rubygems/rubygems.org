@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
@@ -55,7 +57,7 @@ class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
     @role.access_policy.statements = [OIDC::AccessPolicy::Statement.new(
       effect: "allow",
       conditions: [
-        { operator: "string_equals", claim: "unknown", value: "" }
+        operator: "string_equals", claim: "unknown", value: ""
       ],
       principal: { oidc: "" }
     )]

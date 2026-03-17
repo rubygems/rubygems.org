@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 WebAuthn.configure do |config|
   config.allowed_origins = [if Rails.env.development?
                               ENV.fetch("WEBAUTHN_ORIGIN", "http://localhost:3000")
-                            elsif Rails.env.test?
-                              "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}:31337"
                             else
                               "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
                             end]

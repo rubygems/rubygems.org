@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class GemsTest < ActionDispatch::IntegrationTest
@@ -29,7 +31,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "canonical/alternate urls for gem points to most recent version" do
-    base_url = "http://localhost/gems/sandworm/versions/1.1.1".freeze
+    base_url = "http://localhost/gems/sandworm/versions/1.1.1"
     create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_path(@rubygem.slug)
     css = %(link[rel="canonical"][href="#{base_url}"])

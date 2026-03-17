@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class RubygemTest < ActiveSupport::TestCase
@@ -844,11 +846,11 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "enqueue link verification jobs" do
         assert_enqueued_with job: VerifyLinkJob,
-          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/docs").sole }]
+          args: [link_verification: @rubygem.link_verifications.for_uri("https://example.com/docs").sole]
         assert_enqueued_with job: VerifyLinkJob,
-          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/test").sole }]
+          args: [link_verification: @rubygem.link_verifications.for_uri("https://example.com/test").sole]
         assert_enqueued_with job: VerifyLinkJob,
-          args: [{ link_verification: @rubygem.link_verifications.for_uri("https://example.com/").sole }]
+          args: [link_verification: @rubygem.link_verifications.for_uri("https://example.com/").sole]
         assert_enqueued_jobs 3, only: VerifyLinkJob
       end
     end

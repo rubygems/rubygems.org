@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Api::V1::SearchesControllerTest < ActionController::TestCase
@@ -39,9 +41,8 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     setup do
       @match = create(:rubygem, name: "match")
       @other = create(:rubygem, name: "other")
-      create(:version, rubygem: @match)
-      create(:version, rubygem: @other)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @match)
+      create(:version, :reindex, rubygem: @other)
     end
 
     should_respond_to(:json) do |body|
@@ -55,7 +56,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     context "with elasticsearch down" do
       should "returns friendly error message" do
         requires_toxiproxy
-        Toxiproxy[:elasticsearch].down do
+        toxiproxy_elasticsearch.down do
           get :show, params: { query: "other" }, format: :json
 
           assert_response :service_unavailable
@@ -105,10 +106,9 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       @match1 = create(:rubygem, name: "match1")
       @match2 = create(:rubygem, name: "match2")
       @other = create(:rubygem, name: "other")
-      create(:version, rubygem: @match1)
-      create(:version, rubygem: @match2)
-      create(:version, rubygem: @other)
-      import_and_refresh
+      create(:version, :reindex, rubygem: @match1)
+      create(:version, :reindex, rubygem: @match2)
+      create(:version, :reindex, rubygem: @other)
     end
 
     context "with elasticsearch up" do
@@ -130,7 +130,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     context "with elasticsearch down" do
       should "fallback to legacy search" do
         requires_toxiproxy
-        Toxiproxy[:elasticsearch].down do
+        toxiproxy_elasticsearch.down do
           get :autocomplete, params: { query: "ot" }
 
           assert_response :success

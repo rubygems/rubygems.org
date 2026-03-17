@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::UserEvent < ApplicationRecord
   belongs_to :user, class_name: "::User"
 
@@ -44,6 +46,11 @@ class Events::UserEvent < ApplicationRecord
   end
 
   PASSWORD_CHANGED = define_event "user:password:changed"
+
+  PASSWORD_COMPROMISED = define_event "user:password:compromised" do
+    attribute :mfa_enabled, :boolean
+    attribute :action_taken, :string
+  end
 
   POLICIES_ACKNOWLEDGED = define_event "user:policies:acknowledged"
 end

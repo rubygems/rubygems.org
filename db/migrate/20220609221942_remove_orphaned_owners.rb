@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveOrphanedOwners < ActiveRecord::Migration[7.0]
   def up
     # Ownership.where.missing(:user).destroy_all

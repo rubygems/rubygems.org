@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Events::OrganizationEventPolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     def resolve

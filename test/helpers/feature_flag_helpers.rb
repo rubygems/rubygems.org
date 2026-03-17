@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FeatureFlagHelpers
   def enable_feature(flag_name, actor: nil)
     if actor

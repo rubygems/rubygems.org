@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class is the same as the default pundit authorization client.
 # It just adds the admin scope automatically so that Avo pundit policies can be kept separate.
 class Admin::AuthorizationClient < Avo::Pro::Authorization::Clients::PunditClient

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Api::V1::OwnersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
   include ActionMailer::TestHelper
 
-  def self.should_respond_to(format)
+  def self.should_respond_to(format) # rubocop:disable Metrics/MethodLength
     should "route GET show with #{format.to_s.upcase}" do
       route = { controller: "api/v1/owners",
                 action: "show",
@@ -36,6 +38,29 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should "not return other owner handle" do
         assert yield(@response.body).pluck("handle").exclude?(@other_user.handle)
+      end
+
+      should "return owner role for default ownership" do
+        response = yield(@response.body)
+
+        assert_equal "owner", response[0]["role"]
+      end
+    end
+
+    context "on GET to show with #{format.to_s.upcase} for maintainer role" do
+      setup do
+        @rubygem = create(:rubygem)
+        @maintainer = create(:user)
+        create(:ownership, rubygem: @rubygem, user: @maintainer, role: :maintainer)
+
+        get :show, params: { rubygem_id: @rubygem.slug }, format: format
+      end
+
+      should "return maintainer role" do
+        response = yield(@response.body)
+        maintainer_entry = response.find { |o| o["handle"] == @maintainer.handle }
+
+        assert_equal "maintainer", maintainer_entry["role"]
       end
     end
   end

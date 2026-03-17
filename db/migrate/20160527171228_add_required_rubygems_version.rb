@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRequiredRubygemsVersion < ActiveRecord::Migration[4.2]
   def up
     change_table(:versions, bulk: true) do |t|

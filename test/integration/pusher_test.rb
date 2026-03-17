@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class PusherIntegrationTest < ActiveSupport::TestCase
@@ -191,7 +193,9 @@ class PusherIntegrationTest < ActiveSupport::TestCase
         end
         gem_path = build_gemspec(spec)
 
-        @cutter = Pusher.new(@api_key, File.open(gem_path))
+        File.open(gem_path) do |gem_file|
+          @cutter = Pusher.new(@api_key, gem_file)
+        end
         @cutter.process
 
         assert_equal 200, @cutter.code
@@ -212,7 +216,9 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           Gem::Security::SigningPolicy.verify_root = old_verify_root_policy
         end
 
-        @cutter = Pusher.new(@api_key, File.open(gem_path))
+        File.open(gem_path) do |gem_file|
+          @cutter = Pusher.new(@api_key, gem_file)
+        end
         @cutter.process
 
         assert_includes @cutter.message, %(CN=Root not valid after)
@@ -345,7 +351,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 0o7, 0o4))
         perform_enqueued_jobs only: ReindexRubygemJob
-        response = Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: @rubygem.id
+        response = Searchkick.client.get index: Rubygem.searchkick_index.name, id: @rubygem.id
         expected_response = {
           "name"              => "gemsgemsgems",
           "downloads"         => 0,
@@ -399,7 +405,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       end
 
       should "enqueue rstuf addition" do
-        assert_enqueued_with(job: Rstuf::AddJob, args: [{ version: @cutter.version }]) do
+        assert_enqueued_with(job: Rstuf::AddJob, args: [version: @cutter.version]) do
           @cutter.save
         end
       end
@@ -443,7 +449,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
     should "update rubygem index" do
       perform_enqueued_jobs only: ReindexRubygemJob
-      response = Searchkick.client.get index: Gemcutter::SEARCH_INDEX_NAME, id: @rubygem.id
+      response = Searchkick.client.get index: Rubygem.searchkick_index.name, id: @rubygem.id
 
       assert_equal "new summary", response["_source"]["summary"]
     end
@@ -578,8 +584,9 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       end
       gem_path = build_gemspec(spec)
 
-      @gem = File.open(gem_path)
-      @cutter = Pusher.new(@api_key, @gem)
+      File.open(gem_path) do |gem_file|
+        @cutter = Pusher.new(@api_key, gem_file)
+      end
       @cutter.process
     end
 

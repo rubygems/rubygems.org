@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveTimestampsOnVersionHistory < ActiveRecord::Migration[4.2]
   def up
     change_table(:version_histories, bulk: true) do |t|

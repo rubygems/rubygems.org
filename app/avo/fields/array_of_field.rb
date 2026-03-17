@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Fields::ArrayOfField < Avo::Fields::BaseField
   def initialize(name, field:, field_options: {}, **args, &)
     super(name, **args, &nil)

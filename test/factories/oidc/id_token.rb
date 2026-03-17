@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :oidc_id_token, class: "OIDC::IdToken" do
     api_key_role factory: :oidc_api_key_role

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :sigstore_x509_certificate, class: "Sigstore::Common::V1::X509Certificate" do
     transient do

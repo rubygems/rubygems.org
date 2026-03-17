@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailConfirmationsController < ApplicationController
   include EmailResettable
   include RequireMfa
@@ -81,7 +83,7 @@ class EmailConfirmationsController < ApplicationController
 
   def login_failure(message)
     flash.now.alert = message
-    render template: "multifactor_auths/prompt", status: :unauthorized
+    render template: "multifactor_auths/prompt", layout: "hammy", status: :unauthorized
   end
 
   def otp_verification_url

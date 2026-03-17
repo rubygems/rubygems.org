@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class SearchTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   test "searching for a gem" do
-    create(:rubygem, name: "LDAP", number: "1.0.0")
-    create(:rubygem, name: "LDAP-PLUS", number: "1.0.0")
-    import_and_refresh
+    create(:rubygem, :reindex, name: "LDAP", number: "1.0.0")
+    create(:rubygem, :reindex, name: "LDAP-PLUS", number: "1.0.0")
 
     visit search_path
 
@@ -20,8 +21,7 @@ class SearchTest < ApplicationSystemTestCase
 
   test "searching for a yanked gem" do
     rubygem = create(:rubygem, name: "LDAP")
-    create(:version, rubygem: rubygem, indexed: false)
-    import_and_refresh
+    create(:version, :reindex, rubygem: rubygem, indexed: false)
 
     visit search_path
 
@@ -39,9 +39,8 @@ class SearchTest < ApplicationSystemTestCase
 
   test "searching for a gem with yanked versions" do
     rubygem = create(:rubygem, name: "LDAP")
-    create(:version, rubygem: rubygem, number: "1.1.1", indexed: true)
-    create(:version, rubygem: rubygem, number: "2.2.2", indexed: false)
-    import_and_refresh
+    create(:version, :reindex, rubygem: rubygem, number: "1.1.1", indexed: true)
+    create(:version, :reindex, rubygem: rubygem, number: "2.2.2", indexed: false)
 
     visit search_path
 
@@ -54,9 +53,8 @@ class SearchTest < ApplicationSystemTestCase
 
   test "params has non white listed keys" do
     Kaminari.configure { |c| c.default_per_page = 1 }
-    create(:rubygem, name: "ruby-ruby", number: "1.0.0")
-    create(:rubygem, name: "ruby-gems", number: "1.0.0")
-    import_and_refresh
+    create(:rubygem, :reindex, name: "ruby-ruby", number: "1.0.0")
+    create(:rubygem, :reindex, name: "ruby-gems", number: "1.0.0")
 
     visit "/search?query=ruby&original_script_name=javascript:alert(1)//&script_name=javascript:alert(1)//"
 
@@ -71,10 +69,9 @@ class SearchTest < ApplicationSystemTestCase
       orignal_val = Gemcutter::SEARCH_MAX_PAGES
       Gemcutter::SEARCH_MAX_PAGES = 2
 
-      create(:rubygem, name: "ruby-ruby", number: "1.0.0")
-      create(:rubygem, name: "ruby-gems", number: "1.0.0")
-      create(:rubygem, name: "ruby-thing", number: "1.0.0")
-      import_and_refresh
+      create(:rubygem, :reindex, name: "ruby-ruby", number: "1.0.0")
+      create(:rubygem, :reindex, name: "ruby-gems", number: "1.0.0")
+      create(:rubygem, :reindex, name: "ruby-thing", number: "1.0.0")
 
       visit "/search?query=ruby"
 

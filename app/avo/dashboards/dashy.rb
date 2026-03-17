@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Dashboards::Dashy < Avo::Dashboards::BaseDashboard
   self.id = "dashy"
   self.name = "Avo::Dashboards::Dashy"

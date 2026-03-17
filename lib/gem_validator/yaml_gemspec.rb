@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GemValidator::YAMLGemspec
   def initialize(ast)
     @ast = ast

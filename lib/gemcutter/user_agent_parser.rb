@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Gemcutter::UserAgentParser
   class UnableToParse < ArgumentError; end
   class MultipleParsersMatched < ArgumentError; end

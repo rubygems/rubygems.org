@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   ################################################################################
   # Root
@@ -261,6 +263,8 @@ Rails.application.routes.draw do
       post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
       post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
     end
+
+    resource :compromised_password, only: %i[show]
 
     resource :session, only: %i[create destroy] do
       post 'otp_create', to: 'sessions#otp_create', as: :otp_create

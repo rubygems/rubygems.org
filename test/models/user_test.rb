@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
@@ -197,6 +199,9 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "be invalid when it's found in a data breach" do
+        stub_request(:get, "https://api.pwnedpasswords.com/range/01B30")
+          .to_return(status: 200, body: "7ACBA4F54F55AAFC33BB06BBBF6CA803E9A:5")
+
         user = build(:user, password: "1234567890")
 
         refute_predicate user, :valid?

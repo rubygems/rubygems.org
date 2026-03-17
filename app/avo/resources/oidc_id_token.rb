@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::OIDCIdToken < Avo::BaseResource
   self.includes = []
   self.model_class = ::OIDC::IdToken

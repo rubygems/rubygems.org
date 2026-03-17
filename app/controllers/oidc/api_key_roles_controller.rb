@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::ApiKeyRolesController < ApplicationController
   include ApiKeyable
 

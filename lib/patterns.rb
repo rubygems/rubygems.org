@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Patterns
   extend ActiveSupport::Concern
 
-  SPECIAL_CHARACTERS    = ".-_".freeze
+  SPECIAL_CHARACTERS    = ".-_"
   ALLOWED_CHARACTERS    = "[A-Za-z0-9#{Regexp.escape(SPECIAL_CHARACTERS)}]+".freeze
   ROUTE_PATTERN         = /#{ALLOWED_CHARACTERS}(?<!\.gem)/
   LAZY_ROUTE_PATTERN    = /#{ALLOWED_CHARACTERS}?/

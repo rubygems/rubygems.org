@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 SemanticLogger.application = "rubygems.org"
 
 ActiveSupport.on_load(:action_controller) do

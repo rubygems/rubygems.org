@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::EventsUserEvent < Avo::BaseResource
   self.title = :cache_key
   self.includes = %i[user ip_address geoip_info]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CertificateChainSerializer
   PATTERN = /-----BEGIN CERTIFICATE-----(?:.|\n)+?-----END CERTIFICATE-----/
 

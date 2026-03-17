@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "active_support/core_ext/integer/time"
 
 # The test environment is used exclusively to run your application's
@@ -48,7 +50,6 @@ Rails.application.configure do
   # Unlike controllers, the mailer instance doesn't have any context about the
   # incoming request so you'll need to provide the :host parameter yourself.
   config.action_mailer.default_url_options = { host: Gemcutter::HOST,
-                                               port: "31337",
                                                protocol: Gemcutter::PROTOCOL }
 
   # Print deprecation notices to the stderr.

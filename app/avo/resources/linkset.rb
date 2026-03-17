@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::Linkset < Avo::BaseResource
   self.includes = [:rubygem]
   self.visible_on_sidebar = false

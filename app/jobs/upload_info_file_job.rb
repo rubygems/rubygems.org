@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UploadInfoFileJob < ApplicationJob
   queue_with_priority PRIORITIES.fetch(:push)
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::SearchesController < Api::BaseController
   before_action :set_page, only: %i[show autocomplete]
   before_action :verify_query_string, only: %i[show autocomplete]

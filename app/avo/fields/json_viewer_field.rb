@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Fields::JsonViewerField < Avo::Fields::CodeField
   def initialize(name, **args, &)
     super(name, **args, language: :javascript, line_wrapping: true, &)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Indexer < ApplicationJob
   extend StatsD::Instrument
   include TraceTagger

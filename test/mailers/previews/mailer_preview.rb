@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MailerPreview < ActionMailer::Preview
   def email_reset
     Mailer.email_reset(User.first)
@@ -12,7 +14,15 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def change_password
-    PasswordMailer.change_password(User.last)
+    user = User.last
+    user.forgot_password!
+    PasswordMailer.change_password(user)
+  end
+
+  def compromised_password_reset
+    user = User.last
+    user.forgot_password!
+    PasswordMailer.compromised_password_reset(user)
   end
 
   def deletion_complete

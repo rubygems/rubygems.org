@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::VersionAfterWrite < Avo::Actions::ApplicationAction
   self.name = "Run version post-write job"
   self.visible = lambda {

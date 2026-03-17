@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gemcutter::Middleware
   class Hostess < Rack::Static
     def initialize(app, options = {})

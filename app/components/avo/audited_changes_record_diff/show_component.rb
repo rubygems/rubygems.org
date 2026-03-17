@@ -36,7 +36,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
 
   def sorted_fields
     @resource.only_fields
-      .reject { it.is_a?(Avo::Fields::HasManyBaseField) }
+      .grep_v(Avo::Fields::HasManyBaseField)
       .sort_by.with_index { |f, i| [changes.key?(f.id.to_s) ? -1 : 1, i] }
   end
 
@@ -50,7 +50,7 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
       unless field.visible?
         if changes.key?(database_id)
           # dummy field to avoid ever printing out the contents... we just want the label
-          yield (deleted ? :old : :changed), Avo::Fields::BooleanField::ShowComponent.new(field: field)
+          yield (deleted ? :old : :changed), Avo::Fields::TextField::ShowComponent.new(field: field)
         end
         next
       end

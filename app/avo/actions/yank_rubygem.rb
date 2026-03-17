@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class Avo::Actions::YankRubygem < Avo::Actions::ApplicationAction
-  OPTION_ALL = "All".freeze
+  OPTION_ALL = "All"
 
   def fields
     field :version, as: :select,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dependency < ApplicationRecord
   belongs_to :rubygem, optional: true
   belongs_to :version

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
@@ -22,6 +24,33 @@ class Rubygem < ApplicationRecord
   has_many :reverse_dependencies, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
+
+  def unique_reverse_dependencies
+    Rubygem.where(
+      id: Dependency.where(rubygem_id: id)
+        .joins(:version)
+        .where(versions: { indexed: true, position: 0 })
+        .select("versions.rubygem_id")
+    )
+  end
+
+  def unique_reverse_development_dependencies
+    Rubygem.where(
+      id: Dependency.development.where(rubygem_id: id)
+        .joins(:version)
+        .where(versions: { indexed: true, position: 0 })
+        .select("versions.rubygem_id")
+    )
+  end
+
+  def unique_reverse_runtime_dependencies
+    Rubygem.where(
+      id: Dependency.runtime.where(rubygem_id: id)
+        .joins(:version)
+        .where(versions: { indexed: true, position: 0 })
+        .select("versions.rubygem_id")
+    )
+  end
 
   belongs_to :organization, optional: true
 

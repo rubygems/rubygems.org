@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EmailHelpers
   def last_email_link
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob

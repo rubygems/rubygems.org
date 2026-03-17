@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::ChangeOrganizationHandle < Avo::Actions::ApplicationAction
   def fields
     field :new_handle, as: :text, required: true

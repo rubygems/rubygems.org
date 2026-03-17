@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OrganizationMailer < ApplicationMailer
   def user_invited(membership)
     @membership = membership

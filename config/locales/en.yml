@@ -24,6 +24,7 @@ en:
   locale_name: English
   none: None
   not_found: Not Found
+  or: or
   forbidden: Forbidden
   api_gem_not_found: This gem could not be found
   api_key_forbidden: The API key doesn't have access
@@ -97,7 +98,7 @@ en:
         rubygem_name: RubyGem name
     errors:
       messages:
-        unpwn: has previously appeared in a data breach and should not be used
+        not_pwned: has previously appeared in a data breach and should not be used
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
       models:
         api_key:
@@ -511,11 +512,26 @@ en:
         your password:"
       title: CHANGE PASSWORD
       subtitle: Hi %{handle}!
+    compromised_password_reset:
+      subject: "Action required: Reset your %{host} password"
+      title: PASSWORD RESET REQUIRED
+      subtitle: "Hi %{handle}!"
+      opening: "During your recent sign-in, we detected that your password appears in a public data breach from another website."
+      reassurance: "Your RubyGems.org account has not been compromised, but because passwords are often reused across sites, we require you to change your password to keep your account secure."
+      closing_html: "If you did not recently try to sign in to RubyGems.org, please contact %{support_email} immediately."
+      closing_text: "If you did not recently try to sign in to RubyGems.org, please contact support@rubygems.org immediately."
   passwords:
     edit:
       submit: Save this password
       title: Reset password
       token_failure: Please double check the URL or try submitting a new password reset.
+      compromised_heading: "Your password was found in a data breach"
+      compromised_explanation_html: "The password you used was found in a public data breach from <strong>another website</strong>. Please choose a new, unique password that you don't use elsewhere."
+      strength:
+        too_short: Too short
+        weak: Weak
+        fair: Fair
+        strong: Strong
     new:
       submit: Reset password
       title: Change your password
@@ -745,6 +761,7 @@ en:
         header: Links
         home: Homepage
         mail: Mailing List
+        analytics: Analytics
         report_abuse: Report abuse
         reverse_dependencies: Reverse dependencies
         review_changes: Review changes
@@ -844,6 +861,26 @@ en:
       notice: Please confirm your password to continue.
     create:
       account_blocked: Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account.
+  compromised_passwords:
+    show:
+      title: Password Change Required
+      heading: Password found in data breach
+      subheading: Your RubyGems.org account remains secure
+      explanation_html: The password you entered has been found in a public data breach from <strong>another website</strong>. This doesn't mean your RubyGems.org account was compromised, but because passwords are often reused, we require a reset to keep your account secure.
+      email_sent: "We've sent a password reset link to:"
+      next_steps: "Here's what to do next:"
+      step_1: Check your email inbox (and spam folder) for the password reset link
+      step_2: Click the link and create a new, unique password you don't use elsewhere
+      step_3: Sign in with your new password
+      step_4_html: Consider %{link} for additional security
+      step_4_link_text: enabling multi-factor authentication
+      learn_more: Learn more
+      learn_more_hibp_html: Check if your email appears in other breaches at %{link}
+      learn_more_hibp_link_text: Have I Been Pwned
+      learn_more_mfa_html: Protect your account with %{link}
+      learn_more_mfa_link_text: multi-factor authentication
+      back_to_sign_in: Back to Sign In
+      need_help_html: "Need help? Contact %{email}"
   stats:
     index:
       title: Stats
@@ -1043,3 +1080,9 @@ en:
         api_key_gem_html: "Gem: %{gem}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
+      password:
+        password_compromised: "Password Compromised"
+        mfa_status: "MFA Status: %{status}"
+        mfa_enabled: "Enabled"
+        mfa_disabled: "Disabled"
+        action_taken: "Action: %{action}"

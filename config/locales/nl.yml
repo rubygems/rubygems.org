@@ -19,6 +19,7 @@ nl:
   locale_name: Nederlands
   none: Geen
   not_found: Niet gevonden
+  or:
   forbidden:
   api_gem_not_found:
   api_key_forbidden:
@@ -92,7 +93,7 @@ nl:
         rubygem_name:
     errors:
       messages:
-        unpwn:
+        not_pwned:
         blocked:
       models:
         api_key:
@@ -517,11 +518,26 @@ nl:
       opening:
       title:
       subtitle:
+    compromised_password_reset:
+      subject:
+      title:
+      subtitle:
+      opening:
+      reassurance:
+      closing_html:
+      closing_text:
   passwords:
     edit:
       submit: Sla dit wachtwoord op
       title: reset wachtwoord
       token_failure: Controleer het webadres, en probeer het opnieuw.
+      compromised_heading:
+      compromised_explanation_html:
+      strength:
+        too_short:
+        weak:
+        fair:
+        strong:
     new:
       submit: Wachtwoord wijzigen
       title: Wachtwoord wijzigen
@@ -738,6 +754,7 @@ nl:
         header: Links
         home: Startpagina
         mail: Mailing-list
+        analytics:
         report_abuse:
         reverse_dependencies:
         review_changes:
@@ -837,6 +854,26 @@ nl:
       notice:
     create:
       account_blocked:
+  compromised_passwords:
+    show:
+      title:
+      heading:
+      subheading:
+      explanation_html:
+      email_sent:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      back_to_sign_in:
+      need_help_html:
   stats:
     index:
       title:
@@ -1024,3 +1061,9 @@ nl:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      password:
+        password_compromised:
+        mfa_status:
+        mfa_enabled:
+        mfa_disabled:
+        action_taken:

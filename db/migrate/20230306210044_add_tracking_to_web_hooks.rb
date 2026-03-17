@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTrackingToWebHooks < ActiveRecord::Migration[7.0]
   def change
     change_table(:web_hooks, bulk: true) do |t|

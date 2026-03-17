@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::HookRelayController < Api::BaseController
   before_action :authenticate_hook_relay_report
 

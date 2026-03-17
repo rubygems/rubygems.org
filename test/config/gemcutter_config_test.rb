@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # These tests just spot check to make sure config is loaded correctly and the file is not broken or missing

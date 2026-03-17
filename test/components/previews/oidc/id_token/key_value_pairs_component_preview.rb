@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OIDC::IdToken::KeyValuePairsComponentPreview < Lookbook::Preview
   # @param key text
   # @param value text

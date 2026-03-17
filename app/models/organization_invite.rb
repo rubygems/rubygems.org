@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OrganizationInvite < ApplicationRecord
   belongs_to :invitable, polymorphic: true
   belongs_to :user

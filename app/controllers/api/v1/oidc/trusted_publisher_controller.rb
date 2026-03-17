@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   include ApiKeyable
   include JwtValidation

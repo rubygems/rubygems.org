@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClearanceCreateUsers < ActiveRecord::Migration[4.2]
   def self.up
     create_table(:users) do |t| # rubocop:disable Rails/CreateTableWithTimestamps

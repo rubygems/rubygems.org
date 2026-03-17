@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::CompactIndexController < Api::BaseController
   before_action :find_rubygem_by_name, only: [:info]
 

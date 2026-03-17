@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebauthnCredentialsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
 

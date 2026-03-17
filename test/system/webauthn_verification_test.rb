@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class WebAuthnVerificationTest < ApplicationSystemTestCase
@@ -5,8 +7,8 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @user = create(:user)
     create_webauthn_credential
     @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
-    @port = 5678
-    @mock_client = MockClientServer.new(@port)
+    @mock_client = MockClientServer.new
+    @port = @mock_client.port
   end
 
   test "when verifying webauthn credential" do
@@ -149,10 +151,11 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   class MockClientServer
     attr_writer :response
+    attr_reader :port
 
-    def initialize(port)
-      @port = port
-      @server = TCPServer.new(@port)
+    def initialize
+      @server = TCPServer.new(0)
+      @port = @server.addr[1]
       @response = success_response
       create_socket
     end

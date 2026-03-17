@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class OIDC::AccessPolicyTest < ActiveSupport::TestCase
@@ -12,11 +14,11 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
   context "#verify_access!" do
     context "with an unknown effect on matching statement" do
       setup do
-        @access_policy = OIDC::AccessPolicy.new(statements: [{
+        @access_policy = OIDC::AccessPolicy.new(statements: [
                                                   effect: "unknown",
           principal: { oidc: "iss" },
           conditions: []
-                                                }])
+                                                ])
       end
 
       should "raise error" do
@@ -33,11 +35,11 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
     context "with an explicit deny" do
       setup do
-        @access_policy = OIDC::AccessPolicy.new(statements: [{
+        @access_policy = OIDC::AccessPolicy.new(statements: [
                                                   effect: "deny",
           principal: { oidc: "iss" },
           conditions: []
-                                                }])
+                                                ])
       end
 
       should "raise AccessError" do
@@ -59,15 +61,15 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
     context "with string_equals condition" do
       setup do
-        @access_policy = OIDC::AccessPolicy.new(statements: [{
+        @access_policy = OIDC::AccessPolicy.new(statements: [
                                                   effect: "allow",
           principal: { oidc: "iss" },
-          conditions: [{
+          conditions: [
             operator: "string_equals",
             claim: "c",
             value: "value"
-          }]
-                                                }])
+          ]
+                                                ])
       end
 
       should "raise AccessError when unequal" do
@@ -84,15 +86,15 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
     context "with string_matches condition" do
       setup do
-        @access_policy = OIDC::AccessPolicy.new(statements: [{
+        @access_policy = OIDC::AccessPolicy.new(statements: [
                                                   effect: "allow",
           principal: { oidc: "iss" },
-          conditions: [{
+          conditions: [
             operator: "string_matches",
             claim: "c",
             value: "\\A[v].{3}e.*"
-          }]
-                                                }])
+          ]
+                                                ])
       end
 
       should "raise AccessError when no match" do
@@ -109,15 +111,15 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
     context "with condition with unknown operator" do
       setup do
-        @access_policy = OIDC::AccessPolicy.new(statements: [{
+        @access_policy = OIDC::AccessPolicy.new(statements: [
                                                   effect: "allow",
           principal: { oidc: "iss" },
-          conditions: [{
+          conditions: [
             operator: "unknown",
             claim: "c",
             value: ""
-          }]
-                                                }])
+          ]
+                                                ])
       end
 
       should "raise" do
@@ -134,15 +136,15 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
     context "with condition with wrong value type" do
       setup do
-        @access_policy = OIDC::AccessPolicy.new(statements: [{
+        @access_policy = OIDC::AccessPolicy.new(statements: [
                                                   effect: "allow",
           principal: { oidc: "iss" },
-          conditions: [{
+          conditions: [
             operator: "string_equals",
             claim: "c",
             value: 3
-          }]
-                                                }])
+          ]
+                                                ])
       end
 
       should "raise" do

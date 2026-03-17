@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOIDCIdTokens < ActiveRecord::Migration[7.0]
   def change
     create_table :oidc_id_tokens do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebHooksMailer < ApplicationMailer
   def webhook_deleted(user_id, rubygem_id, url, failure_count)
     @user = User.find(user_id)

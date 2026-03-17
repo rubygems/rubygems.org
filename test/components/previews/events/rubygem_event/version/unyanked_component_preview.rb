@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Events::RubygemEvent::Version::UnyankedComponentPreview < Lookbook::Preview
   # @param number text
   # @param platform text

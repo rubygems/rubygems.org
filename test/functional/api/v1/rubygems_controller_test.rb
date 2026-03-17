@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
@@ -441,7 +443,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "POST to create for existing gem should not fail" do
         requires_toxiproxy
-        Toxiproxy[:elasticsearch].down do
+        toxiproxy_elasticsearch.down do
           post :create, body: gem_file("test-1.0.0.gem", &:read)
 
           assert_response :success

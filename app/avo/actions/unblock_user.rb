@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Actions::UnblockUser < Avo::Actions::ApplicationAction
   self.name = "Unblock User"
   self.visible = lambda {

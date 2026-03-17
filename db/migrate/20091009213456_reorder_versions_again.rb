@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReorderVersionsAgain < ActiveRecord::Migration[4.2]
   def self.up
     # Rubygem.find_each(&:reorder_versions)

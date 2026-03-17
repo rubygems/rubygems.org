@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Avo::Resources::OrganizationOnboarding < Avo::BaseResource
   self.title = :organization_name
   self.includes = [:invites]

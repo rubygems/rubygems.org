@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 require_relative "../../lib/gemcutter/middleware/hostess"
@@ -32,7 +34,7 @@ class GemServerConformanceTest < ApplicationSystemTestCase
       to = lambda { |env|
         hostess.call(env)
           .tap do |response|
-            response[1].delete("x-cascade")
+          response[1].delete("x-cascade")
         end
       }
       match "/quick/Marshal.4.8/:name", to:, via: :get, constraints: { name: /[A-Za-z0-9._-]+/ }
