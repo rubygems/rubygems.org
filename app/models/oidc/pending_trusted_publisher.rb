@@ -13,6 +13,7 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
     uniqueness: { case_sensitive: false, scope: %i[trusted_publisher_id trusted_publisher_type], conditions: -> { unexpired } }
 
   validate :available_rubygem_name, on: :create
+  validate :protected_gem_typo, on: :create
 
   scope :unexpired, -> { where(arel_table[:expires_at].eq(nil).or(arel_table[:expires_at].gt(Time.now.utc))) }
   scope :expired, -> { where(arel_table[:expires_at].lteq(Time.now.utc)) }
@@ -36,5 +37,13 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
     return if rubygem.nil? || rubygem.pushable?
 
     errors.add(:rubygem_name, :unavailable)
+  end
+
+  def protected_gem_typo
+    return if rubygem_name.blank?
+    gem_typo = GemTypo.new(rubygem_name)
+
+    return unless gem_typo.protected_typo?
+    errors.add :rubygem_name, "'#{rubygem_name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"
   end
 end
