@@ -379,7 +379,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.12.0)
       activejob (>= 6.1)
-    json (2.19.1)
+    json (2.19.2)
     json-jwt (1.16.7)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -1182,7 +1182,7 @@ CHECKSUMS
   irb (1.17.0) sha256=168c4ddb93d8a361a045c41d92b2952c7a118fa73f23fe14e55609eb7a863aae
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.12.0) sha256=0164057417750f6e9c3ed548f029f1136b18eb53975fa438b09304a525d6c6c0
-  json (2.19.1) sha256=dd94fdc59e48bff85913829a32350b3148156bc4fd2a95a2568a78b11344082d
+  json (2.19.2) sha256=e7e1bd318b2c37c4ceee2444841c86539bc462e81f40d134cf97826cb14e83cf
   json-jwt (1.16.7) sha256=ccabff4c6d1a14276b23178e8bebe513ef236399b72a0b886d7ed94800d172a5
   json-schema (6.2.0) sha256=e8bff46ed845a22c1ab2bd0d7eccf831c01fe23bb3920caa4c74db4306813666
   jwt (3.1.2) sha256=af6991f19a6bb4060d618d9add7a66f0eeb005ac0bc017cd01f63b42e122d535
