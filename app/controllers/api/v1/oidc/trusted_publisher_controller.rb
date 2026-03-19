@@ -51,9 +51,26 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
       raise UnsupportedIssuer, "Unsuported issuer for trusted publishing"
     end
     @trusted_publisher = trusted_publisher_class.for_claims(@jwt)
+  rescue ActiveRecord::RecordNotFound => e
+    log_jwt_claims("find_trusted_publisher failed: #{e.message}")
+    raise
   end
 
   def validate_claims
     @trusted_publisher.to_access_policy(@jwt).verify_access!(@jwt)
+  rescue OIDC::AccessPolicy::AccessError => e
+    log_jwt_claims("validate_claims failed: #{e.message}")
+    raise
+  end
+
+  def log_jwt_claims(message)
+    return unless @jwt
+    logger.info(message,
+      repository: @jwt[:repository],
+      job_workflow_ref: @jwt[:job_workflow_ref],
+      ref: @jwt[:ref],
+      sha: @jwt[:sha],
+      environment: @jwt[:environment],
+      repository_owner_id: @jwt[:repository_owner_id])
   end
 end

@@ -47,6 +47,8 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
   end
 
   context "POST exchange_token" do
+    include SemanticLogger::Test::Minitest
+
     should "return invalid request with no JWT" do
       post api_v1_oidc_trusted_publisher_exchange_token_path
 
@@ -314,6 +316,71 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         params: { jwt: jwt.to_s }
 
       assert_response :not_found
+    end
+
+    should "log claims when trusted publisher is not found" do
+      @claims["repository"] = "unknown-org/unknown-repo"
+      @claims["repository_owner"] = "unknown-org"
+      @claims["repository_owner_id"] = "999999"
+      @claims["job_workflow_ref"] = "unknown-org/unknown-repo/.github/workflows/release.yml@refs/heads/main"
+
+      Api::V1::OIDC::TrustedPublisherController.stubs(:logger).returns(
+        logger = SemanticLogger::Test::CaptureLogEvents.new
+      )
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :not_found
+
+      event = logger.events.find { |e| e.message&.include?("find_trusted_publisher failed") }
+
+      assert_semantic_logger_event(
+        event,
+        level: :info,
+        message_includes: "find_trusted_publisher failed: Couldn't find OIDC::TrustedPublisher::GitHubAction",
+        payload_includes: {
+          repository: "unknown-org/unknown-repo",
+          job_workflow_ref: "unknown-org/unknown-repo/.github/workflows/release.yml@refs/heads/main",
+          ref: "refs/heads/main",
+          sha: "04de3558bc5861874a86f8fcd67e516554101e71",
+          repository_owner_id: "999999"
+        }
+      )
+    end
+
+    should "log claims when access policy validation fails" do
+      @claims["job_workflow_ref"] = "segiddins/oidc-test/.github/workflows/token.yml@refs/heads/other"
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      Api::V1::OIDC::TrustedPublisherController.stubs(:logger).returns(
+        logger = SemanticLogger::Test::CaptureLogEvents.new
+      )
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :not_found
+
+      event = logger.events.find { |e| e.message&.include?("validate_claims failed") }
+
+      assert_semantic_logger_event(
+        event,
+        level: :info,
+        message_includes: "validate_claims failed: denying due to no matching statements",
+        payload_includes: {
+          repository: "segiddins/oidc-test",
+          job_workflow_ref: "segiddins/oidc-test/.github/workflows/token.yml@refs/heads/other",
+          ref: "refs/heads/main",
+          sha: "04de3558bc5861874a86f8fcd67e516554101e71",
+          repository_owner_id: "1946610"
+        }
+      )
     end
 
     should "return not found when reusable workflow used but trusted publisher expects same-repo workflow" do
