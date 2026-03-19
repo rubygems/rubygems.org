@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  include BetterHtml::Helpers
-
   def page_title
     combo = "#{t :title} | #{t :subtitle}"
     # If instance variable @title_for_header_only is present then it is added to combo title string

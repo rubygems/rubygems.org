@@ -100,7 +100,7 @@ gem "propshaft", "~> 1.3.1"
 gem "importmap-rails", "~> 2.2"
 gem "stimulus-rails", "~> 1.3" # this adds stimulus-loading.js so it must be available at runtime
 gem "local_time", "~> 3.0"
-gem "better_html", "~> 2.2"
+gem "herb", "~> 0.9"
 
 group :assets, :development do
   gem "tailwindcss-rails", "~> 4.4"
