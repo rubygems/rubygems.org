@@ -318,6 +318,49 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_response :not_found
     end
 
+    should "return not found when attacker uses same reusable workflow from different caller repo" do
+      # Two publishers share the same reusable workflow but are bound to different caller repos.
+      # An attacker's JWT from their own repo must not match the victim's publisher.
+      victim_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "victim-gem",
+        repository_owner_id: "111111",
+        workflow_filename: "release.yml",
+        workflow_repository_owner: "rubygems",
+        workflow_repository_name: "shared-workflows")
+      victim_publisher.repository_owner = "victim-org"
+      victim_publisher.save!
+
+      attacker_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "attacker-repo",
+        repository_owner_id: "999999",
+        workflow_filename: "release.yml",
+        workflow_repository_owner: "rubygems",
+        workflow_repository_name: "shared-workflows")
+      attacker_publisher.repository_owner = "attacker-org"
+      attacker_publisher.save!
+
+      # JWT comes from the attacker's repo using the same shared workflow
+      @claims["repository"] = "attacker-org/attacker-repo"
+      @claims["repository_owner"] = "attacker-org"
+      @claims["repository_owner_id"] = "999999"
+      @claims["job_workflow_ref"] = "rubygems/shared-workflows/.github/workflows/release.yml@refs/heads/main"
+      @claims["job_workflow_sha"] = "aaa111bbb222"
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      # Should succeed — but only grant access to the attacker's own publisher, not the victim's
+      assert_response :success
+
+      resp = response.parsed_body
+
+      assert_match(/^rubygems_/, resp["rubygems_api_key"])
+
+      # The API key must belong to the attacker's publisher, not the victim's
+      assert_equal 1, attacker_publisher.api_keys.count
+      assert_equal 0, victim_publisher.api_keys.count
+    end
+
     should "return not found when reusable workflow used but trusted publisher expects same-repo workflow" do
       @claims["repository"] = "cseeman/my-gem"
       @claims["repository_owner"] = "cseeman"
