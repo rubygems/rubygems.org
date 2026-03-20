@@ -13,11 +13,14 @@ jobs:
       fail-fast: false
       matrix:
         tests:
-          - name: general
+          - id: general
+            name: General
             command: test
-          - name: system
+          - id: system
+            name: System
             command: test:system
-          - name: avo without pro
+          - id: avo-without-pro
+            name: Avo (without Pro)
             command: "test test/*/avo"
     name: Rails tests ${{ matrix.tests.name }}
     runs-on: ubuntu-24.04
@@ -27,7 +30,7 @@ jobs:
       REQUIRE_TOXIPROXY: true
       TOXIPROXY_LISTEN_HOST: "0.0.0.0"
       TOXIPROXY_UPSTREAM: "search:9200"
-      REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.name != 'avo without pro' }}
+      REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.id != 'avo-without-pro' }}
       AVO_LICENSE_KEY: ${{ secrets.AVO_LICENSE_KEY }}
       BUNDLE_PACKAGER__DEV: ${{ secrets.BUNDLE_PACKAGER__DEV }}
     steps:
@@ -40,7 +43,7 @@ jobs:
         with:
           ruby-version: "4.0.2"
           rubygems-version: "4.0.8"
-          install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
+          install-avo-pro: ${{ matrix.tests.id != 'avo-without-pro' }}
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
@@ -55,7 +58,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload coverage to Codecov
-        if: success() || failure()
+        if: matrix.tests.id != 'avo-without-pro' && (success() || failure())
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
