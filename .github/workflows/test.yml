@@ -8,18 +8,6 @@ permissions:
   contents: read
 
 jobs:
-  # This is umbrella job for all tests needed to pass to make it simpler
-  # to maintain GitHub Actions status required checks since job names and
-  # amount change over the time and it is easier to maintian having just
-  # this umbrella check set as required.
-  status_check:
-    name: All required tests passing check
-    needs: [rails]
-    runs-on: ubuntu-24.04
-    if: always()
-    steps:
-      - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
-
   rails:
     strategy:
       fail-fast: false
