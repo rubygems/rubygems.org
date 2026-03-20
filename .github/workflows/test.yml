@@ -20,7 +20,7 @@ jobs:
           - name: avo without pro
             command: "test test/*/avo"
     name: Rails tests ${{ matrix.tests.name }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       RUBYGEMS_VERSION: "4.0.8"
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
