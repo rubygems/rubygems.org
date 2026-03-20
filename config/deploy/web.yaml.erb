@@ -40,6 +40,13 @@ spec:
             scheme: HTTP
           initialDelaySeconds: 30
           periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
         resources:
           <% if environment == 'production' %>
           requests:
