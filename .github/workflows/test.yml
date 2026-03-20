@@ -24,25 +24,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rubygems:
-          - name: locked
-            version: "4.0.8"
-          - name: latest
-            version: latest
-        ruby_version: ["4.0.2"]
         tests:
           - name: general
             command: test
           - name: system
             command: test:system
-        include:
-          - rubygems: { name: latest, version: latest }
-            ruby_version: "4.0.2"
-            tests: { name: "avo without pro", command: "test test/*/avo" }
-    name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
+          - name: avo without pro
+            command: "test test/*/avo"
+    name: Rails tests ${{ matrix.tests.name }}
     runs-on: ubuntu-22.04
     env:
-      RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
+      RUBYGEMS_VERSION: "4.0.8"
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
       TOXIPROXY_LISTEN_HOST: "0.0.0.0"
@@ -58,8 +50,8 @@ jobs:
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org
         with:
-          ruby-version: ${{ matrix.ruby_version }}
-          rubygems-version: ${{ matrix.rubygems.version }}
+          ruby-version: "4.0.2"
+          rubygems-version: "4.0.8"
           install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
 
       - name: Tests ${{ matrix.tests.name }}
@@ -70,12 +62,12 @@ jobs:
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
-          name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
+          name: capybara-screenshots-${{ matrix.tests.name }}
           path: tmp/capybara
           if-no-files-found: ignore
 
       - name: Upload coverage to Codecov
-        if: matrix.rubygems.name == 'locked' && (success() || failure())
+        if: success() || failure()
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
