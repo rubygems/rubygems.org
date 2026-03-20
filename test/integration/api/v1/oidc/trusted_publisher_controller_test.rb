@@ -274,7 +274,9 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       @claims["repository"] = "cseeman/my-gem"
       @claims["repository_owner"] = "cseeman"
       @claims["repository_owner_id"] = "1946610"
-      @claims["job_workflow_ref"] = "rubygems/shared-workflows/.github/workflows/release.yml@refs/heads/main"
+      # Reusable workflow ref differs from caller's ref (refs/heads/main)
+      @claims["job_workflow_ref"] = "rubygems/shared-workflows/.github/workflows/release.yml@refs/tags/v2.0"
+      @claims["job_workflow_sha"] = "aaabbbccc111222333"
 
       trusted_publisher = build(:oidc_trusted_publisher_github_action,
         repository_name: "my-gem",

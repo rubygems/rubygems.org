@@ -128,7 +128,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def to_access_policy(jwt)
     common_conditions = [repository_condition, environment_condition, repository_owner_id_condition, audience_condition].compact
-    refs = [jwt.fetch(:ref), jwt.fetch(:sha)].compact_blank
+    refs = job_workflow_refs(jwt)
     raise OIDC::AccessPolicy::AccessError, "ref and sha are both missing" if refs.empty?
     OIDC::AccessPolicy.new(
       statements: refs.map do |ref|
@@ -182,6 +182,26 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
 
   private
+
+  # For same-repo workflows, the JWT's ref/sha (from the caller repo) match
+  # the workflow's ref in job_workflow_ref, so we use them directly.
+  #
+  # For cross-repo reusable workflows, the JWT's ref/sha belong to the caller
+  # repo, while job_workflow_ref contains the reusable workflow's own ref.
+  # We extract the ref from job_workflow_ref and use job_workflow_sha instead.
+  def job_workflow_refs(jwt)
+    if workflow_repository_owner.present?
+      refs = []
+      if (jwf_ref = jwt[:job_workflow_ref])
+        match = jwf_ref.match(/@(.+)\z/)
+        refs << match[1] if match
+      end
+      refs << jwt[:job_workflow_sha] if jwt[:job_workflow_sha].present?
+      refs.compact_blank
+    else
+      [jwt.fetch(:ref), jwt.fetch(:sha)].compact_blank
+    end
+  end
 
   def find_github_repository_owner_id
     return if repository_owner.blank?

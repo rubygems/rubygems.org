@@ -355,7 +355,7 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     assert_equal "example/my-gem", publisher.workflow_repository
   end
 
-  test "#to_access_policy with reusable workflow" do
+  test "#to_access_policy with reusable workflow uses reusable workflow refs" do
     publisher = create(:oidc_trusted_publisher_github_action,
       repository_owner: "caller-org",
       repository_name: "caller-repo",
@@ -363,17 +363,28 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       workflow_repository_owner: "shared-org",
       workflow_repository_name: "shared-workflows")
 
-    policy = publisher.to_access_policy({ ref: "refs/heads/main", sha: "abc123" })
+    # Caller ref/sha differ from the reusable workflow's ref/sha
+    policy = publisher.to_access_policy({
+                                          ref: "refs/heads/main", sha: "caller-sha-111",
+      job_workflow_ref: "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/tags/v1.0",
+      job_workflow_sha: "reusable-sha-222"
+                                        })
 
-    # Verify job_workflow_ref points to the shared workflow repo, not the caller repo
-    first_statement = policy.statements.first
-    job_workflow_ref_condition = first_statement.conditions.find { |c| c.claim == "job_workflow_ref" }
+    # Should create statements using the reusable workflow's ref and sha, NOT the caller's
+    assert_equal 2, policy.statements.length
 
-    assert_equal "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/heads/main",
-                 job_workflow_ref_condition.value
+    first_condition = policy.statements.first.conditions.find { |c| c.claim == "job_workflow_ref" }
+
+    assert_equal "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/tags/v1.0",
+                 first_condition.value
+
+    second_condition = policy.statements.second.conditions.find { |c| c.claim == "job_workflow_ref" }
+
+    assert_equal "shared-org/shared-workflows/.github/workflows/shared-release.yml@reusable-sha-222",
+                 second_condition.value
 
     # Verify repository condition still points to caller repo (security)
-    repository_condition = first_statement.conditions.find { |c| c.claim == "repository" }
+    repository_condition = policy.statements.first.conditions.find { |c| c.claim == "repository" }
 
     assert_equal "caller-org/caller-repo", repository_condition.value
   end
