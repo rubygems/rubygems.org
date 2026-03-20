@@ -42,7 +42,7 @@ spec:
           periodSeconds: 5
         livenessProbe:
           tcpSocket:
-            port: 3000
+            port: http-puma
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
