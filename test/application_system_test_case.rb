@@ -22,6 +22,10 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include OauthHelpers
   include AvoHelpers
 
+  parallelize_setup do |worker|
+    SimpleCov.command_name "system-worker-#{worker}"
+  end
+
   if ENV["CAPYBARA_SERVER_PORT"]
     served_by host: "rails-app", port: ENV["CAPYBARA_SERVER_PORT"]
 
