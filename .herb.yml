@@ -1,0 +1,17 @@
+version: 0.9.2
+
+files:
+  exclude:
+    - 'public/**/*'
+
+engine:
+  validators:
+    security: true
+    nesting: true
+    accessibility: true
+
+linter:
+  enabled: true
+
+formatter:
+  enabled: false

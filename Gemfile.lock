@@ -162,13 +162,6 @@ GEM
     bcrypt (3.1.22)
     benchmark (0.5.0)
     benchmark-ips (2.14.0)
-    better_html (2.2.0)
-      actionview (>= 7.0)
-      activesupport (>= 7.0)
-      ast (~> 2.0)
-      erubi (~> 1.4)
-      parser (>= 2.4)
-      smart_properties
     bigdecimal (4.0.1)
     bindata (2.5.1)
     blazer (3.3.0)
@@ -355,6 +348,14 @@ GEM
       logger
     heapy (0.2.0)
       thor
+    herb (0.9.2)
+    herb (0.9.2-aarch64-linux-gnu)
+    herb (0.9.2-arm-linux-gnu)
+    herb (0.9.2-arm-linux-musl)
+    herb (0.9.2-arm64-darwin)
+    herb (0.9.2-x86_64-darwin)
+    herb (0.9.2-x86_64-linux-gnu)
+    herb (0.9.2-x86_64-linux-musl)
     honeybadger (6.5.2)
       logger
       ostruct
@@ -831,7 +832,6 @@ GEM
       simplecov (~> 0.19)
     simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
-    smart_properties (1.17.0)
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
@@ -937,7 +937,6 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1.216)
   aws-sdk-sqs (~> 1.111)
   bcrypt (~> 3.1)
-  better_html (~> 2.2)
   blazer (~> 3.3.0)
   bootsnap (~> 1.23)
   brakeman (~> 8.0)
@@ -969,6 +968,7 @@ DEPENDENCIES
   google-protobuf (~> 4.34)
   gravtastic (~> 3.2)
   groupdate (~> 6.7)
+  herb (~> 0.9)
   honeybadger (~> 6.5.2)
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.2)
@@ -1093,7 +1093,6 @@ CHECKSUMS
   bcrypt (3.1.22) sha256=1f0072e88c2d705d94aff7f2c5cb02eb3f1ec4b8368671e19112527489f29032
   benchmark (0.5.0) sha256=465df122341aedcb81a2a24b4d3bd19b6c67c1530713fd533f3ff034e419236c
   benchmark-ips (2.14.0) sha256=b72bc8a65d525d5906f8cd94270dccf73452ee3257a32b89fbd6684d3e8a9b1d
-  better_html (2.2.0) sha256=e68ab66ab09696b708333bbf35e8aa3c107500ba7892f528e2111624bdd8cf76
   bigdecimal (4.0.1) sha256=8b07d3d065a9f921c80ceaea7c9d4ae596697295b584c296fe599dd0ad01c4a7
   bindata (2.5.1) sha256=53186a1ec2da943d4cb413583d680644eb810aacbf8902497aac8f191fad9e58
   blazer (3.3.0) sha256=01e151091ce1e7d27c156243916b2f13109ef2ef1a16cfa62bef67f4c5fd169f
@@ -1171,6 +1170,14 @@ CHECKSUMS
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
+  herb (0.9.2) sha256=88364c6394740f58d3795cb754a9f4a861631fe6464f250ac0e739d50727e13c
+  herb (0.9.2-aarch64-linux-gnu) sha256=6c34f4cd8eb582d142720fc573e2550e516dc071384a668f20605aef727670f7
+  herb (0.9.2-arm-linux-gnu) sha256=981bda30e30dff1500a7f6467a5154113938027823ca9c82768cc9b985b5a469
+  herb (0.9.2-arm-linux-musl) sha256=43da47b2801cb5cb80b2c88113814a4bf8f4e1cc24b5edb9d1616132491f79fd
+  herb (0.9.2-arm64-darwin) sha256=1dc9e8a456480961648e245cef2fba927ad5d9f445d1db797aac089c65bf96cd
+  herb (0.9.2-x86_64-darwin) sha256=d995e5eb0fefbf093f0e179e61414bac865c58e8be4103a9927f0ef1d99711a4
+  herb (0.9.2-x86_64-linux-gnu) sha256=0a48ed0140499609ed78f28019ec5fc29e0768d1ca69bfa458a9e337771d32a8
+  herb (0.9.2-x86_64-linux-musl) sha256=9f2545149efff5fb9d9c865d42b05de24f866e209f0eb53407233456b3515820
   honeybadger (6.5.2) sha256=b3a4893ced3cf38f63320c307022a4e4ae7106ee1495d1d6afdefc69ca387035
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
@@ -1355,7 +1362,6 @@ CHECKSUMS
   simplecov-cobertura (3.1.0) sha256=6d7f38aa32c965ca2174b2e5bd88cb17138eaf629518854976ac50e628925dc5
   simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
-  smart_properties (1.17.0) sha256=f9323f8122e932341756ddec8e0ac9ec6e238408a7661508be99439ca6d6384b
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
   statsd-instrument (3.9.10) sha256=06f8ae18dc2c2c90e6d4e2de5ef58b47d68562357140bec64228df9716a27048
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06

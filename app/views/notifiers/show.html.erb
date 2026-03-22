@@ -7,7 +7,7 @@
 
       <% @ownerships.each do |ownership| %>
         <h2><%= ownership.rubygem.name %></h2>
-        <h4 class="t-list__heading"><%= t('.push_heading') %></h3>
+        <h4 class="t-list__heading"><%= t('.push_heading') %></h4>
         <div class="push--s">
           <%= label_tag do %>
             <%= radio_button_tag "ownerships[#{ownership.id}][push]", :on, ownership.push_notifier? %>
@@ -20,7 +20,7 @@
           <% end %>
         </div>
 
-        <h4 class="t-list__heading"><%= t('.owner_heading') %></h3>
+        <h4 class="t-list__heading"><%= t('.owner_heading') %></h4>
         <div class="push--s">
           <%= label_tag do %>
             <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :on, ownership.owner_notifier? %>
@@ -31,7 +31,7 @@
             <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :off, !ownership.owner_notifier? %>
             <%= t('.off') %>
           <% end %>
-        </p>
+        </div>
       <% end %>
       <%= submit_tag t('.update'), class: 'form__submit' %>
     <% end %>
