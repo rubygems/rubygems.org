@@ -80,12 +80,6 @@ module UserMultifactorMethods
     self.mfa_hashed_recovery_codes = []
   end
 
-  private
-
-  def strong_mfa_level?
-    mfa_ui_and_gem_signin? || mfa_ui_and_api?
-  end
-
   def mfa_recommended?
     return false if strong_mfa_level? || mfa_required?
 
@@ -96,6 +90,12 @@ module UserMultifactorMethods
     return false if strong_mfa_level?
 
     rubygems.mfa_required.any?
+  end
+
+  private
+
+  def strong_mfa_level?
+    mfa_ui_and_gem_signin? || mfa_ui_and_api?
   end
 
   def mfa_level_for_enabled_devices
