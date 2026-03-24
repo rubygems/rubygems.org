@@ -92,6 +92,7 @@ class ActiveSupport::TestCase
 
   parallelize_setup do |worker|
     self.parallel_worker_number = worker
+    SimpleCov.command_name "rails-worker-#{worker}"
     Version.reset_column_information
     SemanticLogger.reopen
     Searchkick.index_suffix = "_#{worker}"
@@ -120,6 +121,10 @@ class ActiveSupport::TestCase
         url: "http://localhost:#{toxiproxy_port}"
       )
     end
+  end
+
+  parallelize_teardown do |_worker|
+    SimpleCov.result
   end
 
   parallelize(workers: :number_of_processors)

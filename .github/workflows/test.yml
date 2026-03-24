@@ -26,10 +26,10 @@ jobs:
       matrix:
         rubygems:
           - name: locked
-            version: "4.0.7"
+            version: "4.0.8"
           - name: latest
             version: latest
-        ruby_version: ["4.0.1"]
+        ruby_version: ["4.0.2"]
         tests:
           - name: general
             command: test
@@ -37,7 +37,7 @@ jobs:
             command: test:system
         include:
           - rubygems: { name: latest, version: latest }
-            ruby_version: "4.0.1"
+            ruby_version: "4.0.2"
             tests: { name: "avo without pro", command: "test test/*/avo" }
     name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-22.04
@@ -76,6 +76,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.rubygems.name == 'locked' && (success() || failure())
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
