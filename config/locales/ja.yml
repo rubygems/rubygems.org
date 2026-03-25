@@ -627,7 +627,6 @@ ja:
       push_heading: プッシュ通知
   webauthn_verifications:
     expired_or_already_used: 使用されたリンク中のトークンは期限切れか既に使われています。
-    no_port: ポートが与えられていません。再試行してください。
     pending: セキュリティ機器の認証が保留中です。
     prompt:
       title: セキュリティ機器で認証

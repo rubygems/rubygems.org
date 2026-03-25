@@ -613,7 +613,6 @@ zh-TW:
       push_heading: 推送通知
   webauthn_verifications:
     expired_or_already_used: 您所使用的連結中的權杖已過期或被使用。
-    no_port: 未提供連接埠。請再試一次。
     pending:
     prompt:
       title: 透過安全裝置驗證
