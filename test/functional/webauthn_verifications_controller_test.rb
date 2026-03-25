@@ -41,13 +41,13 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       context "with webauthn devices enabled" do
         setup do
           create(:webauthn_credential, user: @user)
-          get :prompt, params: { webauthn_token: @token, port: 1 }
+          get :prompt, params: { webauthn_token: @token }
         end
 
         should respond_with :success
+
         should "set webauthn authentication" do
           assert_not_nil session[:webauthn_authentication]["challenge"]
-          assert_equal "1", session[:webauthn_authentication]["port"]
         end
 
         should "render the verification page" do
@@ -63,22 +63,9 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         end
       end
 
-      context "when no port is given" do
-        setup do
-          create(:webauthn_credential, user: @user)
-          get :prompt, params: { webauthn_token: @token }
-        end
-
-        should redirect_to("the homepage") { root_url }
-
-        should "display error that no port was given" do
-          assert_equal "No port provided. Please try again.", flash[:alert]
-        end
-      end
-
       context "with no webauthn devices enabled" do
         setup do
-          get :prompt, params: { webauthn_token: @token, port: 1 }
+          get :prompt, params: { webauthn_token: @token }
         end
 
         should respond_with :redirect
@@ -95,12 +82,11 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @webauthn_credential = create(:webauthn_credential, user: @user)
-      @port = 1
       @verification_created_at = Time.utc(2023, 1, 1, 0, 0, 0)
       travel_to @verification_created_at do
         @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
         @token = @verification.path_token
-        get :prompt, params: { webauthn_token: @token, port: @port }
+        get :prompt, params: { webauthn_token: @token }
       end
     end
 
@@ -119,7 +105,9 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         @verification.reload
       end
 
-      should redirect_to("localhost with provided port and verification code") { "http://localhost:#{@port}?code=#{@verification.otp}" }
+      should "render success" do
+        assert_equal "success", response.body
+      end
 
       should "set OTP with expiry" do
         assert_equal 16, @user.webauthn_verification.otp.length
@@ -130,29 +118,6 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         verification = WebauthnVerification.find_by!(path_token: @token)
 
         assert_equal Time.utc(2023, 1, 1, 0, 0, 2), verification.path_token_expires_at
-      end
-
-      should "set show_webauthn_status in session" do
-        assert @controller.session[:show_webauthn_status]
-      end
-    end
-
-    context "when verifying the challenge with safari" do
-      setup do
-        @challenge = session[:webauthn_authentication]["challenge"]
-        @origin = WebAuthn.configuration.allowed_origins.first
-        @rp_id = URI.parse(@origin).host
-        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
-        Browser::Unknown.any_instance.stubs(:safari?).returns true
-        authenticate_request
-      end
-
-      should "render success" do
-        assert_equal "success", response.body
       end
 
       should "set show_webauthn_status in session" do
@@ -268,32 +233,6 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
       should "say the token is consumed or expired" do
         assert_equal "The token in the link you used has either expired or been used already.", response.body
-      end
-
-      should "set show_webauthn_status in session" do
-        assert @controller.session[:show_webauthn_status]
-      end
-    end
-
-    context "when no port is given" do
-      setup do
-        @challenge = session[:webauthn_authentication]["challenge"]
-        session[:webauthn_authentication]["port"] = nil
-        @origin = WebAuthn.configuration.allowed_origins.first
-        @rp_id = URI.parse(@origin).host
-        @client = WebAuthn::FakeClient.new(@origin, encoding: false)
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
-        authenticate_request
-        @verification.reload
-      end
-
-      should redirect_to("the homepage") { root_url }
-
-      should "display error that no port was given" do
-        assert_equal "No port provided. Please try again.", flash[:alert]
       end
 
       should "set show_webauthn_status in session" do

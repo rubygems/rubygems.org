@@ -7,26 +7,10 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     @user = create(:user)
     create_webauthn_credential
     @verification = create(:webauthn_verification, user: @user, otp: nil, otp_expires_at: nil)
-    @mock_client = MockClientServer.new
-    @port = @mock_client.port
+    @port = 1
   end
 
   test "when verifying webauthn credential" do
-    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-
-    assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
-
-    click_on "Authenticate"
-
-    assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
-    assert redirect_to(successful_verification_webauthn_verification_path)
-    assert_text "Success!"
-    assert_link_is_expired
-    assert_successful_verification_not_found
-  end
-
-  test "when verifying webauthn credential on safari" do
     assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
@@ -35,64 +19,12 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     click_on "Authenticate"
 
-    Browser::Chrome.any_instance.stubs(:safari?).returns true
-
     assert_text "Success!"
     assert_current_path(successful_verification_webauthn_verification_path)
 
     assert_link_is_expired
     assert_poll_status("success")
     assert_successful_verification_not_found
-  end
-
-  test "when client closes connection during verification" do
-    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-
-    assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
-
-    @mock_client.kill_server
-    click_on "Authenticate"
-
-    assert redirect_to("http://localhost:#{@port}?code=#{@verification.otp}")
-    assert redirect_to(failed_verification_webauthn_verification_path)
-    assert_text "Failed to fetch"
-    assert_text "Please close this browser and try again."
-    assert_link_is_expired
-    assert_failed_verification_not_found
-  end
-
-  test "when port given does not match the client port" do
-    wrong_port = 1111
-    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: wrong_port })
-
-    assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
-
-    click_on "Authenticate"
-
-    assert redirect_to("http://localhost:#{wrong_port}?code=#{@verification.otp}")
-    assert redirect_to(failed_verification_webauthn_verification_path)
-    assert_text "Failed to fetch"
-    assert_text "Please close this browser and try again."
-    assert_link_is_expired
-    assert_failed_verification_not_found
-  end
-
-  test "when there is a client error" do
-    @mock_client.response = @mock_client.bad_request_response
-    visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
-
-    assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
-
-    click_on "Authenticate"
-
-    assert redirect_to(failed_verification_webauthn_verification_path)
-    assert_text "Failed to fetch"
-    assert_text "Please close this browser and try again."
-    assert_link_is_expired
-    assert_failed_verification_not_found
   end
 
   test "when webauthn verification is expired during verification" do
@@ -112,7 +44,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   end
 
   def teardown
-    @mock_client.kill_server
     @authenticator&.remove!
     Capybara.use_default_driver
   end
@@ -147,84 +78,5 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit failed_verification_webauthn_verification_path
 
     assert_text "Page not found."
-  end
-
-  class MockClientServer
-    attr_writer :response
-    attr_reader :port
-
-    def initialize
-      @server = TCPServer.new(0)
-      @port = @server.addr[1]
-      @response = success_response
-      create_socket
-    end
-
-    def create_socket
-      @thread = Thread.new do
-        loop do
-          socket = @server.accept
-          request_line = socket.gets
-
-          method, _req_uri, _protocol = request_line.split
-          if method == "OPTIONS"
-            socket.print options_response
-            socket.close
-            next # will be GET
-          else
-            socket.print @response
-            socket.close
-            break
-          end
-        end
-      ensure
-        @server.close
-      end
-      @thread.abort_on_exception = true
-      @thread.report_on_exception = false
-    end
-
-    def kill_server
-      Thread.kill(@thread)
-    end
-
-    def options_response
-      <<~RESPONSE
-        HTTP/1.1 204 No Content\r
-        connection: close\r
-        access-control-allow-origin: *\r
-        access-control-allow-methods: POST\r
-        access-control-allow-headers: Content-Type, Authorization, x-csrf-token\r
-        \r
-      RESPONSE
-    end
-
-    def success_response
-      <<~RESPONSE
-        HTTP/1.1 200 OK\r
-        connection: close\r
-        access-control-allow-origin: *\r
-        access-control-allow-methods: POST\r
-        access-control-allow-headers: Content-Type, Authorization, x-csrf-token\r
-        content-type: text/plain\r
-        content-length: 7\r
-        \r
-        success
-      RESPONSE
-    end
-
-    def bad_request_response
-      <<~RESPONSE
-        HTTP/1.1 400 Bad Request\r
-        connection: close\r
-        access-control-allow-origin: rubygems.example\r
-        access-control-allow-methods: POST\r
-        access-control-allow-headers: Content-Type, Authorization, x-csrf-token\r
-        content-type: text/plain\r
-        content-length: 22\r
-        \r
-        missing code parameter
-      RESPONSE
-    end
   end
 end
