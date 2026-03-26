@@ -364,11 +364,11 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       workflow_repository_name: "shared-workflows")
 
     # Caller ref/sha differ from the reusable workflow's ref/sha
-    policy = publisher.to_access_policy({
-                                          ref: "refs/heads/main", sha: "caller-sha-111",
+    policy = publisher.to_access_policy(
+      ref: "refs/heads/main", sha: "caller-sha-111",
       job_workflow_ref: "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/tags/v1.0",
       job_workflow_sha: "reusable-sha-222"
-                                        })
+    )
 
     # Should create statements using the reusable workflow's ref and sha, NOT the caller's
     assert_equal 2, policy.statements.length
@@ -397,10 +397,10 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       workflow_repository_owner: "shared-org",
       workflow_repository_name: "shared-workflows")
 
-    policy = publisher.to_access_policy({
-                                          ref: "refs/heads/main", sha: "caller-sha-111",
+    policy = publisher.to_access_policy(
+      ref: "refs/heads/main", sha: "caller-sha-111",
       job_workflow_ref: "shared-org/shared-workflows/.github/workflows/shared-release.yml@refs/tags/v1.0"
-                                        })
+    )
 
     assert_equal 1, policy.statements.length
 
@@ -443,10 +443,12 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
 
     # job_workflow_ref has a different workflow repo than expected
     assert_raises(OIDC::AccessPolicy::AccessError) do
-      publisher.to_access_policy({
-                                   ref: "refs/heads/main", sha: "caller-sha",
-        job_workflow_ref: "attacker-org/evil-workflows/.github/workflows/shared-release.yml@refs/heads/main"
-                                 })
+      publisher.to_access_policy(
+        ref: "refs/heads/main",
+        sha: "caller-sha",
+        job_workflow_ref: "attacker-org/evil-workflows/.github/workflows/shared-release.yml@refs/heads/main",
+        job_workflow_sha: "attacker-sha-123"
+      )
     end
   end
 end

@@ -295,6 +295,10 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       resp = response.parsed_body
 
       assert_match(/^rubygems_/, resp["rubygems_api_key"])
+
+      api_key = trusted_publisher.api_keys.sole
+
+      assert_equal api_key.owner, trusted_publisher
     end
 
     should "return not found when reusable workflow does not match configured workflow_repository" do
@@ -318,7 +322,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_response :not_found
     end
 
-    should "return not found when attacker uses same reusable workflow from different caller repo" do
+    should "succeed but only grant access to attacker's own publisher when using same reusable workflow" do
       # Two publishers share the same reusable workflow but are bound to different caller repos.
       # An attacker's JWT from their own repo must not match the victim's publisher.
       victim_publisher = build(:oidc_trusted_publisher_github_action,
