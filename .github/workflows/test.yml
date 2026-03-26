@@ -8,46 +8,29 @@ permissions:
   contents: read
 
 jobs:
-  # This is umbrella job for all tests needed to pass to make it simpler
-  # to maintain GitHub Actions status required checks since job names and
-  # amount change over the time and it is easier to maintian having just
-  # this umbrella check set as required.
-  status_check:
-    name: All required tests passing check
-    needs: [rails]
-    runs-on: ubuntu-24.04
-    if: always()
-    steps:
-      - run: /bin/${{ (needs.rails.result == 'success' || needs.rails.result == 'skipped') }}
-
   rails:
     strategy:
       fail-fast: false
       matrix:
-        rubygems:
-          - name: locked
-            version: "4.0.8"
-          - name: latest
-            version: latest
-        ruby_version: ["4.0.2"]
         tests:
-          - name: general
+          - id: general
+            name: General
             command: test
-          - name: system
+          - id: system
+            name: System
             command: test:system
-        include:
-          - rubygems: { name: latest, version: latest }
-            ruby_version: "4.0.2"
-            tests: { name: "avo without pro", command: "test test/*/avo" }
-    name: Rails tests ${{ matrix.tests.name }} (RubyGems ${{ matrix.rubygems.name }}, Ruby ${{ matrix.ruby_version }})
-    runs-on: ubuntu-22.04
+          - id: avo-without-pro
+            name: Avo (without Pro)
+            command: "test test/*/avo"
+    name: Rails tests ${{ matrix.tests.name }}
+    runs-on: ubuntu-24.04
     env:
-      RUBYGEMS_VERSION: ${{ matrix.rubygems.version }}
+      RUBYGEMS_VERSION: "4.0.8"
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
       TOXIPROXY_LISTEN_HOST: "0.0.0.0"
       TOXIPROXY_UPSTREAM: "search:9200"
-      REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.name != 'avo without pro' }}
+      REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.id != 'avo-without-pro' }}
       AVO_LICENSE_KEY: ${{ secrets.AVO_LICENSE_KEY }}
       BUNDLE_PACKAGER__DEV: ${{ secrets.BUNDLE_PACKAGER__DEV }}
     steps:
@@ -58,9 +41,9 @@ jobs:
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org
         with:
-          ruby-version: ${{ matrix.ruby_version }}
-          rubygems-version: ${{ matrix.rubygems.version }}
-          install-avo-pro: ${{ matrix.tests.name != 'avo without pro' }}
+          ruby-version: "4.0.2"
+          rubygems-version: "4.0.8"
+          install-avo-pro: ${{ matrix.tests.id != 'avo-without-pro' }}
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
@@ -70,12 +53,12 @@ jobs:
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
-          name: capybara-screenshots-${{ matrix.tests.name }}-${{ matrix.rubygems.name }}
+          name: capybara-screenshots-${{ matrix.tests.name }}
           path: tmp/capybara
           if-no-files-found: ignore
 
       - name: Upload coverage to Codecov
-        if: matrix.rubygems.name == 'locked' && (success() || failure())
+        if: matrix.tests.id != 'avo-without-pro' && (success() || failure())
         uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad # v5.5.3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
