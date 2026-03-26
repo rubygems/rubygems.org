@@ -195,8 +195,10 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
       refs = []
       if (jwf_ref = jwt[:job_workflow_ref])
         expected_prefix = "#{workflow_repository}/#{workflow_slug}@"
-        raise OIDC::AccessPolicy::AccessError,
-          "job_workflow_ref #{jwf_ref} does not match expected prefix #{expected_prefix}" unless jwf_ref.start_with?(expected_prefix)
+        unless jwf_ref.start_with?(expected_prefix)
+          raise OIDC::AccessPolicy::AccessError,
+            "job_workflow_ref #{jwf_ref} does not match expected prefix #{expected_prefix}"
+        end
         refs << jwf_ref.delete_prefix(expected_prefix)
       end
       refs << jwt[:job_workflow_sha] if jwt[:job_workflow_sha].present?
