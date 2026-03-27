@@ -256,7 +256,7 @@ class Pusher
   end
 
   def notify_unauthorized
-    if !api_key.user?
+    if !api_key.user? || rubygem.reserved_name?
       notify("You are not allowed to push this gem.", 403)
     elsif rubygem.unconfirmed_ownership?(owner)
       notify("You do not have permission to push to this gem. " \
