@@ -134,7 +134,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
 
-      assert_match(/Dependency unresolved name can only include letters, numbers, dashes, and underscores/, @cutter.message)
+      assert_match(/Dependency unresolved name can only include letters, numbers, periods, dashes, and underscores/, @cutter.message)
       assert_equal 403, @cutter.code
     end
 
