@@ -120,7 +120,8 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
               "workflow_filename" => "push_gem.yml",
               "environment" => nil,
               "workflow_repository_owner" => nil,
-              "workflow_repository_name" => nil
+              "workflow_repository_name" => nil,
+              "gem_name_pattern" => nil
             } },
           @response.parsed_body
         )
@@ -158,7 +159,8 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
               "workflow_filename" => "push_gem.yml",
               "environment" => nil,
               "workflow_repository_owner" => nil,
-              "workflow_repository_name" => nil
+              "workflow_repository_name" => nil,
+              "gem_name_pattern" => nil
             } },
           response.parsed_body
         )
@@ -198,7 +200,8 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
               "workflow_filename" => "shared-release.yml",
               "environment" => nil,
               "workflow_repository_owner" => "shared-org",
-              "workflow_repository_name" => "shared-workflows"
+              "workflow_repository_name" => "shared-workflows",
+              "gem_name_pattern" => nil
             } },
           response.parsed_body
         )

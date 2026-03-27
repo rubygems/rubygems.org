@@ -33,6 +33,13 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
             repository_name: publisher.repository_name, workflow_filename: publisher.workflow_filename,
             repository_owner_id: publisher.repository_owner_id, environment: publisher.environment)
     end
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      create(:oidc_trusted_publisher_github_action, repository_owner: publisher.repository_owner,
+            repository_name: publisher.repository_name, workflow_filename: publisher.workflow_filename,
+            repository_owner_id: publisher.repository_owner_id, environment: publisher.environment,
+            gem_name_pattern: "other-*")
+    end
   end
 
   test ".for_claims" do
@@ -122,6 +129,81 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
 
     assert publisher.owns_gem?(rubygem1)
     refute publisher.owns_gem?(rubygem2)
+  end
+
+  test "#owns_gem? with gem_name_pattern" do
+    rubygem_match = create(:rubygem, name: "logstash-input-beats")
+    rubygem_match2 = create(:rubygem, name: "logstash-output-elasticsearch")
+    rubygem_no_match = create(:rubygem, name: "elasticsearch-api")
+    publisher = create(:oidc_trusted_publisher_github_action, gem_name_pattern: "logstash-*")
+
+    assert publisher.owns_gem?(rubygem_match)
+    assert publisher.owns_gem?(rubygem_match2)
+    refute publisher.owns_gem?(rubygem_no_match)
+  end
+
+  test "#owns_gem? prefers exact match, falls back to pattern" do
+    rubygem = create(:rubygem, name: "logstash-core")
+
+    publisher = create(:oidc_trusted_publisher_github_action, gem_name_pattern: "logstash-*")
+    create(:oidc_rubygem_trusted_publisher, trusted_publisher: publisher, rubygem: rubygem)
+
+    assert publisher.owns_gem?(rubygem)
+  end
+
+  test "#owns_gem? with gem_name_pattern nil does not match" do
+    rubygem = create(:rubygem, name: "logstash-core")
+
+    publisher = create(:oidc_trusted_publisher_github_action, gem_name_pattern: nil)
+
+    refute publisher.owns_gem?(rubygem)
+  end
+
+  test "gem_name_pattern validation accepts valid patterns" do
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    %w[logstash-* elastic-* my_gem-* a* rails-*].each do |pattern|
+      publisher = OIDC::TrustedPublisher::GitHubAction.new(
+        repository_owner: "example",
+        repository_name: "repo",
+        workflow_filename: "release.yml",
+        gem_name_pattern: pattern
+      )
+
+      assert_predicate publisher, :valid?, "Expected '#{pattern}' to be valid"
+    end
+  end
+
+  test "gem_name_pattern validation rejects invalid patterns" do
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    ["*", "logstash-", "logstash", "log*stash-*", "-logstash-*", "%logstash%", "log stash-*"].each do |pattern|
+      publisher = OIDC::TrustedPublisher::GitHubAction.new(
+        repository_owner: "example",
+        repository_name: "repo",
+        workflow_filename: "release.yml",
+        gem_name_pattern: pattern
+      )
+
+      refute_predicate publisher, :valid?, "Expected '#{pattern}' to be invalid"
+      assert_includes publisher.errors[:gem_name_pattern], "must be a valid gem name prefix ending with *, e.g. 'logstash-*'"
+    end
+  end
+
+  test "gem_name_pattern validation allows nil" do
+    stub_request(:get, "https://api.github.com/users/example")
+      .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    publisher = OIDC::TrustedPublisher::GitHubAction.new(
+      repository_owner: "example",
+      repository_name: "repo",
+      workflow_filename: "release.yml",
+      gem_name_pattern: nil
+    )
+
+    assert_predicate publisher, :valid?
   end
 
   test "#to_access_policy" do
