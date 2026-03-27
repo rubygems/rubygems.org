@@ -17,10 +17,12 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     allow_blank: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :workflow_repository_owner, presence: true, if: -> { workflow_repository_name.present? }
   validates :workflow_repository_name, presence: true, if: -> { workflow_repository_owner.present? }
+  validates :gem_name_pattern, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   validate :unique_publisher
   validate :workflow_filename_format
   validate :workflow_repository_differs_from_repository
+  validate :gem_name_pattern_format
 
   def self.for_claims(claims)
     repository = claims.fetch(:repository)
@@ -55,16 +57,17 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def self.permitted_attributes
     %i[repository_owner repository_name workflow_filename environment
-       workflow_repository_owner workflow_repository_name]
+       workflow_repository_owner workflow_repository_name gem_name_pattern]
   end
 
   def self.build_trusted_publisher(params)
     params = params.reverse_merge(repository_owner_id: nil, repository_name: nil, workflow_filename: nil, environment: nil,
-                                  workflow_repository_owner: nil, workflow_repository_name: nil)
+                                  workflow_repository_owner: nil, workflow_repository_name: nil, gem_name_pattern: nil)
     params.delete(:repository_owner_id)
     params[:environment] = nil if params[:environment].blank?
     params[:workflow_repository_owner] = nil if params[:workflow_repository_owner].blank?
     params[:workflow_repository_name] = nil if params[:workflow_repository_name].blank?
+    params[:gem_name_pattern] = nil if params[:gem_name_pattern].blank?
     find_or_initialize_by(params)
   end
 
@@ -79,7 +82,8 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
       workflow_filename:,
       environment:,
       workflow_repository_owner:,
-      workflow_repository_name:
+      workflow_repository_name:,
+      gem_name_pattern:
     }
   end
 
@@ -179,7 +183,9 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def workflow_slug = ".github/workflows/#{workflow_filename}"
 
-  def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
+  def owns_gem?(rubygem)
+    rubygem_trusted_publishers.exists?(rubygem: rubygem) || gem_name_pattern_matches?(rubygem)
+  end
 
   private
 
@@ -246,5 +252,17 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     return unless workflow_repository_owner == repository_owner && workflow_repository_name == repository_name
 
     errors.add(:base, "workflow_repository must be different from the repository, leave blank for same-repository workflows")
+  end
+
+  def gem_name_pattern_format
+    return if gem_name_pattern.blank?
+    return if gem_name_pattern.match?(/\A[a-zA-Z0-9][a-zA-Z0-9\-_]*\*\z/)
+    errors.add(:gem_name_pattern, "must be a valid gem name prefix ending with *, e.g. 'logstash-*'")
+  end
+
+  def gem_name_pattern_matches?(rubygem)
+    return false if gem_name_pattern.blank?
+    prefix = gem_name_pattern.delete_suffix("*")
+    rubygem.name.start_with?(prefix)
   end
 end

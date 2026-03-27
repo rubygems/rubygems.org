@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_07_200001) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_27_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -475,12 +475,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_07_200001) do
   end
 
   create_table "oidc_rubygem_trusted_publishers", force: :cascade do |t|
-    t.bigint "rubygem_id", null: false
+    t.bigint "rubygem_id"
     t.string "trusted_publisher_type", null: false
     t.bigint "trusted_publisher_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "gem_name_prefix"
     t.index ["rubygem_id", "trusted_publisher_id", "trusted_publisher_type"], name: "index_oidc_rubygem_trusted_publishers_unique", unique: true
+    t.index ["trusted_publisher_id", "trusted_publisher_type", "gem_name_prefix"], name: "index_oidc_rubygem_trusted_publishers_prefix_unique", unique: true, where: "(gem_name_prefix IS NOT NULL)"
     t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_rubygem_trusted_publishers_on_trusted_publisher"
   end
 
@@ -494,6 +496,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_07_200001) do
     t.datetime "updated_at", null: false
     t.string "workflow_repository_owner"
     t.string "workflow_repository_name"
+    t.string "gem_name_pattern"
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment", "workflow_repository_owner", "workflow_repository_name"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
