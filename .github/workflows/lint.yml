@@ -108,7 +108,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: stacklok/frizbee-action@c7009cdb455a69ae0dab0c37f296e0f545b4211c # main
+      - uses: stacklok/frizbee-action@7fb0f7cb0d136c932680249f65eb347c489d3106 # main
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
