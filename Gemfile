@@ -4,15 +4,15 @@ source "https://rubygems.org"
 
 ruby file: ".ruby-version"
 
-gem "rails", "~> 8.0.3"
+gem "rails", "~> 8.0.5"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.216"
-gem "aws-sdk-sqs", "~> 1.111"
+gem "aws-sdk-s3", "~> 1.217"
+gem "aws-sdk-sqs", "~> 1.112"
 gem "bootsnap", "~> 1.23"
 gem "clearance", "~> 2.11"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.29"
+gem "datadog", "~> 2.30"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.34"
 gem "faraday", "~> 2.14"
@@ -68,7 +68,6 @@ gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
-gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
 gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard
@@ -100,7 +99,7 @@ gem "propshaft", "~> 1.3.1"
 gem "importmap-rails", "~> 2.2"
 gem "stimulus-rails", "~> 1.3" # this adds stimulus-loading.js so it must be available at runtime
 gem "local_time", "~> 3.0"
-gem "better_html", "~> 2.2"
+gem "herb", "~> 0.9"
 
 group :assets, :development do
   gem "tailwindcss-rails", "~> 4.4"
@@ -120,7 +119,7 @@ group :development, :test do
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.85", require: false
+  gem "rubocop", "~> 1.86", require: false
   gem "rubocop-rails", "~> 2.34", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.39", require: false
@@ -138,7 +137,7 @@ group :development do
 end
 
 group :test do
-  gem "minitest", "~> 5.27", require: false
+  gem "minitest", "~> 6.0", require: false
   gem "minitest-retry", "~> 0.3.1"
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.1"

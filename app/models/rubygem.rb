@@ -291,7 +291,11 @@ class Rubygem < ApplicationRecord
   end
 
   def pushable?
-    new_record? || (versions.indexed.none? && not_protected?)
+    new_record? || (versions.indexed.none? && not_protected? && !reserved_name?)
+  end
+
+  def reserved_name?
+    GemNameReservation.reserved?(name)
   end
 
   def create_ownership(user)
@@ -400,7 +404,7 @@ class Rubygem < ApplicationRecord
   end
 
   def reserved_names_exclusion
-    return unless GemNameReservation.reserved?(name)
+    return unless reserved_name?
     errors.add :name, "'#{name}' is a reserved gem name."
   end
 
