@@ -32,6 +32,8 @@ class CompromisedPasswordsControllerTest < ActionController::TestCase
       end
 
       should "not update user confirmation_token on page visit" do
+        @user.update!(confirmation_token: "this-is-a-test-token")
+
         original_token = @user.confirmation_token
 
         get :show

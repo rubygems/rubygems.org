@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 ruby file: ".ruby-version"
 
-gem "rails", "~> 8.0.3"
+gem "rails", "~> 8.0.5"
 gem "rails-i18n", "~> 8.1.0"
 
 gem "aws-sdk-s3", "~> 1.217"
@@ -68,7 +68,6 @@ gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
-gem "connection_pool", "~> 2.0" # TODO: Remove when Rails makes new release after (16/12/2025)
 gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard
@@ -138,7 +137,7 @@ group :development do
 end
 
 group :test do
-  gem "minitest", "~> 5.27", require: false
+  gem "minitest", "~> 6.0", require: false
   gem "minitest-retry", "~> 0.3.1"
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.1"
