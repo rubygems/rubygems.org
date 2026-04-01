@@ -16,9 +16,9 @@ class GemInfoTest < ActiveSupport::TestCase
   context "#compact_index_info" do
     setup do
       rubygem = create(:rubygem, name: "example")
-      version = create(:version, rubygem: rubygem, number: "1.0.0", info_checksum: "qw2dwe")
+      @version = create(:version, rubygem: rubygem, number: "1.0.0", info_checksum: "qw2dwe")
       dep = create(:rubygem, name: "exmaple_dep")
-      create(:dependency, rubygem: dep, version: version)
+      create(:dependency, rubygem: dep, version: @version)
 
       @expected_info = [CompactIndex::GemVersion.new(
         "1.0.0",
@@ -27,7 +27,8 @@ class GemInfoTest < ActiveSupport::TestCase
         "qw2dwe",
         [CompactIndex::Dependency.new("exmaple_dep", "= 1.0.0")],
         ">= 2.0.0",
-        ">= 2.6.3"
+        ">= 2.6.3",
+        @version.created_at.utc.iso8601
       )]
     end
 
@@ -35,6 +36,12 @@ class GemInfoTest < ActiveSupport::TestCase
       info = GemInfo.new("example").compact_index_info
 
       assert_equal @expected_info, info
+    end
+
+    should "include created_at timestamp in gem version" do
+      info = GemInfo.new("example").compact_index_info
+
+      assert_equal @version.created_at.utc.iso8601, info.first.created_at
     end
 
     should "write cache" do
