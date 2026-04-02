@@ -210,6 +210,11 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
     assert_nil @response.headers["ETag"]
+    assert_nil @response.headers["Set-Cookie"], "Expected no Set-Cookie on /info 404"
+    assert_includes @response.headers["Cache-Control"], "public"
+    assert_match(/max-age=60/, @response.headers["Cache-Control"])
+    assert_match(/max-age=600/, @response.headers["Surrogate-Control"])
+    assert_equal "info/404", @response.headers["Surrogate-Key"]
   end
 
   test "/info with gzip" do

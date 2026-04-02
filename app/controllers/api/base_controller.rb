@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::BaseController < ApplicationController
+  content_security_policy false
+
   skip_before_action :verify_authenticity_token
   after_action :skip_session
 
