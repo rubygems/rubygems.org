@@ -33,7 +33,7 @@ class Api::CompactIndexController < Api::BaseController
     super
     return if @rubygem
 
-    cache_expiry_headers(expiry: 60, fastly_expiry: 600)
+    cache_expiry_headers(fastly_expiry: 600)
     set_surrogate_key "info/404"
   end
 
