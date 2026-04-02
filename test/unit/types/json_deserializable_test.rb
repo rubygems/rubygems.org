@@ -45,4 +45,17 @@ class Types::JsonDeserializableTest < ActiveSupport::TestCase
     assert_equal expected, result
     assert_instance_of DummyArray, result
   end
+
+  test "serialize handles nil" do
+    assert_nil @type.serialize(nil)
+  end
+
+  test "serialize normalizes custom Array/Hash subclasses bypassing as_json to avoid unexpected structures" do
+    input = DummyArray.new([1, 2, 3])
+
+    result = @type.serialize(input)
+
+    refute_equal input.as_json, result # as_json behavior
+    assert_equal "[1,2,3]", result # normalized behavior
+  end
 end
