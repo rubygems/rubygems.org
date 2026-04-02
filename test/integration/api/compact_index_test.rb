@@ -214,7 +214,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_includes @response.headers["Cache-Control"], "public"
     assert_match(/max-age=60/, @response.headers["Cache-Control"])
     assert_match(/max-age=600/, @response.headers["Surrogate-Control"])
-    assert_equal "info/404", @response.headers["Surrogate-Key"]
+    assert_equal "info/404 info/donotexist", @response.headers["Surrogate-Key"]
   end
 
   test "/info with gzip" do
