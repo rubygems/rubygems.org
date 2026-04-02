@@ -34,7 +34,7 @@ class Api::CompactIndexController < Api::BaseController
     return if @rubygem
 
     cache_expiry_headers(fastly_expiry: 600)
-    set_surrogate_key "info/404 info/#{gem_name}"
+    set_surrogate_key "#{action_name}/404 #{action_name}/#{gem_name}"
   end
 
   def render_range(response_body)
