@@ -4,7 +4,7 @@ class Api::BaseController < ApplicationController
   content_security_policy false
 
   skip_before_action :verify_authenticity_token
-  after_action :skip_session
+  after_action :skip_session # TODO: verify if this is still needed now that CSP is disabled for API controllers
 
   rescue_from(Pundit::NotAuthorizedError) do |e|
     render_forbidden(e.policy.error)
