@@ -29,6 +29,14 @@ class Api::CompactIndexController < Api::BaseController
 
   private
 
+  def find_rubygem_by_name
+    super
+    return if @rubygem
+
+    cache_expiry_headers(fastly_expiry: 600)
+    set_surrogate_key "#{action_name}/404 #{action_name}/#{gem_name}"
+  end
+
   def render_range(response_body)
     headers["ETag"] = %("#{Digest::MD5.hexdigest(response_body)}")
     digest = Digest::SHA256.base64digest(response_body)
