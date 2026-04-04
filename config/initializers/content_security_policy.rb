@@ -50,11 +50,8 @@ Rails.application.configure do
   end
 end
 
-# Generate session nonces for permitted importmap, inline scripts, and inline styles.
-Rails.application.config.content_security_policy_nonce_generator = lambda { |request|
-  # Suggested nonce generator doesn't work on first page load https://github.com/rails/rails/issues/48463
-  # Related PR attempting to fix: https://github.com/rails/rails/pull/48510
-  request.session.send(:load_for_write!) # force session to be created
-  request.session.id.to_s.presence || SecureRandom.base64(16)
+# Generate nonces for permitted importmap, inline scripts, and inline styles.
+Rails.application.config.content_security_policy_nonce_generator = lambda { |_request|
+  SecureRandom.base64(16)
 }
 Rails.application.config.content_security_policy_nonce_directives = %w[script-src]
