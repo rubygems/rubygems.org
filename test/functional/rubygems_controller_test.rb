@@ -432,6 +432,14 @@ class RubygemsControllerTest < ActionController::TestCase
       should "not have an unsubscribe link" do
         refute page.has_selector?("a#unsubscribe")
       end
+
+      should "not set a session cookie" do
+        assert_nil @response.headers["Set-Cookie"]
+      end
+
+      should "not set Cache-Control to private" do
+        refute_includes(@response.headers["Cache-Control"].to_s, "private")
+      end
     end
 
     context "On GET to security_events for a gem" do
