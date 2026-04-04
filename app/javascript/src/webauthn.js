@@ -77,6 +77,11 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
     };
   };
 
+  const getCsrfToken = function (form) {
+    const input = form.querySelector("input[name='authenticity_token']");
+    return input ? input.value : "";
+  };
+
   const onReady = (fn) => {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", fn);
@@ -98,8 +103,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
     const credentialSubmit = document.querySelector(
       ".js-new-webauthn-credential--submit",
     );
-    const csrfMeta = document.querySelector("[name='csrf-token']");
-    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+    const csrfToken = getCsrfToken(credentialForm);
 
     credentialForm.addEventListener("submit", function (event) {
       const form = handleEvent(event);
@@ -185,8 +189,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
     const cliSessionError = document.querySelector(
       ".js-webauthn-session-cli--error",
     );
-    const csrfMeta = document.querySelector("[name='csrf-token']");
-    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+    const csrfToken = getCsrfToken(cliSessionForm);
 
     function failed_verification_url(message) {
       const url = new URL(
@@ -222,8 +225,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
       ".js-webauthn-session--submit",
     );
     const sessionError = document.querySelector(".js-webauthn-session--error");
-    const csrfMeta = document.querySelector("[name='csrf-token']");
-    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+    const csrfToken = getCsrfToken(sessionForm);
 
     sessionForm.addEventListener("submit", async function (event) {
       try {
