@@ -14,7 +14,6 @@ class HomeControllerTest < ActionController::TestCase
     should "display counts" do
       assert page.has_content?("11,000,000")
     end
-
   end
 
   should "on GET to index with non html accept header" do

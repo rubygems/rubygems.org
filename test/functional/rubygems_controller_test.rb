@@ -432,7 +432,6 @@ class RubygemsControllerTest < ActionController::TestCase
       should "not have an unsubscribe link" do
         refute page.has_selector?("a#unsubscribe")
       end
-
     end
 
     context "On GET to security_events for a gem" do
