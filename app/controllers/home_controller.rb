@@ -6,6 +6,7 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html
     end
-    expires_in 1.minute, public: true unless signed_in?
+    set_surrogate_key "homepage"
+    cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
   end
 end
