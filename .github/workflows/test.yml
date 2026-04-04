@@ -58,7 +58,9 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload coverage to Codecov
-        if: matrix.tests.id != 'avo-without-pro' && (success() || failure())
+        if: success() || failure()
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        with:
+          flags: ${{ matrix.tests.id }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

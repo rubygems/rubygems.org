@@ -1,3 +1,10 @@
 codecov:
   notify:
-    after_n_builds: 2
+    after_n_builds: 3
+  flags:
+    general:
+      carryforward: true
+    system:
+      carryforward: true
+    avo-without-pro:
+      carryforward: true
