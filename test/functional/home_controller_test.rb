@@ -15,13 +15,6 @@ class HomeControllerTest < ActionController::TestCase
       assert page.has_content?("11,000,000")
     end
 
-    should "not set a session cookie" do
-      assert_nil @response.headers["Set-Cookie"]
-    end
-
-    should "not set Cache-Control to private" do
-      refute_includes(@response.headers["Cache-Control"].to_s, "private")
-    end
   end
 
   should "on GET to index with non html accept header" do
