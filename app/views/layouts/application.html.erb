@@ -17,7 +17,7 @@
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link href='https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
     <%= render "layouts/feeds" %>
-    <%= csrf_meta_tag %>
+    <%= csrf_meta_tag if signed_in? %>
     <%= yield :head %>
     <%= javascript_importmap_tags %>
   </head>
