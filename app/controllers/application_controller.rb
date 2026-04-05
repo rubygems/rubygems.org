@@ -81,7 +81,7 @@ class ApplicationController < ActionController::Base
   end
 
   def cacheable_request?
-    !signed_in? && params[:locale].blank? && session[:locale].blank?
+    !signed_in? && params[:locale].blank? && session[:locale].blank? && user_locale == I18n.default_locale
   end
 
   def cache_expiry_headers(expiry: 60, fastly_expiry: 3600)
