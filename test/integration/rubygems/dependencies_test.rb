@@ -17,5 +17,4 @@ class Rubygems::DependenciesTest < ActionDispatch::IntegrationTest
     assert_includes response.headers["Surrogate-Control"], "max-age=60"
     assert_equal "gem/sandworm/dependencies", response.headers["Surrogate-Key"]
   end
-
 end
