@@ -68,4 +68,40 @@ class GemsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
   end
+
+  test "anonymous gem index request sets public cache headers" do
+    get rubygems_path(letter: "S")
+
+    assert_response :success
+    assert_nil response.headers["Set-Cookie"]
+    assert_includes response.headers["Cache-Control"], "public"
+    assert_includes response.headers["Surrogate-Control"], "max-age=60"
+    assert_equal "gems/index", response.headers["Surrogate-Key"]
+  end
+
+  test "anonymous gem show request does not set a session cookie" do
+    get rubygem_path(@rubygem.slug)
+
+    assert_response :success
+    assert_nil response.headers["Set-Cookie"]
+  end
+
+  test "anonymous gem show request sets public cache headers" do
+    get rubygem_path(@rubygem.slug)
+
+    assert_response :success
+    assert_includes response.headers["Cache-Control"], "public"
+    assert_includes response.headers["Surrogate-Control"], "max-age=60"
+    assert_equal "gem/sandworm", response.headers["Surrogate-Key"]
+  end
+
+  test "authenticated gem show request does not set public cache headers" do
+    post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    get rubygem_path(@rubygem.slug)
+
+    assert_response :success
+    assert_includes response.headers["Set-Cookie"].to_s, "_rubygems_session"
+    refute_includes response.headers["Cache-Control"], "public"
+  end
 end
