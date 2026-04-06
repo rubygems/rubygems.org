@@ -22,7 +22,7 @@ class RubygemsController < ApplicationController
       end
     end
     set_surrogate_key "gems/index"
-    cache_expiry_headers(expiry: 60.seconds, fastly_expiry: 60.seconds) if cacheable_request?
+    cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
   end
 
   def show
@@ -33,7 +33,7 @@ class RubygemsController < ApplicationController
       render "show_yanked"
     end
     set_surrogate_key "gem/#{@rubygem.name}"
-    cache_expiry_headers(expiry: 60.seconds, fastly_expiry: 60.seconds) if cacheable_request?
+    cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
   end
 
   def security_events

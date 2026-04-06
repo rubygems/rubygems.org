@@ -16,6 +16,6 @@ class ReverseDependenciesController < ApplicationController
     @reverse_dependencies = @reverse_dependencies.legacy_search(params[:rdeps_query]) if params[:rdeps_query].is_a?(String)
     @reverse_dependencies = @reverse_dependencies.page(@page).without_count
     set_surrogate_key "gem/#{@rubygem.name}/reverse_dependencies"
-    cache_expiry_headers(expiry: 60.seconds, fastly_expiry: 60.seconds) if cacheable_request?
+    cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
   end
 end
