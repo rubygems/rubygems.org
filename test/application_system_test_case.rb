@@ -41,9 +41,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     # Clear Chrome's HTTP cache between tests to prevent stale responses.
     # Pages with Cache-Control: public headers are cached by the browser,
     # causing subsequent tests to see stale content when visiting the same URL.
-    if page.driver.browser.respond_to?(:execute_cdp)
-      page.driver.browser.execute_cdp("Network.clearBrowserCache")
-    end
+    page.driver.browser.execute_cdp("Network.clearBrowserCache") if page.driver.browser.respond_to?(:execute_cdp)
   end
 
   def sign_in(user = nil)
