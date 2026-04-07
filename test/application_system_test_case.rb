@@ -37,6 +37,15 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
   end
 
+  teardown do
+    # Clear Chrome's HTTP cache between tests to prevent stale responses.
+    # Pages with Cache-Control: public headers are cached by the browser,
+    # causing subsequent tests to see stale content when visiting the same URL.
+    if page.driver.browser.respond_to?(:execute_cdp)
+      page.driver.browser.execute_cdp("Network.clearBrowserCache")
+    end
+  end
+
   def sign_in(user = nil)
     user ||= @user
 
