@@ -341,8 +341,8 @@ GEM
       bigdecimal
       rake (~> 13.3)
     gravtastic (3.2.6)
-    groupdate (6.7.0)
-      activesupport (>= 7.1)
+    groupdate (6.8.0)
+      activesupport (>= 7.2)
     hashdiff (1.2.1)
     hashie (5.1.0)
       logger
@@ -963,7 +963,7 @@ DEPENDENCIES
   good_job (~> 3.99)
   google-protobuf (~> 4.34)
   gravtastic (~> 3.2)
-  groupdate (~> 6.7)
+  groupdate (~> 6.8)
   herb (~> 0.9)
   honeybadger (~> 6.5.2)
   http_accept_language (~> 2.1)
@@ -1162,7 +1162,7 @@ CHECKSUMS
   google-protobuf (4.34.1-x86_64-linux-gnu) sha256=87088c9fd8e47b5b40ca498fc1195add6149e941ff7e81c532a5b0b8876d4cc9
   google-protobuf (4.34.1-x86_64-linux-musl) sha256=8c0e91436fbe504ffc64f0bd621f2e69adbcce8ed2c58439d7a21117069cfdd7
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
-  groupdate (6.7.0) sha256=beaa8d5bf3856814681914a1d4a20e77436a2214b85d0017dc2ea5c355fb6777
+  groupdate (6.8.0) sha256=16f90ea18ca981c38e41e592416480b28353aa5e5cc3e7cb13a68b8fb5d40510
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
