@@ -15,7 +15,8 @@ class ApplicationController < ActionController::Base
     render_forbidden(e.policy.error)
   end
 
-  before_action :set_locale
+  # TODO: Separate locales by path and re-enable
+  # before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_path_params_param
   before_action :reject_null_char_cookie
@@ -81,7 +82,7 @@ class ApplicationController < ActionController::Base
   end
 
   def cacheable_request?
-    !signed_in? && params[:locale].blank? && session[:locale].blank? && user_locale == I18n.default_locale
+    !signed_in?
   end
 
   def cache_expiry_headers(expiry: 60, fastly_expiry: 3600)

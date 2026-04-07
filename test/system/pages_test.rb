@@ -4,6 +4,8 @@ require "application_system_test_case"
 
 class PagesTest < ApplicationSystemTestCase
   test "renders /pages/about for all supported languages" do
+    skip "locales temporarily disabled"
+
     I18n.available_locales.each do |locale|
       visit "/pages/about?locale=#{locale}"
 

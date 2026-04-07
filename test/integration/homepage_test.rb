@@ -19,11 +19,12 @@ class HomepageTest < ActionDispatch::IntegrationTest
     assert_equal "homepage", response.headers["Surrogate-Key"]
   end
 
-  test "request with locale param does not set public cache headers" do
+  test "request with locale param still sets public cache headers" do
     get root_path(locale: "de")
 
     assert_response :success
-    refute_includes response.headers["Cache-Control"].to_s, "public"
+    assert_nil response.headers["Set-Cookie"]
+    assert_includes response.headers["Cache-Control"], "public"
   end
 
   test "authenticated request sets a session cookie" do
