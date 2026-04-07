@@ -23,6 +23,7 @@ class HomepageTest < ActionDispatch::IntegrationTest
     get root_path(locale: "de")
 
     assert_response :success
+    assert_nil response.headers["Set-Cookie"]
     assert_includes response.headers["Cache-Control"], "public"
   end
 

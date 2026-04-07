@@ -15,7 +15,8 @@ class ApplicationController < ActionController::Base
     render_forbidden(e.policy.error)
   end
 
-  before_action :set_locale
+  # TODO: Separate locales by path and re-enable
+  # before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_path_params_param
   before_action :reject_null_char_cookie
