@@ -31,6 +31,8 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "canonical/alternate urls for gem points to most recent version" do
+    skip "locales temporarily disbaled"
+
     base_url = "http://localhost/gems/sandworm/versions/1.1.1"
     create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_path(@rubygem.slug)

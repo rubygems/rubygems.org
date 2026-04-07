@@ -64,21 +64,7 @@
                   <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                 </div>
               </div>
-              <!-- Language Selector -->
-              <div class="flex relative ml-5" data-controller="dropdown">
-                <button data-action="dropdown#toggle click@window->dropdown#hide" class="flex items-center text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 focus:outline-none">
-                  <%= icon_tag "language", size: 5 %>
-                  <span class="ml-1 text-b3 uppercase"><%= I18n.locale %></span>
-                  <%= icon_tag "arrow-drop-down" %>
-                </button>
-
-                <!-- Language Dropdown Menu -->
-                <div data-dropdown-target="menu" class="z-50 hidden absolute flex-row -left-4 top-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded shadow-lg text-b2 text-neutral-700 dark:text-neutral-300 divide-y divide-neutral-200 dark:divide-neutral-800">
-                  <% I18n.available_locales.each do |language| %>
-                    <%= link_to I18n.t(:locale_name, locale: language), url_for(locale: language, only_path: true), class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-nowrap" %>
-                  <% end %>
-                </div>
-              </div>
+              <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
             </nav>
 
             <!-- Mobile Left Navigation Menu -->
@@ -120,20 +106,7 @@
                     <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "mb-4 hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   </div>
 
-                  <!-- Mobile Language Selector -->
-                  <div class="flex flex-col" data-controller="reveal" data-reveal-toggle-class="rotate-180">
-                    <button class="flex items-center px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none justify-between" data-action="reveal#toggle" data-reveal-target="button">
-                      <span class="flex items-center">
-                        <%= icon_tag "language" %>
-                        <span class="mx-2 text-b2 uppercase"><%= I18n.locale %></span>
-                      </span>
-                      <%= icon_tag "keyboard-arrow-down", class:"transition-transform transform", data: { reveal_target: "toggle" } %>
-                    </button>
-
-                    <% I18n.available_locales.each do |language| %>
-                      <%= link_to I18n.t(:locale_name, locale: language), url_for(locale: language, only_path: true), data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-nowrap" %>
-                    <% end %>
-                  </div>
+                  <%# Mobile locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
                 </nav>
               </div>
             </dialog>
