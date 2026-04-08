@@ -32,6 +32,10 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
 
   def available_rubygem_name
     return if rubygem_name.blank?
+
+    reserved = GemNameReservation.reserved?(rubygem_name)
+    return errors.add(:rubygem_name, :reserved) if reserved
+
     rubygem = Rubygem.name_is(rubygem_name).first
     return if rubygem.nil? || rubygem.pushable?
 

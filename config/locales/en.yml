@@ -144,6 +144,7 @@ en:
           attributes:
             rubygem_name:
               unavailable: "is already in use"
+              reserved: "is reserved"
     models:
       user: User
       api_key:
