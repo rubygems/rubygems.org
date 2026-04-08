@@ -2,10 +2,11 @@
 
 require "test_helper"
 require "compact_index"
+require "helpers/compact_index_helpers"
 
-# Named CompactIndexLibTest to avoid superclass mismatch with
-# CompactIndexTest < ActionDispatch::IntegrationTest in test/integration/api/compact_index_test.rb
-class CompactIndexLibTest < ActiveSupport::TestCase
+class CompactIndexTest < ActiveSupport::TestCase
+  include CompactIndexHelpers
+
   context ".names" do
     should "return the gem list for one gem name" do
       assert_equal "---\ngem\n", CompactIndex.names(["gem"])
@@ -120,59 +121,5 @@ class CompactIndexLibTest < ActiveSupport::TestCase
 
       assert_equal "---\n1.0.1-jruby |checksum:sum+test_gem+1.0.1\n", CompactIndex.info(param)
     end
-  end
-
-  context "GemVersion#<=>" do
-    should "sort by number" do
-      v1 = build_version(number: "1.0")
-      v2 = build_version(number: "2.0")
-
-      assert_equal(-1, v1 <=> v2)
-      assert_equal 1, v2 <=> v1
-    end
-
-    should "sort by platform when numbers are equal" do
-      v1 = build_version(number: "1.0", platform: "java")
-      v2 = build_version(number: "1.0", platform: "ruby")
-
-      assert_equal(-1, v1 <=> v2)
-    end
-
-    should "return zero for equal versions" do
-      v1 = build_version(number: "1.0", platform: "ruby")
-      v2 = build_version(number: "1.0", platform: "ruby")
-
-      assert_equal 0, v1 <=> v2
-    end
-  end
-
-  context "Dependency#version_and_platform" do
-    should "include platform for non-ruby platform" do
-      dep = CompactIndex::Dependency.new("foo", "=1.0", "jruby", "abc")
-
-      assert_equal "=1.0-jruby", dep.version_and_platform
-    end
-
-    should "exclude platform for ruby platform" do
-      dep = CompactIndex::Dependency.new("foo", "=1.0", "ruby", "abc")
-
-      assert_equal "=1.0", dep.version_and_platform
-    end
-  end
-
-  private
-
-  def build_version(**args)
-    name = args.fetch(:name, "test_gem")
-    number = args.fetch(:number, "1.0")
-    CompactIndex::GemVersion.new(
-      number,
-      args[:platform],
-      args.fetch(:checksum, "sum+#{name}+#{number}"),
-      args.fetch(:info_checksum, "info+#{name}+#{number}"),
-      args[:dependencies],
-      args[:ruby_version],
-      args[:rubygems_version]
-    )
   end
 end

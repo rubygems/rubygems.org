@@ -2,8 +2,11 @@
 
 require "test_helper"
 require "compact_index"
+require "helpers/compact_index_helpers"
 
-class CompactIndexVersionsFileTest < ActiveSupport::TestCase
+class CompactIndex::VersionsFileTest < ActiveSupport::TestCase
+  include CompactIndexHelpers
+
   setup do
     @file_contents = "gem1 1.1,1.2\ngem2 2.1,2.1-jruby\n"
     @file = Tempfile.new("versions.list")
@@ -17,9 +20,16 @@ class CompactIndexVersionsFileTest < ActiveSupport::TestCase
   end
 
   context "#create" do
+    setup do
+      @create_file = Tempfile.new("create_versions.list")
+      @create_versions_file = CompactIndex::VersionsFile.new(@create_file.path)
+    end
+
+    teardown do
+      @create_file&.unlink
+    end
+
     should "write one line per gem" do
-      file = Tempfile.new("create_versions.list")
-      versions_file = CompactIndex::VersionsFile.new(file.path)
       gem2_versions = [
         build_version(name: "gem2", number: "1.0.1"),
         build_version(name: "gem2", number: "1.0.2", platform: "arch")
@@ -30,48 +40,42 @@ class CompactIndexVersionsFileTest < ActiveSupport::TestCase
       ]
 
       freeze_time do
-        versions_file.create(gems)
+        @create_versions_file.create(gems)
         expected = "created_at: #{Time.now.iso8601}\n---\n" \
                    "gem2 1.0.1,1.0.2-arch info+gem2+1.0.2\n" \
                    "gem5 1.0.1 info+gem5+1.0.1\n"
 
-        assert_equal expected, file.open.read
+        assert_equal expected, @create_file.open.read
       end
     end
 
     should "add the date on top" do
-      file = Tempfile.new("create_versions.list")
-      versions_file = CompactIndex::VersionsFile.new(file.path)
       gems = [CompactIndex::Gem.new("gem1", [build_version])]
 
       freeze_time do
-        versions_file.create(gems)
+        @create_versions_file.create(gems)
 
-        assert file.open.read.start_with?("created_at: #{Time.now.iso8601}\n")
+        assert @create_file.open.read.start_with?("created_at: #{Time.now.iso8601}\n")
       end
     end
 
     should "order gems by name" do
-      file = Tempfile.new("versions-sort")
-      versions_file = CompactIndex::VersionsFile.new(file.path)
       gems = [
         CompactIndex::Gem.new("gem_b", [build_version]),
         CompactIndex::Gem.new("gem_a", [build_version])
       ]
 
       freeze_time do
-        versions_file.create(gems)
+        @create_versions_file.create(gems)
         expected = "created_at: #{Time.now.iso8601}\n---\n" \
                    "gem_a 1.0 info+test_gem+1.0\n" \
                    "gem_b 1.0 info+test_gem+1.0\n"
 
-        assert_equal expected, file.open.read
+        assert_equal expected, @create_file.open.read
       end
     end
 
     should "use the given version order" do
-      file = Tempfile.new("versions-sort")
-      versions_file = CompactIndex::VersionsFile.new(file.path)
       versions = [
         build_version(number: "1.3.0"),
         build_version(number: "2.2"),
@@ -80,18 +84,16 @@ class CompactIndexVersionsFileTest < ActiveSupport::TestCase
         build_version(number: "2.1.2")
       ]
       gems = [CompactIndex::Gem.new("test", versions)]
-      versions_file.create(gems)
+      @create_versions_file.create(gems)
 
-      assert_includes file.open.read, "test 1.3.0,2.2,1.1.1,1.1.1,2.1.2 info+test_gem+2.1.2"
+      assert_includes @create_file.open.read, "test 1.3.0,2.2,1.1.1,1.1.1,2.1.2 info+test_gem+2.1.2"
     end
 
     should "use a custom timestamp when provided" do
-      file = Tempfile.new("create_versions.list")
-      versions_file = CompactIndex::VersionsFile.new(file.path)
       ts = Time.new(1999, 9, 9).iso8601
-      versions_file.create([], ts)
+      @create_versions_file.create([], ts)
 
-      assert file.open.read.start_with?("created_at: #{ts}")
+      assert @create_file.open.read.start_with?("created_at: #{ts}")
     end
   end
 
@@ -111,6 +113,8 @@ class CompactIndexVersionsFileTest < ActiveSupport::TestCase
       versions_file = CompactIndex::VersionsFile.new(file.path)
 
       assert_equal DateTime.parse("2015-08-23T17:22:53-07:00"), versions_file.updated_at
+    ensure
+      file&.unlink
     end
   end
 
@@ -156,21 +160,5 @@ class CompactIndexVersionsFileTest < ActiveSupport::TestCase
       assert_match(/test 1.0 b1c5ae823c07dba64028e4b37a2a2ba7/,
                    @versions_file.contents(gems, calculate_info_checksums: true))
     end
-  end
-
-  private
-
-  def build_version(**args)
-    name = args.fetch(:name, "test_gem")
-    number = args.fetch(:number, "1.0")
-    CompactIndex::GemVersion.new(
-      number,
-      args[:platform],
-      args.fetch(:checksum, "sum+#{name}+#{number}"),
-      args.fetch(:info_checksum, "info+#{name}+#{number}"),
-      args[:dependencies],
-      args[:ruby_version],
-      args[:rubygems_version]
-    )
   end
 end
