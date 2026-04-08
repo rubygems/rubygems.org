@@ -993,7 +993,7 @@ ja:
         create: 作成
         description_html: |
           信頼できる発行元を使うと、長く残る機密な認証情報を保管することなくCIからgemをプッシュできます。
-          信頼できる発行元を設定する方法についての詳しい情報は、<a href="https://guides.rubygems.org/trusted-publishing/adding-a-publisher/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
+          信頼できる発行元を設定する方法についての詳しい情報は、<a href="https://guides.rubygems.org/trusted-publishing/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
       destroy:
         success: 信頼できる発行元が削除されました
       create:
