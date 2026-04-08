@@ -295,7 +295,7 @@ class Rubygem < ApplicationRecord
   end
 
   def reserved_name?
-    GemNameReservation.reserved?(name)
+    GemNameReservation.reserved?(name) if name.present?
   end
 
   def create_ownership(user)
