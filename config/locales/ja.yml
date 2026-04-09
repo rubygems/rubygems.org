@@ -140,6 +140,7 @@ ja:
           attributes:
             rubygem_name:
               unavailable: 既に使われています
+              reserved:
     models:
       user: ユーザー
       api_key:

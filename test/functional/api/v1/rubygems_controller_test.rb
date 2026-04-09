@@ -425,7 +425,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with 403
       should "not register gem" do
         assert_predicate Rubygem.count, :zero?
-        assert_match(/There was a problem saving your gem: Name 'rubygems' is a reserved gem name./, @response.body)
+        assert_match(/This gem name is reserved. You are not allowed to push this gem./, @response.body)
       end
     end
 

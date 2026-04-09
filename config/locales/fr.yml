@@ -144,6 +144,7 @@ fr:
           attributes:
             rubygem_name:
               unavailable:
+              reserved:
     models:
       user:
       api_key:
