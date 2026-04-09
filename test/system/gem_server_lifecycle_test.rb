@@ -396,12 +396,11 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     end
   end
 
-  def http_delete(path, body: nil, headers: {})
+  def http_delete(path, headers: {})
     uri = URI("#{server_url}/#{path}")
     Net::HTTP.start(uri.host, uri.port) do |http|
       req = Net::HTTP::Delete.new(uri.request_uri)
       headers.each { |k, v| req[k] = v }
-      req.body = body if body
       http.request(req)
     end
   end
