@@ -152,7 +152,6 @@ group :test do
   gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.8"
-  gem "gem_server_conformance", "~> 0.1.4"
 end
 
 gem "avo_upgrade", "~> 0.1.1", group: :development
