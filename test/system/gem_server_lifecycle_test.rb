@@ -109,7 +109,8 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
 
     assert_equal "200", info_a_after_first_push.code
     assert_equal "text/plain; charset=utf-8", info_a_after_first_push["content-type"]
-    expected_info = "---\n1.0.0 |checksum:#{gem_a100.sha256}\n"
+    a100_version = Version.find_by!(full_name: "a-1.0.0")
+    expected_info = "---\n1.0.0 |checksum:#{gem_a100.sha256},created_at:#{a100_version.created_at.utc.iso8601}\n"
 
     assert_equal expected_info, info_a_after_first_push.body
 
@@ -196,12 +197,21 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     info_a_after_second_push = do_get_info("a")
 
     assert_valid_compact_index_response info_a_after_second_push
-    assert_equal info_a_after_yank.body + "0.0.1 |checksum:#{gem_a001.sha256}\n", info_a_after_second_push.body
+    a001_version = Version.find_by!(full_name: "a-0.0.1")
+    expected_a_info = info_a_after_yank.body +
+      "0.0.1 |checksum:#{gem_a001.sha256},created_at:#{a001_version.created_at.utc.iso8601}\n"
+
+    assert_equal expected_a_info, info_a_after_second_push.body
 
     info_b = do_get_info("b")
 
     assert_valid_compact_index_response info_b
-    assert_equal "---\n1.0.0.pre a:< 1.0.0&>= 0.1.0|checksum:#{gem_b100pre.sha256},ruby:>= 2.0,rubygems:>= 2.0\n", info_b.body
+    b100pre_version = Version.find_by!(full_name: "b-1.0.0.pre")
+    expected_b_info = "---\n" \
+                      "1.0.0.pre a:< 1.0.0&>= 0.1.0|checksum:#{gem_b100pre.sha256}," \
+                      "ruby:>= 2.0,rubygems:>= 2.0,created_at:#{b100pre_version.created_at.utc.iso8601}\n"
+
+    assert_equal expected_b_info, info_b.body
 
     response = do_get_names
 
@@ -253,10 +263,13 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     info_a_after_third_push = do_get_info("a")
 
     assert_valid_compact_index_response info_a_after_third_push
+    a020_version = Version.find_by!(full_name: "a-0.2.0")
+    a020_mingw_version = Version.find_by!(full_name: "a-0.2.0-x86-mingw32")
+    a020_java_version = Version.find_by!(full_name: "a-0.2.0-java")
     expected_info_a = info_a_after_second_push.body +
-      "0.2.0 |checksum:#{gem_a020.sha256}\n" \
-      "0.2.0-x86-mingw32 |checksum:#{find_gem('a-0.2.0-x86-mingw32').sha256}\n" \
-      "0.2.0-java |checksum:#{find_gem('a-0.2.0-java').sha256}\n"
+      "0.2.0 |checksum:#{gem_a020.sha256},created_at:#{a020_version.created_at.utc.iso8601}\n" \
+      "0.2.0-x86-mingw32 |checksum:#{find_gem('a-0.2.0-x86-mingw32').sha256},created_at:#{a020_mingw_version.created_at.utc.iso8601}\n" \
+      "0.2.0-java |checksum:#{find_gem('a-0.2.0-java').sha256},created_at:#{a020_java_version.created_at.utc.iso8601}\n"
 
     assert_equal expected_info_a, info_a_after_third_push.body
 
@@ -312,7 +325,9 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     info_a_after_fourth_push = do_get_info("a")
 
     assert_valid_compact_index_response info_a_after_fourth_push
-    assert_match(/0\.3\.0 \|checksum:#{gem_a030.sha256}\n\z/, info_a_after_fourth_push.body)
+    a030_version = Version.find_by!(full_name: "a-0.3.0")
+
+    assert_match(/0\.3\.0 \|checksum:#{gem_a030.sha256},created_at:#{a030_version.created_at.utc.iso8601}\n\z/, info_a_after_fourth_push.body)
 
     specs_after_fourth_push = do_get_specs
 
