@@ -468,12 +468,9 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
   end
 
   def do_yank_gem(gem, expected_code: "200")
-    body = URI.encode_www_form(gem_name: gem.name, version: gem.version.to_s, platform: gem.platform)
-    response = http_delete("api/v1/gems/yank",
-      body: body,
+    query = URI.encode_www_form(gem_name: gem.name, version: gem.version.to_s, platform: gem.platform)
+    response = http_delete("api/v1/gems/yank?#{query}",
       headers: {
-        "Content-Type" => "application/x-www-form-urlencoded",
-        "Content-Length" => body.bytesize.to_s,
         "Authorization" => @api_key
       })
 
