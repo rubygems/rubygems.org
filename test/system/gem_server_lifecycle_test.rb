@@ -52,6 +52,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
   end
 
   teardown do
+    travel_back
     ActiveSupport::Notifications.unsubscribe(@subscriber)
     Rails.application.reload_routes!
   end
