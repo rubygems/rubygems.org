@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Inlined from https://github.com/rubygems/gem_server_conformance (v0.1.5)
+
 require "application_system_test_case"
 
 require_relative "../../lib/gemcutter/middleware/hostess"
