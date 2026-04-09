@@ -56,27 +56,32 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     Rails.application.reload_routes!
   end
 
-  test "gem server push, yank, and index lifecycle" do # rubocop:disable Minitest/MultipleAssertions
+  test "gem server push, yank, and index lifecycle" do
     # Step 1: after rebuilding empty versions list
     do_rebuild_versions_list
 
     response = do_get_versions
+
     assert_valid_compact_index_response response
     assert_equal "created_at: 1990-01-01T00:00:00Z\n---\n", response.body
 
     response = do_get_names
+
     assert_valid_compact_index_response response
     assert_equal "---\n\n", response.body
 
     response = do_get_specs
+
     assert_equal "200", response.code
     assert_equal [], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:prerelease)
+
     assert_equal "200", response.code
     assert_equal [], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:latest)
+
     assert_equal "200", response.code
     assert_equal [], unmarshal_gzipped(response.body)
 
@@ -85,124 +90,145 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     assert_equal "404", do_get_quick_spec("missing").code
 
     # Step 2: push a-1.0.0
-    gem_a_1_0_0 = build_test_gem("a", "1.0.0")
-    do_push_gem(gem_a_1_0_0, expected_code: "200")
+    gem_a100 = build_test_gem("a", "1.0.0")
+    do_push_gem(gem_a100, expected_code: "200")
 
     assert_pushed_gem("a-1.0.0")
 
     versions_after_first_push = do_get_versions
+
     assert_valid_compact_index_response versions_after_first_push
     versions_body = versions_after_first_push.body
+
     assert_match(/\Acreated_at: .+\n---\na 1\.0\.0 \h{32}\n\z/, versions_body)
 
     info_a_after_first_push = do_get_info("a")
+
     assert_equal "200", info_a_after_first_push.code
     assert_equal "text/plain; charset=utf-8", info_a_after_first_push["content-type"]
-    expected_info = "---\n1.0.0 |checksum:#{gem_a_1_0_0.sha256}\n"
+    expected_info = "---\n1.0.0 |checksum:#{gem_a100.sha256}\n"
+
     assert_equal expected_info, info_a_after_first_push.body
 
     response = do_get_names
+
     assert_valid_compact_index_response response
     assert_equal "---\na\n", response.body
 
     response = do_get_specs
+
     assert_equal "200", response.code
     assert_equal [["a", Gem::Version.new("1.0.0"), "ruby"]], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:prerelease)
+
     assert_equal "200", response.code
     assert_equal [], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:latest)
+
     assert_equal "200", response.code
     assert_equal [["a", Gem::Version.new("1.0.0"), "ruby"]], unmarshal_gzipped(response.body)
 
     assert_versions_etags_match_info(versions_after_first_push)
 
     # Step 3: yank a-1.0.0
-    do_yank_gem(gem_a_1_0_0, expected_code: "200")
+    do_yank_gem(gem_a100, expected_code: "200")
 
     assert_yanked_gem("a-1.0.0")
 
     versions_after_yank = do_get_versions
+
     assert_valid_compact_index_response versions_after_yank
     assert versions_after_yank.body.start_with?(versions_body), "versions should be appended"
     assert_match(/a -1\.0\.0 \h{32}\n\z/, versions_after_yank.body)
 
     info_a_after_yank = do_get_info("a")
+
     assert_valid_compact_index_response info_a_after_yank
     assert_equal "---\n", info_a_after_yank.body
 
     response = do_get_names
+
     assert_valid_compact_index_response response
     assert_equal "---\n\n", response.body
 
     response = do_get_specs
+
     assert_equal "200", response.code
     assert_equal [], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:prerelease)
+
     assert_equal "200", response.code
     assert_equal [], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:latest)
+
     assert_equal "200", response.code
     assert_equal [], unmarshal_gzipped(response.body)
 
     assert_versions_etags_match_info(versions_after_yank)
 
     # Step 4: push a-0.0.1 and b-1.0.0.pre
-    gem_a_0_0_1 = build_test_gem("a", "0.0.1")
-    do_push_gem(gem_a_0_0_1, expected_code: "200")
+    gem_a001 = build_test_gem("a", "0.0.1")
+    do_push_gem(gem_a001, expected_code: "200")
 
-    gem_b_1_0_0_pre = build_test_gem("b", "1.0.0.pre") do |spec|
+    gem_b100pre = build_test_gem("b", "1.0.0.pre") do |spec|
       spec.add_runtime_dependency "a", "< 1.0.0", ">= 0.1.0"
       spec.required_ruby_version = ">= 2.0"
       spec.required_rubygems_version = ">= 2.0"
     end
-    do_push_gem(gem_b_1_0_0_pre, expected_code: "200")
+    do_push_gem(gem_b100pre, expected_code: "200")
 
     assert_pushed_gem("a-0.0.1")
     assert_pushed_gem("b-1.0.0.pre")
 
     versions_after_second_push = do_get_versions
+
     assert_valid_compact_index_response versions_after_second_push
     assert versions_after_second_push.body.start_with?(versions_after_yank.body), "versions should be appended"
     assert_match(/a 0\.0\.1 \h{32}\nb 1\.0\.0\.pre \h{32}\n\z/, versions_after_second_push.body)
 
     info_a_after_second_push = do_get_info("a")
+
     assert_valid_compact_index_response info_a_after_second_push
-    assert_equal info_a_after_yank.body + "0.0.1 |checksum:#{gem_a_0_0_1.sha256}\n", info_a_after_second_push.body
+    assert_equal info_a_after_yank.body + "0.0.1 |checksum:#{gem_a001.sha256}\n", info_a_after_second_push.body
 
     info_b = do_get_info("b")
+
     assert_valid_compact_index_response info_b
-    assert_equal "---\n1.0.0.pre a:< 1.0.0&>= 0.1.0|checksum:#{gem_b_1_0_0_pre.sha256},ruby:>= 2.0,rubygems:>= 2.0\n", info_b.body
+    assert_equal "---\n1.0.0.pre a:< 1.0.0&>= 0.1.0|checksum:#{gem_b100pre.sha256},ruby:>= 2.0,rubygems:>= 2.0\n", info_b.body
 
     response = do_get_names
+
     assert_valid_compact_index_response response
     assert_equal "---\na\nb\n", response.body
 
     response = do_get_specs
+
     assert_equal "200", response.code
     assert_equal [["a", Gem::Version.new("0.0.1"), "ruby"]], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:prerelease)
+
     assert_equal "200", response.code
     assert_equal [["b", Gem::Version.new("1.0.0.pre"), "ruby"]], unmarshal_gzipped(response.body)
 
     response = do_get_specs(:latest)
+
     assert_equal "200", response.code
     assert_equal [["a", Gem::Version.new("0.0.1"), "ruby"]], unmarshal_gzipped(response.body)
 
     assert_versions_etags_match_info(versions_after_second_push)
 
     # Step 5: push duplicates and platform variants
-    gem_a_0_0_1_dup = build_test_gem("a", "0.0.1") { |s| s.add_runtime_dependency "b", ">= 1.0.0" }
-    do_push_gem(gem_a_0_0_1_dup, expected_code: "409")
+    gem_a001_dup = build_test_gem("a", "0.0.1") { |s| s.add_runtime_dependency "b", ">= 1.0.0" }
+    do_push_gem(gem_a001_dup, expected_code: "409")
     @all_gems.pop
 
-    gem_a_0_2_0 = build_test_gem("a", "0.2.0")
-    do_push_gem(gem_a_0_2_0, expected_code: "200")
+    gem_a020 = build_test_gem("a", "0.2.0")
+    do_push_gem(gem_a020, expected_code: "200")
 
     build_test_gem("a", "0.2.0", platform: "x86-mingw32")
     do_push_gem(@all_gems.last, expected_code: "200")
@@ -215,35 +241,43 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     assert_pushed_gem("a-0.2.0-java")
 
     versions_after_third_push = do_get_versions
+
     assert_valid_compact_index_response versions_after_third_push
     assert versions_after_third_push.body.start_with?(versions_after_second_push.body), "versions should be appended"
     assert_match(/a 0\.2\.0 \h{32}\na 0\.2\.0-x86-mingw32 \h{32}\na 0\.2\.0-java \h{32}\n\z/,
       versions_after_third_push.body)
 
     info_a_after_third_push = do_get_info("a")
+
     assert_valid_compact_index_response info_a_after_third_push
     expected_info_a = info_a_after_second_push.body +
-      "0.2.0 |checksum:#{gem_a_0_2_0.sha256}\n" \
+      "0.2.0 |checksum:#{gem_a020.sha256}\n" \
       "0.2.0-x86-mingw32 |checksum:#{find_gem('a-0.2.0-x86-mingw32').sha256}\n" \
       "0.2.0-java |checksum:#{find_gem('a-0.2.0-java').sha256}\n"
+
     assert_equal expected_info_a, info_a_after_third_push.body
 
     specs_after_third_push = do_get_specs
+
     assert_equal "200", specs_after_third_push.code
     specs = unmarshal_gzipped(specs_after_third_push.body)
+
     assert_includes specs, ["a", Gem::Version.new("0.0.1"), "ruby"]
     assert_includes specs, ["a", Gem::Version.new("0.2.0"), "ruby"]
     assert_includes specs, ["a", Gem::Version.new("0.2.0"), "x86-mingw32"]
     assert_includes specs, ["a", Gem::Version.new("0.2.0"), "java"]
 
     response = do_get_specs(:latest)
+
     assert_equal "200", response.code
     latest = unmarshal_gzipped(response.body)
+
     assert_includes latest, ["a", Gem::Version.new("0.2.0"), "ruby"]
     assert_includes latest, ["a", Gem::Version.new("0.2.0"), "x86-mingw32"]
     assert_includes latest, ["a", Gem::Version.new("0.2.0"), "java"]
 
     response = do_get_specs(:prerelease)
+
     assert_equal "200", response.code
     assert_equal [["b", Gem::Version.new("1.0.0.pre"), "ruby"]], unmarshal_gzipped(response.body)
 
@@ -253,6 +287,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     do_rebuild_versions_list
 
     versions_after_rebuild = do_get_versions
+
     assert_valid_compact_index_response versions_after_rebuild
     # After rebuild, versions file is compacted (no incremental lines)
     assert_match(/\Acreated_at: .+\n---\n/, versions_after_rebuild.body)
@@ -260,28 +295,34 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     assert_match(/^b .+ \h{32}$/, versions_after_rebuild.body)
 
     # Step 7: push a-0.3.0
-    gem_a_0_3_0 = build_test_gem("a", "0.3.0")
-    do_push_gem(gem_a_0_3_0, expected_code: "200")
+    gem_a030 = build_test_gem("a", "0.3.0")
+    do_push_gem(gem_a030, expected_code: "200")
 
     assert_pushed_gem("a-0.3.0")
 
     versions_after_fourth_push = do_get_versions
+
     assert_valid_compact_index_response versions_after_fourth_push
     assert versions_after_fourth_push.body.start_with?(versions_after_rebuild.body), "versions should be appended"
     assert_match(/a 0\.3\.0 \h{32}\n\z/, versions_after_fourth_push.body)
 
     info_a_after_fourth_push = do_get_info("a")
+
     assert_valid_compact_index_response info_a_after_fourth_push
-    assert_match(/0\.3\.0 \|checksum:#{gem_a_0_3_0.sha256}\n\z/, info_a_after_fourth_push.body)
+    assert_match(/0\.3\.0 \|checksum:#{gem_a030.sha256}\n\z/, info_a_after_fourth_push.body)
 
     specs_after_fourth_push = do_get_specs
+
     assert_equal "200", specs_after_fourth_push.code
     specs = unmarshal_gzipped(specs_after_fourth_push.body)
+
     assert_includes specs, ["a", Gem::Version.new("0.3.0"), "ruby"]
 
     response = do_get_specs(:latest)
+
     assert_equal "200", response.code
     latest = unmarshal_gzipped(response.body)
+
     assert_includes latest, ["a", Gem::Version.new("0.3.0"), "ruby"]
     assert_includes latest, ["a", Gem::Version.new("0.2.0"), "x86-mingw32"]
     assert_includes latest, ["a", Gem::Version.new("0.2.0"), "java"]
@@ -289,26 +330,30 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     assert_versions_etags_match_info(versions_after_fourth_push)
 
     # Step 8: yank a-0.2.0
-    do_yank_gem(gem_a_0_2_0, expected_code: "200")
+    do_yank_gem(gem_a020, expected_code: "200")
 
     assert_yanked_gem("a-0.2.0")
 
     versions_after_second_yank = do_get_versions
+
     assert_valid_compact_index_response versions_after_second_yank
     assert versions_after_second_yank.body.start_with?(versions_after_fourth_push.body), "versions should be appended"
     assert_match(/a -0\.2\.0 \h{32}\n\z/, versions_after_second_yank.body)
 
     info_a_after_second_yank = do_get_info("a")
+
     assert_valid_compact_index_response info_a_after_second_yank
     # The yanked version line should be removed from info
-    refute_match(/^0\.2\.0 \|checksum:#{gem_a_0_2_0.sha256}$/, info_a_after_second_yank.body)
+    refute_match(/^0\.2\.0 \|checksum:#{gem_a020.sha256}$/, info_a_after_second_yank.body)
     # Other versions should still be present
     assert_match(/0\.0\.1 \|checksum:/, info_a_after_second_yank.body)
     assert_match(/0\.3\.0 \|checksum:/, info_a_after_second_yank.body)
 
     specs_after_second_yank = do_get_specs
+
     assert_equal "200", specs_after_second_yank.code
     specs = unmarshal_gzipped(specs_after_second_yank.body)
+
     refute_includes specs, ["a", Gem::Version.new("0.2.0"), "ruby"]
     assert_includes specs, ["a", Gem::Version.new("0.3.0"), "ruby"]
 
@@ -318,6 +363,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     do_rebuild_versions_list
 
     versions_after_final_rebuild = do_get_versions
+
     assert_valid_compact_index_response versions_after_final_rebuild
     assert_match(/\Acreated_at: .+\n---\n/, versions_after_final_rebuild.body)
     assert_match(/^a .+ \h{32}$/, versions_after_final_rebuild.body)
@@ -359,7 +405,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     end
   end
 
-  MockGem = Struct.new(:name, :version, :platform, :sha256, :contents, keyword_init: true) do
+  MockGem = Struct.new(:name, :version, :platform, :sha256, :contents) do
     def full_name
       if platform.to_s == "ruby"
         "#{name}-#{version}"
@@ -394,11 +440,11 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
       platform: spec.platform,
       sha256: Digest::SHA256.hexdigest(contents),
       contents: contents
-    ).tap { @all_gems << _1 }
+    ).tap { @all_gems << it }
   end
 
   def find_gem(full_name)
-    @all_gems.reverse_each.find { _1.full_name == full_name } || raise("gem #{full_name} not found")
+    @all_gems.rfind { it.full_name == full_name } || raise("gem #{full_name} not found")
   end
 
   def advance_time(seconds)
@@ -414,6 +460,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
         "Content-Length" => gem.contents.bytesize.to_s,
         "Authorization" => @api_key
       })
+
     assert_equal expected_code, response.code, response.body
     advance_time(60)
     response
@@ -428,6 +475,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
         "Content-Length" => body.bytesize.to_s,
         "Authorization" => @api_key
       })
+
     assert_equal expected_code, response.code, response.body
     advance_time(60)
     response
@@ -464,11 +512,11 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
   end
 
   def unmarshal_gzipped(body)
-    Marshal.load(Zlib.gunzip(body.b))
+    Marshal.load(Zlib.gunzip(body.b)) # rubocop:disable Security/MarshalLoad
   end
 
   def unmarshal_inflated(body)
-    Marshal.load(Zlib.inflate(body.b))
+    Marshal.load(Zlib.inflate(body.b)) # rubocop:disable Security/MarshalLoad
   end
 
   def assert_valid_compact_index_response(response)
@@ -476,6 +524,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     assert_equal "text/plain; charset=utf-8", response["content-type"]
     assert_equal "bytes", response["accept-ranges"]
     digest = Digest::SHA256.base64digest(response.body)
+
     assert_equal "sha-256=#{digest}", response["digest"]
     assert_equal "sha-256=:#{digest}:", response["repr-digest"]
     assert_equal "\"#{Digest::MD5.hexdigest(response.body)}\"", response["etag"]
@@ -485,12 +534,15 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     gem = find_gem(full_name)
 
     response = do_get_gem(full_name)
+
     assert_equal "200", response.code
     assert_equal gem.contents, response.body.b
 
     response = do_get_quick_spec(full_name)
+
     assert_equal "200", response.code
     actual_spec = unmarshal_inflated(response.body)
+
     assert_equal gem.name, actual_spec.name
     assert_equal gem.version, actual_spec.version
   end
@@ -499,17 +551,19 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     gem = find_gem(full_name)
 
     response = do_get_gem(full_name)
+
     assert_includes %w[404 403], response.code
     refute_equal gem.contents, response.body.b
 
     response = do_get_quick_spec(full_name)
+
     assert_includes %w[404 403], response.code
   end
 
   def assert_versions_etags_match_info(versions_response)
     expected_etags = {}
     versions_response.body.each_line do |line|
-      next if line.start_with?("---") || line.start_with?("created_at:")
+      next if line.start_with?("---", "created_at:")
       name, _versions, etag = line.strip.split
       next unless name && etag
       expected_etags[name] = "\"#{etag}\""
@@ -518,6 +572,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     expected_etags.each do |name, expected_etag|
       info_response = do_get_info(name)
       next unless info_response.code == "200"
+
       assert_equal expected_etag, info_response["etag"],
         "ETag mismatch for info/#{name}"
     end
