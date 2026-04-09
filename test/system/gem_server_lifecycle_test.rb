@@ -231,11 +231,11 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     gem_a020 = build_test_gem("a", "0.2.0")
     do_push_gem(gem_a020, expected_code: "200")
 
-    build_test_gem("a", "0.2.0", platform: "x86-mingw32")
-    do_push_gem(@all_gems.last, expected_code: "200")
+    gem_a020_mingw = build_test_gem("a", "0.2.0", platform: "x86-mingw32")
+    do_push_gem(gem_a020_mingw, expected_code: "200")
 
-    build_test_gem("a", "0.2.0", platform: "java")
-    do_push_gem(@all_gems.last, expected_code: "200")
+    gem_a020_java = build_test_gem("a", "0.2.0", platform: "java")
+    do_push_gem(gem_a020_java, expected_code: "200")
 
     assert_pushed_gem("a-0.2.0")
     assert_pushed_gem("a-0.2.0-x86-mingw32")
