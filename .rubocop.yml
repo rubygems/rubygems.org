@@ -160,6 +160,7 @@ Minitest/MultipleAssertions:
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
   Exclude:
+    - lib/compact_index/*.rb
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb
 

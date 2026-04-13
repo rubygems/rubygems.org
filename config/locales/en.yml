@@ -144,6 +144,7 @@ en:
           attributes:
             rubygem_name:
               unavailable: "is already in use"
+              reserved: "is reserved"
     models:
       user: User
       api_key:
@@ -977,7 +978,7 @@ en:
         create: Create
         description_html: |
           Trusted publishers allow you to push gems from CI without storing any long-lived sensitive credentials.
-          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/adding-a-publisher/" class="t-link">trusted publishing documentation</a>.
+          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/" class="t-link">trusted publishing documentation</a>.
       destroy:
         success: "Trusted Publisher deleted"
       create:

@@ -23,7 +23,7 @@ gem "flipper-active_record", "~> 1.4"
 gem "flipper-ui", "~> 1.4"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.5.2", require: false
+gem "honeybadger", "~> 6.5.4", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -49,7 +49,6 @@ gem "opensearch-ruby", "~> 3.4"
 gem "searchkick", "~> 6.1"
 gem "faraday_middleware-aws-sigv4", "~> 1.0"
 gem "xml-simple", "~> 1.1"
-gem "compact_index", "~> 0.15.0"
 gem "rack-attack", "~> 6.8"
 gem "rqrcode", "~> 3.2"
 gem "rotp", "~> 6.2"
@@ -152,8 +151,7 @@ group :test do
   gem "simplecov-cobertura", "~> 3.1", require: false
   gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
-  gem "minitest-reporters", "~> 1.7"
-  gem "gem_server_conformance", "~> 0.1.4"
+  gem "minitest-reporters", "~> 1.8"
 end
 
 gem "avo_upgrade", "~> 0.1.1", group: :development

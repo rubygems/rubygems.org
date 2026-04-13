@@ -145,6 +145,7 @@ pt-BR:
           attributes:
             rubygem_name:
               unavailable:
+              reserved:
     models:
       user: Usuário
       api_key:
