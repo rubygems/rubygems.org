@@ -201,7 +201,13 @@
           <span class="t-hidden">Mend.io</span>
         </a>
       </div>
-      <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
+      <div class="footer__language_selector">
+        <% I18n.available_locales.each do |language| %>
+          <div class="footer__language">
+            <%= link_to I18n.t(:locale_name, locale: language), locale_switch_path(language), class: "nav--v__link--footer" %>
+          </div>
+        <% end %>
+      </div>
     </footer>
     <%= yield :javascript %>
     <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>

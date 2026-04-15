@@ -59,6 +59,22 @@ module ApplicationHelper
     "is-active" if request.path_info == path
   end
 
+  def locale_switch_path(locale)
+    locale = locale.to_s
+    current_locale = I18n.locale.to_s
+    path = request.path.to_s
+
+    path = path.delete_prefix("/#{current_locale}") if current_locale != I18n.default_locale.to_s
+    path = "/" if path.empty?
+
+    query_string = request.query_parameters.except("locale").to_query
+    path = "#{path}?#{query_string}" if query_string.present?
+
+    return path if locale == I18n.default_locale.to_s
+
+    path == "/" ? "/#{locale}" : "/#{locale}#{path}"
+  end
+
   # replacement for Kaminari::ActionViewExtension#paginate
   # only shows `next` and `prev` links and not page numbers, saving a COUNT(DISTINCT ..) query
   def plain_paginate(items)
