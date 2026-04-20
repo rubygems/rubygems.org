@@ -164,7 +164,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.22)
     benchmark-ips (2.14.0)
-    bigdecimal (4.1.1)
+    bigdecimal (4.1.2)
     bindata (2.5.1)
     blazer (3.3.0)
       activerecord (>= 7.1)
@@ -378,7 +378,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.12.0)
       activejob (>= 6.1)
-    json (2.19.3)
+    json (2.19.4)
     json-jwt (1.16.7)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -864,7 +864,7 @@ GEM
     validates_formatting_of (0.9.0)
       activemodel
     version_gem (1.1.9)
-    view_component (4.6.0)
+    view_component (4.7.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
@@ -1024,7 +1024,7 @@ DEPENDENCIES
   toxiproxy (~> 2.0)
   user_agent_parser (~> 2.21)
   validates_formatting_of (~> 0.9)
-  view_component (~> 4.6.0)
+  view_component (~> 4.7.0)
   webauthn (~> 3.4)
   webmock (~> 3.26)
   xml-simple (~> 1.1)
@@ -1072,7 +1072,7 @@ CHECKSUMS
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.22) sha256=1f0072e88c2d705d94aff7f2c5cb02eb3f1ec4b8368671e19112527489f29032
   benchmark-ips (2.14.0) sha256=b72bc8a65d525d5906f8cd94270dccf73452ee3257a32b89fbd6684d3e8a9b1d
-  bigdecimal (4.1.1) sha256=1c09efab961da45203c8316b0cdaec0ff391dfadb952dd459584b63ebf8054ca
+  bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
   bindata (2.5.1) sha256=53186a1ec2da943d4cb413583d680644eb810aacbf8902497aac8f191fad9e58
   blazer (3.3.0) sha256=01e151091ce1e7d27c156243916b2f13109ef2ef1a16cfa62bef67f4c5fd169f
   bootsnap (1.23.0) sha256=c1254f458d58558b58be0f8eb8f6eec2821456785b7cdd1e16248e2020d3f214
@@ -1165,7 +1165,7 @@ CHECKSUMS
   irb (1.17.0) sha256=168c4ddb93d8a361a045c41d92b2952c7a118fa73f23fe14e55609eb7a863aae
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.12.0) sha256=0164057417750f6e9c3ed548f029f1136b18eb53975fa438b09304a525d6c6c0
-  json (2.19.3) sha256=289b0bb53052a1fa8c34ab33cc750b659ba14a5c45f3fcf4b18762dc67c78646
+  json (2.19.4) sha256=670a7d333fb3b18ca5b29cb255eb7bef099e40d88c02c80bd42a3f30fe5239ac
   json-jwt (1.16.7) sha256=ccabff4c6d1a14276b23178e8bebe513ef236399b72a0b886d7ed94800d172a5
   jwt (3.1.2) sha256=af6991f19a6bb4060d618d9add7a66f0eeb005ac0bc017cd01f63b42e122d535
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
@@ -1361,7 +1361,7 @@ CHECKSUMS
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
   validates_formatting_of (0.9.0) sha256=139590a4b87596dbfb04d93e897bd2e6d30fb849d04fab0343e71ed2ca856e7e
   version_gem (1.1.9) sha256=0c1a0962ae543c84a00889bb018d9f14d8f8af6029d26b295d98774e3d2eb9a4
-  view_component (4.6.0) sha256=aabbcc68ab4af8a0135bd3f488e1a4132180cb611aa2565f86cb6e9135f4ed7e
+  view_component (4.7.0) sha256=d9612abf255fbe89d524bafa470ec90c27b945e14d0bf2d3529ef676cfcb957e
   webauthn (3.4.3) sha256=9be6f5f838f3405b0226e560aa40b67cc8c15ec9154509b997caa7ec9a05e1fc
   webfinger (2.1.3) sha256=567a52bde77fb38ca6b67e55db755f988766ec4651c1d24916a65aa70540695c
   webmock (3.26.2) sha256=774556f2ea6371846cca68c01769b2eac0d134492d21f6d0ab5dd643965a4c90
