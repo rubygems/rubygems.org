@@ -596,7 +596,7 @@ GEM
     prism (1.9.0)
     prop_initializer (0.3.0)
       zeitwerk (>= 2.6.18)
-    propshaft (1.3.1)
+    propshaft (1.3.2)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
       rack
@@ -981,7 +981,7 @@ DEPENDENCIES
   phlex-rails (~> 2.4)
   pp (= 0.6.3)
   prop_initializer (~> 0.2)
-  propshaft (~> 1.3.1)
+  propshaft (~> 1.3.2)
   prosopite (~> 2.1)
   puma (~> 6.6)
   puma-plugin-statsd (~> 2.7)
@@ -1255,7 +1255,7 @@ CHECKSUMS
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
   prop_initializer (0.3.0) sha256=7ccbe912ba808fb46404d50a594a884ca0f3f43278b34de552be9a2ba1acb162
-  propshaft (1.3.1) sha256=9acc664ef67e819ffa3d95bd7ad4c3623ea799110c5f4dee67fa7e583e74c392
+  propshaft (1.3.2) sha256=1d56a3e56a92c21bfc29caf07406b5386b00d4c47ddf357cf989a5a234b1389e
   prosopite (2.1.2) sha256=ca474e5b83bf65cdb1b3d44f848ceb3270c1e3474a9c20fd9228114bf766fd0b
   protobug (0.1.0) sha256=5bf1356cedf99dcf311890743b78f5e602f62ca703e574764337f1996b746bf2
   protobug_googleapis_field_behavior_protos (0.1.0) sha256=db48ef6a5913b2355b4a6931ab400a9e3e995fb48499977a3ad0be6365f9e265
