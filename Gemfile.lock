@@ -894,7 +894,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-schema (1.2.0)
-    yard (0.9.38)
+    yard (0.9.42)
     zeitwerk (2.7.5)
     zlib (3.2.3)
 
@@ -1371,7 +1371,7 @@ CHECKSUMS
   xml-simple (1.1.9) sha256=d21131e519c86f1a5bc2b6d2d57d46e6998e47f18ed249b25cad86433dbd695d
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yaml-schema (1.2.0) sha256=642577657e826a8bbc20a30a64e27f7b6086b29c9ef0f53fbf437d45279d3ec2
-  yard (0.9.38) sha256=721fb82afb10532aa49860655f6cc2eaa7130889df291b052e1e6b268283010f
+  yard (0.9.42) sha256=4e2be01f8623556093497731d44c801e600d7c9759ec7a35a2dd5dd83bbbba68
   zeitwerk (2.7.5) sha256=d8da92128c09ea6ec62c949011b00ed4a20242b255293dd66bf41545398f73dd
   zlib (3.2.3) sha256=5bd316698b32f31a64ab910a8b6c282442ca1626a81bbd6a1674e8522e319c20
 
