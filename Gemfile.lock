@@ -346,14 +346,14 @@ GEM
       logger
     heapy (0.2.0)
       thor
-    herb (0.9.5)
-    herb (0.9.5-aarch64-linux-gnu)
-    herb (0.9.5-arm-linux-gnu)
-    herb (0.9.5-arm-linux-musl)
-    herb (0.9.5-arm64-darwin)
-    herb (0.9.5-x86_64-darwin)
-    herb (0.9.5-x86_64-linux-gnu)
-    herb (0.9.5-x86_64-linux-musl)
+    herb (0.9.7)
+    herb (0.9.7-aarch64-linux-gnu)
+    herb (0.9.7-arm-linux-gnu)
+    herb (0.9.7-arm-linux-musl)
+    herb (0.9.7-arm64-darwin)
+    herb (0.9.7-x86_64-darwin)
+    herb (0.9.7-x86_64-linux-gnu)
+    herb (0.9.7-x86_64-linux-musl)
     honeybadger (6.5.5)
       logger
       ostruct
@@ -1146,14 +1146,14 @@ CHECKSUMS
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
-  herb (0.9.5) sha256=9fb215711b71ed1eec95e9e57d2133733c39bd4b42f5c3e2a95ac08ce31f005b
-  herb (0.9.5-aarch64-linux-gnu) sha256=3338dcec96e0fae1a384d4e01a64d8c1dddb91ca27b9e61b399d1fe77f654477
-  herb (0.9.5-arm-linux-gnu) sha256=c118cd3a485945081a4d837dc3e772211ddb358abf4b8559889f5084af64b95f
-  herb (0.9.5-arm-linux-musl) sha256=3e2047c738d61e9f60fef08df62ad6cca43149749b6e775b0e04fb16620635b3
-  herb (0.9.5-arm64-darwin) sha256=342c2065e6bf27b0fc3cd9d52906cf773caa9962642f57dbd2146abf43ce0295
-  herb (0.9.5-x86_64-darwin) sha256=d5771b2b0d4737db82d9f700f59de42623b56c22c20b080658b8ce20c9896a2d
-  herb (0.9.5-x86_64-linux-gnu) sha256=5acd1a63bf456f27d66b5833649e493ab0f1527fb8ae44325cf76639d7b592db
-  herb (0.9.5-x86_64-linux-musl) sha256=799e53792abfd89cdcdd018d661066a28506de25d0de9f05353a65a77af9dc2a
+  herb (0.9.7) sha256=67ed74044c9a4253ada2eeceba9c9717a8b32ada977896ab851a4098f1d63108
+  herb (0.9.7-aarch64-linux-gnu) sha256=4fb48eefdd3217e9824b2947c1fb6464b9e65159c683c6e408a25bb5fd05bea8
+  herb (0.9.7-arm-linux-gnu) sha256=25b67338e4137e0a9f2065fb649ee623d555eab51699fa523325bb0591b50029
+  herb (0.9.7-arm-linux-musl) sha256=9db724497b220dc4ceec2e4a1ffc655393a3c12d8547306bb50eb5217b81e8ed
+  herb (0.9.7-arm64-darwin) sha256=e3cb927fb1f43b6dd16b984e7c35508ba1b65b0559771ef297d89adae9853fc9
+  herb (0.9.7-x86_64-darwin) sha256=13e69d9eb3897e51c59b486897e1bdfef989568960bd9bf263124bb80206d082
+  herb (0.9.7-x86_64-linux-gnu) sha256=176f9c4c58f59e7f8534368824202a601dd787d89df82be47b8f0ef39801a886
+  herb (0.9.7-x86_64-linux-musl) sha256=a2eb06a36ea90c225019c1bd2e3487de66060730b67973824893288279f05038
   honeybadger (6.5.5) sha256=bb42c7da748f72961520056ef49ab63abd886d62fd3e7bc45f095c15f7094ca7
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
