@@ -25,7 +25,7 @@ jobs:
     name: Rails tests ${{ matrix.tests.name }}
     runs-on: ubuntu-24.04
     env:
-      RUBYGEMS_VERSION: "4.0.8"
+      RUBYGEMS_VERSION: "4.0.10"
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
       TOXIPROXY_LISTEN_HOST: "0.0.0.0"
@@ -41,8 +41,8 @@ jobs:
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org
         with:
-          ruby-version: "4.0.2"
-          rubygems-version: "4.0.8"
+          ruby-version: "4.0.3"
+          rubygems-version: "4.0.10"
           install-avo-pro: ${{ matrix.tests.id != 'avo-without-pro' }}
 
       - name: Tests ${{ matrix.tests.name }}
