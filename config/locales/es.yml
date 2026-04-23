@@ -690,7 +690,6 @@ es:
   webauthn_verifications:
     expired_or_already_used: El token del enlace utilizado ha expirado o ya ha sido
       utilizado.
-    no_port: No se especifica el puerto. Por favor inténtalo de nuevo.
     pending: La autenticación del dispositivo de seguridad está pendiente todavía.
     prompt:
       title: Autenticación con dispositivo de seguridad

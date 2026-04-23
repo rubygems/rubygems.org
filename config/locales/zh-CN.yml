@@ -620,7 +620,6 @@ zh-CN:
       push_heading: 推送通知
   webauthn_verifications:
     expired_or_already_used: 您链接中使用的的令牌已过期或已被使用。
-    no_port: 没有提供端口。请再试一次。
     pending:
     prompt:
       title: 使用安全设备进行身份认证

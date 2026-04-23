@@ -622,7 +622,6 @@ en:
       push_heading: Push Notifications
   webauthn_verifications:
     expired_or_already_used: The token in the link you used has either expired or been used already.
-    no_port: No port provided. Please try again.
     pending: Security device authentication is still pending.
     prompt:
       title: Authenticate with Security Device
