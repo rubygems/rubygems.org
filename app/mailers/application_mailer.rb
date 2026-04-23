@@ -11,6 +11,7 @@ class ApplicationMailer < ActionMailer::Base
 
   layout "mailer"
 
+  around_action :use_default_locale
   after_deliver :record_delivery
 
   def record_delivery
@@ -25,5 +26,11 @@ class ApplicationMailer < ActionMailer::Base
         action: action_name,
         mailer: mailer_name)
     end
+  end
+
+  private
+
+  def use_default_locale(&block)
+    I18n.with_locale(I18n.default_locale, &block)
   end
 end
