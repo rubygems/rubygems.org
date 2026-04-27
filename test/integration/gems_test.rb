@@ -30,29 +30,19 @@ class GemsTest < ActionDispatch::IntegrationTest
     assert page.has_content? "sandworm"
   end
 
-  test "canonical/alternate urls for gem points to most recent version" do
-    skip "locales temporarily disabled"
-
+  test "canonical url for gem points to most recent version" do
     base_url = "http://localhost/gems/sandworm/versions/1.1.1"
     create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_path(@rubygem.slug)
     css = %(link[rel="canonical"][href="#{base_url}"])
 
     assert page.has_css?(css, visible: false)
-    css = %(link[rel="alternate"][hreflang])
-    alternates = page.all(:css, css, visible: false)
-    # I18n.available_locales.length + 1 (x-default)
-    assert_equal (I18n.available_locales.length + 1), alternates.length
-    exp = I18n.available_locales.map { "#{base_url}?locale=#{it}" } << base_url
-    act = alternates.pluck(:href)
-
-    assert_same_elements exp, act
   end
 
-  test "canonical locale urls for gem points to most recent version without locale" do
+  test "canonical locale urls for gem points to most recent version with locale path" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_path(@rubygem.slug, locale: "en")
-    css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.1.1"])
+    get "/de/gems/#{@rubygem.slug}"
+    css = %(link[rel="canonical"][href="http://localhost/de/gems/sandworm/versions/1.1.1"])
 
     assert page.has_css?(css, visible: false)
   end
