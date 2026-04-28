@@ -162,7 +162,6 @@ Style/ClassAndModuleChildren:
   Exclude:
     - lib/compact_index/*.rb
     - lib/gemcutter/middleware/hostess.rb
-    - lib/gemcutter/middleware/locale_from_path.rb
     - lib/gemcutter/middleware/redirector.rb
 
 Capybara/ClickLinkOrButtonStyle:

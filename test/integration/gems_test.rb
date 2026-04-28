@@ -41,7 +41,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "canonical locale urls for gem points to most recent version with locale path" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get "/de/gems/#{@rubygem.slug}"
+    get rubygem_path(@rubygem.slug, locale: "de")
     css = %(link[rel="canonical"][href="http://localhost/de/gems/sandworm/versions/1.1.1"])
 
     assert page.has_css?(css, visible: false)

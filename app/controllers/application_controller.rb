@@ -41,9 +41,13 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = request.env["rubygems.locale"] || I18n.default_locale
+    I18n.locale = params[:locale] || I18n.default_locale
   rescue I18n::InvalidLocale
     I18n.locale = I18n.default_locale
+  end
+
+  def default_url_options
+    { locale: I18n.locale == I18n.default_locale ? nil : I18n.locale }
   end
 
   def set_user_tag

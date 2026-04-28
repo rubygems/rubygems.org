@@ -60,19 +60,8 @@ module ApplicationHelper
   end
 
   def locale_switch_path(locale)
-    locale = locale.to_s
-    current_locale = I18n.locale.to_s
-    path = request.path.to_s
-
-    path = path.delete_prefix("/#{current_locale}") if current_locale != I18n.default_locale.to_s
-    path = "/" if path.empty?
-
-    query_string = request.query_parameters.except("locale").to_query
-    path = "#{path}?#{query_string}" if query_string.present?
-
-    return path if locale == I18n.default_locale.to_s
-
-    path == "/" ? "/#{locale}" : "/#{locale}#{path}"
+    locale = locale.to_sym == I18n.default_locale ? nil : locale
+    url_for(request.query_parameters.except(:locale, "locale").merge(locale: locale, only_path: true))
   end
 
   # replacement for Kaminari::ActionViewExtension#paginate

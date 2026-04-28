@@ -20,7 +20,7 @@ class HomepageTest < ActionDispatch::IntegrationTest
   end
 
   test "request with locale param still sets public cache headers" do
-    get root_path(locale: "de")
+    get "/de"
 
     assert_response :success
     assert_nil response.headers["Set-Cookie"]

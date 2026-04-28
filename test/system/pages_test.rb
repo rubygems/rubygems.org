@@ -5,7 +5,7 @@ require "application_system_test_case"
 class PagesTest < ApplicationSystemTestCase
   test "renders /pages/about for all supported languages" do
     I18n.available_locales.each do |locale|
-      visit locale == I18n.default_locale ? "/pages/about" : "/#{locale}/pages/about"
+      visit page_path("about", locale: locale == I18n.default_locale ? nil : locale)
 
       assert_text I18n.t("pages.about.title", locale: locale)
     end

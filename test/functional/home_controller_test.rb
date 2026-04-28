@@ -24,14 +24,20 @@ class HomeControllerTest < ActionController::TestCase
     end
   end
 
-  should "use default locale on GET using invalid one" do
-    get :index, params: { locale: "foobar" }
+  should "use default locale when no locale param is provided" do
+    get :index
 
     assert_equal I18n.default_locale, I18n.locale
   end
 
-  should "ignore locale param and use default locale" do
+  should "set locale from route param" do
     get :index, params: { locale: "de" }
+
+    assert_equal :de, I18n.locale
+  end
+
+  should "use default locale on GET using invalid one" do
+    get :index, params: { locale: "foobar" }
 
     assert_equal I18n.default_locale, I18n.locale
   end

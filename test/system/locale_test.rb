@@ -5,14 +5,14 @@ require "application_system_test_case"
 class LocaleTest < ApplicationSystemTestCase
   test "html lang attribute is set from locale" do
     I18n.available_locales.each do |locale|
-      visit locale == I18n.default_locale ? root_path : "/#{locale}"
+      visit locale == I18n.default_locale ? root_path : root_path(locale: locale)
 
       assert_equal locale.to_s, page.find("html")[:lang]
     end
   end
 
   test "links generated during a localized request keep the locale prefix" do
-    visit "/de/pages/about"
+    visit page_path("about", locale: "de")
 
     assert_equal "de", page.find("html")[:lang]
     assert page.has_link?(I18n.t("layouts.application.footer.about", locale: :de), href: "/de/pages/about")
@@ -30,8 +30,8 @@ class LocaleTest < ApplicationSystemTestCase
     assert_current_path "/de"
   end
 
-  test "locale menu preserves query params except stale locale params" do
-    visit "/search?query=rails&locale=fr"
+  test "locale menu preserves query params" do
+    visit search_path(query: "rails")
 
     click_link "Deutsch"
 
