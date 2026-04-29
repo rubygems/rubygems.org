@@ -22,7 +22,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= 'body--index' if request.path_info == '/' %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
+  <body class="<%= 'body--index' if home_page? %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
     <!-- Top banner -->
     <% if content_for?(:banner) %>
       <div class="banner">
@@ -33,7 +33,7 @@
     <!-- Policies acknowledgment banner -->
     <%= render "layouts/policies_acknowledgement" if show_policies_acknowledge_banner?(current_user) %>
 
-    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
+    <header class="header <%= 'header--interior' unless home_page? %>" data-nav-target="header collapse">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "logo" }) do %>
           <span class="header__logo" data-icon="⬡">⬢</span>
@@ -102,8 +102,8 @@
       </div>
     <% end %>
 
-    <main class="<%= 'main--interior' if request.path_info != '/' %>" data-nav-target="collapse">
-      <% if request.path_info != '/' %>
+    <main class="<%= 'main--interior' unless home_page? %>" data-nav-target="collapse">
+      <% unless home_page? %>
         <div class="l-wrap--b">
           <% if @title %>
             <h1 class="t-display page__heading">
@@ -199,7 +199,13 @@
           <span class="t-hidden">Mend.io</span>
         </a>
       </div>
-      <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
+      <div class="footer__language_selector">
+        <% I18n.available_locales.each do |language| %>
+          <div class="footer__language">
+            <%= link_to I18n.t(:locale_name, locale: language), locale_switch_path(language), class: "nav--v__link--footer" %>
+          </div>
+        <% end %>
+      </div>
     </footer>
     <%= yield :javascript %>
     <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>

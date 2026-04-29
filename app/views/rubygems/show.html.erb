@@ -7,7 +7,10 @@
   <% if @rubygem.versions.any? && @latest_version.indexed %>
     <!-- canonical url -->
     <link rel="canonical" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug) %>" />
-    <%# Locale alternate links temporarily disabled to improve cacheability and mitigate bot abuse %>
+    <% I18n.available_locales.each do |locale| %>
+      <link rel="alternate" hreflang="<%= locale %>" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug, locale: LocaleRouting.default_locale?(locale) ? nil : locale) %>" />
+    <% end %>
+    <link rel="alternate" hreflang="x-default" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug, locale: nil) %>" />
   <% else %>
     <meta name="robots" content="noindex" />
   <% end %>

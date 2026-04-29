@@ -59,6 +59,10 @@ module ApplicationHelper
     "is-active" if request.path_info == path
   end
 
+  def home_page?
+    current_page?(root_path)
+  end
+
   # replacement for Kaminari::ActionViewExtension#paginate
   # only shows `next` and `prev` links and not page numbers, saving a COUNT(DISTINCT ..) query
   def plain_paginate(items)
