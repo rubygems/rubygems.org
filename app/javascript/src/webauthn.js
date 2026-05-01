@@ -104,6 +104,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
       ".js-new-webauthn-credential--submit",
     );
     const csrfToken = getCsrfToken(credentialForm);
+    const callbackCsrfToken = credentialForm.dataset.callbackCsrfToken;
 
     credentialForm.addEventListener("submit", function (event) {
       const form = handleEvent(event);
@@ -130,7 +131,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
             method: "POST",
             credentials: "same-origin",
             headers: {
-              "X-CSRF-Token": csrfToken,
+              "X-CSRF-Token": callbackCsrfToken,
               "Content-Type": "application/json",
               Accept: "application/json",
             },
