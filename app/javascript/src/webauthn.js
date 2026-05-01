@@ -112,10 +112,10 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
       );
       const nickname = nicknameInput ? nicknameInput.value : "";
 
-      fetch(form.action + ".json", {
+      fetch(form.action, {
         method: "POST",
         credentials: "same-origin",
-        headers: { "X-CSRF-Token": csrfToken },
+        headers: { "X-CSRF-Token": csrfToken, Accept: "application/json" },
       })
         .then(function (response) {
           return response.json();
@@ -126,12 +126,13 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
           });
         })
         .then(function (credentials) {
-          return fetch(form.action + "/callback.json", {
+          return fetch(form.action + "/callback", {
             method: "POST",
             credentials: "same-origin",
             headers: {
               "X-CSRF-Token": csrfToken,
               "Content-Type": "application/json",
+              Accept: "application/json",
             },
             body: JSON.stringify({
               credentials: credentialsToBase64(credentials),

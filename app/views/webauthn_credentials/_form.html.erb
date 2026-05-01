@@ -1,4 +1,4 @@
-<%= form_for webauthn_credential, html: { class: "js-new-webauthn-credential--form" } do |f| %>
+<%= form_for webauthn_credential, html: { class: "js-new-webauthn-credential--form" }, authenticity_token: form_authenticity_token do |f| %>
   <h3><%= t('.new_device') %></h3>
   <div class="text_field">
     <%= f.label :nickname, t('.nickname'), class: 'form__label' %>
