@@ -3,7 +3,7 @@
 require "tempfile"
 require "test_helper"
 
-class CompactIndexTest < ActionDispatch::IntegrationTest
+class Api::CompactIndexTest < ActionDispatch::IntegrationTest
   def etag(body)
     %("#{Digest::MD5.hexdigest(body)}")
   end

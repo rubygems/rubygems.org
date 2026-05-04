@@ -1,4 +1,5 @@
-<%= form_for webauthn_credential, html: { class: "js-new-webauthn-credential--form" } do |f| %>
+<% callback_csrf_token = form_authenticity_token(form_options: { action: callback_webauthn_credentials_path, method: "post" }) %>
+<%= form_for webauthn_credential, html: { class: "js-new-webauthn-credential--form", data: { callback_csrf_token: callback_csrf_token } } do |f| %>
   <h3><%= t('.new_device') %></h3>
   <div class="text_field">
     <%= f.label :nickname, t('.nickname'), class: 'form__label' %>

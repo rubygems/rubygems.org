@@ -7,6 +7,14 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
 
   setup do
     @user = create(:user)
+    # Forgery protection is disabled in the test env by default; enable it here
+    # so this suite catches CSRF regressions in the JS-driven webauthn flows.
+    @original_allow_forgery_protection = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+  end
+
+  teardown do
+    ActionController::Base.allow_forgery_protection = @original_allow_forgery_protection
   end
 
   should "have security device form" do

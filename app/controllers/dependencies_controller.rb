@@ -22,6 +22,8 @@ class DependenciesController < ApplicationController
       format.json { render json: json_return }
       format.html
     end
+    set_surrogate_key "gem/#{@rubygem.name}/dependencies"
+    cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
   end
 
   private

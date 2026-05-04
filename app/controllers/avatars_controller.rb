@@ -13,21 +13,22 @@ class AvatarsController < ApplicationController
            { "Accept" => "image/png", "Connection" => "close", "User-Agent" => "RubyGems.org avatar proxy" })
 
     if resp.success?
-      fastly_expires_in(5.minutes)
-
       # don't copy other headers, since they might leak user info
       response.headers["last-modified"] = resp.headers["last-modified"] if resp.headers["last-modified"]
       filename = "#{@user.display_id}_avatar_#{@size}.#{params[:format]}"
       send_data(resp.body, type: resp.headers["content-type"], disposition: "inline", filename:)
+      set_surrogate_key "avatar/#{@user.display_id}"
+      cache_expiry_headers(expiry: 1800, fastly_expiry: 300)
     elsif resp.status == 404
-      fastly_expires_in(5.minutes)
-
       # means gravatar doesn't have an avatar for this user
       # we'll just redirect to our default avatar instead, so everything is cachable
       redirect_to default_avatar_url
+      set_surrogate_key "avatar/#{@user.display_id}"
+      cache_expiry_headers(expiry: 1800, fastly_expiry: 300)
     else
       # any other error, just redirect to our default avatar
       # this includes 400, 429, 500s, etc
+      # don't cache errors so we retry on the next request
       logger.warn(message: "Failed to fetch gravatar", status: resp.status, url: gravatar_url, user_id: @user.id)
       redirect_to default_avatar_url
     end

@@ -35,7 +35,11 @@ class Pusher
   end
 
   def authorize
-    (rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)) || owner.owns_gem?(rubygem) || notify_unauthorized
+    return notify_reserved if rubygem.reserved_name?
+    return true if rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)
+    return true if owner.owns_gem?(rubygem)
+
+    notify_unauthorized
   end
 
   def verify_gem_scope
@@ -255,8 +259,12 @@ class Pusher
     end
   end
 
+  def notify_reserved
+    notify("This gem name is reserved. You are not allowed to push this gem.", 403)
+  end
+
   def notify_unauthorized
-    if !api_key.user? || rubygem.reserved_name?
+    if !api_key.user?
       notify("You are not allowed to push this gem.", 403)
     elsif rubygem.unconfirmed_ownership?(owner)
       notify("You do not have permission to push to this gem. " \

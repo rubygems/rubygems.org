@@ -85,5 +85,34 @@ class NotifyWebHookJobTest < ActiveJob::TestCase
       assert_performed_jobs 1, only: NotifyWebHookJob
       assert_enqueued_jobs 0, only: NotifyWebHookJob
     end
+
+    should "record a failure on a 422" do
+      stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-#{@hook.id}")
+        .to_return_json(status: 422, body: { error: "Invalid url" })
+
+      perform_enqueued_jobs do
+        @job.enqueue
+      end
+
+      @hook.reload
+
+      assert_equal 1, @hook.failures_since_last_success
+    end
+
+    should "disable the webhook after repeated 422s exceed the failure threshold" do
+      @hook.update!(
+        failures_since_last_success: WebHook::FAILURE_DISABLE_THRESHOLD - 1,
+        created_at: (WebHook::FAILURE_DISABLE_DURATION + 1.minute).ago
+      )
+
+      stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-#{@hook.id}")
+        .to_return_json(status: 422, body: { error: "Invalid url" })
+
+      perform_enqueued_jobs do
+        @job.enqueue
+      end
+
+      refute_predicate @hook.reload, :enabled?
+    end
   end
 end

@@ -140,6 +140,7 @@ zh-CN:
           attributes:
             rubygem_name:
               unavailable:
+              reserved:
     models:
       user: 用户
       api_key:
