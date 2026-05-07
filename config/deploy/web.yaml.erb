@@ -5,6 +5,7 @@ metadata:
   annotations:
     shipit.shopify.io/restart: 'true'
 spec:
+  replicas: <%= environment == 'production' ? 3 : 2 %>
   strategy:
     type: RollingUpdate
     rollingUpdate:
