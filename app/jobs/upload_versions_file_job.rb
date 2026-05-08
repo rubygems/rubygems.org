@@ -23,6 +23,7 @@ class UploadVersionsFileJob < ApplicationJob
 
     logger.info "Generating versions file from #{from_date}"
 
+    # V1: existing format
     extra_gems = GemInfo.compact_index_versions(from_date)
     response_body = CompactIndex.versions(versions_file, extra_gems)
 
@@ -45,6 +46,34 @@ class UploadVersionsFileJob < ApplicationJob
     )
 
     logger.info(message: "Uploading versions file succeeded", response:)
+
+    # V2: new format (uses info_checksum_v2 columns)
+    versions_path_v2 = Rails.application.config.rubygems["versions_file_location_v2"]
+    versions_file_v2 = CompactIndex::VersionsFile.new(versions_path_v2)
+    from_date_v2 = versions_file_v2.updated_at
+
+    extra_gems_v2 = GemInfo.compact_index_versions_v2(from_date_v2)
+    response_body_v2 = CompactIndex.versions(versions_file_v2, extra_gems_v2)
+
+    content_md5_v2 = Digest::MD5.base64digest(response_body_v2)
+    checksum_sha256_v2 = Digest::SHA256.base64digest(response_body_v2)
+
+    response_v2 = RubygemFs.compact_index.store(
+      "v2/versions", response_body_v2,
+      public_acl: false,
+      metadata: {
+        "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+        "surrogate-key" => "v2-versions s3-compact-index s3-v2-versions",
+        "sha256" => checksum_sha256_v2,
+        "md5" => content_md5_v2
+      },
+      cache_control: "max-age=60, public",
+      content_type: "text/plain; charset=utf-8",
+      checksum_sha256: checksum_sha256_v2,
+      content_md5: content_md5_v2
+    )
+
+    logger.info(message: "Uploading v2 versions file succeeded", response: response_v2)
 
     FastlyPurgeJob.perform_later(key: "s3-versions", soft: true)
   end
