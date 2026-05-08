@@ -17,7 +17,10 @@ class UploadInfoFileJob < ApplicationJob
   )
 
   def perform(rubygem_name:)
-    compact_index_info = GemInfo.new(rubygem_name, cached: false).compact_index_info
+    gem_info = GemInfo.new(rubygem_name, cached: false)
+
+    # V1: existing format (without created_at)
+    compact_index_info = gem_info.compact_index_info
     response_body = CompactIndex.info(compact_index_info)
 
     content_md5 = Digest::MD5.base64digest(response_body)
@@ -39,6 +42,30 @@ class UploadInfoFileJob < ApplicationJob
     )
 
     logger.info(message: "Uploading info file for #{rubygem_name} succeeded", response:)
+
+    # V2: new format (with created_at)
+    compact_index_info_v2 = gem_info.compact_index_info_v2
+    response_body_v2 = CompactIndex.info(compact_index_info_v2)
+
+    content_md5_v2 = Digest::MD5.base64digest(response_body_v2)
+    checksum_sha256_v2 = Digest::SHA256.base64digest(response_body_v2)
+
+    response_v2 = RubygemFs.compact_index.store(
+      "v2/info/#{rubygem_name}", response_body_v2,
+      public_acl: false,
+      metadata: {
+        "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+        "surrogate-key" => "v2-info/* v2-info/#{rubygem_name} gem/#{rubygem_name} s3-compact-index s3-v2-info/* s3-v2-info/#{rubygem_name}",
+        "sha256" => checksum_sha256_v2,
+        "md5" => content_md5_v2
+      },
+      cache_control: "max-age=60, public",
+      content_type: "text/plain; charset=utf-8",
+      checksum_sha256: checksum_sha256_v2,
+      content_md5: content_md5_v2
+    )
+
+    logger.info(message: "Uploading v2 info file for #{rubygem_name} succeeded", response: response_v2)
 
     FastlyPurgeJob.perform_later(key: "s3-info/#{rubygem_name}", soft: true)
   end
