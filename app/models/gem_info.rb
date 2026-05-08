@@ -23,6 +23,23 @@ class GemInfo
     Digest::MD5.hexdigest(compact_index_info)
   end
 
+  def info_checksum_v2
+    compact_index_info = CompactIndex.info(compute_compact_index_info(version: 2))
+    Digest::MD5.hexdigest(compact_index_info)
+  end
+
+  def compact_index_info_v2
+    if @cached && (info = Rails.cache.read("info_v2/#{@rubygem_name}"))
+      StatsD.increment "compact_index.memcached.info_v2.hit"
+      info
+    else
+      StatsD.increment "compact_index.memcached.info_v2.miss"
+      compute_compact_index_info(version: 2).tap do |compact_index_info|
+        Rails.cache.write("info_v2/#{@rubygem_name}", compact_index_info)
+      end
+    end
+  end
+
   def self.ordered_names(cached: true)
     if cached && (names = Rails.cache.read("names"))
       StatsD.increment "compact_index.memcached.names.hit"
@@ -96,7 +113,7 @@ class GemInfo
 
   DEPENDENCY_REQUIREMENTS_INDEX = 7
 
-  def compute_compact_index_info
+  def compute_compact_index_info(version: 1)
     requirements_and_dependencies.map do |r|
       deps = []
       if r[DEPENDENCY_REQUIREMENTS_INDEX]
@@ -108,8 +125,9 @@ class GemInfo
         end
       end
 
-      name, platform, checksum, info_checksum, ruby_version, rubygems_version, = r
-      CompactIndex::GemVersion.new(name, platform, Version._sha256_hex(checksum), info_checksum, deps, ruby_version, rubygems_version)
+      name, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, = r
+      CompactIndex::GemVersion.new(name, platform, Version._sha256_hex(checksum), info_checksum, deps, ruby_version, rubygems_version,
+        version == 2 ? created_at&.utc&.iso8601 : nil)
     end
   end
 
