@@ -67,6 +67,43 @@ class GemInfo
     map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
   end
 
+  def self.compact_index_versions_v2(date)
+    query = ["(SELECT r.name, v.created_at as date, v.info_checksum_v2 as info_checksum, v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    v.created_at > ?)
+              UNION
+              (SELECT r.name, v.yanked_at as date, v.yanked_info_checksum_v2 as info_checksum, '-'||v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    v.indexed is false AND
+                    v.yanked_at > ?)
+              ORDER BY date, number, platform, name", date, date]
+
+    map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
+  end
+
+  def self.compact_index_public_versions_v2(updated_at)
+    query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
+                     v.sha256, COALESCE(v.yanked_info_checksum_v2, v.info_checksum_v2) as info_checksum,
+                     v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    (v.created_at <= ? OR v.yanked_at <= ?)
+              ORDER BY r.name, stamp, v.number, v.platform", updated_at, updated_at]
+
+    versions_by_gem = execute_raw_sql(query).group_by { |v| v["name"] }
+    versions_by_gem.each_value do |versions|
+      info_checksum = versions.last["info_checksum"]
+      versions.select! { |v| v["indexed"] == true }
+      # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
+      versions.each { |v| v["info_checksum"] = info_checksum }
+    end
+    versions_by_gem.reject! { |_, versions| versions.empty? }
+
+    map_gem_versions(versions_by_gem)
+  end
+
   def self.compact_index_public_versions(updated_at)
     query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
                      v.sha256, COALESCE(v.yanked_info_checksum, v.info_checksum) as info_checksum,
