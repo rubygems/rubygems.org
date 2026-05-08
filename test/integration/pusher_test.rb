@@ -57,7 +57,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
       assert_empty out
       assert_empty err
-      assert_match(/path: root -> date/, @cutter.message)
+      assert_match(%r{path: /date}, @cutter.message)
 
       assert_equal 422, @cutter.code
     end
@@ -71,7 +71,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
 
-      assert_match(/path: root -> required_ruby_version -> requirements -> 0 -> 1 -> version/, @cutter.message)
+      assert_match(%r{path: /required_ruby_version/requirements/0/1/version}, @cutter.message)
       assert_equal 422, @cutter.code
     end
 
@@ -84,7 +84,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
 
-      assert_match(/path: root -> required_rubygems_version -> requirements -> 0 -> 1 -> version/, @cutter.message)
+      assert_match(%r{path: /required_rubygems_version/requirements/0/1/version}, @cutter.message)
       assert_equal 422, @cutter.code
     end
 
@@ -145,7 +145,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
       refute @cutter.process
 
-      assert_match(/path: root -> metadata -> foo/, @cutter.message)
+      assert_match(%r{path: /metadata/foo}, @cutter.message)
       assert_equal 422, @cutter.code
     end
 
