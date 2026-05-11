@@ -285,7 +285,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
 
-    assert_enqueued_with(job: YankRubygemsForUserJob, args: [{ user: user }]) do
+    assert_enqueued_with(job: YankRubygemsForUserJob, args: [user: user]) do
       click_button "Yank all Rubygems"
     end
 
@@ -339,7 +339,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
 
-    assert_enqueued_with(job: YankRubygemsForUserJob, args: [{ user: user }]) do
+    assert_enqueued_with(job: YankRubygemsForUserJob, args: [user: user]) do
       click_button "Yank User"
     end
 
