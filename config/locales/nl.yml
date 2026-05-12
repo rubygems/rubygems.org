@@ -887,6 +887,7 @@ nl:
       email_sent: Een bevestigingsemail is naar je e-mailadres gestuurd
     new:
       have_account: Heb je al een account?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org

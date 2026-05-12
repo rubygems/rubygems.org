@@ -888,6 +888,7 @@ zh-TW:
       email_sent: 已傳送確認信到您的電子郵件地址。
     new:
       have_account: 已經註冊過了？
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上

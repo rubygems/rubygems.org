@@ -894,6 +894,7 @@ en:
       email_sent: A confirmation mail has been sent to your email address.
     new:
       have_account: Already have an account?
+      registration_disabled: New account registration has been temporarily disabled.
   versions:
     index:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.

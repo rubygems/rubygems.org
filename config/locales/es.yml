@@ -1002,6 +1002,7 @@ es:
         electrónico.
     new:
       have_account: "¿Ya tienes una cuenta?"
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.

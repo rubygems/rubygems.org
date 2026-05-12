@@ -975,6 +975,7 @@ de:
       email_sent:
     new:
       have_account: Haben Sie schon einen Account?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Dieses Gem wird nicht gerade von RubyGems.org gehostet.

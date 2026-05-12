@@ -2,9 +2,11 @@
 
 class UsersController < ApplicationController
   before_action :redirect_to_root, if: :signed_in?
+  before_action :reject_disabled_signup, only: :create
 
   def new
     @user = User.new
+    flash.now[:alert] = t(".registration_disabled") unless signup_enabled?
   end
 
   def create
@@ -20,6 +22,18 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def signup_enabled?
+    Clearance.configuration.allow_sign_up?
+  end
+  helper_method :signup_enabled?
+
+  def reject_disabled_signup
+    return if signup_enabled?
+    @user = User.new
+    flash.now[:alert] = t("users.new.registration_disabled")
+    render template: "users/new", status: :forbidden
+  end
 
   PERMITTED_USER_PARAMS = %i[
     bio

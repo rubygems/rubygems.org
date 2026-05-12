@@ -930,6 +930,7 @@ fr:
       email_sent: Un email de confirmation a été envoyé sur votre adresse email.
     new:
       have_account: Vous avez déjà un compte ?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Gem non hébergé sur Rubygems.

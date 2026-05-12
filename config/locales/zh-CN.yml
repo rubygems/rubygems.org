@@ -900,6 +900,7 @@ zh-CN:
       email_sent: 确认邮件已发送至您的邮箱。
     new:
       have_account: 已经有一个账号了？
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: 此 Gem 目前没有托管在 RubyGems.org 中。

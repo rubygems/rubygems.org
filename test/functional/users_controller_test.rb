@@ -29,6 +29,38 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
+  context "when sign up is disabled" do
+    setup do
+      Clearance.configuration.stubs(:allow_sign_up?).returns(false)
+    end
+
+    context "on GET to new" do
+      setup { get :new }
+
+      should respond_with :success
+      should render_template(:new)
+
+      should "show the registration disabled banner" do
+        assert_text "New account registration has been temporarily disabled."
+      end
+
+      should "not render the sign up form" do
+        assert_no_selector "input[type=password]"
+      end
+    end
+
+    context "on POST to create" do
+      should "not create a user and render the disabled banner" do
+        assert_no_changes -> { User.count } do
+          post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        assert_response :forbidden
+        assert_text "New account registration has been temporarily disabled."
+      end
+    end
+  end
+
   context "on POST to create" do
     context "when email and password are given" do
       should "create a user" do

@@ -910,6 +910,7 @@ pt-BR:
       email_sent:
     new:
       have_account: Já tem uma conta?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Esta gem não está hospdada no Gemcutter.

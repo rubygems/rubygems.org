@@ -907,6 +907,7 @@ ja:
       email_sent: 確認メールがEメールアドレスに送信されました。
     new:
       have_account: 既にアカウントをお持ちですか？
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。
