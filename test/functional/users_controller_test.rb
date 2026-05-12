@@ -45,7 +45,7 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "not render the sign up form" do
-        assert_no_selector "input[type=password]"
+        refute_selector "input[type=password]"
       end
     end
 
