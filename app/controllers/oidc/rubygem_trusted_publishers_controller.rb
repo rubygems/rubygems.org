@@ -22,7 +22,7 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   def create
     trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.new(create_params)
     if trusted_publisher.save
-      redirect_to rubygem_trusted_publishers_path(@rubygem.slug), flash: { notice: t(".success") }
+      redirect_to rubygem_trusted_publishers_path(rubygem_id: @rubygem.slug), flash: { notice: t(".success") }
     else
       flash.now[:error] = trusted_publisher.errors.full_messages.to_sentence
       render OIDC::RubygemTrustedPublishers::NewView.new(
@@ -33,9 +33,9 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
 
   def destroy
     if @rubygem_trusted_publisher.destroy
-      redirect_to rubygem_trusted_publishers_path(@rubygem.slug), flash: { notice: t(".success") }
+      redirect_to rubygem_trusted_publishers_path(rubygem_id: @rubygem.slug), flash: { notice: t(".success") }
     else
-      redirect_back_or_to(rubygem_trusted_publishers_path(@rubygem.slug),
+      redirect_back_or_to(rubygem_trusted_publishers_path(rubygem_id: @rubygem.slug),
 flash: { error: @rubygem_trusted_publisher.errors.full_messages.to_sentence })
     end
   end

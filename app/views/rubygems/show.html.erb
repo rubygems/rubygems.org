@@ -1,16 +1,16 @@
 <% @title = @rubygem.name %>
-<% @title_url = rubygem_path(@rubygem.slug) %>
+<% @title_url = rubygem_path(id: @rubygem.slug) %>
 <% @subtitle = @latest_version&.slug %>
 
 <% content_for :head do %>
-  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(rubygem_id: @rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
   <% if @rubygem.versions.any? && @latest_version.indexed %>
     <!-- canonical url -->
-    <link rel="canonical" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug) %>" />
+    <link rel="canonical" href="<%= rubygem_version_url(rubygem_id: @rubygem.slug, id: @latest_version.slug) %>" />
     <% I18n.available_locales.each do |locale| %>
-      <link rel="alternate" hreflang="<%= locale %>" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug, locale: LocaleRouting.default_locale?(locale) ? nil : locale) %>" />
+      <link rel="alternate" hreflang="<%= locale %>" href="<%= rubygem_version_url(rubygem_id: @rubygem.slug, id: @latest_version.slug, locale: LocaleRouting.default_locale?(locale) ? nil : locale) %>" />
     <% end %>
-    <link rel="alternate" hreflang="x-default" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug, locale: nil) %>" />
+    <link rel="alternate" hreflang="x-default" href="<%= rubygem_version_url(rubygem_id: @rubygem.slug, id: @latest_version.slug, locale: nil) %>" />
   <% else %>
     <meta name="robots" content="noindex" />
   <% end %>
@@ -50,7 +50,7 @@
             <%= render @versions %>
           </ol>
           <% if show_all_versions_link?(@rubygem) %>
-            <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem.slug), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
+            <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(rubygem_id: @rubygem.slug), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
           <% end %>
         </div>
       </div>
@@ -61,7 +61,7 @@
       <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
       <% if @latest_version.dependencies.present? && @latest_version.indexed %>
         <div class="dependencies_list">
-          <%= link_to t(:dependency_list), rubygem_version_dependencies_path(@rubygem.slug, @latest_version.slug), class: "gem__see-all-versions t-link--gray t-link--has-arrow push--s" %>
+          <%= link_to t(:dependency_list), rubygem_version_dependencies_path(rubygem_id: @rubygem.slug, version_id: @latest_version.slug), class: "gem__see-all-versions t-link--gray t-link--has-arrow push--s" %>
         </div>
       <% end %>
     </div>

@@ -23,7 +23,7 @@ class OIDC::Providers::IndexView < ApplicationView
       end
       ul do
         providers.each do |provider|
-          li { link_to provider.issuer, profile_oidc_provider_path(provider) }
+          li { link_to provider.issuer, profile_oidc_provider_path(id: provider) }
         end
       end
       plain paginate(providers)

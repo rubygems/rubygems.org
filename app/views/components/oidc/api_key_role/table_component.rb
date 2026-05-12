@@ -18,7 +18,7 @@ class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
       tbody(class: "t-body") do
         api_key_roles.each do |api_key_role|
           tr(class: "owners__row") do
-            cell(title: "Name") { link_to api_key_role.name, profile_oidc_api_key_role_path(api_key_role.token) }
+            cell(title: "Name") { link_to api_key_role.name, profile_oidc_api_key_role_path(token: api_key_role.token) }
             cell(title: "Role Token") { code { api_key_role.token } }
             cell(title: "Provider") { link_to api_key_role.provider.issuer, api_key_role.provider.issuer }
           end

@@ -9,7 +9,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "gem page with a non valid HTTP_ACCEPT header" do
-    get rubygem_path(@rubygem.slug), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
+    get rubygem_path(id: @rubygem.slug), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
 
     assert page.has_content? "1.0.0"
   end
@@ -24,7 +24,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "versions with atom format" do
     create(:version, rubygem: @rubygem)
-    get rubygem_versions_path(@rubygem.slug, format: :atom)
+    get rubygem_versions_path(rubygem_id: @rubygem.slug, format: :atom)
 
     assert_equal "application/atom+xml", response.media_type
     assert page.has_content? "sandworm"
@@ -33,7 +33,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   test "canonical/alternate urls for gem points to most recent version" do
     base_url = "http://localhost/gems/sandworm/versions/1.1.1"
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
     css = %(link[rel="canonical"][href="#{base_url}"])
 
     assert page.has_css?(css, visible: false)
@@ -59,7 +59,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "canonical url for an old version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_version_path(@rubygem.slug, "1.0.0")
+    get rubygem_version_path(rubygem_id: @rubygem.slug, id: "1.0.0")
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"])
 
     assert page.has_css?(css, visible: false)
@@ -82,14 +82,14 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "anonymous gem show request does not set a session cookie" do
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert_response :success
     assert_nil response.headers["Set-Cookie"]
   end
 
   test "anonymous gem show request sets public cache headers" do
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert_response :success
     assert_includes response.headers["Cache-Control"], "public"
@@ -100,7 +100,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   test "authenticated gem show request does not set public cache headers" do
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert_response :success
     assert_includes response.headers["Set-Cookie"].to_s, "_rubygems_session"

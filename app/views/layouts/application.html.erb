@@ -48,7 +48,7 @@
 
           <nav class="header__nav-links" data-controller="dropdown">
             <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
+              <a href="<%= profile_path(id: current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
                 <span><%= current_user.name %></span>
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
@@ -66,7 +66,7 @@
             <%= link_to t('.footer.guides'), "https://guides.rubygems.org", class: "header__nav-link" %>
 
             <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
+              <a href="<%= profile_path(id: current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
                 <span><%= current_user.name %></span>
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
@@ -129,22 +129,22 @@
             <%= link_to t('.footer.status'), "https://status.rubygems.org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.uptime'), "https://uptime.rubygems.org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.source_code'), "https://github.com/rubygems/rubygems.org", class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.data'), page_path("data"), class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.data'), page_path(id: "data"), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_path, class: "nav--v__link--footer" %>
             <%= link_to t('.footer.contribute'), "https://guides.rubygems.org/contributing/", class: "nav--v__link--footer" %>
             <%- if request.path_info == '/pages/about' %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer is-active" %>
+              <%= link_to t('.footer.about'), page_path(id: "about"), class: "nav--v__link--footer is-active" %>
             <%- else %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer" %>
+              <%= link_to t('.footer.about'), page_path(id: "about"), class: "nav--v__link--footer" %>
             <%- end %>
             <%= mail_to "support@rubygems.org", t('.footer.help'), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.api'), "https://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.policies'), policies_path, class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.support_us'), page_path("supporters"), class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.support_us'), page_path(id: "supporters"), class: "nav--v__link--footer" %>
             <%- if request.path_info == '/pages/security' %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer is-active" %>
+              <%= link_to t('.footer.security'), page_path(id: "security"), class: "nav--v__link--footer is-active" %>
             <%- else %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer" %>
+              <%= link_to t('.footer.security'), page_path(id: "security"), class: "nav--v__link--footer" %>
             <%- end %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
@@ -159,7 +159,7 @@
                   ) %>
               </p>
               <p>
-                <%= t('footer_sponsors_html', supporters_page: page_path("supporters")) %>
+                <%= t('footer_sponsors_html', supporters_page: page_path(id: "supporters")) %>
               </p>
             </div>
           </div>

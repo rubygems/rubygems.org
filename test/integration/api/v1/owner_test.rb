@@ -27,9 +27,9 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by(user: @other_user)
-    get confirm_rubygem_owners_url(@rubygem.slug, token: @ownership.token)
+    get confirm_rubygem_owners_url(rubygem_id: @rubygem.slug, token: @ownership.token)
 
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert page.has_selector?("a[alt='#{@user.handle}']")
     assert page.has_selector?("a[alt='#{@other_user.handle}']")
@@ -41,7 +41,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
       params: { email: @other_user.email },
       headers: { "HTTP_AUTHORIZATION" => @user_api_key }
 
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert page.has_selector?("a[alt='#{@user.handle}']")
     refute page.has_selector?("a[alt='#{@other_user.handle}']")
@@ -54,7 +54,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
       params: { email: @user.email },
       headers: { "HTTP_AUTHORIZATION" => @user_api_key }
 
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     refute page.has_selector?("a[alt='#{@user.handle}']")
     assert page.has_selector?("a[alt='#{@other_user.handle}']")

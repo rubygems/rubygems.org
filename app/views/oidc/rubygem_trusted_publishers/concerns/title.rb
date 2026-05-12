@@ -11,7 +11,7 @@ module OIDC::RubygemTrustedPublishers::Concerns::Title
           plain t(".title")
 
           i(class: "page__subheading page__subheading--block") do
-            raw t(".subtitle_owner_html", gem_html: view_context.link_to(rubygem.name, rubygem_path(rubygem.slug), class: "t-link t-underline"))
+            raw t(".subtitle_owner_html", gem_html: view_context.link_to(rubygem.name, rubygem_path(id: rubygem.slug), class: "t-link t-underline"))
           end
         end
       end

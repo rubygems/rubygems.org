@@ -65,8 +65,8 @@ class LocaleTest < ApplicationSystemTestCase
     assert_current_path "/de/users/new"
   end
 
-  test "positional route helper arguments still target non-locale segments" do
-    assert_equal "/gems/rails", rubygem_path("rails")
-    assert_equal "/gems/rails/versions/7.0.0", rubygem_version_path("rails", "7.0.0")
+  test "keyword route helper arguments target non-locale segments" do
+    assert_equal "/gems/rails", rubygem_path(id: "rails")
+    assert_equal "/gems/rails/versions/7.0.0", rubygem_version_path(rubygem_id: "rails", id: "7.0.0")
   end
 end
