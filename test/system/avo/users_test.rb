@@ -287,9 +287,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
       click_button "Yank all Rubygems"
+
+      page.assert_text "Yanking all rubygems for #{user.handle} has been scheduled"
     end
 
-    page.assert_text "Yanking all rubygems for #{user.handle} has been scheduled"
     page.assert_text user.to_global_id.uri.to_s
 
     # Versions are not yet yanked — that happens in the background job
@@ -341,9 +342,10 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
       click_button "Yank User"
+
+      page.assert_text "Action ran successfully!"
     end
 
-    page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
 
     page.assert_no_text user.encrypted_password
