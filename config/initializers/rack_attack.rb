@@ -171,6 +171,18 @@ class Rack::Attack
     req.ip if protected_route?(protected_yank_action, req.path, req.request_method)
   end
 
+  # Throttle web hook test-fire requests (sends an outbound HTTP request to a user-supplied URL)
+  WEBHOOK_FIRE_LIMIT = 10
+  protected_webhook_fire_action = [controller: "api/v1/web_hooks", action: "fire"]
+
+  throttle("webhook_fire/ip", limit: WEBHOOK_FIRE_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_webhook_fire_action, req.path, req.request_method)
+  end
+
+  throttle("webhook_fire/api_key", limit: WEBHOOK_FIRE_LIMIT, period: LIMIT_PERIOD) do |req|
+    api_key_owner_id(req) if protected_route?(protected_webhook_fire_action, req.path, req.request_method)
+  end
+
   ############################# rate limit per handle ############################
   # Throttle POST requests to /login by email param
   #

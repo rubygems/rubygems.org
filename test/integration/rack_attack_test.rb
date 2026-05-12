@@ -113,6 +113,28 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context "web hook fire requests" do
+      setup do
+        create(:rubygem, name: "gemcutter", number: "0.0.1")
+        create(:api_key, key: "12334", scopes: %i[access_webhooks], owner: @user)
+
+        stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-fire")
+          .to_return(status: 200, body: '{"id":"delivery-id"}', headers: { "Content-Type" => "application/json" })
+        stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
+          .to_return(status: 200, body: { "status" => "success", "responses" => [
+            "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" }
+          ] }.to_json, headers: { "Content-Type" => "application/json" })
+      end
+
+      should "allow web hook fire by ip" do
+        post "/api/v1/web_hooks/fire",
+          params: { gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.org" },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334" }
+
+        assert_response :success
+      end
+    end
+
     context "params" do
       should "return 400 for bad request" do
         post "/session"
@@ -421,6 +443,23 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem", &:read),
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle web hook fire by ip" do
+        update_limit_for("webhook_fire/ip:#{@ip_address}", Rack::Attack::WEBHOOK_FIRE_LIMIT)
+
+        post "/api/v1/web_hooks/fire", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle web hook fire by api key" do
+        api_key = create(:api_key, key: "12334", scopes: %i[access_webhooks], owner: @user)
+        update_limit_for("webhook_fire/api_key:#{api_key.owner.to_gid}", Rack::Attack::WEBHOOK_FIRE_LIMIT)
+
+        post "/api/v1/web_hooks/fire", headers: { HTTP_AUTHORIZATION: "12334" }
 
         assert_response :too_many_requests
       end
