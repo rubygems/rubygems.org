@@ -11,7 +11,8 @@ module CompactIndexHelpers
       args.fetch(:info_checksum, "info+#{name}+#{number}"),
       args[:dependencies],
       args[:ruby_version],
-      args[:rubygems_version]
+      args[:rubygems_version],
+      args[:created_at]
     )
   end
 end
