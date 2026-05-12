@@ -285,7 +285,9 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
 
-    click_button "Yank all Rubygems"
+    assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
+      click_button "Yank all Rubygems"
+    end
 
     page.assert_text "Yanking all rubygems for #{user.handle} has been scheduled"
     page.assert_text user.to_global_id.uri.to_s
@@ -337,7 +339,9 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     fill_in "Comment", with: "A nice long comment"
 
-    click_button "Yank User"
+    assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
+      click_button "Yank User"
+    end
 
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
