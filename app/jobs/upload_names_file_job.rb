@@ -20,15 +20,22 @@ class UploadNamesFileJob < ApplicationJob
     names = GemInfo.ordered_names(cached: false)
     response_body = CompactIndex.names(names)
 
+    upload_names_file(response_body, key: "names", surrogate_key: "names s3-compact-index s3-names")
+    upload_names_file(response_body, key: "v2/names", surrogate_key: "v2/names s3-compact-index s3-v2/names")
+  end
+
+  private
+
+  def upload_names_file(response_body, key:, surrogate_key:)
     content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
 
     response = RubygemFs.compact_index.store(
-      "names", response_body,
+      key, response_body,
       public_acl: false, # the compact-index bucket does not have ACLs enabled
       metadata: {
         "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
-        "surrogate-key" => "names s3-compact-index s3-names",
+        "surrogate-key" => surrogate_key,
         "sha256" => checksum_sha256,
         "md5" => content_md5
       },
@@ -38,8 +45,8 @@ class UploadNamesFileJob < ApplicationJob
       content_md5:
     )
 
-    logger.info(message: "Uploading names file succeeded", response:)
+    logger.info(message: "Uploading #{key} file succeeded", response:)
 
-    FastlyPurgeJob.perform_later(key: "s3-names", soft: true)
+    FastlyPurgeJob.perform_later(key: "s3-#{key}", soft: true)
   end
 end

@@ -18,20 +18,31 @@ class UploadInfoFileJob < ApplicationJob
 
   def perform(rubygem_name:)
     gem_info = GemInfo.new(rubygem_name, cached: false)
-    compact_index_info = gem_info.compact_index_info
 
-    gem_info.compact_index_info(version: 2) # Warm the v2 compact index info cache
+    upload_info_file(gem_info, rubygem_name, version: 1, path_prefix: "info")
+    upload_info_file(gem_info, rubygem_name, version: 2, path_prefix: "v2/info")
+  end
+
+  private
+
+  def rubygem_name_arg
+    arguments.first.fetch(:rubygem_name)
+  end
+
+  def upload_info_file(gem_info, rubygem_name, version:, path_prefix:)
+    compact_index_info = gem_info.compact_index_info(version:)
     response_body = CompactIndex.info(compact_index_info)
 
     content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
+    key = "#{path_prefix}/#{rubygem_name}"
 
     response = RubygemFs.compact_index.store(
-      "info/#{rubygem_name}", response_body,
+      key, response_body,
       public_acl: false, # the compact-index bucket does not have ACLs enabled
       metadata: {
         "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
-        "surrogate-key" => "info/* info/#{rubygem_name} gem/#{rubygem_name} s3-compact-index s3-info/* s3-info/#{rubygem_name}",
+        "surrogate-key" => "#{path_prefix}/* #{key} gem/#{rubygem_name} s3-compact-index s3-#{path_prefix}/* s3-#{key}",
         "sha256" => checksum_sha256,
         "md5" => content_md5
       },
@@ -41,14 +52,8 @@ class UploadInfoFileJob < ApplicationJob
       content_md5:
     )
 
-    logger.info(message: "Uploading info file for #{rubygem_name} succeeded", response:)
+    logger.info(message: "Uploading v#{version} info file for #{rubygem_name} succeeded", response:)
 
-    FastlyPurgeJob.perform_later(key: "s3-info/#{rubygem_name}", soft: true)
-  end
-
-  private
-
-  def rubygem_name_arg
-    arguments.first.fetch(:rubygem_name)
+    FastlyPurgeJob.perform_later(key: "s3-#{key}", soft: true)
   end
 end
