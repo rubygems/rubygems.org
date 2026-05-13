@@ -1,3 +1,27 @@
 codecov:
   notify:
     after_n_builds: 2
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        flags:
+          - core
+      avo:
+        target: auto
+        informational: true
+        flags:
+          - avo
+    patch:
+      default:
+        target: auto
+
+flags:
+  core:
+    paths:
+      - "!app/avo/"
+  avo:
+    paths:
+      - "app/avo/"
