@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateBlockedEmailDomains < ActiveRecord::Migration[7.1]
+class CreateBlockedEmailDomains < ActiveRecord::Migration[8.0]
   def change
     create_table :blocked_email_domains do |t|
       t.string :domain, null: false

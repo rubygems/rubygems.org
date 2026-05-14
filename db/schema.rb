@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_14_224953) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_14_235942) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -167,6 +167,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_14_224953) do
     t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id"
     t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name"
     t.index ["version_id"], name: "index_dependencies_on_version_id"
+  end
+
+  create_table "email_domain_allowlists", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "domain", null: false
+    t.text "notes"
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_email_domain_allowlists_on_domain", unique: true
   end
 
   create_table "events_organization_events", force: :cascade do |t|

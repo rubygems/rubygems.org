@@ -1,11 +1,51 @@
 # frozen_string_literal: true
 
+require "net/http"
+require "openssl"
+
+# Mirrors the upstream disposable-email-domains/disposable-email-domains blocklist
+# into the blocked_email_domains table. Runs daily via good_job cron.
+#
+# Manual entries (source: :manual) are never touched. Upstream entries are
+# upserted; entries that disappear from the upstream blocklist are deleted.
+#
+# Several safeguards protect against a compromised or broken upstream:
+#
+#   * MIN_EXPECTED_DOMAINS / MAX_EXPECTED_DOMAINS bound the accepted list size
+#     so an empty response (e.g., 200 OK with HTML error page, repo wipe) or a
+#     pathologically large payload aborts the sync without touching the DB.
+#   * PROTECTED_PROVIDERS aborts the sync if any common consumer mail provider
+#     appears in the upstream list, preventing a malicious upstream PR from
+#     locking everyone out.
+#   * Domains failing BlockedEmailDomain::DOMAIN_FORMAT are dropped, so
+#     malformed lines never bypass the model's invariants via upsert_all.
 class SyncDisposableEmailDomainsJob < ApplicationJob
   queue_as "stats"
 
   UPSTREAM_BASE = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main"
   BLOCKLIST_URL = "#{UPSTREAM_BASE}/disposable_email_blocklist.conf".freeze
   ALLOWLIST_URL = "#{UPSTREAM_BASE}/allowlist.conf".freeze
+
+  MIN_EXPECTED_DOMAINS = 1_000
+  MAX_EXPECTED_DOMAINS = 100_000
+
+  # Common consumer providers that must never appear on our blocklist. If any
+  # of these show up upstream, treat the sync as poisoned and refuse to apply.
+  PROTECTED_PROVIDERS = %w[
+    gmail.com googlemail.com
+    outlook.com hotmail.com live.com msn.com
+    yahoo.com yahoo.co.uk ymail.com
+    icloud.com me.com mac.com
+    proton.me protonmail.com pm.me
+    aol.com
+    fastmail.com
+  ].freeze
+
+  OPEN_TIMEOUT = 10
+  READ_TIMEOUT = 30
+  MAX_REDIRECTS = 2
+
+  class PoisonedUpstreamError < StandardError; end
 
   def perform
     StatsD.measure("disposable_email_domains.sync.duration") do
@@ -27,25 +67,59 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
   def fetch_domains
     blocklist = fetch_lines(BLOCKLIST_URL)
     allowlist = fetch_lines(ALLOWLIST_URL).to_set
-    blocklist.reject { |d| allowlist.include?(d) }.uniq
+    domains = blocklist
+      .reject { |d| allowlist.include?(d) }
+      .grep(BlockedEmailDomain::DOMAIN_FORMAT)
+      .uniq
+
+    if domains.size < MIN_EXPECTED_DOMAINS
+      raise PoisonedUpstreamError, "Suspiciously small blocklist: #{domains.size} domains (expected >= #{MIN_EXPECTED_DOMAINS})"
+    end
+    if domains.size > MAX_EXPECTED_DOMAINS
+      raise PoisonedUpstreamError, "Suspiciously large blocklist: #{domains.size} domains (expected <= #{MAX_EXPECTED_DOMAINS})"
+    end
+
+    protected_hits = domains & PROTECTED_PROVIDERS
+    raise PoisonedUpstreamError, "Blocklist contains protected providers: #{protected_hits.join(', ')}" unless protected_hits.empty?
+
+    domains
   end
 
-  def fetch_lines(url)
-    response = Net::HTTP.get_response(URI(url))
-    raise "Unexpected response from #{url}: #{response.code}" unless response.is_a?(Net::HTTPSuccess)
+  def fetch_lines(url, redirects_left: MAX_REDIRECTS)
+    uri = URI(url)
+    response = Net::HTTP.start(uri.host, uri.port,
+      use_ssl: uri.scheme == "https",
+      verify_mode: OpenSSL::SSL::VERIFY_PEER,
+      open_timeout: OPEN_TIMEOUT,
+      read_timeout: READ_TIMEOUT) do |http|
+      http.request(Net::HTTP::Get.new(uri.request_uri))
+    end
 
-    response.body.each_line.map { |l| l.split("#", 2).first.to_s.strip.downcase }.reject(&:empty?)
+    case response
+    when Net::HTTPSuccess
+      response.body.each_line.map { |l| l.split("#", 2).first.to_s.strip.downcase }.reject(&:empty?)
+    when Net::HTTPRedirection
+      raise "Too many redirects fetching #{url}" if redirects_left.zero?
+      fetch_lines(response["location"], redirects_left: redirects_left - 1)
+    else
+      raise "Unexpected response from #{url}: #{response.code}"
+    end
   end
 
   def upsert_domains(domains)
-    BlockedEmailDomain.transaction do
-      domains.each_slice(1000) do |slice|
-        BlockedEmailDomain.upsert_all(
-          slice.map { |d| { domain: d, source: BlockedEmailDomain.sources[:upstream] } },
-          unique_by: :domain
-        )
-      end
-      BlockedEmailDomain.upstream.where.not(domain: domains).delete_all
+    synced_at = Time.current
+    domains.each_slice(1000) do |slice|
+      BlockedEmailDomain.upsert_all(
+        slice.map do |d|
+          { domain: d, source: BlockedEmailDomain.sources[:upstream],
+            created_at: synced_at, updated_at: synced_at }
+        end,
+        unique_by: :domain,
+        # Refresh updated_at only — do NOT reset source on rows an admin has
+        # promoted to :manual, and do not bump created_at on existing rows.
+        on_duplicate: Arel.sql("updated_at = EXCLUDED.updated_at")
+      )
     end
+    BlockedEmailDomain.upstream.where(updated_at: ...synced_at).delete_all
   end
 end

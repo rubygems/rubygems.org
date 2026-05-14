@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Avo::Resources::BlockedEmailDomain < Avo::BaseResource
+class Avo::Resources::EmailDomainAllowlist < Avo::BaseResource
   self.title = :domain
   self.includes = []
   self.search = {
@@ -13,12 +13,6 @@ class Avo::Resources::BlockedEmailDomain < Avo::BaseResource
     field :id, as: :id, hide_on: :index
 
     field :domain, as: :text, link_to_resource: true
-    # Hidden on :new — admin-created rows always default to :manual via the
-    # model's after_initialize. Visible (but read-only on upstream rows) on edit.
-    field :source, as: :select,
-      enum: ::BlockedEmailDomain.sources,
-      only_on: %i[index show edit],
-      readonly: -> { view.edit? && record.upstream? }
     field :notes, as: :textarea
 
     field :created_at, as: :date_time, sortable: true, readonly: true, only_on: %i[index show]

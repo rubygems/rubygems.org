@@ -50,6 +50,35 @@ class BlockedEmailDomainTest < ActiveSupport::TestCase
       refute BlockedEmailDomain.blocks?("user@mailinator-not.com")
     end
 
+    should "yield to the allowlist when a parent domain is allowlisted" do
+      create(:email_domain_allowlist, domain: "mailinator.com")
+
+      refute BlockedEmailDomain.blocks?("user@mailinator.com")
+      refute BlockedEmailDomain.blocks?("user@sub.mailinator.com")
+    end
+  end
+
+  context ".match" do
+    setup { @row = create(:blocked_email_domain, :upstream, domain: "mailinator.com") }
+
+    should "return the matched row" do
+      assert_equal @row, BlockedEmailDomain.match("user@mailinator.com")
+    end
+
+    should "return the matched row on a subdomain" do
+      assert_equal @row, BlockedEmailDomain.match("user@inbox.mailinator.com")
+    end
+
+    should "return nil when allowlisted" do
+      create(:email_domain_allowlist, domain: "mailinator.com")
+
+      assert_nil BlockedEmailDomain.match("user@mailinator.com")
+    end
+
+    should "return nil for unrelated domains" do
+      assert_nil BlockedEmailDomain.match("user@gmail.com")
+    end
+
     should "return false for blank input" do
       refute BlockedEmailDomain.blocks?(nil)
       refute BlockedEmailDomain.blocks?("")

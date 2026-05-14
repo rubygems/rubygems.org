@@ -202,6 +202,8 @@ class UserTest < ActiveSupport::TestCase
       end
 
       context "with a disposable email domain" do
+        include StatsD::Instrument::Assertions
+
         setup { create(:blocked_email_domain, domain: "mailinator.com") }
 
         should "be invalid on signup with the exact disposable domain" do
@@ -243,6 +245,26 @@ class UserTest < ActiveSupport::TestCase
           user.update_columns(email: "grandfathered@mailinator.com")
 
           assert user.update(full_name: "New Name")
+        end
+
+        should "allow signup when the domain is on the allowlist" do
+          create(:email_domain_allowlist, domain: "mailinator.com")
+          user = build(:user, email: "user@mailinator.com")
+
+          assert_predicate user, :valid?, user.errors.full_messages.inspect
+        end
+
+        should "allow signup on a subdomain when a parent is on the allowlist" do
+          create(:email_domain_allowlist, domain: "mailinator.com")
+          user = build(:user, email: "user@inbox.mailinator.com")
+
+          assert_predicate user, :valid?, user.errors.full_messages.inspect
+        end
+
+        should "emit a StatsD counter tagged with the source on block" do
+          assert_statsd_increment("email_domain.blocked", tags: { source: "manual" }) do
+            build(:user, email: "spam@mailinator.com").valid?
+          end
         end
       end
     end
