@@ -191,6 +191,15 @@ class UserTest < ActiveSupport::TestCase
 
         assert user.update(full_name: "New Name")
       end
+
+      should "be invalid when activating an account with a reserved domain email" do
+        user = create(:user, email_confirmed: false)
+        user.update_columns(email: "grandfathered@example.com")
+
+        refute user.update(email_confirmed: true)
+        assert_contains user.errors[:email],
+          "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
+      end
     end
 
     context "unconfirmed_email" do

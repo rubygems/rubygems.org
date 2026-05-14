@@ -72,7 +72,7 @@ class User < ApplicationRecord
     uniqueness: { case_sensitive: false }
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP },
     allow_blank: true
-  validates :email, reserved_domain: true, if: :email_changed?
+  validates :email, reserved_domain: true, if: -> { email_changed? || email_confirmed_changed?(to: true) }
   validates :unconfirmed_email, reserved_domain: true, if: :unconfirmed_email_changed?
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
