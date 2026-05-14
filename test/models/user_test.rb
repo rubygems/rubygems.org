@@ -200,6 +200,51 @@ class UserTest < ActiveSupport::TestCase
         assert_contains user.errors[:email],
           "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
       end
+
+      context "with a disposable email domain" do
+        setup { create(:blocked_email_domain, domain: "mailinator.com") }
+
+        should "be invalid on signup with the exact disposable domain" do
+          user = build(:user, email: "spam@mailinator.com")
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+        end
+
+        should "be invalid on signup with a subdomain of a disposable domain" do
+          user = build(:user, email: "spam@foo.mailinator.com")
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+"domain 'foo.mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+        end
+
+        should "be invalid when an existing user changes email to a disposable domain" do
+          user = create(:user)
+          user.email = "switched@mailinator.com"
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+        end
+
+        should "be invalid when activating an account whose domain became disposable" do
+          user = create(:user, email_confirmed: false)
+          user.update_columns(email: "grandfathered@mailinator.com")
+
+          refute user.update(email_confirmed: true)
+          assert_contains user.errors[:email],
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+        end
+
+        should "not re-run disposable validation on saves that don't change email" do
+          user = create(:user)
+          user.update_columns(email: "grandfathered@mailinator.com")
+
+          assert user.update(full_name: "New Name")
+        end
+      end
     end
 
     context "unconfirmed_email" do
@@ -216,6 +261,15 @@ class UserTest < ActiveSupport::TestCase
         refute_predicate user, :valid?
         assert_contains user.errors[:unconfirmed_email],
           "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
+      end
+
+      should "be invalid with a disposable domain" do
+        create(:blocked_email_domain, domain: "mailinator.com")
+        user = build(:user, unconfirmed_email: "user@mailinator.com")
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:unconfirmed_email],
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
       end
     end
 

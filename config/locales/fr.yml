@@ -102,6 +102,7 @@ fr:
         not_pwned:
         blocked:
         reserved_domain:
+        disposable_email_domain:
       models:
         api_key:
           attributes:

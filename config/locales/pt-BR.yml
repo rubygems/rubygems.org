@@ -103,6 +103,7 @@ pt-BR:
           utilizada
         blocked:
         reserved_domain:
+        disposable_email_domain:
       models:
         api_key:
           attributes:

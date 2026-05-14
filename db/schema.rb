@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_14_224953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -132,6 +132,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
     t.string "status"
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_blazer_queries_on_creator_id"
+  end
+
+  create_table "blocked_email_domains", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "domain", null: false
+    t.text "notes"
+    t.integer "source", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_blocked_email_domains_on_domain", unique: true
+    t.index ["source"], name: "index_blocked_email_domains_on_source"
   end
 
   create_table "deletions", id: :serial, force: :cascade do |t|
