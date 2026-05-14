@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
   end
 
   def cacheable_request?
-    !signed_in?
+    !signed_in? && flash.empty?
   end
 
   def cache_expiry_headers(expiry: 60, fastly_expiry: 3600)
