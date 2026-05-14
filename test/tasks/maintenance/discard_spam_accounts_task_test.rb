@@ -6,7 +6,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   include ActionMailer::TestHelper
 
   test "#process discards a matching user" do
-    user = create(:user, email: "spam@example.com", created_at: 1.day.ago, email_confirmed: false)
+    user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
 
     Maintenance::DiscardSpamAccountsTask.process(user)
 
@@ -14,7 +14,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   end
 
   test "#process expires API keys" do
-    user = create(:user, email: "spam@example.com", created_at: 1.day.ago, email_confirmed: false)
+    user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
     api_key = create(:api_key, owner: user)
 
     Maintenance::DiscardSpamAccountsTask.process(user)
@@ -23,7 +23,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   end
 
   test "#process destroys webhooks" do
-    user = create(:user, email: "spam@example.com", created_at: 1.day.ago, email_confirmed: false)
+    user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
     webhook = create(:global_web_hook, user: user)
 
     Maintenance::DiscardSpamAccountsTask.process(user)
@@ -32,7 +32,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   end
 
   test "#process does not send a deletion complete email" do
-    user = create(:user, email: "spam@example.com", created_at: 1.day.ago, email_confirmed: false)
+    user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
 
     assert_no_enqueued_emails do
       Maintenance::DiscardSpamAccountsTask.process(user)
@@ -40,10 +40,10 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   end
 
   test "#process restores deletion email callback after processing" do
-    user = create(:user, email: "spam@example.com", created_at: 1.day.ago, email_confirmed: false)
+    user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
     Maintenance::DiscardSpamAccountsTask.process(user)
 
-    other_user = create(:user, email: "regular@example.com", created_at: 1.day.ago)
+    other_user = create(:user, email: "regular@spammy-test.org", created_at: 1.day.ago)
 
     assert_enqueued_emails 1 do
       other_user.discard!
@@ -51,7 +51,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   end
 
   test "#process reports error when discard fails" do
-    user = create(:user, email: "spam@example.com", created_at: 1.day.ago, email_confirmed: false)
+    user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
 
     User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
 
@@ -63,7 +63,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   end
 
   test "#process skips already discarded users" do
-    user = create(:user, email: "spam@example.com", created_at: 1.day.ago, email_confirmed: false)
+    user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
     user.discard!
 
     assert_no_changes -> { user.reload.deleted_at } do
@@ -75,14 +75,14 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
     task = Maintenance::DiscardSpamAccountsTask.new
     task.created_after = 3.days.ago
     task.created_before = 1.day.ago
-    task.domain_suffix = "example.com"
+    task.domain_suffix = "spammy-test.org"
 
-    matching = create(:user, email: "recent@example.com", created_at: 2.days.ago, email_confirmed: false)
-    too_recent = create(:user, email: "new@example.com", created_at: 1.hour.ago, email_confirmed: false)
-    old_example = create(:user, email: "old@example.com", created_at: 5.days.ago, email_confirmed: false)
-    other_domain = create(:user, email: "recent@anotherexample.com", created_at: 2.days.ago, email_confirmed: false)
-    confirmed = create(:user, email: "confirmed@example.com", created_at: 2.days.ago, email_confirmed: true)
-    with_gems = create(:user, email: "gems@example.com", created_at: 2.days.ago, email_confirmed: false)
+    matching = create(:user, email: "recent@spammy-test.org", created_at: 2.days.ago, email_confirmed: false)
+    too_recent = create(:user, email: "new@spammy-test.org", created_at: 1.hour.ago, email_confirmed: false)
+    old_example = create(:user, email: "old@spammy-test.org", created_at: 5.days.ago, email_confirmed: false)
+    other_domain = create(:user, email: "recent@anotherspammy-test.org", created_at: 2.days.ago, email_confirmed: false)
+    confirmed = create(:user, email: "confirmed@spammy-test.org", created_at: 2.days.ago, email_confirmed: true)
+    with_gems = create(:user, email: "gems@spammy-test.org", created_at: 2.days.ago, email_confirmed: false)
     create(:ownership, user: with_gems, rubygem: create(:rubygem))
 
     collection = task.collection
@@ -98,9 +98,9 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   test "#collection defaults created_before to now" do
     task = Maintenance::DiscardSpamAccountsTask.new
     task.created_after = 3.days.ago
-    task.domain_suffix = "example.com"
+    task.domain_suffix = "spammy-test.org"
 
-    recent = create(:user, email: "just-now@example.com", created_at: 1.minute.ago, email_confirmed: false)
+    recent = create(:user, email: "just-now@spammy-test.org", created_at: 1.minute.ago, email_confirmed: false)
 
     assert_includes task.collection, recent
   end
