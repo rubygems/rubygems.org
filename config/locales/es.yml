@@ -104,6 +104,7 @@ es:
           debería usar
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.
+        reserved_domain:
       models:
         api_key:
           attributes:

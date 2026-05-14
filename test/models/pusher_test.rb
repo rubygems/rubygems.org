@@ -7,7 +7,7 @@ class PusherTest < ActiveSupport::TestCase
   include GemspecYamlTemplateHelpers
 
   setup do
-    @user = create(:user, email: "user@example.com")
+    @user = create(:user, email: "user@rubygems-test.org")
     @api_key = create(:api_key, owner: @user)
     @gem = gem_file
     @cutter = Pusher.new(@api_key, @gem)
@@ -309,7 +309,8 @@ class PusherTest < ActiveSupport::TestCase
         create(:version, rubygem: @rubygem, number: "0.1.1")
 
         refute @cutter.authorize
-        assert_equal "You do not have permission to push to this gem. Ask an owner to add you with: gem owner the_gem_name --add user@example.com",
+        assert_equal "You do not have permission to push to this gem. " \
+                     "Ask an owner to add you with: gem owner the_gem_name --add user@rubygems-test.org",
           @cutter.message
         assert_equal 403, @cutter.code
       end

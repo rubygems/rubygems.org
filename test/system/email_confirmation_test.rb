@@ -21,7 +21,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   test "requesting confirmation mail does not tell if a user exists" do
-    request_confirmation_mail "someone@example.com"
+    request_confirmation_mail "someone@rubygems-test.org"
 
     assert_text "We will email you confirmation link to activate your account if one exists."
   end

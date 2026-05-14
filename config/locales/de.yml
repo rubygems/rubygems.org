@@ -108,6 +108,7 @@ de:
           werden
         blocked: Die Domain '%{domain}' wurde wegen Spam blockiert. Bitte verwenden
           Sie eine gültige persönliche E-Mail-Adresse.
+        reserved_domain:
       models:
         api_key:
           attributes:

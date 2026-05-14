@@ -6,7 +6,7 @@ class ProfileTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
   setup do
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
+    @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
 
   test "changing handle" do
@@ -25,7 +25,7 @@ class ProfileTest < ApplicationSystemTestCase
   end
 
   test "changing to an existing handle" do
-    create(:user, email: "nick2@example.com", handle: "nick2")
+    create(:user, email: "nick2@rubygems-test.org", handle: "nick2")
 
     sign_in
     visit profile_path("nick1")
@@ -56,19 +56,19 @@ class ProfileTest < ApplicationSystemTestCase
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Email address", with: "nick2@example.com"
+    fill_in "Email address", with: "nick2@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
       click_button "Update"
     end
 
-    assert page.has_selector? "input[value='nick@example.com']"
+    assert page.has_selector? "input[value='nick@rubygems-test.org']"
     assert page.has_selector? "#flash_notice", text: "You will receive " \
                                                      "an email within the next few minutes. It contains instructions " \
                                                      "for confirming your new email address."
 
-    assert_event Events::UserEvent::EMAIL_ADDED, { email: "nick2@example.com" },
+    assert_event Events::UserEvent::EMAIL_ADDED, { email: "nick2@rubygems-test.org" },
       @user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
 
     link = last_email_link
@@ -81,10 +81,10 @@ class ProfileTest < ApplicationSystemTestCase
       assert_text("Your email address has been verified")
       visit edit_profile_path
 
-      assert page.has_selector? "input[value='nick2@example.com']"
+      assert page.has_selector? "input[value='nick2@rubygems-test.org']"
     end
 
-    assert_event Events::UserEvent::EMAIL_VERIFIED, { email: "nick2@example.com" },
+    assert_event Events::UserEvent::EMAIL_VERIFIED, { email: "nick2@rubygems-test.org" },
       @user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
   end
 

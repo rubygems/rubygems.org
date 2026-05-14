@@ -57,7 +57,7 @@ FactoryBot.define do
 
     trait :blocked do
       email { "security+locked-#{SecureRandom.hex(4)}@rubygems.org" }
-      blocked_email { "test@example.com" }
+      blocked_email { "test@rubygems-test.org" }
     end
   end
 end

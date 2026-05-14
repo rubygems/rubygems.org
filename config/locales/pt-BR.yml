@@ -102,6 +102,7 @@ pt-BR:
         not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser
           utilizada
         blocked:
+        reserved_domain:
       models:
         api_key:
           attributes:

@@ -4,15 +4,15 @@ require "application_system_test_case"
 
 class SignInTest < ApplicationSystemTestCase
   setup do
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
-    @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+    @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
+    @mfa_user = create(:user, email: "john@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                   mfa_level: :ui_only, totp_seed: "thisisonetotpseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
   end
 
   test "signing in" do
     visit sign_in_path
-    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Email or Username", with: "nick@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -20,12 +20,12 @@ class SignInTest < ApplicationSystemTestCase
     assert_text "We now support security devices!"
 
     assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password" },
-      User.find_by(email: "nick@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
+      User.find_by(email: "nick@rubygems-test.org").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with uppercase email" do
     visit sign_in_path
-    fill_in "Email or Username", with: "Nick@example.com"
+    fill_in "Email or Username", with: "Nick@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -34,7 +34,7 @@ class SignInTest < ApplicationSystemTestCase
 
   test "signing in with wrong password" do
     visit sign_in_path
-    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Email or Username", with: "nick@rubygems-test.org"
     fill_in "Password", with: "wordcrimes12345"
     click_button "Sign in"
 
@@ -44,7 +44,7 @@ class SignInTest < ApplicationSystemTestCase
 
   test "signing in with wrong email" do
     visit sign_in_path
-    fill_in "Email or Username", with: "someone@example.com"
+    fill_in "Email or Username", with: "someone@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -73,7 +73,7 @@ class SignInTest < ApplicationSystemTestCase
 
   test "signing in with current valid otp when mfa enabled" do
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -87,12 +87,12 @@ class SignInTest < ApplicationSystemTestCase
     assert_text "We now support security devices!"
 
     assert_event Events::UserEvent::LOGIN_SUCCESS, { authentication_method: "password", two_factor_method: "otp", two_factor_label: "OTP" },
-      User.find_by(email: "john@example.com").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
+      User.find_by(email: "john@rubygems-test.org").events.where(tag: Events::UserEvent::LOGIN_SUCCESS).sole
   end
 
   test "signing in with current valid otp when mfa enabled but 30 minutes has passed" do
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -111,7 +111,7 @@ class SignInTest < ApplicationSystemTestCase
 
   test "signing in with invalid otp when mfa enabled" do
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -124,7 +124,7 @@ class SignInTest < ApplicationSystemTestCase
 
   test "signing in with valid recovery code when mfa enabled" do
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -138,7 +138,7 @@ class SignInTest < ApplicationSystemTestCase
 
   test "signing in with invalid recovery code when mfa enabled" do
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -158,7 +158,7 @@ class SignInTest < ApplicationSystemTestCase
     )
 
     visit sign_in_path
-    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Email or Username", with: "nick@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -179,7 +179,7 @@ class SignInTest < ApplicationSystemTestCase
     )
 
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -206,7 +206,7 @@ class SignInTest < ApplicationSystemTestCase
     )
 
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -229,7 +229,7 @@ class SignInTest < ApplicationSystemTestCase
     )
 
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -246,7 +246,7 @@ class SignInTest < ApplicationSystemTestCase
     @mfa_user.update_attribute(:handle, nil)
 
     visit sign_in_path
-    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Email or Username", with: "john@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -254,13 +254,13 @@ class SignInTest < ApplicationSystemTestCase
     fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonetotpseed").now
     click_button "Authenticate"
 
-    assert_text "john@example.com"
+    assert_text "john@rubygems-test.org"
     assert_text "Dashboard"
   end
 
   test "signing out" do
     visit sign_in_path
-    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Email or Username", with: "nick@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -273,7 +273,7 @@ class SignInTest < ApplicationSystemTestCase
 
   test "session expires in two weeks" do
     visit sign_in_path
-    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Email or Username", with: "nick@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -287,10 +287,10 @@ class SignInTest < ApplicationSystemTestCase
   end
 
   test "sign in to blocked account" do
-    User.find_by!(email: "nick@example.com").block!
+    User.find_by!(email: "nick@rubygems-test.org").block!
 
     visit sign_in_path
-    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Email or Username", with: "nick@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
@@ -299,10 +299,10 @@ class SignInTest < ApplicationSystemTestCase
   end
 
   test "sign in to deleted account" do
-    User.find_by!(email: "nick@example.com").update!(deleted_at: Time.zone.now)
+    User.find_by!(email: "nick@rubygems-test.org").update!(deleted_at: Time.zone.now)
 
     visit sign_in_path
-    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Email or Username", with: "nick@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 

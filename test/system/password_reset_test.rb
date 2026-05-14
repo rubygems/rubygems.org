@@ -28,7 +28,7 @@ class PasswordResetTest < ApplicationSystemTestCase
   end
 
   test "reset password form does not tell if a user exists" do
-    forgot_password_with "someone@example.com"
+    forgot_password_with "someone@rubygems-test.org"
 
     assert_text "instructions for changing your password"
   end
@@ -213,7 +213,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     visit sign_in_path
 
     email = @user.email
-    new_email = "hijack@example.com"
+    new_email = "hijack@rubygems-test.org"
 
     fill_in "Email or Username", with: email
     fill_in "Password", with: @user.password

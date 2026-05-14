@@ -80,7 +80,7 @@ class ApplicationHelperTest < ActionView::TestCase
 
   context "avatar" do
     setup do
-      @user = create(:user, email: "email@example.com")
+      @user = create(:user, email: "email@rubygems-test.org")
     end
 
     should "raise when invalid theme is requested" do

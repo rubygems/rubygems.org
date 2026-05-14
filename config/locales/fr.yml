@@ -101,6 +101,7 @@ fr:
       messages:
         not_pwned:
         blocked:
+        reserved_domain:
       models:
         api_key:
           attributes:

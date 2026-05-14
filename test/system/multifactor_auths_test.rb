@@ -4,7 +4,7 @@ require "application_system_test_case"
 
 class MultifactorAuthsTest < ApplicationSystemTestCase
   setup do
-    @user = create(:user, email: "testuser@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "testuser")
+    @user = create(:user, email: "testuser@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "testuser")
     @seed = ROTP::Base32.random_base32
     @totp = ROTP::TOTP.new(@seed)
   end

@@ -70,7 +70,10 @@ class User < ApplicationRecord
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
     uniqueness: { case_sensitive: false }
-  validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
+  validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP },
+    allow_blank: true
+  validates :email, reserved_domain: true, if: :email_changed?
+  validates :unconfirmed_email, reserved_domain: true, if: :unconfirmed_email_changed?
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
@@ -271,10 +274,9 @@ class User < ApplicationRecord
   def unblock!
     raise ArgumentError, "User is not blocked" unless blocked?
 
-    update!(
-      email: blocked_email,
-      blocked_email: nil
-    )
+    self.email = blocked_email
+    self.blocked_email = nil
+    save(validate: false)
   end
 
   def blocked?

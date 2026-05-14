@@ -4,9 +4,9 @@ require "application_system_test_case"
 
 class SignInWebauthnTest < ApplicationSystemTestCase
   setup do
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
+    @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
     @mfa_recovery_codes = %w[0123456789ab ba9876543210]
-    @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+    @mfa_user = create(:user, email: "john@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                   mfa_level: :ui_only, totp_seed: "thisisonetotpseed",
                   mfa_recovery_codes: @mfa_recovery_codes)
 

@@ -190,7 +190,7 @@ class MailerPreview < ActionMailer::Preview
         handle: "gem-user-with-yubikey",
         password: "super-secret-password",
         email_confirmed: true
-      ).find_or_create_by!(email: "gem-user-with-yubikey@example.com")
+      ).find_or_create_by!(email: "gem-user-with-yubikey@rubygems-test.org")
 
       webauthn_credential = user_with_yubikey.webauthn_credentials.create_with(
         external_id: "external-id",

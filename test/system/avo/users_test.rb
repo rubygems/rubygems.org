@@ -443,7 +443,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       page.assert_text "Must supply a sufficiently detailed comment"
 
       fill_in "Comment", with: "A nice long comment"
-      fill_in "Email", with: "gem-maintainer-001@example.com"
+      fill_in "Email", with: "gem-maintainer-001@rubygems-test.org"
       click_button "Change User Email"
 
       page.assert_text "Action ran successfully!"
@@ -487,7 +487,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "unchanged" => {}
             }
           },
-          "fields" => { "from_email" => "gem-maintainer-001@example.com" },
+          "fields" => { "from_email" => "gem-maintainer-001@rubygems-test.org" },
           "arguments" => {},
           "models" => ["gid://gemcutter/User/#{user.id}"]
         },
@@ -519,7 +519,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_text "Must supply a sufficiently detailed comment"
 
     fill_in "Comment", with: "A nice long comment"
-    fill_in "Email", with: "gem-user-001@example.com"
+    fill_in "Email", with: "gem-user-001@rubygems-test.org"
     click_button "Create User"
 
     page.assert_text "Action ran successfully!"
@@ -545,7 +545,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "unchanged" => {}
           }
         },
-        "fields" => { "email" => "gem-user-001@example.com" },
+        "fields" => { "email" => "gem-user-001@rubygems-test.org" },
         "arguments" => {},
         "models" => []
       },
