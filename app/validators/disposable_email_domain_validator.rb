@@ -18,6 +18,6 @@ class DisposableEmailDomainValidator < ActiveModel::EachValidator
     # answer "how often is this firing, and from which list source?".
     StatsD.increment("email_domain.blocked", tags: { source: match.source })
 
-    record.errors.add(attribute, I18n.t("activerecord.errors.messages.disposable_email_domain", domain: domain))
+    record.errors.add(attribute, :disposable_email_domain, domain: domain)
   end
 end
