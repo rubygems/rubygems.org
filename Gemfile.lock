@@ -354,7 +354,7 @@ GEM
     herb (0.10.1-x86_64-darwin)
     herb (0.10.1-x86_64-linux-gnu)
     herb (0.10.1-x86_64-linux-musl)
-    honeybadger (6.5.5)
+    honeybadger (6.6.0)
       logger
       ostruct
     htmlbeautifier (1.4.3)
@@ -948,7 +948,7 @@ DEPENDENCIES
   gravtastic (~> 3.2)
   groupdate (~> 6.8)
   herb (~> 0.10)
-  honeybadger (~> 6.5.5)
+  honeybadger (~> 6.6.0)
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.2)
   kaminari (~> 1.2)
@@ -1079,6 +1079,7 @@ CHECKSUMS
   brakeman (8.0.4) sha256=7bf921fa9638544835df9aa7b3e720a9a72c0267f34f92135955edd80d4dcf6f
   browser (6.2.0) sha256=281d5295788825c9396427c292c2d2be0a5c91875c93c390fde6e5d61a5ace2d
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
+  bundler (4.0.11) sha256=5bcec0fb78302e48d02ee46f10ee6e6942be647ba5b44a6d1ddfda9a240ce785
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   cbor (0.5.10.1) sha256=79cdf79f18dcd9ee97e0b849c6d573e5a2e3ddc1954d180f384d6ed2612b6df0
   cgi (0.5.1) sha256=e93fcafc69b8a934fe1e6146121fa35430efa8b4a4047c4893764067036f18e9
@@ -1154,7 +1155,7 @@ CHECKSUMS
   herb (0.10.1-x86_64-darwin) sha256=dc266814a63215eefb82cf4f55ce723bc20218395b13c1631c11ca7cfc782d07
   herb (0.10.1-x86_64-linux-gnu) sha256=c7762d411a6d2e1a032cf403b0429155c01ab48b3b5be2a0aab1e921da6b8948
   herb (0.10.1-x86_64-linux-musl) sha256=a5bb7c82bbc30a9eb80cb833fea749f543a0709d9f858f7db366a3c2616d969b
-  honeybadger (6.5.5) sha256=bb42c7da748f72961520056ef49ab63abd886d62fd3e7bc45f095c15f7094ca7
+  honeybadger (6.6.0) sha256=b4ebeaf508830a8a20b0dee8d19aedff4706ef3a96d3ccbfb05adc60a6a5385d
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
