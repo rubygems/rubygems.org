@@ -22,9 +22,7 @@ require "openssl"
 class SyncDisposableEmailDomainsJob < ApplicationJob
   queue_as "stats"
 
-  UPSTREAM_BASE = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main"
-  BLOCKLIST_URL = "#{UPSTREAM_BASE}/disposable_email_blocklist.conf".freeze
-  ALLOWLIST_URL = "#{UPSTREAM_BASE}/allowlist.conf".freeze
+  BLOCKLIST_URL = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf"
 
   MIN_EXPECTED_DOMAINS = 1_000
   MAX_EXPECTED_DOMAINS = 100_000
@@ -65,10 +63,7 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
   private
 
   def fetch_domains
-    blocklist = fetch_lines(BLOCKLIST_URL)
-    allowlist = fetch_lines(ALLOWLIST_URL).to_set
-    domains = blocklist
-      .reject { |d| allowlist.include?(d) }
+    domains = fetch_lines(BLOCKLIST_URL)
       .grep(BlockedEmailDomain::DOMAIN_FORMAT)
       .uniq
 
@@ -87,8 +82,10 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
 
   def fetch_lines(url, redirects_left: MAX_REDIRECTS)
     uri = URI(url)
+    raise "Refusing non-HTTPS upstream URL: #{url}" unless uri.scheme == "https"
+
     response = Net::HTTP.start(uri.host, uri.port,
-      use_ssl: uri.scheme == "https",
+      use_ssl: true,
       verify_mode: OpenSSL::SSL::VERIFY_PEER,
       open_timeout: OPEN_TIMEOUT,
       read_timeout: READ_TIMEOUT) do |http|
@@ -97,7 +94,7 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
 
     case response
     when Net::HTTPSuccess
-      response.body.each_line.map { |l| l.split("#", 2).first.to_s.strip.downcase }.reject(&:empty?)
+      response.body.each_line.map { |l| l.strip.downcase }.reject(&:empty?)
     when Net::HTTPRedirection
       raise "Too many redirects fetching #{url}" if redirects_left.zero?
       fetch_lines(response["location"], redirects_left: redirects_left - 1)

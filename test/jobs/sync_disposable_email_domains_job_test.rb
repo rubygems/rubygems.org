@@ -12,11 +12,9 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
     "#{(base + extra).join("\n")}\n"
   end
 
-  def stub_upstream(blocklist:, allowlist: "")
+  def stub_upstream(blocklist:)
     stub_request(:get, SyncDisposableEmailDomainsJob::BLOCKLIST_URL)
       .to_return(status: 200, body: blocklist)
-    stub_request(:get, SyncDisposableEmailDomainsJob::ALLOWLIST_URL)
-      .to_return(status: 200, body: allowlist)
   end
 
   context "#perform" do
@@ -28,19 +26,8 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       assert BlockedEmailDomain.exists?(domain: "guerrillamail.com")
     end
 
-    should "exclude domains present on the upstream allowlist" do
-      stub_upstream(
-        blocklist: realistic_blocklist(extra: %w[mailinator.com legitimate.com]),
-        allowlist: "legitimate.com\n"
-      )
-      SyncDisposableEmailDomainsJob.perform_now
-
-      assert BlockedEmailDomain.exists?(domain: "mailinator.com")
-      refute BlockedEmailDomain.exists?(domain: "legitimate.com")
-    end
-
-    should "strip comments and blank lines" do
-      blocklist = "# comment\nmailinator.com  # trailing comment\n\nguerrillamail.com\n#{realistic_blocklist}"
+    should "skip blank lines" do
+      blocklist = "\nmailinator.com\n\nguerrillamail.com\n#{realistic_blocklist}"
       stub_upstream(blocklist: blocklist)
       SyncDisposableEmailDomainsJob.perform_now
 
@@ -135,6 +122,21 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
         "existing upstream rows should not be deleted when sync aborts"
     end
 
+    should "abort and leave DB untouched when blocklist is suspiciously large" do
+      create(:blocked_email_domain, :upstream, domain: "existing.example.test-domain.io")
+      oversized = Array.new(SyncDisposableEmailDomainsJob::MAX_EXPECTED_DOMAINS + 1) { |i| "oversized-#{i}.example.test-domain.io" }
+      stub_upstream(blocklist: "#{oversized.join("\n")}\n")
+
+      metrics = capture_statsd_calls(client: StatsD.singleton_client) do
+        SyncDisposableEmailDomainsJob.perform_now
+      end
+
+      assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })
+      assert BlockedEmailDomain.exists?(domain: "existing.example.test-domain.io"),
+        "existing upstream rows should not be deleted when sync aborts"
+      refute BlockedEmailDomain.exists?(domain: "oversized-0.example.test-domain.io")
+    end
+
     should "abort when blocklist contains a protected provider" do
       stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com gmail.com]))
 
@@ -152,11 +154,23 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       stub_request(:get, SyncDisposableEmailDomainsJob::BLOCKLIST_URL)
         .to_return(status: 302, headers: { "Location" => redirected_url })
       stub_request(:get, redirected_url).to_return(status: 200, body: realistic_blocklist(extra: %w[mailinator.com]))
-      stub_request(:get, SyncDisposableEmailDomainsJob::ALLOWLIST_URL).to_return(status: 200, body: "")
 
       SyncDisposableEmailDomainsJob.perform_now
 
       assert BlockedEmailDomain.exists?(domain: "mailinator.com")
+    end
+
+    should "refuse a redirect to a non-HTTPS URL" do
+      create(:blocked_email_domain, :upstream, domain: "existing.example.test-domain.io")
+      stub_request(:get, SyncDisposableEmailDomainsJob::BLOCKLIST_URL)
+        .to_return(status: 302, headers: { "Location" => "http://example.test-domain.io/redirected_blocklist.conf" })
+
+      metrics = capture_statsd_calls(client: StatsD.singleton_client) do
+        SyncDisposableEmailDomainsJob.perform_now
+      end
+
+      assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })
+      assert BlockedEmailDomain.exists?(domain: "existing.example.test-domain.io")
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BlockedEmailDomain < ApplicationRecord
-  enum :source, { upstream: 0, manual: 1 }
+  enum :source, { manual: 0, upstream: 1 }
 
   DOMAIN_FORMAT = /\A[a-z0-9][a-z0-9.-]*\.[a-z]{2,}\z/i
 
@@ -11,7 +11,6 @@ class BlockedEmailDomain < ApplicationRecord
     format: { with: DOMAIN_FORMAT }
   validates :notes, length: { maximum: 500 }, allow_blank: true
 
-  after_initialize :default_source_to_manual, if: :new_record?
   before_validation :normalize_domain
 
   scope :matching_email, ->(email) { where(domain: candidate_domains(email)) }
@@ -45,12 +44,5 @@ class BlockedEmailDomain < ApplicationRecord
 
   def normalize_domain
     self.domain = domain&.strip&.downcase
-  end
-
-  # New records default to :manual so admin-created rows can never accidentally
-  # land as :upstream. The sync job explicitly sets :upstream via upsert_all,
-  # which bypasses callbacks and is unaffected.
-  def default_source_to_manual
-    self.source ||= :manual
   end
 end

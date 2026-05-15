@@ -87,13 +87,13 @@ class BlockedEmailDomainTest < ActiveSupport::TestCase
   end
 
   context "source enum" do
-    should "default to upstream when zero" do
+    should "default new records to manual so admin-created rows survive the upstream sync" do
       record = BlockedEmailDomain.create!(domain: "mailinator.com")
 
-      assert_predicate record, :upstream?
+      assert_predicate record, :manual?
     end
 
-    should "support a manual source" do
+    should "allow promoting between sources" do
       record = create(:blocked_email_domain, :upstream, domain: "guerrillamail.com")
       record.update!(source: :manual)
 
