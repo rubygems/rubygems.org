@@ -6,19 +6,21 @@ class GemInfoTest < ActiveSupport::TestCase
   setup do
     Rails.cache.delete("names")
     Rails.cache.delete("info/example")
+    Rails.cache.delete("info_v2/example")
   end
 
   teardown do
     Rails.cache.delete("names")
     Rails.cache.delete("info/example")
+    Rails.cache.delete("info_v2/example")
   end
 
   context "#compact_index_info" do
     setup do
       rubygem = create(:rubygem, name: "example")
-      version = create(:version, rubygem: rubygem, number: "1.0.0", info_checksum: "qw2dwe")
+      @version = create(:version, rubygem: rubygem, number: "1.0.0", info_checksum: "qw2dwe")
       dep = create(:rubygem, name: "exmaple_dep")
-      create(:dependency, rubygem: dep, version: version)
+      create(:dependency, rubygem: dep, version: @version)
 
       @expected_info = [CompactIndex::GemVersion.new(
         "1.0.0",
@@ -29,12 +31,44 @@ class GemInfoTest < ActiveSupport::TestCase
         ">= 2.0.0",
         ">= 2.6.3"
       )]
+
+      @expected_info_v2 = [CompactIndex::GemVersion.new(
+        "1.0.0",
+        "ruby",
+        "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
+        "qw2dwe",
+        [CompactIndex::Dependency.new("exmaple_dep", "= 1.0.0")],
+        ">= 2.0.0",
+        ">= 2.6.3",
+        @version.created_at.utc.iso8601
+      )]
+
+      @expected_info_checksum = Digest::MD5.hexdigest(CompactIndex.info(@expected_info))
+      @expected_info_checksum_v2 = Digest::MD5.hexdigest(CompactIndex.info(@expected_info_v2))
     end
 
     should "return gem version and dependency" do
       info = GemInfo.new("example").compact_index_info
 
       assert_equal @expected_info, info
+    end
+
+    should "return v2 gem version and dependency with created_at" do
+      info = GemInfo.new("example").compact_index_info_v2
+
+      assert_equal @expected_info_v2, info
+    end
+
+    should "compute v2 info checksum with created_at" do
+      assert_equal @expected_info_checksum_v2, GemInfo.new("example").info_checksum_v2
+      refute_equal GemInfo.new("example").info_checksum, GemInfo.new("example").info_checksum_v2
+    end
+
+    should "compute v1 and v2 info checksums together" do
+      assert_equal({
+                     info_checksum: @expected_info_checksum,
+                     info_checksum_v2: @expected_info_checksum_v2
+                   }, GemInfo.new("example").info_checksums)
     end
 
     should "write cache" do
@@ -49,6 +83,20 @@ class GemInfoTest < ActiveSupport::TestCase
       info = GemInfo.new("example").compact_index_info
 
       assert_equal @expected_info, info
+    end
+
+    should "write v2 cache" do
+      Rails.cache.expects(:write).with("info_v2/example", @expected_info_v2)
+
+      GemInfo.new("example").compact_index_info_v2
+    end
+
+    should "read v2 from cache when cache exists" do
+      Rails.cache.expects(:read).with("info_v2/example")
+
+      info = GemInfo.new("example").compact_index_info_v2
+
+      assert_equal @expected_info_v2, info
     end
   end
 
@@ -98,6 +146,38 @@ class GemInfoTest < ActiveSupport::TestCase
       versions = GemInfo.compact_index_versions(4.days.ago)
 
       assert_equal @expected_versions, versions
+    end
+  end
+
+  context ".compact_index_versions_v2" do
+    setup do
+      create(:version, number: "0.0.1", created_at: 10.days.ago)
+      rubygem = create(:rubygem, name: "foo")
+      create(:version, rubygem: rubygem, number: "2.0.0", created_at: 2.days.ago,
+                       info_checksum: "qw2dwe", info_checksum_v2: "v2qw2dwe")
+      create(:version, rubygem: rubygem, number: "1.0.1", created_at: 3.days.ago,
+                       info_checksum: "32ddwe", info_checksum_v2: "v232ddwe")
+
+      @expected_versions =
+        [CompactIndex::Gem.new("foo", [CompactIndex::GemVersion.new("1.0.1", "ruby", nil, "v232ddwe")]),
+         CompactIndex::Gem.new("foo", [CompactIndex::GemVersion.new("2.0.0", "ruby", nil, "v2qw2dwe")])]
+    end
+
+    should "return all versions created after given date using v2 checksum" do
+      versions = GemInfo.compact_index_versions_v2(4.days.ago)
+
+      assert_equal @expected_versions, versions
+    end
+
+    should "return yanked versions using v2 yanked checksum" do
+      rubygem = create(:rubygem, name: "bar")
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0", created_at: 10.days.ago,
+                                yanked_at: 1.day.ago, yanked_info_checksum_v2: "v2yanked")
+
+      versions = GemInfo.compact_index_versions_v2(4.days.ago)
+
+      assert_includes versions,
+        CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("-1.0.0", "ruby", nil, "v2yanked")])
     end
   end
 

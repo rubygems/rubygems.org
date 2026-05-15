@@ -47,5 +47,52 @@ class UploadVersionsFileJob < ApplicationJob
     logger.info(message: "Uploading versions file succeeded", response:)
 
     FastlyPurgeJob.perform_later(key: "s3-versions", soft: true)
+
+    # V2 dual-write: only update v2/versions once the backfill task has created it.
+    return unless RubygemFs.compact_index.head("v2/versions")
+
+    upload_v2_versions_file
+  end
+
+  private
+
+  def upload_v2_versions_file
+    versions_path = Rails.application.config.rubygems["versions_file_location_v2"]
+    versions_file = CompactIndex::VersionsFile.new(versions_path)
+    from_date = versions_file.updated_at
+
+    logger.info "Generating v2 versions file from #{from_date}"
+
+    extra_gems = GemInfo.compact_index_versions_v2(from_date)
+
+    missing = extra_gems.select { |g| g.versions.any? { |v| v.info_checksum.nil? } }.map(&:name)
+    if missing.any?
+      logger.warn "Skipping v2/versions upload: #{missing.size} gem(s) missing info_checksum_v2 " \
+                  "(first 20: #{missing.first(20).join(', ')})"
+      return
+    end
+
+    response_body = CompactIndex.versions(versions_file, extra_gems)
+
+    content_md5 = Digest::MD5.base64digest(response_body)
+    checksum_sha256 = Digest::SHA256.base64digest(response_body)
+
+    response = RubygemFs.compact_index.store(
+      "v2/versions", response_body,
+      public_acl: false, # the compact-index bucket does not have ACLs enabled
+      metadata: {
+        "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+        "surrogate-key" => "v2/versions s3-compact-index s3-v2/versions",
+        "sha256" => checksum_sha256,
+        "md5" => content_md5
+      },
+      cache_control: "max-age=60, public",
+      content_type: "text/plain; charset=utf-8",
+      checksum_sha256:,
+      content_md5:
+    )
+
+    logger.info(message: "Uploading v2 versions file succeeded", response:)
+    FastlyPurgeJob.perform_later(key: "s3-v2/versions", soft: true)
   end
 end

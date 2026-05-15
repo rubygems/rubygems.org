@@ -41,5 +41,28 @@ class UploadNamesFileJob < ApplicationJob
     logger.info(message: "Uploading names file succeeded", response:)
 
     FastlyPurgeJob.perform_later(key: "s3-names", soft: true)
+    upload_v2_names_file(response_body, checksum_sha256, content_md5)
+  end
+
+  private
+
+  def upload_v2_names_file(response_body, checksum_sha256, content_md5)
+    v2_response = RubygemFs.compact_index.store(
+      "v2/names", response_body,
+      public_acl: false, # the compact-index bucket does not have ACLs enabled
+      metadata: {
+        "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+        "surrogate-key" => "v2/names s3-compact-index s3-v2/names",
+        "sha256" => checksum_sha256,
+        "md5" => content_md5
+      },
+      cache_control: "max-age=60, public",
+      content_type: "text/plain; charset=utf-8",
+      checksum_sha256:,
+      content_md5:
+    )
+
+    logger.info(message: "Uploading v2/names file succeeded", response: v2_response)
+    FastlyPurgeJob.perform_later(key: "s3-v2/names", soft: true)
   end
 end

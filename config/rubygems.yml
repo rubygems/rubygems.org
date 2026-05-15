@@ -8,6 +8,7 @@ development:
   s3_region: us-east-1
   s3_endpoint: s3.amazonaws.com
   versions_file_location: "./config/versions.list"
+  versions_file_location_v2: "./config/versions_v2.list"
 
 test:
   protocol: http
@@ -19,6 +20,7 @@ test:
   s3_region: us-east-1
   s3_endpoint: s3.amazonaws.com
   versions_file_location: "./test/helpers/versions.list"
+  versions_file_location_v2: "./test/helpers/versions_v2.list"
 
 staging:
   protocol: https
@@ -30,6 +32,7 @@ staging:
   s3_contents_bucket: contents.oregon.staging.s3.rubygems.org
   s3_compact_index_bucket: compact-index.oregon.staging.s3.rubygems.org
   versions_file_location: "./config/versions.list"
+  versions_file_location_v2: "./config/versions_v2.list"
 
 production:
   protocol: https
@@ -41,4 +44,5 @@ production:
   s3_contents_bucket: contents.oregon.production.s3.rubygems.org
   s3_compact_index_bucket: compact-index.oregon.production.s3.rubygems.org
   versions_file_location: "./config/versions.list"
+  versions_file_location_v2: "./config/versions_v2.list"
   separate_admin_host: rubygems.team

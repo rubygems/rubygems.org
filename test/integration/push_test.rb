@@ -92,10 +92,18 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert page.has_css?(css, count: 2)
 
-    assert_equal Digest::MD5.hexdigest(<<~INFO), Rubygem.find_by!(name: "sandworm").versions.sole.info_checksum
+    version = Rubygem.find_by!(name: "sandworm").versions.sole
+    sha256 = Digest::SHA256.hexdigest gem_io.string
+
+    assert_equal Digest::MD5.hexdigest(<<~INFO), version.info_checksum
       ---
-      1.0.0 |checksum:#{Digest::SHA256.hexdigest gem_io.string}
+      1.0.0 |checksum:#{sha256}
     INFO
+    assert_equal Digest::MD5.hexdigest(<<~INFO), version.info_checksum_v2
+      ---
+      1.0.0 |checksum:#{sha256},created_at:#{version.created_at.utc.iso8601}
+    INFO
+    refute_equal version.info_checksum, version.info_checksum_v2
   end
 
   test "push a new version of a gem" do
