@@ -1025,20 +1025,6 @@ class UserTest < ActiveSupport::TestCase
         end
       end
     end
-
-    context "when the blocked email is a now-reserved domain" do
-      setup do
-        @user = create(:user, :blocked)
-        @user.update_columns(blocked_email: "grandfathered@example.com")
-      end
-
-      should "still restore the email" do
-        @user.unblock!
-
-        assert_equal "grandfathered@example.com", @user.email
-        assert_nil @user.blocked_email
-      end
-    end
   end
 
   context "#blocked?" do

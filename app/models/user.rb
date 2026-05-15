@@ -274,9 +274,10 @@ class User < ApplicationRecord
   def unblock!
     raise ArgumentError, "User is not blocked" unless blocked?
 
-    self.email = blocked_email
-    self.blocked_email = nil
-    save(validate: false)
+    update!(
+      email: blocked_email,
+      blocked_email: nil
+    )
   end
 
   def blocked?
