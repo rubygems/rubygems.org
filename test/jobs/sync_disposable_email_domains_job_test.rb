@@ -45,6 +45,15 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       refute BlockedEmailDomain.exists?(domain: ".leading-dot")
     end
 
+    should "drop public-suffix entries so a poisoned upstream cannot lock out a whole ccTLD" do
+      stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com co.uk com.br]))
+      SyncDisposableEmailDomainsJob.perform_now
+
+      assert BlockedEmailDomain.exists?(domain: "mailinator.com")
+      refute BlockedEmailDomain.exists?(domain: "co.uk")
+      refute BlockedEmailDomain.exists?(domain: "com.br")
+    end
+
     should "be idempotent across runs" do
       stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com]))
       SyncDisposableEmailDomainsJob.perform_now

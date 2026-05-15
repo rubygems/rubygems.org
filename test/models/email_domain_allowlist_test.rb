@@ -12,6 +12,14 @@ class EmailDomainAllowlistTest < ActiveSupport::TestCase
     should validate_uniqueness_of(:domain).case_insensitive
     should_not allow_value("not_a_domain").for(:domain)
     should allow_value("privaterelay.appleid.com").for(:domain)
+
+    should "reject a public-suffix value to prevent exempting an entire ccTLD" do
+      record = build(:email_domain_allowlist, domain: "co.uk")
+
+      refute_predicate record, :valid?
+      assert_contains record.errors[:domain],
+        "is a public suffix and cannot be used; specify a registrable domain"
+    end
   end
 
   context ".allows?" do

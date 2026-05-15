@@ -18,6 +18,9 @@ class DisposableEmailDomainValidator < ActiveModel::EachValidator
     # answer "how often is this firing, and from which list source?".
     StatsD.increment("email_domain.blocked", tags: { source: match.source })
 
-    record.errors.add(attribute, :disposable_email_domain, domain: domain)
+    # Surface the matched parent (e.g., "mailinator.com") rather than the raw
+    # input (e.g., "sub.mailinator.com") so the user can see exactly which
+    # entry blocked them.
+    record.errors.add(attribute, :disposable_email_domain, domain: match.domain)
   end
 end

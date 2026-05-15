@@ -44,7 +44,10 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
   BLOCKLIST_URL = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf"
 
   MIN_EXPECTED_DOMAINS = 1_000
-  MAX_EXPECTED_DOMAINS = 100_000
+  # Upstream is currently ~40K. 500K leaves >10x headroom so legitimate growth
+  # doesn't auto-abort the daily sync, while still catching a pathological
+  # payload (e.g., HTML error page parsed as lines, or a runaway commit).
+  MAX_EXPECTED_DOMAINS = 500_000
 
   # Common consumer providers that must never appear on our blocklist. If any
   # of these show up upstream, treat the sync as poisoned and refuse to apply.
@@ -83,6 +86,10 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
   def fetch_domains
     domains = fetch_lines(BLOCKLIST_URL)
       .grep(BlockedEmailDomain::DOMAIN_FORMAT)
+      # Drop entries that are themselves public suffixes (e.g., "co.uk"). If
+      # upstream ever publishes one, blocking it would lock out everything
+      # registrable under that ccTLD.
+      .select { |d| PublicSuffix.valid?(d) }
       .uniq
 
     if domains.size < MIN_EXPECTED_DOMAINS

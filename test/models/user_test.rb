@@ -214,12 +214,12 @@ class UserTest < ActiveSupport::TestCase
 "domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
         end
 
-        should "be invalid on signup with a subdomain of a disposable domain" do
+        should "be invalid on signup with a subdomain of a disposable domain, reporting the matched parent" do
           user = build(:user, email: "spam@foo.mailinator.com")
 
           refute_predicate user, :valid?
           assert_contains user.errors[:email],
-"domain 'foo.mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
         end
 
         should "be invalid when an existing user changes email to a disposable domain" do

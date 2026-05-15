@@ -103,6 +103,7 @@ en:
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
         reserved_domain: "domain '%{domain}' is reserved and cannot be used for registration. Please use a valid personal email."
         disposable_email_domain: "domain '%{domain}' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+        public_suffix: is a public suffix and cannot be used; specify a registrable domain
       models:
         api_key:
           attributes:

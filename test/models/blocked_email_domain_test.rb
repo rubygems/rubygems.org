@@ -14,6 +14,26 @@ class BlockedEmailDomainTest < ActiveSupport::TestCase
     should_not allow_value("missing-tld").for(:domain)
     should allow_value("mailinator.com").for(:domain)
     should allow_value("sub.mailinator.com").for(:domain)
+
+    should "reject a public-suffix value to prevent locking out an entire ccTLD" do
+      record = build(:blocked_email_domain, domain: "co.uk")
+
+      refute_predicate record, :valid?
+      assert_contains record.errors[:domain],
+        "is a public suffix and cannot be used; specify a registrable domain"
+    end
+
+    should "reject a registry-managed multi-label suffix" do
+      record = build(:blocked_email_domain, domain: "com.br")
+
+      refute_predicate record, :valid?
+    end
+
+    should "accept a registrable name under a ccTLD" do
+      record = build(:blocked_email_domain, domain: "shady.co.uk")
+
+      assert_predicate record, :valid?
+    end
   end
 
   context "#normalize_domain" do

@@ -21,6 +21,7 @@ class EmailDomainAllowlist < ApplicationRecord
     length: { maximum: 253 },
     format: { with: DOMAIN_FORMAT }
   validates :notes, length: { maximum: 500 }, allow_blank: true
+  validate :domain_must_be_registrable
 
   before_validation :normalize_domain
 
@@ -34,5 +35,14 @@ class EmailDomainAllowlist < ApplicationRecord
 
   def normalize_domain
     self.domain = domain&.strip&.downcase
+  end
+
+  # Reject entries whose value is itself a public suffix (eTLD). An allowlist
+  # row for "co.uk" would exempt every UK address from the blocklist, which is
+  # almost certainly a misclick.
+  def domain_must_be_registrable
+    return if domain.blank?
+    return if PublicSuffix.valid?(domain)
+    errors.add(:domain, :public_suffix)
   end
 end
