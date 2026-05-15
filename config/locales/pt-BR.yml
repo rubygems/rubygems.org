@@ -104,6 +104,7 @@ pt-BR:
         blocked:
         reserved_domain:
         disposable_email_domain:
+        public_suffix:
       models:
         api_key:
           attributes:

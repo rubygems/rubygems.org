@@ -106,6 +106,7 @@ es:
           un email personal válido.
         reserved_domain:
         disposable_email_domain:
+        public_suffix:
       models:
         api_key:
           attributes:

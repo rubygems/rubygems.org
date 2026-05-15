@@ -98,6 +98,7 @@ zh-TW:
         blocked: 網域 '%{domain}' 因濫發垃圾郵件而遭封鎖。請使用有效的個人電子郵件地址。
         reserved_domain:
         disposable_email_domain:
+        public_suffix:
       models:
         api_key:
           attributes:

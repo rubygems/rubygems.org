@@ -99,6 +99,7 @@ ja:
         blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
         reserved_domain:
         disposable_email_domain:
+        public_suffix:
       models:
         api_key:
           attributes:

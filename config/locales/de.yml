@@ -110,6 +110,7 @@ de:
           Sie eine gültige persönliche E-Mail-Adresse.
         reserved_domain:
         disposable_email_domain:
+        public_suffix:
       models:
         api_key:
           attributes:
