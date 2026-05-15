@@ -22,6 +22,17 @@ require "openssl"
 class SyncDisposableEmailDomainsJob < ApplicationJob
   queue_as "stats"
 
+  include GoodJob::ActiveJobExtensions::Concurrency
+
+  good_job_control_concurrency_with(
+    enqueue_limit: 1,
+    perform_limit: 1,
+    key: name
+  )
+
+  TRANSIENT_ERRORS = (HTTP_ERRORS + [SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
+  retry_on(*TRANSIENT_ERRORS, wait: :polynomially_longer, attempts: 3)
+
   BLOCKLIST_URL = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf"
 
   MIN_EXPECTED_DOMAINS = 1_000
