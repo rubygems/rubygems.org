@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_08_171142) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -683,6 +683,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
     t.string "gem_platform"
     t.boolean "indexed", default: true
     t.string "info_checksum"
+    t.string "info_checksum_v2"
     t.boolean "latest"
     t.string "licenses"
     t.hstore "metadata", default: {}, null: false
@@ -703,6 +704,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
     t.datetime "updated_at", precision: nil
     t.datetime "yanked_at", precision: nil
     t.string "yanked_info_checksum"
+    t.string "yanked_info_checksum_v2"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index "lower((gem_full_name)::text)", name: "index_versions_on_lower_gem_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
