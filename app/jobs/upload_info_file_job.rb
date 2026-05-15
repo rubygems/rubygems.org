@@ -17,7 +17,9 @@ class UploadInfoFileJob < ApplicationJob
   )
 
   def perform(rubygem_name:)
-    compact_index_info = GemInfo.new(rubygem_name, cached: false).compact_index_info
+    gem_info = GemInfo.new(rubygem_name, cached: false)
+    compact_index_info = gem_info.compact_index_info
+    gem_info.compact_index_info_v2
     response_body = CompactIndex.info(compact_index_info)
 
     content_md5 = Digest::MD5.base64digest(response_body)

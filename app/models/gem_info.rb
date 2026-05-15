@@ -7,20 +7,28 @@ class GemInfo
   end
 
   def compact_index_info
-    if @cached && (info = Rails.cache.read("info/#{@rubygem_name}"))
-      StatsD.increment "compact_index.memcached.info.hit"
-      info
-    else
-      StatsD.increment "compact_index.memcached.info.miss"
-      compute_compact_index_info.tap do |compact_index_info|
-        Rails.cache.write("info/#{@rubygem_name}", compact_index_info)
-      end
-    end
+    cached_compact_index_info(version: 1)
   end
 
   def info_checksum
-    compact_index_info = CompactIndex.info(compute_compact_index_info)
-    Digest::MD5.hexdigest(compact_index_info)
+    checksum_for(requirements_and_dependencies, version: 1)
+  end
+
+  def info_checksum_v2
+    checksum_for(requirements_and_dependencies, version: 2)
+  end
+
+  def compact_index_info_v2
+    cached_compact_index_info(version: 2)
+  end
+
+  def info_checksums
+    rows = requirements_and_dependencies
+
+    {
+      info_checksum: checksum_for(rows, version: 1),
+      info_checksum_v2: checksum_for(rows, version: 2)
+    }
   end
 
   def self.ordered_names(cached: true)
@@ -96,21 +104,62 @@ class GemInfo
 
   DEPENDENCY_REQUIREMENTS_INDEX = 7
 
-  def compute_compact_index_info
-    requirements_and_dependencies.map do |r|
-      deps = []
-      if r[DEPENDENCY_REQUIREMENTS_INDEX]
-        reqs = r[DEPENDENCY_REQUIREMENTS_INDEX].split("@")
-        dep_names = r[DEPENDENCY_NAMES_INDEX].split(",")
-        raise "BUG: different size of reqs and dep_names." unless reqs.size == dep_names.size
-        dep_names.zip(reqs).each do |name, req|
-          deps << CompactIndex::Dependency.new(name, req) unless name == "0"
-        end
-      end
+  def cached_compact_index_info(version:)
+    cache_key = compact_index_info_cache_key(version)
+    stats_key = compact_index_info_stats_key(version)
 
-      name, platform, checksum, info_checksum, ruby_version, rubygems_version, = r
-      CompactIndex::GemVersion.new(name, platform, Version._sha256_hex(checksum), info_checksum, deps, ruby_version, rubygems_version)
+    if @cached && (info = Rails.cache.read(cache_key))
+      StatsD.increment "#{stats_key}.hit"
+      info
+    else
+      StatsD.increment "#{stats_key}.miss"
+      compact_index_info_for(requirements_and_dependencies, version:).tap do |compact_index_info|
+        Rails.cache.write(cache_key, compact_index_info)
+      end
     end
+  end
+
+  def compact_index_info_cache_key(version)
+    version == 1 ? "info/#{@rubygem_name}" : "info_v2/#{@rubygem_name}"
+  end
+
+  def compact_index_info_stats_key(version)
+    version == 1 ? "compact_index.memcached.info" : "compact_index.memcached.info_v2"
+  end
+
+  def checksum_for(rows, version:)
+    compact_index_info = CompactIndex.info(compact_index_info_for(rows, version:))
+    Digest::MD5.hexdigest(compact_index_info)
+  end
+
+  def compact_index_info_for(rows, version:)
+    rows.map do |row|
+      gem_version_from_row(row, version:)
+    end
+  end
+
+  def gem_version_from_row(row, version:)
+    deps = []
+    if row[DEPENDENCY_REQUIREMENTS_INDEX]
+      reqs = row[DEPENDENCY_REQUIREMENTS_INDEX].split("@")
+      dep_names = row[DEPENDENCY_NAMES_INDEX].split(",")
+      raise "BUG: different size of reqs and dep_names." unless reqs.size == dep_names.size
+      dep_names.zip(reqs).each do |name, req|
+        deps << CompactIndex::Dependency.new(name, req) unless name == "0"
+      end
+    end
+
+    name, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, = row
+    CompactIndex::GemVersion.new(
+      name,
+      platform,
+      Version._sha256_hex(checksum),
+      info_checksum,
+      deps,
+      ruby_version,
+      rubygems_version,
+      version == 2 ? created_at&.utc&.iso8601 : nil
+    )
   end
 
   def requirements_and_dependencies

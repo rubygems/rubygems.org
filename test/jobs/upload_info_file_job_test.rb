@@ -7,6 +7,18 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
 
   test "uploads the info file" do
     version = create(:version, number: "0.0.1", required_ruby_version: ">= 2.0.0", required_rubygems_version: ">= 2.6.3")
+    version.reload
+    checksum = "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78"
+    compact_index_info = [CompactIndex::GemVersion.new(
+      "0.0.1", "ruby", checksum, version.info_checksum, [], ">= 2.0.0", ">= 2.6.3"
+    )]
+    compact_index_info_v2 = [CompactIndex::GemVersion.new(
+      "0.0.1", "ruby", checksum, version.info_checksum, [], ">= 2.0.0", ">= 2.6.3",
+      version.created_at.utc.iso8601
+    )]
+
+    Rails.cache.expects(:write).with("info/#{version.rubygem.name}", compact_index_info)
+    Rails.cache.expects(:write).with("info_v2/#{version.rubygem.name}", compact_index_info_v2)
 
     perform_enqueued_jobs only: [UploadInfoFileJob] do
       UploadInfoFileJob.perform_now(rubygem_name: version.rubygem.name)
