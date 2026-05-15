@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "openssl"
-
 # Mirrors the upstream disposable-email-domains/disposable-email-domains blocklist
 # into the blocked_email_domains table. Runs daily via good_job cron.
 #
@@ -30,7 +27,18 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
     key: name
   )
 
-  TRANSIENT_ERRORS = (HTTP_ERRORS + [SocketError, SystemCallError, OpenSSL::SSL::SSLError]).freeze
+  # Network-level failures are transient and worth retrying. HTTP status errors
+  # (3xx/4xx/5xx) are surfaced via our own `response.success?` check below and
+  # are NOT retried — the upstream URL is stable, so any of those is a signal
+  # to investigate rather than retry.
+  TRANSIENT_ERRORS = (HTTP_ERRORS + [
+    Faraday::ConnectionFailed,
+    Faraday::TimeoutError,
+    Faraday::SSLError,
+    SocketError,
+    SystemCallError,
+    OpenSSL::SSL::SSLError
+  ]).freeze
   retry_on(*TRANSIENT_ERRORS, wait: :polynomially_longer, attempts: 3)
 
   BLOCKLIST_URL = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf"
@@ -52,7 +60,6 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
 
   OPEN_TIMEOUT = 10
   READ_TIMEOUT = 30
-  MAX_REDIRECTS = 2
 
   class PoisonedUpstreamError < StandardError; end
 
@@ -91,27 +98,17 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
     domains
   end
 
-  def fetch_lines(url, redirects_left: MAX_REDIRECTS)
-    uri = URI(url)
-    raise "Refusing non-HTTPS upstream URL: #{url}" unless uri.scheme == "https"
+  def fetch_lines(url)
+    connection = Faraday.new(url, request: { open_timeout: OPEN_TIMEOUT, read_timeout: READ_TIMEOUT })
+    response = connection.get
 
-    response = Net::HTTP.start(uri.host, uri.port,
-      use_ssl: true,
-      verify_mode: OpenSSL::SSL::VERIFY_PEER,
-      open_timeout: OPEN_TIMEOUT,
-      read_timeout: READ_TIMEOUT) do |http|
-      http.request(Net::HTTP::Get.new(uri.request_uri))
-    end
+    # Redirects are deliberately not followed (Faraday doesn't follow by
+    # default). The upstream URL is stable, so any 3xx — or any 4xx/5xx — is a
+    # signal that something unexpected happened (host swap, takeover, GitHub
+    # policy change). Fail loud and let ops investigate.
+    raise "Unexpected response from #{url}: #{response.status}" unless response.success?
 
-    case response
-    when Net::HTTPSuccess
-      response.body.each_line.map { |l| l.strip.downcase }.reject(&:empty?)
-    when Net::HTTPRedirection
-      raise "Too many redirects fetching #{url}" if redirects_left.zero?
-      fetch_lines(response["location"], redirects_left: redirects_left - 1)
-    else
-      raise "Unexpected response from #{url}: #{response.code}"
-    end
+    response.body.each_line.map { |l| l.strip.downcase }.reject(&:empty?)
   end
 
   def upsert_domains(domains)

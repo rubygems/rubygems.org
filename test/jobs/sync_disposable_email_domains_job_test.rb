@@ -149,28 +149,18 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       refute BlockedEmailDomain.exists?(domain: "mailinator.com")
     end
 
-    should "follow a single redirect" do
-      redirected_url = "https://example.test-domain.io/redirected_blocklist.conf"
-      stub_request(:get, SyncDisposableEmailDomainsJob::BLOCKLIST_URL)
-        .to_return(status: 302, headers: { "Location" => redirected_url })
-      stub_request(:get, redirected_url).to_return(status: 200, body: realistic_blocklist(extra: %w[mailinator.com]))
-
-      SyncDisposableEmailDomainsJob.perform_now
-
-      assert BlockedEmailDomain.exists?(domain: "mailinator.com")
-    end
-
-    should "refuse a redirect to a non-HTTPS URL" do
+    should "refuse to follow any redirect" do
       create(:blocked_email_domain, :upstream, domain: "existing.example.test-domain.io")
       stub_request(:get, SyncDisposableEmailDomainsJob::BLOCKLIST_URL)
-        .to_return(status: 302, headers: { "Location" => "http://example.test-domain.io/redirected_blocklist.conf" })
+        .to_return(status: 302, headers: { "Location" => "https://attacker.example/poisoned_blocklist.conf" })
 
       metrics = capture_statsd_calls(client: StatsD.singleton_client) do
         SyncDisposableEmailDomainsJob.perform_now
       end
 
       assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })
-      assert BlockedEmailDomain.exists?(domain: "existing.example.test-domain.io")
+      assert BlockedEmailDomain.exists?(domain: "existing.example.test-domain.io"),
+        "existing upstream rows should not be deleted when sync aborts on a redirect"
     end
   end
 end
