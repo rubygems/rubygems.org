@@ -163,6 +163,24 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version1pre, @rubygem.reload.most_recent_version
     end
 
+    should "return the most recent non-ruby platform version when multiple non-ruby platform versions exist" do
+      create(:version, rubygem: @rubygem, number: "0.3.8", platform: "universal-darwin")
+      version2 = create(:version, rubygem: @rubygem, number: "0.3.9", platform: "universal-darwin")
+
+      @rubygem.reorder_versions
+
+      assert_equal version2, @rubygem.reload.most_recent_version
+    end
+
+    should "return the highest semver version across platforms" do
+      create(:version, rubygem: @rubygem, number: "0.3.9", platform: "x86_64-linux")
+      version2 = create(:version, rubygem: @rubygem, number: "0.3.10", platform: "universal-darwin")
+
+      @rubygem.reorder_versions
+
+      assert_equal version2, @rubygem.reload.most_recent_version
+    end
+
     should "return the most_recent indexed version when a more recent yanked version exists" do
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
       indexed_v1 = create(:version, rubygem: @rubygem, number: "0.1.0", indexed: true)

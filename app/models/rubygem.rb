@@ -60,9 +60,12 @@ class Rubygem < ApplicationRecord
 
   has_one :most_recent_version,
     lambda {
-      order(Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 2 else 1 end desc"))
-        .order(Arel.sql("case when #{quoted_table_name}.latest then #{quoted_table_name}.number else NULL end desc"))
-        .order(id: :desc)
+      order(
+        Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 0 " \
+                 "when #{quoted_table_name}.latest then 1 else 2 end"),
+        :position,
+        id: :desc
+      )
     },
     class_name: "Version", inverse_of: :rubygem
 
