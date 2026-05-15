@@ -17,7 +17,8 @@ class UploadInfoFileJob < ApplicationJob
   )
 
   def perform(rubygem_name:)
-    compact_index_info = GemInfo.new(rubygem_name, cached: false).compact_index_info
+    gem_info = GemInfo.new(rubygem_name, cached: false)
+    compact_index_info = gem_info.compact_index_info
     response_body = CompactIndex.info(compact_index_info)
 
     content_md5 = Digest::MD5.base64digest(response_body)
@@ -41,11 +42,39 @@ class UploadInfoFileJob < ApplicationJob
     logger.info(message: "Uploading info file for #{rubygem_name} succeeded", response:)
 
     FastlyPurgeJob.perform_later(key: "s3-info/#{rubygem_name}", soft: true)
+
+    upload_v2_info_file(gem_info, rubygem_name)
   end
 
   private
 
   def rubygem_name_arg
     arguments.first.fetch(:rubygem_name)
+  end
+
+  def upload_v2_info_file(gem_info, rubygem_name)
+    compact_index_info = gem_info.compact_index_info_v2
+    response_body = CompactIndex.info(compact_index_info)
+
+    content_md5 = Digest::MD5.base64digest(response_body)
+    checksum_sha256 = Digest::SHA256.base64digest(response_body)
+
+    response = RubygemFs.compact_index.store(
+      "v2/info/#{rubygem_name}", response_body,
+      public_acl: false, # the compact-index bucket does not have ACLs enabled
+      metadata: {
+        "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+        "surrogate-key" => "v2/info/* v2/info/#{rubygem_name} gem/#{rubygem_name} s3-compact-index s3-v2/info/* s3-v2/info/#{rubygem_name}",
+        "sha256" => checksum_sha256,
+        "md5" => content_md5
+      },
+      cache_control: "max-age=60, public",
+      content_type: "text/plain; charset=utf-8",
+      checksum_sha256:,
+      content_md5:
+    )
+
+    logger.info(message: "Uploading v2 info file for #{rubygem_name} succeeded", response:)
+    FastlyPurgeJob.perform_later(key: "s3-v2/info/#{rubygem_name}", soft: true)
   end
 end
