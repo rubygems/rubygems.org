@@ -122,7 +122,10 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
         unique_by: :domain,
         # Refresh updated_at only — do NOT reset source on rows an admin has
         # promoted to :manual, and do not bump created_at on existing rows.
-        on_duplicate: Arel.sql("updated_at = EXCLUDED.updated_at")
+        # record_timestamps: false stops Rails from auto-adding updated_at to
+        # the SET clause (which would conflict with our explicit update_only).
+        record_timestamps: false,
+        update_only: [:updated_at]
       )
     end
     BlockedEmailDomain.upstream.where(updated_at: ...synced_at).delete_all
