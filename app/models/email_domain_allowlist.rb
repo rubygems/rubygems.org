@@ -12,6 +12,8 @@
 # Matching uses the same suffix-walk as BlockedEmailDomain. An allowlist row
 # for `privaterelay.appleid.com` covers `xyz.privaterelay.appleid.com` too.
 class EmailDomainAllowlist < ApplicationRecord
+  has_many :audits, as: :auditable, dependent: :nullify
+
   DOMAIN_FORMAT = BlockedEmailDomain::DOMAIN_FORMAT
 
   validates :domain, presence: true,

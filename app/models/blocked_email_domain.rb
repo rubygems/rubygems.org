@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BlockedEmailDomain < ApplicationRecord
+  has_many :audits, as: :auditable, dependent: :nullify
+
   enum :source, { manual: 0, upstream: 1 }
 
   DOMAIN_FORMAT = /\A[a-z0-9][a-z0-9.-]*\.[a-z]{2,}\z/i
