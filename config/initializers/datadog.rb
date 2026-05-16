@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "app_revision"
+require "datadog/kit/identity"
+require "datadog/kit/appsec/events"
+require "datadog/kit/appsec/events/v2"
 
 Datadog.configure do |c|
   # unified service tagging

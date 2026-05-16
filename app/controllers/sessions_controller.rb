@@ -104,9 +104,17 @@ class SessionsController < Clearance::SessionsController
         StatsD.increment "login.success"
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
+        Datadog::Kit::AppSec::Events::V2.track_user_login_success(current_user.id.to_s)
         set_login_flash
         redirect_to(url_after_create)
       else
+        attempted_user = begin
+          User.find_by_email(who) || User.find_by(handle: who)
+        rescue Encoding::UndefinedConversionError
+          nil
+        end
+        login_id = attempted_user&.id&.to_s || Digest::SHA256.hexdigest(who.to_s)
+        Datadog::Kit::AppSec::Events::V2.track_user_login_failure(login_id, attempted_user.present?)
         login_failure(status.failure_message)
       end
     end
