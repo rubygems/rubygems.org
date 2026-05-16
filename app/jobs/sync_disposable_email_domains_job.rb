@@ -1,21 +1,7 @@
 # frozen_string_literal: true
 
-# Mirrors the upstream disposable-email-domains/disposable-email-domains blocklist
-# into the blocked_email_domains table. Runs daily via good_job cron.
-#
-# Manual entries (source: :manual) are never touched. Upstream entries are
-# upserted; entries that disappear from the upstream blocklist are deleted.
-#
-# Several safeguards protect against a compromised or broken upstream:
-#
-#   * MIN_EXPECTED_DOMAINS / MAX_EXPECTED_DOMAINS bound the accepted list size
-#     so an empty response (e.g., 200 OK with HTML error page, repo wipe) or a
-#     pathologically large payload aborts the sync without touching the DB.
-#   * PROTECTED_PROVIDERS aborts the sync if any common consumer mail provider
-#     appears in the upstream list, preventing a malicious upstream PR from
-#     locking everyone out.
-#   * Domains failing BlockedEmailDomain::DOMAIN_FORMAT are dropped, so
-#     malformed lines never bypass the model's invariants via upsert_all.
+# Mirrors the upstream disposable-email-domains blocklist into the
+# blocked_email_domains table daily. Manual entries are never touched.
 class SyncDisposableEmailDomainsJob < ApplicationJob
   queue_as "stats"
 
@@ -27,10 +13,6 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
     key: name
   )
 
-  # Network-level failures are transient and worth retrying. HTTP status errors
-  # (3xx/4xx/5xx) are surfaced via our own `response.success?` check below and
-  # are NOT retried — the upstream URL is stable, so any of those is a signal
-  # to investigate rather than retry.
   TRANSIENT_ERRORS = (HTTP_ERRORS + [
     Faraday::ConnectionFailed,
     Faraday::TimeoutError,
@@ -41,30 +23,21 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
   ]).freeze
   retry_on(*TRANSIENT_ERRORS, wait: :polynomially_longer, attempts: 3)
 
+  # attempts: 1 short-circuits ApplicationJob's broad retry_on StandardError so
+  # these surface immediately instead of being silently retried for ~10 minutes.
+  class PoisonedUpstreamError < StandardError; end
+  class UpstreamHttpError < StandardError; end
+  retry_on PoisonedUpstreamError, UpstreamHttpError, attempts: 1
+
   BLOCKLIST_URL = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf"
 
   MIN_EXPECTED_DOMAINS = 1_000
-  # Upstream is currently ~40K. 500K leaves >10x headroom so legitimate growth
-  # doesn't auto-abort the daily sync, while still catching a pathological
-  # payload (e.g., HTML error page parsed as lines, or a runaway commit).
   MAX_EXPECTED_DOMAINS = 500_000
-
-  # Common consumer providers that must never appear on our blocklist. If any
-  # of these show up upstream, treat the sync as poisoned and refuse to apply.
-  PROTECTED_PROVIDERS = %w[
-    gmail.com googlemail.com
-    outlook.com hotmail.com live.com msn.com
-    yahoo.com yahoo.co.uk ymail.com
-    icloud.com me.com mac.com
-    proton.me protonmail.com pm.me
-    aol.com
-    fastmail.com
-  ].freeze
+  MAX_DELTA_PERCENT = 50
 
   OPEN_TIMEOUT = 10
   READ_TIMEOUT = 30
-
-  class PoisonedUpstreamError < StandardError; end
+  MAX_RESPONSE_BYTES = 50 * 1024 * 1024
 
   def perform
     StatsD.measure("disposable_email_domains.sync.duration") do
@@ -76,19 +49,29 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
       StatsD.increment("disposable_email_domains.sync.success")
     end
   rescue StandardError => e
-    StatsD.increment("disposable_email_domains.sync.error", tags: { exception: e.class.name })
-    Rails.error.report(e, handled: false)
+    terminal = last_attempt?(e)
+    StatsD.increment("disposable_email_domains.sync.error",
+      tags: { exception: e.class.name, terminal: terminal.to_s })
+    Rails.error.report(e, handled: !terminal)
     raise
   end
 
   private
 
+  def last_attempt?(error)
+    case error
+    when PoisonedUpstreamError, UpstreamHttpError
+      true
+    when *TRANSIENT_ERRORS
+      executions >= 3
+    else
+      executions >= 5
+    end
+  end
+
   def fetch_domains
     domains = fetch_lines(BLOCKLIST_URL)
       .grep(BlockedEmailDomain::DOMAIN_FORMAT)
-      # Drop entries that are themselves public suffixes (e.g., "co.uk"). If
-      # upstream ever publishes one, blocking it would lock out everything
-      # registrable under that ccTLD.
       .select { |d| PublicSuffix.valid?(d) }
       .uniq
 
@@ -99,42 +82,61 @@ class SyncDisposableEmailDomainsJob < ApplicationJob
       raise PoisonedUpstreamError, "Suspiciously large blocklist: #{domains.size} domains (expected <= #{MAX_EXPECTED_DOMAINS})"
     end
 
-    protected_hits = domains & PROTECTED_PROVIDERS
+    protected_hits = domains & BlockedEmailDomain::PROTECTED_PROVIDERS
     raise PoisonedUpstreamError, "Blocklist contains protected providers: #{protected_hits.join(', ')}" unless protected_hits.empty?
 
+    check_delta(domains.size)
+
     domains
+  end
+
+  def check_delta(new_size)
+    current = BlockedEmailDomain.upstream.count
+    StatsD.gauge("disposable_email_domains.upstream.previous_count", current)
+    StatsD.gauge("disposable_email_domains.upstream.next_count", new_size)
+    return if no_baseline?(current)
+
+    delta_pct = ((new_size - current).abs.to_f / current * 100).round(1)
+    StatsD.gauge("disposable_email_domains.upstream.delta_pct", delta_pct)
+    return if delta_pct <= MAX_DELTA_PERCENT
+
+    raise PoisonedUpstreamError,
+      "Blocklist size changed by #{delta_pct}% (#{current} -> #{new_size}); expected <= #{MAX_DELTA_PERCENT}%"
+  end
+
+  def no_baseline?(current_size)
+    current_size < MIN_EXPECTED_DOMAINS
   end
 
   def fetch_lines(url)
     connection = Faraday.new(url, request: { open_timeout: OPEN_TIMEOUT, read_timeout: READ_TIMEOUT })
     response = connection.get
 
-    # Redirects are deliberately not followed (Faraday doesn't follow by
-    # default). The upstream URL is stable, so any 3xx — or any 4xx/5xx — is a
-    # signal that something unexpected happened (host swap, takeover, GitHub
-    # policy change). Fail loud and let ops investigate.
-    raise "Unexpected response from #{url}: #{response.status}" unless response.success?
+    raise UpstreamHttpError, "Unexpected response from #{url}: #{response.status}" unless response.success?
+
+    if response.body.bytesize > MAX_RESPONSE_BYTES
+      raise PoisonedUpstreamError, "Response body too large: #{response.body.bytesize} bytes (max #{MAX_RESPONSE_BYTES})"
+    end
 
     response.body.each_line.map { |l| l.strip.downcase }.reject(&:empty?)
   end
 
   def upsert_domains(domains)
     synced_at = Time.current
-    domains.each_slice(1000) do |slice|
-      BlockedEmailDomain.upsert_all(
-        slice.map do |d|
-          { domain: d, source: BlockedEmailDomain.sources[:upstream],
-            created_at: synced_at, updated_at: synced_at }
-        end,
-        unique_by: :domain,
-        # Refresh updated_at only — do NOT reset source on rows an admin has
-        # promoted to :manual, and do not bump created_at on existing rows.
-        # record_timestamps: false stops Rails from auto-adding updated_at to
-        # the SET clause (which would conflict with our explicit update_only).
-        record_timestamps: false,
-        update_only: [:updated_at]
-      )
+    BlockedEmailDomain.transaction do
+      domains.each_slice(1000) do |slice|
+        BlockedEmailDomain.upsert_all(
+          slice.map do |d|
+            { domain: d, source: BlockedEmailDomain.sources[:upstream],
+              created_at: synced_at, updated_at: synced_at }
+          end,
+          unique_by: :domain,
+          # Preserve :manual source on rows an admin has promoted; only refresh updated_at.
+          record_timestamps: false,
+          update_only: [:updated_at]
+        )
+      end
+      BlockedEmailDomain.upstream.where(updated_at: ...synced_at).delete_all
     end
-    BlockedEmailDomain.upstream.where(updated_at: ...synced_at).delete_all
   end
 end

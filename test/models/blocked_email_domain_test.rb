@@ -34,6 +34,20 @@ class BlockedEmailDomainTest < ActiveSupport::TestCase
 
       assert_predicate record, :valid?
     end
+
+    should "reject a protected consumer mail provider to defend against admin misclicks" do
+      record = build(:blocked_email_domain, domain: "gmail.com")
+
+      refute_predicate record, :valid?
+      assert_contains record.errors[:domain],
+        "is a major consumer mail provider and cannot be blocked"
+    end
+
+    should "reject a regional protected provider" do
+      record = build(:blocked_email_domain, domain: "qq.com")
+
+      refute_predicate record, :valid?
+    end
   end
 
   context "#normalize_domain" do
@@ -76,6 +90,12 @@ class BlockedEmailDomainTest < ActiveSupport::TestCase
       refute BlockedEmailDomain.blocks?("user@mailinator.com")
       refute BlockedEmailDomain.blocks?("user@sub.mailinator.com")
     end
+
+    should "return false for blank input" do
+      refute BlockedEmailDomain.blocks?(nil)
+      refute BlockedEmailDomain.blocks?("")
+      refute BlockedEmailDomain.blocks?("user@")
+    end
   end
 
   context ".match" do
@@ -99,10 +119,11 @@ class BlockedEmailDomainTest < ActiveSupport::TestCase
       assert_nil BlockedEmailDomain.match("user@gmail.com")
     end
 
-    should "return false for blank input" do
-      refute BlockedEmailDomain.blocks?(nil)
-      refute BlockedEmailDomain.blocks?("")
-      refute BlockedEmailDomain.blocks?("user@")
+    should "prefer the most-specific match when multiple parents are blocked" do
+      specific = create(:blocked_email_domain, domain: "sub.mailinator.com")
+
+      assert_equal specific, BlockedEmailDomain.match("user@sub.mailinator.com"),
+        "sub.mailinator.com should win over the broader mailinator.com when both are blocked"
     end
   end
 

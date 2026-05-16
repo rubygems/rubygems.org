@@ -5,9 +5,16 @@ class Avo::Resources::BlockedEmailDomain < Avo::BaseResource
   self.includes = []
   self.search = {
     query: lambda {
-             query.where("domain ILIKE ?", "%#{params[:q]}%")
+             needle = ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)
+             query.where("domain ILIKE ?", "%#{needle}%")
            }
   }
+
+  class SourceFilter < Avo::Filters::ScopeBooleanFilter; end
+
+  def filters
+    filter SourceFilter, arguments: { default: { manual: true, upstream: true } }
+  end
 
   def actions
     action Avo::Actions::BlockEmailDomain

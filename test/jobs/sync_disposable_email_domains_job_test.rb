@@ -108,14 +108,13 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       assert_includes names, "disposable_email_domains.upstream.count"
     end
 
-    should "emit error metric on upstream failure" do
+    should "emit error metric and raise on upstream HTTP failure" do
       stub_request(:get, SyncDisposableEmailDomainsJob::BLOCKLIST_URL).to_return(status: 500)
 
       metrics = capture_statsd_calls(client: StatsD.singleton_client) do
-        # retry_on in ApplicationJob converts the raise into a retry; perform_now
-        # does not re-raise on the first failure. We only care that the error
-        # metric was emitted.
-        SyncDisposableEmailDomainsJob.perform_now
+        assert_raises(SyncDisposableEmailDomainsJob::UpstreamHttpError) do
+          SyncDisposableEmailDomainsJob.perform_now
+        end
       end
 
       assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })
@@ -125,7 +124,9 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       create(:blocked_email_domain, :upstream, domain: "existing.example.test-domain.io")
       stub_upstream(blocklist: "mailinator.com\nguerrillamail.com\n")
 
-      SyncDisposableEmailDomainsJob.perform_now
+      assert_raises(SyncDisposableEmailDomainsJob::PoisonedUpstreamError) do
+        SyncDisposableEmailDomainsJob.perform_now
+      end
 
       assert BlockedEmailDomain.exists?(domain: "existing.example.test-domain.io"),
         "existing upstream rows should not be deleted when sync aborts"
@@ -137,7 +138,9 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       stub_upstream(blocklist: "#{oversized.join("\n")}\n")
 
       metrics = capture_statsd_calls(client: StatsD.singleton_client) do
-        SyncDisposableEmailDomainsJob.perform_now
+        assert_raises(SyncDisposableEmailDomainsJob::PoisonedUpstreamError) do
+          SyncDisposableEmailDomainsJob.perform_now
+        end
       end
 
       assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })
@@ -150,12 +153,53 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com gmail.com]))
 
       metrics = capture_statsd_calls(client: StatsD.singleton_client) do
-        SyncDisposableEmailDomainsJob.perform_now
+        assert_raises(SyncDisposableEmailDomainsJob::PoisonedUpstreamError) do
+          SyncDisposableEmailDomainsJob.perform_now
+        end
       end
 
       assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })
       refute BlockedEmailDomain.exists?(domain: "gmail.com")
       refute BlockedEmailDomain.exists?(domain: "mailinator.com")
+    end
+
+    should "tag terminal:true on PoisonedUpstreamError so transient retries don't drown out real failures" do
+      stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com gmail.com]))
+
+      metrics = capture_statsd_calls(client: StatsD.singleton_client) do
+        assert_raises(SyncDisposableEmailDomainsJob::PoisonedUpstreamError) do
+          SyncDisposableEmailDomainsJob.perform_now
+        end
+      end
+
+      error_metric = metrics.find { |m| m.name == "disposable_email_domains.sync.error" }
+
+      assert_includes error_metric.tags, "terminal:true"
+    end
+
+    should "abort when day-over-day list size shifts by more than MAX_DELTA_PERCENT" do
+      baseline = realistic_blocklist
+      stub_upstream(blocklist: baseline)
+      SyncDisposableEmailDomainsJob.perform_now
+
+      doubled = Array.new(SyncDisposableEmailDomainsJob::MIN_EXPECTED_DOMAINS * 3) { |i| "doubled-#{i}.example.test-domain.io" }
+      stub_upstream(blocklist: "#{doubled.join("\n")}\n")
+
+      assert_raises(SyncDisposableEmailDomainsJob::PoisonedUpstreamError) do
+        SyncDisposableEmailDomainsJob.perform_now
+      end
+
+      refute BlockedEmailDomain.exists?(domain: "doubled-0.example.test-domain.io")
+    end
+
+    should "abort when blocklist contains a non-US/EU consumer provider" do
+      stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com qq.com]))
+
+      assert_raises(SyncDisposableEmailDomainsJob::PoisonedUpstreamError) do
+        SyncDisposableEmailDomainsJob.perform_now
+      end
+
+      refute BlockedEmailDomain.exists?(domain: "qq.com")
     end
 
     should "refuse to follow any redirect" do
@@ -164,7 +208,9 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
         .to_return(status: 302, headers: { "Location" => "https://attacker.example/poisoned_blocklist.conf" })
 
       metrics = capture_statsd_calls(client: StatsD.singleton_client) do
-        SyncDisposableEmailDomainsJob.perform_now
+        assert_raises(SyncDisposableEmailDomainsJob::UpstreamHttpError) do
+          SyncDisposableEmailDomainsJob.perform_now
+        end
       end
 
       assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })

@@ -100,6 +100,7 @@ zh-CN:
         reserved_domain:
         disposable_email_domain:
         public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:

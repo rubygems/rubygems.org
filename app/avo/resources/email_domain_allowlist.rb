@@ -5,7 +5,8 @@ class Avo::Resources::EmailDomainAllowlist < Avo::BaseResource
   self.includes = []
   self.search = {
     query: lambda {
-             query.where("domain ILIKE ?", "%#{params[:q]}%")
+             needle = ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)
+             query.where("domain ILIKE ?", "%#{needle}%")
            }
   }
 

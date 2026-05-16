@@ -211,7 +211,7 @@ class UserTest < ActiveSupport::TestCase
 
           refute_predicate user, :valid?
           assert_contains user.errors[:email],
-"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
         end
 
         should "be invalid on signup with a subdomain of a disposable domain, reporting the matched parent" do
@@ -219,7 +219,7 @@ class UserTest < ActiveSupport::TestCase
 
           refute_predicate user, :valid?
           assert_contains user.errors[:email],
-"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
         end
 
         should "be invalid when an existing user changes email to a disposable domain" do
@@ -228,7 +228,7 @@ class UserTest < ActiveSupport::TestCase
 
           refute_predicate user, :valid?
           assert_contains user.errors[:email],
-"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
         end
 
         should "be invalid when activating an account whose domain became disposable" do
@@ -237,7 +237,7 @@ class UserTest < ActiveSupport::TestCase
 
           refute user.update(email_confirmed: true)
           assert_contains user.errors[:email],
-"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
         end
 
         should "not re-run disposable validation on saves that don't change email" do
@@ -291,7 +291,7 @@ class UserTest < ActiveSupport::TestCase
 
         refute_predicate user, :valid?
         assert_contains user.errors[:unconfirmed_email],
-"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email."
+"domain 'mailinator.com' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
       end
     end
 
