@@ -44,6 +44,9 @@ Datadog.configure do |c|
     c.tracing.instrument :pg, comment_propagation: 'full'
     c.tracing.instrument :rails, request_queuing: true
     c.tracing.instrument :shoryuken if defined?(Shoryuken)
+
+    c.appsec.enabled = true
+    c.appsec.instrument :rails
   end
 end
 
