@@ -108,7 +108,11 @@ class SessionsController < Clearance::SessionsController
         set_login_flash
         redirect_to(url_after_create)
       else
-        attempted_user = User.find_by_email(who.to_s) || User.find_by(handle: who.to_s)
+        attempted_user = begin
+          User.find_by_email(who) || User.find_by(handle: who)
+        rescue Encoding::UndefinedConversionError
+          nil
+        end
         login_id = attempted_user&.id&.to_s || Digest::SHA256.hexdigest(who.to_s)
         Datadog::Kit::AppSec::Events::V2.track_user_login_failure(login_id, attempted_user.present?)
         login_failure(status.failure_message)
