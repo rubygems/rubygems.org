@@ -117,7 +117,11 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
         end
       end
 
-      assert(metrics.any? { |m| m.name == "disposable_email_domains.sync.error" })
+      error_metric = metrics.find { |m| m.name == "disposable_email_domains.sync.error" }
+
+      assert error_metric, "expected disposable_email_domains.sync.error to be emitted"
+      assert_includes error_metric.tags, "terminal:true"
+      assert_includes error_metric.tags, "exception:SyncDisposableEmailDomainsJob::UpstreamHttpError"
     end
 
     should "abort and leave DB untouched when blocklist is suspiciously small" do
@@ -190,6 +194,16 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
       end
 
       refute BlockedEmailDomain.exists?(domain: "doubled-0.example.test-domain.io")
+    end
+
+    should "skip the delta check on the first sync when there is no baseline" do
+      assert_equal 0, BlockedEmailDomain.upstream.count, "precondition: no baseline rows"
+      stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com]))
+
+      SyncDisposableEmailDomainsJob.perform_now
+
+      assert BlockedEmailDomain.exists?(domain: "mailinator.com"),
+        "first sync should populate the table without the delta tripwire firing"
     end
 
     should "abort when blocklist contains a non-US/EU consumer provider" do
