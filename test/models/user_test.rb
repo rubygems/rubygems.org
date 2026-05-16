@@ -200,6 +200,73 @@ class UserTest < ActiveSupport::TestCase
         assert_contains user.errors[:email],
           "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
       end
+
+      context "with a disposable email domain" do
+        include StatsD::Instrument::Assertions
+
+        setup { create(:blocked_email_domain, domain: "mailinator.com") }
+
+        should "be invalid on signup with the exact disposable domain" do
+          user = build(:user, email: "spam@mailinator.com")
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "be invalid on signup with a subdomain of a disposable domain, reporting the matched parent" do
+          user = build(:user, email: "spam@foo.mailinator.com")
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "be invalid when an existing user changes email to a disposable domain" do
+          user = create(:user)
+          user.email = "switched@mailinator.com"
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "be invalid when activating an account whose domain became disposable" do
+          user = create(:user, email_confirmed: false)
+          user.update_columns(email: "grandfathered@mailinator.com")
+
+          refute user.update(email_confirmed: true)
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "not re-run disposable validation on saves that don't change email" do
+          user = create(:user)
+          user.update_columns(email: "grandfathered@mailinator.com")
+
+          assert user.update(full_name: "New Name")
+        end
+
+        should "allow signup when the domain is on the allowlist" do
+          create(:email_domain_allowlist, domain: "mailinator.com")
+          user = build(:user, email: "user@mailinator.com")
+
+          assert_predicate user, :valid?, user.errors.full_messages.inspect
+        end
+
+        should "allow signup on a subdomain when a parent is on the allowlist" do
+          create(:email_domain_allowlist, domain: "mailinator.com")
+          user = build(:user, email: "user@inbox.mailinator.com")
+
+          assert_predicate user, :valid?, user.errors.full_messages.inspect
+        end
+
+        should "emit a StatsD counter tagged with the source on block" do
+          assert_statsd_increment("email_domain.blocked", tags: { source: "manual" }) do
+            build(:user, email: "spam@mailinator.com").valid?
+          end
+        end
+      end
     end
 
     context "unconfirmed_email" do
@@ -216,6 +283,15 @@ class UserTest < ActiveSupport::TestCase
         refute_predicate user, :valid?
         assert_contains user.errors[:unconfirmed_email],
           "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
+      end
+
+      should "be invalid with a disposable domain" do
+        create(:blocked_email_domain, domain: "mailinator.com")
+        user = build(:user, unconfirmed_email: "user@mailinator.com")
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:unconfirmed_email],
+          I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
       end
     end
 

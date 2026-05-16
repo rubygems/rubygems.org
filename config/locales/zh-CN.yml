@@ -98,6 +98,9 @@ zh-CN:
         not_pwned: 曾出现过数据泄露，不应该再使用
         blocked: 域名 '%{domain}' 因发送垃圾邮件已被禁用，请使用另外有效的个人邮箱。
         reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:

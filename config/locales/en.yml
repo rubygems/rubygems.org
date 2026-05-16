@@ -102,6 +102,9 @@ en:
         not_pwned: has previously appeared in a data breach and should not be used
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
         reserved_domain: "domain '%{domain}' is reserved and cannot be used for registration. Please use a valid personal email."
+        disposable_email_domain: "domain '%{domain}' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
+        public_suffix: is a public suffix and cannot be used; specify a registrable domain
+        protected_provider: is a major consumer mail provider and cannot be blocked
       models:
         api_key:
           attributes:

@@ -20,7 +20,7 @@ class ReservedDomainValidator < ActiveModel::EachValidator
     domain = domain.downcase
     return unless reserved?(domain)
 
-    record.errors.add(attribute, I18n.t("activerecord.errors.messages.reserved_domain", domain: domain))
+    record.errors.add(attribute, :reserved_domain, domain: domain)
   end
 
   private
