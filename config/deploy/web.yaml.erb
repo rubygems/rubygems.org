@@ -220,11 +220,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: rubygems_proxy_token
-          - name: DISABLE_SIGNUP
-            value: "true"
           <% if environment == 'staging' %>
           - name: RAILS_LOG_LEVEL
             value: "info"
+          - name: DISABLE_SIGNUP
+            value: "true"
           <% end %>
           - name: DATABASE_URL
             valueFrom:
