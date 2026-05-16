@@ -45,7 +45,7 @@ Datadog.configure do |c|
     c.tracing.instrument :rails, request_queuing: true
     c.tracing.instrument :shoryuken if defined?(Shoryuken)
 
-    c.appsec.enabled = true
+    # AppSec activation is controlled per-deployment via DD_APPSEC_ENABLED.
     c.appsec.instrument :rails
   end
 end

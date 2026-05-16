@@ -81,6 +81,8 @@ spec:
               fieldRef:
                 apiVersion: v1
                 fieldPath: status.hostIP
+          - name: DD_APPSEC_ENABLED
+            value: "true"
           - name: DD_APPSEC_AUTO_USER_INSTRUMENTATION_MODE
             value: "anon"
           # SDK default + auth/signup field names; override replaces, doesn't merge.
