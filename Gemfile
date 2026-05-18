@@ -77,7 +77,7 @@ gem "view_component", "~> 4.9.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.8"
-gem "prop_initializer", "~> 0.2"
+gem "prop_initializer", "~> 0.4"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
