@@ -104,21 +104,22 @@ class OwnerTest < ApplicationSystemTestCase
     assert_equal [@other_user.email], last_email.to
   end
 
-  test "removing last owner shows error message" do
+  test "remove button is disabled for sole owner" do
     visit_ownerships_page
 
     within_element owner_row(@user) do
-      accept_confirm do
-        click_button "Remove"
-      end
+      assert_selector "input[type='submit'][value='Remove'][disabled]"
     end
+  end
 
-    assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
-    assert page.has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
+  test "remove button is enabled when multiple confirmed owners exist" do
+    create(:ownership, user: @other_user, rubygem: @rubygem)
 
-    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+    visit_ownerships_page
 
-    assert_no_emails
+    within_element owner_row(@user) do
+      assert_selector "input[type='submit'][value='Remove']:not([disabled])"
+    end
   end
 
   test "verify using webauthn" do
