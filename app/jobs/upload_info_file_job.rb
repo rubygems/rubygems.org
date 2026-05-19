@@ -6,29 +6,36 @@ class UploadInfoFileJob < ApplicationJob
   include GoodJob::ActiveJobExtensions::Concurrency
 
   good_job_control_concurrency_with(
-    # Maximum number of jobs with the concurrency key to be
-    # concurrently enqueued (excludes performing jobs)
-    #
-    # Because the job only uses current state at time of perform,
-    # it makes no sense to enqueue more than one at a time
     enqueue_limit: 1,
     perform_limit: 1,
     key: -> { "#{self.class.name}:#{rubygem_name_arg}" }
   )
 
   def perform(rubygem_name:)
-    compact_index_info = GemInfo.new(rubygem_name, cached: false).compact_index_info
+    gem_info = GemInfo.new(rubygem_name, cached: false)
+
+    GemInfo.active_formats.each do |format_key, _fmt|
+      upload_info_file(rubygem_name, gem_info, format_key)
+    end
+  end
+
+  private
+
+  def upload_info_file(rubygem_name, gem_info, format_key)
+    compact_index_info = gem_info.compact_index_info_for_format(format_key)
     response_body = CompactIndex.info(compact_index_info)
 
     content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
 
+    s3_path = s3_info_path(rubygem_name, format_key)
+
     response = RubygemFs.compact_index.store(
-      "info/#{rubygem_name}", response_body,
-      public_acl: false, # the compact-index bucket does not have ACLs enabled
+      s3_path, response_body,
+      public_acl: false,
       metadata: {
         "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
-        "surrogate-key" => "info/* info/#{rubygem_name} gem/#{rubygem_name} s3-compact-index s3-info/* s3-info/#{rubygem_name}",
+        "surrogate-key" => surrogate_keys_for(rubygem_name, format_key),
         "sha256" => checksum_sha256,
         "md5" => content_md5
       },
@@ -38,12 +45,18 @@ class UploadInfoFileJob < ApplicationJob
       content_md5:
     )
 
-    logger.info(message: "Uploading info file for #{rubygem_name} succeeded", response:)
-
-    FastlyPurgeJob.perform_later(key: "s3-info/#{rubygem_name}", soft: true)
+    logger.info(message: "Uploading #{format_key} info file for #{rubygem_name} succeeded", response:)
+    FastlyPurgeJob.perform_later(key: "s3-#{s3_path}", soft: true)
   end
 
-  private
+  def s3_info_path(rubygem_name, format_key)
+    format_key == :v1 ? "info/#{rubygem_name}" : "#{format_key}/info/#{rubygem_name}"
+  end
+
+  def surrogate_keys_for(rubygem_name, format_key)
+    prefix = s3_info_path(rubygem_name, format_key).delete_suffix("/#{rubygem_name}")
+    "#{prefix}/* #{prefix}/#{rubygem_name} gem/#{rubygem_name} s3-compact-index s3-#{prefix}/* s3-#{prefix}/#{rubygem_name}"
+  end
 
   def rubygem_name_arg
     arguments.first.fetch(:rubygem_name)
