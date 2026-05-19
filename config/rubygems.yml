@@ -10,6 +10,7 @@ development:
   versions_file_location: "./config/versions.list"
   versions_file_location_v2: "./config/versions_v2.list"
   versions_file_location_v3: "./config/versions_v3.list"
+  versions_file_location_v4: "./config/versions_v4.list"
 
 test:
   protocol: http
@@ -23,6 +24,7 @@ test:
   versions_file_location: "./test/helpers/versions.list"
   versions_file_location_v2: "./test/helpers/versions_v2.list"
   versions_file_location_v3: "./test/helpers/versions_v3.list"
+  versions_file_location_v4: "./config/versions_v4.list"
 
 staging:
   protocol: https
@@ -36,6 +38,7 @@ staging:
   versions_file_location: "./config/versions.list"
   versions_file_location_v2: "./config/versions_v2.list"
   versions_file_location_v3: "./config/versions_v3.list"
+  versions_file_location_v4: "./config/versions_v4.list"
 
 production:
   protocol: https
@@ -49,4 +52,5 @@ production:
   versions_file_location: "./config/versions.list"
   versions_file_location_v2: "./config/versions_v2.list"
   versions_file_location_v3: "./config/versions_v3.list"
+  versions_file_location_v4: "./config/versions_v4.list"
   separate_admin_host: rubygems.team

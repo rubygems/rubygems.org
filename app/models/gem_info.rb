@@ -4,7 +4,8 @@ class GemInfo
   FORMATS = {
     v1: FormatV1.new,
     v2: FormatV2.new,
-    v3: FormatV3.new
+    v3: FormatV3.new,
+    v4: FormatV4.new
   }.freeze
 
   def initialize(rubygem_name, cached: true)

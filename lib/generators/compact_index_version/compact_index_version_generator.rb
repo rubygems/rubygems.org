@@ -77,15 +77,10 @@ class CompactIndexVersionGenerator < Rails::Generators::Base
   end
 
   def register_in_formats
-    inject_into_file "app/models/gem_info.rb",
-      after: /FORMATS = \{[^}]*\n/ do
-      ""
-    end
-
-    # Insert before the closing }.freeze
+    # Add trailing comma to the last entry, then insert new entry before }.freeze
     gsub_file "app/models/gem_info.rb",
-      /([ \t]*)(}.freeze)/ do |_match|
-      "#{$1}#{@version_key}: Format#{@class_suffix}.new,\n#{$1}#{$2}"
+      /(\w+: Format\w+\.new)\n(\s*}\.freeze)/ do
+      "#{$1},\n    #{@version_key}: Format#{@class_suffix}.new\n#{$2}"
     end
   end
 
@@ -125,8 +120,12 @@ class CompactIndexVersionGenerator < Rails::Generators::Base
   end
 
   def previous_version_fields
-    prev_key = "v#{current_max_version}"
-    prev_format = GemInfo::FORMATS[prev_key.to_sym]
-    prev_format&.gem_version_class&.fields || CompactIndex::GemVersion.fields
+    # Parse fields from the latest GemVersion class source
+    source = File.read(Rails.root.join("lib/compact_index/gem_version.rb"))
+    # Find the last define_schema call (may span multiple lines)
+    all_schemas = source.scan(/define_schema\s+((?::\w+,?\s*)+)/m)
+    return [] if all_schemas.empty?
+    last_schema = all_schemas.last.first
+    last_schema.scan(/:(\w+)/).flatten.map(&:to_sym)
   end
 end
