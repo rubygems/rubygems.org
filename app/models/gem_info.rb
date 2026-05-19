@@ -1,26 +1,40 @@
 # frozen_string_literal: true
 
 class GemInfo
+  FORMATS = {
+    v1: FormatV1.new,
+    v2: FormatV2.new,
+    v3: FormatV3.new
+  }.freeze
+
   def initialize(rubygem_name, cached: true)
     @rubygem_name = rubygem_name
     @cached = cached
   end
 
-  def compact_index_info
-    if @cached && (info = Rails.cache.read("info/#{@rubygem_name}"))
-      StatsD.increment "compact_index.memcached.info.hit"
-      info
-    else
-      StatsD.increment "compact_index.memcached.info.miss"
-      compute_compact_index_info.tap do |compact_index_info|
-        Rails.cache.write("info/#{@rubygem_name}", compact_index_info)
-      end
+  def compact_index_info_for_format(format_key)
+    cached_compact_index_info(format_key)
+  end
+
+  def checksum_for_format(format_key)
+    fmt = FORMATS.fetch(format_key)
+    checksum_for(requirements_and_dependencies, format: fmt)
+  end
+
+  def info_checksums
+    rows = requirements_and_dependencies
+    self.class.enabled_formats.each_with_object({}) do |(_, fmt), hash|
+      hash[fmt.checksum_column] = checksum_for(rows, format: fmt)
     end
   end
 
-  def info_checksum
-    compact_index_info = CompactIndex.info(compute_compact_index_info)
-    Digest::MD5.hexdigest(compact_index_info)
+  # Formats filtered by lifecycle state
+  def self.enabled_formats
+    FORMATS.select { |_, fmt| fmt.enabled? }
+  end
+
+  def self.serving_formats
+    FORMATS.select { |_, fmt| fmt.serving? }
   end
 
   def self.ordered_names(cached: true)
@@ -35,12 +49,20 @@ class GemInfo
   end
 
   def self.compact_index_versions(date)
-    query = ["(SELECT r.name, v.created_at as date, v.info_checksum, v.number, v.platform
+    compact_index_versions_for_format(date, :v1)
+  end
+
+  def self.compact_index_versions_for_format(date, format_key)
+    fmt = FORMATS.fetch(format_key)
+    checksum_column = fmt.checksum_column
+    yanked_checksum_column = fmt.yanked_checksum_column
+
+    query = ["(SELECT r.name, v.created_at as date, v.#{checksum_column} as info_checksum, v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
                     v.created_at > ?)
               UNION
-              (SELECT r.name, v.yanked_at as date, v.yanked_info_checksum as info_checksum, '-'||v.number, v.platform
+              (SELECT r.name, v.yanked_at as date, v.#{yanked_checksum_column} as info_checksum, '-'||v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
                     v.indexed is false AND
@@ -51,8 +73,16 @@ class GemInfo
   end
 
   def self.compact_index_public_versions(updated_at)
+    compact_index_public_versions_for_format(updated_at, :v1)
+  end
+
+  def self.compact_index_public_versions_for_format(updated_at, format_key)
+    fmt = FORMATS.fetch(format_key)
+    checksum_column = fmt.checksum_column
+    yanked_checksum_column = fmt.yanked_checksum_column
+
     query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
-                     v.sha256, COALESCE(v.yanked_info_checksum, v.info_checksum) as info_checksum,
+                     v.sha256, COALESCE(v.#{yanked_checksum_column}, v.#{checksum_column}) as info_checksum,
                      v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
@@ -63,7 +93,6 @@ class GemInfo
     versions_by_gem.each_value do |versions|
       info_checksum = versions.last["info_checksum"]
       versions.select! { |v| v["indexed"] == true }
-      # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
       versions.each { |v| v["info_checksum"] = info_checksum }
     end
     versions_by_gem.reject! { |_, versions| versions.empty? }
@@ -92,29 +121,64 @@ class GemInfo
 
   private
 
-  DEPENDENCY_NAMES_INDEX = 8
+  def cached_compact_index_info(format_key)
+    fmt = FORMATS.fetch(format_key)
+    cache_key = "#{fmt.cache_prefix}/#{@rubygem_name}"
 
-  DEPENDENCY_REQUIREMENTS_INDEX = 7
-
-  def compute_compact_index_info
-    requirements_and_dependencies.map do |r|
-      deps = []
-      if r[DEPENDENCY_REQUIREMENTS_INDEX]
-        reqs = r[DEPENDENCY_REQUIREMENTS_INDEX].split("@")
-        dep_names = r[DEPENDENCY_NAMES_INDEX].split(",")
-        raise "BUG: different size of reqs and dep_names." unless reqs.size == dep_names.size
-        dep_names.zip(reqs).each do |name, req|
-          deps << CompactIndex::Dependency.new(name, req) unless name == "0"
-        end
+    if @cached && (info = Rails.cache.read(cache_key))
+      StatsD.increment "#{fmt.stats_key}.hit"
+      info
+    else
+      StatsD.increment "#{fmt.stats_key}.miss"
+      compact_index_info_for(requirements_and_dependencies, format: fmt).tap do |compact_index_info|
+        Rails.cache.write(cache_key, compact_index_info)
       end
+    end
+  end
 
-      name, platform, checksum, info_checksum, ruby_version, rubygems_version, = r
-      CompactIndex::GemVersion.new(name, platform, Version._sha256_hex(checksum), info_checksum, deps, ruby_version, rubygems_version)
+  def checksum_for(rows, format:)
+    compact_index_info = CompactIndex.info(compact_index_info_for(rows, format:))
+    Digest::MD5.hexdigest(compact_index_info)
+  end
+
+  def compact_index_info_for(rows, format:)
+    rows.map { |row| format.gem_version_from_row(row_to_hash(row)) }
+  end
+
+  # Translates a positional pluck row into a named hash.
+  # Column order matches the pluck in requirements_and_dependencies:
+  #   group_by_columns..., dep_requirements_agg, dep_names_agg
+  def row_to_hash(row)
+    *fields, dep_requirements, dep_names = row
+    number, platform, sha256, info_checksum, ruby_version, rubygems_version, created_at, size = fields
+
+    {
+      number: number,
+      platform: platform,
+      checksum: Version._sha256_hex(sha256),
+      info_checksum: info_checksum,
+      ruby_version: ruby_version,
+      rubygems_version: rubygems_version,
+      created_at: created_at,
+      size: size,
+      dependencies: parse_deps(dep_requirements, dep_names)
+    }
+  end
+
+  def parse_deps(dep_requirements, dep_names)
+    return [] unless dep_requirements
+
+    reqs = dep_requirements.split("@")
+    names = dep_names.split(",")
+    raise "BUG: different size of reqs and dep_names." unless reqs.size == names.size
+
+    names.zip(reqs).filter_map do |name, req|
+      CompactIndex::Dependency.new(name, req) unless name == "0"
     end
   end
 
   def requirements_and_dependencies
-    group_by_columns = "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
+    group_by_columns = "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at, versions.size"
 
     dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
 
