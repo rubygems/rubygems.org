@@ -18,15 +18,15 @@ class UploadNamesFileJob < ApplicationJob
     content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
 
-    GemInfo.active_formats.each do |format_key, _fmt|
-      upload_names_file(format_key, response_body, content_md5, checksum_sha256)
+    GemInfo.active_formats.each do |format|
+      upload_names_file(format, response_body, content_md5, checksum_sha256)
     end
   end
 
   private
 
-  def upload_names_file(format_key, response_body, content_md5, checksum_sha256)
-    s3_path = s3_names_path(format_key)
+  def upload_names_file(format, response_body, content_md5, checksum_sha256)
+    s3_path = format.s3_path("names")
 
     response = RubygemFs.compact_index.store(
       s3_path, response_body,
@@ -43,11 +43,7 @@ class UploadNamesFileJob < ApplicationJob
       content_md5:
     )
 
-    logger.info(message: "Uploading #{format_key} names file succeeded", response:)
+    logger.info(message: "Uploading names file (#{format.cache_prefix}) succeeded", response:)
     FastlyPurgeJob.perform_later(key: "s3-#{s3_path}", soft: true)
-  end
-
-  def s3_names_path(format_key)
-    format_key == :v1 ? "names" : "#{format_key}/names"
   end
 end

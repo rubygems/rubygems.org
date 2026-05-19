@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class GemInfo
-  FORMATS = {
-    v1: FormatV1.new,
-    v2: FormatV2.new
-  }.freeze
+  CURRENT_FORMAT = FormatV1.new
+  NEXT_FORMAT = FormatV2.new # set to nil when not rolling out a new format
+
+  def self.active_formats
+    [CURRENT_FORMAT, NEXT_FORMAT].compact
+  end
 
   def initialize(rubygem_name, cached: true)
     @rubygem_name = rubygem_name
@@ -12,31 +14,22 @@ class GemInfo
   end
 
   def compact_index_info
-    compact_index_info_for_format(:v1)
+    cached_compact_index_info(CURRENT_FORMAT)
   end
 
-  def compact_index_info_for_format(format_key)
-    cached_compact_index_info(format_key)
+  def compact_index_info_for_format(format)
+    cached_compact_index_info(format)
   end
 
   def info_checksum
-    checksum_for_format(:v1)
-  end
-
-  def checksum_for_format(format_key)
-    fmt = FORMATS.fetch(format_key)
-    checksum_for(requirements_and_dependencies, format: fmt)
+    checksum_for(requirements_and_dependencies, format: CURRENT_FORMAT)
   end
 
   def info_checksums
     rows = requirements_and_dependencies
-    self.class.active_formats.each_with_object({}) do |(_, fmt), hash|
+    self.class.active_formats.each_with_object({}) do |fmt, hash|
       hash[fmt.checksum_column] = checksum_for(rows, format: fmt)
     end
-  end
-
-  def self.active_formats
-    FORMATS.select { |_, fmt| fmt.active? }
   end
 
   def self.ordered_names(cached: true)
@@ -51,13 +44,12 @@ class GemInfo
   end
 
   def self.compact_index_versions(date)
-    compact_index_versions_for_format(date, :v1)
+    compact_index_versions_for_format(date, CURRENT_FORMAT)
   end
 
-  def self.compact_index_versions_for_format(date, format_key)
-    fmt = FORMATS.fetch(format_key)
-    checksum_column = fmt.checksum_column
-    yanked_checksum_column = fmt.yanked_checksum_column
+  def self.compact_index_versions_for_format(date, format)
+    checksum_column = format.checksum_column
+    yanked_checksum_column = format.yanked_checksum_column
 
     query = ["(SELECT r.name, v.created_at as date, v.#{checksum_column} as info_checksum, v.number, v.platform
               FROM rubygems AS r, versions AS v
@@ -75,13 +67,12 @@ class GemInfo
   end
 
   def self.compact_index_public_versions(updated_at)
-    compact_index_public_versions_for_format(updated_at, :v1)
+    compact_index_public_versions_for_format(updated_at, CURRENT_FORMAT)
   end
 
-  def self.compact_index_public_versions_for_format(updated_at, format_key)
-    fmt = FORMATS.fetch(format_key)
-    checksum_column = fmt.checksum_column
-    yanked_checksum_column = fmt.yanked_checksum_column
+  def self.compact_index_public_versions_for_format(updated_at, format)
+    checksum_column = format.checksum_column
+    yanked_checksum_column = format.yanked_checksum_column
 
     query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
                      v.sha256, COALESCE(v.#{yanked_checksum_column}, v.#{checksum_column}) as info_checksum,
@@ -123,16 +114,15 @@ class GemInfo
 
   private
 
-  def cached_compact_index_info(format_key)
-    fmt = FORMATS.fetch(format_key)
-    cache_key = "#{fmt.cache_prefix}/#{@rubygem_name}"
+  def cached_compact_index_info(format)
+    cache_key = "#{format.cache_prefix}/#{@rubygem_name}"
 
     if @cached && (info = Rails.cache.read(cache_key))
-      StatsD.increment "#{fmt.stats_key}.hit"
+      StatsD.increment "#{format.stats_key}.hit"
       info
     else
-      StatsD.increment "#{fmt.stats_key}.miss"
-      compact_index_info_for(requirements_and_dependencies, format: fmt).tap do |compact_index_info|
+      StatsD.increment "#{format.stats_key}.miss"
+      compact_index_info_for(requirements_and_dependencies, format: format).tap do |compact_index_info|
         Rails.cache.write(cache_key, compact_index_info)
       end
     end
