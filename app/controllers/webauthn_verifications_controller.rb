@@ -10,27 +10,18 @@ class WebauthnVerificationsController < ApplicationController
   before_action :check_show_verification_status, only: %i[successful_verification failed_verification]
 
   def prompt
-    redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
-    setup_webauthn_authentication(form_url: authenticate_webauthn_verification_path, session_options: { "port" => port })
+    setup_webauthn_authentication(form_url: authenticate_webauthn_verification_path)
   end
 
   def authenticate
-    port = session.dig(:webauthn_authentication, "port")
-
-    unless port
-      redirect_to root_path, alert: t(".no_port")
-      return
-    end
-
     return render plain: @webauthn_error, status: :unauthorized unless webauthn_credential_verified?
 
     @verification.generate_otp
     @verification.expire_path_token
 
-    return render plain: "success" if browser.safari?
-    redirect_to(URI.parse("http://localhost:#{port}?code=#{@verification.otp}").to_s, allow_other_host: true)
+    render plain: "success"
   end
 
   def failed_verification
