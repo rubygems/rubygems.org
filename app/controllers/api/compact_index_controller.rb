@@ -10,20 +10,23 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def versions
-    set_surrogate_key "versions"
+    format = CompactIndex.serving_format
+    set_surrogate_key format.s3_path("versions")
     cache_expiry_headers
-    versions_path = Rails.application.config.rubygems["versions_file_location"]
+    versions_path = format.versions_file_path
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
-    extra_gems = GemInfo.compact_index_versions(from_date)
+    extra_gems = GemInfo.compact_index_versions_for(from_date, format)
     render_range CompactIndex.versions(versions_file, extra_gems)
   end
 
   def info
-    set_surrogate_key "info/* gem/#{@rubygem.name} info/#{@rubygem.name}"
+    format = CompactIndex.serving_format
+    prefix = format.s3_path("info")
+    set_surrogate_key "#{prefix}/* gem/#{@rubygem.name} #{prefix}/#{@rubygem.name}"
     cache_expiry_headers
     return unless stale?(@rubygem)
-    info_params = GemInfo.new(@rubygem.name).compact_index_info
+    info_params = GemInfo.new(@rubygem.name).compact_index_info_for(format)
     render_range CompactIndex.info(info_params)
   end
 

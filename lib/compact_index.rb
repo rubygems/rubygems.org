@@ -18,6 +18,17 @@ module CompactIndex
     [CURRENT_FORMAT, NEXT_FORMAT].compact
   end
 
+  # The format served to clients. Controlled by Flipper flag.
+  # When :compact_index_next_format is enabled, serves NEXT_FORMAT.
+  # Otherwise serves CURRENT_FORMAT.
+  def self.serving_format
+    if NEXT_FORMAT && Flipper.enabled?(:compact_index_next_format)
+      NEXT_FORMAT
+    else
+      CURRENT_FORMAT
+    end
+  end
+
   def self.names(gem_names)
     gem_names.join("\n").prepend("---\n") << "\n"
   end
