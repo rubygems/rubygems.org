@@ -6,11 +6,6 @@ class UploadNamesFileJob < ApplicationJob
   include GoodJob::ActiveJobExtensions::Concurrency
 
   good_job_control_concurrency_with(
-    # Maximum number of jobs with the concurrency key to be
-    # concurrently enqueued (excludes performing jobs)
-    #
-    # Because the job only uses current state at time of perform,
-    # it makes no sense to enqueue more than one at a time
     enqueue_limit: 1,
     perform_limit: 1,
     key: name
@@ -18,28 +13,31 @@ class UploadNamesFileJob < ApplicationJob
 
   def perform
     names = GemInfo.ordered_names(cached: false)
-    response_body = CompactIndex.names(names)
+    body = CompactIndex.names(names)
 
-    content_md5 = Digest::MD5.base64digest(response_body)
-    checksum_sha256 = Digest::SHA256.base64digest(response_body)
+    CompactIndex.active_formats.each do |format|
+      s3_path = format.s3_path("names")
 
-    response = RubygemFs.compact_index.store(
-      "names", response_body,
-      public_acl: false, # the compact-index bucket does not have ACLs enabled
-      metadata: {
-        "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
-        "surrogate-key" => "names s3-compact-index s3-names",
-        "sha256" => checksum_sha256,
-        "md5" => content_md5
-      },
-      cache_control: "max-age=60, public",
-      content_type: "text/plain; charset=utf-8",
-      checksum_sha256:,
-      content_md5:
-    )
+      content_md5 = Digest::MD5.base64digest(body)
+      checksum_sha256 = Digest::SHA256.base64digest(body)
 
-    logger.info(message: "Uploading names file succeeded", response:)
+      response = RubygemFs.compact_index.store(
+        s3_path, body,
+        public_acl: false,
+        metadata: {
+          "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+          "surrogate-key" => "#{s3_path} s3-compact-index s3-#{s3_path}",
+          "sha256" => checksum_sha256,
+          "md5" => content_md5
+        },
+        cache_control: "max-age=60, public",
+        content_type: "text/plain; charset=utf-8",
+        checksum_sha256:,
+        content_md5:
+      )
 
-    FastlyPurgeJob.perform_later(key: "s3-names", soft: true)
+      logger.info(message: "Uploading names file (#{format.version_key}) succeeded", response:)
+      FastlyPurgeJob.perform_later(key: "s3-#{s3_path}", soft: true)
+    end
   end
 end

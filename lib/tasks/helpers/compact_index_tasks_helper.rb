@@ -5,14 +5,14 @@ module CompactIndexTasksHelper
 
   def update_last_checksum(rubygem, task)
     last_version = rubygem.versions.order(Arel.sql("COALESCE(yanked_at, created_at) desc, number desc, platform desc")).first
-    cs = GemInfo.new(last_version.rubygem.name).info_checksum
+    gem_info = GemInfo.new(last_version.rubygem.name)
 
-    if last_version.indexed
-      Rails.logger.info("[#{task}] version: #{last_version.full_name} old_checksum: #{last_version.info_checksum} new_checksum: #{cs}")
-      last_version.update_attribute :info_checksum, cs
-    else
-      Rails.logger.info("[#{task}] version: #{last_version.full_name} old_checksum: #{last_version.yanked_info_checksum} new_checksum: #{cs}")
-      last_version.update_attribute :yanked_info_checksum, cs
+    CompactIndex.active_formats.each do |format|
+      cs = Digest::MD5.hexdigest(CompactIndex.info(gem_info.compact_index_info_for(format)))
+      col = last_version.indexed ? format.checksum_column : format.yanked_checksum_column
+
+      Rails.logger.info("[#{task}] version: #{last_version.full_name} format: #{format.version_key} old_checksum: #{last_version[col]} new_checksum: #{cs}")
+      last_version.update_columns(col => cs)
     end
   end
 end

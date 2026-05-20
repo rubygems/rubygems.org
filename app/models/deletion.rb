@@ -96,7 +96,8 @@ class Deletion < ApplicationRecord
   end
 
   def restore_to_index
-    version.update!(indexed: true, yanked_at: nil, yanked_info_checksum: nil)
+    yanked_columns = CompactIndex.active_formats.to_h { |fmt| [fmt.yanked_checksum_column, nil] }
+    version.update!(indexed: true, yanked_at: nil, **yanked_columns)
     reindex
     Rstuf::AddJob.perform_later(version:)
   end
@@ -138,8 +139,8 @@ class Deletion < ApplicationRecord
   end
 
   def set_yanked_info_checksum
-    checksum = GemInfo.new(version.rubygem.name).info_checksum
-    version.update_attribute :yanked_info_checksum, checksum
+    gem_info = GemInfo.new(version.rubygem.name)
+    version.update_columns(gem_info.yanked_info_checksums)
   end
 
   def send_gem_yanked_mail

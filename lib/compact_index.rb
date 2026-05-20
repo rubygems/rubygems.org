@@ -5,10 +5,19 @@
 require_relative "compact_index/gem"
 require_relative "compact_index/gem_version"
 require_relative "compact_index/dependency"
-
+require_relative "compact_index/info_file"
 require_relative "compact_index/versions_file"
+require_relative "compact_index/format"
+require_relative "compact_index/v2/gem_version"
 
 module CompactIndex
+  CURRENT_FORMAT = Format.new(version_key: :v1)
+  NEXT_FORMAT    = Format.new(version_key: :v2, gem_version_class: V2::GemVersion)
+
+  def self.active_formats
+    [CURRENT_FORMAT, NEXT_FORMAT].compact
+  end
+
   def self.names(gem_names)
     gem_names.join("\n").prepend("---\n") << "\n"
   end
@@ -18,8 +27,6 @@ module CompactIndex
   end
 
   def self.info(versions)
-    versions.inject(+"---\n") do |output, version|
-      output << version.to_line << "\n"
-    end
+    InfoFile.new(versions).contents
   end
 end
