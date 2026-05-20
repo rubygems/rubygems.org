@@ -20,9 +20,9 @@
   ],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   // Use 'postCreateCommand' to run commands after the container is created.
-  "onCreateCommand": "bin/setup --skip-server",
+  "onCreateCommand": "bin/setup",
   // Use 'updateContentCommand' to run commands when the container is updated.
-  "updateContentCommand": "bin/setup --skip-server",
+  "updateContentCommand": "bin/setup",
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
