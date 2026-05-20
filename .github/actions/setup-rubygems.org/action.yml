@@ -11,6 +11,10 @@ inputs:
     description: "Install Avo gem"
     required: false
     default: "true"
+  install-playwright:
+    description: "Install Playwright browsers (only needed for system tests)"
+    required: false
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -31,6 +35,10 @@ runs:
     - name: Print bundle environment
       shell: bash
       run: bundle env
+    - name: Install Playwright browsers
+      if: inputs.install-playwright == 'true'
+      shell: bash
+      run: bin/playwright install --with-deps chromium
     - name: Prepare environment
       shell: bash
       run: |

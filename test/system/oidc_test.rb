@@ -153,6 +153,7 @@ class OIDCTest < ApplicationSystemTestCase
 
     click_button "Edit API Key Role"
 
+    page.driver.with_playwright_page { |pw_page| pw_page.wait_for_load_state(state: "load") }
     click_button "Add statement"
 
     statements = page.find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_wrapper/)

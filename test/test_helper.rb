@@ -50,9 +50,7 @@ Avo::Current.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    "chromedriver.storage.googleapis.com",
     "search", # DevContainer services
-    "selenium",
     "rails-app"
   ]
 )
@@ -64,7 +62,7 @@ WebMock.globally_stub_request(:after_local_stubs) do |request|
   end
 end
 
-Capybara.default_max_wait_time = 2
+Capybara.default_max_wait_time = 5
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}" if ENV["DEVCONTAINER_APP_HOST"].blank?
 Capybara.always_include_port = true
 Capybara.server_port = 31_337
@@ -207,52 +205,40 @@ class ActiveSupport::TestCase
     end
   end
 
-  def headless_chrome_driver
-    Capybara.current_driver = :selenium_chrome_headless
-    Capybara.default_max_wait_time = 2
-    Selenium::WebDriver.logger.level = :error
-  end
-
-  def fullscreen_headless_chrome_driver
-    headless_chrome_driver
-    driver = page.driver
-    fullscreen_width = 1200
-    fullscreen_height = 1000
-    driver.resize_window_to(driver.current_window_handle, fullscreen_width, fullscreen_height)
+  def fullscreen_playwright_driver
+    Capybara.current_driver = :playwright unless Capybara.current_driver == :playwright
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.set_viewport_size(width: 1200, height: 1000)
+    end
   end
 
   def create_webauthn_credential
-    fullscreen_headless_chrome_driver
+    fullscreen_playwright_driver
 
-    visit sign_in_path
+    unless page.has_content?("Dashboard", wait: 0)
+      visit sign_in_path
 
-    assert page.has_content?("Sign in")
+      assert page.has_content?("Sign in")
 
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
+      fill_in "Email or Username", with: @user.reload.email
+      fill_in "Password", with: @user.password
+      click_button "Sign in"
 
-    assert page.has_content? "Dashboard"
+      assert page.has_content? "Dashboard"
+    end
 
-    @authenticator = create_webauthn_credential_while_signed_in
+    create_webauthn_credential_while_signed_in
 
     find(:css, ".header__popup-link").click
     click_on "Sign out"
 
     assert page.has_content?("Sign in")
-
-    @authenticator
   end
 
   def create_webauthn_credential_while_signed_in
     visit edit_settings_path
 
-    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
-      resident_key: true,
-      user_verification: true,
-      user_verified: true
-    )
-    @authenticator = page.driver.browser.add_virtual_authenticator(options)
+    enable_virtual_authenticator(resident_key: true, user_verification: true, user_verified: true)
 
     credential_nickname = "new cred"
     fill_in "Nickname", with: credential_nickname
@@ -268,7 +254,38 @@ class ActiveSupport::TestCase
     first("div", text: credential_nickname)
 
     @user.reload
-    @authenticator
+  end
+
+  def enable_virtual_authenticator(resident_key: false, user_verification: false, user_verified: false)
+    page.driver.with_playwright_page do |pw_page|
+      @cdp_session ||= pw_page.context.new_cdp_session(pw_page)
+      @cdp_session.send_message("WebAuthn.enable")
+      result = @cdp_session.send_message("WebAuthn.addVirtualAuthenticator", params: {
+                                           options: {
+                                             protocol: "ctap2",
+                                             transport: "internal",
+                                             hasResidentKey: resident_key,
+                                             hasUserVerification: user_verification,
+                                             isUserVerified: user_verified
+                                           }
+                                         })
+      @authenticator_id = result["authenticatorId"]
+    end
+  end
+
+  def disable_virtual_authenticator
+    return unless @cdp_session && @authenticator_id
+
+    page.driver.with_playwright_page do |_pw_page|
+      @cdp_session.send_message("WebAuthn.removeVirtualAuthenticator", params: {
+                                  authenticatorId: @authenticator_id
+                                })
+    rescue Playwright::TargetClosedError
+      # Browser already closed during teardown
+    ensure
+      @authenticator_id = nil
+      @cdp_session = nil
+    end
   end
 
   def setup_rstuf

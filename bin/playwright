@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Pin the Playwright CLI to the version that matches the playwright-ruby-client
+# gem currently in the bundle. The Node-side driver must match the gem exactly,
+# so resolving the version from the gem keeps them in lockstep across bumps.
+
+set -eu
+
+PLAYWRIGHT_CLI_VERSION=$(bundle exec ruby -e 'require "playwright"; puts Playwright::COMPATIBLE_PLAYWRIGHT_VERSION.strip')
+
+exec npx --yes "playwright@${PLAYWRIGHT_CLI_VERSION}" "$@"

@@ -10,8 +10,7 @@
     "db",
     "cache",
     "search",
-    "toxiproxy",
-    "selenium"
+    "toxiproxy"
   ],
   "forwardPorts": [
     3000, // Rails
@@ -21,14 +20,15 @@
   ],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   // Use 'postCreateCommand' to run commands after the container is created.
-  "onCreateCommand": "bin/setup",
+  "onCreateCommand": "bin/setup --skip-server",
   // Use 'updateContentCommand' to run commands when the container is updated.
-  "updateContentCommand": "bin/setup",
+  "updateContentCommand": "bin/setup --skip-server",
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
     // "ghcr.io/rails/devcontainer/features/activestorage": {},
     "ghcr.io/rails/devcontainer/features/postgres-client": {},
+    "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers-extra/features/apt-packages:1": {
       "packages": [
         "pkg-config"
@@ -40,7 +40,6 @@
     "EDITOR": "code --wait",
     "GIT_EDITOR": "code --wait",
     "CAPYBARA_SERVER_PORT": "31337",
-    "SELENIUM_HOST": "selenium",
     "ELASTICSEARCH_URL": "http://search:9200",
     "DATABASE_URL": "postgres://postgres@db:5432",
     "DEVCONTAINER_APP_HOST": "http://rails-app",

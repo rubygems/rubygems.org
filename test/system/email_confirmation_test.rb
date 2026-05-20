@@ -47,6 +47,11 @@ class EmailConfirmationTest < ApplicationSystemTestCase
     assert_text "Sign in"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
 
+    page.driver.with_playwright_page do |pw_page|
+      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp.send_message("Network.clearBrowserCache")
+      cdp.detach
+    end
     visit link
 
     assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
@@ -143,8 +148,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   teardown do
-    @authenticator&.remove!
+    disable_virtual_authenticator
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end
