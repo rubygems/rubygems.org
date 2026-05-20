@@ -276,16 +276,21 @@ class ActiveSupport::TestCase
   def disable_virtual_authenticator
     return unless @cdp_session && @authenticator_id
 
-    page.driver.with_playwright_page do |_pw_page|
-      @cdp_session.send_message("WebAuthn.removeVirtualAuthenticator", params: {
-                                  authenticatorId: @authenticator_id
-                                })
-    rescue Playwright::TargetClosedError
-      # Browser already closed during teardown
-    ensure
-      @authenticator_id = nil
-      @cdp_session = nil
+    # Teardown can run while the page is on a non-Playwright driver (e.g. a test
+    # that switched to :rack_test). Guard the Playwright-only call so cleanup
+    # can't raise NoMethodError and mask the original test failure.
+    if page.driver.respond_to?(:with_playwright_page)
+      page.driver.with_playwright_page do |_pw_page|
+        @cdp_session.send_message("WebAuthn.removeVirtualAuthenticator", params: {
+                                    authenticatorId: @authenticator_id
+                                  })
+      rescue Playwright::TargetClosedError
+        # Browser already closed during teardown
+      end
     end
+  ensure
+    @authenticator_id = nil
+    @cdp_session = nil
   end
 
   def setup_rstuf
