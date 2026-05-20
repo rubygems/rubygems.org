@@ -24,18 +24,25 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   }
 
   teardown do
-    if page.driver.respond_to?(:with_playwright_page)
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.context.clear_cookies
-        # Clear HTTP cache between tests to prevent stale responses.
-        # Pages with Cache-Control: public headers are cached by the browser,
-        # causing subsequent tests to see stale content when visiting the same URL.
-        cdp = pw_page.context.new_cdp_session(pw_page)
-        cdp.send_message("Network.clearBrowserCache")
-        cdp.detach
-      rescue Playwright::TargetClosedError
-        # Browser already closed
-      end
+    clear_browser_cache(clear_cookies: true)
+  end
+
+  # Clear the browser's HTTP cache, and optionally its cookies. Pages served with
+  # `Cache-Control: public` headers are cached by the browser, so a later visit to
+  # the same URL can return stale content; clearing the cache between (or within)
+  # tests prevents that. Cookies are cleared in teardown to isolate sessions
+  # between tests, but callers that need to bust the cache mid-test should leave
+  # them intact. Safe to call when the browser may have already closed.
+  def clear_browser_cache(clear_cookies: false)
+    return unless page.driver.respond_to?(:with_playwright_page)
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.context.clear_cookies if clear_cookies
+      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp.send_message("Network.clearBrowserCache")
+      cdp.detach
+    rescue Playwright::TargetClosedError
+      # Browser already closed
     end
   end
 
