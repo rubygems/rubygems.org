@@ -21,7 +21,7 @@ class ApiKeysController < ApplicationController
   end
 
   def edit
-    @api_key = current_user.api_keys.find(params[:id])
+    @api_key = current_user.api_keys.find(params.expect(:id))
     return unless @api_key.soft_deleted?
 
     flash[:error] = t(".invalid_key")
@@ -51,7 +51,7 @@ class ApiKeysController < ApplicationController
   end
 
   def update
-    @api_key = current_user.api_keys.find(params[:id])
+    @api_key = current_user.api_keys.find(params.expect(:id))
     @api_key.assign_attributes(api_key_update_params(@api_key))
 
     if @api_key.errors.present?
@@ -68,7 +68,7 @@ class ApiKeysController < ApplicationController
   end
 
   def destroy
-    api_key = current_user.api_keys.find(params[:id])
+    api_key = current_user.api_keys.find(params.expect(:id))
 
     if api_key.expire!
       flash[:notice] = t(".success", name: api_key.name)
