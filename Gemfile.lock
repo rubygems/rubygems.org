@@ -742,7 +742,7 @@ GEM
       chunky_png (~> 1.0)
       rqrcode_core (~> 2.0)
     rqrcode_core (2.1.0)
-    rubocop (1.86.1)
+    rubocop (1.86.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -770,7 +770,7 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.47.1, < 2.0)
-    rubocop-rails (2.34.3)
+    rubocop-rails (2.35.2)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
@@ -1013,7 +1013,7 @@ DEPENDENCIES
   rubocop-factory_bot (~> 2.28)
   rubocop-minitest (~> 0.39)
   rubocop-performance (~> 1.26)
-  rubocop-rails (~> 2.34)
+  rubocop-rails (~> 2.35)
   ruby-magic (~> 0.6)
   searchkick (~> 6.1)
   shoryuken (~> 7.0)
@@ -1313,13 +1313,13 @@ CHECKSUMS
   rouge (4.7.0) sha256=dba5896715c0325c362e895460a6d350803dbf6427454f49a47500f3193ea739
   rqrcode (3.2.0) sha256=64c1494ca6bb67d731330f38b50e3fd09eeab4f5dcd04b608e21218d1d0b9542
   rqrcode_core (2.1.0) sha256=f303b85df89c1b8fc5ee8dc19808c9dc4330e6329b660d99d4a8cbb36ca13051
-  rubocop (1.86.1) sha256=44415f3f01d01a21e01132248d2fd0867572475b566ca188a0a42133a08d4531
+  rubocop (1.86.2) sha256=bb2e97f635eda42c448f2588f4a6ff78f221b8bdfdf65b1e9b07fbd57521b45d
   rubocop-ast (1.49.1) sha256=4412f3ee70f6fe4546cc489548e0f6fcf76cafcfa80fa03af67098ffed755035
   rubocop-capybara (2.23.0) sha256=f9ea1ba3a7561ee8e88cf76fc378ce517ce5327155f305ee7b5c2500e5aee357
   rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
   rubocop-minitest (0.39.1) sha256=998398d6da4026d297f0f9bf709a1eac5f2b6947c24431f94af08138510cf7ed
   rubocop-performance (1.26.1) sha256=cd19b936ff196df85829d264b522fd4f98b6c89ad271fa52744a8c11b8f71834
-  rubocop-rails (2.34.3) sha256=10d37989024865ecda8199f311f3faca990143fbac967de943f88aca11eb9ad2
+  rubocop-rails (2.35.2) sha256=088865be9675922a5c8f13c00055a71ab768ea5eed211437cffd2a8b46b64ac2
   ruby-graphviz (1.2.5) sha256=1c2bb44e3f6da9e2b829f5e7fd8d75a521485fb6b4d1fc66ff0f93f906121504
   ruby-magic (0.6.0) sha256=7b2138877b7d23aff812c95564eba6473b74b815ef85beb0eb792e729a2b6101
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
