@@ -10,12 +10,11 @@ class SignInWebauthnTest < ApplicationSystemTestCase
                   mfa_level: :ui_only, totp_seed: "thisisonetotpseed",
                   mfa_recovery_codes: @mfa_recovery_codes)
 
-    @authenticator = create_webauthn_credential
+    create_webauthn_credential
   end
 
   teardown do
-    @authenticator&.remove!
-    Capybara.use_default_driver
+    disable_virtual_authenticator
   end
 
   test "sign in with webauthn mfa" do

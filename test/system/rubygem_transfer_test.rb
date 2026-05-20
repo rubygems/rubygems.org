@@ -121,7 +121,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
     click_button "Confirm"
 
     # headers:         OWNER             STATUS     MFA                         ADDED BY                      ROLE
-    assert_text "#{maintainer.handle}\nConfirmed\nDisabled\n#{maintainer.ownerships.first.authorizer_name} Maintainer"
+    assert_text "#{maintainer.handle} Confirmed Disabled #{maintainer.ownerships.first.authorizer_name} Maintainer", normalize_ws: true
   end
 
   test "cancelling a rubygem transfer" do

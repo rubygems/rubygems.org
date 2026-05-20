@@ -326,9 +326,9 @@ class ApiKeysTest < ApplicationSystemTestCase
     api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
-    click_button "Delete"
-
-    page.accept_alert
+    accept_alert do
+      click_button "Delete"
+    end
 
     assert_text "New API key"
     page.assert_text "Successfully deleted API key: #{api_key.name}"
@@ -341,9 +341,9 @@ class ApiKeysTest < ApplicationSystemTestCase
     api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
-    click_button "Reset"
-
-    page.accept_alert
+    accept_alert do
+      click_button "Reset"
+    end
 
     assert_text "New API key"
     page.assert_no_text api_key.name

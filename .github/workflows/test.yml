@@ -44,6 +44,7 @@ jobs:
           ruby-version: .ruby-version
           rubygems-version: ${{ env.RUBYGEMS_VERSION }}
           install-avo-pro: ${{ matrix.tests.id != 'avo-without-pro' }}
+          install-playwright: ${{ matrix.tests.id != 'general' }}
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
