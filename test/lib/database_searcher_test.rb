@@ -46,6 +46,50 @@ class DatabaseSearcherTest < ActiveSupport::TestCase
       assert_equal @rails, gems.first
     end
 
+    should "rank an exact name match first, even when a partial match has more downloads" do
+      exact = create(:rubygem, name: "web", downloads: 5)
+      create(:version, rubygem: exact, summary: "tiny web toolkit", description: "web")
+      exact.update_search_vector
+
+      _error, gems = DatabaseSearcher.new("web").search
+
+      assert_equal exact, gems.first
+    end
+
+    # Regression guard: before the exact-name boost, "rails" ranked ~#10 on real data,
+    # behind higher-download gems that merely contain "rails" (rails-html-sanitizer, etc.).
+    should "rank a popular exact-name gem first ahead of higher-download partial matches" do
+      {
+        "rails-html-sanitizer" => 500_000,
+        "factory_bot_rails"    => 400_000,
+        "rspec-rails"          => 300_000,
+        "rubocop-rails"        => 200_000
+      }.each do |name, downloads|
+        gem = create(:rubygem, name: name, downloads: downloads)
+        create(:version, rubygem: gem, summary: "rails integration", description: "works with rails")
+        gem.update_search_vector
+      end
+
+      _error, gems = DatabaseSearcher.new("rails").search
+
+      assert_equal @rails, gems.first, "expected exact 'rails' gem first, got #{gems.first&.name}"
+    end
+
+    should "rank a name-prefix match above an incidental body match" do
+      prefix = create(:rubygem, name: "rack-cors", downloads: 1)
+      create(:version, rubygem: prefix, summary: "cross origin", description: "middleware")
+      prefix.update_search_vector
+
+      body_only = create(:rubygem, name: "middleware-tool", downloads: 100_000)
+      create(:version, rubygem: body_only, summary: "uses rack internally", description: "rack adapter")
+      body_only.update_search_vector
+
+      _error, gems = DatabaseSearcher.new("rack").search
+      names = gems.to_a.map(&:name)
+
+      assert_operator names.index("rack-cors"), :<, names.index("middleware-tool")
+    end
+
     should "exclude yanked (unindexed) gems" do
       @rack.update!(indexed: false)
       _error, gems = DatabaseSearcher.new("web framework").search

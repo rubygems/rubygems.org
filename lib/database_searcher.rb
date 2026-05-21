@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
-# PostgreSQL full-text search over the `rubygems.search_vector` tsvector column
-# (see RubygemSearchable#update_search_vector and AddSearchVectorToRubygems).
-#
-# Drop-in alternative to ElasticSearcher: exposes the same #search, #api_search and
-# #suggestions interface so the controllers can switch between the two behind the
-# :postgres_search feature flag without any other changes. Reuses ElasticSearcher's
-# error classes so existing rescue_from handlers keep working.
+# Drop-in alternative to ElasticSearcher backed by PostgreSQL full-text search, swapped
+# in behind the :postgres_search feature flag. Shares ElasticSearcher's #search /
+# #api_search / #suggestions interface and error classes.
 class DatabaseSearcher
-  # Fields returned by the API, mirroring ElasticSearcher#api_source. These are keys
-  # of Rubygem#search_data so the JSON/YAML response matches the OpenSearch one.
+  # Subset of Rubygem#search_data returned by the API, matching ElasticSearcher#api_source.
   API_FIELDS = %i[
     name downloads version version_downloads platform authors info licenses metadata
     sha project_uri gem_uri homepage_uri wiki_uri documentation_uri mailing_list_uri
@@ -56,15 +51,29 @@ class DatabaseSearcher
   def full_text_search
     return Rubygem.none if @query.blank?
 
-    tsquery = Rubygem.sanitize_sql_array(["websearch_to_tsquery('english', ?)", @query])
+    body_q = Rubygem.sanitize_sql_array(["websearch_to_tsquery('english', ?)", @query])
 
     Rubygem
       .with_versions
       .joins(:gem_download)
-      .where("rubygems.search_vector @@ #{tsquery}")
-      .select("rubygems.*, ts_rank(rubygems.search_vector, #{tsquery}) AS search_rank")
-      .order(Arel.sql("ts_rank(rubygems.search_vector, #{tsquery}) * ln(gem_downloads.count + 2) DESC"))
+      .where("rubygems.search_vector @@ #{body_q}")
+      .select("rubygems.*, #{rank_sql(body_q)} AS search_rank")
+      .order(Arel.sql("#{rank_sql(body_q)} DESC"))
       .preload(:latest_version, :gem_download)
+  end
+
+  # Popularity-weighted text relevance, plus additive boosts that lift exact- and
+  # prefix-name matches above incidental body hits. The boost constants exceed the base
+  # term's range, so an exact name always ranks first while downloads order within a tier.
+  def rank_sql(body_q)
+    exact  = Rubygem.sanitize_sql_array(["lower(rubygems.name) = lower(?)", @query])
+    prefix = Rubygem.sanitize_sql_array(["rubygems.name ILIKE ?", "#{sanitize_like(@query)}%"])
+
+    <<~SQL.squish
+      (CASE WHEN #{exact} THEN 1000 ELSE 0 END)
+      + (CASE WHEN #{prefix} THEN 30 ELSE 0 END)
+      + ts_rank(rubygems.search_vector, #{body_q}) * ln(gem_downloads.count + 2)
+    SQL
   end
 
   def sanitize_like(value)
