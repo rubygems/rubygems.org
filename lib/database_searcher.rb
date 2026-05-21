@@ -25,7 +25,9 @@ class DatabaseSearcher
   end
 
   def api_search
-    results = full_text_search.page(@page).per(Kaminari.config.default_per_page)
+    results = full_text_search
+      .preload(:versions, :linkset, :link_verifications, most_recent_version: :dependencies)
+      .page(@page).per(Kaminari.config.default_per_page)
     results.map { |rubygem| rubygem.search_data.slice(*API_FIELDS) }
   rescue StandardError => e
     raise ElasticSearcher::SearchNotAvailableError, error_msg(e)
@@ -58,13 +60,14 @@ class DatabaseSearcher
       .joins(:gem_download)
       .where("rubygems.search_vector @@ #{body_q}")
       .select("rubygems.*, #{rank_sql(body_q)} AS search_rank")
-      .order(Arel.sql("#{rank_sql(body_q)} DESC"))
+      .order(Arel.sql("search_rank DESC, rubygems.id DESC"))
       .preload(:latest_version, :gem_download)
   end
 
   # Popularity-weighted text relevance, plus additive boosts that lift exact- and
   # prefix-name matches above incidental body hits. The boost constants exceed the base
   # term's range, so an exact name always ranks first while downloads order within a tier.
+  # `body_q` must be a sanitized SQL fragment — it is interpolated raw.
   def rank_sql(body_q)
     exact  = Rubygem.sanitize_sql_array(["lower(rubygems.name) = lower(?)", @query])
     prefix = Rubygem.sanitize_sql_array(["rubygems.name ILIKE ?", "#{sanitize_like(@query)}%"])

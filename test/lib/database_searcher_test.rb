@@ -114,6 +114,33 @@ class DatabaseSearcherTest < ActiveSupport::TestCase
       assert_equal "rails", result[:name]
       assert_equal DatabaseSearcher::API_FIELDS.sort, result.keys.sort
     end
+
+    should "return the same fields as the OpenSearch API response" do
+      es_fields = ElasticSearcher.new("rails").send(:api_source).map(&:to_sym)
+
+      assert_equal es_fields.sort, DatabaseSearcher::API_FIELDS.sort
+    end
+  end
+
+  context "error handling" do
+    should "return a friendly message and report when search fails" do
+      DatabaseSearcher.any_instance.stubs(:full_text_search).raises(ActiveRecord::StatementInvalid, "boom")
+      Rails.error.expects(:report).once
+      StatsD.expects(:increment).with("search.failure", anything).once
+
+      error, gems = DatabaseSearcher.new("rails").search
+
+      assert_nil gems
+      assert_match(/unavailable/i, error)
+    end
+
+    should "raise SearchNotAvailableError from api_search when search fails" do
+      DatabaseSearcher.any_instance.stubs(:full_text_search).raises(ActiveRecord::StatementInvalid, "boom")
+
+      assert_raises(ElasticSearcher::SearchNotAvailableError) do
+        DatabaseSearcher.new("rails").api_search
+      end
+    end
   end
 
   context "#suggestions" do
