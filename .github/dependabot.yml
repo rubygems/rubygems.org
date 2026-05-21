@@ -22,6 +22,12 @@ updates:
   schedule:
     interval: weekly
   open-pull-requests-limit: 99
+  groups:
+    github-actions-patch-minor:
+      patterns: ["*"]
+      update-types:
+        - version-update:semver-patch
+        - version-update:semver-minor
 - package-ecosystem: "devcontainers"
   directory: "/"
   schedule:
