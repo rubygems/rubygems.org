@@ -34,8 +34,9 @@ class FeatureFlaggingTest < ApplicationSystemTestCase
     click_button "Add Feature"
 
     assert_text "my_feature"
+    # Wait for Flipper's DOMContentLoaded JS handlers to be attached before interacting
+    page.driver.with_playwright_page { |pw_page| pw_page.wait_for_load_state(state: "load") }
     click_button "Add an actor"
-
     fill_in "value", with: "user:#{allowed_user.handle}"
     click_button "Add Actor"
 

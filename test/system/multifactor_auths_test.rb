@@ -11,9 +11,8 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
   teardown do
     @user.disable_totp!
-    @authenticator&.remove!
+    disable_virtual_authenticator
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 
   context "cache-control" do
@@ -154,12 +153,12 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     end
 
     should "user with webauthn can change mfa level" do
-      fullscreen_headless_chrome_driver
+      fullscreen_playwright_driver
 
       sign_in
       visit edit_settings_path
 
-      @authenticator = create_webauthn_credential_while_signed_in
+      create_webauthn_credential_while_signed_in
 
       assert_text "UI and gem signin"
 
@@ -247,7 +246,5 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     click_button "Update"
   end
 
-  def go_back
-    page.evaluate_script("window.history.back()")
-  end
+  delegate :go_back, to: :page
 end
