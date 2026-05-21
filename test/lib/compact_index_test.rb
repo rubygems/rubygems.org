@@ -121,5 +121,23 @@ class CompactIndexTest < ActiveSupport::TestCase
 
       assert_equal "---\n1.0.1-jruby |checksum:sum+test_gem+1.0.1\n", CompactIndex.info(param)
     end
+
+    should "show created_at timestamp" do
+      param = [build_version(number: "1.0.1", created_at: "2024-05-01T12:00:00Z")]
+
+      assert_equal "---\n1.0.1 |checksum:sum+test_gem+1.0.1,created_at:2024-05-01T12:00:00Z\n", CompactIndex.info(param)
+    end
+
+    should "show created_at with other requirements" do
+      param = [build_version(number: "1.0.1", ruby_version: ">1.9", created_at: "2024-05-01T12:00:00Z")]
+
+      assert_equal "---\n1.0.1 |checksum:sum+test_gem+1.0.1,ruby:>1.9,created_at:2024-05-01T12:00:00Z\n", CompactIndex.info(param)
+    end
+
+    should "omit created_at when nil" do
+      param = [build_version(number: "1.0.1")]
+
+      refute_includes CompactIndex.info(param), "created_at"
+    end
   end
 end

@@ -14,7 +14,7 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
 
     content = <<~INFO
       ---
-      0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
+      0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{version.created_at.utc.iso8601}
     INFO
 
     assert_equal content, RubygemFs.compact_index.get("info/#{version.rubygem.name}")
