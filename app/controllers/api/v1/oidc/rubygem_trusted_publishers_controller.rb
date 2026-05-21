@@ -41,7 +41,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
   end
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params[:id])
+    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params.expect(:id))
   end
 
   def set_trusted_publisher_type

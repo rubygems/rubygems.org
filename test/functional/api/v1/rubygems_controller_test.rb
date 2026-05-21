@@ -178,7 +178,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "return a hash" do
-        assert_not_nil yield(@response.body)
+        assert_not_nil(yield(@response.body))
       end
       should "only return my gems" do
         gem_names = yield(@response.body).pluck("name").sort

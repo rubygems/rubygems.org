@@ -78,7 +78,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def development_log_in_as
-    user = User.find(params[:user_id])
+    user = User.find(params.expect(:user_id))
     sign_in(user)
     redirect_back_or_to dashboard_path
   end
