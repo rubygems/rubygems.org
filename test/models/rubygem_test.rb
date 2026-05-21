@@ -812,6 +812,18 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    context "#update_search_vector" do
+      should "populate search_vector from name, summary and description of the most recent version" do
+        gem = create(:rubygem, name: "widget")
+        create(:version, rubygem: gem, summary: "a useful gadget", description: "does widget things")
+        gem.update_search_vector
+
+        assert_predicate gem.reload.search_vector, :present?
+        assert_includes Rubygem.where("search_vector @@ websearch_to_tsquery('english', 'gadget')"), gem
+        assert_includes Rubygem.where("search_vector @@ websearch_to_tsquery('english', 'widget')"), gem
+      end
+    end
+
     should "find exact match by name on #name_is" do
       assert_equal @apple_crisp, Rubygem.name_is("apple_crisp").first
     end

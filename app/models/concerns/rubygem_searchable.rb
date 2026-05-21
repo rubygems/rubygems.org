@@ -69,6 +69,21 @@ module RubygemSearchable
       }.merge!(suggest_json)
     end
 
+    # Recomputes the PostgreSQL full-text `search_vector` column from the gem name
+    # and the latest version's summary/description. Maintained alongside the
+    # OpenSearch index (see ReindexRubygemJob) so DatabaseSearcher and
+    # ElasticSearcher stay in sync. Used by the :postgres_search feature flag.
+    def update_search_vector
+      version = most_recent_version
+      sql = Rubygem.sanitize_sql_array([<<~SQL.squish, name, version&.summary, version&.description])
+        search_vector =
+          setweight(to_tsvector('english', coalesce(?, '')), 'A') ||
+          setweight(to_tsvector('english', coalesce(?, '')), 'B') ||
+          setweight(to_tsvector('english', coalesce(?, '')), 'C')
+      SQL
+      Rubygem.where(id: id).update_all(sql)
+    end
+
     def self.legacy_search(query)
       conditions = <<~SQL.squish
         versions.indexed and

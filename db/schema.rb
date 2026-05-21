@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_14_235942) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_21_141021) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -620,12 +620,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_14_235942) do
     t.boolean "indexed", default: false, null: false
     t.string "name"
     t.bigint "organization_id"
+    t.tsvector "search_vector"
     t.datetime "updated_at", precision: nil
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
     t.index ["organization_id"], name: "index_rubygems_on_organization_id"
+    t.index ["search_vector"], name: "index_rubygems_on_search_vector", using: :gin
   end
 
   create_table "sendgrid_events", force: :cascade do |t|

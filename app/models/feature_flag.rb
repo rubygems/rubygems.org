@@ -2,6 +2,7 @@
 
 class FeatureFlag
   ORGANIZATIONS = :organizations
+  POSTGRES_SEARCH = :postgres_search
 
   class << self
     def enabled?(flag_name, actor = nil)

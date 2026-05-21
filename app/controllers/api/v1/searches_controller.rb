@@ -10,7 +10,7 @@ class Api::V1::SearchesController < Api::BaseController
               SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
 
   def show
-    @rubygems = ElasticSearcher.new(query_params, page: @page).api_search
+    @rubygems = Searcher.for(query_params, page: @page, actor: current_user).api_search
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }
@@ -18,7 +18,7 @@ class Api::V1::SearchesController < Api::BaseController
   end
 
   def autocomplete
-    results = ElasticSearcher.new(query_params, page: @page).suggestions
+    results = Searcher.for(query_params, page: @page, actor: current_user).suggestions
     render json: results
   end
 

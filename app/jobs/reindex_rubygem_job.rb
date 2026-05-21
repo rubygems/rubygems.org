@@ -5,5 +5,6 @@ class ReindexRubygemJob < ApplicationJob
 
   def perform(rubygem:)
     rubygem.reindex
+    rubygem.update_search_vector
   end
 end
