@@ -376,7 +376,7 @@ class ApiKeysTest < ApplicationSystemTestCase
   end
 
   def visit_edit_profile_api_key_path(api_key)
-    visit edit_profile_api_key_path(api_key)
+    visit edit_profile_api_key_path(id: api_key)
     verify_password
   end
 

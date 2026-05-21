@@ -1,4 +1,4 @@
-<% url_attrs = @api_key_role.persisted? ? {url: profile_oidc_api_key_role_path(@api_key_role.token)} : {} %>
+<% url_attrs = @api_key_role.persisted? ? {url: profile_oidc_api_key_role_path(token: @api_key_role.token)} : {} %>
 <%= form_for [:profile, @api_key_role], **url_attrs do |f|%>
   <%= error_messages_for @api_key_role %>
   <%= f.label :name, class: "form__label" %>

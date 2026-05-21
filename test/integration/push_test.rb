@@ -80,7 +80,7 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_response :success
     perform_enqueued_jobs
 
-    get rubygem_path("sandworm")
+    get rubygem_path(id: "sandworm")
 
     assert_response :success
     assert page.has_content?("sandworm")
@@ -126,7 +126,7 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_equal({ checksum_sha256: spec_checksum, key: "quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz" },
                  RubygemFs.instance.head("quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz"))
 
-    get rubygem_path("sandworm")
+    get rubygem_path(id: "sandworm")
 
     assert_response :success
     assert page.has_content?("sandworm")
@@ -163,7 +163,7 @@ class PushTest < ActionDispatch::IntegrationTest
       message_id: email.message_id, mailer: "mailer", action: "gem_pushed"
     }, @user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
-    get rubygem_path("sandworm")
+    get rubygem_path(id: "sandworm")
 
     assert_response :success
     page.assert_text("Pushed by")
@@ -180,7 +180,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_path(id: "sandworm")
 
     assert_response :success
     page.assert_text("Pushed by")
@@ -202,7 +202,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_path(id: "sandworm")
 
     assert_response :success
     page.assert_text("Pushed by")
@@ -223,7 +223,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_path(id: "sandworm")
 
     assert_response :success
     assert page.has_content?("crysknife")
@@ -237,7 +237,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_path(id: "sandworm")
 
     assert_response :success
     assert page.has_content?("mauddib")
@@ -284,7 +284,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("valid_signature")
+    get rubygem_path(id: "valid_signature")
 
     assert_response :success
 
@@ -294,7 +294,7 @@ class PushTest < ActionDispatch::IntegrationTest
     refute page.has_content?("(expired)")
 
     travel_to Time.zone.local(2121, 8, 8)
-    get rubygem_path("valid_signature")
+    get rubygem_path(id: "valid_signature")
 
     assert page.has_content?("(expired)")
   end

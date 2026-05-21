@@ -10,7 +10,7 @@ class Organizations::InvitationsController < Organizations::BaseController
 
   def update
     @membership.confirm!
-    redirect_to organization_path(@organization), notice: "You have successfully joined the #{@organization.handle} organization."
+    redirect_to organization_path(id: @organization), notice: "You have successfully joined the #{@organization.handle} organization."
   end
 
   private

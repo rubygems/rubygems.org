@@ -9,7 +9,7 @@ class OwnersController < ApplicationController
   before_action :find_ownership, only: %i[edit update destroy]
 
   rescue_from(Pundit::NotAuthorizedError) do |e|
-    redirect_to rubygem_path(@rubygem.slug), alert: e.policy.error
+    redirect_to rubygem_path(id: @rubygem.slug), alert: e.policy.error
   end
 
   def confirm
@@ -17,7 +17,7 @@ class OwnersController < ApplicationController
 
     if ownership.valid_confirmation_token? && ownership.confirm!
       notify_owner_added(ownership)
-      redirect_to rubygem_path(ownership.rubygem.slug), notice: t(".confirmed_email", gem: ownership.rubygem.name)
+      redirect_to rubygem_path(id: ownership.rubygem.slug), notice: t(".confirmed_email", gem: ownership.rubygem.name)
     else
       redirect_to root_path, alert: t(".token_expired")
     end
@@ -31,7 +31,7 @@ class OwnersController < ApplicationController
     else
       flash[:alert] = t("try_again")
     end
-    redirect_to rubygem_path(ownership.rubygem.slug)
+    redirect_to rubygem_path(id: ownership.rubygem.slug)
   end
 
   def index
@@ -49,7 +49,7 @@ class OwnersController < ApplicationController
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user, role: params[:role])
     if ownership.save
       OwnersMailer.ownership_confirmation(ownership).deliver_later
-      redirect_to rubygem_owners_path(@rubygem.slug), notice: t(".success_notice", handle: owner.name)
+      redirect_to rubygem_owners_path(rubygem_id: @rubygem.slug), notice: t(".success_notice", handle: owner.name)
     else
       index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_content
     end
@@ -61,7 +61,7 @@ class OwnersController < ApplicationController
   def update
     if @ownership.update(update_params)
       OwnersMailer.with(ownership: @ownership, authorizer: current_user).owner_updated.deliver_later
-      redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".success_notice", handle: @ownership.user.name)
+      redirect_to rubygem_owners_path(rubygem_id: @ownership.rubygem.slug), notice: t(".success_notice", handle: @ownership.user.name)
     else
       index_with_error @ownership.errors.full_messages.to_sentence, :unprocessable_content
     end
@@ -70,7 +70,7 @@ class OwnersController < ApplicationController
   def destroy
     if @ownership.safe_destroy
       OwnersMailer.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id).deliver_later
-      redirect_to rubygem_owners_path(@ownership.rubygem.slug), notice: t(".removed_notice", owner_name: @ownership.owner_name)
+      redirect_to rubygem_owners_path(rubygem_id: @ownership.rubygem.slug), notice: t(".removed_notice", owner_name: @ownership.owner_name)
     else
       index_with_error t(".failed_notice"), :forbidden
     end
@@ -79,7 +79,7 @@ class OwnersController < ApplicationController
   private
 
   def verify_session_redirect_path
-    rubygem_owners_url(params[:rubygem_id])
+    rubygem_owners_url(rubygem_id: params[:rubygem_id])
   end
 
   def find_ownership

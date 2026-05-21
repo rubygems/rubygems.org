@@ -14,7 +14,7 @@
 
   <ul>
     <% Gemcutter::POLICY_PAGES.each do |policy| %>
-      <li><%= link_to(t("policies.#{policy}.title"), policy_path(policy)) %></li>
+      <li><%= link_to(t("policies.#{policy}.title"), policy_path(policy: policy)) %></li>
     <% end %>
   </ul>
 
