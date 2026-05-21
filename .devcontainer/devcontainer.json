@@ -39,10 +39,8 @@
   "containerEnv": {
     "EDITOR": "code --wait",
     "GIT_EDITOR": "code --wait",
-    "CAPYBARA_SERVER_PORT": "31337",
     "ELASTICSEARCH_URL": "http://search:9200",
     "DB_HOST": "db",
-    "DEVCONTAINER_APP_HOST": "http://rails-app",
     "MEMCACHED_URL": "memcache:11211"
   },
   "customizations": {
