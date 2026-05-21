@@ -218,6 +218,11 @@ class SessionsControllerTest < ActionController::TestCase
           assert_predicate @controller.request.env[:clearance], :signed_in?
         end
 
+        should "track login success with Datadog AppSec" do
+          Datadog::Kit::AppSec::Events::V2.expects(:track_user_login_success).with(@user.id.to_s)
+          post :create, params: { session: { who: "login", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
         should "set security device notice" do
           expected_notice = "🎉 We now support security devices! Improve your account security by " \
                             "<a href=\"/settings/edit#security-device\">setting up</a> a new device. " \
@@ -312,6 +317,19 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "not sign in the user" do
         refute_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      should "track login failure with Datadog AppSec for an existing user" do
+        user = create(:user, handle: "existinglogin")
+        Datadog::Kit::AppSec::Events::V2.expects(:track_user_login_failure).with(user.id.to_s, true)
+        post :create, params: { session: { who: "existinglogin", password: "wrongpassword" } }
+      end
+
+      should "track login failure with Datadog AppSec for an unknown user" do
+        Datadog::Kit::AppSec::Events::V2.expects(:track_user_login_failure).with(
+          Digest::SHA256.hexdigest("nobody"), false
+        )
+        post :create, params: { session: { who: "nobody", password: "wrongpassword" } }
       end
     end
 

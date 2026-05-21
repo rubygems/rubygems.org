@@ -129,7 +129,7 @@ module GemHelpers # rubocop:disable Metrics/ModuleLength
       s.authors = ["Someone"]
       s.date = Time.zone.now.strftime("%Y-%m-%d")
       s.description = summary.to_s
-      s.email = "someone@example.com"
+      s.email = "someone@rubygems-test.org"
       s.files = []
       s.homepage = "http://example.com/#{name}"
       s.require_paths = ["lib"]

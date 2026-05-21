@@ -3,7 +3,6 @@
 class ApplicationMailer < ActionMailer::Base
   include SemanticLogger::Loggable
   include Roadie::Rails::Automatic
-  include MailerHelper
 
   default from: Gemcutter::MAIL_SENDER
   default_url_options[:host] = Gemcutter::HOST

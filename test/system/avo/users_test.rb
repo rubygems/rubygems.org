@@ -23,13 +23,19 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Reset User 2FA"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Reset MFA"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Reset MFA"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    click_button "Reset MFA"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+      click_button "Reset MFA"
+    end
 
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
@@ -102,13 +108,19 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Block User"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Block User"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Block User"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    click_button "Block User"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+      click_button "Block User"
+    end
 
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
@@ -200,14 +212,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       click_button "Actions"
       click_on "Reset Api Key"
 
-      assert_no_changes "User.find(#{user.id}).attributes" do
-        click_button "Reset Api Key"
+      within("[role='dialog']") do
+        assert_no_changes "User.find(#{user.id}).attributes" do
+          click_button "Reset Api Key"
+        end
       end
       page.assert_text "Must supply a sufficiently detailed comment"
 
-      fill_in "Comment", with: "A nice long comment"
-      select("Public Gem", from: "Template")
-      click_button "Reset Api Key"
+      within("[role='dialog']") do
+        fill_in "Comment", with: "A nice long comment"
+
+        assert_field "Comment", with: "A nice long comment"
+        select("Public Gem", from: "Template")
+        click_button "Reset Api Key"
+      end
 
       page.assert_text "Action ran successfully!"
 
@@ -278,15 +296,23 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Yank all Rubygems"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Yank all Rubygems"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Yank all Rubygems"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+    end
 
     assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
-      click_button "Yank all Rubygems"
+      within("[role='dialog']") do
+        click_button "Yank all Rubygems"
+      end
 
       page.assert_text "Yanking all rubygems for #{user.handle} has been scheduled"
     end
@@ -333,15 +359,23 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Yank User"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Yank User"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Yank User"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+    end
 
     assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
-      click_button "Yank User"
+      within("[role='dialog']") do
+        click_button "Yank User"
+      end
 
       page.assert_text "Action ran successfully!"
     end
@@ -437,14 +471,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       click_button "Actions"
       click_on "Change User Email"
 
-      assert_no_changes "User.find(#{user.id}).attributes" do
-        click_button "Change User Email"
+      within("[role='dialog']") do
+        assert_no_changes "User.find(#{user.id}).attributes" do
+          click_button "Change User Email"
+        end
       end
       page.assert_text "Must supply a sufficiently detailed comment"
 
-      fill_in "Comment", with: "A nice long comment"
-      fill_in "Email", with: "gem-maintainer-001@example.com"
-      click_button "Change User Email"
+      within("[role='dialog']") do
+        fill_in "Comment", with: "A nice long comment"
+
+        assert_field "Comment", with: "A nice long comment"
+        fill_in "Email", with: "gem-maintainer-001@rubygems-test.org"
+        click_button "Change User Email"
+      end
 
       page.assert_text "Action ran successfully!"
 
@@ -487,7 +527,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "unchanged" => {}
             }
           },
-          "fields" => { "from_email" => "gem-maintainer-001@example.com" },
+          "fields" => { "from_email" => "gem-maintainer-001@rubygems-test.org" },
           "arguments" => {},
           "models" => ["gid://gemcutter/User/#{user.id}"]
         },
@@ -513,14 +553,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Create User"
 
-    assert_no_changes "User.count" do
-      click_button "Create User"
+    within("[role='dialog']") do
+      assert_no_changes "User.count" do
+        click_button "Create User"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    fill_in "Email", with: "gem-user-001@example.com"
-    click_button "Create User"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+      fill_in "Email", with: "gem-user-001@rubygems-test.org"
+      click_button "Create User"
+    end
 
     page.assert_text "Action ran successfully!"
     perform_enqueued_jobs
@@ -545,7 +591,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "unchanged" => {}
           }
         },
-        "fields" => { "email" => "gem-user-001@example.com" },
+        "fields" => { "email" => "gem-user-001@rubygems-test.org" },
         "arguments" => {},
         "models" => []
       },

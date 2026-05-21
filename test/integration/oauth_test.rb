@@ -9,7 +9,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
       uid: "95144751",
       info: {
         nickname: "jackson-keeling",
-        email: "jackson.keeling@example.com",
+        email: "jackson.keeling@rubygems-test.org",
         name: "Jackson Keeling",
         image: "https://via.placeholder.com/300x300.png",
         urls: {
@@ -43,7 +43,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
           company: nil,
           blog: nil,
           location: "Paigeton, Massachusetts",
-          email: "jackson.keeling@example.com",
+          email: "jackson.keeling@rubygems-test.org",
           hireable: nil,
           bio: nil,
           public_repos: 263,

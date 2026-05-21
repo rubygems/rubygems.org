@@ -7,58 +7,58 @@ class SendgridEventTest < ActiveSupport::TestCase
 
   context ".fails_since_last_delivery" do
     should "return 0 for email with no events" do
-      assert_equal 0, SendgridEvent.fails_since_last_delivery("user@example.com")
+      assert_equal 0, SendgridEvent.fails_since_last_delivery("user@rubygems-test.org")
     end
 
     should "return 0 for email with no delivery failures" do
-      create(:sendgrid_event, event_type: "delivered", occurred_at: 1.day.ago, email: "user@example.com")
+      create(:sendgrid_event, event_type: "delivered", occurred_at: 1.day.ago, email: "user@rubygems-test.org")
 
-      assert_equal 0, SendgridEvent.fails_since_last_delivery("user@example.com")
+      assert_equal 0, SendgridEvent.fails_since_last_delivery("user@rubygems-test.org")
     end
 
     should "return number of mail delivery failures" do
       freeze_time do
-        create(:sendgrid_event, event_type: "dropped", occurred_at: 1.day.ago, email: "user@example.com")
-        create(:sendgrid_event, event_type: "bounce", occurred_at: 2.days.ago, email: "user@example.com")
-        create(:sendgrid_event, event_type: "dropped", occurred_at: 3.days.ago, email: "user@example.com")
+        create(:sendgrid_event, event_type: "dropped", occurred_at: 1.day.ago, email: "user@rubygems-test.org")
+        create(:sendgrid_event, event_type: "bounce", occurred_at: 2.days.ago, email: "user@rubygems-test.org")
+        create(:sendgrid_event, event_type: "dropped", occurred_at: 3.days.ago, email: "user@rubygems-test.org")
       end
 
-      assert_equal 3, SendgridEvent.fails_since_last_delivery("user@example.com")
+      assert_equal 3, SendgridEvent.fails_since_last_delivery("user@rubygems-test.org")
     end
 
     should "return number of delivery failures for given email only" do
       freeze_time do
-        create(:sendgrid_event, email: "user.a@example.com", event_type: "bounce", occurred_at: 1.day.ago)
-        create(:sendgrid_event, email: "user.b@example.com", event_type: "bounce", occurred_at: 2.days.ago)
-        create(:sendgrid_event, email: "user.a@example.com", event_type: "bounce", occurred_at: 3.days.ago)
+        create(:sendgrid_event, email: "user.a@rubygems-test.org", event_type: "bounce", occurred_at: 1.day.ago)
+        create(:sendgrid_event, email: "user.b@rubygems-test.org", event_type: "bounce", occurred_at: 2.days.ago)
+        create(:sendgrid_event, email: "user.a@rubygems-test.org", event_type: "bounce", occurred_at: 3.days.ago)
       end
 
-      assert_equal 2, SendgridEvent.fails_since_last_delivery("user.a@example.com")
-      assert_equal 1, SendgridEvent.fails_since_last_delivery("user.b@example.com")
+      assert_equal 2, SendgridEvent.fails_since_last_delivery("user.a@rubygems-test.org")
+      assert_equal 1, SendgridEvent.fails_since_last_delivery("user.b@rubygems-test.org")
     end
 
     should "count no more than one delivery failure per day" do
       freeze_time do
-        create(:sendgrid_event, occurred_at: 1.day.ago, event_type: "dropped", email: "user@example.com")
-        create(:sendgrid_event, occurred_at: 1.day.ago, event_type: "bounce", email: "user@example.com")
-        create(:sendgrid_event, occurred_at: 2.days.ago, event_type: "bounce", email: "user@example.com")
-        create(:sendgrid_event, occurred_at: 2.days.ago, event_type: "bounce", email: "user@example.com")
-        create(:sendgrid_event, occurred_at: 2.days.ago, event_type: "dropped", email: "user@example.com")
+        create(:sendgrid_event, occurred_at: 1.day.ago, event_type: "dropped", email: "user@rubygems-test.org")
+        create(:sendgrid_event, occurred_at: 1.day.ago, event_type: "bounce", email: "user@rubygems-test.org")
+        create(:sendgrid_event, occurred_at: 2.days.ago, event_type: "bounce", email: "user@rubygems-test.org")
+        create(:sendgrid_event, occurred_at: 2.days.ago, event_type: "bounce", email: "user@rubygems-test.org")
+        create(:sendgrid_event, occurred_at: 2.days.ago, event_type: "dropped", email: "user@rubygems-test.org")
       end
 
-      assert_equal 2, SendgridEvent.fails_since_last_delivery("user@example.com")
+      assert_equal 2, SendgridEvent.fails_since_last_delivery("user@rubygems-test.org")
     end
 
     should "only count failures since last successful delivery" do
       freeze_time do
-        create(:sendgrid_event, event_type: "bounce", occurred_at: 1.day.ago, email: "user@example.com")
-        create(:sendgrid_event, event_type: "delivered", occurred_at: 2.days.ago, email: "user@example.com")
-        create(:sendgrid_event, event_type: "dropped", occurred_at: 3.days.ago, email: "user@example.com")
-        create(:sendgrid_event, event_type: "bounce", occurred_at: 4.days.ago, email: "user@example.com")
-        create(:sendgrid_event, event_type: "delivered", occurred_at: 5.days.ago, email: "user@example.com")
+        create(:sendgrid_event, event_type: "bounce", occurred_at: 1.day.ago, email: "user@rubygems-test.org")
+        create(:sendgrid_event, event_type: "delivered", occurred_at: 2.days.ago, email: "user@rubygems-test.org")
+        create(:sendgrid_event, event_type: "dropped", occurred_at: 3.days.ago, email: "user@rubygems-test.org")
+        create(:sendgrid_event, event_type: "bounce", occurred_at: 4.days.ago, email: "user@rubygems-test.org")
+        create(:sendgrid_event, event_type: "delivered", occurred_at: 5.days.ago, email: "user@rubygems-test.org")
       end
 
-      assert_equal 1, SendgridEvent.fails_since_last_delivery("user@example.com")
+      assert_equal 1, SendgridEvent.fails_since_last_delivery("user@rubygems-test.org")
     end
   end
 
@@ -67,7 +67,7 @@ class SendgridEventTest < ActiveSupport::TestCase
       occurred_at = 1.minute.ago.change(usec: 0)
 
       SendgridEvent.process_later(
-        email: "user@example.com",
+        email: "user@rubygems-test.org",
         sg_event_id: "t61hI0Xpmk8XSR1YX4s0Kg==",
         event: "bounce",
         timestamp: occurred_at.to_i
@@ -75,13 +75,13 @@ class SendgridEventTest < ActiveSupport::TestCase
 
       event = SendgridEvent.last
 
-      assert_equal("user@example.com", event.email)
+      assert_equal("user@rubygems-test.org", event.email)
       assert_equal("t61hI0Xpmk8XSR1YX4s0Kg==", event.sendgrid_id)
       assert_equal("bounce", event.event_type)
       assert_equal(occurred_at, event.occurred_at)
       assert_predicate event, :pending?
       assert_equal_hash(
-        { "email" => "user@example.com",
+        { "email" => "user@rubygems-test.org",
           "sg_event_id" => "t61hI0Xpmk8XSR1YX4s0Kg==",
           "event" => "bounce",
           "timestamp" => occurred_at.to_i },
@@ -92,7 +92,7 @@ class SendgridEventTest < ActiveSupport::TestCase
     should "schedule job to process event later" do
       assert_enqueued_jobs 1, only: ProcessSendgridEventJob do
         SendgridEvent.process_later(
-          email: "user@example.com",
+          email: "user@rubygems-test.org",
           sg_event_id: "t61hI0Xpmk8XSR1YX4s0Kg==",
           timestamp: Time.current.to_i
         )

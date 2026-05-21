@@ -6,6 +6,6 @@ class Events::UserEvent::Email::AddedComponentTest < ComponentTest
   should "render preview" do
     preview
 
-    assert_text "user@example.com"
+    assert_text "user@rubygems-test.org"
   end
 end

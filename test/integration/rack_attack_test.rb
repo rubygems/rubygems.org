@@ -10,7 +10,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
 
     @ip_address = "1.2.3.4"
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+    @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                    remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
   end
 
@@ -143,7 +143,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "return 401 for unauthorized request" do
-        post "/session", params: { session: { who: "no@example.com", password: @user.password } }
+        post "/session", params: { session: { who: "no@rubygems-test.org", password: @user.password } }
 
         assert_response :unauthorized
       end
@@ -682,14 +682,14 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle for sign in ignoring case" do
           post "/password",
-               params: { password: { email: "Nick@example.com" } }
+               params: { password: { email: "Nick@rubygems-test.org" } }
 
           assert_response :too_many_requests
         end
 
         should "throttle for sign in ignoring spaces" do
           post "/password",
-               params: { password: { email: "n ick@example.com" } }
+               params: { password: { email: "n ick@rubygems-test.org" } }
 
           assert_response :too_many_requests
         end

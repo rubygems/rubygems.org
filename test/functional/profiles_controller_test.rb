@@ -327,8 +327,8 @@ class ProfilesControllerTest < ActionController::TestCase
 
         create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_SENT)
 
-        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_ADDED, additional: { email: "other@example.com" })
-        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_VERIFIED, additional: { email: "other@example.com" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_ADDED, additional: { email: "other@rubygems-test.org" })
+        create(:events_user_event, user: @user, tag: Events::UserEvent::EMAIL_VERIFIED, additional: { email: "other@rubygems-test.org" })
 
         create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_CREATED, additional: { gem: create(:rubygem).name })
         create(:events_user_event, user: @user, tag: Events::UserEvent::API_KEY_DELETED)

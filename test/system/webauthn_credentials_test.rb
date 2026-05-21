@@ -54,8 +54,9 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       assert_no_text "You don't have any security devices"
       assert_text @webauthn_credential.nickname
 
-      click_on "Delete"
-      page.accept_alert
+      accept_alert do
+        click_on "Delete"
+      end
 
       assert_text "You don't have any security devices"
       assert_no_text @webauthn_credential.nickname
@@ -78,8 +79,9 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
       assert_no_text "You don't have any security devices"
       assert_text @webauthn_credential.nickname
 
-      click_on "Delete"
-      page.dismiss_confirm
+      dismiss_confirm do
+        click_on "Delete"
+      end
 
       assert_no_text "You don't have any security devices"
       assert_text @webauthn_credential.nickname
@@ -98,8 +100,7 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
 
     assert_text "You don't have any security devices"
 
-    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
-    authenticator = page.driver.browser.add_virtual_authenticator(options)
+    enable_virtual_authenticator
     WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
@@ -124,6 +125,6 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     assert_equal "New security device added on RubyGems.org", webauthn_credential_creation_email.subject
 
     # Cleanup test data
-    authenticator.remove!
+    disable_virtual_authenticator
   end
 end

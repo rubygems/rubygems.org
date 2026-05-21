@@ -96,14 +96,14 @@ class UserTest < ActiveSupport::TestCase
 
     context "email" do
       should "be less than 255 characters" do
-        user = build(:user, email: format("%s@example.com", "a" * 255))
+        user = build(:user, email: format("%s@rubygems-test.org", "a" * 255))
 
         refute_predicate user, :valid?
         assert_contains user.errors[:email], "is too long (maximum is 255 characters)"
       end
 
       should "be valid when it matches URI mail email regex" do
-        user = build(:user, email: "mail@example.com")
+        user = build(:user, email: "mail@rubygems-test.org")
 
         assert_predicate user, :valid?
       end
@@ -153,6 +153,120 @@ class UserTest < ActiveSupport::TestCase
           assert_contains user.errors[:email], "is not a valid email"
         end
       end
+
+      %w[user@example.com user@example.net user@example.org
+         user@mail.example.com user@deep.sub.example.org
+         user@foo.test user@bar.example user@baz.invalid user@host.localhost
+         user@printer.local user@silkroad.onion
+         USER@Example.COM].each do |email|
+        should "be invalid with reserved domain #{email}" do
+          user = build(:user, email: email)
+
+          refute_predicate user, :valid?
+          domain = email.split("@").last.downcase
+
+          assert_contains user.errors[:email],
+"domain '#{domain}' is reserved and cannot be used for registration. Please use a valid personal email."
+        end
+      end
+
+      should "be valid with a non-reserved domain" do
+        user = build(:user, email: "user@rubygems.org")
+
+        assert_predicate user, :valid?
+      end
+
+      should "be invalid when an existing user changes email to a reserved domain" do
+        user = create(:user)
+        user.email = "switched@example.com"
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:email],
+          "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
+      end
+
+      should "not re-run reserved domain validation on saves that do not change email" do
+        user = create(:user)
+        user.update_columns(email: "grandfathered@example.com")
+
+        assert user.update(full_name: "New Name")
+      end
+
+      should "be invalid when activating an account with a reserved domain email" do
+        user = create(:user, email_confirmed: false)
+        user.update_columns(email: "grandfathered@example.com")
+
+        refute user.update(email_confirmed: true)
+        assert_contains user.errors[:email],
+          "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
+      end
+
+      context "with a disposable email domain" do
+        include StatsD::Instrument::Assertions
+
+        setup { create(:blocked_email_domain, domain: "mailinator.com") }
+
+        should "be invalid on signup with the exact disposable domain" do
+          user = build(:user, email: "spam@mailinator.com")
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "be invalid on signup with a subdomain of a disposable domain, reporting the matched parent" do
+          user = build(:user, email: "spam@foo.mailinator.com")
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "be invalid when an existing user changes email to a disposable domain" do
+          user = create(:user)
+          user.email = "switched@mailinator.com"
+
+          refute_predicate user, :valid?
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "be invalid when activating an account whose domain became disposable" do
+          user = create(:user, email_confirmed: false)
+          user.update_columns(email: "grandfathered@mailinator.com")
+
+          refute user.update(email_confirmed: true)
+          assert_contains user.errors[:email],
+            I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
+        end
+
+        should "not re-run disposable validation on saves that don't change email" do
+          user = create(:user)
+          user.update_columns(email: "grandfathered@mailinator.com")
+
+          assert user.update(full_name: "New Name")
+        end
+
+        should "allow signup when the domain is on the allowlist" do
+          create(:email_domain_allowlist, domain: "mailinator.com")
+          user = build(:user, email: "user@mailinator.com")
+
+          assert_predicate user, :valid?, user.errors.full_messages.inspect
+        end
+
+        should "allow signup on a subdomain when a parent is on the allowlist" do
+          create(:email_domain_allowlist, domain: "mailinator.com")
+          user = build(:user, email: "user@inbox.mailinator.com")
+
+          assert_predicate user, :valid?, user.errors.full_messages.inspect
+        end
+
+        should "emit a StatsD counter tagged with the source on block" do
+          assert_statsd_increment("email_domain.blocked", tags: { source: "manual" }) do
+            build(:user, email: "spam@mailinator.com").valid?
+          end
+        end
+      end
     end
 
     context "unconfirmed_email" do
@@ -161,6 +275,23 @@ class UserTest < ActiveSupport::TestCase
 
         refute_predicate user, :valid?
         assert_contains user.errors[:unconfirmed_email], "is invalid"
+      end
+
+      should "be invalid with a reserved domain" do
+        user = build(:user, unconfirmed_email: "user@example.com")
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:unconfirmed_email],
+          "domain 'example.com' is reserved and cannot be used for registration. Please use a valid personal email."
+      end
+
+      should "be invalid with a disposable domain" do
+        create(:blocked_email_domain, domain: "mailinator.com")
+        user = build(:user, unconfirmed_email: "user@mailinator.com")
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:unconfirmed_email],
+          I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
       end
     end
 
@@ -228,7 +359,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "not authenticate with bad email, good password" do
-      assert_nil User.authenticate("bad@example.com", @user.password)
+      assert_nil User.authenticate("bad@rubygems-test.org", @user.password)
     end
 
     should "not authenticate with good email, bad password" do
@@ -304,7 +435,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when user has an unconfirmed email" do
         setup do
-          @user.update(unconfirmed_email: "unconfirmed@example.com")
+          @user.update(unconfirmed_email: "unconfirmed@rubygems-test.org")
         end
 
         should "delete the unconfirmed email by default" do
@@ -322,7 +453,7 @@ class UserTest < ActiveSupport::TestCase
             @user.save!
           end
 
-          assert_equal "unconfirmed@example.com", @user.unconfirmed_email
+          assert_equal "unconfirmed@rubygems-test.org", @user.unconfirmed_email
         end
       end
 
@@ -994,20 +1125,20 @@ class UserTest < ActiveSupport::TestCase
 
     should "preserve valid characters so that the format error can be returned" do
       # UTF-8 "香" character, which is valid UTF-8, but we reject utf-8 in email addresses
-      assert_equal "香@example.com", User.normalize_email(String.new("\u9999@example.com", encoding: "utf-8"))
+      assert_equal "香@rubygems-test.org", User.normalize_email(String.new("\u9999@rubygems-test.org", encoding: "utf-8"))
 
       # ISO-8859-1 "Å" character (valid in ISO-8859-1)
-      encoded_email = String.new("myem\xC5il@example.com", encoding: "ISO-8859-1")
+      encoded_email = String.new("myem\xC5il@rubygems-test.org", encoding: "ISO-8859-1")
 
       assert_equal encoded_email, User.normalize_email(encoded_email)
     end
 
     should "return an empty string on invalid inputs" do
       # bad encoding when sent as ASCII-8BIT
-      assert_equal "", User.normalize_email(String.new("\u9999@example.com", encoding: "ascii"))
+      assert_equal "", User.normalize_email(String.new("\u9999@rubygems-test.org", encoding: "ascii"))
 
       # ISO-8859-1 "Å" character (invalid in UTF-8, which uses \xC385 for this character)
-      assert_equal "", User.normalize_email(String.new("myem\xC5il@example.com", encoding: "UTF-8"))
+      assert_equal "", User.normalize_email(String.new("myem\xC5il@rubygems-test.org", encoding: "UTF-8"))
     end
 
     should "return an empty string for nil" do

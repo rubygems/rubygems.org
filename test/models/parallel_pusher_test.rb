@@ -9,7 +9,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
   context "when pushing gems in parallel" do
     setup do
       @fs = RubygemFs.mock!
-      @user = create(:user, email: "user@example.com")
+      @user = create(:user, email: "user@rubygems-test.org")
       @api_key = create(:api_key, owner: @user)
     end
 

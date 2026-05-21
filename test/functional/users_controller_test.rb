@@ -77,6 +77,14 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal Time.current, user.policies_acknowledged_at
         end
       end
+
+      should "track signup with Datadog AppSec" do
+        Datadog::Kit::AppSec::Events.expects(:track).with do |event, **metadata|
+          event == "users.signup" && metadata[:"usr.id"].is_a?(String)
+        end
+
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      end
     end
 
     context "when missing a parameter" do

@@ -76,7 +76,7 @@ class Organizations::MembersController < Organizations::BaseController
   private
 
   def find_membership
-    @membership = @organization.memberships_including_unconfirmed.find(params[:id])
+    @membership = @organization.memberships_including_unconfirmed.find(params.expect(:id))
   end
 
   def membership_params
