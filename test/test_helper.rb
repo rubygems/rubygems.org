@@ -50,8 +50,7 @@ Avo::Current.license = Avo::Licensing::LicenseManager.new(Avo::Licensing::HQ.new
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    "search", # DevContainer services
-    "rails-app"
+    "search" # DevContainer services
   ]
 )
 WebMock.globally_stub_request(:after_local_stubs) do |request|
@@ -63,7 +62,7 @@ WebMock.globally_stub_request(:after_local_stubs) do |request|
 end
 
 Capybara.default_max_wait_time = 5
-Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}" if ENV["DEVCONTAINER_APP_HOST"].blank?
+Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
 Capybara.server_port = 31_337
 Capybara.server = :puma, { Silent: true }
