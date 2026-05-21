@@ -27,6 +27,16 @@ class HomepageTest < ActionDispatch::IntegrationTest
     assert_includes response.headers["Cache-Control"], "public"
   end
 
+  test "request with non empty flash hash does not set public cache headers" do
+    get update_email_confirmations_path(token: "invalid_token")
+
+    follow_redirect!
+
+    assert_response :success
+    refute_includes response.headers["Cache-Control"], "public"
+    assert_nil response.headers["Surrogate-Control"]
+  end
+
   test "authenticated request sets a session cookie" do
     user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
     post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
