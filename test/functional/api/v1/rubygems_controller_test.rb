@@ -178,7 +178,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "return a hash" do
-        assert_not_nil yield(@response.body)
+        assert_not_nil(yield(@response.body))
       end
       should "only return my gems" do
         gem_names = yield(@response.body).pluck("name").sort
@@ -203,6 +203,23 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should_respond_to :yaml do |body|
         YAML.safe_load body
+      end
+    end
+
+    context "when user email is unconfirmed" do
+      setup do
+        @user.update!(email_confirmed: false)
+        post :create, body: gem_file(&:read)
+      end
+
+      should respond_with :forbidden
+
+      should "return email confirmation error" do
+        assert_match "Please confirm your email address", @response.body
+      end
+
+      should "not register any gem" do
+        assert_equal 0, Rubygem.count
       end
     end
 

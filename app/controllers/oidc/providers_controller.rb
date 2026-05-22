@@ -20,6 +20,6 @@ class OIDC::ProvidersController < ApplicationController
   private
 
   def find_provider
-    @provider = OIDC::Provider.find(params[:id])
+    @provider = OIDC::Provider.find(params.expect(:id))
   end
 end

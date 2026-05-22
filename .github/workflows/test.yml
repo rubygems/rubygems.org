@@ -25,7 +25,7 @@ jobs:
     name: Rails tests ${{ matrix.tests.name }}
     runs-on: ubuntu-24.04
     env:
-      RUBYGEMS_VERSION: "4.0.8"
+      RUBYGEMS_VERSION: "4.0.12"
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
       TOXIPROXY_LISTEN_HOST: "0.0.0.0"
@@ -41,9 +41,10 @@ jobs:
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org
         with:
-          ruby-version: "4.0.2"
-          rubygems-version: "4.0.8"
+          ruby-version: .ruby-version
+          rubygems-version: ${{ env.RUBYGEMS_VERSION }}
           install-avo-pro: ${{ matrix.tests.id != 'avo-without-pro' }}
+          install-playwright: ${{ matrix.tests.id != 'general' }}
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
@@ -59,6 +60,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.tests.id != 'avo-without-pro' && (success() || failure())
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

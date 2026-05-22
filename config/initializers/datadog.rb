@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "app_revision"
+require "datadog/kit/identity"
+require "datadog/kit/appsec/events"
+require "datadog/kit/appsec/events/v2"
 
 Datadog.configure do |c|
   # unified service tagging
@@ -44,6 +47,9 @@ Datadog.configure do |c|
     c.tracing.instrument :pg, comment_propagation: 'full'
     c.tracing.instrument :rails, request_queuing: true
     c.tracing.instrument :shoryuken if defined?(Shoryuken)
+
+    # AppSec activation is controlled per-deployment via DD_APPSEC_ENABLED.
+    c.appsec.instrument :rails
   end
 end
 

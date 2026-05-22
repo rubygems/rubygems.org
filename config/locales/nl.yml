@@ -25,6 +25,7 @@ nl:
   api_key_forbidden:
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   please_sign_in:
   otp_incorrect:
@@ -95,6 +96,10 @@ nl:
       messages:
         not_pwned:
         blocked:
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -886,6 +891,7 @@ nl:
       email_sent: Een bevestigingsemail is naar je e-mailadres gestuurd
     new:
       have_account: Heb je al een account?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org

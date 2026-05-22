@@ -84,36 +84,6 @@ class Mailer < ApplicationMailer
         default: "Trusted publisher added to %{gem} on RubyGems.org")
   end
 
-  def mfa_notification(user_id)
-    @user = User.find(user_id)
-
-    mail to: @user.email,
-      subject: "Please consider enabling multi-factor authentication for your account"
-  end
-
-  def mfa_recommendation_announcement(user_id)
-    @user = User.find(user_id)
-
-    mail to: @user.email,
-      subject: "Please enable multi-factor authentication on your RubyGems account"
-  end
-
-  def mfa_required_soon_announcement(user_id)
-    @user = User.find(user_id)
-    @heading = mfa_required_soon_heading(@user.mfa_level)
-
-    mail to: @user.email,
-      subject: mfa_required_soon_subject(@user.mfa_level)
-  end
-
-  def mfa_required_popular_gems_announcement(user_id)
-    @user = User.find(user_id)
-    @heading = mfa_required_popular_gems_heading(@user.mfa_level)
-
-    mail to: @user.email,
-      subject: mfa_required_popular_gems_subject(@user.mfa_level)
-  end
-
   def webauthn_credential_created(webauthn_credential_id)
     @webauthn_credential = WebauthnCredential.find(webauthn_credential_id)
 

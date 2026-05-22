@@ -28,7 +28,7 @@ class WebauthnCredentialsController < ApplicationController
   end
 
   def destroy
-    webauthn_credential = current_user.webauthn_credentials.find(params[:id])
+    webauthn_credential = current_user.webauthn_credentials.find(params.expect(:id))
     if webauthn_credential.destroy
       flash[:notice] = t(".webauthn_credential.confirm_delete")
     else

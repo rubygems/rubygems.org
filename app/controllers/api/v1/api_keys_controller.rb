@@ -50,7 +50,10 @@ class Api::V1::ApiKeysController < Api::BaseController
   private
 
   def check_mfa(user)
-    if user&.mfa_gem_signin_authorized?(otp)
+    return false unless user
+    if user.unconfirmed?
+      render_forbidden t(:email_not_confirmed)
+    elsif user.mfa_gem_signin_authorized?(otp)
       if user.mfa_required_not_yet_enabled?
         render_forbidden t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
       elsif user.mfa_required_weak_level_enabled?
@@ -58,7 +61,7 @@ class Api::V1::ApiKeysController < Api::BaseController
       else
         yield
       end
-    elsif user&.mfa_enabled?
+    elsif user.mfa_enabled?
       prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
       render plain: prompt_text, status: :unauthorized
     else

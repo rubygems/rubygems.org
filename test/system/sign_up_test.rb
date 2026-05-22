@@ -70,7 +70,12 @@ class SignUpTest < ApplicationSystemTestCase
 
     visit root_path
 
-    assert_no_text "Sign up"
+    assert_link "Sign up"
+
+    click_on "Sign up"
+
+    assert_text "New account registration has been temporarily disabled."
+    assert_no_button "Sign up"
   end
 
   test "email confirmation" do

@@ -5,7 +5,7 @@ require "test_helper"
 class UsersHelperTest < ActionView::TestCase
   context "obfuscate_email" do
     should "obfuscate standard email" do
-      assert_equal "g*******@e******.com", obfuscate_email("gem-user@example.com")
+      assert_equal "g*******@r************.org", obfuscate_email("gem-user@rubygems-test.org")
     end
 
     should "obfuscate email with short local part" do
@@ -17,11 +17,11 @@ class UsersHelperTest < ActionView::TestCase
     end
 
     should "handle two character local part" do
-      assert_equal "h*@e******.com", obfuscate_email("hi@example.com")
+      assert_equal "h*@r************.org", obfuscate_email("hi@rubygems-test.org")
     end
 
     should "handle single character local part" do
-      assert_equal "*@e******.com", obfuscate_email("a@example.com")
+      assert_equal "*@r************.org", obfuscate_email("a@rubygems-test.org")
     end
 
     should "handle subdomain in TLD" do

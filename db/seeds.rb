@@ -12,19 +12,19 @@ author = User.create_with(
   password: password,
   email_confirmed: true,
   webauthn_id: "a1TLW3o1W18mTuDBfDALHhL2tZ1_E-2B03Fqsdu8Rv05V4tSsRzepe-L7Uprg356dw1tktXXcTI9TIRaK4gM-A"
-).find_or_create_by!(email: "gem-author@example.com")
+).find_or_create_by!(email: "gem-author@rubygems-test.org")
 
 maintainer = User.create_with(
   handle: "gem-maintainer",
   password: password,
   email_confirmed: true
-).find_or_create_by!(email: "gem-maintainer@example.com")
+).find_or_create_by!(email: "gem-maintainer@rubygems-test.org")
 
 user = User.create_with(
   handle: "gem-user",
   password: password,
   email_confirmed: true
-).find_or_create_by!(email: "gem-user@example.com")
+).find_or_create_by!(email: "gem-user@rubygems-test.org")
 
 Membership.create_with(
   role: :owner,

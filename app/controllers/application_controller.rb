@@ -51,7 +51,11 @@ class ApplicationController < ActionController::Base
   end
 
   def set_user_tag
-    set_tag "gemcutter.user.id", current_user.id if signed_in?
+    return unless signed_in?
+    set_tag "gemcutter.user.id", current_user.id
+
+    trace = Datadog::Tracing.active_trace
+    Datadog::Kit::Identity.set_user(trace, id: current_user.id.to_s) if trace
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
@@ -172,7 +176,8 @@ class ApplicationController < ActionController::Base
   end
 
   def valid_page_param?(max_page)
-    params[:page].respond_to?(:to_i) && params[:page].to_i.between?(Gemcutter::DEFAULT_PAGE, max_page)
+    # :page is optional, so we read it directly rather than via params.expect, which would raise when absent.
+    params[:page].respond_to?(:to_i) && params[:page].to_i.between?(Gemcutter::DEFAULT_PAGE, max_page) # rubocop:disable Rails/StrongParametersExpect
   end
 
   def reject_null_char_param

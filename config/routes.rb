@@ -282,7 +282,7 @@ Rails.application.routes.draw do
     get '/sign_in' => 'sessions#new', as: 'sign_in'
     delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
 
-    get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+    get '/sign_up' => 'users#new', as: 'sign_up'
 
     namespace :organizations, as: :organization do
       get "onboarding", to: redirect("/organizations/onboarding/name")

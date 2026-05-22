@@ -418,7 +418,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       context "when mfa is required" do
         setup do
           User.any_instance.stubs(:mfa_required?).returns true
-          @emails = [@second_user.email, "doesnotexist@example.com", @user.email]
+          @emails = [@second_user.email, "doesnotexist@rubygems-test.org", @user.email]
         end
 
         context "by user with mfa disabled" do
@@ -484,7 +484,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       context "when mfa is recommended" do
         setup do
           User.any_instance.stubs(:mfa_recommended?).returns true
-          @emails = [@second_user.email, "doesnotexist@example.com", @user.email]
+          @emails = [@second_user.email, "doesnotexist@rubygems-test.org", @user.email]
         end
 
         context "by user with mfa disabled" do
@@ -815,7 +815,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       context "when mfa is required" do
         setup do
           User.any_instance.stubs(:mfa_required?).returns true
-          @emails = [@second_user.email, "doesnotexist@example.com", @user.email, "no@permission.com"]
+          @emails = [@second_user.email, "doesnotexist@rubygems-test.org", @user.email, "no@permission.com"]
         end
 
         context "by user with mfa disabled" do
@@ -881,7 +881,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       context "when mfa is recommended" do
         setup do
           User.any_instance.stubs(:mfa_recommended?).returns true
-          @emails = [@second_user.email, "doesnotexist@example.com", @user.email, "nopermission@example.com"]
+          @emails = [@second_user.email, "doesnotexist@rubygems-test.org", @user.email, "nopermission@rubygems-test.org"]
         end
 
         context "by user with mfa disabled" do

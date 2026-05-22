@@ -27,6 +27,12 @@ Rails.application.configure do
       class: "RefreshOIDCProvidersJob",
       set: { priority: 10 },
       description: "Refreshing all OIDC provider configurations every 30m"
+    },
+    sync_disposable_email_domains: {
+      cron: "0 4 * * *",
+      class: "SyncDisposableEmailDomainsJob",
+      set: { priority: 10 },
+      description: "Syncing disposable email domain blocklist daily at 04:00 UTC"
     }
   }
 

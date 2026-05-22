@@ -517,7 +517,7 @@ class PushTest < ActionDispatch::IntegrationTest
           '@original_platform': 'not-ruby'
           '@new_platform': ruby
           '@summary': 'malicious'
-          '@authors': [test@example.com]
+          '@authors': [test@rubygems-test.org]
       YAML
 
       push_gem "malicious.gem"
@@ -543,7 +543,7 @@ class PushTest < ActionDispatch::IntegrationTest
           '@original_platform': 'not-ruby'
           '@new_platform': ruby
           '@summary': 'malicious'
-          '@authors': [test@example.com]
+          '@authors': [test@rubygems-test.org]
       YAML
 
       push_gem "malicious.gem"
@@ -567,7 +567,7 @@ class PushTest < ActionDispatch::IntegrationTest
           platform: !ruby/object:Gem::Platform
             os: ruby
           summary: 'malicious'
-          authors: [test@example.com]
+          authors: [test@rubygems-test.org]
         YAML
         push_gem "malicious.gem"
 
@@ -588,7 +588,7 @@ class PushTest < ActionDispatch::IntegrationTest
           version: '1'
           platform: [ruby]
           summary: 'malicious'
-          authors: [test@example.com]
+          authors: [test@rubygems-test.org]
         YAML
         push_gem "malicious.gem"
 
@@ -603,7 +603,7 @@ class PushTest < ActionDispatch::IntegrationTest
           version: []
         version: '1'
         summary: 'malicious'
-        authors: [test@example.com]
+        authors: [test@rubygems-test.org]
       YAML
       push_gem "malicious.gem"
 
@@ -620,7 +620,7 @@ class PushTest < ActionDispatch::IntegrationTest
             os: "../../../../../etc/passwd"
           '@original_platform': ruby
           '@summary': 'malicious'
-          '@authors': [test@example.com]
+          '@authors': [test@rubygems-test.org]
       YAML
       push_gem "malicious.gem"
 
@@ -635,7 +635,7 @@ class PushTest < ActionDispatch::IntegrationTest
         version: '1'
         platform: ruby
         summary: 'malicious'
-        authors: [test@example.com]
+        authors: [test@rubygems-test.org]
         date: !ruby/object:Time
           a: 1
       YAML

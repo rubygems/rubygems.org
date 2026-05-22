@@ -46,7 +46,7 @@ class RubygemsController < ApplicationController
 
   def show_reserved_gem
     return unless GemNameReservation.reserved?(params[:id])
-    @reserved_gem = params[:id].downcase
+    @reserved_gem = params.expect(:id).downcase
     render "reserved"
   end
 

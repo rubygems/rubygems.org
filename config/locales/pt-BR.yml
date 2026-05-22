@@ -29,6 +29,7 @@ pt-BR:
   api_key_forbidden:
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Acesso Negado. Por favor se registre em https://rubygems.org
   please_sign_in: Por favor, faça login em sua conta para continuar.
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
@@ -101,6 +102,10 @@ pt-BR:
         not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser
           utilizada
         blocked:
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -909,6 +914,7 @@ pt-BR:
       email_sent:
     new:
       have_account: Já tem uma conta?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Esta gem não está hospdada no Gemcutter.

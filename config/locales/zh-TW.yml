@@ -25,6 +25,7 @@ zh-TW:
   api_key_forbidden: API 金鑰沒有存取權限
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: 存取遭拒。請先在 https://rubygems.org 上註冊帳號
   please_sign_in: 請登入以繼續。
   otp_incorrect: 您的 OTP 碼不正確。請檢查後再試一次。
@@ -95,6 +96,10 @@ zh-TW:
       messages:
         not_pwned: 曾出現在資料外洩事件中，不應再使用
         blocked: 網域 '%{domain}' 因濫發垃圾郵件而遭封鎖。請使用有效的個人電子郵件地址。
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -887,6 +892,7 @@ zh-TW:
       email_sent: 已傳送確認信到您的電子郵件地址。
     new:
       have_account: 已經註冊過了？
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上
