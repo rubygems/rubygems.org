@@ -16,7 +16,11 @@ class AfterVersionWriteJob < ApplicationJob
       ReindexRubygemJob.perform_later(rubygem:)
       StoreVersionContentsJob.perform_later(version:)
       version.update!(indexed: true)
-      version.update_columns(GemInfo.new(rubygem.name, cached: false).info_checksums)
+      gem_info = GemInfo.new(rubygem.name, cached: false)
+      version.update_columns(
+        info_checksum: gem_info.info_checksum(version: 1),
+        info_checksum_v2: gem_info.info_checksum(version: 2)
+      )
       SetLinksetHomeJob.perform_later(version:)
     end
   end

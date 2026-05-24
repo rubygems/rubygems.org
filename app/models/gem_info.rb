@@ -27,26 +27,9 @@ class GemInfo
     end
   end
 
-  def compact_index_info_v2
-    compact_index_info(version: 2)
-  end
-
   def info_checksum(version: 1)
     compact_index_info = CompactIndex.info(compute_compact_index_info(version:))
     Digest::MD5.hexdigest(compact_index_info)
-  end
-
-  def info_checksum_v2
-    info_checksum(version: 2)
-  end
-
-  def info_checksums
-    rows = requirements_and_dependencies
-
-    {
-      info_checksum: checksum_for(rows, version: 1),
-      info_checksum_v2: checksum_for(rows, version: 2)
-    }
   end
 
   def self.ordered_names(cached: true)
@@ -129,18 +112,9 @@ class GemInfo
     nil
   end
 
-  def checksum_for(rows, version:)
-    compact_index_info = CompactIndex.info(compute_compact_index_info_from(rows, version:))
-    Digest::MD5.hexdigest(compact_index_info)
-  end
-
   def compute_compact_index_info(version:)
-    compute_compact_index_info_from(requirements_and_dependencies, version:)
-  end
-
-  def compute_compact_index_info_from(rows, version:)
     config = VERSIONS.fetch(version)
-    rows.map do |row|
+    requirements_and_dependencies.map do |row|
       deps = []
       if row[DEPENDENCY_REQUIREMENTS_INDEX]
         reqs = row[DEPENDENCY_REQUIREMENTS_INDEX].split("@")

@@ -54,21 +54,14 @@ class GemInfoTest < ActiveSupport::TestCase
     end
 
     should "return v2 gem version and dependency with created_at" do
-      info = GemInfo.new("example").compact_index_info_v2
+      info = GemInfo.new("example").compact_index_info(version: 2)
 
       assert_equal @expected_info_v2, info
     end
 
     should "compute v2 info checksum with created_at" do
-      assert_equal @expected_info_checksum_v2, GemInfo.new("example").info_checksum_v2
-      refute_equal GemInfo.new("example").info_checksum, GemInfo.new("example").info_checksum_v2
-    end
-
-    should "compute v1 and v2 info checksums together" do
-      assert_equal({
-                     info_checksum: @expected_info_checksum,
-                     info_checksum_v2: @expected_info_checksum_v2
-                   }, GemInfo.new("example").info_checksums)
+      assert_equal @expected_info_checksum_v2, GemInfo.new("example").info_checksum(version: 2)
+      refute_equal GemInfo.new("example").info_checksum, GemInfo.new("example").info_checksum(version: 2)
     end
 
     should "write cache" do
@@ -88,13 +81,13 @@ class GemInfoTest < ActiveSupport::TestCase
     should "write v2 cache" do
       Rails.cache.expects(:write).with("info_v2/example", @expected_info_v2)
 
-      GemInfo.new("example").compact_index_info_v2
+      GemInfo.new("example").compact_index_info(version: 2)
     end
 
     should "read v2 from cache when cache exists" do
       Rails.cache.expects(:read).with("info_v2/example")
 
-      info = GemInfo.new("example").compact_index_info_v2
+      info = GemInfo.new("example").compact_index_info(version: 2)
 
       assert_equal @expected_info_v2, info
     end

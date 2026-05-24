@@ -138,10 +138,10 @@ class Deletion < ApplicationRecord
   end
 
   def set_yanked_info_checksum
-    checksums = GemInfo.new(version.rubygem.name).info_checksums
+    gem_info = GemInfo.new(version.rubygem.name)
     version.update_columns(
-      yanked_info_checksum: checksums.fetch(:info_checksum),
-      yanked_info_checksum_v2: checksums.fetch(:info_checksum_v2)
+      yanked_info_checksum: gem_info.info_checksum(version: 1),
+      yanked_info_checksum_v2: gem_info.info_checksum(version: 2)
     )
   end
 
