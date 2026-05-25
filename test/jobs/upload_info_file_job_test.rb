@@ -74,6 +74,22 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
     assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-v2/info/#{version.rubygem.name}", soft: true])
   end
 
+  test "info_checksum columns match the MD5 of uploaded info file bodies" do
+    # /versions advertises the MD5 of /info/<gem>; if they diverge Bundler rejects on hash mismatch.
+    version = create(:version)
+    rubygem_name = version.rubygem.name
+    version.update!(info_checksum_v2: GemInfo.new(rubygem_name).info_checksum(version: 2))
+
+    UploadInfoFileJob.perform_now(rubygem_name: rubygem_name)
+
+    v1_body = RubygemFs.compact_index.get("info/#{rubygem_name}")
+    v2_body = RubygemFs.compact_index.get("v2/info/#{rubygem_name}")
+    version.reload
+
+    assert_equal Digest::MD5.hexdigest(v1_body), version.info_checksum
+    assert_equal Digest::MD5.hexdigest(v2_body), version.info_checksum_v2
+  end
+
   test "#good_job_concurrency_key" do
     job = UploadInfoFileJob.new(rubygem_name: "foo")
 
