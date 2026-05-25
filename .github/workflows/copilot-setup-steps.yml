@@ -1,0 +1,52 @@
+name: "Copilot Setup Steps"
+
+# Workflow consumed by GitHub Copilot's cloud agent to provision its
+# environment before it starts working on an issue or pull request.
+# See: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment
+#
+# The job MUST be named `copilot-setup-steps` for Copilot to pick it up.
+# Only `steps`, `permissions`, `runs-on`, `services`, `snapshot`, and
+# `timeout-minutes` are honored on that job.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+      - .github/actions/setup-rubygems.org/**
+      - .ruby-version
+      - Gemfile.lock
+      - docker-compose.yml
+      - config/database.yml.sample
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+      - .github/actions/setup-rubygems.org/**
+      - .ruby-version
+      - Gemfile.lock
+      - docker-compose.yml
+      - config/database.yml.sample
+
+permissions:
+  contents: read
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup rubygems.org
+        uses: ./.github/actions/setup-rubygems.org
+        with:
+          ruby-version: .ruby-version
+          # Keep in sync with RUBYGEMS_VERSION in .github/workflows/test.yml
+          rubygems-version: "4.0.12"
+          install-avo-pro: "false"
+          install-playwright: "true"
