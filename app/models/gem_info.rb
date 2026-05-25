@@ -7,7 +7,7 @@ class GemInfo
   end
 
   def compact_index_info
-    if @cached && (info = Rails.cache.read("info/#{@rubygem_name}"))
+    if @cached && (info = read_cache("info/#{@rubygem_name}"))
       StatsD.increment "compact_index.memcached.info.hit"
       info
     else
@@ -95,6 +95,13 @@ class GemInfo
   DEPENDENCY_NAMES_INDEX = 8
 
   DEPENDENCY_REQUIREMENTS_INDEX = 7
+
+  # Marshal.load of pre-deploy cache entries fails when GemVersion changes number of Struct fields.
+  def read_cache(cache_key)
+    Rails.cache.read(cache_key)
+  rescue TypeError
+    nil
+  end
 
   def compute_compact_index_info
     requirements_and_dependencies.map do |r|

@@ -50,6 +50,15 @@ class GemInfoTest < ActiveSupport::TestCase
 
       assert_equal @expected_info, info
     end
+
+    should "recompute when cache deserialization fails" do
+      Rails.cache.expects(:read).with("info/example").raises(TypeError, "struct size differs")
+
+      info = nil
+      assert_nothing_raised { info = GemInfo.new("example").compact_index_info }
+
+      assert_equal @expected_info, info
+    end
   end
 
   context ".ordered_names" do
