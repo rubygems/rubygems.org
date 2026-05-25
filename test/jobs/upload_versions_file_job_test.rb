@@ -12,12 +12,7 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
     info_checksum = GemInfo.new(version.rubygem.name).info_checksum
     version.update!(info_checksum:)
 
-    original_v2_path = Rails.application.config.rubygems["versions_file_location_v2"]
-    Rails.application.config.rubygems["versions_file_location_v2"] = "/tmp/nonexistent_versions_v2.list"
-
     UploadVersionsFileJob.perform_now
-
-    Rails.application.config.rubygems["versions_file_location_v2"] = original_v2_path
 
     content = <<~VERSIONS
       created_at: 2015-08-23T17:22:53-07:00
@@ -54,6 +49,11 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
     info_checksum = GemInfo.new(version.rubygem.name).info_checksum
     info_checksum_v2 = GemInfo.new(version.rubygem.name).info_checksum(version: 2)
     version.update!(info_checksum:, info_checksum_v2:)
+
+    v2_file = Tempfile.new("versions_v2.list")
+    v2_file.write("created_at: 2015-08-23T17:22:53-07:00\n---\n")
+    v2_file.flush
+    Rails.application.config.rubygems["versions_file_location_v2"] = v2_file.path
 
     UploadVersionsFileJob.perform_now
 
@@ -106,5 +106,8 @@ class UploadVersionsFileJobTest < ActiveJob::TestCase
 
     assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-versions", soft: true])
     assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-v2/versions", soft: true])
+  ensure
+    Rails.application.config.rubygems["versions_file_location_v2"] = nil
+    v2_file&.close!
   end
 end
