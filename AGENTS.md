@@ -10,6 +10,10 @@ The Ruby community's gem host — a Ruby on Rails app (internal name: `gemcutter
 
 ## Setup
 
+Backing services run via Docker by default. If Docker isn't installed, see
+[CONTRIBUTING.md](CONTRIBUTING.md#setting-up-the-environment) for native install
+instructions (brew on macOS, apt on Debian/Ubuntu).
+
 ```bash
 docker compose up        # starts postgres, opensearch, memcached (NOT the app)
 bin/setup                # deps, db:prepare, db:seed, playwright, assets
@@ -23,7 +27,7 @@ Seed real data beyond `db:seed` (against the dev DB):
 # Weekly anon prod DB dump (-c downloads latest from S3; DROPS & recreates the DB)
 script/load-pg-dump -c -d rubygems_development ~/Downloads/public_postgresql.tar
 
-# Import .gem files via the push pipeline (needs a seeded user, default "gem-author")
+# Import .gem files via the push pipeline (the "gem-author" user is created by db:seed)
 bundle exec rake "gemcutter:import:process[vendor/cache,gem-author]"
 bundle exec rake gemcutter:index:update   # rebuild the gem specs index (compact index / specs.*.gz) after importing
 bundle exec rake searchkick:reindex CLASS=Rubygem   # rebuild the OpenSearch search index (separate from the gem index)
@@ -38,19 +42,27 @@ bin/rails s            # run the app on :3000
 bin/rails test:all     # all tests (unit + system)
 bin/rails test         # non-system tests
 bin/rails test test/models/rubygem_test.rb:42   # single file / line
+bin/rails test -n /pattern/                     # tests matching name pattern
 bin/rails test:system  # system tests (Playwright/Chrome)
 bin/ci             # full CI suite locally (config/ci.rb)
 ```
 
-`DB_HOST` defaults to the local Postgres socket — no setup needed for standard
-installs. Environments where Postgres runs on a network host (e.g. dev containers)
-must set it, and note dotenv excludes `.env.local` in the test env, so set it inline:
+**`DB_HOST`:**
+
+- Standard install: defaults to the local Postgres socket — no setup needed.
+- Network host (e.g. dev containers): must be set. dotenv excludes `.env.local`
+  in the test env, so set it inline:
 
 ```bash
 DB_HOST=db rails test   # only when Postgres isn't local
 ```
 
+Team members with 1Password access can prefix any command with `script/dev` to
+load dev secrets — see [CONTRIBUTING.md](CONTRIBUTING.md#developing-with-dev-secrets).
+
 ## Lint & security (CI will fail otherwise)
+
+All of these run as part of `bin/ci`; reach for them individually when iterating.
 
 ```bash
 bin/rubocop              # Ruby style
@@ -97,7 +109,7 @@ bin/importmap audit      # JS dependency vulnerability audit
   - **Ownership** — `app/models/ownership.rb` (who may push/yank a gem)
   - **Attestations / provenance** — `app/models/attestation.rb`, Sigstore cert chain
   - **TUF signing** — `lib/rstuf*`
-- Never commit secrets or production data; use the dev-secrets workflow (see `CONTRIBUTING.md`).
+- Never commit secrets or production data; use the [dev-secrets workflow](CONTRIBUTING.md#developing-with-dev-secrets).
 
 ## Conventions
 
