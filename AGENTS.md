@@ -34,11 +34,11 @@ Dumps: <https://rubygems.org/pages/data>. Drop `-c` to load an already-downloade
 ## Commands
 
 ```bash
-rails s            # run the app on :3000
-rails test:all     # all tests (unit + system)
-rails test         # non-system tests
-rails test test/models/rubygem_test.rb:42   # single file / line
-rails test:system  # system tests (Playwright/Chrome)
+bin/rails s            # run the app on :3000
+bin/rails test:all     # all tests (unit + system)
+bin/rails test         # non-system tests
+bin/rails test test/models/rubygem_test.rb:42   # single file / line
+bin/rails test:system  # system tests (Playwright/Chrome)
 bin/ci             # full CI suite locally (config/ci.rb)
 ```
 
