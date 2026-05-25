@@ -1,6 +1,6 @@
 ---
 name: run-rubygems-org
-description: Run rubygems.org locally — boot the Rails server, hit it with curl, screenshot pages with headless Chrome. Use when asked to run, start, boot, smoke-test, or screenshot the rubygems.org / gemcutter app.
+description: Run rubygems.org locally — boot the Rails server, hit it with curl, screenshot pages via bin/playwright, or invoke internal code with bin/rails runner. Use when asked to run, start, boot, smoke-test, screenshot, or poke models/jobs/controllers in the rubygems.org / gemcutter app.
 ---
 
 # Run rubygems.org
@@ -40,7 +40,7 @@ docker run -d -p 9200:9200 \
 bin/setup
 ```
 
-See `CONTRIBUTING.md` > Development Setup for the Linux/apt variant. `bin/setup` installs Playwright's bundled Chromium into `~/Library/Caches/ms-playwright/chromium-*/` — `smoke.sh` uses that same binary for screenshots, so you don't need a separate browser.
+See `CONTRIBUTING.md` > Development Setup for the Linux/apt variant. `bin/setup` runs `bin/playwright install --with-deps chromium`; `smoke.sh` shells out to `bin/playwright screenshot`, which uses that same bundled Chromium — no separate browser needed.
 
 ## Run (agent path — preferred)
 
@@ -76,6 +76,33 @@ bin/rails s                  # foreground on :3000
 
 Opens nothing — just listens. Useless headless; for an agent driving the app, always use `smoke.sh` so you get the screenshots and HTTP assertions.
 
+## Direct invocation (poking internal code)
+
+Most PRs in this repo touch a model, job, policy, or controller — not the HTML surface. For those, skip `smoke.sh` and call the code directly. All of these run against the dev DB and respect any local changes without restarting a server:
+
+```bash
+# One-liner: import + call + observe (matches AGENTS.md examples)
+bin/rails runner 'p Rubygem.find_by(name: "rubygem0")&.versions&.count'
+
+# REPL — for exploratory work or anything multi-step
+bin/rails c
+
+# Run one test file (fastest feedback loop for a model/job change)
+bin/rails test test/models/rubygem_test.rb
+bin/rails test test/models/rubygem_test.rb:42      # one line
+bin/rails test -n /pattern/                         # name pattern
+
+# Enqueue / run a job inline against the dev DB
+bin/rails runner 'YourJob.new.perform(Rubygem.last.id)'
+```
+
+If a job/policy depends on the gem index or OpenSearch being current, run the indexer first:
+
+```bash
+bundle exec rake gemcutter:index:update             # compact_index / specs.*.gz
+bundle exec rake searchkick:reindex CLASS=Rubygem   # OpenSearch
+```
+
 ## When this skill fails (learn-and-teach loop)
 
 This skill keeps a running [`LEARNINGS.md`](LEARNINGS.md) so each failure becomes a one-time cost, not a recurring one. **When `smoke.sh` fails with something not already in the Troubleshooting table:**
@@ -110,7 +137,7 @@ bin/ci                                          # full CI suite (lint + brakeman
 - **Seeded gems are `rubygem0`/`rubygem1`/`rubygem2`,** not real gems. `/api/v1/gems/rails.json` returns "This rubygem could not be found." — use `rubygem0` in any smoke check.
 - **Tailwind runs in a separate process** (`bin/rails tailwindcss:watch` is auto-spawned in dev). It writes CSS asynchronously after boot; if the homepage looks unstyled in a screenshot, give it 2–3 more seconds.
 - **`bin/setup` is destructive of dev DB schema.** It runs `db:prepare` which will create+migrate. To load real anonymized data, use `script/load-pg-dump` (see AGENTS.md).
-- **The Playwright Chromium path is version-pinned.** `smoke.sh` globs `~/Library/Caches/ms-playwright/chromium-*/` so it survives upgrades, but if you blow away that cache, re-run `bin/playwright install --with-deps chromium`.
+- **Screenshots go through `bin/playwright`, not a hand-found Chromium.** `bin/playwright` is the Node CLI pinned to the `playwright-ruby-client` gem version, and `playwright screenshot` resolves its own bundled browser — so we don't care where Chromium lives on disk. If you blow away the cache, `bin/playwright install --with-deps chromium` rehydrates it.
 
 ## Troubleshooting
 
@@ -122,5 +149,6 @@ bin/ci                                          # full CI suite (lint + brakeman
 | `Address already in use - bind(2) for "127.0.0.1" port 3000` | A previous Rails is still alive: `pkill -f 'puma.*3000'` (or `kill $(cat tmp/run-skill/rails.pid)` if `smoke.sh` started it). |
 | Smoke says `homepage never returned 200 (last 500)` | `tail -100 tmp/run-skill/rails.log` — usually a missing migration (`bin/rails db:migrate`) or DB seed (`bin/rails db:seed`). |
 | Smoke says `gem JSON API failed (expected 200, got 404)` | DB is fresh and unseeded: `bin/rails db:seed` recreates `rubygem0`. |
-| `no chromium found` in smoke output | `bin/playwright install --with-deps chromium`. The smoke script falls back to `/Applications/Google Chrome.app` if present. |
+| `screenshot <name> failed` in smoke output | Chromium isn't installed for the pinned playwright version: `bin/playwright install --with-deps chromium`. |
+| `bin/playwright unavailable` in smoke output | No `node` on PATH or `bin/playwright` missing — install Node (or use `mise`/`asdf`), then re-run. |
 | Screenshot is blank/white | Server returned 200 but the page errored client-side; open `tmp/run-skill/rails.log` and look for the request just before — Tailwind not ready yet is the most common cause. Re-run `smoke.sh`. |

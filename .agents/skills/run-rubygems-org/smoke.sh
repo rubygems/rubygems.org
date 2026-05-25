@@ -128,7 +128,10 @@ bring_up opensearch probe_os 9200  search
 # 2. rails server
 # ---------------------------------------------------------------------------
 started_server=0
-if curl -sf -m 2 -o /dev/null http://127.0.0.1:3000/; then
+# Reuse anything bound to :3000 — even if it currently 5xx's (e.g. pending
+# migrations). Starting a second server would just fail with EADDRINUSE; let
+# the readiness loop below decide whether it becomes healthy.
+if port_open 127.0.0.1 3000; then
   step "rails already listening on :3000 (reusing)"
 else
   step "starting rails s -p 3000"
@@ -154,7 +157,7 @@ done
 step "endpoint smoke checks"
 check() {
   local name=$1 url=$2 expect=$3 substr=${4:-}
-  local resp code
+  local resp code body
   resp=$(curl -sS -m 10 -w '\n__HTTP_CODE__%{http_code}' "$url")
   code=${resp##*__HTTP_CODE__}
   body=${resp%__HTTP_CODE__*}
@@ -172,24 +175,21 @@ check "gem detail page"   http://127.0.0.1:3000/gems/rubygem0             200 "r
 
 # ---------------------------------------------------------------------------
 # 4. screenshots
+#
+# bin/playwright is the Node CLI pinned to the playwright-ruby-client gem;
+# `playwright screenshot` knows where its own bundled Chromium lives, so we
+# don't have to. If the CLI isn't usable here (e.g. no node), skip rather
+# than fail — screenshots are nice-to-have, not load-bearing.
 # ---------------------------------------------------------------------------
-step "screenshots via headless chrome"
-CHROME=""
-# Prefer playwright-cached chromium (the one bin/setup installs); fall back to /Applications.
-for c in "$HOME"/Library/Caches/ms-playwright/chromium-*/chrome-mac-arm64/"Google Chrome for Testing.app"/Contents/MacOS/"Google Chrome for Testing"; do
-  [[ -x "$c" ]] && CHROME="$c"
-done
-if [[ -z "$CHROME" && -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]]; then
-  CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-fi
-if [[ -z "$CHROME" ]]; then
-  echo "  no chromium found (run: bin/playwright install --with-deps chromium); skipping screenshots"
+step "screenshots via playwright"
+if ! command -v node >/dev/null || ! [[ -x bin/playwright ]]; then
+  echo "  bin/playwright unavailable (need node + bin/playwright); skipping screenshots"
 else
   shoot() {
     local name=$1 url=$2 wh=${3:-1280,1400}
-    "$CHROME" --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
-      --window-size="$wh" --screenshot="$OUT_DIR/$name.png" "$url" \
-      >/dev/null 2>&1
+    bin/playwright screenshot --browser=chromium --viewport-size="$wh" \
+      "$url" "$OUT_DIR/$name.png" >/dev/null 2>&1 \
+      || fail "screenshot $name failed (try: bin/playwright install --with-deps chromium)"
     [[ -s "$OUT_DIR/$name.png" ]] || fail "screenshot $name produced empty file"
     printf '  %-12s -> %s\n' "$name" "$OUT_DIR/$name.png"
   }
