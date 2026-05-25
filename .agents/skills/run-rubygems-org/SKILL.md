@@ -5,11 +5,11 @@ description: Run rubygems.org locally — boot the Rails server, hit it with cur
 
 # Run rubygems.org
 
-A Rails 8 app (internal name: `gemcutter`) that needs Postgres, OpenSearch, and Memcached. Backing services run in Docker; everything else (Ruby 4, Puma, headless Chrome) runs on the host.
+A Rails 8 app (internal name: `gemcutter`) that needs Postgres, OpenSearch, and Memcached reachable on `127.0.0.1:5432/9200/11211`. `smoke.sh` probes those ports and works whether the backing services are running in Docker, via native installs, or are already running on the host; everything else (Ruby 4, Puma, headless Chrome) runs on the host.
 
-**The agent path is `./.agents/skills/run-rubygems-org/smoke.sh`** — it brings services up, boots Rails on :3000 if it isn't already, curls four key endpoints, and writes three PNG screenshots to `tmp/run-skill/`.
+**The agent path is `./.agents/skills/run-rubygems-org/smoke.sh`** — it brings services up, boots Rails on :3000 if it isn't already, curls four key endpoints, and, when a Chromium binary is available, writes three PNG screenshots to `tmp/run-skill/`.
 
-All paths in this doc are relative to the repo root (`/Users/colby/Developer/rubygems.org`).
+All paths in this doc are relative to the repo root.
 
 > Canonical location: `.agents/skills/run-rubygems-org/` — the cross-tool skill convention picked up by Codex CLI, OpenCode, and Gemini CLI. Claude Code reads it through the symlink at `.claude/skills/run-rubygems-org/`.
 >
