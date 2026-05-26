@@ -2,8 +2,10 @@
 
 class GemInfo
   VERSIONS = {
-    1 => { cache_prefix: "info", stats_prefix: "compact_index.memcached.info", klass: CompactIndex::GemVersion },
-    2 => { cache_prefix: "info_v2", stats_prefix: "compact_index.memcached.info_v2", klass: CompactIndex::GemVersionV2 }
+    1 => { cache_prefix: "info", stats_prefix: "compact_index.memcached.info", klass: CompactIndex::GemVersion,
+           checksum_column: "info_checksum", yanked_checksum_column: "yanked_info_checksum" },
+    2 => { cache_prefix: "info_v2", stats_prefix: "compact_index.memcached.info_v2", klass: CompactIndex::GemVersionV2,
+           checksum_column: "info_checksum_v2", yanked_checksum_column: "yanked_info_checksum_v2" }
   }.freeze
 
   def initialize(rubygem_name, cached: true)
@@ -43,13 +45,17 @@ class GemInfo
     names
   end
 
-  def self.compact_index_versions(date)
-    query = ["(SELECT r.name, v.created_at as date, v.info_checksum, v.number, v.platform
+  def self.compact_index_versions(date, version: 1)
+    config = VERSIONS.fetch(version)
+    checksum_column = config[:checksum_column]
+    yanked_checksum_column = config[:yanked_checksum_column]
+
+    query = ["(SELECT r.name, v.created_at as date, v.#{checksum_column} as info_checksum, v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
                     v.created_at > ?)
               UNION
-              (SELECT r.name, v.yanked_at as date, v.yanked_info_checksum as info_checksum, '-'||v.number, v.platform
+              (SELECT r.name, v.yanked_at as date, v.#{yanked_checksum_column} as info_checksum, '-'||v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
                     v.indexed is false AND

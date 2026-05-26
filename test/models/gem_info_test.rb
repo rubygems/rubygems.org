@@ -160,6 +160,38 @@ class GemInfoTest < ActiveSupport::TestCase
     end
   end
 
+  context ".compact_index_versions version: 2" do
+    setup do
+      create(:version, number: "0.0.1", created_at: 10.days.ago)
+      rubygem = create(:rubygem, name: "foo")
+      create(:version, rubygem: rubygem, number: "2.0.0", created_at: 2.days.ago,
+                       info_checksum: "qw2dwe", info_checksum_v2: "v2qw2dwe")
+      create(:version, rubygem: rubygem, number: "1.0.1", created_at: 3.days.ago,
+                       info_checksum: "32ddwe", info_checksum_v2: "v232ddwe")
+
+      @expected_versions =
+        [CompactIndex::Gem.new("foo", [CompactIndex::GemVersion.new("1.0.1", "ruby", nil, "v232ddwe")]),
+         CompactIndex::Gem.new("foo", [CompactIndex::GemVersion.new("2.0.0", "ruby", nil, "v2qw2dwe")])]
+    end
+
+    should "return all versions created after given date using v2 checksum" do
+      versions = GemInfo.compact_index_versions(4.days.ago, version: 2)
+
+      assert_equal @expected_versions, versions
+    end
+
+    should "return yanked versions using v2 yanked checksum" do
+      rubygem = create(:rubygem, name: "bar")
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0", created_at: 10.days.ago,
+                                yanked_at: 1.day.ago, yanked_info_checksum_v2: "v2yanked")
+
+      versions = GemInfo.compact_index_versions(4.days.ago, version: 2)
+
+      assert_includes versions,
+        CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("-1.0.0", "ruby", nil, "v2yanked")])
+    end
+  end
+
   context ".compact_index_public_versions" do
     setup do
       @ts               = 5.minutes.ago

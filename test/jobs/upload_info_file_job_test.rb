@@ -29,7 +29,13 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
       0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
     INFO
 
+    v2_content = <<~INFO
+      ---
+      0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{version.created_at.utc.iso8601}
+    INFO
+
     assert_equal content, RubygemFs.compact_index.get("info/#{version.rubygem.name}")
+    assert_equal v2_content, RubygemFs.compact_index.get("v2/info/#{version.rubygem.name}")
 
     assert_equal_hash(
       { metadata: {
@@ -47,7 +53,41 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
       RubygemFs.compact_index.head("info/#{version.rubygem.name}")
     )
 
+    assert_equal_hash(
+      { metadata: {
+          "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+          "surrogate-key" =>
+            "v2/info/* v2/info/#{version.rubygem.name} gem/#{version.rubygem.name} " \
+            "s3-compact-index s3-v2/info/* s3-v2/info/#{version.rubygem.name}",
+          "sha256" => Digest::SHA256.base64digest(v2_content),
+          "md5" => Digest::MD5.base64digest(v2_content)
+        },
+        cache_control: "max-age=60, public",
+        content_type: "text/plain; charset=utf-8",
+        checksum_sha256: Digest::SHA256.base64digest(v2_content),
+        content_md5: Digest::MD5.base64digest(v2_content),
+        key: "v2/info/#{version.rubygem.name}" },
+      RubygemFs.compact_index.head("v2/info/#{version.rubygem.name}")
+    )
+
     assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-info/#{version.rubygem.name}", soft: true])
+    assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-v2/info/#{version.rubygem.name}", soft: true])
+  end
+
+  test "info_checksum columns match the MD5 of uploaded info file bodies" do
+    # /versions advertises the MD5 of /info/<gem>; if they diverge Bundler rejects on hash mismatch.
+    version = create(:version)
+    rubygem_name = version.rubygem.name
+    version.update!(info_checksum_v2: GemInfo.new(rubygem_name).info_checksum(version: 2))
+
+    UploadInfoFileJob.perform_now(rubygem_name: rubygem_name)
+
+    v1_body = RubygemFs.compact_index.get("info/#{rubygem_name}")
+    v2_body = RubygemFs.compact_index.get("v2/info/#{rubygem_name}")
+    version.reload
+
+    assert_equal Digest::MD5.hexdigest(v1_body), version.info_checksum
+    assert_equal Digest::MD5.hexdigest(v2_body), version.info_checksum_v2
   end
 
   test "#good_job_concurrency_key" do

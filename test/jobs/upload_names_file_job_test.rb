@@ -18,6 +18,7 @@ class UploadNamesFileJobTest < ActiveJob::TestCase
     INFO
 
     assert_equal content, RubygemFs.compact_index.get("names")
+    assert_equal content, RubygemFs.compact_index.get("v2/names")
 
     assert_equal_hash(
       { metadata: {
@@ -35,7 +36,24 @@ class UploadNamesFileJobTest < ActiveJob::TestCase
       RubygemFs.compact_index.head("names")
     )
 
+    assert_equal_hash(
+      { metadata: {
+          "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
+          "surrogate-key" =>
+            "v2/names s3-compact-index s3-v2/names",
+          "sha256" => Digest::SHA256.base64digest(content),
+          "md5" => Digest::MD5.base64digest(content)
+        },
+        cache_control: "max-age=60, public",
+        content_type: "text/plain; charset=utf-8",
+        checksum_sha256: Digest::SHA256.base64digest(content),
+        content_md5: Digest::MD5.base64digest(content),
+        key: "v2/names" },
+      RubygemFs.compact_index.head("v2/names")
+    )
+
     assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-names", soft: true])
+    assert_enqueued_with(job: FastlyPurgeJob, args: [key: "s3-v2/names", soft: true])
   end
 
   test "#good_job_concurrency_key" do
