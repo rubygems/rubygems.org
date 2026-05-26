@@ -105,7 +105,7 @@ class GemInfoTest < ActiveSupport::TestCase
       Rails.cache.expects(:read).with("info_v2/example").raises(TypeError, "struct size differs")
 
       info = nil
-      assert_nothing_raised { info = GemInfo.new("example").compact_index_info_v2 }
+      assert_nothing_raised { info = GemInfo.new("example").compact_index_info(version: 2) }
 
       assert_equal @expected_info_v2, info
     end

@@ -32,16 +32,22 @@ class CompactIndex::GemVersionTest < ActiveSupport::TestCase
   end
 
   context "#to_line" do
-    should "not include created_at when absent" do
-      version = build_version(number: "1.0")
+    should "not include created_at for v1" do
+      v = build_version(number: "1.0")
 
-      assert_equal "1.0 |checksum:sum+test_gem+1.0", version.to_line
+      assert_equal "1.0 |checksum:sum+test_gem+1.0", v.to_line
     end
 
-    should "include created_at when present" do
-      version = build_version(number: "1.0", created_at: "2026-05-12T10:00:00Z")
+    should "not include created_at for v2 when absent" do
+      v = build_version(version: 2, number: "1.0")
 
-      assert_equal "1.0 |checksum:sum+test_gem+1.0,created_at:2026-05-12T10:00:00Z", version.to_line
+      assert_equal "1.0 |checksum:sum+test_gem+1.0", v.to_line
+    end
+
+    should "include created_at for v2 when present" do
+      v = build_version(version: 2, number: "1.0", created_at: "2026-05-12T10:00:00Z")
+
+      assert_equal "1.0 |checksum:sum+test_gem+1.0,created_at:2026-05-12T10:00:00Z", v.to_line
     end
   end
 end

@@ -113,22 +113,24 @@ class GemInfo
   end
 
   def compute_compact_index_info(version:)
-    config = VERSIONS.fetch(version)
     requirements_and_dependencies.map do |row|
-      deps = []
+      dependencies = []
       if row[DEPENDENCY_REQUIREMENTS_INDEX]
         reqs = row[DEPENDENCY_REQUIREMENTS_INDEX].split("@")
         dep_names = row[DEPENDENCY_NAMES_INDEX].split(",")
         raise "BUG: different size of reqs and dep_names." unless reqs.size == dep_names.size
         dep_names.zip(reqs).each do |name, req|
-          deps << CompactIndex::Dependency.new(name, req) unless name == "0"
+          dependencies << CompactIndex::Dependency.new(name, req) unless name == "0"
         end
       end
 
-      name, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, = row
-      args = [name, platform, Version._sha256_hex(checksum), info_checksum, deps, ruby_version, rubygems_version]
-      args << created_at&.utc&.iso8601 if config[:klass] == CompactIndex::GemVersionV2
-      config[:klass].new(*args)
+      number, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, = row
+      version_class = VERSIONS.dig(version, :klass)
+      checksum = Version._sha256_hex(checksum)
+      created_at = created_at&.utc&.iso8601
+      args = { number:, platform:, checksum:, info_checksum:, dependencies:, ruby_version:, rubygems_version:, created_at: }
+      args = args.slice(*version_class.members)
+      version_class.new(**args)
     end
   end
 

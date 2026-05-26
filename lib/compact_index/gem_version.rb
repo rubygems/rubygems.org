@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 module CompactIndex
-  GemVersion = Struct.new(:number, :platform, :checksum, :info_checksum,
-                          :dependencies, :ruby_version, :rubygems_version,
-                          :created_at) do
+  module GemVersionMethods
     def number_and_platform
       if platform.nil? || platform == "ruby"
         number
@@ -26,7 +24,6 @@ module CompactIndex
       line = "#{number_and_platform} #{deps_line}|checksum:#{checksum}"
       line << ",ruby:#{ruby_version_line}" if ruby_version && ruby_version != ">= 0"
       line << ",rubygems:#{rubygems_version_line}" if rubygems_version && rubygems_version != ">= 0"
-      line << ",created_at:#{created_at}" if created_at
       line
     end
 
@@ -52,6 +49,23 @@ module CompactIndex
       requirements = requirements.split(", ")
       requirements.sort!
       requirements.join("&")
+    end
+  end
+
+  GemVersion = Struct.new(:number, :platform, :checksum, :info_checksum,
+                          :dependencies, :ruby_version, :rubygems_version) do
+    include GemVersionMethods
+  end
+
+  GemVersionV2 = Struct.new(:number, :platform, :checksum, :info_checksum,
+                            :dependencies, :ruby_version, :rubygems_version,
+                            :created_at) do
+    include GemVersionMethods
+
+    def to_line
+      line = super
+      line << ",created_at:#{created_at}" if created_at
+      line
     end
   end
 end
