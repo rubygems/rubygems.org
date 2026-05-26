@@ -24,7 +24,7 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
 
   context "#process" do
     context "with an indexed last version" do
-      should "backfill info_checksum_v2 on the most recent version and enqueue UploadInfoFileJob" do
+      should "backfill info_checksum_v2 and enqueue UploadInfoFileJob for v2 only without purge" do
         rubygem = create(:rubygem, name: "testgem")
         version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
         version2 = create(:version, rubygem: rubygem, number: "1.0.1", indexed: true, info_checksum_v2: nil)
@@ -34,12 +34,12 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
 
         assert_not_nil version2.reload.info_checksum_v2
         assert_nil version.reload.info_checksum_v2
-        assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem"])
+        assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem", backfill_only_version: 2])
       end
     end
 
     context "with a yanked last version" do
-      should "backfill yanked_info_checksum_v2 on the most recent version and enqueue UploadInfoFileJob" do
+      should "backfill yanked_info_checksum_v2 and enqueue UploadInfoFileJob for v2 only without purge" do
         rubygem = create(:rubygem, name: "testgem")
         version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
         version2 = create(:version, rubygem: rubygem, number: "1.0.1", indexed: false, yanked_info_checksum_v2: nil)
@@ -49,13 +49,35 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
 
         assert_not_nil version2.reload.yanked_info_checksum_v2
         assert_nil version.reload.info_checksum_v2
-        assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem"])
+        assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem", backfill_only_version: 2])
       end
     end
 
     context "with no versions" do
       should "do nothing" do
         rubygem = create(:rubygem, name: "testgem")
+
+        task = Maintenance::BackfillCompactIndexV2Task.new
+        task.process(rubygem)
+
+        assert_no_enqueued_jobs only: UploadInfoFileJob
+      end
+    end
+
+    context "when already backfilled" do
+      should "skip version that already has info_checksum_v2" do
+        rubygem = create(:rubygem, name: "testgem")
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: "already_set")
+
+        task = Maintenance::BackfillCompactIndexV2Task.new
+        task.process(rubygem)
+
+        assert_no_enqueued_jobs only: UploadInfoFileJob
+      end
+
+      should "skip version that already has yanked_info_checksum_v2" do
+        rubygem = create(:rubygem, name: "testgem")
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: false, yanked_info_checksum_v2: "already_set")
 
         task = Maintenance::BackfillCompactIndexV2Task.new
         task.process(rubygem)
