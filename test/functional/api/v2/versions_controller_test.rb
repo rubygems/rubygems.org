@@ -185,7 +185,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "on GET to show a gem with with lots of versions" do
+  context "on GET to show a gem with lots of versions" do
     setup do
       @rubygem = create(:rubygem)
       12.times do |n|
