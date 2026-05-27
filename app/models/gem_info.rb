@@ -65,9 +65,13 @@ class GemInfo
     map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
   end
 
-  def self.compact_index_public_versions(updated_at)
+  def self.compact_index_public_versions(updated_at, version: 1)
+    config = VERSIONS.fetch(version)
+    checksum_column = config[:checksum_column]
+    yanked_checksum_column = config[:yanked_checksum_column]
+
     query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
-                     v.sha256, COALESCE(v.yanked_info_checksum, v.info_checksum) as info_checksum,
+                     v.sha256, COALESCE(v.#{yanked_checksum_column}, v.#{checksum_column}) as info_checksum,
                      v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND

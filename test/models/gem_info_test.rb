@@ -211,4 +211,47 @@ class GemInfoTest < ActiveSupport::TestCase
       assert_equal expected_versions, versions
     end
   end
+
+  context ".compact_index_public_versions version: 2" do
+    setup do
+      @ts               = 5.minutes.ago
+      @version          = create(:version, number: "0.0.1", created_at: @ts, info_checksum_v2: "v2qw2dwe")
+
+      _updated_after_ts = create(:version, number: "2.0.0", created_at: @ts + 1.second, info_checksum_v2: "v2qw2dwe")
+    end
+
+    should "not return version updated after ts" do
+      versions = GemInfo.compact_index_public_versions(@ts, version: 2)
+
+      expected_versions = [CompactIndex::Gem.new(
+        @version.rubygem.name,
+        [CompactIndex::GemVersion.new(@version.number, @version.platform, @version.sha256, @version.info_checksum_v2)]
+      )]
+
+      assert_equal expected_versions, versions
+    end
+
+    should "not return yanked versions" do
+      rubygem = create(:rubygem, name: "bar")
+      indexed_version = create(:version, rubygem: rubygem, number: "1.0.0", created_at: 10.minutes.ago, info_checksum_v2: "v2qw2dwe")
+      create(:version, :yanked, rubygem: rubygem, number: "2.0.0", created_at: 9.minutes.ago,
+                                yanked_at: 8.minutes.ago, yanked_info_checksum_v2: "v2yanked")
+
+      versions = GemInfo.compact_index_public_versions(@ts, version: 2)
+
+      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("1.0.0", "ruby", indexed_version.sha256, "v2yanked")])
+    end
+
+    should "fall back to info_checksum_v2 for yanked rows missing yanked_info_checksum_v2" do
+      rubygem = create(:rubygem, name: "bar")
+      indexed_version = create(:version, rubygem: rubygem, number: "1.0.0", created_at: 10.minutes.ago, info_checksum_v2: "v2qw2dwe")
+      create(:version, :yanked, rubygem: rubygem, number: "2.0.0", created_at: 9.minutes.ago,
+                                yanked_at: 8.minutes.ago, info_checksum_v2: "v2qw2dwe",
+                                yanked_info_checksum_v2: nil)
+
+      versions = GemInfo.compact_index_public_versions(@ts, version: 2)
+
+      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("1.0.0", "ruby", indexed_version.sha256, "v2qw2dwe")])
+    end
+  end
 end
