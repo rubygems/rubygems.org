@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "tempfile"
 require "test_helper"
 
 class Api::CompactIndexTest < ActionDispatch::IntegrationTest
@@ -10,6 +9,13 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
 
   def digest(body)
     Digest::SHA256.base64digest(body)
+  end
+
+  def with_compact_index_v2_enabled
+    FeatureFlag.enable_globally(:serve_compact_index_v2)
+    yield
+  ensure
+    FeatureFlag.disable_globally(:serve_compact_index_v2)
   end
 
   setup do
@@ -88,6 +94,58 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal full_body.byteslice(15..), @response.body
   end
 
+  test "/versions serves v2 checksums when compact index v2 flag is enabled" do
+    with_compact_index_v2_enabled do
+      file_contents = File.read(Rails.application.config.rubygems["versions_file_location_v2"])
+
+      @version.update!(info_checksum_v2: "v2qw2dwe")
+
+      get versions_path
+
+      assert_response :success
+      assert_match file_contents, @response.body
+      assert_match(/gemB 1.0.0 v2qw2dwe/, @response.body)
+      assert_equal "v2/versions", @response.headers["Surrogate-Key"]
+    end
+  end
+
+  test "/versions partial response uses v2 response body when compact index v2 flag is enabled" do
+    with_compact_index_v2_enabled do
+      @version.update!(info_checksum_v2: "v2qw2dwe")
+      get versions_path
+      full_response_body = @response.body
+      expected_digest = digest(full_response_body)
+      byte_offset = full_response_body.bytesize / 2
+
+      get versions_path, env: { range: "bytes=#{byte_offset}-" }
+
+      assert_response :partial_content
+      assert_equal full_response_body.byteslice(byte_offset..), @response.body
+      assert_equal etag(full_response_body), @response.headers["ETag"]
+      assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+      assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
+      assert_equal "v2/versions", @response.headers["Surrogate-Key"]
+      assert_includes full_response_body, "gemB 1.0.0 v2qw2dwe"
+    end
+  end
+
+  test "/versions serves v1 checksums when compact index v2 flag is disabled" do
+    FeatureFlag.disable_globally(:serve_compact_index_v2)
+
+    @version.update!(info_checksum: "qw2dwe", info_checksum_v2: "v2qw2dwe")
+
+    versions_file_location = Rails.application.config.rubygems["versions_file_location"]
+    file_contents = File.read(versions_file_location)
+
+    get versions_path
+
+    assert_response :success
+    assert_match file_contents, @response.body
+    assert_match(/gemB 1.0.0 qw2dwe/, @response.body)
+    assert_no_match(/gemB 1.0.0 v2qw2dwe/, @response.body)
+    assert_equal "versions", @response.headers["Surrogate-Key"]
+  end
+
   test "/versions includes pre-built file and new gems" do
     versions_file_location = Rails.application.config.rubygems["versions_file_location"]
     file_contents = File.read(versions_file_location)
@@ -127,7 +185,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     full_response_body = @response.body
     expected_digest = digest(full_response_body)
 
-    assert_match "gemB -1.0.0 6105347ebb9825ac754615ca55ff3b0c", full_response_body
+    assert_includes full_response_body, "gemB -1.0.0 6105347ebb9825ac754615ca55ff3b0c"
 
     byte_offset = full_response_body.bytesize / 2
 
@@ -139,11 +197,129 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal full_response_body.byteslice(byte_offset..), @response.body
   end
 
+  test "/versions updates on gem yank when compact index v2 flag is enabled" do
+    with_compact_index_v2_enabled do
+      @version.update!(info_checksum_v2: "v2qw2dwe")
+      Deletion.create!(version: @version, user: create(:user))
+
+      get versions_path
+
+      assert_response :success
+      assert_includes @response.body, "gemB -1.0.0 #{@version.reload.yanked_info_checksum_v2}"
+      assert_equal "v2/versions", @response.headers["Surrogate-Key"]
+    end
+  end
+
   test "/version has surrogate key header" do
     get versions_path
 
     assert_equal "versions", @response.headers["Surrogate-Key"]
     assert_equal "max-age=3600, stale-while-revalidate=1800, stale-if-error=1800", @response.headers["Surrogate-Control"]
+  end
+
+  test "/info serves v2 format when compact index v2 flag is enabled" do
+    with_compact_index_v2_enabled do
+      rubygem = create(:rubygem, name: "v2gem")
+      version = create(:version, rubygem:, number: "1.0.0", created_at: Time.utc(2026, 5, 1, 12, 0, 0))
+
+      expected = <<~VERSIONS_FILE
+        ---
+        1.0.0 |checksum:#{Version._sha256_hex(version.sha256)},ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{version.created_at.utc.iso8601}
+      VERSIONS_FILE
+
+      expected_digest = digest(expected)
+
+      get info_path(gem_name: "v2gem")
+
+      assert_response :success
+      assert_equal expected, @response.body
+      assert_equal etag(expected), @response.headers["ETag"]
+      assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+      assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
+      assert_equal "v2/info/* gem/v2gem v2/info/v2gem", @response.headers["Surrogate-Key"]
+    end
+  end
+
+  test "/info partial response when compact index v2 flag is enabled" do
+    with_compact_index_v2_enabled do
+      rubygem = create(:rubygem, name: "v2partial")
+      version = create(:version, rubygem:, number: "1.0.0", created_at: Time.utc(2026, 5, 1, 12, 0, 0))
+
+      full_body = <<~VERSIONS_FILE
+        ---
+        1.0.0 |checksum:#{Version._sha256_hex(version.sha256)},ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{version.created_at.utc.iso8601}
+      VERSIONS_FILE
+      byte_offset = full_body.bytesize / 2
+      expected_digest = digest(full_body)
+
+      get info_path(gem_name: "v2partial"), env: { range: "bytes=#{byte_offset}-" }
+
+      assert_response :partial_content
+      assert_equal full_body.byteslice(byte_offset..), @response.body
+      assert_equal etag(full_body), @response.headers["ETag"]
+      assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
+      assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
+      assert_equal "v2/info/* gem/v2partial v2/info/v2partial", @response.headers["Surrogate-Key"]
+    end
+  end
+
+  test "/info v2 cache expires on gem yank" do
+    with_compact_index_v2_enabled do
+      rubygem = create(:rubygem, name: "v2yank")
+      version = create(:version, rubygem:, number: "1.0.0", created_at: Time.utc(2026, 5, 1, 12, 0, 0))
+
+      get info_path(gem_name: "v2yank")
+
+      assert_response :success
+      assert_includes @response.body, "1.0.0"
+
+      Deletion.create!(version:, user: create(:user))
+
+      get info_path(gem_name: "v2yank")
+
+      assert_response :success
+      assert_not_includes @response.body, "1.0.0"
+      assert_equal "v2/info/* gem/v2yank v2/info/v2yank", @response.headers["Surrogate-Key"]
+    end
+  end
+
+  test "/info serves v1 format when compact index v2 flag is disabled" do
+    FeatureFlag.disable_globally(:serve_compact_index_v2)
+
+    rubygem = create(:rubygem, name: "v1gem")
+    version = create(:version, rubygem:, number: "1.0.0", created_at: Time.utc(2026, 5, 1, 12, 0, 0))
+
+    expected = <<~VERSIONS_FILE
+      ---
+      1.0.0 |checksum:#{Version._sha256_hex(version.sha256)},ruby:>= 2.0.0,rubygems:>= 2.6.3
+    VERSIONS_FILE
+
+    get info_path(gem_name: "v1gem")
+
+    assert_response :success
+    assert_equal expected, @response.body
+    assert_equal "info/* gem/v1gem info/v1gem", @response.headers["Surrogate-Key"]
+  end
+
+  test "/info does not return not modified for v1 validators after v2 flag is enabled" do
+    rubygem = create(:rubygem, name: "conditionalv2")
+    version = create(:version, rubygem:, number: "1.0.0", created_at: Time.utc(2026, 5, 1, 12, 0, 0))
+
+    get info_path(gem_name: "conditionalv2")
+
+    assert_response :success
+    v1_etag = @response.headers["ETag"]
+
+    with_compact_index_v2_enabled do
+      get info_path(gem_name: "conditionalv2"), headers: {
+        "If-Modified-Since" => rubygem.updated_at.httpdate
+      }
+
+      assert_response :success
+      assert_includes @response.body, "created_at:#{version.created_at.utc.iso8601}"
+      assert_not_equal v1_etag, @response.headers["ETag"]
+      assert_equal "v2/info/* gem/conditionalv2 v2/info/conditionalv2", @response.headers["Surrogate-Key"]
+    end
   end
 
   test "/info with existing gem" do
@@ -215,6 +391,15 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_match(/max-age=60/, @response.headers["Cache-Control"])
     assert_match(/max-age=600/, @response.headers["Surrogate-Control"])
     assert_equal "info/404 info/donotexist", @response.headers["Surrogate-Key"]
+  end
+
+  test "/info with nonexistent gem uses v2 surrogate key when compact index v2 flag is enabled" do
+    with_compact_index_v2_enabled do
+      get info_path(gem_name: "donotexist")
+
+      assert_response :not_found
+      assert_equal "v2/info/404 v2/info/donotexist", @response.headers["Surrogate-Key"]
+    end
   end
 
   test "/info with gzip" do
