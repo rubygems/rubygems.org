@@ -90,6 +90,18 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
     assert_equal Digest::MD5.hexdigest(v2_body), version.info_checksum_v2
   end
 
+  test "backfill_only_version uploads only that version and skips Fastly purge" do
+    version = create(:version, number: "0.0.1", required_ruby_version: ">= 2.0.0", required_rubygems_version: ">= 2.6.3")
+
+    perform_enqueued_jobs only: [UploadInfoFileJob] do
+      UploadInfoFileJob.perform_now(rubygem_name: version.rubygem.name, backfill_only_version: 2)
+    end
+
+    assert_nil RubygemFs.compact_index.get("info/#{version.rubygem.name}")
+    assert_not_nil RubygemFs.compact_index.get("v2/info/#{version.rubygem.name}")
+    assert_no_enqueued_jobs only: FastlyPurgeJob
+  end
+
   test "#good_job_concurrency_key" do
     job = UploadInfoFileJob.new(rubygem_name: "foo")
 

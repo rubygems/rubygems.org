@@ -16,11 +16,17 @@ class UploadInfoFileJob < ApplicationJob
     key: -> { "#{self.class.name}:#{rubygem_name_arg}" }
   )
 
-  def perform(rubygem_name:)
+  PATH_PREFIXES = { 1 => "info", 2 => "v2/info" }.freeze
+
+  def perform(rubygem_name:, backfill_only_version: nil)
     gem_info = GemInfo.new(rubygem_name, cached: false)
 
-    upload_info_file(gem_info, rubygem_name, version: 1, path_prefix: "info")
-    upload_info_file(gem_info, rubygem_name, version: 2, path_prefix: "v2/info")
+    if backfill_only_version
+      upload_info_file(gem_info, rubygem_name, version: backfill_only_version, purge: false)
+    else
+      upload_info_file(gem_info, rubygem_name, version: 1, purge: true)
+      upload_info_file(gem_info, rubygem_name, version: 2, purge: true)
+    end
   end
 
   private
@@ -29,12 +35,13 @@ class UploadInfoFileJob < ApplicationJob
     arguments.first.fetch(:rubygem_name)
   end
 
-  def upload_info_file(gem_info, rubygem_name, version:, path_prefix:)
+  def upload_info_file(gem_info, rubygem_name, version:, purge:)
     compact_index_info = gem_info.compact_index_info(version:)
     response_body = CompactIndex.info(compact_index_info)
 
     content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
+    path_prefix = PATH_PREFIXES.fetch(version)
     key = "#{path_prefix}/#{rubygem_name}"
 
     response = RubygemFs.compact_index.store(
@@ -54,6 +61,6 @@ class UploadInfoFileJob < ApplicationJob
 
     logger.info(message: "Uploading v#{version} info file for #{rubygem_name} succeeded", response:)
 
-    FastlyPurgeJob.perform_later(key: "s3-#{key}", soft: true)
+    FastlyPurgeJob.perform_later(key: "s3-#{key}", soft: true) if purge
   end
 end
