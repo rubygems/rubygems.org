@@ -80,6 +80,28 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
 
         assert_no_enqueued_jobs only: UploadInfoFileJob
       end
+
+      should "enqueue UploadInfoFileJob when forced and info_checksum_v2 is already set" do
+        rubygem = create(:rubygem, name: "testgem")
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: "already_set")
+
+        task = Maintenance::BackfillCompactIndexV2Task.new
+        task.force_upload_info_file_job = true
+        task.process(rubygem)
+
+        assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem", backfill_only_version: 2])
+      end
+
+      should "enqueue UploadInfoFileJob when forced and yanked_info_checksum_v2 is already set" do
+        rubygem = create(:rubygem, name: "testgem")
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: false, yanked_info_checksum_v2: "already_set")
+
+        task = Maintenance::BackfillCompactIndexV2Task.new
+        task.force_upload_info_file_job = true
+        task.process(rubygem)
+
+        assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem", backfill_only_version: 2])
+      end
     end
   end
 end
