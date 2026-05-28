@@ -3,6 +3,7 @@
 class Maintenance::BackfillCompactIndexV2Task < MaintenanceTasks::Task
   attribute :min_rubygem_id, :integer
   attribute :max_rubygem_id, :integer
+  attribute :force_upload_info_file_job, :boolean, default: false
 
   def collection
     scope = Rubygem.with_versions
@@ -17,7 +18,7 @@ class Maintenance::BackfillCompactIndexV2Task < MaintenanceTasks::Task
       .first
 
     return unless last_version
-    return if last_version.info_checksum_v2.present? || last_version.yanked_info_checksum_v2.present?
+    return if !force_upload_info_file_job && (last_version.info_checksum_v2.present? || last_version.yanked_info_checksum_v2.present?)
 
     UploadInfoFileJob.perform_later(rubygem_name: rubygem.name, backfill_only_version: 2)
   end
