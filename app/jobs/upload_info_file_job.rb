@@ -16,13 +16,16 @@ class UploadInfoFileJob < ApplicationJob
     key: -> { "#{self.class.name}:#{rubygem_name_arg}" }
   )
 
-  discard_on ArgumentError
+  class InvalidBackfillVersion < ArgumentError; end
+
+  discard_on InvalidBackfillVersion
 
   PATH_PREFIXES = { 1 => "info", 2 => "v2/info" }.freeze
 
   def perform(rubygem_name:, backfill_only_version: nil)
     unless backfill_only_version.nil? || PATH_PREFIXES.key?(backfill_only_version)
-      raise ArgumentError, "backfill_only_version must be nil or one of #{PATH_PREFIXES.keys.inspect}, got #{backfill_only_version.inspect}"
+      raise InvalidBackfillVersion,
+        "backfill_only_version must be nil or one of #{PATH_PREFIXES.keys.inspect}, got #{backfill_only_version.inspect}"
     end
 
     gem_info = GemInfo.new(rubygem_name, cached: false)
@@ -84,9 +87,9 @@ class UploadInfoFileJob < ApplicationJob
 
     scope = Version.where(id: last_version.id)
     if last_version.indexed
-      scope.where(info_checksum_v2: nil).update_all(info_checksum_v2: checksum)
+      scope.where(indexed: true, info_checksum_v2: nil).update_all(info_checksum_v2: checksum)
     else
-      scope.where(yanked_info_checksum_v2: nil).update_all(yanked_info_checksum_v2: checksum)
+      scope.where(indexed: false, yanked_info_checksum_v2: nil).update_all(yanked_info_checksum_v2: checksum)
     end
   end
 end

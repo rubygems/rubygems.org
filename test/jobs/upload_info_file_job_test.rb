@@ -163,9 +163,22 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
 
   test "rejects unknown backfill_only_version values" do
     job = UploadInfoFileJob.new
-    assert_raises(ArgumentError) do
+    assert_raises(UploadInfoFileJob::InvalidBackfillVersion) do
       job.perform(rubygem_name: "anything", backfill_only_version: 3)
     end
+  end
+
+  test "persist_backfill_checksum does not write info_checksum_v2 if indexed flipped to false mid-perform" do
+    version = create(:version, indexed: false, yanked_at: 1.minute.ago)
+
+    Version.any_instance.stubs(:indexed).returns(true)
+
+    UploadInfoFileJob.perform_now(rubygem_name: version.rubygem.name, backfill_only_version: 2)
+
+    version.reload
+
+    assert_nil version.info_checksum_v2
+    assert_nil version.yanked_info_checksum_v2
   end
 
   test "#good_job_concurrency_key" do
