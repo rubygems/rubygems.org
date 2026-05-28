@@ -102,6 +102,85 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
     assert_no_enqueued_jobs only: FastlyPurgeJob
   end
 
+  test "backfill_only_version: 2 persists info_checksum_v2 on the last indexed version" do
+    rubygem = create(:rubygem, name: "testgem")
+    create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
+    last_version = create(:version, rubygem: rubygem, number: "1.0.1", indexed: true, info_checksum_v2: nil)
+
+    UploadInfoFileJob.perform_now(rubygem_name: "testgem", backfill_only_version: 2)
+
+    body = RubygemFs.compact_index.get("v2/info/testgem")
+
+    assert_equal Digest::MD5.hexdigest(body), last_version.reload.info_checksum_v2
+  end
+
+  test "backfill_only_version: 2 persists yanked_info_checksum_v2 when last version is yanked" do
+    rubygem = create(:rubygem, name: "testgem")
+    create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, yanked_info_checksum_v2: nil)
+    last_version = create(:version, rubygem: rubygem, number: "1.0.1", indexed: false, yanked_info_checksum_v2: nil)
+
+    UploadInfoFileJob.perform_now(rubygem_name: "testgem", backfill_only_version: 2)
+
+    body = RubygemFs.compact_index.get("v2/info/testgem")
+
+    assert_equal Digest::MD5.hexdigest(body), last_version.reload.yanked_info_checksum_v2
+  end
+
+  test "backfill_only_version: 1 uploads only the v1 file and does not persist a checksum" do
+    version = create(:version, indexed: true, info_checksum_v2: nil)
+    name = version.rubygem.name
+
+    UploadInfoFileJob.perform_now(rubygem_name: name, backfill_only_version: 1)
+
+    assert_not_nil RubygemFs.compact_index.get("info/#{name}")
+    assert_nil RubygemFs.compact_index.get("v2/info/#{name}")
+    assert_nil version.reload.info_checksum_v2
+  end
+
+  test "backfill_only_version: 2 is a no-op for persistence when the rubygem no longer exists" do
+    assert_nothing_raised do
+      UploadInfoFileJob.perform_now(rubygem_name: "missing-gem", backfill_only_version: 2)
+    end
+  end
+
+  test "backfill_only_version: 2 does not overwrite an already-populated info_checksum_v2" do
+    rubygem = create(:rubygem, name: "testgem")
+    last_version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: "set-by-after-version-write")
+
+    UploadInfoFileJob.perform_now(rubygem_name: "testgem", backfill_only_version: 2)
+
+    assert_equal "set-by-after-version-write", last_version.reload.info_checksum_v2
+  end
+
+  test "backfill_only_version: 2 does not overwrite an already-populated yanked_info_checksum_v2" do
+    rubygem = create(:rubygem, name: "testgem")
+    last_version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: false, yanked_info_checksum_v2: "set-by-deletion")
+
+    UploadInfoFileJob.perform_now(rubygem_name: "testgem", backfill_only_version: 2)
+
+    assert_equal "set-by-deletion", last_version.reload.yanked_info_checksum_v2
+  end
+
+  test "rejects unknown backfill_only_version values" do
+    job = UploadInfoFileJob.new
+    assert_raises(UploadInfoFileJob::InvalidBackfillVersion) do
+      job.perform(rubygem_name: "anything", backfill_only_version: 3)
+    end
+  end
+
+  test "persist_backfill_checksum does not write info_checksum_v2 if indexed flipped to false mid-perform" do
+    version = create(:version, indexed: false, yanked_at: 1.minute.ago)
+
+    Version.any_instance.stubs(:indexed).returns(true)
+
+    UploadInfoFileJob.perform_now(rubygem_name: version.rubygem.name, backfill_only_version: 2)
+
+    version.reload
+
+    assert_nil version.info_checksum_v2
+    assert_nil version.yanked_info_checksum_v2
+  end
+
   test "#good_job_concurrency_key" do
     job = UploadInfoFileJob.new(rubygem_name: "foo")
 
