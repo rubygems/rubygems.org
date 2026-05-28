@@ -22,6 +22,7 @@ test:
     password: testpassword
     pool: 5
     timeout: 5000
+    gssencmode: disable
 
 staging:
   primary:
