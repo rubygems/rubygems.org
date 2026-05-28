@@ -3,8 +3,6 @@
 class UploadInfoFileJob < ApplicationJob
   queue_with_priority PRIORITIES.fetch(:push)
 
-  discard_on ArgumentError
-
   include GoodJob::ActiveJobExtensions::Concurrency
 
   good_job_control_concurrency_with(
@@ -17,6 +15,8 @@ class UploadInfoFileJob < ApplicationJob
     perform_limit: 1,
     key: -> { "#{self.class.name}:#{rubygem_name_arg}" }
   )
+
+  discard_on ArgumentError
 
   PATH_PREFIXES = { 1 => "info", 2 => "v2/info" }.freeze
 
@@ -82,7 +82,11 @@ class UploadInfoFileJob < ApplicationJob
       .first
     return unless last_version
 
-    column = last_version.indexed ? :info_checksum_v2 : :yanked_info_checksum_v2
-    last_version.update_column(column, checksum)
+    scope = Version.where(id: last_version.id)
+    if last_version.indexed
+      scope.where(info_checksum_v2: nil).update_all(info_checksum_v2: checksum)
+    else
+      scope.where(yanked_info_checksum_v2: nil).update_all(yanked_info_checksum_v2: checksum)
+    end
   end
 end
