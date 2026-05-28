@@ -24,31 +24,27 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
 
   context "#process" do
     context "with an indexed last version" do
-      should "backfill info_checksum_v2 and enqueue UploadInfoFileJob for v2 only without purge" do
+      should "enqueue UploadInfoFileJob for v2 only" do
         rubygem = create(:rubygem, name: "testgem")
-        version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
-        version2 = create(:version, rubygem: rubygem, number: "1.0.1", indexed: true, info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.1", indexed: true, info_checksum_v2: nil)
 
         task = Maintenance::BackfillCompactIndexV2Task.new
         task.process(rubygem)
 
-        assert_not_nil version2.reload.info_checksum_v2
-        assert_nil version.reload.info_checksum_v2
         assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem", backfill_only_version: 2])
       end
     end
 
     context "with a yanked last version" do
-      should "backfill yanked_info_checksum_v2 and enqueue UploadInfoFileJob for v2 only without purge" do
+      should "enqueue UploadInfoFileJob for v2 only" do
         rubygem = create(:rubygem, name: "testgem")
-        version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
-        version2 = create(:version, rubygem: rubygem, number: "1.0.1", indexed: false, yanked_info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.1", indexed: false, yanked_info_checksum_v2: nil)
 
         task = Maintenance::BackfillCompactIndexV2Task.new
         task.process(rubygem)
 
-        assert_not_nil version2.reload.yanked_info_checksum_v2
-        assert_nil version.reload.info_checksum_v2
         assert_enqueued_with(job: UploadInfoFileJob, args: [rubygem_name: "testgem", backfill_only_version: 2])
       end
     end

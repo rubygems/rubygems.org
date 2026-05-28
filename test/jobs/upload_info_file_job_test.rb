@@ -102,6 +102,43 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
     assert_no_enqueued_jobs only: FastlyPurgeJob
   end
 
+  test "backfill_only_version: 2 persists info_checksum_v2 on the last indexed version" do
+    rubygem = create(:rubygem, name: "testgem")
+    create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
+    last_version = create(:version, rubygem: rubygem, number: "1.0.1", indexed: true, info_checksum_v2: nil)
+
+    UploadInfoFileJob.perform_now(rubygem_name: "testgem", backfill_only_version: 2)
+
+    body = RubygemFs.compact_index.get("v2/info/testgem")
+
+    assert_equal Digest::MD5.hexdigest(body), last_version.reload.info_checksum_v2
+  end
+
+  test "backfill_only_version: 2 persists yanked_info_checksum_v2 when last version is yanked" do
+    rubygem = create(:rubygem, name: "testgem")
+    create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, yanked_info_checksum_v2: nil)
+    last_version = create(:version, rubygem: rubygem, number: "1.0.1", indexed: false, yanked_info_checksum_v2: nil)
+
+    UploadInfoFileJob.perform_now(rubygem_name: "testgem", backfill_only_version: 2)
+
+    body = RubygemFs.compact_index.get("v2/info/testgem")
+
+    assert_equal Digest::MD5.hexdigest(body), last_version.reload.yanked_info_checksum_v2
+  end
+
+  test "backfill_only_version: 2 is a no-op for persistence when the rubygem no longer exists" do
+    assert_nothing_raised do
+      UploadInfoFileJob.perform_now(rubygem_name: "missing-gem", backfill_only_version: 2)
+    end
+  end
+
+  test "rejects unknown backfill_only_version values" do
+    job = UploadInfoFileJob.new
+    assert_raises(ArgumentError) do
+      job.perform(rubygem_name: "anything", backfill_only_version: 3)
+    end
+  end
+
   test "#good_job_concurrency_key" do
     job = UploadInfoFileJob.new(rubygem_name: "foo")
 

@@ -3,6 +3,8 @@
 class UploadInfoFileJob < ApplicationJob
   queue_with_priority PRIORITIES.fetch(:push)
 
+  discard_on ArgumentError
+
   include GoodJob::ActiveJobExtensions::Concurrency
 
   good_job_control_concurrency_with(
@@ -19,10 +21,15 @@ class UploadInfoFileJob < ApplicationJob
   PATH_PREFIXES = { 1 => "info", 2 => "v2/info" }.freeze
 
   def perform(rubygem_name:, backfill_only_version: nil)
+    unless backfill_only_version.nil? || PATH_PREFIXES.key?(backfill_only_version)
+      raise ArgumentError, "backfill_only_version must be nil or one of #{PATH_PREFIXES.keys.inspect}, got #{backfill_only_version.inspect}"
+    end
+
     gem_info = GemInfo.new(rubygem_name, cached: false)
 
     if backfill_only_version
-      upload_info_file(gem_info, rubygem_name, version: backfill_only_version, purge: false)
+      response_body = upload_info_file(gem_info, rubygem_name, version: backfill_only_version, purge: false)
+      persist_backfill_checksum(rubygem_name, checksum: Digest::MD5.hexdigest(response_body)) if backfill_only_version == 2
     else
       upload_info_file(gem_info, rubygem_name, version: 1, purge: true)
       upload_info_file(gem_info, rubygem_name, version: 2, purge: true)
@@ -62,5 +69,20 @@ class UploadInfoFileJob < ApplicationJob
     logger.info(message: "Uploading v#{version} info file for #{rubygem_name} succeeded", response:)
 
     FastlyPurgeJob.perform_later(key: "s3-#{key}", soft: true) if purge
+
+    response_body
+  end
+
+  def persist_backfill_checksum(rubygem_name, checksum:)
+    rubygem = Rubygem.find_by(name: rubygem_name)
+    return unless rubygem
+
+    last_version = rubygem.versions
+      .order(Arel.sql("COALESCE(yanked_at, created_at) DESC, number DESC, platform DESC"))
+      .first
+    return unless last_version
+
+    column = last_version.indexed ? :info_checksum_v2 : :yanked_info_checksum_v2
+    last_version.update_column(column, checksum)
   end
 end
