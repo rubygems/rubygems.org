@@ -2,6 +2,7 @@
 
 class FeatureFlag
   ORGANIZATIONS = :organizations
+  SERVE_COMPACT_INDEX_V2 = :serve_compact_index_v2
 
   class << self
     def enabled?(flag_name, actor = nil)

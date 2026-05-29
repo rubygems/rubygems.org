@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 class Api::CompactIndexController < Api::BaseController
+  COMPACT_INDEX_VERSIONS = {
+    1 => {
+      info_prefix: "info",
+      versions_file_location_key: "versions_file_location",
+      versions_surrogate_key: "versions"
+    }.freeze,
+    2 => {
+      info_prefix: "v2/info",
+      versions_file_location_key: "versions_file_location_v2",
+      versions_surrogate_key: "v2/versions"
+    }.freeze
+  }.freeze
+
   before_action :find_rubygem_by_name, only: [:info]
 
   def names
@@ -10,31 +23,56 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def versions
-    set_surrogate_key "versions"
+    set_surrogate_key compact_index_versions_surrogate_key
     cache_expiry_headers
-    versions_path = Rails.application.config.rubygems["versions_file_location"]
-    versions_file = CompactIndex::VersionsFile.new(versions_path)
+    versions_file = CompactIndex::VersionsFile.new(compact_index_versions_file_location)
     from_date = versions_file.updated_at
-    extra_gems = GemInfo.compact_index_versions(from_date)
+    extra_gems = GemInfo.compact_index_versions(from_date, version: compact_index_serving_version)
     render_range CompactIndex.versions(versions_file, extra_gems)
   end
 
   def info
-    set_surrogate_key "info/* gem/#{@rubygem.name} info/#{@rubygem.name}"
+    info_prefix = compact_index_info_prefix
+
+    set_surrogate_key "#{info_prefix}/* gem/#{@rubygem.name} #{info_prefix}/#{@rubygem.name}"
     cache_expiry_headers
-    return unless stale?(@rubygem)
-    info_params = GemInfo.new(@rubygem.name).compact_index_info
+    return unless stale?(etag: [@rubygem, compact_index_serving_version])
+
+    info_params = GemInfo.new(@rubygem.name).compact_index_info(version: compact_index_serving_version)
     render_range CompactIndex.info(info_params)
   end
 
   private
 
+  def compact_index_serving_version
+    # Compact index responses are cached by URL, so this flag must only be toggled globally.
+    @compact_index_serving_version ||= FeatureFlag.enabled?(FeatureFlag::SERVE_COMPACT_INDEX_V2) ? 2 : 1
+  end
+
+  def compact_index_config
+    @compact_index_config ||= COMPACT_INDEX_VERSIONS.fetch(compact_index_serving_version)
+  end
+
+  def compact_index_versions_file_location
+    Rails.application.config.rubygems[compact_index_config.fetch(:versions_file_location_key)]
+  end
+
+  def compact_index_versions_surrogate_key
+    compact_index_config.fetch(:versions_surrogate_key)
+  end
+
+  def compact_index_info_prefix
+    compact_index_config.fetch(:info_prefix)
+  end
+
   def find_rubygem_by_name
     super
     return if @rubygem
 
+    info_prefix = compact_index_info_prefix
+
     cache_expiry_headers(fastly_expiry: 600)
-    set_surrogate_key "#{action_name}/404 #{action_name}/#{gem_name}"
+    set_surrogate_key "#{info_prefix}/404 #{info_prefix}/#{gem_name}"
   end
 
   def render_range(response_body)
