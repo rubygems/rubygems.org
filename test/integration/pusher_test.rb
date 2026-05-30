@@ -376,7 +376,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           "yanked"            => false,
           "summary"           => "old summary",
           "description"       => "Some awesome gem",
-          "updated"           => "2016-07-04T00:00:00.000Z",
+          "updated"           => "2016-07-04T00:00:00Z",
           "dependencies"      => { "development" => [], "runtime" => [] },
           "suggest"           => { "input" => "gemsgemsgems", "weight" => 0, "contexts" => { "yanked" => false } }
         }
