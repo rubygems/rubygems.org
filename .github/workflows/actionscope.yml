@@ -39,7 +39,7 @@ jobs:
       - name: Install ActionScope
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "actionscope @ git+https://github.com/r12habh/ActionScope@6596489ee5c7f972f7cc1995540a7a2a8d0368ac"
+          python -m pip install "actionscope==0.3.2"
 
       - name: Scan workflow AWS exposure
         run: actionscope scan . --fail-on critical --no-color
