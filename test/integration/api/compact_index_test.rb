@@ -265,21 +265,23 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/info v2 cache expires on gem yank" do
     with_compact_index_v2_enabled do
-      rubygem = create(:rubygem, name: "v2yank")
-      version = create(:version, rubygem:, number: "1.0.0", created_at: Time.utc(2026, 5, 1, 12, 0, 0))
+      travel_to(Time.utc(2026, 5, 31, 12, 0, 0)) do
+        rubygem = create(:rubygem, name: "v2yank")
+        version = create(:version, rubygem:, number: "1.0.0", created_at: Time.utc(2026, 5, 1, 12, 0, 0))
 
-      get info_path(gem_name: "v2yank")
+        get info_path(gem_name: "v2yank")
 
-      assert_response :success
-      assert_includes @response.body, "1.0.0"
+        assert_response :success
+        assert_includes @response.body, "1.0.0"
 
-      Deletion.create!(version:, user: create(:user))
+        Deletion.create!(version:, user: create(:user))
 
-      get info_path(gem_name: "v2yank")
+        get info_path(gem_name: "v2yank")
 
-      assert_response :success
-      assert_not_includes @response.body, "1.0.0"
-      assert_equal "v2/info/* gem/v2yank v2/info/v2yank", @response.headers["Surrogate-Key"]
+        assert_response :success
+        assert_not_includes @response.body, "1.0.0"
+        assert_equal "v2/info/* gem/v2yank v2/info/v2yank", @response.headers["Surrogate-Key"]
+      end
     end
   end
 
