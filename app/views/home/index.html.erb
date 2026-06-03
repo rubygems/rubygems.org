@@ -13,6 +13,7 @@
     <div class="w-full max-w-2xl" role="search">
       <%= form_tag search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800" }, class: "relative w-full text-left" do %>
         <%= rubygem_search_field(
+              id: "homepage_gem_query",
               class: "h-14 w-full rounded border border-neutral-500 bg-neutral-050 px-4 pr-14 text-b2 text-neutral-800 outline-none focus:border-neutral-500 focus:ring-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
             ) %>
 
@@ -22,11 +23,11 @@
           <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" tabindex="-1" data-autocomplete-target="item" data-action="click->autocomplete#choose mouseover->autocomplete#highlight"></li>
         </template>
 
-        <%= label_tag :query, id: "home_querylabel" do %>
+        <%= label_tag :homepage_gem_query, id: "homepage_gem_querylabel" do %>
           <span class="sr-only"><%= t("layouts.application.header.search_gem_html") %></span>
         <% end %>
 
-        <button type="submit" aria-labelledby="home_querylabel" class="absolute end-3 top-1/2 -translate-y-1/2 text-neutral-700 hover:text-neutral-900 focus:outline-none dark:text-neutral-300 dark:hover:text-white">
+        <button type="submit" aria-labelledby="homepage_gem_querylabel" class="absolute end-3 top-1/2 -translate-y-1/2 text-neutral-700 hover:text-neutral-900 focus:outline-none dark:text-neutral-300 dark:hover:text-white">
           <%= icon_tag "search", size: 7 %>
         </button>
       <% end %>
