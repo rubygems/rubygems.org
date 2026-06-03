@@ -1,18 +1,84 @@
-<div class="home__image-wrap">
-  <div class="home__image"></div>
-</div>
-<h1 class="home__heading"><%= t '.find_blurb_html' %></h1>
-<%= render "layouts/search" %>
-<div class="home__cta-wrap">
-  <% if @downloads_count %>
-    <h2 class="home__downloads">
-      <p><%= number_with_delimiter(@downloads_count) %></p>
-      <span class="home__downloads__desc"><%= t('.downloads_counting_html') %></span>
-    </h2>
-  <% end %>
-  <%= link_to t('.learn.install_rubygems'), page_url("download"), :class => "home__join #{@downloads_count.nil? ? 'no-download-count' : ''}", "data-icon" => ">" %>
-</div>
-<div class="home__links">
-  <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", class: "home__link", "data-icon" => "⌁" %>
-  <%= link_to t('layouts.application.footer.uptime'), "https://uptime.rubygems.org", class: "home__link", "data-icon" => "⧖" %>
-</div>
+<%# Hero %>
+<section class="w-full rounded-[2rem] bg-[#FFE2D3] dark:bg-orange-950">
+  <div class="mx-auto flex max-w-5xl flex-col items-center gap-8 px-6 py-12 text-center sm:gap-10 sm:px-10 sm:py-16 lg:py-20">
+    <h1 class="flex flex-col items-center gap-1 font-bold leading-none sm:gap-2">
+      <span class="text-[2.5rem] text-[#720000] dark:text-orange-200 sm:text-[3.5rem] lg:text-[5rem]"><%= t(".find_blurb_lead") %></span>
+      <span class="flex items-center gap-3 text-orange-500 sm:gap-4">
+        <%= icon_tag "logo", size: 8, class: "h-10 w-10 sm:h-14 sm:w-14 lg:h-[4.25rem] lg:w-[4.25rem]" %>
+        <span class="text-[2.5rem] sm:text-[3.5rem] lg:text-[5rem]">RubyGems</span>
+      </span>
+    </h1>
+
+    <%# Search %>
+    <div class="w-full max-w-2xl" role="search">
+      <%= form_tag search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800" }, class: "relative w-full text-left" do %>
+        <%= rubygem_search_field(
+              class: "h-14 w-full rounded border border-neutral-500 bg-neutral-050 px-4 pr-14 text-b2 text-neutral-800 outline-none focus:border-neutral-500 focus:ring-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+            ) %>
+
+        <ul role="listbox" data-autocomplete-target="suggestions" class="absolute start-0 z-40 mt-2 hidden w-full divide-y divide-neutral-200 rounded border border-neutral-200 bg-white text-b2 text-neutral-800 shadow-md dark:divide-neutral-800 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"></ul>
+
+        <template id="home_suggestion" data-autocomplete-target="template">
+          <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" tabindex="-1" data-autocomplete-target="item" data-action="click->autocomplete#choose mouseover->autocomplete#highlight"></li>
+        </template>
+
+        <%= label_tag :query, id: "home_querylabel" do %>
+          <span class="sr-only"><%= t("layouts.application.header.search_gem_html") %></span>
+        <% end %>
+
+        <button type="submit" aria-labelledby="home_querylabel" class="absolute end-3 top-1/2 -translate-y-1/2 text-neutral-700 hover:text-neutral-900 focus:outline-none dark:text-neutral-300 dark:hover:text-white">
+          <%= icon_tag "search", size: 7 %>
+        </button>
+      <% end %>
+    </div>
+
+    <%# Downloads count + install CTA %>
+    <div class="flex flex-col items-center gap-6 sm:flex-row sm:gap-8">
+      <% if @downloads_count %>
+        <div class="flex flex-col items-center gap-1.5 leading-none text-orange-900 dark:text-orange-200">
+          <p class="text-b1 font-bold"><%= number_with_delimiter(@downloads_count) %></p>
+          <p class="text-b4 font-semibold uppercase tracking-wide"><%= t(".downloads_counting_html") %></p>
+        </div>
+      <% end %>
+
+      <%= link_to page_path("download"), class: "inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-orange-500 px-6 text-b1 font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none dark:hover:bg-orange-700" do %>
+        <span><%= t(".learn.install_rubygems") %></span>
+        <%= icon_tag "arrow-forward", size: 6 %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# Powered by people %>
+<section class="mx-auto mt-16 flex max-w-5xl flex-col items-center gap-10 text-center lg:mt-24">
+  <h2 class="text-[2.25rem] font-bold leading-tight text-neutral-900 dark:text-white sm:text-[3.25rem] lg:text-[5rem]"><%= t(".powered_by.title") %></h2>
+  <p class="max-w-4xl text-b1 leading-relaxed text-neutral-900 [&_a]:text-orange-500 [&_a]:underline hover:[&_a]:text-orange-600 dark:text-neutral-200"><%= t(".powered_by.body_html") %></p>
+
+  <div class="grid w-full grid-cols-1 gap-6 text-left md:grid-cols-2">
+    <%# Supporters Program %>
+    <div class="flex h-full flex-col gap-8 rounded-[2rem] bg-[#FFEEDD] p-8 dark:bg-orange-950 sm:p-12">
+      <div class="flex items-center gap-4">
+        <%= icon_tag "health_cross", size: 11, class: "text-orange-900 dark:text-orange-200" %>
+        <h3 class="text-h1 font-bold text-orange-900 dark:text-orange-200"><%= t(".supporters.title") %></h3>
+      </div>
+      <p class="text-b1 leading-relaxed text-orange-950 dark:text-orange-100"><%= t(".supporters.body") %></p>
+      <%= link_to page_path("supporters"), class: "mt-auto inline-flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 text-b1 font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none dark:hover:bg-orange-700" do %>
+        <span><%= t(".supporters.cta") %></span>
+        <%= icon_tag "arrow-forward", size: 6 %>
+      <% end %>
+    </div>
+
+    <%# Make a donation %>
+    <div class="flex h-full flex-col gap-8 rounded-[2rem] bg-[#FFE2D3] p-8 dark:bg-orange-900 sm:p-12">
+      <div class="flex items-center gap-4">
+        <%= icon_tag "favorite", size: 11, class: "text-orange-900 dark:text-orange-200" %>
+        <h3 class="text-h1 font-bold text-orange-900 dark:text-orange-200"><%= t(".donation.title") %></h3>
+      </div>
+      <p class="text-b1 leading-relaxed text-orange-950 dark:text-orange-100"><%= t(".donation.body") %></p>
+      <%= link_to "https://rubycentral.org/open-source/#/portal/signup", class: "mt-auto inline-flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 text-b1 font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none dark:hover:bg-orange-700" do %>
+        <span><%= t(".donation.cta") %></span>
+        <%= icon_tag "arrow-forward", size: 6 %>
+      <% end %>
+    </div>
+  </div>
+</section>
