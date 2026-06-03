@@ -258,8 +258,21 @@ nl:
     index:
       downloads_counting_html:
       find_blurb_html: Vind je gems makkelijker en publiceer ze sneller.
+      find_blurb_lead:
+      install_rubygems:
       learn:
         install_rubygems: Installeer RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
     subject:
       subject_label:
