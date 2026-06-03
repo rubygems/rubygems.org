@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class UpdateVersionsListJob < ApplicationJob
+  class UnsupportedVersionError < ArgumentError; end
+
   queue_with_priority PRIORITIES.fetch(:push)
+  discard_on UnsupportedVersionError
 
   include GoodJob::ActiveJobExtensions::Concurrency
 
@@ -22,15 +25,10 @@ class UpdateVersionsListJob < ApplicationJob
     }
   }.freeze
 
-  def version_arg
-    args = arguments.first
-    args[:version] || args["version"] if args.respond_to?(:[])
-  end
-
   def perform(version:)
-    version = Integer(version)
+    version = normalize_version(version)
     config = VERSION_CONFIG[version]
-    raise ArgumentError, "Unsupported compact index version: #{version}" unless config
+    raise UnsupportedVersionError, "Unsupported compact index version: #{version}" unless config
 
     timestamp = Time.now.utc.iso8601
     file_path = Rails.application.config.rubygems[config.fetch(:config_key)]
@@ -39,5 +37,17 @@ class UpdateVersionsListJob < ApplicationJob
 
     versions_file.create(gems, timestamp)
     RubygemFs.instance.store(config.fetch(:store_key), File.read(file_path))
+  end
+
+  private
+
+  def version_arg
+    arguments.first.fetch(:version)
+  end
+
+  def normalize_version(version)
+    Integer(version)
+  rescue ArgumentError, TypeError
+    raise UnsupportedVersionError, "Unsupported compact index version: #{version}"
   end
 end
