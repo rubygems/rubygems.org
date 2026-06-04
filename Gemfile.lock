@@ -384,7 +384,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.14.0)
       activejob (>= 7.1)
-    json (2.19.7)
+    json (2.19.8)
     json-jwt (1.17.0)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -462,13 +462,13 @@ GEM
       net-imap
       net-pop
       net-smtp
-    maintenance_tasks (2.16.0)
-      actionpack (>= 7.1)
-      activejob (>= 7.1)
-      activerecord (>= 7.1)
+    maintenance_tasks (2.17.0)
+      actionpack (>= 7.2)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
       csv
       job-iteration (>= 1.3.6)
-      railties (>= 7.1)
+      railties (>= 7.2)
       zeitwerk (>= 2.6.2)
     marcel (1.2.1)
     matrix (0.4.3)
@@ -626,7 +626,7 @@ GEM
       protobug_well_known_protos (= 0.1.0)
     protobug_well_known_protos (0.1.0)
       protobug (= 0.1.0)
-    psych (5.3.1)
+    psych (5.4.0)
       date
       stringio
     public_suffix (7.0.5)
@@ -968,7 +968,7 @@ DEPENDENCIES
   local_time (~> 3.0)
   lookbook (~> 2.3)
   mail (~> 2.9)
-  maintenance_tasks (~> 2.16)
+  maintenance_tasks (~> 2.17)
   memory_profiler (~> 1.1)
   minitest (~> 6.0)
   minitest-gcstats (~> 1.3)
@@ -1176,7 +1176,7 @@ CHECKSUMS
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.14.0) sha256=f154f978109acc838c0359ecde2fdd4dccc3382f95a22e03a58ac561a3615224
-  json (2.19.7) sha256=fe432c8639f6efff69f9d73b518a3705d9581ab93156f981ea72806e1e5bcc3e
+  json (2.19.8) sha256=6354310fd76ef69b87d5bd1f38b40d730613baf90b6803d2d0a48f618d32dfaa
   json-jwt (1.17.0) sha256=6ff99026b4c54281a9431179f76ceb81faa14772d710ef6169785199caadc4cc
   jwt (3.2.0) sha256=5419b1fe37b1da0982bd07051f573a8b8789ab724c2aa7e785e4784a3ed217d7
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
@@ -1204,7 +1204,7 @@ CHECKSUMS
   loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
   lookbook (2.3.14) sha256=c11a693bde9915b553c4463440ad5e750829f90bff08abdb6b8610373864cd7c
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
-  maintenance_tasks (2.16.0) sha256=a28306944a716121e15d2b56d95b49e987e138a150bfa90061ed94661138c37b
+  maintenance_tasks (2.17.0) sha256=061267305fc37e0e7df8057372bfca2add125d46a502dda420fdd09782fc009e
   marcel (1.2.1) sha256=1678e9360e32f9eafa917c80029e2f6d10b2715c66a4b87b6d0da9b9cd1f859f
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
@@ -1275,7 +1275,7 @@ CHECKSUMS
   protobug_googleapis_field_behavior_protos (0.1.0) sha256=db48ef6a5913b2355b4a6931ab400a9e3e995fb48499977a3ad0be6365f9e265
   protobug_sigstore_protos (0.1.0) sha256=4ad1eebaf6454131b6f432dda50ad0e513773613474b92470847614a5acacce1
   protobug_well_known_protos (0.1.0) sha256=356757f562453bb34a28f12e8e9fa357346cca35a6807a549837c3fe256bb5b3
-  psych (5.3.1) sha256=eb7a57cef10c9d70173ff74e739d843ac3b2c019a003de48447b2963d81b1974
+  psych (5.4.0) sha256=14f72d69a611af663d7d70e4a7b67d9eb1f3ae9f8d916b478961d5a0075ba5b7
   public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
   puma (6.6.1) sha256=b9b56e4a4ea75d1bfa6d9e1972ee2c9f43d0883f011826d914e8e37b3694ea1e
   puma-plugin-statsd (2.8.0) sha256=e515445f93232b6b3571a23b832f93a776d4ce0fc8a5edee798013b82f3488f3
