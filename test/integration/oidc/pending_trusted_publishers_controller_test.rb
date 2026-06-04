@@ -49,6 +49,48 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
       assert_redirected_to profile_oidc_pending_trusted_publishers_url
     end
 
+    should "create gitlab pending trusted publisher" do
+      assert_difference("OIDC::PendingTrustedPublisher.count") do
+        post profile_oidc_pending_trusted_publishers_url, params: {
+          oidc_pending_trusted_publisher: {
+            rubygem_name: "my-new-gem",
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: {
+              project_path: "mygroup/myproject",
+              ci_config_path: ".gitlab-ci.yml"
+            }
+          }
+        }
+      end
+
+      assert_redirected_to profile_oidc_pending_trusted_publishers_url
+      assert_equal "mygroup/myproject", OIDC::TrustedPublisher::GitLab.last.project_path
+    end
+
+    should "error creating invalid gitlab pending trusted publisher" do
+      assert_no_difference("OIDC::PendingTrustedPublisher.count") do
+        post profile_oidc_pending_trusted_publishers_url, params: {
+          oidc_pending_trusted_publisher: {
+            rubygem_name: "my-new-gem",
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: {
+              project_path: "mygroup/myproject",
+              ci_config_path: "not-a-yaml-file.txt"
+            }
+          }
+        }
+
+        assert_response :unprocessable_content
+        assert_equal ["Trusted publisher ci config path must end with .yml or .yaml"].to_sentence, flash[:error]
+      end
+    end
+
+    should "get new with gitlab provider selected" do
+      get new_profile_oidc_pending_trusted_publisher_url(trusted_publisher_type: "gitlab")
+
+      assert_response :success
+    end
+
     should "error creating trusted publisher with type" do
       assert_no_difference("OIDC::PendingTrustedPublisher.count") do
         post profile_oidc_pending_trusted_publishers_url, params: {
