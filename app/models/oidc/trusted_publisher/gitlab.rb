@@ -92,7 +92,7 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
       )
     end
 
-    refs = [jwt.fetch(:ref), jwt.fetch(:sha)].compact_blank
+    refs = [jwt.fetch(:ref_path), jwt.fetch(:sha)].compact_blank
     raise OIDC::AccessPolicy::AccessError, "ref and sha are both missing" if refs.empty?
 
     OIDC::AccessPolicy.new(
