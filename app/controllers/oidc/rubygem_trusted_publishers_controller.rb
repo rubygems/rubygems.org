@@ -16,10 +16,10 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   def new
     rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.new
     rubygem_trusted_publisher.trusted_publisher = if @selected_trusted_publisher_type == OIDC::TrustedPublisher::GitHubAction
-                                                     gh_actions_trusted_publisher
-                                                   else
-                                                     @selected_trusted_publisher_type.new
-                                                   end
+                                                    gh_actions_trusted_publisher
+                                                  else
+                                                    @selected_trusted_publisher_type.new
+                                                  end
 
     render OIDC::RubygemTrustedPublishers::NewView.new(
       rubygem_trusted_publisher: rubygem_trusted_publisher,

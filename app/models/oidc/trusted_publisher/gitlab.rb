@@ -12,7 +12,7 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
     presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :environment, :ref_type, :branch_name, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
-  validates :project_path, uniqueness: { scope: %i[ci_config_path environment ref_type branch_name], message: "publisher already exists" }
+  validates :project_path, uniqueness: { scope: %i[ci_config_path environment ref_type branch_name], message: :publisher_already_exists }
   validate :ci_config_path_format
   validate :branch_name_required_for_branch_ref_type
 

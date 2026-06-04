@@ -18,7 +18,9 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   validates :workflow_repository_owner, presence: true, if: -> { workflow_repository_name.present? }
   validates :workflow_repository_name, presence: true, if: -> { workflow_repository_owner.present? }
 
-  validates :repository_owner, uniqueness: { scope: %i[repository_name repository_owner_id workflow_filename environment workflow_repository_owner workflow_repository_name], message: "publisher already exists" }
+  validates :repository_owner,
+    uniqueness: { scope: %i[repository_name repository_owner_id workflow_filename environment workflow_repository_owner workflow_repository_name],
+                  message: :publisher_already_exists }
   validate :workflow_filename_format
   validate :workflow_repository_differs_from_repository
 
