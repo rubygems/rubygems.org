@@ -12,11 +12,9 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
     presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :environment, :ref_type, :branch_name, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
-  validate :unique_publisher
+  validates :project_path, uniqueness: { scope: %i[ci_config_path environment ref_type branch_name], message: "publisher already exists" }
   validate :ci_config_path_format
   validate :branch_name_required_for_branch_ref_type
-
-  before_validation :set_default_ci_config_path
 
   def self.for_claims(claims)
     required = {
@@ -183,18 +181,6 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   def set_default_ci_config_path
     self.ci_config_path = ".gitlab-ci.yml" if ci_config_path.blank?
-  end
-
-  def unique_publisher
-    return unless self.class.exists?(
-      project_path: project_path,
-      ci_config_path: ci_config_path,
-      environment: environment,
-      ref_type: ref_type,
-      branch_name: branch_name
-    )
-
-    errors.add(:base, "publisher already exists")
   end
 
   def ci_config_path_format

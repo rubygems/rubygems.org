@@ -18,7 +18,7 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   validates :workflow_repository_owner, presence: true, if: -> { workflow_repository_name.present? }
   validates :workflow_repository_name, presence: true, if: -> { workflow_repository_owner.present? }
 
-  validate :unique_publisher
+  validates :repository_owner, uniqueness: { scope: %i[repository_name repository_owner_id workflow_filename environment workflow_repository_owner workflow_repository_name], message: "publisher already exists" }
   validate :workflow_filename_format
   validate :workflow_repository_differs_from_repository
 
@@ -222,20 +222,6 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
       rescue Octokit::NotFound
         nil
       end
-  end
-
-  def unique_publisher
-    return unless self.class.exists?(
-      repository_owner: repository_owner,
-      repository_name: repository_name,
-      repository_owner_id: repository_owner_id,
-      workflow_filename: workflow_filename,
-      environment: environment,
-      workflow_repository_owner: workflow_repository_owner,
-      workflow_repository_name: workflow_repository_name
-    )
-
-    errors.add(:base, "publisher already exists")
   end
 
   def workflow_filename_format

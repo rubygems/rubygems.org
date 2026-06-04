@@ -30,13 +30,7 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
           url: rubygem_trusted_publishers_path(rubygem_trusted_publisher.rubygem.slug)
         ) do |f|
           f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
-
-          case rubygem_trusted_publisher.trusted_publisher
-          when OIDC::TrustedPublisher::GitHubAction
-            render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form: f)
-          when OIDC::TrustedPublisher::GitLab
-            render OIDC::TrustedPublisher::GitLab::FormComponent.new(gitlab_form: f)
-          end
+          render selected_trusted_publisher_type.form_component.new(form: f)
           f.submit class: "form__submit"
         end
       end

@@ -33,13 +33,7 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
         p(class: "form__field__instructions") { t("oidc.trusted_publisher.pending.rubygem_name_help_html") }
 
         f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
-
-        case pending_trusted_publisher.trusted_publisher
-        when OIDC::TrustedPublisher::GitHubAction
-          render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form: f)
-        when OIDC::TrustedPublisher::GitLab
-          render OIDC::TrustedPublisher::GitLab::FormComponent.new(gitlab_form: f)
-        end
+        render selected_trusted_publisher_type.form_component.new(form: f)
         f.submit class: "form__submit"
       end
     end

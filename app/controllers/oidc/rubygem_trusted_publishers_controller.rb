@@ -14,32 +14,25 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def new
-    selected_trusted_publisher_type = nil
-    if params[:trusted_publisher_type].present?
-      selected_trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.url_identifier == params[:trusted_publisher_type] }
-    end
-
-    rubygem_trusted_publisher_instance = @rubygem.oidc_rubygem_trusted_publishers.new
-
-    rubygem_trusted_publisher_instance.trusted_publisher = if selected_trusted_publisher_type
-                                                             selected_trusted_publisher_type.new
-                                                           else
-                                                             OIDC::TrustedPublisher::GitHubAction.new
-                                                           end
+    rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.new
+    rubygem_trusted_publisher.trusted_publisher = if @selected_trusted_publisher_type == OIDC::TrustedPublisher::GitHubAction
+                                                     gh_actions_trusted_publisher
+                                                   else
+                                                     @selected_trusted_publisher_type.new
+                                                   end
 
     render OIDC::RubygemTrustedPublishers::NewView.new(
-      rubygem_trusted_publisher: rubygem_trusted_publisher_instance,
+      rubygem_trusted_publisher: rubygem_trusted_publisher,
       trusted_publisher_types: OIDC::TrustedPublisher.all,
-      selected_trusted_publisher_type: selected_trusted_publisher_type
+      selected_trusted_publisher_type: @selected_trusted_publisher_type
     )
   end
 
   def create
     permitted_params = create_params
-    trusted_publisher_type = @trusted_publisher_type
     specific_trusted_publisher_params = permitted_params[:trusted_publisher_attributes] || {}
 
-    specific_trusted_publisher = trusted_publisher_type.build_trusted_publisher(specific_trusted_publisher_params)
+    specific_trusted_publisher = @trusted_publisher_type.build_trusted_publisher(specific_trusted_publisher_params)
 
     rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.new(
       trusted_publisher: specific_trusted_publisher
@@ -53,7 +46,7 @@ flash: { notice: t(".success") }
       render OIDC::RubygemTrustedPublishers::NewView.new(
         rubygem_trusted_publisher: trusted_publisher,
         trusted_publisher_types: OIDC::TrustedPublisher.all,
-        selected_trusted_publisher_type: trusted_publisher_type
+        selected_trusted_publisher_type: @trusted_publisher_type
       ), status: :unprocessable_content
     end
   end
@@ -85,5 +78,24 @@ flash: { error: @rubygem_trusted_publisher.errors.full_messages.to_sentence })
 
   def find_rubygem_trusted_publisher
     @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params.expect(:id))
+  end
+
+  def gh_actions_trusted_publisher
+    github_params = helpers.github_params(@rubygem)
+
+    publisher = OIDC::TrustedPublisher::GitHubAction.new
+    if github_params
+      publisher.repository_owner = github_params[:user]
+      publisher.repository_name = github_params[:repo]
+      publisher.workflow_filename = workflow_filename(publisher.repository)
+    end
+    publisher
+  end
+
+  def workflow_filename(repo)
+    paths = Octokit.contents(repo, path: ".github/workflows").lazy.select { it.type == "file" }.map(&:name).grep(/\.ya?ml\z/)
+    paths.max_by { |path| [path.include?("release"), path.include?("push")].map! { (it && 1) || 0 } }
+  rescue Octokit::NotFound, Octokit::InvalidRepository
+    nil
   end
 end
