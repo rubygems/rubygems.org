@@ -16,9 +16,9 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponentPreview < Lookbook::Pre
     prop :form_object
 
     def view_template
-      form_with(model: @form_object, url: "/") do |github_action_form|
-        render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form:)
-        github_action_form.submit class: "form__submit", disabled: true
+      form_with(model: @form_object, url: "/") do |f|
+        render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(form: f)
+        f.submit class: "form__submit", disabled: true
       end
     end
   end

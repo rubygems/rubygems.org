@@ -41,13 +41,7 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
         end
 
         f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
-
-        case pending_trusted_publisher.trusted_publisher
-        when OIDC::TrustedPublisher::GitHubAction
-          render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form: f)
-        when OIDC::TrustedPublisher::GitLab
-          render OIDC::TrustedPublisher::GitLab::FormComponent.new(gitlab_form: f)
-        end
+        render selected_trusted_publisher_type.form_component.new(form: f)
 
         render ButtonComponent.new do
           f.submit

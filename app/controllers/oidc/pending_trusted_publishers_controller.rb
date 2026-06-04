@@ -20,25 +20,10 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
   end
 
   def new
-    selected_trusted_publisher_type = nil
-    if params[:trusted_publisher_type].present?
-      selected_trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.url_identifier == params[:trusted_publisher_type] }
-    end
-
-    pending_trusted_publisher = current_user.oidc_pending_trusted_publishers.new
-    pending_trusted_publisher.trusted_publisher = if selected_trusted_publisher_type
-                                                    selected_trusted_publisher_type.new
-                                                  else
-                                                    OIDC::TrustedPublisher::GitHubAction.new
-                                                  end
-
-    add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path)
-    add_breadcrumb(t(".title"))
-
     render OIDC::PendingTrustedPublishers::NewView.new(
-      pending_trusted_publisher: pending_trusted_publisher,
+      pending_trusted_publisher: initialize_trusted_publisher(current_user.oidc_pending_trusted_publishers),
       trusted_publisher_types: OIDC::TrustedPublisher.all,
-      selected_trusted_publisher_type: selected_trusted_publisher_type
+      selected_trusted_publisher_type: @selected_trusted_publisher_type
     )
   end
 
@@ -53,11 +38,10 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
       redirect_to profile_oidc_pending_trusted_publishers_path, flash: { notice: t(".success") }
     else
       flash.now[:error] = trusted_publisher.errors.full_messages.to_sentence
-      selected_trusted_publisher_type = OIDC::TrustedPublisher.all.find { |type| type.polymorphic_name == create_params[:trusted_publisher_type] }
       render OIDC::PendingTrustedPublishers::NewView.new(
         pending_trusted_publisher: trusted_publisher,
         trusted_publisher_types: OIDC::TrustedPublisher.all,
-        selected_trusted_publisher_type: selected_trusted_publisher_type
+        selected_trusted_publisher_type: @trusted_publisher_type
       ), status: :unprocessable_content
     end
   end
