@@ -5,7 +5,8 @@ class OIDC::TrustedPublisher::FormComponent < ApplicationComponent
 
   private
 
-  def field(form, type, name, *args, optional: false, **options)
+  def field(form, type, name, *args, **options)
+    optional = options.delete(:optional) { false }
     form.label name, class: "form__label" do
       plain form.object.class.human_attribute_name(name)
 
