@@ -1,4 +1,3 @@
-<%# Hero %>
 <section class="w-full rounded-[2rem] bg-[#FFE2D3] dark:bg-orange-950">
   <div class="mx-auto flex max-w-5xl flex-col items-center gap-8 px-6 py-12 text-center sm:gap-10 sm:px-10 sm:py-16 lg:py-20">
     <h1 class="flex flex-col items-center gap-1 font-bold leading-none sm:gap-2">
@@ -9,7 +8,6 @@
       </span>
     </h1>
 
-    <%# Search %>
     <div class="w-full max-w-2xl" role="search">
       <%= form_tag search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800" }, class: "relative w-full text-left" do %>
         <%= rubygem_search_field(
@@ -33,7 +31,6 @@
       <% end %>
     </div>
 
-    <%# Downloads count + install CTA %>
     <div class="flex flex-col items-center gap-6 sm:flex-row sm:gap-8">
       <% if @downloads_count %>
         <div class="flex flex-col items-center gap-1.5 leading-none text-orange-900 dark:text-orange-200">
@@ -50,13 +47,11 @@
   </div>
 </section>
 
-<%# Powered by people %>
 <section class="mx-auto mt-16 flex max-w-5xl flex-col items-center gap-10 text-center lg:mt-24">
   <h2 class="text-[2.25rem] font-bold leading-tight text-neutral-900 dark:text-white sm:text-[3.25rem] lg:text-[5rem]"><%= t(".powered_by.title") %></h2>
   <p class="max-w-4xl text-b1 leading-relaxed text-neutral-900 [&_a]:text-orange-500 [&_a]:underline hover:[&_a]:text-orange-600 dark:text-neutral-200"><%= t(".powered_by.body_html") %></p>
 
   <div class="grid w-full grid-cols-1 gap-6 text-left md:grid-cols-2">
-    <%# Supporters Program %>
     <div class="flex h-full flex-col gap-8 rounded-[2rem] bg-[#FFEEDD] p-8 dark:bg-orange-950 sm:p-12">
       <div class="flex items-center gap-4">
         <%= icon_tag "health_cross", size: 11, class: "text-orange-900 dark:text-orange-200" %>
@@ -69,7 +64,6 @@
       <% end %>
     </div>
 
-    <%# Make a donation %>
     <div class="flex h-full flex-col gap-8 rounded-[2rem] bg-[#FFE2D3] p-8 dark:bg-orange-900 sm:p-12">
       <div class="flex items-center gap-4">
         <%= icon_tag "favorite", size: 11, class: "text-orange-900 dark:text-orange-200" %>
