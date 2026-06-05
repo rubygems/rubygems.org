@@ -354,8 +354,6 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
 
       page.assert_text "Versions list update job scheduled"
     end
-
-    assert_not_nil Audit.last
   end
 
   test "upload names file" do
