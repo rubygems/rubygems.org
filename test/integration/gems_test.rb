@@ -57,6 +57,16 @@ class GemsTest < ActionDispatch::IntegrationTest
     assert page.has_css?(css, visible: false)
   end
 
+  test "localized gem page does not add locale params to API download links" do
+    get "/nl/gems/#{@rubygem.slug}"
+
+    assert_response :success
+    assert page.has_css?(
+      %(div.gem__downloads-wrap[data-href="/api/v1/downloads/sandworm-1.0.0.json"]),
+      visible: false
+    )
+  end
+
   test "canonical url for an old version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_version_path(rubygem_id: @rubygem.slug, id: "1.0.0")

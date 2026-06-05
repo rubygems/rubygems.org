@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options
-    { locale: LocaleRouting.default_locale?(I18n.locale) ? nil : I18n.locale }
+    { path_params: { locale: LocaleRouting.default_locale?(I18n.locale) ? nil : I18n.locale } }
   end
 
   def set_user_tag
