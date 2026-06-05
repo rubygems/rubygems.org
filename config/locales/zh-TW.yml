@@ -244,8 +244,21 @@ zh-TW:
     index:
       downloads_counting_html: 總下載次數
       find_blurb_html: 搜尋、安裝以及發佈 RubyGems
+      find_blurb_lead:
+      install_rubygems:
       learn:
         install_rubygems: 安裝 RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
     application:
       footer:
