@@ -75,7 +75,7 @@ class ButtonComponent < ApplicationComponent
 
   PLAIN_BUTTON_COLOR = {
     red:     "text-red-500 hover:bg-red-500/5 active:bg-red-500/10 " \
-             "dark:hover:bg-red-500/15 dark:active:bg-red-500/25 ",
+             "dark:text-red-400 dark:hover:bg-red-500/15 dark:active:bg-red-500/25 ",
     orange:  "text-orange-500 hover:bg-orange-500/5 active:bg-orange-500/10 " \
              "dark:hover:bg-orange-500/15 dark:active:bg-orange-500/25 ",
     hammy:   "text-orange-800 hover:bg-orange-200/15 active:bg-orange-200/25 " \

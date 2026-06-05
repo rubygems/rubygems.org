@@ -3,6 +3,8 @@
 class VersionsController < ApplicationController
   before_action :find_rubygem
 
+  layout "subject", only: :show
+
   def index
     set_page
     @oldest_version_date = @rubygem.versions.oldest_authored_at
@@ -16,6 +18,12 @@ class VersionsController < ApplicationController
     @versions        = @rubygem.public_versions_with_extra_version(@latest_version)
     @versioned_links = @rubygem.links(@latest_version)
     @on_version_page = true
+    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
+    if @latest_version == @rubygem.most_recent_version
+      add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug)
+    else
+      add_breadcrumb @latest_version.slug
+    end
     render "rubygems/show"
     set_surrogate_key "gem/#{@rubygem.name}"
     cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?

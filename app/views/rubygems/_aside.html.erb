@@ -1,81 +1,41 @@
-<div class="gem__aside l-col--r--pad">
+<% heading_class = "text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200" %>
+<div class="gem__aside flex flex-col gap-4 pt-2 lg:pt-10 pb-2 lg:pb-6">
+  <div>
+    <h1 class="text-h3 font-semibold break-words text-neutral-900 dark:text-white"><%= @rubygem.name %></h1>
+    <div class="flex flex-wrap items-center gap-2 mt-1">
+      <%= version_number(@latest_version) %>
+      <%= version_date_component(@latest_version) %>
+    </div>
+  </div>
+
+  <%= link_to rubygem_versions_path(@rubygem.slug),
+        class: "flex w-full items-center px-4 py-3 h-12 min-h-12 rounded border-2 border-green-500 text-b3 " \
+               "text-green-700 dark:text-green-300 hover:bg-green-500/5 active:bg-green-500/10 " \
+               "dark:hover:bg-green-500/15 dark:active:bg-green-500/25 hover:shadow-md " \
+               "transition duration-200 ease-in-out focus:outline-none" do %>
+    <span class="flex-1 text-left"><%= t("rubygems.aside.versions_button", count: @rubygem.versions_count) %></span>
+    <%= icon_tag "arrow-circle-right", size: 6 %>
+  <% end %>
+
+  <div class="flex flex-col gap-3">
+    <div>
+      <h2 class="<%= heading_class %>"><%= t("total_downloads") %></h2>
+      <p class="gem__downloads text-h4 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(@rubygem.downloads) %></p>
+    </div>
+    <div>
+      <h2 class="<%= heading_class %>"><%= t("rubygems.aside.downloads_for_this_version") %></h2>
+      <p class="gem__downloads text-b2 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(@latest_version.downloads_count) %></p>
+    </div>
+  </div>
+
+  <% if @rubygem.metadata_mfa_required? %>
+    <p class="text-b4 text-neutral-800 dark:text-neutral-200"><span class="uppercase font-semibold"><%= t("rubygems.aside.requires_mfa") %></span>: true</p>
+  <% end %>
+  <% if @latest_version.rubygems_metadata_mfa_required? %>
+    <p class="text-b4 text-neutral-800 dark:text-neutral-200"><span class="uppercase font-semibold"><%= t("rubygems.aside.released_with_mfa") %></span>: true</p>
+  <% end %>
+
   <% if github_data_params = github_params(@rubygem) %>
     <%= render partial: "rubygems/github_button", locals: { github_data_params: github_data_params } %>
   <% end %>
-  <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
-    <h2 class="gem__downloads__heading t-text--s">
-      <%= t('total_downloads') %>
-      <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
-    </h2>
-    <h2 class="gem__downloads__heading t-text--s">
-      <%= t('.downloads_for_this_version') %>
-      <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
-    </h2>
-  </div>
-
-  <h2 class="gem__ruby-version__heading t-list__heading">
-    <%= t('.gem_version_age') %>:
-    <span class="gem__rubygem-version-age">
-      <p><%= local_time_ago(@latest_version.authored_at) %></p>
-    </span>
-  </h2>
-
-  <h2 class="gem__ruby-version__heading t-list__heading">
-    <%= pluralized_licenses_header @latest_version %>:
-    <span class="gem__ruby-version">
-      <p><%= formatted_licenses @latest_version.licenses %></p>
-    </span>
-  </h2>
-  <h2 class="gem__ruby-version__heading t-list__heading">
-    <%= t('.required_ruby_version') %>:
-    <i class="gem__ruby-version">
-      <% if @latest_version.required_ruby_version %>
-        <%= @latest_version.required_ruby_version %>
-      <% else %>
-        <%= t('none') %>
-      <% end %>
-    </i>
-  </h2>
-  <% if @rubygem.metadata_mfa_required? %>
-    <h2 class="gem__ruby-version__heading t-list__heading">
-      <%= t('.requires_mfa') %>:
-      <span class="gem__ruby-version">
-        true
-      </span>
-    </h2>
-  <% end %>
-  <% if @latest_version.rubygems_metadata_mfa_required? %>
-    <h2 class="gem__ruby-version__heading t-list__heading">
-      <%= t('.released_with_mfa') %>:
-      <span class="gem__ruby-version">
-        true
-      </span>
-    </h2>
-  <% end %>
-  <% if @latest_version.required_rubygems_version != '>= 0' %>
-    <h2 class="gem__ruby-version__heading t-list__heading">
-      <%= t('.required_rubygems_version') %>:
-      <i class="gem__ruby-version">
-        <%= @latest_version.required_rubygems_version %>
-      </i>
-    </h2>
-  <% end %>
-  <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
-  <div class="t-list__items">
-    <%- @versioned_links.each do |name, link| %>
-      <%= link_to_page name, link, verified: @versioned_links.verified?(link) %>
-    <%- end %>
-    <%= change_diff_link(@rubygem, @latest_version) %>
-    <%= badge_link(@rubygem) %>
-    <%= subscribe_link(@rubygem) if @latest_version.indexed %>
-    <%= atom_link(@rubygem) %>
-    <%= clickgems_analytics_link(@rubygem) %>
-    <%= report_abuse_link(@rubygem) %>
-    <%= reverse_dependencies_link(@rubygem) %>
-    <%= ownership_link(@rubygem) if policy(@rubygem).show_unconfirmed_ownerships? %>
-    <%= rubygem_trusted_publishers_link(@rubygem) if policy(@rubygem).configure_trusted_publishers? %>
-    <%= oidc_api_key_role_links(@rubygem) if policy(@rubygem).configure_oidc? %>
-    <%= resend_owner_confirmation_link(@rubygem) if @rubygem.unconfirmed_ownership?(current_user) %>
-    <%= rubygem_security_events_link(@rubygem) if policy(@rubygem).show_events? %>
-  </div>
 </div>

@@ -110,7 +110,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     visit rubygem_path(@rubygem.name)
 
-    assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
+    assert_text "MANAGED BY #{@organization.name}", normalize_ws: true
 
     click_on "Owners"
 
