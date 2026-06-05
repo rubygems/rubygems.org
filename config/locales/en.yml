@@ -235,6 +235,17 @@ en:
   dependencies:
     show:
       click_to_expand: Click on the arrow icon to expand.
+      gem_header: Gem
+      required_version_header: Required version
+      scope_header:
+        one: "%{title} Dependency"
+        other: "%{title} Dependencies"
+      reverse_dependencies_header: Reverse Dependencies
+      version_header: Version
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      see_all_reverse: See all reverse dependencies
   email_confirmations:
     create:
       promise_resend: We will email you confirmation link to activate your account if one exists.
