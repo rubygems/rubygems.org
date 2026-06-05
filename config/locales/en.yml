@@ -252,6 +252,9 @@ en:
       learn:
         install_rubygems: Install RubyGems
   layouts:
+    subject:
+      subject_label: Details
+      subject_secondary_label: Additional details
     application:
       footer:
         about: About
