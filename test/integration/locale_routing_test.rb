@@ -81,6 +81,40 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert page.has_link?(I18n.t("layouts.application.footer.security", locale: :de), href: "/de/pages/security")
   end
 
+  test "localized hammy page includes default locale canonical and alternate locale urls" do
+    get "/de/pages/about"
+
+    assert_response :success
+    assert page.has_css?(%(link[rel="canonical"][href="#{url_for_path('/pages/about')}"]), visible: false)
+
+    alternate_links = page.all(:css, %(link[rel="alternate"][hreflang]), visible: false)
+
+    assert_equal I18n.available_locales.length + 1, alternate_links.length
+
+    expected_urls = I18n.available_locales.map do |locale|
+      LocaleRouting.default_locale?(locale) ? url_for_path("/pages/about") : url_for_path("/#{locale}/pages/about")
+    end << url_for_path("/pages/about")
+
+    assert_same_elements expected_urls, alternate_links.pluck(:href)
+  end
+
+  test "localized application page includes default locale canonical and alternate locale urls" do
+    get "/de"
+
+    assert_response :success
+    assert page.has_css?(%(link[rel="canonical"][href="#{url_for_path('/')}"]), visible: false)
+
+    alternate_links = page.all(:css, %(link[rel="alternate"][hreflang]), visible: false)
+
+    assert_equal I18n.available_locales.length + 1, alternate_links.length
+
+    expected_urls = I18n.available_locales.map do |locale|
+      LocaleRouting.default_locale?(locale) ? url_for_path("/") : url_for_path("/#{locale}")
+    end << url_for_path("/")
+
+    assert_same_elements expected_urls, alternate_links.pluck(:href)
+  end
+
   test "keyword route helper arguments target non-locale segments" do
     rubygem = create(:rubygem, name: "rails")
 
@@ -92,5 +126,11 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert_raises(ActionController::RoutingError) do
       get "/de/admin"
     end
+  end
+
+  private
+
+  def url_for_path(path)
+    "#{request.base_url}#{path}"
   end
 end
