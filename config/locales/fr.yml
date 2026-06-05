@@ -237,6 +237,17 @@ fr:
   dependencies:
     show:
       click_to_expand:
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: Si ce compte existe, vous recevrez un email avec un lien de
@@ -256,6 +267,9 @@ fr:
       learn:
         install_rubygems: Installez RubyGems
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: À propos
@@ -298,6 +312,7 @@ fr:
       mfa_banner_html:
   breadcrumbs:
     home: Accueil
+    latest_version:
     dashboard: Dashboard
     settings: Paramètres
     org_name: 'Org: %{name}'
@@ -774,6 +789,9 @@ fr:
   rubygems:
     aside:
       downloads_for_this_version: Pour cette version
+      versions_button:
+        one:
+        other:
       gem_version_age: Version publiée
       required_ruby_version: Version de Ruby requise
       required_rubygems_version:
@@ -789,6 +807,7 @@ fr:
         funding:
         header: Liens
         home: Page d'accueil
+        verified:
         mail: Liste de diffusion
         analytics:
         report_abuse: Signaler un abus
@@ -833,6 +852,12 @@ fr:
     show:
       bundler_header: Gemfile
       install: installation
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: License
         other: Licenses
