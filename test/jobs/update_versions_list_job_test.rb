@@ -48,4 +48,10 @@ class UpdateVersionsListJobTest < ActiveJob::TestCase
     Rails.application.config.rubygems["versions_file_location_v2"] = original_v2_path
     v2_file&.unlink
   end
+
+  test "discards unsupported versions" do
+    assert_nothing_raised do
+      UpdateVersionsListJob.perform_now(version: 3)
+    end
+  end
 end
