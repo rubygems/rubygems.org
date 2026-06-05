@@ -31,3 +31,10 @@ dialog::backdrop {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Utility toggled by legacy JS (subscribe link + MFA owner list on the gem page).
+   !important so it wins over Tailwind display utilities (flex, block) on the same element. */
+.t-item--hidden {
+  display: none !important;
+}
+

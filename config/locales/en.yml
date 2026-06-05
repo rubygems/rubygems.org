@@ -297,6 +297,7 @@ en:
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
   breadcrumbs:
     home: Home
+    latest_version: "%{version} (latest)"
     dashboard: Dashboard
     settings: Settings
     org_name: "Org: %{name}"
@@ -754,6 +755,9 @@ en:
   rubygems:
     aside:
       downloads_for_this_version: For this version
+      versions_button:
+        one: "1 Version"
+        other: "%{count} Versions"
       gem_version_age: Version Released
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
@@ -767,8 +771,9 @@ en:
         docs: Documentation
         download: Download
         funding: Funding
-        header: Links
+        header: Helpful Links
         home: Homepage
+        verified: Verified link
         mail: Mailing List
         analytics: Analytics
         report_abuse: Report abuse
@@ -822,7 +827,7 @@ en:
       licenses_header:
         one: License
         other: Licenses
-      no_licenses: N/A
+      no_licenses: No License
       requirements_header: Requirements
       show_all_versions: Show all versions (%{count} total)
       versions_header: Versions

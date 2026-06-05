@@ -1,0 +1,12 @@
+<%# locals: rubygem:, version:, current: %>
+<%= render Rubygem::TabNavComponent.new(current: current) do |nav| %>
+  <% nav.disabled_tab(t("rubygems.show.tabs.readme"), icon: "description") %>
+  <% gem_info_path = version == rubygem.most_recent_version ? rubygem_path(rubygem.slug) : rubygem_version_path(rubygem.slug, version.slug) %>
+  <% nav.tab(t("rubygems.show.tabs.gem_info"), gem_info_path, icon: "info-i", name: :gem_info) %>
+  <% nav.disabled_tab(t("rubygems.show.tabs.contents"), icon: "folder-open") %>
+  <% if version.dependencies.present? && version.indexed %>
+    <% nav.tab(t("rubygems.show.tabs.dependencies"), rubygem_version_dependencies_path(rubygem.slug, version.slug), icon: "account-tree", name: :dependencies) %>
+  <% else %>
+    <% nav.disabled_tab(t("rubygems.show.tabs.dependencies"), icon: "account-tree") %>
+  <% end %>
+<% end %>
