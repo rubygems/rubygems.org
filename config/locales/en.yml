@@ -813,6 +813,12 @@ en:
     show:
       bundler_header: Gemfile
       install: install
+      tabs:
+        label: Gem navigation
+        readme: Readme
+        gem_info: Gem info
+        contents: Contents
+        dependencies: Dependencies
       licenses_header:
         one: License
         other: Licenses
