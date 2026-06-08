@@ -221,7 +221,7 @@ GEM
       addressable
     csv (3.3.5)
     dalli (3.2.8)
-    datadog (2.34.0)
+    datadog (2.35.0)
       cgi
       datadog-ruby_core_source (~> 3.5, >= 3.5.2)
       libdatadog (~> 33.0.0.1.0)
@@ -936,7 +936,7 @@ DEPENDENCIES
   clearance (~> 2.12)
   csv (~> 3.3)
   dalli (~> 3.2)
-  datadog (~> 2.33)
+  datadog (~> 2.35)
   debug (~> 1.0)
   derailed_benchmarks (~> 2.2)
   discard (~> 2.0)
@@ -1106,7 +1106,7 @@ CHECKSUMS
   css_parser (1.22.0) sha256=f274988a40c6178305530d60e7deb5162f7b5538b701b61b5488fc703e5b40c1
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
-  datadog (2.34.0) sha256=8f4c60409b0fb860a7b66d6d3db54463e773c3e8169b77d5dccfaadcbfba3f25
+  datadog (2.35.0) sha256=631180d7f23f1d05cee7b8feaf5c0774a6198f80f7291f7743e140d2eb44710a
   datadog-ruby_core_source (3.5.2) sha256=c379c012eca11d6c58b112d716a986d051fb566a436d58f46cde7cfec43cb299
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
