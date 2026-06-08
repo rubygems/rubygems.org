@@ -766,6 +766,7 @@ en:
   rubygems:
     aside:
       downloads_for_this_version: For this version
+      latest_version_button: Latest Version
       versions_button:
         one: "1 Version"
         other: "%{count} Versions"

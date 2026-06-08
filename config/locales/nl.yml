@@ -759,6 +759,7 @@ nl:
   rubygems:
     aside:
       downloads_for_this_version: Voor deze versie
+      latest_version_button:
       versions_button:
         one:
         other:

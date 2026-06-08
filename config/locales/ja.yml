@@ -774,6 +774,7 @@ ja:
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
+      latest_version_button:
       versions_button:
         one:
         other:
