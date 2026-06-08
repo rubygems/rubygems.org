@@ -760,6 +760,7 @@ zh-TW:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      latest_version_button:
       versions_button:
         one:
         other:

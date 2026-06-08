@@ -768,6 +768,7 @@ zh-CN:
   rubygems:
     aside:
       downloads_for_this_version: 这个版本
+      latest_version_button:
       versions_button:
         one:
         other:

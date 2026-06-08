@@ -847,6 +847,7 @@ de:
   rubygems:
     aside:
       downloads_for_this_version: Für diese Version
+      latest_version_button:
       versions_button:
         one:
         other:
