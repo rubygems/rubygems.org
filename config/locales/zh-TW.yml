@@ -672,6 +672,7 @@ zh-TW:
   settings:
     edit:
       title: 編輯設定
+      account_header:
       webauthn_credentials: 安全裝置
       no_webauthn_credentials: 您沒有任何安全裝置
       webauthn_credential_note: 安全裝置可以是任何遵循 FIDO2 標準的裝置，例如安全或生物特徵金鑰。

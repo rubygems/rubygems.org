@@ -19,12 +19,13 @@ class CardComponent < ApplicationComponent
   end
 
   def title(title, icon: nil, count: nil)
-    h3(class: "flex items-center text-lg space-x-2") do
-      render_icon(icon, class: "fill-orange") if icon
-      span(class: "font-semibold") { title }
-      # when count is 0, don't show the count because it's more confusing than helpful
-      span(class: "font-light text-neutral-600") { count } unless count.to_i.zero?
-    end
+    h3(class: TITLE_CLASSES) { title_content(title, icon:, count:) }
+  end
+
+  # Same visual treatment as #title, rendered as an <h2> for cards that are a
+  # top-level section of the page (keeps the heading outline valid under an <h1>).
+  def section_title(title, icon: nil, count: nil)
+    h2(class: TITLE_CLASSES) { title_content(title, icon:, count:) }
   end
 
   def list(**options, &)
@@ -68,9 +69,17 @@ class CardComponent < ApplicationComponent
 
   private
 
+  TITLE_CLASSES = "flex items-center text-lg space-x-2"
   LIST_ITEM_CLASSES = "flex w-full px-4 py-3 " \
                       "items-center md:rounded " \
                       "hover:bg-neutral-100 dark:hover:bg-neutral-800"
+
+  def title_content(title, icon:, count:)
+    render_icon(icon, class: "fill-orange") if icon
+    span(class: "font-semibold") { title }
+    # when count is 0, don't show the count because it's more confusing than helpful
+    span(class: "font-light text-neutral-600") { count } unless count.to_i.zero?
+  end
 
   def render_icon(name, size: 8, **)
     icon_tag(name, size: size, **)

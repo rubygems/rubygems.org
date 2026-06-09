@@ -1,87 +1,112 @@
 <% @title = t(".title") %>
 
-<div class="t-body">
-  <h2 class="page__subheading"><%= t ".mfa.multifactor_auth" %></h2>
-  <% if @user.mfa_enabled? %>
-    <div class="mfa__header-wrapper">
-      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.level.title")%></h2>
-    </div>
-    <p><%= t(".mfa.level_html") %></p>
+<% content_for :subject do %>
+  <%= render "dashboards/subject", user: current_user, current: :settings %>
+<% end %>
 
-    <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit" do %>
-      <%= select_tag :level, options_for_select(@mfa_options, @user.mfa_level), class: "form__input form__select" %>
+<%# TODO, ¿Should these exist in a component somewhere? %>
+<%
+  sub_heading = "text-b2 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200"
+  note_class  = "mt-2 text-b3 text-neutral-700 dark:text-neutral-300 " \
+                "[&_a]:text-orange-700 [&_a]:underline dark:[&_a]:text-orange-400"
+  label_class = "block text-b4 font-semibold text-neutral-800 dark:text-neutral-200 mb-2"
+  field_class = "block w-full rounded border border-neutral-300 dark:border-neutral-700 " \
+                "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white px-3 h-12 " \
+                "outline-none focus:border-neutral-500 focus:ring-0"
+%>
 
-      <%= submit_tag t(".mfa.update"), class: "form__submit" %>
-    <% end %>
+<h1 class="text-h2 mb-10"><%= t(".title") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head(class: "border-b border-neutral-200 dark:border-neutral-800") do %>
+    <%= c.section_title t(".mfa.multifactor_auth"), icon: "settings" %>
   <% end %>
 
-  <div class="mfa__header-wrapper">
-    <h2 class="mfa__header mfa__header--compact"><%= t(".webauthn_credentials") %></h2>
-    <% if @user.webauthn_enabled? %>
-      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
-    <% else %>
-      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
+  <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
+    <% if @user.mfa_enabled? %>
+      <section class="py-8 first:pt-0">
+        <h3 class="<%= sub_heading %> pt-8"><%= t(".mfa.level.title") %></h3>
+        <p class="<%= note_class %>"><%= t(".mfa.level_html") %></p>
+
+        <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit",
+              class: "mt-4 flex flex-col gap-4 sm:flex-row sm:items-end" do %>
+          <div class="flex-1">
+            <%= label_tag :level, t(".mfa.level.title"), class: "sr-only" %>
+            <%= select_tag :level, options_for_select(@mfa_options, @user.mfa_level), class: field_class %>
+          </div>
+          <%= render ButtonComponent.new(t(".mfa.update"), type: :submit) %>
+        <% end %>
+      </section>
     <% end %>
-  </div>
 
-  <p><%= t(".webauthn_credential_note")%></p>
-
-  <% if @user.webauthn_credentials.none? %>
-    <p><i><%= t(".no_webauthn_credentials") %></i></p>
-  <% else %>
-    <div class="l-mb-8">
-      <%= render @user.webauthn_credentials %>
-    </div>
-  <% end %>
-
-  <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
-
-  <% if @user.totp_enabled? %>
-    <div class="mfa__header-wrapper">
-      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.otp") %></h2>
-      <span class="badge badge--success"><%= t(".mfa.enabled") %></span>
-    </div>
-    <p><%= t(".mfa.enabled_note") %></p>
-    <%= form_tag totp_path, method: :delete, id: "mfa-delete" do %>
-      <div class="text_field">
-        <%= label_tag :otp, t(".otp_code"), class: "form__label" %>
-        <%= text_field_tag :otp, "", class: "form__input", autocomplete: :off %>
+    <section class="py-8 first:pt-0">
+      <div class="flex items-center gap-3">
+        <h3 class="<%= sub_heading %>"><%= t(".webauthn_credentials") %></h3>
+        <%= render Settings::MfaStatusBadgeComponent.new(enabled: @user.webauthn_enabled?) %>
       </div>
-      <%= submit_tag t(".mfa.disable"), class: "form__submit" %>
-    <% end %>
-  <% else %>
-    <div class="mfa__header-wrapper">
-      <h2 class="mfa__header mfa__header--compact"><%= t(".mfa.otp") %></h2>
-      <span class="badge badge--warning"><%= t(".mfa.disabled") %></span>
-    </div>
-    <p>
-      <%= t(".mfa.disabled_html") %>
-      <%= button_to t(".mfa.go_settings"), new_totp_path, method: "get", class: "form__submit" %>
-    </p>
-  <% end %>
-</div>
+      <p class="<%= note_class %>"><%= t(".webauthn_credential_note") %></p>
 
-<div class="t-body">
-  <h2><%= link_to t('.reset_password.title'), new_password_path %></h2>
-</div>
+      <% if @user.webauthn_credentials.none? %>
+        <p class="mt-4 text-b3 italic text-neutral-600 dark:text-neutral-400"><%= t(".no_webauthn_credentials") %></p>
+      <% else %>
+        <ul class="mt-4 divide-y divide-neutral-200 dark:divide-neutral-800 border-y border-neutral-200 dark:border-neutral-800">
+          <%= render @user.webauthn_credentials %>
+        </ul>
+      <% end %>
 
-<div class="t-body">
-  <h2><%= link_to t('api_keys.index.api_keys'), profile_api_keys_path %></h2>
-</div>
+      <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
+    </section>
 
-<div class="t-body">
-  <h2><%= link_to t('oidc.pending_trusted_publishers.index.title'), profile_oidc_pending_trusted_publishers_path %></h2>
-  <span><%= t("oidc.pending_trusted_publishers.index.description_html") %></span>
-</div>
+    <section class="py-8 first:pt-0 last:pb-0">
+      <div class="flex items-center gap-3">
+        <h3 class="<%= sub_heading %>"><%= t(".mfa.otp") %></h3>
+        <%= render Settings::MfaStatusBadgeComponent.new(enabled: @user.totp_enabled?) %>
+      </div>
 
-<% if @user.oidc_api_key_roles.any? %>
-  <div class="t-body">
-    <h2><%= link_to t('oidc.api_key_roles.index.api_key_roles'), profile_oidc_api_key_roles_path %></h2>
+      <% if @user.totp_enabled? %>
+        <p class="<%= note_class %>"><%= t(".mfa.enabled_note") %></p>
+        <%= form_tag totp_path, method: :delete, id: "mfa-delete",
+              class: "mt-4 flex flex-col gap-4 sm:flex-row sm:items-end" do %>
+          <div class="flex-1">
+            <%= label_tag :otp, t(".otp_code"), class: label_class %>
+            <%= text_field_tag :otp, "", class: field_class, autocomplete: :off %>
+          </div>
+          <%= render ButtonComponent.new(t(".mfa.disable"), type: :submit, color: :red) %>
+        <% end %>
+      <% else %>
+        <p class="<%= note_class %>"><%= t(".mfa.disabled_html") %></p>
+        <div class="mt-4">
+          <%= render ButtonComponent.new(t(".mfa.go_settings"), new_totp_path, style: :outline) %>
+        </div>
+      <% end %>
+    </section>
   </div>
 <% end %>
 
-<% if @user.ownerships.any? %>
-  <div class="t-body">
-    <h2><%= link_to t("notifiers.show.title"), notifier_path %></h2>
-  </div>
+<%= render CardComponent.new do |c| %>
+  <%= c.head(class: "border-b border-neutral-200 dark:border-neutral-800") do %>
+    <%= c.section_title t(".account_header"), icon: "settings" %>
+  <% end %>
+
+  <%= c.divided_list do %>
+    <%= c.list_item_to(new_password_path) do %>
+      <%= t(".reset_password.title") %>
+    <% end %>
+    <%= c.list_item_to(profile_api_keys_path) do %>
+      <%= t("api_keys.index.api_keys") %>
+    <% end %>
+    <%= c.list_item_to(profile_oidc_pending_trusted_publishers_path) do %>
+      <span class="block"><%= t("oidc.pending_trusted_publishers.index.title") %></span>
+    <% end %>
+    <% if @user.oidc_api_key_roles.any? %>
+      <%= c.list_item_to(profile_oidc_api_key_roles_path) do %>
+        <%= t("oidc.api_key_roles.index.api_key_roles") %>
+      <% end %>
+    <% end %>
+    <% if @user.ownerships.any? %>
+      <%= c.list_item_to(notifier_path) do %>
+        <%= t("notifiers.show.title") %>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>
