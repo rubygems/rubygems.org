@@ -5,6 +5,8 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
 
   before_action :find_pending_trusted_publisher, only: %i[destroy]
 
+  layout "subject", only: :index
+
   def index
     trusted_publishers = policy_scope(OIDC::PendingTrustedPublisher)
       .unexpired.includes(:trusted_publisher)
