@@ -82,6 +82,11 @@ class ApiKeysControllerTest < ActionController::TestCase
         should "render api key of user" do
           assert page.has_content? @api_key.name
         end
+
+        should "render on the subject layout with settings active" do
+          assert_select "h1", text: "API keys"
+          assert_select "nav a[href=?].bg-orange-100", edit_settings_path
+        end
       end
     end
 

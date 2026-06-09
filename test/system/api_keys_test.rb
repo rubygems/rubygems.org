@@ -72,7 +72,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Create API Key"
 
     assert_text "Note that we won't be able to show the key to you again. New API key:"
-    assert_equal @ownership.rubygem.name, page.find('.owners__cell[data-title="Gem"]').text
+    assert_equal @ownership.rubygem.name, page.find('td[data-title="Gem"]').text
     assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
   end
 
@@ -170,7 +170,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Create API Key"
 
     assert_text "Note that we won't be able to show the key to you again. New API key:"
-    assert_equal expiration.strftime("%Y-%m-%d %H:%M %Z"), page.find('.owners__cell[data-title="Expiration"]').text
+    assert_equal expiration.strftime("%Y-%m-%d %H:%M %Z"), page.find('td[data-title="Expiration"]').text
     assert_equal expiration, @user.api_keys.last.expires_at
   end
 
@@ -216,7 +216,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Update API Key"
 
     assert_text("Successfully updated API key")
-    assert_equal "All Gems", page.find('.owners__cell[data-title="Gem"]').text
+    assert_equal "All Gems", page.find('td[data-title="Gem"]').text
     assert_nil api_key.reload.rubygem
   end
 
@@ -363,7 +363,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_predicate api_key.reload, :soft_deleted?
 
     refute page.has_button? "Edit"
-    assert_equal "#{@ownership.rubygem.name} [?]", page.find('.owners__cell[data-title="Gem"]').text
+    assert_equal "#{@ownership.rubygem.name} [?]", page.find('td[data-title="Gem"]').text
     visit_edit_profile_api_key_path(api_key)
 
     assert_text "An invalid API key cannot be edited. Please delete it and create a new one."

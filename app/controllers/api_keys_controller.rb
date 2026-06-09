@@ -4,6 +4,8 @@ class ApiKeysController < ApplicationController
   before_action :disable_cache, only: :index
   before_action :set_page, only: :index
 
+  layout "subject", only: :index
+
   include ApiKeyable
 
   include SessionVerifiable
