@@ -196,7 +196,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
       should "render edit api key form" do
         assert page.has_content? "Edit API key"
-        assert_select "form > input.form__input", value: "ci-key"
+        assert_select "form input#api_key_name[value=?]", "ci-key"
       end
 
       should "redirect to index with soft deleted key" do
