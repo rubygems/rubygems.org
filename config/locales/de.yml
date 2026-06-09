@@ -777,6 +777,7 @@ de:
   settings:
     edit:
       title:
+      account_header:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
