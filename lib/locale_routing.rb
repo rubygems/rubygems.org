@@ -19,7 +19,12 @@ module LocaleRouting
 
   def self.strip_default_locale_redirect
     lambda { |params, request|
-      path = params[:path] ? "/#{params[:path]}" : "/"
+      # Collapse any leading slashes from the wildcard segment before building the
+      # redirect path. Without this, a crafted request such as `/en/%2Fevil.com`
+      # makes `params[:path]` start with "/", producing a protocol-relative
+      # Location ("//evil.com") that escapes the origin (open redirect).
+      rest = params[:path].to_s.sub(%r{\A/+}, "")
+      path = rest.empty? ? "/" : "/#{rest}"
       request.query_string.present? ? "#{path}?#{request.query_string}" : path
     }
   end

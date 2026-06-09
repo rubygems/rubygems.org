@@ -128,6 +128,34 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "default locale strip redirect stays on the request origin for normal paths" do
+    get "/en/pages/about"
+
+    assert_response :redirect
+    assert_equal request.host, URI.parse(response.location).host
+    assert_redirected_to "/pages/about"
+  end
+
+  test "default locale strip redirect cannot be coerced into an open redirect" do
+    # A percent-encoded slash makes the `*path` wildcard capture a value that
+    # begins with "/". Naively building "/#{params[:path]}" then yields a
+    # protocol-relative Location ("//evil.com") which escapes the origin.
+    open_redirect_payloads = [
+      "/en/%2Fevil.com",
+      "/en/%2Fevil%2Ecom",
+      "/en/%2F%2Fevil%2Ecom",
+      "/en/%2Fattacker%2Eexample%2Ecom%2Fphish"
+    ]
+
+    open_redirect_payloads.each do |path|
+      get path
+
+      assert_response :redirect
+      assert_equal request.host, URI.parse(response.location).host,
+        "#{path} produced an off-origin redirect to #{response.location.inspect}"
+    end
+  end
+
   private
 
   def url_for_path(path)
