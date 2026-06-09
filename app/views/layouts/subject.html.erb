@@ -9,9 +9,11 @@
     <div class="max-w-screen-xl w-full mx-auto">
 
       <% flash.each do |name, msg| %>
-        <%= render AlertComponent.new(style: name, closeable: true) do %>
-          <%= flash_message(name, msg) %>
-        <% end %>
+        <div id="flash_<%= name %>">
+          <%= render AlertComponent.new(style: name, closeable: true) do %>
+            <%= flash_message(name, msg) %>
+          <% end %>
+        </div>
       <% end %>
     </div>
   </div>
