@@ -14,7 +14,7 @@ class SettingsTest < ApplicationSystemTestCase
 
   def change_auth_level(type)
     page.select type
-    find("#mfa-edit input[type=submit]").click
+    within("#mfa-edit") { click_button "Update" }
   end
 
   def otp_key
