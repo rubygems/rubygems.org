@@ -140,7 +140,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     @ownership.destroy!
     click_button "Create API Key"
 
-    assert page.has_css? ".flash"
+    assert page.has_css? "#flash_error"
     assert_text "Rubygem must be a gem that you are an owner of"
     assert_empty @user.api_keys
   end
@@ -270,7 +270,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     @another_ownership.destroy!
     click_button "Update API Key"
 
-    assert page.has_css? ".flash"
+    assert page.has_css? "#flash_error"
     assert_text "Rubygem must be a gem that you are an owner of"
     assert_equal @ownership.rubygem, api_key.reload.rubygem
   end
