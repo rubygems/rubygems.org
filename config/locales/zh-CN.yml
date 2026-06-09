@@ -678,6 +678,7 @@ zh-CN:
   settings:
     edit:
       title: 编辑设置
+      account_header:
       webauthn_credentials: 安全设备
       no_webauthn_credentials: 您还没有任何安全设备
       webauthn_credential_note: 安全设备可以是任何符合 FIDO2 标准的设备，比如安全密钥、生物密钥等。
