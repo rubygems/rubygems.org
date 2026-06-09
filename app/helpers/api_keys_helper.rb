@@ -15,9 +15,11 @@ module ApiKeysHelper
     data[:exclusive_checkbox_target] = exclusive ? "exclusive" : "inclusive"
     data[:gem_scope_target] = "checkbox" if gem_scope
 
-    html_options = { class: "form__checkbox__input", id: api_scope, data: }
+    html_options = { class: CHECKBOX_CLASSES, id: api_scope, data: }
     form.check_box api_scope, html_options, "true", "false"
   end
+
+  CHECKBOX_CLASSES = "h-4 w-4 rounded border-neutral-300 dark:border-neutral-700 text-orange-500 focus:ring-0"
 
   def self.api_key_params(params, existing_api_key = nil)
     scopes = params.fetch(:scopes, existing_api_key&.scopes || []).to_set
