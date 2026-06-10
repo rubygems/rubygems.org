@@ -700,7 +700,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_195603) do
     t.string "gem_full_name"
     t.string "gem_platform"
     t.boolean "indexed", default: true
-    t.string "info_checksum"
     t.string "info_checksum_v2"
     t.boolean "latest"
     t.string "licenses"
@@ -721,7 +720,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_195603) do
     t.text "summary"
     t.datetime "updated_at", precision: nil
     t.datetime "yanked_at", precision: nil
-    t.string "yanked_info_checksum"
     t.string "yanked_info_checksum_v2"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index "lower((gem_full_name)::text)", name: "index_versions_on_lower_gem_full_name"
