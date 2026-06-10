@@ -44,7 +44,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
 
     assert deletion.version.indexed
     assert_nil version.yanked_at
-    assert_nil version.yanked_info_checksum
+    assert_nil version.yanked_info_checksum_v2
 
     audit = version.audits.sole
 
@@ -69,12 +69,11 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
             {
               "indexed" => [false, true],
               "yanked_at" => [version_attributes[:yanked_at].as_json, nil],
-              "yanked_info_checksum" => [version_attributes[:yanked_info_checksum], nil],
               "yanked_info_checksum_v2" => [version_attributes[:yanked_info_checksum_v2], nil],
               "updated_at" => [version_attributes[:updated_at].as_json, version.updated_at.as_json]
             },
             "unchanged" => version_attributes
-              .except("updated_at", "yanked_info_checksum", "yanked_info_checksum_v2", "yanked_at", "indexed")
+              .except("updated_at", "yanked_info_checksum_v2", "yanked_at", "indexed")
               .merge("position" => 0, "latest" => false)
               .transform_values(&:as_json)
           },

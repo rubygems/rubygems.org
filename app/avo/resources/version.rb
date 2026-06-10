@@ -72,8 +72,8 @@ class Avo::Resources::Version < Avo::BaseResource
 
       tab "API" do
         panel do
-          field :info_checksum, as: :text
-          field :yanked_info_checksum, as: :text
+          field :info_checksum_v2, as: :text
+          field :yanked_info_checksum_v2, as: :text
         end
       end
 

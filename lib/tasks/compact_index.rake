@@ -58,9 +58,9 @@ namespace :compact_index do
     Rails.logger.info("[compact_index:correct_info_checksum] #{mismatch}/#{total} gems had info mismatch")
   end
 
-  desc "Fill Versions' yanked_info_checksum attributes for compact index format"
+  desc "Fill Versions' yanked_info_checksum_v2 attributes for compact index format"
   task backfill_yanked_info_checksum: :environment do
-    without_yanked_info_checksum = Version.where(indexed: false, yanked_info_checksum: nil)
+    without_yanked_info_checksum = Version.where(indexed: false, yanked_info_checksum_v2: nil)
     mod = ENV["shard"]
     without_yanked_info_checksum = without_yanked_info_checksum.where("id % 4 = ?", mod.to_i) if mod
 
@@ -69,7 +69,7 @@ namespace :compact_index do
     puts "Total: #{total}"
     without_yanked_info_checksum.find_each do |version|
       cs = GemInfo.new(version.rubygem.name).info_checksum
-      version.update_attribute :yanked_info_checksum, cs
+      version.update_attribute :yanked_info_checksum_v2, cs
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
     end

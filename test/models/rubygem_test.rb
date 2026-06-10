@@ -233,13 +233,13 @@ class RubygemTest < ActiveSupport::TestCase
           number: "1.0.0",
           platform: "ruby",
           licenses: "MIT",
-          info_checksum: "1234567890")
+          info_checksum_v2: "1234567890")
         @jruby_version = create(:version,
           rubygem: @rubygem,
           number: "1.0.0",
           platform: "jruby",
           licenses: "MIT",
-          info_checksum: "1234567890")
+          info_checksum_v2: "1234567890")
       end
 
       should "return the most recently created version without platform" do

@@ -1109,10 +1109,10 @@ class VersionTest < ActiveSupport::TestCase
         end
       end
 
-      context "info checksum is updated" do
+      context "info checksum v2 is updated" do
         should "not reorder versions" do
           @version.expects(:reorder_versions).times(0)
-          @version.update(info_checksum: "lala")
+          @version.update(info_checksum_v2: "lala")
         end
       end
     end

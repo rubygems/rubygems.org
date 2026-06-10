@@ -37,9 +37,9 @@ FactoryBot.define do
     end
 
     after(:create) do |version|
-      if version.info_checksum.blank?
+      if version.info_checksum_v2.blank?
         checksum = GemInfo.new(version.rubygem.name).info_checksum
-        version.update_attribute :info_checksum, checksum
+        version.update_attribute :info_checksum_v2, checksum
       end
     end
   end
