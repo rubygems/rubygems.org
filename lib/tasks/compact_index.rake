@@ -77,17 +77,9 @@ namespace :compact_index do
     puts "Done."
   end
 
-  desc "Generate/update the versions.list file"
+  desc "Generate/update the current compact index versions file"
   task update_versions_file: :environment do
-    ts            = Time.now.utc.iso8601
-    file_path     = Rails.application.config.rubygems["versions_file_location"]
-    versions_file = CompactIndex::VersionsFile.new file_path
-    gems          = GemInfo.compact_index_public_versions ts
-
-    versions_file.create gems, ts
-
-    version_file_content = File.read(file_path)
-    RubygemFs.instance.store("versions/versions.list", version_file_content)
+    Rake::Task["compact_index_v2:update_versions_file"].invoke
   end
 
   desc "Update info checksum for multiple ruby or rubygems requirements"
