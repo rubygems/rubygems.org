@@ -20,7 +20,6 @@ class UploadNamesFileJob < ApplicationJob
     names = GemInfo.ordered_names(cached: false)
     response_body = CompactIndex.names(names)
 
-    upload_names_file(response_body, key: "names", surrogate_key: "names s3-compact-index s3-names")
     upload_names_file(response_body, key: "v2/names", surrogate_key: "v2/names s3-compact-index s3-v2/names")
   end
 
