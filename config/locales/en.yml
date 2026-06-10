@@ -900,6 +900,7 @@ en:
     new:
       forgot_password: Forgot password?
       resend_confirmation: Didn't receive confirmation mail?
+      confirm: Confirm
     verify:
       title: Confirm Password
       confirm: Confirm
