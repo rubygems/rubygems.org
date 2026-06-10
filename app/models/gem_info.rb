@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class GemInfo
+  CURRENT_VERSION = 2
+
+  # Compact index v1 was decommissioned after the v2 rollout.
+  # Keep only actively served or actively migrating formats in this registry.
   VERSIONS = {
-    1 => { cache_prefix: "info", stats_prefix: "compact_index.memcached.info", klass: CompactIndex::GemVersion,
-           checksum_column: "info_checksum", yanked_checksum_column: "yanked_info_checksum" },
     2 => { cache_prefix: "info_v2", stats_prefix: "compact_index.memcached.info_v2", klass: CompactIndex::GemVersionV2,
            checksum_column: "info_checksum_v2", yanked_checksum_column: "yanked_info_checksum_v2" }
   }.freeze
@@ -13,7 +15,7 @@ class GemInfo
     @cached = cached
   end
 
-  def compact_index_info(version: 1)
+  def compact_index_info(version: CURRENT_VERSION)
     config = VERSIONS.fetch(version)
     cache_key = "#{config[:cache_prefix]}/#{@rubygem_name}"
     stats_key = config[:stats_prefix]
@@ -29,7 +31,7 @@ class GemInfo
     end
   end
 
-  def info_checksum(version: 1)
+  def info_checksum(version: CURRENT_VERSION)
     compact_index_info = CompactIndex.info(compute_compact_index_info(version:))
     Digest::MD5.hexdigest(compact_index_info)
   end
@@ -45,7 +47,7 @@ class GemInfo
     names
   end
 
-  def self.compact_index_versions(date, version: 1)
+  def self.compact_index_versions(date, version: CURRENT_VERSION)
     config = VERSIONS.fetch(version)
     checksum_column = config[:checksum_column]
     yanked_checksum_column = config[:yanked_checksum_column]
@@ -65,7 +67,7 @@ class GemInfo
     map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
   end
 
-  def self.compact_index_public_versions(updated_at, version: 1)
+  def self.compact_index_public_versions(updated_at, version: CURRENT_VERSION)
     config = VERSIONS.fetch(version)
     checksum_column = config[:checksum_column]
     yanked_checksum_column = config[:yanked_checksum_column]
@@ -149,7 +151,7 @@ class GemInfo
   end
 
   def fetch_requirements_and_dependencies
-    group_by_columns = "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
+    group_by_columns = "number, platform, sha256, info_checksum_v2, required_ruby_version, required_rubygems_version, versions.created_at"
 
     dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
 

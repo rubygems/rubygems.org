@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class Api::CompactIndexController < Api::BaseController
+  CURRENT_COMPACT_INDEX_VERSION = 2
+
+  # Compact index v1 was decommissioned after the v2 rollout.
+  # Keep only actively served or actively migrating formats in this registry.
   COMPACT_INDEX_VERSIONS = {
-    1 => {
-      info_prefix: "info",
-      versions_file_location_key: "versions_file_location",
-      versions_surrogate_key: "versions"
-    }.freeze,
     2 => {
       info_prefix: "v2/info",
       versions_file_location_key: "versions_file_location_v2",
@@ -45,8 +44,7 @@ class Api::CompactIndexController < Api::BaseController
   private
 
   def compact_index_serving_version
-    # Compact index responses are cached by URL, so this flag must only be toggled globally.
-    @compact_index_serving_version ||= FeatureFlag.enabled?(FeatureFlag::SERVE_COMPACT_INDEX_V2) ? 2 : 1
+    CURRENT_COMPACT_INDEX_VERSION
   end
 
   def compact_index_config
