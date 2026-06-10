@@ -1,38 +1,48 @@
 <% @title = t('sign_in') %>
+<% add_breadcrumb @title %>
 
-<% if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN %>
-<div class="t-body">
-  <h2 class="page__subheading--block">Development Login</h2>
-  <ul>
-    <% User.all.order(id: :asc).each do |user| %>
-    <li>
-      <%= link_to "login as #{user.handle}", controller: :sessions, action: "development_log_in_as", user_id: user.id %>
-    </li>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t(".title") %></h1>
+    <% if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN %>
+      <div class="mb-8">
+      <ul>
+        <% User.all.order(id: :asc).each do |user| %>
+          <li>
+            <span class="text-b3 text-orange-500 underline dark:text-orange-400">
+              <%= link_to "login as #{user.handle}", controller: :sessions, action: "development_log_in_as", user_id: user.id %>
+            </span>
+          </li>
+        <% end %>
+      </ul>
+      </div>
     <% end %>
-  </ul>
-  <hr/>
+
+    <div class="mb-8">
+      <div>
+        <%= link_to t('.forgot_password'), new_password_path, class: "text-b3 text-orange-500 underline dark:text-orange-400"%>
+      </div>
+      <div>
+        <%= link_to t('.resend_confirmation'), new_email_confirmations_path, class: "text-b3 text-orange-500 underline dark:text-orange-400"%>
+      </div>
+    </div>
+
+    <%= form_for :session, :url => session_path do |form| %>
+    <div class="mb-8">
+      <%= form.label :who, t('activerecord.attributes.session.who'),
+        class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+      <%= form.text_field :who, :autofocus => true,
+          class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition mb-2" %>
+      <%= form.label :password, t('activerecord.attributes.session.password'),
+        class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+      <%= form.password_field :password, autocomplete: 'current-password',
+        class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+
+    </div>
+      <%= render ButtonComponent.new(t(".confirm"), type: :submit, color: :primary, data: { disable_with: t("form_disable_with") }) %>
+    <% end %>
+
+    <%= render "multifactor_auths/webauthn_prompt" %>
+
+  </div>
 </div>
-<% end %>
-
-<div class="t-body">
-  <p>
-    <%= link_to t('.forgot_password'), new_password_path, class: 't-list__item' %>
-    <%= link_to t('.resend_confirmation'), new_email_confirmations_path, class: 't-list__item' %>
-  </p>
-</div>
-
-<%= form_for :session, :url => session_path do |form| %>
-  <div class="text_field">
-    <%= form.label :who, t('activerecord.attributes.session.who'), :class => 'form__label' %>
-    <%= form.text_field :who, :autofocus => true, :class => 'form__input' %>
-  </div>
-  <div class="password_field">
-    <%= form.label :password, t('activerecord.attributes.session.password'), :class => 'form__label' %>
-    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input' %>
-  </div>
-  <div class="form_bottom">
-    <%= form.submit t('sign_in'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
-  </div>
-<% end %>
-
-<%= render "multifactor_auths/webauthn_prompt" %>
