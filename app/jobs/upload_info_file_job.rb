@@ -20,7 +20,7 @@ class UploadInfoFileJob < ApplicationJob
 
   discard_on InvalidBackfillVersion
 
-  PATH_PREFIXES = { 1 => "info", 2 => "v2/info" }.freeze
+  PATH_PREFIXES = { 2 => "v2/info" }.freeze
 
   def perform(rubygem_name:, backfill_only_version: nil)
     unless backfill_only_version.nil? || PATH_PREFIXES.key?(backfill_only_version)
@@ -32,10 +32,9 @@ class UploadInfoFileJob < ApplicationJob
 
     if backfill_only_version
       response_body = upload_info_file(gem_info, rubygem_name, version: backfill_only_version, purge: false)
-      persist_backfill_checksum(rubygem_name, checksum: Digest::MD5.hexdigest(response_body)) if backfill_only_version == 2
+      persist_backfill_checksum(rubygem_name, checksum: Digest::MD5.hexdigest(response_body))
     else
-      upload_info_file(gem_info, rubygem_name, version: 1, purge: true)
-      upload_info_file(gem_info, rubygem_name, version: 2, purge: true)
+      upload_info_file(gem_info, rubygem_name, version: GemInfo::CURRENT_VERSION, purge: true)
     end
   end
 
