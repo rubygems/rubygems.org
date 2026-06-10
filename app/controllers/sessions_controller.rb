@@ -6,8 +6,7 @@ class SessionsController < Clearance::SessionsController
   include WebauthnVerifiable
   include SessionVerifiable
 
-  # authenticate/webauthn_authenticate re-render :verify on failure, so they share the layout
-  layout "hammy", only: %i[verify authenticate webauthn_authenticate]
+  layout "hammy"
 
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify webauthn_authenticate authenticate]
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, only: %i[verify webauthn_authenticate authenticate]
