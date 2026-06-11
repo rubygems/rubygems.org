@@ -79,11 +79,14 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "track signup with Datadog AppSec" do
-        Datadog::Kit::AppSec::Events.expects(:track).with do |event, **metadata|
-          event == "users.signup" && metadata[:"usr.id"].is_a?(String)
+        span = with_appsec_trace do
+          post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
 
-        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        user = User.find_by!(email: "foo@bar.com")
+
+        assert_equal "true", span.get_tag("appsec.events.users.signup.track")
+        assert_equal user.id.to_s, span.get_tag("appsec.events.users.signup.usr.id")
       end
     end
 
