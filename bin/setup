@@ -18,7 +18,7 @@ FileUtils.chdir APP_ROOT do
   system("bundle check") || system!("bundle install")
 
   puts "\n== Installing Playwright browser (used by system tests) =="
-  system! "bin/playwright install chromium"
+  system! "bin/playwright install --with-deps chromium"
 
   puts "\n== Copying sample files =="
   unless File.exist?("config/database.yml")

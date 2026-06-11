@@ -249,7 +249,7 @@ spec:
           mountPath: /var/run/secrets/sigstore
           readOnly: true
       - name: nginx
-        image: nginx:1.25.2
+        image: nginx:1.31.1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

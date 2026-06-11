@@ -16,19 +16,50 @@ class UploadInfoFileJob < ApplicationJob
     key: -> { "#{self.class.name}:#{rubygem_name_arg}" }
   )
 
-  def perform(rubygem_name:)
-    compact_index_info = GemInfo.new(rubygem_name, cached: false).compact_index_info
+  class InvalidBackfillVersion < ArgumentError; end
+
+  discard_on InvalidBackfillVersion
+
+  PATH_PREFIXES = { 1 => "info", 2 => "v2/info" }.freeze
+
+  def perform(rubygem_name:, backfill_only_version: nil)
+    unless backfill_only_version.nil? || PATH_PREFIXES.key?(backfill_only_version)
+      raise InvalidBackfillVersion,
+        "backfill_only_version must be nil or one of #{PATH_PREFIXES.keys.inspect}, got #{backfill_only_version.inspect}"
+    end
+
+    gem_info = GemInfo.new(rubygem_name, cached: false)
+
+    if backfill_only_version
+      response_body = upload_info_file(gem_info, rubygem_name, version: backfill_only_version, purge: false)
+      persist_backfill_checksum(rubygem_name, checksum: Digest::MD5.hexdigest(response_body)) if backfill_only_version == 2
+    else
+      upload_info_file(gem_info, rubygem_name, version: 1, purge: true)
+      upload_info_file(gem_info, rubygem_name, version: 2, purge: true)
+    end
+  end
+
+  private
+
+  def rubygem_name_arg
+    arguments.first.fetch(:rubygem_name)
+  end
+
+  def upload_info_file(gem_info, rubygem_name, version:, purge:)
+    compact_index_info = gem_info.compact_index_info(version:)
     response_body = CompactIndex.info(compact_index_info)
 
     content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
+    path_prefix = PATH_PREFIXES.fetch(version)
+    key = "#{path_prefix}/#{rubygem_name}"
 
     response = RubygemFs.compact_index.store(
-      "info/#{rubygem_name}", response_body,
+      key, response_body,
       public_acl: false, # the compact-index bucket does not have ACLs enabled
       metadata: {
         "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
-        "surrogate-key" => "info/* info/#{rubygem_name} gem/#{rubygem_name} s3-compact-index s3-info/* s3-info/#{rubygem_name}",
+        "surrogate-key" => "#{path_prefix}/* #{key} gem/#{rubygem_name} s3-compact-index s3-#{path_prefix}/* s3-#{key}",
         "sha256" => checksum_sha256,
         "md5" => content_md5
       },
@@ -38,14 +69,27 @@ class UploadInfoFileJob < ApplicationJob
       content_md5:
     )
 
-    logger.info(message: "Uploading info file for #{rubygem_name} succeeded", response:)
+    logger.info(message: "Uploading v#{version} info file for #{rubygem_name} succeeded", response:)
 
-    FastlyPurgeJob.perform_later(key: "s3-info/#{rubygem_name}", soft: true)
+    FastlyPurgeJob.perform_later(key: "s3-#{key}", soft: true) if purge
+
+    response_body
   end
 
-  private
+  def persist_backfill_checksum(rubygem_name, checksum:)
+    rubygem = Rubygem.find_by(name: rubygem_name)
+    return unless rubygem
 
-  def rubygem_name_arg
-    arguments.first.fetch(:rubygem_name)
+    last_version = rubygem.versions
+      .order(Arel.sql("COALESCE(yanked_at, created_at) DESC, number DESC, platform DESC"))
+      .first
+    return unless last_version
+
+    scope = Version.where(id: last_version.id)
+    if last_version.indexed
+      scope.where(indexed: true, info_checksum_v2: nil).update_all(info_checksum_v2: checksum)
+    else
+      scope.where(indexed: false, yanked_info_checksum_v2: nil).update_all(yanked_info_checksum_v2: checksum)
+    end
   end
 end

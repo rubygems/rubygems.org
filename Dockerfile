@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1.10
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=4.0.4
+ARG RUBY_VERSION=4.0.5
 ARG ALPINE_VERSION=3.23
 FROM ruby:$RUBY_VERSION-alpine${ALPINE_VERSION} AS base
 
@@ -122,6 +122,7 @@ RUN apk update && apk add postgresql17-client && rm -rf /var/cache/apk/*
 COPY --link --from=build /app/ /app/
 
 ADD --link https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions.list /app/config/versions.list
+ADD --link https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions_v2.list /app/config/versions_v2.list
 ADD --link https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/stopforumspam/toxic_domains_whole.txt /app/vendor/toxic_domains_whole.txt
 
 ARG REVISION

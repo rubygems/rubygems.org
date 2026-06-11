@@ -11,8 +11,6 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     SimpleCov.command_name "system-worker-#{worker}"
   end
 
-  served_by host: "rails-app", port: ENV["CAPYBARA_SERVER_PORT"] if ENV["CAPYBARA_SERVER_PORT"]
-
   # Rails' driven_by registers the :playwright Capybara driver itself, so any
   # standalone Capybara.register_driver block would be overwritten. Pass the
   # Capybara::Playwright::Driver options through `options:` instead — that's
