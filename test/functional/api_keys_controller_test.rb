@@ -82,6 +82,11 @@ class ApiKeysControllerTest < ActionController::TestCase
         should "render api key of user" do
           assert page.has_content? @api_key.name
         end
+
+        should "render on the subject layout with settings active" do
+          assert_select "h1", text: "API keys"
+          assert_select "nav a[href=?].bg-orange-100", edit_settings_path
+        end
       end
     end
 
@@ -191,7 +196,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
       should "render edit api key form" do
         assert page.has_content? "Edit API key"
-        assert_select "form > input.form__input", value: "ci-key"
+        assert_select "form input#api_key_name[value=?]", "ci-key"
       end
 
       should "redirect to index with soft deleted key" do

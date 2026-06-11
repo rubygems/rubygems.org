@@ -1,13 +1,12 @@
-<div class="mfa__option">
-  <h2 class="page__subheading--block"> <%= t("multifactor_auths.prompt.security_device") %></h2>
-  <div class="t-body">
-    <p><%= t("multifactor_auths.prompt.webauthn_credential_note") %></p>
-  </div>
-  <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
-    <div class="form_bottom">
-      <p hidden class="l-text-red-600 js-webauthn-session--error"></p>
+<div class="mt-8 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+  <h2 class="text-b1 font-semibold text-neutral-900 dark:text-white mb-2"><%= t("multifactor_auths.prompt.security_device") %></h2>
+  <p class="mb-4 text-b3 text-neutral-700 dark:text-neutral-300"><%= t("multifactor_auths.prompt.webauthn_credential_note") %></p>
 
-      <%= submit_tag t("multifactor_auths.prompt.sign_in_with_webauthn_credential"), class: 'js-webauthn-session--submit form__submit form__submit--no-hover' %>
-    </div>
+  <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session--form", data: { options: @webauthn_options.to_json } do %>
+    <p hidden class="js-webauthn-session--error mb-3 text-b3 text-red-600 dark:text-red-400"></p>
+    <%= submit_tag t("multifactor_auths.prompt.sign_in_with_webauthn_credential"),
+      class: "js-webauthn-session--submit inline-flex items-center justify-center w-full rounded text-white bg-orange-500 " \
+      "px-4 sm:px-2 min-h-12 text-sm:text-b4 text-lg:text-b2 cursor-pointer hover:bg-orange-600 active:bg-orange-600 " \
+      "dark:bg-orange-500 dark:hover:bg-orange-700 dark:active:bg-orange-700 transition focus:outline-none whitespace-normal" %>
   <% end %>
 </div>

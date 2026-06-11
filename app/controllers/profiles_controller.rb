@@ -9,6 +9,9 @@ class ProfilesController < ApplicationController
   before_action :verify_password, only: %i[update destroy]
   before_action :disable_cache, only: :edit
 
+  # edit + update share the edit template (update re-renders :edit on validation failure)
+  layout "subject", only: %i[edit update]
+
   def show
     @user = User.confirmed.find_by_slug!(params[:id])
     return render_not_found unless @user
