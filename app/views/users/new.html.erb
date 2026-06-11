@@ -1,13 +1,26 @@
 <% @title = t('sign_up') %>
+<% add_breadcrumb @title %>
 
-<div class="form_links sign_up_links t-body">
-  <p><%= link_to t('.have_account'), sign_in_path %></p>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t('sign_up') %></h1>
+
+    <div class="mb-6">
+      <%= link_to t('.have_account'), sign_in_path, class: "text-b3 text-orange-500 underline dark:text-orange-400" %>
+    </div>
+
+    <% if signup_enabled? %>
+      <%= form_for @user do |form| %>
+        <%= render partial: '/users/form', object: form %>
+
+        <p class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+          <%= t('by_signing_up') %> <%= link_to t('sign_up_terms'), policy_path('terms-of-service'), class: "text-orange-500 underline dark:text-orange-400" %>
+        </p>
+
+        <div class="mt-6">
+          <%= render ButtonComponent.new(t('sign_up'), type: :submit, color: :primary, data: { disable_with: t('form_disable_with') }) %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 </div>
-
-<% if signup_enabled? %>
-  <%= form_for @user do |form| %>
-    <%= render :partial => '/users/form', :object => form %>
-    <p class="form__legend"><%= t('by_signing_up')%> <%= link_to t('sign_up_terms'), policy_path('terms-of-service') %></p>
-    <%= form.submit t('sign_up'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
-  <% end %>
-<% end %>
