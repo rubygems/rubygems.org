@@ -42,6 +42,11 @@ bin/setup
 
 See `CONTRIBUTING.md` > Development Setup for the Linux/apt variant. `bin/setup` runs `bin/playwright install --with-deps chromium`; `smoke.sh` shells out to `bin/playwright screenshot`, which uses that same bundled Chromium — no separate browser needed.
 
+Two traps on fresh machines:
+
+- **`mise install` alone doesn't put Ruby on PATH in non-interactive shells.** Activate it first (`eval "$(mise activate bash --shims)"`) or prefix commands with `mise exec --`; otherwise `bin/setup` runs against the system Ruby and bundler aborts with a version mismatch.
+- **Native Postgres on Linux needs `trust` auth.** `config/database.yml` expects *different* passwords for the same `postgres` role in dev (`devpassword`) and test (`testpassword`), which only works when the server doesn't check passwords. Docker handles this via `POSTGRES_HOST_AUTH_METHOD=trust` and Homebrew trusts local connections by default, but apt's Postgres defaults to `scram-sha-256` — set the local/`127.0.0.1` entries in `pg_hba.conf` to `trust` and restart, or `bin/rails db:prepare` fails with `password authentication failed for user "postgres"`.
+
 ## Run (agent path — preferred)
 
 ```bash
@@ -123,14 +128,14 @@ This is the skill teaching itself. `LEARNINGS.md` is the *why* behind every `SKI
 ```bash
 bin/rails test                                  # unit/integration
 bin/rails test test/models/rubygem_test.rb:42   # single test
-DB_HOST=localhost bin/rails test                # ONLY when not on the default unix-socket path — see Gotchas
+DB_HOST=db bin/rails test                       # ONLY when Postgres isn't on localhost (e.g. dev containers) — see Gotchas
 bin/rails test:system                           # Playwright + Chrome
 bin/ci                                          # full CI suite (lint + brakeman + tests)
 ```
 
 ## Gotchas
 
-- **`.env.local` is excluded in the test environment.** dotenv loads `.env.local` for development but not for test, so `DB_HOST` is unset there. The dev config defaults to a Unix socket (no `DB_HOST` needed) but **tests crash if Postgres isn't on the default socket path** — set `DB_HOST=localhost` inline when running tests against the Docker Postgres on TCP. See `config/database.yml` and `config/environments/test.rb`.
+- **`.env.local` is excluded in the test environment.** dotenv loads `.env.local` for development but not for test, so a `DB_HOST` set there is invisible to tests. `config/database.yml` defaults `DB_HOST` to `localhost` (TCP) for both dev and test, so a standard local setup needs no `DB_HOST` at all — but when Postgres lives on another host (e.g. `db` in a dev container), pass it inline: `DB_HOST=db bin/rails test`.
 - **There is no `/up` endpoint.** Rails 8's default health check is not wired up; use `GET /` (homepage) as the readiness probe. `/up` returns 404.
 - **First boot prints ~50 lines of Datadog APM/CI-Visibility noise** before "Listening on …". This is normal — `dd-trace-rb` autoloads in development. Don't mistake it for failure.
 - **OpenSearch may report `status: yellow`.** That's expected for a single-node cluster; the smoke script only requires `_cluster/health` to respond, not be green.
@@ -152,3 +157,6 @@ bin/ci                                          # full CI suite (lint + brakeman
 | `screenshot <name> failed` in smoke output | Chromium isn't installed for the pinned playwright version: `bin/playwright install --with-deps chromium`. |
 | `bin/playwright unavailable` in smoke output | No `node` on PATH or `bin/playwright` missing — install Node (or use `mise`/`asdf`), then re-run. |
 | Screenshot is blank/white | Server returned 200 but the page errored client-side; open `tmp/run-skill/rails.log` and look for the request just before — Tailwind not ready yet is the most common cause. Re-run `smoke.sh`. |
+| `FATAL: password authentication failed for user "postgres"` during `bin/setup` / `db:prepare` | Native Postgres with password auth (the apt default). Dev and test expect different passwords for the same `postgres` role, so the server must not check them: set the local/`127.0.0.1` entries in `pg_hba.conf` to `trust`, restart Postgres, re-run. See Prerequisites. |
+| `Your Ruby version is 3.x, but your Gemfile specified 4.0.x` right after `mise install` | mise isn't activated in this (non-interactive) shell: `eval "$(mise activate bash --shims)"`, or prefix commands with `mise exec --`, then re-run. |
+| `docker pull` fails: `You have reached your unauthenticated pull rate limit` | Docker Hub rate limit — common from fresh containers/CI egress IPs. OpenSearch has a drop-in mirror: swap the image in the Prerequisites `docker run` line for `public.ecr.aws/opensearchproject/opensearch:2.13.0`. Postgres and memcached can come from apt/brew instead (see Prerequisites traps for the Postgres auth caveat). |

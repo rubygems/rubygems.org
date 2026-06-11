@@ -108,7 +108,8 @@ bring_up() {
   if [[ "$HAVE_DOCKER" == y ]] && grep -q "^  ${docker_name}:" docker-compose.yml; then
     echo "  ${svc}: not responding on :${port}, starting via docker compose..."
     docker compose up -d "$docker_name" >/dev/null
-    for _ in $(seq 1 30); do $probe && { echo "  ${svc}: up"; return 0; }; sleep 1; done
+    # 60s: OpenSearch in particular can take >30s to accept connections cold.
+    for _ in $(seq 1 60); do $probe && { echo "  ${svc}: up"; return 0; }; sleep 1; done
     fail "${svc} never came up after docker compose up -d ${docker_name} (see: docker compose logs ${docker_name})"
   fi
   # No docker fallback: tell the user how to bring it up natively.
@@ -145,7 +146,10 @@ fi
 
 step "waiting for homepage to return 200 (up to 60s)"
 for i in $(seq 1 60); do
-  code=$(curl -s -o /dev/null -w '%{http_code}' -m 5 http://127.0.0.1:3000/ || echo 000)
+  # curl -w already emits 000 on connection failure; don't `|| echo 000` or
+  # the two concatenate into "000000".
+  code=$(curl -s -o /dev/null -w '%{http_code}' -m 5 http://127.0.0.1:3000/ || true)
+  code=${code:-000}
   [[ "$code" == 200 ]] && { echo "  ready after ${i}s"; break; }
   sleep 1
 done
@@ -158,7 +162,10 @@ step "endpoint smoke checks"
 check() {
   local name=$1 url=$2 expect=$3 substr=${4:-}
   local resp code body
-  resp=$(curl -sS -m 10 -w '\n__HTTP_CODE__%{http_code}' "$url")
+  # `|| fail` so a connection-level curl error still writes diagnostics
+  # instead of dying silently via set -e.
+  resp=$(curl -sS -m 10 -w '\n__HTTP_CODE__%{http_code}' "$url") \
+    || fail "$name: curl could not reach $url (server died? tail -50 $OUT_DIR/rails.log)"
   code=${resp##*__HTTP_CODE__}
   body=${resp%__HTTP_CODE__*}
   printf '  %-22s %s -> %s' "$name" "$url" "$code"
@@ -178,8 +185,9 @@ check "gem detail page"   http://127.0.0.1:3000/gems/rubygem0             200 "r
 #
 # bin/playwright is the Node CLI pinned to the playwright-ruby-client gem;
 # `playwright screenshot` knows where its own bundled Chromium lives, so we
-# don't have to. If the CLI isn't usable here (e.g. no node), skip rather
-# than fail — screenshots are nice-to-have, not load-bearing.
+# don't have to. If the CLI isn't usable at all (no node / no bin/playwright),
+# skip — screenshots are nice-to-have. But if the CLI exists and a shot fails
+# (usually a missing Chromium), fail with the install command.
 # ---------------------------------------------------------------------------
 step "screenshots via playwright"
 if ! command -v node >/dev/null || ! [[ -x bin/playwright ]]; then
