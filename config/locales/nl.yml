@@ -232,6 +232,17 @@ nl:
   dependencies:
     show:
       click_to_expand:
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: Als het opgegeven account bestaat, wordt er een activatielink
@@ -250,6 +261,9 @@ nl:
       learn:
         install_rubygems: Installeer RubyGems
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: Over ons
@@ -292,6 +306,7 @@ nl:
       mfa_banner_html:
   breadcrumbs:
     home: Startpagina
+    latest_version:
     dashboard: Dashboard
     settings: Instellingen
     org_name: 'Organisatie: %{name}'
@@ -745,6 +760,10 @@ nl:
   rubygems:
     aside:
       downloads_for_this_version: Voor deze versie
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Versie vrijgegeven
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
@@ -760,6 +779,7 @@ nl:
         funding:
         header: Links
         home: Startpagina
+        verified:
         mail: Mailing-list
         analytics:
         report_abuse:
@@ -804,6 +824,12 @@ nl:
     show:
       bundler_header: Gemfile
       install: Installeer
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: Licentie
         other: Licenties

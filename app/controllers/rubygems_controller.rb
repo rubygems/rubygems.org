@@ -10,6 +10,8 @@ class RubygemsController < ApplicationController
   before_action :set_page, only: :index
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
 
+  layout "subject", only: :show
+
   def index
     respond_to do |format|
       format.html do
@@ -28,8 +30,11 @@ class RubygemsController < ApplicationController
   def show
     @versions = @rubygem.public_versions.limit(5)
     if @versions.to_a.any?
+      add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
+      add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug)
       render "show"
     else
+      add_breadcrumb @rubygem.name
       render "show_yanked"
     end
     set_surrogate_key "gem/#{@rubygem.name}"
@@ -47,7 +52,7 @@ class RubygemsController < ApplicationController
   def show_reserved_gem
     return unless GemNameReservation.reserved?(params[:id])
     @reserved_gem = params.expect(:id).downcase
-    render "reserved"
+    render "reserved", layout: "hammy"
   end
 
   def gem_params

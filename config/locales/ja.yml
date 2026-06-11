@@ -231,6 +231,17 @@ ja:
   dependencies:
     show:
       click_to_expand: 矢印アイコンをクリックして展開
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: メールアドレスが登録されている場合は、アカウント有効化のための確認リンクをEメールで送ります。
@@ -248,6 +259,9 @@ ja:
       learn:
         install_rubygems: RubyGemsをインストール
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: 概要
@@ -291,6 +305,7 @@ ja:
         to blog post)！"
   breadcrumbs:
     home: ホーム
+    latest_version:
     dashboard: ダッシュボード
     settings: 設定
     org_name: 組織：%{name}
@@ -760,6 +775,10 @@ ja:
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: このバージョンがリリースされたのは
       required_ruby_version: 必要なRubyのバージョン
       required_rubygems_version: 必要なRubyGemsのバージョン
@@ -775,6 +794,7 @@ ja:
         funding: 寄付
         header: リンク
         home: ホームページ
+        verified:
         mail: メーリングリスト
         analytics:
         report_abuse: 悪用報告
@@ -820,6 +840,12 @@ ja:
     show:
       bundler_header: Gemfile
       install: インストール
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: ライセンス
         other: ライセンス

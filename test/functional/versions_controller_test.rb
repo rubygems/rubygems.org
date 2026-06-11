@@ -179,6 +179,39 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for a version that is not the latest" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      latest = @rubygem.reload.most_recent_version
+      @other = @rubygem.public_versions.find { |version| version != latest }
+      get :show, params: { rubygem_id: @rubygem.name, id: @other.number }
+    end
+
+    should respond_with :success
+
+    should "link to the latest version of the gem" do
+      assert_select "a[href=?]", rubygem_path(@rubygem.slug), text: /Latest Version/
+    end
+  end
+
+  context "On GET to show for the latest version" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      latest = @rubygem.reload.most_recent_version
+      get :show, params: { rubygem_id: @rubygem.name, id: latest.number }
+    end
+
+    should respond_with :success
+
+    should "not show the latest version button" do
+      assert_select "a", text: /Latest Version/, count: 0
+    end
+  end
+
   context "On GET to show with *a* yanked version" do
     setup do
       @version = create(:version, number: "1.0.1")

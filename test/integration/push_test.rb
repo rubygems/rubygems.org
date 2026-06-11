@@ -88,7 +88,7 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Pushed by")
     assert page.has_link? "Homepage", href: "http://example.com/sandworm"
 
-    css = %(div.gem__users a[alt=#{@user.handle}])
+    css = %(.gem__users a[alt=#{@user.handle}])
 
     assert page.has_css?(css, count: 2)
 
@@ -231,7 +231,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_version_dependencies_path("sandworm", "1.0.0")
 
     assert_response :success
     assert page.has_content?("crysknife")
@@ -245,7 +245,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_version_dependencies_path("sandworm", "1.0.0")
 
     assert_response :success
     assert page.has_content?("mauddib")
