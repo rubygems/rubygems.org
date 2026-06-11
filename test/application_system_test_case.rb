@@ -59,6 +59,6 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     reset_session!
     visit "/"
 
-    assert_text("Sign in".upcase)
+    assert_text("Sign in")
   end
 end
