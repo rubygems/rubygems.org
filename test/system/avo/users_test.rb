@@ -23,13 +23,19 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Reset User 2FA"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Reset MFA"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Reset MFA"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    click_button "Reset MFA"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+      click_button "Reset MFA"
+    end
 
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
@@ -102,13 +108,19 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Block User"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Block User"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Block User"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    click_button "Block User"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+      click_button "Block User"
+    end
 
     page.assert_text "Action ran successfully!"
     page.assert_text user.to_global_id.uri.to_s
@@ -200,14 +212,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       click_button "Actions"
       click_on "Reset Api Key"
 
-      assert_no_changes "User.find(#{user.id}).attributes" do
-        click_button "Reset Api Key"
+      within("[role='dialog']") do
+        assert_no_changes "User.find(#{user.id}).attributes" do
+          click_button "Reset Api Key"
+        end
       end
       page.assert_text "Must supply a sufficiently detailed comment"
 
-      fill_in "Comment", with: "A nice long comment"
-      select("Public Gem", from: "Template")
-      click_button "Reset Api Key"
+      within("[role='dialog']") do
+        fill_in "Comment", with: "A nice long comment"
+
+        assert_field "Comment", with: "A nice long comment"
+        select("Public Gem", from: "Template")
+        click_button "Reset Api Key"
+      end
 
       page.assert_text "Action ran successfully!"
 
@@ -259,7 +277,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   test "Yank rubygems" do
     admin_user = create(:admin_github_user, :is_admin)
     avo_sign_in_as admin_user
-    security_user = create(:user, email: "security@rubygems.org")
+    create(:user, email: "security@rubygems.org")
 
     ownership = create(:ownership)
     user = ownership.user
@@ -272,86 +290,53 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     )
 
     user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-    version_attributes = version.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
 
     click_button "Actions"
     click_on "Yank all Rubygems"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Yank all Rubygems"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Yank all Rubygems"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    click_button "Yank all Rubygems"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
 
-    page.assert_text "Action ran successfully!"
+      assert_field "Comment", with: "A nice long comment"
+    end
+
+    assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
+      within("[role='dialog']") do
+        click_button "Yank all Rubygems"
+      end
+
+      page.assert_text "Yanking all rubygems for #{user.handle} has been scheduled"
+    end
+
     page.assert_text user.to_global_id.uri.to_s
 
-    rubygem.reload
-    version.reload
+    # Versions are not yet yanked — that happens in the background job
+    refute_predicate version.reload, :yanked?
 
     audit = user.audits.sole
-    deletion = security_user.deletions.first
-    version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
 
     page.assert_text audit.id
 
     assert_equal "User", audit.auditable_type
     assert_equal "Yank all Rubygems", audit.action
-
-    rubygem_audit = audit.audited_changes["records"].select do |k, _|
-      k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
-    end
-    rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
-
     assert_equal_hash(
       {
-        "records" => {
-          "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => deletion.attributes.transform_values { [nil, it.as_json] },
-            "unchanged" => {}
-          },
-          "gid://gemcutter/Version/#{version.id}" => {
-            "changes" => {
-              "indexed" => [true, false],
-              "yanked_at" => [nil, version.yanked_at.as_json],
-              "updated_at" => [version_attributes[:updated_at].as_json, version.updated_at.as_json],
-              "yanked_info_checksum" => [nil, version.yanked_info_checksum]
-            },
-            "unchanged" => version.attributes.merge("latest" => true)
-              .except(
-                "indexed",
-                "updated_at",
-                "yanked_at",
-                "yanked_info_checksum"
-              ).transform_values(&:as_json)
-          },
-          "gid://gemcutter/Rubygem/#{rubygem.id}" => {
-            "changes" => {
-              "updated_at" => rubygem_updated_at_changes,
-              "indexed" => [true, false]
-            },
-            "unchanged" => rubygem.attributes
-              .except(
-                "updated_at",
-                "indexed"
-              ).transform_values(&:as_json)
-          },
-          version_yanked_event.to_gid.to_s => {
-            "changes" => version_yanked_event.attributes.transform_values { [nil, it] }.as_json,
-            "unchanged" => {}
-          }
-        },
+        "records" => {},
         "fields" => {},
         "arguments" => {},
         "models" => ["gid://gemcutter/User/#{user.id}"]
       },
       audit.audited_changes
     )
-
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
   end
@@ -359,7 +344,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   test "yank user" do
     admin_user = create(:admin_github_user, :is_admin)
     avo_sign_in_as admin_user
-    security_user = create(:user, email: "security@rubygems.org")
+    create(:user, email: "security@rubygems.org")
 
     user = create(:user)
     user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
@@ -368,22 +353,33 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     rubygem = create(:rubygem)
     version = create(:version, rubygem: rubygem)
     create(:ownership, user: user, rubygem: rubygem)
-    version_attributes = version.attributes.with_indifferent_access
 
     visit avo.resources_user_path(user)
 
     click_button "Actions"
     click_on "Yank User"
 
-    assert_no_changes "User.find(#{user.id}).attributes" do
-      click_button "Yank User"
+    within("[role='dialog']") do
+      assert_no_changes "User.find(#{user.id}).attributes" do
+        click_button "Yank User"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    click_button "Yank User"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
 
-    page.assert_text "Action ran successfully!"
+      assert_field "Comment", with: "A nice long comment"
+    end
+
+    assert_enqueued_jobs 1, only: YankRubygemsForUserJob do
+      within("[role='dialog']") do
+        click_button "Yank User"
+      end
+
+      page.assert_text "Action ran successfully!"
+    end
+
     page.assert_text user.to_global_id.uri.to_s
 
     page.assert_no_text user.encrypted_password
@@ -392,59 +388,25 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     page.assert_no_text user_attributes[:mfa_hashed_recovery_codes].first
 
     user.reload
-    rubygem.reload
-    version.reload
+
+    # User is blocked synchronously
+    assert_predicate user, :blocked_email?
+    # Versions are not yet yanked — that happens in the background job
+    refute_predicate version.reload, :yanked?
 
     audit = user.audits.sole
-    deletion = security_user.deletions.first
+    email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+    email_verified_event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
+    password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
 
     page.assert_text audit.id
 
     assert_equal "User", audit.auditable_type
     assert_equal "Yank User", audit.action
 
-    rubygem_audit = audit.audited_changes["records"].select do |k, _|
-      k =~ %r{gid://gemcutter/Rubygem/#{rubygem.id}}
-    end
-    rubygem_updated_at_changes = rubygem_audit["gid://gemcutter/Rubygem/#{rubygem.id}"]["changes"]["updated_at"]
-    email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
-    email_verified_event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
-    password_changed_event = user.events.where(tag: Events::UserEvent::PASSWORD_CHANGED).sole
-    version_yanked_event = rubygem.events.where(tag: Events::RubygemEvent::VERSION_YANKED).sole
-
     assert_equal_hash(
       {
         "records" => {
-          "gid://gemcutter/Deletion/#{deletion.id}" => {
-            "changes" => deletion.attributes.transform_values { [nil, it.as_json] },
-            "unchanged" => {}
-          },
-          "gid://gemcutter/Version/#{version.id}" => {
-            "changes" => {
-              "indexed" => [true, false],
-              "yanked_at" => [nil, version.yanked_at.as_json],
-              "updated_at" => [version_attributes[:updated_at].as_json, version.updated_at.as_json],
-              "yanked_info_checksum" => [nil, version.yanked_info_checksum]
-            },
-            "unchanged" => version.attributes.merge("latest" => true)
-              .except(
-                "indexed",
-                "updated_at",
-                "yanked_at",
-                "yanked_info_checksum"
-              ).transform_values(&:as_json)
-          },
-          "gid://gemcutter/Rubygem/#{rubygem.id}" => {
-            "changes" => {
-              "updated_at" => rubygem_updated_at_changes,
-              "indexed" => [true, false]
-            },
-            "unchanged" => rubygem.attributes
-              .except(
-                "updated_at",
-                "indexed"
-              ).transform_values(&:as_json)
-          },
           "gid://gemcutter/User/#{user.id}" => {
             "changes" => {
               "api_key" => ["secret123", nil],
@@ -483,10 +445,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
           password_changed_event.to_gid.as_json => {
             "changes" => password_changed_event.attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
-          },
-          version_yanked_event.to_gid.as_json => {
-            "changes" => version_yanked_event.attributes.transform_values { [nil, it.as_json] },
-            "unchanged" => {}
           }
         },
         "fields" => {},
@@ -513,14 +471,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       click_button "Actions"
       click_on "Change User Email"
 
-      assert_no_changes "User.find(#{user.id}).attributes" do
-        click_button "Change User Email"
+      within("[role='dialog']") do
+        assert_no_changes "User.find(#{user.id}).attributes" do
+          click_button "Change User Email"
+        end
       end
       page.assert_text "Must supply a sufficiently detailed comment"
 
-      fill_in "Comment", with: "A nice long comment"
-      fill_in "Email", with: "gem-maintainer-001@example.com"
-      click_button "Change User Email"
+      within("[role='dialog']") do
+        fill_in "Comment", with: "A nice long comment"
+
+        assert_field "Comment", with: "A nice long comment"
+        fill_in "Email", with: "gem-maintainer-001@rubygems-test.org"
+        click_button "Change User Email"
+      end
 
       page.assert_text "Action ran successfully!"
 
@@ -563,7 +527,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "unchanged" => {}
             }
           },
-          "fields" => { "from_email" => "gem-maintainer-001@example.com" },
+          "fields" => { "from_email" => "gem-maintainer-001@rubygems-test.org" },
           "arguments" => {},
           "models" => ["gid://gemcutter/User/#{user.id}"]
         },
@@ -589,14 +553,20 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Create User"
 
-    assert_no_changes "User.count" do
-      click_button "Create User"
+    within("[role='dialog']") do
+      assert_no_changes "User.count" do
+        click_button "Create User"
+      end
     end
     page.assert_text "Must supply a sufficiently detailed comment"
 
-    fill_in "Comment", with: "A nice long comment"
-    fill_in "Email", with: "gem-user-001@example.com"
-    click_button "Create User"
+    within("[role='dialog']") do
+      fill_in "Comment", with: "A nice long comment"
+
+      assert_field "Comment", with: "A nice long comment"
+      fill_in "Email", with: "gem-user-001@rubygems-test.org"
+      click_button "Create User"
+    end
 
     page.assert_text "Action ran successfully!"
     perform_enqueued_jobs
@@ -621,7 +591,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "unchanged" => {}
           }
         },
-        "fields" => { "email" => "gem-user-001@example.com" },
+        "fields" => { "email" => "gem-user-001@rubygems-test.org" },
         "arguments" => {},
         "models" => []
       },

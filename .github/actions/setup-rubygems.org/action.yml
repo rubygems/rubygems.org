@@ -11,6 +11,10 @@ inputs:
     description: "Install Avo gem"
     required: false
     default: "true"
+  install-playwright:
+    description: "Install Playwright browsers (only needed for system tests)"
+    required: false
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -23,7 +27,7 @@ runs:
       if: github.secret_source != 'None' && inputs.install-avo-pro == 'true'
       run: |
         printf "BUNDLE_WITH=avo\nRAILS_GROUPS=avo\n" >> $GITHUB_ENV
-    - uses: ruby/setup-ruby@319994f95fa847cf3fb3cd3dbe89f6dcde9f178f # v1.295.0
+    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1.310.0
       with:
         ruby-version: ${{ inputs.ruby-version }}
         bundler-cache: true
@@ -31,6 +35,10 @@ runs:
     - name: Print bundle environment
       shell: bash
       run: bundle env
+    - name: Install Playwright browsers
+      if: inputs.install-playwright == 'true'
+      shell: bash
+      run: bin/playwright install --with-deps chromium
     - name: Prepare environment
       shell: bash
       run: |

@@ -26,6 +26,7 @@ ja:
   api_key_forbidden: APIキーにアクセス権がありません
   api_key_soft_deleted: 正しくないAPIキーは使えません。削除して新規作成してください。
   api_key_insufficient_scope: このAPIキーはこのgemに対して指定された動作を実行できません。
+  email_not_confirmed:
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
   please_sign_in: サインインしてお進みください。
   otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
@@ -96,6 +97,10 @@ ja:
       messages:
         not_pwned: 過去にデータ侵害を受けたためお使いになれません
         blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -906,6 +911,7 @@ ja:
       email_sent: 確認メールがEメールアドレスに送信されました。
     new:
       have_account: 既にアカウントをお持ちですか？
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。

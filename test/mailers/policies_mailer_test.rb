@@ -19,7 +19,7 @@ class PoliciesMailerTest < ActionMailer::TestCase
 
   test "send policy announcement to user with blocked email" do
     @user.email = "blocked@rubygems.org"
-    @user.blocked_email = "original-email@example.com"
+    @user.blocked_email = "original-email@rubygems-test.org"
     @user.save!
 
     PoliciesMailer.policy_update_announcement(@user).deliver_now

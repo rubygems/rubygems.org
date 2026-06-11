@@ -87,13 +87,5 @@ spec:
                 secretKeyRef:
                   name: <%= environment %>
                   key: database_url
-            volumeMounts:
-            - mountPath: /app/lib/tasks/users_verify.rake
-              name: users-verify-rake-volume
-              subPath: users_verify.rake
             securityContext:
               privileged: false
-          volumes:
-          - name: users-verify-rake-volume
-            configMap:
-              name: users-verify-rake-file

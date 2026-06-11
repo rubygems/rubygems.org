@@ -1,0 +1,180 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maintenance
+  annotations:
+    shipit.shopify.io/restart: 'true'
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0%
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      name: maintenance
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/good-job.logs: '[{"source":"rails","service":"rubygems.org","version": <%= current_sha.dump %>}]'
+      labels:
+        name: maintenance
+        tags.datadoghq.com/env: "<%= environment %>"
+        tags.datadoghq.com/service: rubygems.org
+        tags.datadoghq.com/version: <%= current_sha %>
+    spec:
+      containers:
+      - name: good-job
+        image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
+        args: ["good_job", "start", "--queues", "maintenance"]
+        resources:
+          <% if environment == 'production' %>
+          requests:
+            cpu: 500m
+            memory: 1.5Gi
+          limits:
+            cpu: 1000m
+            memory: 3Gi
+          <% else %>
+          requests:
+            cpu: 200m
+            memory: 500Mi
+          limits:
+            cpu: 500m
+            memory: 2Gi
+          <% end %>
+        ports:
+          - name: probe-port
+            containerPort: 7001
+        startupProbe:
+          httpGet:
+            path: "/status/started"
+            port: probe-port
+          failureThreshold: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: "/status/connected"
+            port: probe-port
+          failureThreshold: 1
+          periodSeconds: 10
+        env:
+          - name: RAILS_ENV
+            value: "<%= environment %>"
+          - name: ENV
+            value: "<%= environment %>"
+          - name: DD_TAGS
+            value: "service:rubygems.org env:<%= environment %>"
+          - name: GOOD_JOB_PROBE_PORT
+            value: "7001"
+          - name: GOOD_JOB_QUEUE_SELECT_LIMIT
+            value: "1000"
+          <% if environment != "production" %>
+          - name: GOOD_JOB_MAX_THREADS
+            value: "2"
+          <% end %>
+          - name: DD_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
+          - name: STATSD_IMPLEMENTATION
+            value: "datadog"
+          - name: STATSD_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
+          - name: STATSD_ADDR
+            value: $(STATSD_HOST):8125
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: secret_key_base
+          - name: PREVIOUS_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: previous_secret_key_base
+          - name: AWS_REGION
+            value: "us-west-2"
+          - name: S3_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_access_key_id
+          - name: S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_secret_access_key
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_secret_access_key
+          - name: HONEYBADGER_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: honeybadger_api_key
+          - name: FASTLY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_api_key
+          - name: FASTLY_SERVICE_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_service_id
+          - name: FASTLY_DOMAINS
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_domains
+          - name: ELASTICSEARCH_URL
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: elasticsearch_url
+          - name: SEARCH_NUM_REPLICAS
+            value: "1"
+          - name: MEMCACHED_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: memcached_endpoint
+          - name: SENDGRID_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_username
+          - name: SENDGRID_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_password
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: database_url
+          - name: HOOK_RELAY_ACCOUNT_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_account_id
+          - name: HOOK_RELAY_HOOK_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: hook_relay_hook_id
+        securityContext:
+          privileged: false

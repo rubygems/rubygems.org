@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_26_195603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -134,6 +134,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
     t.index ["creator_id"], name: "index_blazer_queries_on_creator_id"
   end
 
+  create_table "blocked_email_domains", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "domain", null: false
+    t.text "notes"
+    t.integer "source", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_blocked_email_domains_on_domain", unique: true
+    t.index ["source"], name: "index_blocked_email_domains_on_source"
+  end
+
   create_table "deletions", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "number"
@@ -157,6 +167,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
     t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id"
     t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name"
     t.index ["version_id"], name: "index_dependencies_on_version_id"
+  end
+
+  create_table "email_domain_allowlists", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "domain", null: false
+    t.text "notes"
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_email_domain_allowlists_on_domain", unique: true
   end
 
   create_table "events_organization_events", force: :cascade do |t|
@@ -683,6 +701,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
     t.string "gem_platform"
     t.boolean "indexed", default: true
     t.string "info_checksum"
+    t.string "info_checksum_v2"
     t.boolean "latest"
     t.string "licenses"
     t.hstore "metadata", default: {}, null: false
@@ -703,6 +722,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_200001) do
     t.datetime "updated_at", precision: nil
     t.datetime "yanked_at", precision: nil
     t.string "yanked_info_checksum"
+    t.string "yanked_info_checksum_v2"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index "lower((gem_full_name)::text)", name: "index_versions_on_lower_gem_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"

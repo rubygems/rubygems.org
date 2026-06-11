@@ -59,7 +59,7 @@ flash: { error: @rubygem_trusted_publisher.errors.full_messages.to_sentence })
   end
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params[:id])
+    @rubygem_trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.find(params.expect(:id))
   end
 
   def gh_actions_trusted_publisher

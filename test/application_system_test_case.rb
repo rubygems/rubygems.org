@@ -1,22 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
-
-# Workaround for ChromeDriver bug where Turbo Drive DOM replacement causes
-# "Node with given id does not belong to the document" to be raised as a generic
-# UnknownError instead of StaleElementReferenceError. Capybara only retries the
-# latter, so the error crashes the test instead of being retried.
-# See: https://github.com/SeleniumHQ/selenium/issues/15401
-# TODO: Remove when migrating to Playwright (capybara-playwright-driver)
-module ChromeNodeStaleElementPatch
-  def visible?
-    super
-  rescue Selenium::WebDriver::Error::UnknownError => e
-    raise Selenium::WebDriver::Error::StaleElementReferenceError, e.message if e.message.include?("does not belong to the document")
-    raise
-  end
-end
-Capybara::Selenium::ChromeNode.prepend(ChromeNodeStaleElementPatch)
+require "capybara-playwright-driver"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include OauthHelpers
@@ -26,22 +11,37 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     SimpleCov.command_name "system-worker-#{worker}"
   end
 
-  if ENV["CAPYBARA_SERVER_PORT"]
-    served_by host: "rails-app", port: ENV["CAPYBARA_SERVER_PORT"]
-
-    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400], options: {
-      browser: :remote,
-      url: "http://#{ENV['SELENIUM_HOST']}:4444"
-    }
-  else
-    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
-  end
+  # Rails' driven_by registers the :playwright Capybara driver itself, so any
+  # standalone Capybara.register_driver block would be overwritten. Pass the
+  # Capybara::Playwright::Driver options through `options:` instead — that's
+  # what gets forwarded to the driver constructor.
+  driven_by :playwright, screen_size: [1400, 1400], options: {
+    playwright_cli_executable_path: File.expand_path("../bin/playwright", __dir__),
+    browser_type: :chromium,
+    headless: true
+  }
 
   teardown do
-    # Clear Chrome's HTTP cache between tests to prevent stale responses.
-    # Pages with Cache-Control: public headers are cached by the browser,
-    # causing subsequent tests to see stale content when visiting the same URL.
-    page.driver.browser.execute_cdp("Network.clearBrowserCache") if page.driver.browser.respond_to?(:execute_cdp)
+    clear_browser_cache(clear_cookies: true)
+  end
+
+  # Clear the browser's HTTP cache, and optionally its cookies. Pages served with
+  # `Cache-Control: public` headers are cached by the browser, so a later visit to
+  # the same URL can return stale content; clearing the cache between (or within)
+  # tests prevents that. Cookies are cleared in teardown to isolate sessions
+  # between tests, but callers that need to bust the cache mid-test should leave
+  # them intact. Safe to call when the browser may have already closed.
+  def clear_browser_cache(clear_cookies: false)
+    return unless page.driver.respond_to?(:with_playwright_page)
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.context.clear_cookies if clear_cookies
+      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp.send_message("Network.clearBrowserCache")
+      cdp.detach
+    rescue Playwright::TargetClosedError
+      # Browser already closed
+    end
   end
 
   def sign_in(user = nil)

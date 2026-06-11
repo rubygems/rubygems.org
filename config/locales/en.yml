@@ -30,6 +30,7 @@ en:
   api_key_forbidden: The API key doesn't have access
   api_key_soft_deleted: An invalid API key cannot be used. Please delete it and create a new one.
   api_key_insufficient_scope: This API key cannot perform the specified action on this gem.
+  email_not_confirmed: Please confirm your email address before using the API. Check your inbox for a confirmation link.
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
   please_sign_in: Please sign in to continue.
   otp_incorrect: Your OTP code is incorrect. Please check it and retry.
@@ -100,6 +101,10 @@ en:
       messages:
         not_pwned: has previously appeared in a data breach and should not be used
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
+        reserved_domain: "domain '%{domain}' is reserved and cannot be used for registration. Please use a valid personal email."
+        disposable_email_domain: "domain '%{domain}' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
+        public_suffix: is a public suffix and cannot be used; specify a registrable domain
+        protected_provider: is a major consumer mail provider and cannot be blocked
       models:
         api_key:
           attributes:
@@ -893,6 +898,7 @@ en:
       email_sent: A confirmation mail has been sent to your email address.
     new:
       have_account: Already have an account?
+      registration_disabled: New account registration has been temporarily disabled.
   versions:
     index:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.

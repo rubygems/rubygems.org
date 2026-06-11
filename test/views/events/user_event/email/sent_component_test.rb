@@ -8,6 +8,6 @@ class Events::UserEvent::Email::SentComponentTest < ComponentTest
 
     assert_text "Subject: [Subject]"
     assert_text "From: example@rubygems.org"
-    assert_text "To: user@example.com"
+    assert_text "To: user@rubygems-test.org"
   end
 end

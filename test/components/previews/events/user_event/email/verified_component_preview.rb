@@ -2,7 +2,7 @@
 
 class Events::UserEvent::Email::VerifiedComponentPreview < Lookbook::Preview
   # @param email email
-  def default(email: "user@example.com")
+  def default(email: "user@rubygems-test.org")
     event = FactoryBot.build(:events_user_event, tag: Events::UserEvent::EMAIL_VERIFIED, additional:
     {
       email:

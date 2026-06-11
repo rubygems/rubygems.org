@@ -81,6 +81,13 @@ spec:
               fieldRef:
                 apiVersion: v1
                 fieldPath: status.hostIP
+          - name: DD_APPSEC_ENABLED
+            value: "true"
+          - name: DD_APPSEC_AUTO_USER_INSTRUMENTATION_MODE
+            value: "anon"
+          # SDK default + auth/signup field names; override replaces, doesn't merge.
+          - name: DD_APPSEC_OBFUSCATION_PARAMETER_KEY_REGEXP
+            value: "(?i)pass|pw(?:or)?d|secret|(?:api|private|public|access)[_-]?key|token|consumer[_-]?(?:id|key|secret)|sign(?:ed|ature)|bearer|authorization|jsessionid|phpsessid|asp\\.net[_-]sessionid|sid|jwt|email|handle|\\bwho\\b|login|username|full[_-]?name"
           - name: STATSD_IMPLEMENTATION
             value: "datadog"
           - name: STATSD_HOST
@@ -221,10 +228,10 @@ spec:
                 name: <%= environment %>
                 key: rubygems_proxy_token
           <% if environment == 'staging' %>
-          - name: DISABLE_SIGNUP
-            value: "true"
           - name: RAILS_LOG_LEVEL
             value: "info"
+          - name: DISABLE_SIGNUP
+            value: "true"
           <% end %>
           - name: DATABASE_URL
             valueFrom:
@@ -242,7 +249,7 @@ spec:
           mountPath: /var/run/secrets/sigstore
           readOnly: true
       - name: nginx
-        image: nginx:1.25.2
+        image: nginx:1.31.1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

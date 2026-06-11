@@ -339,7 +339,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   teardown do
-    @authenticator&.remove!
+    disable_virtual_authenticator
   end
 
   private

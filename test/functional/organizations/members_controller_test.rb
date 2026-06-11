@@ -88,6 +88,17 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Member invited.", flash[:notice]
   end
 
+  test "POST /organizations/:organization_handle/members as an admin inviting an owner is forbidden" do
+    new_user = create(:user)
+
+    assert_no_difference -> { @organization.memberships.where(role: "owner").count } do
+      post organization_memberships_path(@organization), params: { membership: { user: new_user.handle, role: :owner } }
+    end
+
+    assert_response :not_found
+    assert_nil Membership.find_by(user: new_user, organization: @organization)
+  end
+
   test "POST /organizations/:organization_handle/members with invalid values" do
     post organization_memberships_path(@organization), params: { membership: { user: "invalid role", role: :invalid_role } }
 
@@ -119,6 +130,40 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to organization_memberships_path(@organization)
     assert_equal "Member updated successfully.", flash[:notice]
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id as an admin promoting a maintainer to owner is forbidden" do
+    maintainer_user = create(:user)
+    maintainer_membership = create(:membership, organization: @organization, user: maintainer_user, role: :maintainer)
+
+    patch organization_membership_path(@organization, maintainer_membership), params: { membership: { role: "owner" } }
+
+    assert_response :not_found
+    assert_equal "maintainer", maintainer_membership.reload.role
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id as an admin demoting an owner is forbidden" do
+    owner_user = create(:user)
+    owner_membership = create(:membership, organization: @organization, user: owner_user, role: :owner)
+
+    patch organization_membership_path(@organization, owner_membership), params: { membership: { role: "admin" } }
+
+    assert_response :not_found
+    assert_equal "owner", owner_membership.reload.role
+  end
+
+  test "PATCH /organizations/:organization_handle/members/:id as an owner promoting a maintainer to owner succeeds" do
+    owner_user = create(:user)
+    create(:membership, organization: @organization, user: owner_user, role: :owner)
+    post session_path(session: { who: owner_user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    maintainer_user = create(:user)
+    maintainer_membership = create(:membership, organization: @organization, user: maintainer_user, role: :maintainer)
+
+    patch organization_membership_path(@organization, maintainer_membership), params: { membership: { role: "owner" } }
+
+    assert_redirected_to organization_memberships_path(@organization)
+    assert_equal "owner", maintainer_membership.reload.role
   end
 
   test "PATCH /organizations/:organization_handle/members/:id with invalid values" do

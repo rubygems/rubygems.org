@@ -9,7 +9,7 @@ module MaintenanceTasksAuditable
     around_action :audit_action
 
     def audit_action(&blk)
-      return yield if params[:action].in?(%w[show index])
+      return yield if params.expect(:action).in?(%w[show index])
 
       action = params.fetch(:action)
       task_name = params.fetch(:task_id)

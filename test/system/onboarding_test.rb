@@ -156,6 +156,7 @@ class OnboardingTest < ApplicationSystemTestCase
     click_button "Confirm"
 
     # headers:               OWNER                STATUS     MFA                         ADDED BY                               ROLE
-    assert_text "#{outside_contributor.handle}\nConfirmed\nDisabled\n#{outside_contributor.ownerships.first.authorizer_name} Maintainer"
+    assert_text "#{outside_contributor.handle} Confirmed Disabled #{outside_contributor.ownerships.first.authorizer_name} Maintainer",
+normalize_ws: true
   end
 end

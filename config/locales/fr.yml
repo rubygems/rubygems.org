@@ -30,6 +30,7 @@ fr:
   api_key_forbidden:
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
   please_sign_in:
   otp_incorrect:
@@ -100,6 +101,10 @@ fr:
       messages:
         not_pwned:
         blocked:
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -929,6 +934,7 @@ fr:
       email_sent: Un email de confirmation a été envoyé sur votre adresse email.
     new:
       have_account: Vous avez déjà un compte ?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Gem non hébergé sur Rubygems.

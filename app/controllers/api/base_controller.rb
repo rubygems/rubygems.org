@@ -55,6 +55,7 @@ class Api::BaseController < ApplicationController
     @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
     return render_unauthorized unless @api_key
     set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.user.api_key_id" => @api_key.id
+    return render_forbidden(t(:email_not_confirmed)) if @api_key.user&.unconfirmed?
     Current.user = @api_key.user
     render_forbidden(t(:api_key_soft_deleted)) if @api_key.soft_deleted?
   end

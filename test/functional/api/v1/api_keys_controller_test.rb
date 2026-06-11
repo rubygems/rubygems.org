@@ -252,6 +252,20 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       should_expect_otp_for_show
     end
 
+    context "with unconfirmed email" do
+      setup do
+        @user = create(:user, :unconfirmed)
+        authorize_with("#{@user.email}:#{@user.password}")
+        get :show
+      end
+
+      should respond_with :forbidden
+
+      should "return email confirmation error" do
+        assert_match "Please confirm your email address", @response.body
+      end
+    end
+
     context "when user has old sha1 password" do
       setup do
         @user = create(:user, encrypted_password: "b35e3b6e1b3021e71645b4df8e0a3c7fd98a95fa")
@@ -281,6 +295,20 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         post :create
       end
       should_deny_access
+    end
+
+    context "with unconfirmed email" do
+      setup do
+        @user = create(:user, :unconfirmed)
+        authorize_with("#{@user.email}:#{@user.password}")
+        post :create, params: { name: "test-key", index_rubygems: "true" }
+      end
+
+      should respond_with :forbidden
+
+      should "return email confirmation error" do
+        assert_match "Please confirm your email address", @response.body
+      end
     end
 
     context "with correct credentials" do

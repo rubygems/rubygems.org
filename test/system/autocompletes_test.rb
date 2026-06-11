@@ -32,9 +32,9 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   test "selected field is only one with arrow key selecting" do
-    @fill_field.native.send_keys :down
+    @fill_field.send_keys :down
     find ".selected"
-    @fill_field.native.send_keys :down
+    @fill_field.send_keys :down
 
     assert_selector ".selected", count: 1
   end
@@ -52,25 +52,25 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   test "down arrow key to choose suggestion" do
-    @fill_field.native.send_keys :down
+    @fill_field.send_keys :down
 
     assert page.has_no_field? "query", with: "rubo"
   end
 
   test "up arrow key to choose suggestion" do
-    @fill_field.native.send_keys :up
+    @fill_field.send_keys :up
 
     assert page.has_no_field? "query", with: "rubo"
   end
 
   test "down arrow key should loop" do
-    @fill_field.native.send_keys :down, :down, :down, :down
+    @fill_field.send_keys :down, :down, :down, :down
 
     assert_selector ".suggest-list .menu-item:last-child.selected"
   end
 
   test "up arrow key should loop" do
-    @fill_field.native.send_keys :up, :up, :up, :up
+    @fill_field.send_keys :up, :up, :up, :up
 
     assert_selector ".suggest-list .menu-item:first-child.selected"
   end

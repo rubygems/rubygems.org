@@ -10,8 +10,7 @@
     "db",
     "cache",
     "search",
-    "toxiproxy",
-    "selenium"
+    "toxiproxy"
   ],
   "forwardPorts": [
     3000, // Rails
@@ -28,7 +27,8 @@
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
     // "ghcr.io/rails/devcontainer/features/activestorage": {},
-    "ghcr.io/rails/devcontainer/features/postgres-client": {},
+    "ghcr.io/rails/devcontainer/features/postgres-client:1": {},
+    "ghcr.io/devcontainers/features/node:2": {},
     "ghcr.io/devcontainers-extra/features/apt-packages:1": {
       "packages": [
         "pkg-config"
@@ -39,11 +39,8 @@
   "containerEnv": {
     "EDITOR": "code --wait",
     "GIT_EDITOR": "code --wait",
-    "CAPYBARA_SERVER_PORT": "31337",
-    "SELENIUM_HOST": "selenium",
     "ELASTICSEARCH_URL": "http://search:9200",
-    "DATABASE_URL": "postgres://postgres@db:5432",
-    "DEVCONTAINER_APP_HOST": "http://rails-app",
+    "DB_HOST": "db",
     "MEMCACHED_URL": "memcache:11211"
   },
   "customizations": {

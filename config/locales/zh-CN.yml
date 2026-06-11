@@ -26,6 +26,7 @@ zh-CN:
   api_key_forbidden: API 密钥没有访问权限
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: 拒绝访问，请在 https://rubygems.org 上注册一个账号。
   please_sign_in: 请先登录以继续
   otp_incorrect: 您的 OTP 码不正确，请检查后重试。
@@ -96,6 +97,10 @@ zh-CN:
       messages:
         not_pwned: 曾出现过数据泄露，不应该再使用
         blocked: 域名 '%{domain}' 因发送垃圾邮件已被禁用，请使用另外有效的个人邮箱。
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -899,6 +904,7 @@ zh-CN:
       email_sent: 确认邮件已发送至您的邮箱。
     new:
       have_account: 已经有一个账号了？
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: 此 Gem 目前没有托管在 RubyGems.org 中。

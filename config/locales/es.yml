@@ -30,6 +30,7 @@ es:
   api_key_forbidden: La clave API no tiene acceso
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
@@ -103,6 +104,10 @@ es:
           debería usar
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -1001,6 +1006,7 @@ es:
         electrónico.
     new:
       have_account: "¿Ya tienes una cuenta?"
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.

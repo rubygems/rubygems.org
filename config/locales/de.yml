@@ -32,6 +32,7 @@ de:
   api_key_forbidden:
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
@@ -107,6 +108,10 @@ de:
           werden
         blocked: Die Domain '%{domain}' wurde wegen Spam blockiert. Bitte verwenden
           Sie eine gültige persönliche E-Mail-Adresse.
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
@@ -974,6 +979,7 @@ de:
       email_sent:
     new:
       have_account: Haben Sie schon einen Account?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Dieses Gem wird nicht gerade von RubyGems.org gehostet.

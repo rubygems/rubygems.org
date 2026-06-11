@@ -16,9 +16,8 @@ class Avo::Actions::YankRubygemsForUser < Avo::Actions::ApplicationAction
 
   class ActionHandler < Avo::Actions::ActionHandler
     def handle_record(user)
-      user.rubygems.find_each do |rubygem|
-        rubygem.yank_versions!(force: true)
-      end
+      YankRubygemsForUserJob.perform_later(user: user)
+      succeed("Yanking all rubygems for #{user.handle} has been scheduled")
     end
   end
 end

@@ -10,7 +10,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
 
     @ip_address = "1.2.3.4"
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+    @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                    remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
   end
 
@@ -113,6 +113,28 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context "web hook fire requests" do
+      setup do
+        create(:rubygem, name: "gemcutter", number: "0.0.1")
+        create(:api_key, key: "12334", scopes: %i[access_webhooks], owner: @user)
+
+        stub_request(:post, "https://api.hookrelay.dev/hooks///webhook_id-fire")
+          .to_return(status: 200, body: '{"id":"delivery-id"}', headers: { "Content-Type" => "application/json" })
+        stub_request(:get, "https://app.hookrelay.dev/api/v1/accounts//hooks//deliveries/delivery-id")
+          .to_return(status: 200, body: { "status" => "success", "responses" => [
+            "code" => 200, "body" => "OK", "headers" => { "Content-Type" => "text/plain" }
+          ] }.to_json, headers: { "Content-Type" => "application/json" })
+      end
+
+      should "allow web hook fire by ip" do
+        post "/api/v1/web_hooks/fire",
+          params: { gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.org" },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334" }
+
+        assert_response :success
+      end
+    end
+
     context "params" do
       should "return 400 for bad request" do
         post "/session"
@@ -121,7 +143,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "return 401 for unauthorized request" do
-        post "/session", params: { session: { who: "no@example.com", password: @user.password } }
+        post "/session", params: { session: { who: "no@rubygems-test.org", password: @user.password } }
 
         assert_response :unauthorized
       end
@@ -424,6 +446,23 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         assert_response :too_many_requests
       end
+
+      should "throttle web hook fire by ip" do
+        update_limit_for("webhook_fire/ip:#{@ip_address}", Rack::Attack::WEBHOOK_FIRE_LIMIT)
+
+        post "/api/v1/web_hooks/fire", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle web hook fire by api key" do
+        api_key = create(:api_key, key: "12334", scopes: %i[access_webhooks], owner: @user)
+        update_limit_for("webhook_fire/api_key:#{api_key.owner.to_gid}", Rack::Attack::WEBHOOK_FIRE_LIMIT)
+
+        post "/api/v1/web_hooks/fire", headers: { HTTP_AUTHORIZATION: "12334" }
+
+        assert_response :too_many_requests
+      end
     end
 
     context "exponential backoff" do
@@ -643,14 +682,14 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle for sign in ignoring case" do
           post "/password",
-               params: { password: { email: "Nick@example.com" } }
+               params: { password: { email: "Nick@rubygems-test.org" } }
 
           assert_response :too_many_requests
         end
 
         should "throttle for sign in ignoring spaces" do
           post "/password",
-               params: { password: { email: "n ick@example.com" } }
+               params: { password: { email: "n ick@rubygems-test.org" } }
 
           assert_response :too_many_requests
         end
