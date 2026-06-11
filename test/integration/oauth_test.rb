@@ -63,6 +63,20 @@ class OAuthTest < ActionDispatch::IntegrationTest
     follow_redirect!
   end
 
+  test "callback without state in the session fails with csrf_detected" do
+    OmniAuth.config.test_mode = false
+    raise_out_environments = OmniAuth.config.failure_raise_out_environments
+    OmniAuth.config.failure_raise_out_environments = []
+
+    get "/oauth/github/callback", params: { state: SecureRandom.hex(16), code: "abc123" }
+
+    assert_response :redirect
+    assert_match %r{/oauth/failure\?message=csrf_detected&strategy=github}, response.location
+  ensure
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.failure_raise_out_environments = raise_out_environments
+  end
+
   test "sets auth cookie when successful" do
     info_data = {
       viewer: {
