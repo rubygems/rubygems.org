@@ -182,7 +182,7 @@ module RubygemFs
 
     def head(key)
       s3.head_object(key: key, bucket: bucket).to_h
-    rescue Aws::S3::Errors::NoSuchKey
+    rescue Aws::S3::Errors::NoSuchKey, Aws::S3::Errors::NotFound
       nil
     end
 

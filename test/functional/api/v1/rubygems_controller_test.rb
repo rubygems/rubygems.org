@@ -312,6 +312,25 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On POST to create" do
+      should "track a successful push with Datadog AppSec" do
+        span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+        assert_equal "true", span.get_tag("appsec.events.gem.push.success.track")
+        assert_equal @user.id.to_s, span.get_tag("appsec.events.gem.push.success.usr.id")
+        assert_equal "test", span.get_tag("appsec.events.gem.push.success.gem.name")
+        assert_equal "0.0.0", span.get_tag("appsec.events.gem.push.success.gem.version")
+      end
+
+      should "track a failed push with Datadog AppSec" do
+        span = with_appsec_trace { post :create, body: "really bad gem" }
+
+        assert_equal "true", span.get_tag("appsec.events.gem.push.failure.track")
+        assert_equal @user.id.to_s, span.get_tag("appsec.events.gem.push.failure.usr.id")
+        assert_nil span.get_tag("appsec.events.gem.push.failure.gem.version")
+      end
+    end
+
     context "On POST to create for existing gem" do
       context "with confirmed ownership" do
         setup do
