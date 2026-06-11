@@ -128,7 +128,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "rails-erd", "~> 1.7"
+  gem "rails-erd", "~> 2.0"
   gem "listen", "~> 3.10"
   gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 3.0"
