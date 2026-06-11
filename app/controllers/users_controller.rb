@@ -3,6 +3,7 @@
 class UsersController < ApplicationController
   before_action :redirect_to_root, if: :signed_in?
   before_action :reject_disabled_signup, only: :create
+  layout "hammy"
 
   def new
     @user = User.new
