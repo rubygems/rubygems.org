@@ -24,7 +24,7 @@ module SearchesHelper
     return unless count > 0
 
     time_ago = (Time.zone.today - duration).to_fs(:db)
-    path = search_path(params: { query: "#{params[:query]} AND updated:[#{time_ago} TO *}" })
+    path = search_path(params: { query: "#{params[:query]} AND updated:>=#{time_ago}" })
     update_info = (duration == 30.days ? t("searches.show.month_update", count: count) : t("searches.show.week_update", count: count))
     link_to update_info, path, class: CHIP_CLASS
   end
