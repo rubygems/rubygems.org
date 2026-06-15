@@ -871,9 +871,14 @@ zh-TW:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name} 的反向依賴"
       subtitle: 下列 Gems 的最新版本需要 %{name}
       no_reverse_dependencies: 此 Gem 沒有反向依賴。
+      version_header:
     search:
       search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
   searches:
@@ -885,6 +890,7 @@ zh-TW:
       updated: 更新於
       yanked: 移除於
     show:
+      title:
       subtitle_html: "<em>%{query}</em>"
       month_update: 於最近一個月更新 (%{count})
       week_update: 於最近一週更新 (%{count})

@@ -877,9 +877,14 @@ en:
           other: "Successfully transferred %{count} gems to %{organization}."
   reverse_dependencies:
     index:
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      gem_header: Gem
       title: "Reverse dependencies for %{name}"
       subtitle: "Latest version of the following gems require %{name}"
       no_reverse_dependencies: This gem has no reverse dependencies.
+      version_header: Version
     search:
       search_reverse_dependencies_html: "Search reverse dependencies Gems&hellip;"
   searches:
@@ -891,6 +896,7 @@ en:
       updated: Updated
       yanked: Yanked
     show:
+      title: Search
       subtitle_html: for <em>%{query}</em>
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})
