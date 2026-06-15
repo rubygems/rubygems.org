@@ -9,6 +9,10 @@
   <%= render "rubygems/aside" %>
 <% end %>
 
+<% content_for :subject_secondary do %>
+  <%= render "rubygems/aside_secondary" %>
+<% end %>
+
 <% th_class = "py-2 pr-4 text-b4 font-semibold text-neutral-900 dark:text-white" %>
 <% td_class = "py-3 pr-4 align-top" %>
 <% chip_class = "inline-block px-2 py-0.5 font-mono text-c4 rounded-sm bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white" %>
