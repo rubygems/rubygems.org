@@ -904,6 +904,7 @@ ja:
     index:
       title: 統計
       all_time_most_downloaded: 累計最多ダウンロード数
+      clickgems:
       total_gems: gem総数
       total_users: ユーザー総数
   users:

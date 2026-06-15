@@ -885,6 +885,7 @@ zh-TW:
     index:
       title: 統計資料
       all_time_most_downloaded: 歷史下載次數排行
+      clickgems:
       total_gems: Gems 總數
       total_users: 總使用者數量
   users:

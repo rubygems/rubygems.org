@@ -998,6 +998,7 @@ es:
     index:
       title: Estadísticas
       all_time_most_downloaded: Más descargadas
+      clickgems:
       total_gems: Gemas totales
       total_users: Usuarios totales
   users:
