@@ -826,6 +826,9 @@ de:
     request_denied:
     show:
       title: Profil von %{username}
+      gems:
+      no_gems:
+      edit_profile:
     security_events:
       title:
       description_html:

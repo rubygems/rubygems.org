@@ -738,6 +738,9 @@ nl:
     request_denied:
     show:
       title: Profiel van %{username}
+      gems:
+      no_gems:
+      edit_profile:
     security_events:
       title:
       description_html:
