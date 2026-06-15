@@ -224,7 +224,8 @@ class SessionsControllerTest < ActionController::TestCase
           end
 
           assert_equal "true", span.get_tag("appsec.events.users.login.success.track")
-          assert_equal @user.id.to_s, span.get_tag("appsec.events.users.login.success.usr.login")
+          assert_equal "428821350e9691491f616b754cd8315fb86d797ab35d843479e732ef90665324", span.get_tag("appsec.events.users.login.success.usr.login")
+          assert_equal @user.id.to_s, span.get_tag("usr.id")
         end
 
         should "set security device notice" do
