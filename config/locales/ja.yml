@@ -306,6 +306,7 @@ ja:
   breadcrumbs:
     home: ホーム
     latest_version:
+    versions:
     dashboard: ダッシュボード
     settings: 設定
     org_name: 組織：%{name}

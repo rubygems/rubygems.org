@@ -39,7 +39,7 @@
                   <td class="<%= td_class %> text-b3">
                     <% if version %>
                       <%= link_to rubygem_version_path(name, version), target: :_blank, rel: "noopener",
-                            class: "text-neutral-900 dark:text-white hover:text-orange-700 dark:hover:text-orange-400" do %>
+                            class: "text-neutral-900 dark:text-white hover:text-orange-500 dark:hover:text-orange-400" do %>
                         <%= name %> <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version %></span>
                       <% end %>
                     <% else %>
@@ -80,7 +80,7 @@
                 <tr>
                   <td class="<%= td_class %> text-b3">
                     <%= link_to rubygem_path(reverse_dependency.slug),
-                          class: "text-neutral-900 dark:text-white hover:text-orange-700 dark:hover:text-orange-400" do %>
+                          class: "text-neutral-900 dark:text-white hover:text-orange-500 dark:hover:text-orange-400" do %>
                       <%= reverse_dependency.name %>
                       <span class="sm:hidden block mt-1 text-b4 text-neutral-700 dark:text-neutral-400">
                         <%= t ".downloads_count", count: number_to_human(reverse_dependency.downloads, precision: 3, significant: true) %>
@@ -106,7 +106,7 @@
         </div>
         <p class="mt-3 text-b3">
           <%= link_to t(".see_all_reverse"), rubygem_reverse_dependencies_path(@rubygem.slug),
-                class: "text-orange-700 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300" %>
+                class: "text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
         </p>
       </section>
     <% end %>

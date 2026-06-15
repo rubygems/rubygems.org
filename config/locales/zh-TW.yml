@@ -304,6 +304,7 @@ zh-TW:
   breadcrumbs:
     home: 首頁
     latest_version:
+    versions:
     dashboard: 控制台
     settings: 設定
     org_name: 組織：%{name}

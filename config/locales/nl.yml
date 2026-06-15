@@ -307,6 +307,7 @@ nl:
   breadcrumbs:
     home: Startpagina
     latest_version:
+    versions:
     dashboard: Dashboard
     settings: Instellingen
     org_name: 'Organisatie: %{name}'

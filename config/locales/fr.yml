@@ -313,6 +313,7 @@ fr:
   breadcrumbs:
     home: Accueil
     latest_version:
+    versions:
     dashboard: Dashboard
     settings: Paramètres
     org_name: 'Org: %{name}'
