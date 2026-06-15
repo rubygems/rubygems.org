@@ -23,7 +23,7 @@ gem "flipper-active_record", "~> 1.4"
 gem "flipper-ui", "~> 1.4"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.6.1", require: false
+gem "honeybadger", "~> 6.7.0", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -34,7 +34,7 @@ gem "omniauth-rails_csrf_protection", "~> 2.0"
 gem "openid_connect", "~> 2.5"
 gem "pg", "~> 1.6"
 gem "public_suffix", "~> 7.0"
-gem "puma", "~> 6.6"
+gem "puma", "~> 8.0"
 gem "puma-plugin-statsd", "~> 2.8"
 gem "rack", "~> 3.2"
 gem "rackup", "~> 2.3"
@@ -73,7 +73,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.13"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.11.0"
+gem "view_component", "~> 4.12.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.8"
@@ -128,7 +128,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "rails-erd", "~> 1.7"
+  gem "rails-erd", "~> 2.0"
   gem "listen", "~> 3.10"
   gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 3.0"

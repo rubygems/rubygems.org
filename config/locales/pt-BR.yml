@@ -778,6 +778,9 @@ pt-BR:
     request_denied:
     show:
       title: Perfil de %{username}
+      gems:
+      no_gems:
+      edit_profile:
     security_events:
       title:
       description_html:

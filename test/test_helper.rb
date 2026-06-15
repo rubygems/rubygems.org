@@ -28,6 +28,7 @@ require "shoulda/context"
 require "shoulda/matchers"
 require "helpers/admin_helpers"
 require "helpers/api_policy_helpers"
+require "helpers/datadog_helpers"
 require "helpers/gem_helpers"
 require "helpers/gem_tar_builder"
 require "helpers/gemspec_yaml_template_helpers"
@@ -84,6 +85,7 @@ class ActiveSupport::TestCase
   include EmailHelpers
   include PasswordHelpers
   include FeatureFlagHelpers
+  include DatadogHelpers
 
   cattr_accessor :parallel_worker_number
 

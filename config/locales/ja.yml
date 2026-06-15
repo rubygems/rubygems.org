@@ -780,6 +780,9 @@ ja:
     request_denied: このリクエストは拒否されました。パスワードを検証できませんでした。
     show:
       title: "%{username} のプロフィール"
+      gems:
+      no_gems:
+      edit_profile:
     security_events:
       title: セキュリティ事象
       description_html: |-

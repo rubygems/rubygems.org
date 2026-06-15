@@ -9,13 +9,15 @@ class ProfilesController < ApplicationController
   before_action :verify_password, only: %i[update destroy]
   before_action :disable_cache, only: :edit
 
-  # edit + update share the edit template (update re-renders :edit on validation failure)
-  layout "subject", only: %i[edit update]
+  # show uses the subject layout (user as the subject); edit + update share the edit
+  # template (update re-renders :edit on validation failure)
+  layout "subject", only: %i[show edit update]
 
   def show
     @user = User.confirmed.find_by_slug!(params[:id])
     return render_not_found unless @user
-    @rubygems = @user.rubygems_downloaded.includes(%i[latest_version gem_download]).strict_loading
+    @rubygems = @user.rubygems_downloaded.includes(%i[most_recent_version gem_download]).strict_loading
+    add_breadcrumb @user.display_handle
   end
 
   def me
