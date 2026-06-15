@@ -964,6 +964,7 @@ de:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: für <em>%{query}</em>
       month_update:
       week_update:

@@ -989,6 +989,7 @@ es:
       updated: Actualizada
       yanked: Borrada
     show:
+      title:
       subtitle_html: para <em>%{query}</em>
       month_update: Actualizadas en el último mes (%{count})
       week_update: Actualizadas en la última semana (%{count})
