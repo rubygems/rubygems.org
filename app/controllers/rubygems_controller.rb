@@ -5,12 +5,12 @@ class RubygemsController < ApplicationController
 
   before_action :show_reserved_gem, only: %i[show security_events]
   before_action :find_rubygem, only: %i[show security_events]
-  before_action :latest_version, only: %i[show]
-  before_action :find_versioned_links, only: %i[show]
+  before_action :latest_version, only: %i[show security_events]
+  before_action :find_versioned_links, only: %i[show security_events]
   before_action :set_page, only: :index
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
 
-  layout "subject", only: :show
+  layout "subject", only: %i[show security_events]
 
   def index
     respond_to do |format|
@@ -44,7 +44,8 @@ class RubygemsController < ApplicationController
   def security_events
     authorize @rubygem, :show_events?
     @security_events = @rubygem.events.order(id: :desc).page(params[:page]).per(50)
-    render Rubygems::SecurityEventsView.new(rubygem: @rubygem, security_events: @security_events)
+    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
+    add_breadcrumb t(".title")
   end
 
   private
