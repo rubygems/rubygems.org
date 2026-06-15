@@ -16,6 +16,7 @@ class Avo::Resources::Rubygem < Avo::BaseResource
     action Avo::Actions::UploadInfoFile
     action Avo::Actions::UploadNamesFile
     action Avo::Actions::UploadVersionsFile
+    action Avo::Actions::UpdateVersionsList
   end
 
   class IndexedFilter < Avo::Filters::ScopeBooleanFilter; end
