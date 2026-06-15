@@ -11,12 +11,14 @@ class RubygemsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
 
   layout "subject", only: %i[show security_events]
+  layout "hammy", only: :index
 
   def index
     respond_to do |format|
       format.html do
         @letter = Rubygem.letterize(gem_params[:letter])
         @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
+        add_breadcrumb t(".title")
       end
       format.atom do
         @versions = Version.published.limit(Gemcutter::DEFAULT_PAGINATION)
