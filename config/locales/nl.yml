@@ -934,6 +934,7 @@ nl:
     index:
       title:
       all_time_most_downloaded:
+      clickgems:
       total_gems:
       total_users:
   users:
