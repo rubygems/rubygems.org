@@ -36,7 +36,7 @@ class Avo::Actions::UpdateVersionsList < Avo::Actions::ApplicationAction
 
       succeed("Versions list update job scheduled")
 
-      nil
+      Version.last
     end
 
     private
