@@ -842,6 +842,10 @@ es:
   rubygems:
     aside:
       downloads_for_this_version: Para esta versión
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Versión publicada
       required_ruby_version: Versión de Ruby requerida
       required_rubygems_version: Versión de Rubygems requerida
@@ -943,9 +947,14 @@ es:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: Dependencias inversas para %{name}
       subtitle: La última versión de las siguientes gemas requieren %{name}
       no_reverse_dependencies: Esta gema no tiene dependencias inversas
+      version_header:
     search:
       search_reverse_dependencies_html: Buscar dependencias inversas&hellip;
   searches:

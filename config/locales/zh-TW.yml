@@ -745,6 +745,10 @@ zh-TW:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: 版本发布
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
@@ -831,9 +835,14 @@ zh-TW:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name} 的反向依賴"
       subtitle: 下列 Gems 的最新版本需要 %{name}
       no_reverse_dependencies: 此 Gem 沒有反向依賴。
+      version_header:
     search:
       search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
   searches:

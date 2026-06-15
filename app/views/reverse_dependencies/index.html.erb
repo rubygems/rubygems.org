@@ -1,28 +1,70 @@
 <% @title = t('.title', name: @rubygem.name) %>
-<% @subtitle = t('.subtitle', name: @rubygem.name) %>
+<% @title_url = rubygem_path(@rubygem.slug) %>
+<% @subtitle = @latest_version&.slug %>
 
-<div class="l-overflow">
-  <div class="l-colspan--l colspan--l--has-border">
-    <% if @reverse_dependencies.present? %>
-      <%= render CardComponent.new do |c| %>
-        <%= c.head do %>
-          <%= c.title t('.title', name: @rubygem.name), icon: "gems" %>
-        <% end %>
+<% add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug) %>
+<% add_breadcrumb @title %>
 
-        <div class="mb-6">
-          <%= render "search", rubygem: @rubygem %>
-        </div>
+<% content_for :subject do %>
+  <%= render "rubygems/aside" %>
+<% end %>
 
-        <% @reverse_dependencies.each do |rubygem| %>
-          <%= render RubygemComponent.new(rubygem:) %>
-        <% end %>
+<% th_class = "py-2 pr-4 text-b4 font-semibold text-neutral-900 dark:text-white" %>
+<% td_class = "py-3 pr-4 align-top" %>
+<% chip_class = "inline-block px-2 py-0.5 font-mono text-c4 rounded-sm bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white" %>
 
-        <%= plain_paginate @reverse_dependencies %>
-      <% end %>
-    <% else %>
-      <p class="text-b2 text-neutral-600 dark:text-neutral-400"><%= t(".no_reverse_dependencies") %></p>
-    <% end %>
+<div class="flex flex-col gap-6 pb-16 lg:pt-10 text-neutral-800 dark:text-neutral-200">
+  <div>
+    <h2 class="text-h4 font-semibold text-neutral-900 dark:text-white"><%= t(".title", name: @rubygem.name) %></h2>
+    <p class="text-b3 text-neutral-700 dark:text-neutral-400 mt-1"><%= t(".subtitle", name: @rubygem.name) %></p>
   </div>
 
-  <%= render 'rubygems/aside' %>
+  <% if @reverse_dependencies.present? %>
+    <%= render "search", rubygem: @rubygem %>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="sr-only sm:not-sr-only">
+          <tr class="border-b-2 border-neutral-300 dark:border-neutral-700">
+            <th scope="col" class="<%= th_class %> w-1/3"><%= t(".gem_header") %></th>
+            <th scope="col" class="<%= th_class %> text-right !pr-0 sm:text-left sm:!pr-4"><%= t(".version_header") %></th>
+            <th scope="col" class="<%= th_class %> hidden sm:table-cell"><%= t(".date_header") %></th>
+            <th scope="col" class="<%= th_class %> text-right !pr-0 hidden sm:table-cell"><%= t(".downloads_header") %></th>
+          </tr>
+        </thead>
+        <tbody class="border-t sm:border-t-0 divide-y border-neutral-200 divide-neutral-200 dark:border-neutral-800 dark:divide-neutral-800">
+          <% @reverse_dependencies.each do |reverse_dependency| %>
+            <% version = reverse_dependency.most_recent_version %>
+            <tr>
+              <td class="<%= td_class %> text-b3">
+                <%= link_to rubygem_path(reverse_dependency.slug),
+                      class: "text-neutral-900 dark:text-white hover:text-orange-700 dark:hover:text-orange-400" do %>
+                  <%= reverse_dependency.name %>
+                  <span class="sm:hidden block mt-1 text-b4 text-neutral-700 dark:text-neutral-400">
+                    <%= t(".downloads_count", count: number_to_human(reverse_dependency.downloads, precision: 3, significant: true)) %>
+                  </span>
+                <% end %>
+              </td>
+              <td class="<%= td_class %> text-right !pr-0 sm:text-left sm:!pr-4">
+                <% if version %>
+                  <code class="<%= chip_class %>"><%= version.number %></code>
+                  <p class="sm:hidden mt-1 text-b4 text-neutral-700 dark:text-neutral-400"><%= nice_date_for(version.authored_at) %></p>
+                <% end %>
+              </td>
+              <td class="<%= td_class %> text-b4 text-neutral-700 dark:text-neutral-400 text-nowrap hidden sm:table-cell">
+                <%= nice_date_for(version.authored_at) if version %>
+              </td>
+              <td class="<%= td_class %> !pr-0 text-b4 text-neutral-700 dark:text-neutral-400 text-nowrap text-right hidden sm:table-cell">
+                <%= number_to_human(reverse_dependency.downloads, precision: 3, significant: true) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= plain_paginate @reverse_dependencies %>
+  <% else %>
+    <p class="text-b2 text-neutral-600 dark:text-neutral-400"><%= t(".no_reverse_dependencies") %></p>
+  <% end %>
 </div>

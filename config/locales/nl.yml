@@ -744,6 +744,10 @@ nl:
   rubygems:
     aside:
       downloads_for_this_version: Voor deze versie
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Versie vrijgegeven
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
@@ -830,9 +834,14 @@ nl:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title:
       subtitle:
       no_reverse_dependencies:
+      version_header:
     search:
       search_reverse_dependencies_html:
   searches:
