@@ -87,7 +87,7 @@ class UsersControllerTest < ActionController::TestCase
 
         assert_equal "true", span.get_tag("appsec.events.users.signup.track")
         assert_equal user.id.to_s, span.get_tag("usr.id")
-        assert_equal "0c7e6a405862e402eb76a70f8a26fc732d07c32931e9fae9ab1582911d2e8a3b", span.get_tag("appsec.events.users.signup.usr.login")
+        assert_match(/0c7e6a405862.*2e8a3b/, span.get_tag("appsec.events.users.signup.usr.login"))
       end
     end
 

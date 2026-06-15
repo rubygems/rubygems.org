@@ -116,8 +116,11 @@ class SessionsController < Clearance::SessionsController
         rescue Encoding::UndefinedConversionError
           nil
         end
-        login_id = attempted_user&.id&.to_s || Digest::SHA256.hexdigest(who.to_s)
-        Datadog::Kit::AppSec::Events::V2.track_user_login_failure(login_id, attempted_user.present?)
+        login = attempted_user ? (attempted_user.handle || attempted_user.email) : who.to_s
+        metadata = attempted_user ? { "usr.id": attempted_user.id.to_s } : {}
+        Datadog::Kit::AppSec::Events::V2.track_user_login_failure(
+          Digest::SHA256.hexdigest(login), attempted_user.present?, metadata
+        )
         login_failure(status.failure_message)
       end
     end

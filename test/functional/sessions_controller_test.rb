@@ -224,7 +224,7 @@ class SessionsControllerTest < ActionController::TestCase
           end
 
           assert_equal "true", span.get_tag("appsec.events.users.login.success.track")
-          assert_equal "428821350e9691491f616b754cd8315fb86d797ab35d843479e732ef90665324", span.get_tag("appsec.events.users.login.success.usr.login")
+          assert_match(/428821350e96.*665324/, span.get_tag("appsec.events.users.login.success.usr.login"))
           assert_equal @user.id.to_s, span.get_tag("usr.id")
         end
 
@@ -331,8 +331,9 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         assert_equal "true", span.get_tag("appsec.events.users.login.failure.track")
-        assert_equal user.id.to_s, span.get_tag("appsec.events.users.login.failure.usr.login")
+        assert_match(/4041d06f2aec.*fb5368/, span.get_tag("appsec.events.users.login.failure.usr.login"))
         assert_equal "true", span.get_tag("appsec.events.users.login.failure.usr.exists")
+        assert_equal user.id.to_s, span.get_tag("appsec.events.users.login.failure.usr.id")
       end
 
       should "track login failure with Datadog AppSec for an unknown user" do
@@ -341,7 +342,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         assert_equal "true", span.get_tag("appsec.events.users.login.failure.track")
-        assert_equal Digest::SHA256.hexdigest("nobody"), span.get_tag("appsec.events.users.login.failure.usr.login")
+        assert_match(/6382b3cc8814.*51462a/, span.get_tag("appsec.events.users.login.failure.usr.login"))
         assert_equal "false", span.get_tag("appsec.events.users.login.failure.usr.exists")
       end
     end

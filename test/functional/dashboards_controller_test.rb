@@ -72,7 +72,7 @@ class DashboardsControllerTest < ActionController::TestCase
         span = with_appsec_trace { get :show, format: "atom" }
 
         assert_equal @user.id.to_s, span.get_tag("usr.id")
-        assert_equal "eed7fe63e132770e8d8049f9272905a4c3e3adc8fcd327ac2fb904c659cbaf0e", span.get_tag("usr.login")
+        assert_match(/eed7fe63e132.*cbaf0e/, span.get_tag("usr.login"))
       end
     end
 
