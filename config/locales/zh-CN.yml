@@ -929,6 +929,7 @@ zh-CN:
     index:
       title: 统计数据
       all_time_most_downloaded: 至今最多下载
+      clickgems:
       total_gems: Gem 总数
       total_users: 用户总数
   users:

@@ -1,36 +1,58 @@
-<% @title = t('.title') %>
+<% @title = t(".title") %>
 
-<div class="stats">
-  <h2 class="stat" data-icon="⟡">
-    <%= t('stats.index.total_gems') %>
-    <span class="stat__count"><%= number_with_delimiter @number_of_gems %></span>
-  </h2>
-  <h2 class="stat" data-icon="☺">
-    <%= t('stats.index.total_users') %>
-    <span class="stat__count"><%= number_with_delimiter @number_of_users %></span>
-  </h2>
-  <h2 class="stat" data-icon="⌄">
-    <%= t('total_downloads') %>
-    <span class="stat__count"><%= number_with_delimiter @number_of_downloads %></span>
-  </h2>
+<% card_class = "flex flex-col gap-2 px-6 py-8 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black" %>
+<% stat_label_class = "flex items-center gap-2 text-b4 font-bold uppercase tracking-wide text-neutral-600 dark:text-neutral-400" %>
+<% stat_count_class = "text-h3 font-semibold text-neutral-900 dark:text-white" %>
+
+<div class="flex flex-wrap items-center justify-between gap-4 mb-10">
+  <h1 class="text-h2"><%= t(".title") %></h1>
+  <%= render ButtonComponent.new(
+    t(".clickgems"),
+    "https://clickgems.clickhouse.com/",
+    type: :link,
+    style: :outline,
+    size: :small,
+    target: "_blank",
+    rel: "noopener",
+  ) %>
 </div>
 
-<h2 class="stats__graph__heading">
-  <%= t('stats.index.all_time_most_downloaded') %>
-</h2>
-
-<header class="gems__header">
-  <p class="gems__meter"><%= page_entries_info @most_downloaded, entry_name: 'gem' %></p>
-</header>
-
-<% @most_downloaded.each do |gem| %>
-  <div class="stats__graph__gem">
-    <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem.slug) %></h3>
-    <div class="stats__graph__gem__meter-wrap">
-      <div class="stats__graph__gem__meter t-item--hidden" data-controller="stats" data-stats-width-value="<%= stats_graph_meter(gem, @most_downloaded_count) %>">
-        <span class="stats__graph__gem__count"><%= number_to_delimited gem.downloads %></span>
-      </div>
-    </div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+  <div class="<%= card_class %>">
+    <span class="<%= stat_label_class %>"><%= icon_tag("gems", size: 5, class: "fill-orange") %><%= t("stats.index.total_gems") %></span>
+    <span class="<%= stat_count_class %>"><%= number_with_delimiter @number_of_gems %></span>
   </div>
+  <div class="<%= card_class %>">
+    <span class="<%= stat_label_class %>"><%= icon_tag("account-box", size: 5, class: "fill-orange") %><%= t("stats.index.total_users") %></span>
+    <span class="<%= stat_count_class %>"><%= number_with_delimiter @number_of_users %></span>
+  </div>
+  <div class="<%= card_class %>">
+    <span class="<%= stat_label_class %>"><%= icon_tag("arrow-circle-down", size: 5, class: "fill-orange") %><%= t("total_downloads") %></span>
+    <span class="<%= stat_count_class %>"><%= number_with_delimiter @number_of_downloads %></span>
+  </div>
+</div>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".all_time_most_downloaded"), icon: "history" %>
+  <% end %>
+
+  <p class="text-xs text-neutral-500 uppercase tracking-wide mb-6"><%= page_entries_info @most_downloaded, entry_name: "gem" %></p>
+
+  <div class="flex flex-col gap-4">
+    <% @most_downloaded.each do |gem| %>
+      <div>
+        <h3 class="text-b2 mb-1"><%= link_to gem.name, rubygem_path(gem.slug), class: "text-orange-500 hover:text-orange-600" %></h3>
+        <div class="w-full bg-neutral-100 dark:bg-neutral-800 rounded overflow-hidden">
+          <div class="stats__graph__gem__meter t-item--hidden bg-orange-300 dark:bg-orange-800 h-8 rounded flex items-center justify-end px-3"
+               data-controller="stats"
+               data-stats-width-value="<%= stats_graph_meter(gem, @most_downloaded_count) %>">
+            <span class="text-b4 font-semibold text-orange-900 dark:text-orange-100 whitespace-nowrap"><%= number_with_delimiter gem.downloads %></span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= paginate @most_downloaded, theme: "hammy" %>
 <% end %>
-<%= paginate @most_downloaded %>
