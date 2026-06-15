@@ -844,6 +844,7 @@ nl:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: voor <em>%{query}</em>
       month_update:
       week_update:

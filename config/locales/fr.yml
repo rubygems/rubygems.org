@@ -887,6 +887,7 @@ fr:
       updated: Mis à jour
       yanked:
     show:
+      title:
       subtitle_html: pour <em>%{query}</em>
       month_update:
       week_update:

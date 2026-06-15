@@ -1,26 +1,28 @@
-<% content_for :title do %>
-  <h1 class="t-display page__heading page__heading--small">
-    <%= t('.title', name: @rubygem.name) %>
-    <i class="page__subheading page__subheading--block"><%= t(".subtitle", name: @rubygem.name) %></i>
-  </h1>
-<% end %>
+<% @title = t('.title', name: @rubygem.name) %>
+<% @subtitle = t('.subtitle', name: @rubygem.name) %>
 
 <div class="l-overflow">
-  <% if @reverse_dependencies.present? %>
-    <div class="l-colspan--l colspan--l--has-border">
-      <header class="push push--bottom-s">
-        <%= render "search", rubygem: @rubygem %>
-      </header>
+  <div class="l-colspan--l colspan--l--has-border">
+    <% if @reverse_dependencies.present? %>
+      <%= render CardComponent.new do |c| %>
+        <%= c.head do %>
+          <%= c.title t('.title', name: @rubygem.name), icon: "gems" %>
+        <% end %>
 
-      <div class="reverse__dependencies">
-        <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
-      </div>
-      <%= plain_paginate @reverse_dependencies %>
-    </div>
-  <% else %>
-    <div class="gem__desc">
-      <p><%= t(".no_reverse_dependencies") %></p>
-    </div>
-  <% end %>
+        <div class="mb-6">
+          <%= render "search", rubygem: @rubygem %>
+        </div>
+
+        <% @reverse_dependencies.each do |rubygem| %>
+          <%= render RubygemComponent.new(rubygem:) %>
+        <% end %>
+
+        <%= plain_paginate @reverse_dependencies %>
+      <% end %>
+    <% else %>
+      <p class="text-b2 text-neutral-600 dark:text-neutral-400"><%= t(".no_reverse_dependencies") %></p>
+    <% end %>
+  </div>
+
   <%= render 'rubygems/aside' %>
 </div>

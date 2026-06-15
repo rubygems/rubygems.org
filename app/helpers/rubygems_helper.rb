@@ -19,9 +19,13 @@ module RubygemsHelper
     link_to(t("rubygems.aside.links.#{id}"), url, rel: "nofollow", class: classes, id: id) if url.present?
   end
 
+  NAV_LETTER_CLASS = "inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold " \
+                     "text-neutral-700 dark:text-neutral-300 " \
+                     "hover:bg-orange-500 hover:text-white dark:hover:text-white transition-colors"
+
   def link_to_directory
     ("A".."Z").map do |letter|
-      link_to(letter, rubygems_path(letter: letter), class: "gems__nav-link")
+      link_to(letter, rubygems_path(letter: letter), class: NAV_LETTER_CLASS)
     end.join("\n").html_safe
   end
 
