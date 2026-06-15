@@ -309,6 +309,7 @@ en:
   breadcrumbs:
     home: Home
     latest_version: "%{version} (latest)"
+    versions: Versions
     dashboard: Dashboard
     settings: Settings
     org_name: "Org: %{name}"

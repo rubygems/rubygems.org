@@ -32,7 +32,7 @@
       <%= render CopyFieldComponent.new(value: @latest_version.to_install, name: "install_text", label: t(".install")) %>
     </div>
 
-    <div id="markup" class="gem__desc text-b2 leading-relaxed break-words [&_a]:text-orange-700 dark:[&_a]:text-orange-400 [&_a:hover]:underline [&_p]:mb-3 [&_pre]:font-mono [&_pre]:text-c4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-c4 [&_h1]:text-h4 [&_h1]:font-semibold [&_h2]:text-b1 [&_h2]:font-semibold [&_h3]:text-b2 [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6">
+    <div id="markup" class="gem__desc text-b2 leading-relaxed break-words [&_a]:text-orange-500 dark:[&_a]:text-orange-400 [&_a:hover]:underline [&_p]:mb-3 [&_pre]:font-mono [&_pre]:text-c4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-c4 [&_h1]:text-h4 [&_h1]:font-semibold [&_h2]:text-b1 [&_h2]:font-semibold [&_h3]:text-b2 [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6">
       <%= simple_markup(@latest_version.info) %>
     </div>
 
@@ -82,7 +82,7 @@
       </ol>
       <% if show_all_versions_link?(@rubygem) %>
         <%= link_to t(".show_all_versions", count: @rubygem.versions.count), rubygem_versions_url(@rubygem.slug),
-              class: "inline-block mt-2 text-b3 text-orange-700 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300" %>
+              class: "inline-block mt-2 text-b3 text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
       <% end %>
     </div>
   <% end %>

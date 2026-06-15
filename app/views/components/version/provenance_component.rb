@@ -5,7 +5,7 @@ class Version::ProvenanceComponent < ApplicationComponent
 
   prop :attestation
 
-  LINK = "text-orange-700 underline hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300 break-all"
+  LINK = "text-orange-500 underline hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 break-all"
 
   def view_template
     display_data = @attestation.display_data

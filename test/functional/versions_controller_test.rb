@@ -75,7 +75,7 @@ class VersionsControllerTest < ActionController::TestCase
       end
 
       should "use the singular version" do
-        assert_select ".t-list__heading", text: /1 version\b/, count: 1
+        assert_select "[data-testid='versions-count']", text: /1 version\b/, count: 1
       end
     end
 
@@ -88,7 +88,7 @@ class VersionsControllerTest < ActionController::TestCase
       end
 
       should "use the plural version" do
-        assert_select ".t-list__heading", text: /2 versions\b/, count: 1
+        assert_select "[data-testid='versions-count']", text: /2 versions\b/, count: 1
       end
     end
   end
@@ -117,7 +117,7 @@ class VersionsControllerTest < ActionController::TestCase
 
       assert_select ".gem__version__date sup", text: "*", count: 1
 
-      assert_select ".t-list__heading", text: /1 version since January 01, 2000/, count: 1
+      assert_select "[data-testid='versions-count']", text: /1 version since January 01, 2000/, count: 1
     end
   end
 
@@ -135,17 +135,19 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
 
         assert_response :success
-        assert page.has_content?("1.1.2")
-        refute page.has_content?("1.1.1")
-        assert_select ".t-list__heading", text: /2 versions since January 01, 2010/, count: 1
+        page_versions = css_select(".gem__versions a").map(&:text)
+        assert_includes page_versions, "1.1.2"
+        refute_includes page_versions, "1.1.1"
+        assert_select "[data-testid='versions-count']", text: /2 versions since January 01, 2010/, count: 1
 
         # second page only includes the version at position 1
         get :index, params: { rubygem_id: @rubygem.name, page: 2 }
 
         assert_response :success
-        refute page.has_content?("1.1.2")
-        assert page.has_content?("1.1.1")
-        assert_select ".t-list__heading", text: /2 versions since January 01, 2010/, count: 1
+        page_versions = css_select(".gem__versions a").map(&:text)
+        refute_includes page_versions, "1.1.2"
+        assert_includes page_versions, "1.1.1"
+        assert_select "[data-testid='versions-count']", text: /2 versions since January 01, 2010/, count: 1
       end
     end
   end

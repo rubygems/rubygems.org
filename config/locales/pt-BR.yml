@@ -312,6 +312,7 @@ pt-BR:
   breadcrumbs:
     home: Início
     latest_version:
+    versions:
     dashboard: Painel de Controle
     settings: Configurações da Conta
     org_name: 'Org: %{name}'

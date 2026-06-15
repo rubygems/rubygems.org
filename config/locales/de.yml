@@ -325,6 +325,7 @@ de:
   breadcrumbs:
     home: Startseite
     latest_version:
+    versions:
     dashboard: Dashboard
     settings: Einstellungen
     org_name: 'Organisation: %{name}'
