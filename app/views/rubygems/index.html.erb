@@ -1,9 +1,17 @@
 <% @title = t('.title') %>
 
-<div class="gems__nav-links">
-  <%= link_to_directory %>
-</div>
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t('.title'), icon: "gems" %>
+  <% end %>
 
-<%= render @gems %>
+  <div class="flex flex-wrap gap-1 mb-6 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+    <%= link_to_directory %>
+  </div>
 
-<%= paginate @gems %>
+  <% @gems.each do |rubygem| %>
+    <%= render RubygemComponent.new(rubygem:) %>
+  <% end %>
+
+  <%= paginate @gems %>
+<% end %>

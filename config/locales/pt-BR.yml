@@ -899,6 +899,7 @@ pt-BR:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: para <em>%{query}</em>
       month_update:
       week_update:
