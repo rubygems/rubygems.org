@@ -318,6 +318,7 @@ zh-CN:
   breadcrumbs:
     home: 首页
     latest_version:
+    versions:
     dashboard: 仪表盘
     settings: 设置
     org_name: 组织：%{name}
