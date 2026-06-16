@@ -115,11 +115,14 @@ class VerifyUserEmailDomainsJob < ApplicationJob
   end
 
   def find_unique_domains
-    query = ["SELECT substring(users.email from '@(.*)$') as domain_name FROM users where email_confirmed='true' group by domain_name"]
-
-    sanitized_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
-    result = ActiveRecord::Base.connection.execute(sanitized_sql)
-    result.map(&:values).flatten
+    # The domain part of each confirmed user's email (everything after the @).
+    # substring(text, pattern) is PostgreSQL's POSIX-regex form, equivalent to
+    # substring(text FROM pattern).
+    domain = Arel::Nodes::NamedFunction.new(
+      "substring",
+      [User.arel_table[:email], Arel::Nodes.build_quoted("@(.*)$")]
+    )
+    User.where(email_confirmed: true).distinct.pluck(domain)
   end
 
   # The registrable ("root") domain for an email domain, e.g.
