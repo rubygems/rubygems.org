@@ -384,7 +384,7 @@ GEM
     jmespath (1.6.2)
     job-iteration (1.14.0)
       activejob (>= 7.1)
-    json (2.19.8)
+    json (2.19.9)
     json-jwt (1.17.1)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -744,7 +744,7 @@ GEM
       chunky_png (~> 1.0)
       rqrcode_core (~> 2.0)
     rqrcode_core (2.1.0)
-    rubocop (1.87.0)
+    rubocop (1.88.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -1008,7 +1008,7 @@ DEPENDENCIES
   roadie-rails (~> 3.4)
   rotp (~> 6.2)
   rqrcode (~> 3.2)
-  rubocop (~> 1.87)
+  rubocop (~> 1.88)
   rubocop-capybara (~> 2.23)
   rubocop-factory_bot (~> 2.28)
   rubocop-minitest (~> 0.39)
@@ -1173,7 +1173,7 @@ CHECKSUMS
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.14.0) sha256=f154f978109acc838c0359ecde2fdd4dccc3382f95a22e03a58ac561a3615224
-  json (2.19.8) sha256=6354310fd76ef69b87d5bd1f38b40d730613baf90b6803d2d0a48f618d32dfaa
+  json (2.19.9) sha256=9b9025b7cdddafa38d316eca0b2358488e42d417045c1b90d216a9fefe46b79a
   json-jwt (1.17.1) sha256=5e1ced0f7b206b4c567efee19e6503c1426a819749132926cda579ec013d1f46
   jwt (3.2.0) sha256=5419b1fe37b1da0982bd07051f573a8b8789ab724c2aa7e785e4784a3ed217d7
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
@@ -1314,7 +1314,7 @@ CHECKSUMS
   rouge (4.7.0) sha256=dba5896715c0325c362e895460a6d350803dbf6427454f49a47500f3193ea739
   rqrcode (3.2.0) sha256=64c1494ca6bb67d731330f38b50e3fd09eeab4f5dcd04b608e21218d1d0b9542
   rqrcode_core (2.1.0) sha256=f303b85df89c1b8fc5ee8dc19808c9dc4330e6329b660d99d4a8cbb36ca13051
-  rubocop (1.87.0) sha256=b9d9ddf55116a513f8ef2c7ae660662d8b49301f118d3f0df61865b33a5c188d
+  rubocop (1.88.0) sha256=e420ddf1662d0ef34bc8a2910ac4b396a7ddda0b51a708264405241734b08e0b
   rubocop-ast (1.49.1) sha256=4412f3ee70f6fe4546cc489548e0f6fcf76cafcfa80fa03af67098ffed755035
   rubocop-capybara (2.23.0) sha256=f9ea1ba3a7561ee8e88cf76fc378ce517ce5327155f305ee7b5c2500e5aee357
   rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
