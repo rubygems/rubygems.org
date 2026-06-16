@@ -1,8 +1,6 @@
 <% @title = t("advanced_search") %>
 <% add_breadcrumb @title %>
 
-<h1 class="text-h2 mb-10"><%= t("advanced_search") %></h1>
-
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
     <%= c.title t("advanced_search"), icon: "search" %>
@@ -12,7 +10,7 @@
     <%= form_tag search_url, id: "advanced-search", method: :get do %>
 
       <div class="flex gap-3 mb-8">
-        <%= label_tag :query do %>
+        <%= label_tag :advanced_query do %>
           <span class="sr-only"><%= t("layouts.application.header.search_gem_html") %></span>
         <% end %>
         <%= search_field_tag(
@@ -20,12 +18,15 @@
           params[:query],
           placeholder: t("layouts.application.header.search_gem_html"),
           autofocus: current_page?(root_url),
-          id: "query",
+          id: "advanced_query",
           class: "flex-1 text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500",
           data: { search_target: "query" }
         ) %>
-        <%= submit_tag "⌕", id: "advanced_search_submit", name: nil,
-          class: "px-4 rounded-lg bg-orange-500 text-white text-xl hover:bg-orange-600 active:bg-orange-700 transition-colors cursor-pointer" %>
+        <%= button_tag type: :submit, id: "advanced_search_submit", name: nil,
+          aria: { label: t("advanced_search") },
+          class: "inline-flex items-center px-4 rounded-lg bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700 transition-colors cursor-pointer" do %>
+          <%= icon_tag "search", class: "h-6 w-6" %>
+        <% end %>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
