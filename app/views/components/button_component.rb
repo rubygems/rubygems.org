@@ -22,7 +22,8 @@ class ButtonComponent < ApplicationComponent
           "rounded inline-flex border-box " \
           "justify-content-center items-center hover:shadow-md " \
           "#{DISABLED} disabled:cursor-default disabled:hover:shadow-none " \
-          "transition duration-200 ease-in-out focus:outline-none " \
+          "transition duration-200 ease-in-out " \
+          "focus:outline-2 focus:outline-offset-2 " \
           "#{button_color(color, style)} #{button_size(size)} #{options.delete(:class)}"
 
     if type == :link
@@ -41,7 +42,7 @@ class ButtonComponent < ApplicationComponent
     color = color.to_sym
     color = :orange if color == :primary
     color = :hammy if color == :secondary
-    STYLES[style][color]
+    "#{STYLES[style][color]} #{FOCUS_OUTLINE_COLOR[color]}"
   end
 
   def button_size(size)
@@ -55,6 +56,17 @@ class ButtonComponent < ApplicationComponent
 
   DISABLED = "disabled:bg-neutral-200 disabled:border-neutral-200 disabled:text-neutral-600 " \
              "dark:disabled:bg-neutral-800 dark:disabled:border-neutral-800 dark:disabled:text-neutral-600"
+
+  # Focus outline color matches the button's color (used with focus:outline-2 focus:outline-offset-2)
+  FOCUS_OUTLINE_COLOR = {
+    red:     "focus:outline-red-500",
+    orange:  "focus:outline-orange-500",
+    hammy:   "focus:outline-orange-800 dark:focus:outline-orange-200",
+    yellow:  "focus:outline-yellow-500",
+    green:   "focus:outline-green-500",
+    blue:    "focus:outline-blue-500",
+    neutral: "focus:outline-neutral-700 dark:focus:outline-white"
+  }.freeze
 
   FILL_BUTTON_COLOR = {
     red:     "text-white bg-red-500 hover:bg-red-600 active:bg-red-600 " \
