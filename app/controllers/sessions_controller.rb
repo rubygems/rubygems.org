@@ -130,7 +130,7 @@ class SessionsController < Clearance::SessionsController
 
   def login_failure(message)
     StatsD.increment "login.failure"
-    flash.now.notice = message
+    flash.now.alert = message
     webauthn_new_setup
     render "sessions/new", status: :unauthorized
   end
