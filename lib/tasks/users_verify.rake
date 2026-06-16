@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 DAOMINR_STATUS_API = "https://api.domainr.com/v2/status"
-FASTLY_DOMAIN_RESEARCH_API = "https://api.fastly.com/domain-management/v1/tools/status"
 AVAILABLE_STATUS = %w[inactive parked expiring deleting].freeze
 ZONEDB_URL = "https://raw.githubusercontent.com/zonedb/zonedb/main/zones.txt"
 
@@ -52,27 +51,6 @@ namespace :users do
     json_body = JSON.parse(body)
     domain    = json_body.dig("status", 0, "domain")
     status    = json_body.dig("status", 0, "status")
-
-    status&.split&.each do |item|
-      next unless AVAILABLE_STATUS.include?(item) && no_mx_record?(email_domain, status)
-
-      send_to_slack "domain: #{domain} is available for purchase with status: #{item}"
-      return true
-    end
-    false
-  end
-
-  def domain_available_fastly?(body, email_domain)
-    json_body = JSON.parse(body)
-    errors    = json_body["errors"]
-
-    if errors
-      send_to_slack "Fastly Domain Research API error for domain: #{email_domain} errors: #{errors}"
-      return false
-    end
-
-    domain = json_body["domain"]
-    status = json_body["status"]
 
     status&.split&.each do |item|
       next unless AVAILABLE_STATUS.include?(item) && no_mx_record?(email_domain, status)
@@ -160,45 +138,6 @@ available_domains: #{domains}
             available_domains << root_domain if available
           else
             msg = "API request for #{root_domain} failed with status: #{response.code} body: #{response.body}"
-            send_to_slack msg
-          end
-        end
-      end
-    rescue Errno::ECONNREFUSED, Net::ReadTimeout => e
-      raise if (retries += 1) > 3
-
-      Rails.logger.info "Timeout (#{e}), retrying in #{retries * 10} seconds"
-      sleep(retries * 10)
-      retry
-    end
-
-    block_users(available_domains)
-  end
-
-  desc "Block users who have expired domain in their email (Fastly Domain Research API)"
-  task verify_fastly: :environment do
-    uri               = URI.parse(FASTLY_DOMAIN_RESEARCH_API)
-    retries           = 0
-    available_domains = []
-
-    begin
-      Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-        find_unique_domains.each do |domain|
-          root_domain = find_root_domain(domain)
-
-          uri.query = URI.encode_www_form(domain: root_domain)
-          Rails.logger.info "checking domain: #{domain} root_domain: #{root_domain}"
-
-          request = Net::HTTP::Get.new uri.request_uri
-          request["Fastly-Key"] = ENV["FASTLY_API_KEY"]
-          response = http.request request
-
-          if response.is_a? Net::HTTPSuccess
-            Rails.logger.info response.body
-            available = domain_available_fastly?(response.body, domain)
-            available_domains << root_domain if available
-          else
-            msg = "Fastly Domain Research API request for #{root_domain} failed with status: #{response.code} body: #{response.body}"
             send_to_slack msg
           end
         end
