@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@12fd324f1d0b43274fdc8130f6980590a667c455 # v1.312.0
+      - uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af # v1.313.0
         with:
           bundler-cache: true
       - name: Rubocop
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@12fd324f1d0b43274fdc8130f6980590a667c455 # v1.312.0
+      - uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af # v1.313.0
         with:
           bundler-cache: true
       - name: Herb Analyze
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@12fd324f1d0b43274fdc8130f6980590a667c455 # v1.312.0
+      - uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af # v1.313.0
         with:
           bundler-cache: true
       - name: Brakeman
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@12fd324f1d0b43274fdc8130f6980590a667c455 # v1.312.0
+      - uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af # v1.313.0
         with:
           bundler-cache: true
       - name: Importmap Verify
@@ -83,7 +83,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@12fd324f1d0b43274fdc8130f6980590a667c455 # v1.312.0
+      - uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af # v1.313.0
         with:
           bundler-cache: true
       - name: krane render
