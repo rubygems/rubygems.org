@@ -337,6 +337,25 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_not_nil Audit.last
   end
 
+  test "update versions list" do
+    admin_user = create(:admin_github_user, :is_admin)
+    avo_sign_in_as admin_user
+
+    visit avo.resources_rubygems_path
+
+    create(:version)
+
+    click_button "Actions"
+    click_on "Update Versions List"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 2, only: UpdateVersionsListJob do
+      click_button "Update"
+
+      page.assert_text "Versions list update job scheduled"
+    end
+  end
+
   test "upload names file" do
     admin_user = create(:admin_github_user, :is_admin)
     avo_sign_in_as admin_user

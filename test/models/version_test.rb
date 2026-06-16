@@ -565,7 +565,7 @@ class VersionTest < ActiveSupport::TestCase
         patched_version = build(:version, number: "1.0.3")
         name = patched_version.rubygem.name
         actual = patched_version.to_bundler
-        expected = %(gem '#{name}', '~> 1.0', '>= 1.0.3')
+        expected = %(gem '#{name}', '>= 1.0.3')
 
         assert_equal expected, actual
       end
@@ -574,7 +574,7 @@ class VersionTest < ActiveSupport::TestCase
         no_bugfix = build(:version, number: "1.0")
         name = no_bugfix.rubygem.name
         actual = no_bugfix.to_bundler
-        expected = %(gem '#{name}', '~> 1.0')
+        expected = %(gem '#{name}', '>= 1.0')
 
         assert_equal expected, actual
       end
@@ -583,7 +583,7 @@ class VersionTest < ActiveSupport::TestCase
         long_version = build(:version, number: "1.0.0.0")
         name = long_version.rubygem.name
         actual = long_version.to_bundler
-        expected = %(gem '#{name}', '~> 1.0')
+        expected = %(gem '#{name}', '>= 1.0')
 
         assert_equal expected, actual
       end
@@ -592,7 +592,7 @@ class VersionTest < ActiveSupport::TestCase
         long_version = build(:version, number: "1.0.3.0")
         name = long_version.rubygem.name
         actual = long_version.to_bundler
-        expected = %(gem '#{name}', '~> 1.0', '>= 1.0.3.0')
+        expected = %(gem '#{name}', '>= 1.0.3.0')
 
         assert_equal expected, actual
       end
@@ -601,7 +601,7 @@ class VersionTest < ActiveSupport::TestCase
         early_version = build(:version, number: "0.1.2")
         name = early_version.rubygem.name
         actual = early_version.to_bundler
-        expected = %(gem '#{name}', '~> 0.1.2')
+        expected = %(gem '#{name}', '>= 0.1.2')
 
         assert_equal expected, actual
       end
@@ -610,7 +610,7 @@ class VersionTest < ActiveSupport::TestCase
         prerelease_version = create(:version, number: "4.0.0.pre")
         name = prerelease_version.rubygem.name
         actual = prerelease_version.to_bundler
-        expected = %(gem '#{name}', '~> 4.0.0.pre')
+        expected = %(gem '#{name}', '>= 4.0.0.pre')
 
         assert_equal expected, actual
       end

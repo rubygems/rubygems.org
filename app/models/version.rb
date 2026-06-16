@@ -387,16 +387,16 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def to_bundler(locked_version: false)
     if prerelease?
-      modifier = locked_version ? "" : "~> "
+      modifier = locked_version ? "" : ">= "
       %(gem '#{rubygem.name}', '#{modifier}#{number}')
     elsif number[0] == "0"
-      %(gem '#{rubygem.name}', '~> #{number}')
+      %(gem '#{rubygem.name}', '>= #{number}')
     else
       release = feature_release
       if release == Gem::Version.new(number)
-        %(gem '#{rubygem.name}', '~> #{release}')
+        %(gem '#{rubygem.name}', '>= #{release}')
       else
-        %(gem '#{rubygem.name}', '~> #{release}', '>= #{number}')
+        %(gem '#{rubygem.name}', '>= #{number}')
       end
     end
   end
