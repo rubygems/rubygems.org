@@ -13,7 +13,7 @@ class AdvancedSearchTest < ApplicationSystemTestCase
     rubygem = create(:rubygem, name: "LDAP", number: "1.0.0", downloads: 3)
     create(:version, :reindex, summary: "some summary", description: "Hello World", rubygem: rubygem)
 
-    fill_in "query", with: "downloads: <5"
+    fill_in "advanced_query", with: "downloads: <5"
     click_button "advanced_search_submit"
 
     assert_current_path(search_path, ignore_query: true)
