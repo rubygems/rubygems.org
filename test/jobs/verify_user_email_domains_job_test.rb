@@ -154,10 +154,9 @@ class VerifyUserEmailDomainsJobTest < ActiveJob::TestCase
     end
 
     should "block every user at the MAX_AUTO_BLOCK boundary" do
-      users = Array.new(VerifyUserEmailDomainsJob::MAX_AUTO_BLOCK) do |i|
-        create(:user, email: "user#{i}@expired-domain.com")
-      end
-      stub_fastly(domain: "expired-domain.com")
+      # The :user factory's email sequence puts every user on the same domain (rubygems-test.org).
+      users = create_list(:user, VerifyUserEmailDomainsJob::MAX_AUTO_BLOCK)
+      stub_fastly(domain: "rubygems-test.org")
 
       VerifyUserEmailDomainsJob.perform_now
 
@@ -165,10 +164,8 @@ class VerifyUserEmailDomainsJobTest < ActiveJob::TestCase
     end
 
     should "block no one and defer to manual review above MAX_AUTO_BLOCK" do
-      users = Array.new(VerifyUserEmailDomainsJob::MAX_AUTO_BLOCK + 1) do |i|
-        create(:user, email: "user#{i}@expired-domain.com")
-      end
-      stub_fastly(domain: "expired-domain.com")
+      users = create_list(:user, VerifyUserEmailDomainsJob::MAX_AUTO_BLOCK + 1)
+      stub_fastly(domain: "rubygems-test.org")
 
       VerifyUserEmailDomainsJob.perform_now
 
@@ -189,10 +186,8 @@ class VerifyUserEmailDomainsJobTest < ActiveJob::TestCase
     end
 
     should "emit an event noting deferral when over the auto-block limit" do
-      Array.new(VerifyUserEmailDomainsJob::MAX_AUTO_BLOCK + 1) do |i|
-        create(:user, email: "user#{i}@expired-domain.com")
-      end
-      stub_fastly(domain: "expired-domain.com")
+      create_list(:user, VerifyUserEmailDomainsJob::MAX_AUTO_BLOCK + 1)
+      stub_fastly(domain: "rubygems-test.org")
 
       event = captured_event { VerifyUserEmailDomainsJob.perform_now }
 
