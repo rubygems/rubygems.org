@@ -9,8 +9,6 @@ class ProfilesController < ApplicationController
   before_action :verify_password, only: %i[update destroy]
   before_action :disable_cache, only: :edit
 
-  # show uses the subject layout (user as the subject); edit + update share the edit
-  # template (update re-renders :edit on validation failure)
   layout "subject", only: %i[show edit update]
 
   def show

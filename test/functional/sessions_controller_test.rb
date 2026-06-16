@@ -87,7 +87,7 @@ class SessionsControllerTest < ActionController::TestCase
           post :otp_create, params: { otp: wrong_otp }
         end
 
-        should set_flash.now[:notice]
+        should set_flash.now[:alert]
         should respond_with :unauthorized
 
         should "render sign in page" do
@@ -142,7 +142,7 @@ class SessionsControllerTest < ActionController::TestCase
         post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
       end
 
-      should set_flash.now[:notice]
+      should set_flash.now[:alert]
       should respond_with :unauthorized
 
       should "clear mfa_expires_at" do
@@ -313,7 +313,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
-      should set_flash.now[:notice]
+      should set_flash.now[:alert]
 
       should "render sign in page" do
         assert page.has_content? "Sign in"
@@ -643,8 +643,8 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :unauthorized
 
-      should "set flash notice" do
-        assert_equal "Credentials required", flash[:notice]
+      should "set flash alert" do
+        assert_equal "Credentials required", flash[:alert]
       end
 
       should "render sign in page" do
@@ -679,8 +679,8 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :unauthorized
 
-      should "set flash notice" do
-        assert_equal "WebAuthn::ChallengeVerificationError", flash[:notice]
+      should "set flash alert" do
+        assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
       end
 
       should "render sign in page" do
@@ -726,8 +726,8 @@ class SessionsControllerTest < ActionController::TestCase
         refute_predicate @controller.request.env[:clearance], :signed_in?
       end
 
-      should "set flash notice" do
-        assert_equal "Your login page session has expired.", flash[:notice]
+      should "set flash alert" do
+        assert_equal "Your login page session has expired.", flash[:alert]
       end
 
       should "render sign in page" do
