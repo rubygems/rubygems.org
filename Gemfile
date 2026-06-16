@@ -145,7 +145,7 @@ group :test do
   gem "rails-controller-testing", "~> 1.0"
   gem "mocha", "~> 3.1", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
-  gem "shoulda-matchers", "~> 7.0"
+  gem "shoulda-matchers", "~> 8.0"
   gem "capybara-playwright-driver", "~> 0.5"
   gem "webmock", "~> 3.26"
   gem "simplecov", "~> 0.22", require: false
