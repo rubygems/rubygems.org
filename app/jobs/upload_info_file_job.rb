@@ -32,7 +32,7 @@ class UploadInfoFileJob < ApplicationJob
 
     if backfill_only_version
       response_body = upload_info_file(gem_info, rubygem_name, version: backfill_only_version, purge: false)
-      persist_backfill_checksum(rubygem_name, checksum: Digest::MD5.hexdigest(response_body))
+      persist_backfill_checksum(rubygem_name, version: backfill_only_version, checksum: Digest::MD5.hexdigest(response_body))
     else
       upload_info_file(gem_info, rubygem_name, version: GemInfo::CURRENT_VERSION, purge: true)
     end
@@ -75,7 +75,7 @@ class UploadInfoFileJob < ApplicationJob
     response_body
   end
 
-  def persist_backfill_checksum(rubygem_name, checksum:)
+  def persist_backfill_checksum(rubygem_name, version:, checksum:)
     rubygem = Rubygem.find_by(name: rubygem_name)
     return unless rubygem
 
@@ -84,11 +84,15 @@ class UploadInfoFileJob < ApplicationJob
       .first
     return unless last_version
 
+    config = GemInfo::VERSIONS.fetch(version)
+    checksum_column = config.fetch(:checksum_column)
+    yanked_checksum_column = config.fetch(:yanked_checksum_column)
+
     scope = Version.where(id: last_version.id)
     if last_version.indexed
-      scope.where(indexed: true, info_checksum_v2: nil).update_all(info_checksum_v2: checksum)
+      scope.where(indexed: true, checksum_column => nil).update_all(checksum_column => checksum)
     else
-      scope.where(indexed: false, yanked_info_checksum_v2: nil).update_all(yanked_info_checksum_v2: checksum)
+      scope.where(indexed: false, yanked_checksum_column => nil).update_all(yanked_checksum_column => checksum)
     end
   end
 end

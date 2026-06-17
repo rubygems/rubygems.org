@@ -3,8 +3,6 @@
 class GemInfo
   CURRENT_VERSION = 2
 
-  # Compact index v1 was decommissioned after the v2 rollout.
-  # Keep only actively served or actively migrating formats in this registry.
   VERSIONS = {
     2 => { cache_prefix: "info_v2", stats_prefix: "compact_index.memcached.info_v2", klass: CompactIndex::GemVersionV2,
            checksum_column: "info_checksum_v2", yanked_checksum_column: "yanked_info_checksum_v2" }
@@ -125,7 +123,7 @@ class GemInfo
   end
 
   def compute_compact_index_info(version:)
-    requirements_and_dependencies.map do |row|
+    requirements_and_dependencies(version:).map do |row|
       dependencies = []
       if row[DEPENDENCY_REQUIREMENTS_INDEX]
         reqs = row[DEPENDENCY_REQUIREMENTS_INDEX].split("@")
@@ -146,12 +144,14 @@ class GemInfo
     end
   end
 
-  def requirements_and_dependencies
-    @requirements_and_dependencies ||= fetch_requirements_and_dependencies
+  def requirements_and_dependencies(version:)
+    @requirements_and_dependencies ||= {}
+    @requirements_and_dependencies[version] ||= fetch_requirements_and_dependencies(version)
   end
 
-  def fetch_requirements_and_dependencies
-    group_by_columns = "number, platform, sha256, info_checksum_v2, required_ruby_version, required_rubygems_version, versions.created_at"
+  def fetch_requirements_and_dependencies(version)
+    checksum_column = VERSIONS.fetch(version).fetch(:checksum_column)
+    group_by_columns = "number, platform, sha256, #{checksum_column}, required_ruby_version, required_rubygems_version, versions.created_at"
 
     dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
 

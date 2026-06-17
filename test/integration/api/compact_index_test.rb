@@ -11,31 +11,51 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     Digest::SHA256.base64digest(body)
   end
 
+  def current_compact_index_version
+    GemInfo::CURRENT_VERSION
+  end
+
+  def current_compact_index_config
+    Api::CompactIndexController::COMPACT_INDEX_VERSIONS.fetch(current_compact_index_version)
+  end
+
+  def current_versions_surrogate_key
+    current_compact_index_config.fetch(:versions_surrogate_key)
+  end
+
+  def current_info_prefix
+    current_compact_index_config.fetch(:info_prefix)
+  end
+
+  def checksum_attributes(checksum)
+    { GemInfo::VERSIONS.fetch(current_compact_index_version).fetch(:checksum_column) => checksum }
+  end
+
   setup do
     @rubygem2 = create(:rubygem, name: "gemB")
-    @version = create(:version, rubygem: @rubygem2, number: "1.0.0", info_checksum_v2: "v2qw2dwe")
+    @version = create(:version, rubygem: @rubygem2, number: "1.0.0", **checksum_attributes("v2qw2dwe"))
 
     rubygem = create(:rubygem, name: "gemA")
     dep1 = create(:rubygem, name: "gemA1", indexed: true)
     dep2 = create(:rubygem, name: "gemA2", indexed: true)
 
-    create(:version, rubygem: rubygem, number: "1.0.0", info_checksum_v2: "v2013we2", required_ruby_version: nil)
+    create(:version, rubygem: rubygem, number: "1.0.0", required_ruby_version: nil, **checksum_attributes("v2013we2"))
 
-    version = create(:version, rubygem: rubygem, number: "2.0.0", info_checksum_v2: "v21cf94r", required_ruby_version: nil)
+    version = create(:version, rubygem: rubygem, number: "2.0.0", required_ruby_version: nil, **checksum_attributes("v21cf94r"))
     create(:dependency, rubygem: dep1, version: version)
 
     create(:version,
       rubygem: rubygem,
       number: "1.2.0",
-      info_checksum_v2: "v213q4es",
+      **checksum_attributes("v213q4es"),
       required_rubygems_version: ">1.9",
       required_ruby_version: ">= 2.0.0")
 
     version = create(:version,
       rubygem: rubygem,
       number: "2.1.0",
-      info_checksum_v2: "v2e217fz",
-      required_rubygems_version: ">=2.0")
+      required_rubygems_version: ">=2.0",
+      **checksum_attributes("v2e217fz"))
 
     create(:dependency, rubygem: dep1, version: version)
     create(:dependency, rubygem: dep2, version: version)
@@ -82,7 +102,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match file_contents, @response.body
     assert_match(/gemB 1.0.0 v2qw2dwe/, @response.body)
-    assert_equal "v2/versions", @response.headers["Surrogate-Key"]
+    assert_equal current_versions_surrogate_key, @response.headers["Surrogate-Key"]
   end
 
   test "/versions partial response" do
@@ -98,7 +118,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal etag(full_response_body), @response.headers["ETag"]
     assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
     assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
-    assert_equal "v2/versions", @response.headers["Surrogate-Key"]
+    assert_equal current_versions_surrogate_key, @response.headers["Surrogate-Key"]
   end
 
   test "/versions updates on gem yank" do
@@ -108,13 +128,13 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes @response.body, "gemB -1.0.0 #{@version.reload.yanked_info_checksum_v2}"
-    assert_equal "v2/versions", @response.headers["Surrogate-Key"]
+    assert_equal current_versions_surrogate_key, @response.headers["Surrogate-Key"]
   end
 
   test "/version has surrogate key header" do
     get versions_path
 
-    assert_equal "v2/versions", @response.headers["Surrogate-Key"]
+    assert_equal current_versions_surrogate_key, @response.headers["Surrogate-Key"]
     assert_equal "max-age=3600, stale-while-revalidate=1800, stale-if-error=1800", @response.headers["Surrogate-Control"]
   end
 
@@ -136,7 +156,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal etag(expected), @response.headers["ETag"]
     assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
     assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
-    assert_equal "v2/info/* gem/v2gem v2/info/v2gem", @response.headers["Surrogate-Key"]
+    assert_equal "#{current_info_prefix}/* gem/v2gem #{current_info_prefix}/v2gem", @response.headers["Surrogate-Key"]
   end
 
   test "/info partial response" do
@@ -157,7 +177,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal etag(full_body), @response.headers["ETag"]
     assert_equal "sha-256=#{expected_digest}", @response.headers["Digest"]
     assert_equal "sha-256=:#{expected_digest}:", @response.headers["Repr-Digest"]
-    assert_equal "v2/info/* gem/v2partial v2/info/v2partial", @response.headers["Surrogate-Key"]
+    assert_equal "#{current_info_prefix}/* gem/v2partial #{current_info_prefix}/v2partial", @response.headers["Surrogate-Key"]
   end
 
   test "/info cache expires on gem yank" do
@@ -176,7 +196,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
 
       assert_response :success
       assert_not_includes @response.body, "1.0.0"
-      assert_equal "v2/info/* gem/v2yank v2/info/v2yank", @response.headers["Surrogate-Key"]
+      assert_equal "#{current_info_prefix}/* gem/v2yank #{current_info_prefix}/v2yank", @response.headers["Surrogate-Key"]
     end
   end
 
@@ -189,7 +209,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     assert_includes @response.headers["Cache-Control"], "public"
     assert_match(/max-age=60/, @response.headers["Cache-Control"])
     assert_match(/max-age=600/, @response.headers["Surrogate-Control"])
-    assert_equal "v2/info/404 v2/info/donotexist", @response.headers["Surrogate-Key"]
+    assert_equal "#{current_info_prefix}/404 #{current_info_prefix}/donotexist", @response.headers["Surrogate-Key"]
   end
 
   test "/info with gzip" do

@@ -131,6 +131,7 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
 
   test "persist_backfill_checksum does not write info_checksum_v2 if indexed flipped to false mid-perform" do
     version = create(:version, indexed: false, yanked_at: 1.minute.ago)
+    version.update_column(:info_checksum_v2, nil)
 
     Version.any_instance.stubs(:indexed).returns(true)
 

@@ -3,8 +3,6 @@
 class Api::CompactIndexController < Api::BaseController
   CURRENT_COMPACT_INDEX_VERSION = 2
 
-  # Compact index v1 was decommissioned after the v2 rollout.
-  # Keep only actively served or actively migrating formats in this registry.
   COMPACT_INDEX_VERSIONS = {
     2 => {
       info_prefix: "v2/info",
