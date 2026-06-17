@@ -55,7 +55,9 @@ class ApplicationController < ActionController::Base
     set_tag "gemcutter.user.id", current_user.id
 
     trace = Datadog::Tracing.active_trace
-    Datadog::Kit::Identity.set_user(trace, id: current_user.id.to_s) if trace
+    return unless trace
+
+    Datadog::Kit::Identity.set_user(trace, id: current_user.id.to_s)
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
