@@ -11,6 +11,23 @@ class PagesControllerTest < ActionController::TestCase
     should respond_with :ok
   end
 
+  context "when the security page is requested" do
+    setup do
+      get :show, params: { id: "security" }
+    end
+
+    should respond_with :ok
+
+    should "direct security reports to the security email" do
+      assert_select "a[href='mailto:security@rubygems.org']"
+    end
+
+    should "no longer present HackerOne as a reporting channel" do
+      assert_select "a[href='https://hackerone.com/rubygems']", false
+      assert_no_match(/HackerOne/, @response.body)
+    end
+  end
+
   context "when invalid page is requested" do
     should "error" do
       assert_raises(ActionController::UrlGenerationError) do

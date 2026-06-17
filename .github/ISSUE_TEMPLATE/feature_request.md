@@ -10,7 +10,7 @@ assignees: ''
 This issue tracker for bug reports and feature requests only.
 
   * Please open a support ticket by sending mail to support@rubygems.org  if your issue is related your rubygems.org account or you need help using the site.
-  * Please submit a report using https://hackerone.com/rubygems if you are reporting a security vulnerability.
+  * Please email security@rubygems.org if you are reporting a security vulnerability.
 --->
 
 ## Is your feature request related to a problem?
