@@ -136,6 +136,7 @@ class VersionsControllerTest < ActionController::TestCase
 
         assert_response :success
         page_versions = css_select(".gem__versions a").map(&:text)
+
         assert_includes page_versions, "1.1.2"
         refute_includes page_versions, "1.1.1"
         assert_select "[data-testid='versions-count']", text: /2 versions since January 01, 2010/, count: 1
@@ -145,6 +146,7 @@ class VersionsControllerTest < ActionController::TestCase
 
         assert_response :success
         page_versions = css_select(".gem__versions a").map(&:text)
+
         refute_includes page_versions, "1.1.2"
         assert_includes page_versions, "1.1.1"
         assert_select "[data-testid='versions-count']", text: /2 versions since January 01, 2010/, count: 1
