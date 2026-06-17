@@ -1,7 +1,9 @@
-<%= content_tag :span, class: 'github-btn', data: github_data_params do %>
-  <a class="gh-btn" href="#" rel="noopener noreferrer" target="_blank">
-    <span class="gh-ico" aria-hidden="true"></span>
-    <span class="gh-text"></span>
+<%# Segmented "Star | count" button. github-buttons.js fills .gh-text/.gh-count
+    (stargazers count from the GitHub API) and reveals .gh-count. -%>
+<%= content_tag :span, class: "github-btn flex w-full h-12 rounded overflow-hidden border-2 border-neutral-700 dark:border-neutral-300 text-b3 text-neutral-800 dark:text-neutral-200", data: github_data_params do %>
+  <a class="gh-btn flex flex-1 items-center gap-2 px-4 no-underline transition focus:outline-none hover:bg-neutral-700/5 active:bg-neutral-700/10 dark:hover:bg-white/10 dark:active:bg-white/20" href="#" rel="noopener noreferrer" target="_blank">
+    <%= icon_tag "github", size: 6 %>
+    <span class="gh-text font-semibold"><%= t("rubygems.aside.github_star") %></span>
   </a>
-  <a class="gh-count" href="#" rel="noopener noreferrer" target="_blank" aria-hidden="true" tabindex="-1"></a>
+  <a class="gh-count hidden items-center px-4 font-semibold no-underline border-l-2 border-neutral-700 dark:border-neutral-300 transition hover:bg-neutral-700/5 dark:hover:bg-white/10" href="#" rel="noopener noreferrer" aria-hidden="true" tabindex="-1"></a>
 <% end %>

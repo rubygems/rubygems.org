@@ -858,6 +858,7 @@ es:
   rubygems:
     aside:
       downloads_for_this_version: Para esta versión
+      github_star:
       latest_version_button:
       versions_button:
         one:
