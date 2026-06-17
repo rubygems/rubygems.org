@@ -15,7 +15,7 @@
   <% if user.public_email? || user == current_user %>
     <div class="flex items-center mb-4 text-b3 lg:text-b2">
       <%= icon_tag("mail", color: :primary, class: "h-6 w-6 text-orange mr-3") %>
-      <p class="text-neutral-800 dark:text-white"><%= mail_to(user.email, encode: "hex") %></p>
+      <p class="text-neutral-800 dark:text-white"><%= mail_to(user.email, t("profiles.show.email_me"), encode: "hex") %></p>
     </div>
   <% end %>
 
