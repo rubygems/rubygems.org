@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class GemInfo
+  CURRENT_VERSION = 2
+
   VERSIONS = {
-    1 => { cache_prefix: "info", stats_prefix: "compact_index.memcached.info", klass: CompactIndex::GemVersion,
-           checksum_column: "info_checksum", yanked_checksum_column: "yanked_info_checksum" },
     2 => { cache_prefix: "info_v2", stats_prefix: "compact_index.memcached.info_v2", klass: CompactIndex::GemVersionV2,
            checksum_column: "info_checksum_v2", yanked_checksum_column: "yanked_info_checksum_v2" }
   }.freeze
@@ -13,7 +13,7 @@ class GemInfo
     @cached = cached
   end
 
-  def compact_index_info(version: 1)
+  def compact_index_info(version: CURRENT_VERSION)
     config = VERSIONS.fetch(version)
     cache_key = "#{config[:cache_prefix]}/#{@rubygem_name}"
     stats_key = config[:stats_prefix]
@@ -29,7 +29,7 @@ class GemInfo
     end
   end
 
-  def info_checksum(version: 1)
+  def info_checksum(version: CURRENT_VERSION)
     compact_index_info = CompactIndex.info(compute_compact_index_info(version:))
     Digest::MD5.hexdigest(compact_index_info)
   end
@@ -45,7 +45,7 @@ class GemInfo
     names
   end
 
-  def self.compact_index_versions(date, version: 1)
+  def self.compact_index_versions(date, version: CURRENT_VERSION)
     config = VERSIONS.fetch(version)
     checksum_column = config[:checksum_column]
     yanked_checksum_column = config[:yanked_checksum_column]
@@ -65,7 +65,7 @@ class GemInfo
     map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
   end
 
-  def self.compact_index_public_versions(updated_at, version: 1)
+  def self.compact_index_public_versions(updated_at, version: CURRENT_VERSION)
     config = VERSIONS.fetch(version)
     checksum_column = config[:checksum_column]
     yanked_checksum_column = config[:yanked_checksum_column]
@@ -123,7 +123,7 @@ class GemInfo
   end
 
   def compute_compact_index_info(version:)
-    requirements_and_dependencies.map do |row|
+    requirements_and_dependencies(version:).map do |row|
       dependencies = []
       if row[DEPENDENCY_REQUIREMENTS_INDEX]
         reqs = row[DEPENDENCY_REQUIREMENTS_INDEX].split("@")
@@ -144,12 +144,17 @@ class GemInfo
     end
   end
 
-  def requirements_and_dependencies
-    @requirements_and_dependencies ||= fetch_requirements_and_dependencies
+  def requirements_and_dependencies(version:)
+    @requirements_and_dependencies ||= {}
+    @requirements_and_dependencies[version] ||= fetch_requirements_and_dependencies(version:)
   end
 
-  def fetch_requirements_and_dependencies
-    group_by_columns = "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
+  def fetch_requirements_and_dependencies(version:)
+    checksum_column = VERSIONS.fetch(version).fetch(:checksum_column)
+    group_by_columns = [
+      "number", "platform", "sha256", checksum_column,
+      "required_ruby_version", "required_rubygems_version", "versions.created_at"
+    ]
 
     dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
 
@@ -161,8 +166,8 @@ class GemInfo
           ON rubygems_dependencies.id = dependencies.rubygem_id
           AND dependencies.scope = 'runtime'")
       .where("rubygems.name = ? AND versions.indexed = true", @rubygem_name)
-      .group(Arel.sql(group_by_columns))
+      .group(*group_by_columns)
       .order(Arel.sql("versions.created_at, number, platform, dep_name"))
-      .pluck(Arel.sql("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}"))
+      .pluck(*group_by_columns, Arel.sql(dep_req_agg), Arel.sql(dep_name_agg))
   end
 end

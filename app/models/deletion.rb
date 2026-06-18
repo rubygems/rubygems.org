@@ -96,7 +96,7 @@ class Deletion < ApplicationRecord
   end
 
   def restore_to_index
-    version.update!(indexed: true, yanked_at: nil, yanked_info_checksum: nil, yanked_info_checksum_v2: nil)
+    version.update!(indexed: true, yanked_at: nil, yanked_info_checksum_v2: nil)
     reindex
     Rstuf::AddJob.perform_later(version:)
   end
@@ -140,8 +140,7 @@ class Deletion < ApplicationRecord
   def set_yanked_info_checksum
     gem_info = GemInfo.new(version.rubygem.name)
 
-    version.yanked_info_checksum = gem_info.info_checksum(version: 1)
-    version.yanked_info_checksum_v2 = gem_info.info_checksum(version: 2)
+    version.yanked_info_checksum_v2 = gem_info.info_checksum
     version.save(validate: false)
   end
 

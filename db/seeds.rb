@@ -66,7 +66,7 @@ Version.create_with(
   indexed: true,
   pusher: author,
   sha256: Digest::SHA256.base64digest("abc123"),
-  info_checksum: Digest::MD5.base64digest("abc123")
+  info_checksum_v2: Digest::MD5.base64digest("abc123")
 ).find_or_create_by!(rubygem: rubygem0, number: "0.0.1", platform: "ruby", gem_platform: "ruby") do |version|
   author.deletions.find_or_create_by!(version: version)
 end

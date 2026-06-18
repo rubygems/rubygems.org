@@ -101,7 +101,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     version.reload
 
     assert_not_nil version.yanked_at
-    assert_not_nil version.yanked_info_checksum
+    assert_not_nil version.yanked_info_checksum_v2
 
     audit = rubygem.audits.sole
     deletion = security_user.deletions.first
@@ -179,9 +179,9 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     version2.reload
 
     assert_not_nil version1.yanked_at
-    assert_not_nil version1.yanked_info_checksum
+    assert_not_nil version1.yanked_info_checksum_v2
     assert_not_nil version2.yanked_at
-    assert_not_nil version2.yanked_info_checksum
+    assert_not_nil version2.yanked_info_checksum_v2
 
     audit = rubygem.audits.sole
     deletion1 = security_user.deletions.first

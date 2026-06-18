@@ -26,8 +26,8 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
     context "with an indexed last version" do
       should "enqueue UploadInfoFileJob for v2 only" do
         rubygem = create(:rubygem, name: "testgem")
-        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
-        create(:version, rubygem: rubygem, number: "1.0.1", indexed: true, info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true).update_columns(info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.1", indexed: true).update_columns(info_checksum_v2: nil)
 
         task = Maintenance::BackfillCompactIndexV2Task.new
         task.process(rubygem)
@@ -39,8 +39,9 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
     context "with a yanked last version" do
       should "enqueue UploadInfoFileJob for v2 only" do
         rubygem = create(:rubygem, name: "testgem")
-        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true, info_checksum_v2: nil)
-        create(:version, rubygem: rubygem, number: "1.0.1", indexed: false, yanked_info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.0", indexed: true).update_columns(info_checksum_v2: nil)
+        create(:version, rubygem: rubygem, number: "1.0.1", indexed: false)
+          .update_columns(info_checksum_v2: nil, yanked_info_checksum_v2: nil)
 
         task = Maintenance::BackfillCompactIndexV2Task.new
         task.process(rubygem)

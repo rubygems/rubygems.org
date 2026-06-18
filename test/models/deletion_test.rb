@@ -97,9 +97,8 @@ class DeletionTest < ActiveSupport::TestCase
         assert @version.reload.yanked_at
       end
 
-      should "set the yanked info checksums" do
-        refute_nil @version.reload.yanked_info_checksum
-        refute_nil @version.yanked_info_checksum_v2
+      should "set the yanked info checksum" do
+        refute_nil @version.reload.yanked_info_checksum_v2
       end
 
       should "delete the .gem file" do
@@ -132,12 +131,9 @@ class DeletionTest < ActiveSupport::TestCase
       delete_gem
       @version.reload
       checksum = Version._sha256_hex(other_version.sha256)
-      expected_v1_line = "0.0.1 |checksum:#{checksum},ruby:>= 2.0.0,rubygems:>= 2.6.3"
-      expected_v2_line = "#{expected_v1_line},created_at:#{other_version.created_at.utc.iso8601}"
+      expected_line = "0.0.1 |checksum:#{checksum},ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{other_version.created_at.utc.iso8601}"
 
-      assert_equal Digest::MD5.hexdigest("---\n#{expected_v1_line}\n"), @version.yanked_info_checksum
-      assert_equal Digest::MD5.hexdigest("---\n#{expected_v2_line}\n"), @version.yanked_info_checksum_v2
-      refute_equal @version.yanked_info_checksum, @version.yanked_info_checksum_v2
+      assert_equal Digest::MD5.hexdigest("---\n#{expected_line}\n"), @version.yanked_info_checksum_v2
     end
   end
 
@@ -220,9 +216,8 @@ class DeletionTest < ActiveSupport::TestCase
         assert_predicate @version.reload, :latest?
       end
 
-      should "remove the yanked time and yanked_info_checksum" do
+      should "remove the yanked time and yanked_info_checksum_v2" do
         assert_nil @version.yanked_at
-        assert_nil @version.yanked_info_checksum
         assert_nil @version.yanked_info_checksum_v2
       end
 
