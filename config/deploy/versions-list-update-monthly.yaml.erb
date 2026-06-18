@@ -21,7 +21,7 @@ spec:
           containers:
           - name: versions-list-update-monthly
             image: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org:<%= current_sha %>
-            args: ["rake", "compact_index:update_versions_file", "compact_index_v2:update_versions_file"]
+            args: ["rake", "compact_index:update_versions_file"]
             resources:
               <% if environment == 'production' %>
               requests:

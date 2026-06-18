@@ -7,7 +7,6 @@ development:
   s3_compact_index_bucket: compact-index
   s3_region: us-east-1
   s3_endpoint: s3.amazonaws.com
-  versions_file_location: "./config/versions.list"
   versions_file_location_v2: "./config/versions_v2.list"
 
 test:
@@ -19,7 +18,6 @@ test:
   s3_compact_index_bucket: compact-index.test.s3.rubygems.org
   s3_region: us-east-1
   s3_endpoint: s3.amazonaws.com
-  versions_file_location: "./test/helpers/versions.list"
   versions_file_location_v2: "./test/helpers/versions_v2.list"
 
 staging:
@@ -31,7 +29,6 @@ staging:
   s3_endpoint: s3-us-west-2.amazonaws.com
   s3_contents_bucket: contents.oregon.staging.s3.rubygems.org
   s3_compact_index_bucket: compact-index.oregon.staging.s3.rubygems.org
-  versions_file_location: "./config/versions.list"
   versions_file_location_v2: "./config/versions_v2.list"
 
 production:
@@ -43,6 +40,5 @@ production:
   s3_endpoint: s3-us-west-2.amazonaws.com
   s3_contents_bucket: contents.oregon.production.s3.rubygems.org
   s3_compact_index_bucket: compact-index.oregon.production.s3.rubygems.org
-  versions_file_location: "./config/versions.list"
   versions_file_location_v2: "./config/versions_v2.list"
   separate_admin_host: rubygems.team

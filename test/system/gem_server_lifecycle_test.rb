@@ -19,7 +19,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     Rails.application.config.rubygems.stubs(:[]).with("s3_compact_index_bucket").returns("s3_compact_index_bucket")
     Rails.application.config.rubygems.stubs(:[]).with("s3_contents_bucket").returns("s3_contents_bucket")
 
-    setup_rake_tasks("compact_index_v2.rake", "compact_index.rake")
+    setup_rake_tasks("compact_index.rake")
 
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
