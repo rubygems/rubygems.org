@@ -13,7 +13,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.policies_acknowledged_at = Time.zone.now
     if @user.save
-      Datadog::Kit::AppSec::Events.track("users.signup", "usr.id": @user.id.to_s)
+      Datadog::Kit::AppSec::Events.track_signup(
+        user: { id: @user.id.to_s, login: Digest::SHA256.hexdigest(@user.handle || @user.email) }
+      )
       Mailer.email_confirmation(@user).deliver_later
       flash[:notice] = t(".email_sent")
       redirect_back_or_to root_path
