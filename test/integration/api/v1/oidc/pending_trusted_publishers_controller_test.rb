@@ -53,6 +53,16 @@ class Api::V1::OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::In
         assert_equal "brand-new-gem", pending.rubygem_name
         assert_equal @api_key.user, pending.user
         assert_equal "example", pending.trusted_publisher.repository_owner
+
+        # Contract the CLI depends on: nested trusted_publisher object in the response body.
+        assert_predicate response.parsed_body["id"], :present?
+        assert_equal "brand-new-gem", response.parsed_body["rubygem_name"]
+        nested = response.parsed_body["trusted_publisher"]
+
+        assert_kind_of Hash, nested
+        assert_equal "example", nested["repository_owner"]
+        assert_equal "brand-new-gem", nested["repository_name"]
+        assert_equal "push_gem.yml", nested["workflow_filename"]
       end
     end
 
@@ -107,6 +117,12 @@ class Api::V1::OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::In
 
         assert_response :success
         assert_equal([mine.id], response.parsed_body.pluck("id"))
+
+        # Contract the CLI depends on: each item carries a nested trusted_publisher object.
+        response.parsed_body.each do |item|
+          assert_kind_of Hash, item["trusted_publisher"]
+          assert_predicate item["trusted_publisher"]["repository_owner"], :present?
+        end
       end
     end
   end
