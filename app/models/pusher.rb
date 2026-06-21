@@ -112,6 +112,7 @@ class Pusher
     set_tag "gemcutter.rubygem.name", name
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
+    @rubygem.pushed_by = owner
 
     sha256 = Digest::SHA2.base64digest(body.string)
     spec_sha256 = Digest::SHA2.base64digest(spec_contents)
