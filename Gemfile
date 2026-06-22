@@ -149,7 +149,7 @@ group :test do
   gem "capybara-playwright-driver", "~> 0.5"
   gem "webmock", "~> 3.26"
   gem "simplecov", "~> 0.22", require: false
-  gem "simplecov-cobertura", "~> 3.1", require: false
+  gem "simplecov-cobertura", "~> 3.2", require: false
   gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.8"
