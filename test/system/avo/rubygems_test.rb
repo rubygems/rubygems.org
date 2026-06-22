@@ -349,7 +349,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     click_on "Update Versions List"
     fill_in "Comment", with: "A nice long comment"
 
-    assert_enqueued_jobs 2, only: UpdateVersionsListJob do
+    assert_enqueued_jobs 1, only: UpdateVersionsListJob do
       click_button "Update"
 
       page.assert_text "Versions list update job scheduled"

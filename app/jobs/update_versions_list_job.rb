@@ -17,10 +17,6 @@ class UpdateVersionsListJob < ApplicationJob
   )
 
   VERSION_CONFIG = {
-    1 => {
-      config_key: "versions_file_location",
-      store_key: "versions/versions.list"
-    },
     2 => {
       config_key: "versions_file_location_v2",
       store_key: "versions/versions_v2.list"

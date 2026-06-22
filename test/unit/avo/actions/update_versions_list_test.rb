@@ -14,43 +14,18 @@ class UpdateVersionsListTest < ActiveJob::TestCase
     Avo::Current.stubs(:view_context).returns(view_context)
   end
 
-  test "enqueues a v1 versions list update" do
-    perform_action("1")
-
-    assert_enqueued_jobs 1, only: UpdateVersionsListJob
-    assert_enqueued_with(job: UpdateVersionsListJob, args: [version: 1])
-  end
-
-  test "enqueues a v2 versions list update" do
-    perform_action("2")
+  test "enqueues a versions list update" do
+    perform_action
 
     assert_enqueued_jobs 1, only: UpdateVersionsListJob
     assert_enqueued_with(job: UpdateVersionsListJob, args: [version: 2])
-  end
-
-  test "enqueues v1 and v2 versions list updates" do
-    perform_action("both")
-
-    assert_enqueued_jobs 2, only: UpdateVersionsListJob
-    assert_enqueued_with(job: UpdateVersionsListJob, args: [version: 1])
-    assert_enqueued_with(job: UpdateVersionsListJob, args: [version: 2])
-  end
-
-  test "shows an error for unsupported versions" do
-    perform_action("3")
-
-    assert_no_enqueued_jobs only: UpdateVersionsListJob
-    assert_equal [type: :error, body: "Unsupported compact index version: 3", timeout: nil], @action.response[:messages]
   end
 
   private
 
-  def perform_action(version)
+  def perform_action
     @action.handle(
-      fields: {
-        comment: "Regenerating versions list",
-        "version" => version
-      },
+      fields: { comment: "Regenerating versions list" },
       current_user: @current_user,
       resource: nil,
       records: [],
