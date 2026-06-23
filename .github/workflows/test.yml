@@ -30,7 +30,8 @@ jobs:
       REQUIRE_TOXIPROXY: true
       TOXIPROXY_LISTEN_HOST: "0.0.0.0"
       TOXIPROXY_UPSTREAM: "search:9200"
-      REQUIRE_AVO_PRO: ${{ github.secret_source != 'None' && matrix.tests.id != 'avo-without-pro' }}
+      RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
+      REQUIRE_AVO_PRO: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') && matrix.tests.id != 'avo-without-pro' }}
       AVO_LICENSE_KEY: ${{ secrets.AVO_LICENSE_KEY }}
       BUNDLE_PACKAGER__DEV: ${{ secrets.BUNDLE_PACKAGER__DEV }}
     steps:
@@ -38,12 +39,19 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Fork CI note
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE != 'true'
+        run: |
+          echo "::notice::Running fork-friendly CI without RubyGems.org-only secrets. Avo Pro tests and Codecov upload are disabled."
+          echo "### Fork CI" >> "$GITHUB_STEP_SUMMARY"
+          echo "RubyGems.org-only secrets are unavailable in forks, so this run skips Avo Pro setup and Codecov upload." >> "$GITHUB_STEP_SUMMARY"
+
       - name: Setup rubygems.org
         uses: ./.github/actions/setup-rubygems.org
         with:
           ruby-version: .ruby-version
           rubygems-version: ${{ env.RUBYGEMS_VERSION }}
-          install-avo-pro: ${{ matrix.tests.id != 'avo-without-pro' }}
+          install-avo-pro: ${{ env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true' && matrix.tests.id != 'avo-without-pro' }}
           install-playwright: ${{ matrix.tests.id != 'general' }}
 
       - name: Tests ${{ matrix.tests.name }}
@@ -59,7 +67,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload coverage to Codecov
-        if: matrix.tests.id != 'avo-without-pro' && (success() || failure())
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true' && matrix.tests.id != 'avo-without-pro' && (success() || failure())
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

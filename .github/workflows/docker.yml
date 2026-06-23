@@ -15,6 +15,7 @@ jobs:
     env:
       RUBYGEMS_VERSION: "4.0.12"
       RUBY_VERSION: .ruby-version
+      RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
     permissions:
       id-token: write
     steps:
@@ -35,12 +36,12 @@ jobs:
         run: docker compose up -d
       - name: Configure AWS credentials from Production account
         uses: aws-actions/configure-aws-credentials@e7f100cf4c008499ea8adda475de1042d6975c7b # v6.2.0
-        if: github.secret_source != 'None'
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
         with:
           role-to-assume: arn:aws:iam::048268392960:role/rubygems-ecr-pusher
           aws-region: us-west-2
       - name: Login to Amazon ECR
-        if: github.secret_source != 'None'
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
         uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
       - name: build, test and optionally push docker image
         run: ./script/build_docker.sh
