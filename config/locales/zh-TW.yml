@@ -230,6 +230,17 @@ zh-TW:
   dependencies:
     show:
       click_to_expand: 點擊箭頭圖示來展開。
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: 如果該帳號存在，我們會將用於啟用帳號的確認連結傳送到您的電子郵件地址。
@@ -247,6 +258,9 @@ zh-TW:
       learn:
         install_rubygems: 安裝 RubyGems
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: 關於
@@ -289,6 +303,8 @@ zh-TW:
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
   breadcrumbs:
     home: 首頁
+    latest_version:
+    versions:
     dashboard: 控制台
     settings: 設定
     org_name: 組織：%{name}
@@ -749,6 +765,11 @@ zh-TW:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: 版本发布
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
@@ -764,6 +785,7 @@ zh-TW:
         funding:
         header: 相關連結
         home: 首頁
+        verified:
         mail: 郵件群組
         analytics:
         report_abuse: 檢舉濫用
@@ -808,6 +830,12 @@ zh-TW:
     show:
       bundler_header: Gemfile
       install: 安裝
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: 授權
         other: 授權

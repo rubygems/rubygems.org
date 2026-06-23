@@ -1,95 +1,56 @@
-<div class="gem__members">
-
-  <% if rubygem.owned_by_organization? %>
-    <div class="gem__organization-header">
-      <h3 class="t-list__heading"><%= t '.managed_by' %>:</h3>
-      <div class="gem__organization-info">
-        <h4 class="gem__organization-header"><%= link_to rubygem.organization.name, organization_path(rubygem.organization), class: "gem__organization-name" %></h4>
-      </div>
-
-      <% if rubygem.owners.any? %>
-      <h3 class="t-list__heading"><%= t '.outside_contributors' %></h3>
-      <div class="gem__users">
-        <%= links_to_owners(rubygem) %>
-      </div>
-      <% end %>
-    </div>
-  <% elsif rubygem.owners.present? %>
-    <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
-    <div class="gem__users">
-      <%= links_to_owners(rubygem) %>
-    </div>
-
-    <% if  rubygem.owned_by?(current_user) %>
-      <% if rubygem.owners.without_mfa.present? %>
-        <% if current_user.mfa_disabled? %>
-          <span class="gem__users__mfa-text mfa-warn">
-            <%= t '.self_no_mfa_warning_html' %>
-          </span>
-        <% else %>
-          <span class="gem__users__mfa-text mfa-warn"><%= t '.not_using_mfa_warning_show' %></span>
-        <% end %>
-
-        <div class="gem__users__mfa-disabled t-item--hidden">
-          <span class="gem__users__mfa-text mfa-warn t-item--hidden"><%= t '.not_using_mfa_warning_hide' %></span>
-          <div class="gem__users">
-            <%= links_to_owners_without_mfa(rubygem) %>
-          </div>
-        </div>
-      <% else %>
-          <span class="gem__users__mfa-text mfa-info"><%= t '.using_mfa_info' %></span>
-      <% end %>
-    <% end %>
-  <% end %>
-
+<% release_heading_class = "text-b1 font-semibold text-neutral-900 dark:text-white mb-2" %>
+<div class="gem__members flex flex-col gap-8">
   <% if latest_version.pusher.present? %>
-    <h3 class="t-list__heading"><%= t '.pushed_by' %>:</h3>
-    <div class="gem__users">
-      <%= link_to_user(latest_version.pusher) %>
+    <div>
+      <h3 class="<%= release_heading_class %>"><%= t ".pushed_by" %></h3>
+      <div class="gem__users">
+        <%= render "rubygems/owner", owner: latest_version.pusher %>
+      </div>
     </div>
   <% elsif latest_version.pusher_api_key&.owner.present? %>
-    <h3 class="t-list__heading"><%= t '.pushed_by' %>:</h3>
-    <div class="gem__users">
-      <%= link_to_pusher(latest_version.pusher_api_key.owner) %>
+    <div>
+      <h3 class="<%= release_heading_class %>"><%= t ".pushed_by" %></h3>
+      <div class="gem__users">
+        <%= link_to_pusher(latest_version.pusher_api_key.owner) %>
+      </div>
     </div>
   <% end %>
 
   <% if latest_version.yanker.present? %>
-    <h3 class="t-list__heading"><%= t '.yanked_by' %>:</h3>
-    <div class="gem__users">
-      <%= link_to_user(latest_version.yanker) %>
+    <div>
+      <h3 class="<%= release_heading_class %>"><%= t ".yanked_by" %></h3>
+      <div class="gem__users">
+        <%= render "rubygems/owner", owner: latest_version.yanker %>
+      </div>
     </div>
   <% end %>
 
-  <% if latest_version.authors.present? %>
-    <h3 class="t-list__heading"><%= t '.authors_header' %>:</h3>
-    <ul class="t-list__items">
-      <li class="t-list__item">
-        <p><%= latest_version.authors %></p>
-      </li>
-    </ul>
-  <% end %>
-
   <% if latest_version.sha256.present? %>
-    <h3 class="t-list__heading"><%= t '.sha_256_checksum' %>:</h3>
-    <%= copy_field_tag("gem_sha_256_checksum", latest_version.sha256_hex) %>
+    <div>
+      <h3 class="<%= release_heading_class %>"><%= t ".sha_256_checksum" %></h3>
+      <%= copy_field_tag("gem_sha_256_checksum", latest_version.sha256_hex, aria_label: t(".sha_256_checksum")) %>
+    </div>
   <% end %>
 
   <% if latest_version.cert_chain.present? %>
-    <h3 class="t-list__heading"><%= t '.signature_period' %>:</h3>
-    <div class="gem__expiry">
-      <%= nice_date_for(latest_version.cert_chain_valid_not_before) %> -
-      <%= nice_date_for(latest_version.cert_chain_valid_not_after) %>
-      <% if latest_version.signature_expired? %>
-        (<%= t '.expired' %>)
-      <% end %>
+    <div>
+      <h3 class="<%= release_heading_class %>"><%= t ".signature_period" %></h3>
+      <div class="gem__expiry text-b2">
+        <%= nice_date_for(latest_version.cert_chain_valid_not_before) %> -
+        <%= nice_date_for(latest_version.cert_chain_valid_not_after) %>
+        <% if latest_version.signature_expired? %>
+          (<%= t ".expired" %>)
+        <% end %>
+      </div>
     </div>
   <% end %>
 
   <% if latest_version.attestations.present? %>
-    <h3 class="t-list__heading"><%= t '.provenance_header' %>:</h3>
-    <% latest_version.attestations.each do |attestation| %>
-      <%= render Version::ProvenanceComponent.new(attestation:) %>
-    <%end%>
+    <div>
+      <h3 class="<%= release_heading_class %>"><%= t ".provenance_header" %></h3>
+      <% latest_version.attestations.each do |attestation| %>
+        <%= render Version::ProvenanceComponent.new(attestation:) %>
+      <% end %>
+    </div>
   <% end %>
 </div>
