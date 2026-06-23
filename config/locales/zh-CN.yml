@@ -763,6 +763,10 @@ zh-CN:
     request_denied: 请求被驳回，您的密码无法被我们验证通过。
     show:
       title: "%{username} 的个人资料"
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
