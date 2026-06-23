@@ -32,9 +32,17 @@ module RubygemsHelper
                      "text-neutral-700 dark:text-neutral-300 " \
                      "hover:bg-orange-500 hover:text-white dark:hover:text-white transition-colors"
 
-  def link_to_directory
+  def alphabet_directory_link(active_letter)
+    active_letter = active_letter.presence || "A"
+
     ("A".."Z").map do |letter|
-      link_to(letter, rubygems_path(letter: letter), class: NAV_LETTER_CLASS)
+      if letter == active_letter.upcase
+        css_classes = "#{NAV_LETTER_CLASS} bg-orange-500 text-white dark:text-white"
+        link_to(letter, rubygems_path(letter: letter), class: css_classes)
+
+      else
+        link_to(letter, rubygems_path(letter: letter), class: NAV_LETTER_CLASS)
+      end
     end.join("\n").html_safe
   end
 
