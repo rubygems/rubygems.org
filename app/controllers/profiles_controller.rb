@@ -9,10 +9,13 @@ class ProfilesController < ApplicationController
   before_action :verify_password, only: %i[update destroy]
   before_action :disable_cache, only: :edit
 
+  layout "subject", only: :show
+
   def show
     @user = User.confirmed.find_by_slug!(params[:id])
     return render_not_found unless @user
-    @rubygems = @user.rubygems_downloaded.includes(%i[latest_version gem_download]).strict_loading
+    @rubygems = @user.rubygems_downloaded.includes(%i[latest_version most_recent_version gem_download]).strict_loading
+    add_breadcrumb @user.display_handle
   end
 
   def me

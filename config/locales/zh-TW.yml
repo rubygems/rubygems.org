@@ -755,6 +755,10 @@ zh-TW:
     request_denied: 此請求遭拒。我們無法驗證您的密碼。
     show:
       title: "%{username} 的個人檔案"
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
