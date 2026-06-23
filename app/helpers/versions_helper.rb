@@ -28,7 +28,7 @@ module VersionsHelper
   end
 
   def version_date_component(version, **options)
-    options[:class] = "flex text-b3 text-neutral-600 dark:text-neutral-400 #{options[:class]}"
+    options[:class] = "flex text-b3 text-neutral-700 dark:text-neutral-400 #{options[:class]}"
     options[:data] ||= {}
 
     if version.rely_on_built_at?

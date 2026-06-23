@@ -1,13 +1,114 @@
-<% @title = params[:rubygem_id] %>
+<% @title = @rubygem.name %>
+<% @title_url = rubygem_path(@rubygem.slug) %>
 <% @subtitle = @latest_version.try(:slug) %>
 
-<% if @dependencies.present? && @latest_version.indexed %>
-  <div class="t-body">
-    <p class="form__field__instructions"><%= t ".click_to_expand" %></p>
-  </div>
-
-  <div class="l-full--l">
-    <%= render partial: "dependencies/dependencies", locals: { scope: "runtime", dependencies: @dependencies, gem_name: @latest_version.rubygem.name } %>
-    <%= render partial: "dependencies/dependencies", locals: { scope: "development", dependencies: @dependencies, gem_name: @latest_version.rubygem.name } %>
-  </div>
+<% content_for :subject do %>
+  <%= render "rubygems/aside" %>
 <% end %>
+
+<% content_for :subject_secondary do %>
+  <%= render "rubygems/aside_secondary" %>
+<% end %>
+
+<% th_class = "py-2 pr-4 text-b4 font-semibold text-neutral-900 dark:text-white" %>
+<% td_class = "py-3 pr-4 align-top" %>
+<% chip_class = "inline-block px-2 py-0.5 font-mono text-c4 rounded-sm bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white" %>
+
+<div class="flex flex-col gap-10 pb-16 lg:pt-10 text-neutral-800 dark:text-neutral-200">
+  <%= render "rubygems/tabs", rubygem: @rubygem, version: @latest_version, current: :dependencies %>
+
+  <% if @latest_version.indexed %>
+    <% %w[runtime development].each do |scope| %>
+      <% next unless @dependencies.key?(scope) %>
+      <section>
+        <h2 class="text-b1 font-semibold text-neutral-900 dark:text-white mb-2">
+          <span class="text-blue-700 dark:text-blue-300"><%= @dependencies[scope].size %></span>
+          <%= t ".scope_header", title: scope.titleize, count: @dependencies[scope].size %>
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b-2 border-neutral-300 dark:border-neutral-700">
+                <th scope="col" class="<%= th_class %> w-1/3"><%= t ".gem_header" %></th>
+                <th scope="col" class="<%= th_class %>"><%= t ".required_version_header" %></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200 dark:divide-neutral-800">
+              <% @dependencies[scope].each do |name, version, requirements| %>
+                <tr>
+                  <td class="<%= td_class %> text-b3">
+                    <% if version %>
+                      <%= link_to rubygem_version_path(name, version), target: :_blank, rel: "noopener",
+                            class: "text-neutral-900 dark:text-white hover:text-orange-500 dark:hover:text-orange-400" do %>
+                        <%= name %> <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version %></span>
+                      <% end %>
+                    <% else %>
+                      <span class="text-neutral-900 dark:text-white"><%= name %></span>
+                    <% end %>
+                  </td>
+                  <td class="<%= td_class %>">
+                    <span class="flex flex-wrap gap-2">
+                      <% requirements.to_s.split(", ").each do |requirement| %>
+                        <code class="<%= chip_class %>"><%= requirement %></code>
+                      <% end %>
+                    </span>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    <% end %>
+
+    <% if @reverse_dependencies.present? %>
+      <section>
+        <h2 class="text-b1 font-semibold text-neutral-900 dark:text-white mb-2"><%= t ".reverse_dependencies_header" %></h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="sr-only sm:not-sr-only">
+              <tr class="border-b-2 border-neutral-300 dark:border-neutral-700">
+                <th scope="col" class="<%= th_class %> w-1/3"><%= t ".gem_header" %></th>
+                <th scope="col" class="<%= th_class %> text-right !pr-0 sm:text-left sm:!pr-4"><%= t ".version_header" %></th>
+                <th scope="col" class="<%= th_class %> hidden sm:table-cell"><%= t ".date_header" %></th>
+                <th scope="col" class="<%= th_class %> text-right !pr-0 hidden sm:table-cell"><%= t ".downloads_header" %></th>
+              </tr>
+            </thead>
+            <tbody class="border-t sm:border-t-0 divide-y border-neutral-200 divide-neutral-200 dark:border-neutral-800 dark:divide-neutral-800">
+              <% @reverse_dependencies.each do |reverse_dependency| %>
+                <% version = reverse_dependency.most_recent_version %>
+                <tr>
+                  <td class="<%= td_class %> text-b3">
+                    <%= link_to rubygem_path(reverse_dependency.slug),
+                          class: "text-neutral-900 dark:text-white hover:text-orange-500 dark:hover:text-orange-400" do %>
+                      <%= reverse_dependency.name %>
+                      <span class="sm:hidden block mt-1 text-b4 text-neutral-700 dark:text-neutral-400">
+                        <%= t ".downloads_count", count: number_to_human(reverse_dependency.downloads, precision: 3, significant: true) %>
+                      </span>
+                    <% end %>
+                  </td>
+                  <td class="<%= td_class %> text-right !pr-0 sm:text-left sm:!pr-4">
+                    <% if version %>
+                      <code class="<%= chip_class %>"><%= version.number %></code>
+                      <p class="sm:hidden mt-1 text-b4 text-neutral-700 dark:text-neutral-400"><%= version.authored_at.to_date.strftime("%b %d, %Y") %></p>
+                    <% end %>
+                  </td>
+                  <td class="<%= td_class %> text-b4 text-neutral-700 dark:text-neutral-400 text-nowrap hidden sm:table-cell">
+                    <%= nice_date_for(version.authored_at) if version %>
+                  </td>
+                  <td class="<%= td_class %> !pr-0 text-b4 text-neutral-700 dark:text-neutral-400 text-nowrap text-right hidden sm:table-cell">
+                    <%= number_to_human(reverse_dependency.downloads, precision: 3, significant: true) %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-b3">
+          <%= link_to t(".see_all_reverse"), rubygem_reverse_dependencies_path(@rubygem.slug),
+                class: "text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
+        </p>
+      </section>
+    <% end %>
+  <% end %>
+</div>

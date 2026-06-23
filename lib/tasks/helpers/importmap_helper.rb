@@ -20,7 +20,7 @@ module ImportmapHelper
     end
 
     def verify_vendored_package(package, url, verbose: false)
-      vendored_body = vendored_package_path(package).read.strip
+      vendored_body = vendored_package_path(package).read(encoding: "UTF-8").strip
       vendored_body = vendored_body.lines[2..].join if vendored_body.start_with?("//") # remove the importmap-rails comment
       remote_body = load_package_file(url).strip
 
