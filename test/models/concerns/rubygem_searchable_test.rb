@@ -70,7 +70,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         yanked:            false,
         summary:           "some summary",
         description:       "some description",
-        updated:           @rubygem.updated_at,
+        updated:           @rubygem.updated_at.utc.iso8601,
         dependencies:      { development: [@dev_dep], runtime: [@run_dep] }
       }
 
