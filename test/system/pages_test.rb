@@ -4,10 +4,8 @@ require "application_system_test_case"
 
 class PagesTest < ApplicationSystemTestCase
   test "renders /pages/about for all supported languages" do
-    skip "locales temporarily disabled"
-
     I18n.available_locales.each do |locale|
-      visit "/pages/about?locale=#{locale}"
+      visit locale == I18n.default_locale ? "/pages/about" : "/#{locale}/pages/about"
 
       assert_text I18n.t("pages.about.title", locale: locale)
     end
@@ -49,5 +47,12 @@ class PagesTest < ApplicationSystemTestCase
 
     assert_current_path "/pages/supporters"
     assert_text("Supporters")
+  end
+
+  test "redirects default locale path to unprefixed path" do
+    visit "/en/pages/about"
+
+    assert_current_path "/pages/about"
+    assert_text I18n.t("pages.about.title", locale: :en)
   end
 end
