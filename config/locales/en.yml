@@ -235,6 +235,17 @@ en:
   dependencies:
     show:
       click_to_expand: Click on the arrow icon to expand.
+      gem_header: Gem
+      required_version_header: Required version
+      scope_header:
+        one: "%{title} Dependency"
+        other: "%{title} Dependencies"
+      reverse_dependencies_header: Reverse Dependencies
+      version_header: Version
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      see_all_reverse: See all reverse dependencies
   email_confirmations:
     create:
       promise_resend: We will email you confirmation link to activate your account if one exists.
@@ -252,6 +263,9 @@ en:
       learn:
         install_rubygems: Install RubyGems
   layouts:
+    subject:
+      subject_label: Details
+      subject_secondary_label: Additional details
     application:
       footer:
         about: About
@@ -294,6 +308,8 @@ en:
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
   breadcrumbs:
     home: Home
+    latest_version: "%{version} (latest)"
+    versions: Versions
     dashboard: Dashboard
     settings: Settings
     org_name: "Org: %{name}"
@@ -751,6 +767,11 @@ en:
   rubygems:
     aside:
       downloads_for_this_version: For this version
+      github_star: Star
+      latest_version_button: Latest Version
+      versions_button:
+        one: "1 Version"
+        other: "%{count} Versions"
       gem_version_age: Version Released
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
@@ -764,8 +785,9 @@ en:
         docs: Documentation
         download: Download
         funding: Funding
-        header: Links
+        header: Helpful Links
         home: Homepage
+        verified: Verified link
         mail: Mailing List
         analytics: Analytics
         report_abuse: Report abuse
@@ -810,10 +832,16 @@ en:
     show:
       bundler_header: Gemfile
       install: install
+      tabs:
+        label: Gem navigation
+        readme: Readme
+        gem_info: Gem info
+        contents: Contents
+        dependencies: Dependencies
       licenses_header:
         one: License
         other: Licenses
-      no_licenses: N/A
+      no_licenses: No License
       requirements_header: Requirements
       show_all_versions: Show all versions (%{count} total)
       versions_header: Versions

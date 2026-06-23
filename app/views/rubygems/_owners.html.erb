@@ -1,0 +1,50 @@
+<% heading_class = "text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200" %>
+<% if rubygem.owned_by_organization? %>
+  <div class="flex flex-col gap-2">
+    <h3 class="<%= heading_class %>"><%= t "rubygems.release_info.managed_by" %></h3>
+    <%= link_to rubygem.organization.name, organization_path(rubygem.organization), class: "w-fit text-b3 text-neutral-800 dark:text-neutral-200 hover:text-orange-500 dark:hover:text-orange-400" %>
+
+    <% if rubygem.owners.any? %>
+      <h3 class="<%= heading_class %> mt-2"><%= t "rubygems.release_info.outside_contributors" %></h3>
+      <ul class="gem__users flex flex-col gap-1">
+        <% rubygem.owners.sort_by(&:id).each do |owner| %>
+          <li>
+            <%= render "rubygems/owner", owner: owner %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% elsif rubygem.owners.present? %>
+  <div class="flex flex-col gap-2">
+    <h3 class="<%= heading_class %>"><%= t "rubygems.release_info.owners_header" %></h3>
+    <ul class="gem__users flex flex-col gap-1">
+      <% rubygem.owners.sort_by(&:id).each do |owner| %>
+        <li>
+          <%= render "rubygems/owner", owner: owner %>
+        </li>
+      <% end %>
+    </ul>
+
+    <% if rubygem.owned_by?(current_user) %>
+      <% if rubygem.owners.without_mfa.present? %>
+        <% if current_user.mfa_disabled? %>
+          <span class="gem__users__mfa-text mfa-warn block text-b4 text-yellow-800 dark:text-yellow-500 cursor-pointer">
+            <%= t "rubygems.release_info.self_no_mfa_warning_html" %>
+          </span>
+        <% else %>
+          <span class="gem__users__mfa-text mfa-warn block text-b4 text-yellow-800 dark:text-yellow-500 cursor-pointer"><%= t "rubygems.release_info.not_using_mfa_warning_show" %></span>
+        <% end %>
+
+        <div class="gem__users__mfa-disabled t-item--hidden">
+          <span class="gem__users__mfa-text mfa-warn t-item--hidden block text-b4 text-yellow-800 dark:text-yellow-500 cursor-pointer"><%= t "rubygems.release_info.not_using_mfa_warning_hide" %></span>
+          <div class="gem__users flex flex-wrap gap-1">
+            <%= links_to_owners_without_mfa(rubygem) %>
+          </div>
+        </div>
+      <% else %>
+        <span class="gem__users__mfa-text mfa-info block text-b4 text-green-700 dark:text-green-500"><%= t "rubygems.release_info.using_mfa_info" %></span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

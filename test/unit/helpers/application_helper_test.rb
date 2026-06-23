@@ -3,6 +3,13 @@
 require "test_helper"
 
 class ApplicationHelperTest < ActionView::TestCase
+  def expected_avatar_tag(src)
+    initials = @user.display_handle.first(2).upcase
+    "<img id=\"id\" width=\"160\" height=\"160\" data-controller=\"avatar\" " \
+      "data-action=\"error-&gt;avatar#fallback\" data-avatar-initials-value=\"#{initials}\" " \
+      "src=\"#{src}\" />"
+  end
+
   context "page title" do
     should "return title with subtitle" do
       assert_equal "#{t :title} | #{t :subtitle}", page_title
@@ -96,7 +103,7 @@ class ApplicationHelperTest < ActionView::TestCase
         url = avatar(160, "id", @user)
         expected_uri = "/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light"
 
-        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"#{expected_uri}\" />", url
+        assert_equal expected_avatar_tag(expected_uri), url
       end
     end
 
@@ -108,19 +115,19 @@ class ApplicationHelperTest < ActionView::TestCase
       should "return light themed default avatar" do
         url = avatar(160, "id", @user, theme: :light)
 
-        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light\" />", url
+        assert_equal expected_avatar_tag("/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light"), url
       end
 
       should "return light themed default avatar by default" do
         url = avatar(160, "id", @user)
 
-        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light\" />", url
+        assert_equal expected_avatar_tag("/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=light"), url
       end
 
       should "return dark themed default avatar" do
         url = avatar(160, "id", @user, theme: :dark)
 
-        assert_equal "<img id=\"id\" width=\"160\" height=\"160\" src=\"/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=dark\" />", url
+        assert_equal expected_avatar_tag("/users/#{@user.id}/avatar.jpeg?size=160&amp;theme=dark"), url
       end
     end
   end
