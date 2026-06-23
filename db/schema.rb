@@ -675,6 +675,47 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
+  create_table "transparency_log_events", force: :cascade do |t|
+    t.string "actor_handle", limit: 128
+    t.string "actor_id", limit: 128, null: false
+    t.string "actor_type", limit: 50, null: false
+    t.integer "attempt_count", default: 0, null: false
+    t.string "authentication_method", limit: 100, null: false
+    t.jsonb "canonical_payload", default: {}, null: false
+    t.string "canonicalization_algorithm", limit: 64, null: false
+    t.string "canonicalization_version", limit: 32, null: false
+    t.datetime "created_at", null: false
+    t.string "event_type", limit: 100, null: false
+    t.uuid "event_uuid", null: false
+    t.text "last_error"
+    t.binary "payload_digest", null: false
+    t.string "payload_digest_algorithm", limit: 32, null: false
+    t.binary "public_key_der", null: false
+    t.string "public_key_id", limit: 128, null: false
+    t.text "rekor_checkpoint"
+    t.string "rekor_entry_kind", limit: 50
+    t.string "rekor_entry_version", limit: 32
+    t.jsonb "rekor_inclusion_proof"
+    t.bigint "rekor_log_index"
+    t.string "rekor_log_origin", limit: 255
+    t.jsonb "rekor_request_body", default: {}, null: false
+    t.jsonb "rekor_response_body"
+    t.datetime "rekor_submitted_at"
+    t.binary "signature", null: false
+    t.string "signing_algorithm", limit: 64, null: false
+    t.string "signing_key_id", limit: 128, null: false
+    t.string "signing_mode", limit: 50, null: false
+    t.string "status", limit: 32, default: "pending", null: false
+    t.string "subject_name", limit: 255, null: false
+    t.string "subject_type", limit: 50, null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_type", "created_at"], name: "index_transparency_log_events_on_event_type_and_created_at"
+    t.index ["event_uuid"], name: "index_transparency_log_events_on_event_uuid", unique: true
+    t.index ["payload_digest_algorithm", "payload_digest"], name: "index_transparency_log_events_on_payload_digest", unique: true
+    t.index ["status"], name: "index_transparency_log_events_on_status"
+    t.index ["subject_type", "subject_name"], name: "index_transparency_log_events_on_subject_type_and_subject_name"
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "api_key"
     t.string "blocked_email"
