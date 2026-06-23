@@ -231,6 +231,17 @@ zh-CN:
   dependencies:
     show:
       click_to_expand: 单击箭头图标展开。
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: 如果您的帐户存在，我们将通过邮件发送确认链接来激活您的帐户。
@@ -248,6 +259,9 @@ zh-CN:
       learn:
         install_rubygems: 安装 RubyGems
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: 关于
@@ -290,6 +304,8 @@ zh-CN:
       mfa_banner_html:
   breadcrumbs:
     home: 首页
+    latest_version:
+    versions:
     dashboard: 仪表盘
     settings: 设置
     org_name: 组织：%{name}
@@ -753,6 +769,11 @@ zh-CN:
   rubygems:
     aside:
       downloads_for_this_version: 这个版本
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: 版本发布
       required_ruby_version: 需要的 Ruby 版本
       required_rubygems_version: 需要的 RubyGems 版本
@@ -768,6 +789,7 @@ zh-CN:
         funding: 募集资金
         header: 链接
         home: 主页
+        verified:
         mail: 邮件列表
         analytics:
         report_abuse: 举报投诉
@@ -812,6 +834,12 @@ zh-CN:
     show:
       bundler_header: Gemfile
       install: 安装
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: 许可
         other: 许可

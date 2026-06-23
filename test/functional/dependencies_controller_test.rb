@@ -62,9 +62,36 @@ class DependenciesControllerTest < ActionController::TestCase
       should "render gem name" do
         assert page.has_content?(@rubygem.name)
       end
-      should "render dependencies of gem" do
-        refute page.has_content?(@dependency.name)
+      should "render the unresolved dependency without a link" do
+        assert page.has_content?(@dependency.name)
+        refute page.has_link?(@dependency.name)
       end
+    end
+
+    context "with a dependency that has a missing rubygem" do
+      setup do
+        @missing_dependency = create(:dependency, :runtime, version: @version)
+        @missing_dependency.update_attribute(:requirements, "= 1.2.0")
+        @missing_dependency.rubygem.update_column(:name, "missing")
+        @missing_dependency.update_column(:rubygem_id, nil)
+
+        request_endpoint(@rubygem.name, @version.number)
+      end
+
+      should respond_with :success
+      should "show dependencies that have a rubygem along with the missing one's requirements" do
+        assert page.has_content?(@dep_rubygem.name)
+        assert page.has_content?("1.2.0")
+      end
+    end
+
+    should "mark the dependencies tab as the current tab" do
+      assert page.has_selector?("a[aria-current='page']", text: "Dependencies")
+    end
+
+    should "render the gem sidebar" do
+      assert page.has_selector?("h1", text: @rubygem.name)
+      assert page.has_link?("Subscribe")
     end
 
     context "with an invalid version that makes a valid gem full name" do

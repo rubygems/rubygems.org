@@ -72,7 +72,8 @@ if (document.querySelectorAll('.github-btn').length) {
       counter.setAttribute('aria-label', counter.textContent + ' stargazers' + LABEL_SUFFIX);
 
       if (counter.textContent !== '') {
-        counter.style.display = 'block';
+        // inline display:flex overrides the Tailwind `hidden` class and lets `items-center` center the count
+        counter.style.display = 'flex';
         counter.removeAttribute('aria-hidden');
       }
     };

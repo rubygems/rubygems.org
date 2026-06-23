@@ -44,9 +44,9 @@ class YankTest < ApplicationSystemTestCase
     assert_text "This version has been yanked"
     assert page.has_css? 'meta[name="robots"][content="noindex"]', visible: false
 
-    assert_text("YANKED BY")
+    assert_text("Yanked by")
 
-    css = %(div.gem__users a[alt=#{@user.handle}])
+    css = %(.gem__users a[alt=#{@user.handle}])
 
     assert page.has_css?(css, count: 2)
 
