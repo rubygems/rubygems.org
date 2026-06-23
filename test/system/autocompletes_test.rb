@@ -21,7 +21,7 @@ class AutocompletesTest < ApplicationSystemTestCase
     @fill_field.set "rubocop"
     click_on class: "home__search__icon"
 
-    assert_text "search"
+    assert_text "Search"
     assert_text "rubocop"
   end
 
