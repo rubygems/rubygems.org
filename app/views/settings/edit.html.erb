@@ -24,12 +24,12 @@
 
   <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
     <% if @user.mfa_enabled? %>
-      <section class="py-8">
+      <section class="py-4">
         <h3 class="<%= sub_heading %> pt-8"><%= t(".mfa.level.title") %></h3>
         <p class="<%= note_class %>"><%= t(".mfa.level_html") %></p>
 
         <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit",
-              class: "mt-4 flex flex-col gap-4 sm:flex-row sm:items-end" do %>
+              class: "my-4 flex flex-col gap-4 sm:flex-row sm:items-end" do %>
           <div class="flex-1">
             <%= label_tag :level, t(".mfa.level.title"), class: "sr-only" %>
             <%= select_tag :level, options_for_select(@mfa_options, @user.mfa_level), class: field_class %>
@@ -39,7 +39,7 @@
       </section>
     <% end %>
 
-    <section class="py-8">
+    <section class="py-4">
       <div class="flex items-center gap-3">
         <h3 class="<%= sub_heading %>"><%= t(".webauthn_credentials") %></h3>
         <%= render Settings::MfaStatusBadgeComponent.new(enabled: @user.webauthn_enabled?) %>
@@ -54,7 +54,9 @@
         </ul>
       <% end %>
 
-      <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
+      <div class="pb-4">
+        <%= render "webauthn_credentials/form", webauthn_credential: @webauthn_credential %>
+      </div>
     </section>
 
     <section class="py-8 first:pt-0 last:pb-0">
