@@ -1006,6 +1006,7 @@ es:
     new:
       forgot_password: "¿Olvidaste tu contraseña?"
       resend_confirmation: "¿No recibiste tu correo electrónico de confirmación?"
+      confirm:
     verify:
       title:
       confirm: Confirmar

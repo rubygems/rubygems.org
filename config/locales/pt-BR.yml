@@ -916,6 +916,7 @@ pt-BR:
     new:
       forgot_password: Esqueceu sua Senha?
       resend_confirmation: Não recebeu o email de confirmação?
+      confirm:
     verify:
       title:
       confirm:

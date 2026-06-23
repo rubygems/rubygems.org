@@ -893,6 +893,7 @@ nl:
     new:
       forgot_password: Wachtwoord vergeten?
       resend_confirmation: Geen bevestigingsemail ontvangen?
+      confirm:
     verify:
       title:
       confirm:

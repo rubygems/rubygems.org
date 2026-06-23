@@ -894,6 +894,7 @@ zh-TW:
     new:
       forgot_password: 忘記密碼？
       resend_confirmation: 沒收到確認信？
+      confirm:
     verify:
       title:
       confirm: 確認

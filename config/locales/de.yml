@@ -981,6 +981,7 @@ de:
     new:
       forgot_password: Passwort vergessen?
       resend_confirmation:
+      confirm:
     verify:
       title:
       confirm:

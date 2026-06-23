@@ -913,6 +913,7 @@ ja:
     new:
       forgot_password: パスワードをお忘れですか？
       resend_confirmation: 確認メールを受け取っていませんか？
+      confirm:
     verify:
       title:
       confirm: 確定
