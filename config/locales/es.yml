@@ -856,6 +856,10 @@ es:
     request_denied: La solicitud fue denegada. No pudimos verificar tu contraseña.
     show:
       title: Perfil de %{username}
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:

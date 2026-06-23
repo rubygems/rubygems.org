@@ -765,6 +765,10 @@ en:
     request_denied: This request was denied. We could not verify your password.
     show:
       title: Profile of %{username}
+      gems: Gems
+      no_gems: This user has not pushed any gems yet.
+      edit_profile: Edit Profile
+      email_me: Email Me
     security_events:
       title: Security Events
       description_html: "This page shows the security events that have occurred on your account. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
