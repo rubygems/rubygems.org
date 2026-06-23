@@ -1,4 +1,5 @@
 <% @title = t(".api_keys") %>
+<% add_breadcrumb(@title) %>
 
 <% content_for :subject do %>
   <%= render "dashboards/subject", user: current_user, current: :settings %>

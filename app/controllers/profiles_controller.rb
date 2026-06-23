@@ -24,6 +24,7 @@ class ProfilesController < ApplicationController
 
   def edit
     @user = current_user
+    add_breadcrumb(current_user.handle)
   end
 
   def update

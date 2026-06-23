@@ -1,10 +1,10 @@
 <% @title = t(".title") %>
+<% add_breadcrumb(@title) %>
 
 <% content_for :subject do %>
   <%= render "dashboards/subject", user: current_user, current: :settings %>
 <% end %>
 
-<%# TODO, ¿Should these exist in a component somewhere? %>
 <%
   sub_heading = "text-b2 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200"
   note_class  = "mt-2 text-b3 text-neutral-700 dark:text-neutral-300 " \
@@ -24,7 +24,7 @@
 
   <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
     <% if @user.mfa_enabled? %>
-      <section class="py-8 first:pt-0">
+      <section class="py-8">
         <h3 class="<%= sub_heading %> pt-8"><%= t(".mfa.level.title") %></h3>
         <p class="<%= note_class %>"><%= t(".mfa.level_html") %></p>
 
@@ -39,7 +39,7 @@
       </section>
     <% end %>
 
-    <section class="py-8 first:pt-0">
+    <section class="py-8">
       <div class="flex items-center gap-3">
         <h3 class="<%= sub_heading %>"><%= t(".webauthn_credentials") %></h3>
         <%= render Settings::MfaStatusBadgeComponent.new(enabled: @user.webauthn_enabled?) %>

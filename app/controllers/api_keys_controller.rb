@@ -4,11 +4,9 @@ class ApiKeysController < ApplicationController
   before_action :disable_cache, only: :index
   before_action :set_page, only: :index
 
-  # create/update re-render new/edit on validation failure, so they share the layout
   layout "subject", only: %i[index new edit create update]
 
   include ApiKeyable
-
   include SessionVerifiable
 
   verify_session_before
