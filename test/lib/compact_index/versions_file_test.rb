@@ -75,6 +75,22 @@ class CompactIndex::VersionsFileTest < ActiveSupport::TestCase
       end
     end
 
+    should "create from sorted gems without sorting" do
+      gems = [
+        CompactIndex::Gem.new("gem_b", [build_version]),
+        CompactIndex::Gem.new("gem_a", [build_version])
+      ]
+
+      freeze_time do
+        @create_versions_file.create_from_sorted(gems)
+        expected = "created_at: #{Time.now.iso8601}\n---\n" \
+                   "gem_b 1.0 info+test_gem+1.0\n" \
+                   "gem_a 1.0 info+test_gem+1.0\n"
+
+        assert_equal expected, @create_file.open.read
+      end
+    end
+
     should "use the given version order" do
       versions = [
         build_version(number: "1.3.0"),
