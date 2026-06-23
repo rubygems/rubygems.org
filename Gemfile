@@ -102,7 +102,7 @@ gem "local_time", "~> 3.0"
 gem "herb", "~> 0.10"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 4.5"
+  gem "tailwindcss-rails", "~> 4.6"
 end
 
 group :development, :test do
