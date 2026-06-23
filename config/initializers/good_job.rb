@@ -36,6 +36,17 @@ Rails.application.configure do
     }
   }
 
+  # Account-blocking job: schedule in production only, mirroring the previous
+  # production-only Kubernetes CronJob. (enable_cron is on in all non-dev envs.)
+  if Rails.env.production?
+    config.good_job.cron[:verify_user_email_domains] = {
+      cron: "0 12 * * *",
+      class: "VerifyUserEmailDomainsJob",
+      set: { priority: 10 },
+      description: "Blocking users whose email domain has expired daily at 12:00 UTC"
+    }
+  end
+
   # see https://github.com/bensheldon/good_job/pull/883
   # this makes good_job consistent with the priorities we used
   # previously for delayed job

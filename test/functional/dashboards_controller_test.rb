@@ -62,6 +62,20 @@ class DashboardsControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to show with Datadog AppSec" do
+      setup do
+        @user = create(:user, handle: "appsec_dashboard")
+        sign_in_as(@user)
+      end
+
+      should "set hashed usr.login and usr.id tags" do
+        span = with_appsec_trace { get :show, format: "atom" }
+
+        assert_equal @user.id.to_s, span.get_tag("usr.id")
+        assert_match(/eed7fe63e132.*cbaf0e/, span.get_tag("usr.login"))
+      end
+    end
+
     context "On GET to show as an atom feed" do
       setup do
         @subscribed_versions = (1..2).map { |n| create(:version, created_at: n.hours.ago) }

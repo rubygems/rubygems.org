@@ -28,7 +28,7 @@
     "ghcr.io/devcontainers/features/github-cli:1": {},
     // "ghcr.io/rails/devcontainer/features/activestorage": {},
     "ghcr.io/rails/devcontainer/features/postgres-client:1": {},
-    "ghcr.io/devcontainers/features/node:2": {},
+    "ghcr.io/devcontainers/features/node:": {},
     "ghcr.io/devcontainers-extra/features/apt-packages:1": {
       "packages": [
         "pkg-config"
