@@ -15,7 +15,6 @@ class SearchTest < ApplicationSystemTestCase
     click_button "search_submit"
 
     assert_text "LDAP"
-
     assert_text "LDAP-PLUS"
   end
 
@@ -59,7 +58,7 @@ class SearchTest < ApplicationSystemTestCase
     visit "/search?query=ruby&original_script_name=javascript:alert(1)//&script_name=javascript:alert(1)//"
 
     assert_text "ruby-ruby"
-    assert page.has_link?("Next", href: "/search?page=2&query=ruby")
+    assert page.has_link?(href: "/search?page=2&query=ruby")
     Kaminari.configure { |c| c.default_per_page = 30 }
   end
 
@@ -77,7 +76,7 @@ class SearchTest < ApplicationSystemTestCase
 
       assert_text "DISPLAYING GEM 1 - 1 OF 3 IN TOTAL"
 
-      click_link "Last"
+      find(".last-page-button").click
 
       assert_text "DISPLAYING GEM 2 - 2 OF 3 IN TOTAL"
 
@@ -97,7 +96,7 @@ class SearchTest < ApplicationSystemTestCase
     visit "/gems/#{dependency.name}/reverse_dependencies"
 
     assert_text "Search reverse dependencies Gems…"
-    within ".reverse__dependencies" do
+    within "[data-testid='reverse-dependencies']" do
       assert_text gem.name
     end
 

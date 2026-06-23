@@ -32,7 +32,7 @@
             <th scope="col" class="<%= th_class %> text-right !pr-0 hidden sm:table-cell"><%= t(".downloads_header") %></th>
           </tr>
         </thead>
-        <tbody class="border-t sm:border-t-0 divide-y border-neutral-200 divide-neutral-200 dark:border-neutral-800 dark:divide-neutral-800">
+        <tbody class="border-t sm:border-t-0 divide-y border-neutral-200 divide-neutral-200 dark:border-neutral-800 dark:divide-neutral-800" data-testid="reverse-dependencies">
           <% @reverse_dependencies.each do |reverse_dependency| %>
             <% version = reverse_dependency.most_recent_version %>
             <tr>
