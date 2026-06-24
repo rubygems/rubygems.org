@@ -12,8 +12,6 @@ class LocaleTest < ApplicationSystemTestCase
   end
 
   test "locale is switched via locale menu" do
-    skip "locale switcher temporarily disabled"
-
     visit root_path
 
     assert_equal I18n.default_locale.to_s, page.find("html")[:lang]
