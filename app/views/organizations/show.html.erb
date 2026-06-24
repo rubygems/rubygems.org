@@ -27,7 +27,7 @@
             end
           %>
           <%= t.timeline_item(version.authored_at, pusher_link) do %>
-            <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(version.rubygem.slug) %></div>
+            <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(id: version.rubygem.slug) %></div>
             <%= version_number(version) %>
           <% end %>
         <% end %>
@@ -48,7 +48,7 @@
     <%= c.divided_list do %>
       <% @gems.each do |rubygem| %>
         <%= c.list_item_to(
-          rubygem_path(rubygem.slug),
+          rubygem_path(id: rubygem.slug),
           title: short_info(rubygem.most_recent_version),
         ) do %>
           <div class="flex flex-col w-full justify-between">
@@ -83,7 +83,7 @@
   <% else %>
     <%= c.divided_list do %>
       <% @memberships.each do |membership| %>
-        <%= c.list_item_to(profile_path(membership.user.handle)) do %>
+        <%= c.list_item_to(profile_path(id: membership.user.handle)) do %>
           <div class="flex justify-between">
             <p class="text-neutral-800 dark:text-white"><%= membership.user.name %></p>
             <% if @organization.user_is_member?(current_user) %>
@@ -100,7 +100,7 @@
 
     <% if policy(@organization).invite_member? %>
       <div class="pt-6 flex flex-row justify-end">
-        <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
+        <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(organization_id: @organization), type: :link %>
       </div>
     <% end %>
   <% end %>

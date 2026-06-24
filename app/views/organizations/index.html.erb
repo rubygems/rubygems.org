@@ -25,7 +25,7 @@
       <% end %>
     <% else %>
       <% @memberships.each do |membership| %>
-        <%= c.list_item_to(organization_path(membership.organization.handle)) do %>
+        <%= c.list_item_to(organization_path(id: membership.organization.handle)) do %>
           <div class="flex flex-row w-full justify-between items-center">
             <div class="flex flex-col">
               <p class="text-neutral-800 dark:text-white"><%= membership.organization.name %></p>

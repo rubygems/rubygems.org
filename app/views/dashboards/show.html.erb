@@ -21,14 +21,14 @@
 
   <% if @latest_updates.empty? %>
     <%= prose do %>
-      <i><%= t('.no_subscriptions_html', :gem_link => link_to(t('.gem_link_text'), rubygem_path("rake"))) %></i>
+      <i><%= t('.no_subscriptions_html', :gem_link => link_to(t('.gem_link_text'), rubygem_path(id: "rake"))) %></i>
     <% end %>
   <% else %>
     <%= c.scrollable do %>
       <%= render Card::TimelineComponent.new do |t| %>
         <% @latest_updates.each do |version| %>
           <%= t.timeline_item(version.authored_at, t.link_to_pusher(version)) do %>
-              <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(version.rubygem.slug) %></div>
+              <div class="flex text-b1 text-neutral-800 dark:text-white"><%= link_to version.rubygem.name, rubygem_path(id: version.rubygem.slug) %></div>
               <%= version_number(version) %>
           <% end %>
         <% end %>
@@ -49,7 +49,7 @@
     <%= c.divided_list do %>
       <% @my_gems.each do |rubygem| %>
         <%= c.list_item_to(
-          rubygem_path(rubygem.slug),
+          rubygem_path(id: rubygem.slug),
           title: short_info(rubygem.most_recent_version),
         ) do %>
           <div class="flex flex-col w-full justify-between">
@@ -76,7 +76,7 @@
     <% end %>
     <%= c.list do %>
       <% @subscribed_gems.each do |gem| %>
-        <%= c.list_item_to(rubygem_path(gem.slug), title: short_info(gem.most_recent_version)) do %>
+        <%= c.list_item_to(rubygem_path(id: gem.slug), title: short_info(gem.most_recent_version)) do %>
           <h3 class="text-b1"><%= gem.name %></h3>
           <p class="text-b3 text-neutral-600"><%= short_info(gem.most_recent_version) %></p>
         <% end %>
@@ -94,7 +94,7 @@
     <% end %>
     <%= c.divided_list do %>
       <% current_user.memberships.preload(:organization).each do |membership| %>
-        <%= c.list_item_to(organization_path(membership.organization)) do %>
+        <%= c.list_item_to(organization_path(id: membership.organization)) do %>
           <div class="flex flex-row w-full justify-between items-center">
             <div class="flex flex-col">
               <p class="text-neutral-800 dark:text-white"><%= membership.organization.name %></p>

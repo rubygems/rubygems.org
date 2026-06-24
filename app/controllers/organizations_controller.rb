@@ -29,7 +29,7 @@ class OrganizationsController < Organizations::BaseController
   end
 
   def edit
-    add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+    add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(id: @organization)
     add_breadcrumb t("breadcrumbs.settings")
 
     authorize @organization
@@ -39,7 +39,7 @@ class OrganizationsController < Organizations::BaseController
     authorize @organization
 
     if @organization.update(organization_params)
-      redirect_to organization_path(@organization)
+      redirect_to organization_path(id: @organization)
     else
       render :edit
     end
