@@ -17,7 +17,7 @@ class OIDC::ProvidersControllerTest < ActionDispatch::IntegrationTest
     end
 
     should "get show" do
-      get profile_oidc_provider_url(@provider)
+      get profile_oidc_provider_url(id: @provider)
 
       assert_response :success
     end
@@ -31,7 +31,7 @@ class OIDC::ProvidersControllerTest < ActionDispatch::IntegrationTest
 
   context "without a verified session" do
     should "redirect show to verify" do
-      get profile_oidc_provider_url(@provider)
+      get profile_oidc_provider_url(id: @provider)
 
       assert_response :redirect
       assert_redirected_to verify_session_path

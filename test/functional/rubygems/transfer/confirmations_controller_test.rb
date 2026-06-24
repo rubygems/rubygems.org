@@ -16,7 +16,7 @@ class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::Integrat
     patch confirm_transfer_rubygems_path(as: @owner)
 
     assert_response :redirect
-    assert_redirected_to organization_path(@organization.handle)
+    assert_redirected_to organization_path(id: @organization.handle)
     assert_equal flash[:notice], "Successfully transferred 1 gem to #{@organization.name}."
   end
 

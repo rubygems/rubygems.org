@@ -16,7 +16,7 @@ class OIDC::IdTokensControllerTest < ActionDispatch::IntegrationTest
     end
 
     should "get show" do
-      get profile_oidc_id_token_url(@id_token)
+      get profile_oidc_id_token_url(id: @id_token)
 
       assert_response :success
     end
@@ -30,7 +30,7 @@ class OIDC::IdTokensControllerTest < ActionDispatch::IntegrationTest
 
   context "without a verified session" do
     should "redirect show to verify" do
-      get profile_oidc_id_token_url(@id_token)
+      get profile_oidc_id_token_url(id: @id_token)
 
       assert_response :redirect
       assert_redirected_to verify_session_path

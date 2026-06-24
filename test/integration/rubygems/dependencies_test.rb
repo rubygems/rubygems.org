@@ -9,7 +9,7 @@ class Rubygems::DependenciesTest < ActionDispatch::IntegrationTest
   end
 
   test "anonymous dependencies page sets public cache headers" do
-    get rubygem_version_dependencies_path(@rubygem.slug, @version.slug)
+    get rubygem_version_dependencies_path(rubygem_id: @rubygem.slug, version_id: @version.slug)
 
     assert_response :success
     assert_nil response.headers["Set-Cookie"]

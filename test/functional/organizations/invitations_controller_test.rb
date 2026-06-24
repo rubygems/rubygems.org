@@ -10,7 +10,7 @@ class Organizations::InvitationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /organizations/:organization_handle/invitation" do
-    get organization_invitation_path(@organization, as: @user)
+    get organization_invitation_path(organization_id: @organization, as: @user)
 
     assert_response :success
   end
@@ -18,15 +18,15 @@ class Organizations::InvitationsControllerTest < ActionDispatch::IntegrationTest
   test "GET /organizations/:organization_handle/invitation with already confirmed membership" do
     @membership.update!(confirmed_at: Time.current)
 
-    get organization_invitation_path(@organization, as: @user)
+    get organization_invitation_path(organization_id: @organization, as: @user)
 
     assert_response :not_found
   end
 
   test "PATCH /organizations/:organization_handle/invitation" do
-    patch organization_invitation_path(@organization, as: @user)
+    patch organization_invitation_path(organization_id: @organization, as: @user)
 
-    assert_redirected_to organization_path(@organization)
+    assert_redirected_to organization_path(id: @organization)
 
     @membership.reload
 

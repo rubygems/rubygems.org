@@ -33,7 +33,7 @@ class SearchTest < ApplicationSystemTestCase
     click_link "Yanked (1)"
 
     assert_text "LDAP"
-    assert page.has_selector? "a[href='#{rubygem_path('LDAP')}']"
+    assert page.has_selector? "a[href='#{rubygem_path(id: 'LDAP')}']"
   end
 
   test "searching for a gem with yanked versions" do
