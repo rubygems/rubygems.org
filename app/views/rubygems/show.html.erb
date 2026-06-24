@@ -2,15 +2,16 @@
 <% @title_url = rubygem_path(id: @rubygem.slug) %>
 <% @subtitle = @latest_version&.slug %>
 
-<% content_for :head do %>
-  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(rubygem_id: @rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+<% content_for :search_engine_tags do %>
   <% if @rubygem.versions.any? && @latest_version.indexed %>
-    <!-- canonical url -->
-    <link rel="canonical" href="<%= rubygem_version_url(rubygem_id: @rubygem.slug, id: @latest_version.slug) %>" />
-    <%# Locale alternate links temporarily disabled to improve cacheability and mitigate bot abuse %>
+    <%= canonical_link_tags { |locale| rubygem_version_url(rubygem_id: @rubygem.slug, id: @latest_version.slug, locale: locale_param(locale)) } %>
   <% else %>
     <meta name="robots" content="noindex" />
   <% end %>
+<% end %>
+
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(rubygem_id: @rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
 <% end %>
 
 
