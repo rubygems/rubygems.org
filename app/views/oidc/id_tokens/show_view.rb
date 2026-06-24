@@ -13,8 +13,8 @@ class OIDC::IdTokens::ShowView < ApplicationView
       section(:created_at) { time_tag id_token.created_at }
       section(:expires_at) { time_tag id_token.api_key.expires_at }
       section(:jti) { code { id_token.jti } }
-      section(:api_key_role) { link_to id_token.api_key_role.name, profile_oidc_api_key_role_path(id_token.api_key_role.token) }
-      section(:provider) { link_to id_token.provider.issuer, profile_oidc_provider_path(id_token.provider) }
+      section(:api_key_role) { link_to id_token.api_key_role.name, profile_oidc_api_key_role_path(token: id_token.api_key_role.token) }
+      section(:provider) { link_to id_token.provider.issuer, profile_oidc_provider_path(id: id_token.provider) }
       section(:claims) { render OIDC::IdToken::KeyValuePairsComponent.new(pairs: id_token.claims) }
       section(:header) { render OIDC::IdToken::KeyValuePairsComponent.new(pairs: id_token.header) }
     end

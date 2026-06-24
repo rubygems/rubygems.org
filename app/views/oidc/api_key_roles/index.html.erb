@@ -24,13 +24,13 @@
       <% @api_key_roles.each do |api_key_role| %>
         <tr class="owners__row">
           <td class="owners__cell" data-title="Name">
-            <%= link_to api_key_role.name, profile_oidc_api_key_role_path(api_key_role.token) %>
+            <%= link_to api_key_role.name, profile_oidc_api_key_role_path(token: api_key_role.token) %>
           </td>
           <td class="owners__cell " data-title="Role Token">
             <code><%= api_key_role.token %></code>
           </td>
           <td class="owners__cell" data-title="Provider">
-            <%= link_to api_key_role.provider.issuer, profile_oidc_provider_path(api_key_role.provider) %>
+            <%= link_to api_key_role.provider.issuer, profile_oidc_provider_path(id: api_key_role.provider) %>
           </td>
         </tr>
       <% end %>

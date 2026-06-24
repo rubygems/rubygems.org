@@ -32,7 +32,7 @@ class Card::TimelineComponent < ApplicationComponent
   end
 
   def link_to_user(user)
-    link_to(profile_path(user.display_id), alt: user.display_handle, title: user.display_handle, class: "flex items-center") do
+    link_to(profile_path(id: user.display_id), alt: user.display_handle, title: user.display_handle, class: "flex items-center") do
       span(class: "w-6 h-6 inline-block mr-2 rounded") { avatar(48, "gravatar-#{user.id}", user) }
       span { user.display_handle }
     end

@@ -9,7 +9,7 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
   def create
     if @user.webauthn_enabled?
       verification = @user.refresh_webauthn_verification
-      webauthn_path = webauthn_verification_url(verification.path_token)
+      webauthn_path = webauthn_verification_url(webauthn_token: verification.path_token)
       respond_to do |format|
         format.any(:all) { render plain: webauthn_path }
         format.yaml { render yaml: { path: webauthn_path, expiry: verification.path_token_expires_at.utc } }

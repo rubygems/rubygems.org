@@ -16,7 +16,7 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
     div(class: "t-body") do
       form_with(
         model: rubygem_trusted_publisher,
-        url: rubygem_trusted_publishers_path(rubygem_trusted_publisher.rubygem.slug)
+        url: rubygem_trusted_publishers_path(rubygem_id: rubygem_trusted_publisher.rubygem.slug)
       ) do |f|
         f.label :trusted_publisher_type, class: "form__label"
         f.select :trusted_publisher_type, OIDC::TrustedPublisher.all.map { |type|

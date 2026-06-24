@@ -47,7 +47,7 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
     div(class: "tw-border-solid tw-my-4 tw-space-y-2 tw-flex tw-flex-col") do
       div(class: "sm:tw-flex sm:tw-flex-row tw-gap-4 tw-mt-2") do
         h3(class: "!tw-mb-0") { pending_trusted_publisher.rubygem_name }
-        button_to(t(".delete"), profile_oidc_pending_trusted_publisher_path(pending_trusted_publisher),
+        button_to(t(".delete"), profile_oidc_pending_trusted_publisher_path(id: pending_trusted_publisher),
           method: :delete, class: "form__submit form__submit--small")
       end
 
