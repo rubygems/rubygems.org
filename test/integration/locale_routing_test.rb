@@ -36,6 +36,27 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "default locale path redirects to unprefixed path" do
+    get "/en/pages/about"
+
+    assert_response :redirect
+    assert_redirected_to "/pages/about"
+  end
+
+  test "default locale redirect preserves query string" do
+    get "/en/search?query=rails"
+
+    assert_response :redirect
+    assert_redirected_to "/search?query=rails"
+  end
+
+  test "default locale root redirects to unprefixed root" do
+    get "/en?query=rails"
+
+    assert_response :redirect
+    assert_redirected_to "/?query=rails"
+  end
+
   test "the localized sponsors alias redirects with the locale preserved" do
     get "/de/pages/sponsors"
 
@@ -56,6 +77,25 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert page.has_css?("a.header__nav-link.is-active", text: "Gems")
+  end
+
+  test "the default locale strip can never produce an external redirect" do
+    redirected_externally =
+      begin
+        get "/en/%2F%2Fevil.com"
+        response.redirect? && response.headers["Location"].to_s.match?(%r{\A(https?:)?//})
+      rescue ActionController::RoutingError
+        false
+      end
+
+    refute redirected_externally, "leaked an external/protocol-relative redirect"
+  end
+
+  test "a region locale (zh-CN) is taken from the URL path" do
+    get "/zh-CN"
+
+    assert_response :success
+    assert_includes response.body, %(<html lang="zh-CN")
   end
 
   test "keyword route helper arguments target non-locale segments" do
