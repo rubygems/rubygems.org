@@ -223,7 +223,7 @@ Rails.application.routes.draw do
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
 
       collection do
-        get "transfer", to: redirect("/gems/transfer/organization")
+        get "transfer", to: "rubygems/transfers#new"
         delete "transfer", to: "rubygems/transfers#destroy"
 
         namespace :transfer do
@@ -287,7 +287,7 @@ Rails.application.routes.draw do
     get '/sign_up' => 'users#new', as: 'sign_up'
 
     namespace :organizations, as: :organization do
-      get "onboarding", to: redirect("/organizations/onboarding/name")
+      get "onboarding", to: "onboarding#new"
       delete "onboarding", to: "onboarding#destroy"
 
       namespace :onboarding do
@@ -344,7 +344,7 @@ Rails.application.routes.draw do
   ################################################################################
   # static pages routes
   get 'pages' => 'pages#index', constraints: { format: :html }, as: :pages
-  get 'pages/sponsors' => redirect('/pages/supporters'), constraints: { format: :html }
+  get 'pages/sponsors', to: "pages#sponsors", constraints: { format: :html }
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
   get 'supporters' => 'pages#show', defaults: { id: 'supporters' }, constraints: { format: :html }, as: :supporters
   get 'security' => 'pages#show', defaults: { id: 'security' }, constraints: { format: :html }, as: :security
