@@ -1,7 +1,7 @@
 <%
   add_breadcrumb "Dashboard", dashboard_path
   add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle)
-  add_breadcrumb t("breadcrumbs.members"), organization_memberships_path(@organization)
+  add_breadcrumb t("breadcrumbs.members"), organization_memberships_path(organization_id: @organization)
 %>
 
 <% content_for :subject do %>
@@ -16,13 +16,13 @@
   <%= c.head do %>
     <%= c.title t("organizations.show.members"), icon: "organizations", count: @memberships_count %>
     <% if policy(@organization).invite_member? %>
-      <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(@organization), type: :link %>
+      <%= render ButtonComponent.new t(".invite"), new_organization_membership_path(organization_id: @organization), type: :link %>
     <% end %>
   <% end %>
   <%= c.divided_list do %>
     <% @memberships.each do |membership| %>
       <%= c.list_item_to(
-        policy(@organization).list_memberships? ? edit_organization_membership_path(@organization, membership) : profile_path(membership.user),
+        policy(@organization).list_memberships? ? edit_organization_membership_path(organization_id: @organization, id: membership) : profile_path(id: membership.user),
         title: membership.user.handle,
       ) do %>
         <div class="flex flex-col w-full justify-between">

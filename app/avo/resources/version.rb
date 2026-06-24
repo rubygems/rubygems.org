@@ -27,7 +27,7 @@ class Avo::Resources::Version < Avo::BaseResource
   def fields # rubocop:disable Metrics
     field :full_name, as: :text, link_to_resource: true
     field :id, as: :id, hide_on: :index, as_html: true do |_id, *_args|
-      link_to record.id, main_app.rubygem_version_url(record.rubygem.slug, record.slug)
+      link_to record.id, main_app.rubygem_version_url(rubygem_id: record.rubygem.slug, id: record.slug)
     end
 
     field :rubygem, as: :belongs_to

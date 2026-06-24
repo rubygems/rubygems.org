@@ -38,7 +38,7 @@ class Organizations::MembersController < Organizations::BaseController
 
     if @membership.save
       OrganizationMailer.user_invited(@membership).deliver_later
-      redirect_to organization_memberships_path(@organization), notice: t(".member_invited")
+      redirect_to organization_memberships_path(organization_id: @organization), notice: t(".member_invited")
     else
       render :new, status: :unprocessable_content
     end
@@ -48,7 +48,7 @@ class Organizations::MembersController < Organizations::BaseController
     @membership.assign_attributes(membership_params[:membership])
     authorize @membership, :update?
     if @membership.save
-      redirect_to organization_memberships_path(@organization), notice: t(".member_updated")
+      redirect_to organization_memberships_path(organization_id: @organization), notice: t(".member_updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -56,20 +56,23 @@ class Organizations::MembersController < Organizations::BaseController
 
   def destroy
     authorize @membership, :destroy?
-    return redirect_to organization_memberships_path(@organization), alert: t(".cannot_remove_self") if current_user == @membership.user
+    if current_user == @membership.user
+      return redirect_to organization_memberships_path(organization_id: @organization), alert: t(".cannot_remove_self")
+    end
+
     @membership.destroy!
 
-    redirect_to organization_memberships_path(@organization), notice: t(".member_removed")
+    redirect_to organization_memberships_path(organization_id: @organization), notice: t(".member_removed")
   end
 
   def resend_invitation
-    return redirect_to organization_memberships_path(@organization), alert: t(".already_confirmed") if @membership.confirmed?
+    return redirect_to organization_memberships_path(organization_id: @organization), alert: t(".already_confirmed") if @membership.confirmed?
 
     authorize @organization, :invite_member?
 
     @membership.refresh_invitation!
     OrganizationMailer.user_invited(@membership).deliver_later
-    redirect_to organization_memberships_path(@organization), notice: t(".invitation_resent")
+    redirect_to organization_memberships_path(organization_id: @organization), notice: t(".invitation_resent")
   end
 
   private

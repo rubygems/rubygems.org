@@ -35,6 +35,6 @@ class SubscriptionsController < ApplicationController
 
   def redirect_to_rubygem(success)
     flash[:error] = t("try_again") unless success
-    redirect_to rubygem_path(@rubygem.slug)
+    redirect_to rubygem_path(id: @rubygem.slug)
   end
 end

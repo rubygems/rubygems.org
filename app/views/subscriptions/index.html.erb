@@ -14,19 +14,19 @@
 <%= render CardComponent.new do |c| %>
   <% if @subscribed_gems.empty? %>
     <%= prose do %>
-      <i><%= t("dashboards.show.no_subscriptions_html", :gem_link => link_to(t('dashboards.show.gem_link_text'), rubygem_path("rake"))) %></i>
+      <i><%= t("dashboards.show.no_subscriptions_html", :gem_link => link_to(t('dashboards.show.gem_link_text'), rubygem_path(id: "rake"))) %></i>
     <% end %>
   <% else %>
     <%= c.list do %>
       <% @subscribed_gems.each do |gem| %>
         <%= c.list_item do %>
           <div class="flex flex-row w-full items-center justify-between">
-            <%= link_to rubygem_path(gem.slug) do %>
+            <%= link_to rubygem_path(id: gem.slug) do %>
               <h3 class="text-b1"><%= gem.name %></h3>
               <p class="text-b3"><%= short_info(gem.most_recent_version) %></p>
             <% end %>
             <%= button_to(
-              rubygem_subscription_path(gem.slug),
+              rubygem_subscription_path(rubygem_id: gem.slug),
               method: :delete,
               title: t("rubygems.aside.links.unsubscribe"),
               class: "h-8 w-8 ml-6 items-center justify-center outline-none -mr-2",
