@@ -201,6 +201,11 @@
             </a>
           </div>
         </div>
+        <nav aria-label="Languages" class="max-w-screen-xl mx-auto mt-6 pt-6 border-t border-orange-200 dark:border-orange-800 flex flex-wrap gap-x-6 gap-y-2 text-b2">
+          <% I18n.available_locales.each do |language| %>
+            <%= link_to I18n.t(:locale_name, locale: language), locale_switch_path(language), class: "hover:text-neutral-600 dark:hover:text-neutral-400" %>
+          <% end %>
+        </nav>
       </div>
 
       <div class="w-full px-6 bg-orange-200 dark:bg-orange-900 text-neutral-900 dark:text-neutral-100">
