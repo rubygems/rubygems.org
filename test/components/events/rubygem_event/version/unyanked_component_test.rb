@@ -9,7 +9,8 @@ class Events::RubygemEvent::Version::UnyankedComponentTest < ComponentTest
 
     assert_text "Version:"
     assert_text "#{version.rubygem.name} (#{version.number})"
-    assert_link "#{version.rubygem.name} (#{version.number})", href: view_context.rubygem_version_path(version.rubygem.slug, version.slug)
+    assert_link "#{version.rubygem.name} (#{version.number})",
+      href: view_context.rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug)
 
     preview rubygem: version.rubygem, number: version.number, platform: version.platform, version_gid: nil
 

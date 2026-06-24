@@ -11,7 +11,7 @@ class Events::RubygemEvent::Version::YankedComponentTest < ComponentTest
     preview rubygem: version.rubygem, number: version.number, platform: version.platform
 
     assert_text "Version: RubyGem1 (0.0.1)\nYanked by: Yanker", exact: true
-    assert_link "RubyGem1 (0.0.1)", href: view_context.rubygem_version_path(version.rubygem.slug, version.slug)
-    assert_link "Yanker", href: view_context.profile_path(version.yanker.display_id)
+    assert_link "RubyGem1 (0.0.1)", href: view_context.rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug)
+    assert_link "Yanker", href: view_context.profile_path(id: version.yanker.display_id)
   end
 end

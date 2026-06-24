@@ -9,7 +9,7 @@ class Rubygems::VersionsTest < ActionDispatch::IntegrationTest
   end
 
   test "anonymous versions index sets public cache headers" do
-    get rubygem_versions_path(@rubygem.slug)
+    get rubygem_versions_path(rubygem_id: @rubygem.slug)
 
     assert_response :success
     assert_nil response.headers["Set-Cookie"]
@@ -19,7 +19,7 @@ class Rubygems::VersionsTest < ActionDispatch::IntegrationTest
   end
 
   test "anonymous version show sets public cache headers" do
-    get rubygem_version_path(@rubygem.slug, @version.slug)
+    get rubygem_version_path(rubygem_id: @rubygem.slug, id: @version.slug)
 
     assert_response :success
     assert_nil response.headers["Set-Cookie"]

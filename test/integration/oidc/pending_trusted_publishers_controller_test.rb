@@ -106,7 +106,7 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
 
     should "destroy trusted publisher" do
       assert_difference("OIDC::PendingTrustedPublisher.count", -1) do
-        delete profile_oidc_pending_trusted_publisher_url(@trusted_publisher)
+        delete profile_oidc_pending_trusted_publisher_url(id: @trusted_publisher)
       end
 
       assert_redirected_to profile_oidc_pending_trusted_publishers_url
@@ -119,7 +119,7 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
     should "return not found on destroy for other users trusted publisher" do
       trusted_publisher = create(:oidc_pending_trusted_publisher)
       assert_no_difference("OIDC::PendingTrustedPublisher.count") do
-        delete profile_oidc_pending_trusted_publisher_url(trusted_publisher)
+        delete profile_oidc_pending_trusted_publisher_url(id: trusted_publisher)
 
         assert_response :not_found
       end

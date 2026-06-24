@@ -8,7 +8,7 @@ class Rubygems::ReverseDependenciesTest < ActionDispatch::IntegrationTest
   end
 
   test "anonymous reverse dependencies page sets public cache headers" do
-    get rubygem_reverse_dependencies_path(@rubygem.slug)
+    get rubygem_reverse_dependencies_path(rubygem_id: @rubygem.slug)
 
     assert_response :success
     assert_nil response.headers["Set-Cookie"]

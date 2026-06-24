@@ -14,7 +14,7 @@ class SubscriptionsTest < ApplicationSystemTestCase
 
     assert_text "You're not subscribed to any gems yet."
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     click_link "Subscribe"
 

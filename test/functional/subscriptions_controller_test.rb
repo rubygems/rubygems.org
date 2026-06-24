@@ -39,7 +39,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       post :create, params: { rubygem_id: @rubygem.slug }
     end
 
-    should redirect_to("rubygems show") { rubygem_path(@rubygem.slug) }
+    should redirect_to("rubygems show") { rubygem_path(id: @rubygem.slug) }
 
     should "not set flash error" do
       assert_nil flash[:error]
@@ -52,7 +52,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       post :create, params: { rubygem_id: @rubygem.slug }
     end
 
-    should redirect_to("rubygems show") { rubygem_path(@rubygem.slug) }
+    should redirect_to("rubygems show") { rubygem_path(id: @rubygem.slug) }
 
     should "set flash error" do
       assert_equal "Something went wrong. Please try again.", flash[:error]
@@ -64,7 +64,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       delete :destroy, params: { rubygem_id: @rubygem.slug }
     end
 
-    should redirect_to("rubygems show") { rubygem_path(@rubygem.slug) }
+    should redirect_to("rubygems show") { rubygem_path(id: @rubygem.slug) }
 
     should "set flash error" do
       assert_equal "Something went wrong. Please try again.", flash[:error]
@@ -77,7 +77,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       delete :destroy, params: { rubygem_id: @rubygem.slug }
     end
 
-    should redirect_to("rubygems show") { rubygem_path(@rubygem.slug) }
+    should redirect_to("rubygems show") { rubygem_path(id: @rubygem.slug) }
 
     should "not set flash error" do
       assert_nil flash[:error]

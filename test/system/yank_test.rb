@@ -62,14 +62,14 @@ class YankTest < ApplicationSystemTestCase
   test "yanked gem entirely then someone else pushes a new version" do
     create(:version, rubygem: @rubygem, number: "0.0.0")
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert_text "sandworm"
     assert_text "0.0.0"
 
     yank_gem_via_api(@user_api_key, @rubygem.name, "0.0.0")
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert_text "sandworm"
     assert_text "This gem is not currently hosted on RubyGems.org"
@@ -80,7 +80,7 @@ class YankTest < ApplicationSystemTestCase
     gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
     push_gem_via_api(other_user_key, gem_io)
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert_text "sandworm"
     assert_text "1.0.0"
