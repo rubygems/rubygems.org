@@ -65,7 +65,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
   def create
     @api_key_role = current_user.oidc_api_key_roles.build(api_key_role_params)
     if @api_key_role.save
-      redirect_to profile_oidc_api_key_role_path(@api_key_role.token), flash: { notice: t(".success") }
+      redirect_to profile_oidc_api_key_role_path(token: @api_key_role.token), flash: { notice: t(".success") }
     else
       flash.now[:error] = @api_key_role.errors.full_messages.to_sentence
       render :new
@@ -74,7 +74,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
 
   def update
     if @api_key_role.update(api_key_role_params)
-      redirect_to profile_oidc_api_key_role_path(@api_key_role.token), flash: { notice: t(".success") }
+      redirect_to profile_oidc_api_key_role_path(token: @api_key_role.token), flash: { notice: t(".success") }
     else
       flash.now[:error] = @api_key_role.errors.full_messages.to_sentence
       render :edit
@@ -85,7 +85,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
     if @api_key_role.update(deleted_at: Time.current)
       redirect_to profile_oidc_api_key_roles_path, flash: { notice: t(".success") }
     else
-      redirect_to profile_oidc_api_key_role_path(@api_key_role.token),
+      redirect_to profile_oidc_api_key_role_path(token: @api_key_role.token),
         flash: { error: @api_key_role.errors.full_messages.to_sentence }
     end
   end

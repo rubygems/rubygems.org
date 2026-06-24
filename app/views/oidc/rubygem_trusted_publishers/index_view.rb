@@ -18,7 +18,7 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
       end
 
       p do
-        button_to t(".create"), new_rubygem_trusted_publisher_path(rubygem.slug), class: "form__submit", method: :get
+        button_to t(".create"), new_rubygem_trusted_publisher_path(rubygem_id: rubygem.slug), class: "form__submit", method: :get
       end
 
       header(class: "gems__header push--s") do
@@ -30,7 +30,7 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
           div(class: "tw-border-solid tw-my-4 tw-space-y-4 tw-flex tw-flex-col") do
             div(class: "sm:tw-flex sm:tw-items-baseline tw-mt-4 tw-gap-2") do
               h4 { rubygem_trusted_publisher.trusted_publisher.class.publisher_name }
-              button_to(t(".delete"), rubygem_trusted_publisher_path(rubygem.slug, rubygem_trusted_publisher),
+              button_to(t(".delete"), rubygem_trusted_publisher_path(rubygem_id: rubygem.slug, id: rubygem_trusted_publisher),
                         method: :delete, class: "form__submit form__submit--small")
             end
             render rubygem_trusted_publisher.trusted_publisher

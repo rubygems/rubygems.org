@@ -1,7 +1,7 @@
 <% @title = t(".api_key_role_name", name: @api_key_role.name) %>
 <div class="t-body">
   <% if @api_key_role.github_actions_push? && !@api_key_role.deleted_at? %>
-    <h2 class="t-display"><%= link_to t(".automate_gh_actions_publishing"), github_actions_workflow_profile_oidc_api_key_role_path(@api_key_role.token), class: "t-link t-underline" %> →</h2>
+    <h2 class="t-display"><%= link_to t(".automate_gh_actions_publishing"), github_actions_workflow_profile_oidc_api_key_role_path(token: @api_key_role.token), class: "t-link t-underline" %> →</h2>
   <% end %>
   <% if @api_key_role.deleted_at? %>
     <h2 class="t-display">
@@ -14,7 +14,7 @@
   </div>
   <h3 class="t-list__heading"><%= OIDC::ApiKeyRole.human_attribute_name(:provider) %></h3>
   <div class="push--s">
-    <%= link_to t(".view_provider", issuer: @api_key_role.provider.issuer), profile_oidc_provider_path(@api_key_role.provider) %> →
+    <%= link_to t(".view_provider", issuer: @api_key_role.provider.issuer), profile_oidc_provider_path(id: @api_key_role.provider) %> →
   </div>
   <h3 class="t-list__heading"><%= OIDC::ApiKeyRole.human_attribute_name(:api_key_permissions) %></h3>
   <div class="push--s">
@@ -26,8 +26,8 @@
   </div>
 
   <% unless @api_key_role.deleted_at? %>
-    <%= button_to t(".edit_role"), edit_profile_oidc_api_key_role_path(@api_key_role.token), method: "get", class: "form__submit" %>
-    <%= button_to t(".delete_role"), profile_oidc_api_key_role_path(@api_key_role.token), method: "delete", class: "form__submit", data: { confirm: t(".confirm_delete") } %>
+    <%= button_to t(".edit_role"), edit_profile_oidc_api_key_role_path(token: @api_key_role.token), method: "get", class: "form__submit" %>
+    <%= button_to t(".delete_role"), profile_oidc_api_key_role_path(token: @api_key_role.token), method: "delete", class: "form__submit", data: { confirm: t(".confirm_delete") } %>
   <% end %>
   <h3 class="t-list__heading"><%= OIDC::ApiKeyRole.human_attribute_name(:id_tokens) %></h3>
   <div class="push--s">

@@ -29,7 +29,7 @@
   <% @ownerships.each do |ownership| %>
     <tr class="owners__row">
       <td class="owners__cell" data-title="Name">
-        <%= link_to(ownership.owner_name, profile_path(ownership.user.display_id), class: "owner__profile") %>
+        <%= link_to(ownership.owner_name, profile_path(id: ownership.user.display_id), class: "owner__profile") %>
       </td>
       <td class="owners__cell" data-title="Confirmed">
         <span class="owners__icon">
@@ -55,7 +55,7 @@
       <td class="owners__cell" data-title="Action">
         <% if can_remove_owners?(@rubygem) %>
         <%= button_to t("remove"),
-          rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
+          rubygem_owner_path(rubygem_id: @rubygem.slug, handle: ownership.user.display_id),
           method: "delete",
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
@@ -63,7 +63,7 @@
         <% if can_modify_owners?(@rubygem) %>
         <br>
         <%= button_to t("edit"),
-          edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
+          edit_rubygem_owner_path(rubygem_id: @rubygem.name, handle: ownership.user.display_id),
           disabled: ownership.user == current_user,
           method: "get",
           class: "form__submit form__submit--small" %>
