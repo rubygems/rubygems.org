@@ -985,8 +985,8 @@ en:
         edit_role: "Edit API Key Role"
       git_hub_actions_workflow:
         title: "OIDC Gem Push GitHub Actions Workflow"
-        configured_for_html: "This OIDC API Key Role is configured to allow pushing %{link_html} from GitHub Actions."
-        to_automate_html: "To automate releasing %{link_html} when a new tag is pushed, add the following workflow to your repository."
+        configured_for_html: "This OIDC API Key Role is configured to allow pushing <span class='underline'>%{link_html}</span> from GitHub Actions."
+        to_automate_html: "To automate releasing <span class='underline'> %{link_html}</span> when a new tag is pushed, add the following workflow to your repository."
         not_github: "This OIDC API Key Role is not configured for GitHub Actions."
         not_push: "This OIDC API Key Role is not configured to allow pushing gems."
         a_gem: a gem

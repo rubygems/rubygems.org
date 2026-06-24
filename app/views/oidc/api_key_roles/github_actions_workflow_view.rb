@@ -2,6 +2,7 @@
 
 class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
   include Phlex::Rails::Helpers::LinkTo
+  include Phlex::Rails::Helpers::ContentFor
 
   attr_reader :api_key_role
 
@@ -13,41 +14,79 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
   def view_template
     self.title = t(".title")
 
-    return if not_configured
+    subject_sidebar
 
-    div(class: "t-body", data: { controller: "clipboard", clipboard_success_content_value: "✔" }) do
-      p do
-        t(".configured_for_html", link_html:
-          single_gem_role? ? link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
-      end
+    return render_not_configured unless configured?
 
-      p do
-        t(".to_automate_html", link_html:
-         single_gem_role? ? link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
-      end
+    render CardComponent.new do |c|
+      c.head { c.title(t(".title"), icon: "settings") }
 
-      p { t(".instructions_html") }
+      div(data: { controller: "clipboard", clipboard_success_content_value: "✔" }) do
+        div(class: "text-lg mb-4") { gem_link }
+        p(class: "text-b2 mb-4") { t(".configured_for_html", link_html: gem_name) }
+        p(class: "text-b2 mb-4") { t(".to_automate_html", link_html: gem_name) }
+        p(class: "text-b2 mb-8") { t(".instructions_html") }
 
-      header(class: "gem__code__header") do
-        h3(class: "t-list__heading l-mb-0") { code { ".github/workflows/push_gem.yml" } }
-        button(
-          class: "gem__code__icon",
-          title: t("copy_to_clipboard"),
-          data: { action: "click->clipboard#copy", clipboard_target: "button" }
-        ) { "=" }
-      end
-      pre(class: "gem__code multiline") do
-        code(class: "multiline", id: "workflow_yaml", data: { clipboard_target: "source" }) do
-          plain workflow_yaml
-        end
+        code_block
       end
     end
   end
 
   private
 
+  COPY_BUTTON = "shrink-0 p-1 rounded text-b4 cursor-pointer " \
+                "text-neutral-700 dark:text-neutral-400 " \
+                "hover:bg-neutral-100 hover:text-neutral-800 active:bg-neutral-200 " \
+                "dark:hover:bg-neutral-800 dark:hover:text-white dark:active:bg-neutral-700 " \
+                "transition duration-200 ease-in-out"
+
+  def subject_sidebar
+    content_for :subject do
+      raw view_context.render(partial: "dashboards/subject", locals: { user: current_user, current: :profile })
+    end
+  end
+
+  def code_block
+    div(class: "rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden") do
+      div(class: "flex items-center justify-between gap-2 px-4 py-2 " \
+                 "border-b border-neutral-200 dark:border-neutral-800 " \
+                 "bg-neutral-050 dark:bg-neutral-950") do
+        code(class: "text-c4 font-mono text-neutral-800 dark:text-neutral-200") { ".github/workflows/push_gem.yml" }
+        button(
+          type: :button,
+          class: COPY_BUTTON,
+          title: t("copy_to_clipboard"),
+          aria: { label: t("copy_to_clipboard") },
+          data: { action: "click->clipboard#copy", clipboard_target: "button" }
+        ) { icon_tag("content-copy", size: 5, class: "pointer-events-none") }
+      end
+      pre(class: "overflow-x-auto p-4 text-c4 bg-white dark:bg-black") do
+        code(class: "font-mono", id: "workflow_yaml", data: { clipboard_target: "source" }) do
+          plain workflow_yaml
+        end
+      end
+    end
+  end
+
+  def render_not_configured
+    render CardComponent.new do |c|
+      c.head { c.title(t(".title"), icon: "settings") }
+
+      p(class: "text-b2") { t(".not_github") } unless github?
+      p(class: "text-b2") { t(".not_push") } unless push?
+    end
+  end
+
+  def gem_link
+    render link_to("#{gem_name} →", rubygem_path(gem_name), class: "text-orange-500 hover:underline")
+  end
+
   def gem_name
-    single_gem_role? ? api_key_role.api_key_permissions.gems.first : "YOUR_GEM_NAME"
+    if single_gem_role?
+      api_key_role.api_key_permissions.gems.first
+    else
+      "YOUR_GEM_NAME"
+    end
   end
 
   def workflow_yaml
@@ -96,15 +135,16 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
     BASH
   end
 
-  def not_configured
-    is_github = api_key_role.provider.github_actions?
-    is_push = api_key_role.api_key_permissions.scopes.include?("push_rubygem")
-    return if is_github && is_push
-    div(class: "t-body") do
-      p { t(".not_github") } unless is_github
-      p { t(".not_push") } unless is_push
-    end
-    true
+  def configured?
+    github? && push?
+  end
+
+  def github?
+    api_key_role.provider.github_actions?
+  end
+
+  def push?
+    api_key_role.api_key_permissions.scopes.include?("push_rubygem")
   end
 
   def configured_audience

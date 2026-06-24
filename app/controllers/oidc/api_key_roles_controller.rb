@@ -34,6 +34,10 @@ class OIDC::ApiKeyRolesController < ApplicationController
   end
 
   def github_actions_workflow
+    add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path)
+    add_breadcrumb(t("oidc.api_key_roles.index.api_key_roles"), profile_oidc_api_key_roles_path)
+    add_breadcrumb(t("oidc.api_key_roles.git_hub_actions_workflow.title"))
+
     render OIDC::ApiKeyRoles::GitHubActionsWorkflowView.new(api_key_role: @api_key_role)
   end
 

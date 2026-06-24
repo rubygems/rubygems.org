@@ -1,5 +1,5 @@
 <% @title = t(".api_key_roles") %>
-<% add_breadcrumb(t("breadcrumb.settings"), edit_settings_path) %>
+<% add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path) %>
 <% add_breadcrumb(@title) %>
 
 <% content_for :subject do %>
@@ -19,13 +19,13 @@
   <table class="w-full text-left border-separate">
     <thead>
       <tr>
-        <th class="">
+        <th>
           <%= OIDC::ApiKeyRole.human_attribute_name(:name) %>
         </th>
-        <th class="">
+        <th>
           <%= OIDC::ApiKeyRole.human_attribute_name(:token) %>
         </th>
-        <th class="">
+        <th>
           <%= OIDC::Provider.human_attribute_name(:issuer) %>
         </th>
       </tr>
