@@ -147,7 +147,7 @@ class OnboardingTest < ApplicationSystemTestCase
 
     click_button "Create Org"
 
-    visit rubygem_owners_path(@rubygem.slug)
+    visit rubygem_owners_path(rubygem_id: @rubygem.slug)
 
     assert_text "Please confirm your password to continue"
 

@@ -20,7 +20,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
     should "respond forbidden for non-owner" do
       @rubygem.disown
 
-      get rubygem_trusted_publishers_url(@rubygem.slug)
+      get rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
 
       assert_response :forbidden
     end
@@ -28,13 +28,13 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
     should "get index" do
       create(:oidc_rubygem_trusted_publisher, rubygem: @rubygem,
              trusted_publisher: create(:oidc_trusted_publisher_github_action, environment: "production"))
-      get rubygem_trusted_publishers_url(@rubygem.slug)
+      get rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
 
       assert_response :success
     end
 
     should "get new" do
-      get new_rubygem_trusted_publisher_url(@rubygem.slug)
+      get new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
       assert_response :success
     end
@@ -50,7 +50,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
 
       create(:version, rubygem: @rubygem, metadata: { "source_code_uri" => "https://github.com/example/rubygem1" })
 
-      get new_rubygem_trusted_publisher_url(@rubygem.slug)
+      get new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
       assert_response :success
 
@@ -65,7 +65,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
 
       create(:version, rubygem: @rubygem, metadata: { "source_code_uri" => "https://github.com/example/rubygem1" })
 
-      get new_rubygem_trusted_publisher_url(@rubygem.slug)
+      get new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
       assert_response :success
 
@@ -77,7 +77,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       assert_no_difference("OIDC::RubygemTrustedPublisher.count") do
         create(:version, rubygem: @rubygem, metadata: { "source_code_uri" => "https://github.com/CaioGarcia1" })
 
-        get new_rubygem_trusted_publisher_url(@rubygem.slug)
+        get new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
         assert_response :success
       end
@@ -89,7 +89,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
 
       assert_difference("OIDC::RubygemTrustedPublisher.count") do
         trusted_publisher = build(:oidc_rubygem_trusted_publisher, rubygem: @rubygem)
-        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+        post rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug), params: {
           oidc_rubygem_trusted_publisher: {
             trusted_publisher_type: trusted_publisher.trusted_publisher_type,
             trusted_publisher_attributes: trusted_publisher.trusted_publisher.as_json
@@ -97,7 +97,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
         }
       end
 
-      assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
+      assert_redirected_to rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
     end
 
     should "create rubygem trusted publisher when trusted publisher already exists" do
@@ -107,7 +107,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       github_action_trusted_publisher = create(:oidc_trusted_publisher_github_action)
 
       assert_difference("OIDC::RubygemTrustedPublisher.count") do
-        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+        post rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug), params: {
           oidc_rubygem_trusted_publisher: {
             trusted_publisher_type: github_action_trusted_publisher.class.polymorphic_name,
             trusted_publisher_attributes: github_action_trusted_publisher.as_json
@@ -116,12 +116,12 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
         }
       end
 
-      assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
+      assert_redirected_to rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
     end
 
     should "error creating trusted publisher with type" do
       assert_no_difference("OIDC::RubygemTrustedPublisher.count") do
-        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+        post rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug), params: {
           oidc_rubygem_trusted_publisher: {
             trusted_publisher_type: "Hash",
             trusted_publisher_attributes: { repository_owner: "example" }
@@ -138,7 +138,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
         .to_return(status: 404, body: { message: "Not Found" }.to_json, headers: { "Content-Type" => "application/json" })
 
       assert_no_difference("OIDC::RubygemTrustedPublisher.count") do
-        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+        post rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug), params: {
           oidc_rubygem_trusted_publisher: {
             trusted_publisher_type: OIDC::TrustedPublisher::GitHubAction.polymorphic_name,
             trusted_publisher_attributes: { repository_owner: "example" }
@@ -159,7 +159,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
         .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
 
       assert_no_difference("OIDC::RubygemTrustedPublisher.count") do
-        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+        post rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug), params: {
           oidc_rubygem_trusted_publisher: {
             trusted_publisher_type: OIDC::TrustedPublisher::GitHubAction.polymorphic_name,
             trusted_publisher_attributes: { repository_name: "rubygem1", repository_owner: "example", workflow_filename: "ci.NO" }
@@ -173,10 +173,10 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
 
     should "destroy trusted publisher" do
       assert_difference("OIDC::RubygemTrustedPublisher.count", -1) do
-        delete rubygem_trusted_publisher_url(@rubygem.slug, @trusted_publisher)
+        delete rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug, id: @trusted_publisher)
       end
 
-      assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
+      assert_redirected_to rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
 
       assert_raises ActiveRecord::RecordNotFound do
         @trusted_publisher.reload
@@ -186,28 +186,28 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
 
   context "without a verified session" do
     should "redirect index to verify" do
-      get rubygem_trusted_publishers_url(@rubygem.slug)
+      get rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
 
       assert_response :redirect
       assert_redirected_to verify_session_path
     end
 
     should "redirect new to verify" do
-      get new_rubygem_trusted_publisher_url(@rubygem.slug)
+      get new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
       assert_response :redirect
       assert_redirected_to verify_session_path
     end
 
     should "redirect create to verify" do
-      post rubygem_trusted_publishers_url(@rubygem.slug)
+      post rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
 
       assert_response :redirect
       assert_redirected_to verify_session_path
     end
 
     should "redirect destroy to verify" do
-      delete new_rubygem_trusted_publisher_url(@rubygem.slug)
+      delete new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
       assert_response :redirect
       assert_redirected_to verify_session_path
@@ -223,19 +223,19 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       end
 
       should "render forbidden on show" do
-        get rubygem_trusted_publishers_url(@rubygem.slug)
+        get rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
 
         assert_response :forbidden
       end
 
       should "render forbidden on new" do
-        get new_rubygem_trusted_publisher_url(@rubygem.slug)
+        get new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
         assert_response :forbidden
       end
 
       should "render forbidden on create" do
-        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+        post rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug), params: {
           oidc_rubygem_trusted_publisher: { # avoid params permit error before authorization check
             trusted_publisher_type: "OIDC::TrustedPublisher::GitHubAction",
             trusted_publisher_attributes: {}
@@ -246,7 +246,7 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       end
 
       should "render forbidden on destroy" do
-        delete new_rubygem_trusted_publisher_url(@rubygem.slug)
+        delete new_rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug)
 
         assert_response :forbidden
       end
