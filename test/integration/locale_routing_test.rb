@@ -122,6 +122,40 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     refute page.has_css?(%(link[rel="alternate"][hreflang]), visible: false)
   end
 
+  test "the footer language switcher is rendered" do
+    get "/"
+
+    assert_response :success
+    assert page.has_link?(I18n.t(:locale_name, locale: :de), href: "/de")
+  end
+
+  test "the language switcher keeps the current path when changing locale" do
+    create(:rubygem, name: "sandworm", number: "1.0.0")
+
+    get "/gems/sandworm"
+
+    assert_response :success
+    assert page.has_link?(I18n.t(:locale_name, locale: :de), href: "/de/gems/sandworm")
+  end
+
+  test "the language switcher preserves query parameters (minus a stale locale)" do
+    get "/search?query=rails&locale=fr"
+
+    assert_response :success
+    assert page.has_link?(I18n.t(:locale_name, locale: :de), href: "/de/search?query=rails")
+  end
+
+  test "the language switcher targets a GET page after a failed form submission" do
+    post users_path, params: { user: { handle: "", email: "", password: "" } }
+
+    assert_response :success
+    de_href = page.find_link(I18n.t(:locale_name, locale: :de))[:href]
+
+    get de_href
+
+    assert_response :success
+  end
+
   test "a region locale (zh-CN) is taken from the URL path" do
     get "/zh-CN"
 
