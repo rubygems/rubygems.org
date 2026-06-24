@@ -45,11 +45,11 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
     should "see sinatra on the page in the results" do
       assert page.has_content?(@sinatra.name)
-      assert page.has_selector?("a[href='#{rubygem_path(@sinatra.slug)}']")
+      assert page.has_selector?("a[href='#{rubygem_path(id: @sinatra.slug)}']")
     end
     should "not see brando on the page in the results" do
       refute page.has_content?(@brando.name)
-      refute page.has_selector?("a[href='#{rubygem_path(@brando.slug)}']")
+      refute page.has_selector?("a[href='#{rubygem_path(id: @brando.slug)}']")
     end
     should "display 'gems' in pagination summary" do
       assert page.has_content?("all 2 gems")
@@ -70,11 +70,11 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
     should "see sinatra on the page in the results" do
       assert_text @sinatra.name
-      assert_selector "a[href='#{rubygem_path(@sinatra.slug)}']"
+      assert_selector "a[href='#{rubygem_path(id: @sinatra.slug)}']"
     end
     should "not see brando on the page in the results" do
       refute_text @brando.name
-      refute_selector "a[href='#{rubygem_path(@brando.slug)}']"
+      refute_selector "a[href='#{rubygem_path(id: @brando.slug)}']"
     end
     should "display pagination summary" do
       assert page.has_text?("all 2 gems")
@@ -115,11 +115,11 @@ class SearchesControllerTest < ActionController::TestCase
       assert_selector "a[href='#{search_path(query: @sinatra.name)}']"
     end
     should "not see sinatra on the page in the results" do
-      refute_selector "a[href='#{rubygem_path(@sinatra.slug)}']"
+      refute_selector "a[href='#{rubygem_path(id: @sinatra.slug)}']"
     end
     should "not see brando on the page in the results" do
       refute_text @brando.name
-      refute_selector "a[href='#{rubygem_path(@brando.slug)}']"
+      refute_selector "a[href='#{rubygem_path(id: @brando.slug)}']"
     end
     should "not see filters" do
       refute_text "Filter"
@@ -138,10 +138,10 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "see sinatra_redux on the page in the results" do
-      assert_selector "a[href='#{rubygem_path(@sinatra_redux.slug)}']"
+      assert_selector "a[href='#{rubygem_path(id: @sinatra_redux.slug)}']"
     end
     should "not see sinatra on the page in the results" do
-      refute_selector "a[href='#{rubygem_path(@sinatra.slug)}']"
+      refute_selector "a[href='#{rubygem_path(id: @sinatra.slug)}']"
     end
   end
 

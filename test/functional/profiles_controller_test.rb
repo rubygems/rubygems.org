@@ -110,7 +110,7 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :redirect
-      should redirect_to("the user's profile page") { profile_path(@user.handle) }
+      should redirect_to("the user's profile page") { profile_path(id: @user.handle) }
     end
 
     context "on GET to delete" do

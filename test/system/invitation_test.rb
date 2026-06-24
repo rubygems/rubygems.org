@@ -16,7 +16,7 @@ class InvitationTest < ApplicationSystemTestCase
   test "inviting a user to an organization" do
     sign_in
 
-    visit organization_path(@organization)
+    visit organization_path(id: @organization)
     click_on "Invite"
 
     fill_in "Handle", with: @outside_user.handle
@@ -33,7 +33,7 @@ class InvitationTest < ApplicationSystemTestCase
 
     sign_in maintainer
 
-    visit organization_path(@organization)
+    visit organization_path(id: @organization)
 
     assert_no_text "Invite"
   end
@@ -65,7 +65,7 @@ class InvitationTest < ApplicationSystemTestCase
 
     sign_in
 
-    visit edit_organization_membership_path(@organization, pending_membership)
+    visit edit_organization_membership_path(organization_id: @organization, id: pending_membership)
 
     assert_text @outside_user.handle
     assert_text "Resend Invitation"
@@ -80,7 +80,7 @@ class InvitationTest < ApplicationSystemTestCase
 
     sign_in
 
-    visit edit_organization_membership_path(@organization, confirmed_membership)
+    visit edit_organization_membership_path(organization_id: @organization, id: confirmed_membership)
 
     assert_text @outside_user.handle
     assert_text "Joined:"
@@ -94,7 +94,7 @@ class InvitationTest < ApplicationSystemTestCase
 
     sign_in maintainer
 
-    visit edit_organization_membership_path(@organization, pending_membership)
+    visit edit_organization_membership_path(organization_id: @organization, id: pending_membership)
 
     # Maintainers cannot access the edit page at all
     assert_text "Page not found"

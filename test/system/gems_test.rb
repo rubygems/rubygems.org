@@ -10,17 +10,17 @@ class GemsSystemTest < ApplicationSystemTestCase
   end
 
   test "version navigation" do
-    visit rubygem_version_path(@rubygem.slug, "1.0.0")
+    visit rubygem_version_path(rubygem_id: @rubygem.slug, id: "1.0.0")
     click_link "Next version →"
 
-    assert_current_path rubygem_version_path(@rubygem.slug, "1.1.1")
+    assert_current_path rubygem_version_path(rubygem_id: @rubygem.slug, id: "1.1.1")
     click_link "← Previous version"
 
-    assert_current_path rubygem_version_path(@rubygem.slug, "1.0.0")
+    assert_current_path rubygem_version_path(rubygem_id: @rubygem.slug, id: "1.0.0")
   end
 
   test "subscribe to a gem" do
-    visit rubygem_path(@rubygem.slug, as: @user.id)
+    visit rubygem_path(id: @rubygem.slug, as: @user.id)
 
     assert page.has_css?("a#subscribe")
 
@@ -33,7 +33,7 @@ class GemsSystemTest < ApplicationSystemTestCase
   test "unsubscribe to a gem" do
     create(:subscription, rubygem: @rubygem, user: @user)
 
-    visit rubygem_path(@rubygem.slug, as: @user.id)
+    visit rubygem_path(id: @rubygem.slug, as: @user.id)
 
     assert page.has_css?("a#unsubscribe")
 
@@ -46,7 +46,7 @@ class GemsSystemTest < ApplicationSystemTestCase
   test "shows enable MFA instructions when logged in as owner with MFA disabled" do
     create(:ownership, rubygem: @rubygem, user: @user)
 
-    visit rubygem_path(@rubygem.slug, as: @user.id)
+    visit rubygem_path(id: @rubygem.slug, as: @user.id)
 
     assert_text "Please consider enabling multi-factor"
     find(".gem__users__mfa-text.mfa-warn").click
@@ -61,7 +61,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     create(:ownership, rubygem: @rubygem, user: @user)
     create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
-    visit rubygem_path(@rubygem.slug, as: @user.id)
+    visit rubygem_path(id: @rubygem.slug, as: @user.id)
 
     assert page.has_selector?(".gem__users__mfa-text.mfa-warn")
     find(".gem__users__mfa-text.mfa-warn").click
@@ -77,7 +77,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     create(:ownership, rubygem: @rubygem, user: @user)
     create(:ownership, rubygem: @rubygem, user: user_with_mfa)
 
-    visit rubygem_path(@rubygem.slug, as: @user.id)
+    visit rubygem_path(id: @rubygem.slug, as: @user.id)
 
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-warn")
     assert page.has_selector?(".gem__users__mfa-text.mfa-info")
@@ -90,7 +90,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     create(:ownership, rubygem: @rubygem, user: @user)
     create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert page.has_no_selector?(".gem__users__mfa-disabled .gem__users a")
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-warn")
@@ -101,7 +101,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     github_link = "http://github.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "source_code_uri" => github_link })
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert page.has_selector?(".github-btn")
   end
@@ -110,7 +110,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     github_link = "http://github.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => github_link })
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert page.has_selector?(".github-btn")
   end
@@ -119,7 +119,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     notgithub_link = "http://notgithub.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => notgithub_link })
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert page.has_no_selector?(".github-btn")
   end
@@ -128,7 +128,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
     create(:version, :mfa_required, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem.slug, "0.1.1")
+    visit rubygem_version_path(rubygem_id: @rubygem.slug, id: "0.1.1")
 
     assert_text "NEW VERSIONS REQUIRE MFA"
     assert_text "VERSION PUBLISHED WITH MFA"
@@ -138,7 +138,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
     create(:version, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem.slug, "0.1.1")
+    visit rubygem_version_path(rubygem_id: @rubygem.slug, id: "0.1.1")
 
     assert_text "NEW VERSIONS REQUIRE MFA"
     assert_no_text "VERSION PUBLISHED WITH MFA"
@@ -148,7 +148,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
     create(:version, :mfa_required, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem.slug, "0.1.1")
+    visit rubygem_version_path(rubygem_id: @rubygem.slug, id: "0.1.1")
 
     assert_no_text "NEW VERSIONS REQUIRE MFA"
     assert_text "VERSION PUBLISHED WITH MFA"
@@ -158,7 +158,7 @@ class GemsSystemTest < ApplicationSystemTestCase
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
     create(:version, rubygem: @rubygem, number: "0.1.1")
 
-    visit rubygem_version_path(@rubygem.slug, "0.1.1")
+    visit rubygem_version_path(rubygem_id: @rubygem.slug, id: "0.1.1")
 
     assert_no_text "NEW VERSIONS REQUIRE MFA"
     assert_no_text "VERSION PUBLISHED WITH MFA"
@@ -167,7 +167,7 @@ class GemsSystemTest < ApplicationSystemTestCase
   test "shows both mfa headers if MFA enabled for latest version and viewing latest version" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert_text "NEW VERSIONS REQUIRE MFA"
     assert_text "VERSION PUBLISHED WITH MFA"
@@ -176,7 +176,7 @@ class GemsSystemTest < ApplicationSystemTestCase
   test "shows neither mfa header if MFA disabled for latest version and viewing latest version" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
     assert_no_text "NEW VERSIONS REQUIRE MFA"
     assert_no_text "VERSION PUBLISHED WITH MFA"
