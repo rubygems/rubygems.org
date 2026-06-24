@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TransparencyLog::TlogEntryBuilder
+class TransparencyLog::EntryBuilder
   def initialize(private_key)
     @private_key = private_key
   end
