@@ -8,4 +8,8 @@ module LocaleRouting
   def self.default_locale?(locale)
     locale.to_s == DEFAULT_LOCALE
   end
+
+  def self.locale_param(locale)
+    default_locale?(locale) ? nil : locale
+  end
 end
