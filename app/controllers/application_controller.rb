@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   before_action :reject_null_char_param
   before_action :reject_path_params_param
   before_action :reject_null_char_cookie
+  before_action :strip_default_locale
   before_action :set_error_context_user
   before_action :set_user_tag
   before_action :set_current_request
@@ -48,6 +49,17 @@ class ApplicationController < ActionController::Base
 
   def default_url_options
     { path_params: { locale: LocaleRouting.default_locale?(I18n.locale) ? nil : I18n.locale } }
+  end
+
+  def strip_default_locale
+    return unless request.get? || request.head?
+    return unless LocaleRouting.default_locale?(request.path_parameters[:locale])
+
+    canonical = url_for(request.path_parameters.merge(locale: nil, only_path: true))
+    canonical = "#{canonical}?#{request.query_string}" if request.query_string.present?
+    redirect_to canonical, status: :moved_permanently
+  rescue ActionController::UrlGenerationError
+    nil
   end
 
   def set_user_tag
