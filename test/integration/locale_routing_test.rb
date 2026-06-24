@@ -91,6 +91,37 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     refute redirected_externally, "leaked an external/protocol-relative redirect"
   end
 
+  test "a localized gem page never emits ?locale= query params" do
+    create(:rubygem, name: "sandworm", number: "1.0.0")
+
+    get "/de/gems/sandworm"
+
+    assert_response :success
+    refute_includes response.body, "?locale=", "locale leaked as a query param, fragmenting the CDN cache"
+  end
+
+  test "localized pages emit a self-referential canonical plus hreflang alternates" do
+    get "/de"
+
+    assert_response :success
+    assert page.has_css?(%(link[rel="canonical"][href="http://localhost/de"]), visible: false)
+    alternates = page.all(:css, %(link[rel="alternate"][hreflang]), visible: false)
+
+    assert_equal I18n.available_locales.length + 1, alternates.length
+    assert page.has_css?(%(link[rel="alternate"][hreflang="x-default"][href="http://localhost/"]), visible: false)
+  end
+
+  test "search engine tags are omitted for signed-in requests" do
+    user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    get "/de"
+
+    assert_response :success
+    refute page.has_css?(%(link[rel="canonical"]), visible: false)
+    refute page.has_css?(%(link[rel="alternate"][hreflang]), visible: false)
+  end
+
   test "a region locale (zh-CN) is taken from the URL path" do
     get "/zh-CN"
 
