@@ -7,7 +7,11 @@
   submit_label = @api_key_role.persisted? ? t("oidc.api_key_roles.edit.edit_role") : t("oidc.api_key_roles.index.new_role")
 %>
 <%= form_for [:profile, @api_key_role], **url_attrs do |f| %>
-  <%= error_messages_for @api_key_role %>
+  <% if error_messages_for(@api_key_role).present? %>
+    <div class="border rounded border-red-500 bg-red-200 text-neutral-800 dark:bg-red-900 dark:text-white p-4 my-4">
+      <%= error_messages_for @api_key_role %>
+    </div>
+  <% end %>
 
   <div class="mb-8">
     <%= f.label :name, class: label_class %>
