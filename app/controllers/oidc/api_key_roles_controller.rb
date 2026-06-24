@@ -13,6 +13,8 @@ class OIDC::ApiKeyRolesController < ApplicationController
   before_action :redirect_for_deleted, only: %i[edit update destroy]
   before_action :set_page, only: :index
 
+  layout "subject"
+
   def index
     @api_key_roles = current_user.oidc_api_key_roles.active.includes(:provider)
       .page(@page)
