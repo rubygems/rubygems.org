@@ -53,12 +53,16 @@ class PushTest < ActionDispatch::IntegrationTest
     info_file = response.body
 
     assert_response :success
+    rubygem = Rubygem.find_by!(name: "sigstore")
+    existing_version_created_at = Version.find_by!(full_name: "sigstore-0.0.1").created_at.utc.iso8601
+    pushed_version = rubygem.versions.find_by!(number: "1.0.0")
+
     assert_equal <<~INFO, info_file
       ---
-      0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
-      1.0.0 |checksum:#{Digest::SHA256.hexdigest File.binread(gem_file('sigstore-1.0.0.gem'))}
+      0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{existing_version_created_at}
+      1.0.0 |checksum:#{Digest::SHA256.hexdigest File.binread(gem_file('sigstore-1.0.0.gem'))},created_at:#{pushed_version.created_at.utc.iso8601}
     INFO
-    assert_equal Digest::MD5.hexdigest(info_file), Rubygem.find_by!(name: "sigstore").versions.find_by(number: "1.0.0").info_checksum
+    assert_equal Digest::MD5.hexdigest(info_file), pushed_version.info_checksum_v2
 
     get api_v2_rubygem_version_path("sigstore", "1.0.0", format: "json")
 
@@ -95,15 +99,10 @@ class PushTest < ActionDispatch::IntegrationTest
     version = Rubygem.find_by!(name: "sandworm").versions.sole
     sha256 = Digest::SHA256.hexdigest gem_io.string
 
-    assert_equal Digest::MD5.hexdigest(<<~INFO), version.info_checksum
-      ---
-      1.0.0 |checksum:#{sha256}
-    INFO
     assert_equal Digest::MD5.hexdigest(<<~INFO), version.info_checksum_v2
       ---
       1.0.0 |checksum:#{sha256},created_at:#{version.created_at.utc.iso8601}
     INFO
-    refute_equal version.info_checksum, version.info_checksum_v2
   end
 
   test "push a new version of a gem" do

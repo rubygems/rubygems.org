@@ -339,8 +339,8 @@ class PusherIntegrationTest < ActiveSupport::TestCase
         assert_equal 200, @cutter.code
       end
 
-      should "set info_checksum" do
-        assert_not_nil @rubygem.versions.last.info_checksum
+      should "set info_checksum_v2" do
+        assert_not_nil @rubygem.versions.last.info_checksum_v2
       end
 
       should "indexe rubygem and version" do

@@ -18,19 +18,8 @@ class UploadVersionsFileJob < ApplicationJob
 
   def perform
     upload_versions_file(
-      versions_file_location: Rails.application.config.rubygems["versions_file_location"],
-      extra_gems: GemInfo.compact_index_versions(versions_file_updated_at("versions_file_location")),
-      key: "versions",
-      surrogate_key: "versions s3-compact-index s3-versions"
-    )
-
-    # V2 dual-write: only update v2/versions once the bootstrap rake task has seeded the local file.
-    v2_path = Rails.application.config.rubygems["versions_file_location_v2"]
-    return unless v2_path && File.exist?(v2_path)
-
-    upload_versions_file(
-      versions_file_location: v2_path,
-      extra_gems: GemInfo.compact_index_versions(versions_file_updated_at("versions_file_location_v2"), version: 2),
+      versions_file_location: Rails.application.config.rubygems["versions_file_location_v2"],
+      extra_gems: GemInfo.compact_index_versions(versions_file_updated_at("versions_file_location_v2")),
       key: "v2/versions",
       surrogate_key: "v2/versions s3-compact-index s3-v2/versions"
     )

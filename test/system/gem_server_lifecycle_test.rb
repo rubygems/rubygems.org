@@ -15,7 +15,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     @tmp_versions_file = Tempfile.new("tmp_versions_file")
     tmp_path = @tmp_versions_file.path
 
-    Rails.application.config.rubygems.stubs(:[]).with("versions_file_location").returns(tmp_path)
+    Rails.application.config.rubygems.stubs(:[]).with("versions_file_location_v2").returns(tmp_path)
     Rails.application.config.rubygems.stubs(:[]).with("s3_compact_index_bucket").returns("s3_compact_index_bucket")
     Rails.application.config.rubygems.stubs(:[]).with("s3_contents_bucket").returns("s3_contents_bucket")
 
@@ -109,7 +109,8 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
 
     assert_equal "200", info_a_after_first_push.code
     assert_equal "text/plain; charset=utf-8", info_a_after_first_push["content-type"]
-    expected_info = "---\n1.0.0 |checksum:#{gem_a100.sha256}\n"
+    a100_created_at = Version.find_by!(full_name: "a-1.0.0").created_at.utc.iso8601
+    expected_info = "---\n1.0.0 |checksum:#{gem_a100.sha256},created_at:#{a100_created_at}\n"
 
     assert_equal expected_info, info_a_after_first_push.body
 
@@ -196,12 +197,18 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     info_a_after_second_push = do_get_info("a")
 
     assert_valid_compact_index_response info_a_after_second_push
-    assert_equal info_a_after_yank.body + "0.0.1 |checksum:#{gem_a001.sha256}\n", info_a_after_second_push.body
+    a001_created_at = Version.find_by!(full_name: "a-0.0.1").created_at.utc.iso8601
+
+    assert_equal info_a_after_yank.body + "0.0.1 |checksum:#{gem_a001.sha256},created_at:#{a001_created_at}\n",
+      info_a_after_second_push.body
 
     info_b = do_get_info("b")
 
     assert_valid_compact_index_response info_b
-    assert_equal "---\n1.0.0.pre a:< 1.0.0&>= 0.1.0|checksum:#{gem_b100pre.sha256},ruby:>= 2.0,rubygems:>= 2.0\n", info_b.body
+    b100pre_created_at = Version.find_by!(full_name: "b-1.0.0.pre").created_at.utc.iso8601
+
+    assert_equal "---\n1.0.0.pre a:< 1.0.0&>= 0.1.0|checksum:#{gem_b100pre.sha256}," \
+                 "ruby:>= 2.0,rubygems:>= 2.0,created_at:#{b100pre_created_at}\n", info_b.body
 
     response = do_get_names
 
@@ -253,10 +260,13 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     info_a_after_third_push = do_get_info("a")
 
     assert_valid_compact_index_response info_a_after_third_push
+    a020_created_at = Version.find_by!(full_name: "a-0.2.0").created_at.utc.iso8601
+    a020_mingw_created_at = Version.find_by!(full_name: "a-0.2.0-x86-mingw32").created_at.utc.iso8601
+    a020_java_created_at = Version.find_by!(full_name: "a-0.2.0-java").created_at.utc.iso8601
     expected_info_a = info_a_after_second_push.body +
-      "0.2.0 |checksum:#{gem_a020.sha256}\n" \
-      "0.2.0-x86-mingw32 |checksum:#{find_gem('a-0.2.0-x86-mingw32').sha256}\n" \
-      "0.2.0-java |checksum:#{find_gem('a-0.2.0-java').sha256}\n"
+      "0.2.0 |checksum:#{gem_a020.sha256},created_at:#{a020_created_at}\n" \
+      "0.2.0-x86-mingw32 |checksum:#{find_gem('a-0.2.0-x86-mingw32').sha256},created_at:#{a020_mingw_created_at}\n" \
+      "0.2.0-java |checksum:#{find_gem('a-0.2.0-java').sha256},created_at:#{a020_java_created_at}\n"
 
     assert_equal expected_info_a, info_a_after_third_push.body
 
@@ -312,7 +322,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     info_a_after_fourth_push = do_get_info("a")
 
     assert_valid_compact_index_response info_a_after_fourth_push
-    assert_match(/0\.3\.0 \|checksum:#{gem_a030.sha256}\n\z/, info_a_after_fourth_push.body)
+    assert_match(/0\.3\.0 \|checksum:#{gem_a030.sha256},created_at:[^\n]+\n\z/, info_a_after_fourth_push.body)
 
     specs_after_fourth_push = do_get_specs
 
@@ -347,7 +357,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
 
     assert_valid_compact_index_response info_a_after_second_yank
     # The yanked version line should be removed from info
-    refute_match(/^0\.2\.0 \|checksum:#{gem_a020.sha256}$/, info_a_after_second_yank.body)
+    refute_match(/^0\.2\.0 \|checksum:#{gem_a020.sha256},/, info_a_after_second_yank.body)
     # Other versions should still be present
     assert_match(/0\.0\.1 \|checksum:/, info_a_after_second_yank.body)
     assert_match(/0\.3\.0 \|checksum:/, info_a_after_second_yank.body)

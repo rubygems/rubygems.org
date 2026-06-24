@@ -8,11 +8,11 @@ module CompactIndexTasksHelper
     cs = GemInfo.new(last_version.rubygem.name).info_checksum
 
     if last_version.indexed
-      Rails.logger.info("[#{task}] version: #{last_version.full_name} old_checksum: #{last_version.info_checksum} new_checksum: #{cs}")
-      last_version.update_attribute :info_checksum, cs
+      Rails.logger.info("[#{task}] version: #{last_version.full_name} old_checksum: #{last_version.info_checksum_v2} new_checksum: #{cs}")
+      last_version.update_attribute :info_checksum_v2, cs
     else
-      Rails.logger.info("[#{task}] version: #{last_version.full_name} old_checksum: #{last_version.yanked_info_checksum} new_checksum: #{cs}")
-      last_version.update_attribute :yanked_info_checksum, cs
+      Rails.logger.info("[#{task}] version: #{last_version.full_name} old_checksum: #{last_version.yanked_info_checksum_v2} new_checksum: #{cs}")
+      last_version.update_attribute :yanked_info_checksum_v2, cs
     end
   end
 end

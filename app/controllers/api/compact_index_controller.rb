@@ -2,11 +2,6 @@
 
 class Api::CompactIndexController < Api::BaseController
   COMPACT_INDEX_VERSIONS = {
-    1 => {
-      info_prefix: "info",
-      versions_file_location_key: "versions_file_location",
-      versions_surrogate_key: "versions"
-    }.freeze,
     2 => {
       info_prefix: "v2/info",
       versions_file_location_key: "versions_file_location_v2",
@@ -27,7 +22,7 @@ class Api::CompactIndexController < Api::BaseController
     cache_expiry_headers
     versions_file = CompactIndex::VersionsFile.new(compact_index_versions_file_location)
     from_date = versions_file.updated_at
-    extra_gems = GemInfo.compact_index_versions(from_date, version: compact_index_serving_version)
+    extra_gems = GemInfo.compact_index_versions(from_date, version: GemInfo::CURRENT_VERSION)
     render_range CompactIndex.versions(versions_file, extra_gems)
   end
 
@@ -36,21 +31,16 @@ class Api::CompactIndexController < Api::BaseController
 
     set_surrogate_key "#{info_prefix}/* gem/#{@rubygem.name} #{info_prefix}/#{@rubygem.name}"
     cache_expiry_headers
-    return unless stale?(etag: [@rubygem, compact_index_serving_version])
+    return unless stale?(etag: [@rubygem, GemInfo::CURRENT_VERSION])
 
-    info_params = GemInfo.new(@rubygem.name).compact_index_info(version: compact_index_serving_version)
+    info_params = GemInfo.new(@rubygem.name).compact_index_info(version: GemInfo::CURRENT_VERSION)
     render_range CompactIndex.info(info_params)
   end
 
   private
 
-  def compact_index_serving_version
-    # Compact index responses are cached by URL, so this flag must only be toggled globally.
-    @compact_index_serving_version ||= FeatureFlag.enabled?(FeatureFlag::SERVE_COMPACT_INDEX_V2) ? 2 : 1
-  end
-
   def compact_index_config
-    @compact_index_config ||= COMPACT_INDEX_VERSIONS.fetch(compact_index_serving_version)
+    @compact_index_config ||= COMPACT_INDEX_VERSIONS.fetch(GemInfo::CURRENT_VERSION)
   end
 
   def compact_index_versions_file_location
