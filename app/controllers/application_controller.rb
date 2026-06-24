@@ -15,8 +15,7 @@ class ApplicationController < ActionController::Base
     render_forbidden(e.policy.error)
   end
 
-  # TODO: Separate locales by path and re-enable
-  # before_action :set_locale
+  around_action :switch_locale
   before_action :reject_null_char_param
   before_action :reject_path_params_param
   before_action :reject_null_char_cookie
@@ -41,13 +40,14 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  def set_locale
-    I18n.locale = user_locale
-
-    # after store current locale
-    session[:locale] = params[:locale] if params[:locale]
+  def switch_locale(&action)
+    I18n.with_locale(request.path_parameters[:locale] || I18n.default_locale, &action)
   rescue I18n::InvalidLocale
-    I18n.locale = I18n.default_locale
+    I18n.with_locale(I18n.default_locale, &action)
+  end
+
+  def default_url_options
+    { path_params: { locale: LocaleRouting.default_locale?(I18n.locale) ? nil : I18n.locale } }
   end
 
   def set_user_tag
@@ -143,14 +143,6 @@ class ApplicationController < ActionController::Base
     redirect_to_page_with_error && return unless valid_page_param?(max_page)
 
     @page = params[:page].to_i
-  end
-
-  def user_locale
-    params[:locale] || session[:locale] || http_head_locale || I18n.default_locale
-  end
-
-  def http_head_locale
-    http_accept_language.language_region_compatible_from(I18n.available_locales)
   end
 
   def render_not_found

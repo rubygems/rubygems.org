@@ -2,11 +2,6 @@
 
 Rails.application.routes.draw do
   ################################################################################
-  # Root
-
-  root to: 'home#index'
-
-  ################################################################################
   # API
 
   namespace :api do
@@ -156,160 +151,177 @@ Rails.application.routes.draw do
   end
 
   ################################################################################
-  # UI
-  scope constraints: { format: :html }, defaults: { format: 'html' } do
-    resource :search, only: :show do
-      get :advanced
-    end
-    resource :dashboard, only: :show, constraints: { format: /html|atom/ }
-    resources :subscriptions, only: :index
-    resources :profiles, only: :show
-    get "profile/me", to: "profiles#me", as: :my_profile
-    resource :multifactor_auth, only: %i[update] do
-      get 'recovery'
-      post 'otp_update', to: 'multifactor_auths#otp_update', as: :otp_update
-      post 'webauthn_update', to: 'multifactor_auths#webauthn_update', as: :webauthn_update
-    end
-    resource :totp, only: %i[new create destroy]
-    resource :settings, only: :edit
-    resource :profile, only: %i[edit update] do
-      get :security_events
-      member do
-        get :delete
-        delete :destroy, as: :destroy
-      end
+  # Localized UI
+  scope "(:locale)", locale: LocaleRouting::PATH_CONSTRAINT do
+    root to: 'home#index'
 
-      resources :api_keys do
-        delete :reset, on: :collection
+    scope constraints: { format: :html }, defaults: { format: 'html' } do
+      resource :search, only: :show do
+        get :advanced
       end
+      resource :dashboard, only: :show, constraints: { format: /html|atom/ }
+      resources :subscriptions, only: :index
+      resources :profiles, only: :show
+      get "profile/me", to: "profiles#me", as: :my_profile
+      resource :multifactor_auth, only: %i[update] do
+        get 'recovery'
+        post 'otp_update', to: 'multifactor_auths#otp_update', as: :otp_update
+        post 'webauthn_update', to: 'multifactor_auths#webauthn_update', as: :webauthn_update
+      end
+      resource :totp, only: %i[new create destroy]
+      resource :settings, only: :edit
+      resource :profile, only: %i[edit update] do
+        get :security_events
+        member do
+          get :delete
+          delete :destroy, as: :destroy
+        end
 
-      namespace :oidc do
-        resources :api_key_roles, param: :token do
-          member do
-            get 'github_actions_workflow'
+        resources :api_keys do
+          delete :reset, on: :collection
+        end
+
+        namespace :oidc do
+          resources :api_key_roles, param: :token do
+            member do
+              get 'github_actions_workflow'
+            end
+          end
+          resources :api_key_roles, param: :token, only: %i[show], constraints: { format: :json }
+          resources :id_tokens, only: %i[index show]
+          resources :providers, only: %i[index show]
+          resources :pending_trusted_publishers, except: %i[show edit update]
+        end
+      end
+      resources :stats, only: :index
+      get "/news" => 'news#show', as: 'legacy_news_path'
+      resource :news, path: 'releases', only: [:show] do
+        get :popular, on: :collection
+      end
+      resource :notifier, only: %i[update show]
+
+      resources :rubygems,
+        only: %i[index show],
+        path: 'gems',
+        constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
+        get :security_events, on: :member
+
+        resource :subscription,
+          only: %i[create destroy],
+          constraints: { format: :js },
+          defaults: { format: :js }
+        resources :versions, only: %i[show index] do
+          get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
+        end
+        resources :reverse_dependencies, only: %i[index]
+        resources :owners, only: %i[index destroy edit update create], param: :handle do
+          get 'confirm', to: 'owners#confirm', as: :confirm, on: :collection
+          get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
+        end
+        resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
+
+        collection do
+          get "transfer", to: "rubygems/transfers#new"
+          delete "transfer", to: "rubygems/transfers#destroy"
+
+          namespace :transfer do
+            get "organization", to: "/rubygems/transfer/organizations#new"
+            post "organization", to: "/rubygems/transfer/organizations#create"
+
+            get "rubygems", to: "/rubygems/transfer/rubygems#edit"
+            patch "rubygems", to: "/rubygems/transfer/rubygems#update"
+
+            get "users", to: "/rubygems/transfer/users#edit"
+            patch "users", to: "/rubygems/transfer/users#update"
+
+            get "confirm", to: "/rubygems/transfer/confirmations#edit"
+            patch "confirm", to: "/rubygems/transfer/confirmations#update"
           end
         end
-        resources :api_key_roles, param: :token, only: %i[show], constraints: { format: :json }
-        resources :id_tokens, only: %i[index show]
-        resources :providers, only: %i[index show]
-        resources :pending_trusted_publishers, except: %i[show edit update]
       end
-    end
-    resources :stats, only: :index
-    get "/news" => 'news#show', as: 'legacy_news_path'
-    resource :news, path: 'releases', only: [:show] do
-      get :popular, on: :collection
-    end
-    resource :notifier, only: %i[update show]
 
-    resources :rubygems,
-      only: %i[index show],
-      path: 'gems',
-      constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
-      get :security_events, on: :member
-
-      resource :subscription,
-        only: %i[create destroy],
-        constraints: { format: :js },
-        defaults: { format: :js }
-      resources :versions, only: %i[show index] do
-        get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
+      resources :webauthn_credentials, only: :destroy
+      resource :webauthn_verification, only: [] do
+        get 'successful_verification'
+        get 'failed_verification'
+        get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
       end
-      resources :reverse_dependencies, only: %i[index]
-      resources :owners, only: %i[index destroy edit update create], param: :handle do
-        get 'confirm', to: 'owners#confirm', as: :confirm, on: :collection
-        get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
+
+      ################################################################################
+      # Clearance Overrides and Additions
+
+      resource :email_confirmations, only: %i[new create] do
+        get 'confirm', to: 'email_confirmations#update', as: :update
+        post 'otp_update', to: 'email_confirmations#otp_update', as: :otp_update
+        post 'webauthn_update', to: 'email_confirmations#webauthn_update', as: :webauthn_update
+        patch 'unconfirmed'
       end
-      resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
 
-      collection do
-        get "transfer", to: "rubygems/transfers#new"
-        delete "transfer", to: "rubygems/transfers#destroy"
+      resource :password, only: %i[new create edit update] do
+        post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
+        post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
+      end
 
-        namespace :transfer do
-          get "organization", to: "/rubygems/transfer/organizations#new"
-          post "organization", to: "/rubygems/transfer/organizations#create"
+      resource :compromised_password, only: %i[show]
 
-          get "rubygems", to: "/rubygems/transfer/rubygems#edit"
-          patch "rubygems", to: "/rubygems/transfer/rubygems#update"
+      resource :session, only: %i[create destroy] do
+        post 'otp_create', to: 'sessions#otp_create', as: :otp_create
+        post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
+        post 'webauthn_full_create', to: 'sessions#webauthn_full_create', as: :webauthn_full_create
+        get 'verify', to: 'sessions#verify', as: :verify
+        post 'authenticate', to: 'sessions#authenticate', as: :authenticate
+        post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
 
-          get "users", to: "/rubygems/transfer/users#edit"
-          patch "users", to: "/rubygems/transfer/users#update"
+        get 'development_log_in_as/:user_id', to: 'sessions#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
+      end
 
-          get "confirm", to: "/rubygems/transfer/confirmations#edit"
-          patch "confirm", to: "/rubygems/transfer/confirmations#update"
+      resources :users, only: %i[new create]
+
+      get '/sign_in' => 'sessions#new', as: 'sign_in'
+      delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
+
+      get '/sign_up' => 'users#new', as: 'sign_up'
+
+      namespace :organizations, as: :organization do
+        get "onboarding", to: "onboarding#new"
+        delete "onboarding", to: "onboarding#destroy"
+
+        namespace :onboarding do
+          get "name", to: "name#new"
+          post "name", to: "name#create"
+
+          get "gems", to: "gems#edit"
+          patch "gems", to: "gems#update"
+
+          get "users", to: "users#edit"
+          patch "users", to: "users#update"
+
+          get "confirm", to: "confirm#edit"
+          patch "confirm", to: "confirm#update"
         end
       end
-    end
-
-    resources :webauthn_credentials, only: :destroy
-    resource :webauthn_verification, only: [] do
-      get 'successful_verification'
-      get 'failed_verification'
-      get ':webauthn_token', to: 'webauthn_verifications#prompt', as: ''
+      resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
+        resources :memberships, controller: 'organizations/members', except: :show do
+          member do
+            patch :resend_invitation
+          end
+        end
+        resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
+        resources :gems, only: :index, controller: 'organizations/gems'
+      end
     end
 
     ################################################################################
-    # Clearance Overrides and Additions
+    # static pages routes
 
-    resource :email_confirmations, only: %i[new create] do
-      get 'confirm', to: 'email_confirmations#update', as: :update
-      post 'otp_update', to: 'email_confirmations#otp_update', as: :otp_update
-      post 'webauthn_update', to: 'email_confirmations#webauthn_update', as: :webauthn_update
-      patch 'unconfirmed'
-    end
+    get 'pages/sponsors', to: "pages#sponsors", constraints: { format: :html }
+    get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 
-    resource :password, only: %i[new create edit update] do
-      post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
-      post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
-    end
-
-    resource :compromised_password, only: %i[show]
-
-    resource :session, only: %i[create destroy] do
-      post 'otp_create', to: 'sessions#otp_create', as: :otp_create
-      post 'webauthn_create', to: 'sessions#webauthn_create', as: :webauthn_create
-      post 'webauthn_full_create', to: 'sessions#webauthn_full_create', as: :webauthn_full_create
-      get 'verify', to: 'sessions#verify', as: :verify
-      post 'authenticate', to: 'sessions#authenticate', as: :authenticate
-      post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
-
-      get 'development_log_in_as/:user_id', to: 'sessions#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
-    end
-
-    resources :users, only: %i[new create]
-
-    get '/sign_in' => 'sessions#new', as: 'sign_in'
-    delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
-
-    get '/sign_up' => 'users#new', as: 'sign_up'
-
-    namespace :organizations, as: :organization do
-      get "onboarding", to: "onboarding#new"
-      delete "onboarding", to: "onboarding#destroy"
-
-      namespace :onboarding do
-        get "name", to: "name#new"
-        post "name", to: "name#create"
-
-        get "gems", to: "gems#edit"
-        patch "gems", to: "gems#update"
-
-        get "users", to: "users#edit"
-        patch "users", to: "users#update"
-
-        get "confirm", to: "confirm#edit"
-        patch "confirm", to: "confirm#update"
+    resources :policies, only: %i[index show], constraints: { format: :html, policy: Regexp.union(Gemcutter::POLICY_PAGES) },
+      param: :policy do
+      collection do
+        patch :acknowledge
       end
-    end
-    resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
-      resources :memberships, controller: 'organizations/members', except: :show do
-        member do
-          patch :resend_invitation
-        end
-      end
-      resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
-      resources :gems, only: :index, controller: 'organizations/gems'
     end
   end
 
@@ -336,18 +348,6 @@ Rails.application.routes.draw do
       get 'avatar', on: :member, to: 'avatars#show', format: true
     end
   end
-
-  ################################################################################
-  # static pages routes
-  get 'pages/sponsors', to: "pages#sponsors", constraints: { format: :html }
-  get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
-
-  resources :policies, only: %i[index show], constraints: { format: :html, policy: Regexp.union(Gemcutter::POLICY_PAGES) },
-    param: :policy do
-      collection do
-        patch :acknowledge
-      end
-    end
 
   ################################################################################
   # Internal Routes

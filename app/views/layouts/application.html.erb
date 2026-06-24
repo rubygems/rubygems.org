@@ -22,7 +22,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= 'body--index' if request.path_info == '/' %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
+  <body class="<%= 'body--index' if home_page? %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
     <!-- Top banner -->
     <% if content_for?(:banner) %>
       <div class="banner">
@@ -33,7 +33,7 @@
     <!-- Policies acknowledgment banner -->
     <%= render "layouts/policies_acknowledgement" if show_policies_acknowledge_banner?(current_user) %>
 
-    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
+    <header class="header <%= 'header--interior' unless home_page? %>" data-nav-target="header collapse">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "logo" }) do %>
           <span class="header__logo" data-icon="⬡">⬢</span>
@@ -57,7 +57,7 @@
             <%= link_to t('.footer.releases'), news_url, class: "header__nav-link #{active_status(news_path)}" %>
             <%= link_to t('.footer.blog'), "https://blog.rubygems.org", class: "header__nav-link" %>
 
-            <%- if request.path_info == '/gems' %>
+            <%- if current_page?(rubygems_path) %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link is-active" %>
             <%- else %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link" %>
@@ -80,8 +80,8 @@
                 <%= link_to t('sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
               </div>
             <% else %>
-              <%= link_to t('sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
-              <%= link_to t('sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
+              <%= link_to t('sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if current_page?(sign_in_path)}" %>
+              <%= link_to t('sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if current_page?(sign_up_path)}" %>
             <% end %>
           </nav>
         </div>
@@ -102,8 +102,8 @@
       </div>
     <% end %>
 
-    <main class="<%= 'main--interior' if request.path_info != '/' %>" data-nav-target="collapse">
-      <% if request.path_info != '/' %>
+    <main class="<%= 'main--interior' unless home_page? %>" data-nav-target="collapse">
+      <% unless home_page? %>
         <div class="l-wrap--b">
           <% if @title %>
             <h1 class="t-display page__heading">
@@ -132,7 +132,7 @@
             <%= link_to t('.footer.data'), page_path("data"), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_path, class: "nav--v__link--footer" %>
             <%= link_to t('.footer.contribute'), "https://guides.rubygems.org/contributing/", class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/about' %>
+            <%- if current_page?(page_path(id: "about")) %>
               <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer is-active" %>
             <%- else %>
               <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer" %>
@@ -141,7 +141,7 @@
             <%= link_to t('.footer.api'), "https://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.policies'), policies_path, class: "nav--v__link--footer" %>
             <%= link_to t('.footer.support_us'), page_path("supporters"), class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/security' %>
+            <%- if current_page?(page_path(id: "security")) %>
               <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer is-active" %>
             <%- else %>
               <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer" %>
