@@ -47,9 +47,9 @@ class CreateTransparencyLogs < ActiveRecord::Migration[8.1]
       t.timestamps
 
       t.index :event_uuid, unique: true
-      t.index [:subject_type, :subject_name]
-      t.index [:event_type, :created_at]
-      t.index [:payload_digest_algorithm, :payload_digest],
+      t.index %i[subject_type subject_name]
+      t.index %i[event_type created_at]
+      t.index %i[payload_digest_algorithm payload_digest],
         unique: true,
         name: "index_transparency_log_events_on_payload_digest"
       t.index :status

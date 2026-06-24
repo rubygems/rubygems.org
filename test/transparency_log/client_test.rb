@@ -16,26 +16,26 @@ class TransparencyLog::ClientTest < ActiveSupport::TestCase
         hashedRekordV002: {
           data: {
             algorithm: "SHA2_256",
-            digest: "abc123",
+            digest: "abc123"
           },
           signature: {
-            content: "signature123",
-          },
-        },
-      },
+            content: "signature123"
+          }
+        }
+      }
     }
 
     stub_request(:post, "#{@url}/api/v1/log/entries")
       .with(
         body: JSON.generate(entry),
         headers: {
-          "Content-Type" => "application/json",
-        },
+          "Content-Type" => "application/json"
+        }
       )
       .to_return(
         status: 201,
         body: { uuid: "abc", logIndex: 1 }.to_json,
-        headers: { "Content-Type" => "application/json" },
+        headers: { "Content-Type" => "application/json" }
       )
 
     response = @client.post(entry)
