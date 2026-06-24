@@ -117,7 +117,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
       expected_links = users.sort_by(&:id).map do |u|
         link_to avatar(48, "gravatar-#{u.id}", u),
-          profile_path(u.display_id),
+          profile_path(id: u.display_id),
           alt: u.display_handle,
           title: u.display_handle
       end.join
@@ -134,7 +134,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
       expected_links = without_mfa.sort_by(&:id).map do |u|
         link_to avatar(48, "gravatar-#{u.id}", u),
-          profile_path(u.display_id),
+          profile_path(id: u.display_id),
           alt: u.display_handle,
           title: u.display_handle
       end.join
@@ -228,7 +228,7 @@ class RubygemsHelperTest < ActionView::TestCase
       role = create(:oidc_api_key_role, name: "Push my_gem", api_key_permissions: { gems: ["my_gem"], scopes: ["push_rubygem"] }, user: user)
       stubs(:current_user).returns(user)
 
-      role_link = link_to "OIDC: #{role.name}", profile_oidc_api_key_role_path(role.token), class: "gem__link t-list__item"
+      role_link = link_to "OIDC: #{role.name}", profile_oidc_api_key_role_path(token: role.token), class: "gem__link t-list__item"
       create_link = link_to "OIDC: Create", new_profile_oidc_api_key_role_path(rubygem: rubygem.name, scopes: ["push_rubygem"]),
         class: "gem__link t-list__item"
 

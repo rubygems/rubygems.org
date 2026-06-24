@@ -16,7 +16,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     sign_in maintainer
 
-    visit organization_path(@organization.handle)
+    visit organization_path(id: @organization.handle)
 
     assert_no_link "Transfer"
   end
@@ -24,7 +24,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
   test "transfer a rubygem to an organization" do
     sign_in @owner
 
-    visit organization_path(@organization.handle)
+    visit organization_path(id: @organization.handle)
     click_on "Transfer"
 
     assert_current_path organization_transfer_rubygems_path
@@ -52,7 +52,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     sign_in @owner
 
-    visit organization_path(@organization.handle)
+    visit organization_path(id: @organization.handle)
     click_on "Transfer"
 
     assert_current_path organization_transfer_rubygems_path
@@ -74,7 +74,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     assert_text "Successfully transferred 1 gem to #{@organization.name}."
 
-    visit organization_path(@organization.handle)
+    visit organization_path(id: @organization.handle)
     click_on "Members"
 
     assert_text "#{maintainer.handle} Pending", normalize_ws: true
@@ -86,9 +86,9 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     sign_in @owner
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
-    visit organization_path(@organization.handle)
+    visit organization_path(id: @organization.handle)
     click_on "Transfer"
 
     assert_current_path organization_transfer_rubygems_path
@@ -108,7 +108,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
 
     click_on "Transfer Gem"
 
-    visit rubygem_path(@rubygem.name)
+    visit rubygem_path(id: @rubygem.name)
 
     assert_text "MANAGED BY: #{@organization.name}", normalize_ws: true
 
@@ -127,7 +127,7 @@ class RubygemTransferSystemTest < ApplicationSystemTestCase
   test "cancelling a rubygem transfer" do
     sign_in @owner
 
-    visit organization_path(@organization.handle)
+    visit organization_path(id: @organization.handle)
     click_on "Transfer"
 
     assert_current_path organization_transfer_rubygems_path

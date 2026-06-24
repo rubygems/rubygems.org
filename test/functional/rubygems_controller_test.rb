@@ -19,7 +19,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should "renders owner gems overview links" do
         @owners.each do |owner|
-          assert page.has_selector?("a[href='#{profile_path(owner.display_id)}']")
+          assert page.has_selector?("a[href='#{profile_path(id: owner.display_id)}']")
         end
       end
     end
@@ -110,7 +110,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render links" do
       @gems.each do |g|
         assert page.has_content?(g.name)
-        page.assert_selector("a[href='#{rubygem_path(g.slug)}']")
+        page.assert_selector("a[href='#{rubygem_path(id: g.slug)}']")
       end
     end
   end
@@ -128,8 +128,8 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render posts with platform-specific titles and links of all subscribed versions" do
       @versions.each do |v|
         assert_select "entry > title", count: 1, text: v.to_title
-        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem.slug, v.slug)}']", count: 1
-        assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem.slug, v.slug)
+        assert_select "entry > link[href='#{rubygem_version_url(rubygem_id: v.rubygem.slug, id: v.slug)}']", count: 1
+        assert_select "entry > id", count: 1, text: rubygem_version_url(rubygem_id: v.rubygem.slug, id: v.slug)
       end
     end
 
@@ -157,7 +157,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should "render links" do
       assert page.has_content?(@zgem.name)
-      assert page.has_selector?("a[href='#{rubygem_path(@zgem.slug)}']")
+      assert page.has_selector?("a[href='#{rubygem_path(id: @zgem.slug)}']")
     end
   end
 
@@ -176,7 +176,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render links" do
       @gems.each do |g|
         assert page.has_content?(g.name)
-        assert page.has_selector?("a[href='#{rubygem_path(g.slug)}']")
+        assert page.has_selector?("a[href='#{rubygem_path(id: g.slug)}']")
       end
     end
   end
@@ -299,7 +299,7 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_no_content?("Versions")
       end
       should "renders owner gems overview link" do
-        assert page.has_selector?("a[href='#{profile_path(@owner.display_id)}']")
+        assert page.has_selector?("a[href='#{profile_path(id: @owner.display_id)}']")
       end
     end
   end
@@ -456,7 +456,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "link the organization profile page" do
       get :show, params: { id: @rubygem.slug }
 
-      assert page.has_link?(@organization.name, href: organization_path(@organization))
+      assert page.has_link?(@organization.name, href: organization_path(id: @organization))
     end
   end
 
@@ -473,7 +473,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "display outside contributors" do
       get :show, params: { id: @rubygem.slug }
 
-      assert page.has_selector?("a[href='#{profile_path(@outside_contributor.display_id)}']")
+      assert page.has_selector?("a[href='#{profile_path(id: @outside_contributor.display_id)}']")
     end
   end
 end
