@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <%= form_for :session, :url => session_path do |form| %>
+    <%= form_for :session, url: session_path do |form| %>
     <div class="mb-8">
       <%= form.label :who, t('activerecord.attributes.session.who'),
         class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
@@ -39,7 +39,7 @@
         class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
 
     </div>
-      <%= render ButtonComponent.new(t(".confirm"), type: :submit, color: :primary, data: { disable_with: t("form_disable_with") }) %>
+      <%= render ButtonComponent.new(t(".sign_in"), type: :submit, color: :primary, data: { disable_with: t("form_disable_with") }) %>
     <% end %>
 
     <%= render "multifactor_auths/webauthn_prompt" %>
