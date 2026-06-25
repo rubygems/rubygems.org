@@ -23,20 +23,15 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
       f.submit "Select", class: "form__submit"
     end
 
-    if selected_trusted_publisher_type
-      div(class: "t-body") do
-        form_with(
-          model: rubygem_trusted_publisher,
-          url: rubygem_trusted_publishers_path(rubygem_trusted_publisher.rubygem.slug)
-        ) do |f|
-          f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
-          render selected_trusted_publisher_type.form_component.new(form: f)
-          f.submit class: "form__submit"
-        end
-      end
-    else
-      div(class: "t-body") do
-        # p "Please select a CI/CD provider to create a pending trusted publisher."
+    return unless selected_trusted_publisher_type
+    div(class: "t-body") do
+      form_with(
+        model: rubygem_trusted_publisher,
+        url: rubygem_trusted_publishers_path(rubygem_trusted_publisher.rubygem.slug)
+      ) do |f|
+        f.hidden_field :trusted_publisher_type, value: selected_trusted_publisher_type.polymorphic_name
+        render selected_trusted_publisher_type.form_component.new(form: f)
+        f.submit class: "form__submit"
       end
     end
   end

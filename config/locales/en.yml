@@ -1030,6 +1030,12 @@ en:
         environment_help_html: "The name of the GitLab CI/CD environment"
         ref_type_help_html: "Restrict publishing to a specific ref type (Branch or Tag)"
         branch_name_help_html: "The name of the branch to restrict publishing to (e.g. <code>main</code>)"
+        table:
+          project_path: "GitLab Project Path"
+          ci_config_path: "GitLab CI Config Path"
+          environment: "GitLab Environment"
+          ref_type: "Ref Type"
+          branch_name: "Branch Name"
       pending:
         rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
   duration:

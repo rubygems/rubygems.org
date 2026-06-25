@@ -35,6 +35,17 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     assert_includes publisher.errors[:branch_name], "is required when ref_type is 'branch'"
   end
 
+  test "validates ref_type is branch or tag or nil" do
+    assert_predicate build(:oidc_trusted_publisher_gitlab, ref_type: nil), :valid?
+    assert_predicate build(:oidc_trusted_publisher_gitlab, ref_type: "tag"), :valid?
+    assert_predicate build(:oidc_trusted_publisher_gitlab, ref_type: "branch", branch_name: "main"), :valid?
+
+    publisher = build(:oidc_trusted_publisher_gitlab, ref_type: "commit")
+
+    refute_predicate publisher, :valid?
+    assert_includes publisher.errors[:ref_type], "is not included in the list"
+  end
+
   test ".for_claims with basic claims" do
     bar = create(:oidc_trusted_publisher_gitlab, project_path: "ns/bar")
     create(:oidc_trusted_publisher_gitlab, project_path: "ns/foo")
@@ -55,10 +66,73 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     claims = {
       project_path: "ns/bar",
       ref_type: "branch",
-      ref: "refs/heads/main"
+      ref: "main",
+      ref_path: "refs/heads/main"
     }
 
     assert_equal branch_publisher, OIDC::TrustedPublisher::GitLab.for_claims(claims)
+  end
+
+  test ".for_claims with tag ref" do
+    tag_publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "ns/bar",
+      ref_type: "tag")
+
+    claims = {
+      project_path: "ns/bar",
+      ref_type: "tag",
+      ref: "v1.0.0",
+      ref_path: "refs/tags/v1.0.0"
+    }
+
+    assert_equal tag_publisher, OIDC::TrustedPublisher::GitLab.for_claims(claims)
+  end
+
+  test ".for_claims with tag ref falls back to publisher with no ref_type" do
+    any_publisher = create(:oidc_trusted_publisher_gitlab, project_path: "ns/bar", ref_type: nil)
+
+    claims = {
+      project_path: "ns/bar",
+      ref_type: "tag",
+      ref: "v1.0.0",
+      ref_path: "refs/tags/v1.0.0"
+    }
+
+    assert_equal any_publisher, OIDC::TrustedPublisher::GitLab.for_claims(claims)
+  end
+
+  test ".for_claims with environment prefers specific environment over nil" do
+    _any_env_publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "ns/bar",
+      environment: nil)
+    specific_env_publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "ns/bar",
+      ci_config_path: "deploy.yml",
+      environment: "production")
+
+    claims = { project_path: "ns/bar", environment: "production" }
+
+    assert_equal specific_env_publisher, OIDC::TrustedPublisher::GitLab.for_claims(claims)
+  end
+
+  test ".for_claims with environment falls back to nil environment publisher" do
+    any_env_publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "ns/bar",
+      environment: nil)
+
+    claims = { project_path: "ns/bar", environment: "staging" }
+
+    assert_equal any_env_publisher, OIDC::TrustedPublisher::GitLab.for_claims(claims)
+  end
+
+  test ".for_claims raises RecordNotFound when no publisher matches" do
+    create(:oidc_trusted_publisher_gitlab, project_path: "ns/other")
+
+    claims = { project_path: "ns/bar" }
+
+    assert_raises ActiveRecord::RecordNotFound do
+      OIDC::TrustedPublisher::GitLab.for_claims(claims)
+    end
   end
 
   test ".for_claims with nested namespace" do
@@ -105,6 +179,42 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     assert_equal "GitLab myns/bar @ .gitlab-ci.yml", publisher.name
   end
 
+  test "#to_access_policy raises AccessError when ref_path and sha are both missing" do
+    publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "myns/rubygem1",
+      ci_config_path: ".gitlab-ci.yml")
+
+    assert_raises OIDC::AccessPolicy::AccessError do
+      publisher.to_access_policy({})
+    end
+  end
+
+  test "#to_access_policy for tag ref" do
+    publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "myns/rubygem1",
+      ci_config_path: ".gitlab-ci.yml",
+      ref_type: "tag")
+
+    jwt = { ref: "v1.0.0", ref_path: "refs/tags/v1.0.0", sha: "abc123" }
+
+    policy = publisher.to_access_policy(jwt)
+
+    assert_equal 2, policy.statements.size
+
+    conditions = policy.statements.first["conditions"]
+
+    assert_includes conditions.pluck("claim"), "ref_type"
+    type_condition = conditions.find { |c| c["claim"] == "ref_type" }
+
+    assert_equal "tag", type_condition["value"]
+
+    ci_condition = conditions.find { |c| c["claim"] == "ci_config_ref_uri" }
+
+    assert_equal "gitlab.com/myns/rubygem1//.gitlab-ci.yml@refs/tags/v1.0.0", ci_condition["value"]
+
+    refute_includes conditions.pluck("claim"), "ref"
+  end
+
   test "#to_access_policy" do
     publisher = create(:oidc_trusted_publisher_gitlab,
       project_path: "myns/rubygem1",
@@ -112,7 +222,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
       ref_type: "branch",
       branch_name: "main")
 
-    jwt = { ref: "refs/heads/main", sha: "abc123" }
+    jwt = { ref: "main", ref_path: "refs/heads/main", sha: "abc123" }
 
     policy = publisher.to_access_policy(jwt)
 

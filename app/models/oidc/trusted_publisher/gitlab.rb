@@ -10,7 +10,8 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   validates :project_path, :ci_config_path,
     presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
-  validates :environment, :ref_type, :branch_name, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :environment, :branch_name, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :ref_type, inclusion: { in: %w[branch tag], allow_nil: true }, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   validates :project_path, uniqueness: { scope: %i[ci_config_path environment ref_type branch_name], message: :publisher_already_exists }
   validate :ci_config_path_format
@@ -31,13 +32,13 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
            end
 
     # Match ref_type and branch_name
-    # GitLab OIDC tokens provide ref_type (branch/tag) and ref (full ref path e.g. refs/heads/main)
+    # GitLab OIDC tokens provide ref_type (branch/tag), ref (short name e.g. main), and ref_path (full path e.g. refs/heads/main)
     if (ref_type = claims[:ref_type])
       if ref_type == "tag"
         base = base.where(ref_type: ["tag", nil])
       elsif ref_type == "branch"
-        # We store short branch name, so strip prefix from claim
-        branch = claims[:ref].delete_prefix("refs/heads/")
+        # ref claim is already the short branch name (e.g. "main"), not the full ref path
+        branch = claims[:ref]
         base = base.where(ref_type: "branch", branch_name: branch)
           .or(base.where(ref_type: nil))
       end
@@ -92,7 +93,7 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
       )
     end
 
-    refs = [jwt.fetch(:ref_path), jwt.fetch(:sha)].compact_blank
+    refs = [jwt[:ref_path], jwt[:sha]].compact_blank
     raise OIDC::AccessPolicy::AccessError, "ref and sha are both missing" if refs.empty?
 
     OIDC::AccessPolicy.new(
@@ -177,10 +178,6 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
         value: "refs/heads/#{branch_name}"
       )
     end
-  end
-
-  def set_default_ci_config_path
-    self.ci_config_path = ".gitlab-ci.yml" if ci_config_path.blank?
   end
 
   def ci_config_path_format

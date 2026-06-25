@@ -2,8 +2,6 @@
 
 class CreateOIDCTrustedPublisherGitLab < ActiveRecord::Migration[8.0]
   def up
-    drop_table :oidc_trusted_publisher_gitlabs, if_exists: true
-
     create_table :oidc_trusted_publisher_gitlabs do |t|
       t.string :project_path, null: false
       t.string :ci_config_path, null: false

@@ -100,6 +100,67 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
     end
 
+    should "create gitlab trusted publisher" do
+      assert_difference("OIDC::RubygemTrustedPublisher.count") do
+        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+          oidc_rubygem_trusted_publisher: {
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: {
+              project_path: "mygroup/myproject",
+              ci_config_path: ".gitlab-ci.yml"
+            }
+          }
+        }
+      end
+
+      assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
+      assert_equal "mygroup/myproject", OIDC::TrustedPublisher::GitLab.last.project_path
+    end
+
+    should "create gitlab trusted publisher when trusted publisher already exists" do
+      gitlab_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "mygroup/myproject",
+        ci_config_path: ".gitlab-ci.yml")
+
+      assert_difference("OIDC::RubygemTrustedPublisher.count") do
+        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+          oidc_rubygem_trusted_publisher: {
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: {
+              project_path: gitlab_publisher.project_path,
+              ci_config_path: gitlab_publisher.ci_config_path
+            }
+          }
+        }
+      end
+
+      assert_redirected_to rubygem_trusted_publishers_url(@rubygem.slug)
+      assert_equal gitlab_publisher, OIDC::RubygemTrustedPublisher.last.trusted_publisher
+    end
+
+    should "error creating invalid gitlab trusted publisher" do
+      assert_no_difference("OIDC::RubygemTrustedPublisher.count") do
+        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+          oidc_rubygem_trusted_publisher: {
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: {
+              project_path: "mygroup/myproject",
+              ci_config_path: "not-a-yaml-file.txt"
+            }
+          }
+        }
+
+        assert_response :unprocessable_content
+        assert_equal ["Trusted publisher ci config path must end with .yml or .yaml"].to_sentence, flash[:error]
+      end
+    end
+
+    should "get new with gitlab provider selected" do
+      get new_rubygem_trusted_publisher_url(@rubygem.slug, trusted_publisher_type: "gitlab")
+
+      assert_response :success
+    end
+
     should "create rubygem trusted publisher when trusted publisher already exists" do
       stub_request(:get, "https://api.github.com/users/example")
         .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })
