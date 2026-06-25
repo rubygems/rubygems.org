@@ -6,7 +6,7 @@ if Rails.env.local?
 
   Rails.application.config.after_initialize do
     Prosopite.custom_logger = SemanticLogger[Prosopite]
-    Prosopite.raise = false
+    Prosopite.raise = true
     Prosopite.ignore_queries = []
     Prosopite.allow_stack_paths = [
       # mailers need refactoring to not find based on IDs when we already have objects in memory
