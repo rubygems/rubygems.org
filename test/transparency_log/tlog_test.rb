@@ -9,8 +9,13 @@ class TransparencyLog::TlogTest < ActiveSupport::TestCase
   end
 
   test "creates entry and posts it to transparency log" do
-    stub_request(:post, "http://localhost:3004/api/v1/log/entries")
-      .with(headers: { "Content-Type" => "application/json" })
+    stub_request(:post, "http://localhost:3004/api/v2/log/entries")
+      .with(
+        headers: {
+          "Content-Type" => "application/json",
+          "Accept" => "application/json"
+        }
+      )
       .to_return(
         status: 201,
         body: { uuid: "abc", logIndex: 1 }.to_json,

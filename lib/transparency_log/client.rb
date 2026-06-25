@@ -2,21 +2,31 @@
 
 require "net/http"
 require "json"
+require "uri"
 
 class TransparencyLog::Client
+  ENTRIES_PATH = "/api/v2/log/entries"
+
   def initialize(url)
-    @url = url
+    @base_uri = URI.parse(url)
+    @http     = Net::HTTP.new(@base_uri.host, @base_uri.port)
+    @http.use_ssl = @base_uri.scheme == "https"
   end
 
   def post(entry)
-    uri = URI("#{@url}/api/v1/log/entries")
+    @http.post(
+      ENTRIES_PATH,
+      JSON.dump(entry),
+      headers
+    )
+  end
 
-    req = Net::HTTP::Post.new(uri)
-    req["Content-Type"] = "application/json"
-    req.body = JSON.generate(entry)
+  private
 
-    Net::HTTP.start(uri.host, uri.port) do |http|
-      http.request(req)
-    end
+  def headers
+    {
+      "Content-Type" => "application/json",
+      "Accept"       => "application/json"
+    }
   end
 end

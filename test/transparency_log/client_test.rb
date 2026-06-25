@@ -10,26 +10,26 @@ class TransparencyLog::ClientTest < ActiveSupport::TestCase
 
   test "posts entry to rekor log entries endpoint" do
     entry = {
-      apiVersion: "0.0.2",
-      kind: "hashedrekord",
-      spec: {
-        hashedRekordV002: {
-          data: {
-            algorithm: "SHA2_256",
-            digest: "abc123"
-          },
-          signature: {
-            content: "signature123"
+      "hashedRekordRequestV002" => {
+        "digest" => "abc123",
+        "signature" => {
+          "content" => "signature123",
+          "verifier" => {
+            "publicKey" => {
+              "rawBytes" => "publickey123"
+            },
+            "keyDetails" => "PKIX_ECDSA_P256_SHA_256"
           }
         }
       }
     }
 
-    stub_request(:post, "#{@url}/api/v1/log/entries")
+    stub_request(:post, "#{@url}/api/v2/log/entries")
       .with(
-        body: JSON.generate(entry),
+        body: JSON.dump(entry),
         headers: {
-          "Content-Type" => "application/json"
+          "Content-Type" => "application/json",
+          "Accept" => "application/json"
         }
       )
       .to_return(

@@ -6,20 +6,28 @@ class TransparencyLog::EntryBuilderTest < ActiveSupport::TestCase
   setup do
     @private_key = OpenSSL::PKey::EC.generate("prime256v1")
     @json_payload = '{"gem":"rack","version":"3.0.0"}'
+    @entry = TransparencyLog::EntryBuilder.new(@private_key).build(@json_payload)
   end
 
   should "build a hashedrekord entry" do
-    entry = TransparencyLog::EntryBuilder.new(@private_key).build(@json_payload)
+    assert @entry.key?("hashedRekordRequestV002")
 
-    assert_equal "0.0.2", entry[:apiVersion]
-    assert_equal "hashedrekord", entry[:kind]
+    hashed_rekord = @entry["hashedRekordRequestV002"]
+
+    assert_equal(
+      Base64.strict_encode64(Digest::SHA256.digest(@json_payload)),
+      hashed_rekord["digest"]
+    )
+
+    assert_equal(
+      "PKIX_ECDSA_P256_SHA_256",
+      hashed_rekord.dig("signature", "verifier", "keyDetails")
+    )
   end
 
   should "produce a verifiable signature" do
-    entry = TransparencyLog::EntryBuilder.new(@private_key).build(@json_payload)
-
     signature = Base64.decode64(
-      entry.dig(:spec, :hashedRekordV002, :signature, :content)
+      @entry.dig("hashedRekordRequestV002", "signature", "content")
     )
 
     assert @private_key.verify(
@@ -27,5 +35,19 @@ class TransparencyLog::EntryBuilderTest < ActiveSupport::TestCase
       signature,
       @json_payload
     )
+  end
+
+  should "include the public key verifier" do
+    raw_bytes = Base64.decode64(
+      @entry.dig(
+        "hashedRekordRequestV002",
+        "signature",
+        "verifier",
+        "publicKey",
+        "rawBytes"
+      )
+    )
+
+    assert_equal @private_key.public_to_der, raw_bytes
   end
 end

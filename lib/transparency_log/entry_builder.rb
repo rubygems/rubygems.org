@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
+require "base64"
+require "digest"
+require "openssl"
+
 class TransparencyLog::EntryBuilder
+  KEY_DETAILS = "PKIX_ECDSA_P256_SHA_256"
+
   def initialize(private_key)
     @private_key = private_key
   end
@@ -12,18 +18,17 @@ class TransparencyLog::EntryBuilder
     )
 
     {
-      apiVersion: "0.0.2",
-      kind: "hashedrekord",
-      spec: {
-        hashedRekordV002: {
-          data: {
-            algorithm: "SHA2_256",
-            digest: Base64.strict_encode64(
-              Digest::SHA256.digest(json_payload)
-            )
-          },
-          signature: {
-            content: Base64.strict_encode64(signature)
+      "hashedRekordRequestV002" => {
+        "digest" => Base64.strict_encode64(
+          Digest::SHA256.digest(json_payload)
+        ),
+        "signature" => {
+          "content" => Base64.strict_encode64(signature),
+          "verifier" => {
+            "publicKey" => {
+              "rawBytes" => Base64.strict_encode64(@private_key.public_to_der)
+            },
+            "keyDetails" => KEY_DETAILS
           }
         }
       }
