@@ -39,7 +39,7 @@
         class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
 
     </div>
-      <%= render ButtonComponent.new(t(".sign_in"), type: :submit, color: :primary, data: { disable_with: t("form_disable_with") }) %>
+      <%= render ButtonComponent.new(t("sign_in"), type: :submit, color: :primary, data: { disable_with: t("form_disable_with") }) %>
     <% end %>
 
     <%= render "multifactor_auths/webauthn_prompt" %>
