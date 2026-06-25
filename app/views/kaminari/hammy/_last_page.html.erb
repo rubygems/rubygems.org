@@ -3,5 +3,5 @@
   <span class="inline-flex items-center justify-center w-10 h-10 rounded-md text-neutral-300 dark:text-neutral-700 cursor-default" aria-disabled="true" aria-label="<%= t("views.pagination.last_page", default: "Last page") %>"><%= icon_tag "last-page", size: 5 %></span>
 <% else -%>
   <%= link_to url, remote: remote, rel: "last", aria: { label: t("views.pagination.last_page", default: "Last page") },
-        class: "inline-flex items-center justify-center w-10 h-10 rounded-md no-underline text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800" do %><%= icon_tag "last-page", size: 5 %><% end %>
+        class: "last-page-button inline-flex items-center justify-center w-10 h-10 rounded-md no-underline text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800" do %><%= icon_tag "last-page", size: 5 %><% end %>
 <% end -%>

@@ -15,10 +15,10 @@ en:
     <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
   footer_sponsors_html:
     The RubyGems.org website and service are maintained and operated by Ruby Central’s
-    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team. 
-    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations. 
-    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler 
-    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.   
+    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team.
+    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations.
+    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler
+    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.
   form_disable_with: Please wait...
   invalid_page: Page number is out of range. Redirected to default page.
   locale_name: English
@@ -873,9 +873,14 @@ en:
           other: "Successfully transferred %{count} gems to %{organization}."
   reverse_dependencies:
     index:
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      gem_header: Gem
       title: "Reverse dependencies for %{name}"
       subtitle: "Latest version of the following gems require %{name}"
       no_reverse_dependencies: This gem has no reverse dependencies.
+      version_header: Version
     search:
       search_reverse_dependencies_html: "Search reverse dependencies Gems&hellip;"
   searches:
@@ -887,6 +892,7 @@ en:
       updated: Updated
       yanked: Yanked
     show:
+      title: Search
       subtitle_html: for <em>%{query}</em>
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})

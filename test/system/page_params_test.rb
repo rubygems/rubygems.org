@@ -17,7 +17,7 @@ class PageParamsTest < ApplicationSystemTestCase
     visit search_path(page: "102")
 
     assert redirect_to(search_path(page: "1"))
-    assert_text "search"
+    assert_text "Search"
     assert_text "Page number is out of range. Redirected to default page."
   end
 

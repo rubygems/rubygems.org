@@ -909,9 +909,14 @@ fr:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: Dépendances inversées pour %{name}
       subtitle:
       no_reverse_dependencies:
+      version_header:
     search:
       search_reverse_dependencies_html: Chercher des dépendances inversées Gems&hellip;
   searches:
@@ -923,6 +928,7 @@ fr:
       updated: Mis à jour
       yanked:
     show:
+      title:
       subtitle_html: pour <em>%{query}</em>
       month_update:
       week_update:

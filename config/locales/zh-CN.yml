@@ -879,9 +879,14 @@ zh-CN:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name} 的反向依赖"
       subtitle: 以下 Gem 的最新版本需要 %{name}
       no_reverse_dependencies: 这个 Gem 没有反向依赖。
+      version_header:
     search:
       search_reverse_dependencies_html: 搜索反向依赖 Gem&hellip;
   searches:
@@ -893,6 +898,7 @@ zh-CN:
       updated: 更新
       yanked: 撤回
     show:
+      title:
       subtitle_html: "<em>%{query}</em>"
       month_update: 上个月更新 (%{count})
       week_update: 上周更新 (%{count})
