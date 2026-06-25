@@ -50,11 +50,24 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert_redirected_to "/search?query=rails"
   end
 
+  test "default locale redirect preserves dotted path segments" do
+    get "/en/gems/rails/versions/7.0.0?query=release"
+
+    assert_response :redirect
+    assert_redirected_to "/gems/rails/versions/7.0.0?query=release"
+  end
+
   test "default locale root redirects to unprefixed root" do
     get "/en?query=rails"
 
     assert_response :redirect
     assert_redirected_to "/?query=rails"
+  end
+
+  test "default locale strip only redirects safe request methods" do
+    post "/en/users", params: { user: { handle: "", email: "", password: "" } }
+
+    assert_response :success
   end
 
   test "the localized sponsors alias redirects with the locale preserved" do
@@ -68,6 +81,16 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert page.has_link?(I18n.t("layouts.application.footer.security", locale: :de), href: "/de/pages/security")
+  end
+
+  test "localized pages use root-relative asset urls" do
+    get "/de/pages/about"
+
+    assert_response :success
+    asset_urls = page.all(:css, %(link[rel="stylesheet"][href], script[src]), visible: false).filter_map { |node| node[:href] || node[:src] }
+
+    assert_not_empty asset_urls
+    assert_empty asset_urls.grep(%r{\A/de/})
   end
 
   test "the active nav link is locale-aware" do
@@ -98,6 +121,15 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     refute_includes response.body, "?locale=", "locale leaked as a query param, fragmenting the CDN cache"
+  end
+
+  test "localized gem page keeps API helper urls unlocalized" do
+    create(:rubygem, name: "sandworm", number: "1.0.0")
+
+    get "/de/gems/sandworm"
+
+    assert_response :success
+    assert page.has_css?(%(.gem__downloads-wrap[data-href="/api/v1/downloads/sandworm-1.0.0.json"]))
   end
 
   test "localized pages emit a self-referential canonical plus hreflang alternates" do
