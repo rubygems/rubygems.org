@@ -433,7 +433,7 @@ class Rubygem < ApplicationRecord
 
     ids = []
     positions = []
-    versions.each do |version|
+    versions.order(:id).each do |version|
       ids << version.id
       positions << numbers.index(version.number)
     end

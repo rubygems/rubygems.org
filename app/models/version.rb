@@ -27,7 +27,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
   after_create :record_push_event
-  after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
   after_save :enqueue_web_hook_jobs, if: -> { saved_change_to_indexed? && (!saved_change_to_id? || indexed?) }
   after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 

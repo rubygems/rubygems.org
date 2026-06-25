@@ -23,6 +23,7 @@ class AfterVersionWriteJob < ApplicationJob
 
       SetLinksetHomeJob.perform_later(version:)
     end
+    ReorderVersionsJob.perform_later(rubygem: version.rubygem)
   end
 
   def owner
