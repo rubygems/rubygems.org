@@ -100,6 +100,7 @@ nl:
         disposable_email_domain:
         public_suffix:
         protected_provider:
+        publisher_already_exists:
       models:
         api_key:
           attributes:
@@ -1077,6 +1078,12 @@ nl:
         environment_help_html:
         ref_type_help_html:
         branch_name_help_html:
+        table:
+          project_path:
+          ci_config_path:
+          environment:
+          ref_type:
+          branch_name:
       pending:
         rubygem_name_help_html:
   duration:
