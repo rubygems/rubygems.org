@@ -11,9 +11,10 @@
     <div class="w-full max-w-2xl" role="search">
       <%= form_tag search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800" }, class: "relative w-full text-left" do %>
         <%= rubygem_search_field(
-              id: "homepage_gem_query",
-              class: "h-14 w-full rounded border border-neutral-500 bg-neutral-050 px-4 pr-14 text-b2 text-neutral-800 outline-none focus:border-neutral-500 focus:ring-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
-            ) %>
+          id: "homepage_gem_query",
+          autofocus: true,
+          class: "h-14 w-full rounded border border-neutral-500 bg-neutral-050 px-4 pr-14 text-b2 text-neutral-800 outline-none focus:border-neutral-500 focus:ring-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+        ) %>
 
         <ul role="listbox" data-autocomplete-target="suggestions" class="absolute start-0 z-40 mt-2 hidden w-full divide-y divide-neutral-200 rounded border border-neutral-200 bg-white text-b2 text-neutral-800 shadow-md dark:divide-neutral-800 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"></ul>
 

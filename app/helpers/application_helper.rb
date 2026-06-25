@@ -104,7 +104,7 @@ module ApplicationHelper
       :query,
       params[:query],
       placeholder: t("layouts.application.header.search_gem_html"),
-      autofocus: current_page?(root_url),
+      autofocus: kwargs.delete(:autofocus).present?,
       class: kwargs[:class],
       autocomplete: "off",
       aria:,
