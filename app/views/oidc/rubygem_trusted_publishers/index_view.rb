@@ -29,11 +29,11 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
         trusted_publishers.each do |rubygem_trusted_publisher|
           div(class: "tw-border-solid tw-my-4 tw-space-y-4 tw-flex tw-flex-col") do
             div(class: "sm:tw-flex sm:tw-items-baseline tw-mt-4 tw-gap-2") do
-              h4 { rubygem_trusted_publisher.trusted_publisher.class.publisher_name }
+              h4 { rubygem_trusted_publisher.trusted_publisher&.class&.publisher_name || "Unknown Publisher" }
               button_to(t(".delete"), rubygem_trusted_publisher_path(rubygem.slug, rubygem_trusted_publisher),
                         method: :delete, class: "form__submit form__submit--small")
             end
-            render rubygem_trusted_publisher.trusted_publisher
+            render rubygem_trusted_publisher.trusted_publisher if rubygem_trusted_publisher.trusted_publisher
           end
         end
       end

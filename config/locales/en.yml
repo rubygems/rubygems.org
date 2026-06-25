@@ -15,10 +15,10 @@ en:
     <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
   footer_sponsors_html:
     The RubyGems.org website and service are maintained and operated by Ruby Central’s
-    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team. 
-    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations. 
-    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler 
-    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.   
+    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team.
+    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations.
+    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler
+    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.
   form_disable_with: Please wait...
   invalid_page: Page number is out of range. Redirected to default page.
   locale_name: English
@@ -105,6 +105,7 @@ en:
         disposable_email_domain: "domain '%{domain}' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
         public_suffix: is a public suffix and cannot be used; specify a registrable domain
         protected_provider: is a major consumer mail provider and cannot be blocked
+        publisher_already_exists: publisher already exists
       models:
         api_key:
           attributes:
@@ -464,7 +465,7 @@ en:
       show:
         accept: Accept
         decline: Decline
-        title_html: "invited you to join their organization<br>as an <span class=\"font-bold\">%{role}</span>."
+        title_html: 'invited you to join their organization<br>as an <span class="font-bold">%{role}</span>.'
   pages:
     about:
       contributors_amount: "%{count} Rubyists"
@@ -1023,6 +1024,18 @@ en:
         workflow_repository_name_help_html: |
           <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The name of the repository containing the reusable workflow file.<br>
           Leave blank if the workflow is defined in the same repository as above (the common case).
+      gitlab:
+        project_path_help_html: "The path to the GitLab project, in the format <code>&lt;namespace&gt;/&lt;project&gt;</code>"
+        ci_config_path_help_html: "The path to the CI configuration file (e.g. <code>.gitlab-ci.yml</code>)"
+        environment_help_html: "The name of the GitLab CI/CD environment"
+        ref_type_help_html: "Restrict publishing to a specific ref type (Branch or Tag)"
+        branch_name_help_html: "The name of the branch to restrict publishing to (e.g. <code>main</code>)"
+        table:
+          project_path: "GitLab Project Path"
+          ci_config_path: "GitLab CI Config Path"
+          environment: "GitLab Environment"
+          ref_type: "Ref Type"
+          branch_name: "Branch Name"
       pending:
         rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
   duration:

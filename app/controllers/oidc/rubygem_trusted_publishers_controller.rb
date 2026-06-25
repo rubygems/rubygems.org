@@ -14,19 +14,39 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def new
+    rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.new
+    rubygem_trusted_publisher.trusted_publisher = if @selected_trusted_publisher_type == OIDC::TrustedPublisher::GitHubAction
+                                                    gh_actions_trusted_publisher
+                                                  else
+                                                    @selected_trusted_publisher_type.new
+                                                  end
+
     render OIDC::RubygemTrustedPublishers::NewView.new(
-      rubygem_trusted_publisher: @rubygem.oidc_rubygem_trusted_publishers.new(trusted_publisher: gh_actions_trusted_publisher)
+      rubygem_trusted_publisher: rubygem_trusted_publisher,
+      trusted_publisher_types: OIDC::TrustedPublisher.all,
+      selected_trusted_publisher_type: @selected_trusted_publisher_type
     )
   end
 
   def create
-    trusted_publisher = authorize @rubygem.oidc_rubygem_trusted_publishers.new(create_params)
+    permitted_params = create_params
+    specific_trusted_publisher_params = permitted_params[:trusted_publisher_attributes] || {}
+
+    specific_trusted_publisher = @trusted_publisher_type.build_trusted_publisher(specific_trusted_publisher_params)
+
+    rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.new(
+      trusted_publisher: specific_trusted_publisher
+    )
+    trusted_publisher = authorize rubygem_trusted_publisher
     if trusted_publisher.save
-      redirect_to rubygem_trusted_publishers_path(@rubygem.slug), flash: { notice: t(".success") }
+      redirect_to rubygem_trusted_publishers_path(@rubygem.slug),
+flash: { notice: t(".success") }
     else
       flash.now[:error] = trusted_publisher.errors.full_messages.to_sentence
       render OIDC::RubygemTrustedPublishers::NewView.new(
-        rubygem_trusted_publisher: trusted_publisher
+        rubygem_trusted_publisher: trusted_publisher,
+        trusted_publisher_types: OIDC::TrustedPublisher.all,
+        selected_trusted_publisher_type: @trusted_publisher_type
       ), status: :unprocessable_content
     end
   end
@@ -44,10 +64,8 @@ flash: { error: @rubygem_trusted_publisher.errors.full_messages.to_sentence })
 
   def create_params
     params.expect(
-      create_params_key => [
-        :trusted_publisher_type,
-        trusted_publisher_attributes: @trusted_publisher_type.permitted_attributes
-      ]
+      create_params_key => [:trusted_publisher_type,
+                            trusted_publisher_attributes: @trusted_publisher_type.permitted_attributes]
     )
   end
 
