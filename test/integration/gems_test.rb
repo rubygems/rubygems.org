@@ -57,6 +57,13 @@ class GemsTest < ActionDispatch::IntegrationTest
     assert page.has_css?(css, visible: false)
   end
 
+  test "gem page emits search engine tags alongside head content" do
+    get rubygem_path(id: @rubygem.slug)
+
+    assert page.has_css?(%(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: false)
+    assert page.has_css?(%(link[rel="alternate"][type="application/atom+xml"][title="sandworm Version Feed"][href="/gems/sandworm/versions.atom"]), visible: false)
+  end
+
   test "canonical url for an old version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_version_path(rubygem_id: @rubygem.slug, id: "1.0.0")
