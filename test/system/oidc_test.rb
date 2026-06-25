@@ -467,18 +467,16 @@ class OIDCTest < ApplicationSystemTestCase
 
     page.assert_text "Pending Trusted Publisher created"
     page.assert_selector "h1", text: "Pending Trusted Publishers"
-    page.assert_text <<~TEXT
-      rubygem1
-      Delete
-      GitHub Actions
-      Valid for about 12 hours
-      GitHub Repository
-      example/rubygem1
-      Workflow Filename
-      push_rubygem.yml
-      Environment
-      prod
-    TEXT
+    page.assert_text "rubygem1"
+    page.assert_text "Delete"
+    page.assert_text "GitHub Actions"
+    page.assert_text "Valid for about 12 hours"
+    page.assert_text "GitHub Repository"
+    page.assert_text "example/rubygem1"
+    page.assert_text "Workflow Filename"
+    page.assert_text "push_rubygem.yml"
+    page.assert_text "Environment"
+    page.assert_text "prod"
   end
 
   test "deleting pending trusted publishers" do
@@ -491,6 +489,6 @@ class OIDCTest < ApplicationSystemTestCase
     click_button "Delete"
 
     assert_content "Pending Trusted Publisher deleted"
-    assert_content "NO PENDING TRUSTED PUBLISHERS FOUND"
+    assert_content "No pending trusted publishers found"
   end
 end
