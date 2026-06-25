@@ -1,6 +1,10 @@
 <% if gems.respond_to?(:response) && aggregations = gems.response['aggregations'] %>
-  <div class="aggregations">
-    <%= t('searches.show.filter') if not_empty?(gems.response) %>
+  <div class="flex flex-wrap items-center gap-2 mb-6">
+    <% if not_empty?(gems.response) %>
+      <span class="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+        <%= t('searches.show.filter') %>
+      </span>
+    <% end %>
     <%= aggregation_match_count aggregations['matched_field'], 'name' %>
     <%= aggregation_match_count aggregations['matched_field'], 'description' %>
     <%= aggregation_match_count aggregations['matched_field'], 'summary' %>

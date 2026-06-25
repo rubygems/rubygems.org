@@ -882,9 +882,14 @@ ja:
           other: "%{count} gemを%{organization}に正常に移動しました。"
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name}の被依存関係"
       subtitle: 以下のgemの最新版は%{name}を必要としています
       no_reverse_dependencies: このgemは被依存関係がありません。
+      version_header:
     search:
       search_reverse_dependencies_html: 被依存関係のgemから検索...
   searches:
@@ -896,6 +901,7 @@ ja:
       updated: 更新日
       yanked: ヤンク済み
     show:
+      title:
       subtitle_html: "<em>%{query}</em>の検索結果"
       month_update: 先月更新（%{count}件）
       week_update: 先週更新（%{count}件）

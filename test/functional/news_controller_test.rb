@@ -23,7 +23,7 @@ class NewsControllerTest < ActionController::TestCase
 
     should "order by created_at of gem version" do
       expected_order = [@rubygem2, @rubygem3].map(&:name)
-      actual_order = assert_select("h2.gems__gem__name").map(&:text)
+      actual_order = assert_select("[data-testid='rubygem-name']").map(&:text)
 
       expected_order.each_with_index do |expected_gem_name, i|
         assert_match(/#{expected_gem_name}/, actual_order[i])
@@ -31,7 +31,7 @@ class NewsControllerTest < ActionController::TestCase
     end
 
     should "display entries and total in page info" do
-      assert_select "header > p.gems__meter", text: /.*2 of 100 in total/
+      assert_select "[data-testid='entries-info']", text: /.*2 of 100 in total/
     end
   end
 
@@ -48,7 +48,7 @@ class NewsControllerTest < ActionController::TestCase
 
     should "order by gem downloads" do
       expected_order = [@rubygem3, @rubygem2, @rubygem1].map(&:name)
-      actual_order = assert_select("h2.gems__gem__name").map(&:text)
+      actual_order = assert_select("[data-testid='rubygem-name']").map(&:text)
 
       expected_order.each_with_index do |expected_gem_name, i|
         assert_match(/#{expected_gem_name}/, actual_order[i])
@@ -56,7 +56,7 @@ class NewsControllerTest < ActionController::TestCase
     end
 
     should "display entries and total in page info" do
-      assert_select "header > p.gems__meter", text: /.*3 of 100 in total/
+      assert_select "[data-testid='entries-info']", text: /.*3 of 100 in total/
     end
   end
 
@@ -71,7 +71,7 @@ class NewsControllerTest < ActionController::TestCase
 
     should "order by created_at of gem version" do
       expected_order = [@rubygem2, @rubygem3].map(&:name)
-      actual_order = assert_select("h2.gems__gem__name").map(&:text)
+      actual_order = assert_select("[data-testid='rubygem-name']").map(&:text)
 
       expected_order.each_with_index do |expected_gem_name, i|
         assert_match(/#{expected_gem_name}/, actual_order[i])
@@ -79,7 +79,7 @@ class NewsControllerTest < ActionController::TestCase
     end
 
     should "display correct number of entries" do
-      entries = assert_select("h2.gems__gem__name")
+      entries = assert_select("[data-testid='rubygem-name']")
 
       assert_equal(2, entries.size)
     end
