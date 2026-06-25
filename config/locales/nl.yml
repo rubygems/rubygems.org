@@ -862,9 +862,14 @@ nl:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title:
       subtitle:
       no_reverse_dependencies:
+      version_header:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -876,6 +881,7 @@ nl:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: voor <em>%{query}</em>
       month_update:
       week_update:
