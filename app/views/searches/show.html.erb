@@ -7,7 +7,7 @@
 <%= render CardComponent.new do |c| %>
   <%= c.head(divide: true) do %>
     <h1 class="text-h2 mb-10">
-      <%= t(".title") %> <span class="text-orange-500 italic"> for "<%= params[:query] %>"</span>
+      <%= t(".title") %>; <span class="text-orange-500 italic"> "<%= params[:query] %>"</span>
     </h1>
   <% end %>
 
