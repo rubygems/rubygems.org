@@ -939,6 +939,7 @@ pt-BR:
     index:
       title: Estatísticas
       all_time_most_downloaded: Mais baixadas de todos os tempos
+      clickgems:
       total_gems: Total de gems
       total_users: Total de usuários
   users:

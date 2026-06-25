@@ -923,6 +923,7 @@ en:
     index:
       title: Stats
       all_time_most_downloaded: All Time Most Downloaded
+      clickgems: View analytics on ClickGems
       total_gems: Total gems
       total_users: Total users
   users:

@@ -1004,6 +1004,7 @@ de:
     index:
       title:
       all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
+      clickgems:
       total_gems: Gems insgesamt
       total_users: Benutzer insgesamt
   users:
