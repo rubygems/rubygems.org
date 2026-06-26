@@ -1,72 +1,50 @@
 ---
 en:
-  credentials_required: Credentials required
-  copied: Copied!
-  copy_to_clipboard: Copy to clipboard
-  edit: Edit
-  hide: Hide
-  verification_expired: The verification has expired. Please verify again.
-  feed_latest: RubyGems.org | Latest Gems
-  feed_subscribed: RubyGems.org | Subscribed Gems
-  footer_about_html:
-    RubyGems.org is the Ruby community&rsquo;s gem hosting service.
-    Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>.
-    Use <a href="%{api_docs}">the API</a> to find out more about <a href="%{gem_list}">available gems</a>.
-    <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
-  footer_sponsors_html:
-    The RubyGems.org website and service are maintained and operated by Ruby Central’s
-    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team.
-    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations.
-    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler
-    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.
-  form_disable_with: Please wait...
-  invalid_page: Page number is out of range. Redirected to default page.
-  locale_name: English
-  none: None
-  not_found: Not Found
-  or: or
-  forbidden: Forbidden
-  api_gem_not_found: This gem could not be found
-  api_key_forbidden: The API key doesn't have access
-  api_key_soft_deleted: An invalid API key cannot be used. Please delete it and create a new one.
-  api_key_insufficient_scope: This API key cannot perform the specified action on this gem.
-  email_not_confirmed: Please confirm your email address before using the API. Check your inbox for a confirmation link.
-  please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
-  please_sign_in: Please sign in to continue.
-  otp_incorrect: Your OTP code is incorrect. Please check it and retry.
-  otp_missing: You have enabled multifactor authentication but no OTP code provided. Please fill it and retry.
-  sign_in: Sign in
-  sign_out: Sign out
-  sign_up: Sign up
-  by_signing_up: By signing up, you agree to the
-  sign_up_terms: RubyGems Terms of Service
-  dependency_list: Show all transitive dependencies
-  multifactor_authentication: Multi-factor authentication
-  subtitle: your community gem host
-  this_rubygem_could_not_be_found: This rubygem could not be found.
-  time_ago: "%{duration} ago"
-  title: RubyGems.org
-  total_downloads: Total downloads
-  try_again: Something went wrong. Please try again.
-  update: Update
-  remove: Remove
-  view_all: View all
-  advanced_search: Advanced Search
-  authenticate: Authenticate
-  helpers:
-    submit:
-      create: "Create %{model}"
-      update: "Update %{model}"
+  activemodel:
+    attributes:
+      oidc/provider/configuration:
+        id_token_signing_alg_values_supported: ID Token signing algorithms supported
+        jwks_uri: JWKS URI
+    errors:
+      models:
+        oidc/api_key_permissions:
+          attributes:
+            gems:
+              too_long: may include at most 1 gem
+            valid_for:
+              inclusion: "%{value} seconds must be between 5 minutes (300 seconds)
+                and 1 day (86,400 seconds)"
   activerecord:
     attributes:
+      api_key:
+        oidc_api_key_role: OIDC API Key Role
       linkset:
         bugs: Bug Tracker URL
         changelog: Changelog URL
         code: Source Code URL
         docs: Documentation URL
+        funding: Funding URL
         mail: Mailing List URL
         wiki: Wiki URL
-        funding: Funding URL
+      membership/role:
+        admin: Admin
+        maintainer: Maintainer
+        outside_contributor: Outside Contributor
+        owner: Owner
+      oidc/api_key_role:
+        api_key_permissions: API Key Permissions
+      oidc/id_token:
+        api_key_role: API Key Role
+        jti: JWT ID
+      oidc/pending_trusted_publisher:
+        rubygem_name: RubyGem name
+      oidc/trusted_publisher/github_action:
+        repository_owner_id: GitHub Repository Owner ID
+        workflow_repository_name: Workflow Repository Name
+        workflow_repository_owner: Workflow Repository Owner
+      ownership/role:
+        maintainer: Maintainer
+        owner: Owner
       session:
         password: Password
         who: Email or Username
@@ -76,149 +54,172 @@ en:
         full_name: Full name
         handle: Username
         password: Password
-      ownership/role:
-        owner: Owner
-        maintainer: Maintainer
-      membership/role:
-        owner: Owner
-        admin: Admin
-        maintainer: Maintainer
-        outside_contributor: Outside Contributor
-      api_key:
-        oidc_api_key_role: OIDC API Key Role
-      oidc/id_token:
-        jti: JWT ID
-        api_key_role: API Key Role
-      oidc/api_key_role:
-        api_key_permissions: API Key Permissions
-      oidc/trusted_publisher/github_action:
-        repository_owner_id: GitHub Repository Owner ID
-        workflow_repository_owner: Workflow Repository Owner
-        workflow_repository_name: Workflow Repository Name
-      oidc/pending_trusted_publisher:
-        rubygem_name: RubyGem name
     errors:
       messages:
+        blocked: domain '%{domain}' has been blocked for spamming. Please use a valid
+          personal email.
+        disposable_email_domain: domain '%{domain}' is a disposable email provider
+          and cannot be used for registration. Please use a valid personal email.
+          If this block is incorrect, email support@rubygems.org.
         not_pwned: has previously appeared in a data breach and should not be used
-        blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
-        reserved_domain: "domain '%{domain}' is reserved and cannot be used for registration. Please use a valid personal email."
-        disposable_email_domain: "domain '%{domain}' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
-        public_suffix: is a public suffix and cannot be used; specify a registrable domain
         protected_provider: is a major consumer mail provider and cannot be blocked
+        public_suffix: is a public suffix and cannot be used; specify a registrable
+          domain
+        reserved_domain: domain '%{domain}' is reserved and cannot be used for registration.
+          Please use a valid personal email.
       models:
         api_key:
           attributes:
             expires_at:
-              inclusion: "must be in the future"
-        organization:
-          attributes:
-            handle:
-              invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+              inclusion: must be in the future
         membership:
           attributes:
             user:
-              taken: has already been invited to this organization
               blank: not found
               required: not found
+              taken: has already been invited to this organization
             user_id:
-              taken: has already been invited to this organization
               blank: not found
               required: not found
+              taken: has already been invited to this organization
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              reserved: is reserved
+              unavailable: is already in use
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken: has already been configured with this trusted publisher
+        organization:
+          attributes:
+            handle:
+              invalid: must start with a letter and can only contain letters, numbers,
+                underscores, and dashes
         ownership:
           attributes:
             user_id:
-              already_confirmed: "is already an owner of this gem"
-              already_invited: "is already invited to this gem"
+              already_confirmed: is already an owner of this gem
+              already_invited: is already invited to this gem
         user:
           attributes:
             handle:
-              invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+              invalid: must start with a letter and can only contain letters, numbers,
+                underscores, and dashes
             password:
               bcrypt_length: is too long (maximum is 72 bytes)
         version:
           attributes:
-            gem_full_name:
-              taken: "%{value} already exists"
             full_name:
               taken: "%{value} already exists"
-        oidc/rubygem_trusted_publisher:
-          attributes:
-            rubygem:
-              taken: "has already been configured with this trusted publisher"
-        oidc/pending_trusted_publisher:
-          attributes:
-            rubygem_name:
-              unavailable: "is already in use"
-              reserved: "is reserved"
+            gem_full_name:
+              taken: "%{value} already exists"
     models:
-      user: User
       api_key:
-        zero: API Keys
         one: API Key
         other: API Keys
-  activemodel:
-    attributes:
-      oidc/provider/configuration:
-        jwks_uri: JWKS URI
-        id_token_signing_alg_values_supported: ID Token signing algorithms supported
-    errors:
-      models:
-        oidc/api_key_permissions:
-          attributes:
-            valid_for:
-              inclusion: "%{value} seconds must be between 5 minutes (300 seconds) and 1 day (86,400 seconds)"
-            gems:
-              too_long: "may include at most 1 gem"
+        zero: API Keys
+      user: User
+  advanced_search: Advanced Search
+  api_gem_not_found: This gem could not be found
+  api_key_forbidden: The API key doesn't have access
+  api_key_insufficient_scope: This API key cannot perform the specified action on
+    this gem.
+  api_key_soft_deleted: An invalid API key cannot be used. Please delete it and create
+    a new one.
   api_keys:
-    form:
-      exclusive_scopes: Exclusive Scopes
-      rubygem_scope: Gem Scope
-      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
-      multifactor_auth: Multi-factor authentication
-      enable_mfa: Enable MFA
-      expiration: Expiration
+    all_gems: All Gems
     create:
-      success: "Created new API key"
       invalid_gem: Selected gem cannot be scoped to this key
+      success: Created new API key
     destroy:
-      success: "Successfully deleted API key: %{name}"
+      success: 'Successfully deleted API key: %{name}'
+    edit:
+      edit_api_key: Edit API key
+      invalid_key: An invalid API key cannot be edited. Please delete it and create
+        a new one.
+    form:
+      enable_mfa: Enable MFA
+      exclusive_scopes: Exclusive Scopes
+      expiration: Expiration
+      multifactor_auth: Multi-factor authentication
+      rubygem_scope: Gem Scope
+      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove
+        commands to a specific gem.
+    gem_ownership_removed: Ownership of the %{rubygem_name} gem has been removed after
+      being scoped to this key.
     index:
-      api_keys: API keys
-      name: Name
-      scopes: Scopes
-      gem: Gem
-      age: Age
-      last_access: Last access
+      access_webhooks: Access webhooks
       action: Action
-      delete: Delete
+      add_owner: Add owner
+      age: Age
+      api_keys: API keys
+      configure_trusted_publishers: Configure trusted publishers
       confirm: The API key will become invalid. Are you sure?
       confirm_all: All API keys will become invalid. Are you sure?
-      new_key: New API key
-      index_rubygems: Index rubygems
-      push_rubygem: Push rubygem
-      yank_rubygem: Yank rubygem
-      add_owner: Add owner
-      remove_owner: Remove owner
-      access_webhooks: Access webhooks
-      show_dashboard: Show dashboard
-      configure_trusted_publishers: Configure trusted publishers
-      reset: Reset
-      save_key: "Note that we won't be able to show the key to you again. New API key:"
-      mfa: MFA
+      delete: Delete
       expiration: Expiration
+      gem: Gem
+      index_rubygems: Index rubygems
+      last_access: Last access
+      mfa: MFA
+      name: Name
+      new_key: New API key
+      push_rubygem: Push rubygem
+      remove_owner: Remove owner
+      reset: Reset
+      save_key: 'Note that we won''t be able to show the key to you again. New API
+        key:'
+      scopes: Scopes
+      show_dashboard: Show dashboard
       update_owner: Update Owner
+      yank_rubygem: Yank rubygem
     new:
       new_api_key: New API key
     reset:
-      success: "Deleted all API keys"
+      success: Deleted all API keys
     update:
-      success: "Successfully updated API key"
       invalid_gem: Selected gem cannot be scoped to this key
-    edit:
-      edit_api_key: "Edit API key"
-      invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
-    all_gems: All Gems
-    gem_ownership_removed: Ownership of the %{rubygem_name} gem has been removed after being scoped to this key.
+      success: Successfully updated API key
+  authenticate: Authenticate
+  breadcrumbs:
+    dashboard: Dashboard
+    gems: Gems
+    home: Home
+    invite_member: Invite Member
+    latest_version: "%{version} (latest)"
+    members: Members
+    org_name: 'Org: %{name}'
+    settings: Settings
+    subscriptions: Subscriptions
+    versions: Versions
+  by_signing_up: By signing up, you agree to the
+  compromised_passwords:
+    show:
+      back_to_sign_in: Back to Sign In
+      email_sent: 'We''ve sent a password reset link to:'
+      explanation_html: The password you entered has been found in a public data breach
+        from <strong>another website</strong>. This doesn't mean your RubyGems.org
+        account was compromised, but because passwords are often reused, we require
+        a reset to keep your account secure.
+      heading: Password found in data breach
+      learn_more: Learn more
+      learn_more_hibp_html: Check if your email appears in other breaches at %{link}
+      learn_more_hibp_link_text: Have I Been Pwned
+      learn_more_mfa_html: Protect your account with %{link}
+      learn_more_mfa_link_text: multi-factor authentication
+      need_help_html: Need help? Contact %{email}
+      next_steps: 'Here''s what to do next:'
+      step_1: Check your email inbox (and spam folder) for the password reset link
+      step_2: Click the link and create a new, unique password you don't use elsewhere
+      step_3: Sign in with your new password
+      step_4_html: Consider %{link} for additional security
+      step_4_link_text: enabling multi-factor authentication
+      subheading: Your RubyGems.org account remains secure
+      title: Password Change Required
+  copied: Copied!
+  copy_to_clipboard: Copy to clipboard
+  credentials_required: Credentials required
   dashboards:
     show:
       creating_link_text: creating
@@ -228,27 +229,45 @@ en:
       migrating_link_text: migrating
       mine: My Gems
       my_subscriptions: Subscriptions
-      no_owned_html: You haven't pushed any gems yet. Perhaps check out the guide on %{creating_link} a gem.
-      no_subscriptions_html: You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!
+      no_owned_html: You haven't pushed any gems yet. Perhaps check out the guide
+        on %{creating_link} a gem.
+      no_subscriptions_html: You're not subscribed to any gems yet. Visit a %{gem_link}
+        to subscribe to one!
       organizations: Organizations
       title: Dashboard
   dependencies:
     show:
       click_to_expand: Click on the arrow icon to expand.
-      gem_header: Gem
-      required_version_header: Required version
-      scope_header:
-        one: "%{title} Dependency"
-        other: "%{title} Dependencies"
-      reverse_dependencies_header: Reverse Dependencies
-      version_header: Version
       date_header: Date
       downloads_count: "+%{count} Downloads"
       downloads_header: Downloads
+      gem_header: Gem
+      required_version_header: Required version
+      reverse_dependencies_header: Reverse Dependencies
+      scope_header:
+        one: "%{title} Dependency"
+        other: "%{title} Dependencies"
       see_all_reverse: See all reverse dependencies
+      version_header: Version
+  dependency_list: Show all transitive dependencies
+  duration:
+    days:
+      one: 1 day
+      other: "%{count} days"
+    hours:
+      one: 1 hour
+      other: "%{count} hours"
+    minutes:
+      one: 1 minute
+      other: "%{count} minutes"
+    seconds:
+      one: 1 second
+      other: "%{count} seconds"
+  edit: Edit
   email_confirmations:
     create:
-      promise_resend: We will email you confirmation link to activate your account if one exists.
+      promise_resend: We will email you confirmation link to activate your account
+        if one exists.
     new:
       submit: Resend Confirmation
       title: Resend confirmation email
@@ -256,16 +275,91 @@ en:
     update:
       confirmed_email: Your email address has been verified.
       token_failure: Please double check the URL or try submitting it again.
+  email_not_confirmed: Please confirm your email address before using the API. Check
+    your inbox for a confirmation link.
+  events:
+    rubygem_event:
+      owner:
+        owner_added: Owner Added
+        owner_added_authorizer_html: 'Authorized by: %{authorizer}'
+        owner_added_owner_html: 'New owner added: %{owner}'
+        owner_confirmed: Owner Confirmed
+        owner_removed: Owner Removed
+        owner_removed_by_html: 'Removed by: %{remover}'
+        owner_removed_owner_html: 'Owner removed: %{owner}'
+      version:
+        version_html: 'Version: %{version}'
+        version_pushed: Version Pushed
+        version_pushed_by_html: 'Pushed by: %{pusher}'
+        version_pushed_sha256_html: 'SHA256: %{sha256}'
+        version_unyanked: Version Unyanked
+        version_yanked: Version Yanked
+        version_yanked_by_html: 'Yanked by: %{pusher}'
+    table_component:
+      additional_info: Additional Info
+      event: Event
+      no_user_agent_info: No user agent info
+      redacted: Redacted
+      time: Time
+    user_event:
+      api_key:
+        api_key_created: API Key Created
+        api_key_deleted: API Key Deleted
+        api_key_gem_html: 'Gem: %{gem}'
+        api_key_mfa: 'MFA: %{mfa}'
+        api_key_name: 'Name: %{name}'
+        api_key_scopes: 'Scopes: %{scopes}'
+        not_required: Not required
+      email:
+        email_sent_from: 'From: %{from}'
+        email_sent_subject: 'Subject: %{subject}'
+        email_sent_to: 'To: %{to}'
+        email_verified: Email Verified
+      login:
+        login_success: Login Success
+        mfa_device: 'MFA Device: %{device}'
+        mfa_method: 'MFA Method: %{method}'
+        none: None
+        webauthn_login: 'Webauthn login: %{device}'
+      password:
+        action_taken: 'Action: %{action}'
+        mfa_disabled: Disabled
+        mfa_enabled: Enabled
+        mfa_status: 'MFA Status: %{status}'
+        password_compromised: Password Compromised
+      user:
+        created: User Created
+        email: 'Email: %{email}'
+  feed_latest: RubyGems.org | Latest Gems
+  feed_subscribed: RubyGems.org | Subscribed Gems
+  footer_about_html: RubyGems.org is the Ruby community&rsquo;s gem hosting service.
+    Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install
+    them</a>. Use <a href="%{api_docs}">the API</a> to find out more about <a href="%{gem_list}">available
+    gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve
+    the site yourself.
+  footer_sponsors_html: The RubyGems.org website and service are maintained and operated
+    by Ruby Central’s <a href="https://rubycentral.org/open-source/">Open Source Program</a>
+    and the RubyGems team. It is funded by the greater Ruby community through support
+    from sponsors, members, and infrastructure donations. <b>If you build with Ruby
+    and believe in our mission, you can join us in keeping RubyGems.org, RubyGems,
+    and Bundler secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.
+  forbidden: Forbidden
+  form:
+    optional: optional
+  form_disable_with: Please wait...
+  helpers:
+    submit:
+      create: Create %{model}
+      update: Update %{model}
+  hide: Hide
   home:
     index:
       downloads_counting_html: downloads &amp; counting
       find_blurb_html: Find, install, and publish RubyGems.
       learn:
         install_rubygems: Install RubyGems
+  invalid_page: Page number is out of range. Redirected to default page.
   layouts:
-    subject:
-      subject_label: Details
-      subject_secondary_label: Additional details
     application:
       footer:
         about: About
@@ -273,307 +367,188 @@ en:
         blog: Blog
         contribute: Contribute
         data: Data
-        docs: Docs
         designed_by: Designed by
         discussion_forum: Discuss
+        docs: Docs
         gems_served_by: Gems served by
         guides: Guides
         help: Help
         hosted_by: Hosted by
+        looking_for_maintainers: maintainers wanted
         monitored_by: Monitored by
+        operated_by: Operated by
         optimized_by: Optimized by
         policies: Policies
         releases: Releases
         resolved_with: Resolved with
+        secured_by: Secured by
         security: Security
         source_code: Code
         statistics: Stats
         status: Status
         support_us: Support Us
         supported_by: Supported by
-        operated_by: Operated by
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           is supported by
         uptime: Uptime
-        secured_by: Secured by
-        looking_for_maintainers: maintainers wanted
       header:
-        profile: Profile
         dashboard: Dashboard
-        settings: Settings
         edit_profile: Edit profile
-        search_gem_html: Search Gems&hellip;
         members: Members
-      mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
-  breadcrumbs:
-    home: Home
-    latest_version: "%{version} (latest)"
-    versions: Versions
-    dashboard: Dashboard
-    settings: Settings
-    org_name: "Org: %{name}"
-    subscriptions: Subscriptions
-    gems: Gems
-    members: Members
-    invite_member: Invite Member
+        profile: Profile
+        search_gem_html: Search Gems&hellip;
+        settings: Settings
+      mfa_banner_html: "🎉 We now support security devices! Improve your account
+        security by <a href=\"/settings/edit#security-device\">setting up</a> a new
+        device. [Learn more](link to blog post)!"
+    subject:
+      subject_label: Details
+      subject_secondary_label: Additional details
+  locale_name: English
   mailer:
-    confirm_your_email: Please confirm your email address with the link sent to your email.
+    admin_manual:
+      title: MESSAGE FROM RUBYGEMS.ORG ADMINS
+    confirm_your_email: Please confirm your email address with the link sent to your
+      email.
     confirmation_subject: Please confirm your email address with %{host}
-    link_expiration_explanation_html: Please keep in mind that this link is valid for only 3 hours. You can request the updated link using <a href='https://rubygems.org/email_confirmations/new'>resend confirmation mail</a> page.
+    deletion_complete:
+      body_html: Your request for account deletion on %{host} has been processed.
+        You can always create a new account using our %{sign_up} page.
+      subject: Your account has been deleted from %{host}
+      subtitle: Bye!
+      title: DELETION COMPLETE
+    deletion_failed:
+      body_html: You had requested account deletion on %{host}. Unfortunately, we
+        were not able to process your request. Please try again after some time or
+        %{contact} us if problem persists.
+      subject: Your account deletion request on %{host} has failed
+      subtitle: Sorry!
+      title: DELETION FAILED
     email_confirmation:
-      title: EMAIL CONFIRMATION
-      subtitle: Almost done!
       confirmation_link: Confirm email address
+      subtitle: Almost done!
+      title: EMAIL CONFIRMATION
       welcome_message: Welcome to %{host}! Visit the link below to verify your email.
     email_reset:
+      subtitle: Hi %{handle}!
       title: EMAIL RESET
-      subtitle: Hi %{handle}!
-      visit_link_instructions: You changed your email address on %{host}. Please visit the following url to re-activate your account.
-    deletion_complete:
-      title: DELETION COMPLETE
-      subtitle: Bye!
-      subject: Your account has been deleted from %{host}
-      body_html: Your request for account deletion on %{host} has been processed. You can always create a new account using our %{sign_up} page.
-    deletion_failed:
-      title: DELETION FAILED
-      subtitle: Sorry!
-      subject: Your account deletion request on %{host} has failed
-      body_html: You had requested account deletion on %{host}. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
-    notifiers_changed:
-      subject: You changed your %{host} email notification settings
-      title: EMAIL NOTIFICATIONS
-      subtitle: Hi %{handle}
-      "on": "ON"
-      off_html: <b>OFF</b>
-    gem_pushed:
-      subject: Gem %{gem} pushed to %{host}
-      title: GEM PUSHED
-    gem_yanked:
-      subject: Gem %{gem} yanked from %{host}
-      title: GEM YANKED
-    reset_api_key:
-      subject: "%{host} API key was reset"
-      title: API KEY RESET
-      subtitle: Hi %{handle}
-    webauthn_credential_created:
-      subject: New security device added on %{host}
-      title: SECURITY DEVICE ADDED
-      subtitle: Hi %{handle}!
-    webauthn_credential_removed:
-      subject: Security device removed on %{host}
-      title: SECURITY DEVICE REMOVED
-      subtitle: Hi %{handle}!
-    totp_enabled:
-      subject: Authentication app enabled on %{host}
-      title: AUTHENTICATION APP ENABLED
-      subtitle: Hi %{handle}!
-    totp_disabled:
-      subject: Authentication app disabled on %{host}
-      title: AUTHENTICATION APP DISABLED
-      subtitle: Hi %{handle}!
+      visit_link_instructions: You changed your email address on %{host}. Please visit
+        the following url to re-activate your account.
     email_reset_update:
       subject: You have requested email address update on %{host}
       title: EMAIL UPDATE REQUESTED
-    ownership_confirmation:
-      subject: Please confirm the ownership of the %{gem} gem on %{host}
-      title: OWNERSHIP CONFIRMATION
-      subtitle: Hi %{handle}!
-      body_text: You were added as an owner to the %{gem} gem by %{authorizer}. Please visit link below to confirm your ownership.
-      body_html: You were added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
-      link_expiration_explanation_html: Please note that this link is valid for only %{expiry_hours}. You can resend confirmation mail from the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem page after sign in.
+    gem_pushed:
+      subject: Gem %{gem} pushed to %{host}
+      title: GEM PUSHED
+    gem_trusted_publisher_added:
+      title: TRUSTED PUBLISHER ADDED
+    gem_yanked:
+      subject: Gem %{gem} yanked from %{host}
+      title: GEM YANKED
+    link_expiration_explanation_html: Please keep in mind that this link is valid
+      for only 3 hours. You can request the updated link using <a href='https://rubygems.org/email_confirmations/new'>resend
+      confirmation mail</a> page.
+    notifiers_changed:
+      off_html: "<b>OFF</b>"
+      'on': 'ON'
+      subject: You changed your %{host} email notification settings
+      subtitle: Hi %{handle}
+      title: EMAIL NOTIFICATIONS
     owner_added:
-      subject_self: You were added as an owner to the %{gem} gem
+      body_others_html: <b>%{owner_handle}</b> was added as an owner to the <strong><a
+        href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>.
+        You are receiving this notification because you are an owner of %{gem}.
+      body_self_html: <b>You</b> were added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gem on %{host}.
       subject_others: User %{owner_handle} was added as an owner to the %{gem} gem
+      subject_self: You were added as an owner to the %{gem} gem
+      subtitle: Hi %{user_handle}!
       title: OWNER ADDED
-      subtitle: Hi %{user_handle}!
-      body_self_html: <b>You</b> were added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host}.
-      body_others_html: <b>%{owner_handle}</b> was added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving this notification because you are an owner of %{gem}.
     owner_removed:
+      body_html: <b>You</b> were removed as an owner from the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gem on %{host} by <b>%{remover}</b>.
       subject: You were removed as an owner from the %{gem} gem
+      subtitle: Hi %{user_handle}!
       title: OWNER REMOVED
-      subtitle: Hi %{user_handle}!
-      body_html: <b>You</b> were removed as an owner from the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on %{host} by <b>%{remover}</b>.
     owner_updated:
-      subject: Your role was updated for the %{gem} gem
-      title: OWNER ROLE UPDATED
-      subtitle: Hi %{user_handle}!
-      body_html: Your role was updated to %{role} for the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem.
+      body_html: Your role was updated to %{role} for the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gem.
       body_text: Your role was updated to %{role} for the %{gem} gem.
+      subject: Your role was updated for the %{gem} gem
+      subtitle: Hi %{user_handle}!
+      title: OWNER ROLE UPDATED
+    ownership_confirmation:
+      body_html: You were added as an owner to the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm
+        your ownership.
+      body_text: You were added as an owner to the %{gem} gem by %{authorizer}. Please
+        visit link below to confirm your ownership.
+      link_expiration_explanation_html: Please note that this link is valid for only
+        %{expiry_hours}. You can resend confirmation mail from the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        gem page after sign in.
+      subject: Please confirm the ownership of the %{gem} gem on %{host}
+      subtitle: Hi %{handle}!
+      title: OWNERSHIP CONFIRMATION
+    reset_api_key:
+      subject: "%{host} API key was reset"
+      subtitle: Hi %{handle}
+      title: API KEY RESET
+    totp_disabled:
+      subject: Authentication app disabled on %{host}
+      subtitle: Hi %{handle}!
+      title: AUTHENTICATION APP DISABLED
+    totp_enabled:
+      subject: Authentication app enabled on %{host}
+      subtitle: Hi %{handle}!
+      title: AUTHENTICATION APP ENABLED
     web_hook_deleted:
-      title: WEBHOOK DELETED
+      body_html: Your webhook that <code>POST</code>ed to <a href="%{url}"><code>%{url}</code></a>
+        has been deleted after %{failures} failures.
+      body_text: Your webhook that POSTed to %{url} has been deleted after %{failures}
+        failures.
+      gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        was pushed.
+      gem_text: This webhook was previously called when %{gem} was pushed.
+      global_html: This webhook was previously called when <em>any</em> gem was pushed.
+      global_text: This webhook was previously called when any gem was pushed.
       subject: Your %{host} webhook was deleted
       subtitle: Hi %{handle}!
-      body_text: Your webhook that POSTed to %{url} has been deleted after %{failures} failures.
-      body_html: Your webhook that <code>POST</code>ed to <a href="%{url}"><code>%{url}</code></a> has been deleted after %{failures} failures.
-      global_text: This webhook was previously called when any gem was pushed.
-      global_html: This webhook was previously called when <em>any</em> gem was pushed.
-      gem_text: This webhook was previously called when %{gem} was pushed.
-      gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
+      title: WEBHOOK DELETED
     web_hook_disabled:
-      title: WEBHOOK DISABLED
-      subject: Your %{host} webhook was disabled
-      subtitle: Hi %{handle}!
-      body_text: |
-        Your webhook that POSTed to %{url} has been disabled due to %{disabled_reason}.
-        It last succeeded at %{last_success} and has failed %{failures_since_last_success} times since then.
-        You may delete this webhook by running `%{delete_command}`.
       body_html: |
         <p>Your webhook that <code>POST</code>ed to <a href="%{url}"><code>%{url}</code></a> has been disabled due to %{disabled_reason}.</p>
         <p>It last succeeded at <code>%{last_success}</code> and has failed %{failures_since_last_success} times since then.</p>
         <p>You may delete this webhook by running <code>%{delete_command}</code>.</p>
-      global_text: This webhook was previously called when any gem was pushed.
-      global_html: This webhook was previously called when <em>any</em> gem was pushed.
+      body_text: |
+        Your webhook that POSTed to %{url} has been disabled due to %{disabled_reason}.
+        It last succeeded at %{last_success} and has failed %{failures_since_last_success} times since then.
+        You may delete this webhook by running `%{delete_command}`.
+      gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        was pushed.
       gem_text: This webhook was previously called when %{gem} was pushed.
-      gem_html: This webhook was previously called when <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> was pushed.
-    gem_trusted_publisher_added:
-      title: TRUSTED PUBLISHER ADDED
-    admin_manual:
-      title: MESSAGE FROM RUBYGEMS.ORG ADMINS
-  news:
-    show:
-      title: New Releases — All Gems
-      all_gems: All Gems
-      popular_gems: Popular Gems
-    popular:
-      title: New Releases — Popular Gems
-  organizations:
-    index:
-      title: Organizations
-      no_organizations: You are not a member of any organizations.
-    show:
-      organization: Organization
-      gems: Gems
-      history: History
-      members: Members
-      no_history: No events yet
-      no_gems: No gems yet
-      add_member: Invite Member
-      invite: Invite
-      transfer: Transfer
-    members:
-      create:
-        user_already_invited: User already invited to the organization.
-        user_not_found: User not found.
-        member_invited: Member invited.
-      update:
-        member_updated: Member updated successfully.
-      destroy:
-        member_removed: Member removed successfully.
-        cannot_remove_self: You cannot remove yourself from the organization.
-      resend_invitation:
-        invitation_resent: Invitation resent successfully.
-        already_confirmed: Member is already confirmed.
-      index:
-        invite: Invite
-        pending: Pending
-      edit:
-        update: Update
-        delete: Delete
-        resend_invitation: Resend Invitation
-      new:
-        handle: Handle
-        role: Role
-        create: Create
-        invite: Invite
-    invitations:
-      show:
-        accept: Accept
-        decline: Decline
-        title_html: "invited you to join their organization<br>as an <span class=\"font-bold\">%{role}</span>."
-  pages:
-    about:
-      contributors_amount: "%{count} Rubyists"
-      downloads_amount: "billions of gem downloads"
-      checkout_code: "please check out the code"
-      mit_licensed: "MIT licensed"
-      logo_header: Looking for our logo?
-      logo_details: Just select the download button and you'll get three .PNGs and an .SVG of the RubyGems logo all for yourself.
-      founding_html: The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community.
-      support_html: Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on. Our infrastructure is currently hosted on %{aws}.
-      technical_html: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3}, served by %{fastly}, and the time between publishing a new gem and having it ready for installation is usually just a few seconds. For more info, %{source_code}, which is %{license} over at GitHub."
-      title: About
-      purpose:
-        better_api: Provide a better API for dealing with gems
-        enable_community: Enable the community to improve and enhance the site
-        header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
-        transparent_pages: Create more transparent and accessible project pages
-    data:
-      title: RubyGems.org Data Dumps
-    download:
-      title: Download RubyGems
-    security:
-      title: Security
-    supporters:
-      title: RubyGems Supporters
-  policies:
-    index:
-      title: RubyGems.org Policies
-    terms-of-service:
-      title: Terms of Service
-    acceptable-use:
-      title: Acceptable Use
-    copyright:
-      title: Copyright Policy
-    privacy:
-      title: Privacy Notice
-  policies_mailer:
-    policy_update_announcement:
-      subject: Review New RubyGems.org Policies
-      title: POLICY UPDATE ANNOUNCEMENT
+      global_html: This webhook was previously called when <em>any</em> gem was pushed.
+      global_text: This webhook was previously called when any gem was pushed.
+      subject: Your %{host} webhook was disabled
       subtitle: Hi %{handle}!
-    policy_update_review_closed:
-      subject: RubyGems.org New Policy Adoption
-      title: POLICY UPDATE REVIEW CLOSED
+      title: WEBHOOK DISABLED
+    webauthn_credential_created:
+      subject: New security device added on %{host}
       subtitle: Hi %{handle}!
-  password_mailer:
-    change_password:
-      closing: If you didn't request this, ignore this email. Your password has
-        not been changed.
-      opening: "Someone, hopefully you, requested we send you a link to change
-        your password:"
-      title: CHANGE PASSWORD
+      title: SECURITY DEVICE ADDED
+    webauthn_credential_removed:
+      subject: Security device removed on %{host}
       subtitle: Hi %{handle}!
-    compromised_password_reset:
-      subject: "Action required: Reset your %{host} password"
-      title: PASSWORD RESET REQUIRED
-      subtitle: "Hi %{handle}!"
-      opening: "During your recent sign-in, we detected that your password appears in a public data breach from another website."
-      reassurance: "Your RubyGems.org account has not been compromised, but because passwords are often reused across sites, we require you to change your password to keep your account secure."
-      closing_html: "If you did not recently try to sign in to RubyGems.org, please contact %{support_email} immediately."
-      closing_text: "If you did not recently try to sign in to RubyGems.org, please contact support@rubygems.org immediately."
-  passwords:
-    edit:
-      submit: Save this password
-      title: Reset password
-      token_failure: Please double check the URL or try submitting a new password reset.
-      compromised_heading: "Your password was found in a data breach"
-      compromised_explanation_html: "The password you used was found in a public data breach from <strong>another website</strong>. Please choose a new, unique password that you don't use elsewhere."
-      strength:
-        too_short: Too short
-        weak: Weak
-        fair: Fair
-        strong: Strong
-    new:
-      submit: Reset password
-      title: Change your password
-      will_email_notice: We will email you a link to change your password.
-    create:
-      success: You will receive an email within the next few minutes. It contains instructions for changing your password.
-      failure_on_missing_email: Email can't be blank.
-    update:
-      success: Your password has been changed.
-      failure: Your password could not be changed. Please try again.
+      title: SECURITY DEVICE REMOVED
+  multifactor_authentication: Multi-factor authentication
   multifactor_auths:
-    session_expired: Your login page session has expired.
-    require_mfa_enabled: Your multi-factor authentication has not been enabled. You have to enable it first.
-    require_webauthn_enabled: You don't have any security devices enabled. You have to associate a device to your account first.
-    setup_required_html: For protection of your account and your gems, you are required to set up multi-factor authentication. Please read our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">blog post</a> for more details.
-    setup_recommended: For protection of your account and your gems, we encourage you to set up multi-factor authentication. Your account will be required to have MFA enabled in the future.
-    strong_mfa_level_required_html: For protection of your account and your gems, you are required to change your MFA level to "UI and gem signin" or "UI and API". Please read our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">blog post</a> for more details.
-    strong_mfa_level_recommended: For protection of your account and your gems, we encourage you to change your MFA level to "UI and gem signin" or "UI and API". Your account will be required to have MFA enabled on one of these levels in the future.
-    setup_webauthn_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. <a href="https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html">Learn more</a>!
     api:
+      mfa_recommended_not_yet_enabled: |
+        [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication at https://rubygems.org/totp/new.
+        Your account will be required to have MFA enabled in the future.
+      mfa_recommended_weak_level_enabled: |
+        [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit.
+        Your account will be required to have MFA enabled on one of these levels in the future.
       mfa_required: Gem requires MFA enabled; You do not have MFA enabled yet.
       mfa_required_not_yet_enabled: |
         [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication at https://rubygems.org/totp/new.
@@ -583,206 +558,459 @@ en:
         [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit.
 
         Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
-      mfa_recommended_not_yet_enabled: |
-        [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication at https://rubygems.org/totp/new.
-        Your account will be required to have MFA enabled in the future.
-      mfa_recommended_weak_level_enabled: |
-        [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit.
-        Your account will be required to have MFA enabled on one of these levels in the future.
-    recovery:
-      continue: Continue
-      title: Recovery codes
-      saved: I acknowledge that I have saved my recovery codes.
-      confirm_dialog: Leave without copying recovery codes?
-      note_html: "Please <strong class='recovery__bold'>copy and save</strong> these recovery codes. You can use these codes to login and reset your MFA if your lose your authentication device. Each code can be used once."
-      already_generated: You should have already saved your recovery codes.
-    update:
-      invalid_level: Invalid MFA level.
-      success: You have successfully updated your multi-factor authentication level.
     prompt:
-      webauthn_credential_note: Authenticate with a security device such as Touch ID, YubiKey, etc.
-      sign_in_with_webauthn_credential: Authenticate with security device
       otp_code: OTP code
       otp_or_recovery: OTP or recovery code
       recovery_code: Recovery code
-      recovery_code_html: 'You can use a valid <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
+      recovery_code_html: You can use a valid <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa",
+        class="t-link">recovery code</a> if you have lost access to your multi-factor
+        authentication device or to your security device.
       security_device: Security Device
+      sign_in_with_webauthn_credential: Authenticate with security device
       verify_code: Verify code
-  totps:
-    incorrect_otp: Your OTP code is incorrect.
-    require_totp_disabled: Your OTP based multi-factor authentication has already been enabled. To reconfigure your OTP based authentication, you'll have to remove it first.
-    require_totp_enabled: You don't have an authenticator app enabled. You have to enable it first.
-    new:
-      title: Enabling multi-factor auth
-      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually.
-      otp_prompt: Type digit code from auth app to continue.
-      confirm: I have kept my recovery codes safe.
-      enable: Enable
-      account: "Account: %{account}"
-      key: "Key: %{key}"
-      time_based: "Time based: Yes"
-    create:
-      qrcode_expired: The QR-code and key is expired. Please try registering a new device again.
-      success: You have successfully enabled OTP based multi-factor authentication.
-    destroy:
-      success: You have successfully disabled OTP based multi-factor authentication.
-  notifiers:
+      webauthn_credential_note: Authenticate with a security device such as Touch
+        ID, YubiKey, etc.
+    recovery:
+      already_generated: You should have already saved your recovery codes.
+      confirm_dialog: Leave without copying recovery codes?
+      continue: Continue
+      note_html: Please <strong class='recovery__bold'>copy and save</strong> these
+        recovery codes. You can use these codes to login and reset your MFA if your
+        lose your authentication device. Each code can be used once.
+      saved: I acknowledge that I have saved my recovery codes.
+      title: Recovery codes
+    require_mfa_enabled: Your multi-factor authentication has not been enabled. You
+      have to enable it first.
+    require_webauthn_enabled: You don't have any security devices enabled. You have
+      to associate a device to your account first.
+    session_expired: Your login page session has expired.
+    setup_recommended: For protection of your account and your gems, we encourage
+      you to set up multi-factor authentication. Your account will be required to
+      have MFA enabled in the future.
+    setup_required_html: For protection of your account and your gems, you are required
+      to set up multi-factor authentication. Please read our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">blog
+      post</a> for more details.
+    setup_webauthn_html: "🎉 We now support security devices! Improve your
+      account security by <a href=\"/settings/edit#security-device\">setting up</a>
+      a new device. <a href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">Learn
+      more</a>!"
+    strong_mfa_level_recommended: For protection of your account and your gems, we
+      encourage you to change your MFA level to "UI and gem signin" or "UI and API".
+      Your account will be required to have MFA enabled on one of these levels in
+      the future.
+    strong_mfa_level_required_html: For protection of your account and your gems,
+      you are required to change your MFA level to "UI and gem signin" or "UI and
+      API". Please read our <a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">blog
+      post</a> for more details.
     update:
-      success: You have successfully updated your email notification settings.
+      invalid_level: Invalid MFA level.
+      success: You have successfully updated your multi-factor authentication level.
+  news:
+    popular:
+      title: New Releases — Popular Gems
     show:
-      info:
-        To aid detection of unauthorized gem or ownership changes, we email you each time a new version of a
-        gem you own is pushed, yanked or a new owner was added. By receiving and reading these emails, you help protect the Ruby
+      all_gems: All Gems
+      popular_gems: Popular Gems
+      title: New Releases — All Gems
+  none: None
+  not_found: Not Found
+  notifiers:
+    show:
+      info: To aid detection of unauthorized gem or ownership changes, we email you
+        each time a new version of a gem you own is pushed, yanked or a new owner
+        was added. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
-      "on": "On"
-      "off": "Off"
+      'off': 'Off'
+      'on': 'On'
+      owner_heading: Ownership Notifications
+      push_heading: Push Notifications
       recommended: recommended
       title: Email notifications
       update: Update
-      owner_heading: Ownership Notifications
-      push_heading: Push Notifications
-  webauthn_verifications:
-    expired_or_already_used: The token in the link you used has either expired or been used already.
-    no_port: No port provided. Please try again.
-    pending: Security device authentication is still pending.
-    prompt:
-      title: Authenticate with Security Device
-      authenticating_as: Authenticating as
-      authenticate: Authenticate
-      no_webauthn_devices: You don't have any security devices enabled
-    successful_verification:
-      title: Success!
-      close_browser: Please close this browser.
-    failed_verification:
-      title: Error - Verification Failed
-      close_browser: Please close this browser and try again.
+    update:
+      success: You have successfully updated your email notification settings.
+  oidc:
+    api_key_roles:
+      create:
+        success: OIDC API Key Role created
+      deleted: The role has been deleted.
+      destroy:
+        success: OIDC API Key Role deleted
+      edit:
+        edit_role: Edit API Key Role
+      form:
+        add_condition: Add condition
+        add_statement: Add statement
+        remove_condition: Remove condition
+        remove_statement: Remove statement
+      git_hub_actions_workflow:
+        a_gem: a gem
+        configured_for_html: This OIDC API Key Role is configured to allow pushing
+          %{link_html} from GitHub Actions.
+        instructions_html: 'To release, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem"
+          rel="noreferer">bump the gem version</a> and push a new tag (using <code>rake
+          release:source_control_push</code>) to GitHub. The workflow will automatically
+          build the gem and push it to RubyGems.org.
+
+          '
+        not_github: This OIDC API Key Role is not configured for GitHub Actions.
+        not_push: This OIDC API Key Role is not configured to allow pushing gems.
+        title: OIDC Gem Push GitHub Actions Workflow
+        to_automate_html: To automate releasing %{link_html} when a new tag is pushed,
+          add the following workflow to your repository.
+      index:
+        api_key_roles: OIDC API Key Roles
+        new_role: Create API Key Role
+      new:
+        title: New OIDC API Key Role
+      show:
+        api_key_role_name: API Key Role %{name}
+        automate_gh_actions_publishing: Automate Gem Publishing with GitHub Actions
+        confirm_delete: Are you sure you want to delete this role?
+        delete_role: Delete API Key Role
+        deleted_at_html: This role was deleted %{time_html} ago and can no longer
+          be used.
+        edit_role: Edit API Key Role
+        view_provider: View provider %{issuer}
+      update:
+        success: OIDC API Key Role updated
+    id_tokens:
+      index:
+        title: OIDC ID Tokens
+      show:
+        title: OIDC ID Token
+    pending_trusted_publishers:
+      create:
+        success: Pending Trusted Publisher created
+      destroy:
+        success: Pending Trusted Publisher deleted
+      index:
+        create: Create
+        delete: Delete
+        description_html: |
+          Pending trusted publishers allow you to configure trusted publishing before you have pushed the first version of a gem.
+          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/" class="t-link">trusted publishing documentation</a>.
+        title: Pending Trusted Publishers
+        valid_for_html: Valid for %{time_html}
+      new:
+        title: New Pending Trusted Publisher
+    providers:
+      index:
+        description_html: These are the OIDC providers that have been configured for
+          RubyGems.org.<br>Please reach out to support if you need another OIDC Provider
+          added.
+        title: OIDC Providers
+      show:
+        title: OIDC Provider
+    rubygem_trusted_publishers:
+      create:
+        success: Trusted Publisher created
+      destroy:
+        success: Trusted Publisher deleted
+      index:
+        create: Create
+        delete: Delete
+        description_html: |
+          Trusted publishers allow you to push gems from CI without storing any long-lived sensitive credentials.
+          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/" class="t-link">trusted publishing documentation</a>.
+        subtitle_owner_html: Trusted publishers for %{gem_html}
+        title: Trusted Publishers
+      new:
+        subtitle_owner_html: Add a trusted publisher for %{gem_html}
+        title: New Trusted Publisher
+    trusted_publisher:
+      github_actions:
+        environment_help_html: |
+          The name of the <a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">GitHub Actions environment</a> that the above workflow uses for publishing.<br>
+          This should be configured under the repository's settings.<br>
+          While not required, a dedicated publishing environment is strongly encouraged, especially if your repository has maintainers with commit access who shouldn't have RubyGems.org gem push access.
+        repository_name_help_html: The name of the GitHub repository that contains
+          the publishing workflow
+        repository_owner_help_html: The GitHub organization name or GitHub username
+          that owns the repository
+        workflow_filename_help_html: The filename of the publishing workflow.<br>This
+          file should exist in the <code>.github/workflows/</code> directory in the
+          repository configured above.
+        workflow_repository_name_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The name of the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
+        workflow_repository_owner_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The GitHub organization or username that owns the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
+      pending:
+        rubygem_name_help_html: The gem (on RubyGems.org) that will be created when
+          this publisher is used
+      unsupported_type: Unsupported trusted publisher type
+  or: or
   organization_onboardings:
     confirm:
       success: Organization onboarded successfully!
+  organizations:
+    index:
+      no_organizations: You are not a member of any organizations.
+      title: Organizations
+    invitations:
+      show:
+        accept: Accept
+        decline: Decline
+        title_html: invited you to join their organization<br>as an <span class="font-bold">%{role}</span>.
+    members:
+      create:
+        member_invited: Member invited.
+        user_already_invited: User already invited to the organization.
+        user_not_found: User not found.
+      destroy:
+        cannot_remove_self: You cannot remove yourself from the organization.
+        member_removed: Member removed successfully.
+      edit:
+        delete: Delete
+        resend_invitation: Resend Invitation
+        update: Update
+      index:
+        invite: Invite
+        pending: Pending
+      new:
+        create: Create
+        handle: Handle
+        invite: Invite
+        role: Role
+      resend_invitation:
+        already_confirmed: Member is already confirmed.
+        invitation_resent: Invitation resent successfully.
+      update:
+        member_updated: Member updated successfully.
+    show:
+      add_member: Invite Member
+      gems: Gems
+      history: History
+      invite: Invite
+      members: Members
+      no_gems: No gems yet
+      no_history: No events yet
+      organization: Organization
+      transfer: Transfer
+  otp_incorrect: Your OTP code is incorrect. Please check it and retry.
+  otp_missing: You have enabled multifactor authentication but no OTP code provided.
+    Please fill it and retry.
   owners:
+    confirm:
+      confirmed_email: You were added as an owner to the %{gem} gem
+      token_expired: The confirmation token has expired. Please try resending the
+        token from the gem page.
+    create:
+      success_notice: "%{handle} was added as an unconfirmed owner. Ownership access
+        will be enabled after the user clicks on the confirmation mail sent to their
+        email."
+    destroy:
+      failed_notice: Can't remove the only owner of the gem
+      removed_notice: "%{owner_name} was removed from the owners successfully"
     edit:
       role: Role
       title: Edit Owner
-    confirm:
-      confirmed_email: You were added as an owner to the %{gem} gem
-      token_expired: The confirmation token has expired. Please try resending the token from the gem page.
     index:
-      add_owner: ADD OWNER
-      name: OWNER
-      mfa: MFA STATUS
-      status: STATUS
-      confirmed_at: CONFIRMED AT
-      added_by: ADDED BY
       action: ACTION
+      add_owner: ADD OWNER
+      added_by: ADDED BY
+      confirm_remove: Are you sure you want to remove this user from the owners?
+      confirmed: Confirmed
+      confirmed_at: CONFIRMED AT
+      email_field: Email / Handle
+      info: add or remove owners
+      mfa: MFA STATUS
+      name: OWNER
+      pending: Pending
       role: ROLE
       role_field: Role
-      email_field: Email / Handle
+      status: STATUS
       submit_button: Add Owner
-      info: add or remove owners
-      confirmed: Confirmed
-      pending: Pending
-      confirm_remove: Are you sure you want to remove this user from the owners?
+    mfa_required: The gem has MFA requirement enabled, please setup MFA on your account.
     resend_confirmation:
       resent_notice: A confirmation mail has been re-sent to your email
-    create:
-      success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
     update:
-      update_current_user_role: Can't update your own Role
       success_notice: "%{handle} was successfully updated."
-    destroy:
-      removed_notice: "%{owner_name} was removed from the owners successfully"
-      failed_notice: Can't remove the only owner of the gem
-    mfa_required: The gem has MFA requirement enabled, please setup MFA on your account.
-  settings:
+      update_current_user_role: Can't update your own Role
+  pages:
+    about:
+      checkout_code: please check out the code
+      contributors_amount: "%{count} Rubyists"
+      downloads_amount: billions of gem downloads
+      founding_html: The project was started in April 2009 by %{founder}, and has
+        since grown to include the contributions of over %{contributors} and %{downloads}.
+        As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from
+        Gemcutter to solidify the site's central role in the Ruby community.
+      logo_details: Just select the download button and you'll get three .PNGs and
+        an .SVG of the RubyGems logo all for yourself.
+      logo_header: Looking for our logo?
+      mit_licensed: MIT licensed
+      purpose:
+        better_api: Provide a better API for dealing with gems
+        enable_community: Enable the community to improve and enhance the site
+        header: 'Welcome to %{site}, the Ruby community''s gem hosting service. The
+          purpose of this project is three-fold:'
+        transparent_pages: Create more transparent and accessible project pages
+      support_html: Although RubyGems.org is not run by one specific company, plenty
+        have helped us out so far. The current design, illustrations, and front-end
+        development of this site were created by %{dockyard}. %{github} has also been
+        invaluable for helping us collaborate and share code easily. The site started
+        on %{heroku}, whose great service helped prove RubyGems as a viable solution
+        that the whole community could rely on. Our infrastructure is currently hosted
+        on %{aws}.
+      technical_html: 'Some insights into the technical aspects of the site: It''s
+        100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3},
+        served by %{fastly}, and the time between publishing a new gem and having
+        it ready for installation is usually just a few seconds. For more info, %{source_code},
+        which is %{license} over at GitHub.'
+      title: About
+    data:
+      title: RubyGems.org Data Dumps
+    download:
+      title: Download RubyGems
+    security:
+      title: Security
+    supporters:
+      title: RubyGems Supporters
+  password_mailer:
+    change_password:
+      closing: If you didn't request this, ignore this email. Your password has not
+        been changed.
+      opening: 'Someone, hopefully you, requested we send you a link to change your
+        password:'
+      subtitle: Hi %{handle}!
+      title: CHANGE PASSWORD
+    compromised_password_reset:
+      closing_html: If you did not recently try to sign in to RubyGems.org, please
+        contact %{support_email} immediately.
+      closing_text: If you did not recently try to sign in to RubyGems.org, please
+        contact support@rubygems.org immediately.
+      opening: During your recent sign-in, we detected that your password appears
+        in a public data breach from another website.
+      reassurance: Your RubyGems.org account has not been compromised, but because
+        passwords are often reused across sites, we require you to change your password
+        to keep your account secure.
+      subject: 'Action required: Reset your %{host} password'
+      subtitle: Hi %{handle}!
+      title: PASSWORD RESET REQUIRED
+  passwords:
+    create:
+      failure_on_missing_email: Email can't be blank.
+      success: You will receive an email within the next few minutes. It contains
+        instructions for changing your password.
     edit:
-      title: Edit settings
-      account_header: Account
-      webauthn_credentials: Security device
-      no_webauthn_credentials: You don't have any security devices
-      webauthn_credential_note: A security device can be any device that complies with the FIDO2 standard such as security and biometric keys.
-      otp_code: OTP code or recovery code
-      api_access:
-        confirm_reset: Are you sure? This cannot be undone.
-        credentials_html: "If you want to use %{gem_commands_link} from the command line, you'll need a %{gem_credentials_file} file, which you can generate using the following command:"
-        key_is_html: Your API key is %{key}.
-        link_text: gem commands
-        reset: Reset my API key
-        reset_all: Delete all scoped API keys
-        title: API Access
-      reset_password:
-        title: Reset password
-      mfa:
-        multifactor_auth: Multi-factor authentication
-        otp: Authentication app
-        disabled_html: You have not yet enabled OTP based multi-factor authentication. Please refer to <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
-        go_settings: Register a new device
-        level_html: You have enabled multi-factor authentication. Please click 'Update' to change your MFA level. Please refer to <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on MFA levels.
-        enabled_note:
-          You have enabled multi-factor authentication. Please input your OTP from your authenticator or one of your active
-          recovery codes to disable it.
-        update: Update
-        disable: Disable
-        enabled: Enabled
-        disabled: Disabled
-        level:
-          title: MFA Level
-          disabled: Disabled
-          ui_only: UI Only
-          ui_and_api: UI and API (Recommended)
-          ui_and_gem_signin: UI and gem signin
+      compromised_explanation_html: The password you used was found in a public data
+        breach from <strong>another website</strong>. Please choose a new, unique
+        password that you don't use elsewhere.
+      compromised_heading: Your password was found in a data breach
+      strength:
+        fair: Fair
+        strong: Strong
+        too_short: Too short
+        weak: Weak
+      submit: Save this password
+      title: Reset password
+      token_failure: Please double check the URL or try submitting a new password
+        reset.
+    new:
+      submit: Reset password
+      title: Change your password
+      will_email_notice: We will email you a link to change your password.
+    update:
+      failure: Your password could not be changed. Please try again.
+      success: Your password has been changed.
+  please_sign_in: Please sign in to continue.
+  please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
+  policies:
+    acceptable-use:
+      title: Acceptable Use
+    copyright:
+      title: Copyright Policy
+    index:
+      title: RubyGems.org Policies
+    privacy:
+      title: Privacy Notice
+    terms-of-service:
+      title: Terms of Service
+  policies_mailer:
+    policy_update_announcement:
+      subject: Review New RubyGems.org Policies
+      subtitle: Hi %{handle}!
+      title: POLICY UPDATE ANNOUNCEMENT
+    policy_update_review_closed:
+      subject: RubyGems.org New Policy Adoption
+      subtitle: Hi %{handle}!
+      title: POLICY UPDATE REVIEW CLOSED
   profiles:
+    delete:
+      confirm: Confirm
+      instructions: We are sorry to see you go. Type your password in the field below
+        and confirm.
+      list_multi_owner: You will lose access to these gem but other owners of the
+        gem will continue to have access.
+      list_only_owner_html: These gems will be yanked when you delete your profile.
+        If you would like to add owners before you delete your profile, you can use
+        %{command_link} command.
+      title: Delete profile
+      warning: Deleting your profile is an irreversible action. This can't be undone
+        by contacting support. Please be certain!
+    destroy:
+      request_queued: Your account deletion request has been enqueued. We will send
+        you a confirmation mail when your request has been processed.
     edit:
       change_avatar: Change Avatar
-      disabled_avatar_html: "A default avatar is used due to private email settings. To enable a personalized <a href='https://gravatar.com'>Gravatar</a>, turn on 'Show email in public profile'. Notice this will expose your email to the public."
+      delete:
+        delete: Delete
+        delete_profile: Delete Profile
+        warning: Deleting your profile is an irreversible action. This can't be undone
+          by contacting support. Please be certain!
+      disabled_avatar_html: A default avatar is used due to private email settings.
+        To enable a personalized <a href='https://gravatar.com'>Gravatar</a>, turn
+        on 'Show email in public profile'. Notice this will expose your email to the
+        public.
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
       optional_full_name: Optional. Will be displayed publicly
       optional_twitter_username: Optional X username. Will be displayed publicly
-      twitter_username: Username
       title: Edit profile
-      delete:
-        delete: Delete
-        delete_profile: Delete Profile
-        warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
-    delete:
-      title: Delete profile
-      confirm: Confirm
-      instructions: We are sorry to see you go. Type your password in the field below and confirm.
-      list_only_owner_html: These gems will be yanked when you delete your profile. If you would like to add owners before you delete your profile, you can use %{command_link} command.
-      list_multi_owner: You will lose access to these gem but other owners of the gem will continue to have access.
-      warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
-    rubygem:
-      owners_header: Owners
-    destroy:
-      request_queued: Your account deletion request has been enqueued. We will send you a confirmation mail when your request has been processed.
-    update:
-      confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
-      updated: Your profile was updated.
+      twitter_username: Username
     public_email: Show email in public profile
     request_denied: This request was denied. We could not verify your password.
+    rubygem:
+      owners_header: Owners
+    security_events:
+      description_html: This page shows the security events that have occurred on
+        your account. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact
+        support</a>.
+      title: Security Events
     show:
-      title: Profile of %{username}
-      gems: Gems
-      no_gems: This user has not pushed any gems yet.
       edit_profile: Edit Profile
       email_me: Email Me
-    security_events:
-      title: Security Events
-      description_html: "This page shows the security events that have occurred on your account. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
+      gems: Gems
+      no_gems: This user has not pushed any gems yet.
+      title: Profile of %{username}
+    update:
+      confirmation_mail_sent: You will receive an email within the next few minutes.
+        It contains instructions for confirming your new email address.
+      updated: Your profile was updated.
+  remove: Remove
+  reverse_dependencies:
+    index:
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      gem_header: Gem
+      no_reverse_dependencies: This gem has no reverse dependencies.
+      subtitle: Latest version of the following gems require %{name}
+      title: Reverse dependencies for %{name}
+      version_header: Version
+    search:
+      search_reverse_dependencies_html: Search reverse dependencies Gems&hellip;
   rubygems:
     aside:
       downloads_for_this_version: For this version
+      gem_version_age: Version Released
       github_star: Star
       latest_version_button: Latest Version
-      versions_button:
-        one: "1 Version"
-        other: "%{count} Versions"
-      gem_version_age: Version Released
-      required_ruby_version: Required Ruby Version
-      required_rubygems_version: Required Rubygems Version
-      requires_mfa: New versions require MFA
-      released_with_mfa: Version published with MFA
       links:
+        analytics: Analytics
         badge: Badge
         bugs: Bug Tracker
         changelog: Changelog
@@ -792,345 +1020,270 @@ en:
         funding: Funding
         header: Helpful Links
         home: Homepage
-        verified: Verified link
         mail: Mailing List
-        analytics: Analytics
+        oidc:
+          api_key_role:
+            name: 'OIDC: %{name}'
+            new: 'OIDC: Create'
+        ownership: Ownership
         report_abuse: Report abuse
+        resend_ownership_confirmation: Resend confirmation
         reverse_dependencies: Reverse dependencies
         review_changes: Review changes
         rss: RSS
         subscribe: Subscribe
-        unsubscribe: Unsubscribe
-        wiki: Wiki
-        resend_ownership_confirmation: Resend confirmation
-        ownership: Ownership
-        oidc:
-          api_key_role:
-            name: "OIDC: %{name}"
-            new: "OIDC: Create"
         trusted_publishers: Trusted publishers
-    reserved:
-      reserved_namespace: This namespace is reserved by rubygems.org.
+        unsubscribe: Unsubscribe
+        verified: Verified link
+        wiki: Wiki
+      released_with_mfa: Version published with MFA
+      required_ruby_version: Required Ruby Version
+      required_rubygems_version: Required Rubygems Version
+      requires_mfa: New versions require MFA
+      versions_button:
+        one: 1 Version
+        other: "%{count} Versions"
     dependencies:
       header: "%{title} Dependencies"
-    release_info:
-      managed_by: Managed By
-      outside_contributors: Outside Contributors
-      authors_header: Authors
-      self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling multi-factor authentication (MFA)</a> to keep your account secure.
-      not_using_mfa_warning_show: "* Some owners are not using multi-factor authentication (MFA). Click for the complete list."
-      not_using_mfa_warning_hide: "* The following owners are not using multi-factor authentication (MFA). Click to hide."
-      owners_header: Owners
-      pushed_by: Pushed by
-      using_mfa_info: "* All owners are using multi-factor authentication (MFA)."
-      yanked_by: Yanked by
-      sha_256_checksum: SHA 256 checksum
-      signature_period: Signature validity period
-      expired: expired
-      provenance_header: Provenance
-    version_navigation:
-      previous_version: ← Previous version
-      next_version: Next version →
     index:
       downloads: Downloads
       title: Gems
+    release_info:
+      authors_header: Authors
+      expired: expired
+      managed_by: Managed By
+      not_using_mfa_warning_hide: "* The following owners are not using multi-factor
+        authentication (MFA). Click to hide."
+      not_using_mfa_warning_show: "* Some owners are not using multi-factor authentication
+        (MFA). Click for the complete list."
+      outside_contributors: Outside Contributors
+      owners_header: Owners
+      provenance_header: Provenance
+      pushed_by: Pushed by
+      self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling
+        multi-factor authentication (MFA)</a> to keep your account secure.
+      sha_256_checksum: SHA 256 checksum
+      signature_period: Signature validity period
+      using_mfa_info: "* All owners are using multi-factor authentication (MFA)."
+      yanked_by: Yanked by
+    reserved:
+      reserved_namespace: This namespace is reserved by rubygems.org.
+    security_events:
+      description_html: This page shows the security events that have occurred on
+        %{gem}. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact
+        support</a>.
+      title: Security Events
     show:
       bundler_header: Gemfile
       install: install
-      tabs:
-        label: Gem navigation
-        readme: Readme
-        gem_info: Gem info
-        contents: Contents
-        dependencies: Dependencies
       licenses_header:
         one: License
         other: Licenses
       no_licenses: No License
       requirements_header: Requirements
       show_all_versions: Show all versions (%{count} total)
+      tabs:
+        contents: Contents
+        dependencies: Dependencies
+        gem_info: Gem info
+        label: Gem navigation
+        readme: Readme
       versions_header: Versions
-      yanked_notice: This version has been yanked, and it is not available for download directly or for other gems that may have depended on it.
+      yanked_notice: This version has been yanked, and it is not available for download
+        directly or for other gems that may have depended on it.
     show_yanked:
-      not_hosted_notice: This gem is not currently hosted on RubyGems.org. Yanked versions of this gem may already exist.
+      not_hosted_notice: This gem is not currently hosted on RubyGems.org. Yanked
+        versions of this gem may already exist.
       reserved_namespace_html:
-        one: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for 1 more day. After that time is up, anyone will be able to claim this gem name using gem push. <br><br> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command or create new versions of this gem using gem push.
-        other: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for %{count} more days. After that time is up, anyone will be able to claim this gem name using gem push. <br><br> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command or create new versions of this gem using gem push.
-    security_events:
-      title: Security Events
-      description_html: "This page shows the security events that have occurred on %{gem}. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
+        one: This gem previously existed, but has been removed by its owner. The RubyGems.org
+          team has reserved this gem name for 1 more day. After that time is up, anyone
+          will be able to claim this gem name using gem push. <br><br> If you are
+          the previous owner of this gem, you can change ownership of this gem using
+          the gem owner command or create new versions of this gem using gem push.
+        other: This gem previously existed, but has been removed by its owner. The
+          RubyGems.org team has reserved this gem name for %{count} more days. After
+          that time is up, anyone will be able to claim this gem name using gem push.
+          <br><br> If you are the previous owner of this gem, you can change ownership
+          of this gem using the gem owner command or create new versions of this gem
+          using gem push.
     transfer:
       cancelled: Your draft gem transfer has been cancelled.
+      confirm:
+        success:
+          one: Successfully transferred 1 gem to %{organization}.
+          other: Successfully transferred %{count} gems to %{organization}.
       organizations:
         new:
           organization: Organization
-      confirm:
-        success:
-          one: "Successfully transferred 1 gem to %{organization}."
-          other: "Successfully transferred %{count} gems to %{organization}."
-  reverse_dependencies:
-    index:
-      date_header: Date
-      downloads_count: "+%{count} Downloads"
-      downloads_header: Downloads
-      gem_header: Gem
-      title: "Reverse dependencies for %{name}"
-      subtitle: "Latest version of the following gems require %{name}"
-      no_reverse_dependencies: This gem has no reverse dependencies.
-      version_header: Version
-    search:
-      search_reverse_dependencies_html: "Search reverse dependencies Gems&hellip;"
+    version_navigation:
+      next_version: Next version →
+      previous_version: "← Previous version"
   searches:
     advanced:
-      name: Name
-      summary: Summary
       description: Description
       downloads: Downloads
+      name: Name
+      summary: Summary
       updated: Updated
       yanked: Yanked
     show:
-      title: Search
-      subtitle_html: for <em>%{query}</em>
+      filter: 'Filter:'
       month_update: Updated last month (%{count})
-      week_update: Updated last week (%{count})
-      filter: "Filter:"
-      yanked: Yanked (%{count})
+      subtitle_html: for <em>%{query}</em>
       suggestion: Did you mean
+      title: Search
+      week_update: Updated last week (%{count})
+      yanked: Yanked (%{count})
   sessions:
+    create:
+      account_blocked: Your account was blocked by rubygems team. Please email support@rubygems.org
+        to recover your account.
     new:
+      confirm: Confirm
       forgot_password: Forgot password?
       resend_confirmation: Didn't receive confirmation mail?
-      confirm: Confirm
     verify:
-      title: Confirm Password
       confirm: Confirm
       notice: Please confirm your password to continue.
-    create:
-      account_blocked: Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account.
-  compromised_passwords:
-    show:
-      title: Password Change Required
-      heading: Password found in data breach
-      subheading: Your RubyGems.org account remains secure
-      explanation_html: The password you entered has been found in a public data breach from <strong>another website</strong>. This doesn't mean your RubyGems.org account was compromised, but because passwords are often reused, we require a reset to keep your account secure.
-      email_sent: "We've sent a password reset link to:"
-      next_steps: "Here's what to do next:"
-      step_1: Check your email inbox (and spam folder) for the password reset link
-      step_2: Click the link and create a new, unique password you don't use elsewhere
-      step_3: Sign in with your new password
-      step_4_html: Consider %{link} for additional security
-      step_4_link_text: enabling multi-factor authentication
-      learn_more: Learn more
-      learn_more_hibp_html: Check if your email appears in other breaches at %{link}
-      learn_more_hibp_link_text: Have I Been Pwned
-      learn_more_mfa_html: Protect your account with %{link}
-      learn_more_mfa_link_text: multi-factor authentication
-      back_to_sign_in: Back to Sign In
-      need_help_html: "Need help? Contact %{email}"
+      title: Confirm Password
+  settings:
+    edit:
+      account_header: Account
+      api_access:
+        confirm_reset: Are you sure? This cannot be undone.
+        credentials_html: 'If you want to use %{gem_commands_link} from the command
+          line, you''ll need a %{gem_credentials_file} file, which you can generate
+          using the following command:'
+        key_is_html: Your API key is %{key}.
+        link_text: gem commands
+        reset: Reset my API key
+        reset_all: Delete all scoped API keys
+        title: API Access
+      mfa:
+        disable: Disable
+        disabled: Disabled
+        disabled_html: You have not yet enabled OTP based multi-factor authentication.
+          Please refer to <a target="_blank" rel="noopener" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+          MFA guide</a> for more information on MFA levels.
+        enabled: Enabled
+        enabled_note: You have enabled multi-factor authentication. Please input your
+          OTP from your authenticator or one of your active recovery codes to disable
+          it.
+        go_settings: Register a new device
+        level:
+          disabled: Disabled
+          title: MFA Level
+          ui_and_api: UI and API (Recommended)
+          ui_and_gem_signin: UI and gem signin
+          ui_only: UI Only
+        level_html: You have enabled multi-factor authentication. Please click 'Update'
+          to change your MFA level. Please refer to <a target="_blank" rel="noopener"
+          href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+          MFA guide</a> for more information on MFA levels.
+        multifactor_auth: Multi-factor authentication
+        otp: Authentication app
+        update: Update
+      no_webauthn_credentials: You don't have any security devices
+      otp_code: OTP code or recovery code
+      reset_password:
+        title: Reset password
+      title: Edit settings
+      webauthn_credential_note: A security device can be any device that complies
+        with the FIDO2 standard such as security and biometric keys.
+      webauthn_credentials: Security device
+  sign_in: Sign in
+  sign_out: Sign out
+  sign_up: Sign up
+  sign_up_terms: RubyGems Terms of Service
   stats:
     index:
-      title: Stats
       all_time_most_downloaded: All Time Most Downloaded
       clickgems: View analytics on ClickGems
+      title: Stats
       total_gems: Total gems
       total_users: Total users
+  subtitle: your community gem host
+  this_rubygem_could_not_be_found: This rubygem could not be found.
+  time_ago: "%{duration} ago"
+  title: RubyGems.org
+  total_downloads: Total downloads
+  totps:
+    create:
+      qrcode_expired: The QR-code and key is expired. Please try registering a new
+        device again.
+      success: You have successfully enabled OTP based multi-factor authentication.
+    destroy:
+      success: You have successfully disabled OTP based multi-factor authentication.
+    incorrect_otp: Your OTP code is incorrect.
+    new:
+      account: 'Account: %{account}'
+      confirm: I have kept my recovery codes safe.
+      enable: Enable
+      key: 'Key: %{key}'
+      otp_prompt: Type digit code from auth app to continue.
+      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot
+        scan the code, add information below into your app manually.
+      time_based: 'Time based: Yes'
+      title: Enabling multi-factor auth
+    require_totp_disabled: Your OTP based multi-factor authentication has already
+      been enabled. To reconfigure your OTP based authentication, you'll have to remove
+      it first.
+    require_totp_enabled: You don't have an authenticator app enabled. You have to
+      enable it first.
+  try_again: Something went wrong. Please try again.
+  update: Update
   users:
     create:
       email_sent: A confirmation mail has been sent to your email address.
     new:
       have_account: Already have an account?
       registration_disabled: New account registration has been temporarily disabled.
+  verification_expired: The verification has expired. Please verify again.
   versions:
     index:
+      imported_gem_version_notice: This gem version was imported to RubyGems.org on
+        %{import_date}. The date displayed was specified by the author in the gemspec.
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       title: All versions of %{name}
       versions_since:
+        one: 1 version since %{since}
         other: "%{count} versions since %{since}"
-        one: "1 version since %{since}"
-      imported_gem_version_notice: "This gem version was imported to RubyGems.org on %{import_date}. The date displayed was specified by the author in the gemspec."
     version:
       yanked: yanked
+  view_all: View all
   webauthn_credentials:
     callback:
       success: You have successfully registered a security device.
-    recovery:
-      continue: Continue
-      title: You have successfully added a security device
-      notice_html: 'Please <strong class="recovery__bold">copy and paste</strong> these recovery codes. You can use these codes to login if you lose your security device. Each code can be used once.'
-      saved: I acknowledge that I have saved my recovery codes.
-    webauthn_credential:
-      confirm_delete: "Credential deleted"
-      delete_failed: "Could not delete credential"
-      delete: Delete
-      confirm: Are you sure you want to delete this credential?
-      saved: Security device successfully created
     form:
       new_device: Register a new security device
       nickname: Nickname
       submit: Register device
-  oidc:
-    api_key_roles:
-      index:
-        api_key_roles: OIDC API Key Roles
-        new_role: Create API Key Role
-      show:
-        api_key_role_name: "API Key Role %{name}"
-        automate_gh_actions_publishing: "Automate Gem Publishing with GitHub Actions"
-        view_provider: "View provider %{issuer}"
-        edit_role: "Edit API Key Role"
-        delete_role: "Delete API Key Role"
-        confirm_delete: "Are you sure you want to delete this role?"
-        deleted_at_html: "This role was deleted %{time_html} ago and can no longer be used."
-      edit:
-        edit_role: "Edit API Key Role"
-      git_hub_actions_workflow:
-        title: "OIDC Gem Push GitHub Actions Workflow"
-        configured_for_html: "This OIDC API Key Role is configured to allow pushing %{link_html} from GitHub Actions."
-        to_automate_html: "To automate releasing %{link_html} when a new tag is pushed, add the following workflow to your repository."
-        not_github: "This OIDC API Key Role is not configured for GitHub Actions."
-        not_push: "This OIDC API Key Role is not configured to allow pushing gems."
-        a_gem: a gem
-        instructions_html: |
-          To release, <a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">bump the gem version</a> and push a new tag (using <code>rake release:source_control_push</code>) to GitHub. The workflow will automatically build the gem and push it to RubyGems.org.
-      new:
-        title: "New OIDC API Key Role"
-      update:
-        success: "OIDC API Key Role updated"
-      create:
-        success: "OIDC API Key Role created"
-      destroy:
-        success: "OIDC API Key Role deleted"
-      form:
-        add_condition: Add condition
-        remove_condition: Remove condition
-        add_statement: Add statement
-        remove_statement: Remove statement
-      deleted: "The role has been deleted."
-    providers:
-      index:
-        title: "OIDC Providers"
-        description_html: "These are the OIDC providers that have been configured for RubyGems.org.<br>Please reach out to support if you need another OIDC Provider added."
-      show:
-        title: "OIDC Provider"
-    id_tokens:
-      index:
-        title: "OIDC ID Tokens"
-      show:
-        title: "OIDC ID Token"
-    rubygem_trusted_publishers:
-      index:
-        title: Trusted Publishers
-        subtitle_owner_html: "Trusted publishers for %{gem_html}"
-        delete: Delete
-        create: Create
-        description_html: |
-          Trusted publishers allow you to push gems from CI without storing any long-lived sensitive credentials.
-          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/" class="t-link">trusted publishing documentation</a>.
-      destroy:
-        success: "Trusted Publisher deleted"
-      create:
-        success: "Trusted Publisher created"
-      new:
-        title: "New Trusted Publisher"
-        subtitle_owner_html: "Add a trusted publisher for %{gem_html}"
-    pending_trusted_publishers:
-      index:
-        title: Pending Trusted Publishers
-        valid_for_html: "Valid for %{time_html}"
-        delete: Delete
-        create: Create
-        description_html: |
-          Pending trusted publishers allow you to configure trusted publishing before you have pushed the first version of a gem.
-          For more information about how to set up trusted publishing, see the <a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/" class="t-link">trusted publishing documentation</a>.
-      destroy:
-        success: "Pending Trusted Publisher deleted"
-      create:
-        success: "Pending Trusted Publisher created"
-      new:
-        title: "New Pending Trusted Publisher"
-    trusted_publisher:
-      unsupported_type: "Unsupported trusted publisher type"
-      github_actions:
-        repository_owner_help_html: "The GitHub organization name or GitHub username that owns the repository"
-        repository_name_help_html: "The name of the GitHub repository that contains the publishing workflow"
-        workflow_filename_help_html: "The filename of the publishing workflow.<br>This file should exist in the <code>.github/workflows/</code> directory in the repository configured above."
-        environment_help_html: |
-          The name of the <a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">GitHub Actions environment</a> that the above workflow uses for publishing.<br>
-          This should be configured under the repository's settings.<br>
-          While not required, a dedicated publishing environment is strongly encouraged, especially if your repository has maintainers with commit access who shouldn't have RubyGems.org gem push access.
-        workflow_repository_owner_help_html: |
-          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The GitHub organization or username that owns the repository containing the reusable workflow file.<br>
-          Leave blank if the workflow is defined in the same repository as above (the common case).
-        workflow_repository_name_help_html: |
-          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The name of the repository containing the reusable workflow file.<br>
-          Leave blank if the workflow is defined in the same repository as above (the common case).
-      pending:
-        rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
-  duration:
-    minutes:
-      other: "%{count} minutes"
-      one: "1 minute"
-    hours:
-      other: "%{count} hours"
-      one: "1 hour"
-    days:
-      other: "%{count} days"
-      one: "1 day"
-    seconds:
-      other: "%{count} seconds"
-      one: "1 second"
-  form:
-    optional: optional
-  events:
-    table_component:
-      event: Event
-      time: Time
-      additional_info: Additional Info
-      redacted: Redacted
-      no_user_agent_info: No user agent info
-    rubygem_event:
-      version:
-        version_pushed: Version Pushed
-        version_yanked: Version Yanked
-        version_unyanked: Version Unyanked
-        version_html: "Version: %{version}"
-        version_pushed_sha256_html: "SHA256: %{sha256}"
-        version_pushed_by_html: "Pushed by: %{pusher}"
-        version_yanked_by_html: "Yanked by: %{pusher}"
-      owner:
-        owner_added: "Owner Added"
-        owner_added_owner_html: "New owner added: %{owner}"
-        owner_added_authorizer_html: "Authorized by: %{authorizer}"
-        owner_removed: "Owner Removed"
-        owner_removed_owner_html: "Owner removed: %{owner}"
-        owner_removed_by_html: "Removed by: %{remover}"
-        owner_confirmed: "Owner Confirmed"
-    user_event:
-      user:
-        created: "User Created"
-        email: "Email: %{email}"
-      login:
-        login_success: "Login Success"
-        webauthn_login: "Webauthn login: %{device}"
-        mfa_method: "MFA Method: %{method}"
-        mfa_device: "MFA Device: %{device}"
-        none: None
-      email:
-        email_verified: "Email Verified"
-        email_sent_subject: "Subject: %{subject}"
-        email_sent_from: "From: %{from}"
-        email_sent_to: "To: %{to}"
-      api_key:
-        api_key_created: "API Key Created"
-        api_key_deleted: "API Key Deleted"
-        api_key_name: "Name: %{name}"
-        api_key_scopes: "Scopes: %{scopes}"
-        api_key_gem_html: "Gem: %{gem}"
-        api_key_mfa: "MFA: %{mfa}"
-        not_required: "Not required"
-      password:
-        password_compromised: "Password Compromised"
-        mfa_status: "MFA Status: %{status}"
-        mfa_enabled: "Enabled"
-        mfa_disabled: "Disabled"
-        action_taken: "Action: %{action}"
+    recovery:
+      continue: Continue
+      notice_html: Please <strong class="recovery__bold">copy and paste</strong> these
+        recovery codes. You can use these codes to login if you lose your security
+        device. Each code can be used once.
+      saved: I acknowledge that I have saved my recovery codes.
+      title: You have successfully added a security device
+    webauthn_credential:
+      confirm: Are you sure you want to delete this credential?
+      confirm_delete: Credential deleted
+      delete: Delete
+      delete_failed: Could not delete credential
+      saved: Security device successfully created
+  webauthn_verifications:
+    expired_or_already_used: The token in the link you used has either expired or
+      been used already.
+    failed_verification:
+      close_browser: Please close this browser and try again.
+      title: Error - Verification Failed
+    no_port: No port provided. Please try again.
+    pending: Security device authentication is still pending.
+    prompt:
+      authenticate: Authenticate
+      authenticating_as: Authenticating as
+      no_webauthn_devices: You don't have any security devices enabled
+      title: Authenticate with Security Device
+    successful_verification:
+      close_browser: Please close this browser.
+      title: Success!

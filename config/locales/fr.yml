@@ -1,72 +1,49 @@
 ---
 fr:
-  credentials_required:
-  copied: Copié!
-  copy_to_clipboard: Copier
-  edit: Modification
-  hide: Cacher
-  verification_expired:
-  feed_latest: RubyGems.org | Derniers Gems
-  feed_subscribed: RubyGems.org | Gems abonnés
-  footer_about_html: RubyGems.org est le service d&rsquo;hébergement de la communauté
-    Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir
-    et trouver des informations sur les gems disponibles. Contribuez et améliorez
-    ce site avec nous !
-  footer_sponsors_html: RubyGems.org est rendu possible grâce à un partenariat avec
-    la communauté Ruby au sens large. <a href="https://www.fastly.com/">Fastly</a>
-    fournisseur de bande passante et du support CDN, <a href="https://www.rubycentral.org/">Ruby
-    Central</a> qui couvre les frais d'infrastructure, et qui finance le développement
-    et l'administration des serveurs. <a href="%{supporters_page}">Apprenez en plus
-    sur nos sponsors et comment ils travaillent entre eux.</a>
-  form_disable_with: Veuillez patienter...
-  invalid_page: Le numéro de page est hors de portée. Redirection vers la page par
-    défaut.
-  locale_name: Français
-  none:
-  not_found: Introuvable
-  or:
-  forbidden:
-  api_gem_not_found:
-  api_key_forbidden:
-  api_key_soft_deleted:
-  api_key_insufficient_scope:
-  email_not_confirmed:
-  please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
-  please_sign_in:
-  otp_incorrect:
-  otp_missing:
-  sign_in: Connexion
-  sign_out: Déconnexion
-  sign_up: Inscription
-  by_signing_up:
-  sign_up_terms:
-  dependency_list:
-  multifactor_authentication: Authentification Multifacteur
-  subtitle: votre communauté d'hébergement des gems
-  this_rubygem_could_not_be_found: Rubygem introuvable.
-  time_ago: il y a %{duration}
-  title: RubyGems.org
-  total_downloads: Total de téléchargements
-  try_again: Une erreur est survenue. Veuillez réessayer.
-  update: Mise à jour
-  remove:
-  view_all: Voir tout
-  advanced_search: Recherche avancée
-  authenticate:
-  helpers:
-    submit:
-      create:
-      update:
+  activemodel:
+    attributes:
+      oidc/provider/configuration:
+        id_token_signing_alg_values_supported:
+        jwks_uri:
+    errors:
+      models:
+        oidc/api_key_permissions:
+          attributes:
+            gems:
+              too_long:
+            valid_for:
+              inclusion:
   activerecord:
     attributes:
+      api_key:
+        oidc_api_key_role:
       linkset:
         bugs: URL du suivi de bugs
         changelog: Changelog
         code: URL du code source
         docs: URL de la documentation
+        funding:
         mail: URL de la liste de diffusion
         wiki: URL du wiki
-        funding:
+      membership/role:
+        admin:
+        maintainer:
+        outside_contributor:
+        owner:
+      oidc/api_key_role:
+        api_key_permissions:
+      oidc/id_token:
+        api_key_role:
+        jti:
+      oidc/pending_trusted_publisher:
+        rubygem_name:
+      oidc/trusted_publisher/github_action:
+        repository_owner_id:
+        workflow_repository_name:
+        workflow_repository_owner:
+      ownership/role:
+        maintainer:
+        owner:
       session:
         password: Mot de passe
         who: Email ou pseudonyme
@@ -76,54 +53,42 @@ fr:
         full_name: Nom complet
         handle: Pseudonyme
         password: Mot de passe
-      ownership/role:
-        owner:
-        maintainer:
-      membership/role:
-        owner:
-        admin:
-        maintainer:
-        outside_contributor:
-      api_key:
-        oidc_api_key_role:
-      oidc/id_token:
-        jti:
-        api_key_role:
-      oidc/api_key_role:
-        api_key_permissions:
-      oidc/trusted_publisher/github_action:
-        repository_owner_id:
-        workflow_repository_owner:
-        workflow_repository_name:
-      oidc/pending_trusted_publisher:
-        rubygem_name:
     errors:
       messages:
-        not_pwned:
         blocked:
-        reserved_domain:
         disposable_email_domain:
-        public_suffix:
+        not_pwned:
         protected_provider:
+        public_suffix:
+        reserved_domain:
       models:
         api_key:
           attributes:
             expires_at:
               inclusion:
+        membership:
+          attributes:
+            user:
+              blank:
+              required:
+              taken:
+            user_id:
+              blank:
+              required:
+              taken:
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              reserved:
+              unavailable:
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken:
         organization:
           attributes:
             handle:
               invalid:
-        membership:
-          attributes:
-            user:
-              taken:
-              blank:
-              required:
-            user_id:
-              taken:
-              blank:
-              required:
         ownership:
           attributes:
             user_id:
@@ -137,88 +102,107 @@ fr:
               bcrypt_length:
         version:
           attributes:
-            gem_full_name:
-              taken:
             full_name:
               taken:
-        oidc/rubygem_trusted_publisher:
-          attributes:
-            rubygem:
+            gem_full_name:
               taken:
-        oidc/pending_trusted_publisher:
-          attributes:
-            rubygem_name:
-              unavailable:
-              reserved:
     models:
-      user:
       api_key:
-        zero:
         one:
         other:
-  activemodel:
-    attributes:
-      oidc/provider/configuration:
-        jwks_uri:
-        id_token_signing_alg_values_supported:
-    errors:
-      models:
-        oidc/api_key_permissions:
-          attributes:
-            valid_for:
-              inclusion:
-            gems:
-              too_long:
+        zero:
+      user:
+  advanced_search: Recherche avancée
+  api_gem_not_found:
+  api_key_forbidden:
+  api_key_insufficient_scope:
+  api_key_soft_deleted:
   api_keys:
-    form:
-      exclusive_scopes:
-      rubygem_scope:
-      rubygem_scope_info:
-      multifactor_auth:
-      enable_mfa:
-      expiration:
+    all_gems:
     create:
-      success:
       invalid_gem:
+      success:
     destroy:
       success:
+    edit:
+      edit_api_key:
+      invalid_key:
+    form:
+      enable_mfa:
+      exclusive_scopes:
+      expiration:
+      multifactor_auth:
+      rubygem_scope:
+      rubygem_scope_info:
+    gem_ownership_removed:
     index:
-      api_keys:
-      name:
-      scopes:
-      gem:
-      age:
-      last_access:
+      access_webhooks:
       action:
-      delete:
+      add_owner:
+      age:
+      api_keys:
+      configure_trusted_publishers:
       confirm:
       confirm_all:
-      new_key:
+      delete:
+      expiration:
+      gem:
       index_rubygems:
+      last_access:
+      mfa:
+      name:
+      new_key:
       push_rubygem:
-      yank_rubygem:
-      add_owner:
       remove_owner:
-      access_webhooks:
-      show_dashboard:
-      configure_trusted_publishers:
       reset:
       save_key:
-      mfa:
-      expiration:
+      scopes:
+      show_dashboard:
       update_owner:
+      yank_rubygem:
     new:
       new_api_key:
     reset:
       success:
     update:
-      success:
       invalid_gem:
-    edit:
-      edit_api_key:
-      invalid_key:
-    all_gems:
-    gem_ownership_removed:
+      success:
+  authenticate:
+  breadcrumbs:
+    dashboard: Dashboard
+    gems:
+    home: Accueil
+    invite_member:
+    latest_version:
+    members:
+    org_name: 'Org: %{name}'
+    settings: Paramètres
+    subscriptions: Abonnements
+    versions:
+  by_signing_up:
+  compromised_passwords:
+    show:
+      back_to_sign_in:
+      email_sent:
+      explanation_html:
+      heading:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      need_help_html:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      subheading:
+      title:
+  copied: Copié!
+  copy_to_clipboard: Copier
+  credentials_required:
   dashboards:
     show:
       creating_link_text: création
@@ -237,17 +221,32 @@ fr:
   dependencies:
     show:
       click_to_expand:
-      gem_header:
-      required_version_header:
-      scope_header:
-        one:
-        other:
-      reverse_dependencies_header:
-      version_header:
       date_header:
       downloads_count:
       downloads_header:
+      gem_header:
+      required_version_header:
+      reverse_dependencies_header:
+      scope_header:
+        one:
+        other:
       see_all_reverse:
+      version_header:
+  dependency_list:
+  duration:
+    days:
+      one:
+      other:
+    hours:
+      one:
+      other:
+    minutes:
+      one:
+      other:
+    seconds:
+      one:
+      other:
+  edit: Modification
   email_confirmations:
     create:
       promise_resend: Si ce compte existe, vous recevrez un email avec un lien de
@@ -260,16 +259,90 @@ fr:
     update:
       confirmed_email: Votre adresse email a été vérifiée.
       token_failure: Veuillez vérifier l'URL ou réessayer.
+  email_not_confirmed:
+  events:
+    rubygem_event:
+      owner:
+        owner_added:
+        owner_added_authorizer_html:
+        owner_added_owner_html:
+        owner_confirmed:
+        owner_removed:
+        owner_removed_by_html:
+        owner_removed_owner_html:
+      version:
+        version_html:
+        version_pushed:
+        version_pushed_by_html:
+        version_pushed_sha256_html:
+        version_unyanked:
+        version_yanked:
+        version_yanked_by_html:
+    table_component:
+      additional_info:
+      event:
+      no_user_agent_info:
+      redacted:
+      time:
+    user_event:
+      api_key:
+        api_key_created:
+        api_key_deleted:
+        api_key_gem_html:
+        api_key_mfa:
+        api_key_name:
+        api_key_scopes:
+        not_required:
+      email:
+        email_sent_from:
+        email_sent_subject:
+        email_sent_to:
+        email_verified:
+      login:
+        login_success:
+        mfa_device:
+        mfa_method:
+        none:
+        webauthn_login:
+      password:
+        action_taken:
+        mfa_disabled:
+        mfa_enabled:
+        mfa_status:
+        password_compromised:
+      user:
+        created:
+        email:
+  feed_latest: RubyGems.org | Derniers Gems
+  feed_subscribed: RubyGems.org | Gems abonnés
+  footer_about_html: RubyGems.org est le service d&rsquo;hébergement de la communauté
+    Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir
+    et trouver des informations sur les gems disponibles. Contribuez et améliorez
+    ce site avec nous !
+  footer_sponsors_html: RubyGems.org est rendu possible grâce à un partenariat avec
+    la communauté Ruby au sens large. <a href="https://www.fastly.com/">Fastly</a>
+    fournisseur de bande passante et du support CDN, <a href="https://www.rubycentral.org/">Ruby
+    Central</a> qui couvre les frais d'infrastructure, et qui finance le développement
+    et l'administration des serveurs. <a href="%{supporters_page}">Apprenez en plus
+    sur nos sponsors et comment ils travaillent entre eux.</a>
+  forbidden:
+  form:
+    optional:
+  form_disable_with: Veuillez patienter...
+  helpers:
+    submit:
+      create:
+      update:
+  hide: Cacher
   home:
     index:
       downloads_counting_html: téléchargements à ce jour
       find_blurb_html: Trouvez, installez et publiez des RubyGems.
       learn:
         install_rubygems: Installez RubyGems
+  invalid_page: Le numéro de page est hors de portée. Redirection vers la page par
+    défaut.
   layouts:
-    subject:
-      subject_label:
-      subject_secondary_label:
     application:
       footer:
         about: À propos
@@ -277,227 +350,402 @@ fr:
         blog: Blog
         contribute: Contribuer
         data: Données
-        docs: Documentation
         designed_by: Design par
         discussion_forum: Discussions
+        docs: Documentation
         gems_served_by: Gems mis à disposition par
         guides: Guides
         help: Aide
         hosted_by: Hébergé par
+        looking_for_maintainers:
         monitored_by: Monitoring par
+        operated_by:
         optimized_by: Optimisé par
         policies:
         releases:
         resolved_with: Résolu par
+        secured_by:
         security: Security
         source_code: Code
         statistics: Stats
         status: Statut
         support_us:
         supported_by: Soutenu par
-        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> est soutenu par
         uptime: Uptime
-        secured_by:
-        looking_for_maintainers:
       header:
-        profile: Profil
         dashboard: Dashboard
-        settings: Paramètres
         edit_profile: Modifier le profil
-        search_gem_html: Recherche de Gems&hellip;
         members:
+        profile: Profil
+        search_gem_html: Recherche de Gems&hellip;
+        settings: Paramètres
       mfa_banner_html:
-  breadcrumbs:
-    home: Accueil
-    latest_version:
-    versions:
-    dashboard: Dashboard
-    settings: Paramètres
-    org_name: 'Org: %{name}'
-    subscriptions: Abonnements
-    gems:
-    members:
-    invite_member:
+    subject:
+      subject_label:
+      subject_secondary_label:
+  locale_name: Français
   mailer:
+    admin_manual:
+      title:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
     confirmation_subject: Veuillez confirmer votre adresse email pour RubyGems.org
-    link_expiration_explanation_html:
-    email_confirmation:
-      title:
-      subtitle:
-      confirmation_link: Confirmez l'adresse email
-      welcome_message: Bienvenue sur RubyGems.org! Veuillez cliquer sur le lien ci-dessous
-        pour vérifier votre adresse email.
-    email_reset:
-      title:
-      subtitle:
-      visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org.
-        Veuillez suivre l'URL suivant pour réactiver votre compte.
     deletion_complete:
-      title:
-      subtitle:
-      subject: Votre compte a bien été supprimé de RubyGems.org
       body_html: Votre demande de suppression de compte sur RubyGems.org a bien été
         prise en compte. Vous pouvez toujours créer un nouveau compte sur la page
         %{sign_up}
-    deletion_failed:
-      title:
+      subject: Votre compte a bien été supprimé de RubyGems.org
       subtitle:
-      subject: Votre demande de suppression de compte sur RubyGems.org a échoué
+      title:
+    deletion_failed:
       body_html: Vous avez effectué une demande de suppression de compte sur RubyGems.org.
         Malheureusement, votre demande n'a pu aboutir. Veuillez réessayer plus tard
         ou nous %{contact} si le problème subsiste.
-    notifiers_changed:
+      subject: Votre demande de suppression de compte sur RubyGems.org a échoué
+      subtitle:
+      title:
+    email_confirmation:
+      confirmation_link: Confirmez l'adresse email
+      subtitle:
+      title:
+      welcome_message: Bienvenue sur RubyGems.org! Veuillez cliquer sur le lien ci-dessous
+        pour vérifier votre adresse email.
+    email_reset:
+      subtitle:
+      title:
+      visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org.
+        Veuillez suivre l'URL suivant pour réactiver votre compte.
+    email_reset_update:
       subject:
       title:
-      subtitle:
-      'on':
-      off_html:
     gem_pushed:
       subject:
+      title:
+    gem_trusted_publisher_added:
       title:
     gem_yanked:
       subject:
       title:
-    reset_api_key:
+    link_expiration_explanation_html:
+    notifiers_changed:
+      off_html:
+      'on':
       subject:
-      title:
       subtitle:
-    webauthn_credential_created:
-      subject:
       title:
+    owner_added:
+      body_others_html:
+      body_self_html:
+      subject_others:
+      subject_self:
       subtitle:
-    webauthn_credential_removed:
-      subject:
       title:
-      subtitle:
-    totp_enabled:
+    owner_removed:
+      body_html:
       subject:
+      subtitle:
       title:
-      subtitle:
-    totp_disabled:
+    owner_updated:
+      body_html:
+      body_text:
       subject:
-      title:
       subtitle:
-    email_reset_update:
-      subject:
       title:
     ownership_confirmation:
-      subject:
-      title:
-      subtitle:
-      body_text:
       body_html:
+      body_text:
       link_expiration_explanation_html:
-    owner_added:
-      subject_self:
-      subject_others:
-      title:
-      subtitle:
-      body_self_html:
-      body_others_html:
-    owner_removed:
       subject:
-      title:
       subtitle:
-      body_html:
-    owner_updated:
+      title:
+    reset_api_key:
       subject:
-      title:
       subtitle:
-      body_html:
-      body_text:
+      title:
+    totp_disabled:
+      subject:
+      subtitle:
+      title:
+    totp_enabled:
+      subject:
+      subtitle:
+      title:
     web_hook_deleted:
-      title:
+      body_html:
+      body_text:
+      gem_html:
+      gem_text:
+      global_html:
+      global_text:
       subject:
       subtitle:
-      body_text:
-      body_html:
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
+      title:
     web_hook_disabled:
-      title:
+      body_html:
+      body_text:
+      gem_html:
+      gem_text:
+      global_html:
+      global_text:
       subject:
       subtitle:
-      body_text:
-      body_html:
-      global_text:
-      global_html:
-      gem_text:
-      gem_html:
-    gem_trusted_publisher_added:
       title:
-    admin_manual:
+    webauthn_credential_created:
+      subject:
+      subtitle:
       title:
+    webauthn_credential_removed:
+      subject:
+      subtitle:
+      title:
+  multifactor_authentication: Authentification Multifacteur
+  multifactor_auths:
+    api:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+    prompt:
+      otp_code:
+      otp_or_recovery:
+      recovery_code:
+      recovery_code_html:
+      security_device:
+      sign_in_with_webauthn_credential:
+      verify_code:
+      webauthn_credential_note:
+    recovery:
+      already_generated:
+      confirm_dialog:
+      continue: Continuer
+      note_html:
+      saved:
+      title: Codes de récupération
+    require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
+      Vous devez d'abord l'activer.
+    require_webauthn_enabled:
+    session_expired:
+    setup_recommended:
+    setup_required_html:
+    setup_webauthn_html:
+    strong_mfa_level_recommended:
+    strong_mfa_level_required_html:
+    update:
+      invalid_level:
+      success:
   news:
-    show:
-      title: Nouvelles Versions - Toutes les Gems
-      all_gems: Toutes les Gems
-      popular_gems: Gems populaires
     popular:
       title: Nouvelles Versions - Gems populaires
+    show:
+      all_gems: Toutes les Gems
+      popular_gems: Gems populaires
+      title: Nouvelles Versions - Toutes les Gems
+  none:
+  not_found: Introuvable
+  notifiers:
+    show:
+      info:
+      'off':
+      'on':
+      owner_heading:
+      push_heading:
+      recommended:
+      title:
+      update:
+    update:
+      success:
+  oidc:
+    api_key_roles:
+      create:
+        success:
+      deleted:
+      destroy:
+        success:
+      edit:
+        edit_role:
+      form:
+        add_condition:
+        add_statement:
+        remove_condition:
+        remove_statement:
+      git_hub_actions_workflow:
+        a_gem:
+        configured_for_html:
+        instructions_html:
+        not_github:
+        not_push:
+        title:
+        to_automate_html:
+      index:
+        api_key_roles:
+        new_role:
+      new:
+        title:
+      show:
+        api_key_role_name:
+        automate_gh_actions_publishing:
+        confirm_delete:
+        delete_role:
+        deleted_at_html:
+        edit_role:
+        view_provider:
+      update:
+        success:
+    id_tokens:
+      index:
+        title:
+      show:
+        title:
+    pending_trusted_publishers:
+      create:
+        success:
+      destroy:
+        success:
+      index:
+        create:
+        delete:
+        description_html:
+        title:
+        valid_for_html:
+      new:
+        title:
+    providers:
+      index:
+        description_html:
+        title:
+      show:
+        title:
+    rubygem_trusted_publishers:
+      create:
+        success:
+      destroy:
+        success:
+      index:
+        create:
+        delete:
+        description_html:
+        subtitle_owner_html:
+        title:
+      new:
+        subtitle_owner_html:
+        title:
+    trusted_publisher:
+      github_actions:
+        environment_help_html:
+        repository_name_help_html:
+        repository_owner_help_html:
+        workflow_filename_help_html:
+        workflow_repository_name_help_html:
+        workflow_repository_owner_help_html:
+      pending:
+        rubygem_name_help_html:
+      unsupported_type:
+  or:
+  organization_onboardings:
+    confirm:
+      success:
   organizations:
     index:
-      title:
       no_organizations:
-    show:
-      organization:
-      gems:
-      history:
-      members:
-      no_history:
-      no_gems:
-      add_member:
-      invite:
-      transfer:
-    members:
-      create:
-        user_already_invited:
-        user_not_found:
-        member_invited:
-      update:
-        member_updated:
-      destroy:
-        member_removed:
-        cannot_remove_self:
-      resend_invitation:
-        invitation_resent:
-        already_confirmed:
-      index:
-        invite:
-        pending:
-      edit:
-        update:
-        delete:
-        resend_invitation:
-      new:
-        handle:
-        role:
-        create:
-        invite:
+      title:
     invitations:
       show:
         accept:
         decline:
         title_html:
+    members:
+      create:
+        member_invited:
+        user_already_invited:
+        user_not_found:
+      destroy:
+        cannot_remove_self:
+        member_removed:
+      edit:
+        delete:
+        resend_invitation:
+        update:
+      index:
+        invite:
+        pending:
+      new:
+        create:
+        handle:
+        invite:
+        role:
+      resend_invitation:
+        already_confirmed:
+        invitation_resent:
+      update:
+        member_updated:
+    show:
+      add_member:
+      gems:
+      history:
+      invite:
+      members:
+      no_gems:
+      no_history:
+      organization:
+      transfer:
+  otp_incorrect:
+  otp_missing:
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    create:
+      success_notice:
+    destroy:
+      failed_notice:
+      removed_notice:
+    edit:
+      role:
+      title:
+    index:
+      action:
+      add_owner:
+      added_by:
+      confirm_remove:
+      confirmed:
+      confirmed_at:
+      email_field:
+      info:
+      mfa:
+      name:
+      pending:
+      role:
+      role_field:
+      status:
+      submit_button:
+    mfa_required:
+    resend_confirmation:
+      resent_notice:
+    update:
+      success_notice:
+      update_current_user_role:
   pages:
     about:
+      checkout_code:
       contributors_amount:
       downloads_amount:
-      checkout_code:
-      mit_licensed:
-      logo_header:
-      logo_details:
       founding_html: Le projet a commencé en avril 2009 par %{founder}, et a grandi
         avec les contribution de %{contributors} et %{downloads}. À la sortie de RubyGems
         1.3.6, ce site a été renommé de Gemcutter à %{title} pour ancrer son rôle
         central dans la communauté Ruby.
+      logo_details:
+      logo_header:
+      mit_licensed:
+      purpose:
+        better_api: Fournir une meilleure API pour gérer les gems
+        enable_community: Permettre à la communauté d'améliorer ce site
+        header: 'Bienvenue sur %{site}, le service d''hébergement des gems de la communauté
+          Ruby. Ce projet a trois objectifs :'
+        transparent_pages: Créer des pages de projet plus accessibles et transparentes
       support_html: Bien que Gemcutter n'appartienne à aucune entreprise en particulier,
         il a reçu l'aide de nombreuses d'entre elles. Le design actuel, les illustrations,
         et développement front-end de ce site nous ont été offerts par %{dockyard}.
@@ -512,12 +760,6 @@ fr:
         davantage d''informations, le %{source_code} est disponible sous licence %{license}
         sur GitHub.'
       title: À propos
-      purpose:
-        better_api: Fournir une meilleure API pour gérer les gems
-        enable_community: Permettre à la communauté d'améliorer ce site
-        header: 'Bienvenue sur %{site}, le service d''hébergement des gems de la communauté
-          Ruby. Ce projet a trois objectifs :'
-        transparent_pages: Créer des pages de projet plus accessibles et transparentes
     data:
       title:
     download:
@@ -526,286 +768,137 @@ fr:
       title:
     supporters:
       title:
-  policies:
-    index:
-      title:
-    terms-of-service:
-      title:
-    acceptable-use:
-      title:
-    copyright:
-      title:
-    privacy:
-      title:
-  policies_mailer:
-    policy_update_announcement:
-      subject:
-      title:
-      subtitle:
-    policy_update_review_closed:
-      subject:
-      title:
-      subtitle:
   password_mailer:
     change_password:
       closing:
       opening:
-      title:
       subtitle:
+      title:
     compromised_password_reset:
-      subject:
-      title:
-      subtitle:
-      opening:
-      reassurance:
       closing_html:
       closing_text:
+      opening:
+      reassurance:
+      subject:
+      subtitle:
+      title:
   passwords:
+    create:
+      failure_on_missing_email:
+      success:
     edit:
+      compromised_explanation_html:
+      compromised_heading:
+      strength:
+        fair:
+        strong:
+        too_short:
+        weak:
       submit: Enregistrer ce mot de passe
       title: Nouveau mot de passe
       token_failure: Veuillez vérifier l'URL ou réessayer.
-      compromised_heading:
-      compromised_explanation_html:
-      strength:
-        too_short:
-        weak:
-        fair:
-        strong:
     new:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
-    create:
-      success:
-      failure_on_missing_email:
     update:
-      success:
       failure:
-  multifactor_auths:
-    session_expired:
-    require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
-      Vous devez d'abord l'activer.
-    require_webauthn_enabled:
-    setup_required_html:
-    setup_recommended:
-    strong_mfa_level_required_html:
-    strong_mfa_level_recommended:
-    setup_webauthn_html:
-    api:
-      mfa_required:
-      mfa_required_not_yet_enabled:
-      mfa_required_weak_level_enabled:
-      mfa_recommended_not_yet_enabled:
-      mfa_recommended_weak_level_enabled:
-    recovery:
-      continue: Continuer
-      title: Codes de récupération
-      saved:
-      confirm_dialog:
-      note_html:
-      already_generated:
-    update:
-      invalid_level:
       success:
-    prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code:
-      otp_or_recovery:
-      recovery_code:
-      recovery_code_html:
-      security_device:
-      verify_code:
-  totps:
-    incorrect_otp: Votre clé OTP est incorrecte.
-    require_totp_disabled:
-    require_totp_enabled:
-    new:
-      title: Activer l'authentification multifacteur
-      scan_prompt: Veuillez scanner le QR code avec votre app d'authentification.
-        Si vous ne pouvez pas scanner le code, veuillez saisir manuellement les informations
-        ci-dessous dans votre app.
-      otp_prompt: Veuillez taper le code de l'application d'authentification pour
-        poursuivre.
-      confirm: J'ai gardé mes codes de récupération en sécurité.
-      enable: Activer
-      account: 'Compte: %{account}'
-      key: 'Clé: %{key}'
-      time_based:
-    create:
-      qrcode_expired: Le QR code et la clé sont expirés. Veuillez essayer d'enregistrer
-        un nouvel appareil.
-      success: Vous avez activé l'authentification multifacteur.
-    destroy:
-      success: Vous avez désactivé l'authentification multifacteur.
-  notifiers:
-    update:
-      success:
-    show:
-      info:
-      'on':
-      'off':
-      recommended:
+  please_sign_in:
+  please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
+  policies:
+    acceptable-use:
       title:
-      update:
-      owner_heading:
-      push_heading:
-  webauthn_verifications:
-    expired_or_already_used:
-    no_port:
-    pending:
-    prompt:
+    copyright:
       title:
-      authenticating_as:
-      authenticate:
-      no_webauthn_devices:
-    successful_verification:
-      title:
-      close_browser:
-    failed_verification:
-      title:
-      close_browser:
-  organization_onboardings:
-    confirm:
-      success:
-  owners:
-    edit:
-      role:
-      title:
-    confirm:
-      confirmed_email:
-      token_expired:
     index:
-      add_owner:
-      name:
-      mfa:
-      status:
-      confirmed_at:
-      added_by:
-      action:
-      role:
-      role_field:
-      email_field:
-      submit_button:
-      info:
-      confirmed:
-      pending:
-      confirm_remove:
-    resend_confirmation:
-      resent_notice:
-    create:
-      success_notice:
-    update:
-      update_current_user_role:
-      success_notice:
-    destroy:
-      removed_notice:
-      failed_notice:
-    mfa_required:
-  settings:
-    edit:
       title:
-      account_header:
-      webauthn_credentials:
-      no_webauthn_credentials:
-      webauthn_credential_note:
-      otp_code:
-      api_access:
-        confirm_reset: Êtes-vous sûr ? Cette action ne peut être annulée.
-        credentials_html: 'Si vous voulez utiliser %{gem_commands_link} de la ligne
-          de commande, vous aurez besoin d''un fichier %{gem_credentials_file}, que
-          vous pouvez générer avec la commande suivante :'
-        key_is_html: Votre clé API est %{key}.
-        link_text: des commandes gems
-        reset: Remise à zéro de votre clé API
-        reset_all:
-        title: Accès API
-      reset_password:
-        title: Renvoi de mot de passe
-      mfa:
-        multifactor_auth: Authentification Multifacteur
-        otp:
-        disabled_html:
-        go_settings: Enregistrer un nouvel appareil
-        level_html:
-        enabled_note:
-        update:
-        disable:
-        enabled:
-        disabled:
-        level:
-          title:
-          disabled:
-          ui_only:
-          ui_and_api:
-          ui_and_gem_signin:
+    privacy:
+      title:
+    terms-of-service:
+      title:
+  policies_mailer:
+    policy_update_announcement:
+      subject:
+      subtitle:
+      title:
+    policy_update_review_closed:
+      subject:
+      subtitle:
+      title:
   profiles:
+    delete:
+      confirm: Confirmer
+      instructions: Nous sommes désolés de vous voir partir. Veuillez entrer votre
+        mot de passe dans le champ et confirmer.
+      list_multi_owner: Vous allez perdre l'accès à ces gems mais d'autres propriétaires
+        de ces gems y ont toujours accès.
+      list_only_owner_html: Ces gems seront effacées quand vous effacerez votre profil.
+        Si vous désirez ajouter des propriétaires avant de supprimer votre profil,
+        vous pouvez utiliser la commande %{command_link}.
+      title: Supprimer le profil
+      warning: La suppression de votre profil est une action irréversible. Cela ne
+        peut pas être annulé en contactant le support. Réfléchissez-bien avant de
+        continuer !
+    destroy:
+      request_queued: Votre demande de suppression de compte a été envoyée. Nous vous
+        enverrons un email de confirmation lorsque votre demande aura été prise en
+        compte.
     edit:
       change_avatar:
-      disabled_avatar_html:
-      email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email
-        %{unconfirmed_email}
-      enter_password: Veuillez entrer le mot de passe de votre compte
-      optional_full_name:
-      optional_twitter_username: Nom d'utilisateur X optionnel. Sera affiché publiquement
-      twitter_username: Pseudonyme
-      title: Modification de profil
       delete:
         delete: Supprimer
         delete_profile: Supprimer le profil
         warning: La suppression de votre profil est une action irréversible. Cela
           ne peut pas être annulé en contactant le support. Réfléchissez-bien avant
           de continuer !
-    delete:
-      title: Supprimer le profil
-      confirm: Confirmer
-      instructions: Nous sommes désolés de vous voir partir. Veuillez entrer votre
-        mot de passe dans le champ et confirmer.
-      list_only_owner_html: Ces gems seront effacées quand vous effacerez votre profil.
-        Si vous désirez ajouter des propriétaires avant de supprimer votre profil,
-        vous pouvez utiliser la commande %{command_link}.
-      list_multi_owner: Vous allez perdre l'accès à ces gems mais d'autres propriétaires
-        de ces gems y ont toujours accès.
-      warning: La suppression de votre profil est une action irréversible. Cela ne
-        peut pas être annulé en contactant le support. Réfléchissez-bien avant de
-        continuer !
+      disabled_avatar_html:
+      email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email
+        %{unconfirmed_email}
+      enter_password: Veuillez entrer le mot de passe de votre compte
+      optional_full_name:
+      optional_twitter_username: Nom d'utilisateur X optionnel. Sera affiché publiquement
+      title: Modification de profil
+      twitter_username: Pseudonyme
+    public_email: Afficher l'email dans le profil public
+    request_denied: Cette demande a été refusée. Nous n'avons pas pu vérifier votre
+      mot de passe.
     rubygem:
       owners_header: Propriétaires
-    destroy:
-      request_queued: Votre demande de suppression de compte a été envoyée. Nous vous
-        enverrons un email de confirmation lorsque votre demande aura été prise en
-        compte.
+    security_events:
+      description_html:
+      title:
+    show:
+      edit_profile:
+      email_me:
+      gems:
+      no_gems:
+      title: Profil de %{username}
     update:
       confirmation_mail_sent: Vous allez recevoir un email dans quelques minutes.
         Il contient les instructions pour confirmer votre nouvelle adresse email.
       updated: Votre profil a été mis à jour.
-    public_email: Afficher l'email dans le profil public
-    request_denied: Cette demande a été refusée. Nous n'avons pas pu vérifier votre
-      mot de passe.
-    show:
-      title: Profil de %{username}
-      gems:
-      no_gems:
-      edit_profile:
-      email_me:
-    security_events:
-      title:
-      description_html:
+  remove:
+  reverse_dependencies:
+    index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
+      no_reverse_dependencies:
+      subtitle:
+      title: Dépendances inversées pour %{name}
+      version_header:
+    search:
+      search_reverse_dependencies_html: Chercher des dépendances inversées Gems&hellip;
   rubygems:
     aside:
       downloads_for_this_version: Pour cette version
+      gem_version_age: Version publiée
       github_star:
       latest_version_button:
-      versions_button:
-        one:
-        other:
-      gem_version_age: Version publiée
-      required_ruby_version: Version de Ruby requise
-      required_rubygems_version:
-      requires_mfa:
-      released_with_mfa:
       links:
+        analytics:
         badge: Badge
         bugs: Suivi de bugs
         changelog: Changelog
@@ -815,63 +908,69 @@ fr:
         funding:
         header: Liens
         home: Page d'accueil
-        verified:
         mail: Liste de diffusion
-        analytics:
-        report_abuse: Signaler un abus
-        reverse_dependencies:
-        review_changes:
-        rss: RSS
-        subscribe: Abonnement
-        unsubscribe: Désabonement
-        wiki: Wiki
-        resend_ownership_confirmation:
-        ownership:
         oidc:
           api_key_role:
             name:
             new:
+        ownership:
+        report_abuse: Signaler un abus
+        resend_ownership_confirmation:
+        reverse_dependencies:
+        review_changes:
+        rss: RSS
+        subscribe: Abonnement
         trusted_publishers:
-    reserved:
-      reserved_namespace: Ce nom est réservé par rubygems.org.
+        unsubscribe: Désabonement
+        verified:
+        wiki: Wiki
+      released_with_mfa:
+      required_ruby_version: Version de Ruby requise
+      required_rubygems_version:
+      requires_mfa:
+      versions_button:
+        one:
+        other:
     dependencies:
       header: Dépendances de %{title}
-    release_info:
-      managed_by:
-      outside_contributors:
-      authors_header: Auteurs
-      self_no_mfa_warning_html:
-      not_using_mfa_warning_show:
-      not_using_mfa_warning_hide:
-      owners_header: Propriétaires
-      pushed_by:
-      using_mfa_info:
-      yanked_by:
-      sha_256_checksum: Total de contrôle SHA 256
-      signature_period:
-      expired:
-      provenance_header:
-    version_navigation:
-      previous_version: "← Version précédente"
-      next_version: Version suivante →
     index:
       downloads: Téléchargements
       title: Gems
+    release_info:
+      authors_header: Auteurs
+      expired:
+      managed_by:
+      not_using_mfa_warning_hide:
+      not_using_mfa_warning_show:
+      outside_contributors:
+      owners_header: Propriétaires
+      provenance_header:
+      pushed_by:
+      self_no_mfa_warning_html:
+      sha_256_checksum: Total de contrôle SHA 256
+      signature_period:
+      using_mfa_info:
+      yanked_by:
+    reserved:
+      reserved_namespace: Ce nom est réservé par rubygems.org.
+    security_events:
+      description_html:
+      title:
     show:
       bundler_header: Gemfile
       install: installation
-      tabs:
-        label:
-        readme:
-        gem_info:
-        contents:
-        dependencies:
       licenses_header:
         one: License
         other: Licenses
       no_licenses: aucune
       requirements_header: Dépendances
       show_all_versions: Voir toutes les versions (%{count})
+      tabs:
+        contents:
+        dependencies:
+        gem_info:
+        label:
+        readme:
       versions_header: Versions
       yanked_notice: 'Retrait de Gem : disponible ni directement, ni pour les gems
         qui en dépendraient.'
@@ -892,269 +991,170 @@ fr:
           pouvez modifier la propriété de cette gem en utilisant la commande de gem
           owner. Vous pouvez également créer de nouvelles versions de cette gem avec
           gem push.
-    security_events:
-      title:
-      description_html:
     transfer:
       cancelled:
-      organizations:
-        new:
-          organization:
       confirm:
         success:
           one:
           other:
-  reverse_dependencies:
-    index:
-      date_header:
-      downloads_count:
-      downloads_header:
-      gem_header:
-      title: Dépendances inversées pour %{name}
-      subtitle:
-      no_reverse_dependencies:
-      version_header:
-    search:
-      search_reverse_dependencies_html: Chercher des dépendances inversées Gems&hellip;
+      organizations:
+        new:
+          organization:
+    version_navigation:
+      next_version: Version suivante →
+      previous_version: "← Version précédente"
   searches:
     advanced:
-      name: Nom
-      summary: Sommaire
       description: Description
       downloads: Téléchargements
+      name: Nom
+      summary: Sommaire
       updated: Mis à jour
       yanked:
     show:
-      title:
-      subtitle_html: pour <em>%{query}</em>
-      month_update:
-      week_update:
       filter:
-      yanked:
+      month_update:
+      subtitle_html: pour <em>%{query}</em>
       suggestion:
-  sessions:
-    new:
-      forgot_password: Mot de passe oublié ?
-      resend_confirmation: Vous n'avez pas reçu l'email de confirmation ?
-      confirm:
-    verify:
       title:
-      confirm:
-      notice:
+      week_update:
+      yanked:
+  sessions:
     create:
       account_blocked:
-  compromised_passwords:
-    show:
+    new:
+      confirm:
+      forgot_password: Mot de passe oublié ?
+      resend_confirmation: Vous n'avez pas reçu l'email de confirmation ?
+    verify:
+      confirm:
+      notice:
       title:
-      heading:
-      subheading:
-      explanation_html:
-      email_sent:
-      next_steps:
-      step_1:
-      step_2:
-      step_3:
-      step_4_html:
-      step_4_link_text:
-      learn_more:
-      learn_more_hibp_html:
-      learn_more_hibp_link_text:
-      learn_more_mfa_html:
-      learn_more_mfa_link_text:
-      back_to_sign_in:
-      need_help_html:
+  settings:
+    edit:
+      account_header:
+      api_access:
+        confirm_reset: Êtes-vous sûr ? Cette action ne peut être annulée.
+        credentials_html: 'Si vous voulez utiliser %{gem_commands_link} de la ligne
+          de commande, vous aurez besoin d''un fichier %{gem_credentials_file}, que
+          vous pouvez générer avec la commande suivante :'
+        key_is_html: Votre clé API est %{key}.
+        link_text: des commandes gems
+        reset: Remise à zéro de votre clé API
+        reset_all:
+        title: Accès API
+      mfa:
+        disable:
+        disabled:
+        disabled_html:
+        enabled:
+        enabled_note:
+        go_settings: Enregistrer un nouvel appareil
+        level:
+          disabled:
+          title:
+          ui_and_api:
+          ui_and_gem_signin:
+          ui_only:
+        level_html:
+        multifactor_auth: Authentification Multifacteur
+        otp:
+        update:
+      no_webauthn_credentials:
+      otp_code:
+      reset_password:
+        title: Renvoi de mot de passe
+      title:
+      webauthn_credential_note:
+      webauthn_credentials:
+  sign_in: Connexion
+  sign_out: Déconnexion
+  sign_up: Inscription
+  sign_up_terms:
   stats:
     index:
-      title:
       all_time_most_downloaded: Gems les plus téléchargés
       clickgems:
+      title:
       total_gems: Total de gems
       total_users: Total d'utilisateurs
+  subtitle: votre communauté d'hébergement des gems
+  this_rubygem_could_not_be_found: Rubygem introuvable.
+  time_ago: il y a %{duration}
+  title: RubyGems.org
+  total_downloads: Total de téléchargements
+  totps:
+    create:
+      qrcode_expired: Le QR code et la clé sont expirés. Veuillez essayer d'enregistrer
+        un nouvel appareil.
+      success: Vous avez activé l'authentification multifacteur.
+    destroy:
+      success: Vous avez désactivé l'authentification multifacteur.
+    incorrect_otp: Votre clé OTP est incorrecte.
+    new:
+      account: 'Compte: %{account}'
+      confirm: J'ai gardé mes codes de récupération en sécurité.
+      enable: Activer
+      key: 'Clé: %{key}'
+      otp_prompt: Veuillez taper le code de l'application d'authentification pour
+        poursuivre.
+      scan_prompt: Veuillez scanner le QR code avec votre app d'authentification.
+        Si vous ne pouvez pas scanner le code, veuillez saisir manuellement les informations
+        ci-dessous dans votre app.
+      time_based:
+      title: Activer l'authentification multifacteur
+    require_totp_disabled:
+    require_totp_enabled:
+  try_again: Une erreur est survenue. Veuillez réessayer.
+  update: Mise à jour
   users:
     create:
       email_sent: Un email de confirmation a été envoyé sur votre adresse email.
     new:
       have_account: Vous avez déjà un compte ?
       registration_disabled:
+  verification_expired:
   versions:
     index:
+      imported_gem_version_notice:
       not_hosted_notice: Gem non hébergé sur Rubygems.
       title: Toutes les versions de %{name}
       versions_since:
-        other: "%{count} versions depuis %{since}"
         one: "%{count} version depuis %{since}"
-      imported_gem_version_notice:
+        other: "%{count} versions depuis %{since}"
     version:
       yanked: retiré
+  view_all: Voir tout
   webauthn_credentials:
     callback:
       success:
-    recovery:
-      continue:
-      title:
-      notice_html:
-      saved:
-    webauthn_credential:
-      confirm_delete:
-      delete_failed:
-      delete:
-      confirm:
-      saved:
     form:
       new_device:
       nickname:
       submit:
-  oidc:
-    api_key_roles:
-      index:
-        api_key_roles:
-        new_role:
-      show:
-        api_key_role_name:
-        automate_gh_actions_publishing:
-        view_provider:
-        edit_role:
-        delete_role:
-        confirm_delete:
-        deleted_at_html:
-      edit:
-        edit_role:
-      git_hub_actions_workflow:
-        title:
-        configured_for_html:
-        to_automate_html:
-        not_github:
-        not_push:
-        a_gem:
-        instructions_html:
-      new:
-        title:
-      update:
-        success:
-      create:
-        success:
-      destroy:
-        success:
-      form:
-        add_condition:
-        remove_condition:
-        add_statement:
-        remove_statement:
-      deleted:
-    providers:
-      index:
-        title:
-        description_html:
-      show:
-        title:
-    id_tokens:
-      index:
-        title:
-      show:
-        title:
-    rubygem_trusted_publishers:
-      index:
-        title:
-        subtitle_owner_html:
-        delete:
-        create:
-        description_html:
-      destroy:
-        success:
-      create:
-        success:
-      new:
-        title:
-        subtitle_owner_html:
-    pending_trusted_publishers:
-      index:
-        title:
-        valid_for_html:
-        delete:
-        create:
-        description_html:
-      destroy:
-        success:
-      create:
-        success:
-      new:
-        title:
-    trusted_publisher:
-      unsupported_type:
-      github_actions:
-        repository_owner_help_html:
-        repository_name_help_html:
-        workflow_filename_help_html:
-        environment_help_html:
-        workflow_repository_owner_help_html:
-        workflow_repository_name_help_html:
-      pending:
-        rubygem_name_help_html:
-  duration:
-    minutes:
-      other:
-      one:
-    hours:
-      other:
-      one:
-    days:
-      other:
-      one:
-    seconds:
-      other:
-      one:
-  form:
-    optional:
-  events:
-    table_component:
-      event:
-      time:
-      additional_info:
-      redacted:
-      no_user_agent_info:
-    rubygem_event:
-      version:
-        version_pushed:
-        version_yanked:
-        version_unyanked:
-        version_html:
-        version_pushed_sha256_html:
-        version_pushed_by_html:
-        version_yanked_by_html:
-      owner:
-        owner_added:
-        owner_added_owner_html:
-        owner_added_authorizer_html:
-        owner_removed:
-        owner_removed_owner_html:
-        owner_removed_by_html:
-        owner_confirmed:
-    user_event:
-      user:
-        created:
-        email:
-      login:
-        login_success:
-        webauthn_login:
-        mfa_method:
-        mfa_device:
-        none:
-      email:
-        email_verified:
-        email_sent_subject:
-        email_sent_from:
-        email_sent_to:
-      api_key:
-        api_key_created:
-        api_key_deleted:
-        api_key_name:
-        api_key_scopes:
-        api_key_gem_html:
-        api_key_mfa:
-        not_required:
-      password:
-        password_compromised:
-        mfa_status:
-        mfa_enabled:
-        mfa_disabled:
-        action_taken:
+    recovery:
+      continue:
+      notice_html:
+      saved:
+      title:
+    webauthn_credential:
+      confirm:
+      confirm_delete:
+      delete:
+      delete_failed:
+      saved:
+  webauthn_verifications:
+    expired_or_already_used:
+    failed_verification:
+      close_browser:
+      title:
+    no_port:
+    pending:
+    prompt:
+      authenticate:
+      authenticating_as:
+      no_webauthn_devices:
+      title:
+    successful_verification:
+      close_browser:
+      title:

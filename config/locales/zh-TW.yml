@@ -1,67 +1,49 @@
 ---
 zh-TW:
-  credentials_required: 需要認證
-  copied: 已複製
-  copy_to_clipboard: 複製
-  edit: 編輯
-  hide: 隱藏
-  verification_expired:
-  feed_latest: RubyGems.org | 最新 Gems
-  feed_subscribed: RubyGems.org | 訂閱 Gems
-  footer_about_html: RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓您能立即地<a href="%{publish_docs}">發佈</a>及<a
-    href="%{install_docs}">安裝</a>您的 Gem 套件，並且利用 <a href="%{api_docs}">API</a> 查詢及操作<a
-    href="%{gem_list}">可用 Gem</a> 的詳細資訊。<br>現在就<a href="%{contributing_docs}">成為貢獻者</a>，貢獻一己之力來改善本站。
-  footer_sponsors_html: RubyGems.org 透過與廣大的 Ruby 社群合作而誕生。 <a href="https://www.fastly.com/">Fastly</a>
-    提供頻寬和 CDN 支援， <a href="https://www.rubycentral.org/">Ruby Central</a> 支付設備費用，並為進行中的開發和營運工作提供資金。
-    <a href="%{supporters_page}">進一步了解我們的贊助商和它們是如何合作的</a>。
-  form_disable_with: 請稍候...
-  invalid_page: 頁碼超出範圍。已重新導向至預設頁面。
-  locale_name: 正體中文
-  none: 無
-  not_found: 沒有找到
-  or:
-  forbidden:
-  api_gem_not_found:
-  api_key_forbidden: API 金鑰沒有存取權限
-  api_key_soft_deleted:
-  api_key_insufficient_scope:
-  email_not_confirmed:
-  please_sign_up: 存取遭拒。請先在 https://rubygems.org 上註冊帳號
-  please_sign_in: 請登入以繼續。
-  otp_incorrect: 您的 OTP 碼不正確。請檢查後再試一次。
-  otp_missing: 您已啟用多重要素驗證，但是沒有輸入 OTP 碼。請輸入後再試一次。
-  sign_in: 登入
-  sign_out: 登出
-  sign_up: 註冊
-  by_signing_up:
-  sign_up_terms:
-  dependency_list:
-  multifactor_authentication: 多重要素驗證
-  subtitle: Ruby 社群 Gem 套件管理平台
-  this_rubygem_could_not_be_found: 找不到此 rubygem。
-  time_ago: "%{duration} 前"
-  title: RubyGems.org
-  total_downloads: 總下載次數
-  try_again: 發生錯誤。請再試一次。
-  update: 更新
-  remove:
-  view_all: 查看全部
-  advanced_search: 進階搜尋
-  authenticate: 驗證
-  helpers:
-    submit:
-      create:
-      update:
+  activemodel:
+    attributes:
+      oidc/provider/configuration:
+        id_token_signing_alg_values_supported: IP 權杖簽署演算法
+        jwks_uri: JWKS URI
+    errors:
+      models:
+        oidc/api_key_permissions:
+          attributes:
+            gems:
+              too_long:
+            valid_for:
+              inclusion: "%{value} 秒數應介於 5 分鐘 (300 秒) 和 1 天 (86,400 秒) 之間"
   activerecord:
     attributes:
+      api_key:
+        oidc_api_key_role: OIDC API 金鑰角色
       linkset:
         bugs: Bug 追蹤 URL
         changelog: 更新日誌
         code: 原始碼 URL
         docs: 文件 URL
+        funding:
         mail: 郵件群組 URL
         wiki: Wiki URL
-        funding:
+      membership/role:
+        admin:
+        maintainer:
+        outside_contributor:
+        owner:
+      oidc/api_key_role:
+        api_key_permissions: API 金鑰權限
+      oidc/id_token:
+        api_key_role: API 金鑰角色
+        jti: JWT ID
+      oidc/pending_trusted_publisher:
+        rubygem_name:
+      oidc/trusted_publisher/github_action:
+        repository_owner_id:
+        workflow_repository_name:
+        workflow_repository_owner:
+      ownership/role:
+        maintainer:
+        owner:
       session:
         password: 密碼
         who: 電子郵件地址或帳號
@@ -71,54 +53,42 @@ zh-TW:
         full_name: 全名
         handle: 帳號
         password: 密碼
-      ownership/role:
-        owner:
-        maintainer:
-      membership/role:
-        owner:
-        admin:
-        maintainer:
-        outside_contributor:
-      api_key:
-        oidc_api_key_role: OIDC API 金鑰角色
-      oidc/id_token:
-        jti: JWT ID
-        api_key_role: API 金鑰角色
-      oidc/api_key_role:
-        api_key_permissions: API 金鑰權限
-      oidc/trusted_publisher/github_action:
-        repository_owner_id:
-        workflow_repository_owner:
-        workflow_repository_name:
-      oidc/pending_trusted_publisher:
-        rubygem_name:
     errors:
       messages:
-        not_pwned: 曾出現在資料外洩事件中，不應再使用
         blocked: 網域 '%{domain}' 因濫發垃圾郵件而遭封鎖。請使用有效的個人電子郵件地址。
-        reserved_domain:
         disposable_email_domain:
-        public_suffix:
+        not_pwned: 曾出現在資料外洩事件中，不應再使用
         protected_provider:
+        public_suffix:
+        reserved_domain:
       models:
         api_key:
           attributes:
             expires_at:
               inclusion:
+        membership:
+          attributes:
+            user:
+              blank:
+              required:
+              taken:
+            user_id:
+              blank:
+              required:
+              taken:
+        oidc/pending_trusted_publisher:
+          attributes:
+            rubygem_name:
+              reserved:
+              unavailable:
+        oidc/rubygem_trusted_publisher:
+          attributes:
+            rubygem:
+              taken:
         organization:
           attributes:
             handle:
               invalid:
-        membership:
-          attributes:
-            user:
-              taken:
-              blank:
-              required:
-            user_id:
-              taken:
-              blank:
-              required:
         ownership:
           attributes:
             user_id:
@@ -132,88 +102,107 @@ zh-TW:
               bcrypt_length:
         version:
           attributes:
-            gem_full_name:
-              taken: "%{value} 已存在"
             full_name:
               taken: "%{value} 已存在"
-        oidc/rubygem_trusted_publisher:
-          attributes:
-            rubygem:
-              taken:
-        oidc/pending_trusted_publisher:
-          attributes:
-            rubygem_name:
-              unavailable:
-              reserved:
+            gem_full_name:
+              taken: "%{value} 已存在"
     models:
-      user:
       api_key:
-        zero:
         one:
         other:
-  activemodel:
-    attributes:
-      oidc/provider/configuration:
-        jwks_uri: JWKS URI
-        id_token_signing_alg_values_supported: IP 權杖簽署演算法
-    errors:
-      models:
-        oidc/api_key_permissions:
-          attributes:
-            valid_for:
-              inclusion: "%{value} 秒數應介於 5 分鐘 (300 秒) 和 1 天 (86,400 秒) 之間"
-            gems:
-              too_long:
+        zero:
+      user:
+  advanced_search: 進階搜尋
+  api_gem_not_found:
+  api_key_forbidden: API 金鑰沒有存取權限
+  api_key_insufficient_scope:
+  api_key_soft_deleted:
   api_keys:
-    form:
-      exclusive_scopes:
-      rubygem_scope:
-      rubygem_scope_info:
-      multifactor_auth:
-      enable_mfa:
-      expiration:
+    all_gems: 所有 Gems
     create:
-      success: 已建立新 API 金鑰
       invalid_gem:
+      success: 已建立新 API 金鑰
     destroy:
       success: 已刪除 API 金鑰：%{name}
+    edit:
+      edit_api_key: 編輯 API 金鑰
+      invalid_key: 無法編輯無效的 API 金鑰。請刪除此金鑰並重新建立。
+    form:
+      enable_mfa:
+      exclusive_scopes:
+      expiration:
+      multifactor_auth:
+      rubygem_scope:
+      rubygem_scope_info:
+    gem_ownership_removed:
     index:
-      api_keys: API 金鑰
-      name: 名稱
-      scopes:
-      gem: Gem
-      age:
-      last_access: 最後存取於
+      access_webhooks: 存取 Webhooks
       action: 操作
-      delete: 刪除
+      add_owner: 新增擁有者
+      age:
+      api_keys: API 金鑰
+      configure_trusted_publishers:
       confirm: API 金鑰將無效。您確定嗎？
       confirm_all: 所有 API 金鑰將無效。您確定嗎？
-      new_key: 新 API 金鑰
+      delete: 刪除
+      expiration:
+      gem: Gem
       index_rubygems:
+      last_access: 最後存取於
+      mfa: MFA
+      name: 名稱
+      new_key: 新 API 金鑰
       push_rubygem: 推送 rubygem
-      yank_rubygem: 移除 rubygem
-      add_owner: 新增擁有者
       remove_owner: 移除擁有者
-      access_webhooks: 存取 Webhooks
-      show_dashboard: 顯示儀表板
-      configure_trusted_publishers:
       reset: 重設
       save_key: 請注意，我們無法再次顯示您的 API 金鑰。新 API 金鑰：
-      mfa: MFA
-      expiration:
+      scopes:
+      show_dashboard: 顯示儀表板
       update_owner:
+      yank_rubygem: 移除 rubygem
     new:
       new_api_key: 新 API 金鑰
     reset:
       success: 已刪除所有 API 金鑰
     update:
-      success: 已成功更新 API 金鑰
       invalid_gem:
-    edit:
-      edit_api_key: 編輯 API 金鑰
-      invalid_key: 無法編輯無效的 API 金鑰。請刪除此金鑰並重新建立。
-    all_gems: 所有 Gems
-    gem_ownership_removed:
+      success: 已成功更新 API 金鑰
+  authenticate: 驗證
+  breadcrumbs:
+    dashboard: 控制台
+    gems:
+    home: 首頁
+    invite_member:
+    latest_version:
+    members:
+    org_name: 組織：%{name}
+    settings: 設定
+    subscriptions: 訂閱
+    versions:
+  by_signing_up:
+  compromised_passwords:
+    show:
+      back_to_sign_in:
+      email_sent:
+      explanation_html:
+      heading:
+      learn_more:
+      learn_more_hibp_html:
+      learn_more_hibp_link_text:
+      learn_more_mfa_html:
+      learn_more_mfa_link_text:
+      need_help_html:
+      next_steps:
+      step_1:
+      step_2:
+      step_3:
+      step_4_html:
+      step_4_link_text:
+      subheading:
+      title:
+  copied: 已複製
+  copy_to_clipboard: 複製
+  credentials_required: 需要認證
   dashboards:
     show:
       creating_link_text: Gem 建立
@@ -230,17 +219,32 @@ zh-TW:
   dependencies:
     show:
       click_to_expand: 點擊箭頭圖示來展開。
-      gem_header:
-      required_version_header:
-      scope_header:
-        one:
-        other:
-      reverse_dependencies_header:
-      version_header:
       date_header:
       downloads_count:
       downloads_header:
+      gem_header:
+      required_version_header:
+      reverse_dependencies_header:
+      scope_header:
+        one:
+        other:
       see_all_reverse:
+      version_header:
+  dependency_list:
+  duration:
+    days:
+      one:
+      other:
+    hours:
+      one:
+      other:
+    minutes:
+      one:
+      other:
+    seconds:
+      one:
+      other:
+  edit: 編輯
   email_confirmations:
     create:
       promise_resend: 如果該帳號存在，我們會將用於啟用帳號的確認連結傳送到您的電子郵件地址。
@@ -251,16 +255,85 @@ zh-TW:
     update:
       confirmed_email: 電子郵件地址驗證成功。
       token_failure: 請確認 URL 或再次提交
+  email_not_confirmed:
+  events:
+    rubygem_event:
+      owner:
+        owner_added:
+        owner_added_authorizer_html:
+        owner_added_owner_html:
+        owner_confirmed:
+        owner_removed:
+        owner_removed_by_html:
+        owner_removed_owner_html:
+      version:
+        version_html:
+        version_pushed:
+        version_pushed_by_html:
+        version_pushed_sha256_html:
+        version_unyanked:
+        version_yanked:
+        version_yanked_by_html:
+    table_component:
+      additional_info:
+      event:
+      no_user_agent_info:
+      redacted:
+      time:
+    user_event:
+      api_key:
+        api_key_created:
+        api_key_deleted:
+        api_key_gem_html:
+        api_key_mfa:
+        api_key_name:
+        api_key_scopes:
+        not_required:
+      email:
+        email_sent_from:
+        email_sent_subject:
+        email_sent_to:
+        email_verified:
+      login:
+        login_success:
+        mfa_device:
+        mfa_method:
+        none:
+        webauthn_login:
+      password:
+        action_taken:
+        mfa_disabled:
+        mfa_enabled:
+        mfa_status:
+        password_compromised:
+      user:
+        created:
+        email:
+  feed_latest: RubyGems.org | 最新 Gems
+  feed_subscribed: RubyGems.org | 訂閱 Gems
+  footer_about_html: RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓您能立即地<a href="%{publish_docs}">發佈</a>及<a
+    href="%{install_docs}">安裝</a>您的 Gem 套件，並且利用 <a href="%{api_docs}">API</a> 查詢及操作<a
+    href="%{gem_list}">可用 Gem</a> 的詳細資訊。<br>現在就<a href="%{contributing_docs}">成為貢獻者</a>，貢獻一己之力來改善本站。
+  footer_sponsors_html: RubyGems.org 透過與廣大的 Ruby 社群合作而誕生。 <a href="https://www.fastly.com/">Fastly</a>
+    提供頻寬和 CDN 支援， <a href="https://www.rubycentral.org/">Ruby Central</a> 支付設備費用，並為進行中的開發和營運工作提供資金。
+    <a href="%{supporters_page}">進一步了解我們的贊助商和它們是如何合作的</a>。
+  forbidden:
+  form:
+    optional:
+  form_disable_with: 請稍候...
+  helpers:
+    submit:
+      create:
+      update:
+  hide: 隱藏
   home:
     index:
       downloads_counting_html: 總下載次數
       find_blurb_html: 搜尋、安裝以及發佈 RubyGems
       learn:
         install_rubygems: 安裝 RubyGems
+  invalid_page: 頁碼超出範圍。已重新導向至預設頁面。
   layouts:
-    subject:
-      subject_label:
-      subject_secondary_label:
     application:
       footer:
         about: 關於
@@ -268,227 +341,404 @@ zh-TW:
         blog: 部落格
         contribute: 貢獻
         data: 資料
-        docs: 文件
         designed_by: 設計
         discussion_forum: 討論群組
+        docs: 文件
         gems_served_by: 服務
         guides: 教學文件
         help: 說明
         hosted_by: 托管
+        looking_for_maintainers: 徵求維護者
         monitored_by: 監控
+        operated_by:
         optimized_by: 最佳化
         policies:
         releases:
         resolved_with: 解析
+        secured_by:
         security: 安全
         source_code: 原始碼
         statistics: 統計
         status: 狀態
         support_us:
         supported_by: 支持
-        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> 由以下支持
         uptime: 上線時間
-        secured_by:
-        looking_for_maintainers: 徵求維護者
       header:
-        profile: 個人檔案
         dashboard: 儀表板
-        settings: 設定
         edit_profile: 編輯個人檔案
-        search_gem_html: 搜尋 Gems&hellip;
         members:
-      mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
-  breadcrumbs:
-    home: 首頁
-    latest_version:
-    versions:
-    dashboard: 控制台
-    settings: 設定
-    org_name: 組織：%{name}
-    subscriptions: 訂閱
-    gems:
-    members:
-    invite_member:
+        profile: 個人檔案
+        search_gem_html: 搜尋 Gems&hellip;
+        settings: 設定
+      mfa_banner_html: "🎉 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
+    subject:
+      subject_label:
+      subject_secondary_label:
+  locale_name: 正體中文
   mailer:
+    admin_manual:
+      title:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
-    link_expiration_explanation_html: 請注意，此連結將在 3 小時後過期。您可以前往<a href='https://rubygems.org/email_confirmations/new'>確認信</a>頁面要求傳送新連結。
-    email_confirmation:
-      title: 電子郵件地址確認
-      subtitle: 就快完成了！
-      confirmation_link: 確認電子郵件地址
-      welcome_message: 歡迎來到 RubyGems.org！點擊下方的連結來驗證您的電子郵件地址。
-    email_reset:
-      title: 電子郵件地址重設
-      subtitle: 嗨 %{handle}！
-      visit_link_instructions: 您已變更您在 %{host} 的電子郵件地址。請點擊下列網址來重新啟用您的帳號。
     deletion_complete:
-      title: 刪除完成
-      subtitle: 掰掰！
-      subject: 您在 rubygems.org 上的帳號已被刪除
       body_html: 您在 %{host} 的帳號刪除請求已處理完畢。您隨時可以透過 %{sign_up} 頁面建立新帳號。
+      subject: 您在 rubygems.org 上的帳號已被刪除
+      subtitle: 掰掰！
+      title: 刪除完成
     deletion_failed:
-      title: 刪除失敗
-      subtitle: 抱歉！
-      subject: 您在 rubygems.org 上的帳號刪除請求失敗
       body_html: 您曾在 rubygems.org 送出帳號刪除的請求。很遺憾，我們無法處理您的請求，請稍後再試。若無法解決，請 %{contact}
         我們。
-    notifiers_changed:
-      subject: 您已更改 RubyGems.org 的電子郵件通知設定
-      title: 電子郵件通知
-      subtitle: 嗨 %{handle}
-      'on': 開
-      off_html: "<b>關</b>"
-    gem_pushed:
-      subject: Gem %{gem} 已推送至 RubyGems.org
-      title: Gem 已推送
-    gem_yanked:
-      subject: Gem %{gem} 已從 RubyGems.org 移除
-      title: Gem 已移除
-    reset_api_key:
-      subject: RubyGems.org 上的 API 金鑰遭重設
-      title: API 金鑰重設
-      subtitle: 嗨 %{handle}
-    webauthn_credential_created:
-      subject: "%{host} 上的安全裝置已新增"
-      title: 已新增安全裝置
+      subject: 您在 rubygems.org 上的帳號刪除請求失敗
+      subtitle: 抱歉！
+      title: 刪除失敗
+    email_confirmation:
+      confirmation_link: 確認電子郵件地址
+      subtitle: 就快完成了！
+      title: 電子郵件地址確認
+      welcome_message: 歡迎來到 RubyGems.org！點擊下方的連結來驗證您的電子郵件地址。
+    email_reset:
       subtitle: 嗨 %{handle}！
-    webauthn_credential_removed:
-      subject: "%{host} 上的安全裝置已移除"
-      title: 安全裝置已移除
-      subtitle: 嗨 %{handle}！
-    totp_enabled:
-      subject: "%{host} 上的驗證器應用程式已啟用"
-      title: 已啟用驗證器應用程式
-      subtitle: 嗨 %{handle}！
-    totp_disabled:
-      subject: "%{host} 上的驗證器應用程式已停用"
-      title: 已停用驗證器應用程式
-      subtitle: 嗨 %{handle}！
+      title: 電子郵件地址重設
+      visit_link_instructions: 您已變更您在 %{host} 的電子郵件地址。請點擊下列網址來重新啟用您的帳號。
     email_reset_update:
       subject: 您已在 %{host} 請求電子郵件地址更新
       title: 已請求電子郵件地址更新
-    ownership_confirmation:
-      subject: 請確認 RubyGems.org 上 %{gem} Gem 的所有權
-      title: 所有權確認
-      subtitle: 嗨 %{handle}！
-      body_text: "%{authorizer} 把您加入了 %{gem} Gem 的擁有者名單。請點擊下方連結來確認您的所有權。"
-      body_html: <strong>%{authorizer}</strong> 把您加入了 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
-        Gem 的擁有者名單。請點擊下方連結來確認您的所有權。
-      link_expiration_explanation_html:
+    gem_pushed:
+      subject: Gem %{gem} 已推送至 RubyGems.org
+      title: Gem 已推送
+    gem_trusted_publisher_added:
+      title:
+    gem_yanked:
+      subject: Gem %{gem} 已從 RubyGems.org 移除
+      title: Gem 已移除
+    link_expiration_explanation_html: 請注意，此連結將在 3 小時後過期。您可以前往<a href='https://rubygems.org/email_confirmations/new'>確認信</a>頁面要求傳送新連結。
+    notifiers_changed:
+      off_html: "<b>關</b>"
+      'on': 開
+      subject: 您已更改 RubyGems.org 的電子郵件通知設定
+      subtitle: 嗨 %{handle}
+      title: 電子郵件通知
     owner_added:
-      subject_self: 您加入了 %{gem} Gem 的擁有者名單
-      subject_others: 使用者 %{owner_handle} 加入了 %{gem} Gem 的擁有者名單
-      title:
-      subtitle: 嗨 %{user_handle}！
-      body_self_html:
       body_others_html:
-    owner_removed:
-      subject:
-      title:
+      body_self_html:
+      subject_others: 使用者 %{owner_handle} 加入了 %{gem} Gem 的擁有者名單
+      subject_self: 您加入了 %{gem} Gem 的擁有者名單
       subtitle: 嗨 %{user_handle}！
-      body_html:
-    owner_updated:
-      subject:
       title:
-      subtitle:
+    owner_removed:
+      body_html:
+      subject:
+      subtitle: 嗨 %{user_handle}！
+      title:
+    owner_updated:
       body_html:
       body_text:
-    web_hook_deleted:
-      title: Webhook 遭刪除
-      subject: 您在 RubyGems.org 上的 Webhook 遭到刪除
+      subject:
+      subtitle:
+      title:
+    ownership_confirmation:
+      body_html: <strong>%{authorizer}</strong> 把您加入了 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+        Gem 的擁有者名單。請點擊下方連結來確認您的所有權。
+      body_text: "%{authorizer} 把您加入了 %{gem} Gem 的擁有者名單。請點擊下方連結來確認您的所有權。"
+      link_expiration_explanation_html:
+      subject: 請確認 RubyGems.org 上 %{gem} Gem 的所有權
       subtitle: 嗨 %{handle}！
-      body_text: 您傳送 POST 請求至 %{url} 的 Webhook 在 %{failures} 次失敗後遭到刪除。
+      title: 所有權確認
+    reset_api_key:
+      subject: RubyGems.org 上的 API 金鑰遭重設
+      subtitle: 嗨 %{handle}
+      title: API 金鑰重設
+    totp_disabled:
+      subject: "%{host} 上的驗證器應用程式已停用"
+      subtitle: 嗨 %{handle}！
+      title: 已停用驗證器應用程式
+    totp_enabled:
+      subject: "%{host} 上的驗證器應用程式已啟用"
+      subtitle: 嗨 %{handle}！
+      title: 已啟用驗證器應用程式
+    web_hook_deleted:
       body_html: 您傳送 <code>POST</code> 請求至 <a href="%{url}"><code>%{url}</code></a>
         的 Webhook 在 %{failures} 次失敗後遭到刪除。
-      global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
-      global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
-      gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
+      body_text: 您傳送 POST 請求至 %{url} 的 Webhook 在 %{failures} 次失敗後遭到刪除。
       gem_html: 之前這個 Webhook 會在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         被推送的時候被呼叫。
-    web_hook_disabled:
-      title: Webhook 遭停用
-      subject: 您在 RubyGems.org 上的 Webhook 遭到停用
+      gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
+      global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
+      global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
+      subject: 您在 RubyGems.org 上的 Webhook 遭到刪除
       subtitle: 嗨 %{handle}！
+      title: Webhook 遭刪除
+    web_hook_disabled:
+      body_html:
       body_text: |
         您傳送 POST 請求至 %{url} 的 Webhook 因 %{disabled_reason} 被停用。
         該 Webhook 最後成功於 %{last_success}，之後便失敗了 %{failures_since_last_success} 次。
         您可以執行 `%{delete_command}` 命令來刪除此 Webhook。
-      body_html:
-      global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
-      global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
-      gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
       gem_html: 之前這個 Webhook 會在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         被推送的時候被呼叫。
-    gem_trusted_publisher_added:
-      title:
-    admin_manual:
-      title:
+      gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
+      global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
+      global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
+      subject: 您在 RubyGems.org 上的 Webhook 遭到停用
+      subtitle: 嗨 %{handle}！
+      title: Webhook 遭停用
+    webauthn_credential_created:
+      subject: "%{host} 上的安全裝置已新增"
+      subtitle: 嗨 %{handle}！
+      title: 已新增安全裝置
+    webauthn_credential_removed:
+      subject: "%{host} 上的安全裝置已移除"
+      subtitle: 嗨 %{handle}！
+      title: 安全裝置已移除
+  multifactor_authentication: 多重要素驗證
+  multifactor_auths:
+    api:
+      mfa_recommended_not_yet_enabled:
+      mfa_recommended_weak_level_enabled:
+      mfa_required:
+      mfa_required_not_yet_enabled:
+      mfa_required_weak_level_enabled:
+    prompt:
+      otp_code: OTP 碼
+      otp_or_recovery: OTP 或復原碼
+      recovery_code: 復原碼
+      recovery_code_html:
+      security_device: 安全裝置
+      sign_in_with_webauthn_credential:
+      verify_code: 驗證碼
+      webauthn_credential_note:
+    recovery:
+      already_generated:
+      confirm_dialog:
+      continue: 繼續
+      note_html:
+      saved:
+      title: 復原碼
+    require_mfa_enabled: 您尚未啟用多重要素驗證，請先啟用。
+    require_webauthn_enabled: 您未啟用任何安全裝置。您需要先將裝置綁定到您的帳號。
+    session_expired: 您的登入頁面工作階段已過期。
+    setup_recommended: 為保護您的帳號和 Gems，我們建議您設定多重要素驗證。未來我們將強制要求所有帳號啟用 MFA。
+    setup_required_html: 您必須設定多重要素驗證以保護您的帳號和 Gems。請閱讀我們的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">部落格文章</a>以了解詳情。
+    setup_webauthn_html: "🎉 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。<a
+      href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">了解詳情</a>！"
+    strong_mfa_level_recommended: 為保護您的帳號和 Gems，我們建議您將您的 MFA 等級設為 "使用者介面和 Gem 登入"
+      或 "使用者介面和 API"。未來我們將強制要求所有帳號將設為上述 MFA 等級。
+    strong_mfa_level_required_html: 為保護您的帳號和 Gems，您必須將您的 MFA 等級設為 "使用者介面和 Gem 登入"
+      或 "使用者介面和 API"。請閱讀我們的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">部落格文章</a>以了解詳情。
+    update:
+      invalid_level: MFA 等級無效。
+      success: 您已成功修改多重驗證等級。
   news:
-    show:
-      title: 最新發佈
-      all_gems: 全部
-      popular_gems: 熱門
     popular:
       title: 熱門新發佈
+    show:
+      all_gems: 全部
+      popular_gems: 熱門
+      title: 最新發佈
+  none: 無
+  not_found: 沒有找到
+  notifiers:
+    show:
+      info: 為協助偵測未經授權的 Gem 或所有權變更，我們將在您擁有的 Gem 推送新版本、遭移除，或新增擁有者時傳送電子郵件給您。在接收和閱讀這些郵件的同時，您也在保護
+        Ruby 的生態圈。
+      'off': 關
+      'on': 開
+      owner_heading: 所有權通知
+      push_heading: 推送通知
+      recommended: 建議
+      title: 電子郵件通知
+      update: 更新
+    update:
+      success: 您已成功更新您的電子郵件通知設定。
+  oidc:
+    api_key_roles:
+      create:
+        success:
+      deleted:
+      destroy:
+        success:
+      edit:
+        edit_role:
+      form:
+        add_condition:
+        add_statement:
+        remove_condition:
+        remove_statement:
+      git_hub_actions_workflow:
+        a_gem:
+        configured_for_html:
+        instructions_html:
+        not_github:
+        not_push:
+        title:
+        to_automate_html:
+      index:
+        api_key_roles:
+        new_role:
+      new:
+        title:
+      show:
+        api_key_role_name:
+        automate_gh_actions_publishing:
+        confirm_delete:
+        delete_role:
+        deleted_at_html:
+        edit_role:
+        view_provider:
+      update:
+        success:
+    id_tokens:
+      index:
+        title:
+      show:
+        title:
+    pending_trusted_publishers:
+      create:
+        success:
+      destroy:
+        success:
+      index:
+        create:
+        delete:
+        description_html:
+        title:
+        valid_for_html:
+      new:
+        title:
+    providers:
+      index:
+        description_html:
+        title:
+      show:
+        title:
+    rubygem_trusted_publishers:
+      create:
+        success:
+      destroy:
+        success:
+      index:
+        create:
+        delete:
+        description_html:
+        subtitle_owner_html:
+        title:
+      new:
+        subtitle_owner_html:
+        title:
+    trusted_publisher:
+      github_actions:
+        environment_help_html:
+        repository_name_help_html:
+        repository_owner_help_html:
+        workflow_filename_help_html:
+        workflow_repository_name_help_html:
+        workflow_repository_owner_help_html:
+      pending:
+        rubygem_name_help_html:
+      unsupported_type:
+  or:
+  organization_onboardings:
+    confirm:
+      success:
   organizations:
     index:
-      title:
       no_organizations:
-    show:
-      organization:
-      gems:
-      history:
-      members:
-      no_history:
-      no_gems:
-      add_member:
-      invite:
-      transfer:
-    members:
-      create:
-        user_already_invited:
-        user_not_found:
-        member_invited:
-      update:
-        member_updated:
-      destroy:
-        member_removed:
-        cannot_remove_self:
-      resend_invitation:
-        invitation_resent:
-        already_confirmed:
-      index:
-        invite:
-        pending:
-      edit:
-        update:
-        delete:
-        resend_invitation:
-      new:
-        handle:
-        role:
-        create:
-        invite:
+      title:
     invitations:
       show:
         accept:
         decline:
         title_html:
+    members:
+      create:
+        member_invited:
+        user_already_invited:
+        user_not_found:
+      destroy:
+        cannot_remove_self:
+        member_removed:
+      edit:
+        delete:
+        resend_invitation:
+        update:
+      index:
+        invite:
+        pending:
+      new:
+        create:
+        handle:
+        invite:
+        role:
+      resend_invitation:
+        already_confirmed:
+        invitation_resent:
+      update:
+        member_updated:
+    show:
+      add_member:
+      gems:
+      history:
+      invite:
+      members:
+      no_gems:
+      no_history:
+      organization:
+      transfer:
+  otp_incorrect: 您的 OTP 碼不正確。請檢查後再試一次。
+  otp_missing: 您已啟用多重要素驗證，但是沒有輸入 OTP 碼。請輸入後再試一次。
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired: 確認權杖已過期。請從 Gem 頁面嘗試重新傳送權杖。
+    create:
+      success_notice: "%{handle} 已以未確認擁有者的身分加入。所有權存取將在使用者點擊傳送到他們的電子郵件地址的確認信後啟用。"
+    destroy:
+      failed_notice: 無法移除 Gem 的唯一擁有者
+      removed_notice:
+    edit:
+      role:
+      title:
+    index:
+      action: 操作
+      add_owner: 新增擁有者
+      added_by: 新增者
+      confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
+      confirmed: 已確認
+      confirmed_at: 確認於
+      email_field:
+      info: 新增或移除擁有者
+      mfa: MFA 狀態
+      name: 擁有者
+      pending: 待確認
+      role:
+      role_field:
+      status: 狀態
+      submit_button: 新增擁有者
+    mfa_required: Gem 啟用了 MFA 要求，請設定您的帳號的 MFA。
+    resend_confirmation:
+      resent_notice:
+    update:
+      success_notice:
+      update_current_user_role:
   pages:
     about:
+      checkout_code:
       contributors_amount: "%{count} 位 Ruby 愛好者"
       downloads_amount:
-      checkout_code:
-      mit_licensed: MIT 授權
-      logo_header:
-      logo_details: 只要點選下載按鈕即可獲得三份 .PNG 和一份 .SVG 格式的 RubyGems Logo。
       founding_html: 本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及
         %{downloads} 次下載。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為
         Ruby 社群的核心網站。
+      logo_details: 只要點選下載按鈕即可獲得三份 .PNG 和一份 .SVG 格式的 RubyGems Logo。
+      logo_header:
+      mit_licensed: MIT 授權
+      purpose:
+        better_api: 提供更好的 Gem API
+        enable_community: 讓社群能透過眾人的力量來改善本站
+        header: 歡迎來到 %{site}，這裡是 Ruby 社群 Gem 套件管理服務。此專案的建立有以下三個目的：
+        transparent_pages: 建立更透明、更易於瀏覽的 Gem 專案頁面
       support_html: 雖然 RubyGems.org 並不是由一個特定的公司運作，但在發展過程中接受了許多來源的幫助。目前的設計、圖像以及網站的前端開發是由
         %{dockyard} 提供。%{github} 也幫助我們能更容易地協作和分享原始碼。本站部署在 %{heroku} 上，其一流的服務，更有助於證明
         RubyGems.org 是一個可以穩定、可行的解決方案。Our infrastructure is currently hosted on %{aws}.
@@ -496,11 +746,6 @@ zh-TW:
         by %{fastly}, 使得 Gem 從發佈到提供下載的時間大幅縮短。詳細資訊可從 GitHub 上的 %{source_code} 查看（遵守
         %{license} 協議）。
       title: 關於
-      purpose:
-        better_api: 提供更好的 Gem API
-        enable_community: 讓社群能透過眾人的力量來改善本站
-        header: 歡迎來到 %{site}，這裡是 Ruby 社群 Gem 套件管理服務。此專案的建立有以下三個目的：
-        transparent_pages: 建立更透明、更易於瀏覽的 Gem 專案頁面
     data:
       title:
     download:
@@ -509,274 +754,125 @@ zh-TW:
       title: 安全性
     supporters:
       title:
-  policies:
-    index:
-      title:
-    terms-of-service:
-      title:
-    acceptable-use:
-      title:
-    copyright:
-      title:
-    privacy:
-      title:
-  policies_mailer:
-    policy_update_announcement:
-      subject:
-      title:
-      subtitle:
-    policy_update_review_closed:
-      subject:
-      title:
-      subtitle:
   password_mailer:
     change_password:
       closing:
       opening:
-      title:
       subtitle:
+      title:
     compromised_password_reset:
-      subject:
-      title:
-      subtitle:
-      opening:
-      reassurance:
       closing_html:
       closing_text:
+      opening:
+      reassurance:
+      subject:
+      subtitle:
+      title:
   passwords:
+    create:
+      failure_on_missing_email:
+      success:
     edit:
+      compromised_explanation_html:
+      compromised_heading:
+      strength:
+        fair:
+        strong:
+        too_short:
+        weak:
       submit: 更新密碼
       title: 重設密碼
       token_failure: 請確認 URL 或再次提交
-      compromised_heading:
-      compromised_explanation_html:
-      strength:
-        too_short:
-        weak:
-        fair:
-        strong:
     new:
       submit: 更新密碼
       title: 修改密碼
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給您
-    create:
-      success:
-      failure_on_missing_email:
     update:
-      success:
       failure:
-  multifactor_auths:
-    session_expired: 您的登入頁面工作階段已過期。
-    require_mfa_enabled: 您尚未啟用多重要素驗證，請先啟用。
-    require_webauthn_enabled: 您未啟用任何安全裝置。您需要先將裝置綁定到您的帳號。
-    setup_required_html: 您必須設定多重要素驗證以保護您的帳號和 Gems。請閱讀我們的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">部落格文章</a>以了解詳情。
-    setup_recommended: 為保護您的帳號和 Gems，我們建議您設定多重要素驗證。未來我們將強制要求所有帳號啟用 MFA。
-    strong_mfa_level_required_html: 為保護您的帳號和 Gems，您必須將您的 MFA 等級設為 "使用者介面和 Gem 登入"
-      或 "使用者介面和 API"。請閱讀我們的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">部落格文章</a>以了解詳情。
-    strong_mfa_level_recommended: 為保護您的帳號和 Gems，我們建議您將您的 MFA 等級設為 "使用者介面和 Gem 登入"
-      或 "使用者介面和 API"。未來我們將強制要求所有帳號將設為上述 MFA 等級。
-    setup_webauthn_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。<a
-      href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">了解詳情</a>！"
-    api:
-      mfa_required:
-      mfa_required_not_yet_enabled:
-      mfa_required_weak_level_enabled:
-      mfa_recommended_not_yet_enabled:
-      mfa_recommended_weak_level_enabled:
-    recovery:
-      continue: 繼續
-      title: 復原碼
-      saved:
-      confirm_dialog:
-      note_html:
-      already_generated:
-    update:
-      invalid_level: MFA 等級無效。
-      success: 您已成功修改多重驗證等級。
-    prompt:
-      webauthn_credential_note:
-      sign_in_with_webauthn_credential:
-      otp_code: OTP 碼
-      otp_or_recovery: OTP 或復原碼
-      recovery_code: 復原碼
-      recovery_code_html:
-      security_device: 安全裝置
-      verify_code: 驗證碼
-  totps:
-    incorrect_otp: 您的 OTP 碼不正確。
-    require_totp_disabled: 您基於 OTP 的多重要素驗證已經啟用。您需要先移除才能重新設定。
-    require_totp_enabled: 您未啟用驗證器應用程式。請先啟用。
-    new:
-      title: 啟用多重要素驗證
-      scan_prompt: 請用您的驗證裝置掃描 QR-code。如果您沒辦法掃描，手動輸入下面的資料。
-      otp_prompt: 輸入驗證裝置上的數字來繼續。
-      confirm: 我已把復原碼收在安全的地方。
-      enable: 啟用
-      account: 帳號：%{account}
-      key: 金鑰：%{key}
-      time_based: 基於時間：是
-    create:
-      qrcode_expired: QR-code 和金鑰已過期。請重新註冊裝置。
-      success: 您已成功啟用基於 OTP 的多重要素驗證。
-    destroy:
-      success: 您已成功停用基於 OTP 的多重要素驗證。
-  notifiers:
-    update:
-      success: 您已成功更新您的電子郵件通知設定。
-    show:
-      info: 為協助偵測未經授權的 Gem 或所有權變更，我們將在您擁有的 Gem 推送新版本、遭移除，或新增擁有者時傳送電子郵件給您。在接收和閱讀這些郵件的同時，您也在保護
-        Ruby 的生態圈。
-      'on': 開
-      'off': 關
-      recommended: 建議
-      title: 電子郵件通知
-      update: 更新
-      owner_heading: 所有權通知
-      push_heading: 推送通知
-  webauthn_verifications:
-    expired_or_already_used: 您所使用的連結中的權杖已過期或被使用。
-    no_port: 未提供連接埠。請再試一次。
-    pending:
-    prompt:
-      title: 透過安全裝置驗證
-      authenticating_as: 驗證身分為
-      authenticate: 驗證
-      no_webauthn_devices: 您未啟用任何安全裝置
-    successful_verification:
-      title: 成功！
-      close_browser: 請關閉此瀏覽器。
-    failed_verification:
-      title: 錯誤 - 驗證失敗
-      close_browser: 請關閉此瀏覽器並重試。
-  organization_onboardings:
-    confirm:
       success:
-  owners:
-    edit:
-      role:
+  please_sign_in: 請登入以繼續。
+  please_sign_up: 存取遭拒。請先在 https://rubygems.org 上註冊帳號
+  policies:
+    acceptable-use:
       title:
-    confirm:
-      confirmed_email:
-      token_expired: 確認權杖已過期。請從 Gem 頁面嘗試重新傳送權杖。
+    copyright:
+      title:
     index:
-      add_owner: 新增擁有者
-      name: 擁有者
-      mfa: MFA 狀態
-      status: 狀態
-      confirmed_at: 確認於
-      added_by: 新增者
-      action: 操作
-      role:
-      role_field:
-      email_field:
-      submit_button: 新增擁有者
-      info: 新增或移除擁有者
-      confirmed: 已確認
-      pending: 待確認
-      confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
-    resend_confirmation:
-      resent_notice:
-    create:
-      success_notice: "%{handle} 已以未確認擁有者的身分加入。所有權存取將在使用者點擊傳送到他們的電子郵件地址的確認信後啟用。"
-    update:
-      update_current_user_role:
-      success_notice:
-    destroy:
-      removed_notice:
-      failed_notice: 無法移除 Gem 的唯一擁有者
-    mfa_required: Gem 啟用了 MFA 要求，請設定您的帳號的 MFA。
-  settings:
-    edit:
-      title: 編輯設定
-      account_header:
-      webauthn_credentials: 安全裝置
-      no_webauthn_credentials: 您沒有任何安全裝置
-      webauthn_credential_note: 安全裝置可以是任何遵循 FIDO2 標準的裝置，例如安全或生物特徵金鑰。
-      otp_code: OTP 或復原碼
-      api_access:
-        confirm_reset: 確定要重設嗎？此動作無法還原。
-        credentials_html: 如果您需要從命令列中執行 %{gem_commands_link}，您需要先準備 %{gem_credentials_file}
-          這個檔案，可以使用以下的命令產生：
-        key_is_html: 您的 API key 是 %{key}。
-        link_text: Gem 命令
-        reset: 重設我的 API 金鑰
-        reset_all:
-        title: API 存取
-      reset_password:
-        title: 重設密碼
-      mfa:
-        multifactor_auth: 多重要素驗證
-        otp: 驗證器應用程式
-        disabled_html: 您尚未啟用基於 OTP 的多重要素驗證。請參閱 <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
-          MFA 指南</a>來了解關於 MFA 等級的資訊。
-        go_settings: 註冊新裝置
-        level_html: 您已啟用多重要素驗證。請點擊 '更新' 來變更您的 MFA 等級。請參閱 <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
-          MFA 指南</a>來了解關於 MFA 等級的資訊。
-        enabled_note: 您已啟用多重要素驗證。請輸入驗證器提供的 OTP 碼或復原碼來停用。
-        update: 更新
-        disable: 停用
-        enabled: 已啟用
-        disabled: 已停用
-        level:
-          title: 多重驗證等級
-          disabled: 停用
-          ui_only: 僅使用者介面
-          ui_and_api: 使用者介面與 API (建議)
-          ui_and_gem_signin: 使用者介面和 Gem 登入
+      title:
+    privacy:
+      title:
+    terms-of-service:
+      title:
+  policies_mailer:
+    policy_update_announcement:
+      subject:
+      subtitle:
+      title:
+    policy_update_review_closed:
+      subject:
+      subtitle:
+      title:
   profiles:
+    delete:
+      confirm: 確認
+      instructions: 我們很遺憾
+      list_multi_owner: 您將失去這些 Gem 的存取權，但其他擁有者將不受影響。
+      list_only_owner_html: 這些 Gems 將與您的個人檔案一起被移除。如果您想要在刪除個人檔案前新增擁有者，請使用 %{command_link}
+        命令。
+      title: 刪除個人檔案
+      warning: 警告
+    destroy:
+      request_queued:
     edit:
       change_avatar:
+      delete:
+        delete: 刪除
+        delete_profile: 刪除個人檔案
+        warning: 警告
       disabled_avatar_html:
       email_awaiting_confirmation: 請確認您的新電子郵件地址 %{unconfirmed_email}
       enter_password: 輸入密碼
       optional_full_name: 選填。將公開顯示
       optional_twitter_username: X 帳號（可選）
-      twitter_username: 帳號
       title: 編輯個人檔案
-      delete:
-        delete: 刪除
-        delete_profile: 刪除個人檔案
-        warning: 警告
-    delete:
-      title: 刪除個人檔案
-      confirm: 確認
-      instructions: 我們很遺憾
-      list_only_owner_html: 這些 Gems 將與您的個人檔案一起被移除。如果您想要在刪除個人檔案前新增擁有者，請使用 %{command_link}
-        命令。
-      list_multi_owner: 您將失去這些 Gem 的存取權，但其他擁有者將不受影響。
-      warning: 警告
+      twitter_username: 帳號
+    public_email: 在公開個人檔案顯示電子郵件地址
+    request_denied: 此請求遭拒。我們無法驗證您的密碼。
     rubygem:
       owners_header: 擁有者
-    destroy:
-      request_queued:
+    security_events:
+      description_html:
+      title:
+    show:
+      edit_profile:
+      email_me:
+      gems:
+      no_gems:
+      title: "%{username} 的個人檔案"
     update:
       confirmation_mail_sent: 您將在幾分鐘內收到一封郵件。內含確認您新的電子郵件地址的指示。
       updated: 您的個人檔案已更新。
-    public_email: 在公開個人檔案顯示電子郵件地址
-    request_denied: 此請求遭拒。我們無法驗證您的密碼。
-    show:
-      title: "%{username} 的個人檔案"
-      gems:
-      no_gems:
-      edit_profile:
-      email_me:
-    security_events:
-      title:
-      description_html:
+  remove:
+  reverse_dependencies:
+    index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
+      no_reverse_dependencies: 此 Gem 沒有反向依賴。
+      subtitle: 下列 Gems 的最新版本需要 %{name}
+      title: "%{name} 的反向依賴"
+      version_header:
+    search:
+      search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      gem_version_age: 版本发布
       github_star:
       latest_version_button:
-      versions_button:
-        one:
-        other:
-      gem_version_age: 版本发布
-      required_ruby_version: Ruby 版本需求
-      required_rubygems_version: RubyGems 版本需求
-      requires_mfa: 新版本需要 MFA
-      released_with_mfa: 使用 MFA 發布的版本
       links:
+        analytics:
         badge: 徽章
         bugs: Bug 追蹤
         changelog: 更新日誌
@@ -786,63 +882,69 @@ zh-TW:
         funding:
         header: 相關連結
         home: 首頁
-        verified:
         mail: 郵件群組
-        analytics:
-        report_abuse: 檢舉濫用
-        reverse_dependencies: 反向依賴
-        review_changes:
-        rss: RSS
-        subscribe: 訂閱
-        unsubscribe: 取消訂閱
-        wiki: Wiki
-        resend_ownership_confirmation: 重新傳送確認信
-        ownership: 所有權
         oidc:
           api_key_role:
             name:
             new:
+        ownership: 所有權
+        report_abuse: 檢舉濫用
+        resend_ownership_confirmation: 重新傳送確認信
+        reverse_dependencies: 反向依賴
+        review_changes:
+        rss: RSS
+        subscribe: 訂閱
         trusted_publishers:
-    reserved:
-      reserved_namespace: 此命名空間被 rubygems.org 保留。
+        unsubscribe: 取消訂閱
+        verified:
+        wiki: Wiki
+      released_with_mfa: 使用 MFA 發布的版本
+      required_ruby_version: Ruby 版本需求
+      required_rubygems_version: RubyGems 版本需求
+      requires_mfa: 新版本需要 MFA
+      versions_button:
+        one:
+        other:
     dependencies:
       header: "%{title} 相依性套件"
-    release_info:
-      managed_by:
-      outside_contributors:
-      authors_header: 作者
-      self_no_mfa_warning_html:
-      not_using_mfa_warning_show: "* 某些擁有者未使用多重要素驗證 (MFA)。點擊此處以顯示完整名單。"
-      not_using_mfa_warning_hide: "* 下列擁有者未使用多重要素驗證 (MFA)。點擊此處以隱藏。"
-      owners_header: 擁有者
-      pushed_by: 推送者
-      using_mfa_info: "* 擁有者皆使用多重要素驗證 (MFA)。"
-      yanked_by: 移除者
-      sha_256_checksum: SHA 256 總和檢查碼
-      signature_period: 簽名有效期
-      expired: 已過期
-      provenance_header:
-    version_navigation:
-      previous_version: "← 上一版本"
-      next_version: 下一版本 →
     index:
       downloads: 下載
       title: Gems
+    release_info:
+      authors_header: 作者
+      expired: 已過期
+      managed_by:
+      not_using_mfa_warning_hide: "* 下列擁有者未使用多重要素驗證 (MFA)。點擊此處以隱藏。"
+      not_using_mfa_warning_show: "* 某些擁有者未使用多重要素驗證 (MFA)。點擊此處以顯示完整名單。"
+      outside_contributors:
+      owners_header: 擁有者
+      provenance_header:
+      pushed_by: 推送者
+      self_no_mfa_warning_html:
+      sha_256_checksum: SHA 256 總和檢查碼
+      signature_period: 簽名有效期
+      using_mfa_info: "* 擁有者皆使用多重要素驗證 (MFA)。"
+      yanked_by: 移除者
+    reserved:
+      reserved_namespace: 此命名空間被 rubygems.org 保留。
+    security_events:
+      description_html:
+      title:
     show:
       bundler_header: Gemfile
       install: 安裝
-      tabs:
-        label:
-        readme:
-        gem_info:
-        contents:
-        dependencies:
       licenses_header:
         one: 授權
         other: 授權
       no_licenses: 無
       requirements_header: 必填
       show_all_versions: 顯示所有版本（共 %{count}）
+      tabs:
+        contents:
+        dependencies:
+        gem_info:
+        label:
+        readme:
       versions_header: 版本列表
       yanked_notice: 這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。
     show_yanked:
@@ -850,270 +952,168 @@ zh-TW:
       reserved_namespace_html:
         one:
         other:
-    security_events:
-      title:
-      description_html:
     transfer:
       cancelled:
-      organizations:
-        new:
-          organization:
       confirm:
         success:
           one:
           other:
-  reverse_dependencies:
-    index:
-      date_header:
-      downloads_count:
-      downloads_header:
-      gem_header:
-      title: "%{name} 的反向依賴"
-      subtitle: 下列 Gems 的最新版本需要 %{name}
-      no_reverse_dependencies: 此 Gem 沒有反向依賴。
-      version_header:
-    search:
-      search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
+      organizations:
+        new:
+          organization:
+    version_navigation:
+      next_version: 下一版本 →
+      previous_version: "← 上一版本"
   searches:
     advanced:
-      name: 名稱
-      summary: 摘要
       description: 描述
       downloads: 下載數
+      name: 名稱
+      summary: 摘要
       updated: 更新於
       yanked: 移除於
     show:
-      title:
-      subtitle_html: "<em>%{query}</em>"
-      month_update: 於最近一個月更新 (%{count})
-      week_update: 於最近一週更新 (%{count})
       filter:
-      yanked: 遭移除 (%{count})
+      month_update: 於最近一個月更新 (%{count})
+      subtitle_html: "<em>%{query}</em>"
       suggestion: 您是不是在找
-  sessions:
-    new:
-      forgot_password: 忘記密碼？
-      resend_confirmation: 沒收到確認信？
-      confirm:
-    verify:
       title:
-      confirm: 確認
-      notice: 請確認您的密碼以繼續。
+      week_update: 於最近一週更新 (%{count})
+      yanked: 遭移除 (%{count})
+  sessions:
     create:
       account_blocked:
-  compromised_passwords:
-    show:
+    new:
+      confirm:
+      forgot_password: 忘記密碼？
+      resend_confirmation: 沒收到確認信？
+    verify:
+      confirm: 確認
+      notice: 請確認您的密碼以繼續。
       title:
-      heading:
-      subheading:
-      explanation_html:
-      email_sent:
-      next_steps:
-      step_1:
-      step_2:
-      step_3:
-      step_4_html:
-      step_4_link_text:
-      learn_more:
-      learn_more_hibp_html:
-      learn_more_hibp_link_text:
-      learn_more_mfa_html:
-      learn_more_mfa_link_text:
-      back_to_sign_in:
-      need_help_html:
+  settings:
+    edit:
+      account_header:
+      api_access:
+        confirm_reset: 確定要重設嗎？此動作無法還原。
+        credentials_html: 如果您需要從命令列中執行 %{gem_commands_link}，您需要先準備 %{gem_credentials_file}
+          這個檔案，可以使用以下的命令產生：
+        key_is_html: 您的 API key 是 %{key}。
+        link_text: Gem 命令
+        reset: 重設我的 API 金鑰
+        reset_all:
+        title: API 存取
+      mfa:
+        disable: 停用
+        disabled: 已停用
+        disabled_html: 您尚未啟用基於 OTP 的多重要素驗證。請參閱 <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+          MFA 指南</a>來了解關於 MFA 等級的資訊。
+        enabled: 已啟用
+        enabled_note: 您已啟用多重要素驗證。請輸入驗證器提供的 OTP 碼或復原碼來停用。
+        go_settings: 註冊新裝置
+        level:
+          disabled: 停用
+          title: 多重驗證等級
+          ui_and_api: 使用者介面與 API (建議)
+          ui_and_gem_signin: 使用者介面和 Gem 登入
+          ui_only: 僅使用者介面
+        level_html: 您已啟用多重要素驗證。請點擊 '更新' 來變更您的 MFA 等級。請參閱 <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems
+          MFA 指南</a>來了解關於 MFA 等級的資訊。
+        multifactor_auth: 多重要素驗證
+        otp: 驗證器應用程式
+        update: 更新
+      no_webauthn_credentials: 您沒有任何安全裝置
+      otp_code: OTP 或復原碼
+      reset_password:
+        title: 重設密碼
+      title: 編輯設定
+      webauthn_credential_note: 安全裝置可以是任何遵循 FIDO2 標準的裝置，例如安全或生物特徵金鑰。
+      webauthn_credentials: 安全裝置
+  sign_in: 登入
+  sign_out: 登出
+  sign_up: 註冊
+  sign_up_terms:
   stats:
     index:
-      title: 統計資料
       all_time_most_downloaded: 歷史下載次數排行
       clickgems:
+      title: 統計資料
       total_gems: Gems 總數
       total_users: 總使用者數量
+  subtitle: Ruby 社群 Gem 套件管理平台
+  this_rubygem_could_not_be_found: 找不到此 rubygem。
+  time_ago: "%{duration} 前"
+  title: RubyGems.org
+  total_downloads: 總下載次數
+  totps:
+    create:
+      qrcode_expired: QR-code 和金鑰已過期。請重新註冊裝置。
+      success: 您已成功啟用基於 OTP 的多重要素驗證。
+    destroy:
+      success: 您已成功停用基於 OTP 的多重要素驗證。
+    incorrect_otp: 您的 OTP 碼不正確。
+    new:
+      account: 帳號：%{account}
+      confirm: 我已把復原碼收在安全的地方。
+      enable: 啟用
+      key: 金鑰：%{key}
+      otp_prompt: 輸入驗證裝置上的數字來繼續。
+      scan_prompt: 請用您的驗證裝置掃描 QR-code。如果您沒辦法掃描，手動輸入下面的資料。
+      time_based: 基於時間：是
+      title: 啟用多重要素驗證
+    require_totp_disabled: 您基於 OTP 的多重要素驗證已經啟用。您需要先移除才能重新設定。
+    require_totp_enabled: 您未啟用驗證器應用程式。請先啟用。
+  try_again: 發生錯誤。請再試一次。
+  update: 更新
   users:
     create:
       email_sent: 已傳送確認信到您的電子郵件地址。
     new:
       have_account: 已經註冊過了？
       registration_disabled:
+  verification_expired:
   versions:
     index:
+      imported_gem_version_notice: 此版本的 Gem 於 %{import_date} 匯入 RubyGems.org。顯示日期由作者在
+        gemspec 指定。
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上
       title: "%{name} 的所有版本"
       versions_since:
-        other: 自從 %{since} 以來，有 %{count} 個版本
         one: 自從 %{since} 以來，有 %{count} 個版本
-      imported_gem_version_notice: 此版本的 Gem 於 %{import_date} 匯入 RubyGems.org。顯示日期由作者在
-        gemspec 指定。
+        other: 自從 %{since} 以來，有 %{count} 個版本
     version:
       yanked: 已被移除
+  view_all: 查看全部
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。
-    recovery:
-      continue: 繼續
-      title: 您已成功新增安全裝置
-      notice_html:
-      saved:
-    webauthn_credential:
-      confirm_delete: 已刪除認證
-      delete_failed: 無法刪除認證
-      delete: 刪除
-      confirm: 您確定要刪除此認證嗎？
-      saved: 已成功建立安全裝置
     form:
       new_device: 註冊新安全裝置
       nickname: 暱稱
       submit: 註冊裝置
-  oidc:
-    api_key_roles:
-      index:
-        api_key_roles:
-        new_role:
-      show:
-        api_key_role_name:
-        automate_gh_actions_publishing:
-        view_provider:
-        edit_role:
-        delete_role:
-        confirm_delete:
-        deleted_at_html:
-      edit:
-        edit_role:
-      git_hub_actions_workflow:
-        title:
-        configured_for_html:
-        to_automate_html:
-        not_github:
-        not_push:
-        a_gem:
-        instructions_html:
-      new:
-        title:
-      update:
-        success:
-      create:
-        success:
-      destroy:
-        success:
-      form:
-        add_condition:
-        remove_condition:
-        add_statement:
-        remove_statement:
-      deleted:
-    providers:
-      index:
-        title:
-        description_html:
-      show:
-        title:
-    id_tokens:
-      index:
-        title:
-      show:
-        title:
-    rubygem_trusted_publishers:
-      index:
-        title:
-        subtitle_owner_html:
-        delete:
-        create:
-        description_html:
-      destroy:
-        success:
-      create:
-        success:
-      new:
-        title:
-        subtitle_owner_html:
-    pending_trusted_publishers:
-      index:
-        title:
-        valid_for_html:
-        delete:
-        create:
-        description_html:
-      destroy:
-        success:
-      create:
-        success:
-      new:
-        title:
-    trusted_publisher:
-      unsupported_type:
-      github_actions:
-        repository_owner_help_html:
-        repository_name_help_html:
-        workflow_filename_help_html:
-        environment_help_html:
-        workflow_repository_owner_help_html:
-        workflow_repository_name_help_html:
-      pending:
-        rubygem_name_help_html:
-  duration:
-    minutes:
-      other:
-      one:
-    hours:
-      other:
-      one:
-    days:
-      other:
-      one:
-    seconds:
-      other:
-      one:
-  form:
-    optional:
-  events:
-    table_component:
-      event:
-      time:
-      additional_info:
-      redacted:
-      no_user_agent_info:
-    rubygem_event:
-      version:
-        version_pushed:
-        version_yanked:
-        version_unyanked:
-        version_html:
-        version_pushed_sha256_html:
-        version_pushed_by_html:
-        version_yanked_by_html:
-      owner:
-        owner_added:
-        owner_added_owner_html:
-        owner_added_authorizer_html:
-        owner_removed:
-        owner_removed_owner_html:
-        owner_removed_by_html:
-        owner_confirmed:
-    user_event:
-      user:
-        created:
-        email:
-      login:
-        login_success:
-        webauthn_login:
-        mfa_method:
-        mfa_device:
-        none:
-      email:
-        email_verified:
-        email_sent_subject:
-        email_sent_from:
-        email_sent_to:
-      api_key:
-        api_key_created:
-        api_key_deleted:
-        api_key_name:
-        api_key_scopes:
-        api_key_gem_html:
-        api_key_mfa:
-        not_required:
-      password:
-        password_compromised:
-        mfa_status:
-        mfa_enabled:
-        mfa_disabled:
-        action_taken:
+    recovery:
+      continue: 繼續
+      notice_html:
+      saved:
+      title: 您已成功新增安全裝置
+    webauthn_credential:
+      confirm: 您確定要刪除此認證嗎？
+      confirm_delete: 已刪除認證
+      delete: 刪除
+      delete_failed: 無法刪除認證
+      saved: 已成功建立安全裝置
+  webauthn_verifications:
+    expired_or_already_used: 您所使用的連結中的權杖已過期或被使用。
+    failed_verification:
+      close_browser: 請關閉此瀏覽器並重試。
+      title: 錯誤 - 驗證失敗
+    no_port: 未提供連接埠。請再試一次。
+    pending:
+    prompt:
+      authenticate: 驗證
+      authenticating_as: 驗證身分為
+      no_webauthn_devices: 您未啟用任何安全裝置
+      title: 透過安全裝置驗證
+    successful_verification:
+      close_browser: 請關閉此瀏覽器。
+      title: 成功！
