@@ -684,6 +684,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.jsonb "canonical_payload", default: {}, null: false
     t.string "canonicalization_algorithm", limit: 64, null: false
     t.string "canonicalization_version", limit: 32, null: false
+    t.uuid "corrects_event_uuid"
     t.datetime "created_at", null: false
     t.string "event_type", limit: 100, null: false
     t.uuid "event_uuid", null: false
@@ -701,17 +702,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.jsonb "rekor_request_body", default: {}, null: false
     t.jsonb "rekor_response_body"
     t.datetime "rekor_submitted_at"
+    t.string "resource_id", limit: 128
+    t.string "resource_name", limit: 255, null: false
+    t.string "resource_type", limit: 50, null: false
     t.binary "signature", null: false
     t.string "signing_algorithm", limit: 64, null: false
     t.string "signing_key_id", limit: 128, null: false
     t.string "signing_mode", limit: 50, null: false
+    t.string "spec_version", limit: 32, null: false
     t.string "status", limit: 32, default: "pending", null: false
+    t.string "subject_handle", limit: 128
+    t.string "subject_id", limit: 128
     t.string "subject_name", limit: 255, null: false
     t.string "subject_type", limit: 50, null: false
     t.datetime "updated_at", null: false
+    t.index ["actor_type", "actor_handle", "created_at"], name: "idx_on_actor_type_actor_handle_created_at_68ba253fe2"
+    t.index ["actor_type", "actor_id", "created_at"], name: "idx_on_actor_type_actor_id_created_at_9dea14a582"
+    t.index ["corrects_event_uuid"], name: "index_transparency_log_events_on_corrects_event_uuid"
     t.index ["event_type", "created_at"], name: "index_transparency_log_events_on_event_type_and_created_at"
     t.index ["event_uuid"], name: "index_transparency_log_events_on_event_uuid", unique: true
     t.index ["payload_digest_algorithm", "payload_digest"], name: "index_transparency_log_events_on_payload_digest", unique: true
+    t.index ["resource_type", "resource_name", "created_at"], name: "idx_on_resource_type_resource_name_created_at_ea155536e2"
+    t.index ["status", "created_at"], name: "index_transparency_log_events_on_status_and_created_at"
     t.index ["status"], name: "index_transparency_log_events_on_status"
     t.index ["subject_type", "subject_name"], name: "index_transparency_log_events_on_subject_type_and_subject_name"
   end
