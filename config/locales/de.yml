@@ -277,7 +277,6 @@ de:
       downloads_counting_html: Gezählte Downloads
       find_blurb_html: Finde, installiere und veröffentliche RubyGems.
       find_blurb_lead:
-      install_rubygems:
       learn:
         install_rubygems: Installiere RubyGems
       donation:
