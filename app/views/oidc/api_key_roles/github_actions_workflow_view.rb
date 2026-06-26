@@ -42,7 +42,7 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
 
   def subject_sidebar
     content_for :subject do
-      raw view_context.render(partial: "dashboards/subject", locals: { user: current_user, current: :profile })
+      view_context.render(partial: "dashboards/subject", locals: { user: current_user, current: :profile })
     end
   end
 
