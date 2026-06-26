@@ -781,6 +781,7 @@ de:
   settings:
     edit:
       title:
+      account_header:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
@@ -984,6 +985,7 @@ de:
     new:
       forgot_password: Passwort vergessen?
       resend_confirmation:
+      confirm:
     verify:
       title:
       confirm:

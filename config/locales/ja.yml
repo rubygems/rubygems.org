@@ -706,6 +706,7 @@ ja:
   settings:
     edit:
       title: 設定を編集
+      account_header:
       webauthn_credentials: セキュリティ機器
       no_webauthn_credentials: セキュリティ機器がありません
       webauthn_credential_note: セキュリティ機器とは、セキュリティキーや生体認証キーといった、FIDO2規格に準じた任意の機器です。
@@ -916,6 +917,7 @@ ja:
     new:
       forgot_password: パスワードをお忘れですか？
       resend_confirmation: 確認メールを受け取っていませんか？
+      confirm:
     verify:
       title:
       confirm: 確定

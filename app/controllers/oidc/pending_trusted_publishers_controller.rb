@@ -5,10 +5,15 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
 
   before_action :find_pending_trusted_publisher, only: %i[destroy]
 
+  layout "subject"
+
   def index
     trusted_publishers = policy_scope(OIDC::PendingTrustedPublisher)
       .unexpired.includes(:trusted_publisher)
       .order(:rubygem_name, :created_at).page(@page).strict_loading
+    add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path)
+    add_breadcrumb(t(".title"))
+
     render OIDC::PendingTrustedPublishers::IndexView.new(
       trusted_publishers:
     )
@@ -16,6 +21,8 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
 
   def new
     pending_trusted_publisher = current_user.oidc_pending_trusted_publishers.new(trusted_publisher: OIDC::TrustedPublisher::GitHubAction.new)
+    add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path)
+    add_breadcrumb(t(".title"))
     render OIDC::PendingTrustedPublishers::NewView.new(
       pending_trusted_publisher:
     )

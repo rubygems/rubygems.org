@@ -700,6 +700,7 @@ en:
   settings:
     edit:
       title: Edit settings
+      account_header: Account
       webauthn_credentials: Security device
       no_webauthn_credentials: You don't have any security devices
       webauthn_credential_note: A security device can be any device that complies with the FIDO2 standard such as security and biometric keys.
@@ -903,6 +904,7 @@ en:
     new:
       forgot_password: Forgot password?
       resend_confirmation: Didn't receive confirmation mail?
+      confirm: Confirm
     verify:
       title: Confirm Password
       confirm: Confirm

@@ -772,6 +772,7 @@ es:
   settings:
     edit:
       title: Editar configuración
+      account_header:
       webauthn_credentials: Dispositivo de seguridad
       no_webauthn_credentials: No tienes dispositivos de seguridad
       webauthn_credential_note: Un dispositivo de seguridad puede ser cualquier dispositivo
@@ -1009,6 +1010,7 @@ es:
     new:
       forgot_password: "¿Olvidaste tu contraseña?"
       resend_confirmation: "¿No recibiste tu correo electrónico de confirmación?"
+      confirm:
     verify:
       title:
       confirm: Confirmar

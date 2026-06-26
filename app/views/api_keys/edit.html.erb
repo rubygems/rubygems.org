@@ -1,5 +1,12 @@
 <% @title = t(".edit_api_key") %>
+<% add_breadcrumb(@title) %>
 
-<div class="t-body">
+<% content_for :subject do %>
+  <%= render "dashboards/subject", user: current_user, current: :settings %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t(".edit_api_key") %></h1>
+
+<%= render CardComponent.new do %>
   <%= render "form", api_key: @api_key %>
-</div>
+<% end %>

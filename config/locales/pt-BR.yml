@@ -704,6 +704,7 @@ pt-BR:
   settings:
     edit:
       title:
+      account_header:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
@@ -919,6 +920,7 @@ pt-BR:
     new:
       forgot_password: Esqueceu sua Senha?
       resend_confirmation: Não recebeu o email de confirmação?
+      confirm:
     verify:
       title:
       confirm:

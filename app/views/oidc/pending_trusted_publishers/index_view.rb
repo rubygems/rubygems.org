@@ -9,58 +9,81 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
   prop :trusted_publishers, reader: :public
 
   def view_template
-    title_content
+    self.title = t(".title")
+    content_for(:subject) { raw(subject_sidebar) } # rubocop:disable Rails/OutputSafety -- trusted Rails partial
 
-    div(class: "tw-space-y-2 t-body") do
-      p do
-        t(".description_html")
+    h1(class: "text-h2 mb-10") { t(".title") }
+
+    p(class: "mb-8 max-w-2xl text-b3 text-neutral-700 dark:text-neutral-300 " \
+             "[&_a]:text-orange-700 [&_a]:underline dark:[&_a]:text-orange-400") do
+      raw t(".description_html")
+    end
+
+    div(class: "mb-8") do
+      render ButtonComponent.new(t(".create"), new_profile_oidc_pending_trusted_publisher_path)
+    end
+
+    render CardComponent.new do
+      p(class: "mb-2 text-b4 text-neutral-600 dark:text-neutral-400") { page_entries_info(trusted_publishers) }
+
+      div(class: "divide-y divide-neutral-200 dark:divide-neutral-800") do
+        trusted_publishers.each { |pending_trusted_publisher| publisher_section(pending_trusted_publisher) }
       end
 
-      p do
-        button_to t(".create"), new_profile_oidc_pending_trusted_publisher_path, class: "form__submit", method: :get
-      end
-
-      header(class: "gems__header push--s") do
-        p(class: "gems__meter l-mb-0") { page_entries_info(trusted_publishers) }
-      end
-
-      div(class: "tw-divide-y") do
-        trusted_publishers.each do |pending_trusted_publisher|
-          trusted_publisher_section(pending_trusted_publisher)
-        end
-      end
-
-      paginate(trusted_publishers)
+      div(class: "mt-4") { paginate(trusted_publishers) }
     end
   end
 
-  def title_content
-    self.title_for_header_only = t(".title")
-    content_for :title do
-      h1(class: "t-display page__heading page__heading-small") do
-        plain t(".title")
-      end
-    end
+  private
+
+  DANGER_BTN = "inline-flex items-center justify-center rounded border-2 border-red-500 text-red-500 " \
+               "px-4 h-9 min-h-9 text-b3 hover:bg-red-500/5 active:bg-red-500/10 " \
+               "dark:hover:bg-red-500/15 dark:active:bg-red-500/25 transition focus:outline-none"
+
+  def subject_sidebar
+    view_context.render(partial: "dashboards/subject", locals: { user: current_user, current: :settings })
   end
 
-  def trusted_publisher_section(pending_trusted_publisher)
-    div(class: "tw-border-solid tw-my-4 tw-space-y-2 tw-flex tw-flex-col") do
-      div(class: "sm:tw-flex sm:tw-flex-row tw-gap-4 tw-mt-2") do
-        h3(class: "!tw-mb-0") { pending_trusted_publisher.rubygem_name }
+  def publisher_section(pending_trusted_publisher)
+    div(class: "py-6 first:pt-0 last:pb-0") do
+      div(class: "flex flex-wrap items-center justify-between gap-3") do
+        h2(class: "text-b1 font-semibold text-neutral-900 dark:text-white") { pending_trusted_publisher.rubygem_name }
         button_to(t(".delete"), profile_oidc_pending_trusted_publisher_path(pending_trusted_publisher),
-          method: :delete, class: "form__submit form__submit--small")
+          method: :delete, class: DANGER_BTN)
       end
 
-      div(class: "sm:tw-flex sm:tw-flex-row tw-gap-4") do
-        p(class: "!tw-mb-0") { pending_trusted_publisher.trusted_publisher.class.publisher_name }
-        p(class: "!tw-mb-0") do
-          raw t(".valid_for_html",
-            time_html: view_context.time_tag(pending_trusted_publisher.expires_at,
-view_context.distance_of_time_in_words_to_now(pending_trusted_publisher.expires_at)))
-        end
+      p(class: "mt-1 text-b3 text-neutral-700 dark:text-neutral-300") do
+        plain pending_trusted_publisher.trusted_publisher.class.publisher_name
+        whitespace
+        plain "·"
+        whitespace
+        raw t(".valid_for_html",
+          time_html: view_context.time_tag(pending_trusted_publisher.expires_at,
+            view_context.distance_of_time_in_words_to_now(pending_trusted_publisher.expires_at)))
       end
 
-      render pending_trusted_publisher.trusted_publisher
+      publisher_details(pending_trusted_publisher.trusted_publisher)
+    end
+  end
+
+  # Rendered inline (rather than the shared tw-prefixed TableComponent) so the
+  # details are styled under the new hammy layout. GitHub Actions is currently
+  # the only trusted publisher type.
+  def publisher_details(github_action)
+    dl(class: "mt-4 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2") do
+      detail_row("GitHub Repository", github_action.repository)
+      detail_row("Workflow Filename", github_action.workflow_filename)
+      detail_row("Workflow Repository", github_action.workflow_repository) if github_action.workflow_repository_owner.present?
+      detail_row("Environment", github_action.environment) if github_action.environment?
+    end
+  end
+
+  def detail_row(label, value)
+    div do
+      dt(class: "text-b4 font-semibold text-neutral-800 dark:text-neutral-200") { label }
+      dd(class: "mt-0.5 break-all") do
+        code(class: "font-mono text-c4 text-neutral-900 dark:text-white") { value }
+      end
     end
   end
 end
