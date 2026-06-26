@@ -5,8 +5,6 @@ require "digest/sha2"
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
 
-  self.ignored_columns += %w[info_checksum yanked_info_checksum]
-
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
                             order(Rubygem.arel_table["name"].asc).includes(:rubygem).references(:rubygem)
