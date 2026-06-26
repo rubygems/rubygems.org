@@ -1,26 +1,30 @@
-<%= error_messages_for(@user) %>
+<%= error_messages_for(@user,
+  class: "mb-6 p-4 border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950 rounded-lg text-red-700 dark:text-red-400 text-sm") %>
 
-<div class="text_field">
-  <%= form.label :full_name, :class => 'form__label' %>
-  <p class='form__field__instructions'>
-    <%= t('profiles.edit.optional_full_name') %>
-  </p>
-  <%= form.text_field :full_name, :class => 'form__input' %>
-</div>
+<div class="flex flex-col gap-6">
+  <div>
+    <%= form.label :full_name, class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+    <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-2"><%= t('profiles.edit.optional_full_name') %></p>
+    <%= form.text_field :full_name, class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+  </div>
 
-<div class="text_field">
-  <%= form.label :email, :class => 'form__label' %>
-  <%= form.email_field :email, :class => 'form__input' %>
-</div>
-<div class="text_field">
-  <%= form.label :handle, :class => 'form__label' %>
-  <%= form.text_field :handle, :class => 'form__input' %>
-</div>
-<div class="password_field">
-  <%= form.label :password, t('activerecord.attributes.user.password'), :class => 'form__label' %>
-  <%= form.password_field :password, autocomplete: "new-password", class: 'form__input' %>
-</div>
-<div class="profile-checkbox form__checkbox">
-  <%= form.check_box :public_email, :class => 'form__checkbox__input' %>
-  <%= form.label :public_email, t('profiles.public_email'), :class => 'form__checkbox__label' %>
+  <div>
+    <%= form.label :email, class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+    <%= form.email_field :email, class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+  </div>
+
+  <div>
+    <%= form.label :handle, class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+    <%= form.text_field :handle, class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+  </div>
+
+  <div>
+    <%= form.label :password, t('activerecord.attributes.user.password'), class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+    <%= form.password_field :password, autocomplete: "new-password", class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= form.check_box :public_email, class: "h-4 w-4 rounded border-neutral-300 dark:border-neutral-700 text-orange-500 focus:ring-0" %>
+    <%= form.label :public_email, t('profiles.public_email'), class: "text-sm text-neutral-800 dark:text-neutral-200" %>
+  </div>
 </div>

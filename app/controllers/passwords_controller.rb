@@ -5,7 +5,7 @@ class PasswordsController < ApplicationController
   include RequireMfa
   include WebauthnVerifiable
 
-  layout "hammy", only: %i[edit]
+  layout "hammy"
 
   before_action :ensure_email_present, only: %i[create]
 
@@ -21,6 +21,7 @@ class PasswordsController < ApplicationController
   before_action :validate_password_reset_session, only: :update
 
   def new
+    render :new
   end
 
   def edit
