@@ -1,117 +1,22 @@
 ---
 ja:
-  activemodel:
-    attributes:
-      oidc/provider/configuration:
-        id_token_signing_alg_values_supported: サポート対象のIDトークン書名アルゴリズム
-        jwks_uri: JWKS URI
-    errors:
-      models:
-        oidc/api_key_permissions:
-          attributes:
-            gems:
-              too_long: 最大1個のgemを含められます。
-            valid_for:
-              inclusion: "%{value}秒は5分（300秒）から1日（86,400秒）までの間でなければなりません"
   activerecord:
     attributes:
-      api_key:
-        oidc_api_key_role: OIDC APIキーのロール
-      linkset:
-        bugs: バグトラッカーのURL
-        changelog: 更新履歴のURL
-        code: ソースコードのURL
-        docs: ドキュメントのURL
-        funding: 寄付のURL
-        mail: メーリングリストのURL
-        wiki: WikiのURL
-      membership/role:
-        admin: 管理者
-        maintainer: メンテナ
-        outside_contributor: 外部の貢献者
-        owner: 所有者
-      oidc/api_key_role:
-        api_key_permissions: APIキーのパーミッション
-      oidc/id_token:
-        api_key_role: APIキーのロール
-        jti: JWT ID
-      oidc/pending_trusted_publisher:
-        rubygem_name: RubyGem名
-      oidc/trusted_publisher/github_action:
-        repository_owner_id: GitHubリポジトリの所有者ID
-        workflow_repository_name:
-        workflow_repository_owner:
-      ownership/role:
-        maintainer: メンテナ
-        owner: 所有者
       session:
         password: パスワード
         who: Eメールまたはユーザー名
       user:
-        avatar: アバター
         email: Eメールアドレス
-        full_name: フルネーム
-        handle: ユーザー名
         password: パスワード
     errors:
       messages:
         blocked: ドメイン %{domain} はスパムのため差し止められました。正しい個人のEメールを使ってください。
-        disposable_email_domain:
-        not_pwned: 過去にデータ侵害を受けたためお使いになれません
-        protected_provider:
-        public_suffix:
-        reserved_domain:
       models:
-        api_key:
-          attributes:
-            expires_at:
-              inclusion: 未来でなければなりません
-        membership:
-          attributes:
-            user:
-              blank: 見つかりませんでした
-              required: 見つかりませんでした
-              taken: は既にこの組織に招待されています
-            user_id:
-              blank: 見つかりませんでした
-              required: 見つかりませんでした
-              taken: は既にこの組織に招待されています
-        oidc/pending_trusted_publisher:
-          attributes:
-            rubygem_name:
-              reserved:
-              unavailable: 既に使われています
-        oidc/rubygem_trusted_publisher:
-          attributes:
-            rubygem:
-              taken: この信頼できる発行元で既に構成されています
-        organization:
-          attributes:
-            handle:
-              invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
         ownership:
           attributes:
             user_id:
               already_confirmed: は既にこのgemの所有者です
               already_invited: は既にこのgemに招待されています
-        user:
-          attributes:
-            handle:
-              invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
-            password:
-              bcrypt_length: は長すぎます（最大72バイト）
-        version:
-          attributes:
-            full_name:
-              taken: "%{value}は既に存在します"
-            gem_full_name:
-              taken: "%{value}は既に存在します"
-    models:
-      api_key:
-        one: APIキー
-        other: APIキー
-        zero: APIキー
-      user: ユーザー
   advanced_search: 高度な検索
   api_gem_not_found: このgemは見つかりませんでした
   api_key_forbidden: APIキーにアクセス権がありません
@@ -120,7 +25,6 @@ ja:
   api_keys:
     all_gems: 全てのgem
     create:
-      invalid_gem: 選択されたgemはこのキーのスコープにありません
       success: 新しいAPIキーを作成しました
     destroy:
       success: APIキーが正常に削除されました：%{name}
@@ -165,7 +69,6 @@ ja:
     reset:
       success: 全てのAPIキーを削除しました
     update:
-      invalid_gem: 選択されたgemはこのキーのスコープにありません
       success: APIキーが正常に更新されました
   authenticate: 認証
   breadcrumbs:
@@ -173,33 +76,118 @@ ja:
     gems: gem
     home: ホーム
     invite_member: メンバーを招待
-    latest_version:
+    latest_version: "%{version} (latest)"
     members: メンバー
     org_name: 組織：%{name}
     settings: 設定
     subscriptions: 購読
-    versions:
+    versions: Versions
   by_signing_up: 新規登録するときは次に同意したものとみなします：
+  clearance:
+    models:
+      clearance_mailer:
+        change_password: Change password
+  components:
+    events:
+      rubygem_event:
+        owner:
+          added_component:
+            view_template:
+              owner_added_authorizer_html: Owner added authorizer html
+              owner_added_owner_html: Owner added owner html
+          confirmed_component:
+            view_template:
+              owner_added_authorizer_html: Owner added authorizer html
+              owner_added_owner_html: Owner added owner html
+          removed_component:
+            view_template:
+              owner_removed_by_html: Owner removed by html
+              owner_removed_owner_html: Owner removed owner html
+        version:
+          pushed_component:
+            view_template:
+              version_html: Version html
+              version_pushed_by_html: Version pushed by html
+              version_pushed_sha256_html: Version pushed sha256 html
+          unyanked_component:
+            view_template:
+              version_html: Version html
+          yank_forbidden_component:
+            view_template:
+              version_html: Version html
+              version_yanked_by_html: Version yanked by html
+          yanked_component:
+            view_template:
+              version_html: Version html
+              version_yanked_by_html: Version yanked by html
+      table_component:
+        additional_info:
+          no_user_agent_info: No user agent info
+          redacted: Redacted
+        view_template:
+          additional_info: Additional info
+          event: Event
+          time: Time
+      user_event:
+        api_key:
+          created_component:
+            view_template:
+              api_key_gem_html: Api key gem html
+              api_key_mfa: Api key mfa
+              api_key_name: Api key name
+              api_key_scopes: Api key scopes
+              not_required: Not required
+              required: Required
+          deleted_component:
+            view_template:
+              api_key_name: Api key name
+        email:
+          sent_component:
+            view_template:
+              email_sent_from: Email sent from
+              email_sent_subject: Email sent subject
+              email_sent_to: Email sent to
+        login:
+          success_component:
+            view_template:
+              mfa_device: Mfa device
+              mfa_method: Mfa method
+              none: None
+              webauthn_login: Webauthn login
+        password:
+          compromised_component:
+            view_template:
+              action_taken: Action taken
+              mfa_disabled: Mfa disabled
+              mfa_enabled: Mfa enabled
+              mfa_status: Mfa status
+        user:
+          created_component:
+            view_template:
+              email: Email
   compromised_passwords:
     show:
-      back_to_sign_in:
-      email_sent:
-      explanation_html:
-      heading:
-      learn_more:
-      learn_more_hibp_html:
-      learn_more_hibp_link_text:
-      learn_more_mfa_html:
-      learn_more_mfa_link_text:
-      need_help_html:
-      next_steps:
-      step_1:
-      step_2:
-      step_3:
-      step_4_html:
-      step_4_link_text:
-      subheading:
-      title:
+      back_to_sign_in: Back to Sign In
+      email_sent: 'We''ve sent a password reset link to:'
+      explanation_html: The password you entered has been found in a public data breach
+        from <strong>another website</strong>. This doesn't mean your RubyGems.org
+        account was compromised, but because passwords are often reused, we require
+        a reset to keep your account secure.
+      heading: Password found in data breach
+      learn_more: Learn more
+      learn_more_hibp_html: Check if your email appears in other breaches at %{link}
+      learn_more_hibp_link_text: Have I Been Pwned
+      learn_more_mfa_html: Protect your account with %{link}
+      learn_more_mfa_link_text: multi-factor authentication
+      need_help_html: Need help? Contact %{email}
+      next_steps: 'Here''s what to do next:'
+      step_1: Check your email inbox (and spam folder) for the password reset link
+      step_2: Click the link and create a new, unique password you don't use elsewhere
+      step_3: Sign in with your new password
+      step_4_html: Consider %{link} for additional security
+      step_4_link_text: enabling multi-factor authentication
+      subheading: Your RubyGems.org account remains secure
+      title: Password Change Required
   copied: コピー完了!
   copy_to_clipboard: クリップボードにコピー
   credentials_required: 認証情報が必要です
@@ -209,7 +197,6 @@ ja:
       gem_link_text: gemのページ
       latest: 最近の更新
       latest_title: 最近の更新のRSSフィード
-      migrating_link_text: 移行
       mine: 自分のgem
       my_subscriptions: 購読
       no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}ガイドをご覧ください。
@@ -218,32 +205,17 @@ ja:
       title: ダッシュボード
   dependencies:
     show:
-      click_to_expand: 矢印アイコンをクリックして展開
-      date_header:
-      downloads_count:
-      downloads_header:
-      gem_header:
-      required_version_header:
-      reverse_dependencies_header:
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      gem_header: Gem
+      required_version_header: Required version
+      reverse_dependencies_header: Reverse Dependencies
       scope_header:
         one:
         other:
-      see_all_reverse:
-      version_header:
-  dependency_list: 全ての推移的な依存関係を表示
-  duration:
-    days:
-      one: 1日
-      other: "%{count}日"
-    hours:
-      one: 1時間
-      other: "%{count}時間"
-    minutes:
-      one: 1分
-      other: "%{count}分"
-    seconds:
-      one: 1秒
-      other: "%{count}秒"
+      see_all_reverse: See all reverse dependencies
+      version_header: Version
   edit: 編集
   email_confirmations:
     create:
@@ -255,60 +227,11 @@ ja:
     update:
       confirmed_email: メールアドレスが確認されました。
       token_failure: URLを見返すか、再度送信してみてください。
-  email_not_confirmed:
-  events:
-    rubygem_event:
-      owner:
-        owner_added: 所有者が追加されました
-        owner_added_authorizer_html: 承認者：%{authorizer}
-        owner_added_owner_html: 新しく追加された所有者：%{owner}
-        owner_confirmed: 所有者が確認されました
-        owner_removed: 所有者が削除されました
-        owner_removed_by_html: 削除者：%{remover}
-        owner_removed_owner_html: 削除された所有者：%{owner}
-      version:
-        version_html: バージョン：%{version}
-        version_pushed: バージョンがプッシュされました
-        version_pushed_by_html: プッシュ者：%{pusher}
-        version_pushed_sha256_html: SHA256：%{sha256}
-        version_unyanked: バージョンのヤンクが取り消されました
-        version_yanked: バージョンがヤンクされました
-        version_yanked_by_html: ヤンク者：%{pusher}
-    table_component:
-      additional_info: 追加情報
-      event: 事象
-      no_user_agent_info: ユーザーエージェント情報なし
-      redacted: 訂正
-      time: 時刻
-    user_event:
-      api_key:
-        api_key_created: APIキーが作成されました
-        api_key_deleted: APIキーが削除されました
-        api_key_gem_html: gem：%{gem}
-        api_key_mfa: MFA：%{mfa}
-        api_key_name: 名前：%{name}
-        api_key_scopes: スコープ：%{scopes}
-        not_required: 必要ではありません
-      email:
-        email_sent_from: 差出人：%{from}
-        email_sent_subject: 題名：%{subject}
-        email_sent_to: 宛先：%{to}
-        email_verified: Eメールが検証されました
-      login:
-        login_success: ログインが成功しました
-        mfa_device: MFA機器：%{device}
-        mfa_method: MFAの方法：%{method}
-        none: なし
-        webauthn_login: Webauthnのログイン：%{device}
-      password:
-        action_taken:
-        mfa_disabled:
-        mfa_enabled:
-        mfa_status:
-        password_compromised:
-      user:
-        created: ユーザーが作成されました
-        email: Eメール：%{email}
+  email_not_confirmed: Please confirm your email address before using the API. Check
+    your inbox for a confirmation link.
+  errors:
+    messages:
+      taken: Taken
   feed_latest: RubyGems.org | 最新のgemの一覧
   feed_subscribed: RubyGems.org | 購読したgemの一覧
   footer_about_html: RubyGems.orgはRubyコミュニティのgemのホスティングサービスです。すぐに<a href="%{publish_docs}">gemを公開</a>して<a
@@ -322,10 +245,6 @@ ja:
   form:
     optional: 省略できます
   form_disable_with: お待ちください……
-  helpers:
-    submit:
-      create: "%{model}を作成"
-      update: "%{model}を更新"
   hide: 非表示
   home:
     index:
@@ -343,16 +262,13 @@ ja:
         contribute: 貢献
         data: データ
         designed_by: 設計
-        discussion_forum: 議論
         docs: ドキュメント
         gems_served_by: gemの提供
         guides: ガイド
         help: ヘルプ
         hosted_by: ホスト
-        looking_for_maintainers: メンテナの募集
         monitored_by: 監視
         operated_by: 運営
-        optimized_by: 最適化
         policies: ポリシー
         releases: リリース
         resolved_with: DNS
@@ -362,7 +278,6 @@ ja:
         statistics: 統計
         status: 状態
         support_us: 支援
-        supported_by: 協賛
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           は以下から支援を受けています
@@ -374,16 +289,17 @@ ja:
         profile: プロフィール
         search_gem_html: gemを検索...
         settings: 設定
-      mfa_banner_html: "🎉 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
-        to blog post)！"
     subject:
-      subject_label:
-      subject_secondary_label:
-  locale_name: 日本語
+      subject_label: Details
+      subject_secondary_label: Additional details
+  mail:
+    api_key_created:
+      subject: New API key created for rubygems.org
+    api_key_revoked:
+      subject: One of your API keys was revoked on rubygems.org
   mailer:
     admin_manual:
       title: RubyGems.orgの管理者からのお知らせ
-    confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
     deletion_complete:
       body_html: "%{host}のアカウント削除申請が処理されました。%{sign_up}ページからいつでも再登録できます。"
@@ -396,7 +312,6 @@ ja:
       subtitle: すみません！
       title: 削除失敗
     email_confirmation:
-      confirmation_link: メールアドレスを確認する
       subtitle: あともう少しです！
       title: Eメールの確認
       welcome_message: "%{host}にようこそ! 以下のリンクからEメールを確認してください。"
@@ -411,6 +326,7 @@ ja:
       subject: "%{gem} gemが%{host}にプッシュされした"
       title: gemがプッシュされました
     gem_trusted_publisher_added:
+      subject: Trusted publisher added to %{gem} on RubyGems.org
       title: 信頼できる発行元が追加されました
     gem_yanked:
       subject: "%{gem} gemが%{host}からヤンクされました"
@@ -525,7 +441,6 @@ ja:
         class="t-link">復旧コード</a>を使えます。
       security_device: セキュリティ機器
       sign_in_with_webauthn_credential: セキュリティ機器で認証
-      verify_code: コードを検証
       webauthn_credential_note: Touch ID、YubiKeyなどのセキュリティ機器で認証してください。
     recovery:
       already_generated: 既に復旧コードを保存したはずです。
@@ -569,12 +484,12 @@ ja:
       title: Eメール通知
       update: 更新
     update:
-      success: Eメール通知設定が正常に更新されました。
+      update:
+        success: Success
   oidc:
     api_key_roles:
       create:
         success: OIDC APIキーのロールを作成しました
-      deleted: ロールが削除されました。
       destroy:
         success: OIDC APIキーのロールを削除しました
       edit:
@@ -584,21 +499,23 @@ ja:
         add_statement: ステートメントを追加
         remove_condition: 条件を削除
         remove_statement: ステートメントを削除
-      git_hub_actions_workflow:
-        a_gem: gem
-        configured_for_html: このOIDC APIキーのロールはGitHub Actionsから%{link_html}へプッシュできるように構成されています。
-        instructions_html: |
-          リリースするには、<a href="https://bundler.io/guides/creating_gem.html#releasing-the-gem" rel="noreferer">gemのバージョンを上げ</a>て（<code>rake release:source_control_push</code>を使って）GitHubへ新しいタグをプッシュしてください。
-          ワークフローは自動的にgemをビルドしてRubyGems.orgへプッシュします。
-        not_github: このOIDC APIキーのロールはGitHub Actions用に構成されていません。
-        not_push: このOIDC APIキーのロールはgemのプッシュができるように構成されていません。
-        title: OIDCでgemをプッシュするGitHub Actionsワークフロー
-        to_automate_html: 新しいタグがプッシュされたときの%{link_html}へのリリースを自動化するには、以下のワークフローをリポジトリに追加してください。
+      github_actions_workflow_view:
+        not_configured:
+          not_github: Not github
+          not_push: Not push
+        view_template:
+          a_gem: A gem
+          configured_for_html: Configured for html
+          instructions_html: Instructions html
+          title: Title
+          to_automate_html: To automate html
       index:
         api_key_roles: OIDC APIキーのロール
         new_role: APIキーのロールを作成
       new:
         title: 新しいOIDC APIキーのロール
+      redirect_for_deleted:
+        deleted: Deleted
       show:
         api_key_role_name: APIキーのロール%{name}
         automate_gh_actions_publishing: GitHub Actionsでgemの発表を自動化
@@ -610,49 +527,55 @@ ja:
       update:
         success: OIDC APIキーのロールが更新されました
     id_tokens:
-      index:
-        title: OIDC IDトークン
-      show:
-        title: OIDC IDトークン
+      index_view:
+        view_template:
+          title: Title
+      show_view:
+        view_template:
+          title: Title
     pending_trusted_publishers:
       create:
         success: 待機中の信頼できる発行元が作成されました
       destroy:
         success: 待機中の信頼できる発行元が削除されました
       index:
-        create: 作成
-        delete: 削除
-        description_html: |
-          待機中の信頼できる発行元を使うと、gemの最初のバージョンをプッシュする前に信頼できる発行元を構成できます。
-          信頼できる発行元を設定する方法についてより詳しくは、<a href="https://guides.rubygems.org/trusted-publishing/pushing-a-new-gem/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
         title: 待機中の信頼できる発行元
-        valid_for_html: "%{time_html}まで有効"
+      index_view:
+        publisher_section:
+          delete: Delete
+          valid_for_html: Valid for html
+        view_template:
+          create: Create
+          description_html: Description html
+          title: Title
       new:
         title: 新しい待機中の信頼できる発行元
+      new_view:
+        view_template:
+          title: Title
     providers:
-      index:
-        description_html: |-
-          以下はRubyGems.orgに構成されたOIDCプロバイダです。<br>
-          別のOIDCプロバイダを追加する必要があるときはサポートにお問い合わせください。
-        title: OIDCプロバイダ
-      show:
-        title: OIDCプロバイダ
+      index_view:
+        view_template:
+          description_html: Description html
+          title: Title
+      show_view:
+        view_template:
+          title: Title
     rubygem_trusted_publishers:
+      concerns:
+        title:
+          title_content:
+            subtitle_owner_html: Subtitle owner html
+            title: Title
       create:
         success: 信頼できる発行元が作成されました
       destroy:
         success: 信頼できる発行元が削除されました
-      index:
-        create: 作成
-        delete: 削除
-        description_html: |
-          信頼できる発行元を使うと、長く残る機密な認証情報を保管することなくCIからgemをプッシュできます。
-          信頼できる発行元を設定する方法についての詳しい情報は、<a href="https://guides.rubygems.org/trusted-publishing/" class="t-link">信頼できる発行元のドキュメント</a>を参照してください。
-        subtitle_owner_html: "%{gem_html}の信頼できる発行元"
-        title: 信頼できる発行元
-      new:
-        subtitle_owner_html: "%{gem_html}に信頼できる発行元を追加"
-        title: 新しい信頼できる発行元
+      index_view:
+        view_template:
+          create: Create
+          delete: Delete
+          description_html: Description html
     trusted_publisher:
       github_actions:
         environment_help_html: |
@@ -665,17 +588,21 @@ ja:
         workflow_filename_help_html: |-
           公開ワークフローのファイル名。<br>
           このファイルは上で構成されたリポジトリの<code>.github/workflows/</code>ディレクトリになければなりません。
-        workflow_repository_name_help_html:
-        workflow_repository_owner_help_html:
+        workflow_repository_name_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The name of the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
+        workflow_repository_owner_help_html: |
+          <strong>For <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a> only:</strong> The GitHub organization or username that owns the repository containing the reusable workflow file.<br>
+          Leave blank if the workflow is defined in the same repository as above (the common case).
       pending:
         rubygem_name_help_html: "（RubyGems.orgの）gemはこの発行元が使われたときに作られます"
       unsupported_type: サポートされていない信頼できる発行元の種類
-  or:
   organization_onboardings:
     confirm:
       success: 組織の立ち上げに成功しました！
   organizations:
     index:
+      create_new_organization: Create new organization
       no_organizations: どの組織のメンバーでもありません。
       title: 組織
     invitations:
@@ -688,8 +615,6 @@ ja:
     members:
       create:
         member_invited: メンバーが招待されました。
-        user_already_invited: ユーザーは既に組織に招待されています。
-        user_not_found: ユーザーが見つかりません。
       destroy:
         cannot_remove_self: 組織から自分自身を削除できません。
         member_removed: メンバーが正常に削除されました。
@@ -701,7 +626,6 @@ ja:
         invite: 招待
         pending: 保留
       new:
-        create: 作成
         handle: ハンドル名
         invite: 招待
         role: ロール
@@ -711,14 +635,15 @@ ja:
       update:
         member_updated: メンバーが正常に更新されました。
     show:
-      add_member: メンバーを招待
       gems: gem
       history: 履歴
       invite: 招待
       members: メンバー
       no_gems: まだgemがありません
       no_history: まだ履歴がありません
+      no_members: No members
       organization: 組織
+      pending: Pending
       transfer: 移動
   otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
   otp_missing: 多要素認証が有効化済みですがOTPのコードが与えられませんでした。入力の上再試行してください。
@@ -789,28 +714,36 @@ ja:
       subtitle: こんにちは、%{handle}！
       title: パスワードを変更する
     compromised_password_reset:
-      closing_html:
-      closing_text:
-      opening:
-      reassurance:
-      subject:
-      subtitle:
-      title:
+      closing_html: If you did not recently try to sign in to RubyGems.org, please
+        contact %{support_email} immediately.
+      closing_text: If you did not recently try to sign in to RubyGems.org, please
+        contact support@rubygems.org immediately.
+      opening: During your recent sign-in, we detected that your password appears
+        in a public data breach from another website.
+      reassurance: Your RubyGems.org account has not been compromised, but because
+        passwords are often reused across sites, we require you to change your password
+        to keep your account secure.
+      subject: 'Action required: Reset your %{host} password'
+      subtitle: Hi %{handle}!
+      title: PASSWORD RESET REQUIRED
   passwords:
     create:
-      failure_on_missing_email: Eメールは空にできません。
       success: 数分でEメールが届きます。メールにはパスワードを変更する手順が記載されています。
     edit:
-      compromised_explanation_html:
-      compromised_heading:
+      compromised_explanation_html: The password you used was found in a public data
+        breach from <strong>another website</strong>. Please choose a new, unique
+        password that you don't use elsewhere.
+      compromised_heading: Your password was found in a data breach
       strength:
-        fair:
-        strong:
-        too_short:
-        weak:
+        fair: Fair
+        strong: Strong
+        too_short: Too short
+        weak: Weak
       submit: このパスワードを保存する
       title: パスワードをリセット
       token_failure: URLをダブルチェックするか、パスワードリセットを再度試してみてください。
+    ensure_email_present:
+      failure_on_missing_email: Failure on missing email
     new:
       submit: パスワードをリセット
       title: パスワードを変更する
@@ -836,10 +769,6 @@ ja:
       subject: 新しいRubyGems.orgのポリシーを確認
       subtitle: こんにちは、%{handle}！
       title: ポリシー更新のお知らせ
-    policy_update_review_closed:
-      subject: RubyGems.orgの新しいポリシーの適合
-      subtitle: こんにちは、%{handle}！
-      title: ポリシー更新の確認を完了
   profiles:
     delete:
       confirm: 確定
@@ -847,7 +776,6 @@ ja:
       list_multi_owner: これらのgemへのアクセス権を喪失しますが、gemの他の所有者はアクセス権を持ち続けます。
       list_only_owner_html: プロフィールを削除した場合、これらのgemはヤンクされた状態になります。もしプロフィールの削除前に別の所有者を追加したい場合は、%{command_link}コマンドが使えます。
       title: プロフィールを削除
-      warning: プロフィールの削除は不可逆的な操作です。サポートに連絡しても取り消せません。ご注意ください。
     destroy:
       request_queued: アカウント削除処理は追って実行されます。申請が処理されたら確認のメールを送信します。
     edit:
@@ -867,16 +795,16 @@ ja:
     request_denied: このリクエストは拒否されました。パスワードを検証できませんでした。
     rubygem:
       owners_header: 所有者
-    security_events:
-      description_html: |-
-        このページにはあなたのアカウントに起こったセキュリティ事象が表示されます。
-        何か疑わしい活動を見かけたら、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
-      title: セキュリティ事象
+    security_events_view:
+      title_content:
+        title: Title
+      view_template:
+        description_html: Description html
     show:
-      edit_profile:
-      email_me:
-      gems:
-      no_gems:
+      edit_profile: Edit Profile
+      email_me: Email Me
+      gems: Gems
+      no_gems: This user has not pushed any gems yet.
       title: "%{username} のプロフィール"
     update:
       confirmation_mail_sent: 数分でEメールが届きます。メールには新しいEメールアドレスを確認する手順が含まれています。
@@ -884,24 +812,23 @@ ja:
   remove: 削除
   reverse_dependencies:
     index:
-      date_header:
-      downloads_count:
-      downloads_header:
-      gem_header:
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      gem_header: Gem
       no_reverse_dependencies: このgemは被依存関係がありません。
       subtitle: 以下のgemの最新版は%{name}を必要としています
       title: "%{name}の被依存関係"
-      version_header:
+      version_header: Version
     search:
       search_reverse_dependencies_html: 被依存関係のgemから検索...
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
-      gem_version_age: このバージョンがリリースされたのは
-      github_star:
-      latest_version_button:
+      github_star: Star
+      latest_version_button: Latest Version
       links:
-        analytics:
+        analytics: Analytics
         badge: バッジ
         bugs: バグトラッカー
         changelog: 変更履歴
@@ -925,7 +852,7 @@ ja:
         subscribe: 購読
         trusted_publishers: 信頼できる発行元
         unsubscribe: 購読を解除
-        verified:
+        verified: Verified link
         wiki: Wiki
       released_with_mfa: MFAで投稿されたバージョン
       required_ruby_version: 必要なRubyのバージョン
@@ -934,10 +861,7 @@ ja:
       versions_button:
         one:
         other:
-    dependencies:
-      header: "%{title}依存関係"
     index:
-      downloads: ダウンロード数
       title: gem
     release_info:
       authors_header: 作者
@@ -970,11 +894,9 @@ ja:
       requirements_header: 必須要件
       show_all_versions: 全てのバージョンを表示（全%{count}件）
       tabs:
-        contents:
-        dependencies:
-        gem_info:
-        label:
-        readme:
+        dependencies: Dependencies
+        gem_info: Gem info
+        label: Gem navigation
       versions_header: バージョン履歴
       yanked_notice: このバージョンはヤンクされ、直接のダウンロードや依存関係になっている可能性がある他のgemは利用できません。
     show_yanked:
@@ -1011,31 +933,28 @@ ja:
       month_update: 先月更新（%{count}件）
       subtitle_html: "<em>%{query}</em>の検索結果"
       suggestion: もしかして
-      title:
+      title: Search
       week_update: 先週更新（%{count}件）
       yanked: ヤンク済み（%{count}件）
   sessions:
     create:
       account_blocked: アカウントがrubygemsチームにより差し止められました。アカウントを復旧するにはsupport@rubygems.orgにEメールを送ってください。
+    ensure_not_blocked:
+      account_blocked: Account blocked
     new:
-      confirm:
       forgot_password: パスワードをお忘れですか？
       resend_confirmation: 確認メールを受け取っていませんか？
+      title: Title
     verify:
       confirm: 確定
       notice: パスワードを確認してお進みください。
-      title:
+      title: Confirm Password
   settings:
     edit:
-      account_header:
+      account_header: Account
       api_access:
-        confirm_reset: よろしいですか。この操作は取り消せません。
-        credentials_html: もしコマンドラインから%{gem_commands_link}を使いたい場合、%{gem_credentials_file}ファイルが必要になります。このファイルは以下のコマンドで再生成できます：
-        key_is_html: APIキーは%{key}です。
-        link_text: gemコマンド
         reset: APIキーをリセットする
         reset_all: 全てのスコープにあるAPIキーを削除
-        title: APIアクセス
       mfa:
         disable: 無効
         disabled: 無効
@@ -1045,7 +964,6 @@ ja:
         enabled_note: 多要素認証が有効化済みです。認証器上のOTPか有効な復旧コードの1つを入力して無効にしてください。
         go_settings: 新しい機器を登録
         level:
-          disabled: 無効
           title: MFAの水準
           ui_and_api: UIとAPI（推奨）
           ui_and_gem_signin: UIとgemのサインイン
@@ -1069,13 +987,12 @@ ja:
   stats:
     index:
       all_time_most_downloaded: 累計最多ダウンロード数
-      clickgems:
+      clickgems: View analytics on ClickGems
       title: 統計
       total_gems: gem総数
       total_users: ユーザー総数
   subtitle: コミュニティのgemホスティングサービス
   this_rubygem_could_not_be_found: お探しのrubygemは見つかりませんでした。
-  time_ago: "%{duration}前"
   title: RubyGems.org
   total_downloads: 累計ダウンロード数
   totps:
@@ -1087,7 +1004,6 @@ ja:
     incorrect_otp: OTPのコードが正しくありません。
     new:
       account: アカウント：%{account}
-      confirm: 復旧コードを安全に保持しました。
       enable: 有効
       key: キー：%{key}
       otp_prompt: 認証アプリ上の数値のコードを入力して続けてください。
@@ -1103,7 +1019,7 @@ ja:
       email_sent: 確認メールがEメールアドレスに送信されました。
     new:
       have_account: 既にアカウントをお持ちですか？
-      registration_disabled:
+      registration_disabled: New account registration has been temporarily disabled.
   verification_expired: 検証が期限切れです。もう一度検証してください。
   versions:
     index:
@@ -1116,34 +1032,37 @@ ja:
     version:
       yanked: ヤンク済み
   view_all: 全て表示
+  views:
+    pagination:
+      first_page: First page
+      last_page: Last page
+      next_page: Next page
+      previous_page: Previous page
   webauthn_credentials:
     callback:
       success: セキュリティ機器が正常に登録されました。
+    destroy:
+      webauthn_credential:
+        confirm_delete: Confirm delete
     form:
       new_device: 新しいセキュリティ機器を登録
       nickname: ニックネーム
       submit: 機器を登録
-    recovery:
-      continue: 続ける
-      notice_html: これらの復旧コードを<strong class="recovery__bold">コピー&amp;ペースト</strong>してください。セキュリティ機器を紛失した場合にこれらのコードを使ってログインできます。各コードは1度使えます。
-      saved: 復旧コードを保存したことを確認しました。
-      title: セキュリティ機器を正常に追加しました。
     webauthn_credential:
       confirm: この認証情報を削除してよろしいですか。
-      confirm_delete: 認証情報が削除されました
       delete: 削除
-      delete_failed: 認証情報を削除できませんでした
-      saved: セキュリティ機器が正常に作成されました
   webauthn_verifications:
+    authenticate:
+      no_port: No port
     expired_or_already_used: 使用されたリンク中のトークンは期限切れか既に使われています。
     failed_verification:
       close_browser: このブラウザを閉じて再試行してください。
       title: エラー - 検証が失敗しました
-    no_port: ポートが与えられていません。再試行してください。
     pending: セキュリティ機器の認証が保留中です。
     prompt:
       authenticate: 認証
       authenticating_as: 認証対象
+      no_port: No port
       no_webauthn_devices: 有効なセキュリティ機器がありません
       title: セキュリティ機器で認証
     successful_verification:
