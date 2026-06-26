@@ -6,7 +6,10 @@
   <%= render "dashboards/subject", user: current_user, current: :profile %>
 <% end %>
 
-<%= render CardComponent.new do %>
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title @title, icon: "settings" %>
+  <% end %>
   <div class="py-4">
     <%= render ButtonComponent.new(t(".new_role"), new_profile_oidc_api_key_role_path, method: "get") %>
   </div>

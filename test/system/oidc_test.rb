@@ -21,11 +21,11 @@ class OIDCTest < ApplicationSystemTestCase
     visit profile_oidc_providers_path
     verify_session
 
-    page.assert_selector "h1", text: "OIDC Providers"
+    page.assert_selector "h3", text: "OIDC Providers"
     page.assert_text(/displaying 1 provider/i)
     page.click_link "https://token.actions.githubusercontent.com"
 
-    page.assert_selector "h1", text: "OIDC Provider"
+    page.assert_selector "h3", text: "https://token.actions.githubusercontent.com"
     page.assert_text "https://token.actions.githubusercontent.com"
     page.assert_text "https://token.actions.githubusercontent.com/.well-known/jwks"
     page.assert_text(/Displaying 1 api key role/i)
@@ -38,21 +38,22 @@ class OIDCTest < ApplicationSystemTestCase
     visit profile_oidc_api_key_roles_path
     verify_session
 
-    page.assert_selector "h1", text: "OIDC API Key Roles"
+    page.assert_selector "h3", text: "OIDC API Key Roles"
     page.assert_text(/displaying 1 api key role/i)
     page.click_link @id_token.api_key_role.name
 
-    page.assert_selector "h1", text: "API Key Role #{@id_token.api_key_role.name}"
+    page.assert_selector "h3", text: "API Key Role #{@id_token.api_key_role.name}"
     page.assert_text @id_token.api_key_role.token
-    page.assert_text "Scopes\npush_rubygem"
-    page.assert_text "Gems\nAll Gems"
-    page.assert_text "Valid for\n30 minutes"
-    page.assert_text "Effect\nallow"
-    page.assert_text "Principal\nhttps://token.actions.githubusercontent.com"
-    page.assert_text "Conditions\nsub string_equals repo:segiddins/oidc-test:ref:refs/heads/main"
+    page.assert_text "SCOPES\npush_rubygem"
+    page.assert_text "GEMS\nAll Gems"
+    page.assert_text "VALID FOR\n30 minutes"
+    page.assert_text "EFFECT\nallow"
+    page.assert_text "PRINCIPAL\nhttps://token.actions.githubusercontent.com"
+    page.assert_text "CONDITIONS\nsub string_equals repo:segiddins/oidc-test:ref:refs/heads/main"
     page.assert_text(/Displaying 1 id token/i)
 
-    assert_link "View provider https://token.actions.githubusercontent.com", href: profile_oidc_provider_path(@provider)
+    assert_selector "form[action='#{profile_oidc_provider_path(@provider)}'] button",
+      text: "View provider https://token.actions.githubusercontent.com"
     assert_link @id_token.jti, href: profile_oidc_id_token_path(@id_token)
   end
 
@@ -61,11 +62,11 @@ class OIDCTest < ApplicationSystemTestCase
     visit profile_oidc_id_tokens_path
     verify_session
 
-    page.assert_selector "h1", text: "OIDC ID Tokens"
+    page.assert_selector "h3", text: "OIDC ID Tokens"
     page.assert_text(/displaying 1 id token/i)
     page.click_link @id_token.jti
 
-    page.assert_selector "h1", text: "OIDC ID Token"
+    page.assert_selector "h3", text: "OIDC ID Token"
     page.assert_text "CREATED AT\n#{@id_token.created_at.to_fs(:long)}"
     page.assert_text "EXPIRES AT\n#{@id_token.api_key.expires_at.to_fs(:long)}"
     page.assert_text "JWT ID\n#{@id_token.jti}"
@@ -87,7 +88,7 @@ class OIDCTest < ApplicationSystemTestCase
     click_link "OIDC: Create"
     verify_session
 
-    page.assert_selector "h1", text: "New OIDC API Key Role"
+    page.assert_selector "h3", text: "New OIDC API Key Role"
 
     assert_field "Name", with: "Push #{rubygem.name}"
     assert_select "OIDC provider", options: ["https://token.actions.githubusercontent.com"], selected: "https://token.actions.githubusercontent.com"
@@ -112,9 +113,9 @@ class OIDCTest < ApplicationSystemTestCase
 
     page.scroll_to page.find(id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_claim")
 
-    click_button "Create Api key role"
+    click_button "Create API Key Role"
 
-    page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
+    page.assert_selector "h3", text: "API Key Role Push #{rubygem.name}"
 
     role = OIDC::ApiKeyRole.where(name: "Push #{rubygem.name}", user: @user, provider: @provider).sole
 
@@ -145,9 +146,9 @@ class OIDCTest < ApplicationSystemTestCase
 
     click_button "Edit API Key Role"
     page.scroll_to :bottom
-    click_button "Update Api key role"
+    click_button "Edit API Key Role"
 
-    page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
+    page.assert_selector "h3", text: "API Key Role Push #{rubygem.name}"
 
     assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
 
@@ -174,7 +175,7 @@ class OIDCTest < ApplicationSystemTestCase
 
     page.assert_selector("button.form__remove_nested_button", text: "Remove condition", count: 3)
 
-    click_button "Update Api key role"
+    click_button "Edit API Key Role"
 
     page.assert_text "Access policy statements[1] conditions[1] claim unknown for the provider"
 
@@ -187,9 +188,9 @@ class OIDCTest < ApplicationSystemTestCase
     page.unselect rubygem.name, from: "Gem Scope"
     page.check "Yank rubygem"
 
-    click_button "Update Api key role"
+    click_button "Edit API Key Role"
 
-    page.assert_selector "h1", text: "API Key Role Push gems"
+    page.assert_selector "h3", text: "API Key Role Push gems"
 
     expected.merge!(
       "name" => "Push gems",
@@ -206,7 +207,7 @@ class OIDCTest < ApplicationSystemTestCase
             ]
           },
           {
-            "effect" => "allow",
+            "effect" => "deny",
             "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
             "conditions" => [
               { "operator" => "string_matches", "claim" => "sub", "value" => "repo:example/repo:ref:refs/tags/.*" },
@@ -233,7 +234,7 @@ class OIDCTest < ApplicationSystemTestCase
     click_link "OIDC: Create"
     verify_session
 
-    page.assert_selector "h1", text: "New OIDC API Key Role"
+    page.assert_selector "h3", text: "New OIDC API Key Role"
 
     # The page loads defaulting to Github Actions shaped config
     assert_field "Name", with: "Push #{rubygem.name}"
@@ -275,9 +276,9 @@ class OIDCTest < ApplicationSystemTestCase
     new_condition.fill_in "Claim", with: "pipeline_slug"
     new_condition.fill_in "Value", with: "example-pipeline"
 
-    click_button "Create Api key role"
+    click_button "Create API Key Role"
 
-    page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
+    page.assert_selector "h3", text: "API Key Role Push #{rubygem.name}"
 
     role = OIDC::ApiKeyRole.where(name: "Push #{rubygem.name}", user: @user, provider: provider_two).sole
 
@@ -309,15 +310,15 @@ class OIDCTest < ApplicationSystemTestCase
 
     click_button "Edit API Key Role"
 
-    page.assert_selector "h1", text: "Edit API Key Role"
+    page.assert_selector "h3", text: "Edit API Key Role"
 
     assert_select "OIDC provider", options: ["https://token.actions.githubusercontent.com", "https://agent.buildkite.com"], selected: "https://agent.buildkite.com"
 
     page.fill_in "Name", with: "Another Name"
 
-    click_button "Update Api key role"
+    click_button "Edit API Key Role"
 
-    page.assert_selector "h1", text: "API Key Role Another Name"
+    page.assert_selector "h3", text: "API Key Role Another Name"
   end
 
   test "creating rubygem trusted publishers" do
