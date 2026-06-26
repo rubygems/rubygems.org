@@ -9,7 +9,7 @@ class ProfilesController < ApplicationController
   before_action :verify_password, only: %i[update destroy]
   before_action :disable_cache, only: :edit
 
-  layout "subject", only: :show
+  layout "subject", only: %i[show edit update]
 
   def show
     @user = User.confirmed.find_by_slug!(params[:id])
@@ -24,6 +24,7 @@ class ProfilesController < ApplicationController
 
   def edit
     @user = current_user
+    add_breadcrumb(current_user.handle)
   end
 
   def update
