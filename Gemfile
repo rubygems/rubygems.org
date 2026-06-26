@@ -134,6 +134,7 @@ group :development do
   gem "letter_opener_web", "~> 3.0"
   gem "derailed_benchmarks", "~> 2.2"
   gem "memory_profiler", "~> 1.1"
+  gem "i18n-tasks"
 end
 
 group :test do
