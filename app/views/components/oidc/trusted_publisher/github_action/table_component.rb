@@ -4,21 +4,21 @@ class OIDC::TrustedPublisher::GitHubAction::TableComponent < ApplicationComponen
   prop :github_action, reader: :public
 
   def view_template
-    dl(class: "tw-flex tw-flex-col sm:tw-grid sm:tw-grid-cols-2 tw-items-baseline tw-gap-4 full-width overflow-wrap") do
-      dt(class: "description__heading ") { "GitHub Repository" }
-      dd { code { github_action.repository } }
+    dl(class: "mt-4 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2") do
+      detail_row("GitHub Repository", github_action.repository)
+      detail_row("Workflow Filename", github_action.workflow_filename)
+      detail_row("Workflow Repository", github_action.workflow_repository) if github_action.workflow_repository_owner.present?
+      detail_row("Environment", github_action.environment) if github_action.environment?
+    end
+  end
 
-      dt(class: "description__heading ") { "Workflow Filename" }
-      dd { code { github_action.workflow_filename } }
+  private
 
-      if github_action.workflow_repository_owner.present?
-        dt(class: "description__heading") { "Workflow Repository" }
-        dd { code { github_action.workflow_repository } }
-      end
-
-      if github_action.environment?
-        dt(class: "description__heading") { "Environment" }
-        dd { code { github_action.environment } }
+  def detail_row(label, value)
+    div do
+      dt(class: "text-b4 font-semibold text-neutral-800 dark:text-neutral-200") { label }
+      dd(class: "mt-0.5 break-all") do
+        code(class: "font-mono text-c4 text-neutral-900 dark:text-white") { value }
       end
     end
   end
