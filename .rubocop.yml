@@ -164,9 +164,6 @@ Style/ClassAndModuleChildren:
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb
 
-Capybara/ClickLinkOrButtonStyle:
-  Enabled: false
-
 Rails/ThreeStateBooleanColumn:
   Enabled: false
 
