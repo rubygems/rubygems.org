@@ -6,21 +6,21 @@ class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
   prop :api_key_roles, reader: :public
 
   def view_template
-    table(class: "t-body") do
+    table(class: "w-full text-left border-separate") do
       thead do
-        tr(class: "owners__row owners__header") do
+        tr do
           header { OIDC::ApiKeyRole.human_attribute_name(:name) }
           header { OIDC::ApiKeyRole.human_attribute_name(:token) }
           header { OIDC::ApiKeyRole.human_attribute_name(:issuer) }
         end
       end
 
-      tbody(class: "t-body") do
+      tbody do
         api_key_roles.each do |api_key_role|
-          tr(class: "owners__row") do
-            cell(title: "Name") { link_to api_key_role.name, profile_oidc_api_key_role_path(api_key_role.token) }
+          tr(class: "text-sm") do
+            cell(title: "Name") { link_to api_key_role.name, profile_oidc_api_key_role_path(api_key_role.token), class: "hover:underline" }
             cell(title: "Role Token") { code { api_key_role.token } }
-            cell(title: "Provider") { link_to api_key_role.provider.issuer, api_key_role.provider.issuer }
+            cell(title: "Provider") { link_to api_key_role.provider.issuer, api_key_role.provider.issuer, class: LINK_CLASSES }
           end
         end
       end
@@ -29,11 +29,13 @@ class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
 
   private
 
+  LINK_CLASSES = "text-orange-500 hover:underline dark:text-orange-400"
+
   def header(&)
-    th(class: "owners_cell", &)
+    th(&)
   end
 
   def cell(title:, &)
-    td(class: "owners__cell", data: { title: }, &)
+    td(data: { title: }, &)
   end
 end
