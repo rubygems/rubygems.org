@@ -1,6 +1,3 @@
-<% @title = t('.title') %>
-<% add_breadcrumb(@title) %>
-
 <% content_for :subject do %>
   <%= render "dashboards/subject", user: current_user, current: :settings %>
 <% end %>

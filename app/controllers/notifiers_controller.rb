@@ -9,6 +9,9 @@ class NotifiersController < ApplicationController
 
   def show
     @ownerships = current_user.ownerships.by_indexed_gem_name.includes(:rubygem)
+    @title = t(".title")
+    add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path)
+    add_breadcrumb(@title)
   end
 
   def update
