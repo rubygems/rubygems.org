@@ -41,9 +41,9 @@ class OIDC::TrustedPublisher::GitHubAction::TableComponentTest < ComponentTest
   end
 
   def assert_dl(*rows, node: page)
-    node.all("dl > *").each_slice(2) do |dt, dd|
-      assert_equal "dt", dt.tag_name
-      assert_equal "dd", dd.tag_name
+    node.all("dl > div").each do |row_node|
+      dt = row_node.find("dt")
+      dd = row_node.find("dd")
 
       row = rows.shift
 
