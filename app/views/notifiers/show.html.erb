@@ -27,7 +27,7 @@
                 <div class="space-y-2">
                   <%= label_tag(nil, nil, class: radio_label) do %>
                     <%= radio_button_tag "ownerships[#{ownership.id}][push]", :on, ownership.push_notifier?, class: radio_input %>
-                    <span><%= t('.on') %> <span class="text-b3 text-neutral-500 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
+                    <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
                   <% end %>
                   <%= label_tag(nil, nil, class: radio_label) do %>
                     <%= radio_button_tag "ownerships[#{ownership.id}][push]", :off, !ownership.push_notifier?, class: radio_input %>
@@ -41,7 +41,7 @@
                 <div class="space-y-3">
                   <%= label_tag(nil, nil, class: radio_label) do %>
                     <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :on, ownership.owner_notifier?, class: radio_input %>
-                    <span><%= t('.on') %> <span class="text-b3 text-neutral-500 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
+                    <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
                   <% end %>
                   <%= label_tag(nil, nil, class: radio_label) do %>
                     <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :off, !ownership.owner_notifier?, class: radio_input %>
