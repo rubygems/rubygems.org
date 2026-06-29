@@ -9,5 +9,8 @@ class TransparencyLog::Tlog
   def create_entry(transparency_log_event)
     entry = @entry_builder.build(transparency_log_event)
     @client.post(entry)
+  rescue TransparencyLog::Client::Error => e
+    Rails.logger.error(e.message)
+    raise
   end
 end

@@ -8,33 +8,23 @@ class TransparencyLog::EntryBuilderTest < ActiveSupport::TestCase
     @entry = TransparencyLog::EntryBuilder.new.build(@transparency_log_event)
   end
 
-  should "build a hashedrekord entry" do
-    assert @entry.key?("hashedRekordRequestV002")
-
-    hashed_rekord = @entry["hashedRekordRequestV002"]
-
+  test "build the expected hashedrekord structure" do
     assert_equal(
-      @transparency_log_event.encoded_payload_digest,
-      hashed_rekord["digest"]
+      {
+        "hashedRekordRequestV002" => {
+          "digest" => @transparency_log_event.encoded_payload_digest,
+          "signature" => {
+            "content" => @transparency_log_event.encoded_signature,
+            "verifier" => {
+              "publicKey" => {
+                "rawBytes" => @transparency_log_event.encoded_public_key_der
+              },
+              "keyDetails" => TransparencyLog::EntryBuilder::KEY_DETAILS
+            }
+          }
+        }
+      },
+      @entry
     )
-
-    assert_equal(
-      "PKIX_ECDSA_P256_SHA_256",
-      hashed_rekord.dig("signature", "verifier", "keyDetails")
-    )
-  end
-
-  should "include the public key verifier" do
-    raw_bytes = Base64.decode64(
-      @entry.dig(
-        "hashedRekordRequestV002",
-        "signature",
-        "verifier",
-        "publicKey",
-        "rawBytes"
-      )
-    )
-
-    assert_equal @transparency_log_event.public_key_der, raw_bytes
   end
 end

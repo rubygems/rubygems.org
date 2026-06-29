@@ -5,6 +5,8 @@ require "json"
 require "uri"
 
 class TransparencyLog::Client
+  class Error < StandardError; end
+
   ENTRIES_PATH = "/api/v2/log/entries"
 
   def initialize(url)
@@ -14,11 +16,15 @@ class TransparencyLog::Client
   end
 
   def post(entry)
-    @http.post(
+    response = @http.post(
       ENTRIES_PATH,
       JSON.dump(entry),
       headers
     )
+
+    raise Error, "Request failed (#{response.code})" unless response.is_a?(Net::HTTPSuccess)
+
+    JSON.parse(response.body)
   end
 
   private
