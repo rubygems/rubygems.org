@@ -2,15 +2,12 @@
 
 class TransparencyLog::Tlog
   def initialize
-    pem = ENV.fetch("TRANSPARENCY_LOG_PRIVATE_KEY").gsub("\\n", "\n")
-    passphrase = ENV.fetch("TRANSPARENCY_LOG_PRIVATE_KEY_PASSPHRASE", nil)
-
-    @entry_builder = TransparencyLog::EntryBuilder.new(OpenSSL::PKey.read(pem, passphrase))
+    @entry_builder = TransparencyLog::EntryBuilder.new
     @client = TransparencyLog::Client.new(ENV.fetch("TRANSPARENCY_LOG_REKOR_URL"))
   end
 
-  def create_entry(json_payload)
-    entry = @entry_builder.build(json_payload)
+  def create_entry(transparency_log_event)
+    entry = @entry_builder.build(transparency_log_event)
     @client.post(entry)
   end
 end

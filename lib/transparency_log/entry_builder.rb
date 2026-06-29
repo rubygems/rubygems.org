@@ -7,26 +7,15 @@ require "openssl"
 class TransparencyLog::EntryBuilder
   KEY_DETAILS = "PKIX_ECDSA_P256_SHA_256"
 
-  def initialize(private_key)
-    @private_key = private_key
-  end
-
-  def build(json_payload)
-    signature = @private_key.sign(
-      OpenSSL::Digest.new("SHA256"),
-      json_payload
-    )
-
+  def build(transparency_log_event)
     {
       "hashedRekordRequestV002" => {
-        "digest" => Base64.strict_encode64(
-          Digest::SHA256.digest(json_payload)
-        ),
+        "digest" => transparency_log_event.encoded_payload_digest,
         "signature" => {
-          "content" => Base64.strict_encode64(signature),
+          "content" => transparency_log_event.encoded_signature,
           "verifier" => {
             "publicKey" => {
-              "rawBytes" => Base64.strict_encode64(@private_key.public_to_der)
+              "rawBytes" => transparency_log_event.encoded_public_key_der
             },
             "keyDetails" => KEY_DETAILS
           }
