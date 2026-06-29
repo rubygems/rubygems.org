@@ -485,6 +485,77 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "abc-1.1.1.gem", @version.gem_file_name
     end
 
+    context "deriving ruby ABI" do
+      should "set ruby_abi when required_ruby_version targets a single Ruby minor version" do
+        version = create(:version, required_ruby_version: "~> 3.2.0")
+
+        assert_equal("3.2", version.ruby_abi)
+      end
+
+      should "not set ruby_abi when required_ruby_version is broad" do
+        version = create(:version, required_ruby_version: ">= 3.2")
+
+        assert_nil(version.ruby_abi)
+      end
+
+      should "only set ruby_abi for clean three-segment requirements" do
+        version = create(:version, required_ruby_version: "~> 3.2.0.0")
+
+        assert_nil(version.ruby_abi)
+      end
+
+      should "not set ruby_abi when required_ruby_version has multiple requirements" do
+        version = create(:version, required_ruby_version: ">= 3.2, < 3.4")
+
+        assert_nil(version.ruby_abi)
+      end
+
+      should "not set ruby_abi when required_ruby_version is malformed" do
+        version = build(:version, required_ruby_version: "not a requirement")
+
+        assert_nothing_raised { version.valid? }
+        assert_nil(version.ruby_abi)
+        assert_includes(version.errors[:required_ruby_version], "must be list of valid requirements")
+      end
+
+      should "not set ruby_abi when required_ruby_version indicates multiple Ruby ABIs" do
+        version = create(:version, required_ruby_version: "~> 3.2")
+
+        assert_nil(version.ruby_abi)
+      end
+
+      should "not set ruby_abi when required_ruby_version is blank" do
+        version = create(:version, required_ruby_version: "")
+
+        assert_nil(version.ruby_abi)
+      end
+
+      should "not set ruby_abi for patch-specific pessimistic requirements" do
+        version = create(:version, required_ruby_version: "~> 3.2.1")
+
+        assert_nil(version.ruby_abi)
+      end
+
+      should "recalculate ruby_abi when required_ruby_version is updated" do
+        version = create(:version, required_ruby_version: ">= 3.2.0")
+
+        assert_nil(version.ruby_abi)
+
+        version.update!(required_ruby_version: "~> 3.2.0")
+
+        assert_equal("3.2", version.reload.ruby_abi)
+      end
+
+      should "not recalculate ruby_abi when required_ruby_version is unchanged" do
+        version = create(:version, required_ruby_version: "~> 3.2.0")
+        version.update_column(:ruby_abi, "manually-set")
+
+        version.update!(summary: "Updated summary")
+
+        assert_equal("manually-set", version.reload.ruby_abi)
+      end
+    end
+
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
         @version.rubygem.find_version!(number: "some stupid version 399", platform: @version.platform)
