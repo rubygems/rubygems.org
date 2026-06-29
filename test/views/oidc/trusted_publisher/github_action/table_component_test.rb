@@ -41,6 +41,7 @@ class OIDC::TrustedPublisher::GitHubAction::TableComponentTest < ComponentTest
   end
 
   def assert_dl(*rows, node: page)
+    # rubocop:disable Rails/FindEach
     node.all("dl > div").each do |row_node|
       dt = row_node.find("dt")
       dd = row_node.find("dd")
@@ -50,6 +51,7 @@ class OIDC::TrustedPublisher::GitHubAction::TableComponentTest < ComponentTest
       flunk "Unexpected row: #{dt.text} => #{dd.text}" unless row
       row[dt, dd]
     end
+    # rubocop:enable Rails/FindEach
 
     assert_empty rows
   end
