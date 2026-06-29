@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_17_144510) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_29_112747) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -713,6 +713,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_144510) do
     t.string "required_ruby_version"
     t.string "required_rubygems_version", limit: 255
     t.text "requirements"
+    t.string "ruby_abi"
     t.integer "rubygem_id"
     t.string "sha256"
     t.integer "size"
