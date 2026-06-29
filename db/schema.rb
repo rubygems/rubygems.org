@@ -713,6 +713,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_061553) do
     t.string "required_ruby_version"
     t.string "required_rubygems_version", limit: 255
     t.text "requirements"
+    t.string "ruby_abi"
     t.integer "rubygem_id"
     t.string "sha256"
     t.integer "size"
