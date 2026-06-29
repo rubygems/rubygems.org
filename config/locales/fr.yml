@@ -245,10 +245,11 @@ fr:
       taken: Taken
   feed_latest: RubyGems.org | Derniers Gems
   feed_subscribed: RubyGems.org | Gems abonnés
-  footer_about_html: RubyGems.org est le service d&rsquo;hébergement de la communauté
-    Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir
-    et trouver des informations sur les gems disponibles. Contribuez et améliorez
-    ce site avec nous !
+  footer_about_html: RubyGems.org est le service d&rsquo;hébergement de gems de la
+    communauté Ruby. <a href="%{publish_docs}">Publiez vos gems</a> et <a href="%{install_docs}">installez-les</a>
+    instantanément. Utilisez <a href="%{api_docs}">l'API</a> pour en savoir plus sur
+    les <a href="%{gem_list}">gems disponibles</a>. <a href="%{contributing_docs}">Devenez
+    contributeur</a> et améliorez le site vous-même.
   footer_sponsors_html: RubyGems.org est rendu possible grâce à un partenariat avec
     la communauté Ruby au sens large. <a href="https://www.fastly.com/">Fastly</a>
     fournisseur de bande passante et du support CDN, <a href="https://www.rubycentral.org/">Ruby
@@ -315,31 +316,30 @@ fr:
   mailer:
     admin_manual:
       title: MESSAGE FROM RUBYGEMS.ORG ADMINS
-    confirmation_subject: Veuillez confirmer votre adresse email pour RubyGems.org
+    confirmation_subject: Veuillez confirmer votre adresse email pour %{host}
     deletion_complete:
-      body_html: Votre demande de suppression de compte sur RubyGems.org a bien été
-        prise en compte. Vous pouvez toujours créer un nouveau compte sur la page
-        %{sign_up}
-      subject: Votre compte a bien été supprimé de RubyGems.org
+      body_html: Votre demande de suppression de compte sur %{host} a bien été prise
+        en compte. Vous pouvez toujours créer un nouveau compte sur la page %{sign_up}
+      subject: Votre compte a bien été supprimé de %{host}
       subtitle: Bye!
       title: DELETION COMPLETE
     deletion_failed:
-      body_html: Vous avez effectué une demande de suppression de compte sur RubyGems.org.
+      body_html: Vous avez effectué une demande de suppression de compte sur %{host}.
         Malheureusement, votre demande n'a pu aboutir. Veuillez réessayer plus tard
         ou nous %{contact} si le problème subsiste.
-      subject: Votre demande de suppression de compte sur RubyGems.org a échoué
+      subject: Votre demande de suppression de compte sur %{host} a échoué
       subtitle: Sorry!
       title: DELETION FAILED
     email_confirmation:
       subtitle: Almost done!
       title: EMAIL CONFIRMATION
-      welcome_message: Bienvenue sur RubyGems.org! Veuillez cliquer sur le lien ci-dessous
+      welcome_message: Bienvenue sur %{host}! Veuillez cliquer sur le lien ci-dessous
         pour vérifier votre adresse email.
     email_reset:
       subtitle: Hi %{handle}!
       title: EMAIL RESET
-      visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org.
-        Veuillez suivre l'URL suivant pour réactiver votre compte.
+      visit_link_instructions: Vous avez changé d'adresse email sur %{host}. Veuillez
+        suivre l'URL suivant pour réactiver votre compte.
     email_reset_update:
       subject: You have requested email address update on %{host}
       title: EMAIL UPDATE REQUESTED

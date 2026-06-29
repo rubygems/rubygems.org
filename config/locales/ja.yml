@@ -1027,7 +1027,7 @@ ja:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。
       title: "%{name}の全バージョン履歴"
       versions_since:
-        one: "%{since}からの1バージョン"
+        one: "%{since}からの%{count}バージョン"
         other: "%{since}からの%{count}バージョン"
     version:
       yanked: ヤンク済み

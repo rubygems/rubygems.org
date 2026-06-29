@@ -371,13 +371,13 @@ es:
       subject_others: El usuario %{owner_handle} ha sido añadido/a como propietario/a
         de la gema %{gem}
       subject_self: Has sido añadido/a como propietario/a de la gema %{gem}
-      subtitle: "¡Hola %{handle}!"
+      subtitle: "¡Hola %{user_handle}!"
       title: PROPIETARIO AÑADIDO
     owner_removed:
       body_html: Has sido eliminado como propietario/a de la gema <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         en %{host} por <b>%{remover}</b>.
       subject: Has sido eliminado como propietario/a de la gema %{gem}
-      subtitle: "¡Hola %{handle}!"
+      subtitle: "¡Hola %{user_handle}!"
       title: PROPIETARIO ELIMINADO
     owner_updated:
       body_html: Your role was updated to %{role} for the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>

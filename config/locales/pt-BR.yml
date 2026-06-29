@@ -245,9 +245,10 @@ pt-BR:
   feed_latest: RubyGems.org | Últimas Gems
   feed_subscribed: RubyGems.org | Gems do seu Feed
   footer_about_html: RubyGems.org é o serviço de hospedagem de gems da comunidade
-    Ruby. Publique e instale suas gems instantaneamente. Use a API para interagir
-    e encontrar mais informações sobre gems disponíveis. Torne-se um contribuidor
-    e melhore o site com suas mudanças.
+    Ruby. <a href="%{publish_docs}">Publique</a> e <a href="%{install_docs}">instale</a>
+    suas gems instantaneamente. Use <a href="%{api_docs}">a API</a> para encontrar
+    mais informações sobre as <a href="%{gem_list}">gems disponíveis</a>. <a href="%{contributing_docs}">Torne-se
+    um contribuidor</a> e melhore o site você mesmo.
   footer_sponsors_html: O RubyGems.org só é possível através da nossa parceria com
     a grande comunidade Ruby. <a href="https://www.fastly.com/">Fastly</a> fornece
     uma largura de banda (bandwidth) e suporte a CDN, <a href="https://www.rubycentral.org/">Ruby
@@ -314,11 +315,11 @@ pt-BR:
     admin_manual:
       title: MESSAGE FROM RUBYGEMS.ORG ADMINS
     confirmation_subject: Por favor, confirme seu endereço de email para se cadastrar
-      no RubyGems.org
+      no %{host}
     deletion_complete:
-      body_html: Sua solicitação de exclusão da sua conta do rubygems.org foi concluída.
+      body_html: Sua solicitação de exclusão da sua conta do %{host} foi concluída.
         Você pode criar outra na página %{sign_up}.
-      subject: Sua conta do rubygems.org foi deletada com sucesso.
+      subject: Sua conta do %{host} foi deletada com sucesso.
       subtitle: Tchau!
       title: EXCLUSÃO COMPLETA
     deletion_failed:
@@ -331,13 +332,13 @@ pt-BR:
     email_confirmation:
       subtitle: Quase pronto!
       title: EMAIL DE CONFIRMAÇÃO
-      welcome_message: Bem-vindo ao RubyGems.org! Visite o link abaixo para confirmar
-        seu endereço de email.
+      welcome_message: Bem-vindo ao %{host}! Visite o link abaixo para confirmar seu
+        endereço de email.
     email_reset:
       subtitle: Olá, %{handle}!
       title: RESETAR ENDEREÇO DE EMAIL
-      visit_link_instructions: Você alterou seu endereço de email do RubyGems.org.
-        Por favor acesse a seguinte url para reativar sua conta.
+      visit_link_instructions: Você alterou seu endereço de email do %{host}. Por
+        favor acesse a seguinte url para reativar sua conta.
     email_reset_update:
       subject: You have requested email address update on %{host}
       title: EMAIL UPDATE REQUESTED

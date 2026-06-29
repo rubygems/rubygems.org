@@ -247,8 +247,8 @@ nl:
   footer_about_html: RubyGems.org is de gem hosting service van de Ruby community.
     <a href="%{publish_docs}">Publiceer</a> en <a href="%{install_docs}">installeer</a>
     je gems direct. Gebruik <a href="%{api_docs}">de API</a> om meer informatie over
-    beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a>
-    en verbeter de site met jouw aanpassingen.
+    <a href="%{gem_list}">beschikbare gems</a> te vinden. <a href="%{contributing_docs}">Word
+    een deelnemer</a> en verbeter de site met jouw aanpassingen.
   footer_sponsors_html: The RubyGems.org website and service are maintained and operated
     by Ruby Central’s <a href="https://rubycentral.org/open-source/">Open Source Program</a>
     and the RubyGems team. It is funded by the greater Ruby community through support
