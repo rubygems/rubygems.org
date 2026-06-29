@@ -18,6 +18,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
+  before_validation :set_ruby_abi, if: :required_ruby_version_changed?
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
   before_save :create_link_verifications, if: :metadata_changed?
@@ -49,6 +50,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
   validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
+  validates :ruby_abi, format: { with: /\A\d+\.\d+\z/ }, allow_nil: true
 
   validates :number, :platform, :gem_platform, :full_name, :gem_full_name, :canonical_number,
     name_format: { requires_letter: false },
@@ -455,6 +457,33 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   private
+
+  def set_ruby_abi
+    self.ruby_abi = derive_ruby_abi
+  end
+
+  def derive_ruby_abi
+    return if required_ruby_version.blank?
+
+    requirement = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/))
+    requirements = requirement.requirements
+
+    return unless requirements.one?
+
+    operator, version = requirements.first
+    return unless operator == "~>"
+
+    segments = version.segments
+    return unless segments.length == 3
+
+    patch = segments[2]
+    return unless patch.is_a?(Integer)
+    return unless patch.zero?
+
+    "#{segments[0]}.#{segments[1]}"
+  rescue Gem::Requirement::BadRequirementError
+    nil
+  end
 
   def update_prerelease
     self[:prerelease] = prerelease
