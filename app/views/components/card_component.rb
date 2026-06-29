@@ -67,6 +67,10 @@ class CardComponent < ApplicationComponent
     end
   end
 
+  def sub_heading_classes
+    "text-b2 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200"
+  end
+
   private
 
   TITLE_CLASSES = "flex items-center text-lg space-x-2"
