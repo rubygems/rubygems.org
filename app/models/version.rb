@@ -20,9 +20,9 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
+  before_validation :set_ruby_abi, if: :required_ruby_version_changed?
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
-  before_validation :set_ruby_abi, if: :required_ruby_version_changed?
   before_save :create_link_verifications, if: :metadata_changed?
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
