@@ -1130,7 +1130,7 @@ en:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       title: All versions of %{name}
       versions_since:
-        one: 1 version since %{since}
+        one: "%{count} version since %{since}"
         other: "%{count} versions since %{since}"
     version:
       yanked: yanked

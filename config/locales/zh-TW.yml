@@ -306,19 +306,18 @@ zh-TW:
     confirmation_subject: "%{host} 電子郵件地址確認"
     deletion_complete:
       body_html: 您在 %{host} 的帳號刪除請求已處理完畢。您隨時可以透過 %{sign_up} 頁面建立新帳號。
-      subject: 您在 rubygems.org 上的帳號已被刪除
+      subject: 您在 %{host} 上的帳號已被刪除
       subtitle: 掰掰！
       title: 刪除完成
     deletion_failed:
-      body_html: 您曾在 rubygems.org 送出帳號刪除的請求。很遺憾，我們無法處理您的請求，請稍後再試。若無法解決，請 %{contact}
-        我們。
-      subject: 您在 rubygems.org 上的帳號刪除請求失敗
+      body_html: 您曾在 %{host} 送出帳號刪除的請求。很遺憾，我們無法處理您的請求，請稍後再試。若無法解決，請 %{contact} 我們。
+      subject: 您在 %{host} 上的帳號刪除請求失敗
       subtitle: 抱歉！
       title: 刪除失敗
     email_confirmation:
       subtitle: 就快完成了！
       title: 電子郵件地址確認
-      welcome_message: 歡迎來到 RubyGems.org！點擊下方的連結來驗證您的電子郵件地址。
+      welcome_message: 歡迎來到 %{host}！點擊下方的連結來驗證您的電子郵件地址。
     email_reset:
       subtitle: 嗨 %{handle}！
       title: 電子郵件地址重設
@@ -327,19 +326,19 @@ zh-TW:
       subject: 您已在 %{host} 請求電子郵件地址更新
       title: 已請求電子郵件地址更新
     gem_pushed:
-      subject: Gem %{gem} 已推送至 RubyGems.org
+      subject: Gem %{gem} 已推送至 %{host}
       title: Gem 已推送
     gem_trusted_publisher_added:
       subject: Trusted publisher added to %{gem} on RubyGems.org
       title: TRUSTED PUBLISHER ADDED
     gem_yanked:
-      subject: Gem %{gem} 已從 RubyGems.org 移除
+      subject: Gem %{gem} 已從 %{host} 移除
       title: Gem 已移除
     link_expiration_explanation_html: 請注意，此連結將在 3 小時後過期。您可以前往<a href='https://rubygems.org/email_confirmations/new'>確認信</a>頁面要求傳送新連結。
     notifiers_changed:
       off_html: "<b>關</b>"
       'on': 開
-      subject: 您已更改 RubyGems.org 的電子郵件通知設定
+      subject: 您已更改 %{host} 的電子郵件通知設定
       subtitle: 嗨 %{handle}
       title: 電子郵件通知
     owner_added:
@@ -372,11 +371,11 @@ zh-TW:
       link_expiration_explanation_html: Please note that this link is valid for only
         %{expiry_hours}. You can resend confirmation mail from the <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         gem page after sign in.
-      subject: 請確認 RubyGems.org 上 %{gem} Gem 的所有權
+      subject: 請確認 %{host} 上 %{gem} Gem 的所有權
       subtitle: 嗨 %{handle}！
       title: 所有權確認
     reset_api_key:
-      subject: RubyGems.org 上的 API 金鑰遭重設
+      subject: "%{host} 上的 API 金鑰遭重設"
       subtitle: 嗨 %{handle}
       title: API 金鑰重設
     totp_disabled:
@@ -396,7 +395,7 @@ zh-TW:
       gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
       global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
       global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
-      subject: 您在 RubyGems.org 上的 Webhook 遭到刪除
+      subject: 您在 %{host} 上的 Webhook 遭到刪除
       subtitle: 嗨 %{handle}！
       title: Webhook 遭刪除
     web_hook_disabled:
@@ -413,7 +412,7 @@ zh-TW:
       gem_text: 之前這個 Webhook 會在 %{gem} 被推送的時候被呼叫。
       global_html: 之前這個 Webhook 會在<em>任何</em> Gem 被推送的時候被呼叫。
       global_text: 之前這個 Webhook 會在任何 Gem 被推送的時候被呼叫。
-      subject: 您在 RubyGems.org 上的 Webhook 遭到停用
+      subject: 您在 %{host} 上的 Webhook 遭到停用
       subtitle: 嗨 %{handle}！
       title: Webhook 遭停用
     webauthn_credential_created:

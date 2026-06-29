@@ -302,57 +302,56 @@ zh-CN:
   mailer:
     admin_manual:
       title: MESSAGE FROM RUBYGEMS.ORG ADMINS
-    confirmation_subject: 请确认您的邮箱地址
+    confirmation_subject: 请确认您在 %{host} 上的邮箱地址
     deletion_complete:
-      body_html: 您从 RubyGems.org 中删除账户的请求已经被处理。您随时可以使用我们的 %{sign_up} 页面注册新的账号。
-      subject: 您的账户已经从 RubyGems.org 中删除
+      body_html: 您从 %{host} 中删除账户的请求已经被处理。您随时可以使用我们的 %{sign_up} 页面注册新的账号。
+      subject: 您的账户已经从 %{host} 中删除
       subtitle: 拜拜！
       title: 删除完成
     deletion_failed:
-      body_html: 您已请求在 RubyGems.org 中删除账户。很遗憾，我们无法处理您的请求，请稍后重试。如果问题依然存在，请 %{contact}
-        我们。
-      subject: 您在 RubyGems.org 上关于删除账户的请求失败了
+      body_html: 您已请求在 %{host} 中删除账户。很遗憾，我们无法处理您的请求，请稍后重试。如果问题依然存在，请 %{contact} 我们。
+      subject: 您在 %{host} 上关于删除账户的请求失败了
       subtitle: 抱歉！
       title: 删除失败
     email_confirmation:
       subtitle: 即将完成！
       title: 邮箱确认
-      welcome_message: 欢迎来到 RubyGems.org！请点击下面的链接来验证您的邮箱。
+      welcome_message: 欢迎来到 %{host}！请点击下面的链接来验证您的邮箱。
     email_reset:
       subtitle: 你好啊，%{handle}！
       title: 邮箱重置
-      visit_link_instructions: 您在 RubyGems.org 上更改了您的邮箱地址，请点击以下链接重新激活您的帐户。
+      visit_link_instructions: 您在 %{host} 上更改了您的邮箱地址，请点击以下链接重新激活您的帐户。
     email_reset_update:
-      subject: 您已请求在 RubyGems.org 上进行邮箱地址变更
+      subject: 您已请求在 %{host} 上进行邮箱地址变更
       title: 邮箱更新请求已发送
     gem_pushed:
-      subject: Gem %{gem} 已被推送至 RubyGems.org
+      subject: Gem %{gem} 已被推送至 %{host}
       title: Gem 推送
     gem_trusted_publisher_added:
       subject: Trusted publisher added to %{gem} on RubyGems.org
       title: TRUSTED PUBLISHER ADDED
     gem_yanked:
-      subject: Gem %{gem} 已从 RubyGems.org 中撤回
+      subject: Gem %{gem} 已从 %{host} 中撤回
       title: Gem 撤回
     link_expiration_explanation_html: 请记住，此链接仅在 3 小时内有效。您可以用<a href='https://rubygems.org/email_confirmations/new'>重新发送确认邮件</a>页面来请求获得一个新链接。
     notifiers_changed:
       off_html: "<b>关闭</b"
       'on': 开启
-      subject: 您改变了您在 RubyGems.org 上的邮件通知设置
+      subject: 您改变了您在 %{host} 上的邮件通知设置
       subtitle: 你好啊，%{handle}！
       title: 邮件通知
     owner_added:
       body_others_html: <b>%{owner_handle}</b> 由 <b>%{authorizer}</b> 添加为 Gem <strong><a
         href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 的所有者之一。您收到此通知是因为您是
         %{gem} 的所有者之一。
-      body_self_html: <b>您</b> 被添加为 RubyGems.org 上 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+      body_self_html: <b>您</b> 被添加为 %{host} 上 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         的所有者之一。
       subject_others: 用户 %{owner_handle} 已被添加为 Gem %{gem} 的所有者之一
       subject_self: 您已被添加为 Gem %{gem} 的所有者之一
       subtitle: 你好啊，%{user_handle}！
       title: 新增所有者
     owner_removed:
-      body_html: <b>您</b>在 RubyGems.org 上对 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
+      body_html: <b>您</b>在 %{host} 上对 Gem <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         的所有者身份已被 <b>%{remover}</b> 移除。
       subject: 您对 Gem %{gem} 的所有者身份已被移除
       subtitle: 你好，%{user_handle}！
@@ -370,31 +369,31 @@ zh-CN:
       body_text: 您已被 %{authorizer} 添加为 Gem %{gem} 的所有者之一。请点击下方的链接来确认您的所有权。
       link_expiration_explanation_html: 请注意，此链接仅在 %{expiry_hours} 内有效。您可以在登录后从 Gem
         <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> 页面重新发送确认邮件。
-      subject: 请确认在 RubyGems.org 上对 Gem %{gem} 的所有权
+      subject: 请确认在 %{host} 上对 Gem %{gem} 的所有权
       subtitle: 你好，%{handle}！
       title: 所有权确认
     reset_api_key:
-      subject: RubyGems.org API 密钥已重置
+      subject: "%{host} API 密钥已重置"
       subtitle: 你好，%{handle}！
       title: API 密钥重置
     totp_disabled:
-      subject: 认证 App 已在 RubyGems.org 上禁用
+      subject: 认证 App 已在 %{host} 上禁用
       subtitle: 你好，%{handle}！
       title: 认证 App 已禁用
     totp_enabled:
-      subject: 认证 App 已在 RubyGems.org 上启用
+      subject: 认证 App 已在 %{host} 上启用
       subtitle: 你好啊，%{handle}！
       title: 认证 App 已启用
     web_hook_deleted:
       body_html: 您 <code>POST<code> 到 <a href="%{url}"><code>%{url}</code></a> 的 Webhook
         在经过 %{failures} 次失败后已被删除。
-      body_text: 您 POST 到 ${url} 的 Webhook 在经过 %{failures} 次失败后已被删除。
+      body_text: 您 POST 到 %{url} 的 Webhook 在经过 %{failures} 次失败后已被删除。
       gem_html: 这个 Webhook 在 <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong>
         被推送时被调用。
       gem_text: 这个 Webhook 在 %{gem} 被推送时被调用。
       global_html: 这个 Webhook 曾在<em>任何</em> Gem 被推送时被调用。
       global_text: 这个 Webhook 曾在任何 Gem 被推送时被调用。
-      subject: 您的 RubyGems.org Webhook 已被删除
+      subject: 您的 %{host} Webhook 已被删除
       subtitle: 你好，%{handle}！
       title: 删除 Webhook
     web_hook_disabled:
@@ -411,15 +410,15 @@ zh-CN:
       gem_text: 这个 Webhook 在 %{gem} 被推送时被调用。
       global_html: 这个 Webhook 曾在<em>任何</em> Gem 被推送时被调用。
       global_text: 这个 Webhook 曾在任何 Gem 被推送时被调用。
-      subject: 您的 RubyGems.org Webhook 已被停用
+      subject: 您的 %{host} Webhook 已被停用
       subtitle: 你好啊，%{handle}！
       title: 停用 Webhook
     webauthn_credential_created:
-      subject: 新的安全设备已添加至 RubyGems.org
+      subject: 新的安全设备已添加至 %{host}
       subtitle: 你好啊，%{handle}！
       title: 安全设备已添加
     webauthn_credential_removed:
-      subject: 某个安全设备已从 RubyGems.org 中移除
+      subject: 某个安全设备已从 %{host} 中移除
       subtitle: 你好，%{handle}！
       title: 安全设备已移除
   multifactor_authentication: 多因素验证（MFA）

@@ -327,7 +327,7 @@ de:
     deletion_failed:
       body_html: Sie hatten eine Kontolöschung auf %{host} beantragt. Leider konnten
         wir Ihren Antrag nicht bearbeiten. Bitte versuchen Sie es nach einiger Zeit
-        erneut oder kontaktieren Sie uns, wenn das Problem weiterhin besteht.
+        erneut oder %{contact} Sie uns, wenn das Problem weiterhin besteht.
       subject: Ihr Antrag auf Kontolöschung auf %{host} ist fehlgeschlagen
       subtitle: Entschuldigung!
       title: LÖSCHUNG FEHLGESCHLAGEN
@@ -447,7 +447,7 @@ de:
       subtitle: Hallo %{handle}!
       title: WEBHOOK DEAKTIVIERT
     webauthn_credential_created:
-      subject: Neue Sicherheitsvorrichtung hinzugefügt
+      subject: Neue Sicherheitsvorrichtung auf %{host} hinzugefügt
       subtitle: Hallo %{handle}!
       title: SICHERHEITS GERÄT HINZUGEFÜGT
     webauthn_credential_removed:
@@ -764,7 +764,7 @@ de:
         better_api: Eine bessere API bereitzustellen, um mit Gems zu arbeiten
         enable_community: Es der Community zu ermöglichen, diese Webseite zu verbessern
           und zu erweitern
-        header: 'Willkommen bei RubyGems.org, dem Gem-Hosting-Srrvice der Ruby-Community.
+        header: 'Willkommen bei %{site}, dem Gem-Hosting-Srrvice der Ruby-Community.
           Dieses Projekt hat drei Ziele:'
         transparent_pages: Mehr transparente und barrierefreie Projektseiten zu erstellen
       support_html: Obwohl RubyGems.org nicht von einem zentralen Unternehmen geführt
