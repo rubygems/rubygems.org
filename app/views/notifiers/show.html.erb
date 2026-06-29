@@ -5,10 +5,8 @@
   <%= render "dashboards/subject", user: current_user, current: :settings %>
 <% end %>
 
-<%
-    radio_label = "flex items-center gap-3 text-b2 text-neutral-900 dark:text-white cursor-pointer"
-    radio_input = "h-5 w-5 accent-orange focus:ring-0"
-%>
+<% radio_label = "flex items-center gap-3 text-b2 text-neutral-900 dark:text-white cursor-pointer"
+   radio_input = "h-5 w-5 accent-orange focus:ring-0" %>
 
 <%= render CardComponent.new do |c| %>
   <%= c.head(class: "border-b border-neutral-200 dark:border-neutral-800") do %>
