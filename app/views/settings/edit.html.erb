@@ -6,7 +6,6 @@
 <% end %>
 
 <%
-  sub_heading = "text-b2 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200"
   note_class  = "mt-2 text-b3 text-neutral-700 dark:text-neutral-300 " \
                 "[&_a]:text-orange-700 [&_a]:underline dark:[&_a]:text-orange-400"
   label_class = "block text-b4 font-semibold text-neutral-800 dark:text-neutral-200 mb-2"
@@ -25,7 +24,7 @@
   <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
     <% if @user.mfa_enabled? %>
       <section class="py-4">
-        <h3 class="<%= sub_heading %> pt-8"><%= t(".mfa.level.title") %></h3>
+        <h3 class="<%= c.sub_heading_classes %> pt-8"><%= t(".mfa.level.title") %></h3>
         <p class="<%= note_class %>"><%= t(".mfa.level_html") %></p>
 
         <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit",
@@ -41,7 +40,7 @@
 
     <section class="py-4">
       <div class="flex items-center gap-3">
-        <h3 class="<%= sub_heading %>"><%= t(".webauthn_credentials") %></h3>
+        <h3 class="<%= c.sub_heading_classes %>"><%= t(".webauthn_credentials") %></h3>
         <%= render Settings::MfaStatusBadgeComponent.new(enabled: @user.webauthn_enabled?) %>
       </div>
       <p class="<%= note_class %>"><%= t(".webauthn_credential_note") %></p>
@@ -61,7 +60,7 @@
 
     <section class="py-8 first:pt-0 last:pb-0">
       <div class="flex items-center gap-3">
-        <h3 class="<%= sub_heading %>"><%= t(".mfa.otp") %></h3>
+        <h3 class="<%= c.sub_heading_classes %>"><%= t(".mfa.otp") %></h3>
         <%= render Settings::MfaStatusBadgeComponent.new(enabled: @user.totp_enabled?) %>
       </div>
 
