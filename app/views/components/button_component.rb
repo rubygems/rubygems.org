@@ -19,7 +19,7 @@ class ButtonComponent < ApplicationComponent
 
   def view_template(&block)
     css = "text-nowrap no-underline " \
-          "rounded inline-flex border-box " \
+          "inline-flex border-box " \
           "justify-content-center items-center hover:shadow-md " \
           "#{DISABLED} disabled:cursor-default disabled:hover:shadow-none " \
           "transition duration-200 ease-in-out " \
@@ -48,9 +48,11 @@ class ButtonComponent < ApplicationComponent
   def button_size(size)
     case size
     when :small # 36px height
-      "px-4 py-3 h-9 min-h-9 text-b3"
+      "px-4 py-3 h-9 min-h-9 text-b3 rounded"
+    when :extra_large
+      "px-6 py-3 min-h-14 text-b1 rounded-lg font-semibold"
     else # :large, 44px height
-      "px-4 py-3 h-12 min-h-12 text-b2"
+      "px-4 py-3 h-12 min-h-12 text-b2 rounded"
     end
   end
 

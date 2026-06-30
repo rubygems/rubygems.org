@@ -26,7 +26,7 @@
           <span class="sr-only"><%= t("layouts.application.header.search_gem_html") %></span>
         <% end %>
 
-        <button type="submit" aria-labelledby="homepage_gem_querylabel" class="absolute end-3 top-1/2 -translate-y-1/2 text-neutral-700 hover:text-neutral-900 focus:outline-none dark:text-neutral-300 dark:hover:text-white">
+        <button type="submit" aria-labelledby="homepage_gem_querylabel" class="absolute end-3 top-1/2 -translate-y-1/2 text-neutral-900 dark:text-white focus:outline-none hover:text-neutral-600 dark:hover:text-neutral-400 rounded-r">
           <%= icon_tag "search", size: 7 %>
         </button>
       <% end %>
@@ -40,7 +40,7 @@
         </div>
       <% end %>
 
-      <%= link_to page_path("download"), class: "inline-flex min-h-14 items-center justify-center gap-3 rounded-lg bg-orange-500 px-6 py-3 text-b1 font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none dark:hover:bg-orange-700" do %>
+      <%= render ButtonComponent.new(page_path("download"), type: :link, size: :extra_large, class: "gap-3") do %>
         <span><%= t(".learn.install_rubygems") %></span>
         <%= icon_tag "arrow-forward", size: 6 %>
       <% end %>
@@ -59,7 +59,7 @@
         <h3 class="text-h1 font-bold text-orange-900 dark:text-orange-200"><%= t(".supporters.title") %></h3>
       </div>
       <p class="text-b1 leading-relaxed text-orange-950 dark:text-orange-100"><%= t(".supporters.body") %></p>
-      <%= link_to page_path("supporters"), class: "mt-auto inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-3 text-b1 font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none dark:hover:bg-orange-700" do %>
+      <%= render ButtonComponent.new(page_path("supporters"), type: :link, size: :extra_large, class: "gap-2 justify-center") do %>
         <span><%= t(".supporters.cta") %></span>
         <%= icon_tag "arrow-forward", size: 6 %>
       <% end %>
@@ -71,7 +71,7 @@
         <h3 class="text-h1 font-bold text-orange-900 dark:text-orange-200"><%= t(".donation.title") %></h3>
       </div>
       <p class="text-b1 leading-relaxed text-orange-950 dark:text-orange-100"><%= t(".donation.body") %></p>
-      <%= link_to "https://rubycentral.org/open-source/#/portal/signup", class: "mt-auto inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-3 text-b1 font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none dark:hover:bg-orange-700" do %>
+      <%= render ButtonComponent.new("https://rubycentral.org/open-source/#/portal/signup", type: :link, size: :extra_large, class: "gap-2 justify-center") do %>
         <span><%= t(".donation.cta") %></span>
         <%= icon_tag "arrow-forward", size: 6 %>
       <% end %>
