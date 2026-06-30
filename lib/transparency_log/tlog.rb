@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 class TransparencyLog::Tlog
-  def initialize
+  def initialize()
     @entry_builder = TransparencyLog::EntryBuilder.new
-    @client = TransparencyLog::Client.new(ENV.fetch("TRANSPARENCY_LOG_REKOR_URL"))
+    @client = TransparencyLog::Client.new(ENV.fetch("TRANSPARENCY_LOG_REKOR_URL", "http://localhost:3004"))
   end
 
   def create_entry(transparency_log_event)
     entry = @entry_builder.build(transparency_log_event)
-    @client.post(entry)
+    response = @client.post(entry)
+    TransparencyLogEvent::RekorEntry.from_json(response)
   rescue TransparencyLog::Client::Error => e
     Rails.logger.error(e.message)
     raise

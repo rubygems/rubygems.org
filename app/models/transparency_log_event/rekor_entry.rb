@@ -9,9 +9,20 @@ TransparencyLogEvent::RekorEntry = Data.define(
   :checkpoint,
   :inclusion_proof
 ) do
+  def self.from_json(json_entry)
+    new(
+      origin: '',
+      kind: json_entry["kindVersion"]["kind"],
+      version: json_entry["kindVersion"]["version"],
+      index: json_entry["logIndex"],
+      checkpoint: json_entry["inclusionProof"]["checkpoint"],
+      inclusion_proof: json_entry["inclusionProof"]
+    )
+  end
+
   def event_attributes
     {
-      rekor_log_origin: origin,
+      rekor_log_origin: '',
       rekor_entry_kind: kind,
       rekor_entry_version: version,
       rekor_log_index: index,
