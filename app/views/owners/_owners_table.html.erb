@@ -57,6 +57,7 @@
         <%= button_to t("remove"),
           rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
           method: "delete",
+          disabled: @ownerships.select(&:confirmed?).count <= 1,
           data: { confirm: t("owners.index.confirm_remove") },
           class: "form__submit form__submit--small" %>
         <% end %>
