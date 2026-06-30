@@ -22,6 +22,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
+  before_validation :set_ruby_abi, if: :required_ruby_version_changed?
   before_save :create_link_verifications, if: :metadata_changed?
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
@@ -457,6 +458,33 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   private
+
+  def set_ruby_abi
+    self.ruby_abi = derive_ruby_abi
+  end
+
+  def derive_ruby_abi
+    return if required_ruby_version.blank?
+
+    requirement = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/))
+    requirements = requirement.requirements
+
+    return unless requirements.one?
+
+    operator, version = requirements.first
+    return unless operator == "~>"
+
+    segments = version.segments
+    return unless segments.length == 3
+
+    patch = segments[2]
+    return unless patch.is_a?(Integer)
+    return unless patch.zero?
+
+    "#{segments[0]}.#{segments[1]}"
+  rescue Gem::Requirement::BadRequirementError
+    nil
+  end
 
   def update_prerelease
     self[:prerelease] = prerelease
