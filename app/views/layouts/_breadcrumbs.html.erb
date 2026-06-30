@@ -1,8 +1,8 @@
-<div class="hidden lg:block w-full px-8 py-1 lg:pb-8 bg-neutral-050 dark:bg-neutral-950 text-neutral-800 dark:text-white">
-  <div class="max-w-screen-xl mx-auto flex items-center">
-    <nav class="flex justify-start items-center text-b2" aria-label="Breadcrumb">
-      <!-- Home breadcrumb -->
-      <% if breadcrumbs.present? %>
+<% if breadcrumbs.present? %>
+  <div class="hidden lg:block w-full px-8 py-1 lg:pb-8 bg-neutral-050 dark:bg-neutral-950 text-neutral-800 dark:text-white">
+    <div class="max-w-screen-xl mx-auto flex items-center">
+      <nav class="flex justify-start items-center text-b2" aria-label="Breadcrumb">
+        <!-- Home breadcrumb -->
         <%= link_to root_path, class: "inline-block p-1 -ml-1 hover:text-neutral-600 dark:hover:text-neutral-400", title: t("breadcrumbs.home"), aria: { label: t("breadcrumbs.home") } do %>
           <%= icon_tag "house-siding", size: 6 %>
         <% end %>
@@ -16,7 +16,7 @@
             <span class="inline-block p-1 text-black dark:text-white font-semibold" aria-current="page"><%= name %></span>
           <% end %>
         <% end %>
-      <% end %>
-    </nav>
+      </nav>
+    </div>
   </div>
-</div>
+<% end %>
