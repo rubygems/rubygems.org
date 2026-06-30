@@ -570,6 +570,92 @@ class VersionTest < ActiveSupport::TestCase
       end
     end
 
+    context "with content-addressable naming" do
+      setup do
+        @rubygem = create(:rubygem, name: "nokogiri")
+      end
+
+      should "use platform identity for versions targeting multiple Ruby ABIs" do
+        version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: ">= 3.2"
+        )
+
+        assert_equal("nokogiri-1.18.9-arm64-darwin-25", version.full_name)
+        assert_equal("nokogiri-1.18.9-arm64-darwin-25", version.gem_full_name)
+        assert_equal("#{version.full_name}.gem", version.gem_file_name)
+      end
+
+      should "use sha256 identity for versions targeting a single Ruby ABI" do
+        version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          sha256: Digest::SHA2.base64digest("skinny gem")
+        )
+
+        expected_identity = "nokogiri-1.18.9-#{version.sha256_hex.first(8)}"
+
+        assert_equal(expected_identity, version.full_name)
+        assert_equal(expected_identity, version.gem_full_name)
+        assert_equal("#{version.full_name}.gem", version.gem_file_name)
+      end
+
+      should "extend sha256 identity when another version already uses the first eight characters" do
+        shared_hex_prefix = "abc12345"
+        existing_sha256 = encoded_sha256_with_hex_prefix(shared_hex_prefix + ("0" * 56))
+        colliding_sha256 = encoded_sha256_with_hex_prefix(shared_hex_prefix + ("1" * 56))
+
+        existing_version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: "~> 3.3.0",
+          sha256: existing_sha256
+        )
+
+        version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "x86_64-darwin-25",
+          gem_platform: "x86_64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          sha256: colliding_sha256
+        )
+
+        expected_identity = "nokogiri-1.18.9-#{version.sha256_hex.first(9)}"
+
+        assert_equal(expected_identity, version.full_name)
+        assert_equal(expected_identity, version.gem_full_name)
+        assert_not_equal(existing_version.full_name, version.full_name)
+      end
+
+      should "be invalid when content-addressable version has no sha256" do
+        version = build(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "x86_64-darwin-25",
+          gem_platform: "x86_64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          sha256: nil
+        )
+
+        refute_predicate version, :valid?
+        assert_includes version.errors[:sha256], "can't be blank"
+      end
+    end
+
     %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
       should "be able to find with platform of #{platform}" do
         version = create(:version, platform: platform)
@@ -1187,5 +1273,11 @@ class VersionTest < ActiveSupport::TestCase
         end
       end
     end
+  end
+
+  private
+
+  def encoded_sha256_with_hex_prefix(hex_sha256)
+    [[hex_sha256].pack("H*")].pack("m0")
   end
 end
