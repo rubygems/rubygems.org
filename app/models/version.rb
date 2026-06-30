@@ -4,6 +4,7 @@ require "digest/sha2"
 
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
+  DEFAULT_CONTENT_ADDRESS_LENGTH = 8
 
   self.ignored_columns += %w[info_checksum yanked_info_checksum]
 
@@ -66,6 +67,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validate :metadata_links_format, if: -> { validation_context == :create || metadata_changed? }
   validate :metadata_attribute_length
   validate :no_dashes_in_version_number, on: :create
+  validate :sha256_presence_for_content_addressable_version
 
   class AuthorType < ActiveModel::Type::String
     def cast_value(value)
@@ -459,6 +461,16 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   private
 
+  def content_addressable?
+    platformed? && ruby_abi.present? && sha256.present?
+  end
+
+  def sha256_presence_for_content_addressable_version
+    return unless platformed? && ruby_abi.present?
+
+    errors.add(:sha256, "can't be blank") if sha256.blank?
+  end
+
   def set_ruby_abi
     self.ruby_abi = derive_ruby_abi
   end
@@ -517,15 +529,34 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def full_nameify!
     return if rubygem.nil?
-    self.full_name = "#{rubygem.name}-#{number}"
-    full_name << "-#{platform}" if platformed?
+    self.full_name = platform_identity(platform)
   end
 
   def gem_full_nameify!
     return if gem_platform.blank?
     return if rubygem.nil?
-    self.gem_full_name = "#{rubygem.name}-#{number}"
-    gem_full_name << "-#{gem_platform}" unless gem_platform == "ruby"
+
+    self.gem_full_name = platform_identity(gem_platform)
+  end
+
+  def content_address
+    digest = sha256_hex
+    raise ArgumentError, "Could not generate unique content-address" if digest.blank?
+
+    (DEFAULT_CONTENT_ADDRESS_LENGTH..digest.length).each do |length|
+      identity = "#{rubygem.name}-#{number}-#{digest.first(length)}"
+      return identity unless Version.where(full_name: identity).where.not(id: id).exists?
+    end
+
+    raise ArgumentError, "Could not generate unique content-address"
+  end
+
+  def platform_identity(platform_value)
+    return content_address if content_addressable?
+
+    identity = "#{rubygem.name}-#{number}"
+    identity << "-#{platform_value}" unless platform_value == "ruby"
+    identity
   end
 
   def set_canonical_number
