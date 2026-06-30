@@ -20,7 +20,7 @@ class Rubygem < ApplicationRecord
   has_many :audits, as: :auditable, inverse_of: :auditable
   has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", inverse_of: :rubygem, dependent: :destroy
-  has_many :incoming_dependencies, -> { where(versions: { indexed: true, position: 0 }) }, class_name: "Dependency", inverse_of: :rubygem
+  has_many :incoming_dependencies, -> { where(versions: { indexed: true, latest: true }) }, class_name: "Dependency", inverse_of: :rubygem
   has_many :reverse_dependencies, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
@@ -29,7 +29,7 @@ class Rubygem < ApplicationRecord
     Rubygem.where(
       id: Dependency.where(rubygem_id: id)
         .joins(:version)
-        .where(versions: { indexed: true, position: 0 })
+        .where(versions: { indexed: true, latest: true })
         .select("versions.rubygem_id")
     )
   end
@@ -38,7 +38,7 @@ class Rubygem < ApplicationRecord
     Rubygem.where(
       id: Dependency.development.where(rubygem_id: id)
         .joins(:version)
-        .where(versions: { indexed: true, position: 0 })
+        .where(versions: { indexed: true, latest: true })
         .select("versions.rubygem_id")
     )
   end
@@ -47,7 +47,7 @@ class Rubygem < ApplicationRecord
     Rubygem.where(
       id: Dependency.runtime.where(rubygem_id: id)
         .joins(:version)
-        .where(versions: { indexed: true, position: 0 })
+        .where(versions: { indexed: true, latest: true })
         .select("versions.rubygem_id")
     )
   end
@@ -61,9 +61,15 @@ class Rubygem < ApplicationRecord
   has_one :most_recent_version,
     lambda {
       order(
+        # Prefer indexed versions, then the platform-ruby latest, then any latest.
+        # `position`/`latest` are assigned asynchronously by ReorderVersionsJob, so a
+        # freshly pushed version can briefly have a NULL position; treat NULL position
+        # as newest (NULLS FIRST) and fall back to id DESC so the most recent version
+        # still wins during that window.
+        Arel.sql("case when #{quoted_table_name}.indexed then 0 else 1 end"),
         Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 0 " \
                  "when #{quoted_table_name}.latest then 1 else 2 end"),
-        :position,
+        Arel.sql("#{quoted_table_name}.position ASC NULLS FIRST"),
         id: :desc
       )
     },

@@ -80,6 +80,7 @@ OmniAuth.config.test_mode = true
 WebAuthn.configuration.allowed_origins = ["http://localhost:31337"]
 
 class ActiveSupport::TestCase
+  include ActiveJob::TestHelper
   include FactoryBot::Syntax::Methods
   include GemHelpers
   include EmailHelpers
@@ -135,6 +136,12 @@ class ActiveSupport::TestCase
     OmniAuth.config.mock_auth.clear
 
     ActionMailer::Base.deliveries.clear
+  end
+
+  def reorder_versions_for(*rubygems)
+    rubygems.each do |rubygem|
+      ReorderVersionsJob.new.perform(rubygem: rubygem)
+    end
   end
 
   def page

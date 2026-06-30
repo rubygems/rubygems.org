@@ -4,7 +4,7 @@ class SetLinksetHomeJob < ApplicationJob
   queue_as :default
 
   def perform(version:)
-    return unless version.latest? && version.indexed?
+    return unless version.indexed? && version.latest_for_platform?
 
     gem = RubygemFs.instance.get("gems/#{version.gem_file_name}")
     package = Gem::Package.new(StringIO.new(gem))
