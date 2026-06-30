@@ -7,6 +7,7 @@ class Api::V1::OIDC::PendingTrustedPublishersController < Api::BaseController
   before_action :set_trusted_publisher_type, only: %i[create]
 
   def index
+    authorize OIDC::PendingTrustedPublisher, :index?
     pending = policy_scope(OIDC::PendingTrustedPublisher)
       .unexpired.includes(:trusted_publisher).strict_loading
     render json: pending
