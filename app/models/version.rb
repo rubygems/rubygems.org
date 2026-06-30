@@ -4,6 +4,7 @@ require "digest/sha2"
 
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
+  DEFAULT_CONTENT_ADDRESS_LENGTH = 8
 
   self.ignored_columns += %w[info_checksum yanked_info_checksum]
 
@@ -52,6 +53,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
   validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
+  validates :sha256, presence: true, if: :content_addressable?
 
   validates :number, :platform, :gem_platform, :full_name, :gem_full_name, :canonical_number,
     name_format: { requires_letter: false },
@@ -459,6 +461,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   private
 
+  def content_addressable?
+    platformed? && ruby_abi.present?
+  end
+
   def set_ruby_abi
     self.ruby_abi = derive_ruby_abi
   end
@@ -517,15 +523,34 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def full_nameify!
     return if rubygem.nil?
-    self.full_name = "#{rubygem.name}-#{number}"
-    full_name << "-#{platform}" if platformed?
+    self.full_name = platform_identity(platform)
   end
 
   def gem_full_nameify!
     return if gem_platform.blank?
     return if rubygem.nil?
-    self.gem_full_name = "#{rubygem.name}-#{number}"
-    gem_full_name << "-#{gem_platform}" unless gem_platform == "ruby"
+
+    self.gem_full_name = platform_identity(gem_platform)
+  end
+
+  def content_address
+    digest = sha256_hex
+    raise ArgumentError, "Could not generate unique content-address" if digest.blank?
+
+    (DEFAULT_CONTENT_ADDRESS_LENGTH..digest.length).each do |length|
+      identity = "#{rubygem.name}-#{number}-#{digest.first(length)}"
+      return identity unless Version.where(full_name: identity).where.not(id: id).exists?
+    end
+
+    raise ArgumentError, "Could not generate unique content-address"
+  end
+
+  def platform_identity(platform_value)
+    return content_address if content_addressable? && sha256.present?
+
+    identity = "#{rubygem.name}-#{number}"
+    identity << "-#{platform_value}" unless platform_value == "ruby"
+    identity
   end
 
   def set_canonical_number
