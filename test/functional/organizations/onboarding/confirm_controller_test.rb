@@ -45,7 +45,7 @@ class Organizations::Onboarding::ConfirmControllerTest < ActionDispatch::Integra
     should "onboard the organization and render a success message" do
       patch "/organizations/onboarding/confirm"
 
-      assert_redirected_to organization_path(@organization_onboarding.reload.organization)
+      assert_redirected_to organization_path(id: @organization_onboarding.reload.organization)
 
       follow_redirect!
 

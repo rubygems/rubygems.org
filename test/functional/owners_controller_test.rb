@@ -57,7 +57,7 @@ class OwnersControllerTest < ActionController::TestCase
           get :index, params: { rubygem_id: @rubygem.name }
         end
 
-        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should redirect_to("gem info page") { rubygem_path(id: @rubygem.slug) }
         should set_flash[:alert].to "Forbidden"
       end
     end
@@ -72,7 +72,7 @@ class OwnersControllerTest < ActionController::TestCase
           post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
         end
 
-        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should redirect_to("gem info page") { rubygem_path(id: @rubygem.slug) }
         should set_flash[:alert].to "Forbidden"
 
         should "not add other user as owner" do
@@ -107,7 +107,7 @@ class OwnersControllerTest < ActionController::TestCase
             post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
           end
 
-          should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
+          should redirect_to("ownerships index") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
           should "add unconfirmed ownership record" do
             assert_includes @rubygem.owners_including_unconfirmed, @new_owner
             assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
@@ -167,7 +167,7 @@ class OwnersControllerTest < ActionController::TestCase
               post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name, role: :owner }
             end
 
-            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
+            should redirect_to("ownerships index") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
 
             should "set success notice flash" do
               expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. " \
@@ -199,7 +199,7 @@ class OwnersControllerTest < ActionController::TestCase
           post :create, params: { handle: @other_user.display_id, rubygem_id: @rubygem.name }
         end
 
-        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should redirect_to("gem info page") { rubygem_path(id: @rubygem.slug) }
         should set_flash[:alert].to "Forbidden"
 
         should "not add other user as owner" do
@@ -219,7 +219,7 @@ class OwnersControllerTest < ActionController::TestCase
           delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
         end
 
-        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should redirect_to("gem info page") { rubygem_path(id: @rubygem.slug) }
 
         should "not remove user as owner" do
           assert_includes @rubygem.owners, @second_user
@@ -243,7 +243,7 @@ class OwnersControllerTest < ActionController::TestCase
             end
           end
 
-          should redirect_to("ownership index") { rubygem_owners_path(@rubygem.slug) }
+          should redirect_to("ownership index") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
 
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
@@ -263,7 +263,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
             end
           end
-          should redirect_to("ownership index") { rubygem_owners_path(@rubygem.slug) }
+          should redirect_to("ownership index") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
 
           should "remove the ownership record" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
@@ -319,7 +319,7 @@ class OwnersControllerTest < ActionController::TestCase
               delete :destroy, params: { handle: @second_user.display_id, rubygem_id: @rubygem.name }
             end
 
-            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
+            should redirect_to("ownerships index") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
 
             should "set success notice flash" do
               expected_notice = "#{@second_user.handle} was removed from the owners successfully"
@@ -339,7 +339,7 @@ class OwnersControllerTest < ActionController::TestCase
           delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
         end
 
-        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should redirect_to("gem info page") { rubygem_path(id: @rubygem.slug) }
 
         should "not remove user as owner" do
           assert_includes @rubygem.owners, @last_owner
@@ -361,7 +361,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
         end
 
-        should redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
+        should redirect_to("rubygem show") { rubygem_path(id: @rubygem.slug) }
         should "set success notice flash" do
           success_flash = "A confirmation mail has been re-sent to your email"
 
@@ -427,7 +427,7 @@ class OwnersControllerTest < ActionController::TestCase
           get :edit, params: { rubygem_id: @rubygem.name, handle: @owner.display_id }
         end
 
-        should redirect_to("gem info page") { rubygem_path(@rubygem.slug) }
+        should redirect_to("gem info page") { rubygem_path(id: @rubygem.slug) }
         should set_flash[:alert].to "Can't update your own Role"
       end
     end
@@ -442,7 +442,7 @@ class OwnersControllerTest < ActionController::TestCase
         patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id, role: :maintainer }
       end
 
-      should redirect_to("rubygem show") { rubygem_owners_path(@rubygem.slug) }
+      should redirect_to("rubygem show") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
 
       should "set success notice flash" do
         assert_equal "#{@maintainer.name} was successfully updated.", flash[:notice]
@@ -466,7 +466,7 @@ class OwnersControllerTest < ActionController::TestCase
         patch :update, params: { rubygem_id: @rubygem.name, handle: @maintainer.display_id }
       end
 
-      should redirect_to("ownerships index") { rubygem_owners_path(@rubygem.slug) }
+      should redirect_to("ownerships index") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
 
       should "not update the role" do
         ownership = Ownership.find_by(rubygem: @rubygem, user: @maintainer)
@@ -602,7 +602,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should "confirm ownership" do
           assert_predicate @ownership, :confirmed?
-          assert redirect_to("rubygem show") { rubygem_path(@rubygem.slug) }
+          assert redirect_to("rubygem show") { rubygem_path(id: @rubygem.slug) }
           assert_equal "You were added as an owner to the #{@rubygem.name} gem", flash[:notice]
         end
 

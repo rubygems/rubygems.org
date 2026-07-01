@@ -10,6 +10,10 @@ class PagesController < ApplicationController
     render @page
   end
 
+  def sponsors
+    redirect_to page_path(id: "supporters"), status: :moved_permanently
+  end
+
   private
 
   def find_page

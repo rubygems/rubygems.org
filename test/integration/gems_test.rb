@@ -9,7 +9,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "gem page with a non valid HTTP_ACCEPT header" do
-    get rubygem_path(@rubygem.slug), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
+    get rubygem_path(id: @rubygem.slug), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
 
     assert page.has_content? "1.0.0"
   end
@@ -24,18 +24,16 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "versions with atom format" do
     create(:version, rubygem: @rubygem)
-    get rubygem_versions_path(@rubygem.slug, format: :atom)
+    get rubygem_versions_path(rubygem_id: @rubygem.slug, format: :atom)
 
     assert_equal "application/atom+xml", response.media_type
     assert page.has_content? "sandworm"
   end
 
   test "canonical/alternate urls for gem points to most recent version" do
-    skip "locales temporarily disabled"
-
     base_url = "http://localhost/gems/sandworm/versions/1.1.1"
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
     css = %(link[rel="canonical"][href="#{base_url}"])
 
     assert page.has_css?(css, visible: false)
@@ -43,23 +41,34 @@ class GemsTest < ActionDispatch::IntegrationTest
     alternates = page.all(:css, css, visible: false)
     # I18n.available_locales.length + 1 (x-default)
     assert_equal (I18n.available_locales.length + 1), alternates.length
-    exp = I18n.available_locales.map { "#{base_url}?locale=#{it}" } << base_url
+    exp = I18n.available_locales.map do |locale|
+      LocaleRouting.default_locale?(locale) ? base_url : "http://localhost/#{locale}/gems/sandworm/versions/1.1.1"
+    end << base_url
     act = alternates.pluck(:href)
 
     assert_same_elements exp, act
   end
 
-  test "canonical locale urls for gem points to most recent version without locale" do
+  test "canonical locale urls for gem points to most recent version with locale path" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_path(@rubygem.slug, locale: "en")
-    css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.1.1"])
+    get "/nl/gems/#{@rubygem.slug}"
+    css = %(link[rel="canonical"][href="http://localhost/nl/gems/sandworm/versions/1.1.1"])
+
+    assert page.has_css?(css, visible: false)
+  end
+
+  test "gem page emits search engine tags alongside head content" do
+    get rubygem_path(id: @rubygem.slug)
+
+    assert page.has_css?(%(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: false)
+    css = %(link[rel="alternate"][type="application/atom+xml"][title="sandworm Version Feed"][href="/gems/sandworm/versions.atom"])
 
     assert page.has_css?(css, visible: false)
   end
 
   test "canonical url for an old version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
-    get rubygem_version_path(@rubygem.slug, "1.0.0")
+    get rubygem_version_path(rubygem_id: @rubygem.slug, id: "1.0.0")
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"])
 
     assert page.has_css?(css, visible: false)
@@ -82,14 +91,14 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "anonymous gem show request does not set a session cookie" do
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert_response :success
     assert_nil response.headers["Set-Cookie"]
   end
 
   test "anonymous gem show request sets public cache headers" do
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert_response :success
     assert_includes response.headers["Cache-Control"], "public"
@@ -100,7 +109,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   test "authenticated gem show request does not set public cache headers" do
     post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
-    get rubygem_path(@rubygem.slug)
+    get rubygem_path(id: @rubygem.slug)
 
     assert_response :success
     assert_includes response.headers["Set-Cookie"].to_s, "_rubygems_session"

@@ -1,7 +1,7 @@
 <% @title = t('.title') %>
 <% @roles = Ownership.roles.map { |k,_| [Ownership.human_attribute_name("role.#{k}"), k] } %>
 
-<%= form_tag rubygem_owner_path(rubygem_id: @rubygem.slug, owner_id: @ownership.user.display_id), method: :patch do |form| %>
+<%= form_tag rubygem_owner_path(rubygem_id: @rubygem.slug, handle: @ownership.user.display_id), method: :patch do |form| %>
   <%= error_messages_for(@ownership) %>
 
   <div class="text_field">

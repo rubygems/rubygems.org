@@ -10,7 +10,7 @@
       <span class="home__downloads__desc"><%= t('.downloads_counting_html') %></span>
     </h2>
   <% end %>
-  <%= link_to t('.learn.install_rubygems'), page_url("download"), :class => "home__join #{@downloads_count.nil? ? 'no-download-count' : ''}", "data-icon" => ">" %>
+  <%= link_to t('.learn.install_rubygems'), page_url(id: "download"), :class => "home__join #{@downloads_count.nil? ? 'no-download-count' : ''}", "data-icon" => ">" %>
 </div>
 <div class="home__links">
   <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", class: "home__link", "data-icon" => "⌁" %>

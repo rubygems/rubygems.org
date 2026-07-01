@@ -33,8 +33,8 @@ class OIDC::IdToken::TableComponent < ApplicationComponent
     tr(class: row_classes.join(" ")) do
       td(class: "owners__cell") { time_tag token.created_at }
       td(class: "owners__cell") { time_tag token.api_key.expires_at }
-      td(class: "owners__cell") { link_to_unless_current token.api_key_role.name, profile_oidc_api_key_role_path(token.api_key_role.token) }
-      td(class: "owners__cell") { link_to_unless_current token.jti, profile_oidc_id_token_path(token), class: "recovery-code-list__item" }
+      td(class: "owners__cell") { link_to_unless_current token.api_key_role.name, profile_oidc_api_key_role_path(token: token.api_key_role.token) }
+      td(class: "owners__cell") { link_to_unless_current token.jti, profile_oidc_id_token_path(id: token), class: "recovery-code-list__item" }
     end
   end
 end

@@ -16,7 +16,7 @@ class ProfilesController < ApplicationController
   end
 
   def me
-    redirect_to profile_path(current_user.display_id)
+    redirect_to profile_path(id: current_user.display_id)
   end
 
   def edit
