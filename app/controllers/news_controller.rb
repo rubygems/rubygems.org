@@ -3,8 +3,6 @@
 class NewsController < ApplicationController
   before_action -> { set_page Gemcutter::NEWS_MAX_PAGES }
 
-  layout "hammy"
-
   def show
     @rubygems = Rubygem.preload(:latest_version, :gem_download)
       .news(Gemcutter::NEWS_DAYS_LIMIT)
