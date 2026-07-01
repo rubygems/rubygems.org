@@ -463,6 +463,8 @@ zh-TW:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count} 位 Ruby 愛好者"
       downloads_amount:
@@ -491,6 +493,8 @@ zh-TW:
       title: 下載 RubyGems
     security:
       title: 安全性
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:

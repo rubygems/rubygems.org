@@ -458,6 +458,8 @@ nl:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount:
       downloads_amount:
@@ -495,6 +497,8 @@ nl:
     download:
       title:
     security:
+      title:
+    security-engineers-in-residence-faq:
       title:
     supporters:
       title:

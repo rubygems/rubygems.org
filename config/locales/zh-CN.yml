@@ -472,6 +472,8 @@ zh-CN:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount:
       downloads_amount:
@@ -498,6 +500,8 @@ zh-CN:
       title: 下载 RubyGems
     security:
       title: 安全
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:

@@ -471,6 +471,8 @@ ja:
           <span class="font-bold">%{role}</span>として<br>
           組織へ参加するよう招待されました。
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count}人以上のRubyist"
       downloads_amount: 何億回ものgemダウンロード
@@ -494,6 +496,8 @@ ja:
       title: RubyGemsをダウンロード
     security:
       title: セキュリティ
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title: RubyGemsの支援者
   policies:

@@ -503,6 +503,8 @@ es:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count} Rubystas"
       downloads_amount: millones de descargas de gemas
@@ -540,6 +542,8 @@ es:
       title: Descargar RubyGems
     security:
       title: Seguridad
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:

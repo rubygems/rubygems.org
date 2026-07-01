@@ -466,6 +466,8 @@ en:
         decline: Decline
         title_html: "invited you to join their organization<br>as an <span class=\"font-bold\">%{role}</span>."
   pages:
+    index:
+      title: Pages
     about:
       contributors_amount: "%{count} Rubyists"
       downloads_amount: "billions of gem downloads"
@@ -488,6 +490,8 @@ en:
       title: Download RubyGems
     security:
       title: Security
+    security-engineers-in-residence-faq:
+      title: "Security Engineers in Residence: FAQ"
     supporters:
       title: RubyGems Supporters
   policies:
