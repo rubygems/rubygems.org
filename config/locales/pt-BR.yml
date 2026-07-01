@@ -263,8 +263,20 @@ pt-BR:
     index:
       downloads_counting_html: downloads
       find_blurb_html: Encontre, instale e publique RubyGems.
+      find_blurb_lead:
       learn:
         install_rubygems: Instalar o RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
     subject:
       subject_label:

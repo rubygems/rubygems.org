@@ -256,8 +256,20 @@ ja:
     index:
       downloads_counting_html: ダウンロード数
       find_blurb_html: RubyGemを発見、<br>インストール、公開しよう。
+      find_blurb_lead:
       learn:
         install_rubygems: RubyGemsをインストール
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
     subject:
       subject_label:

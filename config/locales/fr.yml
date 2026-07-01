@@ -264,8 +264,20 @@ fr:
     index:
       downloads_counting_html: téléchargements à ce jour
       find_blurb_html: Trouvez, installez et publiez des RubyGems.
+      find_blurb_lead:
       learn:
         install_rubygems: Installez RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
     subject:
       subject_label:
