@@ -488,6 +488,8 @@ en:
       title: Download RubyGems
     security:
       title: Security
+    security-engineers-in-residence-faq:
+      title: "Security Engineers in Residence: FAQ"
     supporters:
       title: RubyGems Supporters
   policies:

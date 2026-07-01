@@ -38,6 +38,13 @@ class PagesTest < ApplicationSystemTestCase
     assert_text("Security")
   end
 
+  test "renders /pages/security-engineers-in-residence-faq" do
+    visit "/pages/security-engineers-in-residence-faq"
+
+    assert_text("Security Engineers in Residence: FAQ")
+    assert_text("gem-security@rubygems.org")
+  end
+
   test "renders /pages/supporters" do
     visit "/pages/supporters"
 
