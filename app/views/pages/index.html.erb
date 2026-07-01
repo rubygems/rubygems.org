@@ -1,0 +1,11 @@
+<% @title = t(".title") %>
+
+<%= prose do %>
+  <h1 id="rubygemsorg-pages"><%= t(".title") %></h1>
+
+  <ul>
+    <% Gemcutter::PAGES.each do |page| %>
+      <li><%= link_to t("pages.#{page}.title"), page_path(page) %></li>
+    <% end %>
+  </ul>
+<% end %>

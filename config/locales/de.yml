@@ -510,6 +510,8 @@ de:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count} Rubyists"
       downloads_amount: Millionen von Gem-Downloads
@@ -550,6 +552,8 @@ de:
       title: Download RubyGems
     security:
       title: Security
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:

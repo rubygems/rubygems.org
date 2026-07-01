@@ -3,6 +3,13 @@
 require "application_system_test_case"
 
 class PagesTest < ApplicationSystemTestCase
+  test "renders /pages" do
+    visit "/pages"
+
+    assert_text("Pages")
+    assert_link("Security Engineers in Residence: FAQ", href: "/pages/security-engineers-in-residence-faq")
+  end
+
   test "renders /pages/about for all supported languages" do
     skip "locales temporarily disabled"
 
@@ -41,7 +48,7 @@ class PagesTest < ApplicationSystemTestCase
   test "renders /pages/security-engineers-in-residence-faq" do
     visit "/pages/security-engineers-in-residence-faq"
 
-    assert_selector "nav[aria-label='Breadcrumb'] a[href='/pages/security']", text: "Security"
+    assert_selector "nav[aria-label='Breadcrumb'] a[href='/pages']", text: "Pages"
     assert_text("Security Engineers in Residence: FAQ")
     assert_text("gem-security@rubygems.org")
   end
