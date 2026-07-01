@@ -3,7 +3,7 @@
     <% resource = field_wrapper_args.fetch(:resource) or raise "missing resource for #{self}" %>
     <table><tbody>
     <% field.get_fields.each do |f| %>
-      <tr class="!py-0" >
+      <tr class="!tw-py-0" >
         <td><%= f.name %></td>
         <%= render f.hydrate(view:, record: field.value, resource:).component_for_view(view).new(field: f, resource:, flush: true) %>
       </tr>
