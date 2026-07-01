@@ -1,6 +1,6 @@
 # Security Engineers in Residence: FAQ
 
-[Ruby Central](http://rubycentral.org) has been awarded a grant from [Alpha-Omega](https://alpha-omega.dev/) to fund a team of Security Engineers in Residence for the Ruby ecosystem. The idea behind the program is a simple one: every report that reaches a maintainer should be the work of a person who understood the gem first. AI helps the team find candidate vulnerabilities faster, but nothing reaches you until a person has confirmed the issue is real, worked out what it means in practice, and decided it is worth your time.
+[Ruby Central](https://rubycentral.org) has been awarded a grant from [Alpha-Omega](https://alpha-omega.dev/) to fund a team of Security Engineers in Residence for the Ruby ecosystem. The idea behind the program is a simple one: every report that reaches a maintainer should be the work of a person who understood the gem first. AI helps the team find candidate vulnerabilities faster, but nothing reaches you until a person has confirmed the issue is real, worked out what it means in practice, and decided it is worth your time.
 
 This FAQ covers what the program is, how the team works, what to expect if we find something in your gem, what it means if you only depend on gems, and how to tell a real report from the noise. If something here is unclear or you think it could work better, we want to hear it. You can always reach us at [gem-security@rubygems.org](mailto:gem-security@rubygems.org).
 
@@ -100,7 +100,7 @@ If a confirmed, serious issue goes unanswered, we keep trying to reach you throu
 
 ## Verifying that outreach is legitimate
 
-### How do I know a reach out from the team is real?
+### How do I know a message from the team is real?
 
 Three things to check.
 
