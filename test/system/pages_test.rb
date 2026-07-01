@@ -41,6 +41,7 @@ class PagesTest < ApplicationSystemTestCase
   test "renders /pages/security-engineers-in-residence-faq" do
     visit "/pages/security-engineers-in-residence-faq"
 
+    assert_selector "nav[aria-label='Breadcrumb'] a[href='/pages/security']", text: "Security"
     assert_text("Security Engineers in Residence: FAQ")
     assert_text("gem-security@rubygems.org")
   end
