@@ -314,6 +314,44 @@ class PusherIntegrationTest < ActiveSupport::TestCase
     [root_cert, cert]
   end
 
+  context "finding an existing gem version" do
+    should "initialize a new version when the existing version has a different Ruby ABI" do
+      rubygem = create(:rubygem, name: "sandworm")
+      create(:version, rubygem: rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+
+      spec = new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby", { ruby_version: "~> 3.4.0" }) do |gem_spec|
+        gem_spec.platform = "arm64-darwin-25"
+      end
+
+      gem = build_gem(spec)
+      pusher = Pusher.new(@api_key, gem)
+
+      assert pusher.pull_spec
+      assert pusher.find
+
+      assert_equal("~> 3.4.0", pusher.version.required_ruby_version)
+      assert_equal("3.4", pusher.version.ruby_abi)
+    end
+
+    should "reject a new version when the existing version has the same Ruby ABI" do
+      rubygem = create(:rubygem, name: "sandworm")
+      create(:version, rubygem: rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.4.0")
+
+      spec = new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby", { ruby_version: "~> 3.4.0" }) do |gem_spec|
+        gem_spec.platform = "arm64-darwin-25"
+      end
+
+      gem = build_gem(spec)
+      pusher = Pusher.new(@api_key, gem)
+
+      assert pusher.pull_spec
+      refute pusher.find
+
+      assert_equal(409, pusher.code)
+      assert_match(/Repushing of gem versions is not allowed/, pusher.message)
+    end
+  end
+
   context "successfully saving a gemcutter" do
     setup do
       @rubygem = create(:rubygem, name: "gemsgemsgems")

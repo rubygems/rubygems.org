@@ -159,6 +159,42 @@ class VersionTest < ActiveSupport::TestCase
       refute_predicate @dup_version, :valid?
     end
 
+    should "allow duplicate versions with different Ruby ABIs" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+
+      version = build(:version, rubygem: @rubygem, number: existing_version.number, platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0")
+
+      assert_predicate version, :valid?
+    end
+
+    should "not allow duplicate versions with the same Ruby ABI" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+
+      version = build(:version, rubygem: @rubygem, number: existing_version.number, platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0")
+
+      refute_predicate version, :valid?
+    end
+
+    should "allow canonical number duplicates with different Ruby ABIs" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+
+      version = build(:version, rubygem: @rubygem, number: "1.0", platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0")
+
+      assert_predicate version, :valid?
+    end
+
+    should "not allow canonical number duplicates with the same Ruby ABI" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+
+      version = build(:version, rubygem: @rubygem, number: "1.0", platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0")
+
+      refute_predicate version, :valid?
+    end
+
     should "be able to find dependencies" do
       @dependency = create(:rubygem)
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")

@@ -459,23 +459,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     "#{full_name}.gem"
   end
 
-  private
-
-  def content_addressable?
-    platformed? && ruby_abi.present? && sha256.present?
-  end
-
-  def sha256_presence_for_content_addressable_version
-    return unless platformed? && ruby_abi.present?
-
-    errors.add(:sha256, "can't be blank") if sha256.blank?
-  end
-
-  def set_ruby_abi
-    self.ruby_abi = derive_ruby_abi
-  end
-
-  def derive_ruby_abi
+  def self.ruby_abi_for(required_ruby_version)
     return if required_ruby_version.blank?
 
     requirement = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/))
@@ -498,19 +482,48 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     nil
   end
 
+  private
+
+  def content_addressable?
+    platformed? && ruby_abi.present? && sha256.present?
+  end
+
+  def sha256_presence_for_content_addressable_version
+    return unless platformed? && ruby_abi.present?
+
+    errors.add(:sha256, "can't be blank") if sha256.blank?
+  end
+
+  def set_ruby_abi
+    self.ruby_abi = Version.ruby_abi_for(required_ruby_version)
+  end
+
   def update_prerelease
     self[:prerelease] = prerelease
   end
 
   def platform_and_number_are_unique
-    return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
-    errors.add(:base, "A version already exists with this number or platform.")
+    return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform, ruby_abi: ruby_abi)
+
+    message = if ruby_abi.present?
+                "A version already exists with this number, platform and Ruby ABI"
+              else
+                "A version already exists with this number or platform"
+              end
+
+    errors.add(:base, message)
   end
 
   def gem_platform_and_number_are_unique
-    platforms = Version.where(rubygem_id: rubygem_id, number: number, gem_platform: gem_platform).pluck(:platform)
+    platforms = Version.where(rubygem_id: rubygem_id, number: number, gem_platform: gem_platform, ruby_abi: ruby_abi).pluck(:platform)
     return if platforms.empty?
-    errors.add(:base, "A version already exists with this number and resolved platform #{platforms}")
+
+    message = if ruby_abi.present?
+                "A version already exists with this number, resolved platform, and Ruby ABI #{platforms}"
+              else
+                "A version already exists with this number or resolved platform #{platforms}"
+              end
+    errors.add(:base, message)
   end
 
   def original_platform_resolves_to_gem_platform
@@ -591,7 +604,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def unique_canonical_number
-    version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform)
+    version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform, ruby_abi: ruby_abi)
     errors.add(:canonical_number, "has already been taken. Existing version: #{version.number}") unless version.nil?
   end
 

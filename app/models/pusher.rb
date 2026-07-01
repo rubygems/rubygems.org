@@ -129,13 +129,16 @@ class Pusher
         pusher_api_key: api_key
       )
 
+    version.required_ruby_version = spec.required_ruby_version.to_s
+    version.ruby_abi = Version.ruby_abi_for(version.required_ruby_version)
+
     unless @rubygem.new_record?
       # Return success for idempotent pushes
       return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?
 
       # If the gem is yanked, we can't repush it
       # Additionally, we don't allow overwriting existing versions
-      if (existing = @rubygem.versions.find_by(number: version.number, platform: version.platform))
+      if (existing = @rubygem.versions.find_by(number: version.number, platform: version.platform, ruby_abi: version.ruby_abi))
         return republish_notification(existing)
       end
 
