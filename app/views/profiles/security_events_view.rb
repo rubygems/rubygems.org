@@ -12,7 +12,7 @@ class Profiles::SecurityEventsView < ApplicationView
   def view_template
     title_content
 
-    div(class: "tw-space-y-2 t-body") do
+    div(class: "space-y-2 t-body") do
       p do
         t(".description_html")
       end
