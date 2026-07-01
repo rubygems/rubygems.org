@@ -6,7 +6,7 @@ class PagesController < ApplicationController
   layout "hammy"
 
   def index
-    add_breadcrumb t("pages.index.title")
+    add_breadcrumb t(".title")
   end
 
   def show
