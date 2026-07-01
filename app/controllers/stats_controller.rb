@@ -3,8 +3,6 @@
 class StatsController < ApplicationController
   before_action -> { set_page Gemcutter::STATS_MAX_PAGES }
 
-  layout "hammy"
-
   def index
     @number_of_gems        = Rubygem.total_count
     @number_of_users       = User.count

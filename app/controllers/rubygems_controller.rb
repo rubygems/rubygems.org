@@ -10,7 +10,7 @@ class RubygemsController < ApplicationController
   before_action :set_page, only: :index
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
 
-  layout :resolve_layout
+  layout "subject", only: %i[show security_events]
 
   def index
     respond_to do |format|
@@ -51,19 +51,10 @@ class RubygemsController < ApplicationController
 
   private
 
-  def resolve_layout
-    case action_name.to_sym
-    when :show, :security_events
-      "subject"
-    else
-      "hammy"
-    end
-  end
-
   def show_reserved_gem
     return unless GemNameReservation.reserved?(params[:id])
     @reserved_gem = params.expect(:id).downcase
-    render "reserved", layout: "hammy"
+    render "reserved"
   end
 
   def gem_params

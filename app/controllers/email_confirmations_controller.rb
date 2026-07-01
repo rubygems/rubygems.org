@@ -85,7 +85,7 @@ class EmailConfirmationsController < ApplicationController
 
   def login_failure(message)
     flash.now.alert = message
-    render template: "multifactor_auths/prompt", layout: "hammy", status: :unauthorized
+    render template: "multifactor_auths/prompt", status: :unauthorized
   end
 
   def otp_verification_url
