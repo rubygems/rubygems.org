@@ -231,6 +231,17 @@ zh-CN:
   dependencies:
     show:
       click_to_expand: 单击箭头图标展开。
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: 如果您的帐户存在，我们将通过邮件发送确认链接来激活您的帐户。
@@ -245,9 +256,24 @@ zh-CN:
     index:
       downloads_counting_html: 总下载次数
       find_blurb_html: 查找、安装以及发布 Gem
+      find_blurb_lead:
       learn:
         install_rubygems: 安装 RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: 关于
@@ -290,6 +316,8 @@ zh-CN:
       mfa_banner_html:
   breadcrumbs:
     home: 首页
+    latest_version:
+    versions:
     dashboard: 仪表盘
     settings: 设置
     org_name: 组织：%{name}
@@ -682,6 +710,7 @@ zh-CN:
   settings:
     edit:
       title: 编辑设置
+      account_header:
       webauthn_credentials: 安全设备
       no_webauthn_credentials: 您还没有任何安全设备
       webauthn_credential_note: 安全设备可以是任何符合 FIDO2 标准的设备，比如安全密钥、生物密钥等。
@@ -751,12 +780,21 @@ zh-CN:
     request_denied: 请求被驳回，您的密码无法被我们验证通过。
     show:
       title: "%{username} 的个人资料"
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: 这个版本
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: 版本发布
       required_ruby_version: 需要的 Ruby 版本
       required_rubygems_version: 需要的 RubyGems 版本
@@ -772,6 +810,7 @@ zh-CN:
         funding: 募集资金
         header: 链接
         home: 主页
+        verified:
         mail: 邮件列表
         analytics:
         report_abuse: 举报投诉
@@ -816,6 +855,12 @@ zh-CN:
     show:
       bundler_header: Gemfile
       install: 安装
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: 许可
         other: 许可
@@ -847,9 +892,14 @@ zh-CN:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name} 的反向依赖"
       subtitle: 以下 Gem 的最新版本需要 %{name}
       no_reverse_dependencies: 这个 Gem 没有反向依赖。
+      version_header:
     search:
       search_reverse_dependencies_html: 搜索反向依赖 Gem&hellip;
   searches:
@@ -861,6 +911,7 @@ zh-CN:
       updated: 更新
       yanked: 撤回
     show:
+      title:
       subtitle_html: "<em>%{query}</em>"
       month_update: 上个月更新 (%{count})
       week_update: 上周更新 (%{count})
@@ -871,6 +922,7 @@ zh-CN:
     new:
       forgot_password: 忘了密码？
       resend_confirmation: 没有收到确认邮件？
+      confirm:
     verify:
       title:
       confirm: 确认
@@ -901,6 +953,7 @@ zh-CN:
     index:
       title: 统计数据
       all_time_most_downloaded: 至今最多下载
+      clickgems:
       total_gems: Gem 总数
       total_users: 用户总数
   users:

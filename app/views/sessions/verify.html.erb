@@ -1,18 +1,25 @@
 <% @title = t(".title") %>
+<% add_breadcrumb @title %>
 
-<div class="t-body">
-  <p><%= t(".notice") %></p>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t(".title") %></h1>
+
+    <p class="mb-6 text-b3 text-neutral-700 dark:text-neutral-300"><%= t(".notice") %></p>
+
+    <%= form_for :verify_password, url: authenticate_session_path, method: :post do |form| %>
+      <div class="mb-8">
+        <%= form.label :password, t("activerecord.attributes.session.password"),
+          class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+        <%= form.password_field :password, autocomplete: "current-password",
+          class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+      </div>
+
+      <%= render ButtonComponent.new(t(".confirm"), type: :submit, color: :primary, data: { disable_with: t("form_disable_with") }) %>
+    <% end %>
+
+    <% if @user.webauthn_enabled? %>
+        <%= render "multifactor_auths/webauthn_prompt" %>
+    <% end %>
+  </div>
 </div>
-
-<%= form_for :verify_password, url: authenticate_session_path, method: :post do |form| %>
-  <div class="password_field">
-    <%= form.label :password, t("activerecord.attributes.session.password"), class: "form__label" %>
-    <%= form.password_field :password, autocomplete: "current-password", class: "form__input" %>
-  </div>
-  <div class="form_bottom">
-    <%= form.submit t(".confirm"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
-  </div>
-<% end %>
-<% if @user.webauthn_enabled?%>
-    <%= render "multifactor_auths/webauthn_prompt" %>
-<% end %>

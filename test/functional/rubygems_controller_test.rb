@@ -316,82 +316,32 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "On GET to show for a gem with both runtime and development dependencies" do
-    setup do
-      @version = create(:version)
-
-      @development = create(:dependency, :development, version: @version)
-      @runtime     = create(:dependency, :runtime,     version: @version)
-
-      get :show, params: { id: @version.rubygem.slug }
-    end
-
-    should respond_with :success
-    should "show runtime dependencies and development dependencies" do
-      assert page.has_content?(@runtime.rubygem.name)
-      assert page.has_content?(@development.rubygem.name)
-    end
-    should "show runtime and development dependencies count" do
-      assert page.has_content?(@version.dependencies.runtime.count)
-      assert page.has_content?(@version.dependencies.development.count)
-    end
-    should "show proper links to dependencies" do
-      assert page.has_link?(@runtime.rubygem.name, href: "/gems/#{@runtime.rubygem.name}")
-      assert page.has_link?(@development.rubygem.name, href: "/gems/#{@development.rubygem.name}")
-    end
-  end
-
-  context "On GET to show for a gem with dependencies that are unresolved" do
-    setup do
-      @version = create(:version)
-
-      @unresolved = create(:dependency, :unresolved, version: @version)
-
-      get :show, params: { id: @version.rubygem.slug }
-    end
-
-    should respond_with :success
-
-    should "show unresolved dependencies" do
-      assert page.has_content?(@unresolved.name)
-    end
-  end
-
-  context "On GET to show for a gem with dependencies that have missing rubygem" do
-    setup do
-      @version = create(:version)
-
-      @runtime = create(:dependency, :runtime, version: @version)
-      @runtime.update_attribute(:requirements, "= 1.0.0")
-      @runtime.rubygem.update_column(:name, "foo")
-
-      @missing_dependency = create(:dependency, :runtime, version: @version)
-      @missing_dependency.update_attribute(:requirements, "= 1.2.0")
-      @missing_dependency.rubygem.update_column(:name, "missing")
-      @missing_dependency.update_column(:rubygem_id, nil)
-
-      get :show, params: { id: @version.rubygem.slug }
-    end
-
-    should respond_with :success
-    should "show dependencies that have rubygem with version" do
-      assert page.has_content?(@runtime.rubygem.name)
-      assert page.has_content?("1.2.0")
-    end
-  end
-
-  context "On GET to show for a gem with runtime dependencies that have a bad link" do
+  context "On GET to show for a gem with dependencies" do
     setup do
       @version = create(:version)
       @runtime = create(:dependency, :runtime, version: @version)
-      @runtime.rubygem.update_column(:name, "foo>0.1.1")
+
       get :show, params: { id: @version.rubygem.slug }
     end
 
     should respond_with :success
 
-    should "show runtime dependencies and development dependencies" do
-      assert page.has_content?(@runtime.rubygem.name)
+    should "link the dependencies tab to the dependencies page" do
+      assert page.has_link?("Dependencies", href: rubygem_version_dependencies_path(@version.rubygem.slug, @version.slug))
+    end
+  end
+
+  context "On GET to show for a gem without dependencies" do
+    setup do
+      @version = create(:version)
+
+      get :show, params: { id: @version.rubygem.slug }
+    end
+
+    should respond_with :success
+    should "show a disabled dependencies tab" do
+      refute page.has_link?("Dependencies")
+      assert page.has_selector?("span[aria-disabled='true']", text: "Dependencies")
     end
   end
 

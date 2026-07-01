@@ -230,6 +230,17 @@ zh-TW:
   dependencies:
     show:
       click_to_expand: 點擊箭頭圖示來展開。
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: 如果該帳號存在，我們會將用於啟用帳號的確認連結傳送到您的電子郵件地址。
@@ -244,9 +255,24 @@ zh-TW:
     index:
       downloads_counting_html: 總下載次數
       find_blurb_html: 搜尋、安裝以及發佈 RubyGems
+      find_blurb_lead:
       learn:
         install_rubygems: 安裝 RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: 關於
@@ -289,6 +315,8 @@ zh-TW:
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
   breadcrumbs:
     home: 首頁
+    latest_version:
+    versions:
     dashboard: 控制台
     settings: 設定
     org_name: 組織：%{name}
@@ -676,6 +704,7 @@ zh-TW:
   settings:
     edit:
       title: 編輯設定
+      account_header:
       webauthn_credentials: 安全裝置
       no_webauthn_credentials: 您沒有任何安全裝置
       webauthn_credential_note: 安全裝置可以是任何遵循 FIDO2 標準的裝置，例如安全或生物特徵金鑰。
@@ -743,12 +772,21 @@ zh-TW:
     request_denied: 此請求遭拒。我們無法驗證您的密碼。
     show:
       title: "%{username} 的個人檔案"
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: 版本发布
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
@@ -764,6 +802,7 @@ zh-TW:
         funding:
         header: 相關連結
         home: 首頁
+        verified:
         mail: 郵件群組
         analytics:
         report_abuse: 檢舉濫用
@@ -808,6 +847,12 @@ zh-TW:
     show:
       bundler_header: Gemfile
       install: 安裝
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: 授權
         other: 授權
@@ -835,9 +880,14 @@ zh-TW:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name} 的反向依賴"
       subtitle: 下列 Gems 的最新版本需要 %{name}
       no_reverse_dependencies: 此 Gem 沒有反向依賴。
+      version_header:
     search:
       search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
   searches:
@@ -849,6 +899,7 @@ zh-TW:
       updated: 更新於
       yanked: 移除於
     show:
+      title:
       subtitle_html: "<em>%{query}</em>"
       month_update: 於最近一個月更新 (%{count})
       week_update: 於最近一週更新 (%{count})
@@ -859,6 +910,7 @@ zh-TW:
     new:
       forgot_password: 忘記密碼？
       resend_confirmation: 沒收到確認信？
+      confirm:
     verify:
       title:
       confirm: 確認
@@ -889,6 +941,7 @@ zh-TW:
     index:
       title: 統計資料
       all_time_most_downloaded: 歷史下載次數排行
+      clickgems:
       total_gems: Gems 總數
       total_users: 總使用者數量
   users:

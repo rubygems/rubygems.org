@@ -38,7 +38,7 @@ class ApiKeysHelperTest < ActionView::TestCase
 
     [
       scope,
-      { class: "form__checkbox__input", id: scope, data: },
+      { class: ApiKeysHelper::CHECKBOX_CLASSES, id: scope, data: },
       "true",
       "false"
     ]

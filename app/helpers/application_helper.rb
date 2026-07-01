@@ -36,15 +36,21 @@ module ApplicationHelper
     end
   end
 
-  def avatar(size, id = "gravatar", user = current_user, theme: :light, **)
+  def avatar(size, id = "gravatar", user = current_user, theme: :light, **options)
     raise ArgumentError, "invalid default avatar theme, only light and dark are suported" unless %i[light dark].include? theme
 
     url = avatar_user_path(user.id, params: { size: size, theme: theme })
+    data = {
+      controller: "avatar",
+      action: "error->avatar#fallback",
+      avatar_initials_value: user.display_handle.first(2).upcase
+    }.merge(options.delete(:data) || {})
     image_tag(url,
       id: id,
       width: size,
       height: size,
-      **)
+      data: data,
+      **options)
   end
 
   def download_count(rubygem)
@@ -98,7 +104,7 @@ module ApplicationHelper
       :query,
       params[:query],
       placeholder: t("layouts.application.header.search_gem_html"),
-      autofocus: current_page?(root_url),
+      autofocus: kwargs.delete(:autofocus).present?,
       class: kwargs[:class],
       autocomplete: "off",
       aria:,

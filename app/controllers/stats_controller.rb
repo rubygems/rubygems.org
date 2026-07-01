@@ -3,6 +3,8 @@
 class StatsController < ApplicationController
   before_action -> { set_page Gemcutter::STATS_MAX_PAGES }
 
+  layout "hammy"
+
   def index
     @number_of_gems        = Rubygem.total_count
     @number_of_users       = User.count
@@ -10,6 +12,7 @@ class StatsController < ApplicationController
     @most_downloaded       = Rubygem.by_downloads.includes(:gem_download).page(@page).per(Gemcutter::STATS_PER_PAGE)
     @most_downloaded_count = GemDownload.most_downloaded_gem_count
     limit_total_count
+    add_breadcrumb t(".title")
   end
 
   private

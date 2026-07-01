@@ -43,4 +43,15 @@ class CardComponentTest < ComponentTest
     assert_text "content"
     refute_text "View all"
   end
+
+  should "render a section title as an h2" do
+    render_page CardComponent.new do |c|
+      c.head do
+        c.section_title("Account")
+      end
+    end
+
+    assert_selector "h2", text: "Account"
+    refute_selector "h3", text: "Account"
+  end
 end

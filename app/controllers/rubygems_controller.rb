@@ -5,16 +5,19 @@ class RubygemsController < ApplicationController
 
   before_action :show_reserved_gem, only: %i[show security_events]
   before_action :find_rubygem, only: %i[show security_events]
-  before_action :latest_version, only: %i[show]
-  before_action :find_versioned_links, only: %i[show]
+  before_action :latest_version, only: %i[show security_events]
+  before_action :find_versioned_links, only: %i[show security_events]
   before_action :set_page, only: :index
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[security_events]
+
+  layout :resolve_layout
 
   def index
     respond_to do |format|
       format.html do
         @letter = Rubygem.letterize(gem_params[:letter])
         @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
+        add_breadcrumb t(".title")
       end
       format.atom do
         @versions = Version.published.limit(Gemcutter::DEFAULT_PAGINATION)
@@ -28,8 +31,11 @@ class RubygemsController < ApplicationController
   def show
     @versions = @rubygem.public_versions.limit(5)
     if @versions.to_a.any?
+      add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
+      add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug)
       render "show"
     else
+      add_breadcrumb @rubygem.name
       render "show_yanked"
     end
     set_surrogate_key "gem/#{@rubygem.name}"
@@ -39,15 +45,25 @@ class RubygemsController < ApplicationController
   def security_events
     authorize @rubygem, :show_events?
     @security_events = @rubygem.events.order(id: :desc).page(params[:page]).per(50)
-    render Rubygems::SecurityEventsView.new(rubygem: @rubygem, security_events: @security_events)
+    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
+    add_breadcrumb t(".title")
   end
 
   private
 
+  def resolve_layout
+    case action_name.to_sym
+    when :show, :security_events
+      "subject"
+    else
+      "hammy"
+    end
+  end
+
   def show_reserved_gem
     return unless GemNameReservation.reserved?(params[:id])
     @reserved_gem = params.expect(:id).downcase
-    render "reserved"
+    render "reserved", layout: "hammy"
   end
 
   def gem_params
