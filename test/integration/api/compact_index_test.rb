@@ -112,7 +112,8 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
       required_ruby_version: "~> 3.2.0",
       required_rubygems_version: ">= 4.1.0.beta1",
       sha256: Digest::SHA2.base64digest("v2rubyabi-2.9.0-x86_64-linux-musl"),
-      created_at: Time.utc(2026, 5, 1, 12, 0, 0)
+      created_at: Time.utc(2026, 5, 1, 12, 0, 0),
+      ruby_abi: "3.2"
     )
 
     content_address = version.full_name.split("-").last
@@ -216,7 +217,8 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
       required_ruby_version: "~> 3.2.0",
       required_rubygems_version: ">= 4.1.0.beta1",
       sha256: Digest::SHA2.base64digest("v2rubyabi-2.9.0-x86_64-linux-musl"),
-      created_at: Time.utc(2026, 5, 1, 12, 0, 0)
+      created_at: Time.utc(2026, 5, 1, 12, 0, 0),
+      ruby_abi: "3.2"
     )
 
     content_address = version.full_name.split("-").last
