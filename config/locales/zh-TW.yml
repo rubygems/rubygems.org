@@ -671,10 +671,13 @@ zh-TW:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email:
       token_expired: 確認權杖已過期。請從 Gem 頁面嘗試重新傳送權杖。
     index:
+      title:
       add_owner: 新增擁有者
       name: 擁有者
       mfa: MFA 狀態

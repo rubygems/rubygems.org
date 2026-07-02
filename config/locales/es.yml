@@ -747,11 +747,14 @@ es:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email: Has sido añadido/a como propietario de la gema %{gem}
       token_expired: El token de confirmación ha expirado. Por favor intenta reenviar
         el token desde la página de la gema.
     index:
+      title:
       add_owner: AÑADIR PROPIETARIO
       name: PROPIETARIO/A
       mfa: ESTADO DE AMF

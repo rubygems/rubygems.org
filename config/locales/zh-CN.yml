@@ -677,10 +677,13 @@ zh-CN:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email: 您已被添加为 Gem %{gem} 的所有者之一
       token_expired: 确认令牌已过期。请尝试从该 Gem 页面重新发送令牌。
     index:
+      title:
       add_owner: 添加所有者
       name: 所有者
       mfa: 多因素验证（MFA）状态

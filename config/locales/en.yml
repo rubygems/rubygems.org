@@ -678,11 +678,14 @@ en:
   owners:
     edit:
       role: Role
-      title: Edit Owner
+      title: "Edit %{rubygem} Gem Ownership"
+      submit_button: Update Gem Ownership
+      user: User
     confirm:
       confirmed_email: You were added as an owner to the %{gem} gem
       token_expired: The confirmation token has expired. Please try resending the token from the gem page.
     index:
+      title: Owners
       add_owner: ADD OWNER
       name: OWNER
       mfa: MFA STATUS
