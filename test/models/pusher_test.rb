@@ -483,7 +483,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal 422, @cutter.code
     end
 
-    should "not raise if sigstore verification raises an unexpected error" do
+    should "report and return a generic error if sigstore verification raises an unexpected error" do
       attestations = [build(:sigstore_bundle).as_json]
       rubygem = create(:rubygem, name: "test", owners: [@user])
       rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem:)
@@ -496,9 +496,9 @@ class PusherTest < ActiveSupport::TestCase
         .raises error
 
       refute @cutter.process
-      assert_includes @cutter.message, "RubyGems.org could not verify attestation."
-      assert_includes @cutter.message, "timestamp verification response is missing nonce"
-      assert_equal 422, @cutter.code
+      assert_equal "Attestation verification failed.", @cutter.message
+      assert_not_includes @cutter.message, "timestamp verification response is missing nonce"
+      assert_equal 500, @cutter.code
     end
   end
 end
