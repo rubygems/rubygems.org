@@ -91,12 +91,17 @@ class Deletion < ApplicationRecord
 
   def remove_from_index
     version.update!(indexed: false, yanked_at: Time.now.utc)
+    # Reorder synchronously: yanking is a low-frequency, single-version operation
+    # (not the concurrent-push path that ReorderVersionsJob exists to protect), and
+    # the website/API must immediately reflect the new latest version.
+    version.rubygem.reorder_versions
     reindex
     Rstuf::RemoveJob.perform_later(version:)
   end
 
   def restore_to_index
     version.update!(indexed: true, yanked_at: nil, yanked_info_checksum_v2: nil)
+    version.rubygem.reorder_versions
     reindex
     Rstuf::AddJob.perform_later(version:)
   end
