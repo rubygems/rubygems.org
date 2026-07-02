@@ -30,6 +30,9 @@ class ButtonComponent < ApplicationComponent
       link_to(*args, class: css, **options, &block)
     elsif (args.size == 1 && block_given?) || args.size == 2
       button_to(*args, class: css, method: :get, **options, &block)
+    elsif type == :submit
+      block ||= proc { args.first }
+      button(class: css, type:, **submit_button_options(options), &block)
     else
       block ||= proc { args.first }
       button(class: css, type:, **options, &block)
@@ -37,6 +40,16 @@ class ButtonComponent < ApplicationComponent
   end
 
   private
+
+  def submit_button_options(options)
+    if options.dig(:data, :disable_with).present?
+      options
+    else
+      data = options.delete(:data) || {}
+      data.merge!(disable_with: t("form_disable_with"))
+      options.merge(data:)
+    end
+  end
 
   def button_color(color, style)
     color = color.to_sym
