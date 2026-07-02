@@ -82,9 +82,9 @@ namespace :compact_index do
     ts = Time.now.utc.iso8601
     file_path = Rails.application.config.rubygems["versions_file_location_v2"]
     versions_file = CompactIndex::VersionsFile.new(file_path)
-    gems = GemInfo.compact_index_public_versions(ts)
+    gems = GemInfo.each_compact_index_public_version(ts)
 
-    versions_file.create(gems, ts)
+    versions_file.create_from_sorted(gems, ts)
     RubygemFs.instance.store("versions/versions_v2.list", File.read(file_path))
   end
 
