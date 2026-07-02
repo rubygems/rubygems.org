@@ -25,7 +25,7 @@
           main content (subject top -> main -> subject secondary, matching DOM order);
           at desktop width both subject blocks share the left column while main spans the right. %>
       <div class="lg:max-w-screen-xl lg:w-full lg:mx-auto grid grid-cols-1 lg:grid-cols-[18rem_1fr] lg:grid-rows-[auto_1fr] lg:gap-x-20">
-        <aside aria-label="<%= t("layouts.subject.subject_label") %>" class="w-full px-8 lg:px-0 pb-6 lg:pb-0 lg:col-start-1 lg:row-start-1 bg-white dark:bg-black lg:bg-transparent border-b border-neutral-400 dark:border-neutral-800 lg:border-none">
+        <aside aria-label="<%= t("layouts.subject.subject_label") %>" class="w-full px-8 lg:px-0 pb-6 lg:pb-0 lg:col-start-1 lg:row-start-1 lg:bg-transparent border-b border-neutral-400 dark:border-neutral-800 lg:border-none">
           <div class="flex flex-col w-full">
             <%= yield :subject %>
           </div>
@@ -37,7 +37,7 @@
           </div>
         </main>
 
-        <aside aria-label="<%= t("layouts.subject.subject_secondary_label") %>" class="w-full px-8 lg:px-0 pb-6 lg:pb-32 lg:col-start-1 lg:row-start-2 bg-white dark:bg-black lg:bg-transparent border-t border-neutral-400 dark:border-neutral-800 lg:border-none">
+        <aside aria-label="<%= t("layouts.subject.subject_secondary_label") %>" class="w-full px-8 lg:px-0 pb-6 lg:pb-32 lg:col-start-1 lg:row-start-2 lg:bg-transparent border-t border-neutral-400 dark:border-neutral-800 lg:border-none">
           <div class="flex flex-col w-full">
             <%= yield :subject_secondary %>
           </div>
