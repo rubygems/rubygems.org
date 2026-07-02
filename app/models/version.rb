@@ -5,6 +5,7 @@ require "digest/sha2"
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
   DEFAULT_CONTENT_ADDRESS_LENGTH = 8
+  CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.beta1"
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
@@ -19,7 +20,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
-  before_validation :set_ruby_abi, if: :required_ruby_version_changed?
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
   before_save :create_link_verifications, if: :metadata_changed?
@@ -382,7 +382,9 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def to_title
-    if platformed?
+    if content_addressable?
+      "#{rubygem.name} (#{number}-#{content_address}, Platform: #{platform}, Ruby ABI #{ruby_abi})"
+    elsif platformed?
       "#{rubygem.name} (#{number}-#{platform})"
     else
       "#{rubygem.name} (#{number})"
@@ -481,15 +483,42 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     nil
   end
 
-  private
-
   def content_addressable?
     platformed? && ruby_abi.present?
   end
 
-  def set_ruby_abi
-    self.ruby_abi = Version.ruby_abi_for(required_ruby_version)
+  def normalize_content_addressable_gem_metadata!
+    return unless content_addressable?
+    return if required_rubygems_version_satisfies_content_addressable_floor?
+
+    preserved = required_rubygems_version.to_s.split(/\s*,\s*/).filter_map do |req|
+      req = req.strip
+      if req.start_with?("~>")
+        "< #{Gem::Version.new(req[2..].strip).bump}"
+      elsif req.start_with?("<", "!=")
+        req
+      end
+    end
+    update!(required_rubygems_version: [CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, *preserved].join(", "))
   end
+
+  def required_rubygems_version_satisfies_content_addressable_floor?
+    requirements = required_rubygems_version.presence&.split(/\s*,\s*/) || [">= 0"]
+    requirement = Gem::Requirement.new(requirements)
+
+    requirement.requirements.any? do |operator, required_version|
+      case operator
+      when ">=", "~>", "=", ">"
+        Gem::Requirement.new(CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION).satisfied_by?(required_version)
+      else
+        false
+      end
+    end
+  rescue Gem::Requirement::BadRequirementError
+    false
+  end
+
+  private
 
   def update_prerelease
     self[:prerelease] = prerelease
@@ -550,15 +579,20 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     raise ArgumentError, "Could not generate unique content-address" if digest.blank?
 
     (DEFAULT_CONTENT_ADDRESS_LENGTH..digest.length).each do |length|
-      identity = "#{rubygem.name}-#{number}-#{digest.first(length)}"
-      return identity unless Version.where(full_name: identity).where.not(id: id).exists?
+      candidate = digest.first(length)
+      identity = "#{rubygem.name}-#{number}-#{candidate}"
+      return candidate unless Version.where(full_name: identity).where.not(id: id).exists?
     end
 
     raise ArgumentError, "Could not generate unique content-address"
   end
 
+  def content_addressed_full_name
+    "#{rubygem.name}-#{number}-#{content_address}"
+  end
+
   def platform_identity(platform_value)
-    return content_address if content_addressable? && sha256.present?
+    return content_addressed_full_name if content_addressable? && sha256.present?
 
     identity = "#{rubygem.name}-#{number}"
     identity << "-#{platform_value}" unless platform_value == "ruby"
