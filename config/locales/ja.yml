@@ -685,10 +685,13 @@ ja:
     edit:
       role: ロール
       title: 所有者を編集
+      submit_button:
+      user:
     confirm:
       confirmed_email: "%{gem} gemの所有者として追加されました"
       token_expired: 確認トークンが期限切れです。gemのページからトークンを再送してみてください。
     index:
+      title:
       add_owner: 所有者を追加
       name: 所有者
       mfa: MFAの状態

@@ -1,76 +1,73 @@
-<table class="owners__table">
-  <tbody class="owners__tbody">
-  <tr class="owners__row owners__header">
-    <th class="owners__cell">
-      <%= t("owners.index.name") %>
-    </th>
-    <th class="owners__cell">
-      <%= t("owners.index.status") %>
-    </th>
-    <th class="owners__cell">
-      <%= t("owners.index.mfa") %>
-    </th>
-    <th class="owners__cell">
-      <%= t("owners.index.added_by") %>
-    </th>
-    <th class="owners__cell">
-      <%= t("owners.index.role") %>
-    </th>
-    <th class="owners__cell">
-      <%= t("owners.index.confirmed_at") %>
-    </th>
-    <% if can_modify_or_remove_owners?(@rubygem) %>
-    <th class="owners__cell">
-      <%= t("owners.index.action") %>
-    </th>
-    <% end %>
-  </tr>
+<%
+  th_class    = "py-2 pr-4 text-b4 font-semibold text-neutral-900 dark:text-white"
+  cell_class  = "block md:table-cell py-2 md:py-4 pr-4 align-top " \
+                "before:content-[attr(data-title)] before:block before:text-c4 before:font-semibold " \
+                "before:uppercase before:tracking-wide before:text-neutral-500 md:before:content-none"
+  can_modify_or_remove  = can_modify_or_remove_owners?(@rubygem)
+%>
 
-  <% @ownerships.each do |ownership| %>
-    <tr class="owners__row">
-      <td class="owners__cell" data-title="Name">
-        <%= link_to(ownership.owner_name, profile_path(ownership.user.display_id), class: "owner__profile") %>
-      </td>
-      <td class="owners__cell" data-title="Confirmed">
-        <span class="owners__icon">
-          <%= confirmation_status(ownership) %>
-        </span>
-      </td>
-      <td class="owners__cell" data-title="MFA">
-        <span class="owners__icon">
-          <%= mfa_status(ownership.user) %>
-          <%= t("settings.edit.mfa.level." + ownership.user.mfa_level) %>
-        </span>
-      </td>
-      <td class="owners__cell" data-title="Added By">
-        <%= ownership.authorizer_name %>
-      </td>
-      <td class="owners__cell" data-title="Role">
-        <%= Ownership.human_attribute_name("role.#{ownership.role}") %>
-      </td>
-      <td class="owners__cell" data-title="Confirmed At">
-        <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
-      </td>
-      <% if can_modify_or_remove_owners?(@rubygem) %>
-      <td class="owners__cell" data-title="Action">
-        <% if can_remove_owners?(@rubygem) %>
-        <%= button_to t("remove"),
-          rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
-          method: "delete",
-          data: { confirm: t("owners.index.confirm_remove") },
-          class: "form__submit form__submit--small" %>
+<div class="overflow-x-auto">
+  <table class="w-full text-left text-b3" data-testid="owners_table">
+    <thead class="hidden md:table-header-group border-b-2 border-neutral-300 dark:border-neutral-700">
+      <tr>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.name") %></th>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.status") %></th>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.mfa") %></th>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.added_by") %></th>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.role") %></th>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.confirmed_at") %></th>
+        <% if can_modify_or_remove %>
+          <th scope="col" class="<%= th_class %>"><span class="sr-only"><%= t("owners.index.action") %></span></th>
         <% end %>
-        <% if can_modify_owners?(@rubygem) %>
-        <br>
-        <%= button_to t("edit"),
-          edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
-          disabled: ownership.user == current_user,
-          method: "get",
-          class: "form__submit form__submit--small" %>
-        <% end %>
-      </td>
+      </tr>
+    </thead>
+    <tbody class="md:divide-y md:divide-neutral-200 md:dark:divide-neutral-800">
+      <% @ownerships.each do |ownership| %>
+        <tr class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0">
+          <td data-title="Name" class="<%= cell_class %> font-medium">
+            <%= link_to(ownership.owner_name, profile_path(ownership.user.display_id), class: "text-orange-500 hover:underline dark:text-orange-400") %>
+          </td>
+          <td data-title="Confirmed" class="<%= cell_class %>">
+            <span class="inline-flex items-center gap-1"><%= confirmation_status(ownership) %></span>
+          </td>
+          <td data-title="MFA" class="<%= cell_class %>">
+            <span class="inline-flex items-center gap-1">
+              <%= mfa_status(ownership.user) %>
+              <%= t("settings.edit.mfa.level." + ownership.user.mfa_level) %>
+            </span>
+          </td>
+          <td data-title="Added By" class="<%= cell_class %> text-neutral-700 dark:text-neutral-300">
+            <%= ownership.authorizer_name %>
+          </td>
+          <td data-title="Role" class="<%= cell_class %> text-neutral-700 dark:text-neutral-300">
+            <%= Ownership.human_attribute_name("role.#{ownership.role}") %>
+          </td>
+          <td data-title="Confirmed At" class="<%= cell_class %> text-nowrap text-neutral-700 dark:text-neutral-300">
+            <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
+          </td>
+          <% if can_modify_or_remove %>
+            <td class="block py-2 align-top md:table-cell md:py-4">
+              <div class="flex flex-wrap gap-2">
+                <% if can_modify_owners?(@rubygem) %>
+                  <%= render ButtonComponent.new(
+                    t("edit"),
+                    edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
+                    color: :secondary,
+                    disabled: ownership.user == current_user) %>
+                <% end %>
+                <% if can_remove_owners?(@rubygem) %>
+                  <%= render ButtonComponent.new(
+                    t("remove"),
+                    rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
+                    method: "delete",
+                    data: { confirm: t("owners.index.confirm_remove") },
+                    color: :red) %>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
+        </tr>
       <% end %>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
