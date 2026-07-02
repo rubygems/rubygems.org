@@ -104,7 +104,7 @@ If a confirmed, serious issue goes unanswered, we keep trying to reach you throu
 
 Three things to check.
 
-* All emails come from an `@rubygems.org` account and are DKIM signed, which is a standard cryptographic signature your email provider verifies automatically. A spoofed sender address will usually be flagged by your provider as failing that check.
+* All emails come from an `@rubygems.org` account and are DKIM signed. DKIM is a standard cryptographic signature that many mail providers check, but provider behavior and DMARC policy can vary, including when subdomains are involved. Treat any failed DKIM, SPF, or DMARC check, or any warning from your mail provider, as a reason to pause and confirm with us directly.
 
 * Everyone on the team is a member of the [RubyGems GitHub organization](https://github.com/rubygems/). The current list of handles is kept on the program page; at the time of writing they are `@dkw-oss`, `@colby-swandale`, `@p-linnane`, `@halogenandtoast`, and `@mensfeld`.
 
