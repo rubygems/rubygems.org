@@ -160,19 +160,21 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "allow duplicate versions with different Ruby ABIs" do
-      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
 
       version = build(:version, rubygem: @rubygem, number: existing_version.number, platform: existing_version.platform,
-        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0")
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0", ruby_abi: "3.4")
 
       assert_predicate version, :valid?
     end
 
     should "not allow duplicate versions with the same Ruby ABI" do
-      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
 
       version = build(:version, rubygem: @rubygem, number: existing_version.number, platform: existing_version.platform,
-        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0")
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
 
       refute_predicate version, :valid?
 
@@ -209,19 +211,21 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "allow canonical number duplicates with different Ruby ABIs" do
-      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
 
       version = build(:version, rubygem: @rubygem, number: "1.0", platform: existing_version.platform,
-        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0")
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0", ruby_abi: "3.4")
 
       assert_predicate version, :valid?
     end
 
     should "not allow canonical number duplicates with the same Ruby ABI" do
-      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25", required_ruby_version: "~> 3.3.0")
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
 
       version = build(:version, rubygem: @rubygem, number: "1.0", platform: existing_version.platform,
-        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0")
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
 
       refute_predicate version, :valid?
     end
@@ -552,74 +556,37 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "abc-1.1.1.gem", @version.gem_file_name
     end
 
-    context "deriving ruby ABI" do
-      should "set ruby_abi when required_ruby_version targets a single Ruby minor version" do
-        version = create(:version, required_ruby_version: "~> 3.2.0")
-
-        assert_equal("3.2", version.ruby_abi)
+    context ".ruby_abi_for" do
+      should "returns Ruby ABI when required_ruby_version targets a single Ruby minor version" do
+        assert_equal "3.2", Version.ruby_abi_for("~> 3.2.0")
       end
 
-      should "not set ruby_abi when required_ruby_version is broad" do
-        version = create(:version, required_ruby_version: ">= 3.2")
-
-        assert_nil(version.ruby_abi)
+      should "return nil when required_ruby_version is broad" do
+        assert_nil Version.ruby_abi_for(">= 3.2")
       end
 
-      should "only set ruby_abi for clean three-segment requirements" do
-        version = create(:version, required_ruby_version: "~> 3.2.0.0")
-
-        assert_nil(version.ruby_abi)
+      should "return nil for clean requirements with more than three segments" do
+        assert_nil Version.ruby_abi_for("~> 3.2.0.0")
       end
 
-      should "not set ruby_abi when required_ruby_version has multiple requirements" do
-        version = create(:version, required_ruby_version: ">= 3.2, < 3.4")
-
-        assert_nil(version.ruby_abi)
+      should "return nil when required_ruby_version has multiple requirements" do
+        assert_nil Version.ruby_abi_for(">= 3.2, < 3.4")
       end
 
-      should "not set ruby_abi when required_ruby_version is malformed" do
-        version = build(:version, required_ruby_version: "not a requirement")
-
-        assert_nothing_raised { version.valid? }
-        assert_nil(version.ruby_abi)
-        assert_includes(version.errors[:required_ruby_version], "must be list of valid requirements")
+      should "return nil when required_ruby_version is malformed" do
+        assert_nil Version.ruby_abi_for("not a requirement")
       end
 
-      should "not set ruby_abi when required_ruby_version indicates multiple Ruby ABIs" do
-        version = create(:version, required_ruby_version: "~> 3.2")
-
-        assert_nil(version.ruby_abi)
+      should "return nil when required_ruby_version indicates multiple Ruby ABIs" do
+        assert_nil Version.ruby_abi_for("~> 3.2")
       end
 
-      should "not set ruby_abi when required_ruby_version is blank" do
-        version = create(:version, required_ruby_version: "")
-
-        assert_nil(version.ruby_abi)
+      should "return nil when required_ruby_version is blank" do
+        assert_nil Version.ruby_abi_for("")
       end
 
-      should "not set ruby_abi for patch-specific pessimistic requirements" do
-        version = create(:version, required_ruby_version: "~> 3.2.1")
-
-        assert_nil(version.ruby_abi)
-      end
-
-      should "recalculate ruby_abi when required_ruby_version is updated" do
-        version = create(:version, required_ruby_version: ">= 3.2.0")
-
-        assert_nil(version.ruby_abi)
-
-        version.update!(required_ruby_version: "~> 3.2.0")
-
-        assert_equal("3.2", version.reload.ruby_abi)
-      end
-
-      should "not recalculate ruby_abi when required_ruby_version is unchanged" do
-        version = create(:version, required_ruby_version: "~> 3.2.0")
-        version.update_column(:ruby_abi, "manually-set")
-
-        version.update!(summary: "Updated summary")
-
-        assert_equal("manually-set", version.reload.ruby_abi)
+      should "return nil for patch-specific pessimistic requirements" do
+        assert_nil Version.ruby_abi_for("~> 3.2.1")
       end
     end
 
@@ -658,15 +625,18 @@ class VersionTest < ActiveSupport::TestCase
       end
 
       should "use sha256 identity for versions targeting a single Ruby ABI" do
-        version = create(
+        version = build(
           :version,
           rubygem: @rubygem,
           number: "1.18.9",
           platform: "arm64-darwin-25",
           gem_platform: "arm64-darwin-25",
           required_ruby_version: "~> 3.4.0",
-          sha256: Digest::SHA2.base64digest("skinny gem")
+          ruby_abi: "3.4",
+          sha256: Digest::SHA2.base64digest("content addressable gem")
         )
+
+        version.save!
 
         expected_identity = "nokogiri-1.18.9-#{version.sha256_hex.first(8)}"
 
@@ -680,25 +650,29 @@ class VersionTest < ActiveSupport::TestCase
         existing_sha256 = encoded_sha256_with_hex_prefix(shared_hex_prefix + ("0" * 56))
         colliding_sha256 = encoded_sha256_with_hex_prefix(shared_hex_prefix + ("1" * 56))
 
-        existing_version = create(
+        existing_version = build(
           :version,
           rubygem: @rubygem,
           number: "1.18.9",
           platform: "arm64-darwin-25",
           gem_platform: "arm64-darwin-25",
           required_ruby_version: "~> 3.3.0",
-          sha256: existing_sha256
+          sha256: existing_sha256,
+          ruby_abi: "3.3"
         )
+        existing_version.save!
 
-        version = create(
+        version = build(
           :version,
           rubygem: @rubygem,
           number: "1.18.9",
           platform: "x86_64-darwin-25",
           gem_platform: "x86_64-darwin-25",
           required_ruby_version: "~> 3.4.0",
-          sha256: colliding_sha256
+          sha256: colliding_sha256,
+          ruby_abi: "3.4"
         )
+        version.save!
 
         expected_identity = "nokogiri-1.18.9-#{version.sha256_hex.first(9)}"
 
@@ -715,7 +689,8 @@ class VersionTest < ActiveSupport::TestCase
           platform: "x86_64-darwin-25",
           gem_platform: "x86_64-darwin-25",
           required_ruby_version: "~> 3.4.0",
-          sha256: nil
+          sha256: nil,
+          ruby_abi: "3.4"
         )
 
         refute_predicate version, :valid?
@@ -844,6 +819,23 @@ class VersionTest < ActiveSupport::TestCase
       @version.platform = "zomg"
 
       assert_equal "#{@version.rubygem.name} (#{@version.number}-zomg)", @version.to_title
+    end
+
+    should "give content address, platform and Ruby ABI for #to_title" do
+      rubygem = create(:rubygem, name: "nokogiri")
+      version = build(
+        :version,
+        rubygem: rubygem,
+        number: "1.18.9",
+        platform: "arm64-darwin-25",
+        gem_platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.4.0",
+        ruby_abi: "3.4",
+        sha256: Digest::SHA2.base64digest("content addressable gem")
+      )
+      expected_content_address = version.sha256_hex.first(Version::DEFAULT_CONTENT_ADDRESS_LENGTH).to_s
+
+      assert_equal "nokogiri (1.18.9-#{expected_content_address}, Platform: arm64-darwin-25, Ruby ABI 3.4)", version.to_title
     end
 
     should "have description for info" do
