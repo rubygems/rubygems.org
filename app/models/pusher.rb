@@ -197,6 +197,13 @@ class Pusher
       Error verifying sigstore attestation:
       #{e.message}
     MSG
+  rescue StandardError => e
+    Rails.error.report(e, handled: true)
+    notify <<~MSG, 422
+      RubyGems.org could not verify attestation.
+      Error:
+      #{extract_error_message(e)}
+    MSG
   end
 
   private

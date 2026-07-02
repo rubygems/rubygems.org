@@ -470,5 +470,35 @@ class PusherTest < ActiveSupport::TestCase
       refute @cutter.verify_sigstore
       assert_equal "Attestation verification failed:\nAttestation failed to validate", @cutter.message
     end
+
+    should "not push gem if sigstore raises an expected error" do
+      @cutter.stubs(:attestations).returns([build(:sigstore_bundle).as_json])
+      @api_key.owner = create(:oidc_trusted_publisher_github_action)
+
+      @cutter.send(:sigstore_verifier).expects(:verify).with(input: anything, policy: anything, offline: true)
+        .raises Sigstore::Error, "expected sigstore failure"
+
+      refute @cutter.verify_sigstore
+      assert_equal "Error verifying sigstore attestation:\nexpected sigstore failure\n", @cutter.message
+      assert_equal 422, @cutter.code
+    end
+
+    should "not raise if sigstore verification raises an unexpected error" do
+      attestations = [build(:sigstore_bundle).as_json]
+      rubygem = create(:rubygem, name: "test", owners: [@user])
+      rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem:)
+      @api_key = create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, scopes: %i[push_rubygem])
+      @cutter = Pusher.new(@api_key, build_gem(gemspec_yaml_template), attestations:)
+      error = KeyError.new("timestamp verification response is missing nonce")
+
+      Rails.error.expects(:report).with(error, handled: true)
+      @cutter.send(:sigstore_verifier).expects(:verify).with(input: anything, policy: anything, offline: true)
+        .raises error
+
+      refute @cutter.process
+      assert_includes @cutter.message, "RubyGems.org could not verify attestation."
+      assert_includes @cutter.message, "timestamp verification response is missing nonce"
+      assert_equal 422, @cutter.code
+    end
   end
 end
