@@ -14,8 +14,11 @@
       <div class="mb-6">
         <%= form.label :email, t('activerecord.attributes.user.email'),
           class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
-        <%= form.email_field :email, :size => '25',
-          class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+        <%= form.email_field :email,
+          size: '25',
+          class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition",
+          required: true
+        %>
       </div>
       <div class="submit_field">
         <%= render ButtonComponent.new(t(".submit"), type: :submit, color: :primary) %>
