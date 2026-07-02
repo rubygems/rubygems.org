@@ -10,17 +10,24 @@
 
   <div>
     <%= form.label :email, class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
-    <%= form.email_field :email, class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+    <%= form.email_field :email,
+      class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition",
+      required: true %>
   </div>
 
   <div>
     <%= form.label :handle, class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
-    <%= form.text_field :handle, class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+    <%= form.text_field :handle,
+      class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition",
+      required: true %>
   </div>
 
   <div>
-    <%= form.label :password, t('activerecord.attributes.user.password'), class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
-    <%= form.password_field :password, autocomplete: "new-password", class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+    <%= form.label :password, t('activerecord.attributes.user.password'),
+      class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+    <%= form.password_field :password, autocomplete: "new-password",
+      class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition",
+      required: true %>
   </div>
 
   <div class="flex items-center gap-2">
