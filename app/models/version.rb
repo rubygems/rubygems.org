@@ -19,7 +19,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
-  before_validation :set_ruby_abi, if: :required_ruby_version_changed?
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
   before_save :create_link_verifications, if: :metadata_changed?
@@ -381,7 +380,9 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def to_title
-    if platformed?
+    if content_addressable?
+      "#{rubygem.name} (#{number}-#{content_address}, Platform: #{platform}, Ruby ABI #{ruby_abi})"
+    elsif platformed?
       "#{rubygem.name} (#{number}-#{platform})"
     else
       "#{rubygem.name} (#{number})"
@@ -480,15 +481,11 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     nil
   end
 
-  private
-
   def content_addressable?
     platformed? && ruby_abi.present?
   end
 
-  def set_ruby_abi
-    self.ruby_abi = Version.ruby_abi_for(required_ruby_version)
-  end
+  private
 
   def update_prerelease
     self[:prerelease] = prerelease
@@ -549,15 +546,20 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     raise ArgumentError, "Could not generate unique content-address" if digest.blank?
 
     (DEFAULT_CONTENT_ADDRESS_LENGTH..digest.length).each do |length|
-      identity = "#{rubygem.name}-#{number}-#{digest.first(length)}"
-      return identity unless Version.where(full_name: identity).where.not(id: id).exists?
+      candidate = digest.first(length)
+      identity = "#{rubygem.name}-#{number}-#{candidate}"
+      return candidate unless Version.where(full_name: identity).where.not(id: id).exists?
     end
 
     raise ArgumentError, "Could not generate unique content-address"
   end
 
+  def content_addressed_full_name
+    "#{rubygem.name}-#{number}-#{content_address}"
+  end
+
   def platform_identity(platform_value)
-    return content_address if content_addressable? && sha256.present?
+    return content_addressed_full_name if content_addressable? && sha256.present?
 
     identity = "#{rubygem.name}-#{number}"
     identity << "-#{platform_value}" unless platform_value == "ruby"
