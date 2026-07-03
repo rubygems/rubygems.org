@@ -73,6 +73,9 @@
             <% if version.platformed? %>
               <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version.platform %></span>
             <% end %>
+            <% if version.ruby_abi.present? %>
+              <span class="text-b4 text-neutral-700 dark:text-neutral-400">Ruby ABI <%= version.ruby_abi %></span>
+            <% end %>
             <span class="text-b4 text-neutral-700 dark:text-neutral-400">(<%= number_to_human_size(version.size) %>)</span>
             <% if version.yanked? %>
               <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t "versions.version.yanked" %></span>
