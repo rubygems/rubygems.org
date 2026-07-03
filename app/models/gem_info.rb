@@ -49,9 +49,9 @@ class GemInfo
 
   private
 
-  DEPENDENCY_NAMES_INDEX = 8
+  DEPENDENCY_NAMES_INDEX = 10
 
-  DEPENDENCY_REQUIREMENTS_INDEX = 7
+  DEPENDENCY_REQUIREMENTS_INDEX = 9
 
   # Marshal.load of pre-deploy cache entries fails when GemVersion grows a Struct field.
   def read_cache(cache_key)
@@ -72,11 +72,21 @@ class GemInfo
         end
       end
 
-      number, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, = row
+      number, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, ruby_abi, full_name, = row
       version_class = VERSIONS.dig(version, :klass)
       checksum = Version._sha256_hex(checksum)
       created_at = created_at&.utc&.iso8601
-      args = { number:, platform:, checksum:, info_checksum:, dependencies:, ruby_version:, rubygems_version:, created_at: }
+      content_address = self.class.content_address_for(ruby_abi, full_name)
+      args = { number:,
+              platform:,
+              checksum:,
+              info_checksum:,
+              dependencies:,
+              ruby_version:,
+              rubygems_version:,
+              created_at:,
+              ruby_abi:,
+              content_address: }
       args = args.slice(*version_class.members)
       version_class.new(**args)
     end
@@ -91,7 +101,7 @@ class GemInfo
     checksum_column = VERSIONS.fetch(version).fetch(:checksum_column)
     group_by_columns = [
       "number", "platform", "sha256", checksum_column,
-      "required_ruby_version", "required_rubygems_version", "versions.created_at"
+      "required_ruby_version", "required_rubygems_version", "versions.created_at", "ruby_abi", "full_name"
     ]
 
     dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
