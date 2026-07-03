@@ -9,17 +9,17 @@ module CompactIndexVersions
       checksum_column = config[:checksum_column]
       yanked_checksum_column = config[:yanked_checksum_column]
 
-      query = ["(SELECT r.name, v.created_at as date, v.#{checksum_column} as info_checksum, v.number, v.platform
+      query = ["(SELECT r.name, v.created_at as date, v.#{checksum_column} as info_checksum, v.number, v.platform, v.ruby_abi, v.full_name
                 FROM rubygems AS r, versions AS v
                 WHERE v.rubygem_id = r.id AND
                       v.created_at > ?)
                 UNION
-                (SELECT r.name, v.yanked_at as date, v.#{yanked_checksum_column} as info_checksum, '-'||v.number, v.platform
+                (SELECT r.name, v.yanked_at as date, v.#{yanked_checksum_column} as info_checksum, '-'||v.number, v.platform, v.ruby_abi, v.full_name
                 FROM rubygems AS r, versions AS v
                 WHERE v.rubygem_id = r.id AND
                       v.indexed is false AND
                       v.yanked_at > ?)
-                ORDER BY date, number, platform, name", date, date]
+                ORDER BY date, number, platform, ruby_abi, full_name, name", date, date]
 
       map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
     end
@@ -35,11 +35,11 @@ module CompactIndexVersions
 
       query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
                        v.sha256, COALESCE(v.#{yanked_checksum_column}, v.#{checksum_column}) as info_checksum,
-                       v.number, v.platform
+                       v.number, v.platform, v.ruby_abi, v.full_name
                 FROM rubygems AS r, versions AS v
                 WHERE v.rubygem_id = r.id AND
                       (v.created_at <= ? OR v.yanked_at <= ?)
-                ORDER BY r.name COLLATE \"C\", stamp, v.number, v.platform", updated_at, updated_at]
+                ORDER BY r.name COLLATE \"C\", stamp, v.number, v.platform, v.ruby_abi, v.full_name", updated_at, updated_at]
 
       execute_raw_sql(query)
         .chunk_while { |a, b| a["name"] == b["name"] }
@@ -71,12 +71,26 @@ module CompactIndexVersions
 
     def build_compact_index_gem(gem_name, versions)
       compact_index_versions = versions.map do |version|
-        CompactIndex::GemVersion.new(version["number"],
-          version["platform"],
-          version["sha256"],
-          version["info_checksum"])
+        CompactIndex::GemVersion.new(
+          number: version["number"],
+          platform: version["platform"],
+          checksum: version["sha256"],
+          info_checksum: version["info_checksum"],
+          ruby_abi: version["ruby_abi"],
+          content_address: content_address_for(version["ruby_abi"], version["full_name"])
+        )
       end
       CompactIndex::Gem.new(gem_name, compact_index_versions)
+    end
+
+    def content_address_for(ruby_abi, full_name)
+      return if ruby_abi.blank?
+      return if full_name.blank?
+
+      content_address = full_name.split("-")&.last
+      return unless content_address.match?(/\A[0-9a-f]{#{Version::DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/o)
+
+      content_address
     end
 
     private :map_gem_versions, :public_compact_index_gem, :build_compact_index_gem, :execute_raw_sql

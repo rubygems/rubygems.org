@@ -11,10 +11,12 @@ module CompactIndexHelpers
       args.fetch(:info_checksum, "info+#{name}+#{number}"),
       args[:dependencies],
       args[:ruby_version],
-      args[:rubygems_version]
+      args[:rubygems_version],
+      args[:ruby_abi],
+      args[:content_address]
     ]
     if version == 2
-      CompactIndex::GemVersionV2.new(*common, args[:created_at])
+      CompactIndex::GemVersionV2.new(*common[0...7], args[:created_at], *common[7..])
     else
       CompactIndex::GemVersion.new(*common)
     end
