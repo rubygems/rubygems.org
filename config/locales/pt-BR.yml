@@ -894,6 +894,7 @@ pt-BR:
       requirements_header: Requisitos
       show_all_versions: Mostrar todas as versões (%{count})
       versions_header: Versões
+      ruby_abi:
       yanked_notice: Esta gem foi removida, e não está mais disponível para download.
     show_yanked:
       not_hosted_notice: Esta gem não está hospedada no Gemcutter.
@@ -1004,6 +1005,7 @@ pt-BR:
       imported_gem_version_notice:
     version:
       yanked: removida
+      ruby_abi:
   webauthn_credentials:
     callback:
       success:

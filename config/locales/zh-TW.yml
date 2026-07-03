@@ -882,6 +882,7 @@ zh-TW:
       requirements_header: 必填
       show_all_versions: 顯示所有版本（共 %{count}）
       versions_header: 版本列表
+      ruby_abi:
       yanked_notice: 這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。
     show_yanked:
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上
@@ -983,6 +984,7 @@ zh-TW:
         gemspec 指定。
     version:
       yanked: 已被移除
+      ruby_abi:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。
