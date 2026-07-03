@@ -135,6 +135,21 @@ class CompactIndex::VersionsFileTest < ActiveSupport::TestCase
   end
 
   context "#contents" do
+    should "use content address for Ruby ABI version tokens" do
+      versions = [
+        build_version(
+          name: "test",
+          number: "2.9.0",
+          platform: "x86_64-linux-musl",
+          ruby_abi: "3.2",
+          content_address: "ef716ba7"
+        )
+      ]
+      gems = [CompactIndex::Gem.new("test", versions)]
+
+      assert_includes @versions_file.contents(gems), "test 2.9.0-ef716ba7 info+test+2.9.0"
+    end
+
     should "raise when there are unknown options" do
       assert_raises(ArgumentError) { @versions_file.contents(nil, foo: :bar) }
     end
