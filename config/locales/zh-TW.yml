@@ -692,7 +692,14 @@ zh-TW:
       info: 新增或移除擁有者
       confirmed: 已確認
       pending: 待確認
+      current_user_badge:
       confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice:
     create:

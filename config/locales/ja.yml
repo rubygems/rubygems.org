@@ -706,7 +706,14 @@ ja:
       info: 所有者を追加または削除する
       confirmed: 確定
       pending: 保留
+      current_user_badge:
       confirm_remove: このユーザーを所有者から削除されたいとのことでよろしいですか。
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice: 確定メールがEメールに再送されました。
     create:

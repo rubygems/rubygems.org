@@ -700,7 +700,14 @@ en:
       info: add or remove owners
       confirmed: Confirmed
       pending: Pending
+      current_user_badge: you
       confirm_remove: Are you sure you want to remove this user from the owners?
+      remove_self_dialog:
+        title: Remove yourself as owner?
+        warning: "You will lose access to this gem. You will need to ask another owner to re-add you to regain ownership. This cannot be undone."
+        confirm_label: "Type your username (%{username}) to confirm:"
+        submit: Remove my access
+        cancel: Cancel
     resend_confirmation:
       resent_notice: A confirmation mail has been re-sent to your email
     create:
