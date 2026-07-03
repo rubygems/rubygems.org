@@ -34,6 +34,83 @@ class GemInfoTest < ActiveSupport::TestCase
       @expected_info_checksum = Digest::MD5.hexdigest(CompactIndex.info(@expected_info))
     end
 
+    should "include Ruby ABI and content address in info version targeting a single Ruby ABI" do
+      rubygem = create(:rubygem, name: "single-abi-info")
+      version = create(
+        :version,
+        rubygem: rubygem,
+        number: "2.9.0",
+        platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl",
+        required_ruby_version: "~> 3.2.0",
+        sha256: Digest::SHA2.base64digest("single-abi-2.9.0-x86_64-linux-musl"),
+        info_checksum_v2: "single-abi-info-checksum"
+      )
+
+      info = GemInfo.new("single-abi-info").compact_index_info
+      compact_index_version = info.first
+
+      assert_equal "3.2", compact_index_version.ruby_abi
+      assert_equal version.full_name.split("-").last, compact_index_version.content_address
+    end
+
+    should "order info versions with the same number and platform by Ruby ABI" do
+      rubygem = create(:rubygem, name: "abi-ordering")
+      created_at = Time.utc(2026, 7, 1, 12, 0, 0)
+      create(
+        :version,
+        rubygem: rubygem,
+        number: "1.0.0",
+        platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl",
+        required_ruby_version: ">= 3.2",
+        sha256: Digest::SHA2.base64digest("abi-ordering-x86_64-linux-musl"),
+        info_checksum_v2: "abi-ordering-checksum",
+        ruby_abi: nil,
+        created_at: created_at
+      )
+      %w[3.4 3.2 3.3].each do |abi|
+        create(
+          :version,
+          rubygem: rubygem,
+          number: "1.0.0",
+          platform: "x86_64-linux-musl",
+          gem_platform: "x86_64-linux-musl",
+          required_ruby_version: "~> #{abi}.0",
+          sha256: Digest::SHA2.base64digest("abi-ordering-#{abi}-x86_64-linux-musl"),
+          info_checksum_v2: "abi-ordering-checksum",
+          ruby_abi: abi,
+          created_at: created_at
+        )
+      end
+
+      info = GemInfo.new("abi-ordering").compact_index_info
+
+      assert_equal ["3.2", "3.3", "3.4", nil], info.map(&:ruby_abi)
+    end
+
+    should "return platform identity without Ruby ABI or content address for versions targeting multiple Ruby ABIs" do
+      rubygem = create(:rubygem, name: "multi-abi")
+      create(
+        :version,
+        rubygem: rubygem,
+        number: "2.9.0",
+        platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl",
+        required_ruby_version: ">= 3.2.0",
+        sha256: Digest::SHA2.base64digest("multi-abi-2.9.0-x86_64-linux-musl"),
+        info_checksum_v2: "multi-abi-info-checksum"
+      )
+
+      info = GemInfo.new("multi-abi").compact_index_info
+      compact_index_version = info.first
+
+      assert_equal "2.9.0", compact_index_version.number
+      assert_equal "x86_64-linux-musl", compact_index_version.platform
+      assert_nil compact_index_version.ruby_abi
+      assert_nil compact_index_version.content_address
+    end
+
     should "return v2 gem version and dependency with created_at" do
       info = GemInfo.new("example").compact_index_info
 
