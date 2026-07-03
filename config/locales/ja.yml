@@ -897,6 +897,7 @@ ja:
       requirements_header: 必須要件
       show_all_versions: 全てのバージョンを表示（全%{count}件）
       versions_header: バージョン履歴
+      ruby_abi:
       yanked_notice: このバージョンはヤンクされ、直接のダウンロードや依存関係になっている可能性がある他のgemは利用できません。
     show_yanked:
       not_hosted_notice: このgemは現在RubyGems.org上ではホストされていません。このgemのヤンクされたバージョンはまだ存在する可能性があります。
@@ -1001,6 +1002,7 @@ ja:
       imported_gem_version_notice: このgemのバージョンは%{import_date}にRubyGems.orgにインポートされました。表示されている日付は作者によってgemspec中で指定されました。
     version:
       yanked: ヤンク済み
+      ruby_abi:
   webauthn_credentials:
     callback:
       success: セキュリティ機器が正常に登録されました。
