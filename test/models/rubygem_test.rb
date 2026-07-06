@@ -80,6 +80,25 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version3_ruby, @rubygem.most_recent_version
     end
 
+    should "mark the latest version for each Ruby ABI per platform" do
+      abi32_old = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                         required_ruby_version: "~> 3.2.0", ruby_abi: "3.2", sha256: Digest::SHA2.base64digest("abi32-1.0.0"))
+      abi32_new = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                         required_ruby_version: "~> 3.2.0", ruby_abi: "3.2", sha256: Digest::SHA2.base64digest("abi32-2.0.0"))
+      abi33_new = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                         required_ruby_version: "~> 3.3.0", ruby_abi: "3.3", sha256: Digest::SHA2.base64digest("abi33-2.0.0"))
+      plain_ruby = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
+
+      @rubygem.reorder_versions
+
+      latest_versions = Version.latest
+
+      assert_includes latest_versions, abi32_new
+      assert_includes latest_versions, abi33_new
+      assert_includes latest_versions, plain_ruby
+      refute_includes latest_versions, abi32_old
+    end
+
     should "order latest platform gems with latest uniquely" do
       pre  = create(:version,
         rubygem: @rubygem,
