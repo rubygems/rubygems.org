@@ -19,10 +19,11 @@ class ButtonComponent < ApplicationComponent
 
   def view_template(&block)
     css = "text-nowrap no-underline " \
-          "rounded inline-flex border-box " \
+          "inline-flex border-box " \
           "justify-content-center items-center hover:shadow-md " \
           "#{DISABLED} disabled:cursor-default disabled:hover:shadow-none " \
-          "transition duration-200 ease-in-out focus:outline-none " \
+          "transition duration-200 ease-in-out " \
+          "focus:outline-2 focus:outline-offset-2 " \
           "#{button_color(color, style)} #{button_size(size)} #{options.delete(:class)}"
 
     if type == :link
@@ -41,20 +42,33 @@ class ButtonComponent < ApplicationComponent
     color = color.to_sym
     color = :orange if color == :primary
     color = :hammy if color == :secondary
-    STYLES[style][color]
+    "#{STYLES[style][color]} #{FOCUS_OUTLINE_COLOR[color]}"
   end
 
   def button_size(size)
     case size
     when :small # 36px height
-      "px-4 py-3 h-9 min-h-9 text-b3"
+      "px-4 py-3 h-9 min-h-9 text-b3 rounded"
+    when :extra_large
+      "px-6 py-3 min-h-14 text-b1 rounded-lg font-semibold"
     else # :large, 44px height
-      "px-4 py-3 h-12 min-h-12 text-b2"
+      "px-4 py-3 h-12 min-h-12 text-b2 rounded"
     end
   end
 
   DISABLED = "disabled:bg-neutral-200 disabled:border-neutral-200 disabled:text-neutral-600 " \
              "dark:disabled:bg-neutral-800 dark:disabled:border-neutral-800 dark:disabled:text-neutral-600"
+
+  # Focus outline color matches the button's color (used with focus:outline-2 focus:outline-offset-2)
+  FOCUS_OUTLINE_COLOR = {
+    red:     "focus:outline-red-500",
+    orange:  "focus:outline-orange-500",
+    hammy:   "focus:outline-orange-800 dark:focus:outline-orange-200",
+    yellow:  "focus:outline-yellow-500",
+    green:   "focus:outline-green-500",
+    blue:    "focus:outline-blue-500",
+    neutral: "focus:outline-neutral-700 dark:focus:outline-white"
+  }.freeze
 
   FILL_BUTTON_COLOR = {
     red:     "text-white bg-red-500 hover:bg-red-600 active:bg-red-600 " \
@@ -75,7 +89,7 @@ class ButtonComponent < ApplicationComponent
 
   PLAIN_BUTTON_COLOR = {
     red:     "text-red-500 hover:bg-red-500/5 active:bg-red-500/10 " \
-             "dark:hover:bg-red-500/15 dark:active:bg-red-500/25 ",
+             "dark:text-red-400 dark:hover:bg-red-500/15 dark:active:bg-red-500/25 ",
     orange:  "text-orange-500 hover:bg-orange-500/5 active:bg-orange-500/10 " \
              "dark:hover:bg-orange-500/15 dark:active:bg-orange-500/25 ",
     hammy:   "text-orange-800 hover:bg-orange-200/15 active:bg-orange-200/25 " \

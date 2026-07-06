@@ -12,7 +12,7 @@ gem "aws-sdk-sqs", "~> 1.116"
 gem "bootsnap", "~> 1.24"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.35"
+gem "datadog", "~> 2.36"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.35"
 gem "faraday", "~> 2.14"
@@ -123,7 +123,7 @@ group :development, :test do
   gem "rubocop-rails", "~> 2.35", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.39", require: false
-  gem "rubocop-capybara", "~> 2.23", require: false
+  gem "rubocop-capybara", "~> 3.0", require: false
   gem "rubocop-factory_bot", "~> 2.28", require: false
 end
 

@@ -105,7 +105,7 @@ class SignInTest < ApplicationSystemTestCase
       assert_text "Sign in"
       expected_notice = "Your login page session has expired."
 
-      assert page.has_selector? "#flash_notice", text: expected_notice
+      assert page.has_selector? "#flash_alert", text: expected_notice
     end
   end
 

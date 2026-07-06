@@ -7,21 +7,21 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     get "/de"
 
     assert_response :success
-    assert_includes response.body, "RubyGems.org ist der Gem-Hosting-Dienst"
+    assert_includes response.body, I18n.t("layouts.application.header.search_gem_html", locale: :de)
   end
 
   test "paths without locale use default locale" do
     get "/"
 
     assert_response :success
-    assert_includes response.body, "RubyGems.org is the Ruby community"
+    assert_includes response.body, I18n.t("home.index.find_blurb_lead", locale: :en)
   end
 
   test "query string locale is ignored" do
     get "/?locale=de"
 
     assert_response :success
-    assert_includes response.body, "RubyGems.org is the Ruby community"
+    assert_includes response.body, I18n.t("home.index.find_blurb_lead", locale: :en)
   end
 
   test "invalid locale path does not match localized routes" do
@@ -93,13 +93,11 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert_empty asset_urls.grep(%r{\A/de/})
   end
 
-  test "the active nav link is locale-aware" do
-    create(:rubygem, name: "sandworm", number: "1.0.0")
-
-    get "/de/gems"
+  test "nav links are locale-aware" do
+    get "/de"
 
     assert_response :success
-    assert page.has_css?("a.header__nav-link.is-active", text: "Gems")
+    assert page.has_link?(I18n.t("layouts.application.footer.statistics", locale: :de), href: "/de/stats")
   end
 
   test "the default locale strip can never produce an external redirect" do
@@ -123,13 +121,13 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "?locale=", "locale leaked as a query param, fragmenting the CDN cache"
   end
 
-  test "localized gem page keeps API helper urls unlocalized" do
+  test "localized gem page does not emit localized API urls" do
     create(:rubygem, name: "sandworm", number: "1.0.0")
 
     get "/de/gems/sandworm"
 
     assert_response :success
-    assert page.has_css?(%(.gem__downloads-wrap[data-href="/api/v1/downloads/sandworm-1.0.0.json"]))
+    refute_includes response.body, "/de/api/"
   end
 
   test "localized pages emit a self-referential canonical plus hreflang alternates" do

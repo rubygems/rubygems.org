@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GemInfo
+  include CompactIndexVersions
+
   CURRENT_VERSION = 2
 
   VERSIONS = {
@@ -44,70 +46,6 @@ class GemInfo
     end
     names
   end
-
-  def self.compact_index_versions(date, version: CURRENT_VERSION)
-    config = VERSIONS.fetch(version)
-    checksum_column = config[:checksum_column]
-    yanked_checksum_column = config[:yanked_checksum_column]
-
-    query = ["(SELECT r.name, v.created_at as date, v.#{checksum_column} as info_checksum, v.number, v.platform
-              FROM rubygems AS r, versions AS v
-              WHERE v.rubygem_id = r.id AND
-                    v.created_at > ?)
-              UNION
-              (SELECT r.name, v.yanked_at as date, v.#{yanked_checksum_column} as info_checksum, '-'||v.number, v.platform
-              FROM rubygems AS r, versions AS v
-              WHERE v.rubygem_id = r.id AND
-                    v.indexed is false AND
-                    v.yanked_at > ?)
-              ORDER BY date, number, platform, name", date, date]
-
-    map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
-  end
-
-  def self.compact_index_public_versions(updated_at, version: CURRENT_VERSION)
-    config = VERSIONS.fetch(version)
-    checksum_column = config[:checksum_column]
-    yanked_checksum_column = config[:yanked_checksum_column]
-
-    query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
-                     v.sha256, COALESCE(v.#{yanked_checksum_column}, v.#{checksum_column}) as info_checksum,
-                     v.number, v.platform
-              FROM rubygems AS r, versions AS v
-              WHERE v.rubygem_id = r.id AND
-                    (v.created_at <= ? OR v.yanked_at <= ?)
-              ORDER BY r.name, stamp, v.number, v.platform", updated_at, updated_at]
-
-    versions_by_gem = execute_raw_sql(query).group_by { |v| v["name"] }
-    versions_by_gem.each_value do |versions|
-      info_checksum = versions.last["info_checksum"]
-      versions.select! { |v| v["indexed"] == true }
-      # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
-      versions.each { |v| v["info_checksum"] = info_checksum }
-    end
-    versions_by_gem.reject! { |_, versions| versions.empty? }
-
-    map_gem_versions(versions_by_gem)
-  end
-
-  def self.execute_raw_sql(query)
-    sanitized_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
-    ActiveRecord::Base.connection.execute(sanitized_sql)
-  end
-
-  def self.map_gem_versions(versions_by_gem)
-    versions_by_gem.map do |gem_name, versions|
-      compact_index_versions = versions.map do |version|
-        CompactIndex::GemVersion.new(version["number"],
-          version["platform"],
-          version["sha256"],
-          version["info_checksum"])
-      end
-      CompactIndex::Gem.new(gem_name, compact_index_versions)
-    end
-  end
-
-  private_class_method :map_gem_versions, :execute_raw_sql
 
   private
 

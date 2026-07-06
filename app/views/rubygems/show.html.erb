@@ -14,70 +14,91 @@
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(rubygem_id: @rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
 <% end %>
 
+<% content_for :subject do %>
+  <%= render "rubygems/aside" %>
+<% end %>
 
-<div class="l-overflow">
-  <div class="l-colspan--l colspan--l--has-border">
-    <% if @latest_version.indexed %>
-      <div class="gem__intro">
-        <div id="markup" class="gem__desc">
-          <%= simple_markup(@latest_version.info) %>
-        </div>
-      </div>
+<% content_for :subject_secondary do %>
+  <%= render "rubygems/aside_secondary" %>
+<% end %>
 
-      <div class="gem__install">
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= t '.bundler_header' %>:
-          <%= copy_field_tag("gemfile_text", @latest_version.to_bundler(locked_version: @on_version_page)) %>
-        </h2>
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= t '.install' %>:
-          <%= copy_field_tag("install_text", @latest_version.to_install) %>
-        </h2>
-      </div>
-    <% else %>
-      <div class="t-body">
-        <p><%=t '.yanked_notice' %></p>
-      </div>
-    <% end %>
+<% section_heading_class = "text-b1 font-semibold text-neutral-900 dark:text-white" %>
 
-    <% if @versions.present? %>
-      <div class="l-half--l">
-        <div class="versions">
-          <h3 class="t-list__heading"><%= t '.versions_header' %>:</h3>
-          <ol class="gem__versions t-list__items">
-            <%= render @versions %>
-          </ol>
-          <% if show_all_versions_link?(@rubygem) %>
-            <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(rubygem_id: @rubygem.slug), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
+<div class="flex flex-col gap-8 pb-16 lg:pt-10 text-neutral-800 dark:text-neutral-200">
+  <%= render "rubygems/tabs", rubygem: @rubygem, version: @latest_version, current: :gem_info %>
 
-    <div class = "l-half--l">
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
-      <% if @latest_version.dependencies.present? && @latest_version.indexed %>
-        <div class="dependencies_list">
-          <%= link_to t(:dependency_list), rubygem_version_dependencies_path(rubygem_id: @rubygem.slug, version_id: @latest_version.slug), class: "gem__see-all-versions t-link--gray t-link--has-arrow push--s" %>
+  <% if @latest_version.indexed %>
+    <div class="flex flex-col gap-3">
+      <%= render CopyFieldComponent.new(value: @latest_version.to_bundler(locked_version: @on_version_page), name: "gemfile_text", label: t(".bundler_header")) %>
+      <%= render CopyFieldComponent.new(value: @latest_version.to_install, name: "install_text", label: t(".install")) %>
+    </div>
+
+    <div id="markup" class="gem__desc text-b2 leading-relaxed break-words [&_a]:text-orange-500 dark:[&_a]:text-orange-400 [&_a:hover]:underline [&_p]:mb-3 [&_pre]:font-mono [&_pre]:text-c4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-c4 [&_h1]:text-h4 [&_h1]:font-semibold [&_h2]:text-b1 [&_h2]:font-semibold [&_h3]:text-b2 [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6">
+      <%= simple_markup(@latest_version.info) %>
+    </div>
+
+    <div class="flex flex-wrap gap-x-16 gap-y-4">
+      <div class="flex flex-col items-start gap-2">
+        <h3 class="text-b3 font-semibold text-neutral-900 dark:text-white"><%= t "rubygems.aside.required_ruby_version" %></h3>
+        <code class="px-2 py-0.5 font-mono text-c4 rounded-sm bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white"><%= @latest_version.required_ruby_version.presence || t("none") %></code>
+      </div>
+      <% if @latest_version.required_rubygems_version != ">= 0" %>
+        <div class="flex flex-col items-start gap-2">
+          <h3 class="text-b3 font-semibold text-neutral-900 dark:text-white"><%= t "rubygems.aside.required_rubygems_version" %></h3>
+          <code class="px-2 py-0.5 font-mono text-c4 rounded-sm bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white"><%= @latest_version.required_rubygems_version.presence || t("none") %></code>
         </div>
       <% end %>
     </div>
 
-    <% if @latest_version.requirements.present? %>
-      <div class="l-half--l">
-        <h3 class="t-list__heading"><%= t '.requirements_header' %>:</h3>
-        <div class="t-list__items">
-          <% Array(@latest_version.requirements).each do |requirement| %>
-            <p><%= requirement %></p>
-          <% end %>
-        </div>
+    <% if @latest_version.authors.present? %>
+      <div>
+        <h3 class="<%= section_heading_class %> mb-2"><%= t "rubygems.release_info.authors_header" %></h3>
+        <p class="text-b2"><%= @latest_version.authors %></p>
       </div>
     <% end %>
+  <% else %>
+    <%= render AlertComponent.new(style: :alert) do %>
+      <%= t ".yanked_notice" %>
+    <% end %>
+  <% end %>
 
-    <%= render partial: "rubygems/release_info", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
-    <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
-  </div>
+  <% if @versions.present? %>
+    <div class="versions">
+      <h3 class="<%= section_heading_class %> mb-2"><%= t ".versions_header" %></h3>
+      <ol class="gem__versions flex flex-col gap-1.5">
+        <% @versions.each do |version| %>
+          <li class="flex flex-wrap items-center gap-x-2">
+            <%= link_to version.number, rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug),
+                  class: "font-mono text-c4 px-2 py-0.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white hover:bg-green-300 dark:hover:bg-green-700" %>
+            <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version_date_tag(version) %></span>
+            <% if version.platformed? %>
+              <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version.platform %></span>
+            <% end %>
+            <span class="text-b4 text-neutral-700 dark:text-neutral-400">(<%= number_to_human_size(version.size) %>)</span>
+            <% if version.yanked? %>
+              <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t "versions.version.yanked" %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ol>
+      <% if show_all_versions_link?(@rubygem) %>
+        <%= link_to t(".show_all_versions", count: @rubygem.versions.count), rubygem_versions_url(rubygem_id: @rubygem.slug),
+              class: "inline-block mt-2 text-b3 text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
+      <% end %>
+    </div>
+  <% end %>
 
-  <%= render "rubygems/aside" %>
+  <% if @latest_version.requirements.present? %>
+    <div>
+      <h3 class="<%= section_heading_class %> mb-2"><%= t ".requirements_header" %></h3>
+      <div class="text-b2">
+        <% Array(@latest_version.requirements).each do |requirement| %>
+          <p><%= requirement %></p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render partial: "rubygems/release_info", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+  <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
 </div>

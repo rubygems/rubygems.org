@@ -1,12 +1,12 @@
-<li class="gem__version-wrap">
-  <%= link_to version.number, rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug), :class => 't-list__item' %>
-  <%= version_date_tag(version) %>
+<li class="flex flex-wrap items-center gap-x-2">
+  <%= link_to version.number, rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug),
+        class: "font-mono text-c4 px-2 py-0.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white hover:bg-green-300 dark:hover:bg-green-700" %>
+  <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version_date_tag(version) %></span>
   <% if version.platformed? %>
-    <span class="gem__version__date platform"><%= version.platform %></span>
+    <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version.platform %></span>
   <% end %>
-
-  <span class="gem__version__date">(<%= number_to_human_size(version.size) %>)</span>
-  <% if version.yanked? -%>
-    <span class="gem__version__date"><%= t '.yanked' %></span>
-  <% end -%>
+  <span class="text-b4 text-neutral-700 dark:text-neutral-400">(<%= number_to_human_size(version.size) %>)</span>
+  <% if version.yanked? %>
+    <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t ".yanked" %></span>
+  <% end %>
 </li>

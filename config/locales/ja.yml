@@ -231,6 +231,17 @@ ja:
   dependencies:
     show:
       click_to_expand: 矢印アイコンをクリックして展開
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: メールアドレスが登録されている場合は、アカウント有効化のための確認リンクをEメールで送ります。
@@ -245,9 +256,24 @@ ja:
     index:
       downloads_counting_html: ダウンロード数
       find_blurb_html: RubyGemを発見、<br>インストール、公開しよう。
+      find_blurb_lead:
       learn:
         install_rubygems: RubyGemsをインストール
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: 概要
@@ -291,6 +317,8 @@ ja:
         to blog post)！"
   breadcrumbs:
     home: ホーム
+    latest_version:
+    versions:
     dashboard: ダッシュボード
     settings: 設定
     org_name: 組織：%{name}
@@ -471,6 +499,8 @@ ja:
           <span class="font-bold">%{role}</span>として<br>
           組織へ参加するよう招待されました。
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count}人以上のRubyist"
       downloads_amount: 何億回ものgemダウンロード
@@ -494,6 +524,8 @@ ja:
       title: RubyGemsをダウンロード
     security:
       title: セキュリティ
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title: RubyGemsの支援者
   policies:
@@ -686,6 +718,7 @@ ja:
   settings:
     edit:
       title: 設定を編集
+      account_header:
       webauthn_credentials: セキュリティ機器
       no_webauthn_credentials: セキュリティ機器がありません
       webauthn_credential_note: セキュリティ機器とは、セキュリティキーや生体認証キーといった、FIDO2規格に準じた任意の機器です。
@@ -751,6 +784,10 @@ ja:
     request_denied: このリクエストは拒否されました。パスワードを検証できませんでした。
     show:
       title: "%{username} のプロフィール"
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title: セキュリティ事象
       description_html: |-
@@ -759,6 +796,11 @@ ja:
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: このバージョンがリリースされたのは
       required_ruby_version: 必要なRubyのバージョン
       required_rubygems_version: 必要なRubyGemsのバージョン
@@ -774,6 +816,7 @@ ja:
         funding: 寄付
         header: リンク
         home: ホームページ
+        verified:
         mail: メーリングリスト
         analytics:
         report_abuse: 悪用報告
@@ -819,6 +862,12 @@ ja:
     show:
       bundler_header: Gemfile
       install: インストール
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: ライセンス
         other: ライセンス
@@ -850,9 +899,14 @@ ja:
           other: "%{count} gemを%{organization}に正常に移動しました。"
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name}の被依存関係"
       subtitle: 以下のgemの最新版は%{name}を必要としています
       no_reverse_dependencies: このgemは被依存関係がありません。
+      version_header:
     search:
       search_reverse_dependencies_html: 被依存関係のgemから検索...
   searches:
@@ -864,6 +918,7 @@ ja:
       updated: 更新日
       yanked: ヤンク済み
     show:
+      title:
       subtitle_html: "<em>%{query}</em>の検索結果"
       month_update: 先月更新（%{count}件）
       week_update: 先週更新（%{count}件）
@@ -874,6 +929,7 @@ ja:
     new:
       forgot_password: パスワードをお忘れですか？
       resend_confirmation: 確認メールを受け取っていませんか？
+      confirm:
     verify:
       title:
       confirm: 確定
@@ -904,6 +960,7 @@ ja:
     index:
       title: 統計
       all_time_most_downloaded: 累計最多ダウンロード数
+      clickgems:
       total_gems: gem総数
       total_users: ユーザー総数
   users:

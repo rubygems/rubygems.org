@@ -1,50 +1,62 @@
-<% @title = "search" %>
-
 <% if @error_msg %>
-  <div class="errorExplanation">
-    <p><%= @error_msg %></p>
-  </div>
-<% end %>
-<%= link_to t("advanced_search"), advanced_search_path, class: "t-link--gray t-link--has-arrow" %>
-<% if @yanked_filter %>
-  <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
-
-  <% if @yanked_gem.present? %>
-    <%= link_to rubygem_path(id: @yanked_gem.slug), :class => 'gems__gem' do %>
-      <span class="gems__gem__info">
-        <h2 class="gems__gem__name">
-          <%= @yanked_gem.name %>
-          <span class="gems__gem__badge"><%= t('searches.advanced.yanked') %></span>
-        </h2>
-        <p class="gems__gem__desc t-text"><%= t('rubygems.show_yanked.not_hosted_notice') %></p>
-      </span>
-    <% end %>
+  <%= render AlertComponent.new(style: :error) do %>
+    <%= @error_msg %>
   <% end %>
-<% else %>
-  <% if @gems %>
-    <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
+<% end %>
 
-    <header class="gems__header push--s">
-      <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem') %></p>
-    </header>
+<%= render CardComponent.new do |c| %>
+  <%= c.head(divide: true) do %>
+    <h1 class="text-h2 mb-10">
+      <%= t(".title") %>; <span class="text-orange-500 italic"> "<%= params[:query] %>"</span>
+    </h1>
+  <% end %>
 
-    <%= render partial: 'aggregations', locals: { gems: @gems } %>
+  <div class="mb-6">
+    <%= link_to t("advanced_search"), advanced_search_path, class: "text-sm text-orange-500 hover:underline" %>
+  </div>
 
-    <% suggestions = es_suggestions(@gems) %>
-    <% if suggestions %>
-      <div class='search__suggestions'>
-        <p>
-          <%= t(".suggestion") %>
-          <%= to_sentence(suggestions.map do |term|
-            link_to term, search_path(params: { query: term }), only_path: true
-          end, last_word_connector: ' or ') %>?
-        </p>
-      </div>
+  <% if @yanked_filter %>
+    <% @subtitle = t('.subtitle_html', query: params[:query]) %>
+
+    <% if @yanked_gem.present? %>
+      <%= link_to rubygem_path(id: @yanked_gem.slug), class: "flex flex-col w-full px-4 py-4 rounded-md hover:bg-orange-50 dark:hover:bg-orange-950 border-b border-neutral-200 dark:border-neutral-800 group no-underline" do %>
+        <div class="flex flex-row w-full items-center">
+          <h2 class="text-b1 font-semibold text-neutral-900 dark:text-white group-hover:text-orange-500 transition-colors">
+            <%= @yanked_gem.name %>
+          </h2>
+          <span class="ml-2 px-2 py-0.5 text-xs bg-red-500 text-white rounded-sm"><%= t('searches.advanced.yanked') %></span>
+        </div>
+        <p class="text-b3 text-neutral-600 dark:text-neutral-400 mt-1"><%= t('rubygems.show_yanked.not_hosted_notice') %></p>
+      <% end %>
     <% end %>
+  <% else %>
+    <% if @gems %>
+      <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
 
-    <% if @gems.present? %>
-      <%= render partial: 'rubygems/rubygem', collection: @gems %>
-      <%= paginate @gems %>
+      <header class="flex items-center mb-6">
+        <p class="text-xs text-neutral-500 uppercase tracking-wide"><%= page_entries_info(@gems, :entry_name => 'gem') %></p>
+      </header>
+
+      <%= render partial: 'aggregations', locals: { gems: @gems } %>
+
+      <% suggestions = es_suggestions(@gems) %>
+      <% if suggestions %>
+        <div data-testid="search-suggestions" class="p-4 mb-6 rounded-md border border-yellow-400 bg-yellow-50 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-200 text-b3">
+          <%= t(".suggestion") %>
+          <%= to_sentence(suggestions.map { |term|
+            link_to term, search_path(params: { query: term }), only_path: true,
+                    class: "font-bold underline text-yellow-900 dark:text-yellow-100"
+          }, last_word_connector: " or ") %>?
+        </div>
+      <% end %>
+
+      <% if @gems.present? %>
+        <% @gems.each do |rubygem| %>
+          <%= render RubygemComponent.new(rubygem:) %>
+        <% end %>
+        <%= paginate @gems, theme: "hammy" %>
+      <% end %>
+
     <% end %>
   <% end %>
 <% end %>

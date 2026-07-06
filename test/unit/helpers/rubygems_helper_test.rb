@@ -28,8 +28,8 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   context "formatted licenses" do
-    should "be N/A if there is no license" do
-      assert_equal "N/A", formatted_licenses([])
+    should "be No License if there is no license" do
+      assert_equal "No License", formatted_licenses([])
     end
 
     should "be combined with comma if there are licenses" do
@@ -38,7 +38,7 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   should "create the directory" do
-    directory = link_to_directory
+    directory = alphabet_directory_link("A")
 
     ("A".."Z").each do |letter|
       assert_match rubygems_path(letter: letter), directory
@@ -217,7 +217,7 @@ class RubygemsHelperTest < ActionView::TestCase
       result = clickgems_analytics_link(rubygem)
 
       assert_match expected_url, result
-      assert_match "gem__link t-list__item", result
+      assert_match RubygemsHelper::ASIDE_LINK_CLASSES, result
     end
   end
 
@@ -228,9 +228,9 @@ class RubygemsHelperTest < ActionView::TestCase
       role = create(:oidc_api_key_role, name: "Push my_gem", api_key_permissions: { gems: ["my_gem"], scopes: ["push_rubygem"] }, user: user)
       stubs(:current_user).returns(user)
 
-      role_link = link_to "OIDC: #{role.name}", profile_oidc_api_key_role_path(token: role.token), class: "gem__link t-list__item"
+      role_link = link_to "OIDC: #{role.name}", profile_oidc_api_key_role_path(token: role.token), class: RubygemsHelper::ASIDE_LINK_CLASSES
       create_link = link_to "OIDC: Create", new_profile_oidc_api_key_role_path(rubygem: rubygem.name, scopes: ["push_rubygem"]),
-        class: "gem__link t-list__item"
+        class: RubygemsHelper::ASIDE_LINK_CLASSES
 
       assert_equal safe_join([role_link, create_link]), oidc_api_key_role_links(rubygem)
     end
@@ -258,7 +258,7 @@ class RubygemsHelperTest < ActionView::TestCase
         diff_url = "https://my.diffend.io/gems/#{@rubygem.name}/prev/#{@version.slug}"
 
         expected_link = link_to "Review changes", diff_url,
-                          class: "gem__link t-list__item"
+                          class: RubygemsHelper::ASIDE_LINK_CLASSES
 
         assert_equal expected_link, change_diff_link(@rubygem, @version)
       end

@@ -137,7 +137,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
 
       follow_redirect!
 
-      page.assert_selector ".flash #flash_error", text: "The role has been deleted."
+      page.assert_selector "#flash_error", text: "The role has been deleted."
 
       get edit_profile_oidc_api_key_role_url(token: @api_key_role.token)
 
@@ -146,7 +146,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
 
       follow_redirect!
 
-      page.assert_selector ".flash #flash_error", text: "The role has been deleted."
+      page.assert_selector "#flash_error", text: "The role has been deleted."
     end
   end
 

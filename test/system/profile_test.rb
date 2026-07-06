@@ -197,11 +197,11 @@ class ProfileTest < ApplicationSystemTestCase
     sign_in
     visit profile_path(id: "nick1")
 
-    downloads = page.all(".gems__gem__downloads__count")
+    downloads = page.all("[data-testid='rubygem-downloads']")
 
-    assert_equal("7\nDOWNLOADS", downloads[0].text)
-    assert_equal("5\nDOWNLOADS", downloads[1].text)
-    assert_equal("2\nDOWNLOADS", downloads[2].text)
+    assert_equal("7", downloads[0].text)
+    assert_equal("5", downloads[1].text)
+    assert_equal("2", downloads[2].text)
   end
 
   test "seeing the latest version when there is a newer previous version" do
@@ -211,7 +211,7 @@ class ProfileTest < ApplicationSystemTestCase
     sign_in
     visit profile_path(id: "nick1")
 
-    version = page.find(".gems__gem__version").text
+    version = page.find("[data-testid='rubygem-version']").text
 
     assert_equal("1.0.1", version)
   end

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module RubygemsHelper
+  ASIDE_LINK_CLASSES = "flex w-fit items-center gap-2 py-1 text-b3 text-neutral-800 dark:text-neutral-200 " \
+                       "hover:text-orange-500 dark:hover:text-orange-400"
+
   def pluralized_licenses_header(version)
     t("rubygems.show.licenses_header", count: version&.licenses&.length || 0)
   end
@@ -14,14 +17,32 @@ module RubygemsHelper
   end
 
   def link_to_page(id, url, verified: false)
-    classes = %w[gem__link t-list__item]
-    classes << "gem__link__verified" if verified
-    link_to(t("rubygems.aside.links.#{id}"), url, rel: "nofollow", class: classes, id: id) if url.present?
+    return if url.blank?
+
+    link_to(url, rel: "nofollow", class: ASIDE_LINK_CLASSES, id: id) do
+      concat t("rubygems.aside.links.#{id}")
+      if verified
+        concat icon_tag("check-circle", size: 4, class: "text-green-500", role: "img",
+          aria: { hidden: false, label: t("rubygems.aside.links.verified") })
+      end
+    end
   end
 
-  def link_to_directory
+  NAV_LETTER_CLASS = "flex-grow inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold " \
+                     "text-neutral-700 dark:text-neutral-300 " \
+                     "hover:bg-orange-500 hover:text-white dark:hover:text-white transition-colors"
+
+  def alphabet_directory_link(active_letter)
+    active_letter = active_letter.presence || "A"
+
     ("A".."Z").map do |letter|
-      link_to(letter, rubygems_path(letter: letter), class: "gems__nav-link")
+      if letter == active_letter.upcase
+        css_classes = "#{NAV_LETTER_CLASS} bg-orange-500 text-white dark:text-white"
+        link_to(letter, rubygems_path(letter: letter), class: css_classes)
+
+      else
+        link_to(letter, rubygems_path(letter: letter), class: NAV_LETTER_CLASS)
+      end
     end.join("\n").html_safe
   end
 
@@ -38,17 +59,17 @@ module RubygemsHelper
   def subscribe_link(rubygem)
     if signed_in?
       if rubygem.subscribers.find_by_id(current_user.id)
-        link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
-          class: [:toggler, "gem__link", "t-list__item"], id: "unsubscribe",
+        link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
+          class: [:toggler, ASIDE_LINK_CLASSES], id: "unsubscribe",
           method: :delete
       else
-        link_to t(".links.subscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
-          class: %w[toggler gem__link t-list__item], id: "subscribe",
+        link_to t("rubygems.aside.links.subscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
+          class: [:toggler, ASIDE_LINK_CLASSES], id: "subscribe",
           method: :post
       end
     else
-      link_to t(".links.subscribe"), sign_in_path,
-        class: [:toggler, "gem__link", "t-list__item"], id: :subscribe
+      link_to t("rubygems.aside.links.subscribe"), sign_in_path,
+        class: [:toggler, ASIDE_LINK_CLASSES], id: :subscribe
     end
   end
 
@@ -57,7 +78,7 @@ module RubygemsHelper
     style = "t-item--hidden" unless rubygem.subscribers.find_by_id(current_user.id)
 
     link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
-      class: [:toggler, "gem__link", "t-list__item", style], id: "unsubscribe",
+      class: [:toggler, ASIDE_LINK_CLASSES, style], id: "unsubscribe",
       method: :delete
   end
 
@@ -67,12 +88,12 @@ module RubygemsHelper
     diff_url = "https://my.diffend.io/gems/#{rubygem.name}/prev/#{latest_version.slug}"
 
     link_to t("rubygems.aside.links.review_changes"), diff_url,
-      class: "gem__link t-list__item"
+      class: ASIDE_LINK_CLASSES
   end
 
   def atom_link(rubygem)
-    link_to t(".links.rss"), rubygem_versions_path(rubygem_id: rubygem.slug, format: "atom"),
-      class: "gem__link t-list__item", id: :rss
+    link_to t("rubygems.aside.links.rss"), rubygem_versions_path(rubygem_id: rubygem.slug, format: "atom"),
+      class: ASIDE_LINK_CLASSES, id: :rss
   end
 
   def reverse_dependencies_link(rubygem)
@@ -81,22 +102,23 @@ module RubygemsHelper
 
   def badge_link(rubygem)
     badge_url = "https://badge.fury.io/rb/#{rubygem.name}/install"
-    link_to t("rubygems.aside.links.badge"), badge_url, class: "gem__link t-list__item", id: :badge
+    link_to t("rubygems.aside.links.badge"), badge_url, class: ASIDE_LINK_CLASSES, id: :badge
   end
 
   def report_abuse_link(rubygem)
     subject = "Reporting Abuse on #{rubygem.name}"
     report_abuse_url = "mailto:support@rubygems.org" \
                        "?subject=" + subject
-    link_to t("rubygems.aside.links.report_abuse"), report_abuse_url.html_safe, class: "gem__link t-list__item"
+    render ButtonComponent.new(t("rubygems.aside.links.report_abuse"), report_abuse_url.html_safe,
+      type: :link, color: :red, style: :outline, size: :small, class: "w-full")
   end
 
   def ownership_link(rubygem)
-    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem_id: rubygem.slug), class: "gem__link t-list__item"
+    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem_id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def rubygem_trusted_publishers_link(rubygem)
-    link_to t("rubygems.aside.links.trusted_publishers"), rubygem_trusted_publishers_path(rubygem_id: rubygem.slug), class: "gem__link t-list__item"
+    link_to t("rubygems.aside.links.trusted_publishers"), rubygem_trusted_publishers_path(rubygem_id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def oidc_api_key_role_links(rubygem)
@@ -106,13 +128,13 @@ module RubygemsHelper
       link_to(
         t("rubygems.aside.links.oidc.api_key_role.name", name: role.name),
         profile_oidc_api_key_role_path(token: role.token),
-        class: "gem__link t-list__item"
+        class: ASIDE_LINK_CLASSES
       )
     end
     links << link_to(
       t("rubygems.aside.links.oidc.api_key_role.new"),
       new_profile_oidc_api_key_role_path(rubygem: rubygem.name, scopes: ["push_rubygem"]),
-      class: "gem__link t-list__item"
+      class: ASIDE_LINK_CLASSES
     )
 
     safe_join(links)
@@ -120,18 +142,18 @@ module RubygemsHelper
 
   def resend_owner_confirmation_link(rubygem)
     link_to I18n.t("rubygems.aside.links.resend_ownership_confirmation"),
-            resend_confirmation_rubygem_owners_path(rubygem_id: rubygem.slug), class: "gem__link t-list__item"
+            resend_confirmation_rubygem_owners_path(rubygem_id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def rubygem_security_events_link(rubygem)
     link_to "Security Events",
-      security_events_rubygem_path(id: rubygem.slug), class: "gem__link t-list__item"
+      security_events_rubygem_path(id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def clickgems_analytics_link(rubygem)
     link_to t("rubygems.aside.links.analytics"),
       "https://clickgems.clickhouse.com/dashboard/#{rubygem.name}",
-      class: "gem__link t-list__item"
+      class: ASIDE_LINK_CLASSES
   end
 
   def links_to_owners(rubygem)
@@ -192,33 +214,7 @@ module RubygemsHelper
     }
   end
 
-  def copy_field_tag(name, value)
-    field = text_field_tag(
-      name,
-      value,
-      id: name,
-      class: "gem__code",
-      readonly: "readonly",
-      data: { clipboard_target: "source" }
-    )
-
-    button = tag.span(
-      "=",
-      class: "gem__code__icon",
-      title: t("copy_to_clipboard"),
-      data: {
-        action: "click->clipboard#copy",
-        clipboard_target: "button"
-      }
-    )
-
-    tag.div(
-      field + button,
-      class: "gem__code-wrap",
-      data: {
-        controller: "clipboard",
-        clipboard_success_content_value: "✔"
-      }
-    )
+  def copy_field_tag(name, value, label: nil, aria_label: nil)
+    render CopyFieldComponent.new(value: value, name: name, label: label, aria_label: aria_label)
   end
 end

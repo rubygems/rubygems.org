@@ -1,15 +1,33 @@
-<% @title = t('.title', :name => @rubygem.name) %>
-<% if @versions.load.size.zero? %>
-  <div class="t-body">
-    <p><%= t('.not_hosted_notice') %></p>
-  </div>
-<% else %>
-  <h3 class="t-list__heading"><%= t('.versions_since', :count => @versions.total_count, :since => nice_date_for(@oldest_version_date)) %>:</h3>
-  <div class="versions">
-    <ul class="t-list__items">
-      <%= render @versions %>
-    </ul>
+<% @title = t(".title", name: @rubygem.name) %>
+<% @title_url = rubygem_path(id: @rubygem.slug) %>
+<% @subtitle = @latest_version&.slug %>
 
-    <%= paginate @versions %>
-  </div>
+<% if @latest_version %>
+  <% content_for :subject do %>
+    <%= render "rubygems/aside" %>
+  <% end %>
+
+  <% content_for :subject_secondary do %>
+    <%= render "rubygems/aside_secondary" %>
+  <% end %>
 <% end %>
+
+<% section_heading_class = "text-b1 font-semibold text-neutral-900 dark:text-white" %>
+
+<div class="flex flex-col gap-8 pb-16 lg:pt-10 text-neutral-800 dark:text-neutral-200">
+  <% if @versions.load.size.zero? %>
+    <%= render AlertComponent.new(style: :notice) do %>
+      <%= t(".not_hosted_notice") %>
+    <% end %>
+  <% else %>
+    <div class="versions">
+      <h3 class="<%= section_heading_class %> mb-4" data-testid="versions-count">
+        <%= t(".versions_since", count: @versions.total_count, since: nice_date_for(@oldest_version_date)) %>
+      </h3>
+      <ol class="gem__versions flex flex-col gap-1.5">
+        <%= render @versions %>
+      </ol>
+      <%= paginate @versions, theme: "hammy" %>
+    </div>
+  <% end %>
+</div>

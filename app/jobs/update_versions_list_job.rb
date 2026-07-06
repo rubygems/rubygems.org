@@ -31,9 +31,9 @@ class UpdateVersionsListJob < ApplicationJob
     timestamp = Time.now.utc.iso8601
     file_path = Rails.application.config.rubygems[config.fetch(:config_key)]
     versions_file = CompactIndex::VersionsFile.new(file_path)
-    gems = GemInfo.compact_index_public_versions(timestamp, version:)
+    gems = GemInfo.each_compact_index_public_version(timestamp, version:)
 
-    versions_file.create(gems, timestamp)
+    versions_file.create_from_sorted(gems, timestamp)
     RubygemFs.instance.store(config.fetch(:store_key), File.read(file_path))
   end
 

@@ -26,19 +26,28 @@ module CompactIndex
 
     def create(gems, timestamp = Time.now.iso8601)
       gems.sort!
+      create_from_sorted(gems, timestamp)
+    end
 
+    def create_from_sorted(gems, timestamp = Time.now.iso8601)
       File.open(@path, "w") do |io|
         io.write "created_at: #{timestamp}\n---\n"
-        io.write gem_lines(gems)
+        write_gem_lines(io, gems)
       end
     end
 
     private
 
     def gem_lines(gems)
-      gems.reduce(+"") do |lines, gem|
+      lines = +""
+      write_gem_lines(lines, gems)
+      lines
+    end
+
+    def write_gem_lines(io, gems)
+      gems.each do |gem|
         version_numbers = gem.versions.map(&:number_and_platform).join(",")
-        lines << gem.name <<
+        io << gem.name <<
           " " << version_numbers <<
           " #{gem.versions.last.info_checksum}\n"
       end

@@ -249,6 +249,17 @@ de:
   dependencies:
     show:
       click_to_expand: Klicken Sie auf das Pfeilsymbol, um es zu erweitern.
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: Wir senden Ihnen einen Bestätigungslink per E-Mail, um Ihr Konto
@@ -265,9 +276,24 @@ de:
     index:
       downloads_counting_html: Gezählte Downloads
       find_blurb_html: Finde, installiere und veröffentliche RubyGems.
+      find_blurb_lead:
       learn:
         install_rubygems: Installiere RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: Über uns
@@ -310,6 +336,8 @@ de:
       mfa_banner_html:
   breadcrumbs:
     home: Startseite
+    latest_version:
+    versions:
     dashboard: Dashboard
     settings: Einstellungen
     org_name: 'Organisation: %{name}'
@@ -510,6 +538,8 @@ de:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count} Rubyists"
       downloads_amount: Millionen von Gem-Downloads
@@ -550,6 +580,8 @@ de:
       title: Download RubyGems
     security:
       title: Security
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:
@@ -761,6 +793,7 @@ de:
   settings:
     edit:
       title:
+      account_header:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
@@ -826,12 +859,21 @@ de:
     request_denied:
     show:
       title: Profil von %{username}
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: Für diese Version
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Version veröffentlicht
       required_ruby_version: Erforderliche Ruby-Version
       required_rubygems_version:
@@ -847,6 +889,7 @@ de:
         funding:
         header: Links
         home: Homepage
+        verified:
         mail: Mailingliste
         analytics:
         report_abuse: Missbrauch melden
@@ -891,6 +934,12 @@ de:
     show:
       bundler_header: Gemfile
       install: installieren
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: Lizenz
         other: Lizenzen
@@ -918,9 +967,14 @@ de:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title:
       subtitle:
       no_reverse_dependencies:
+      version_header:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -932,6 +986,7 @@ de:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: für <em>%{query}</em>
       month_update:
       week_update:
@@ -942,6 +997,7 @@ de:
     new:
       forgot_password: Passwort vergessen?
       resend_confirmation:
+      confirm:
     verify:
       title:
       confirm:
@@ -972,6 +1028,7 @@ de:
     index:
       title:
       all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
+      clickgems:
       total_gems: Gems insgesamt
       total_users: Benutzer insgesamt
   users:

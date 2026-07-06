@@ -1,114 +1,41 @@
-<% @title_for_header_only = t('.title', username: @user.display_id) %>
+<% @title = t(".title", username: @user.display_id) %>
 
-<% content_for :title do %>
-  <header class="profile__header">
-    <div class="profile__header__name-wrap">
-      <div id="avatar-frame">
-        <%= avatar(300, 'profile_gravatar', @user, class: 'profile__header__avatar') %>
-      </div>
-
-      <% if @user.full_name.present? %>
-        <h1 id="profile-full-name" class="profile__header__name t-display-full-name">
-          <%= link_to(@user.full_name, profile_path(id: @user.display_id), class: "t-link--black") %>
-        </h1>
-
-        <h1 id="profile-name" class="profile__header__username t-display-username">
-          <%= link_to(@user.display_handle, profile_path(id: @user.display_id), class: "t-link--black") %>
-        </h1>
-      <% else %>
-        <h1 id="profile-name" class="profile__header__name t-display">
-          <%=
-            link_to(
-              @user.display_handle, profile_path(id: @user.display_id),
-              class: "t-link--black"
-            )
-          %>
-        </h1>
-      <% end %>
-
-      <% if @user == current_user %>
-        <div id="profile-settings">
-          <%=
-            link_to(
-              t("layouts.application.header.settings"),
-              edit_settings_path,
-              id: "edit-settings",
-              class: "profile__header__attribute t-link--black",
-              "data-icon": "★"
-            )
-          %>
-        </div>
-
-        <div id="downloads-ego">
-          <%=
-            link_to(
-              "Edit Profile",
-              edit_profile_path,
-              id: "edit-profile",
-              class: "profile__header__attribute t-link--black",
-              "data-icon": "☺"
-            )
-          %>
-        </div>
-      <% else %>
-        <% if @user.public_email? %>
-          <p id="profile-email">
-            <%=
-              mail_to(
-                @user.email,
-                "Email Me",
-                encode: "hex",
-                class: "profile__header__attribute t-link--black",
-                "data-icon" => "✉"
-              )
-            %>
-          </p>
-        <% end %>
-
-        <% if @user.twitter_username.present? %>
-          <%=
-            image_tag(
-              "/images/x_icon.png",
-              alt: "X icon",
-              class: "profile__header__icon"
-            )
-          %>
-
-          <%=
-            link_to(
-              twitter_username(@user),
-              twitter_url(@user),
-              class: "profile__header__attribute t-link--black"
-            )
-          %>
-        <% end %>
-      <% end %>
-    </div>
-
-    <div class="profile__downloads-wrap">
-      <h4 class="gem__downloads__heading t-text--s">
-        <%= t('stats.index.total_gems') %>
-      </h4>
-
-      <h2 id="profile-gems-count" class="gem__downloads">
-        <%= @user.total_rubygems_count.to_s %>
-      </h2>
-
-      <h4 id="downloads" class="gem__downloads__heading t-text--s">
-        <%= t('total_downloads') %>
-      </h4>
-
-      <h2 id="downloads_count" class="gem__downloads">
-        <%= number_with_delimiter(@user.total_downloads_count) %>
-      </h2>
-    </div>
-  </header>
+<% content_for :subject do %>
+  <%= render "profiles/subject", user: @user %>
 <% end %>
 
-<div id="profile">
-  <div class="profile-list">
-    <ul>
-      <%= render partial: 'rubygem', collection: @rubygems %>
-    </ul>
-  </div>
-</div>
+<!-- Main Content -->
+<h1 class="text-h2 mb-10"><%= t(".title", username: @user.display_handle) %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".gems"), icon: "gems", count: @user.total_rubygems_count %>
+  <% end %>
+
+  <% if @rubygems.empty? %>
+    <%= prose do %>
+      <i><%= t(".no_gems") %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @rubygems.each do |rubygem| %>
+        <% version = rubygem.latest_version || rubygem.most_recent_version %>
+        <%= c.list_item_to(
+          rubygem_path(id: rubygem.slug),
+          title: short_info(version),
+        ) do %>
+          <div class="flex flex-col w-full justify-between">
+            <div class="flex flex-row w-full items-center justify-between">
+              <h4 class="text-b1 flex"><%= rubygem.name %></h4>
+              <span data-testid="rubygem-version"><%= version_number(version) %></span>
+            </div>
+            <div class="flex flex-row w-full items-center justify-between">
+              <%= download_count_component(rubygem, class: "flex", data: { testid: "rubygem-downloads" }) %>
+              <div class="flex text-neutral-600"><%= version_date_component(version) %></div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

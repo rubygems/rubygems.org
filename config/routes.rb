@@ -314,6 +314,7 @@ Rails.application.routes.draw do
     ################################################################################
     # static pages routes
 
+    get 'pages' => 'pages#index', constraints: { format: :html }, as: :pages
     get 'pages/sponsors', to: "pages#sponsors", constraints: { format: :html }
     get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 

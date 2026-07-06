@@ -2,11 +2,18 @@
 
 class OIDC::RubygemTrustedPublishersController < ApplicationController
   include OIDC::Concerns::TrustedPublisherCreation
+  include LatestVersion
 
   before_action :find_rubygem
   before_action :find_rubygem_trusted_publisher, except: %i[index new create]
+  before_action :latest_version, only: %i[index new create]
+  before_action :find_versioned_links, only: %i[index new create]
+
+  layout "subject"
 
   def index
+    add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+    add_breadcrumb t(".title")
     render OIDC::RubygemTrustedPublishers::IndexView.new(
       rubygem: @rubygem,
       trusted_publishers: @rubygem.oidc_rubygem_trusted_publishers.includes(:trusted_publisher).page(@page).strict_loading
@@ -14,6 +21,8 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def new
+    add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+    add_breadcrumb t(".title")
     render OIDC::RubygemTrustedPublishers::NewView.new(
       rubygem_trusted_publisher: @rubygem.oidc_rubygem_trusted_publishers.new(trusted_publisher: gh_actions_trusted_publisher)
     )

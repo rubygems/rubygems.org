@@ -15,10 +15,10 @@ en:
     <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
   footer_sponsors_html:
     The RubyGems.org website and service are maintained and operated by Ruby Central’s
-    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team. 
-    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations. 
-    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler 
-    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.   
+    <a href="https://rubycentral.org/open-source/">Open Source Program</a> and the RubyGems team.
+    It is funded by the greater Ruby community through support from sponsors, members, and infrastructure donations.
+    <b>If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler
+    secure and sustainable for years to come by contributing <a href="%{supporters_page}">here</a></b>.
   form_disable_with: Please wait...
   invalid_page: Page number is out of range. Redirected to default page.
   locale_name: English
@@ -235,6 +235,17 @@ en:
   dependencies:
     show:
       click_to_expand: Click on the arrow icon to expand.
+      gem_header: Gem
+      required_version_header: Required version
+      scope_header:
+        one: "%{title} Dependency"
+        other: "%{title} Dependencies"
+      reverse_dependencies_header: Reverse Dependencies
+      version_header: Version
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      see_all_reverse: See all reverse dependencies
   email_confirmations:
     create:
       promise_resend: We will email you confirmation link to activate your account if one exists.
@@ -249,9 +260,24 @@ en:
     index:
       downloads_counting_html: downloads &amp; counting
       find_blurb_html: Find, install, and publish RubyGems.
+      find_blurb_lead: Find, install, and publish
       learn:
         install_rubygems: Install RubyGems
+      donation:
+        body: Believe in open source? Make a tax-deductible donation to Ruby Central, the 501(c)(3) nonprofit that keeps RubyGems.org, RubyGems, and Bundler secure and sustainable.
+        cta: Donate now
+        title: Make a donation
+      powered_by:
+        body_html: The RubyGems website and service is maintained and operated by Ruby Central’s Open Source Program and the RubyGems team. If you build with Ruby and believe in our mission, you can join us in keeping RubyGems.org, RubyGems, and Bundler secure and sustainable for years to come by <a href="https://rubycentral.org/">contributing here</a>.
+        title: Powered by people
+      supporters:
+        body: RubyGems.org is a community-run service overseen by Ruby Central. The Supporter Program lets you or your company directly fund its maintenance, operations, and growth.
+        cta: See our sponsors
+        title: Supporters Program
   layouts:
+    subject:
+      subject_label: Details
+      subject_secondary_label: Additional details
     application:
       footer:
         about: About
@@ -294,6 +320,8 @@ en:
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
   breadcrumbs:
     home: Home
+    latest_version: "%{version} (latest)"
+    versions: Versions
     dashboard: Dashboard
     settings: Settings
     org_name: "Org: %{name}"
@@ -466,6 +494,8 @@ en:
         decline: Decline
         title_html: "invited you to join their organization<br>as an <span class=\"font-bold\">%{role}</span>."
   pages:
+    index:
+      title: Pages
     about:
       contributors_amount: "%{count} Rubyists"
       downloads_amount: "billions of gem downloads"
@@ -488,6 +518,8 @@ en:
       title: Download RubyGems
     security:
       title: Security
+    security-engineers-in-residence-faq:
+      title: "Security Engineers in Residence: FAQ"
     supporters:
       title: RubyGems Supporters
   policies:
@@ -680,6 +712,7 @@ en:
   settings:
     edit:
       title: Edit settings
+      account_header: Account
       webauthn_credentials: Security device
       no_webauthn_credentials: You don't have any security devices
       webauthn_credential_note: A security device can be any device that complies with the FIDO2 standard such as security and biometric keys.
@@ -745,12 +778,21 @@ en:
     request_denied: This request was denied. We could not verify your password.
     show:
       title: Profile of %{username}
+      gems: Gems
+      no_gems: This user has not pushed any gems yet.
+      edit_profile: Edit Profile
+      email_me: Email Me
     security_events:
       title: Security Events
       description_html: "This page shows the security events that have occurred on your account. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
   rubygems:
     aside:
       downloads_for_this_version: For this version
+      github_star: Star
+      latest_version_button: Latest Version
+      versions_button:
+        one: "1 Version"
+        other: "%{count} Versions"
       gem_version_age: Version Released
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
@@ -764,8 +806,9 @@ en:
         docs: Documentation
         download: Download
         funding: Funding
-        header: Links
+        header: Helpful Links
         home: Homepage
+        verified: Verified link
         mail: Mailing List
         analytics: Analytics
         report_abuse: Report abuse
@@ -810,10 +853,16 @@ en:
     show:
       bundler_header: Gemfile
       install: install
+      tabs:
+        label: Gem navigation
+        readme: Readme
+        gem_info: Gem info
+        contents: Contents
+        dependencies: Dependencies
       licenses_header:
         one: License
         other: Licenses
-      no_licenses: N/A
+      no_licenses: No License
       requirements_header: Requirements
       show_all_versions: Show all versions (%{count} total)
       versions_header: Versions
@@ -837,9 +886,14 @@ en:
           other: "Successfully transferred %{count} gems to %{organization}."
   reverse_dependencies:
     index:
+      date_header: Date
+      downloads_count: "+%{count} Downloads"
+      downloads_header: Downloads
+      gem_header: Gem
       title: "Reverse dependencies for %{name}"
       subtitle: "Latest version of the following gems require %{name}"
       no_reverse_dependencies: This gem has no reverse dependencies.
+      version_header: Version
     search:
       search_reverse_dependencies_html: "Search reverse dependencies Gems&hellip;"
   searches:
@@ -851,6 +905,7 @@ en:
       updated: Updated
       yanked: Yanked
     show:
+      title: Search
       subtitle_html: for <em>%{query}</em>
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})
@@ -861,6 +916,7 @@ en:
     new:
       forgot_password: Forgot password?
       resend_confirmation: Didn't receive confirmation mail?
+      confirm: Confirm
     verify:
       title: Confirm Password
       confirm: Confirm
@@ -891,6 +947,7 @@ en:
     index:
       title: Stats
       all_time_most_downloaded: All Time Most Downloaded
+      clickgems: View analytics on ClickGems
       total_gems: Total gems
       total_users: Total users
   users:
@@ -944,8 +1001,8 @@ en:
         edit_role: "Edit API Key Role"
       git_hub_actions_workflow:
         title: "OIDC Gem Push GitHub Actions Workflow"
-        configured_for_html: "This OIDC API Key Role is configured to allow pushing %{link_html} from GitHub Actions."
-        to_automate_html: "To automate releasing %{link_html} when a new tag is pushed, add the following workflow to your repository."
+        configured_for_html: "This OIDC API Key Role is configured to allow pushing <span class='underline'>%{link_html}</span> from GitHub Actions."
+        to_automate_html: "To automate releasing <span class='underline'> %{link_html}</span> when a new tag is pushed, add the following workflow to your repository."
         not_github: "This OIDC API Key Role is not configured for GitHub Actions."
         not_push: "This OIDC API Key Role is not configured to allow pushing gems."
         a_gem: a gem
