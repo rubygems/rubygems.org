@@ -24,9 +24,9 @@ class LocaleTest < ApplicationSystemTestCase
   test "localized root keeps the home page layout" do
     visit "/de"
 
-    assert_selector "body.body--index"
-    assert_no_selector "header.header--interior"
-    assert_no_selector "main.main--interior"
+    assert_selector "input#homepage_gem_query"
+    assert_text I18n.t("home.index.learn.install_rubygems", locale: :de)
+    assert_no_selector "nav[aria-label='Breadcrumb']"
   end
 
   test "keyword route helper arguments target non-locale segments" do
