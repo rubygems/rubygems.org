@@ -43,6 +43,79 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
     end
   end
 
+  context "when Rekor accepts the submission" do
+    setup do
+      @event = create(:transparency_log_event, status: :pending)
+      @job   = ProcessTransparencyLogEventJob.new(@event)
+      rekor_response = TransparencyLogEvent::RekorResponse.new(
+        response_body: { "uuid" => "rekor-entry-uuid" },
+        rekor_entry: TransparencyLogEvent::RekorEntry.new(
+          origin: "rekor.sigstore.dev",
+          kind: "hashedrekord",
+          version: "0.0.1",
+          index: 123,
+          checkpoint: "checkpoint",
+          inclusion_proof: {}
+        )
+      )
+      TransparencyLog::Tlog.any_instance.stubs(:create_entry).returns(rekor_response)
+    end
+
+    should "mark the event as submitted" do
+      safely_perform(@job)
+
+      assert_predicate @event.reload, :submitted?
+    end
+
+    should "persist the raw response body" do
+      safely_perform(@job)
+
+      assert_equal({ "uuid" => "rekor-entry-uuid" }, @event.reload.rekor_response_body)
+    end
+
+    should "persist the parsed rekor entry attributes" do
+      safely_perform(@job)
+
+      assert_equal "hashedrekord", @event.reload.rekor_entry_kind
+    end
+  end
+
+  context "when Rekor accepts the submission but persisting it fails" do
+    setup do
+      @event = create(:transparency_log_event, status: :pending)
+      @job   = ProcessTransparencyLogEventJob.new(@event)
+      rekor_response = TransparencyLogEvent::RekorResponse.new(
+        response_body: { "uuid" => "rekor-entry-uuid" },
+        rekor_entry: TransparencyLogEvent::RekorEntry.new(
+          origin: "rekor.sigstore.dev",
+          kind: "hashedrekord",
+          version: "0.0.1",
+          index: 123,
+          checkpoint: "checkpoint",
+          inclusion_proof: {}
+        )
+      )
+      TransparencyLog::Tlog.any_instance.stubs(:create_entry).returns(rekor_response)
+      TransparencyLogEvent.any_instance.stubs(:record_submission).returns(false)
+    end
+
+    should "not raise" do
+      assert_nothing_raised { @job.perform_now }
+    end
+
+    should "leave the event's status unchanged" do
+      safely_perform(@job)
+
+      assert_predicate @event.reload, :pending?
+    end
+
+    should "log an error" do
+      Rails.logger.expects(:error).with(includes(@event.event_uuid.to_s))
+
+      safely_perform(@job)
+    end
+  end
+
   context "when an unexpected error is raised" do
     setup do
       @event = create(:transparency_log_event, status: :pending)
