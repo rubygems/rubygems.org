@@ -12,7 +12,7 @@ class RubygemComponentTest < ComponentTest
   should "link to the rubygem page" do
     render RubygemComponent.new(rubygem: @rubygem)
 
-    assert_link href: rubygem_path(@rubygem.name)
+    assert_link href: rubygem_path(id: @rubygem.name)
   end
 
   should "display the gem name" do

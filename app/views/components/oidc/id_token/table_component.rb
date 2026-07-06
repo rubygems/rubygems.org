@@ -35,8 +35,8 @@ class OIDC::IdToken::TableComponent < ApplicationComponent
     tr(class: row_classes.join(" ")) do
       td { time_tag token.created_at }
       td { time_tag token.api_key.expires_at }
-      td { link_to_unless_current token.api_key_role.name, profile_oidc_api_key_role_path(token.api_key_role.token), class: LINK_CLASSES }
-      td { link_to_unless_current token.jti, profile_oidc_id_token_path(token), class: LINK_CLASSES }
+      td { link_to_unless_current token.api_key_role.name, profile_oidc_api_key_role_path(token: token.api_key_role.token), class: LINK_CLASSES }
+      td { link_to_unless_current token.jti, profile_oidc_id_token_path(id: token), class: LINK_CLASSES }
     end
   end
 end

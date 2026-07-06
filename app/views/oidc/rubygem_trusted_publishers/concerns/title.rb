@@ -25,7 +25,7 @@ module OIDC::RubygemTrustedPublishers::Concerns::Title
         h1(class: "text-h4 font-semibold text-neutral-900 dark:text-white") { t(".title") }
         p(class: "text-b2 mt-2") do
           raw t(".subtitle_owner_html",
-            gem_html: view_context.link_to(rubygem.name, rubygem_path(rubygem.slug), class: "text-orange-500 hover:text-orange-600"))
+            gem_html: view_context.link_to(rubygem.name, rubygem_path(id: rubygem.slug), class: "text-orange-500 hover:text-orange-600"))
         end
       end
 

@@ -40,7 +40,7 @@
         </div>
       <% end %>
 
-      <%= render ButtonComponent.new(page_path("download"), type: :link, size: :extra_large, class: "gap-3") do %>
+      <%= render ButtonComponent.new(page_path(id: "download"), type: :link, size: :extra_large, class: "gap-3") do %>
         <span><%= t(".learn.install_rubygems") %></span>
         <%= icon_tag "arrow-forward", size: 6 %>
       <% end %>
@@ -59,7 +59,7 @@
         <h3 class="text-h1 font-bold text-orange-900 dark:text-orange-200"><%= t(".supporters.title") %></h3>
       </div>
       <p class="text-b1 leading-relaxed text-orange-950 dark:text-orange-100"><%= t(".supporters.body") %></p>
-      <%= render ButtonComponent.new(page_path("supporters"), type: :link, size: :extra_large, class: "gap-2 justify-center") do %>
+      <%= render ButtonComponent.new(page_path(id: "supporters"), type: :link, size: :extra_large, class: "gap-2 justify-center") do %>
         <span><%= t(".supporters.cta") %></span>
         <%= icon_tag "arrow-forward", size: 6 %>
       <% end %>

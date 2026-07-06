@@ -59,11 +59,11 @@ module RubygemsHelper
   def subscribe_link(rubygem)
     if signed_in?
       if rubygem.subscribers.find_by_id(current_user.id)
-        link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
+        link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
           class: [:toggler, ASIDE_LINK_CLASSES], id: "unsubscribe",
           method: :delete
       else
-        link_to t("rubygems.aside.links.subscribe"), rubygem_subscription_path(rubygem.slug),
+        link_to t("rubygems.aside.links.subscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
           class: [:toggler, ASIDE_LINK_CLASSES], id: "subscribe",
           method: :post
       end
@@ -77,7 +77,7 @@ module RubygemsHelper
     return unless signed_in?
     style = "t-item--hidden" unless rubygem.subscribers.find_by_id(current_user.id)
 
-    link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
+    link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem_id: rubygem.slug),
       class: [:toggler, ASIDE_LINK_CLASSES, style], id: "unsubscribe",
       method: :delete
   end
@@ -92,12 +92,12 @@ module RubygemsHelper
   end
 
   def atom_link(rubygem)
-    link_to t("rubygems.aside.links.rss"), rubygem_versions_path(rubygem.slug, format: "atom"),
+    link_to t("rubygems.aside.links.rss"), rubygem_versions_path(rubygem_id: rubygem.slug, format: "atom"),
       class: ASIDE_LINK_CLASSES, id: :rss
   end
 
   def reverse_dependencies_link(rubygem)
-    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem.slug)
+    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem_id: rubygem.slug)
   end
 
   def badge_link(rubygem)
@@ -114,11 +114,11 @@ module RubygemsHelper
   end
 
   def ownership_link(rubygem)
-    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem.slug), class: ASIDE_LINK_CLASSES
+    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem_id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def rubygem_trusted_publishers_link(rubygem)
-    link_to t("rubygems.aside.links.trusted_publishers"), rubygem_trusted_publishers_path(rubygem.slug), class: ASIDE_LINK_CLASSES
+    link_to t("rubygems.aside.links.trusted_publishers"), rubygem_trusted_publishers_path(rubygem_id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def oidc_api_key_role_links(rubygem)
@@ -127,7 +127,7 @@ module RubygemsHelper
     links = roles.map do |role|
       link_to(
         t("rubygems.aside.links.oidc.api_key_role.name", name: role.name),
-        profile_oidc_api_key_role_path(role.token),
+        profile_oidc_api_key_role_path(token: role.token),
         class: ASIDE_LINK_CLASSES
       )
     end
@@ -142,12 +142,12 @@ module RubygemsHelper
 
   def resend_owner_confirmation_link(rubygem)
     link_to I18n.t("rubygems.aside.links.resend_ownership_confirmation"),
-            resend_confirmation_rubygem_owners_path(rubygem.slug), class: ASIDE_LINK_CLASSES
+            resend_confirmation_rubygem_owners_path(rubygem_id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def rubygem_security_events_link(rubygem)
     link_to "Security Events",
-      security_events_rubygem_path(rubygem.slug), class: ASIDE_LINK_CLASSES
+      security_events_rubygem_path(id: rubygem.slug), class: ASIDE_LINK_CLASSES
   end
 
   def clickgems_analytics_link(rubygem)
@@ -165,7 +165,7 @@ module RubygemsHelper
   end
 
   def link_to_user(user)
-    link_to avatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
+    link_to avatar(48, "gravatar-#{user.id}", user), profile_path(id: user.display_id),
       alt: user.display_handle, title: user.display_handle
   end
 

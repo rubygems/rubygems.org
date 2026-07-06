@@ -21,7 +21,7 @@
       <% @rubygems.each do |rubygem| %>
         <% version = rubygem.latest_version || rubygem.most_recent_version %>
         <%= c.list_item_to(
-          rubygem_path(rubygem.slug),
+          rubygem_path(id: rubygem.slug),
           title: short_info(version),
         ) do %>
           <div class="flex flex-col w-full justify-between">

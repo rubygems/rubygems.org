@@ -20,7 +20,7 @@ class Events::TableDetailsComponent < ApplicationComponent
     user = load_gid(gid, only: User)
 
     if user
-      view_context.link_to text, profile_path(user.display_id), alt: user.display_handle, title: user.display_handle
+      view_context.link_to text, profile_path(id: user.display_id), alt: user.display_handle, title: user.display_handle
     else
       text
     end
@@ -30,7 +30,7 @@ class Events::TableDetailsComponent < ApplicationComponent
     version = load_gid(gid, only: Version)
 
     if version
-      view_context.link_to version.to_title, rubygem_version_path(version.rubygem.slug, version.slug)
+      view_context.link_to version.to_title, rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug)
     else
       "#{rubygem.name} (#{number}#{"-#{platform}" unless platform.blank? || platform == 'ruby'})"
     end

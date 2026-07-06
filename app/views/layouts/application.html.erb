@@ -18,11 +18,12 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag if signed_in? %>
+    <%= content_for?(:search_engine_tags) ? yield(:search_engine_tags) : default_search_engine_tags %>
     <%= yield :head %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= 'body--index' if request.path_info == '/' %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
+  <body class="<%= 'body--index' if home_page? %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
     <!-- Top banner -->
     <% if content_for?(:banner) %>
       <div class="banner">
@@ -33,7 +34,7 @@
     <!-- Policies acknowledgment banner -->
     <%= render "layouts/policies_acknowledgement" if show_policies_acknowledge_banner?(current_user) %>
 
-    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
+    <header class="header <%= 'header--interior' unless home_page? %>" data-nav-target="header collapse">
       <div class="l-wrap--header">
         <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "logo" }) do %>
           <span class="header__logo" data-icon="⬡">⬢</span>
@@ -48,7 +49,7 @@
 
           <nav class="header__nav-links" data-controller="dropdown">
             <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
+              <a href="<%= profile_path(id: current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
                 <span><%= current_user.name %></span>
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
@@ -57,7 +58,7 @@
             <%= link_to t('.footer.releases'), news_url, class: "header__nav-link #{active_status(news_path)}" %>
             <%= link_to t('.footer.blog'), "https://blog.rubygems.org", class: "header__nav-link" %>
 
-            <%- if request.path_info == '/gems' %>
+            <%- if current_page?(rubygems_path) %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link is-active" %>
             <%- else %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link" %>
@@ -66,7 +67,7 @@
             <%= link_to t('.footer.guides'), "https://guides.rubygems.org", class: "header__nav-link" %>
 
             <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
+              <a href="<%= profile_path(id: current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
                 <span><%= current_user.name %></span>
                 <%= avatar 80, "user_gravatar", theme: :dark %>
               </a>
@@ -80,8 +81,8 @@
                 <%= link_to t('sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
               </div>
             <% else %>
-              <%= link_to t('sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
-              <%= link_to t('sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
+              <%= link_to t('sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if current_page?(sign_in_path)}" %>
+              <%= link_to t('sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if current_page?(sign_up_path)}" %>
             <% end %>
           </nav>
         </div>
@@ -102,8 +103,8 @@
       </div>
     <% end %>
 
-    <main class="<%= 'main--interior' if request.path_info != '/' %>" data-nav-target="collapse">
-      <% if request.path_info != '/' %>
+    <main class="<%= 'main--interior' unless home_page? %>" data-nav-target="collapse">
+      <% unless home_page? %>
         <div class="l-wrap--b">
           <% if @title %>
             <h1 class="t-display page__heading">
@@ -129,22 +130,22 @@
             <%= link_to t('.footer.status'), "https://status.rubygems.org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.uptime'), "https://uptime.rubygems.org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.source_code'), "https://github.com/rubygems/rubygems.org", class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.data'), page_path("data"), class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.data'), page_path(id: "data"), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_path, class: "nav--v__link--footer" %>
             <%= link_to t('.footer.contribute'), "https://guides.rubygems.org/contributing/", class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/about' %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer is-active" %>
+            <%- if current_page?(page_path(id: "about")) %>
+              <%= link_to t('.footer.about'), page_path(id: "about"), class: "nav--v__link--footer is-active" %>
             <%- else %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer" %>
+              <%= link_to t('.footer.about'), page_path(id: "about"), class: "nav--v__link--footer" %>
             <%- end %>
             <%= mail_to "support@rubygems.org", t('.footer.help'), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.api'), "https://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.policies'), policies_path, class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.support_us'), page_path("supporters"), class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/security' %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer is-active" %>
+            <%= link_to t('.footer.support_us'), page_path(id: "supporters"), class: "nav--v__link--footer" %>
+            <%- if current_page?(page_path(id: "security")) %>
+              <%= link_to t('.footer.security'), page_path(id: "security"), class: "nav--v__link--footer is-active" %>
             <%- else %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer" %>
+              <%= link_to t('.footer.security'), page_path(id: "security"), class: "nav--v__link--footer" %>
             <%- end %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
@@ -159,7 +160,7 @@
                   ) %>
               </p>
               <p>
-                <%= t('footer_sponsors_html', supporters_page: page_path("supporters")) %>
+                <%= t('footer_sponsors_html', supporters_page: page_path(id: "supporters")) %>
               </p>
             </div>
           </div>
@@ -199,7 +200,13 @@
           <span class="t-hidden">Mend.io</span>
         </a>
       </div>
-      <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
+      <div class="footer__language_selector">
+        <% I18n.available_locales.each do |language| %>
+          <div class="footer__language">
+            <%= link_to I18n.t(:locale_name, locale: language), locale_switch_path(language), class: "nav--v__link--footer" %>
+          </div>
+        <% end %>
+      </div>
     </footer>
     <%= yield :javascript %>
     <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>

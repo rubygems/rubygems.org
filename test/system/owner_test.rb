@@ -28,7 +28,7 @@ class OwnerTest < ApplicationSystemTestCase
     owners_table = page.find(:css, ".owners__table")
 
     within_element owners_table do
-      assert_selector(:css, "a[href='#{profile_path(@other_user.display_id)}']")
+      assert_selector(:css, "a[href='#{profile_path(id: @other_user.display_id)}']")
     end
 
     assert_cell(@other_user, "Confirmed", "Pending")
@@ -95,7 +95,7 @@ class OwnerTest < ApplicationSystemTestCase
       end
     end
 
-    refute page.has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
+    refute page.has_selector? ".owners__table a[href='#{profile_path(id: @other_user)}']"
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
@@ -113,7 +113,7 @@ class OwnerTest < ApplicationSystemTestCase
       end
     end
 
-    assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
+    assert page.has_selector?("a[href='#{profile_path(id: @user.display_id)}']")
     assert page.has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
@@ -128,7 +128,7 @@ class OwnerTest < ApplicationSystemTestCase
     click_button "Authenticate with security device"
     find(:css, ".header__popup-link")
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
     click_link "Ownership"
 
     assert page.has_css? "#verify_password_password"
@@ -145,7 +145,7 @@ class OwnerTest < ApplicationSystemTestCase
     click_button "Authenticate with security device"
     find(:css, ".header__popup-link")
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
     click_link "Ownership"
 
     assert page.has_css? "#verify_password_password"
@@ -160,7 +160,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "incorrect password on verify shows error" do
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
     click_link "Ownership"
 
     assert page.has_css? "#verify_password_password"
@@ -175,7 +175,7 @@ class OwnerTest < ApplicationSystemTestCase
 
     travel 15.minutes
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
     click_link "Ownership"
 
     assert page.has_field? "Password"
@@ -184,7 +184,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "incorrect password error does not persist after correct password" do
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
     click_link "Ownership"
 
     assert page.has_css? "#verify_password_password"
@@ -201,13 +201,13 @@ class OwnerTest < ApplicationSystemTestCase
 
   test "clicking on confirmation link confirms the account" do
     @unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: @rubygem)
-    confirmation_link = confirm_rubygem_owners_url(@rubygem.slug, token: @unconfirmed_ownership.token)
+    confirmation_link = confirm_rubygem_owners_url(rubygem_id: @rubygem.slug, token: @unconfirmed_ownership.token)
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
       visit confirmation_link
     end
 
-    assert_current_path rubygem_path(@rubygem.slug)
+    assert_current_path rubygem_path(id: @rubygem.slug)
     assert page.has_selector? "#flash_notice", text: "You were added as an owner to the #{@rubygem.name} gem"
 
     assert_emails 2
@@ -219,7 +219,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   test "clicking on incorrect link shows error" do
-    confirmation_link = confirm_rubygem_owners_url(@rubygem.slug, token: SecureRandom.hex(20).encode("UTF-8"))
+    confirmation_link = confirm_rubygem_owners_url(rubygem_id: @rubygem.slug, token: SecureRandom.hex(20).encode("UTF-8"))
     visit confirmation_link
 
     assert_text "Page not found."
@@ -240,8 +240,8 @@ class OwnerTest < ApplicationSystemTestCase
 
     owners_table = page.find(:css, ".owners__table")
     within_element owners_table do
-      assert_selector(:css, "a[href='#{profile_path(@user.display_id)}']")
-      assert_selector(:css, "a[href='#{profile_path(maintainer.display_id)}']")
+      assert_selector(:css, "a[href='#{profile_path(id: @user.display_id)}']")
+      assert_selector(:css, "a[href='#{profile_path(id: maintainer.display_id)}']")
     end
 
     assert_no_text "ADD OWNER"
@@ -256,40 +256,40 @@ class OwnerTest < ApplicationSystemTestCase
     sign_out
     sign_in(maintainer)
 
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
-    assert page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+    assert page.has_selector?("a[href='#{rubygem_owners_path(rubygem_id: @rubygem.slug)}']")
   end
 
   test "shows ownership link when is owner" do
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
-    assert page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+    assert page.has_selector?("a[href='#{rubygem_owners_path(rubygem_id: @rubygem.slug)}']")
   end
 
   test "hides ownership link when not owner" do
     sign_out
     sign_in(@other_user)
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
-    refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+    refute page.has_selector?("a[href='#{rubygem_owners_path(rubygem_id: @rubygem.slug)}']")
   end
 
   test "hides ownership link when not signed in" do
     sign_out
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
-    refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+    refute page.has_selector?("a[href='#{rubygem_owners_path(rubygem_id: @rubygem.slug)}']")
   end
 
   test "shows resend confirmation link when unconfirmed" do
     sign_out
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
     sign_in(@other_user)
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
 
-    refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
-    assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owners_path(@rubygem.slug)}']")
+    refute page.has_selector?("a[href='#{rubygem_owners_path(rubygem_id: @rubygem.slug)}']")
+    assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owners_path(rubygem_id: @rubygem.slug)}']")
   end
 
   test "deleting unconfirmed owner user" do
@@ -357,7 +357,7 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   def visit_ownerships_page
-    visit rubygem_path(@rubygem.slug)
+    visit rubygem_path(id: @rubygem.slug)
     click_link "Ownership"
     return unless page.has_css? "#verify_password_password"
 

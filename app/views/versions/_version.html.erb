@@ -1,5 +1,5 @@
 <li class="flex flex-wrap items-center gap-x-2">
-  <%= link_to version.number, rubygem_version_path(version.rubygem.slug, version.slug),
+  <%= link_to version.number, rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug),
         class: "font-mono text-c4 px-2 py-0.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white hover:bg-green-300 dark:hover:bg-green-700" %>
   <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version_date_tag(version) %></span>
   <% if version.platformed? %>

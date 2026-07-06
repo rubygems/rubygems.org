@@ -12,7 +12,7 @@ class RubygemComponent < ApplicationComponent
   prop :rubygem
 
   def view_template(&)
-    link_to rubygem_path(@rubygem.name), class: LINK_CLASSES do
+    link_to rubygem_path(id: @rubygem.name), class: LINK_CLASSES do
       div(class: "flex flex-row w-full items-center justify-between") do
         h2(class: "text-b1 font-semibold text-neutral-900 dark:text-white group-hover:text-orange-500 transition-colors",
            data: { testid: "rubygem-name" }) do

@@ -1,16 +1,17 @@
 <% @title = @rubygem.name %>
-<% @title_url = rubygem_path(@rubygem.slug) %>
+<% @title_url = rubygem_path(id: @rubygem.slug) %>
 <% @subtitle = @latest_version&.slug %>
 
-<% content_for :head do %>
-  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+<% content_for :search_engine_tags do %>
   <% if @rubygem.versions.any? && @latest_version.indexed %>
-    <!-- canonical url -->
-    <link rel="canonical" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug) %>" />
-    <%# Locale alternate links temporarily disabled to improve cacheability and mitigate bot abuse %>
+    <%= canonical_link_tags { |locale| rubygem_version_url(rubygem_id: @rubygem.slug, id: @latest_version.slug, locale: locale_param(locale)) } %>
   <% else %>
     <meta name="robots" content="noindex" />
   <% end %>
+<% end %>
+
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(rubygem_id: @rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
 <% end %>
 
 <% content_for :subject do %>
@@ -67,7 +68,7 @@
       <ol class="gem__versions flex flex-col gap-1.5">
         <% @versions.each do |version| %>
           <li class="flex flex-wrap items-center gap-x-2">
-            <%= link_to version.number, rubygem_version_path(version.rubygem.slug, version.slug),
+            <%= link_to version.number, rubygem_version_path(rubygem_id: version.rubygem.slug, id: version.slug),
                   class: "font-mono text-c4 px-2 py-0.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white hover:bg-green-300 dark:hover:bg-green-700" %>
             <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version_date_tag(version) %></span>
             <% if version.platformed? %>
@@ -81,7 +82,7 @@
         <% end %>
       </ol>
       <% if show_all_versions_link?(@rubygem) %>
-        <%= link_to t(".show_all_versions", count: @rubygem.versions.count), rubygem_versions_url(@rubygem.slug),
+        <%= link_to t(".show_all_versions", count: @rubygem.versions.count), rubygem_versions_url(rubygem_id: @rubygem.slug),
               class: "inline-block mt-2 text-b3 text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
       <% end %>
     </div>

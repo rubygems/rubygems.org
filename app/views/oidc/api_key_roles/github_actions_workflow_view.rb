@@ -78,7 +78,7 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
   end
 
   def gem_link
-    render link_to("#{gem_name} →", rubygem_path(gem_name), class: "text-orange-500 hover:underline")
+    render link_to("#{gem_name} →", rubygem_path(id: gem_name), class: "text-orange-500 hover:underline")
   end
 
   def gem_name
