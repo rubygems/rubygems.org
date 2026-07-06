@@ -19,7 +19,7 @@ class StaticPagesManifestTest < ActionDispatch::IntegrationTest
 
   test "configured policy markdown pages render" do
     Gemcutter::POLICY_PAGES.each do |policy|
-      get policy_path(policy)
+      get policy_path(policy: policy)
 
       assert_response :success
       assert_select "main"
