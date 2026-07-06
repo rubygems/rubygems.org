@@ -25,7 +25,7 @@ class OwnerTest < ApplicationSystemTestCase
       click_button "Add Owner"
     end
 
-    owners_table = page.find(:css, ".owners__table")
+    owners_table = page.find('[data-testid="owners_table"]')
 
     within_element owners_table do
       assert_selector(:css, "a[href='#{profile_path(@other_user.display_id)}']")
@@ -95,7 +95,7 @@ class OwnerTest < ApplicationSystemTestCase
       end
     end
 
-    refute page.has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
+    refute page.has_selector? "a[href='#{profile_path(@other_user)}']"
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
@@ -236,9 +236,9 @@ class OwnerTest < ApplicationSystemTestCase
 
     visit_ownerships_page
 
-    assert page.has_selector?(".owners__table")
+    assert page.has_selector?('[data-testid="owners_table"]')
 
-    owners_table = page.find(:css, ".owners__table")
+    owners_table = page.find('[data-testid="owners_table"]')
     within_element owners_table do
       assert_selector(:css, "a[href='#{profile_path(@user.display_id)}']")
       assert_selector(:css, "a[href='#{profile_path(maintainer.display_id)}']")
@@ -345,7 +345,7 @@ class OwnerTest < ApplicationSystemTestCase
   private
 
   def owner_row(owner)
-    page.find(:css, ".owners__table")
+    page.find('[data-testid="owners_table"]')
       .find(:css, "td[data-title='Name']", text: /^#{owner.handle}$/)
       .find(:xpath, "./parent::tr")
   end
@@ -364,6 +364,6 @@ class OwnerTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert_selector ".owners__table"
+    assert_selector '[data-testid="owners_table"]'
   end
 end

@@ -12,6 +12,8 @@ class OwnersController < ApplicationController
     redirect_to rubygem_path(@rubygem.slug), alert: e.policy.error
   end
 
+  layout "hammy"
+
   def confirm
     ownership = Ownership.find_by!(token: token_params)
 
@@ -36,6 +38,7 @@ class OwnersController < ApplicationController
 
   def index
     authorize @rubygem, :show_unconfirmed_ownerships?
+
     @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
   end
 

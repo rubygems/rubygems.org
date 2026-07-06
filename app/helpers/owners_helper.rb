@@ -9,7 +9,7 @@ module OwnersHelper
     if ownership.confirmed?
       image_tag("/images/check.svg") + t("owners.index.confirmed")
     else
-      image_tag("/images/clock.svg") + t("owners.index.pending")
+      icon_tag("clock") + t("owners.index.pending")
     end
   end
 
