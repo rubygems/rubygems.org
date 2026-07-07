@@ -34,6 +34,32 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
     end
 
+    context "A user creates an organization without gems" do
+      setup do
+        @onboarding = build(
+          :organization_onboarding,
+          organization_name: "Test Organization",
+          organization_handle: "test-organization",
+          name_type: "handle",
+          created_by: @owner
+        )
+      end
+
+      should "create a valid organization" do
+        assert_predicate(@onboarding, :valid?)
+        @onboarding.save!
+
+        @onboarding.onboard!
+
+        @onboarding.reload
+
+        organization = @onboarding.organization
+
+        assert_equal("test-organization", organization.handle)
+        assert_equal("Test Organization", organization.name)
+      end
+    end
+
     context "when the user does not have the required gem roles" do
       setup do
         @onboarding.created_by = @maintainer

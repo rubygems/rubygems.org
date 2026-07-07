@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class OrganizationOnboarding < ApplicationRecord
-  enum :name_type, { gem: "gem", user: "user" }, prefix: true, default: "gem"
+  # TODO: BRIAN: I bet we can straight up drop this? Handle should cover all of it?
+  enum :name_type, { gem: "gem", user: "user", handle: "handle" }, prefix: true, default: "handle"
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   has_many :invites, as: :invitable, class_name: "OrganizationInvite", dependent: :destroy
