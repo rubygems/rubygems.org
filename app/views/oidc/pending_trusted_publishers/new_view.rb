@@ -30,7 +30,8 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
           f.label :trusted_publisher_type, class: label_class
           f.select :trusted_publisher_type,
             OIDC::TrustedPublisher.all.map { |type| [type.publisher_name, type.polymorphic_name] },
-            {}
+            {},
+            class: field_class
         end
 
         render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(

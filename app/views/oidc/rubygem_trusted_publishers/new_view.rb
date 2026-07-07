@@ -22,7 +22,8 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
             f.label :trusted_publisher_type, class: label_class
             f.select :trusted_publisher_type,
               OIDC::TrustedPublisher.all.map { |type| [type.publisher_name, type.polymorphic_name] },
-              {}
+              {},
+              class: field_class
           end
 
           render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(
@@ -41,5 +42,11 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
 
   def label_class
     "block text-b4 font-semibold text-neutral-800 dark:text-neutral-200 mb-2"
+  end
+
+  def field_class
+    "block w-full rounded border border-neutral-300 dark:border-neutral-700 " \
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white px-3 h-12 " \
+      "outline-none focus:border-neutral-500 focus:ring-0"
   end
 end
