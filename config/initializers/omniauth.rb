@@ -40,7 +40,7 @@ OmniAuth.config.on_failure = FailureEndpoint
 # https://github.com/omniauth/omniauth-oauth2/issues/189#issuecomment-4624416883
 # https://github.com/omniauth/omniauth-oauth2/pull/186
 OmniAuth::Strategies::OAuth2.prepend(Module.new do
-  def secure_compare(a, b)
-    super(a.to_s, b.to_s)
+  def secure_compare(string_a, string_b)
+    super(string_a.to_s, string_b.to_s)
   end
 end)
