@@ -7,6 +7,7 @@ CI.run do
 
   step "Style: Ruby", "bin/rubocop"
   step "Style: ERB", "bin/herb analyze"
+  step "Style: JS", "bin/prettier"
 
   step "Security: Importmap vulnerability audit", "bin/importmap audit"
   step "Security: Brakeman code analysis", "bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error"
