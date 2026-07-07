@@ -5,8 +5,7 @@ The Ruby community's gem host — a Ruby on Rails app (internal name: `gemcutter
 ## Stack
 
 - Ruby 4.0.x (`.ruby-version`), Rails 8.1, Bundler/RubyGems 4.0.x
-- PostgreSQL (>= 14), OpenSearch 2.13.0, Memcached — all required to run app & tests
-- Chrome + Playwright for system tests
+- PostgreSQL (>= 14), OpenSearch (version pinned in `docker-compose.yml`), Memcached — all required to run app & tests
 
 ## Setup
 
@@ -47,6 +46,9 @@ bin/rails test:system  # system tests (Playwright/Chrome)
 bin/ci             # full CI suite locally (config/ci.rb)
 ```
 
+Dev-only routes: mailer previews at `/rails/mailers`, sent mail at `/letter_opener`,
+component previews at `/lookbook`.
+
 **`DB_HOST`:**
 
 - Standard install: defaults to the local Postgres socket — no setup needed.
@@ -62,31 +64,35 @@ load dev secrets — see [CONTRIBUTING.md](CONTRIBUTING.md#developing-with-dev-s
 
 ## Lint & security (CI will fail otherwise)
 
-All of these run as part of `bin/ci`; reach for them individually when iterating.
+All of these checks run as part of `bin/ci`; reach for them individually when iterating.
 
 ```bash
 bin/rubocop              # Ruby style
 bin/herb analyze         # ERB linting
 bin/prettier             # JS style
-rake format              # auto-fix Ruby + JS
 bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error
 bin/importmap audit      # JS dependency vulnerability audit
+rake format              # auto-fix Ruby + JS style (fixer, not a bin/ci check)
 ```
+
+CI-only checks (not in `bin/ci`): `bin/rake importmap:verify` (re-downloads every JS pin;
+network-flaky locally), kubeconform/krane render on `config/deploy/*.yaml.erb`, and zizmor
+on workflows — deploy manifests look inert but can fail CI.
 
 ## Architecture (`app/`)
 
 - **Dual interface**: the website (HTML controllers in `controllers/`) and the gem-client
   API (`controllers/api/v1`, `controllers/api/v2`, plus compact_index endpoints
   `/versions`, `/info/:gem_name`, `/names` that `bundle`/`gem` fetch).
-- `models/`, `controllers/`, `views/` — standard Rails
 - `components/` — ViewComponent UI components
 - `policies/` — Pundit authorization
 - `jobs/` — background jobs (GoodJob + Shoryuken/SQS)
-- `avo/` — Avo admin interface
+- `avo/` — Avo admin interface at `/admin`; in development the login page offers a
+  "login as" user picker (`ENABLE_DEVELOPMENT_LOG_IN`)
 - `tasks/` — maintenance_tasks (data migrations)
 - Frontend: Propshaft + importmap (no JS bundler), Stimulus controllers in
   `app/javascript/controllers/`, Tailwind CSS.
-- Feature flags via Flipper (`flipper-active_record`; UI at `/features`).
+- Feature flags via Flipper (`flipper-active_record`; UI at `/admin/features`).
 - Auth via Clearance. Gem processing stores files in S3 (prod) or `server/` (dev).
 - `lib/compact_index*`, `lib/rstuf*`, `lib/gemcutter` — gem index, TUF signing, core domain
 
@@ -94,7 +100,16 @@ bin/importmap audit      # JS dependency vulnerability audit
 
 - Minitest with `shoulda-context` (`class FooTest < ActiveSupport::TestCase`, `should` blocks) + `shoulda-matchers`.
 - `factory_bot` for test data (`create(:rubygem)`) — not fixtures; factories in `test/factories/`.
-- `mocha` for mocking; system tests use Capybara + Playwright.
+- `mocha` for mocking; system tests use Capybara + Playwright (Chrome).
+- External HTTP is blocked (WebMock); S3 is stubbed (`RubygemFs.mock!` + AWS
+  `stub_responses`) — stub, never fetch.
+- OpenSearch indexing callbacks are disabled globally; `include SearchKickHelper` to
+  re-enable & reindex in search tests — without it searches silently return nothing.
+- Self-skipping tests: Toxiproxy and Avo Pro tests skip locally unless their
+  service/license is present, but CI forces them (`REQUIRE_TOXIPROXY`,
+  `REQUIRE_AVO_PRO`) — a local pass can hide a CI failure.
+- Tests run parallelized (one worker per processor, each with its own search index and
+  cache namespace).
 - `test/` mirrors `app/`. **Contributions are not accepted without tests.**
 
 ## Guardrails
@@ -109,7 +124,7 @@ bin/importmap audit      # JS dependency vulnerability audit
   - **Ownership** — `app/models/ownership.rb` (who may push/yank a gem)
   - **Attestations / provenance** — `app/models/attestation.rb`, Sigstore cert chain
   - **TUF signing** — `lib/rstuf*`
-- Never commit secrets or production data; use the [dev-secrets workflow](CONTRIBUTING.md#developing-with-dev-secrets).
+- Never commit secrets or production data (`script/dev` under Commands is the dev-secrets workflow).
 
 ## Conventions
 
