@@ -11,7 +11,8 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       created_by: @user,
       status: :pending,
       organization_handle: "existing-name",
-      organization_name: "Existing Name"
+      organization_name: "Existing Name",
+      rubygems: [] # assume a new organization will have no gems associated
     )
 
     FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
@@ -37,7 +38,7 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       assert_equal [@gem.id], @organization_onboarding.reload.rubygems
     end
 
-    # TODO: BRIAN - we should prevent submission unless at least one gem is selected
+    # TODO BRIAN we should make this so it is not allowed
     should "allow selecting no additional gems" do
       patch organization_onboarding_gems_path(as: @user)
 
@@ -46,8 +47,7 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       assert_equal [], @organization_onboarding.reload.rubygems
     end
 
-    # TODO: BRIAN - we should prevent submission unless at least one gem is selected
-    should "remove non namesake gems if rubygems param is empty" do
+    should "remove all gems if rubygems param is empty" do
       @organization_onboarding.update!(rubygems: [@gem.id])
 
       assert_equal [@gem.id], @organization_onboarding.reload.rubygems
