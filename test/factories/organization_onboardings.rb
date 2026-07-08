@@ -38,16 +38,5 @@ FactoryBot.define do
       error { "Failed to onboard" }
       status { :failed }
     end
-
-    trait :user do
-      name_type { "gem" } # temporarily set to gem during release when username is disabled
-
-      # organization_name { "Rubygems" }
-      # organization_handle { created_by.handle }
-
-      # rubygems do
-      #   []
-      # end
-    end
   end
 end
