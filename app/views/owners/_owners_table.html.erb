@@ -65,7 +65,6 @@
                       <%= render ButtonComponent.new(
                         t("remove"),
                         color: :red,
-                        size: :small,
                         data: { action: "confirm-remove-self#open" }) %>
                       <dialog data-confirm-remove-self-target="dialog"
                               class="fixed inset-0 m-0 w-full h-full max-w-none max-h-none border-0 p-0 z-50 open:flex open:items-center open:justify-center open:bg-black/50">
@@ -86,7 +85,7 @@
                                  spellcheck="false"
                                  data-confirm-remove-self-target="usernameInput"
                                  data-action="input->confirm-remove-self#validate"
-                                 class="form__input">
+                                 class="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition">
                           <div class="flex gap-3 justify-end items-center mt-5">
                             <%= render ButtonComponent.new(
                               t("owners.index.remove_self_dialog.cancel"),
