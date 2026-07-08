@@ -5,22 +5,21 @@ FactoryBot.define do
     transient do
       approved_invites { [] }
       authorizer { create(:user) } # rubocop:disable FactoryBot/FactoryAssociationWithStrategy
-      namesake_rubygem { create(:rubygem) } # rubocop:disable FactoryBot/FactoryAssociationWithStrategy
     end
 
     created_by { association(:user) }
 
-    organization_name { namesake_rubygem.name }
-    organization_handle { namesake_rubygem.name }
+    sequence(:organization_name) { |n| "Organization Name #{n}" }
+    sequence(:organization_handle) { |n| "organization_name_#{n}"}
 
     rubygems do
-      [namesake_rubygem.id]
+      [create(:rubygem, owners: [created_by])]
     end
 
     after(:build) do |organization_onboarding, evaluator|
       Ownership.find_or_create_by(
         user: organization_onboarding.created_by,
-        rubygem: evaluator.namesake_rubygem,
+        rubygem: evaluator.rubygems.first,
         authorizer: evaluator.authorizer,
         role: "owner"
       )
