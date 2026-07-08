@@ -63,11 +63,14 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
 
   context "POST create" do
     should "create a new onboarding and redirect to the next step" do
-      post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
-        organization_name: "New Name", organization_handle: @gem.name, name_type: "gem"
-      } }
+      post organization_onboarding_name_path(as: @user), params: {
+        organization_onboarding: {
+          organization_name: "New Name",
+          organization_handle: "new_name"
+        }
+      }
 
-      assert OrganizationOnboarding.exists?(organization_name: "New Name", organization_handle: @gem.name, name_type: "gem")
+      assert OrganizationOnboarding.exists?(organization_name: "New Name", organization_handle: "new_name")
       assert_redirected_to organization_onboarding_gems_path
     end
 
@@ -77,9 +80,11 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
       end
 
       should "update the existing onboarding and redirect to the next step" do
-        post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
-          organization_name: "Updated Name"
-        } }
+        post organization_onboarding_name_path(as: @user), params: {
+          organization_onboarding: {
+            organization_name: "Updated Name"
+          }
+        }
 
         assert_redirected_to organization_onboarding_gems_path
         assert_equal "Updated Name", @organization_onboarding.reload.organization_name
@@ -88,9 +93,11 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
 
     context "when the onboarding is invalid" do
       should "render the form with an error" do
-        post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
-          organization_name: ""
-        } }
+        post organization_onboarding_name_path(as: @user), params: {
+          organization_onboarding: {
+            organization_name: ""
+          }
+        }
 
         assert_response :unprocessable_content
       end
@@ -98,11 +105,12 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
 
     context "when the organization handle is reserved" do
       should "render the form with an error for reserved handle" do
-        post organization_onboarding_name_path(as: @user), params: { organization_onboarding: {
-          organization_name: "Admin Organization",
-          organization_handle: "admin",
-          name_type: "custom"
-        } }
+        post organization_onboarding_name_path(as: @user), params: {
+          organization_onboarding: {
+            organization_name: "Admin Organization",
+            organization_handle: "admin",
+          }
+        }
 
         assert_response :unprocessable_content
         assert_select ".field_with_errors"
