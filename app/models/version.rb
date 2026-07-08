@@ -444,19 +444,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     ActiveRecord::Type::Boolean.new.cast(metadata["rubygems_mfa_required"])
   end
 
-  # Whether this version is the latest indexed release for its platform, computed
-  # directly rather than relying on the `latest` flag (which is updated
-  # asynchronously by ReorderVersionsJob and may lag right after a push/yank).
-  def latest_for_platform?
-    return false unless indexed? && !prerelease?
-    latest_for_platform = rubygem.versions
-      .release
-      .indexed
-      .where(platform:)
-      .max_by(&:to_gem_version)
-    latest_for_platform&.id == id
-  end
-
   def prerelease?
     !!to_gem_version.prerelease?
   end

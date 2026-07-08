@@ -9,26 +9,25 @@ class ReorderVersionsJobTest < ActiveJob::TestCase
   end
 
   context "reordering versions" do
-    should "reorder versions correctly" do
+    should "reorder versions, set the latest flag, and record the success metric" do
       v3 = create(:version, rubygem: @rubygem, number: "3.0.0", indexed: true)
       v1 = create(:version, rubygem: @rubygem, number: "1.0.0", indexed: true)
       v2 = create(:version, rubygem: @rubygem, number: "2.0.0", indexed: true)
+
+      StatsD.stubs(:increment)
+      StatsD.stubs(:measure)
+      StatsD.expects(:increment).with("reorder_versions.success")
+      StatsD.expects(:measure).with("reorder_versions.duration").yields
 
       ReorderVersionsJob.new.perform(rubygem: @rubygem)
 
       assert_equal 0, v3.reload.position
       assert_equal 1, v2.reload.position
       assert_equal 2, v1.reload.position
-    end
-
-    should "set latest flag correctly" do
-      v1 = create(:version, rubygem: @rubygem, number: "1.0.0", indexed: true)
-      v2 = create(:version, rubygem: @rubygem, number: "2.0.0", indexed: true)
-
-      ReorderVersionsJob.new.perform(rubygem: @rubygem)
 
       refute v1.reload.latest
-      assert v2.reload.latest
+      refute v2.reload.latest
+      assert v3.reload.latest
     end
 
     should "handle concurrent reorder attempts gracefully" do
@@ -56,21 +55,14 @@ class ReorderVersionsJobTest < ActiveJob::TestCase
       assert_equal 0, @rubygem.versions.first.reload.position
     end
 
-    should "increment success metric when reorder completes" do
-      create(:version, rubygem: @rubygem, number: "1.0.0", indexed: true)
-
-      StatsD.expects(:increment).with("reorder_versions.success", tags: { gem: "test-gem" })
-      StatsD.expects(:measure).with("reorder_versions.duration", anything, tags: { gem: "test-gem" })
-
-      ReorderVersionsJob.new.perform(rubygem: @rubygem)
-    end
-
     should "handle errors and increment error metric" do
       create(:version, rubygem: @rubygem, number: "1.0.0", indexed: true)
 
       @rubygem.stubs(:reorder_versions).raises(StandardError.new("Test error"))
 
-      StatsD.expects(:increment).with("reorder_versions.error", tags: { gem: "test-gem", error: "StandardError" })
+      StatsD.stubs(:increment)
+      StatsD.stubs(:measure).yields
+      StatsD.expects(:increment).with("reorder_versions.error", tags: { error: "StandardError" })
 
       assert_raises(StandardError) do
         ReorderVersionsJob.new.perform(rubygem: @rubygem)

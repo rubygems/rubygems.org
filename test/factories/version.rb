@@ -42,10 +42,11 @@ FactoryBot.define do
         version.update_attribute :info_checksum_v2, checksum
       end
 
-      # Production reorders versions asynchronously via ReorderVersionsJob (enqueued
-      # from AfterVersionWriteJob) to avoid deadlocks. The test queue adapter never
-      # runs that job, so do the reordering inline here to keep position/latest
-      # consistent for factory-built versions (restores the old after_save invariant).
+      # In production, everything in this after(:create) block (the info_checksum_v2
+      # update above and the version reordering below) is performed asynchronously by
+      # AfterVersionWriteJob. The test queue adapter never runs that job, so we do it
+      # inline here to keep info_checksum_v2/position/latest consistent for
+      # factory-built versions.
       version.rubygem.reorder_versions
     end
   end

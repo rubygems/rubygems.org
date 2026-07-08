@@ -72,9 +72,11 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
               "yanked_info_checksum_v2" => [version_attributes[:yanked_info_checksum_v2], nil],
               "updated_at" => [version_attributes[:updated_at].as_json, version.updated_at.as_json]
             },
+            # `latest` stays true here: reordering (which would clear it on yank) now
+            # runs asynchronously via ReorderVersionsJob, so it isn't reflected inline.
             "unchanged" => version_attributes
               .except("updated_at", "yanked_info_checksum_v2", "yanked_at", "indexed")
-              .merge("position" => 0, "latest" => false)
+              .merge("position" => 0, "latest" => true)
               .transform_values(&:as_json)
           },
           "gid://gemcutter/Rubygem/#{rubygem.id}" =>

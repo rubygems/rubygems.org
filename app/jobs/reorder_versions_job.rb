@@ -4,7 +4,7 @@ class ReorderVersionsJob < ApplicationJob
   include GoodJob::ActiveJobExtensions::Concurrency
 
   good_job_control_concurrency_with(
-    total_limit: 1,
+    perform_limit: 1,
     key: -> { "reorder-versions-#{arguments.first[:rubygem].id}" }
   )
 
@@ -16,17 +16,20 @@ class ReorderVersionsJob < ApplicationJob
   def perform(rubygem:)
     logger.info { "Reordering versions for gem: #{rubygem.name} (#{rubygem.id})" }
 
-    start_time = Time.zone.now
-    rubygem.reorder_versions
-    elapsed = ((Time.zone.now - start_time) * 1000).round(2)
+    StatsD.measure("reorder_versions.duration") do
+      rubygem.reorder_versions
+    end
+    StatsD.increment("reorder_versions.success")
 
-    StatsD.increment("reorder_versions.success", tags: { gem: rubygem.name })
-    StatsD.measure("reorder_versions.duration", elapsed, tags: { gem: rubygem.name })
+    # SetLinksetHomeJob relies on the freshly-updated `latest`, so enqueue it here
+    # (after reordering) rather than before.
+    latest_version = rubygem.reload.most_recent_version
+    SetLinksetHomeJob.perform_later(version: latest_version) if latest_version
 
-    logger.info { "Reordering complete for #{rubygem.name} in #{elapsed}ms" }
+    logger.info { "Reordering complete for #{rubygem.name}" }
   rescue StandardError => e
     logger.error { "Failed to reorder versions for #{rubygem.name}: #{e.message}" }
-    StatsD.increment("reorder_versions.error", tags: { gem: rubygem.name, error: e.class.name })
+    StatsD.increment("reorder_versions.error", tags: { error: e.class.name })
     raise
   end
 end
