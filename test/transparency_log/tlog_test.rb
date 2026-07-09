@@ -36,9 +36,8 @@ class TransparencyLog::TlogTest < ActiveSupport::TestCase
 
     result = @tlog.create_entry(@transparency_log_event)
 
-    assert_kind_of TransparencyLogEvent::RekorResponse, result
-    assert_kind_of TransparencyLogEvent::RekorEntry, result.rekor_entry
-    assert_equal result.rekor_entry.kind, "hashedrekord"
+    assert_kind_of TransparencyLogEvent::RekorEntry, result
+    assert_equal "hashedrekord", result.kind
   end
 
   test "carries the complete raw response body alongside the parsed entry" do

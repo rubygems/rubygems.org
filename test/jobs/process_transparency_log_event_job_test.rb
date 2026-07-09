@@ -47,18 +47,16 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
     setup do
       @event = create(:transparency_log_event, status: :pending)
       @job   = ProcessTransparencyLogEventJob.new(@event)
-      rekor_response = TransparencyLogEvent::RekorResponse.new(
+      rekor_entry = TransparencyLogEvent::RekorEntry.new(
         response_body: { "uuid" => "rekor-entry-uuid" },
-        rekor_entry: TransparencyLogEvent::RekorEntry.new(
-          origin: "rekor.sigstore.dev",
-          kind: "hashedrekord",
-          version: "0.0.1",
-          index: 123,
-          checkpoint: "checkpoint",
-          inclusion_proof: {}
-        )
+        origin: "rekor.sigstore.dev",
+        kind: "hashedrekord",
+        version: "0.0.1",
+        index: 123,
+        checkpoint: "checkpoint",
+        inclusion_proof: {}
       )
-      TransparencyLog::Tlog.any_instance.stubs(:create_entry).returns(rekor_response)
+      TransparencyLog::Tlog.any_instance.stubs(:create_entry).returns(rekor_entry)
     end
 
     should "mark the event as submitted" do
@@ -84,18 +82,16 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
     setup do
       @event = create(:transparency_log_event, status: :pending)
       @job   = ProcessTransparencyLogEventJob.new(@event)
-      rekor_response = TransparencyLogEvent::RekorResponse.new(
+      rekor_entry = TransparencyLogEvent::RekorEntry.new(
         response_body: { "uuid" => "rekor-entry-uuid" },
-        rekor_entry: TransparencyLogEvent::RekorEntry.new(
-          origin: "rekor.sigstore.dev",
-          kind: "hashedrekord",
-          version: "0.0.1",
-          index: 123,
-          checkpoint: "checkpoint",
-          inclusion_proof: {}
-        )
+        origin: "rekor.sigstore.dev",
+        kind: "hashedrekord",
+        version: "0.0.1",
+        index: 123,
+        checkpoint: "checkpoint",
+        inclusion_proof: {}
       )
-      TransparencyLog::Tlog.any_instance.stubs(:create_entry).returns(rekor_response)
+      TransparencyLog::Tlog.any_instance.stubs(:create_entry).returns(rekor_entry)
       TransparencyLogEvent.any_instance.stubs(:record_submission).returns(false)
     end
 

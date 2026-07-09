@@ -270,6 +270,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     response_body = { "uuid" => "rekor-entry-uuid" }
     inclusion_proof = { "treeSize" => 2, "hashes" => ["abc"] }
     rekor_entry = TransparencyLogEvent::RekorEntry.new(
+      response_body:,
       origin: "rekor.sigstore.dev",
       kind: "hashedrekord",
       version: "0.0.1",
@@ -299,6 +300,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   should "not record a submission for a failed event" do
     event = create(:transparency_log_event, :failed)
     rekor_entry = TransparencyLogEvent::RekorEntry.new(
+      response_body: { "uuid" => "rekor-entry-uuid" },
       origin: "rekor.sigstore.dev",
       kind: "hashedrekord",
       version: "0.0.1",
@@ -326,6 +328,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
       }
     }
     rekor_entry = TransparencyLogEvent::RekorEntry.new(
+      response_body:,
       origin: "rekor.sigstore.dev",
       kind: response_body.dig("kindVersion", "kind"),
       version: response_body.dig("kindVersion", "version"),

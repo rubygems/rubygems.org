@@ -7,6 +7,7 @@ class TransparencyLogEvent::RekorEntryTest < ActiveSupport::TestCase
   should "map normalized evidence to transparency log event attributes" do
     inclusion_proof = { "treeSize" => 2, "hashes" => ["abc"] }
     rekor_entry = TransparencyLogEvent::RekorEntry.new(
+      response_body: { "uuid" => "rekor-entry-uuid" },
       origin: "rekor.sigstore.dev",
       kind: "hashedrekord",
       version: "0.0.1",
