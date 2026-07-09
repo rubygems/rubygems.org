@@ -26,6 +26,9 @@
         <tr class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0">
           <td data-title="Name" class="<%= cell_class %> font-medium">
             <%= link_to(ownership.owner_name, profile_path(ownership.user.display_id), class: "text-orange-500 hover:underline dark:text-orange-400") %>
+            <% if ownership.user == current_user %>
+              <span class="text-b4 text-neutral-500">(<%= t("owners.index.current_user_badge") %>)</span>
+            <% end %>
           </td>
           <td data-title="Confirmed" class="<%= cell_class %>">
             <span class="inline-flex items-center gap-1"><%= confirmation_status(ownership) %></span>
@@ -56,12 +59,59 @@
                     disabled: ownership.user == current_user) %>
                 <% end %>
                 <% if can_remove_owners?(@rubygem) %>
-                  <%= render ButtonComponent.new(
-                    t("remove"),
-                    rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
-                    method: "delete",
-                    data: { confirm: t("owners.index.confirm_remove") },
-                    color: :red) %>
+                  <% if ownership.user == current_user %>
+                    <div data-controller="confirm-remove-self"
+                         data-confirm-remove-self-username-value="<%= current_user.display_id %>">
+                      <%= render ButtonComponent.new(
+                        t("remove"),
+                        color: :red,
+                        data: { action: "confirm-remove-self#open" }) %>
+                      <dialog data-confirm-remove-self-target="dialog"
+                              class="fixed inset-0 m-0 w-full h-full max-w-none max-h-none border-0 p-0 z-50 open:flex open:items-center open:justify-center open:bg-black/50">
+                        <div class="bg-white dark:bg-neutral-900 rounded p-6 w-[calc(100%-2rem)] max-w-[440px] shadow-xl">
+                          <p class="text-lg font-bold mb-3 text-neutral-900 dark:text-white">
+                            <%= t("owners.index.remove_self_dialog.title") %>
+                          </p>
+                          <p class="text-b3 font-light leading-relaxed mb-5 text-neutral-500 dark:text-neutral-400">
+                            <%= t("owners.index.remove_self_dialog.warning") %>
+                          </p>
+                          <label class="block text-b3 mb-2 text-neutral-900 dark:text-white"
+                                 for="username_confirm_<%= ownership.id %>">
+                            <%= t("owners.index.remove_self_dialog.confirm_label", username: current_user.display_id) %>
+                          </label>
+                          <input id="username_confirm_<%= ownership.id %>"
+                                 type="text"
+                                 autocomplete="off"
+                                 spellcheck="false"
+                                 data-confirm-remove-self-target="usernameInput"
+                                 data-action="input->confirm-remove-self#validate"
+                                 class="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition">
+                          <div class="flex gap-3 justify-end items-center mt-5">
+                            <%= render ButtonComponent.new(
+                              t("owners.index.remove_self_dialog.cancel"),
+                              color: :secondary,
+                              size: :small,
+                              data: { action: "confirm-remove-self#close" }) %>
+                            <%= render ButtonComponent.new(
+                              t("owners.index.remove_self_dialog.submit"),
+                              rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
+                              method: "delete",
+                              disabled: true,
+                              data: { "confirm-remove-self-target": "submitButton" },
+                              color: :red,
+                              size: :small) %>
+                          </div>
+                        </div>
+                      </dialog>
+                    </div>
+                  <% else %>
+                    <%= render ButtonComponent.new(
+                      t("remove"),
+                      rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
+                      method: "delete",
+                      data: { confirm: t("owners.index.confirm_remove") },
+                      color: :red) %>
+                  <% end %>
                 <% end %>
               </div>
             </td>

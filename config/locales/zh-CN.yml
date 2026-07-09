@@ -698,7 +698,14 @@ zh-CN:
       info: 添加或移除所有者
       confirmed: 已批准
       pending: 待定
+      current_user_badge:
       confirm_remove: 您确定您想要从所有者中移除该用户吗？
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice: 一封确认邮件已被重新发送到您的邮箱中
     create:

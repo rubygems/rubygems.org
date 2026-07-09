@@ -781,7 +781,14 @@ de:
       info:
       confirmed:
       pending:
+      current_user_badge:
       confirm_remove:
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice:
     create:

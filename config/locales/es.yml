@@ -769,7 +769,14 @@ es:
       info: añadir o eliminar propietarios
       confirmed: Confirmado
       pending: Pendiente
+      current_user_badge:
       confirm_remove: "¿Seguro que quieres eliminar a este usuario de los propietarios?"
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
