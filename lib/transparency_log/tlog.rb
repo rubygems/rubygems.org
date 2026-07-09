@@ -3,7 +3,7 @@
 class TransparencyLog::Tlog
   def initialize()
     @entry_builder = TransparencyLog::EntryBuilder.new
-    @client = TransparencyLog::Client.new(ENV.fetch("TRANSPARENCY_LOG_REKOR_URL", "http://localhost:3004"))
+    @client = TransparencyLog::Client.new(TransparencyLog.rekor_url)
   end
 
   def create_entry(transparency_log_event)
