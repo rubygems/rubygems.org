@@ -95,6 +95,12 @@ class Api::BaseController < ApplicationController
     request.session_options[:skip] = true
   end
 
+  def deny_shared_cache
+    response.headers["Cache-Control"]     = "private, no-store"
+    response.headers["Surrogate-Control"] = "max-age=0"
+    response.headers["Vary"] = [response.headers["Vary"], "Authorization"].compact_blank.join(", ")
+  end
+
   def render_bad_request(error = "bad request")
     error = error.message if error.is_a?(Exception)
     render json: { error: error.to_s }, status: :bad_request

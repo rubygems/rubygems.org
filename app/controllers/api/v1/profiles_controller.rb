@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::ProfilesController < Api::BaseController
+  before_action :deny_shared_cache, only: :me
+
   def show
     @user = User.find_by_slug!(params[:id])
     respond_to do |format|
