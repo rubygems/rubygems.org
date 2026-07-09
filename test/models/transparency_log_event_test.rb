@@ -285,6 +285,8 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
       submitted_at:
     )
 
+    event.reload
+
     assert_predicate event, :submitted?
     assert_equal response_body, event.rekor_response_body
     assert_equal "rekor.sigstore.dev", event.rekor_log_origin
@@ -311,6 +313,9 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
 
     refute event.record_submission(response_body: { "uuid" => "rekor-entry-uuid" }, rekor_entry:)
     assert_includes event.errors[:status], "cannot transition from failed to submitted"
+
+    event.reload
+
     assert_predicate event, :failed?
     assert_nil event.rekor_log_index
   end
@@ -341,6 +346,8 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
       response_body:,
       rekor_entry:
     )
+
+    event.reload
 
     assert_predicate event, :submitted?
     assert_equal "rekor.sigstore.dev", event.rekor_log_origin
