@@ -25,8 +25,8 @@ runs:
     - name: Configure bundler environment
       shell: bash
       if: inputs.install-avo-pro == 'true'
-      run: |
-        printf "BUNDLE_WITH=avo\nRAILS_GROUPS=avo\n" >> $GITHUB_ENV
+      run: | # zizmor: ignore[github-env] Only literal, trusted values are written.
+        printf "BUNDLE_WITH=avo\nRAILS_GROUPS=avo\n" >> "$GITHUB_ENV"
     - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1.310.0
       with:
         ruby-version: ${{ inputs.ruby-version }}

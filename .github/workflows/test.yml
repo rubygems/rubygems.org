@@ -4,8 +4,12 @@ on:
   push:
     branches:
       - master
-permissions:
-  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   rails:
@@ -24,6 +28,9 @@ jobs:
             command: "test test/*/avo"
     name: Rails tests ${{ matrix.tests.name }}
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
     env:
       RUBYGEMS_VERSION: "4.0.12"
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
@@ -56,7 +63,12 @@ jobs:
 
       - name: Tests ${{ matrix.tests.name }}
         id: test-all
-        run: bin/rails ${{ matrix.tests.command }}
+        run: |
+          # Intentional splitting and glob expansion for the static matrix command.
+          # shellcheck disable=SC2086
+          bin/rails $TEST_COMMAND
+        env:
+          TEST_COMMAND: ${{ matrix.tests.command }}
 
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
