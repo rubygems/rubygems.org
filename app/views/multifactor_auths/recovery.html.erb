@@ -12,12 +12,12 @@
 
     <%# This tag contains the recovery codes and should not be a part of the form %>
     <%= text_area_tag "source", "#{@mfa_recovery_codes.join("\n")}\n",
-      class: "recovery-code-list w-full px-4 py-3 mb-4 font-mono text-sm border border-neutral-300 dark:border-neutral-600 " \
+      class: "w-full px-4 py-3 mb-4 font-mono text-sm border border-neutral-300 dark:border-neutral-600 " \
              "rounded-lg bg-neutral-050 dark:bg-neutral-900 text-neutral-900 dark:text-white resize-none " \
              "focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition",
       rows: @mfa_recovery_codes.size + 1,
       readonly: true,
-      data: { clipboard_target: "source" } %>
+      data: { clipboard_target: "source", testid: "recovery-code-list" } %>
 
     <%= form_tag(@continue_path, method: "get", data: { controller: "recovery", recovery_confirm_value: t(".confirm_dialog"), action: "recovery#submit" }) do %>
       <p class="mb-6">
