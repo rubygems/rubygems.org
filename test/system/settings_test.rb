@@ -96,7 +96,7 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert_text "Recovery codes"
 
-    recoveries = page.find(:css, ".recovery-code-list").value.split
+    recoveries = page.find(:css, "[data-testid='recovery-code-list']").value.split
 
     click_link "Copy to clipboard"
     check "ack"
