@@ -135,7 +135,7 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
 
         assert_response :success
-        page_versions = css_select(".gem__versions a").map(&:text)
+        page_versions = css_select("[data-testid='gem-versions'] a").map(&:text)
 
         assert_includes page_versions, "1.1.2"
         refute_includes page_versions, "1.1.1"
@@ -145,7 +145,7 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name, page: 2 }
 
         assert_response :success
-        page_versions = css_select(".gem__versions a").map(&:text)
+        page_versions = css_select("[data-testid='gem-versions'] a").map(&:text)
 
         refute_includes page_versions, "1.1.2"
         assert_includes page_versions, "1.1.1"

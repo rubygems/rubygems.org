@@ -185,7 +185,7 @@ class OwnerTest < ApplicationSystemTestCase
 
     visit sign_in_path
     click_button "Authenticate with security device"
-    find(:css, ".header__popup-link")
+    find(:css, "[data-testid='header-popup-link']")
 
     visit rubygem_path(@rubygem.slug)
     click_link "Ownership"
@@ -202,7 +202,7 @@ class OwnerTest < ApplicationSystemTestCase
 
     visit sign_in_path
     click_button "Authenticate with security device"
-    find(:css, ".header__popup-link")
+    find(:css, "[data-testid='header-popup-link']")
 
     visit rubygem_path(@rubygem.slug)
     click_link "Ownership"
