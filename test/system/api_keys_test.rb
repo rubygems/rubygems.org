@@ -353,13 +353,13 @@ class ApiKeysTest < ApplicationSystemTestCase
     api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
     visit_profile_api_keys_path
 
-    refute page.has_css? "tr[data-soft-deleted='true']"
+    refute page.has_css? "[data-testid='api-key-invalid-row']"
 
     @ownership.destroy!
 
     visit_profile_api_keys_path
 
-    assert page.has_css? "tr[data-soft-deleted='true']"
+    assert page.has_css? "[data-testid='api-key-invalid-row']"
     assert_predicate api_key.reload, :soft_deleted?
 
     refute page.has_button? "Edit"
