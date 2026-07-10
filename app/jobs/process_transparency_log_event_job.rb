@@ -3,6 +3,9 @@
 class ProcessTransparencyLogEventJob < ApplicationJob
   queue_as :default
 
+  retry_on TransparencyLog::Client::FormatError, attempts: 3
+  retry_on TransparencyLog::Client::Error, attempts: 5
+
   def perform(transparency_log_event)
     return unless transparency_log_event.pending?
 

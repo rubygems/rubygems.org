@@ -19,9 +19,18 @@ class TransparencyLog::TlogTest < ActiveSupport::TestCase
     assert_requested :post, "http://localhost:3004/api/v2/log/entries", times: 1
   end
 
-  test "logs error and raises for client errors" do
+  test "logs error and raises FormatError for malformed entry (400)" do
     stub_request(:post, "http://localhost:3004/api/v2/log/entries")
       .to_return(status: 400, body: "Bad Request")
+
+    assert_raises TransparencyLog::Client::FormatError do
+      @tlog.create_entry(@transparency_log_event)
+    end
+  end
+
+  test "logs error and raises for other client/server errors" do
+    stub_request(:post, "http://localhost:3004/api/v2/log/entries")
+      .to_return(status: 500, body: "Internal Server Error")
 
     assert_raises TransparencyLog::Client::Error do
       @tlog.create_entry(@transparency_log_event)

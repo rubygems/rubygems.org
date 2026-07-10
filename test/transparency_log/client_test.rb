@@ -44,16 +44,35 @@ class TransparencyLog::ClientTest < ActiveSupport::TestCase
     assert_equal({}, response)
   end
 
-  test "raises error for non-success response codes" do
-    [400, 401, 403, 404, 409, 422, 500, 502, 503, 504].each do |status_code|
+  test "raises FormatError for 400 response" do
+    stub_request(:post, "https://example.test/api/v2/log/entries")
+      .to_return(status: 400, body: "Bad entry")
+
+    error = assert_raises TransparencyLog::Client::FormatError do
+      @client.post(@entry)
+    end
+
+    assert_equal "Malformed entry (400): Bad entry", error.message
+  end
+
+  test "raises error for other non-success response codes" do
+    [401, 403, 404, 409, 422, 500, 502, 503, 504].each do |status_code|
       stub_request(:post, "https://example.test/api/v2/log/entries")
         .to_return(status: status_code, body: "Error")
 
       error = assert_raises TransparencyLog::Client::Error do
         @client.post(@entry)
       end
-
       assert_equal "Request failed (#{status_code})", error.message
+    end
+  end
+
+  test "FormatError is a kind of Error" do
+    stub_request(:post, "https://example.test/api/v2/log/entries")
+      .to_return(status: 400, body: "Bad entry")
+
+    assert_raises TransparencyLog::Client::Error do
+      @client.post(@entry)
     end
   end
 

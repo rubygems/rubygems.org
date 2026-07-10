@@ -6,6 +6,7 @@ require "uri"
 
 class TransparencyLog::Client
   class Error < StandardError; end
+  class FormatError < Error; end
 
   ENTRIES_PATH = "/api/v2/log/entries"
 
@@ -22,6 +23,7 @@ class TransparencyLog::Client
       headers
     )
 
+    raise FormatError, "Malformed entry (400): #{response.body}" if response.code == "400"
     raise Error, "Request failed (#{response.code})" unless response.is_a?(Net::HTTPSuccess)
 
     JSON.parse(response.body)

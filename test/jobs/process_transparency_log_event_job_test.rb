@@ -11,7 +11,6 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
     should "leave the event's status unchanged" do
       safely_perform(@job)
-
       assert_predicate @event.reload, :submitted?
     end
   end
@@ -26,20 +25,45 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
     should "mark the event as failed" do
       safely_perform(@job)
-
       assert_predicate @event.reload, :failed?
     end
 
     should "store the error message" do
       safely_perform(@job)
-
       assert_equal "timeout", @event.reload.last_error
     end
 
     should "increment attempt_count" do
       safely_perform(@job)
-
       assert_equal 1, @event.reload.attempt_count
+    end
+  end
+
+  context "when Rekor rejects the entry as malformed" do
+    setup do
+      @event = create(:transparency_log_event, status: :pending)
+      @job   = ProcessTransparencyLogEventJob.new(@event)
+      TransparencyLog::Tlog.any_instance.stubs(:create_entry)
+        .raises(TransparencyLog::Client::FormatError.new("Malformed entry (400): Bad Request"))
+    end
+
+    should "mark the event as failed" do
+      safely_perform(@job)
+      assert_predicate @event.reload, :failed?
+    end
+
+    should "store the error message" do
+      safely_perform(@job)
+      assert_equal "Malformed entry (400): Bad Request", @event.reload.last_error
+    end
+
+    should "increment attempt_count" do
+      safely_perform(@job)
+      assert_equal 1, @event.reload.attempt_count
+    end
+
+    should "re-raise so ActiveJob's retry policy for FormatError applies" do
+      assert_raises(TransparencyLog::Client::FormatError) { @job.perform_now }
     end
   end
 
@@ -61,19 +85,16 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
     should "mark the event as submitted" do
       safely_perform(@job)
-
       assert_predicate @event.reload, :submitted?
     end
 
     should "persist the raw response body" do
       safely_perform(@job)
-
       assert_equal({ "uuid" => "rekor-entry-uuid" }, @event.reload.rekor_response_body)
     end
 
     should "persist the parsed rekor entry attributes" do
       safely_perform(@job)
-
       assert_equal "hashedrekord", @event.reload.rekor_entry_kind
     end
   end
@@ -101,13 +122,11 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
     should "leave the event's status unchanged" do
       safely_perform(@job)
-
       assert_predicate @event.reload, :pending?
     end
 
     should "log an error" do
       Rails.logger.expects(:error).with(includes(@event.event_uuid.to_s))
-
       safely_perform(@job)
     end
   end
@@ -122,13 +141,11 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
     should "not mark the event as failed" do
       safely_perform(@job)
-
       assert_predicate @event.reload, :pending?
     end
 
     should "not store an error message" do
       safely_perform(@job)
-
       assert_nil @event.reload.last_error
     end
   end
