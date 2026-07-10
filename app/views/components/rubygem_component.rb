@@ -6,7 +6,7 @@ class RubygemComponent < ApplicationComponent
   extend Phlex::Rails::HelperMacros
 
   register_output_helper :download_count_component
-  register_value_helper :short_info
+  register_output_helper :short_info
   register_value_helper :latest_version_number
 
   prop :rubygem
@@ -26,7 +26,7 @@ class RubygemComponent < ApplicationComponent
 
       div(class: "flex flex-row w-full items-center justify-between mt-1") do
         p(class: "text-b3 text-neutral-600 dark:text-neutral-400 truncate flex-1 mr-4") do
-          plain short_info(@rubygem)
+          short_info(@rubygem)
         end
         download_count_component(@rubygem)
       end

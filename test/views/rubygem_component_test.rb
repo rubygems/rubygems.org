@@ -39,6 +39,21 @@ class RubygemComponentTest < ComponentTest
     assert_text view_context.short_info(@rubygem)
   end
 
+  should "display quotes in the gem description without escaping them" do
+    @rubygem.latest_version.update!(description: "Generate 'Add To Calendar' URLs")
+    render RubygemComponent.new(rubygem: @rubygem.reload)
+
+    assert_text "Generate 'Add To Calendar' URLs"
+  end
+
+  should "sanitize html in the gem description" do
+    @rubygem.latest_version.update!(description: "<script>alert('foo');</script>Rails authentication & authorization")
+    render RubygemComponent.new(rubygem: @rubygem.reload)
+
+    refute_selector "script", visible: :all
+    assert_text "alert('foo');Rails authentication & authorization"
+  end
+
   should "not display a version badge when the version number is absent" do
     @rubygem.latest_version.stubs(:number).returns(nil)
     render RubygemComponent.new(rubygem: @rubygem)
