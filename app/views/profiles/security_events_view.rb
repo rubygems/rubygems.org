@@ -12,7 +12,7 @@ class Profiles::SecurityEventsView < ApplicationView
   def view_template
     title_content
 
-    div(class: "space-y-2 t-body") do
+    div(class: "space-y-2") do
       p do
         t(".description_html")
       end
@@ -24,7 +24,7 @@ class Profiles::SecurityEventsView < ApplicationView
   def title_content
     self.title_for_header_only = t(".title")
     content_for :title do
-      h1(class: "t-display page__heading page__heading-small") do
+      h1 do
         plain t(".title")
       end
     end

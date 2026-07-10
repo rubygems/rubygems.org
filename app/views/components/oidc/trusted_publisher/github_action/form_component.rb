@@ -20,7 +20,7 @@ class OIDC::TrustedPublisher::GitHubAction::FormComponent < ApplicationComponent
     div class: "py-4" do
       form.label name, class: label_class do
         plain form.object.class.human_attribute_name(name)
-        span(class: "t-text--s") { " (#{t('form.optional')})" } if optional
+        span { " (#{t('form.optional')})" } if optional
       end
       form.send(type, name, class: class_names(field_class, "border border-red-500" => form.object.errors.include?(name)), **)
       p(class: note_class) { t("oidc.trusted_publisher.github_actions.#{name}_help_html") }

@@ -32,7 +32,7 @@
       <%= render CopyFieldComponent.new(value: @latest_version.to_install, name: "install_text", label: t(".install")) %>
     </div>
 
-    <div id="markup" class="gem__desc text-b2 leading-relaxed break-words [&_a]:text-orange-500 dark:[&_a]:text-orange-400 [&_a:hover]:underline [&_p]:mb-3 [&_pre]:font-mono [&_pre]:text-c4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-c4 [&_h1]:text-h4 [&_h1]:font-semibold [&_h2]:text-b1 [&_h2]:font-semibold [&_h3]:text-b2 [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6">
+    <div id="markup" class="text-b2 leading-relaxed break-words [&_a]:text-orange-500 dark:[&_a]:text-orange-400 [&_a:hover]:underline [&_p]:mb-3 [&_pre]:font-mono [&_pre]:text-c4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-c4 [&_h1]:text-h4 [&_h1]:font-semibold [&_h2]:text-b1 [&_h2]:font-semibold [&_h3]:text-b2 [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6">
       <%= simple_markup(@latest_version.info) %>
     </div>
 
@@ -64,7 +64,7 @@
   <% if @versions.present? %>
     <div class="versions">
       <h3 class="<%= section_heading_class %> mb-2"><%= t ".versions_header" %></h3>
-      <ol class="gem__versions flex flex-col gap-1.5">
+      <ol data-testid="gem-versions" class="flex flex-col gap-1.5">
         <% @versions.each do |version| %>
           <li class="flex flex-wrap items-center gap-x-2">
             <%= link_to version.number, rubygem_version_path(version.rubygem.slug, version.slug),

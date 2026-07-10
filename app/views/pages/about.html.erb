@@ -28,9 +28,9 @@
                              ) %>
   </p>
 
-  <h2 class="about__assets__heading"><%= t('.logo_header') %></h2>
+  <h2><%= t('.logo_header') %></h2>
   <p><%= t('.logo_details') %></p>
-  <div class="about__assets-wrap">
+  <div>
     <%= render ButtonComponent.new t('rubygems.aside.links.download'), "/logos.zip", type: :link %>
   </div>
 <% end %>

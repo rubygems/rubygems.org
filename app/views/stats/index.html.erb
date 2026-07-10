@@ -44,7 +44,7 @@
       <div>
         <h3 class="text-b2 mb-1"><%= link_to gem.name, rubygem_path(gem.slug), class: "text-orange-500 hover:text-orange-600" %></h3>
         <div class="w-full bg-neutral-100 dark:bg-neutral-800 rounded overflow-hidden">
-          <div class="stats__graph__gem__meter t-item--hidden bg-orange-300 dark:bg-orange-500 h-8 rounded flex items-center justify-end px-3"
+          <div data-testid="stats-graph-gem-meter" class="t-item--hidden bg-orange-300 dark:bg-orange-500 h-8 rounded flex items-center justify-end px-3"
                data-controller="stats"
                data-stats-width-value="<%= stats_graph_meter(gem, @most_downloaded_count) %>">
             <span class="text-b4 font-semibold text-orange-900 dark:text-orange-100 whitespace-nowrap"><%= number_with_delimiter gem.downloads %></span>

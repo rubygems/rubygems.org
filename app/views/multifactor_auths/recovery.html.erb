@@ -1,7 +1,8 @@
 <% @title = t(".title") %>
 
+<h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t(".title") %></h1>
+
 <%= tag.div(
-  class: "t-body",
   data: {
     controller: "clipboard",
     clipboard_success_content_value: t('copied')
@@ -10,16 +11,16 @@
   <p><%= t ".note_html" %></p>
 
   <%# This tag contains the recovery codes and should not be a part of the form %>
-  <%= text_area_tag "source", "#{@mfa_recovery_codes.join("\n")}\n", class: "recovery-code-list", rows: @mfa_recovery_codes.size + 1, cols: @mfa_recovery_codes.first.length + 1, readonly: true, data: { clipboard_target: "source" } %>
+  <%= text_area_tag "source", "#{@mfa_recovery_codes.join("\n")}\n", rows: @mfa_recovery_codes.size + 1, cols: @mfa_recovery_codes.first.length + 1, readonly: true, data: { clipboard_target: "source", testid: "recovery-code-list" } %>
 
-  <%= form_tag(@continue_path, method: "get", class: "form", data: { controller: "recovery", recovery_confirm_value: t(".confirm_dialog"), action: "recovery#submit" }) do %>
-    <p><%= link_to t("copy_to_clipboard"), "#/", class: "t-link--bold recovery__copy__icon", data: { action: "clipboard#copy recovery#copy", clipboard_target: "button" } %></p>
+  <%= form_tag(@continue_path, method: "get", data: { controller: "recovery", recovery_confirm_value: t(".confirm_dialog"), action: "recovery#submit" }) do %>
+    <p><%= link_to t("copy_to_clipboard"), "#/", data: { action: "clipboard#copy recovery#copy", clipboard_target: "button" } %></p>
 
-    <div class = "form__checkbox__item">
-      <%= check_box_tag "checked", "ack", false, required: true, class: "form__checkbox__input" %>
-      <%= label_tag "checked", t(".saved"), class: "form__checkbox__label" %>
+    <div>
+      <%= check_box_tag "checked", "ack", false, required: true %>
+      <%= label_tag "checked", t(".saved") %>
     </div>
 
-    <%= button_tag t(".continue"), class: "form__submit form__submit--no-hover" %>
+    <%= button_tag t(".continue") %>
   <% end %>
 <% end %>
