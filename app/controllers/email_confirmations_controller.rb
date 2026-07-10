@@ -16,8 +16,6 @@ class EmailConfirmationsController < ApplicationController
   before_action :validate_webauthn, only: :webauthn_update
   after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
 
-  layout "hammy"
-
   def new
   end
 
