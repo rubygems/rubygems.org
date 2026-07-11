@@ -5,26 +5,33 @@ on:
     branches:
       - master
       - oidc-api-tokens
-permissions:
-  contents: read
+
+concurrency:
+  # PR runs supersede each other; push runs publish unique SHA tags and must finish.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   build:
     name: Docker build (and optional push)
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     env:
       RUBYGEMS_VERSION: "4.0.12"
       RUBY_VERSION: .ruby-version
       RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
     permissions:
-      id-token: write
+      contents: read
+      id-token: write # Needed to authenticate to AWS through OIDC
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # master
+        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
       - name: Cache Docker layers
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:

@@ -14,22 +14,25 @@ on:
   # push:
   #   branches: [ "master" ]
 
-# Declare default permissions as read only.
-permissions: read-all
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Deny permissions by default; the analysis job grants only what it needs.
+permissions: {}
 
 jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     # `publish_results: true` only works when run from the default branch. conditional can be removed if disabled.
     if: github.event.repository.default_branch == github.ref_name || github.event_name == 'pull_request'
     permissions:
-      # Needed to upload the results to code-scanning dashboard.
-      security-events: write
-      # Needed to publish results and get a badge (see publish_results below).
-      id-token: write
-      # Uncomment the permissions below if installing in a private repository.
-      # contents: read
+      contents: read
+      security-events: write # Needed to upload results to the code-scanning dashboard
+      id-token: write # Needed to publish results and generate the Scorecard badge
+      # Uncomment the permission below if installing in a private repository.
       # actions: read
 
     steps:

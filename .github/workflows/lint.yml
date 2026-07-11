@@ -4,13 +4,20 @@ on:
   push:
     branches:
       - master
-permissions:
-  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   rubocop:
     name: Rubocop
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -23,6 +30,9 @@ jobs:
   herb:
     name: Herb 🌿
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -35,6 +45,9 @@ jobs:
   brakeman:
     name: Brakeman
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -47,6 +60,9 @@ jobs:
   importmap:
     name: Importmap Verify
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -59,6 +75,9 @@ jobs:
   prettier:
     name: Prettier
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -71,6 +90,9 @@ jobs:
   kubeconform:
     name: Kubeconform
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
     strategy:
       matrix:
         kubernetes_version: ["1.29.1"]
@@ -79,7 +101,9 @@ jobs:
           - production
     steps:
       - name: login to Github Packages
-        run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+        run: printf '%s\n' "$GHCR_TOKEN" | docker login https://ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+        env:
+          GHCR_TOKEN: ${{ github.token }}
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
@@ -88,7 +112,7 @@ jobs:
           bundler-cache: true
       - name: krane render
         run: |
-          gem exec --silent krane render -f config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT --current-sha=$REVISION > config/deploy/$ENVIRONMENT.rendered.yaml
+          gem exec --silent krane render -f "config/deploy/$ENVIRONMENT" --bindings="environment=$ENVIRONMENT" --current-sha="$REVISION" > "config/deploy/$ENVIRONMENT.rendered.yaml"
         env:
           ENVIRONMENT: "${{ matrix.environment }}"
           REVISION: "${{ github.sha }}"
@@ -104,6 +128,9 @@ jobs:
   frizbee:
     name: Frizbee
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -118,31 +145,19 @@ jobs:
           fail_on_unpinned: true
           open_pr: false
           repo_root: "."
+
   zizmor:
     name: zizmor
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     permissions:
-      security-events: write
-      # required for workflows in private repositories
+      security-events: write # Needed to upload zizmor results to code scanning
       contents: read
-      actions: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
-      - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
-
       - name: Run zizmor 🌈
-        run: uvx zizmor --format sarif . > results.sarif
-
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
-        with:
-          sarif_file: results.sarif
-          category: zizmor
+        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7

@@ -29,12 +29,16 @@ on:
       - docker-compose.yml
       - config/database.yml.sample
 
-permissions:
-  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   copilot-setup-steps:
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     permissions:
       contents: read
     steps:
