@@ -100,6 +100,40 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
     end
 
+    context "organization_handle" do
+      should allow_value("CapsLOCK").for(:organization_handle)
+      should_not allow_value(nil).for(:organization_handle)
+      should_not allow_value("1abcde").for(:organization_handle)
+      should_not allow_value("abc^%def").for(:organization_handle)
+      should_not allow_value("abc\n<script>bad").for(:organization_handle)
+
+      should "be between 2 and 40 characters" do
+        @onboarding.organization_handle = "a" * 41
+        @onboarding.valid?
+
+        refute_predicate @onboarding, :valid?
+        assert_contains @onboarding.errors[:organization_handle], "is too long (maximum is 40 characters)"
+
+        @onboarding.organization_handle = "a"
+        @onboarding.valid?
+
+        refute_predicate @onboarding, :valid?
+        assert_contains @onboarding.errors[:organization_handle], "is too short (minimum is 2 characters)"
+
+        @onboarding.organization_handle = "abcdef"
+        @onboarding.valid?
+
+        assert_predicate @onboarding, :valid?
+        assert_nil @onboarding.errors[:organization_handle].first
+      end
+
+      should "be invalid when an empty string" do
+        @onboarding.update(organization_handle: "")
+
+        refute_predicate @onboarding, :valid?
+      end
+    end
+
     context "when the organization handle is reserved" do
       should "be invalid" do
         @onboarding.organization_handle = "admin"
@@ -160,7 +194,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       onboarding = create(
         :organization_onboarding,
         organization_name: "My Super Sick Organization",
-        organization_handle: "super_sick_org",
+        organization_handle: "super_sick_organization",
         rubygems: [existing_rubygem],
         created_by: owner
       )

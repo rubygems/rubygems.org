@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class OrganizationOnboarding < ApplicationRecord
-  # TODO: Drop this column once it's no longer used
-  self.ignored_columns += ["name_type"]
-
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   has_many :invites, as: :invitable, class_name: "OrganizationInvite", dependent: :destroy
@@ -12,6 +9,13 @@ class OrganizationOnboarding < ApplicationRecord
   belongs_to :created_by, class_name: "User", inverse_of: :organization_onboardings
 
   accepts_nested_attributes_for :invites
+
+  validates :organization_handle, presence: true,
+    uniqueness: { case_sensitive: false },
+    length: { within: 2..40 },
+    format: { with: Patterns::HANDLE_PATTERN }
+
+  validates :organization_name, presence: true, length: { within: 2..255 }
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
