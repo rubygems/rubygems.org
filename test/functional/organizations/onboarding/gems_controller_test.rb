@@ -38,7 +38,6 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       assert_equal [@gem.id], @organization_onboarding.reload.rubygems
     end
 
-    # TODO BRIAN we should make this so it is not allowed
     should "allow selecting no additional gems" do
       patch organization_onboarding_gems_path(as: @user)
 
