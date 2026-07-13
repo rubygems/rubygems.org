@@ -10,7 +10,7 @@ FactoryBot.define do
     created_by { association(:user) }
 
     sequence(:organization_name) { |n| "Organization Name #{n}" }
-    sequence(:organization_handle) { |n| "organization_name_#{n}"}
+    sequence(:organization_handle) { |n| "organization_name_#{n}" }
 
     rubygems do
       [create(:rubygem, owners: [created_by])]

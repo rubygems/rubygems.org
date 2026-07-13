@@ -108,7 +108,7 @@ class Organizations::Onboarding::NameControllerTest < ActionDispatch::Integratio
         post organization_onboarding_name_path(as: @user), params: {
           organization_onboarding: {
             organization_name: "Admin Organization",
-            organization_handle: "admin",
+            organization_handle: "admin"
           }
         }
 
