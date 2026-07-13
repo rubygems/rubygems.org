@@ -22,7 +22,7 @@
       </label>
     </div>
     <ul class="divide-y divide-neutral-300 dark:divide-neutral-700">
-      <%= form.collection_check_boxes :rubygems, @organization_onboarding.available_rubygems, :id, :name do |b| %>
+      <%= form.collection_check_boxes(:rubygems, @organization_onboarding.available_rubygems, :id, :name) do |b| %>
         <%
           data = { counter_target: "checked" }
           data[:checkbox_select_all_target] = "checkbox"

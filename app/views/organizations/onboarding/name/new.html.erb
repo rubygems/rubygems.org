@@ -17,7 +17,7 @@
   This name will be used as the URL for your Organization's page and will eventually become its namespace.
 </p>
 
-<%= form_with(model: @organization_onboarding, url: organization_onboarding_name_path, method: :post, data: { controller: "onboarding-name" }) do |form| %>
+<%= form_with(model: @organization_onboarding, url: organization_onboarding_name_path, method: :post, data: { controller: "onboarding-name", testid: "organization_name.form" }) do |form| %>
   <% if @organization_onboarding.errors.any? %>
     <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
       <div class="flex">
