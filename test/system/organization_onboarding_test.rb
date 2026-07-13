@@ -18,7 +18,11 @@ class OrganizationOnboardingSystemTest < ApplicationSystemTestCase
 
     assert_text "Name your Organization"
 
-    select @gem_with_reserved_org_name.name, from: "rubygems.org/organizations/"
+    form = find(:element, "data-testid": "organization_name.form")
+    within form do
+      fill_in "Organization Name", with: "Admin"
+      fill_in "Organization Handle", with: "admin"
+    end
 
     click_on "Continue"
 
