@@ -135,9 +135,10 @@ class OrganizationOnboarding < ApplicationRecord
 
   def organization_handle_reservable
     return if organization_handle.blank?
-    return unless Organization::Handle.reserved?(organization_handle)
 
-    errors.add(:organization_handle, "is reserved and cannot be used")
+    if Organization::Handle.reserved?(organization_handle)
+      errors.add(:organization_handle, "is reserved and cannot be used")
+    end
   end
 
   def created_by_gem_ownerships
