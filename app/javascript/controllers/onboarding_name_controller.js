@@ -26,8 +26,8 @@ export default class extends Controller {
     // drop anything else, and collapse repeated dashes.
     this.organizationhandleTarget.value = value
       .toLowerCase()
-      .replace(/[\s_]+/g, "-")
+      .replace(/[\s_]+/g, "_")
       .replace(/[^a-z0-9-]/g, "")
-      .replace(/-+/g, "-");
+      .replace(/-+/g, "_");
   }
 }
