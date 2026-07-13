@@ -33,7 +33,11 @@ class OrganizationOnboardingSystemTest < ApplicationSystemTestCase
 
     assert_text "Name your Organization"
 
-    select @gem_with_valid_org_name.name, from: "rubygems.org/organizations/"
+    form = find(:element, "data-testid": "organization_name.form")
+    within form do
+      fill_in "Organization Name", with: "Hot Dog Society"
+      fill_in "Organization Handle", with: "hot-dog-society"
+    end
 
     click_on "Continue"
 
