@@ -3,7 +3,7 @@
 class TransparencyLog::Tlog
   def initialize
     @entry_builder = TransparencyLog::EntryBuilder.new
-    @client = TransparencyLog::Client.new(TransparencyLog.rekor_url)
+    @client = TransparencyLog::Client.new
   end
 
   def create_entry(transparency_log_event)

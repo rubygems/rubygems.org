@@ -8,10 +8,13 @@ class TransparencyLog::Client
   class Error < StandardError; end
   class FormatError < Error; end
 
+  attr_reader :rekor_url
+
   ENTRIES_PATH = "/api/v2/log/entries"
 
-  def initialize(url)
-    @base_uri = URI.parse(url)
+  def initialize
+    @rekor_url = TransparencyLog.configuration.rekor_url
+    @base_uri = URI.parse(@rekor_url)
     @http     = Net::HTTP.new(@base_uri.host, @base_uri.port)
     @http.use_ssl = @base_uri.scheme == "https"
   end

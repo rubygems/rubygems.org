@@ -62,8 +62,10 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
       assert_equal 1, @event.reload.attempt_count
     end
 
-    should "re-raise so ActiveJob's retry policy for FormatError applies" do
-      assert_raises(TransparencyLog::Client::FormatError) { @job.perform_now }
+    should "enqueue a retry for FormatError" do
+      assert_enqueued_jobs 1, only: ProcessTransparencyLogEventJob do
+        @job.perform_now
+      end
     end
   end
 

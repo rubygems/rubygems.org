@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+require_relative "./transparency_log/configuration"
+
 module TransparencyLog
-  mattr_accessor :rekor_url, default: "http://localhost:3004"
+  class << self
+    attr_accessor :configuration
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
+  end
 end
