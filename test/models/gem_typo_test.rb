@@ -77,6 +77,42 @@ class GemTypoTest < ActiveSupport::TestCase
     end
   end
 
+  context "the pushing user owns the colliding protected gem" do
+    setup do
+      @owner = create(:user)
+      create(:ownership, rubygem: @existing, user: @owner)
+    end
+
+    should "return false so the owner can publish a too-similar name for their own gem" do
+      gem_typo = GemTypo.new("delayed-job_active_record", pushed_by: @owner)
+
+      refute_predicate gem_typo, :protected_typo?
+    end
+
+    should "still return true for a different user pushing a too-similar name" do
+      other_user = create(:user)
+      gem_typo = GemTypo.new("delayed-job_active_record", pushed_by: other_user)
+
+      assert_predicate gem_typo, :protected_typo?
+    end
+
+    should "still return true when no pushing user is provided" do
+      gem_typo = GemTypo.new("delayed-job_active_record")
+
+      assert_predicate gem_typo, :protected_typo?
+    end
+
+    should "still return true when another protected gem the user does not own also collides" do
+      other_gem = build(:rubygem, name: "delayed-job-active-record")
+      other_gem.save(validate: false)
+      create(:version, rubygem: other_gem, created_at: Time.now.utc)
+
+      gem_typo = GemTypo.new("delayed-job_active_record", pushed_by: @owner)
+
+      assert_predicate gem_typo, :protected_typo?
+    end
+  end
+
   context "gem has less than GemTypo::DOWNLOADS_THRESHOLD downloads" do
     setup do
       @existing.gem_download.update_attribute(:count, 9999)

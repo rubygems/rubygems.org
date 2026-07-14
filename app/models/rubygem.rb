@@ -4,6 +4,10 @@ class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
+  # The user pushing this gem, when available (set by Pusher). Used to let an
+  # existing owner bypass the typo protection for their own gems. Not persisted.
+  attr_accessor :pushed_by
+
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
   has_many :owners, through: :ownerships, source: :user
@@ -412,7 +416,7 @@ class Rubygem < ApplicationRecord
   end
 
   def protected_gem_typo
-    gem_typo = GemTypo.new(name)
+    gem_typo = GemTypo.new(name, pushed_by: pushed_by)
 
     return unless gem_typo.protected_typo?
     errors.add :name, "'#{name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"
