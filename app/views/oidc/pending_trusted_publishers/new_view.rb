@@ -11,7 +11,7 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
   prop :trusted_publisher_types, reader: :private
   prop :selected_trusted_publisher_type, reader: :private
 
-  def view_template
+  def view_template # rubocop:disable Metrics/AbcSize
     self.title = t(".title")
     content_for(:subject) { raw(subject_sidebar) } # rubocop:disable Rails/OutputSafety -- trusted Rails partial
 

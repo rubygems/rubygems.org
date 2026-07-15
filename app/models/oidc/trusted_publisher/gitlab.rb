@@ -120,6 +120,16 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
 
+  class UnsupportedSigstorePolicy
+    def verify(_cert)
+      Sigstore::VerificationFailure.new("Attestation verification is not supported for GitLab trusted publishers")
+    end
+  end
+
+  def to_sigstore_identity_policy
+    UnsupportedSigstorePolicy.new
+  end
+
   private
 
   def project_path_condition

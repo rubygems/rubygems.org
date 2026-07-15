@@ -386,4 +386,252 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_response :not_found
     end
   end
+
+  context "POST exchange_token with GitLab issuer" do
+    setup do
+      @gitlab_pkey = OpenSSL::PKey::RSA.generate(2048)
+      create(:oidc_provider, issuer: OIDC::Provider::GITLAB_ISSUER, pkey: @gitlab_pkey)
+
+      # Based on the sample GitLab OIDC payload
+      @gitlab_claims = {
+        "namespace_id" => "72",
+        "namespace_path" => "my-group",
+        "project_id" => "20",
+        "project_path" => "my-group/my-project",
+        "user_id" => "1",
+        "user_login" => "sample-user",
+        "user_email" => "sample-user@example.com",
+        "pipeline_id" => "574",
+        "pipeline_source" => "push",
+        "job_id" => "302",
+        "ref" => "feature-branch-1",
+        "ref_type" => "branch",
+        "ref_path" => "refs/heads/feature-branch-1",
+        "ref_protected" => "false",
+        "environment" => nil,
+        "environment_protected" => "false",
+        "deployment_tier" => "testing",
+        "environment_action" => "start",
+        "runner_id" => 1,
+        "runner_environment" => "self-hosted",
+        "sha" => "714a629c0b401fdce83e847fc9589983fc6f46bc",
+        "project_visibility" => "public",
+        "ci_config_ref_uri" => "gitlab.com/my-group/my-project//.gitlab-ci.yml@refs/heads/feature-branch-1",
+        "ci_config_sha" => "714a629c0b401fdce83e847fc9589983fc6f46bc",
+        "jti" => "235b3a54-b797-45c7-ae9a-f72d7bc6ef5b",
+        "iss" => OIDC::Provider::GITLAB_ISSUER,
+        "iat" => 1_680_020_537,
+        "nbf" => 1_680_019_937,
+        "exp" => 1_680_020_837,
+        "sub" => "project_path:my-group/my-project:ref_type:branch:ref:feature-branch-1",
+        "aud" => Gemcutter::HOST
+      }
+    end
+
+    def gitlab_jwt(claims = @gitlab_claims, key: @gitlab_pkey)
+      JSON::JWT.new(claims).sign(key.to_jwk)
+    end
+
+    should "return not found with no matching GitLab trusted publisher" do
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "succeed with matching GitLab trusted publisher on branch" do
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :created
+
+      resp = response.parsed_body
+
+      assert_match(/^rubygems_/, resp["rubygems_api_key"])
+      assert_equal ["push_rubygem"], resp["scopes"]
+      assert_nil resp["gem"]
+
+      api_key = trusted_publisher.api_keys.sole
+
+      assert_equal api_key.owner, trusted_publisher
+    end
+
+    should "succeed with matching GitLab trusted publisher with no ref restriction" do
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: nil,
+        branch_name: nil)
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :created
+
+      api_key = trusted_publisher.api_keys.sole
+
+      assert_equal api_key.owner, trusted_publisher
+    end
+
+    should "succeed with matching GitLab trusted publisher on tag" do
+      @gitlab_claims["ref"] = "v1.0.0"
+      @gitlab_claims["ref_type"] = "tag"
+      @gitlab_claims["ref_path"] = "refs/tags/v1.0.0"
+      @gitlab_claims["ci_config_ref_uri"] = "gitlab.com/my-group/my-project//.gitlab-ci.yml@refs/tags/v1.0.0"
+      @gitlab_claims["sub"] = "project_path:my-group/my-project:ref_type:tag:ref:v1.0.0"
+
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "tag")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :created
+
+      api_key = trusted_publisher.api_keys.sole
+
+      assert_equal api_key.owner, trusted_publisher
+    end
+
+    should "return not found when GitLab project_path does not match" do
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "other-group/other-project",
+        ci_config_path: ".gitlab-ci.yml")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "return not found when GitLab branch does not match" do
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "main")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "return not found when GitLab audience is wrong" do
+      @gitlab_claims["aud"] = "https://vault.example.com"
+
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "return not found when GitLab JWT is signed with wrong key" do
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt(key: OpenSSL::PKey::RSA.generate(2048)).to_s }
+
+      assert_response :not_found
+    end
+
+    should "return not found when GitLab ci_config_ref_uri does not match" do
+      # ci_config_ref_uri points to a different branch than the publisher expects
+      @gitlab_claims["ci_config_ref_uri"] = "gitlab.com/my-group/my-project//.gitlab-ci.yml@refs/heads/other-branch"
+
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "succeed with GitLab trusted publisher scoped to environment" do
+      @gitlab_claims["environment"] = "production"
+      @gitlab_claims["environment_protected"] = "true"
+
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1",
+        environment: "production")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :created
+
+      api_key = trusted_publisher.api_keys.sole
+
+      assert_equal api_key.owner, trusted_publisher
+    end
+
+    should "return not found when GitLab environment does not match" do
+      @gitlab_claims["environment"] = "staging"
+
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1",
+        environment: "production")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "return not found when GitLab provider configuration is too old" do
+      OIDC::Provider.gitlab.update!(configuration_updated_at: 2.days.ago)
+
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+
+    should "return not found when GitLab JWT is expired" do
+      @gitlab_claims["exp"] = 1.hour.ago.to_i
+
+      create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml")
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: gitlab_jwt.to_s }
+
+      assert_response :not_found
+    end
+  end
 end
