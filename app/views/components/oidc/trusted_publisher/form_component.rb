@@ -13,7 +13,7 @@ class OIDC::TrustedPublisher::FormComponent < ApplicationComponent
       end
 
       input_class = class_names(
-        type == :select ? select_class : field_class,
+        field_class,
         "tw-border tw-border-red-500" => form.object.errors.include?(name)
       )
       form.send(type, name, *args, { class: input_class, **options })
@@ -27,12 +27,6 @@ class OIDC::TrustedPublisher::FormComponent < ApplicationComponent
   end
 
   def field_class
-    "block w-full rounded border border-neutral-300 dark:border-neutral-700 " \
-      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white px-3 h-12 " \
-      "outline-none focus:border-neutral-500 focus:ring-0"
-  end
-
-  def select_class
     "block w-full rounded border border-neutral-300 dark:border-neutral-700 " \
       "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white px-3 h-12 " \
       "outline-none focus:border-neutral-500 focus:ring-0"

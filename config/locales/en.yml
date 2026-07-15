@@ -106,6 +106,7 @@ en:
         public_suffix: is a public suffix and cannot be used; specify a registrable domain
         protected_provider: is a major consumer mail provider and cannot be blocked
         publisher_already_exists: publisher already exists
+        invalid_extension: must end with .yml or .yaml
       models:
         api_key:
           attributes:

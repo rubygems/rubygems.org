@@ -214,6 +214,17 @@ module RubygemsHelper
     }
   end
 
+  def gitlab_params(rubygem)
+    candidates = [rubygem.links.source_code_uri, rubygem.links.homepage_uri].compact
+    link = candidates.lazy.filter_map { |l| URI(l) }.find { |u| u.host == "gitlab.com" }
+    return unless link
+
+    # path is e.g. /group/project or /group/subgroup/project — drop leading "/"
+    { project_path: link.path.delete_prefix("/") }
+  rescue URI::InvalidURIError
+    nil
+  end
+
   def copy_field_tag(name, value, label: nil, aria_label: nil)
     render CopyFieldComponent.new(value: value, name: name, label: label, aria_label: aria_label)
   end

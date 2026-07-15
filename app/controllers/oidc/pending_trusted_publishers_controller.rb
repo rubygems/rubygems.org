@@ -20,6 +20,9 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
   end
 
   def new
+    add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path)
+    add_breadcrumb(t(".title"))
+
     render OIDC::PendingTrustedPublishers::NewView.new(
       pending_trusted_publisher: initialize_trusted_publisher(current_user.oidc_pending_trusted_publishers),
       trusted_publisher_types: OIDC::TrustedPublisher.all,

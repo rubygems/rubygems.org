@@ -106,6 +106,7 @@ fr:
         public_suffix:
         protected_provider:
         publisher_already_exists:
+        invalid_extension:
       models:
         api_key:
           attributes:

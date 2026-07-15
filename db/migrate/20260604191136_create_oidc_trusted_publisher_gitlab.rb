@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateOIDCTrustedPublisherGitLab < ActiveRecord::Migration[8.0]
+class CreateOIDCTrustedPublisherGitLab < ActiveRecord::Migration[8.1]
   def up
     create_table :oidc_trusted_publisher_gitlabs do |t|
       t.string :project_path, null: false

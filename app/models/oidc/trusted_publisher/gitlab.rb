@@ -81,17 +81,8 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
       project_path_condition,
       environment_condition,
       audience_condition,
-      ref_condition
+      *ref_conditions
     ].compact
-
-    # We also verify ref_type matches the publisher requirement
-    if ref_type == "branch"
-      common_conditions << OIDC::AccessPolicy::Statement::Condition.new(
-        operator: "string_equals",
-        claim: "ref_type",
-        value: "branch"
-      )
-    end
 
     refs = [jwt[:ref_path], jwt[:sha]].compact_blank
     raise OIDC::AccessPolicy::AccessError, "ref and sha are both missing" if refs.empty?
@@ -172,28 +163,42 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
     )
   end
 
-  def ref_condition
-    return if ref_type.blank?
+  # Returns an array of conditions that restrict the ref type and value.
+  # For tags: enforces ref_type == "tag".
+  # For branches: enforces both ref_type == "branch" and the specific branch ref.
+  def ref_conditions
+    return [] if ref_type.blank?
 
     if ref_type == "tag"
-      OIDC::AccessPolicy::Statement::Condition.new(
-        operator: "string_equals",
-        claim: "ref_type",
-        value: "tag"
-      )
+      [
+        OIDC::AccessPolicy::Statement::Condition.new(
+          operator: "string_equals",
+          claim: "ref_type",
+          value: "tag"
+        )
+      ]
     elsif ref_type == "branch" && branch_name.present?
-      OIDC::AccessPolicy::Statement::Condition.new(
-        operator: "string_equals",
-        claim: "ref",
-        value: "refs/heads/#{branch_name}"
-      )
+      [
+        OIDC::AccessPolicy::Statement::Condition.new(
+          operator: "string_equals",
+          claim: "ref_type",
+          value: "branch"
+        ),
+        OIDC::AccessPolicy::Statement::Condition.new(
+          operator: "string_equals",
+          claim: "ref",
+          value: "refs/heads/#{branch_name}"
+        )
+      ]
+    else
+      []
     end
   end
 
   def ci_config_path_format
     return if ci_config_path.blank?
 
-    errors.add(:ci_config_path, "must end with .yml or .yaml") unless /\.ya?ml\z/.match?(ci_config_path)
+    errors.add(:ci_config_path, :invalid_extension) unless /\.ya?ml\z/.match?(ci_config_path)
   end
 
   def branch_name_required_for_branch_ref_type
