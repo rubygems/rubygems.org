@@ -392,6 +392,8 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       @gitlab_pkey = OpenSSL::PKey::RSA.generate(2048)
       create(:oidc_provider, issuer: OIDC::Provider::GITLAB_ISSUER, pkey: @gitlab_pkey)
 
+      @gitlab_jwt = ->(claims = @gitlab_claims, key: @gitlab_pkey) { JSON::JWT.new(claims).sign(key.to_jwk) }
+
       # Based on the sample GitLab OIDC payload
       @gitlab_claims = {
         "namespace_id" => "72",
@@ -428,13 +430,9 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       }
     end
 
-    def gitlab_jwt(claims = @gitlab_claims, key: @gitlab_pkey)
-      JSON::JWT.new(claims).sign(key.to_jwk)
-    end
-
     should "return not found with no matching GitLab trusted publisher" do
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
@@ -447,7 +445,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         branch_name: "feature-branch-1")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :created
 
@@ -470,7 +468,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         branch_name: nil)
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :created
 
@@ -492,7 +490,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         ref_type: "tag")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :created
 
@@ -507,7 +505,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         ci_config_path: ".gitlab-ci.yml")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
@@ -520,7 +518,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         branch_name: "main")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
@@ -535,7 +533,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         branch_name: "feature-branch-1")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
@@ -548,7 +546,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         branch_name: "feature-branch-1")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt(key: OpenSSL::PKey::RSA.generate(2048)).to_s }
+        params: { jwt: @gitlab_jwt.call(key: OpenSSL::PKey::RSA.generate(2048)).to_s }
 
       assert_response :not_found
     end
@@ -564,7 +562,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         branch_name: "feature-branch-1")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
@@ -581,7 +579,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         environment: "production")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :created
 
@@ -601,7 +599,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         environment: "production")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
@@ -616,7 +614,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         branch_name: "feature-branch-1")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
@@ -629,7 +627,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         ci_config_path: ".gitlab-ci.yml")
 
       post api_v1_oidc_trusted_publisher_exchange_token_path,
-        params: { jwt: gitlab_jwt.to_s }
+        params: { jwt: @gitlab_jwt.call.to_s }
 
       assert_response :not_found
     end
