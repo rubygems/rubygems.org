@@ -23,7 +23,7 @@
     <span><span class="sr-only"><%= pluralized_licenses_header(@latest_version) %>: </span><%= formatted_licenses @latest_version.licenses %></span>
   </div>
 
-  <% if @rubygem.owned_by_organization? || @rubygem.owners.present? %>
+  <% if display_owners?(@rubygem) %>
     <div class="py-6">
       <%= render "rubygems/owners", rubygem: @rubygem %>
     </div>

@@ -8,7 +8,7 @@
     <%= rubygem_security_events_link(@rubygem) if policy(@rubygem).show_events? %>
   </div>
 
-  <% if @rubygem.owned_by_organization? || @rubygem.owners.present? %>
+  <% if display_owners?(@rubygem) %>
     <div class="py-6">
       <%= render "rubygems/owners", rubygem: @rubygem %>
     </div>

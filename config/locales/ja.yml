@@ -909,6 +909,7 @@ ja:
       not_using_mfa_warning_show: 多要素認証（MFA）を使っていない所有者がいます。完全な一覧を見るにはクリックしてください。
       not_using_mfa_warning_hide: "* 以下の所有者は多要素認証（MFA）を使っていません。クリックして隠します。"
       owners_header: 所有者
+      prior_owner_removed_at:
       pushed_by: プッシュ者
       using_mfa_info: "* 全ての所有者が多要素認証（MFA）を使っています。"
       yanked_by: ヤンク者

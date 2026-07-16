@@ -893,6 +893,7 @@ nl:
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
       owners_header: Eigenaren
+      prior_owner_removed_at:
       pushed_by:
       using_mfa_info:
       yanked_by:

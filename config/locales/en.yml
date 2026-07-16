@@ -900,6 +900,7 @@ en:
       not_using_mfa_warning_show: "* Some owners are not using multi-factor authentication (MFA). Click for the complete list."
       not_using_mfa_warning_hide: "* The following owners are not using multi-factor authentication (MFA). Click to hide."
       owners_header: Owners
+      prior_owner_removed_at: "Until %{date}"
       pushed_by: Pushed by
       using_mfa_info: "* All owners are using multi-factor authentication (MFA)."
       yanked_by: Yanked by

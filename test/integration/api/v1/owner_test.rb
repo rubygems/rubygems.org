@@ -44,7 +44,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
     get rubygem_path(@rubygem.slug)
 
     assert page.has_selector?("a[alt='#{@user.handle}']")
-    refute page.has_selector?("a[alt='#{@other_user.handle}']")
+    refute page.has_selector?("a:not(.gem__prior-owner)[alt='#{@other_user.handle}']")
+    assert page.has_selector?("a.gem__prior-owner[alt='#{@other_user.handle}']")
   end
 
   test "transferring ownership" do
@@ -56,7 +57,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
 
     get rubygem_path(@rubygem.slug)
 
-    refute page.has_selector?("a[alt='#{@user.handle}']")
+    refute page.has_selector?("a:not(.gem__prior-owner)[alt='#{@user.handle}']")
+    assert page.has_selector?("a.gem__prior-owner[alt='#{@user.handle}']")
     assert page.has_selector?("a[alt='#{@other_user.handle}']")
   end
 

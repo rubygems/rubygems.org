@@ -97,6 +97,42 @@ class GemsSystemTest < ApplicationSystemTestCase
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-info")
   end
 
+  test "shows a prior owner in the owners list" do
+    former_owner = create(:user, handle: "former_owner")
+    create(:ownership, rubygem: @rubygem, user: former_owner).destroy
+
+    visit rubygem_path(@rubygem.slug)
+
+    assert page.has_selector?("a.gem__prior-owner", text: "former_owner")
+    assert_text(/until/i)
+  end
+
+  test "does not style a current owner as a prior owner" do
+    current_owner = create(:user, handle: "current_owner")
+    former_owner = create(:user, handle: "former_owner")
+    create(:ownership, rubygem: @rubygem, user: current_owner)
+    create(:ownership, rubygem: @rubygem, user: former_owner).destroy
+
+    visit rubygem_path(@rubygem.slug)
+
+    assert page.has_link?("current_owner", href: profile_path(current_owner.display_id))
+    assert page.has_no_selector?("a.gem__prior-owner", text: "current_owner")
+    assert page.has_selector?("a.gem__prior-owner", text: "former_owner")
+  end
+
+  test "does not show a discarded prior owner" do
+    visible_owner = create(:user, handle: "visible_owner")
+    discarded_owner = create(:user, handle: "discarded_owner")
+    create(:ownership, rubygem: @rubygem, user: visible_owner).destroy
+    create(:ownership, rubygem: @rubygem, user: discarded_owner).destroy
+    discarded_owner.discard!
+
+    visit rubygem_path(@rubygem.slug)
+
+    assert page.has_selector?("a.gem__prior-owner", text: "visible_owner")
+    assert page.has_no_text?("discarded_owner")
+  end
+
   test "shows github link when source_code_uri is set" do
     github_link = "http://github.com/user/project"
     create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "source_code_uri" => github_link })

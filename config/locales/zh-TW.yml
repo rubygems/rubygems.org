@@ -894,6 +894,7 @@ zh-TW:
       not_using_mfa_warning_show: "* 某些擁有者未使用多重要素驗證 (MFA)。點擊此處以顯示完整名單。"
       not_using_mfa_warning_hide: "* 下列擁有者未使用多重要素驗證 (MFA)。點擊此處以隱藏。"
       owners_header: 擁有者
+      prior_owner_removed_at:
       pushed_by: 推送者
       using_mfa_info: "* 擁有者皆使用多重要素驗證 (MFA)。"
       yanked_by: 移除者

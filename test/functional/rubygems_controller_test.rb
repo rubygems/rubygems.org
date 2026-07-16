@@ -297,6 +297,19 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_selector?("a[href='#{profile_path(@owner.display_id)}']")
       end
     end
+    context "with a prior owner and no current owner" do
+      setup do
+        @former_owner = create(:user, handle: "former_owner")
+        create(:ownership, user: @former_owner, rubygem: @rubygem).destroy
+        get :show, params: { id: @rubygem.slug }
+      end
+
+      should respond_with :success
+
+      should "render the prior owner's profile link" do
+        assert page.has_selector?("a.gem__prior-owner[href='#{profile_path(@former_owner.display_id)}']")
+      end
+    end
   end
 
   context "On GET to show for a gem with no versions" do

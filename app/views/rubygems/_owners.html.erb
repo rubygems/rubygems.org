@@ -1,10 +1,11 @@
 <% heading_class = "text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200" %>
+<% prior_owners = prior_owners_of(rubygem) %>
 <% if rubygem.owned_by_organization? %>
   <div class="flex flex-col gap-2">
     <h3 class="<%= heading_class %>"><%= t "rubygems.release_info.managed_by" %></h3>
     <%= link_to rubygem.organization.name, organization_path(rubygem.organization), class: "w-fit text-b3 text-neutral-800 dark:text-neutral-200 hover:text-orange-500 dark:hover:text-orange-400" %>
 
-    <% if rubygem.owners.any? %>
+    <% if rubygem.owners.any? || prior_owners.any? %>
       <h3 class="<%= heading_class %> mt-2"><%= t "rubygems.release_info.outside_contributors" %></h3>
       <ul class="gem__users flex flex-col gap-1">
         <% rubygem.owners.sort_by(&:id).each do |owner| %>
@@ -12,16 +13,26 @@
             <%= render "rubygems/owner", owner: owner %>
           </li>
         <% end %>
+        <% prior_owners.each do |prior_ownership| %>
+          <li>
+            <%= render "rubygems/prior_owner", prior_ownership: prior_ownership %>
+          </li>
+        <% end %>
       </ul>
     <% end %>
   </div>
-<% elsif rubygem.owners.present? %>
+<% elsif rubygem.owners.present? || prior_owners.any? %>
   <div class="flex flex-col gap-2">
     <h3 class="<%= heading_class %>"><%= t "rubygems.release_info.owners_header" %></h3>
     <ul class="gem__users flex flex-col gap-1">
       <% rubygem.owners.sort_by(&:id).each do |owner| %>
         <li>
           <%= render "rubygems/owner", owner: owner %>
+        </li>
+      <% end %>
+      <% prior_owners.each do |prior_ownership| %>
+        <li>
+          <%= render "rubygems/prior_owner", prior_ownership: prior_ownership %>
         </li>
       <% end %>
     </ul>
