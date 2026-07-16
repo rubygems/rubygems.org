@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_17_144510) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_16_041502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -359,6 +359,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_144510) do
     t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
+  end
+
+  create_table "historical_ownerships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "first_owned_at", null: false
+    t.datetime "removed_at"
+    t.integer "role", null: false
+    t.bigint "rubygem_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["rubygem_id", "user_id"], name: "index_historical_ownerships_on_rubygem_id_and_user_id"
+    t.index ["rubygem_id"], name: "index_historical_ownerships_on_rubygem_id"
+    t.index ["user_id"], name: "index_historical_ownerships_on_user_id"
   end
 
   create_table "ip_addresses", force: :cascade do |t|
@@ -788,6 +801,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_144510) do
   add_foreign_key "events_user_events", "geoip_infos"
   add_foreign_key "events_user_events", "ip_addresses"
   add_foreign_key "events_user_events", "users"
+  add_foreign_key "historical_ownerships", "rubygems"
+  add_foreign_key "historical_ownerships", "users"
   add_foreign_key "ip_addresses", "geoip_infos"
   add_foreign_key "linksets", "rubygems", name: "linksets_rubygem_id_fk"
   add_foreign_key "memberships", "organizations"
