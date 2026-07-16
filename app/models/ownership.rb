@@ -16,8 +16,9 @@ class Ownership < ApplicationRecord
   before_create :generate_confirmation_token
 
   after_create :record_create_event
-  after_create :create_historical_ownership
+  after_create :create_historical_ownership, if: :confirmed?
   after_update :record_confirmation_event, if: :saved_change_to_confirmed_at?
+  after_update :create_historical_ownership, if: :saved_change_to_confirmed_at?
   after_update :record_role_updated_event, if: :saved_change_to_role?
   after_update :notify_user_role_of_role_change, if: :saved_change_to_role?
   after_destroy :record_destroy_event
@@ -135,7 +136,9 @@ class Ownership < ApplicationRecord
   end
 
   def create_historical_ownership
-    HistoricalOwnership.create!(rubygem_id:, user_id:, first_owned_at: created_at)
+    HistoricalOwnership.find_or_create_by!(rubygem_id:, user_id:, removed_at: nil) do |h|
+      h.first_owned_at = confirmed_at
+    end
   end
 
   # Intentionally tolerant of not finding a record to update

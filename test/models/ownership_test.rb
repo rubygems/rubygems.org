@@ -162,13 +162,33 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "historical ownership" do
     context "on create" do
-      should "create a matching open HistoricalOwnership" do
+      should "create a matching open HistoricalOwnership when already confirmed" do
         ownership = create(:ownership)
 
         historical = HistoricalOwnership.find_by(rubygem: ownership.rubygem, user: ownership.user)
 
         assert_predicate historical, :present?
-        assert_equal ownership.created_at, historical.first_owned_at
+        assert_in_delta ownership.confirmed_at, historical.first_owned_at, 1.second
+        assert_nil historical.removed_at
+      end
+
+      should "not create a HistoricalOwnership while unconfirmed" do
+        ownership = create(:ownership, :unconfirmed)
+
+        refute HistoricalOwnership.exists?(rubygem: ownership.rubygem, user: ownership.user)
+      end
+    end
+
+    context "on confirm" do
+      should "create a matching open HistoricalOwnership using the confirmation time" do
+        ownership = create(:ownership, :unconfirmed)
+
+        ownership.confirm!
+
+        historical = HistoricalOwnership.find_by(rubygem: ownership.rubygem, user: ownership.user)
+
+        assert_predicate historical, :present?
+        assert_in_delta ownership.confirmed_at, historical.first_owned_at, 1.second
         assert_nil historical.removed_at
       end
     end
@@ -205,6 +225,14 @@ class OwnershipTest < ActiveSupport::TestCase
         end
 
         refute HistoricalOwnership.exists?(rubygem: @rubygem, user: @ownership_two.user)
+      end
+
+      should "not create a HistoricalOwnership for a rescinded unconfirmed invite" do
+        unconfirmed = create(:ownership, :unconfirmed, rubygem: @rubygem)
+
+        unconfirmed.destroy
+
+        refute HistoricalOwnership.exists?(rubygem: @rubygem, user: unconfirmed.user)
       end
     end
   end
