@@ -16,10 +16,12 @@ class Ownership < ApplicationRecord
   before_create :generate_confirmation_token
 
   after_create :record_create_event
+  after_create :create_historical_ownership
   after_update :record_confirmation_event, if: :saved_change_to_confirmed_at?
   after_update :record_role_updated_event, if: :saved_change_to_role?
   after_update :notify_user_role_of_role_change, if: :saved_change_to_role?
   after_destroy :record_destroy_event
+  after_destroy :close_historical_ownership
 
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
@@ -130,6 +132,16 @@ class Ownership < ApplicationRecord
       removed_by: Current.user&.display_handle,
       owner_gid: user.to_gid,
       actor_gid: Current.user&.to_gid)
+  end
+
+  def create_historical_ownership
+    HistoricalOwnership.create!(rubygem_id:, user_id:, first_owned_at: created_at)
+  end
+
+  # Intentionally tolerant of not finding a record to update
+  def close_historical_ownership
+    HistoricalOwnership.where(rubygem_id:, user_id:, removed_at: nil)
+      .update_all(removed_at: Time.current)
   end
 
   def notify_user_role_of_role_change
