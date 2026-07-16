@@ -15,6 +15,7 @@ class Admin::RubygemPolicy < Admin::ApplicationPolicy
   has_association :latest_version
   has_association :ownerships
   has_association :ownerships_including_unconfirmed
+  has_association :historical_ownerships
   has_association :subscriptions
   has_association :subscribers
   has_association :web_hooks
