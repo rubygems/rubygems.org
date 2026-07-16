@@ -27,4 +27,14 @@ class HistoricalOwnershipTest < ActiveSupport::TestCase
       assert_not_includes HistoricalOwnership.alumni, @current
     end
   end
+
+  context ".roles_below" do
+    should "return roles with a lower value than the given role" do
+      assert_equal ["maintainer"], HistoricalOwnership.roles_below(:owner)
+    end
+
+    should "return an empty array for the lowest role" do
+      assert_equal [], HistoricalOwnership.roles_below(:maintainer)
+    end
+  end
 end
