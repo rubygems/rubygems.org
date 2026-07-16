@@ -260,4 +260,82 @@ class RubygemsHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#prior_owners_of" do
+    setup do
+      @rubygem = create(:rubygem)
+    end
+
+    should "exclude a user who currently owns the gem even with an old closed stint" do
+      user = create(:user)
+      create(:ownership, rubygem: @rubygem, user: user).destroy
+      create(:ownership, rubygem: @rubygem, user: user)
+
+      assert_empty prior_owners_of(@rubygem).to_a
+    end
+
+    should "order by most recent removal descending" do
+      older = create(:user)
+      newer = create(:user)
+
+      create(:ownership, rubygem: @rubygem, user: older).destroy
+      travel 1.day do
+        create(:ownership, rubygem: @rubygem, user: newer).destroy
+      end
+
+      assert_equal [newer, older], prior_owners_of(@rubygem).map(&:user)
+    end
+
+    should "return one entry for a user with two closed stints on the same gem" do
+      user = create(:user)
+      create(:ownership, rubygem: @rubygem, user: user).destroy
+      create(:ownership, rubygem: @rubygem, user: user).destroy
+
+      assert_equal [user], prior_owners_of(@rubygem).map(&:user)
+    end
+
+    should "include individual alumni for organization-owned gems" do
+      @rubygem.update!(organization: create(:organization))
+      user = create(:user)
+      create(:ownership, rubygem: @rubygem, user: user).destroy
+
+      assert_equal [user], prior_owners_of(@rubygem).map(&:user)
+    end
+
+    should "exclude a discarded prior owner" do
+      user = create(:user)
+      create(:ownership, rubygem: @rubygem, user: user).destroy
+      user.discard!
+
+      assert_empty prior_owners_of(@rubygem).to_a
+    end
+  end
+
+  context "#display_owners?" do
+    should "return true when the gem has a prior owner and no current owners" do
+      rubygem = create(:rubygem)
+      user = create(:user)
+      create(:ownership, rubygem: rubygem, user: user).destroy
+
+      assert display_owners?(rubygem)
+    end
+
+    should "return true when the gem has a current owner" do
+      rubygem = create(:rubygem, owners: [create(:user)])
+
+      assert display_owners?(rubygem)
+    end
+
+    should "return true when the gem is owned by an organization" do
+      rubygem = create(:rubygem, organization: create(:organization))
+
+      assert display_owners?(rubygem)
+    end
+
+    should "return false when the gem has no current or prior owners" do
+      rubygem = create(:rubygem)
+
+      refute display_owners?(rubygem)
+    end
+  end
 end
