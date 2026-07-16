@@ -24,6 +24,7 @@ class Ownership < ApplicationRecord
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
 
+  # The numeric enum values here are intentionally defined by lib/access.rb in ascending order of privilege.
   enum :role, { owner: Access::OWNER, maintainer: Access::MAINTAINER }, validate: true, default: :owner
 
   scope :user_with_minimum_role, ->(user, role) { where(user: user, role: Access.with_minimum_role(role)) }
