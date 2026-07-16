@@ -342,6 +342,7 @@ class Rubygem < ApplicationRecord
   def disown
     ownerships_including_unconfirmed.find_each(&:delete)
     ownerships_including_unconfirmed.clear
+    historical_ownerships.current.update_all(removed_at: Time.current)
 
     oidc_rubygem_trusted_publishers.find_each(&:delete)
     oidc_rubygem_trusted_publishers.clear
