@@ -905,6 +905,40 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal 2, @user.only_owner_gems.count
     end
+
+    should "include downloads and count from a gem the user no longer owns" do
+      former_rubygem = create(:rubygem, downloads: 500)
+      create(:version, rubygem: former_rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+
+      assert_equal 6500, @user.total_downloads_count
+      assert_equal 4, @user.total_rubygems_count
+    end
+
+    should "not double-count a gem with two closed stints" do
+      former_rubygem = create(:rubygem, downloads: 500)
+      create(:version, rubygem: former_rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+
+      assert_equal 6500, @user.total_downloads_count
+      assert_equal 4, @user.total_rubygems_count
+    end
+
+    should "not double-count a gem currently owned with an old closed stint" do
+      Ownership.find_by(user: @user, rubygem: @rubygems.first).destroy
+      create(:ownership, user: @user, rubygem: @rubygems.first)
+
+      assert_equal 6000, @user.total_downloads_count
+      assert_equal 3, @user.total_rubygems_count
+    end
+
+    should "exclude a formerly-owned gem with no versions from the count" do
+      former_rubygem = create(:rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+
+      assert_equal 3, @user.total_rubygems_count
+    end
   end
 
   context "yaml" do
