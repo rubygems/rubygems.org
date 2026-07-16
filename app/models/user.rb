@@ -34,6 +34,7 @@ class User < ApplicationRecord
   scope :confirmed, -> { where(email_confirmed: true) }
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
+  has_many :historical_ownerships, dependent: :destroy, inverse_of: :user
 
   has_many :rubygems, through: :ownerships, source: :rubygem
   has_many :subscriptions, dependent: :destroy
