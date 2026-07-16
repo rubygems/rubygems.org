@@ -747,6 +747,9 @@ en:
       added_by: ADDED BY
       action: ACTION
       role: ROLE
+      prior_owners_title: Prior Owners
+      prior_owner_start: START
+      prior_owner_end: END
       role_field: Role
       email_field: Email / Handle
       submit_button: Add Owner

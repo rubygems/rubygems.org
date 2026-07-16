@@ -739,6 +739,9 @@ zh-TW:
       added_by: 新增者
       action: 操作
       role:
+      prior_owners_title:
+      prior_owner_start:
+      prior_owner_end:
       role_field:
       email_field:
       submit_button: 新增擁有者

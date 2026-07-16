@@ -43,4 +43,11 @@
       <% end %>
     </section>
   <% end %>
+
+  <% if (prior_ownerships = prior_ownerships_of(@rubygem)).any? %>
+    <section class="mt-10 border-t border-neutral-200 pt-8 dark:border-neutral-800">
+      <h2 class="text-h4 mb-6"><%= t(".prior_owners_title") %></h2>
+      <%= render "prior_owners_table", prior_ownerships: prior_ownerships %>
+    </section>
+  <% end %>
 <% end %>

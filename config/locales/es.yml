@@ -816,6 +816,9 @@ es:
       added_by: AÑADIDO POR
       action: ACCIÓN
       role:
+      prior_owners_title:
+      prior_owner_start:
+      prior_owner_end:
       role_field:
       email_field: Correo / Usuario
       submit_button: Añadir a propietarios

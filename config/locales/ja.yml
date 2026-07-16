@@ -753,6 +753,9 @@ ja:
       added_by: 追加者
       action: 操作
       role: ロール
+      prior_owners_title:
+      prior_owner_start:
+      prior_owner_end:
       role_field: ロール
       email_field: Eメール / ハンドル名
       submit_button: 所有者を追加

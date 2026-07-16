@@ -751,6 +751,9 @@ pt-BR:
       added_by:
       action:
       role:
+      prior_owners_title:
+      prior_owner_start:
+      prior_owner_end:
       role_field:
       email_field:
       submit_button:
