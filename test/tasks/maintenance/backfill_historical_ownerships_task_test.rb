@@ -4,7 +4,7 @@ require "test_helper"
 
 class Maintenance::BackfillHistoricalOwnershipsTaskTest < ActiveSupport::TestCase
   context "#collection" do
-    should "return ownerships between min_ownership_id and max_ownership_id" do
+    should "return confirmed ownerships between min_ownership_id and max_ownership_id" do
       ownership1 = create(:ownership)
       ownership2 = create(:ownership)
       create(:ownership)
@@ -14,6 +14,14 @@ class Maintenance::BackfillHistoricalOwnershipsTaskTest < ActiveSupport::TestCas
       task.max_ownership_id = ownership2.id
 
       assert_equal [ownership1, ownership2], task.collection.to_a
+    end
+
+    should "exclude unconfirmed ownerships" do
+      create(:ownership, :unconfirmed)
+
+      task = Maintenance::BackfillHistoricalOwnershipsTask.new
+
+      assert_empty task.collection
     end
   end
 
@@ -29,7 +37,7 @@ class Maintenance::BackfillHistoricalOwnershipsTaskTest < ActiveSupport::TestCas
       assert_predicate historical, :present?
       assert_nil historical.removed_at
       assert_equal "owner", historical.role
-      assert_equal ownership.created_at, historical.first_owned_at
+      assert_in_delta ownership.confirmed_at, historical.first_owned_at, 1.second
     end
 
     should "not create a duplicate when an open HistoricalOwnership already exists" do
