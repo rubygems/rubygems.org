@@ -92,6 +92,49 @@ class ProfilesControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to show with a prior gem" do
+      setup do
+        @former_rubygem = create(:rubygem, name: "former_rubygem")
+        create(:version, rubygem: @former_rubygem)
+        create(:ownership, rubygem: @former_rubygem, user: @user).destroy
+
+        get :show, params: { id: @user.handle }
+      end
+
+      should respond_with :success
+
+      should "display the prior gem" do
+        assert page.has_content?(@former_rubygem.name)
+      end
+    end
+
+    context "on GET to show with a prior gem that has no versions" do
+      setup do
+        @former_rubygem = create(:rubygem, name: "unpublished_former_rubygem")
+        create(:ownership, rubygem: @former_rubygem, user: @user).destroy
+
+        get :show, params: { id: @user.handle }
+      end
+
+      should respond_with :success
+
+      should "not display the prior gem" do
+        refute page.has_content?(@former_rubygem.name)
+      end
+    end
+
+    context "on GET to show with no current or prior gems" do
+      setup do
+        get :show, params: { id: @user.handle }
+      end
+
+      should respond_with :success
+
+      should "display the no gems message" do
+        assert page.has_content?("This user has not pushed any gems yet.")
+      end
+    end
+
     context "on GET to show with handle" do
       setup do
         get :show, params: { id: @user.handle }

@@ -846,6 +846,7 @@ en:
       title: Profile of %{username}
       gems: Gems
       no_gems: This user has not pushed any gems yet.
+      prior_rubygem_removed_at: "Owned until %{removed_at}, published on %{published_at}"
       edit_profile: Edit Profile
       email_me: Email Me
     security_events:

@@ -13,6 +13,24 @@ module UsersHelper
     user.present? && !user.policies_acknowledged?
   end
 
+  def rubygems_with_history_for(current_rubygems, prior_rubygems)
+    current_pairs = current_rubygems.map { |rubygem| [rubygem, nil] }
+    prior_pairs = prior_rubygems.map { |ownership| [ownership.rubygem, ownership.removed_at] }
+
+    (current_pairs + prior_pairs).sort_by { |rubygem, _removed_at| -rubygem.downloads }
+  end
+
+  def prior_rubygems_of(user)
+    current_rubygem_ids = user.ownerships.pluck(:rubygem_id)
+
+    user.historical_ownerships
+      .where.not(rubygem_id: current_rubygem_ids)
+      .joins(:rubygem).merge(Rubygem.with_versions)
+      .preload(rubygem: %i[latest_version most_recent_version gem_download])
+      .order(removed_at: :desc)
+      .uniq(&:rubygem_id)
+  end
+
   def obfuscate_email(email)
     return email if email.blank?
 

@@ -852,6 +852,7 @@ ja:
       title: "%{username} のプロフィール"
       gems:
       no_gems:
+      prior_rubygem_removed_at:
       edit_profile:
       email_me:
     security_events:

@@ -848,6 +848,7 @@ zh-CN:
       title: "%{username} 的个人资料"
       gems:
       no_gems:
+      prior_rubygem_removed_at:
       edit_profile:
       email_me:
     security_events:
