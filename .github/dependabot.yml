@@ -19,6 +19,11 @@ updates:
       patterns: ["aws-*"]
     flipper:
       patterns: ["flipper*"]
+    minor-and-patch:
+      patterns: ["*"]
+      update-types:
+        - minor
+        - patch
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
