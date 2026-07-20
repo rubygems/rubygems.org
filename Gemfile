@@ -120,7 +120,7 @@ group :development, :test do
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.88", require: false
-  gem "rubocop-rails", "~> 2.35", require: false
+  gem "rubocop-rails", "~> 2.36", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.39", require: false
   gem "rubocop-capybara", "~> 3.0", require: false
