@@ -1,12 +1,14 @@
 <% @title = t('.title') %>
-<% add_breadcrumb @title %>
+<% add_breadcrumb(@title) %>
 
 <div class="flex items-center justify-center">
   <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
     <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t(".title") %></h1>
 
     <div class="flex justify-center mb-6">
-      <%= @qrcode_svg %>
+      <div class="bg-white p-4 rounded-lg">
+        <%= @qrcode_svg %>
+      </div>
     </div>
 
     <p class="text-b2 text-neutral-700 dark:text-neutral-300 mb-4"><%= t('.scan_prompt') %></p>
