@@ -16,6 +16,7 @@
  *               Execute only when .github-btn exists
  *               Remove title update (mdo/github-buttons@cbf5395b)
  *               Stripped to minimal needed code with no dependencies (show amount of stars)
+ *               Remove link to `/stargazers` due to GitHub access restrictions
  */
 
 if (document.querySelectorAll('.github-btn').length) {
@@ -86,7 +87,7 @@ if (document.querySelectorAll('.github-btn').length) {
     // Add the class, change the text label, set count link href
     mainButton.className += ' github-stargazers';
     text.textContent = 'Star';
-    counter.href = REPO_URL + '/stargazers';
+    counter.href = REPO_URL;
     title = text.textContent + ' ' + USER_REPO;
 
     button.setAttribute('aria-label', title + LABEL_SUFFIX);
