@@ -19,6 +19,12 @@ class DashboardsControllerTest < ActionController::TestCase
         should "render an XML feed with subscribed items" do
           assert_select "entry > title", text: /#{@subscribed_version.rubygem.name}/
         end
+
+        should "deny shared caching of the credential-bearing response" do
+          assert_equal "private, no-store", @response.headers["Cache-Control"]
+          assert_equal "max-age=0", @response.headers["Surrogate-Control"]
+          assert_includes @response.headers["Vary"].to_s, "Authorization"
+        end
       end
     end
 
@@ -59,6 +65,11 @@ class DashboardsControllerTest < ActionController::TestCase
 
           page.assert_selector(selector)
         end
+      end
+
+      should "mark the signed-in response private, no-store" do
+        assert_equal "private, no-store", @response.headers["Cache-Control"]
+        assert_includes @response.headers["Vary"].to_s, "Cookie"
       end
     end
 
