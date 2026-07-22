@@ -1,0 +1,102 @@
+<% @title = "SECURITY NOTICE" %>
+<% @sub_title = "Hi #{@user.handle}" %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <p><strong>Important security notice: a legacy API key on your account may have been exposed while it was active</strong></p>
+        <br>
+        <p>
+          You are receiving this because your RubyGems.org account had one or more legacy API keys that were <strong>already inactive</strong> by the time we swept accounts for a security incident: you, or an automated safeguard, had already reset, deleted, or expired them. Because it was already inactive, we did not need to revoke anything for you, and there is nothing you have to do to your credentials. We are writing because those keys, while they were still active, could have been exposed by the incident, and resetting them afterwards does not undo anything that may have been done while they were live. We recommend a quick review of your account.
+        </p>
+
+        <br>
+        <p><strong>What happened</strong></p>
+        <br>
+        <p>
+          RubyGems.org had a misconfiguration in the proxy cache settings for an endpoint that older <strong>gem</strong> clients used to sign in (<strong>GET /api/v1/api_key</strong>). That endpoint creates and returns a broadly scoped legacy API key. Under specific conditions, our CDN could cache the compressed response and replay it to a later request routed through the same edge, including one without valid credentials, for up to an hour. Keys protected by API MFA were still exposed, but protected actions also required a valid OTP.
+        </p>
+        <br>
+        <p>
+          We have no evidence that this was used to tamper with any gem, but because of how it works we cannot rule it out across the full period the bug existed.
+        </p>
+
+        <br>
+        <p><strong>What we have already done</strong></p>
+        <ul>
+          <li>Fixed the root cause so the sign-in response can no longer be cached or shared.</li>
+          <li>Purged the affected responses from our CDN.</li>
+          <li>Revoked the affected keys by expiring them. <strong>All legacy API keys have been expired</strong>, so no legacy key can push or yank a gem, or change ownership. Your key was already inactive, so this did not change anything for you.</li>
+          <li>Retired the affected sign-in endpoint (<strong>GET /api/v1/api_key</strong>) so it no longer returns an API key.</li>
+        </ul>
+
+        <br>
+        <p><strong>What you need to do</strong></p>
+        <br>
+        <p>
+          <strong>No credential action is needed.</strong> Your key was already inactive, so it can no longer be used to sign in or publish, and your current setup is unaffected. But if the key leaked while it was still live, someone could have used it in the window before you rotated it, and expiring a key does not roll back actions already taken with it, such as adding or removing gem owners, changing trusted publishers or webhooks, or publishing or yanking a version. So we suggest reviewing the items below.
+        </p>
+
+        <br>
+        <p><strong>What you can check on your account</strong></p>
+        <br>
+        <p>
+          Your published gem versions cannot have been silently rewritten. Overwriting the contents of a version that already exists has been blocked on RubyGems.org since 2010, so no existing release can have been altered in place, and a version number that has been yanked cannot be reused.
+        </p>
+        <br>
+        <p>
+          What is worth reviewing is anything that could have been <strong>added</strong> or <strong>removed</strong> under your identity: a gem version you did not publish (particularly one numbered higher than your last release), a version yanked without your action, an owner or maintainer you do not recognise, a trusted publisher or webhook you did not set up, or a push, yank, or owner change in your account activity from an IP or location that is not yours (your account events show the source IP and location of each action).
+        </p>
+        <br>
+        <p>
+          If you find something you did not do, please act in this order:
+        </p>
+        <ol>
+          <li><strong>Capture the details first:</strong> note the gem and version, and the IP, location, and timestamp shown in your account events (a screenshot is ideal).</li>
+          <li><strong>Remove the unauthorized configuration:</strong> delete any trusted publisher or webhook you did not set up, and remove any owner you do not recognise.</li>
+          <li><strong>Yank any version you did not publish.</strong></li>
+          <li><strong>Then contact us</strong> at <%= mail_to "support@rubygems.org" %> with what you found and the details you captured, and we will help you assess and recover.</li>
+        </ol>
+
+        <br>
+        <p><strong>Were you affected if you use a custom tool?</strong></p>
+        <br>
+        <p>
+          Possibly, and independently of your <strong>gem</strong> version. Any tool, script, mirror, or CI job that calls <strong>GET /api/v1/api_key</strong> directly with a username and password (rather than using a stored, scoped key) went through the same endpoint and could both receive a foreign key and seed one into the cache. That endpoint has now been retired and returns an error, so move anything like this to a pre-created scoped key or trusted publishing.
+        </p>
+
+        <br>
+        <p><strong>How to verify this email is legitimate</strong></p>
+        <br>
+        <p>
+          A security message like this is exactly what a phishing email looks like, so please do not take our word for it — verify it independently:
+        </p>
+        <ul>
+          <li>An official post about this incident has been published on the RubyGems blog at <%= link_to "https://blog.rubygems.org/", "https://blog.rubygems.org/" %>, and an advisory is published on GitHub under <strong>GHSA-9j48-x3c3-mrp2</strong>. Reach both yourself, without clicking any link in this email, and confirm this notice against them.</li>
+          <li>This email was sent from an official rubygems.org address (<strong>no-reply@mailer.rubygems.org</strong>), and replies go to <strong>support@rubygems.org</strong>.</li>
+          <li>We will <strong>never</strong> ask you for your password, recovery codes, or an API key by email, and we will never link you to a page that asks for them.</li>
+          <li>Everything we ask you to do can be done by going to <strong>https://rubygems.org</strong> directly in your browser and signing in as normal. You do not need to click any link in this message to act on it.</li>
+        </ul>
+
+        <br>
+        <p><strong>Questions</strong></p>
+        <br>
+        <p>
+          If you are unsure whether your account was involved, if you find something you cannot explain or have any other questions relating to this, contact us at <%= mail_to "support@rubygems.org" %>.
+        </p>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>
+<!-- END Body -->

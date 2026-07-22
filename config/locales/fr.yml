@@ -379,6 +379,10 @@ fr:
     gem_yanked:
       subject:
       title:
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject:
       title:
@@ -1177,6 +1181,7 @@ fr:
       api_key:
         api_key_created:
         api_key_deleted:
+        api_key_cache_exposure_revoked:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:

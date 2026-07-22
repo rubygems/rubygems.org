@@ -23,5 +23,11 @@ FactoryBot.define do
       owner factory: %i[oidc_trusted_publisher_github_action]
       transient { key { SecureRandom.hex(4) } }
     end
+
+    trait :legacy_broad do
+      name { ApiKey::LEGACY_KEY_NAME }
+      scopes { ApiKey::API_SCOPES - ApiKey::EXCLUSIVE_SCOPES }
+      to_create { |instance| instance.save(validate: false) }
+    end
   end
 end

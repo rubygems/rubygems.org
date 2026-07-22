@@ -1,0 +1,64 @@
+Hi <%= @user.handle %>
+
+Important security notice: your RubyGems.org API key has been expired
+
+You are receiving this because your RubyGems.org account had one or more active legacy API keys that we revoked, by expiring them, as part of a security incident. Anything that used one of those keys to authenticate will stop working, including publishing or yanking gems and the subscribed-gems Atom feed. Installing and downloading gems is unaffected. The rest of this notice explains what happened, what we have already done, and what we recommend you check.
+
+WHAT HAPPENED
+
+RubyGems.org had a misconfiguration in the proxy cache settings for an endpoint that older gem clients used to sign in (GET /api/v1/api_key). That endpoint creates and returns a broadly scoped legacy API key. Under specific conditions, our CDN could cache the compressed response and replay it to a later request routed through the same edge, including one without valid credentials, for up to an hour. Keys protected by API MFA were still exposed, but protected actions also required a valid OTP.
+
+We have no evidence that this was used to tamper with any gem, but because of how it works we cannot rule it out across the full period the bug existed. We are treating key expiry, not log review, as the control, which is why every legacy key that could have been exposed has been expired.
+
+WHAT WE HAVE ALREADY DONE
+
+- Fixed the root cause so the sign-in response can no longer be cached or shared.
+- Purged the affected responses from our CDN.
+- Revoked the affected keys by expiring them. Expiring leaves the key's record in place; it simply can no longer authenticate. All legacy API keys have been expired, so no legacy key can push or yank a gem, or change ownership.
+- Retired the affected sign-in endpoint (GET /api/v1/api_key) so it no longer returns an API key.
+
+WHAT YOU NEED TO DO
+
+If you publish gems from a personal machine: the key stored on your machine has been expired, so your next push will fail with a 401. Because that stored key could be one that leaked from another account, clear it and sign in again for a fresh key of your own:
+
+- Run "gem signout" to clear the stored key. gem signout deletes your entire gem credentials file, so it removes saved keys for every gem host you use, not only RubyGems.org. If you have keys for other hosts and want to keep them, instead delete just the ":rubygems_api_key:" entry (and any "https://rubygems.org" entry) from your credentials file (usually ~/.gem/credentials).
+- Update RubyGems: run "gem update --system". The sign-in flow changed in RubyGems 3.2.0, and older versions used the endpoint we have now retired, so sign-in needs a current RubyGems.
+- Run "gem signin" and enter your username and password. This stores a fresh key of your own, replacing anything you may have been unknowingly holding for another account.
+
+If you have GEM_HOST_API_KEY set in your shell environment, unset it as well (or change its value), because it overrides the credentials file.
+
+If you publish from CI or automation using a stored key: your pushes will start failing with a 401 until you replace the stored key. Create a new API key (ideally a scoped one, or move to trusted publishing) and update your RUBYGEMS_API_KEY / GEM_HOST_API_KEY secret. Jobs that only install gems are unaffected.
+
+We recommend creating scoped keys rather than a full-access key, and using trusted publishing (OIDC) for CI where you can. Both limit the damage a single key can do. See the RubyGems.org guide to API key scopes: https://guides.rubygems.org/api-key-scopes/
+
+WHAT YOU CAN CHECK ON YOUR ACCOUNT
+
+Your published gem versions cannot have been silently rewritten. Overwriting the contents of a version that already exists has been blocked on RubyGems.org since 2010, so no existing release can have been altered in place, and a version number that has been yanked cannot be reused.
+
+What is worth reviewing is anything that could have been added or removed under your identity: a gem version you did not publish (particularly one numbered higher than your last release), a version yanked without your action, an owner or maintainer you do not recognise, a trusted publisher or webhook you did not set up, or a push, yank, or owner change in your account activity from an IP or location that is not yours (your account events show the source IP and location of each action).
+
+If you find something you did not do, please act in this order:
+
+1. Capture the details first: note the gem and version, and the IP, location, and timestamp shown in your account events (a screenshot is ideal).
+2. Remove the unauthorized configuration: delete any trusted publisher or webhook you did not set up, and remove any owner you do not recognise.
+3. Yank any version you did not publish.
+4. Then contact us at support@rubygems.org with what you found and the details you captured, and we will help you assess and recover.
+
+One more tell-tale worth knowing: if you have recently tried to push one of your own gems and been refused with a 403 "You do not have permission to push to this gem" message, that can be a sign your client was holding another account's key. Clear the stored key and sign in again as described above.
+
+WERE YOU AFFECTED IF YOU USE A CUSTOM TOOL?
+
+Possibly, and independently of your gem version. Any tool, script, mirror, or CI job that calls GET /api/v1/api_key directly with a username and password (rather than using a stored, scoped key) went through the same endpoint and could both receive a foreign key and seed one into the cache. That endpoint has now been retired and returns an error, so move anything like this to a pre-created scoped key or trusted publishing.
+
+HOW TO VERIFY THIS EMAIL IS LEGITIMATE
+
+A security message that tells you to re-authenticate is exactly what a phishing email looks like, so please do not take our word for it — verify it independently:
+
+- An official post about this incident has been published on the RubyGems blog at https://blog.rubygems.org/, and an advisory is published on GitHub under GHSA-9j48-x3c3-mrp2. Reach both yourself, without clicking any link in this email, and confirm this notice against them.
+- This email was sent from an official rubygems.org address (no-reply@mailer.rubygems.org), and replies go to support@rubygems.org.
+- We will never ask you for your password, recovery codes, or an API key by email, and we will never link you to a page that asks for them.
+- Everything we ask you to do can be done by going to https://rubygems.org directly in your browser and signing in as normal. You do not need to click any link in this message to act on it.
+
+QUESTIONS
+
+If you are unsure whether your account was involved, if you find something you cannot explain or have any other questions relating to this, contact us at support@rubygems.org

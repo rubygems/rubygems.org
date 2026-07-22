@@ -4,6 +4,8 @@ require "test_helper"
 
 class Api::CompactIndexTest < ActionDispatch::IntegrationTest
   setup do
+    Rails.cache.delete("names")
+
     @rubygem2 = create(:rubygem, name: "gemB")
     @version = create(:version, rubygem: @rubygem2, number: "1.0.0", **checksum_attribute("v2qw2dwe"))
 
@@ -33,6 +35,10 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
     create(:dependency, rubygem: dep2, version: @gem_a_v21)
   end
 
+  teardown do
+    Rails.cache.delete("names")
+  end
+
   test "/names output" do
     get names_path
 
@@ -54,6 +60,8 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
   test "/names partial response" do
     get names_path
     full_body = @response.body
+
+    assert_operator full_body.bytesize, :>, 15
 
     get names_path, env: { range: "bytes=15-" }
 

@@ -365,6 +365,10 @@ ja:
     gem_yanked:
       subject: "%{gem} gemが%{host}からヤンクされました"
       title: gemがヤンクされました
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject: "%{host}のAPIキーがリセットされました"
       title: APIキーがリセットされました
@@ -1168,6 +1172,7 @@ ja:
       api_key:
         api_key_created: APIキーが作成されました
         api_key_deleted: APIキーが削除されました
+        api_key_cache_exposure_revoked:
         api_key_name: 名前：%{name}
         api_key_scopes: スコープ：%{scopes}
         api_key_gem_html: gem：%{gem}

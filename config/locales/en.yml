@@ -368,6 +368,10 @@ en:
     gem_yanked:
       subject: Gem %{gem} yanked from %{host}
       title: GEM YANKED
+    cache_exposure_inactive_notice:
+      subject: Your %{host} legacy API key may have been exposed
+    cache_exposure_notice:
+      subject: Your %{host} API key was expired
     reset_api_key:
       subject: "%{host} API key was reset"
       title: API KEY RESET
@@ -1153,6 +1157,7 @@ en:
       api_key:
         api_key_created: "API Key Created"
         api_key_deleted: "API Key Deleted"
+        api_key_cache_exposure_revoked: "API Key Revoked (security incident)"
         api_key_name: "Name: %{name}"
         api_key_scopes: "Scopes: %{scopes}"
         api_key_gem_html: "Gem: %{gem}"
