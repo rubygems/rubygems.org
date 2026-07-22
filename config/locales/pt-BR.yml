@@ -183,6 +183,7 @@ pt-BR:
       invalid_gem:
     destroy:
       success:
+      already_expired:
     index:
       api_keys:
       name:
@@ -208,6 +209,8 @@ pt-BR:
       mfa:
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key:
     reset:
@@ -218,6 +221,7 @@ pt-BR:
     edit:
       edit_api_key:
       invalid_key:
+      expired_key:
     all_gems:
     gem_ownership_removed:
   dashboards:

@@ -330,7 +330,7 @@ class ApiKeysTest < ApplicationSystemTestCase
       click_button "Delete"
     end
 
-    assert_text "New API key"
+    assert_current_path profile_api_keys_path
     page.assert_text "Successfully deleted API key: #{api_key.name}"
 
     assert_event Events::UserEvent::API_KEY_DELETED, { name: api_key.name, api_key_gid: api_key.to_global_id.to_s },
@@ -345,8 +345,34 @@ class ApiKeysTest < ApplicationSystemTestCase
       click_button "Reset"
     end
 
-    assert_text "New API key"
+    assert_current_path profile_api_keys_path
     page.assert_no_text api_key.name
+  end
+
+  test "viewing previous api keys" do
+    create(:api_key, owner: @user, name: "old-key")
+
+    visit_profile_api_keys_path
+
+    assert_no_link "View previous API keys"
+
+    accept_alert do
+      click_button "Delete"
+    end
+
+    assert_text "Successfully deleted API key: old-key"
+    assert_current_path profile_api_keys_path
+
+    click_link "View previous API keys"
+
+    assert_text "old-key"
+    assert_no_button "Edit"
+    assert_no_button "Delete"
+    assert_no_button "Reset"
+
+    click_link "Back to active API keys"
+
+    assert_no_text "old-key"
   end
 
   test "gem ownership removed displays api key as invalid" do

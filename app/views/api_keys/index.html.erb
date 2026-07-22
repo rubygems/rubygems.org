@@ -35,10 +35,17 @@
   <div class="flex">
     <div class="grow mt-8 mb-4 pr-4">
       <p class="text-b4 text-neutral-600 dark:text-neutral-400"><%= page_entries_info @api_keys, entry_name: "API keys" %></p>
+      <% if @expired_view %>
+        <%= link_to t(".view_active"), profile_api_keys_path, class: "text-b3 text-orange-500 underline dark:text-orange-400" %>
+      <% elsif @has_expired_keys %>
+        <%= link_to t(".view_expired"), profile_api_keys_path(expired: "true"), class: "text-b3 text-orange-500 underline dark:text-orange-400" %>
+      <% end %>
     </div>
-    <div class="flex-initial mt-6 mb-4">
-      <%= button_to t(".reset"), reset_profile_api_keys_path, method: :delete, class: "#{danger_btn} right", data: { confirm: t(".confirm_all") } %>
-    </div>
+    <% unless @expired_view %>
+      <div class="flex-initial mt-6 mb-4">
+        <%= button_to t(".reset"), reset_profile_api_keys_path, method: :delete, class: "#{danger_btn} right", data: { confirm: t(".confirm_all") } %>
+      </div>
+    <% end %>
   </div>
 
   <div class="overflow-x-auto">
@@ -54,12 +61,14 @@
           <% end %>
           <th scope="col" class="<%= th_class %>"><%= t(".last_access") %></th>
           <th scope="col" class="<%= th_class %>"><%= t(".expiration") %></th>
-          <th scope="col" class="<%= th_class %>"><span class="sr-only"><%= t(".action") %></span></th>
+          <% unless @expired_view %>
+            <th scope="col" class="<%= th_class %>"><span class="sr-only"><%= t(".action") %></span></th>
+          <% end %>
         </tr>
       </thead>
       <tbody class="md:divide-y md:divide-neutral-200 md:dark:divide-neutral-800">
         <% @api_keys.each do |api_key| %>
-          <tr data-soft-deleted="<%= api_key.soft_deleted? %>" class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0 <%= "opacity-60" if api_key.soft_deleted? %>">
+          <tr data-soft-deleted="<%= api_key.soft_deleted? %>" class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0 <%= "opacity-60" if api_key.soft_deleted? && !@expired_view %>">
             <td data-title="<%= t('.name') %>" class="<%= cell_class %> font-medium text-neutral-900 dark:text-white"><%= api_key.name %></td>
             <td data-title="<%= t('.scopes') %>" class="<%= cell_class %>">
               <span class="flex flex-wrap gap-1">
@@ -77,14 +86,16 @@
             <% end %>
             <td data-title="<%= t('.last_access') %>" class="<%= cell_class %> text-nowrap text-neutral-700 dark:text-neutral-300"><%= api_key.last_accessed_at&.strftime("%Y-%m-%d %H:%M %Z") %></td>
             <td data-title="<%= t('.expiration') %>" class="<%= cell_class %> text-nowrap text-neutral-700 dark:text-neutral-300"><%= api_key.expires_at&.strftime("%Y-%m-%d %H:%M %Z") %></td>
-            <td class="block py-2 align-top md:table-cell md:py-3">
-              <div class="flex gap-2">
-                <% unless api_key.soft_deleted? %>
-                  <%= button_to t("edit"), edit_profile_api_key_path(id: api_key.id), method: :get, class: edit_btn %>
-                <% end %>
-                <%= button_to t(".delete"), profile_api_key_path(id: api_key.id), method: :delete, class: danger_btn, data: { confirm: t(".confirm") } %>
-              </div>
-            </td>
+            <% unless @expired_view %>
+              <td class="block py-2 align-top md:table-cell md:py-3">
+                <div class="flex gap-2">
+                  <% unless api_key.soft_deleted? %>
+                    <%= button_to t("edit"), edit_profile_api_key_path(id: api_key.id), method: :get, class: edit_btn %>
+                  <% end %>
+                  <%= button_to t(".delete"), profile_api_key_path(id: api_key.id), method: :delete, class: danger_btn, data: { confirm: t(".confirm") } %>
+                </div>
+              </td>
+            <% end %>
           </tr>
         <% end %>
       </tbody>

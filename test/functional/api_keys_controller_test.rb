@@ -71,6 +71,32 @@ class ApiKeysControllerTest < ActionController::TestCase
         should redirect_to("the new api key page") { new_profile_api_key_path }
       end
 
+      context "only expired keys exist" do
+        setup do
+          @expired_key = create(:api_key, owner: @user, name: "expired-key")
+          @expired_key.update_column(:expires_at, 1.week.ago)
+          get :index
+        end
+
+        should respond_with :success
+
+        should "not list the expired key in the active view" do
+          refute page.has_content? @expired_key.name
+        end
+
+        should "render a link to view previous keys" do
+          assert page.has_link? "View previous API keys", href: profile_api_keys_path(expired: "true")
+        end
+      end
+
+      context "no api key exists and the expired view is requested" do
+        setup do
+          get :index, params: { expired: "true" }
+        end
+
+        should respond_with :success
+      end
+
       context "api key exists" do
         setup do
           @api_key = create(:api_key, owner: @user)
@@ -86,6 +112,102 @@ class ApiKeysControllerTest < ActionController::TestCase
         should "render on the subject layout with settings active" do
           assert_select "h1", text: "API keys"
           assert_select "nav a[href=?].bg-orange-100", edit_settings_path
+        end
+      end
+
+      context "user has no expired keys" do
+        setup do
+          create(:api_key, owner: @user)
+          get :index
+        end
+
+        should "not render a link to view previous keys" do
+          refute page.has_link? "View previous API keys"
+        end
+      end
+
+      context "user has expired keys" do
+        setup do
+          @active_key = create(:api_key, owner: @user, name: "active-key")
+          @expired_key = create(:api_key, owner: @user, name: "expired-key")
+          @expired_key.update_column(:expires_at, 1.week.ago)
+        end
+
+        context "without the expired param" do
+          setup { get :index }
+
+          should respond_with :success
+
+          should "list only active keys" do
+            assert page.has_content? @active_key.name
+            refute page.has_content? @expired_key.name
+          end
+
+          should "render a link to view previous keys" do
+            assert page.has_link? "View previous API keys", href: profile_api_keys_path(expired: "true")
+          end
+
+          should "render the reset button" do
+            assert page.has_button? "Reset"
+          end
+        end
+
+        context "with the expired param" do
+          setup { get :index, params: { expired: "true" } }
+
+          should respond_with :success
+
+          should "list only expired keys" do
+            assert page.has_content? @expired_key.name
+            refute page.has_content? @active_key.name
+          end
+
+          should "not render edit or delete buttons" do
+            refute page.has_button? "Edit"
+            refute page.has_button? "Delete"
+          end
+
+          should "not render the reset button" do
+            refute page.has_button? "Reset"
+          end
+
+          should "render the new key button" do
+            assert page.has_button? "New API key"
+          end
+
+          should "render a link back to active keys" do
+            assert page.has_link? "Back to active API keys", href: profile_api_keys_path
+          end
+        end
+
+        should "order previous keys by expiration descending" do
+          ancient_key = create(:api_key, owner: @user, name: "ancient-key")
+          ancient_key.update_column(:expires_at, 2.weeks.ago)
+          get :index, params: { expired: "true" }
+
+          assert_operator response.body.index(@expired_key.name), :<, response.body.index(ancient_key.name)
+        end
+
+        should "not list expired OIDC keys" do
+          oidc_key = create(:api_key, owner: @user, name: "oidc-key", scopes: %i[push_rubygem])
+          create(:oidc_id_token, api_key: oidc_key)
+          oidc_key.update_column(:expires_at, 1.week.ago)
+          get :index, params: { expired: "true" }
+
+          refute page.has_content? oidc_key.name
+        end
+
+        should "render the gem name for an expired key whose gem ownership was removed" do
+          ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
+          orphaned_key = create(:api_key, owner: @user, name: "orphaned-key", scopes: %i[push_rubygem], ownership: ownership)
+          ownership.destroy!
+          orphaned_key.update_column(:expires_at, 3.days.ago)
+          get :index, params: { expired: "true" }
+
+          tooltip = "Ownership of the #{ownership.rubygem.name} gem has been removed after being scoped to this key."
+
+          assert page.has_css? "span[title='#{tooltip}']", text: "#{ownership.rubygem.name} [?]"
+          refute page.has_css? "tr.opacity-60"
         end
       end
     end
@@ -206,6 +328,23 @@ class ApiKeysControllerTest < ActionController::TestCase
         assert_redirected_to profile_api_keys_path
         assert_equal "An invalid API key cannot be edited. Please delete it and create a new one.", flash[:error]
       end
+
+      should "redirect to index with expired key" do
+        @api_key.update_column(:expires_at, 1.hour.ago)
+        get :edit, params: { id: @api_key.id }
+
+        assert_redirected_to profile_api_keys_path
+        assert_equal "An expired API key cannot be edited. Please create a new one.", flash[:error]
+      end
+
+      should "prefer the soft deleted error for a key both soft deleted and expired" do
+        @api_key.soft_delete!
+        @api_key.update_column(:expires_at, 1.hour.ago)
+        get :edit, params: { id: @api_key.id }
+
+        assert_redirected_to profile_api_keys_path
+        assert_equal "An invalid API key cannot be edited. Please delete it and create a new one.", flash[:error]
+      end
     end
 
     context "on PATCH to update" do
@@ -274,6 +413,21 @@ class ApiKeysControllerTest < ActionController::TestCase
         end
       end
 
+      context "with an expired key" do
+        setup do
+          @api_key.update_column(:expires_at, 1.hour.ago)
+          patch :update, params: { api_key: { add_owner: true }, id: @api_key.id }
+        end
+
+        should "show error to user" do
+          assert_text "An expired API key cannot be used. Please create a new one."
+        end
+
+        should "not update scope of the key" do
+          refute_predicate @api_key.reload, :can_add_owner?
+        end
+      end
+
       context "with an expiration" do
         should "not allow chaging expiration" do
           @api_key.update_column(:expires_at, 1.month.from_now)
@@ -322,6 +476,28 @@ class ApiKeysControllerTest < ActionController::TestCase
 
           should "not expire api key of user" do
             refute_empty @user.api_keys.unexpired
+          end
+        end
+
+        context "with an already-expired key" do
+          setup do
+            @api_key.update_column(:expires_at, 1.hour.ago)
+            @original_expires_at = @api_key.reload.expires_at
+            delete :destroy, params: { id: @api_key.id }
+          end
+
+          should redirect_to("the index api key page") { profile_api_keys_path }
+
+          should "show an error to the user" do
+            assert_equal "The API key has already expired.", flash[:error]
+          end
+
+          should "not change the expiration timestamp" do
+            assert_equal @original_expires_at, @api_key.reload.expires_at
+          end
+
+          should "not record another deletion event" do
+            assert_empty @user.events.where(tag: Events::UserEvent::API_KEY_DELETED)
           end
         end
       end

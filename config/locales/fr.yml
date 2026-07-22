@@ -182,6 +182,7 @@ fr:
       invalid_gem:
     destroy:
       success:
+      already_expired:
     index:
       api_keys:
       name:
@@ -207,6 +208,8 @@ fr:
       mfa:
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key:
     reset:
@@ -217,6 +220,7 @@ fr:
     edit:
       edit_api_key:
       invalid_key:
+      expired_key:
     all_gems:
     gem_ownership_removed:
   dashboards:

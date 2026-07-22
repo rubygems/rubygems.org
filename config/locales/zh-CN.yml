@@ -178,6 +178,7 @@ zh-CN:
       invalid_gem: 该 Gem 未被此 API 密钥所允许的作用范围包含
     destroy:
       success: 成功删除 API 密钥：%{name}
+      already_expired:
     index:
       api_keys: API 密钥
       name: 名称
@@ -203,6 +204,8 @@ zh-CN:
       mfa: 多因素验证（MFA）
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key: 生成新 API 密钥
     reset:
@@ -213,6 +216,7 @@ zh-CN:
     edit:
       edit_api_key: 编辑 API 密钥
       invalid_key: 已作废的 API 密钥不能被编辑，请删除它并创建一个新的 API 密钥。
+      expired_key:
     all_gems: 所有 Gem
     gem_ownership_removed: 对 %{rubygem_name} 的所有权已经被移除（在使用此 API 密钥决定作用范围后）
   dashboards:
