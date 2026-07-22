@@ -230,7 +230,7 @@ class ActiveSupport::TestCase
 
     create_webauthn_credential_while_signed_in
 
-    find(:css, ".header__popup-link").click
+    find(:css, "[data-testid='header-popup-link']").click
     click_on "Sign out"
 
     assert page.has_content?("Sign in")
@@ -246,7 +246,7 @@ class ActiveSupport::TestCase
     click_on "Register device"
 
     click_on "Copy to clipboard"
-    @mfa_recovery_codes = find(:css, ".recovery-code-list").value.split
+    @mfa_recovery_codes = find(:css, "[data-testid='recovery-code-list']").value.split
 
     check "ack"
     click_on "Continue"

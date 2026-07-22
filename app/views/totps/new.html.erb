@@ -1,7 +1,9 @@
 <% @title = t('.title') %>
 
-<div class="t-body l-overflow">
-  <div class="l-half--l l-half--l--center">
+<h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t('.title') %></h1>
+
+<div>
+  <div>
     <%= @qrcode_svg %>
   </div>
   <div>
@@ -15,10 +17,10 @@
 </div>
 
 <%= form_tag totp_path, method: :post do %>
-  <div class="text_field">
-    <%= label_tag :otp, 'OTP code', class: 'form__label' %>
-    <p class='form__field__instructions'><%= t '.otp_prompt' %></p>
-    <%= text_field_tag :otp, '', class: 'form__input', autocomplete: 'one-time-code' %>
+  <div>
+    <%= label_tag :otp, 'OTP code' %>
+    <p><%= t '.otp_prompt' %></p>
+    <%= text_field_tag :otp, '', autocomplete: 'one-time-code' %>
   </div>
-  <%= submit_tag t('.enable'), class: 'form__submit' %>
+  <%= submit_tag t('.enable') %>
 <% end %>

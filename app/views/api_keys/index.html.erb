@@ -59,7 +59,7 @@
       </thead>
       <tbody class="md:divide-y md:divide-neutral-200 md:dark:divide-neutral-800">
         <% @api_keys.each do |api_key| %>
-          <tr data-soft-deleted="<%= api_key.soft_deleted? %>" class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0 <%= "opacity-60" if api_key.soft_deleted? %>">
+          <%= tag.tr class: "block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0 #{'opacity-60' if api_key.soft_deleted?}", data: { testid: ("api-key-invalid-row" if api_key.soft_deleted?) } do %>
             <td data-title="<%= t('.name') %>" class="<%= cell_class %> font-medium text-neutral-900 dark:text-white"><%= api_key.name %></td>
             <td data-title="<%= t('.scopes') %>" class="<%= cell_class %>">
               <span class="flex flex-wrap gap-1">
@@ -85,7 +85,7 @@
                 <%= button_to t(".delete"), profile_api_key_path(id: api_key.id), method: :delete, class: danger_btn, data: { confirm: t(".confirm") } %>
               </div>
             </td>
-          </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>

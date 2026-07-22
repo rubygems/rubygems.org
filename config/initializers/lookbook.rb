@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.application.config.lookbook.preview_layout = "component_preview" if Rails.env.local?
+Rails.application.config.lookbook.preview_layout = "hammy_component_preview" if Rails.env.local?
 
 if Rails.env.development?
   module Lookbook::PreviewOverrides

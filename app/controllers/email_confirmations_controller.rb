@@ -16,8 +16,6 @@ class EmailConfirmationsController < ApplicationController
   before_action :validate_webauthn, only: :webauthn_update
   after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
 
-  layout "hammy"
-
   def new
   end
 
@@ -85,7 +83,7 @@ class EmailConfirmationsController < ApplicationController
 
   def login_failure(message)
     flash.now.alert = message
-    render template: "multifactor_auths/prompt", layout: "hammy", status: :unauthorized
+    render template: "multifactor_auths/prompt", status: :unauthorized
   end
 
   def otp_verification_url

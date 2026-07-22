@@ -1,19 +1,19 @@
-<li class="small">
-  <div class="gems__gem">
-    <span class="gems__gem__info">
-      <a href="<%= rubygem_path(rubygem.slug) %>" class="gems__gem__name">
+<li>
+  <div>
+    <span>
+      <a href="<%= rubygem_path(rubygem.slug) %>">
         <%= rubygem.name %>
-        <span class="gems__gem__version"><%= rubygem.latest_version %></span>
+        <span><%= rubygem.latest_version %></span>
       </a>
     </span>
-    <p class="gems__gem__downloads__count">
+    <p>
       <%= number_with_delimiter(rubygem.downloads) %>
-      <span class="gems__gem__downloads__heading">Downloads</span>
+      <span>Downloads</span>
     </p>
     <% if local_assigns[:owners] %>
-      <div class="owners">
-        <h3 class="t-list__heading"><%= t '.owners_header'%>:</h3>
-        <div class="gem__owners">
+      <div>
+        <h3><%= t '.owners_header'%>:</h3>
+        <div>
           <%= links_to_owners(rubygem) %>
         </div>
       </div>

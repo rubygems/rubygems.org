@@ -10,7 +10,7 @@ class StatsTest < ApplicationSystemTestCase
   test "downloads animation bar" do
     visit stats_path
 
-    assert page.find(".stats__graph__gem__meter", wait: Capybara.default_max_wait_time)
+    assert page.find("[data-testid='stats-graph-gem-meter']", wait: Capybara.default_max_wait_time)
     assert_text(@rubygem.downloads)
   end
 end

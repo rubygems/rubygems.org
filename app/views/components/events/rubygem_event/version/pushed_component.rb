@@ -9,7 +9,7 @@ class Events::RubygemEvent::Version::PushedComponent < Events::TableDetailsCompo
         link_to_version_from_gid(additional.version_gid, additional.number, additional.platform))
     end
     if additional.sha256.present?
-      sha256 = capture { code(class: "tw-break-all") { additional.sha256 } }
+      sha256 = capture { code(class: "break-all") { additional.sha256 } }
       div { t(".version_pushed_sha256_html", sha256:) }
     end
     return if additional.pushed_by.blank?

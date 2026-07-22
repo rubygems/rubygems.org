@@ -1,16 +1,18 @@
 <% @title = t(".title")%>
 
 <% if @user.webauthn_enabled? %>
-  <div class="t-body">
-    <h2><%= t(".authenticating_as") %> <%= @user.name %></h2>
+  <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t(".title") %></h1>
+
+  <div>
+    <h2 class="text-b3 font-semibold uppercase tracking-wide text-neutral-800 dark:text-neutral-200 mb-2"><%= t(".authenticating_as") %> <%= @user.name %></h2>
     <p><%= t("settings.edit.webauthn_credential_note") %></p>
   </div>
 
   <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session-cli--form", data: { options: @webauthn_options.to_json } do %>
-    <div class="form_bottom">
-      <p hidden class="l-text-red-600 js-webauthn-session-cli--error"></p>
+    <div>
+      <p hidden class="js-webauthn-session-cli--error"></p>
 
-      <%= submit_tag t(".authenticate"), class: 'js-webauthn-session-cli--submit form__submit form__submit--no-hover' %>
+      <%= submit_tag t(".authenticate"), class: 'js-webauthn-session-cli--submit' %>
     </div>
   <% end %>
 <% end %>

@@ -10,12 +10,12 @@ class Version::ProvenanceComponent < ApplicationComponent
   def view_template
     display_data = @attestation.display_data
 
-    div(class: "gem__attestation flex flex-col gap-4 sm:flex-row sm:items-center mt-4 first:mt-0", id: "gem__attestation") do
-      div(class: "gem__attestation__built_on flex shrink-0 items-center gap-4 p-5 rounded-lg border " \
+    div(class: "flex flex-col gap-4 sm:flex-row sm:items-center mt-4 first:mt-0", id: "gem__attestation") do
+      div(class: "flex shrink-0 items-center gap-4 p-5 rounded-lg border " \
                  "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black shadow-sm") do
         provider_box(display_data)
       end
-      div(class: "gem__attestation__grid flex flex-col gap-1 text-b4") do
+      div(class: "flex flex-col gap-1 text-b4") do
         div do
           p(class: "text-neutral-700 dark:text-neutral-400") { plain "Source Commit" }
           p { a(href: display_data[:source_commit_url], class: LINK) { display_data[:source_commit_string] } }
@@ -35,7 +35,7 @@ class Version::ProvenanceComponent < ApplicationComponent
   def provider_box(display_data)
     case display_data[:ci_platform]
     when "GitHub Actions"
-      div(class: "gem__attestation__built_on__github_actions flex shrink-0 items-center justify-center p-2 " \
+      div(class: "flex shrink-0 items-center justify-center p-2 " \
                  "rounded-md border border-orange-500 bg-orange-100 dark:bg-orange-950") do
         safe(<<~SVG)
           <svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,7 @@ class Version::ProvenanceComponent < ApplicationComponent
     else
       plain "Unknown"
     end
-    div(class: "gem__attestation__built_on__info flex flex-col gap-1 text-b4 text-neutral-700 dark:text-neutral-400") do
+    div(class: "flex flex-col gap-1 text-b4 text-neutral-700 dark:text-neutral-400") do
       p { plain "Built and signed on" }
       p { em(class: "not-italic font-semibold text-b3 text-neutral-800 dark:text-white") { display_data[:ci_platform] } }
       p { link_to "Build summary", display_data[:build_summary_url], target: "_blank", rel: "noopener", class: LINK }
