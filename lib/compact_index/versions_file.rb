@@ -46,7 +46,7 @@ module CompactIndex
 
     def write_gem_lines(io, gems)
       gems.each do |gem|
-        version_numbers = gem.versions.map(&:number_and_platform).join(",")
+        version_numbers = gem.versions.map(&:version_token).join(",")
         io << gem.name <<
           " " << version_numbers <<
           " #{gem.versions.last.info_checksum}\n"
