@@ -177,6 +177,7 @@ zh-TW:
       invalid_gem:
     destroy:
       success: 已刪除 API 金鑰：%{name}
+      already_expired:
     index:
       api_keys: API 金鑰
       name: 名稱
@@ -202,6 +203,8 @@ zh-TW:
       mfa: MFA
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key: 新 API 金鑰
     reset:
@@ -212,6 +215,7 @@ zh-TW:
     edit:
       edit_api_key: 編輯 API 金鑰
       invalid_key: 無法編輯無效的 API 金鑰。請刪除此金鑰並重新建立。
+      expired_key:
     all_gems: 所有 Gems
     gem_ownership_removed:
   dashboards:

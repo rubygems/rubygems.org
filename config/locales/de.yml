@@ -191,6 +191,7 @@ de:
       invalid_gem: Das ausgewählte Gem kann diesem Schlüssel nicht zugeordnet werden
     destroy:
       success: 'API-Schlüssel erfolgreich gelöscht: %{name}'
+      already_expired:
     index:
       api_keys: API-Schlüssel
       name: Name
@@ -217,6 +218,8 @@ de:
       mfa: MFA
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key: Neuer API-Schlüssel
     reset:
@@ -228,6 +231,7 @@ de:
       edit_api_key: API-Schlüssel bearbeiten
       invalid_key: Ein ungültiger API-Schlüssel kann nicht bearbeitet werden. Bitte
         löschen Sie ihn und erstellen Sie einen neuen.
+      expired_key:
     all_gems: Alle Gems
     gem_ownership_removed: Die Eigentümerschaft von %{rubygem_name} wurde nach der
       Zuordnung zu diesem Schlüssel entfernt.

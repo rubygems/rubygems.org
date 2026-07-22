@@ -182,6 +182,7 @@ en:
       invalid_gem: Selected gem cannot be scoped to this key
     destroy:
       success: "Successfully deleted API key: %{name}"
+      already_expired: The API key has already expired.
     index:
       api_keys: API keys
       name: Name
@@ -207,6 +208,8 @@ en:
       mfa: MFA
       expiration: Expiration
       update_owner: Update Owner
+      view_expired: View previous API keys
+      view_active: Back to active API keys
     new:
       new_api_key: New API key
     reset:
@@ -217,6 +220,7 @@ en:
     edit:
       edit_api_key: "Edit API key"
       invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
+      expired_key: An expired API key cannot be edited. Please create a new one.
     all_gems: All Gems
     gem_ownership_removed: Ownership of the %{rubygem_name} gem has been removed after being scoped to this key.
   dashboards:
