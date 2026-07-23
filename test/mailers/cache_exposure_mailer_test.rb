@@ -46,9 +46,8 @@ class CacheExposureMailerTest < ActionMailer::TestCase
       end
     end
 
-    should "enqueue delivery via the concurrency-capped job on the dedicated within_24_hours queue" do
-      # The custom delivery job carries the fleet-wide perform_limit; the queue keeps it off the
-      # transactional mailers queue. See CacheExposureMailDeliveryJobTest for the cap itself.
+    should "enqueue delivery via the custom job on the dedicated within_24_hours queue" do
+      # The dedicated queue keeps the bulk notices off the transactional mailers queue.
       assert_enqueued_with(job: CacheExposureMailDeliveryJob, queue: "within_24_hours") do
         CacheExposureMailer.cache_exposure_notice(@user).deliver_later
       end
