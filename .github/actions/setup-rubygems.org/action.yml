@@ -27,7 +27,7 @@ runs:
       if: inputs.install-avo-pro == 'true'
       run: | # zizmor: ignore[github-env] Only literal, trusted values are written.
         printf "BUNDLE_WITH=avo\nRAILS_GROUPS=avo\n" >> "$GITHUB_ENV"
-    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1.310.0
+    - uses: ruby/setup-ruby@003a5c4d8d6321bd302e38f6f0ec593f77f06600 # v1.319.0
       with:
         ruby-version: ${{ inputs.ruby-version }}
         bundler-cache: true
