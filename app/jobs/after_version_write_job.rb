@@ -21,7 +21,8 @@ class AfterVersionWriteJob < ApplicationJob
       version.info_checksum_v2 = gem_info.info_checksum
       version.save(validate: false)
 
-      SetLinksetHomeJob.perform_later(version:)
+      # Enqueues SetLinksetHomeJob once reordering is done (it depends on `latest`).
+      ReorderVersionsJob.perform_later(rubygem:)
     end
   end
 

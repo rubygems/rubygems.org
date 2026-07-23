@@ -103,6 +103,8 @@ class Deletion < ApplicationRecord
 
   def reindex
     Indexer.perform_later
+    # Reorder asynchronously (like the push path) to avoid deadlocks.
+    ReorderVersionsJob.perform_later(rubygem: version.rubygem)
     UploadInfoFileJob.perform_later(rubygem_name: rubygem_name)
     UploadVersionsFileJob.perform_later
     UploadNamesFileJob.perform_later

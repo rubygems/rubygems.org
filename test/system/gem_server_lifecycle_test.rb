@@ -43,6 +43,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
 
     Indexer.perform_now
     @subscriber = ActiveSupport::Notifications.subscribe("process_action.action_controller") do
+      perform_enqueued_jobs only: [ReorderVersionsJob]
       perform_enqueued_jobs only: [Indexer]
     end
 
