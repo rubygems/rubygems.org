@@ -108,6 +108,8 @@ es:
         disposable_email_domain:
         public_suffix:
         protected_provider:
+        publisher_already_exists:
+        invalid_extension:
       models:
         api_key:
           attributes:
@@ -1211,6 +1213,18 @@ es:
         environment_help_html:
         workflow_repository_owner_help_html:
         workflow_repository_name_help_html:
+      gitlab:
+        project_path_help_html:
+        ci_config_path_help_html:
+        environment_help_html:
+        ref_type_help_html:
+        branch_name_help_html:
+        table:
+          project_path:
+          ci_config_path:
+          environment:
+          ref_type:
+          branch_name:
       pending:
         rubygem_name_help_html:
   duration:

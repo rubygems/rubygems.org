@@ -516,6 +516,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_061553) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment", "workflow_repository_owner", "workflow_repository_name"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "oidc_trusted_publisher_gitlabs", force: :cascade do |t|
+    t.string "branch_name"
+    t.string "ci_config_path", null: false
+    t.datetime "created_at", null: false
+    t.string "environment"
+    t.string "project_path", null: false
+    t.string "ref_type"
+    t.datetime "updated_at", null: false
+    t.index ["project_path", "ci_config_path", "environment", "ref_type", "branch_name"], name: "index_oidc_trusted_publisher_gitlabs_on_claims", unique: true
+  end
+
   create_table "organization_invites", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "invitable_id", null: false
