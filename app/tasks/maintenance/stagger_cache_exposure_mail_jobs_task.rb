@@ -24,7 +24,7 @@ class Maintenance::StaggerCacheExposureMailJobsTask < MaintenanceTasks::Task
   private
 
   def queued_jobs
-    GoodJob::Job.where(job_class: JOB_CLASS, queue_name: QUEUE_NAME, finished_at: nil)
+    GoodJob::Job.where(job_class: JOB_CLASS, queue_name: QUEUE_NAME, finished_at: nil, performed_at: nil)
   end
 
   def next_wave_at

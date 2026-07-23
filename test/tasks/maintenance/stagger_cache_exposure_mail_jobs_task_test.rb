@@ -10,7 +10,7 @@ class Maintenance::StaggerCacheExposureMailJobsTaskTest < ActiveSupport::TestCas
   end
 
   def create_good_job(job_class: "CacheExposureMailDeliveryJob", queue_name: "within_24_hours",
-    scheduled_at: 1.hour.ago, finished_at: nil)
+    scheduled_at: 1.hour.ago, finished_at: nil, performed_at: nil)
     GoodJob::Job.create!(
       id: SecureRandom.uuid,
       active_job_id: SecureRandom.uuid,
@@ -18,6 +18,7 @@ class Maintenance::StaggerCacheExposureMailJobsTaskTest < ActiveSupport::TestCas
       queue_name: queue_name,
       scheduled_at: scheduled_at,
       finished_at: finished_at,
+      performed_at: performed_at,
       serialized_params: { "job_class" => job_class, "queue_name" => queue_name }
     )
   end
@@ -28,6 +29,7 @@ class Maintenance::StaggerCacheExposureMailJobsTaskTest < ActiveSupport::TestCas
       other_class = create_good_job(job_class: "ActionMailer::MailDeliveryJob")
       other_queue = create_good_job(queue_name: "mailers")
       finished = create_good_job(finished_at: Time.current)
+      running = create_good_job(performed_at: Time.current)
 
       covered = @task.collection.each_record.to_a
 
@@ -35,6 +37,7 @@ class Maintenance::StaggerCacheExposureMailJobsTaskTest < ActiveSupport::TestCas
       refute_includes covered, other_class
       refute_includes covered, other_queue
       refute_includes covered, finished
+      refute_includes covered, running
     end
   end
 
@@ -54,12 +57,14 @@ class Maintenance::StaggerCacheExposureMailJobsTaskTest < ActiveSupport::TestCas
     end
 
     should "not reschedule jobs outside the collection" do
-      untouched = create_good_job(job_class: "ActionMailer::MailDeliveryJob", scheduled_at: 2.hours.ago)
-      create_good_job
+      freeze_time do
+        untouched = create_good_job(job_class: "ActionMailer::MailDeliveryJob", scheduled_at: 2.hours.ago)
+        create_good_job
 
-      @task.collection.each { |batch| @task.process(batch) }
+        @task.collection.each { |batch| @task.process(batch) }
 
-      assert_equal 2.hours.ago.to_i, untouched.reload.scheduled_at.to_i
+        assert_equal 2.hours.ago, untouched.reload.scheduled_at
+      end
     end
 
     should "continue after the latest scheduled wave when resumed" do
