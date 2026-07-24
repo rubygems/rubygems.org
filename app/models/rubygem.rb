@@ -12,6 +12,7 @@ class Rubygem < ApplicationRecord
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
   has_many :owners, through: :ownerships, source: :user
   has_many :owners_including_unconfirmed, through: :ownerships_including_unconfirmed, source: :user
+  has_many :historical_ownerships, dependent: :destroy, inverse_of: :rubygem
   has_many :push_notifiable_owners, ->(gem) { gem.owners.push_notifiable_owners }, through: :ownerships, source: :user
   has_many :ownership_notifiable_owners, ->(gem) { gem.owners.ownership_notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
@@ -341,6 +342,7 @@ class Rubygem < ApplicationRecord
   def disown
     ownerships_including_unconfirmed.find_each(&:delete)
     ownerships_including_unconfirmed.clear
+    historical_ownerships.current.update_all(removed_at: Time.current)
 
     oidc_rubygem_trusted_publishers.find_each(&:delete)
     oidc_rubygem_trusted_publishers.clear

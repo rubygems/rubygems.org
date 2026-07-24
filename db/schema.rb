@@ -362,6 +362,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_061553) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "historical_ownerships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "first_owned_at", null: false
+    t.datetime "removed_at"
+    t.integer "role", null: false
+    t.bigint "rubygem_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["rubygem_id", "user_id"], name: "index_historical_ownerships_on_rubygem_id_and_user_id"
+    t.index ["rubygem_id"], name: "index_historical_ownerships_on_rubygem_id"
+    t.index ["user_id"], name: "index_historical_ownerships_on_user_id"
+  end
+
   create_table "ip_addresses", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "geoip_info_id"
@@ -789,6 +802,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_061553) do
   add_foreign_key "events_user_events", "geoip_infos"
   add_foreign_key "events_user_events", "ip_addresses"
   add_foreign_key "events_user_events", "users"
+  add_foreign_key "historical_ownerships", "rubygems"
+  add_foreign_key "historical_ownerships", "users"
   add_foreign_key "ip_addresses", "geoip_infos"
   add_foreign_key "linksets", "rubygems", name: "linksets_rubygem_id_fk"
   add_foreign_key "memberships", "organizations"
