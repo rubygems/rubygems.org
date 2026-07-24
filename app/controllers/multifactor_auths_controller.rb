@@ -5,6 +5,8 @@ class MultifactorAuthsController < ApplicationController
   include RequireMfa
   include WebauthnVerifiable
 
+  layout "hammy"
+
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_mfa_enabled, only: %i[update otp_update]
   before_action :find_mfa_user, only: %i[update otp_update webauthn_update]
