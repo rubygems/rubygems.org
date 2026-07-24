@@ -19,14 +19,27 @@ updates:
       patterns: ["aws-*"]
     flipper:
       patterns: ["flipper*"]
+    minor-and-patch:
+      patterns: ["*"]
+      update-types:
+        - minor
+        - patch
 - package-ecosystem: github-actions
-  directory: "/"
+  directories:
+    - "/"
+    - "/.github/actions/setup-rubygems.org"
   schedule:
     interval: weekly
   open-pull-requests-limit: 99
   cooldown:
     default-days: 7
   groups:
+    setup-ruby:
+      patterns: ["ruby/setup-ruby"]
+      update-types:
+        - patch
+        - minor
+      group-by: dependency-name
     github-actions-patch-minor:
       patterns: ["*"]
       update-types:

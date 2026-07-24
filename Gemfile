@@ -7,8 +7,8 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.1.3"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.226"
-gem "aws-sdk-sqs", "~> 1.116"
+gem "aws-sdk-s3", "~> 1.227"
+gem "aws-sdk-sqs", "~> 1.117"
 gem "bootsnap", "~> 1.24"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
@@ -120,7 +120,7 @@ group :development, :test do
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.88", require: false
-  gem "rubocop-rails", "~> 2.35", require: false
+  gem "rubocop-rails", "~> 2.36", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.39", require: false
   gem "rubocop-capybara", "~> 3.0", require: false
@@ -128,7 +128,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "rails-erd", "~> 2.0"
+  gem "rails-erd", "~> 2.1"
   gem "listen", "~> 3.10"
   gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 3.0"
@@ -148,8 +148,8 @@ group :test do
   gem "shoulda-matchers", "~> 8.0"
   gem "capybara-playwright-driver", "~> 0.5"
   gem "webmock", "~> 3.26"
-  gem "simplecov", "~> 0.22", require: false
-  gem "simplecov-cobertura", "~> 3.2", require: false
+  gem "simplecov", "~> 1.0", require: false
+  gem "simplecov-cobertura", "~> 4.0", require: false
   gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
   gem "minitest-reporters", "~> 1.8"

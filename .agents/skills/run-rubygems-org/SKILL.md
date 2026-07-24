@@ -23,7 +23,7 @@ If you're on a fresh machine, pick whichever path you prefer:
 
 ```bash
 # Path A: Docker (one command for all three backing services)
-mise install                  # ruby 4.0.5 per .ruby-version
+mise install                  # ruby 4.0.6 per .ruby-version
 docker compose up -d db cache search
 bin/setup                     # bundle, db:prepare, db:seed, playwright install
 

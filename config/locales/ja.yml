@@ -178,6 +178,7 @@ ja:
       invalid_gem: 選択されたgemはこのキーのスコープにありません
     destroy:
       success: APIキーが正常に削除されました：%{name}
+      already_expired:
     index:
       api_keys: APIキー
       name: 名前
@@ -203,6 +204,8 @@ ja:
       mfa: MFA
       expiration: 期限
       update_owner: 所有者を更新
+      view_expired:
+      view_active:
     new:
       new_api_key: 新しいAPIキー
     reset:
@@ -213,6 +216,7 @@ ja:
     edit:
       edit_api_key: APIキーを編集する
       invalid_key: 正しくないAPIキーは編集できません。削除して新規作成してください。
+      expired_key:
     all_gems: 全てのgem
     gem_ownership_removed: このキーのスコープにあった%{rubygem_name}の所有権が削除されました。
   dashboards:
@@ -361,6 +365,10 @@ ja:
     gem_yanked:
       subject: "%{gem} gemが%{host}からヤンクされました"
       title: gemがヤンクされました
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject: "%{host}のAPIキーがリセットされました"
       title: APIキーがリセットされました
@@ -1164,6 +1172,7 @@ ja:
       api_key:
         api_key_created: APIキーが作成されました
         api_key_deleted: APIキーが削除されました
+        api_key_cache_exposure_revoked:
         api_key_name: 名前：%{name}
         api_key_scopes: スコープ：%{scopes}
         api_key_gem_html: gem：%{gem}

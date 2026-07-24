@@ -101,6 +101,23 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "cache headers" do
+      setup do
+        @user = create(:user)
+        create(:webauthn_credential, user: @user)
+        authorize_with("#{@user.email}:#{@user.password}")
+        post :create
+      end
+
+      should respond_with :success
+
+      # The body is a single-use path_token link; it must never be shared-cached.
+      should "deny shared caching of the minted path token" do
+        assert_equal "private, no-store", @response.headers["Cache-Control"]
+        assert_equal "max-age=0", @response.headers["Surrogate-Control"]
+      end
+    end
+
     context "user has not enabled webauthn" do
       setup do
         @user = create(:user)

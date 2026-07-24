@@ -51,6 +51,6 @@ jobs:
         with:
           ruby-version: .ruby-version
           # Keep in sync with RUBYGEMS_VERSION in .github/workflows/test.yml
-          rubygems-version: "4.0.12"
+          rubygems-version: "4.0.16"
           install-avo-pro: "false"
           install-playwright: "true"

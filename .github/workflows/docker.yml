@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
-      RUBYGEMS_VERSION: "4.0.12"
+      RUBYGEMS_VERSION: "4.0.16"
       RUBY_VERSION: .ruby-version
       RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
     permissions:

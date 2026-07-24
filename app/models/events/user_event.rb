@@ -45,6 +45,12 @@ class Events::UserEvent < ApplicationRecord
     attribute :api_key_gid, :global_id
   end
 
+  CACHE_EXPOSURE_KEY_REVOKED = define_event "user:api_key:cache_exposure_revoked" do
+    attribute :name, :string
+
+    attribute :api_key_gid, :global_id
+  end
+
   PASSWORD_CHANGED = define_event "user:password:changed"
 
   PASSWORD_COMPROMISED = define_event "user:password:compromised" do

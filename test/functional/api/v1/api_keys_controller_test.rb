@@ -15,27 +15,6 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     @request.env["HTTP_AUTHORIZATION"] = "Basic #{Base64.encode64(str)}"
   end
 
-  def self.should_respond_to(format, to_meth = :to_s)
-    context "with #{format.to_s.upcase} and with confirmed user" do
-      setup do
-        @user = create(:user)
-        authorize_with("#{@user.email}:#{@user.password}")
-        get :show, format: format
-      end
-      should respond_with :success
-      should "return API key" do
-        response = yield(@response.body)
-
-        assert_not_nil response
-        assert_kind_of Hash, response
-
-        hashed_key = @user.api_keys.first.hashed_key
-
-        assert_equal hashed_key, Digest::SHA256.hexdigest(response["rubygems_api_key".send(to_meth)])
-      end
-    end
-  end
-
   def self.should_deny_access
     should "deny access" do
       assert_response :unauthorized
@@ -67,53 +46,6 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       hashed_key = @user.api_keys.first.hashed_key
 
       assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-    end
-  end
-
-  def self.should_deliver_api_key_created_email
-    should "deliver api key created email" do
-      refute_empty ActionMailer::Base.deliveries
-      email = ActionMailer::Base.deliveries.last
-
-      assert_equal [@user.email], email.to
-      assert_equal ["no-reply@mailer.rubygems.org"], email.from
-      assert_equal "New API key created for rubygems.org", email.subject
-      assert_match "legacy-key", email.body.to_s
-    end
-  end
-
-  def self.should_not_signin_user
-    should "not sign in user" do
-      refute_predicate @controller.request.env[:clearance], :signed_in?
-    end
-  end
-
-  def self.should_expect_otp_for_show
-    context "without OTP" do
-      setup { get :show }
-      should_deny_access_missing_otp
-    end
-
-    context "with incorrect OTP" do
-      setup do
-        @request.env["HTTP_OTP"] = "11111"
-        get :show
-      end
-
-      should_deny_access_incorrect_otp
-    end
-
-    context "with correct OTP" do
-      setup do
-        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-          get :show
-        end
-      end
-
-      should_return_api_key_successfully
-      should_deliver_api_key_created_email
-      should_not_signin_user
     end
   end
 
@@ -174,110 +106,30 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
-  context "on GET to show with invalid credentials" do
-    setup do
-      @user = create(:user)
-      authorize_with("bad\0:creds")
+  context "on GET to show (retired endpoint)" do
+    # GET /api/v1/api_key is retired: 410 Gone, mints nothing, regardless of method or credentials.
+    should "respond 410 Gone with no credentials" do
       get :show
-    end
-    should "deny access" do
-      assert_response :unauthorized
-      assert_match "HTTP Basic: Access denied.", @response.body
-    end
-  end
 
-  context "on GET to show" do
-    should_respond_to(:json) do |body|
-      JSON.load body
+      assert_response :gone
+      assert_match "retired", @response.body
     end
 
-    should_respond_to(:yaml, :to_sym) do |body|
-      YAML.safe_load(body, permitted_classes: [Symbol])
-    end
+    should "respond 410 Gone with valid credentials and mint nothing" do
+      user = create(:user)
+      authorize_with("#{user.email}:#{user.password}")
 
-    context "with no credentials" do
-      setup { get :show }
-      should_deny_access
-    end
-
-    context "with bad credentials" do
-      setup do
-        @user = create(:user)
-        authorize_with("bad:creds")
-        get :show
-      end
-      should_deny_access
-    end
-
-    context "with credentials with invalid encoding" do
-      setup do
-        @user = create(:user)
-        authorize_with(String.new("\x12\xff\x12:creds", encoding: Encoding::UTF_8))
-        get :show
-      end
-      should_deny_access
-    end
-
-    context "with correct credentials" do
-      setup do
-        @user = create(:user)
-        authorize_with("#{@user.email}:#{@user.password}")
-        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-          get :show, format: "text"
-        end
-      end
-
-      should_return_api_key_successfully
-      should_deliver_api_key_created_email
-      should_not_signin_user
-    end
-
-    context "when user has enabled MFA for UI and API" do
-      setup do
-        @user = create(:user)
-        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-        authorize_with("#{@user.email}:#{@user.password}")
-      end
-
-      should_expect_otp_for_show
-    end
-
-    context "when user has enabled MFA for UI and gem signin" do
-      setup do
-        @user = create(:user)
-        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_gem_signin)
-        authorize_with("#{@user.email}:#{@user.password}")
-      end
-
-      should_expect_otp_for_show
-    end
-
-    context "with unconfirmed email" do
-      setup do
-        @user = create(:user, :unconfirmed)
-        authorize_with("#{@user.email}:#{@user.password}")
+      assert_no_difference -> { ApiKey.count } do
         get :show
       end
 
-      should respond_with :forbidden
-
-      should "return email confirmation error" do
-        assert_match "Please confirm your email address", @response.body
-      end
+      assert_response :gone
     end
 
-    context "when user has old sha1 password" do
-      setup do
-        @user = create(:user, encrypted_password: "b35e3b6e1b3021e71645b4df8e0a3c7fd98a95fa")
-      end
+    should "respond 410 Gone to a HEAD request" do
+      head :show
 
-      should "deny access" do
-        authorize_with("#{@user.handle}:pass")
-        get :show
-
-        assert_response :unauthorized
-        assert_match "HTTP Basic: Access denied.", @response.body
-      end
+      assert_response :gone
     end
   end
 

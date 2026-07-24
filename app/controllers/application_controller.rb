@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
   before_action :set_error_context_user
   before_action :set_user_tag
   before_action :set_current_request
+  after_action :deny_shared_cache_when_authenticated
 
   add_flash_types :notice_html
 
@@ -113,6 +114,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_signin
     response.headers["Cache-Control"] = "private, max-age=0"
+    response.headers["Surrogate-Control"] = "max-age=0"
     redirect_to sign_in_path, alert: t("please_sign_in")
   end
 
@@ -205,8 +207,18 @@ class ApplicationController < ActionController::Base
 
   def disable_cache
     response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Surrogate-Control"] = "max-age=0"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
+  def deny_shared_cache_when_authenticated
+    return unless signed_in? || @api_key.present?
+
+    response.headers["Cache-Control"] = "private, no-store"
+    response.headers["Surrogate-Control"] = "max-age=0"
+    vary = response.headers["Vary"].to_s.split(",").map(&:strip).compact_blank
+    response.headers["Vary"] = (vary + %w[Cookie Authorization]).uniq.join(", ")
   end
 
   # Avoid leaking confirmation token in referrer header on certain pages

@@ -32,7 +32,7 @@ jobs:
     permissions:
       contents: read
     env:
-      RUBYGEMS_VERSION: "4.0.12"
+      RUBYGEMS_VERSION: "4.0.16"
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
       TOXIPROXY_LISTEN_HOST: "0.0.0.0"

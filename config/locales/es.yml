@@ -187,6 +187,7 @@ es:
       invalid_gem: La gema seleccionada no se puede incluir en esta clave
     destroy:
       success: 'Clave de API eliminada con éxito: %{name}'
+      already_expired:
     index:
       api_keys: Claves de API
       name: Nombre
@@ -213,6 +214,8 @@ es:
       mfa: AMF
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key: Nueva clave de API
     reset:
@@ -225,6 +228,7 @@ es:
       edit_api_key: Editar clave de API
       invalid_key: No se puede editar una clave de API inválida. Por favor bórrala
         y crea una nueva.
+      expired_key:
     all_gems: Todas las gemas
     gem_ownership_removed: Se ha eliminado la propiedad de %{rubygem_name} tras haber
       sido añadida a esta clave.
@@ -385,6 +389,10 @@ es:
     gem_yanked:
       subject: Gema %{gem} eliminada de %{host}
       title: GEMA ELIMINADA
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject: Clave de API de %{host} restablecida
       title: CLAVE DE API RESTABLECIDA
@@ -1262,6 +1270,7 @@ es:
       api_key:
         api_key_created:
         api_key_deleted:
+        api_key_cache_exposure_revoked:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:

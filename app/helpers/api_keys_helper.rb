@@ -43,8 +43,8 @@ module ApiKeysHelper
     content_tag(
       :span,
       "#{name} [?]",
-      class: "tooltip__text",
-      data: { tooltip: t("api_keys.gem_ownership_removed", rubygem_name: name) }
+      class: "cursor-help",
+      title: t("api_keys.gem_ownership_removed", rubygem_name: name)
     )
   end
 end
