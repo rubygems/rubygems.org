@@ -27,25 +27,34 @@ class Maintenance::NotifyCacheExposedInactiveUsersTask < MaintenanceTasks::Task
   private
 
   def unnotified_inactive_users
-    inactive_affected_users.where.not(id: notified_user_ids)
+    inactive_affected_users.where.not(notice_email_events.arel.exists)
   end
 
   def inactive_affected_users
-    revoked_user_ids = Events::UserEvent
-      .where(tag: Events::UserEvent::CACHE_EXPOSURE_KEY_REVOKED)
-      .select(:user_id)
-    inactive_owner_ids = ApiKey.legacy.expired
-      .where.not(owner_id: revoked_user_ids)
-      .select(:owner_id)
-    User.where(id: inactive_owner_ids).where(blocked_email: nil)
+    User.where(blocked_email: nil)
+      .where(expired_legacy_keys.arel.exists)
+      .where.not(revocation_events.arel.exists)
   end
 
-  def notified_user_ids
+  def expired_legacy_keys
+    ApiKey.expired
+      .where(owner_type: "User", name: ApiKey::LEGACY_KEY_NAME)
+      .where.not(OIDC::IdToken.where("oidc_id_tokens.api_key_id = api_keys.id").arel.exists)
+      .where("api_keys.owner_id = users.id")
+  end
+
+  def revocation_events
+    Events::UserEvent
+      .where(tag: Events::UserEvent::CACHE_EXPOSURE_KEY_REVOKED)
+      .where("events_user_events.user_id = users.id")
+  end
+
+  def notice_email_events
     Events::UserEvent
       .where(tag: Events::UserEvent::EMAIL_SENT)
       .where("additional ->> 'action' = ?", NOTICE_MAILER_ACTION)
       .where("additional ->> 'mailer' = ?", NOTICE_MAILER_NAME)
-      .select(:user_id)
+      .where("events_user_events.user_id = users.id")
   end
 
   def max_user_id_not_before_min
