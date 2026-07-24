@@ -66,6 +66,13 @@ class Maintenance::NotifyCacheExposedInactiveUsersTaskTest < ActiveSupport::Test
       refute_includes @task.collection, user
     end
 
+    should "exclude an owner whose expired legacy-named key is OIDC-backed" do
+      token = create(:oidc_id_token)
+      token.api_key.update_columns(name: ApiKey::LEGACY_KEY_NAME, expires_at: 1.day.ago)
+
+      refute_includes @task.collection, token.api_key.owner
+    end
+
     should "exclude blocked owners" do
       active = create(:user)
       blocked = create(:user)
