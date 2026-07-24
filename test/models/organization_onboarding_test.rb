@@ -12,12 +12,12 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     @onboarding = create(
       :organization_onboarding,
-      name_type: "gem",
-      organization_name: "Test Organization",
-      organization_handle: @rubygem.name,
+      organization_name: "My Super Sick Organization",
+      organization_handle: "super_sick_org",
       created_by: @owner,
-      namesake_rubygem: @rubygem
+      rubygems: [@rubygem]
     )
+
     maintainer_invite = @onboarding.invites.first
     maintainer_invite.update(role: :maintainer)
   end
@@ -31,6 +31,31 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       should "require a onboarded by user" do
         assert_predicate @onboarding, :invalid?
         assert_equal ["must exist"], @onboarding.errors[:created_by]
+      end
+    end
+
+    context "A user creates an organization without gems" do
+      setup do
+        @onboarding = build(
+          :organization_onboarding,
+          organization_name: "Test Organization",
+          organization_handle: "test-organization",
+          created_by: @owner
+        )
+      end
+
+      should "create a valid organization" do
+        assert_predicate(@onboarding, :valid?)
+        @onboarding.save!
+
+        @onboarding.onboard!
+
+        @onboarding.reload
+
+        organization = @onboarding.organization
+
+        assert_equal("test-organization", organization.handle)
+        assert_equal("Test Organization", organization.name)
       end
     end
 
@@ -75,53 +100,55 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       end
     end
 
-    context "when the user specifices a user as the name of the organization" do
-      setup do
-        @onboarding.name_type = :user
+    context "organization_handle" do
+      should allow_value("CapsLOCK").for(:organization_handle)
+      should_not allow_value(nil).for(:organization_handle)
+      should_not allow_value("1abcde").for(:organization_handle)
+      should_not allow_value("abc^%def").for(:organization_handle)
+      should_not allow_value("abc\n<script>bad").for(:organization_handle)
+
+      should "be between 2 and 40 characters" do
+        @onboarding.organization_handle = "a" * 41
+        @onboarding.valid?
+
+        refute_predicate @onboarding, :valid?
+        assert_contains @onboarding.errors[:organization_handle], "is too long (maximum is 40 characters)"
+
+        @onboarding.organization_handle = "a"
+        @onboarding.valid?
+
+        refute_predicate @onboarding, :valid?
+        assert_contains @onboarding.errors[:organization_handle], "is too short (minimum is 2 characters)"
+
+        @onboarding.organization_handle = "abcdef"
+        @onboarding.valid?
+
+        assert_predicate @onboarding, :valid?
+        assert_nil @onboarding.errors[:organization_handle].first
       end
 
-      should "set the Organization Onboarding handle to the handle of the User" do
-        assert_equal @rubygem.name, @onboarding.organization_handle
+      should "be invalid when an empty string" do
+        @onboarding.update(organization_handle: "")
+
+        refute_predicate @onboarding, :valid?
       end
     end
 
-    context "when the user specifies a gem as the name of the organization" do
-      setup do
-        @onboarding.name_type = :gem
+    context "when the organization handle is reserved" do
+      should "be invalid" do
+        @onboarding.organization_handle = "admin"
+
+        assert_predicate @onboarding, :invalid?
+        assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
       end
+    end
 
-      context "when the name is a valid gem that the user owns" do
-        should "be valid" do
-          @onboarding.organization_handle = @rubygem.name
+    context "when the organization handle is reserved (case insensitive)" do
+      should "be invalid" do
+        @onboarding.organization_handle = "ADMIN"
 
-          assert_predicate @onboarding, :valid?
-        end
-      end
-
-      context "when the name is not valid" do
-        should "it is ignored and set to the gem name" do
-          @onboarding.organization_handle = "invalid"
-
-          assert_predicate @onboarding, :invalid?
-        end
-      end
-
-      context "when the organization handle is reserved" do
-        should "be invalid" do
-          @onboarding.organization_handle = "admin"
-
-          assert_predicate @onboarding, :invalid?
-          assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
-        end
-      end
-
-      context "when the organization handle is reserved (case insensitive)" do
-        should "be invalid" do
-          @onboarding.organization_handle = "ADMIN"
-
-          assert_predicate @onboarding, :invalid?
-          assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
-        end
+        assert_predicate @onboarding, :invalid?
+        assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
       end
     end
   end
@@ -131,24 +158,14 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       other_owner = create(:user)
       create(:rubygem, owners: [@owner, other_owner])
 
-      @onboarding = create(:organization_onboarding, name_type: "gem", organization_handle: @rubygem.name, created_by: @owner,
-namesake_rubygem: @rubygem, rubygems: [@rubygem])
+      @onboarding = create(
+        :organization_onboarding,
+        organization_handle: @rubygem.name,
+        created_by: @owner,
+        rubygems: [@rubygem]
+      )
 
       assert_equal @onboarding.users, [@maintainer]
-    end
-  end
-
-  context "#set_user_handle" do
-    context "when the gem name is set to user" do
-      setup do
-        @onboarding.name_type = :user
-      end
-
-      should "automatically set the organization handle to the handle of the user" do
-        @onboarding.valid?
-
-        assert_equal @owner.handle, @onboarding.organization_handle
-      end
     end
   end
 
@@ -169,13 +186,28 @@ namesake_rubygem: @rubygem, rubygems: [@rubygem])
     end
 
     should "add invites for the owners and maintainers of the specified rubygems" do
-      other_user = create(:user)
-      rubygem = create(:rubygem, owners: [@owner, other_user])
-      @onboarding.rubygems = [rubygem.id]
-      @onboarding.save
-      @onboarding.reload
+      owner = create(:user)
+      maintainer = create(:user)
 
-      assert_equal [@maintainer, other_user].map(&:handle).sort, @onboarding.users.map(&:handle).sort
+      existing_rubygem = create(:rubygem, owners: [owner], maintainers: [maintainer])
+
+      onboarding = create(
+        :organization_onboarding,
+        organization_name: "My Super Sick Organization",
+        organization_handle: "super_sick_organization",
+        rubygems: [existing_rubygem],
+        created_by: owner
+      )
+
+      other_user = create(:user)
+      rubygem = create(:rubygem, owners: [owner, other_user])
+
+      onboarding.rubygems = [rubygem.id]
+      onboarding.save!
+
+      onboarding.reload
+
+      assert_equal([other_user], onboarding.users)
     end
   end
 
