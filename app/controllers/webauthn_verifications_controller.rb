@@ -10,6 +10,8 @@ class WebauthnVerificationsController < ApplicationController
   before_action :set_verification, :set_user, except: %i[successful_verification failed_verification]
   before_action :check_show_verification_status, only: %i[successful_verification failed_verification]
 
+  layout "hammy"
+
   def prompt
     redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
