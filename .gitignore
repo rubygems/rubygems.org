@@ -1,8 +1,6 @@
 *.rbc
 *.rdb
 *.sql
-*.swp
-*~
 .bundle
 .sass-cache/
 _site/
@@ -28,6 +26,17 @@ REVISION
 /doc/erd.*
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Vim swap/session/temp files
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+*.swp
+Session.vim
+.netrwhist
+*~
 
 # CodeQL
 codeql-db/
