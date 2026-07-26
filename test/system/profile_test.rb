@@ -189,30 +189,47 @@ class ProfileTest < ApplicationSystemTestCase
     assert_no_enqueued_jobs
   end
 
-  test "seeing the gems ordered by downloads" do
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 5)
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 2)
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 7)
+  test "seeing owned gems ordered by downloads with their most recent versions" do
+    platform_gem = create(:rubygem, name: "platform-gem", owners: [@user], downloads: 7)
+    platform_release = create(:version,
+      rubygem: platform_gem,
+      number: "2.0.0",
+      description: "Current platform gem release",
+      created_at: Time.zone.parse("2026-01-03"))
+    create(:version, rubygem: platform_gem, number: "3.0.0", platform: "java")
+
+    prerelease_gem = create(:rubygem, name: "prerelease-gem", owners: [@user], downloads: 5)
+    stable_release = create(:version,
+      rubygem: prerelease_gem,
+      number: "1.5.0",
+      description: "Current stable release",
+      created_at: Time.zone.parse("2026-01-02"))
+    create(:version, rubygem: prerelease_gem, number: "2.0.0.pre")
+    create(:version, :yanked, rubygem: prerelease_gem, number: "3.0.0")
+
+    simple_gem = create(:rubygem, name: "simple-gem", owners: [@user], downloads: 2)
+    simple_release = create(:version,
+      rubygem: simple_gem,
+      number: "4.0.0",
+      description: "Current simple gem release",
+      created_at: Time.zone.parse("2026-01-01"))
 
     sign_in
     visit profile_path("nick1")
 
-    downloads = page.all("[data-testid='rubygem-downloads']")
+    assert_equal %w[platform-gem prerelease-gem simple-gem], page.all("article li h4").map(&:text)
 
-    assert_equal("7", downloads[0].text)
-    assert_equal("5", downloads[1].text)
-    assert_equal("2", downloads[2].text)
-  end
+    [
+      [platform_gem, platform_release, "7"],
+      [prerelease_gem, stable_release, "5"],
+      [simple_gem, simple_release, "2"],
+    ].each do |rubygem, version, downloads|
+      row = page.find("a[href='#{rubygem_path(rubygem.slug)}']")
 
-  test "seeing the latest version when there is a newer previous version" do
-    create(:rubygem, owners: [@user], number: "1.0.1")
-    create(:version, rubygem: Rubygem.first, number: "0.0.2")
-
-    sign_in
-    visit profile_path("nick1")
-
-    version = page.find("[data-testid='rubygem-version']").text
-
-    assert_equal("1.0.1", version)
+      assert_equal version.description, row[:title]
+      assert_equal version.number, row.find("[data-testid='rubygem-version']").text
+      assert_equal downloads, row.find("[data-testid='rubygem-downloads']").text
+      assert_includes row.text, version.created_at.to_date.to_fs(:long)
+    end
   end
 end
