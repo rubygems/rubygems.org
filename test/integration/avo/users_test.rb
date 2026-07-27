@@ -23,5 +23,6 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert page.has_content? user.name
+    assert page.has_content? "Delete User"
   end
 end
