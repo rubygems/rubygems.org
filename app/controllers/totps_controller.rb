@@ -5,6 +5,8 @@ class TotpsController < ApplicationController
   include RequireMfa
   include WebauthnVerifiable
 
+  layout "hammy", only: :new
+
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_totp_disabled, only: %i[new create]
   before_action :require_totp_enabled, only: :destroy
