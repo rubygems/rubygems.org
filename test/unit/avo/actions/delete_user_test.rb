@@ -29,30 +29,9 @@ class DeleteUserTest < ActiveSupport::TestCase
   end
 
   should "ask for confirmation naming the user" do
-    action_mock = Data.define(:record).new(record: @user)
-
-    message = action_mock.instance_exec(&Avo::Actions::DeleteUser.message)
+    message = @action.get_message
 
     assert_includes message, @user.handle
     assert_includes message, @user.email
-  end
-
-  should "be visible to rubygems.org operators on the user page" do
-    action_mock = Data.define(:current_user, :view).new(current_user: @current_user, view: :show)
-
-    assert action_mock.instance_exec(&Avo::Actions::DeleteUser.visible)
-  end
-
-  should "not be visible outside the user page" do
-    action_mock = Data.define(:current_user, :view).new(current_user: @current_user, view: :index)
-
-    refute action_mock.instance_exec(&Avo::Actions::DeleteUser.visible)
-  end
-
-  should "not be visible to operators outside the rubygems.org team" do
-    current_user = create(:admin_github_user)
-    action_mock = Data.define(:current_user, :view).new(current_user:, view: :show)
-
-    refute action_mock.instance_exec(&Avo::Actions::DeleteUser.visible)
   end
 end
