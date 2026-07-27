@@ -222,7 +222,7 @@ class ProfileTest < ApplicationSystemTestCase
     [
       [platform_gem, platform_release, "7"],
       [prerelease_gem, stable_release, "5"],
-      [simple_gem, simple_release, "2"],
+      [simple_gem, simple_release, "2"]
     ].each do |rubygem, version, downloads|
       row = page.find("a[href='#{rubygem_path(rubygem.slug)}']")
 
