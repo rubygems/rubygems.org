@@ -2,8 +2,8 @@
 
 require "simplecov"
 SimpleCov.start "rails" do
-  add_filter "lib/tasks"
-  add_filter "lib/rails_development_log_formatter.rb"
+  skip "lib/tasks"
+  skip "lib/rails_development_log_formatter.rb"
 
   if ENV["CI"]
     require "simplecov-cobertura"
