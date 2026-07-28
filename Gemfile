@@ -12,7 +12,7 @@ gem "aws-sdk-sqs", "~> 1.117"
 gem "bootsnap", "~> 1.24"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.37"
+gem "datadog", "~> 2.38"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.35"
 gem "faraday", "~> 2.14"
@@ -23,7 +23,7 @@ gem "flipper-active_record", "~> 1.4"
 gem "flipper-ui", "~> 1.4"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.9.0", require: false
+gem "honeybadger", "~> 6.9.1", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -87,7 +87,7 @@ end
 
 # Logging
 gem "amazing_print", "~> 2.0"
-gem "rails_semantic_logger", "~> 5.0"
+gem "rails_semantic_logger", "~> 5.1"
 gem "pp", "0.6.4"
 
 # Former default gems
