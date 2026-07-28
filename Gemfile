@@ -122,7 +122,7 @@ group :development, :test do
   gem "rubocop", "~> 1.88", require: false
   gem "rubocop-rails", "~> 2.36", require: false
   gem "rubocop-performance", "~> 1.26", require: false
-  gem "rubocop-minitest", "~> 0.39", require: false
+  gem "rubocop-minitest", "~> 0.40", require: false
   gem "rubocop-capybara", "~> 3.0", require: false
   gem "rubocop-factory_bot", "~> 2.28", require: false
 end
