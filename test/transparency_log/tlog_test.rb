@@ -4,7 +4,7 @@ require "test_helper"
 
 class TransparencyLog::TlogTest < ActiveSupport::TestCase
   setup do
-    @tlog = TransparencyLog::Tlog.new()
+    @tlog = TransparencyLog::Tlog.new
     @transparency_log_event = create(:transparency_log_event)
   end
 

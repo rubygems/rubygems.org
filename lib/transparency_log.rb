@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "./transparency_log/configuration"
+module TransparencyLog
+end
+
+require_relative "transparency_log/configuration"
 
 module TransparencyLog
   class << self

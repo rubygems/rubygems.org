@@ -14,7 +14,7 @@ TransparencyLogEvent::RekorEntry = Data.define(
   def self.from_json(response_body)
     new(
       response_body: response_body,
-      origin: '',
+      origin: "",
       kind: response_body["kindVersion"]["kind"],
       version: response_body["kindVersion"]["version"],
       index: response_body["logIndex"],
