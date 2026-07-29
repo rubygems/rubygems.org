@@ -28,6 +28,25 @@ class DeleteUserTest < ActiveSupport::TestCase
     end
   end
 
+  should "not enqueue deletion when the user is the sole owner of an old gem version" do
+    rubygem = create(:rubygem, owners: [@user])
+    create(:version, rubygem:, created_at: 31.days.ago)
+    args = {
+      current_user: @current_user,
+      resource: @resource,
+      records: [@user],
+      fields: {
+        comment: "Deleting at the user's request"
+      },
+      query: nil
+    }
+
+    assert_no_enqueued_jobs only: DeleteUserJob do
+      @action.handle(**args)
+    end
+    assert_equal Avo::Actions::DeleteUser.blocked_reason, @action.response.dig(:messages, 0, :body)
+  end
+
   should "ask for confirmation naming the user" do
     message = @action.get_message
 

@@ -1,5 +1,8 @@
 ---
 en:
+  admin:
+    delete_user:
+      blocked_reason: Blocked because this user is the sole owner of gem versions published more than 30 days ago.
   credentials_required: Credentials required
   copied: Copied!
   copy_to_clipboard: Copy to clipboard

@@ -1,5 +1,8 @@
 ---
 nl:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required:
   copied: Gekopieerd
   copy_to_clipboard: Kopieer naar klembord

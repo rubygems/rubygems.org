@@ -1,5 +1,8 @@
 ---
 zh-TW:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required: 需要認證
   copied: 已複製
   copy_to_clipboard: 複製

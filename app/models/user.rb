@@ -245,6 +245,14 @@ class User < ApplicationRecord
       SELECT rubygem_id FROM ownerships GROUP BY rubygem_id HAVING count(rubygem_id) = 1)')
   end
 
+  def sole_owner_of_old_gem_versions?
+    only_owner_gems
+      .joins(:versions)
+      .where(versions: { indexed: true })
+      .where(Version.arel_table[:created_at].lt(Deletion::MAXIMUM_VERSION_AGE.ago))
+      .exists?
+  end
+
   def remember_me!
     self.remember_token = Clearance::Token.new
     self.remember_token_expires_at = Gemcutter::REMEMBER_FOR.from_now

@@ -1,5 +1,8 @@
 ---
 pt-BR:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required:
   copied: Copiado
   copy_to_clipboard: Copiar
