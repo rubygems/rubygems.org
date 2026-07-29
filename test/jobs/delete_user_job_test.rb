@@ -27,6 +27,29 @@ class DeleteUserJobTest < ActiveJob::TestCase
     refute_predicate user, :deleted_at
   end
 
+  test "does not send email when a successful deletion has emails disabled" do
+    user = create(:user)
+    rubygem = create(:rubygem, name: "admin-email-suppression", owners: [user])
+    create(:version, rubygem:)
+
+    Mailer.expects(:deletion_complete).never
+    assert_no_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      DeleteUserJob.new(user:, send_emails: false).perform(user:, send_emails: false)
+    end
+
+    assert_predicate user.reload, :discarded?
+  end
+
+  test "does not send deletion failed when emails are disabled" do
+    user = create(:user)
+
+    Mailer.expects(:deletion_failed).never
+    User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
+    DeleteUserJob.new(user:, send_emails: false).perform(user:, send_emails: false)
+
+    refute_predicate user.reload, :discarded?
+  end
+
   test "succeeds with api key" do
     user = create(:user)
     create(:api_key, owner: user)

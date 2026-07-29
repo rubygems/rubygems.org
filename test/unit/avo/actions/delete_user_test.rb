@@ -12,7 +12,7 @@ class DeleteUserTest < ActiveSupport::TestCase
     @action = Avo::Actions::DeleteUser.new(record: @user, resource: @resource, user: @current_user, view: :show)
   end
 
-  should "enqueue the same deletion job used by profile deletion" do
+  should "enqueue deletion without sending the user emails" do
     args = {
       current_user: @current_user,
       resource: @resource,
@@ -23,7 +23,7 @@ class DeleteUserTest < ActiveSupport::TestCase
       query: nil
     }
 
-    assert_enqueued_with(job: DeleteUserJob, args: [user: @user]) do
+    assert_enqueued_with(job: DeleteUserJob, args: [user: @user, send_emails: false]) do
       @action.handle(**args)
     end
   end

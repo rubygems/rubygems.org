@@ -12,6 +12,8 @@ class User < ApplicationRecord
   self.discard_column = :deleted_at
   self.ignored_columns += [:token]
 
+  attr_accessor :skip_deletion_complete_email
+
   default_scope { not_deleted }
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
@@ -25,7 +27,7 @@ class User < ApplicationRecord
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
   before_discard :clear_personal_attributes
-  after_discard :send_deletion_complete_email
+  after_discard :send_deletion_complete_email, unless: :skip_deletion_complete_email
   before_destroy :yank_gems
 
   scope :not_deleted, -> { kept }
