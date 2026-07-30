@@ -22,12 +22,14 @@ export default class extends Controller {
   }
 
   updateHandleWith(value) {
-    // Slugify into a URL-safe handle: lowercase, spaces/underscores to dashes,
-    // drop anything else, and collapse repeated dashes.
+    // Slugify into a URL-safe handle: lowercase, spaces/dashes to underscores,
+    // drop anything else, collapse repeated underscores, and trim the leading
+    // and trailing ones (the handle must start with a letter).
     this.organizationhandleTarget.value = value
       .toLowerCase()
-      .replace(/[\s_]+/g, "_")
-      .replace(/[^a-z0-9-]/g, "")
-      .replace(/-+/g, "_");
+      .replace(/[\s-]+/g, "_")
+      .replace(/[^a-z0-9_]/g, "")
+      .replace(/_+/g, "_")
+      .replace(/^_+|_+$/g, "");
   }
 }
