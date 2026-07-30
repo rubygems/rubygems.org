@@ -1,16 +1,24 @@
-<% @title = t(".title")%>
+<% @title = t(".title") %>
 
-<% if @user.webauthn_enabled? %>
-  <div class="t-body">
-    <h2><%= t(".authenticating_as") %> <%= @user.name %></h2>
-    <p><%= t("settings.edit.webauthn_credential_note") %></p>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t(".title") %></h1>
+
+    <% if @user.webauthn_enabled? %>
+      <h2 class="font-bold text-b2 text-neutral-900 dark:text-white mb-4">
+        <%= t(".authenticating_as") %> <%= @user.name %>
+      </h2>
+      <p class="mb-6 text-b3 text-neutral-700 dark:text-neutral-300"><%= t("settings.edit.webauthn_credential_note") %></p>
+
+      <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session-cli--form", data: { options: @webauthn_options.to_json } do %>
+        <p hidden class="js-webauthn-session-cli--error mb-3 text-b3 text-red-600 dark:text-red-400"></p>
+
+        <%= submit_tag t(".authenticate"),
+          class: "js-webauthn-session-cli--submit inline-flex items-center justify-center w-full rounded text-white bg-orange-500 " \
+                 "px-4 min-h-12 text-b2 cursor-pointer hover:bg-orange-600 active:bg-orange-600 " \
+                 "dark:bg-orange-500 dark:hover:bg-orange-700 dark:active:bg-orange-700 transition " \
+                 "focus:outline-2 focus:outline-offset-2 focus:outline-orange-500" %>
+      <% end %>
+    <% end %>
   </div>
-
-  <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session-cli--form", data: { options: @webauthn_options.to_json } do %>
-    <div class="form_bottom">
-      <p hidden class="l-text-red-600 js-webauthn-session-cli--error"></p>
-
-      <%= submit_tag t(".authenticate"), class: 'js-webauthn-session-cli--submit form__submit form__submit--no-hover' %>
-    </div>
-  <% end %>
-<% end %>
+</div>

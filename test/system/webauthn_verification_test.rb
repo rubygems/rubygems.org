@@ -15,7 +15,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -31,7 +31,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -49,7 +49,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     @mock_client.kill_server
     click_on "Authenticate"
@@ -67,7 +67,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: wrong_port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -84,7 +84,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -100,7 +100,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     travel 3.minutes do
       assert_text "Authenticate with Security Device"
-      assert_text "Authenticating as #{@user.handle}".upcase
+      assert_text "Authenticating as #{@user.handle}"
 
       click_on "Authenticate"
 
