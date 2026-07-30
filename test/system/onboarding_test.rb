@@ -4,7 +4,7 @@ require "application_system_test_case"
 
 class OnboardingTest < ApplicationSystemTestCase
   setup do
-    @user = create(:user, :mfa_enabled)
+    @user = create(:user, :mfa_enabled, handle: "capt-test-maker")
     @other_user = create(:user)
     @admin = create(:user)
     @maintainer = create(:user)
@@ -37,9 +37,11 @@ class OnboardingTest < ApplicationSystemTestCase
 
     visit organization_onboarding_name_path
 
-    find("label", text: "a gem you own").click
-
-    select @rubygem.name, from: "rubygems.org/organizations/"
+    form = find(:element, "data-testid": "organization_name.form")
+    within form do
+      fill_in "Organization Name", with: "Hot Dog Society"
+      fill_in "Organization Handle", with: "hot-dog-society"
+    end
 
     click_button "Continue"
 
@@ -63,9 +65,11 @@ class OnboardingTest < ApplicationSystemTestCase
 
     visit organization_onboarding_name_path
 
-    find("label", text: "a gem you own").click
-
-    select @rubygem.name, from: "rubygems.org/organizations/"
+    form = find(:element, "data-testid": "organization_name.form")
+    within form do
+      fill_in "Organization Name", with: "Hot Dog Society"
+      fill_in "Organization Handle", with: "hot-dog-society"
+    end
 
     click_button "Continue"
 
@@ -93,16 +97,18 @@ class OnboardingTest < ApplicationSystemTestCase
 
     visit organization_onboarding_name_path
 
-    find("label", text: "a gem you own").click
-
-    select @rubygem.name, from: "rubygems.org/organizations/"
+    form = find(:element, "data-testid": "organization_name.form")
+    within form do
+      fill_in "Organization Name", with: "Hot Dog Society"
+      fill_in "Organization Handle", with: "hot-dog-society"
+    end
 
     click_button "Continue"
 
     assert_text "Add gems to your Org"
 
+    check @rubygem.name
     check @other_rubygem.name
-
     click_button "Continue"
 
     assert_text "Manage Members"
@@ -118,23 +124,26 @@ class OnboardingTest < ApplicationSystemTestCase
   end
 
   test "onboarding with outside contributors demotes their ownership to maintainer" do
-    outside_contributor = create(:user)
+    outside_contributor = create(:user, handle: "lt-outside-contrib")
     create(:ownership, user: outside_contributor, rubygem: @rubygem, role: "owner")
 
     visit sign_in_path
 
-    click_link @user[:handle]
+    click_link @user.handle
 
     visit organization_onboarding_name_path
 
-    find("label", text: "a gem you own").click
-
-    select @rubygem.name, from: "rubygems.org/organizations/"
+    form = find(:element, "data-testid": "organization_name.form")
+    within form do
+      fill_in "Organization Name", with: "Hot Dog Society"
+      fill_in "Organization Handle", with: "hot-dog-society"
+    end
 
     click_button "Continue"
 
     assert_text "Add gems to your Org"
 
+    check @rubygem.name
     click_button "Continue"
 
     assert_text "Manage Members"

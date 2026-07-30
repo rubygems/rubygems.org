@@ -21,14 +21,6 @@ class Organizations::Onboarding::BaseController < ApplicationController
     add_breadcrumb "Create Org"
   end
 
-  def available_rubygems
-    @available_rubygems ||= @organization_onboarding.available_rubygems.to_a.tap do |gems|
-      namesake_rubygem = @organization_onboarding.namesake_rubygem
-      gems.unshift gems.delete(namesake_rubygem) if namesake_rubygem
-    end
-  end
-  helper_method :available_rubygems
-
   def approved_invites
     owner = OrganizationInvite.new(user: @organization_onboarding.created_by, role: :owner)
     @approved_invites ||= @organization_onboarding.approved_invites.prepend(owner)

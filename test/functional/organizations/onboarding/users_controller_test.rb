@@ -10,9 +10,11 @@ class Organizations::Onboarding::UsersControllerTest < ActionDispatch::Integrati
 
     @organization_onboarding = create(
       :organization_onboarding,
-      created_by: @user,
-      namesake_rubygem: @rubygem
+      created_by: @user
     )
+
+    @organization_onboarding.rubygems = [@rubygem]
+    @organization_onboarding.save!
 
     @invites = @organization_onboarding.invites.to_a
 

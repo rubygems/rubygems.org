@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class OrganizationOnboarding < ApplicationRecord
-  enum :name_type, { gem: "gem", user: "user" }, prefix: true, default: "gem"
   enum :status, { pending: "pending", completed: "completed", failed: "failed" }, default: "pending"
 
   has_many :invites, as: :invitable, class_name: "OrganizationInvite", dependent: :destroy
@@ -11,9 +10,12 @@ class OrganizationOnboarding < ApplicationRecord
 
   accepts_nested_attributes_for :invites
 
-  validate :created_by_gem_ownerships
+  validates :organization_handle, presence: true,
+    uniqueness: { case_sensitive: false },
+    length: { within: 2..40 },
+    format: { with: Patterns::HANDLE_PATTERN }
 
-  validates :organization_name, :organization_handle, :name_type, presence: true
+  validates :organization_name, presence: true, length: { within: 2..255 }
 
   with_options if: :completed? do
     validates :onboarded_at, presence: true
@@ -23,17 +25,12 @@ class OrganizationOnboarding < ApplicationRecord
     validates :error, presence: true
   end
 
-  with_options if: :name_type_user? do
-    before_validation :set_user_handle
-  end
-
-  with_options if: :name_type_gem? do
-    validate :organization_handle_matches_rubygem_name
-    validate :organization_handle_reservable
-    after_validation :add_namesake_rubygem
-  end
-
   before_validation :remove_invalid_invites
+
+  validate :organization_handle_reservable
+  validate :created_by_gem_ownerships
+  validates :organization_name, :organization_handle, presence: true
+
   before_save :sync_invites, if: :rubygems_changed?
 
   def onboard!
@@ -68,11 +65,6 @@ class OrganizationOnboarding < ApplicationRecord
 
   def selected_rubygems
     Rubygem.where(id: rubygems).all
-  end
-
-  def namesake_rubygem
-    return unless name_type_gem?
-    created_by&.rubygems&.find_by(name: organization_handle)
   end
 
   def approved_invites
@@ -130,11 +122,6 @@ class OrganizationOnboarding < ApplicationRecord
     )
   end
 
-  def set_user_handle
-    return if created_by.blank? || !name_type_user?
-    self.organization_handle = created_by.handle
-  end
-
   def remove_ownerships_for_joining_members
     onboarded_users = invites.reject { it.role.nil? || it.outside_contributor? }.map(&:user)
     onboarded_users << created_by
@@ -150,24 +137,10 @@ class OrganizationOnboarding < ApplicationRecord
       .update_all(role: :maintainer)
   end
 
-  def add_namesake_rubygem
-    namesake = namesake_rubygem
-    return unless namesake && rubygems.exclude?(namesake.id)
-    rubygems.unshift(namesake.id)
-  end
-
-  def organization_handle_matches_rubygem_name
-    return if organization_handle.blank?
-    return if namesake_rubygem.present?
-    return if selected_rubygems.any? { it.name == organization_handle }
-
-    errors.add(:organization_handle, "must match a rubygem you own")
-  end
-
   def organization_handle_reservable
     return if organization_handle.blank?
-    return unless Organization::Handle.reserved?(organization_handle)
 
+    return unless Organization::Handle.reserved?(organization_handle)
     errors.add(:organization_handle, "is reserved and cannot be used")
   end
 
