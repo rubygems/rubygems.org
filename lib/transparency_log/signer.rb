@@ -8,9 +8,8 @@ class TransparencyLog::Signer
   SIGNING_ALGORITHM = "ECDSA-P256-SHA256"
 
   def initialize
-    @private_key = OpenSSL::PKey.read(
-      TransparencyLog.configuration.private_key
-    )
+    private_key = TransparencyLog.configuration.private_key.gsub("\\n", "\n")
+    @private_key = OpenSSL::PKey.read(private_key)
   end
 
   def sign(canonical_payload)
