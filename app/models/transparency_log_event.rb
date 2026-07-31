@@ -37,7 +37,6 @@ class TransparencyLogEvent < ApplicationRecord
     payload_digest_algorithm
     payload_digest
     signing_mode
-    signing_key_id
     signing_algorithm
     signature
     public_key_id
@@ -77,10 +76,13 @@ class TransparencyLogEvent < ApplicationRecord
     :canonicalization_algorithm,
     :canonicalization_version,
     :payload_digest_algorithm,
+    :payload_digest,
     :signing_mode,
-    :signing_key_id,
     :signing_algorithm,
+    :signature,
     :public_key_id,
+    :public_key_der,
+    :rekor_request_body,
     :spec_version,
     presence: true
   validates :event_uuid, uniqueness: true
@@ -90,7 +92,7 @@ class TransparencyLogEvent < ApplicationRecord
   validates :event_type, length: { maximum: 100 }
   validates :resource_type, :subject_type, :actor_type, length: { maximum: 50 }
   validates :resource_name, :subject_name, length: { maximum: 255 }
-  validates :resource_id, :subject_id, :subject_handle, :actor_id, :actor_handle, :signing_key_id, :public_key_id, length: { maximum: 128 }
+  validates :resource_id, :subject_id, :subject_handle, :actor_id, :actor_handle, :public_key_id, length: { maximum: 128 }
   validates :authentication_method, length: { maximum: 100 }
   validates :canonicalization_algorithm, :signing_algorithm, length: { maximum: 64 }
   validates :canonicalization_version, :rekor_entry_version, :spec_version, length: { maximum: 32 }
@@ -195,8 +197,6 @@ class TransparencyLogEvent < ApplicationRecord
   end
 
   def rekor_request_body_is_object
-    return unless submitted?
-
     errors.add(:rekor_request_body, "must be a JSON object") unless rekor_request_body.is_a?(Hash)
   end
 

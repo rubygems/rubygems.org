@@ -23,7 +23,6 @@ class CreateTransparencyLogs < ActiveRecord::Migration[8.1]
       t.binary :payload_digest, null: false
 
       t.string :signing_mode, null: false, limit: 50
-      t.string :signing_key_id, null: false, limit: 128
       t.string :signing_algorithm, null: false, limit: 64
       t.binary :signature, null: false
 

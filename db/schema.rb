@@ -675,6 +675,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
+  create_table "transparency_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "event_type"
+    t.string "gem_name"
+    t.string "leaf_hash"
+    t.integer "leaf_index"
+    t.datetime "updated_at", null: false
+    t.string "version_number"
+    t.string "version_sha256"
+  end
+
   create_table "transparency_log_events", force: :cascade do |t|
     t.string "actor_handle", limit: 128
     t.string "actor_id", limit: 128, null: false
@@ -707,7 +718,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.string "resource_type", limit: 50, null: false
     t.binary "signature", null: false
     t.string "signing_algorithm", limit: 64, null: false
-    t.string "signing_key_id", limit: 128, null: false
     t.string "signing_mode", limit: 50, null: false
     t.string "spec_version", limit: 32, null: false
     t.string "status", limit: 32, default: "pending", null: false
@@ -726,6 +736,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.index ["status", "created_at"], name: "index_transparency_log_events_on_status_and_created_at"
     t.index ["status"], name: "index_transparency_log_events_on_status"
     t.index ["subject_type", "subject_name"], name: "index_transparency_log_events_on_subject_type_and_subject_name"
+  end
+
+  create_table "transparency_tree_heads", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "root_hash"
+    t.datetime "timestamp"
+    t.integer "tree_size"
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", id: :serial, force: :cascade do |t|

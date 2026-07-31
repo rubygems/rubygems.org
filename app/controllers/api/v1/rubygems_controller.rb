@@ -116,25 +116,10 @@ class Api::V1::RubygemsController < Api::BaseController
       actor_type: @api_key.user? ? "user" : "unknown",
       actor_id: @api_key.owner_id.to_s,
       actor_handle: @api_key.owner&.name,
-      authentication_method: "api_key",
-      spec_version: "1.0",
-      canonicalization_algorithm: "JCS",
-      canonicalization_version: "1",
-      payload_digest_algorithm: "SHA-256",
-      payload_digest: "",
-      signing_mode: "TODO",
-      signing_key_id: "TODO",
-      signing_algorithm: "ECDSA-P256-SHA256",
-      signature: "",
-      public_key_id: "TODO",
-      public_key_der: "",
-      rekor_request_body: {}
+      authentication_method: "api_key"
     )
 
-    payload = TransparencyLogEvent::CanonicalPayload.from_event(event).to_h
-    event.canonical_payload = payload
-
-    event.save!
+    TransparencyLog::Recorder.new.record(event)
   rescue StandardError => e
     Rails.error.report(e, handled: true)
   end

@@ -301,8 +301,20 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           post :create, body: gem_file(&:read)
         end
 
-        should "create a transparency log event" do
+        should "create and enqueue a transparency log event" do
           assert_equal 1, TransparencyLogEvent.count
+
+          event = TransparencyLogEvent.last
+
+          assert_predicate event, :pending?
+          assert_equal "gem_push", event.event_type
+          assert_equal "rubygem", event.resource_type
+          assert_equal "test", event.resource_name
+
+          assert_enqueued_with(
+            job: ProcessTransparencyLogEventJob,
+            args: [event]
+          )
         end
       end
     end
