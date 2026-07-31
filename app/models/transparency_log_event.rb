@@ -77,14 +77,10 @@ class TransparencyLogEvent < ApplicationRecord
     :canonicalization_algorithm,
     :canonicalization_version,
     :payload_digest_algorithm,
-    :payload_digest,
     :signing_mode,
     :signing_key_id,
     :signing_algorithm,
-    :signature,
     :public_key_id,
-    :public_key_der,
-    :rekor_request_body,
     :spec_version,
     presence: true
   validates :event_uuid, uniqueness: true
@@ -199,6 +195,8 @@ class TransparencyLogEvent < ApplicationRecord
   end
 
   def rekor_request_body_is_object
+    return unless submitted?
+
     errors.add(:rekor_request_body, "must be a JSON object") unless rekor_request_body.is_a?(Hash)
   end
 

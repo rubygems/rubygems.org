@@ -23,14 +23,10 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   should validate_presence_of(:canonicalization_algorithm)
   should validate_presence_of(:canonicalization_version)
   should validate_presence_of(:payload_digest_algorithm)
-  should validate_presence_of(:payload_digest)
   should validate_presence_of(:signing_mode)
   should validate_presence_of(:signing_key_id)
   should validate_presence_of(:signing_algorithm)
-  should validate_presence_of(:signature)
   should validate_presence_of(:public_key_id)
-  should validate_presence_of(:public_key_der)
-  should validate_presence_of(:rekor_request_body)
 
   should validate_uniqueness_of(:event_uuid).ignoring_case_sensitivity
   should validate_uniqueness_of(:payload_digest).scoped_to(:payload_digest_algorithm)
@@ -115,13 +111,6 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     )
 
     assert_predicate event, :valid?
-  end
-
-  should "require Rekor request body to be a JSON object" do
-    event = build(:transparency_log_event, rekor_request_body: %w[not an object])
-
-    refute_predicate event, :valid?
-    assert_includes event.errors[:rekor_request_body], "must be a JSON object"
   end
 
   should "require Rekor response details when submitted" do

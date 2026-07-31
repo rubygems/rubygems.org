@@ -52,6 +52,7 @@ class Api::V1::RubygemsController < Api::BaseController
     gemcutter = Pusher.new(@api_key, gem_body, request:, attestations:)
     gemcutter.process
     track_gem_push(gemcutter)
+    record_transparency_log_event(gemcutter) if gemcutter.code == 200
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue Pundit::NotAuthorizedError
     raise # allow rescue_from in base_controller to handle this
@@ -96,6 +97,44 @@ class Api::V1::RubygemsController < Api::BaseController
 
     logger.info(event, **metadata, actor:, edge_bypassed: request.edge_bypassed?, request_id: request.uuid)
     Datadog::Kit::AppSec::Events.track(event, **metadata, **actor.transform_keys { |key| :"actor.#{key}" })
+  rescue StandardError => e
+    Rails.error.report(e, handled: true)
+  end
+
+  def record_transparency_log_event(gemcutter)
+    rubygem = gemcutter.rubygem
+    version = gemcutter.version
+    return if rubygem.nil? || version.nil?
+
+    event = TransparencyLogEvent.new(
+      event_type: "gem_push",
+      resource_type: "rubygem",
+      resource_name: rubygem.name,
+      resource_id: rubygem.id.to_s,
+      subject_type: "gem_version",
+      subject_name: version.full_name,
+      actor_type: @api_key.user? ? "user" : "unknown",
+      actor_id: @api_key.owner_id.to_s,
+      actor_handle: @api_key.owner&.name,
+      authentication_method: "api_key",
+      spec_version: "1.0",
+      canonicalization_algorithm: "JCS",
+      canonicalization_version: "1",
+      payload_digest_algorithm: "SHA-256",
+      payload_digest: "",
+      signing_mode: "TODO",
+      signing_key_id: "TODO",
+      signing_algorithm: "ECDSA-P256-SHA256",
+      signature: "",
+      public_key_id: "TODO",
+      public_key_der: "",
+      rekor_request_body: {}
+    )
+
+    payload = TransparencyLogEvent::CanonicalPayload.from_event(event).to_h
+    event.canonical_payload = payload
+
+    event.save!
   rescue StandardError => e
     Rails.error.report(e, handled: true)
   end

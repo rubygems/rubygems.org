@@ -295,6 +295,16 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_predicate ownership, :confirmed?
         end
       end
+
+      context "On POST to create for new gem, transparency log" do
+        setup do
+          post :create, body: gem_file(&:read)
+        end
+
+        should "create a transparency log event" do
+          assert_equal 1, TransparencyLogEvent.count
+        end
+      end
     end
 
     context "On POST to create for new gem" do
