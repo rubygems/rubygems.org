@@ -263,6 +263,22 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             assert_equal "Please confirm the ownership of the #{@rubygem.name} gem on RubyGems.org", last_email.subject
             assert_equal [@second_user.email], last_email.to
           end
+
+          should "record and enqueue a transparency log event" do
+            event = TransparencyLogEvent.find_by!(
+              event_type: "ownership_change",
+              resource_type: "rubygem",
+              resource_name: @rubygem.name,
+              subject_type: "user",
+              subject_name: @second_user.handle
+            )
+
+            assert_equal @rubygem.id.to_s, event.resource_id
+            assert_equal @second_user.id.to_s, event.subject_id
+            assert_equal @user.id.to_s, event.actor_id
+            assert_equal "api_key", event.authentication_method
+            assert_enqueued_with job: ProcessTransparencyLogEventJob, args: [event]
+          end
         end
 
         context "add user with handler" do

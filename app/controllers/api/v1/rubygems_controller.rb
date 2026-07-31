@@ -113,6 +113,7 @@ class Api::V1::RubygemsController < Api::BaseController
       resource_id: rubygem.id.to_s,
       subject_type: "gem_version",
       subject_name: version.full_name,
+      subject_id: version.id.to_s,
       actor_type: @api_key.user? ? "user" : "unknown",
       actor_id: @api_key.owner_id.to_s,
       actor_handle: @api_key.owner&.name,

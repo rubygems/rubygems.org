@@ -9,7 +9,7 @@ class TransparencyLogEvent::RekorResponseTest < ActiveSupport::TestCase
       "logIndex" => "10",
       "rootHash" => "root-hash",
       "treeSize" => "11",
-      "hashes" => ["hash-one", "hash-two"],
+      "hashes" => %w[hash-one hash-two],
       "checkpoint" => { "envelope" => @checkpoint }
     }
     @response_body = {

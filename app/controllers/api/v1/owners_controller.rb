@@ -20,6 +20,7 @@ class Api::V1::OwnersController < Api::BaseController
     ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user, **ownership_params)
 
     if ownership.save
+      record_transparency_log_event(owner)
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       render plain: response_with_mfa_warning("#{owner.display_handle} was added as an unconfirmed owner. " \
                                               "Ownership access will be enabled after the user clicks on the " \
@@ -32,14 +33,16 @@ class Api::V1::OwnersController < Api::BaseController
   def update
     owner = User.find_by_name(email_param)
     ownership = @rubygem.ownerships.find_by(user: owner) if owner
+
     if ownership
       authorize(ownership)
     else
-      authorize(@rubygem, :update_owner?) # don't leak presence of an email unless authorized
+      authorize(@rubygem, :update_owner?)
       return render_not_found
     end
 
     if ownership.update(ownership_params)
+      record_transparency_log_event(owner)
       render plain: response_with_mfa_warning("Owner updated successfully.")
     else
       render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_content
@@ -52,6 +55,7 @@ class Api::V1::OwnersController < Api::BaseController
     ownership = @rubygem.ownerships_including_unconfirmed.find_by!(user: owner)
 
     if ownership.safe_destroy
+      record_transparency_log_event(owner)
       OwnersMailer.owner_removed(ownership.user_id, @api_key.user.id, ownership.rubygem_id).deliver_later
       render plain: response_with_mfa_warning("Owner removed successfully.")
     else
@@ -92,5 +96,25 @@ class Api::V1::OwnersController < Api::BaseController
       .map do |ownership|
         ownership.user.payload.merge("role" => ownership.role)
       end
+  end
+
+  def record_transparency_log_event(owner)
+    event = TransparencyLogEvent.new(
+      event_type: "ownership_change",
+      resource_type: "rubygem",
+      resource_name: @rubygem.name,
+      resource_id: @rubygem.id.to_s,
+      subject_type: "user",
+      subject_name: owner.handle,
+      subject_id: owner.id.to_s,
+      actor_type: "user",
+      actor_id: @api_key.user.id.to_s,
+      actor_handle: @api_key.user.handle,
+      authentication_method: "api_key"
+    )
+
+    TransparencyLog::Recorder.new.record(event)
+  rescue StandardError => e
+    Rails.error.report(e, handled: true)
   end
 end
