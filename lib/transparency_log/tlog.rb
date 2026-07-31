@@ -2,13 +2,12 @@
 
 class TransparencyLog::Tlog
   def initialize
-    @entry_builder = TransparencyLog::EntryBuilder.new
     @client = TransparencyLog::Client.new
   end
 
   def create_entry(transparency_log_event)
-    entry = @entry_builder.build(transparency_log_event)
-    response = @client.post(entry)
+    response = @client.post(transparency_log_event.rekor_request_body)
+
     TransparencyLogEvent::RekorEntry.from_json(response)
   rescue TransparencyLog::Client::FormatError => e
     Rails.logger.error("Transparency log entry malformed: #{e.message}")

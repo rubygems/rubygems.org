@@ -42,7 +42,6 @@ FactoryBot.define do
     payload_digest_algorithm { "sha256" }
     payload_digest { Digest::SHA256.digest(canonical_payload.to_json) }
     signing_mode { "local" }
-    signing_key_id { "rubygems-development-key" }
     signing_algorithm { "ecdsa-p256-sha256" }
     signature { "signature-bytes" }
     public_key_id { "rubygems-development-public-key" }

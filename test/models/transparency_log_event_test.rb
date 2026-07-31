@@ -24,7 +24,6 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   should validate_presence_of(:canonicalization_version)
   should validate_presence_of(:payload_digest_algorithm)
   should validate_presence_of(:signing_mode)
-  should validate_presence_of(:signing_key_id)
   should validate_presence_of(:signing_algorithm)
   should validate_presence_of(:public_key_id)
 
