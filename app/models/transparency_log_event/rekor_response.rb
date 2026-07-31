@@ -2,7 +2,7 @@
 
 # Bundles the raw Rekor response body together with the normalized log entry
 # it maps into the transparency log event columns that persist inclusion evidence.
-TransparencyLogEvent::RekorEntry = Data.define(
+TransparencyLogEvent::RekorResponse = Data.define(
   :response_body,
   :origin,
   :kind,
@@ -12,14 +12,17 @@ TransparencyLogEvent::RekorEntry = Data.define(
   :inclusion_proof
 ) do
   def self.from_json(response_body)
+    inclusion_proof = response_body["inclusionProof"]
+    checkpoint = inclusion_proof.dig("checkpoint", "envelope")
+
     new(
-      response_body: response_body,
-      origin: "",
-      kind: response_body["kindVersion"]["kind"],
-      version: response_body["kindVersion"]["version"],
+      response_body:,
+      origin: checkpoint.lines.first.chomp,
+      kind: response_body.dig("kindVersion", "kind"),
+      version: response_body.dig("kindVersion", "version"),
       index: response_body["logIndex"],
-      checkpoint: response_body["inclusionProof"]["checkpoint"],
-      inclusion_proof: response_body["inclusionProof"]
+      checkpoint:,
+      inclusion_proof:
     )
   end
 

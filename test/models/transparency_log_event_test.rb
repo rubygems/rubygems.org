@@ -23,9 +23,13 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   should validate_presence_of(:canonicalization_algorithm)
   should validate_presence_of(:canonicalization_version)
   should validate_presence_of(:payload_digest_algorithm)
+  should validate_presence_of(:payload_digest)
   should validate_presence_of(:signing_mode)
   should validate_presence_of(:signing_algorithm)
+  should validate_presence_of(:signature)
   should validate_presence_of(:public_key_id)
+  should validate_presence_of(:public_key_der)
+  should validate_presence_of(:rekor_request_body)
 
   should validate_uniqueness_of(:event_uuid).ignoring_case_sensitivity
   should validate_uniqueness_of(:payload_digest).scoped_to(:payload_digest_algorithm)
@@ -47,7 +51,6 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
 
   should "preserve a provided event uuid" do
     event_uuid = SecureRandom.uuid
-
     event = create(:transparency_log_event, event_uuid:)
 
     assert_equal event_uuid, event.event_uuid
@@ -257,7 +260,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     submitted_at = Time.zone.local(2026, 6, 16, 12, 0, 0)
     response_body = { "uuid" => "rekor-entry-uuid" }
     inclusion_proof = { "treeSize" => 2, "hashes" => ["abc"] }
-    rekor_entry = TransparencyLogEvent::RekorEntry.new(
+    rekor_response = TransparencyLogEvent::RekorResponse.new(
       response_body:,
       origin: "rekor.sigstore.dev",
       kind: "hashedrekord",
@@ -267,12 +270,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
       inclusion_proof:
     )
 
-    assert event.record_submission(
-      response_body:,
-      rekor_entry:,
-      submitted_at:
-    )
-
+    travel_to(submitted_at) { assert event.record_submission(rekor_response) }
     event.reload
 
     assert_predicate event, :submitted?
@@ -289,7 +287,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
 
   should "not record a submission for a failed event" do
     event = create(:transparency_log_event, :failed)
-    rekor_entry = TransparencyLogEvent::RekorEntry.new(
+    rekor_response = TransparencyLogEvent::RekorResponse.new(
       response_body: { "uuid" => "rekor-entry-uuid" },
       origin: "rekor.sigstore.dev",
       kind: "hashedrekord",
@@ -299,7 +297,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
       inclusion_proof: {}
     )
 
-    refute event.record_submission(response_body: { "uuid" => "rekor-entry-uuid" }, rekor_entry:)
+    refute event.record_submission(rekor_response)
     assert_includes event.errors[:status], "cannot transition from failed to submitted"
 
     event.reload
@@ -308,7 +306,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     assert_nil event.rekor_log_index
   end
 
-  should "record a submission from an explicitly mapped Rekor entry" do
+  should "record a submission from a normalized Rekor response" do
     event = create(:transparency_log_event)
     response_body = {
       "uuid" => "rekor-entry-uuid",
@@ -320,7 +318,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
         "checkpoint" => { "envelope" => "checkpoint envelope" }
       }
     }
-    rekor_entry = TransparencyLogEvent::RekorEntry.new(
+    rekor_response = TransparencyLogEvent::RekorResponse.new(
       response_body:,
       origin: "rekor.sigstore.dev",
       kind: response_body.dig("kindVersion", "kind"),
@@ -330,14 +328,11 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
       inclusion_proof: response_body["inclusionProof"]
     )
 
-    assert event.record_submission(
-      response_body:,
-      rekor_entry:
-    )
-
+    assert event.record_submission(rekor_response)
     event.reload
 
     assert_predicate event, :submitted?
+    assert_equal response_body, event.rekor_response_body
     assert_equal "rekor.sigstore.dev", event.rekor_log_origin
     assert_equal "hashedrekord", event.rekor_entry_kind
     assert_equal "0.0.1", event.rekor_entry_version

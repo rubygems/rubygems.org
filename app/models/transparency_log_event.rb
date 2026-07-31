@@ -144,7 +144,7 @@ class TransparencyLogEvent < ApplicationRecord
     actor_handle.presence || "#{actor_type}:#{actor_id}"
   end
 
-  def record_submission(response_body:, rekor_entry:, submitted_at: Time.current)
+  def record_submission(rekor_response)
     unless pending?
       errors.add(:status, "cannot transition from #{status} to submitted")
       return false
@@ -152,10 +152,10 @@ class TransparencyLogEvent < ApplicationRecord
 
     update(
       status: :submitted,
-      rekor_response_body: response_body,
-      rekor_submitted_at: submitted_at,
+      rekor_response_body: rekor_response.response_body,
+      rekor_submitted_at: Time.current,
       last_error: nil,
-      **rekor_entry.event_attributes
+      **rekor_response.event_attributes
     )
   end
 
