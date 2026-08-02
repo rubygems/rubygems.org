@@ -248,7 +248,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     ref_condition = conditions.find { |c| c["claim"] == "ref" }
 
     assert_equal "string_equals", ref_condition["operator"]
-    assert_equal "refs/heads/main", ref_condition["value"]
+    assert_equal "main", ref_condition["value"]
 
     # Check ref_type condition
     type_condition = conditions.find { |c| c["claim"] == "ref_type" }
