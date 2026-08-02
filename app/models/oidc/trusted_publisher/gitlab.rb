@@ -187,7 +187,7 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
         OIDC::AccessPolicy::Statement::Condition.new(
           operator: "string_equals",
           claim: "ref",
-          value: "refs/heads/#{branch_name}"
+          value: branch_name
         )
       ]
     else
