@@ -14,8 +14,9 @@ module Patterns
   REQUIREMENT_PATTERN   = Gem::Requirement::PATTERN
   BASE64_SHA256_PATTERN = %r{\A[0-9a-zA-Z_+/-]{43}={0,2}\z}
   HANDLE_PATTERN        = /\A[A-Za-z][A-Za-z_\-0-9]*\z/
-  SPECIAL_CHAR_PREFIX_REGEXP = /\A[#{Regexp.escape(SPECIAL_CHARACTERS)}]/o
-  SPECIAL_CHAR_SUFFIX_REGEXP = /[#{Regexp.escape(SPECIAL_CHARACTERS)}]\z/o
-  BANNED_EXTENSIONS          = %w[gem json html gemspec].freeze
-  BANNED_EXTENSION_REGEXP    = /\.(?:#{Regexp.union(BANNED_EXTENSIONS)})\z/i
+  ORGANIZATION_HANDLE_PATTERN = /\A[0-9A-Za-z][A-Za-z_\-0-9]*\z/
+  SPECIAL_CHAR_PREFIX_REGEXP  = /\A[#{Regexp.escape(SPECIAL_CHARACTERS)}]/o
+  SPECIAL_CHAR_SUFFIX_REGEXP  = /[#{Regexp.escape(SPECIAL_CHARACTERS)}]\z/o
+  BANNED_EXTENSIONS           = %w[gem json html gemspec].freeze
+  BANNED_EXTENSION_REGEXP     = /\.(?:#{Regexp.union(BANNED_EXTENSIONS)})\z/i
 end

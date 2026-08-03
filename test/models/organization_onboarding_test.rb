@@ -151,6 +151,35 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
         assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
       end
     end
+
+    context "when the organization handle is reserved under another spelling" do
+      should "be invalid" do
+        @onboarding.organization_handle = "sign-in"
+
+        assert_predicate @onboarding, :invalid?
+        assert_includes @onboarding.errors[:organization_handle], "is reserved and cannot be used"
+      end
+    end
+
+    context "when an existing organization already owns the handle" do
+      should "be invalid" do
+        create(:organization, handle: "takenhandle")
+        @onboarding.organization_handle = "TakenHandle"
+
+        assert_predicate @onboarding, :invalid?
+        assert_includes @onboarding.errors[:organization_handle], "has already been taken"
+      end
+    end
+
+    context "when a user already owns the handle" do
+      should "be invalid" do
+        create(:user, handle: "takenhandle")
+        @onboarding.organization_handle = "TakenHandle"
+
+        assert_predicate @onboarding, :invalid?
+        assert_includes @onboarding.errors[:organization_handle], "has already been taken"
+      end
+    end
   end
 
   context "#save" do
